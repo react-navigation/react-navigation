@@ -5,7 +5,7 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { Animated, View } from 'react-native';
+import { Animated, Keyboard, View } from 'react-native';
 
 import { type BottomTabScreenProps, createBottomTabNavigator } from '../index';
 
@@ -68,4 +68,49 @@ test('handles screens preloading', async () => {
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
+});
+
+test('tab bar cannot be tapped when hidden', async () => {
+  jest.useFakeTimers();
+
+  const Test = ({ route }: BottomTabScreenProps<BottomTabParamList>) => (
+    <View>
+      <Text>Screen {route.name}</Text>
+    </View>
+  );
+
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
+
+  const { queryByText, getByRole } = render(
+    <NavigationContainer>
+      <Tab.Navigator
+        screenOptions={{
+          tabBarHideOnKeyboard: true,
+        }}
+      >
+        <Tab.Screen name="A" component={Test} />
+        <Tab.Screen name="B" component={Test} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  // start at Screen A
+  expect(queryByText('Screen B')).toBeNull();
+
+  // switch to Screen B
+  fireEvent.press(getByRole('button', { name: 'B, tab, 2 of 2' }), {});
+  jest.runAllTimers();
+  expect(queryByText('Screen B')).not.toBeNull();
+
+  // show the keyboard to hide the tab bar
+  act(() => {
+    // @ts-expect-error: React Native does not expose the emit method on Keyboard
+    Keyboard._emitter.emit?.('keyboardWillShow');
+  });
+
+  // attempt to switch to Screen A
+  fireEvent.press(getByRole('button', { name: 'A, tab, 1 of 2' }), {});
+  jest.runAllTimers();
+  expect(queryByText('Screen A')).toBeNull();
+  expect(queryByText('Screen B')).not.toBeNull();
 });
