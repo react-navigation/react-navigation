@@ -64,7 +64,7 @@
     "react": "18.2.0",
     "react-native": "0.74.2",
     "react-native-builder-bob": "^0.29.0",
-    "react-native-screens": "4.0.0-beta.5",
+    "react-native-screens": "4.0.0-beta.9",
     "typescript": "^5.5.2"
   },
   "peerDependencies": {
