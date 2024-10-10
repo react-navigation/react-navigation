@@ -27,6 +27,12 @@ export type DrawerNavigationConfig = {
    * Defaults to `DrawerContent`.
    */
   drawerContent?: (props: DrawerContentComponentProps) => React.ReactNode;
+
+  /**
+   * Accessibility label for the drawer toggle button. This is read by the screen reader when the user taps the button.
+   * Defaults to "Open navigation menu".
+   */
+  drawerToggleButtonAccessibilityLabel?: string;
   /**
    * Whether inactive screens should be detached from the view hierarchy to save memory.
    * Make sure to call `enableScreens` from `react-native-screens` to make it work.
@@ -164,6 +170,12 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * Defaults to "Close drawer".
    */
   overlayAccessibilityLabel?: string;
+
+  /**
+   * Accessibility label for the drawer toggle button. This is read by the screen reader when the user taps the button.
+   * Defaults to "Open navigation menu".
+   */
+  drawerToggleButtonAccessibilityLabel?: string;
 
   /**
    * Style object for the component wrapping the screen content.
@@ -332,4 +344,5 @@ export type DrawerProps = {
   swipeEnabled: boolean;
   swipeVelocityThreshold: number;
   overlayAccessibilityLabel?: string;
+  drawerToggleButtonAccessibilityLabel?: string;
 };
