@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.10...react-native-tab-view@4.0.0-rc.11) (2024-10-11)
+
+### Bug Fixes
+
+* spread key into JSX warning ([#12142](https://github.com/react-navigation/react-navigation/issues/12142)) ([f9031ec](https://github.com/react-navigation/react-navigation/commit/f9031ec3eeeda46db5c5a55dca0f24f0ea021547)) - by @jewhyena
+
 # [4.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.9...react-native-tab-view@4.0.0-rc.10) (2024-09-08)
 
 **Note:** Version bump only for package react-native-tab-view

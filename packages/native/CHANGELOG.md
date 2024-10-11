@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.19...@react-navigation/native@7.0.0-rc.20) (2024-10-11)
+
+### Bug Fixes
+
+* fix type error when using useScrollToTop with FlatList ([#12140](https://github.com/react-navigation/react-navigation/issues/12140)) ([a1f947a](https://github.com/react-navigation/react-navigation/commit/a1f947a44f16a8d846c31d76efb0485780bd8de3)), closes [#12139](https://github.com/react-navigation/react-navigation/issues/12139) - by @itsramiel
+
+### Features
+
+* export LocaleDirContext and UNSTABLE_UnhandledLinkingContext ([#12145](https://github.com/react-navigation/react-navigation/issues/12145)) ([4caf3cb](https://github.com/react-navigation/react-navigation/commit/4caf3cb849a8708a36d0dbf22dac432d2ca780be)) - by @marklawlor
+
 # [7.0.0-rc.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.18...@react-navigation/native@7.0.0-rc.19) (2024-09-08)
 
 **Note:** Version bump only for package @react-navigation/native
