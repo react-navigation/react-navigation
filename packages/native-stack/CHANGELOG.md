@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.27...@react-navigation/native-stack@7.0.0-rc.28) (2024-10-11)
+
+### Bug Fixes
+
+* **native-stack:** incorrect text truncation in header title on Android ([#12125](https://github.com/react-navigation/react-navigation/issues/12125)) ([6b6b846](https://github.com/react-navigation/react-navigation/commit/6b6b846f4984ac4834bab6bd8474b390313c741e)) - by @kkafar
+
+### Features
+
+* preload using activityState prop ([#12189](https://github.com/react-navigation/react-navigation/issues/12189)) ([496012c](https://github.com/react-navigation/react-navigation/commit/496012c32ae86af335160d569fb0d025cd092bd8)) - by @maciekstosio
+* support for Android sheets & iOS custom detents ([#12032](https://github.com/react-navigation/react-navigation/issues/12032)) ([af20d57](https://github.com/react-navigation/react-navigation/commit/af20d57b1a12d0d79a51425e2a7088efe140ae57)) - by @kkafar
+
 # [7.0.0-rc.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.26...@react-navigation/native-stack@7.0.0-rc.27) (2024-09-10)
 
 **Note:** Version bump only for package @react-navigation/native-stack
