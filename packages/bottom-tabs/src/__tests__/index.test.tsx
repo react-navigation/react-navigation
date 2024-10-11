@@ -5,7 +5,13 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
-import { Animated, Keyboard, View } from 'react-native';
+import {
+  type EmitterSubscription,
+  Keyboard,
+  type KeyboardEventListener,
+  type KeyboardEventName,
+  View,
+} from 'react-native';
 
 import { type BottomTabScreenProps, createBottomTabNavigator } from '../index';
 
@@ -14,12 +20,9 @@ type BottomTabParamList = {
   B: undefined;
 };
 
-test('renders a bottom tab navigator with screens', async () => {
-  // @ts-expect-error: incomplete mock for testing
-  jest.spyOn(Animated, 'timing').mockImplementation(() => ({
-    start: (callback) => callback?.({ finished: true }),
-  }));
+jest.useFakeTimers();
 
+test('renders a bottom tab navigator with screens', async () => {
   const Test = ({ route }: BottomTabScreenProps<BottomTabParamList>) => (
     <View>
       <Text>Screen {route.name}</Text>
@@ -71,7 +74,23 @@ test('handles screens preloading', async () => {
 });
 
 test('tab bar cannot be tapped when hidden', async () => {
-  jest.useFakeTimers();
+  // @ts-expect-error: mock implementation for testing
+  const listeners: Record<KeyboardEventName, KeyboardEventListener[]> = {
+    keyboardWillShow: [],
+    keyboardWillHide: [],
+  };
+
+  const spy = jest
+    .spyOn(Keyboard, 'addListener')
+    .mockImplementation((name, callback) => {
+      listeners[name].push(callback);
+
+      return {
+        remove: () => {
+          listeners[name] = listeners[name].filter((c) => c !== callback);
+        },
+      } as EmitterSubscription;
+    });
 
   const Test = ({ route }: BottomTabScreenProps<BottomTabParamList>) => (
     <View>
@@ -94,23 +113,28 @@ test('tab bar cannot be tapped when hidden', async () => {
     </NavigationContainer>
   );
 
-  // start at Screen A
   expect(queryByText('Screen B')).toBeNull();
 
-  // switch to Screen B
   fireEvent.press(getByRole('button', { name: 'B, tab, 2 of 2' }), {});
-  jest.runAllTimers();
+
+  act(() => jest.runAllTimers());
+
   expect(queryByText('Screen B')).not.toBeNull();
 
-  // show the keyboard to hide the tab bar
   act(() => {
-    // @ts-expect-error: React Native does not expose the emit method on Keyboard
-    Keyboard._emitter.emit?.('keyboardWillShow');
+    // Show the keyboard to hide the tab bar
+    listeners.keyboardWillShow.forEach((listener) =>
+      // @ts-expect-error: mock event
+      listener({})
+    );
   });
 
-  // attempt to switch to Screen A
   fireEvent.press(getByRole('button', { name: 'A, tab, 1 of 2' }), {});
-  jest.runAllTimers();
+
+  act(() => jest.runAllTimers());
+
   expect(queryByText('Screen A')).toBeNull();
   expect(queryByText('Screen B')).not.toBeNull();
+
+  spy.mockRestore();
 });
