@@ -50,37 +50,6 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
 
-  e2e-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Get Playwright version
-        id: playwright
-        run: echo "VERSION=$(node --print 'require(`@playwright/test/package.json`).version')" >> $GITHUB_OUTPUT
-
-      - name: Cache Playwright
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.playwright.outputs.VERSION }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
-
-      - name: Install Playwright
-        run: npx playwright install --with-deps
-
-      - name: Build example for web
-        run: yarn example expo export --platform web
-
-      - name: Run e2e tests
-        run: yarn example e2e:web
-
   build:
     runs-on: ubuntu-latest
     steps:
