@@ -99,7 +99,7 @@ export type DrawerProps = {
 
   /**
    * Accessibility label for the drawer toggle button. This is read by the screen reader when the user taps the button.
-   * Defaults to "Open navigation menu".
+   * Defaults to "Show navigation menu".
    */
   drawerToggleButtonAccessibilityLabel?: string;
 
