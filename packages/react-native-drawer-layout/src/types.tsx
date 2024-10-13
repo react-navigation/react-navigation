@@ -98,12 +98,6 @@ export type DrawerProps = {
   overlayAccessibilityLabel?: string;
 
   /**
-   * Accessibility label for the drawer toggle button. This is read by the screen reader when the user taps the button.
-   * Defaults to "Show navigation menu".
-   */
-  drawerToggleButtonAccessibilityLabel?: string;
-
-  /**
    * Whether the keyboard should be dismissed when the swipe gesture begins.
    * Defaults to `'on-drag'`. Set to `'none'` to disable keyboard handling.
    */

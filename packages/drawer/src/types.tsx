@@ -172,12 +172,6 @@ export type DrawerNavigationOptions = HeaderOptions & {
   overlayAccessibilityLabel?: string;
 
   /**
-   * Accessibility label for the drawer toggle button. This is read by the screen reader when the user taps the button.
-   * Defaults to "Show navigation menu".
-   */
-  drawerToggleButtonAccessibilityLabel?: string;
-
-  /**
    * Style object for the component wrapping the screen content.
    */
   sceneContainerStyle?: StyleProp<ViewStyle>;
