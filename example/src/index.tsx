@@ -262,6 +262,7 @@ export function App() {
             {() => (
               <Drawer.Navigator
                 drawerContent={(props) => <CustomDrawerContent {...props} />}
+                drawerToggleButtonAccessibilityLabel="Show navigation menu"
                 screenOptions={{
                   drawerType: isLargeScreen ? 'permanent' : undefined,
                 }}

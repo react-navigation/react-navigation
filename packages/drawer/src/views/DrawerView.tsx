@@ -55,6 +55,7 @@ function DrawerViewBase({
   descriptors,
   defaultStatus,
   drawerContent = renderDrawerContentDefault,
+  drawerToggleButtonAccessibilityLabel,
   detachInactiveScreens = Platform.OS === 'web' ||
     Platform.OS === 'android' ||
     Platform.OS === 'ios',
@@ -243,7 +244,12 @@ function DrawerViewBase({
                 title={getHeaderTitle(options, route.name)}
                 headerLeft={
                   options.headerLeft ??
-                  ((props) => <DrawerToggleButton {...props} />)
+                  ((props) => (
+                    <DrawerToggleButton
+                      accessibilityLabel={drawerToggleButtonAccessibilityLabel}
+                      {...props}
+                    />
+                  ))
                 }
               />
             ),
