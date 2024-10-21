@@ -101,7 +101,7 @@ const MaybeNestedStack = ({
   const content = (
     <DebugContainer
       style={[
-        presentation === 'formSheet' ? styles.absolute : styles.container,
+        presentation === 'formSheet' ? styles.sheet : styles.container,
         presentation !== 'transparentModal' &&
           presentation !== 'containedTransparentModal' && {
             backgroundColor: colors.background,
@@ -701,6 +701,12 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   absolute: {
+    position: 'absolute',
+    top: 0,
+    start: 0,
+    end: 0,
+  },
+  sheet: {
     position: 'absolute',
     top: 0,
     start: 0,
