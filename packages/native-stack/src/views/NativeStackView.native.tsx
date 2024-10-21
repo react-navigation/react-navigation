@@ -542,7 +542,12 @@ const SceneView = ({
                     ? !isRemovePrevented
                     : headerBackButtonMenuEnabled
                 }
-                headerShown={header !== undefined ? false : headerShown}
+                headerShown={
+                  header !== undefined ||
+                  (presentation === 'formSheet' && Platform.OS === 'android')
+                    ? false
+                    : headerShown
+                }
                 headerHeight={headerHeight}
                 headerBackTitle={
                   options.headerBackTitle !== undefined
