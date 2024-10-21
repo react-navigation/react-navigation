@@ -34,9 +34,9 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^18.5.0",
     "@evilmartians/lefthook": "^1.6.0",
-    "@lerna-lite/cli": "^3.5.1",
-    "@lerna-lite/publish": "^3.5.2",
-    "@lerna-lite/run": "^3.5.1",
+    "@lerna-lite/cli": "^3.9.3",
+    "@lerna-lite/publish": "^3.9.3",
+    "@lerna-lite/run": "^3.9.3",
     "@react-native/babel-preset": "^0.74.84",
     "check-dependency-version-consistency": "^4.1.0",
     "commitlint": "^18.5.0",
