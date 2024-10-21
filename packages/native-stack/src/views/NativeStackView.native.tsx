@@ -25,6 +25,7 @@ import {
   StyleSheet,
   useAnimatedValue,
   View,
+  type ViewStyle,
 } from 'react-native';
 import {
   useSafeAreaFrame,
@@ -63,6 +64,7 @@ const MaybeNestedStack = ({
   headerTopInsetEnabled,
   children,
   isPreloaded,
+  internalScreenStyle,
 }: {
   options: NativeStackNavigationOptions;
   route: Route<string>;
@@ -71,14 +73,10 @@ const MaybeNestedStack = ({
   headerTopInsetEnabled: boolean;
   children: React.ReactNode;
   isPreloaded?: boolean;
+  internalScreenStyle?: Pick<ViewStyle, 'backgroundColor'>;
 }) => {
   const { colors } = useTheme();
-  const {
-    header,
-    headerShown = true,
-    contentStyle,
-    unstable_screenStyle = null,
-  } = options;
+  const { header, headerShown = true, contentStyle } = options;
 
   const isHeaderInModal =
     Platform.OS === 'android'
@@ -125,7 +123,7 @@ const MaybeNestedStack = ({
           enabled
           isNativeStack
           hasLargeHeader={options.headerLargeTitle ?? false}
-          style={[StyleSheet.absoluteFill, unstable_screenStyle]}
+          style={[StyleSheet.absoluteFill, internalScreenStyle]}
           activityState={isPreloaded ? 0 : 2}
         >
           {content}
@@ -188,7 +186,6 @@ const SceneView = ({
     animationMatchesGesture,
     presentation = isPresentationModal ? 'modal' : 'card',
     fullScreenGestureEnabled,
-    unstable_screenStyle = null,
   } = options;
 
   const {
@@ -222,16 +219,21 @@ const SceneView = ({
     statusBarTranslucent,
     statusBarBackgroundColor,
     unstable_sheetFooter = null,
+    contentStyle,
     freezeOnBlur,
   } = options;
 
-  // We want to allow only backgroundColor setting for now.
+  // We take backgroundColor from contentStyle and apply it on Screen.
   // This allows to workaround one issue with truncated
   // content with formSheet presentation.
-  unstable_screenStyle =
-    unstable_screenStyle && presentation === 'formSheet'
-      ? { backgroundColor: unstable_screenStyle.backgroundColor }
-      : null;
+  let internalScreenStyle;
+
+  if (presentation === 'formSheet' && contentStyle) {
+    const flattenContentStyles = StyleSheet.flatten(contentStyle);
+    internalScreenStyle = {
+      backgroundColor: flattenContentStyles?.backgroundColor,
+    };
+  }
 
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
     // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
@@ -360,7 +362,7 @@ const SceneView = ({
       enabled
       isNativeStack
       activityState={isPreloaded ? 0 : 2}
-      style={[StyleSheet.absoluteFill, unstable_screenStyle]}
+      style={[StyleSheet.absoluteFill, internalScreenStyle]}
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       hasLargeHeader={options.headerLargeTitle ?? false}
@@ -516,6 +518,7 @@ const SceneView = ({
                   presentation={presentation}
                   headerHeight={headerHeight}
                   headerTopInsetEnabled={headerTopInsetEnabled}
+                  internalScreenStyle={internalScreenStyle}
                 >
                   <HeaderBackContext.Provider value={headerBack}>
                     {render()}

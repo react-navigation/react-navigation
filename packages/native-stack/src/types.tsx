@@ -448,13 +448,6 @@ export type NativeStackNavigationOptions = {
    */
   contentStyle?: StyleProp<ViewStyle>;
   /**
-   * Style object for the screen native component. This might help to workaround
-   * some issues when using `formSheet` presentation.
-   *
-   * Only `backgroundColor` is accepted.
-   */
-  unstable_screenStyle?: ScreenProps['unstable_screenStyle'];
-  /**
    * Whether the gesture to dismiss should use animation provided to `animation` prop. Defaults to `false`.
    *
    * Doesn't affect the behavior of screens presented modally.
