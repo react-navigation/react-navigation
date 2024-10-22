@@ -10,7 +10,6 @@ import {
   NavigationContext,
   NavigationRouteContext,
   type ParamListBase,
-  type Route,
   type RouteProp,
   StackActions,
   type StackNavigationState,
@@ -30,119 +29,23 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import {
-  type ScreenProps,
-  ScreenStack,
-  type StackPresentationTypes,
-} from 'react-native-screens';
-import warnOnce from 'warn-once';
+import { type ScreenProps, ScreenStack } from 'react-native-screens';
 
 import type {
   NativeStackDescriptor,
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
-  NativeStackNavigationOptions,
 } from '../types';
 import { debounce } from '../utils/debounce';
 import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
-import { DebugContainer } from './DebugContainer';
 import { FooterComponent } from './FooterComponent';
 import { ScreenStackContent } from './ScreenStackContent';
 import { useHeaderConfigProps } from './useHeaderConfigProps';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
-
-const MaybeNestedStack = ({
-  options,
-  route,
-  presentation,
-  headerHeight,
-  headerTopInsetEnabled,
-  children,
-  isPreloaded,
-}: {
-  options: NativeStackNavigationOptions;
-  route: Route<string>;
-  presentation: Exclude<StackPresentationTypes, 'push'> | 'card';
-  headerHeight: number;
-  headerTopInsetEnabled: boolean;
-  children: React.ReactNode;
-  isPreloaded?: boolean;
-}) => {
-  const { colors } = useTheme();
-  const {
-    header,
-    headerShown = true,
-    contentStyle,
-    unstable_screenStyle = null,
-  } = options;
-
-  const isHeaderInModal =
-    Platform.OS === 'android'
-      ? false
-      : presentation !== 'card' && headerShown === true && header === undefined;
-
-  const headerShownPreviousRef = React.useRef(headerShown);
-
-  React.useEffect(() => {
-    warnOnce(
-      Platform.OS !== 'android' &&
-        presentation !== 'card' &&
-        headerShownPreviousRef.current !== headerShown,
-      `Dynamically changing 'headerShown' in modals will result in remounting the screen and losing all local state. See options for the screen '${route.name}'.`
-    );
-
-    headerShownPreviousRef.current = headerShown;
-  }, [headerShown, presentation, route.name]);
-
-  const content = (
-    <DebugContainer
-      style={[
-        presentation === 'formSheet'
-          ? Platform.OS === 'ios'
-            ? styles.absolute
-            : null
-          : styles.container,
-        presentation !== 'transparentModal' &&
-          presentation !== 'containedTransparentModal' && {
-            backgroundColor: colors.background,
-          },
-        contentStyle,
-      ]}
-      stackPresentation={presentation === 'card' ? 'push' : presentation}
-    >
-      {children}
-    </DebugContainer>
-  );
-
-  const headerConfig = useHeaderConfigProps({
-    ...options,
-    route,
-    canGoBack: false,
-    headerHeight,
-    headerTopInsetEnabled,
-  });
-
-  if (isHeaderInModal) {
-    return (
-      <ScreenStack style={styles.container}>
-        <ScreenStackContent
-          hasLargeHeader={options.headerLargeTitle ?? false}
-          style={[StyleSheet.absoluteFill, unstable_screenStyle]}
-          activityState={isPreloaded ? 0 : 2}
-          headerConfig={headerConfig}
-        >
-          {content}
-        </ScreenStackContent>
-      </ScreenStack>
-    );
-  }
-
-  return content;
-};
 
 type SceneViewProps = {
   index: number;
@@ -223,6 +126,7 @@ const SceneView = ({
     statusBarBackgroundColor,
     unstable_sheetFooter = null,
     freezeOnBlur,
+    contentStyle,
   } = options;
 
   // We want to allow only backgroundColor setting for now.
@@ -264,6 +168,7 @@ const SceneView = ({
     presentation = 'card';
   }
 
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const frame = useSafeAreaFrame();
 
@@ -381,7 +286,6 @@ const SceneView = ({
       style={[StyleSheet.absoluteFill, unstable_screenStyle]}
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
-      hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
       fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
@@ -477,6 +381,13 @@ const SceneView = ({
           },
         }
       )}
+      contentStyle={[
+        presentation !== 'transparentModal' &&
+          presentation !== 'containedTransparentModal' && {
+            backgroundColor: colors.background,
+          },
+        contentStyle,
+      ]}
       headerConfig={headerConfig}
       // When ts-expect-error is added, it affects all the props below it
       // So we keep any props that need it at the end
@@ -529,17 +440,9 @@ const SceneView = ({
               <HeaderShownContext.Provider
                 value={isParentHeaderShown || headerShown !== false}
               >
-                <MaybeNestedStack
-                  options={options}
-                  route={route}
-                  presentation={presentation}
-                  headerHeight={headerHeight}
-                  headerTopInsetEnabled={headerTopInsetEnabled}
-                >
-                  <HeaderBackContext.Provider value={headerBack}>
-                    {render()}
-                  </HeaderBackContext.Provider>
-                </MaybeNestedStack>
+                <HeaderBackContext.Provider value={headerBack}>
+                  {render()}
+                </HeaderBackContext.Provider>
               </HeaderShownContext.Provider>
               {presentation === 'formSheet' && unstable_sheetFooter && (
                 <FooterComponent>{unstable_sheetFooter()}</FooterComponent>
