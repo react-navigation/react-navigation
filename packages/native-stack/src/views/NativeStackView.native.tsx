@@ -31,7 +31,6 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import {
-  Screen,
   type ScreenProps,
   ScreenStack,
   type StackPresentationTypes,
@@ -51,7 +50,8 @@ import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
 import { DebugContainer } from './DebugContainer';
 import { FooterComponent } from './FooterComponent';
-import { HeaderConfig } from './HeaderConfig';
+import { ScreenStackContent } from './ScreenStackContent';
+import { useHeaderConfigProps } from './useHeaderConfigProps';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
 
@@ -118,25 +118,25 @@ const MaybeNestedStack = ({
     </DebugContainer>
   );
 
+  const headerConfig = useHeaderConfigProps({
+    ...options,
+    route,
+    canGoBack: false,
+    headerHeight,
+    headerTopInsetEnabled,
+  });
+
   if (isHeaderInModal) {
     return (
       <ScreenStack style={styles.container}>
-        <Screen
-          enabled
-          isNativeStack
+        <ScreenStackContent
           hasLargeHeader={options.headerLargeTitle ?? false}
           style={[StyleSheet.absoluteFill, unstable_screenStyle]}
           activityState={isPreloaded ? 0 : 2}
+          headerConfig={headerConfig}
         >
           {content}
-          <HeaderConfig
-            {...options}
-            route={route}
-            headerHeight={headerHeight}
-            headerTopInsetEnabled={headerTopInsetEnabled}
-            canGoBack
-          />
-        </Screen>
+        </ScreenStackContent>
       </ScreenStack>
     );
   }
@@ -357,11 +357,26 @@ const SceneView = ({
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
+  const headerConfig = useHeaderConfigProps({
+    ...options,
+    route,
+    canGoBack,
+    headerBackButtonMenuEnabled:
+      isRemovePrevented !== undefined
+        ? !isRemovePrevented
+        : headerBackButtonMenuEnabled,
+    headerBackTitle:
+      options.headerBackTitle !== undefined
+        ? options.headerBackTitle
+        : undefined,
+    headerHeight,
+    headerShown: header !== undefined ? false : headerShown,
+    headerTopInsetEnabled,
+  });
+
   return (
-    <Screen
+    <ScreenStackContent
       key={route.key}
-      enabled
-      isNativeStack
       activityState={isPreloaded ? 0 : 2}
       style={[StyleSheet.absoluteFill, unstable_screenStyle]}
       accessibilityElementsHidden={!focused}
@@ -462,6 +477,7 @@ const SceneView = ({
           },
         }
       )}
+      headerConfig={headerConfig}
       // When ts-expect-error is added, it affects all the props below it
       // So we keep any props that need it at the end
       // Otherwise invalid props may not be caught by TypeScript
@@ -525,35 +541,6 @@ const SceneView = ({
                   </HeaderBackContext.Provider>
                 </MaybeNestedStack>
               </HeaderShownContext.Provider>
-              {/**
-               * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
-               * We don't render it conditionally to make it possible to dynamically render a custom `header`
-               * Otherwise dynamically rendering a custom `header` leaves the native header visible
-               *
-               * https://github.com/software-mansion/react-native-screens/blob/main/guides/GUIDE_FOR_LIBRARY_AUTHORS.md#screenstackheaderconfig
-               *
-               * HeaderConfig must not be first child of a Screen.
-               * See https://github.com/software-mansion/react-native-screens/pull/1825
-               * for detailed explanation.
-               */}
-              <HeaderConfig
-                {...options}
-                route={route}
-                headerBackButtonMenuEnabled={
-                  isRemovePrevented !== undefined
-                    ? !isRemovePrevented
-                    : headerBackButtonMenuEnabled
-                }
-                headerShown={header !== undefined ? false : headerShown}
-                headerHeight={headerHeight}
-                headerBackTitle={
-                  options.headerBackTitle !== undefined
-                    ? options.headerBackTitle
-                    : undefined
-                }
-                headerTopInsetEnabled={headerTopInsetEnabled}
-                canGoBack={canGoBack}
-              />
               {presentation === 'formSheet' && unstable_sheetFooter && (
                 <FooterComponent>{unstable_sheetFooter()}</FooterComponent>
               )}
@@ -561,7 +548,7 @@ const SceneView = ({
           </AnimatedHeaderHeightContext.Provider>
         </NavigationRouteContext.Provider>
       </NavigationContext.Provider>
-    </Screen>
+    </ScreenStackContent>
   );
 };
 

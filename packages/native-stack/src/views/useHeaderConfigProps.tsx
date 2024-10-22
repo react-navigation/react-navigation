@@ -5,7 +5,6 @@ import {
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
-  ScreenStackHeaderConfig,
   ScreenStackHeaderLeftView,
   ScreenStackHeaderRightView,
   ScreenStackHeaderSearchBarView,
@@ -22,7 +21,7 @@ type Props = NativeStackNavigationOptions & {
   canGoBack: boolean;
 };
 
-export function HeaderConfig({
+export function useHeaderConfigProps({
   headerBackImageSource,
   headerBackButtonDisplayMode,
   headerBackButtonMenuEnabled,
@@ -50,7 +49,7 @@ export function HeaderConfig({
   route,
   title,
   canGoBack,
-}: Props): JSX.Element {
+}: Props) {
   const { direction } = useLocale();
   const { colors, fonts } = useTheme();
   const tintColor =
@@ -192,52 +191,8 @@ export function HeaderConfig({
 
   const isCenterViewRenderedAndroid = headerTitleAlign === 'center';
 
-  return (
-    <ScreenStackHeaderConfig
-      backButtonInCustomView={backButtonInCustomView}
-      backgroundColor={headerBackgroundColor}
-      backTitle={headerBackTitle}
-      backTitleVisible={
-        isBackButtonDisplayModeAvailable
-          ? undefined
-          : headerBackButtonDisplayMode !== 'minimal'
-      }
-      backButtonDisplayMode={
-        isBackButtonDisplayModeAvailable
-          ? headerBackButtonDisplayMode
-          : undefined
-      }
-      backTitleFontFamily={backTitleFontFamily}
-      backTitleFontSize={backTitleFontSize}
-      blurEffect={headerBlurEffect}
-      color={tintColor}
-      direction={direction}
-      disableBackButtonMenu={headerBackButtonMenuEnabled === false}
-      hidden={headerShown === false}
-      hideBackButton={headerBackVisible === false}
-      hideShadow={
-        headerShadowVisible === false ||
-        headerBackground != null ||
-        (headerTransparent && headerShadowVisible !== true)
-      }
-      largeTitle={headerLargeTitle}
-      largeTitleBackgroundColor={largeTitleBackgroundColor}
-      largeTitleColor={largeTitleColor}
-      largeTitleFontFamily={largeTitleFontFamily}
-      largeTitleFontSize={largeTitleFontSize}
-      largeTitleFontWeight={largeTitleFontWeight}
-      largeTitleHideShadow={headerLargeTitleShadowVisible === false}
-      title={titleText}
-      titleColor={titleColor}
-      titleFontFamily={titleFontFamily}
-      titleFontSize={titleFontSize}
-      titleFontWeight={String(titleFontWeight)}
-      topInsetEnabled={headerTopInsetEnabled}
-      translucent={
-        // This defaults to `true`, so we can't pass `undefined`
-        translucent === true
-      }
-    >
+  const children = (
+    <>
       {Platform.OS === 'ios' ? (
         <>
           {headerLeftElement != null ? (
@@ -306,6 +261,45 @@ export function HeaderConfig({
           <SearchBar {...headerSearchBarOptions} />
         </ScreenStackHeaderSearchBarView>
       ) : null}
-    </ScreenStackHeaderConfig>
+    </>
   );
+
+  return {
+    backButtonInCustomView,
+    backgroundColor: headerBackgroundColor,
+    backTitle: headerBackTitle,
+    backTitleVisible: isBackButtonDisplayModeAvailable
+      ? undefined
+      : headerBackButtonDisplayMode !== 'minimal',
+    backButtonDisplayMode: isBackButtonDisplayModeAvailable
+      ? headerBackButtonDisplayMode
+      : undefined,
+    backTitleFontFamily,
+    backTitleFontSize,
+    blurEffect: headerBlurEffect,
+    color: tintColor,
+    direction,
+    disableBackButtonMenu: headerBackButtonMenuEnabled === false,
+    hidden: headerShown === false,
+    hideBackButton: headerBackVisible === false,
+    hideShadow:
+      headerShadowVisible === false ||
+      headerBackground != null ||
+      (headerTransparent && headerShadowVisible !== true),
+    largeTitle: headerLargeTitle,
+    largeTitleBackgroundColor,
+    largeTitleColor,
+    largeTitleFontFamily,
+    largeTitleFontSize,
+    largeTitleFontWeight,
+    largeTitleHideShadow: headerLargeTitleShadowVisible === false,
+    title: titleText,
+    titleColor,
+    titleFontFamily,
+    titleFontSize,
+    titleFontWeight: String(titleFontWeight),
+    topInsetEnabled: headerTopInsetEnabled,
+    translucent: translucent === true,
+    children,
+  } as const;
 }
