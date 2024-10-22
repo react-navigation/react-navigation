@@ -339,18 +339,21 @@ const SceneView = ({
       ? statusBarTranslucent
       : topInset !== 0;
 
+  const canGoBack = previousDescriptor != null || parentHeaderBack != null;
   const backTitle = previousDescriptor
     ? getHeaderTitle(previousDescriptor.options, previousDescriptor.route.name)
     : parentHeaderBack?.title;
 
-  const headerBack = React.useMemo(
-    () => ({
-      // No href needed for native
-      href: undefined,
-      title: backTitle,
-    }),
-    [backTitle]
-  );
+  const headerBack = React.useMemo(() => {
+    if (canGoBack) {
+      return {
+        href: undefined, // No href needed for native
+        title: backTitle,
+      };
+    }
+
+    return undefined;
+  }, [canGoBack, backTitle]);
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
@@ -549,7 +552,7 @@ const SceneView = ({
                     : undefined
                 }
                 headerTopInsetEnabled={headerTopInsetEnabled}
-                canGoBack={headerBack !== undefined}
+                canGoBack={canGoBack}
               />
               {presentation === 'formSheet' && unstable_sheetFooter && (
                 <FooterComponent>{unstable_sheetFooter()}</FooterComponent>
