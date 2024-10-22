@@ -102,9 +102,10 @@ const MaybeNestedStack = ({
     <DebugContainer
       style={[
         presentation === 'formSheet'
-          ? Platform.OS === 'ios'
-            ? styles.absolute
-            : null
+          ? {
+              ...styles.sheet,
+              maxHeight: Platform.OS === 'android' ? '100%' : undefined,
+            }
           : styles.container,
         presentation !== 'transparentModal' &&
           presentation !== 'containedTransparentModal' && {
@@ -544,7 +545,12 @@ const SceneView = ({
                     ? !isRemovePrevented
                     : headerBackButtonMenuEnabled
                 }
-                headerShown={header !== undefined ? false : headerShown}
+                headerShown={
+                  header !== undefined ||
+                  (presentation === 'formSheet' && Platform.OS === 'android')
+                    ? false
+                    : headerShown
+                }
                 headerHeight={headerHeight}
                 headerBackTitle={
                   options.headerBackTitle !== undefined
@@ -708,6 +714,12 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   absolute: {
+    position: 'absolute',
+    top: 0,
+    start: 0,
+    end: 0,
+  },
+  sheet: {
     position: 'absolute',
     top: 0,
     start: 0,
