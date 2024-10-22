@@ -4598,7 +4598,7 @@ __metadata:
   peerDependencies:
     "@react-navigation/native": "workspace:^"
     react: ">= 18.2.0"
-    react-native: ">= 0.72.0"
+    react-native: "*"
     react-native-safe-area-context: ">= 4.0.0"
     react-native-screens: ">= 4.0.0"
   languageName: unknown
@@ -4673,7 +4673,7 @@ __metadata:
   peerDependencies:
     "@react-navigation/native": "workspace:^"
     react: ">= 18.2.0"
-    react-native: ">= 0.72.0"
+    react-native: "*"
     react-native-gesture-handler: ">= 2.0.0"
     react-native-reanimated: ">= 2.0.0"
     react-native-safe-area-context: ">= 4.0.0"
@@ -4700,7 +4700,7 @@ __metadata:
     "@react-native-masked-view/masked-view": ">= 0.2.0"
     "@react-navigation/native": "workspace:^"
     react: ">= 18.2.0"
-    react-native: ">= 0.72.0"
+    react-native: "*"
     react-native-safe-area-context: ">= 4.0.0"
   peerDependenciesMeta:
     "@react-native-masked-view/masked-view":
@@ -4782,7 +4782,7 @@ __metadata:
   peerDependencies:
     "@react-navigation/native": "workspace:^"
     react: ">= 18.2.0"
-    react-native: ">= 0.72.0"
+    react-native: "*"
     react-native-pager-view: ">= 6.0.0"
   languageName: unknown
   linkType: soft
@@ -4806,7 +4806,7 @@ __metadata:
   peerDependencies:
     "@react-navigation/native": "workspace:^"
     react: ">= 18.2.0"
-    react-native: ">= 0.72.0"
+    react-native: "*"
     react-native-safe-area-context: ">= 4.0.0"
     react-native-screens: ">= 4.0.0"
   languageName: unknown
@@ -4833,7 +4833,7 @@ __metadata:
     use-latest-callback: "npm:^0.2.1"
   peerDependencies:
     react: ">= 18.2.0"
-    react-native: ">= 0.72.0"
+    react-native: "*"
   languageName: unknown
   linkType: soft
 
@@ -4871,7 +4871,7 @@ __metadata:
   peerDependencies:
     "@react-navigation/native": "workspace:^"
     react: ">= 18.2.0"
-    react-native: ">= 0.72.0"
+    react-native: "*"
     react-native-gesture-handler: ">= 2.0.0"
     react-native-safe-area-context: ">= 4.0.0"
     react-native-screens: ">= 4.0.0"
@@ -15017,7 +15017,7 @@ __metadata:
     use-latest-callback: "npm:^0.2.1"
   peerDependencies:
     react: ">= 18.2.0"
-    react-native: ">= 0.72.0"
+    react-native: "*"
     react-native-gesture-handler: ">= 2.0.0"
     react-native-reanimated: ">= 2.0.0"
   languageName: unknown
@@ -15107,7 +15107,7 @@ __metadata:
     use-latest-callback: "npm:^0.2.1"
   peerDependencies:
     react: ">= 18.2.0"
-    react-native: ">= 0.72.0"
+    react-native: "*"
     react-native-pager-view: ">= 6.0.0"
   languageName: unknown
   linkType: soft
