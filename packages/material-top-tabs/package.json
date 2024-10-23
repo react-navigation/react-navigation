@@ -63,7 +63,7 @@
     "@types/react": "~18.2.79",
     "del-cli": "^5.1.0",
     "react": "18.2.0",
-    "react-native": "0.74.2",
+    "react-native": "0.74.5",
     "react-native-builder-bob": "^0.29.0",
     "react-native-pager-view": "6.3.0",
     "typescript": "^5.5.2"
@@ -71,7 +71,7 @@
   "peerDependencies": {
     "@react-navigation/native": "workspace:^",
     "react": ">= 18.2.0",
-    "react-native": ">= 0.72.0",
+    "react-native": "*",
     "react-native-pager-view": ">= 6.0.0"
   },
   "react-native-builder-bob": {

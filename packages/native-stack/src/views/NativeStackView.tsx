@@ -77,7 +77,7 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
             }
           : parentHeaderBack;
 
-        const canGoBack = headerBack !== undefined;
+        const canGoBack = headerBack != null;
 
         const {
           header,

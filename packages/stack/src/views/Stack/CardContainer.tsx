@@ -218,10 +218,17 @@ function CardContainerInner({
     href = buildHref(route.name, route.params);
   }
 
-  const headerBack = React.useMemo(
-    () => ({ title: backTitle, href }),
-    [backTitle, href]
-  );
+  const canGoBack = previousScene != null;
+  const headerBack = React.useMemo(() => {
+    if (canGoBack) {
+      return {
+        href,
+        title: backTitle,
+      };
+    }
+
+    return undefined;
+  }, [canGoBack, backTitle, href]);
 
   return (
     <Card
