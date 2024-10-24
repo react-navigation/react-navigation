@@ -50,7 +50,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
 
-  e2e-test:
+  integration-test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -78,8 +78,8 @@ jobs:
       - name: Build example for web
         run: yarn example expo export --platform web
 
-      - name: Run e2e tests
-        run: yarn example e2e:web
+      - name: Run integration tests
+        run: yarn example test
 
   build:
     runs-on: ubuntu-latest

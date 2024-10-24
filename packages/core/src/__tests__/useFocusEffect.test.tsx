@@ -1,4 +1,3 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
@@ -12,7 +11,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('runs focus effect on focus change', () => {
+it('runs focus effect on focus change', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -67,7 +66,7 @@ test('runs focus effect on focus change', () => {
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
-test('runs focus effect on deps change', () => {
+it('runs focus effect on deps change', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -109,7 +108,7 @@ test('runs focus effect on deps change', () => {
   expect(focusEffect).toHaveBeenCalledTimes(2);
 });
 
-test('runs focus effect when initial state is given', () => {
+it('runs focus effect when initial state is given', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -161,7 +160,7 @@ test('runs focus effect when initial state is given', () => {
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
-test('runs focus effect when only focused route is rendered', () => {
+it('runs focus effect when only focused route is rendered', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -204,7 +203,7 @@ test('runs focus effect when only focused route is rendered', () => {
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
-test('runs cleanup when component is unmounted', () => {
+it('runs cleanup when component is unmounted', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -246,7 +245,7 @@ test('runs cleanup when component is unmounted', () => {
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
-test('prints error when a dependency array is passed', () => {
+it('prints error when a dependency array is passed', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -268,7 +267,7 @@ test('prints error when a dependency array is passed', () => {
     </BaseNavigationContainer>
   );
 
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const spy = jest.spyOn(console, 'error').mockImplementation();
 
   render(<App />);
 
@@ -279,7 +278,7 @@ test('prints error when a dependency array is passed', () => {
   spy.mockRestore();
 });
 
-test('prints error when the effect returns a value', () => {
+it('prints error when the effect returns a value', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -301,7 +300,7 @@ test('prints error when the effect returns a value', () => {
     </BaseNavigationContainer>
   );
 
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const spy = jest.spyOn(console, 'error').mockImplementation();
 
   render(<App />);
 
@@ -312,7 +311,7 @@ test('prints error when the effect returns a value', () => {
   spy.mockRestore();
 });
 
-test('prints error when the effect returns null', () => {
+it('prints error when the effect returns null', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -334,7 +333,7 @@ test('prints error when the effect returns null', () => {
     </BaseNavigationContainer>
   );
 
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const spy = jest.spyOn(console, 'error').mockImplementation();
 
   render(<App />);
 
@@ -345,7 +344,7 @@ test('prints error when the effect returns null', () => {
   spy.mockRestore();
 });
 
-test('prints error when the effect is an async function', () => {
+it('prints error when the effect is an async function', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -367,7 +366,7 @@ test('prints error when the effect is an async function', () => {
     </BaseNavigationContainer>
   );
 
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const spy = jest.spyOn(console, 'error').mockImplementation();
 
   render(<App />);
 

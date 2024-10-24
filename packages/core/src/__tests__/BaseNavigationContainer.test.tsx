@@ -1,4 +1,3 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
 import {
   type DefaultRouterOptions,
   type NavigationState,
@@ -15,10 +14,6 @@ import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { NavigationIndependentTree } from '../NavigationIndependentTree';
 import { NavigationStateContext } from '../NavigationStateContext';
 import { Screen } from '../Screen';
-import type {
-  EventListenerCallback,
-  NavigationContainerEventMap,
-} from '../types';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import {
   type MockActions,
@@ -30,7 +25,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('throws when getState is accessed without a container', () => {
+it('throws when getState is accessed without a container', () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -48,7 +43,7 @@ test('throws when getState is accessed without a container', () => {
   );
 });
 
-test('throws when setState is accessed without a container', () => {
+it('throws when setState is accessed without a container', () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -66,7 +61,7 @@ test('throws when setState is accessed without a container', () => {
   );
 });
 
-test('throws when nesting containers', () => {
+it('throws when nesting containers', () => {
   expect(() =>
     render(
       <BaseNavigationContainer>
@@ -94,7 +89,7 @@ test('throws when nesting containers', () => {
   );
 });
 
-test('handle dispatching with ref', () => {
+it('handle dispatching with ref', () => {
   function CurrentRootRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const RootRouter: Router<
@@ -180,7 +175,7 @@ test('handle dispatching with ref', () => {
   });
 });
 
-test('handle resetting state with ref', () => {
+it('handle resetting state with ref', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -274,7 +269,7 @@ test('handle resetting state with ref', () => {
   });
 });
 
-test('handles getRootState', () => {
+it('handles getRootState', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -332,7 +327,7 @@ test('handles getRootState', () => {
   });
 });
 
-test('emits state events when the state changes', () => {
+it('emits state events when the state changes', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -357,8 +352,7 @@ test('emits state events when the state changes', () => {
 
   render(element).update(element);
 
-  const listener =
-    jest.fn<EventListenerCallback<NavigationContainerEventMap, 'state'>>();
+  const listener = jest.fn();
 
   ref.current?.addListener('state', listener);
 
@@ -401,7 +395,7 @@ test('emits state events when the state changes', () => {
   });
 });
 
-test('emits state events when new navigator mounts', () => {
+it('emits state events when new navigator mounts', () => {
   jest.useFakeTimers();
 
   const TestNavigator = (props: any) => {
@@ -448,8 +442,7 @@ test('emits state events when new navigator mounts', () => {
 
   render(element).update(element);
 
-  const listener =
-    jest.fn<EventListenerCallback<NavigationContainerEventMap, 'state'>>();
+  const listener = jest.fn();
 
   ref.current?.addListener('state', listener);
 
@@ -493,7 +486,7 @@ test('emits state events when new navigator mounts', () => {
   expect(onStateChange).toHaveBeenLastCalledWith(resultState);
 });
 
-test('emits option events when options change with tab router', () => {
+it('emits option events when options change with tab router', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(TabRouter, props);
 
@@ -531,8 +524,7 @@ test('emits option events when options change with tab router', () => {
     </BaseNavigationContainer>
   );
 
-  const listener =
-    jest.fn<EventListenerCallback<NavigationContainerEventMap, 'options'>>();
+  const listener = jest.fn();
 
   render(element).update(element);
   ref.current?.addListener('options', listener);
@@ -547,8 +539,7 @@ test('emits option events when options change with tab router', () => {
 
   ref.current?.removeListener('options', listener);
 
-  const listener2 =
-    jest.fn<EventListenerCallback<NavigationContainerEventMap, 'options'>>();
+  const listener2 = jest.fn();
 
   ref.current?.addListener('options', listener2);
 
@@ -569,7 +560,7 @@ test('emits option events when options change with tab router', () => {
   expect(ref.current?.getCurrentOptions()).toEqual({ h: 9 });
 });
 
-test('emits option events when options change with stack router', () => {
+it('emits option events when options change with stack router', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 
@@ -607,8 +598,7 @@ test('emits option events when options change with stack router', () => {
     </BaseNavigationContainer>
   );
 
-  const listener =
-    jest.fn<EventListenerCallback<NavigationContainerEventMap, 'options'>>();
+  const listener = jest.fn();
 
   render(element).update(element);
   ref.current?.addListener('options', listener);
@@ -623,8 +613,7 @@ test('emits option events when options change with stack router', () => {
 
   ref.current?.removeListener('options', listener);
 
-  const listener2 =
-    jest.fn<EventListenerCallback<NavigationContainerEventMap, 'options'>>();
+  const listener2 = jest.fn();
 
   ref.current?.addListener('options', listener2);
 
@@ -645,7 +634,7 @@ test('emits option events when options change with stack router', () => {
   expect(ref.current?.getCurrentOptions()).toEqual({ h: 9 });
 });
 
-test('throws if there is no navigator rendered', () => {
+it('throws if there is no navigator rendered', () => {
   expect.assertions(1);
 
   const ref = createNavigationContainerRef<ParamListBase>();
@@ -656,7 +645,7 @@ test('throws if there is no navigator rendered', () => {
 
   render(element);
 
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const spy = jest.spyOn(console, 'error').mockImplementation();
 
   ref.current?.dispatch({ type: 'WHATEVER' });
 
@@ -667,7 +656,7 @@ test('throws if there is no navigator rendered', () => {
   spy.mockRestore();
 });
 
-test("throws if the ref hasn't finished initializing", () => {
+it("throws if the ref hasn't finished initializing", () => {
   expect.assertions(1);
 
   const ref = createNavigationContainerRef<ParamListBase>();
@@ -680,7 +669,7 @@ test("throws if the ref hasn't finished initializing", () => {
 
   const TestScreen = () => {
     React.useEffect(() => {
-      const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+      const spy = jest.spyOn(console, 'error').mockImplementation();
 
       ref.current?.dispatch({ type: 'WHATEVER' });
 
@@ -705,7 +694,7 @@ test("throws if the ref hasn't finished initializing", () => {
   render(element);
 });
 
-test('fires onReady after navigator is rendered', () => {
+it('fires onReady after navigator is rendered', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
 
   const TestNavigator = (props: any) => {
@@ -739,7 +728,7 @@ test('fires onReady after navigator is rendered', () => {
   expect(ref.current?.isReady()).toBe(true);
 });
 
-test('invokes the unhandled action listener with the unhandled action', () => {
+it('invokes the unhandled action listener with the unhandled action', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
   const fn = jest.fn();
 
@@ -775,7 +764,7 @@ test('invokes the unhandled action listener with the unhandled action', () => {
   });
 });
 
-test('works with state change events in independent nested container', () => {
+it('works with state change events in independent nested container', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -837,7 +826,7 @@ test('works with state change events in independent nested container', () => {
   });
 });
 
-test('warns for duplicate route names nested inside each other', () => {
+it('warns for duplicate route names nested inside each other', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -850,7 +839,7 @@ test('warns for duplicate route names nested inside each other', () => {
 
   const TestScreen = () => <></>;
 
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+  const spy = jest.spyOn(console, 'warn').mockImplementation();
 
   render(
     <BaseNavigationContainer>

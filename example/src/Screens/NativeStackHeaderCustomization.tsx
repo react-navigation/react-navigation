@@ -1,10 +1,5 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import {
-  Button,
-  getHeaderTitle,
-  Header,
-  HeaderButton,
-} from '@react-navigation/elements';
+import { Button, HeaderButton } from '@react-navigation/elements';
 import type { PathConfigMap } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
@@ -75,7 +70,7 @@ const NewsFeedScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Push albums
+          Push Albums
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
@@ -132,7 +127,7 @@ export function NativeStackHeaderCustomization() {
           NativeHeaderCustomizationStackParams,
           'Article'
         >) => ({
-          title: `Article byyyy ${route.params?.author ?? 'Unknown'}`,
+          title: `Article by ${route.params?.author ?? 'Unknown'}`,
           headerTintColor: 'white',
           headerTitle: ({ tintColor }) => (
             <HeaderButton onPress={onPress}>
@@ -177,12 +172,10 @@ export function NativeStackHeaderCustomization() {
         component={NewsFeedScreen}
         options={{
           title: 'Feed',
-          header: ({ options, route, back }) => (
-            <Header
-              {...options}
-              back={back}
-              title={getHeaderTitle(options, route.name)}
-            />
+          headerLeft: ({ tintColor }) => (
+            <HeaderButton onPress={onPress}>
+              <MaterialCommunityIcons name="spa" size={24} color={tintColor} />
+            </HeaderButton>
           ),
         }}
       />
@@ -223,8 +216,8 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   headerBackground: {
-    height: 'auto',
-    width: 'auto',
+    height: undefined,
+    width: undefined,
     flex: 1,
   },
 });

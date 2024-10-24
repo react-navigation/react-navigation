@@ -45,16 +45,14 @@ type Props = DrawerNavigationConfig & {
 
 const DRAWER_BORDER_RADIUS = 16;
 
-const renderDrawerContentDefault = (props: DrawerContentComponentProps) => (
-  <DrawerContent {...props} />
-);
-
 function DrawerViewBase({
   state,
   navigation,
   descriptors,
   defaultStatus,
-  drawerContent = renderDrawerContentDefault,
+  drawerContent = (props: DrawerContentComponentProps) => (
+    <DrawerContent {...props} />
+  ),
   detachInactiveScreens = Platform.OS === 'web' ||
     Platform.OS === 'android' ||
     Platform.OS === 'ios',

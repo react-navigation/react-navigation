@@ -55,11 +55,9 @@ export type TabActionHelpers<ParamList extends ParamListBase> = {
    * @param [params] Params object for the route.
    */
   jumpTo<RouteName extends Extract<keyof ParamList, string>>(
-    ...args: {
-      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
-        ? [screen: Screen] | [screen: Screen, params: ParamList[Screen]]
-        : [screen: Screen, params: ParamList[Screen]];
-    }[RouteName]
+    ...args: undefined extends ParamList[RouteName]
+      ? [screen: RouteName] | [screen: RouteName, params: ParamList[RouteName]]
+      : [screen: RouteName, params: ParamList[RouteName]]
   ): void;
 };
 

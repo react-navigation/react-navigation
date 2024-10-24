@@ -1,5 +1,3 @@
-import { expect, jest, test } from '@jest/globals';
-
 import {
   CommonActions,
   type ParamListBase,
@@ -7,11 +5,11 @@ import {
   TabActions,
   type TabNavigationState,
   TabRouter,
-} from '../index';
+} from '../../src';
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
 
-test('gets initial state from route names and params with initialRouteName', () => {
+it('gets initial state from route names and params with initialRouteName', () => {
   const router = TabRouter({ initialRouteName: 'baz' });
 
   expect(
@@ -42,7 +40,7 @@ test('gets initial state from route names and params with initialRouteName', () 
   });
 });
 
-test('gets initial state from route names and params without initialRouteName', () => {
+it('gets initial state from route names and params without initialRouteName', () => {
   const router = TabRouter({});
 
   expect(
@@ -70,7 +68,7 @@ test('gets initial state from route names and params without initialRouteName', 
   });
 });
 
-test('gets rehydrated state from partial state', () => {
+it('gets rehydrated state from partial state', () => {
   const router = TabRouter({});
 
   const options: RouterConfigOptions = {
@@ -243,7 +241,7 @@ test('gets rehydrated state from partial state', () => {
   });
 });
 
-test("doesn't rehydrate state if it's not stale", () => {
+it("doesn't rehydrate state if it's not stale", () => {
   const router = TabRouter({});
 
   const state: TabNavigationState<ParamListBase> = {
@@ -270,7 +268,7 @@ test("doesn't rehydrate state if it's not stale", () => {
   ).toBe(state);
 });
 
-test('restores correct history on rehydrating with backBehavior: order', () => {
+it('restores correct history on rehydrating with backBehavior: order', () => {
   const router = TabRouter({ backBehavior: 'order' });
 
   const options: RouterConfigOptions = {
@@ -313,7 +311,7 @@ test('restores correct history on rehydrating with backBehavior: order', () => {
   });
 });
 
-test('restores correct history on rehydrating with backBehavior: history', () => {
+it('restores correct history on rehydrating with backBehavior: history', () => {
   const router = TabRouter({ backBehavior: 'history' });
 
   const options: RouterConfigOptions = {
@@ -352,7 +350,7 @@ test('restores correct history on rehydrating with backBehavior: history', () =>
   });
 });
 
-test('restores correct history on rehydrating with backBehavior: firstRoute', () => {
+it('restores correct history on rehydrating with backBehavior: firstRoute', () => {
   const router = TabRouter({
     backBehavior: 'firstRoute',
     initialRouteName: 'bar',
@@ -397,7 +395,7 @@ test('restores correct history on rehydrating with backBehavior: firstRoute', ()
   });
 });
 
-test('restores correct history on rehydrating with backBehavior: initialRoute', () => {
+it('restores correct history on rehydrating with backBehavior: initialRoute', () => {
   const router = TabRouter({
     backBehavior: 'initialRoute',
     initialRouteName: 'bar',
@@ -442,7 +440,7 @@ test('restores correct history on rehydrating with backBehavior: initialRoute', 
   });
 });
 
-test('restores correct history on rehydrating with backBehavior: none', () => {
+it('restores correct history on rehydrating with backBehavior: none', () => {
   const router = TabRouter({ backBehavior: 'none' });
 
   const options: RouterConfigOptions = {
@@ -481,7 +479,7 @@ test('restores correct history on rehydrating with backBehavior: none', () => {
   });
 });
 
-test('gets state on route names change', () => {
+it('gets state on route names change', () => {
   const router = TabRouter({});
 
   expect(
@@ -563,7 +561,7 @@ test('gets state on route names change', () => {
   });
 });
 
-test('preserves focused route on route names change', () => {
+it('preserves focused route on route names change', () => {
   const router = TabRouter({});
 
   expect(
@@ -609,7 +607,7 @@ test('preserves focused route on route names change', () => {
   });
 });
 
-test('falls back to first route if route is removed on route names change', () => {
+it('falls back to first route if route is removed on route names change', () => {
   const router = TabRouter({});
 
   expect(
@@ -654,7 +652,7 @@ test('falls back to first route if route is removed on route names change', () =
   });
 });
 
-test('handles navigate action', () => {
+it('handles navigate action', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz'],
@@ -715,7 +713,7 @@ test('handles navigate action', () => {
   ).toBeNull();
 });
 
-test("doesn't navigate to nonexistent screen", () => {
+it("doesn't navigate to nonexistent screen", () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
@@ -744,7 +742,7 @@ test("doesn't navigate to nonexistent screen", () => {
   ).toBeNull();
 });
 
-test('ensures unique ID for navigate', () => {
+it('ensures unique ID for navigate', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -823,7 +821,7 @@ test('ensures unique ID for navigate', () => {
   });
 });
 
-test('handles jump to action', () => {
+it('handles jump to action', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz'],
@@ -867,7 +865,7 @@ test('handles jump to action', () => {
   });
 });
 
-test("doesn't jump to nonexistent screen", () => {
+it("doesn't jump to nonexistent screen", () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
@@ -896,7 +894,7 @@ test("doesn't jump to nonexistent screen", () => {
   ).toBeNull();
 });
 
-test('ensures unique ID for jump to', () => {
+it('ensures unique ID for jump to', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -975,7 +973,7 @@ test('ensures unique ID for jump to', () => {
   });
 });
 
-test('handles back action with backBehavior: history', () => {
+it('handles back action with backBehavior: history', () => {
   const router = TabRouter({ backBehavior: 'history' });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
@@ -1065,7 +1063,7 @@ test('handles back action with backBehavior: history', () => {
   });
 });
 
-test('handles back action with backBehavior: order', () => {
+it('handles back action with backBehavior: order', () => {
   const router = TabRouter({ backBehavior: 'order' });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
@@ -1139,7 +1137,7 @@ test('handles back action with backBehavior: order', () => {
   ).toBeNull();
 });
 
-test('handles back action with backBehavior: initialRoute', () => {
+it('handles back action with backBehavior: initialRoute', () => {
   const router = TabRouter({ backBehavior: 'initialRoute' });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
@@ -1210,7 +1208,7 @@ test('handles back action with backBehavior: initialRoute', () => {
   ).toBeNull();
 });
 
-test('handles back action with backBehavior: initialRoute and initialRouteName', () => {
+it('handles back action with backBehavior: initialRoute and initialRouteName', () => {
   const router = TabRouter({
     backBehavior: 'initialRoute',
     initialRouteName: 'baz',
@@ -1285,7 +1283,7 @@ test('handles back action with backBehavior: initialRoute and initialRouteName',
   ).toBeNull();
 });
 
-test('handles back action with backBehavior: none', () => {
+it('handles back action with backBehavior: none', () => {
   const router = TabRouter({ backBehavior: 'none' });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
@@ -1306,7 +1304,7 @@ test('handles back action with backBehavior: none', () => {
   ).toBeNull();
 });
 
-test('updates route key history on navigate and jump to', () => {
+it('updates route key history on navigate and jump to', () => {
   const router = TabRouter({ backBehavior: 'history' });
   const options: RouterConfigOptions = {
     routeNames: ['bar', 'baz', 'qux'],
@@ -1384,7 +1382,7 @@ test('updates route key history on navigate and jump to', () => {
   expect(state.history).toEqual([{ type: 'route', key: 'qux-0' }]);
 });
 
-test('updates route key history on focus change', () => {
+it('updates route key history on focus change', () => {
   const router = TabRouter({ backBehavior: 'history' });
 
   const state = {
@@ -1412,7 +1410,7 @@ test('updates route key history on focus change', () => {
   ]);
 });
 
-test('adds path on navigate if provided', () => {
+it('adds path on navigate if provided', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1511,7 +1509,7 @@ test('adds path on navigate if provided', () => {
   });
 });
 
-test("doesn't remove existing path on navigate if not provided", () => {
+it("doesn't remove existing path on navigate if not provided", () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1557,7 +1555,7 @@ test("doesn't remove existing path on navigate if not provided", () => {
   });
 });
 
-test("doesn't merge params on navigate to an existing screen", () => {
+it("doesn't merge params on navigate to an existing screen", () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1679,7 +1677,7 @@ test("doesn't merge params on navigate to an existing screen", () => {
   });
 });
 
-test('merges params on navigate to an existing screen if merge: true', () => {
+it('merges params on navigate to an existing screen if merge: true', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1769,7 +1767,7 @@ test('merges params on navigate to an existing screen if merge: true', () => {
   });
 });
 
-test("doesn't merge params on jump to an existing screen", () => {
+it("doesn't merge params on jump to an existing screen", () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1852,7 +1850,7 @@ test("doesn't merge params on jump to an existing screen", () => {
   });
 });
 
-test('handles screen preloading', () => {
+it('handles screen preloading', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],

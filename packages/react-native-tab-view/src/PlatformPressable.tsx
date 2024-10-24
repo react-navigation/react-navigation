@@ -18,7 +18,11 @@ const ANDROID_SUPPORTS_RIPPLE =
   Platform.OS === 'android' && Platform.Version >= ANDROID_VERSION_LOLLIPOP;
 
 /**
- * PlatformPressable provides an abstraction on top of Pressable to handle platform differences.
+ * PlatformPressable provides an abstraction on top of TouchableNativeFeedback and
+ * TouchableOpacity to handle platform differences.
+ *
+ * On Android, you can pass the props of TouchableNativeFeedback.
+ * On other platforms, you can pass the props of TouchableOpacity.
  */
 export function PlatformPressable({
   disabled,
@@ -30,16 +34,16 @@ export function PlatformPressable({
   ...rest
 }: Props) {
   const handlePress = (e: GestureResponderEvent) => {
-    if (Platform.OS === 'web' && rest.href !== null) {
+    // @ts-expect-error: these properties exist on web, but not in React Native
+    const hasModifierKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey; // ignore clicks with modifier keys
+    // @ts-expect-error: these properties exist on web, but not in React Native
+    const isLeftClick = e.button == null || e.button === 0; // only handle left clicks
+    const isSelfTarget = [undefined, null, '', 'self'].includes(
       // @ts-expect-error: these properties exist on web, but not in React Native
-      const hasModifierKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey; // ignore clicks with modifier keys
-      // @ts-expect-error: these properties exist on web, but not in React Native
-      const isLeftClick = e.button === null || e.button === 0; // only handle left clicks
-      const isSelfTarget = [undefined, null, '', 'self'].includes(
-        // @ts-expect-error: these properties exist on web, but not in React Native
-        e.currentTarget?.target
-      ); // let browser handle "target=_blank" etc.
+      e.currentTarget?.target
+    ); // let browser handle "target=_blank" etc.
 
+    if (Platform.OS === 'web' && rest.href != null) {
       if (!hasModifierKey && isLeftClick && isSelfTarget) {
         e.preventDefault();
         onPress?.(e);
@@ -58,12 +62,7 @@ export function PlatformPressable({
       }
       style={({ pressed }) => [
         {
-          cursor:
-            Platform.OS === 'web' || Platform.OS === 'ios'
-              ? // Pointer cursor on web
-                // Hover effect on iPad and visionOS
-                'pointer'
-              : 'auto',
+          cursor: 'pointer', // Add hover effect on iPad and VisionOS,
           opacity: pressed && !ANDROID_SUPPORTS_RIPPLE ? pressOpacity : 1,
         },
         typeof style === 'function' ? style({ pressed }) : style,

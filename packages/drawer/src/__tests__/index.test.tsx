@@ -1,4 +1,3 @@
-import { expect, test } from '@jest/globals';
 import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
@@ -14,7 +13,7 @@ type DrawerParamList = {
   B: undefined;
 };
 
-test('renders a drawer navigator with screens', async () => {
+it('renders a drawer navigator with screens', async () => {
   const Test = ({ route, navigation }: DrawerScreenProps<DrawerParamList>) => (
     <View>
       <Text>Screen {route.name}</Text>
@@ -42,7 +41,7 @@ test('renders a drawer navigator with screens', async () => {
   expect(queryByText('Screen B')).not.toBeNull();
 });
 
-test('handles screens preloading', async () => {
+it('handles screens preloading', async () => {
   const Drawer = createDrawerNavigator<DrawerParamList>();
 
   const navigation = createNavigationContainerRef<DrawerParamList>();

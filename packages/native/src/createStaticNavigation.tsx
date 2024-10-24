@@ -51,57 +51,45 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
     { linking, ...rest }: Props,
     ref: React.Ref<NavigationContainerRef<ParamListBase>>
   ) {
-    const linkingConfig = React.useMemo(() => {
-      if (!tree.config.screens) return;
-
-      const screens = createPathConfigForStaticNavigation(
-        tree,
-        { initialRouteName: linking?.config?.initialRouteName },
-        linking?.enabled === 'auto'
-      );
-
-      if (!screens) return;
-
-      return {
-        path: linking?.config?.path,
-        initialRouteName: linking?.config?.initialRouteName,
-        screens,
-      };
-    }, [
-      linking?.enabled,
-      linking?.config?.path,
-      linking?.config?.initialRouteName,
-    ]);
-
-    const memoizedLinking = React.useMemo(() => {
-      if (!linking) {
-        return undefined;
+    const screens = React.useMemo(() => {
+      if (tree.config.screens) {
+        return createPathConfigForStaticNavigation(
+          tree,
+          { initialRouteName: linking?.config?.initialRouteName },
+          linking?.enabled === 'auto'
+        );
       }
 
-      const enabled =
-        typeof linking.enabled === 'boolean'
-          ? linking.enabled
-          : linkingConfig?.screens != null;
+      return undefined;
+    }, [linking?.config, linking?.enabled]);
 
-      return {
-        ...linking,
-        enabled,
-        config: linkingConfig,
-      };
-    }, [linking, linkingConfig]);
-
-    if (linking?.enabled === true && linkingConfig?.screens == null) {
+    if (linking?.enabled === true && screens == null) {
       throw new Error(
         'Linking is enabled but no linking configuration was found for the screens.\n\n' +
           'To solve this:\n' +
           "- Specify a 'linking' property for the screens you want to link to.\n" +
           "- Or set 'linking.enabled' to 'auto' to generate paths automatically.\n\n" +
-          'See usage guide: https://reactnavigation.org/docs/static-configuration#linking'
+          'See usage guide: https://reactnavigation.org/docs/7.x/static-configuration#linking'
       );
     }
 
     return (
-      <NavigationContainer {...rest} ref={ref} linking={memoizedLinking}>
+      <NavigationContainer
+        {...rest}
+        ref={ref}
+        linking={
+          linking
+            ? {
+                ...linking,
+                enabled:
+                  typeof linking.enabled === 'boolean'
+                    ? linking.enabled
+                    : screens != null,
+                config: screens ? { ...linking.config, screens } : undefined,
+              }
+            : undefined
+        }
+      >
         <Component />
       </NavigationContainer>
     );

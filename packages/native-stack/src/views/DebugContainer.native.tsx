@@ -1,11 +1,8 @@
 import * as React from 'react';
-import { Platform, type ViewProps } from 'react-native';
+import { Platform, View, type ViewProps } from 'react-native';
 // @ts-expect-error Getting private component
 import AppContainer from 'react-native/Libraries/ReactNative/AppContainer';
-import {
-  ScreenContentWrapper,
-  type StackPresentationTypes,
-} from 'react-native-screens';
+import type { StackPresentationTypes } from 'react-native-screens';
 
 type ContainerProps = ViewProps & {
   stackPresentation: StackPresentationTypes;
@@ -18,26 +15,22 @@ type ContainerProps = ViewProps & {
  * for detailed explanation.
  */
 export let DebugContainer = (props: ContainerProps) => {
-  return <ScreenContentWrapper {...props} />;
+  return <View {...props} collapsable={false} />;
 };
 
 if (process.env.NODE_ENV !== 'production') {
   DebugContainer = (props: ContainerProps) => {
     const { stackPresentation, ...rest } = props;
 
-    if (
-      Platform.OS === 'ios' &&
-      stackPresentation !== 'push' &&
-      stackPresentation !== 'formSheet'
-    ) {
+    if (Platform.OS === 'ios' && stackPresentation !== 'push') {
       // This is necessary for LogBox
       return (
         <AppContainer>
-          <ScreenContentWrapper {...rest} />
+          <View {...rest} collapsable={false} />
         </AppContainer>
       );
     }
 
-    return <ScreenContentWrapper {...rest} />;
+    return <View {...rest} collapsable={false} />;
   };
 }

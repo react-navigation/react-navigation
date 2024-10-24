@@ -10,7 +10,7 @@ import {
   NavigationContext,
   NavigationRouteContext,
   type ParamListBase,
-  type RouteProp,
+  type Route,
   StackActions,
   type StackNavigationState,
   usePreventRemoveContext,
@@ -29,23 +29,110 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import { type ScreenProps, ScreenStack } from 'react-native-screens';
+import {
+  type GestureDetectorBridge,
+  GHContext,
+  InnerScreen,
+  Screen,
+  ScreenContext,
+  type ScreenProps,
+  ScreenStack,
+  type StackPresentationTypes,
+} from 'react-native-screens';
+import warnOnce from 'warn-once';
 
 import type {
   NativeStackDescriptor,
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
+  NativeStackNavigationOptions,
+  ScreensRefsHolder,
 } from '../types';
 import { debounce } from '../utils/debounce';
 import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
-import { FooterComponent } from './FooterComponent';
-import { ScreenStackContent } from './ScreenStackContent';
-import { useHeaderConfigProps } from './useHeaderConfigProps';
+import { DebugContainer } from './DebugContainer';
+import { HeaderConfig } from './HeaderConfig';
 
-const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
+const isAndroid = Platform.OS === 'android';
+
+const MaybeNestedStack = ({
+  options,
+  route,
+  presentation,
+  headerHeight,
+  headerTopInsetEnabled,
+  children,
+}: {
+  options: NativeStackNavigationOptions;
+  route: Route<string>;
+  presentation: Exclude<StackPresentationTypes, 'push'> | 'card';
+  headerHeight: number;
+  headerTopInsetEnabled: boolean;
+  children: React.ReactNode;
+}) => {
+  const { colors } = useTheme();
+  const { header, headerShown = true, contentStyle } = options;
+
+  const isHeaderInModal = isAndroid
+    ? false
+    : presentation !== 'card' && headerShown === true && header === undefined;
+
+  const headerShownPreviousRef = React.useRef(headerShown);
+
+  React.useEffect(() => {
+    warnOnce(
+      !isAndroid &&
+        presentation !== 'card' &&
+        headerShownPreviousRef.current !== headerShown,
+      `Dynamically changing 'headerShown' in modals will result in remounting the screen and losing all local state. See options for the screen '${route.name}'.`
+    );
+
+    headerShownPreviousRef.current = headerShown;
+  }, [headerShown, presentation, route.name]);
+
+  const content = (
+    <DebugContainer
+      style={[
+        styles.container,
+        presentation !== 'transparentModal' &&
+          presentation !== 'containedTransparentModal' && {
+            backgroundColor: colors.background,
+          },
+        contentStyle,
+      ]}
+      stackPresentation={presentation === 'card' ? 'push' : presentation}
+    >
+      {children}
+    </DebugContainer>
+  );
+
+  if (isHeaderInModal) {
+    return (
+      <ScreenStack style={styles.container}>
+        <Screen
+          enabled
+          isNativeStack
+          hasLargeHeader={options.headerLargeTitle ?? false}
+          style={StyleSheet.absoluteFill}
+        >
+          {content}
+          <HeaderConfig
+            {...options}
+            route={route}
+            headerHeight={headerHeight}
+            headerTopInsetEnabled={headerTopInsetEnabled}
+            canGoBack
+          />
+        </Screen>
+      </ScreenStack>
+    );
+  }
+
+  return content;
+};
 
 type SceneViewProps = {
   index: number;
@@ -53,8 +140,8 @@ type SceneViewProps = {
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
+  screenRefs: React.MutableRefObject<ScreensRefsHolder>;
   isPresentationModal?: boolean;
-  isPreloaded?: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
   onAppear: () => void;
@@ -63,7 +150,6 @@ type SceneViewProps = {
   onHeaderBackButtonClicked: ScreenProps['onHeaderBackButtonClicked'];
   onNativeDismissCancelled: ScreenProps['onDismissed'];
   onGestureCancel: ScreenProps['onGestureCancel'];
-  onSheetDetentChanged: ScreenProps['onSheetDetentChanged'];
 };
 
 const SceneView = ({
@@ -72,8 +158,8 @@ const SceneView = ({
   descriptor,
   previousDescriptor,
   nextDescriptor,
+  screenRefs,
   isPresentationModal,
-  isPreloaded,
   onWillDisappear,
   onWillAppear,
   onAppear,
@@ -82,7 +168,6 @@ const SceneView = ({
   onHeaderBackButtonClicked,
   onNativeDismissCancelled,
   onGestureCancel,
-  onSheetDetentChanged,
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
 
@@ -91,13 +176,11 @@ const SceneView = ({
     animationMatchesGesture,
     presentation = isPresentationModal ? 'modal' : 'card',
     fullScreenGestureEnabled,
-    unstable_screenStyle = null,
   } = options;
 
   const {
     animationDuration,
     animationTypeForReplace = 'push',
-    fullScreenGestureShadowEnabled = false,
     gestureEnabled,
     gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
     gestureResponseDistance,
@@ -112,30 +195,29 @@ const SceneView = ({
     navigationBarTranslucent,
     navigationBarHidden,
     orientation,
-    sheetAllowedDetents = [1.0],
-    sheetLargestUndimmedDetentIndex = -1,
+    sheetAllowedDetents = 'large',
+    sheetLargestUndimmedDetent = 'all',
     sheetGrabberVisible = false,
     sheetCornerRadius = -1.0,
-    sheetElevation = 24,
     sheetExpandsWhenScrolledToEdge = true,
-    sheetInitialDetentIndex = 0,
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
     statusBarTranslucent,
     statusBarBackgroundColor,
-    unstable_sheetFooter = null,
     freezeOnBlur,
-    contentStyle,
   } = options;
 
-  // We want to allow only backgroundColor setting for now.
-  // This allows to workaround one issue with truncated
-  // content with formSheet presentation.
-  unstable_screenStyle =
-    unstable_screenStyle && presentation === 'formSheet'
-      ? { backgroundColor: unstable_screenStyle.backgroundColor }
-      : null;
+  const screenRef = React.useRef(null);
+  React.useLayoutEffect(() => {
+    const currentRefs = screenRefs.current;
+    currentRefs[route.key] = screenRef;
+
+    return () => {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+      delete currentRefs[route.key];
+    };
+  });
 
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
     // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
@@ -168,7 +250,6 @@ const SceneView = ({
     presentation = 'card';
   }
 
-  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const frame = useSafeAreaFrame();
 
@@ -196,7 +277,7 @@ const SceneView = ({
     // FIXME: Currently screens isn't using Material 3
     // So our `getDefaultHeaderHeight` doesn't return the correct value
     // So we hardcode the value here for now until screens is updated
-    android: ANDROID_DEFAULT_HEADER_HEIGHT + topInset,
+    android: 56 + topInset,
     default: getDefaultHeaderHeight(frame, isModal, topInset),
   });
 
@@ -213,7 +294,7 @@ const SceneView = ({
 
   let headerHeightCorrectionOffset = 0;
 
-  if (Platform.OS === 'android' && !hasCustomHeader) {
+  if (isAndroid && !hasCustomHeader) {
     const statusBarHeight = StatusBar.currentHeight ?? 0;
 
     // FIXME: On Android, the native header height is not correctly calculated
@@ -244,54 +325,33 @@ const SceneView = ({
       ? statusBarTranslucent
       : topInset !== 0;
 
-  const canGoBack = previousDescriptor != null || parentHeaderBack != null;
   const backTitle = previousDescriptor
     ? getHeaderTitle(previousDescriptor.options, previousDescriptor.route.name)
     : parentHeaderBack?.title;
 
-  const headerBack = React.useMemo(() => {
-    if (canGoBack) {
-      return {
-        href: undefined, // No href needed for native
-        title: backTitle,
-      };
-    }
-
-    return undefined;
-  }, [canGoBack, backTitle]);
+  const headerBack = React.useMemo(
+    () => ({
+      // No href needed for native
+      href: undefined,
+      title: backTitle,
+    }),
+    [backTitle]
+  );
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
-  const headerConfig = useHeaderConfigProps({
-    ...options,
-    route,
-    canGoBack,
-    headerBackButtonMenuEnabled:
-      isRemovePrevented !== undefined
-        ? !isRemovePrevented
-        : headerBackButtonMenuEnabled,
-    headerBackTitle:
-      options.headerBackTitle !== undefined
-        ? options.headerBackTitle
-        : undefined,
-    headerHeight,
-    headerShown: header !== undefined ? false : headerShown,
-    headerTopInsetEnabled,
-  });
-
   return (
-    <ScreenStackContent
+    <ScreenWithRef
       key={route.key}
-      activityState={isPreloaded ? 0 : 2}
-      style={[StyleSheet.absoluteFill, unstable_screenStyle]}
-      accessibilityElementsHidden={!focused}
-      importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
+      ref={screenRef}
+      enabled
+      isNativeStack
+      style={StyleSheet.absoluteFill}
+      hasLargeHeader={options.headerLargeTitle ?? false}
       customAnimationOnSwipe={animationMatchesGesture}
       fullScreenSwipeEnabled={fullScreenGestureEnabled}
-      fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
-      freezeOnBlur={freezeOnBlur}
       gestureEnabled={
-        Platform.OS === 'android'
+        isAndroid
           ? // This prop enables handling of system back gestures on Android
             // Since we handle them in JS side, we disable this
             false
@@ -300,6 +360,7 @@ const SceneView = ({
       homeIndicatorHidden={autoHideHomeIndicator}
       hideKeyboardOnSwipe={keyboardHandlingEnabled}
       navigationBarColor={navigationBarColor}
+      // @ts-expect-error prop supported from react-native-screens 3.32.0 onwards
       navigationBarTranslucent={navigationBarTranslucent}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
@@ -307,11 +368,9 @@ const SceneView = ({
       stackAnimation={animation}
       screenOrientation={orientation}
       sheetAllowedDetents={sheetAllowedDetents}
-      sheetLargestUndimmedDetentIndex={sheetLargestUndimmedDetentIndex}
+      sheetLargestUndimmedDetent={sheetLargestUndimmedDetent}
       sheetGrabberVisible={sheetGrabberVisible}
-      sheetInitialDetentIndex={sheetInitialDetentIndex}
       sheetCornerRadius={sheetCornerRadius}
-      sheetElevation={sheetElevation}
       sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
       statusBarAnimation={statusBarAnimation}
       statusBarHidden={statusBarHidden}
@@ -326,7 +385,6 @@ const SceneView = ({
       onDisappear={onDisappear}
       onDismissed={onDismissed}
       onGestureCancel={onGestureCancel}
-      onSheetDetentChanged={onSheetDetentChanged}
       gestureResponseDistance={gestureResponseDistance}
       nativeBackButtonDismissalEnabled={false} // on Android
       onHeaderBackButtonClicked={onHeaderBackButtonClicked}
@@ -347,16 +405,6 @@ const SceneView = ({
         {
           useNativeDriver: true,
           listener: (e) => {
-            if (
-              Platform.OS === 'android' &&
-              (options.headerBackground != null || options.headerTransparent)
-            ) {
-              // FIXME: On Android, we get 0 if the header is translucent
-              // So we set a default height in that case
-              setHeaderHeight(ANDROID_DEFAULT_HEADER_HEIGHT + topInset);
-              return;
-            }
-
             if (
               e.nativeEvent &&
               typeof e.nativeEvent === 'object' &&
@@ -381,77 +429,107 @@ const SceneView = ({
           },
         }
       )}
-      contentStyle={[
-        presentation !== 'transparentModal' &&
-          presentation !== 'containedTransparentModal' && {
-            backgroundColor: colors.background,
-          },
-        contentStyle,
-      ]}
-      headerConfig={headerConfig}
-      // When ts-expect-error is added, it affects all the props below it
-      // So we keep any props that need it at the end
-      // Otherwise invalid props may not be caught by TypeScript
+      // this prop is available since rn-screens 3.16
+      freezeOnBlur={freezeOnBlur}
     >
       <NavigationContext.Provider value={navigation}>
         <NavigationRouteContext.Provider value={route}>
-          <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
-            <HeaderHeightContext.Provider
-              value={
-                headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
-              }
-            >
-              {headerBackground != null ? (
-                /**
-                 * To show a custom header background, we render it at the top of the screen below the header
-                 * The header also needs to be positioned absolutely (with `translucent` style)
-                 */
-                <View
-                  style={[
-                    styles.background,
-                    headerTransparent ? styles.translucent : null,
-                    { height: headerHeight },
-                  ]}
-                >
-                  {headerBackground()}
-                </View>
-              ) : null}
-              {header !== undefined && headerShown !== false ? (
-                <View
-                  onLayout={(e) => {
-                    const headerHeight = e.nativeEvent.layout.height;
-
-                    setHeaderHeight(headerHeight);
-                    rawAnimatedHeaderHeight.setValue(headerHeight);
-                  }}
-                  style={[
-                    styles.header,
-                    headerTransparent ? styles.absolute : null,
-                  ]}
-                >
-                  {header({
-                    back: headerBack,
-                    options,
-                    route,
-                    navigation,
-                  })}
-                </View>
-              ) : null}
-              <HeaderShownContext.Provider
-                value={isParentHeaderShown || headerShown !== false}
+          <HeaderShownContext.Provider
+            value={isParentHeaderShown || headerShown !== false}
+          >
+            <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+              <HeaderHeightContext.Provider
+                value={
+                  headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
+                }
               >
-                <HeaderBackContext.Provider value={headerBack}>
-                  {render()}
-                </HeaderBackContext.Provider>
-              </HeaderShownContext.Provider>
-              {presentation === 'formSheet' && unstable_sheetFooter && (
-                <FooterComponent>{unstable_sheetFooter()}</FooterComponent>
-              )}
-            </HeaderHeightContext.Provider>
-          </AnimatedHeaderHeightContext.Provider>
+                {headerBackground != null ? (
+                  /**
+                   * To show a custom header background, we render it at the top of the screen below the header
+                   * The header also needs to be positioned absolutely (with `translucent` style)
+                   */
+                  <View
+                    style={[
+                      styles.background,
+                      headerTransparent ? styles.translucent : null,
+                      { height: headerHeight },
+                    ]}
+                  >
+                    {headerBackground()}
+                  </View>
+                ) : null}
+                <View
+                  accessibilityElementsHidden={!focused}
+                  importantForAccessibility={
+                    focused ? 'auto' : 'no-hide-descendants'
+                  }
+                  style={styles.scene}
+                >
+                  <MaybeNestedStack
+                    options={options}
+                    route={route}
+                    presentation={presentation}
+                    headerHeight={headerHeight}
+                    headerTopInsetEnabled={headerTopInsetEnabled}
+                  >
+                    <HeaderBackContext.Provider value={headerBack}>
+                      {render()}
+                    </HeaderBackContext.Provider>
+                  </MaybeNestedStack>
+                  {header !== undefined && headerShown !== false ? (
+                    <View
+                      onLayout={(e) => {
+                        const headerHeight = e.nativeEvent.layout.height;
+
+                        setHeaderHeight(headerHeight);
+                        rawAnimatedHeaderHeight.setValue(headerHeight);
+                      }}
+                      style={headerTransparent ? styles.absolute : null}
+                    >
+                      {header({
+                        back: headerBack,
+                        options,
+                        route,
+                        navigation,
+                      })}
+                    </View>
+                  ) : null}
+                </View>
+                {/**
+                 * `HeaderConfig` needs to be the direct child of `Screen` without any intermediate `View`
+                 * We don't render it conditionally to make it possible to dynamically render a custom `header`
+                 * Otherwise dynamically rendering a custom `header` leaves the native header visible
+                 *
+                 * https://github.com/software-mansion/react-native-screens/blob/main/guides/GUIDE_FOR_LIBRARY_AUTHORS.md#screenstackheaderconfig
+                 *
+                 * HeaderConfig must not be first child of a Screen.
+                 * See https://github.com/software-mansion/react-native-screens/pull/1825
+                 * for detailed explanation
+                 */}
+                <HeaderConfig
+                  {...options}
+                  route={route}
+                  headerBackButtonMenuEnabled={
+                    isRemovePrevented !== undefined
+                      ? !isRemovePrevented
+                      : headerBackButtonMenuEnabled
+                  }
+                  headerShown={header !== undefined ? false : headerShown}
+                  headerHeight={headerHeight}
+                  headerBackTitle={
+                    options.headerBackTitle !== undefined
+                      ? options.headerBackTitle
+                      : undefined
+                  }
+                  headerTopInsetEnabled={headerTopInsetEnabled}
+                  canGoBack={headerBack !== undefined}
+                />
+              </HeaderHeightContext.Provider>
+            </AnimatedHeaderHeightContext.Provider>
+          </HeaderShownContext.Provider>
         </NavigationRouteContext.Provider>
       </NavigationContext.Provider>
-    </ScreenStackContent>
+    </ScreenWithRef>
   );
 };
 
@@ -459,143 +537,146 @@ type Props = {
   state: StackNavigationState<ParamListBase>;
   navigation: NativeStackNavigationHelpers;
   descriptors: NativeStackDescriptorMap;
-  describe: (
-    route: RouteProp<ParamListBase>,
-    placeholder: boolean
-  ) => NativeStackDescriptor;
 };
 
-export function NativeStackView({
-  state,
-  navigation,
-  descriptors,
-  describe,
-}: Props) {
+export function NativeStackView({ state, navigation, descriptors }: Props) {
   const { setNextDismissedKey } = useDismissedRouteError(state);
 
   const { colors } = useTheme();
+
+  const currentRouteKey = state.routes[state.index].key;
+  const topScreenOptions = descriptors[currentRouteKey].options;
+  const gestureDetectorBridge = React.useRef<GestureDetectorBridge>({
+    stackUseEffectCallback: (_stackRef) => {
+      // this method will be overriden in GestureDetector
+    },
+  });
+
+  const screensRefs = React.useRef<ScreensRefsHolder>({});
+
+  const ScreenGestureDetector = React.useContext(GHContext);
 
   useInvalidPreventRemoveError(descriptors);
 
   const modalRouteKeys = getModalRouteKeys(state.routes, descriptors);
 
-  const preloadedDescriptors =
-    state.preloadedRoutes.reduce<NativeStackDescriptorMap>((acc, route) => {
-      acc[route.key] = acc[route.key] || describe(route, true);
-      return acc;
-    }, {});
-
   return (
     <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
-      <ScreenStack style={styles.container}>
-        {state.routes.concat(state.preloadedRoutes).map((route, index) => {
-          const descriptor =
-            descriptors[route.key] ?? preloadedDescriptors[route.key];
-          const isFocused = state.index === index;
-          const previousKey = state.routes[index - 1]?.key;
-          const nextKey = state.routes[index + 1]?.key;
-          const previousDescriptor = previousKey
-            ? descriptors[previousKey]
-            : undefined;
-          const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
+      <ScreenGestureDetector
+        gestureDetectorBridge={gestureDetectorBridge}
+        goBackGesture={topScreenOptions?.gestureType}
+        transitionAnimation={topScreenOptions?.animationForGesture}
+        screenEdgeGesture={topScreenOptions?.gestureFromEdgeEnabled ?? false}
+        screensRefs={screensRefs}
+        currentRouteKey={currentRouteKey}
+      >
+        <ScreenStack
+          style={styles.container}
+          gestureDetectorBridge={gestureDetectorBridge}
+        >
+          {state.routes.map((route, index) => {
+            const descriptor = descriptors[route.key];
+            const isFocused = state.index === index;
+            const previousKey = state.routes[index - 1]?.key;
+            const nextKey = state.routes[index + 1]?.key;
+            const previousDescriptor = previousKey
+              ? descriptors[previousKey]
+              : undefined;
+            const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
-          const isModal = modalRouteKeys.includes(route.key);
+            const isModal = modalRouteKeys.includes(route.key);
 
-          const isPreloaded =
-            preloadedDescriptors[route.key] !== undefined &&
-            descriptors[route.key] === undefined;
+            return (
+              <SceneView
+                key={route.key}
+                index={index}
+                focused={isFocused}
+                descriptor={descriptor}
+                previousDescriptor={previousDescriptor}
+                nextDescriptor={nextDescriptor}
+                screenRefs={screensRefs}
+                isPresentationModal={isModal}
+                onWillDisappear={() => {
+                  navigation.emit({
+                    type: 'transitionStart',
+                    data: { closing: true },
+                    target: route.key,
+                  });
+                }}
+                onWillAppear={() => {
+                  navigation.emit({
+                    type: 'transitionStart',
+                    data: { closing: false },
+                    target: route.key,
+                  });
+                }}
+                onAppear={() => {
+                  navigation.emit({
+                    type: 'transitionEnd',
+                    data: { closing: false },
+                    target: route.key,
+                  });
+                }}
+                onDisappear={() => {
+                  navigation.emit({
+                    type: 'transitionEnd',
+                    data: { closing: true },
+                    target: route.key,
+                  });
+                }}
+                onDismissed={(event) => {
+                  navigation.dispatch({
+                    ...StackActions.pop(event.nativeEvent.dismissCount),
+                    source: route.key,
+                    target: state.key,
+                  });
 
-          return (
-            <SceneView
-              key={route.key}
-              index={index}
-              focused={isFocused}
-              descriptor={descriptor}
-              previousDescriptor={previousDescriptor}
-              nextDescriptor={nextDescriptor}
-              isPresentationModal={isModal}
-              isPreloaded={isPreloaded}
-              onWillDisappear={() => {
-                navigation.emit({
-                  type: 'transitionStart',
-                  data: { closing: true },
-                  target: route.key,
-                });
-              }}
-              onWillAppear={() => {
-                navigation.emit({
-                  type: 'transitionStart',
-                  data: { closing: false },
-                  target: route.key,
-                });
-              }}
-              onAppear={() => {
-                navigation.emit({
-                  type: 'transitionEnd',
-                  data: { closing: false },
-                  target: route.key,
-                });
-              }}
-              onDisappear={() => {
-                navigation.emit({
-                  type: 'transitionEnd',
-                  data: { closing: true },
-                  target: route.key,
-                });
-              }}
-              onDismissed={(event) => {
-                navigation.dispatch({
-                  ...StackActions.pop(event.nativeEvent.dismissCount),
-                  source: route.key,
-                  target: state.key,
-                });
-
-                setNextDismissedKey(route.key);
-              }}
-              onHeaderBackButtonClicked={() => {
-                navigation.dispatch({
-                  ...StackActions.pop(),
-                  source: route.key,
-                  target: state.key,
-                });
-              }}
-              onNativeDismissCancelled={(event) => {
-                navigation.dispatch({
-                  ...StackActions.pop(event.nativeEvent.dismissCount),
-                  source: route.key,
-                  target: state.key,
-                });
-              }}
-              onGestureCancel={() => {
-                navigation.emit({
-                  type: 'gestureCancel',
-                  target: route.key,
-                });
-              }}
-              onSheetDetentChanged={(event) => {
-                navigation.emit({
-                  type: 'sheetDetentChange',
-                  target: route.key,
-                  data: {
-                    index: event.nativeEvent.index,
-                    stable: event.nativeEvent.isStable,
-                  },
-                });
-              }}
-            />
-          );
-        })}
-      </ScreenStack>
+                  setNextDismissedKey(route.key);
+                }}
+                onHeaderBackButtonClicked={() => {
+                  navigation.dispatch({
+                    ...StackActions.pop(),
+                    source: route.key,
+                    target: state.key,
+                  });
+                }}
+                onNativeDismissCancelled={(event) => {
+                  navigation.dispatch({
+                    ...StackActions.pop(event.nativeEvent.dismissCount),
+                    source: route.key,
+                    target: state.key,
+                  });
+                }}
+                onGestureCancel={() => {
+                  navigation.emit({
+                    type: 'gestureCancel',
+                    target: route.key,
+                  });
+                }}
+              />
+            );
+          })}
+        </ScreenStack>
+      </ScreenGestureDetector>
     </SafeAreaProviderCompat>
   );
 }
+
+const ScreenWithRef = React.forwardRef<InnerScreen & View, ScreenProps>(
+  (props, ref) => {
+    const ScreenWrapper = React.useContext(ScreenContext) || InnerScreen;
+
+    return <ScreenWrapper {...props} ref={ref} />;
+  }
+);
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header: {
-    zIndex: 1,
+  scene: {
+    flex: 1,
+    flexDirection: 'column-reverse',
   },
   absolute: {
     position: 'absolute',

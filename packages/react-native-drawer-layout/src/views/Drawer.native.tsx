@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 import Animated, {
   interpolate,
-  ReduceMotion,
   runOnJS,
   useAnimatedStyle,
   useDerivedValue,
@@ -190,7 +189,6 @@ export function Drawer({
           overshootClamping: true,
           restDisplacementThreshold: 0.01,
           restSpeedThreshold: 0.01,
-          reduceMotion: ReduceMotion.Never,
         },
         (finished) => runOnJS(handleAnimationEnd)(open, finished)
       );

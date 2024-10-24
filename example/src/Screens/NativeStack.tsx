@@ -11,20 +11,17 @@ import { Animated, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
-import { Contacts } from '../Shared/Contacts';
 import { NewsFeed } from '../Shared/NewsFeed';
 
 export type NativeStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
-  Contacts: undefined;
   Albums: undefined;
 };
 
 const linking: PathConfigMap<NativeStackParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
   NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-  Contacts: 'contacts',
   Albums: 'albums',
 };
 
@@ -51,7 +48,7 @@ const ArticleScreen = ({
             Replace with feed
           </Button>
           <Button variant="filled" onPress={() => navigation.popTo('Albums')}>
-            Pop to albums
+            Pop to Albums
           </Button>
           <Button variant="tinted" onPress={() => navigation.pop()}>
             Pop screen
@@ -71,12 +68,20 @@ const NewsFeedScreen = ({
   route,
   navigation,
 }: NativeStackScreenProps<NativeStackParams, 'NewsFeed'>) => {
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        placeholder: 'Search',
+      },
+    });
+  }, [navigation]);
+
   return (
     <View>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={styles.buttons}>
-          <Button variant="filled" onPress={() => navigation.push('Contacts')}>
-            Push contacts
+          <Button variant="filled" onPress={() => navigation.push('Albums')}>
+            Push Albums
           </Button>
           <Button variant="tinted" onPress={() => navigation.goBack()}>
             Go back
@@ -86,41 +91,6 @@ const NewsFeedScreen = ({
       </ScrollView>
       <HeaderHeightView />
     </View>
-  );
-};
-
-const ContactsScreen = ({
-  navigation,
-}: NativeStackScreenProps<NativeStackParams, 'Contacts'>) => {
-  const [query, setQuery] = React.useState('');
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      headerSearchBarOptions: {
-        placeholder: 'Filter contacts',
-        placement: 'inline',
-        onChangeText: (e) => {
-          setQuery(e.nativeEvent.text);
-        },
-      },
-    });
-  }, [navigation]);
-
-  return (
-    <Contacts
-      query={query}
-      contentInsetAdjustmentBehavior="automatic"
-      ListHeaderComponent={
-        <View style={styles.buttons}>
-          <Button variant="filled" onPress={() => navigation.push('Albums')}>
-            Push albums
-          </Button>
-          <Button variant="tinted" onPress={() => navigation.goBack()}>
-            Go back
-          </Button>
-        </View>
-      }
-    />
   );
 };
 
@@ -207,15 +177,6 @@ export function NativeStack() {
         }}
       />
       <Stack.Screen
-        name="Contacts"
-        component={ContactsScreen}
-        options={{
-          headerSearchBarOptions: {
-            placeholder: 'Filter contacts',
-          },
-        }}
-      />
-      <Stack.Screen
         name="Albums"
         component={AlbumsScreen}
         options={{
@@ -224,11 +185,8 @@ export function NativeStack() {
           headerTransparent: true,
           headerBlurEffect: 'light',
           headerStyle: {
-            backgroundColor: Platform.select({
-              // Add a background color since Android doesn't support blur effect
-              android: colors.card,
-              default: 'transparent',
-            }),
+            // Add a background color since Android doesn't support blur effect
+            backgroundColor: colors.card,
           },
         }}
       />

@@ -77,7 +77,6 @@ const SafeAreaFrameProvider = ({
 
     const rect = element.current.getBoundingClientRect();
 
-    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setFrame({
       x: rect.x,
       y: rect.y,
@@ -85,7 +84,7 @@ const SafeAreaFrameProvider = ({
       height: rect.height,
     });
 
-    let timeout: ReturnType<typeof setTimeout>;
+    let timeout: NodeJS.Timeout;
 
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0];

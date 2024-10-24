@@ -1,4 +1,3 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
 import {
   type DefaultRouterOptions,
   type NavigationState,
@@ -33,7 +32,7 @@ beforeEach(() => {
   require('nanoid/non-secure').__key = 0;
 });
 
-test("lets parent handle the action if child didn't", () => {
+it("lets parent handle the action if child didn't", () => {
   function CurrentRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const ParentRouter: Router<
@@ -110,7 +109,7 @@ test("lets parent handle the action if child didn't", () => {
   });
 });
 
-test("lets children handle the action if parent didn't with navigationInChildEnabled", () => {
+it("lets children handle the action if parent didn't with navigationInChildEnabled", () => {
   const CurrentParentRouter = MockRouter;
 
   function CurrentChildRouter(options: DefaultRouterOptions) {
@@ -243,7 +242,7 @@ test("lets children handle the action if parent didn't with navigationInChildEna
   });
 });
 
-test("lets children handle the action if parent didn't with NAVIGATE_DEPRECATED", () => {
+it("lets children handle the action if parent didn't with NAVIGATE_DEPRECATED", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -301,7 +300,7 @@ test("lets children handle the action if parent didn't with NAVIGATE_DEPRECATED"
   expect(navigation.getCurrentRoute()?.name).toBe('lex');
 });
 
-test('action goes to correct parent navigator if target is specified', () => {
+it('action goes to correct parent navigator if target is specified', () => {
   function CurrentTestRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const TestRouter: Router<
@@ -429,7 +428,7 @@ test('action goes to correct parent navigator if target is specified', () => {
   });
 });
 
-test('action goes to correct child navigator if target is specified', () => {
+it('action goes to correct child navigator if target is specified', () => {
   function CurrentTestRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const TestRouter: Router<
@@ -556,7 +555,7 @@ test('action goes to correct child navigator if target is specified', () => {
   });
 });
 
-test("action doesn't bubble if target is specified", () => {
+it("action doesn't bubble if target is specified", () => {
   const CurrentParentRouter = MockRouter;
 
   function CurrentChildRouter(options: DefaultRouterOptions) {
@@ -641,7 +640,7 @@ test("action doesn't bubble if target is specified", () => {
   expect(onStateChange).not.toHaveBeenCalled();
 });
 
-test('logs error if no navigator handled the action', () => {
+it('logs error if no navigator handled the action', () => {
   const TestRouter = MockRouter;
 
   const TestNavigator = (props: any) => {
@@ -701,7 +700,7 @@ test('logs error if no navigator handled the action', () => {
     </BaseNavigationContainer>
   );
 
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const spy = jest.spyOn(console, 'error').mockImplementation();
 
   render(element).update(element);
 
@@ -712,7 +711,7 @@ test('logs error if no navigator handled the action', () => {
   spy.mockRestore();
 });
 
-test("prevents removing a screen with 'beforeRemove' event", () => {
+it("prevents removing a screen with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 
@@ -852,7 +851,7 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
   });
 });
 
-test("prevents removing a child screen with 'beforeRemove' event", () => {
+it("prevents removing a child screen with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 
@@ -1020,7 +1019,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
   });
 });
 
-test("prevents removing a grand child screen with 'beforeRemove' event", () => {
+it("prevents removing a grand child screen with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 
@@ -1221,7 +1220,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
   });
 });
 
-test("prevents removing by multiple screens with 'beforeRemove' event", () => {
+it("prevents removing by multiple screens with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 
@@ -1383,7 +1382,7 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
   });
 });
 
-test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'", () => {
+it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 

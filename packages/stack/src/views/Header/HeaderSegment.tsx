@@ -114,8 +114,8 @@ export function HeaderSegment(props: Props) {
     headerRight: right,
     headerBackImage,
     headerBackTitle,
-    headerBackButtonDisplayMode = Platform.OS === 'ios' ? 'default' : 'minimal',
-    headerBackTruncatedTitle,
+    headerBackTitleVisible = Platform.OS === 'ios',
+    headerTruncatedBackTitle,
     headerBackAccessibilityLabel,
     headerBackTestID,
     headerBackAllowFontScaling,
@@ -167,7 +167,7 @@ export function HeaderSegment(props: Props) {
           allowFontScaling: headerBackAllowFontScaling,
           onPress: onGoBack,
           label: headerBackTitle,
-          truncatedLabel: headerBackTruncatedTitle,
+          truncatedLabel: headerTruncatedBackTitle,
           labelStyle: [leftLabelStyle, headerBackTitleStyle],
           onLabelLayout: handleLeftLabelLayout,
           screenLayout: layout,
@@ -195,11 +195,11 @@ export function HeaderSegment(props: Props) {
       layout={layout}
       headerTitle={headerTitle}
       headerLeft={headerLeft}
+      headerLeftLabelVisible={headerBackTitleVisible}
       headerRight={headerRight}
       headerTitleContainerStyle={[titleStyle, headerTitleContainerStyle]}
       headerLeftContainerStyle={[leftButtonStyle, headerLeftContainerStyle]}
       headerRightContainerStyle={[rightButtonStyle, headerRightContainerStyle]}
-      headerBackButtonDisplayMode={headerBackButtonDisplayMode}
       headerBackgroundContainerStyle={[
         backgroundStyle,
         headerBackgroundContainerStyle,

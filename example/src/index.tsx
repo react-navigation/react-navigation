@@ -17,7 +17,6 @@ import {
   DarkTheme,
   DefaultTheme,
   type InitialState,
-  type LinkingOptions,
   NavigationContainer,
   useNavigationContainerRef,
 } from '@react-navigation/native';
@@ -41,6 +40,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import type { LinkingOptions } from '../../packages/native/src/types';
 import {
   type RootDrawerParamList,
   type RootStackParamList,
@@ -136,7 +136,7 @@ export function App() {
       try {
         const initialUrl = await Linking.getInitialURL();
 
-        if (Platform.OS !== 'web' && initialUrl === null) {
+        if (Platform.OS !== 'web' || initialUrl === null) {
           const savedState = await AsyncStorage.getItem(
             NAVIGATION_PERSISTENCE_KEY
           );
@@ -308,7 +308,6 @@ export function App() {
                             <ListItem
                               title={SCREENS[name].title}
                               onPress={() => {
-                                // @ts-expect-error TypeScript has some issues with more than 25 screens. Needs workaround.
                                 navigation.navigate(name);
                               }}
                             />

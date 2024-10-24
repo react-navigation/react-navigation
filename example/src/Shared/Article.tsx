@@ -39,13 +39,11 @@ const Paragraph = ({
   );
 };
 
-const DEFAULT_AUTHOR = {
-  name: 'Knowledge Bot',
-};
-
 export function Article({
   date = '1st Jan 2025',
-  author = DEFAULT_AUTHOR,
+  author = {
+    name: 'Knowledge Bot',
+  },
   ...rest
 }: Props) {
   const ref = React.useRef<ScrollView>(null);

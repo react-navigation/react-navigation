@@ -23,12 +23,8 @@ type Props = MaterialTopTabNavigationConfig & {
   descriptors: MaterialTopTabDescriptorMap;
 };
 
-const renderTabBarDefault = (props: MaterialTopTabBarProps) => (
-  <MaterialTopTabBar {...props} />
-);
-
 export function MaterialTopTabView({
-  tabBar = renderTabBarDefault,
+  tabBar = (props: MaterialTopTabBarProps) => <MaterialTopTabBar {...props} />,
   state,
   navigation,
   descriptors,

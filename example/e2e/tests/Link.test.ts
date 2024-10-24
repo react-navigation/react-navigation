@@ -26,7 +26,7 @@ test('goes to the album screen and goes back', async ({ page }) => {
   await page.waitForURL('**/link-component/article/gandalf');
 
   const link = page.getByRole('link', {
-    name: 'Go to albums',
+    name: 'Go to Albums',
   });
 
   await expect(link).toHaveAttribute('href', '/link-component/albums');
@@ -58,7 +58,7 @@ test('replaces article with the album screen', async ({ page }) => {
   await page.waitForURL('**/link-component/article/gandalf');
 
   const link = page.getByRole('link', {
-    name: 'Replace with albums',
+    name: 'Replace with Albums',
   });
 
   await expect(link).toHaveAttribute('href', '/link-component/albums');
@@ -102,7 +102,7 @@ test('preserves hash for navigation', async ({ page }) => {
     'Article by Babel fish - React Navigation Example'
   );
 
-  await page.getByRole('link', { name: 'Replace with albums' }).click();
+  await page.getByRole('link', { name: 'Replace with Albums' }).click();
 
   await page.waitForURL('**/link-component/albums');
 });

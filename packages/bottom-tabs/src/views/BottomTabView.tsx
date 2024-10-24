@@ -64,16 +64,12 @@ const hasAnimation = (options: BottomTabNavigationOptions) => {
     return animation !== 'none';
   }
 
-  return Boolean(transitionSpec);
+  return !transitionSpec;
 };
-
-const renderTabBarDefault = (props: BottomTabBarProps) => (
-  <BottomTabBar {...props} />
-);
 
 export function BottomTabView(props: Props) {
   const {
-    tabBar = renderTabBarDefault,
+    tabBar = (props: BottomTabBarProps) => <BottomTabBar {...props} />,
     state,
     navigation,
     descriptors,

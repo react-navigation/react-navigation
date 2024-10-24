@@ -78,7 +78,7 @@ const NewsFeedScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.navigate('Albums')}>
-          Navigate to albums
+          Navigate to album
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back

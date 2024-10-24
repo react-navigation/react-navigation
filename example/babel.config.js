@@ -3,7 +3,6 @@ const fs = require('fs');
 
 const packages = path.resolve(__dirname, '..', 'packages');
 
-/** @type {import('@babel/core').TransformOptions} */
 module.exports = function (api) {
   api.cache(true);
 
@@ -25,29 +24,15 @@ module.exports = function (api) {
 
   return {
     presets: ['babel-preset-expo'],
-    overrides: [
-      {
-        exclude: /\/node_modules\//,
-        plugins: [
-          '@babel/plugin-transform-strict-mode',
-          [
-            'module-resolver',
-            {
-              extensions: ['.tsx', '.ts', '.js', '.json'],
-              alias,
-            },
-          ],
-        ],
-      },
-      {
-        include: /\/packages\//,
-        presets: [
-          [
-            'module:react-native-builder-bob/babel-preset',
-            { modules: 'commonjs' },
-          ],
-        ],
-      },
+    plugins: [
+      'react-native-reanimated/plugin',
+      [
+        'module-resolver',
+        {
+          extensions: ['.tsx', '.ts', '.js', '.json'],
+          alias,
+        },
+      ],
     ],
   };
 };

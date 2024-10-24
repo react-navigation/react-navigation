@@ -3,32 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [4.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.10...react-native-tab-view@4.0.0-rc.11) (2024-10-11)
-
-### Bug Fixes
-
-* spread key into JSX warning ([#12142](https://github.com/react-navigation/react-navigation/issues/12142)) ([f9031ec](https://github.com/react-navigation/react-navigation/commit/f9031ec3eeeda46db5c5a55dca0f24f0ea021547)) - by @jewhyena
-
-# [4.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.9...react-native-tab-view@4.0.0-rc.10) (2024-09-08)
-
-**Note:** Version bump only for package react-native-tab-view
-
-# [4.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.8...react-native-tab-view@4.0.0-rc.9) (2024-08-08)
-
-### Bug Fixes
-
-* use pointer cursor only on web & iOS ([ce1ce06](https://github.com/react-navigation/react-navigation/commit/ce1ce06df75991cb25f3647bcb3e52e08dfff145)) - by @satya164
-
-# [4.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.7...react-native-tab-view@4.0.0-rc.8) (2024-08-01)
-
-**Note:** Version bump only for package react-native-tab-view
-
-# [4.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.6...react-native-tab-view@4.0.0-rc.7) (2024-07-11)
-
-### Bug Fixes
-
-* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
-
 # [4.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.5...react-native-tab-view@4.0.0-rc.6) (2024-07-10)
 
 ### Bug Fixes

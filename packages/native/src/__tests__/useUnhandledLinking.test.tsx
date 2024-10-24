@@ -1,4 +1,3 @@
-import { expect, test } from '@jest/globals';
 import {
   createNavigatorFactory,
   type NavigationListBase,
@@ -10,6 +9,7 @@ import {
 } from '@react-navigation/core';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
+// eslint-disable-next-line no-restricted-imports
 import { Button, Text } from 'react-native';
 
 import { NavigationContainer } from '../NavigationContainer';
@@ -44,7 +44,7 @@ function createTestNavigator<
   return createNavigatorFactory(StackNavigator)();
 }
 
-test('schedules a state to be handled on conditional linking', async () => {
+it('schedules a state to be handled on conditional linking', async () => {
   const Stack = createTestNavigator();
 
   const TestScreen = ({ route, signOut }: any) => (
@@ -139,7 +139,7 @@ test('schedules a state to be handled on conditional linking', async () => {
   expect(queryByText('Home')).not.toBeNull();
 });
 
-test('schedules a state to be handled on conditional linking under nested navigator', async () => {
+it('schedules a state to be handled on conditional linking under nested navigator', async () => {
   const OuterStack = createTestNavigator();
   const Stack = createTestNavigator();
 
@@ -238,7 +238,7 @@ test('schedules a state to be handled on conditional linking under nested naviga
   expect(queryByText('Profile')).not.toBeNull();
 });
 
-test('schedules a state to be handled on conditional linking in nested stack', async () => {
+it('schedules a state to be handled on conditional linking in nested stack', async () => {
   const Stack = createTestNavigator();
   const NestedStack = createTestNavigator();
 
@@ -347,7 +347,7 @@ test('schedules a state to be handled on conditional linking in nested stack', a
   expect(queryByText('Details')).not.toBeNull();
 });
 
-test('clears lastUnhandledLink upon successful linking handling', () => {
+it('clears lastUnhandledLink upon successful linking handling', () => {
   const linking = {
     prefixes: ['rn://'],
     config: {
@@ -400,7 +400,7 @@ test('clears lastUnhandledLink upon successful linking handling', () => {
   expect(queryByText('home/profile')).toBeNull();
 });
 
-test('clears lastUnhandledLink upon calling clearUnhandledLink', async () => {
+it('clears lastUnhandledLink upon calling clearUnhandledLink', async () => {
   const Stack = createTestNavigator();
 
   const LinkDisplayScreen = (): any => {

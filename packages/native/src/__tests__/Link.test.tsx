@@ -1,4 +1,3 @@
-import { expect, jest, test } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
@@ -8,13 +7,11 @@ import { NavigationContainer } from '../NavigationContainer';
 type RootParamList = { Foo: undefined; Bar: { id: string } };
 
 jest.mock('react-native/Libraries/Utilities/Platform', () => ({
-  ...jest.requireActual<
-    typeof import('react-native/Libraries/Utilities/Platform')
-  >('react-native/Libraries/Utilities/Platform'),
+  ...jest.requireActual('react-native/Libraries/Utilities/Platform'),
   OS: 'web',
 }));
 
-test('renders link with href on web', () => {
+it('renders link with href on web', () => {
   const config = {
     prefixes: ['https://example.com'],
     config: {
@@ -105,7 +102,7 @@ test('renders link with href on web', () => {
 `);
 });
 
-test("doesn't navigate if default was prevented", () => {
+it("doesn't navigate if default was prevented", () => {
   const config = {
     prefixes: ['https://example.com'],
     config: {

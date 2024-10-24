@@ -1,4 +1,3 @@
-import { beforeEach, expect, test } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
@@ -11,7 +10,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('gets navigation prop from context', () => {
+it('gets navigation prop from context', () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
@@ -37,7 +36,7 @@ test('gets navigation prop from context', () => {
   );
 });
 
-test("gets navigation's parent from context", () => {
+it("gets navigation's parent from context", () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
@@ -69,7 +68,7 @@ test("gets navigation's parent from context", () => {
   );
 });
 
-test("gets navigation's parent's parent from context", () => {
+it("gets navigation's parent's parent from context", () => {
   expect.assertions(2);
 
   const TestNavigator = (props: any): any => {
@@ -109,7 +108,7 @@ test("gets navigation's parent's parent from context", () => {
   );
 });
 
-test('gets navigation from container from context', () => {
+it('gets navigation from container from context', () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
@@ -136,7 +135,7 @@ test('gets navigation from container from context', () => {
   );
 });
 
-test('throws if called outside a navigation context', () => {
+it('throws if called outside a navigation context', () => {
   expect.assertions(1);
 
   const Test = () => {

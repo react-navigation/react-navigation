@@ -1,19 +1,17 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   Button,
-  getHeaderTitle,
-  Header as ElementsHeader,
+  HeaderBackground,
   HeaderButton,
   useHeaderHeight,
 } from '@react-navigation/elements';
 import { type PathConfigMap } from '@react-navigation/native';
 import {
   createStackNavigator,
-  Header as StackHeader,
+  Header,
   type StackHeaderProps,
   type StackScreenProps,
 } from '@react-navigation/stack';
-import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import {
   Alert,
@@ -27,17 +25,15 @@ import {
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
-import { NewsFeed } from '../Shared/NewsFeed';
+import { BlurView } from '../Shared/BlurView';
 
 export type HeaderCustomizationStackParams = {
   Article: { author: string };
-  NewsFeed: { date: number };
   Albums: undefined;
 };
 
 const linking: PathConfigMap<HeaderCustomizationStackParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
-  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
   Albums: 'albums',
 };
 
@@ -50,39 +46,17 @@ const ArticleScreen = ({
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button
-          variant="filled"
-          onPress={() => navigation.push('NewsFeed', { date: Date.now() })}
-        >
-          Push feed
-        </Button>
-        <Button variant="tinted" onPress={() => navigation.pop()}>
-          Pop screen
-        </Button>
-      </View>
-      <Article
-        author={{ name: route.params?.author ?? 'Unknown' }}
-        scrollEnabled={scrollEnabled}
-      />
-    </ScrollView>
-  );
-};
-
-const NewsFeedScreen = ({
-  route,
-  navigation,
-}: StackScreenProps<HeaderCustomizationStackParams, 'NewsFeed'>) => {
-  return (
-    <ScrollView>
-      <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Push albums
+          Push album
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
         </Button>
       </View>
-      <NewsFeed scrollEnabled={scrollEnabled} date={route.params.date} />
+      <Article
+        author={{ name: route.params.author }}
+        scrollEnabled={scrollEnabled}
+      />
     </ScrollView>
   );
 };
@@ -97,14 +71,12 @@ const AlbumsScreen = ({
       <View style={styles.buttons}>
         <Button
           variant="filled"
-          onPress={() =>
-            navigation.navigate('Article', { author: 'Babel fish' })
-          }
+          onPress={() => navigation.push('Article', { author: 'Babel fish' })}
         >
-          Navigate to article
+          Push article
         </Button>
-        <Button variant="tinted" onPress={() => navigation.pop(2)}>
-          Pop by 2
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
+          Go back
         </Button>
       </View>
       <Albums scrollEnabled={scrollEnabled} />
@@ -125,7 +97,7 @@ function CustomHeader(props: StackHeaderProps) {
 
   return (
     <>
-      <StackHeader {...props} />
+      <Header {...props} />
       <Animated.Text style={[styles.banner, { opacity }]}>
         Why hello there, pardner!
       </Animated.Text>
@@ -146,7 +118,7 @@ export function StackHeaderCustomization() {
           header: (props) => <CustomHeader {...props} />,
           headerTintColor: '#fff',
           headerStyle: { backgroundColor: '#ff005d' },
-          headerBackButtonDisplayMode: 'minimal',
+          headerBackTitleVisible: false,
           headerTitleAlign: headerTitleCentered ? 'center' : 'left',
           headerBackImage: ({ tintColor }) => (
             <MaterialCommunityIcons
@@ -177,21 +149,6 @@ export function StackHeaderCustomization() {
         initialParams={{ author: 'Gandalf' }}
       />
       <Stack.Screen
-        name="NewsFeed"
-        component={NewsFeedScreen}
-        options={{
-          title: 'Feed',
-          headerMode: 'screen',
-          header: ({ options, route, back }) => (
-            <ElementsHeader
-              {...options}
-              back={back}
-              title={getHeaderTitle(options, route.name)}
-            />
-          ),
-        }}
-      />
-      <Stack.Screen
         name="Albums"
         component={AlbumsScreen}
         options={({ theme }) => ({
@@ -199,11 +156,19 @@ export function StackHeaderCustomization() {
           headerBackTitle: 'Back',
           headerTransparent: true,
           headerBackground: () => (
-            <BlurView
-              tint={theme.dark ? 'dark' : 'light'}
-              intensity={100}
-              style={StyleSheet.absoluteFill}
-            />
+            <HeaderBackground
+              style={{
+                backgroundColor: 'blue',
+                borderBottomWidth: StyleSheet.hairlineWidth,
+                borderBottomColor: theme.colors.border,
+              }}
+            >
+              <BlurView
+                tint={theme.dark ? 'dark' : 'light'}
+                intensity={75}
+                style={StyleSheet.absoluteFill}
+              />
+            </HeaderBackground>
           ),
         })}
       />

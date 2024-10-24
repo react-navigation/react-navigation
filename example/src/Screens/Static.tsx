@@ -97,13 +97,8 @@ const Navigation = createComponentForStaticNavigation(RootStack, 'Root');
 export function StaticScreen() {
   const [isChatShown, setIsChatShown] = React.useState(false);
 
-  const context = React.useMemo(
-    () => ({ isChatShown, setIsChatShown }),
-    [isChatShown]
-  );
-
   return (
-    <ChatShownContext.Provider value={context}>
+    <ChatShownContext.Provider value={{ isChatShown, setIsChatShown }}>
       <Navigation />
     </ChatShownContext.Provider>
   );

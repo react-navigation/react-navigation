@@ -1,4 +1,3 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
 import type { NavigationState, Router } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
@@ -12,7 +11,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('fires focus and blur events in root navigator', () => {
+it('fires focus and blur events in root navigator', () => {
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation, descriptors } = useNavigationBuilder(
       MockRouter,
@@ -105,7 +104,7 @@ test('fires focus and blur events in root navigator', () => {
   expect(fourthBlurCallback).toHaveBeenCalledTimes(0);
 });
 
-test('fires focus event after blur', () => {
+it('fires focus event after blur', () => {
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation, descriptors } = useNavigationBuilder(
       MockRouter,
@@ -168,7 +167,7 @@ test('fires focus event after blur', () => {
   ]);
 });
 
-test('fires focus and blur events in nested navigator', () => {
+it('fires focus and blur events in nested navigator', () => {
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation, descriptors } = useNavigationBuilder(
       MockRouter,
@@ -309,7 +308,7 @@ test('fires focus and blur events in nested navigator', () => {
   expect(fourthBlurCallback).toHaveBeenCalledTimes(3);
 });
 
-test('fires blur event when a route is removed with a delay', async () => {
+it('fires blur event when a route is removed with a delay', async () => {
   const TestRouter = (options: any): Router<NavigationState, any> => {
     const router = MockRouter(options);
 
@@ -440,7 +439,7 @@ test('fires blur event when a route is removed with a delay', async () => {
   expect(blurCallback).toHaveBeenCalledTimes(1);
 });
 
-test('fires custom events added with addListener', () => {
+it('fires custom events added with addListener', () => {
   const eventName = 'someSuperCoolEvent';
 
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
@@ -457,9 +456,9 @@ test('fires custom events added with addListener', () => {
     return state.routes.map((route) => descriptors[route.key].render());
   });
 
-  const firstCallback: any = jest.fn();
-  const secondCallback: any = jest.fn();
-  const thirdCallback: any = jest.fn();
+  const firstCallback = jest.fn();
+  const secondCallback = jest.fn();
+  const thirdCallback = jest.fn();
 
   const createComponent =
     (callback: any) =>
@@ -523,7 +522,7 @@ test('fires custom events added with addListener', () => {
   expect(thirdCallback).toHaveBeenCalledTimes(2);
 });
 
-test("doesn't call same listener multiple times with addListener", () => {
+it("doesn't call same listener multiple times with addListener", () => {
   const eventName = 'someSuperCoolEvent';
 
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
@@ -574,10 +573,9 @@ test("doesn't call same listener multiple times with addListener", () => {
   expect(callback).toHaveBeenCalledTimes(1);
 });
 
-test('fires custom events added with listeners prop', () => {
+it('fires custom events added with listeners prop', () => {
   const eventName = 'someSuperCoolEvent';
 
-  // eslint-disable-next-line @eslint-react/no-missing-component-display-name
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation } = useNavigationBuilder(MockRouter, props);
 
@@ -589,9 +587,9 @@ test('fires custom events added with listeners prop', () => {
     return null;
   });
 
-  const firstCallback: any = jest.fn();
-  const secondCallback: any = jest.fn();
-  const thirdCallback: any = jest.fn();
+  const firstCallback = jest.fn();
+  const secondCallback = jest.fn();
+  const thirdCallback = jest.fn();
 
   const ref = React.createRef<any>();
 
@@ -654,10 +652,9 @@ test('fires custom events added with listeners prop', () => {
   expect(thirdCallback).toHaveBeenCalledTimes(1);
 });
 
-test("doesn't call same listener multiple times with listeners", () => {
+it("doesn't call same listener multiple times with listeners", () => {
   const eventName = 'someSuperCoolEvent';
 
-  // eslint-disable-next-line @eslint-react/no-missing-component-display-name
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation } = useNavigationBuilder(MockRouter, props);
 
@@ -706,10 +703,9 @@ test("doesn't call same listener multiple times with listeners", () => {
   expect(callback).toHaveBeenCalledTimes(1);
 });
 
-test('fires listeners when callback is provided for listeners prop', () => {
+it('fires listeners when callback is provided for listeners prop', () => {
   const eventName = 'someSuperCoolEvent';
 
-  // eslint-disable-next-line @eslint-react/no-missing-component-display-name
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation } = useNavigationBuilder(MockRouter, props);
 
@@ -721,9 +717,9 @@ test('fires listeners when callback is provided for listeners prop', () => {
     return null;
   });
 
-  const firstCallback: any = jest.fn();
-  const secondCallback: any = jest.fn();
-  const thirdCallback: any = jest.fn();
+  const firstCallback = jest.fn();
+  const secondCallback = jest.fn();
+  const thirdCallback = jest.fn();
 
   const ref = React.createRef<any>();
 
@@ -792,7 +788,7 @@ test('fires listeners when callback is provided for listeners prop', () => {
   expect(thirdCallback).toHaveBeenCalledTimes(1);
 });
 
-test('has option to prevent default', () => {
+it('has option to prevent default', () => {
   expect.assertions(5);
 
   const eventName = 'someSuperCoolEvent';
@@ -852,7 +848,7 @@ test('has option to prevent default', () => {
   });
 });
 
-test('removes only one listener when unsubscribe is called multiple times', () => {
+it('removes only one listener when unsubscribe is called multiple times', () => {
   const eventName = 'someSuperCoolEvent';
 
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {

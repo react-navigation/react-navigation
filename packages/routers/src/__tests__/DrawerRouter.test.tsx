@@ -1,5 +1,3 @@
-import { expect, jest, test } from '@jest/globals';
-
 import {
   CommonActions,
   DrawerActions,
@@ -11,7 +9,7 @@ import {
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
 
-test('gets initial state from route names and params with initialRouteName', () => {
+it('gets initial state from route names and params with initialRouteName', () => {
   const router = DrawerRouter({ initialRouteName: 'baz' });
 
   expect(
@@ -43,7 +41,7 @@ test('gets initial state from route names and params with initialRouteName', () 
   });
 });
 
-test('gets initial state from route names and params without initialRouteName', () => {
+it('gets initial state from route names and params without initialRouteName', () => {
   const router = DrawerRouter({});
 
   expect(
@@ -72,7 +70,7 @@ test('gets initial state from route names and params without initialRouteName', 
   });
 });
 
-test('gets rehydrated state from partial state', () => {
+it('gets rehydrated state from partial state', () => {
   const router = DrawerRouter({});
 
   const options: RouterConfigOptions = {
@@ -225,7 +223,7 @@ test('gets rehydrated state from partial state', () => {
   });
 });
 
-test("doesn't rehydrate state if it's not stale", () => {
+it("doesn't rehydrate state if it's not stale", () => {
   const router = DrawerRouter({});
 
   const state: DrawerNavigationState<ParamListBase> = {
@@ -256,7 +254,7 @@ test("doesn't rehydrate state if it's not stale", () => {
   ).toBe(state);
 });
 
-test('handles navigate action', () => {
+it('handles navigate action', () => {
   const router = DrawerRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
@@ -299,7 +297,7 @@ test('handles navigate action', () => {
   });
 });
 
-test('handles navigate action with open drawer', () => {
+it('handles navigate action with open drawer', () => {
   const router = DrawerRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
@@ -345,7 +343,7 @@ test('handles navigate action with open drawer', () => {
   });
 });
 
-test('handles open drawer action', () => {
+it('handles open drawer action', () => {
   const router = DrawerRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
@@ -413,7 +411,7 @@ test('handles open drawer action', () => {
   ).toBe(state);
 });
 
-test('handles close drawer action', () => {
+it('handles close drawer action', () => {
   const router = DrawerRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
@@ -481,7 +479,7 @@ test('handles close drawer action', () => {
   ).toBe(state);
 });
 
-test('handles toggle drawer action', () => {
+it('handles toggle drawer action', () => {
   const router = DrawerRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar'],
@@ -564,7 +562,7 @@ test('handles toggle drawer action', () => {
   });
 });
 
-test('updates history on focus change', () => {
+it('updates history on focus change', () => {
   const router = DrawerRouter({ backBehavior: 'history' });
 
   const state: DrawerNavigationState<ParamListBase> = {
@@ -593,7 +591,7 @@ test('updates history on focus change', () => {
   ]);
 });
 
-test('closes drawer on focus change', () => {
+it('closes drawer on focus change', () => {
   const router = DrawerRouter({ backBehavior: 'history' });
 
   expect(

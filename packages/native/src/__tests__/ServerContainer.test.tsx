@@ -1,4 +1,3 @@
-import { expect, jest, test } from '@jest/globals';
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
@@ -25,7 +24,7 @@ window.addEventListener = () => {};
 window.removeEventListener = () => {};
 
 // We want to use the web version of useLinking
-// eslint-disable-next-line import-x/extensions
+// eslint-disable-next-line import/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
 // Since Jest is configured for React Native, the *.native.js file is imported
@@ -43,7 +42,7 @@ jest.spyOn(console, 'error').mockImplementation((...args) => {
   error(...args);
 });
 
-test('renders correct state with location', () => {
+it('renders correct state with location', () => {
   const StackNavigator = (
     props: DefaultNavigatorOptions<
       ParamListBase,
@@ -157,7 +156,7 @@ test('renders correct state with location', () => {
   );
 });
 
-test('gets the current options', () => {
+it('gets the current options', () => {
   const createTabNavigator = createNavigatorFactory((props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       TabRouter,

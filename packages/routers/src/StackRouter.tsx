@@ -68,11 +68,9 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
    * @param [params] Params object for the new route.
    */
   replace<RouteName extends keyof ParamList>(
-    ...args: {
-      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
-        ? [screen: Screen] | [screen: Screen, params: ParamList[Screen]]
-        : [screen: Screen, params: ParamList[Screen]];
-    }[RouteName]
+    ...args: undefined extends ParamList[RouteName]
+      ? [screen: RouteName] | [screen: RouteName, params: ParamList[RouteName]]
+      : [screen: RouteName, params: ParamList[RouteName]]
   ): void;
 
   /**
@@ -82,11 +80,9 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
    * @param [params] Params object for the route.
    */
   push<RouteName extends keyof ParamList>(
-    ...args: {
-      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
-        ? [screen: Screen] | [screen: Screen, params: ParamList[Screen]]
-        : [screen: Screen, params: ParamList[Screen]];
-    }[RouteName]
+    ...args: undefined extends ParamList[RouteName]
+      ? [screen: RouteName] | [screen: RouteName, params: ParamList[RouteName]]
+      : [screen: RouteName, params: ParamList[RouteName]]
   ): void;
 
   /**
@@ -108,16 +104,19 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
    * @param [merge] Whether to merge the params onto the route.
    */
   popTo<RouteName extends keyof ParamList>(
-    ...args: {
-      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
+    ...args: // This condition allows us to iterate over a union type, similar to navigate
+    RouteName extends unknown
+      ? // This condition checks if the params are optional,
+        // which means it's either undefined or a union with undefined
+        undefined extends ParamList[RouteName]
         ?
-            | [screen: Screen]
-            | [screen: Screen, params: ParamList[Screen]]
-            | [screen: RouteName, params: ParamList[Screen], merge: boolean]
+            | [screen: RouteName]
+            | [screen: RouteName, params: ParamList[RouteName]]
+            | [screen: RouteName, params: ParamList[RouteName], merge: boolean]
         :
-            | [screen: Screen, params: ParamList[Screen]]
-            | [screen: RouteName, params: ParamList[Screen], merge: boolean];
-    }[RouteName]
+            | [screen: RouteName, params: ParamList[RouteName]]
+            | [screen: RouteName, params: ParamList[RouteName], merge: boolean]
+      : never
   ): void;
 };
 

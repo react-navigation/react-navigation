@@ -3,9 +3,32 @@ import { Button } from '@react-navigation/elements';
 import { useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Drawer } from 'react-native-drawer-layout';
+import { Drawer, useDrawerProgress } from 'react-native-drawer-layout';
+import Animated, {
+  interpolate,
+  type SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
-import { DrawerProgress } from '../Shared/DrawerProgress';
+const RealDrawer = () => {
+  const progress = useDrawerProgress() as SharedValue<number>;
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateY: interpolate(progress.value, [0, 1], [56, 0]),
+        },
+      ],
+    };
+  });
+
+  return (
+    <View style={styles.realDrawerWrapper}>
+      <Animated.View style={[styles.realDrawer, animatedStyle]} />
+    </View>
+  );
+};
 
 const DRAWER_TYPES = ['front', 'back', 'slide'] as const;
 
@@ -40,7 +63,7 @@ export function DrawerView() {
       }}
     >
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <DrawerProgress />
+        <RealDrawer />
         <View style={styles.buttons}>
           <Button
             variant="filled"
@@ -100,5 +123,23 @@ const styles = StyleSheet.create({
   },
   buttons: {
     gap: 8,
+  },
+  realDrawerWrapper: {
+    width: 64,
+    height: 72,
+    marginBottom: 8,
+    overflow: 'hidden',
+  },
+  realDrawer: {
+    position: 'absolute',
+    top: 0,
+    start: 0,
+    end: 8,
+    bottom: 0,
+    backgroundColor: '#ebdec1',
+    borderColor: '#3e3a3a',
+    borderWidth: 4,
+    borderBottomWidth: 0,
+    borderRadius: 2,
   },
 });

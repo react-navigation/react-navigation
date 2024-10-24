@@ -1,4 +1,3 @@
-import { expect, test } from '@jest/globals';
 import type { InitialState } from '@react-navigation/routers';
 import { produce } from 'immer';
 
@@ -13,11 +12,11 @@ const changePath = <T extends InitialState>(state: T, path: string): T =>
     route.path = path;
   });
 
-test('returns undefined for invalid path', () => {
+it('returns undefined for invalid path', () => {
   expect(getStateFromPath<object>('//')).toBeUndefined();
 });
 
-test('converts path string to initial state', () => {
+it('converts path string to initial state', () => {
   const path = 'foo/bar/baz%20qux?author=jane%20%26%20co&valid=true';
   const state = {
     routes: [
@@ -49,7 +48,7 @@ test('converts path string to initial state', () => {
   );
 });
 
-test('decodes encoded params in path', () => {
+it('decodes encoded params in path', () => {
   const path = '/foo/bar/bar_%23_foo';
   const config = {
     screens: {
@@ -87,7 +86,7 @@ test('decodes encoded params in path', () => {
   ).toEqual(path);
 });
 
-test('decodes encoded params in path that have encoded /', () => {
+it('decodes encoded params in path that have encoded /', () => {
   const path = '/foo/bar/bar_%2F_foo';
   const config = {
     screens: {
@@ -125,7 +124,7 @@ test('decodes encoded params in path that have encoded /', () => {
   ).toEqual(path);
 });
 
-test('converts path string to initial state with config', () => {
+it('converts path string to initial state with config', () => {
   const path = '/foo/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
   const config = {
     screens: {
@@ -190,7 +189,7 @@ test('converts path string to initial state with config', () => {
   ).toEqual(state);
 });
 
-test('handles leading slash when converting', () => {
+it('handles leading slash when converting', () => {
   const path = '/foo/bar/?count=42';
 
   expect(getStateFromPath<object>(path)).toEqual({
@@ -211,7 +210,7 @@ test('handles leading slash when converting', () => {
   });
 });
 
-test('handles ending slash when converting', () => {
+it('handles ending slash when converting', () => {
   const path = 'foo/bar/?count=42';
 
   expect(getStateFromPath<object>(path)).toEqual({
@@ -232,7 +231,7 @@ test('handles ending slash when converting', () => {
   });
 });
 
-test('handles route without param', () => {
+it('handles route without param', () => {
   const path = 'foo/bar';
   const state = {
     routes: [
@@ -251,7 +250,7 @@ test('handles route without param', () => {
   );
 });
 
-test('converts path string to initial state with config with nested screens', () => {
+it('converts path string to initial state with config with nested screens', () => {
   const path = '/foe/bar/sweet/apple/baz/jane?count=10&answer=42&valid=true';
   const config = {
     screens: {
@@ -329,7 +328,7 @@ test('converts path string to initial state with config with nested screens', ()
   ).toEqual(state);
 });
 
-test('converts path string to initial state with config with nested screens and unused parse functions', () => {
+it('converts path string to initial state with config with nested screens and unused parse functions', () => {
   const path = '/foe/baz/jane?count=10&answer=42&valid=true';
   const config = {
     screens: {
@@ -392,7 +391,7 @@ test('converts path string to initial state with config with nested screens and 
   ).toEqual(changePath(state, '/foe/baz/Jane?count=10&answer=42&valid=true'));
 });
 
-test('handles nested object with unused configs and with parse in it', () => {
+it('handles nested object with unused configs and with parse in it', () => {
   const path = '/bar/sweet/apple/foe/bis/jane?count=10&answer=42&valid=true';
   const config = {
     screens: {
@@ -484,7 +483,7 @@ test('handles nested object with unused configs and with parse in it', () => {
   ).toEqual(state);
 });
 
-test('handles parse in nested object for second route depth', () => {
+it('handles parse in nested object for second route depth', () => {
   const path = '/baz';
   const config = {
     screens: {
@@ -534,7 +533,7 @@ test('handles parse in nested object for second route depth', () => {
   ).toEqual(state);
 });
 
-test('handles parse in nested object for second route depth and and path and parse in roots', () => {
+it('handles parse in nested object for second route depth and and path and parse in roots', () => {
   const path = '/baz';
   const config = {
     screens: {
@@ -585,7 +584,7 @@ test('handles parse in nested object for second route depth and and path and par
   ).toEqual(state);
 });
 
-test('handles path at top level', () => {
+it('handles path at top level', () => {
   const path = 'foo/fruits/apple';
   const config = {
     path: 'foo',
@@ -621,7 +620,7 @@ test('handles path at top level', () => {
   ).toEqual(state);
 });
 
-test('handles initialRouteName at top level', () => {
+it('handles initialRouteName at top level', () => {
   const path = '/baz';
   const config = {
     initialRouteName: 'Boo',
@@ -665,7 +664,7 @@ test('handles initialRouteName at top level', () => {
   ).toEqual(state);
 });
 
-test('handles initialRouteName inside a screen', () => {
+it('handles initialRouteName inside a screen', () => {
   const path = '/baz';
   const config = {
     screens: {
@@ -711,7 +710,7 @@ test('handles initialRouteName inside a screen', () => {
   ).toEqual(state);
 });
 
-test('handles initialRouteName included in path', () => {
+it('handles initialRouteName included in path', () => {
   const path = '/baz';
   const config = {
     screens: {
@@ -753,7 +752,7 @@ test('handles initialRouteName included in path', () => {
   ).toEqual(state);
 });
 
-test('handles two initialRouteNames', () => {
+it('handles two initialRouteNames', () => {
   const path = '/bar/sweet/apple/foe/bis/jane?answer=42&count=10&valid=true';
   const config = {
     screens: {
@@ -848,7 +847,7 @@ test('handles two initialRouteNames', () => {
   ).toEqual(state);
 });
 
-test('accepts initialRouteName without config for it', () => {
+it('accepts initialRouteName without config for it', () => {
   const path = '/bar/sweet/apple/foe/bis/jane?answer=42&count=10&valid=true';
   const config = {
     screens: {
@@ -943,7 +942,7 @@ test('accepts initialRouteName without config for it', () => {
   ).toEqual(state);
 });
 
-test('returns undefined if no matching screen is present (top level path)', () => {
+it('returns undefined if no matching screen is present (top level path)', () => {
   const path = '/foo/bar';
   const config = {
     path: 'qux',
@@ -964,7 +963,7 @@ test('returns undefined if no matching screen is present (top level path)', () =
   expect(getStateFromPath<object>(path, config)).toBeUndefined();
 });
 
-test('returns undefined if no matching screen is present', () => {
+it('returns undefined if no matching screen is present', () => {
   const path = '/baz';
   const config = {
     screens: {
@@ -985,7 +984,7 @@ test('returns undefined if no matching screen is present', () => {
   expect(getStateFromPath<object>(path, config)).toBeUndefined();
 });
 
-test('returns undefined if path is empty and no matching screen is present', () => {
+it('returns undefined if path is empty and no matching screen is present', () => {
   const path = '';
   const config = {
     screens: {
@@ -1005,7 +1004,7 @@ test('returns undefined if path is empty and no matching screen is present', () 
   expect(getStateFromPath<object>(path, config)).toBeUndefined();
 });
 
-test('returns matching screen if path is empty', () => {
+it('returns matching screen if path is empty', () => {
   const path = '';
   const config = {
     screens: {
@@ -1047,7 +1046,7 @@ test('returns matching screen if path is empty', () => {
   ).toEqual(changePath(state, '/'));
 });
 
-test('returns matching screen if path is only slash', () => {
+it('returns matching screen if path is only slash', () => {
   const path = '/';
   const config = {
     screens: {
@@ -1089,7 +1088,7 @@ test('returns matching screen if path is only slash', () => {
   ).toEqual(changePath(state, '/'));
 });
 
-test('returns matching screen with params if path is empty', () => {
+it('returns matching screen with params if path is empty', () => {
   const path = '?foo=42';
   const config = {
     screens: {
@@ -1134,7 +1133,7 @@ test('returns matching screen with params if path is empty', () => {
   ).toEqual(changePath(state, '/?foo=42'));
 });
 
-test("doesn't match nested screen if path is empty", () => {
+it("doesn't match nested screen if path is empty", () => {
   const config = {
     screens: {
       Foo: {
@@ -1159,7 +1158,7 @@ test("doesn't match nested screen if path is empty", () => {
   expect(getStateFromPath<object>(path, config)).toBeUndefined();
 });
 
-test('chooses more exhaustive pattern', () => {
+it('chooses more exhaustive pattern', () => {
   const path = '/foo/5';
 
   const config = {
@@ -1207,7 +1206,7 @@ test('chooses more exhaustive pattern', () => {
   ).toEqual(state);
 });
 
-test('handles same paths beginnings', () => {
+it('handles same paths beginnings', () => {
   const path = '/foos';
 
   const config = {
@@ -1251,7 +1250,7 @@ test('handles same paths beginnings', () => {
   ).toEqual(state);
 });
 
-test('handles same paths beginnings with params', () => {
+it('handles same paths beginnings with params', () => {
   const path = '/foos/5';
 
   const config = {
@@ -1299,7 +1298,7 @@ test('handles same paths beginnings with params', () => {
   ).toEqual(state);
 });
 
-test('handles not taking path with too many segments', () => {
+it('handles not taking path with too many segments', () => {
   const path = '/foos/5';
 
   const config = {
@@ -1354,7 +1353,7 @@ test('handles not taking path with too many segments', () => {
   ).toEqual(state);
 });
 
-test('handles differently ordered params v1', () => {
+it('handles differently ordered params v1', () => {
   const path = '/foos/5/res/20';
 
   const config = {
@@ -1409,7 +1408,7 @@ test('handles differently ordered params v1', () => {
   ).toEqual(state);
 });
 
-test('handles differently ordered params v2', () => {
+it('handles differently ordered params v2', () => {
   const path = '/5/20/foos/res';
 
   const config = {
@@ -1464,7 +1463,7 @@ test('handles differently ordered params v2', () => {
   ).toEqual(state);
 });
 
-test('handles differently ordered params v3', () => {
+it('handles differently ordered params v3', () => {
   const path = '/foos/5/20/res';
 
   const config = {
@@ -1519,7 +1518,7 @@ test('handles differently ordered params v3', () => {
   ).toEqual(state);
 });
 
-test('handles differently ordered params v4', () => {
+it('handles differently ordered params v4', () => {
   const path = '5/foos/res/20';
 
   const config = {
@@ -1574,7 +1573,7 @@ test('handles differently ordered params v4', () => {
   ).toEqual(changePath(state, '/5/foos/res/20'));
 });
 
-test('handles simple optional params', () => {
+it('handles simple optional params', () => {
   const path = '/foos/5';
 
   const config = {
@@ -1629,7 +1628,7 @@ test('handles simple optional params', () => {
   ).toEqual(state);
 });
 
-test('handle 2 optional params at the end v1', () => {
+it('handle 2 optional params at the end v1', () => {
   const path = '/foos/5';
 
   const config = {
@@ -1684,7 +1683,7 @@ test('handle 2 optional params at the end v1', () => {
   ).toEqual(state);
 });
 
-test('handle 2 optional params at the end v2', () => {
+it('handle 2 optional params at the end v2', () => {
   const path = '/foos/5/10';
 
   const config = {
@@ -1739,7 +1738,7 @@ test('handle 2 optional params at the end v2', () => {
   ).toEqual(state);
 });
 
-test('handle 2 optional params at the end v3', () => {
+it('handle 2 optional params at the end v3', () => {
   const path = '/foos/5/10/15';
 
   const config = {
@@ -1795,7 +1794,7 @@ test('handle 2 optional params at the end v3', () => {
   ).toEqual(state);
 });
 
-test('handle optional params in the middle v1', () => {
+it('handle optional params in the middle v1', () => {
   const path = '/foos/5/10';
 
   const config = {
@@ -1851,7 +1850,7 @@ test('handle optional params in the middle v1', () => {
   ).toEqual(state);
 });
 
-test('handle optional params in the middle v2', () => {
+it('handle optional params in the middle v2', () => {
   const path = '/foos/5/10/15';
 
   const config = {
@@ -1907,7 +1906,7 @@ test('handle optional params in the middle v2', () => {
   ).toEqual(state);
 });
 
-test('handle optional params in the middle v3', () => {
+it('handle optional params in the middle v3', () => {
   const path = '/foos/5/10/15';
 
   const config = {
@@ -1964,7 +1963,7 @@ test('handle optional params in the middle v3', () => {
   ).toEqual(state);
 });
 
-test('handle optional params in the middle v4', () => {
+it('handle optional params in the middle v4', () => {
   const path = '/foos/5/10';
 
   const config = {
@@ -2021,7 +2020,7 @@ test('handle optional params in the middle v4', () => {
   ).toEqual(state);
 });
 
-test('handle optional params in the middle v5', () => {
+it('handle optional params in the middle v5', () => {
   const path = '/foos/5/10/15';
 
   const config = {
@@ -2078,7 +2077,7 @@ test('handle optional params in the middle v5', () => {
   ).toEqual(state);
 });
 
-test('handle optional params in the beginning v1', () => {
+it('handle optional params in the beginning v1', () => {
   const path = '5/10/foos/15';
 
   const config = {
@@ -2135,7 +2134,7 @@ test('handle optional params in the beginning v1', () => {
   ).toEqual(changePath(state, '/5/10/foos/15'));
 });
 
-test('handle optional params in the beginning v2', () => {
+it('handle optional params in the beginning v2', () => {
   const path = '5/10/foos/15';
 
   const config = {
@@ -2192,7 +2191,7 @@ test('handle optional params in the beginning v2', () => {
   ).toEqual(changePath(state, '/5/10/foos/15'));
 });
 
-test('merges parent patterns if needed', () => {
+it('merges parent patterns if needed', () => {
   const path = 'foo/42/baz/babel';
 
   const config = {
@@ -2233,7 +2232,7 @@ test('merges parent patterns if needed', () => {
   ).toEqual(changePath(state, '/foo/42/baz/babel'));
 });
 
-test('ignores extra slashes in the pattern', () => {
+it('ignores extra slashes in the pattern', () => {
   const path = '/bar/42';
   const config = {
     screens: {
@@ -2270,7 +2269,7 @@ test('ignores extra slashes in the pattern', () => {
   ).toEqual(state);
 });
 
-test('matches wildcard patterns at root', () => {
+it('matches wildcard patterns at root', () => {
   const path = '/test/bar/42/whatever';
   const config = {
     screens: {
@@ -2295,7 +2294,7 @@ test('matches wildcard patterns at root', () => {
   ).toEqual(changePath(state, '/404'));
 });
 
-test('matches wildcard patterns at nested level', () => {
+it('matches wildcard patterns at nested level', () => {
   const path = '/bar/42/whatever/baz/initt';
   const config = {
     screens: {
@@ -2337,7 +2336,7 @@ test('matches wildcard patterns at nested level', () => {
   ).toEqual(changePath(state, '/bar/42/404'));
 });
 
-test('matches wildcard patterns at nested level with exact', () => {
+it('matches wildcard patterns at nested level with exact', () => {
   const path = '/whatever';
   const config = {
     screens: {
@@ -2382,7 +2381,7 @@ test('matches wildcard patterns at nested level with exact', () => {
   ).toEqual(changePath(state, '/404'));
 });
 
-test('tries to match wildcard patterns at the end', () => {
+it('tries to match wildcard patterns at the end', () => {
   const path = '/bar/42/test';
   const config = {
     screens: {
@@ -2426,7 +2425,7 @@ test('tries to match wildcard patterns at the end', () => {
   ).toEqual(state);
 });
 
-test('uses nearest parent wildcard match for unmatched paths', () => {
+it('uses nearest parent wildcard match for unmatched paths', () => {
   const path = '/bar/42/baz/test';
   const config = {
     screens: {
@@ -2461,7 +2460,7 @@ test('uses nearest parent wildcard match for unmatched paths', () => {
   ).toEqual(changePath(state, '/404'));
 });
 
-test('matches screen with overlapping initial path and wildcard', () => {
+it('matches screen with overlapping initial path and wildcard', () => {
   const path = '/bar/42/baz/test/whatever';
   const config = {
     screens: {
@@ -2496,7 +2495,7 @@ test('matches screen with overlapping initial path and wildcard', () => {
   ).toEqual(changePath(state, '/bar/42/Baz'));
 });
 
-test('throws if two screens map to the same pattern', () => {
+it('throws if two screens map to the same pattern', () => {
   const path = '/bar/42/baz/test';
 
   expect(() =>
@@ -2537,7 +2536,7 @@ test('throws if two screens map to the same pattern', () => {
   ).not.toThrow();
 });
 
-test('correctly applies initialRouteName for config with similar route names', () => {
+it('correctly applies initialRouteName for config with similar route names', () => {
   const path = '/weekly-earnings';
 
   const config = {
@@ -2593,7 +2592,7 @@ test('correctly applies initialRouteName for config with similar route names', (
   ).toEqual(state);
 });
 
-test('correctly applies initialRouteName for config with similar route names v2', () => {
+it('correctly applies initialRouteName for config with similar route names v2', () => {
   const path = '/earnings/weekly-earnings';
 
   const config = {
@@ -2653,7 +2652,7 @@ test('correctly applies initialRouteName for config with similar route names v2'
   ).toEqual(state);
 });
 
-test('throws when invalid properties are specified in the config', () => {
+it('throws when invalid properties are specified in the config', () => {
   expect(() =>
     getStateFromPath<object>('', {
       path: 42,
@@ -2723,7 +2722,7 @@ test('throws when invalid properties are specified in the config', () => {
 // A–Z, a–z, 0–9, -, ., _, ~, !, $, &, ', (, ), *, +, ,, ;, =, :, @
 // User09-A_Z~!$&'()*+,;=:@__#?# - should encode only last ones #?#
 // query params after '?' should be encoded fully with encodeURIComponent
-test('encodes special characters in params', () => {
+it('encodes special characters in params', () => {
   const paramWithValidSymbols = `User09-A_Z~!$&'()*+,;=:@__`;
   const invalidSymbols = '#?[]{}%<>||';
   const queryString = 'user#email@gmail.com=2&4';
@@ -2765,7 +2764,7 @@ test('encodes special characters in params', () => {
   ).toEqual(path);
 });
 
-test('resolves nested path params with same name to correct screen', () => {
+it('resolves nested path params with same name to correct screen', () => {
   const path = '/foo/42/bar/43';
 
   const config = {
@@ -2803,7 +2802,7 @@ test('resolves nested path params with same name to correct screen', () => {
   expect(getStateFromPath<object>(path, config)).toEqual(state);
 });
 
-test('parses / same as empty string', () => {
+it('parses / same as empty string', () => {
   const config = {
     screens: {
       Foo: {

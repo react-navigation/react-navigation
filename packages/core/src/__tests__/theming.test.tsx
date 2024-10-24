@@ -1,4 +1,3 @@
-import { expect, test } from '@jest/globals';
 import { render } from '@testing-library/react-native';
 import * as React from 'react';
 
@@ -8,7 +7,7 @@ import { useTheme } from '../theming/useTheme';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import { MockRouter } from './__fixtures__/MockRouter';
 
-test('can get current theme with useTheme', () => {
+it('can get current theme with useTheme', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -43,7 +42,7 @@ test('can get current theme with useTheme', () => {
   );
 });
 
-test("throws if theme isn't passed to BaseNavigationContainer", () => {
+it("throws if theme isn't passed to BaseNavigationContainer", () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -66,7 +65,7 @@ test("throws if theme isn't passed to BaseNavigationContainer", () => {
   );
 });
 
-test('throws if useTheme is used without BaseNavigationContainer', () => {
+it('throws if useTheme is used without BaseNavigationContainer', () => {
   const Test = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     expect(() => useTheme()).toThrow("Couldn't find a theme");
@@ -77,7 +76,7 @@ test('throws if useTheme is used without BaseNavigationContainer', () => {
   render(<Test />);
 });
 
-test('passes theme to options prop', () => {
+it('passes theme to options prop', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -108,7 +107,7 @@ test('passes theme to options prop', () => {
   );
 });
 
-test('passes theme to screenOptions prop', () => {
+it('passes theme to screenOptions prop', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 

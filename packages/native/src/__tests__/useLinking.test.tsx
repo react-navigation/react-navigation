@@ -1,4 +1,3 @@
-import { expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
   type ParamListBase,
@@ -7,7 +6,7 @@ import { render, type RenderAPI } from '@testing-library/react-native';
 
 import { useLinking } from '../useLinking';
 
-test('throws if multiple instances of useLinking are used', () => {
+it('throws if multiple instances of useLinking are used', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
 
   const options = { prefixes: [] };
@@ -18,7 +17,7 @@ test('throws if multiple instances of useLinking are used', () => {
     return null;
   }
 
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  const spy = jest.spyOn(console, 'error').mockImplementation();
 
   let element: RenderAPI | undefined;
 

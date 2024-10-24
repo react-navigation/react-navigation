@@ -1,4 +1,3 @@
-import { expect, test } from '@jest/globals';
 import type {
   DefaultRouterOptions,
   NavigationState,
@@ -60,7 +59,7 @@ const TestScreen = ({ route }: any) => {
   );
 };
 
-test('renders the specified nested navigator configuration', () => {
+it('renders the specified nested navigator configuration', () => {
   const Nested = createTestNavigator({
     screens: {
       Profile: TestScreen,
@@ -128,7 +127,7 @@ test('renders the specified nested navigator configuration', () => {
   `);
 });
 
-test('renders the specified nested navigator configuration with groups', () => {
+it('renders the specified nested navigator configuration with groups', () => {
   const Nested = createTestNavigator({
     screens: {
       Profile: TestScreen,
@@ -215,9 +214,8 @@ test('renders the specified nested navigator configuration with groups', () => {
   `);
 });
 
-test('handles non-function screens', () => {
+it('handles non-function screens', () => {
   expect(() => {
-    // eslint-disable-next-line @eslint-react/ensure-forward-ref-using-ref, @eslint-react/no-missing-component-display-name
     const TestScreen = React.forwardRef(() => null);
 
     const Root = createTestNavigator({
@@ -239,7 +237,7 @@ test('handles non-function screens', () => {
   }).not.toThrow();
 });
 
-test("throws if screens or groups property isn't specified", () => {
+it("throws if screens or groups property isn't specified", () => {
   expect(() => {
     const Root = createTestNavigator({});
 
@@ -247,7 +245,7 @@ test("throws if screens or groups property isn't specified", () => {
   }).toThrow("Couldn't find a 'screens' or 'groups' property");
 });
 
-test("doesn't throw if either screens or groups property is specified", () => {
+it("doesn't throw if either screens or groups property is specified", () => {
   expect(() => {
     const Root = createTestNavigator({
       screens: {},
@@ -265,7 +263,7 @@ test("doesn't throw if either screens or groups property is specified", () => {
   }).not.toThrow();
 });
 
-test('renders the initial screen based on the order of screens', () => {
+it('renders the initial screen based on the order of screens', () => {
   const A = createTestNavigator({
     screens: {
       Home: TestScreen,
@@ -337,7 +335,7 @@ test('renders the initial screen based on the order of screens', () => {
 `);
 });
 
-test('creates linking configuration for static config', () => {
+it('creates linking configuration for static config', () => {
   const Nested = createTestNavigator({
     screens: {
       Profile: {
@@ -492,7 +490,7 @@ test('creates linking configuration for static config', () => {
   });
 });
 
-test('returns undefined if there is no linking configuration', () => {
+it('returns undefined if there is no linking configuration', () => {
   const Nested = createTestNavigator({
     screens: {
       Profile: {
@@ -552,7 +550,7 @@ test('returns undefined if there is no linking configuration', () => {
   expect(screens).toBeUndefined();
 });
 
-test('automatically generates paths if auto is specified', () => {
+it('automatically generates paths if auto is specified', () => {
   const NestedA = createTestNavigator({
     screens: {
       Home: TestScreen,
@@ -760,7 +758,7 @@ test('automatically generates paths if auto is specified', () => {
   });
 });
 
-test('use initialRouteName for the automatic home screen', () => {
+it('use initialRouteName for the automatic home screen', () => {
   const NestedA = createTestNavigator({
     initialRouteName: 'Profile',
     screens: {

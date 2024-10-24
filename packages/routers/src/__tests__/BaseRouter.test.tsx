@@ -1,5 +1,3 @@
-import { expect, jest, test } from '@jest/globals';
-
 import { BaseRouter } from '../BaseRouter';
 import * as CommonActions from '../CommonActions';
 
@@ -18,7 +16,7 @@ const STATE = {
   routeNames: ['foo', 'bar', 'baz', 'qux'],
 };
 
-test('sets params for the focused screen with SET_PARAMS', () => {
+it('sets params for the focused screen with SET_PARAMS', () => {
   const result = BaseRouter.getStateForAction(
     STATE,
     CommonActions.setParams({ answer: 42 })
@@ -38,7 +36,7 @@ test('sets params for the focused screen with SET_PARAMS', () => {
   });
 });
 
-test('sets params for the source screen with SET_PARAMS', () => {
+it('sets params for the source screen with SET_PARAMS', () => {
   const result = BaseRouter.getStateForAction(STATE, {
     ...CommonActions.setParams({ answer: 42 }),
     source: 'foo',
@@ -58,7 +56,7 @@ test('sets params for the source screen with SET_PARAMS', () => {
   });
 });
 
-test("doesn't handle SET_PARAMS if source key isn't present", () => {
+it("doesn't handle SET_PARAMS if source key isn't present", () => {
   const result = BaseRouter.getStateForAction(STATE, {
     ...CommonActions.setParams({ answer: 42 }),
     source: 'magic',
@@ -67,7 +65,7 @@ test("doesn't handle SET_PARAMS if source key isn't present", () => {
   expect(result).toBeNull();
 });
 
-test('resets state to new state with RESET', () => {
+it('resets state to new state with RESET', () => {
   const routes = [
     { key: 'foo', name: 'foo' },
     { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
@@ -86,7 +84,7 @@ test('resets state to new state with RESET', () => {
   expect(result).toEqual({ index: 0, routes });
 });
 
-test('adds keys to routes missing keys during RESET', () => {
+it('adds keys to routes missing keys during RESET', () => {
   const result = BaseRouter.getStateForAction(
     STATE,
     CommonActions.reset({
@@ -101,7 +99,7 @@ test('adds keys to routes missing keys during RESET', () => {
   });
 });
 
-test("doesn't handle RESET if routes don't match routeNames", () => {
+it("doesn't handle RESET if routes don't match routeNames", () => {
   const routes = [
     { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
     { key: 'baz', name: 'baz' },
@@ -119,7 +117,7 @@ test("doesn't handle RESET if routes don't match routeNames", () => {
   expect(result).toBeNull();
 });
 
-test("doesn't handle RESET if routeNames don't match", () => {
+it("doesn't handle RESET if routeNames don't match", () => {
   const result = BaseRouter.getStateForAction(
     STATE,
     CommonActions.reset({
@@ -131,7 +129,7 @@ test("doesn't handle RESET if routeNames don't match", () => {
   expect(result).toBeNull();
 });
 
-test("doesn't handle RESET if there are no routes", () => {
+it("doesn't handle RESET if there are no routes", () => {
   const result = BaseRouter.getStateForAction(
     STATE,
     CommonActions.reset({

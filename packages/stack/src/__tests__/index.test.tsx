@@ -1,4 +1,3 @@
-import { expect, jest, test } from '@jest/globals';
 import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
@@ -20,7 +19,7 @@ type StackParamList = {
 
 jest.useFakeTimers();
 
-test('renders a stack navigator with screens', async () => {
+it('renders a stack navigator with screens', async () => {
   const Test = ({ route, navigation }: StackScreenProps<ParamListBase>) => (
     <View>
       <Text>Screen {route.name}</Text>
@@ -50,7 +49,7 @@ test('renders a stack navigator with screens', async () => {
   expect(queryByText('Screen B')).not.toBeNull();
 });
 
-test('fires transition events on navigation', async () => {
+it('fires transition events on navigation', async () => {
   const FirstScreen = ({ navigation }: StackScreenProps<ParamListBase>) => (
     <Button onPress={() => navigation.navigate('B')} title="Go to B" />
   );
@@ -117,7 +116,7 @@ test('fires transition events on navigation', async () => {
   );
 });
 
-test('handles screens preloading', async () => {
+it('handles screens preloading', async () => {
   const Stack = createStackNavigator<StackParamList>();
 
   const navigation = createNavigationContainerRef<StackParamList>();
@@ -138,7 +137,7 @@ test('handles screens preloading', async () => {
   ).not.toBeNull();
 });
 
-test('runs focus effect on focus change on preloaded route', () => {
+it('runs focus effect on focus change on preloaded route', () => {
   const focusEffect = jest.fn();
   const focusEffectCleanup = jest.fn();
 
@@ -187,7 +186,7 @@ test('runs focus effect on focus change on preloaded route', () => {
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
-test('renders correct focus state with preloading', () => {
+it('renders correct focus state with preloading', () => {
   const Test = () => {
     const isFocused = useIsFocused();
 

@@ -59,7 +59,7 @@ const NewsFeedScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Navigate to albums
+          Navigate to album
         </Button>
         <Button variant="tinted" onPress={() => navigation.pop()}>
           Pop screen

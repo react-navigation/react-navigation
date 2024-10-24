@@ -1,4 +1,3 @@
-import { beforeEach, expect, test } from '@jest/globals';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
@@ -13,7 +12,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('preserves reference for navigation objects', () => {
+it('preserves reference for navigation objects', () => {
   expect.assertions(2);
 
   const state = {
@@ -65,7 +64,7 @@ test('preserves reference for navigation objects', () => {
   root.update(<Test />);
 });
 
-test('returns correct value for isFocused', () => {
+it('returns correct value for isFocused', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -105,7 +104,7 @@ test('returns correct value for isFocused', () => {
   expect(navigation.isFocused()).toBe(true);
 });
 
-test('returns correct value for isFocused after changing screens', () => {
+it('returns correct value for isFocused after changing screens', () => {
   const TestRouter = (
     options: Parameters<typeof MockRouter>[0]
   ): ReturnType<typeof MockRouter> => {

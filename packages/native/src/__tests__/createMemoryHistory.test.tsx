@@ -1,4 +1,3 @@
-import { expect, jest, test } from '@jest/globals';
 import type { NavigationState } from '@react-navigation/core';
 
 import { window } from '../__stubs__/window';
@@ -6,10 +5,10 @@ import { createMemoryHistory } from '../createMemoryHistory';
 
 Object.assign(global, window);
 
-// eslint-disable-next-line import-x/extensions
+// eslint-disable-next-line import/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
-test('will not attempt to navigate beyond whatever browser history it is possible to know about', () => {
+it('will not attempt to navigate beyond whatever browser history it is possible to know about', () => {
   jest.useFakeTimers();
   const windowGoSpy = jest.spyOn(window.history, 'go');
 

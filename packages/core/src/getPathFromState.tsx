@@ -37,25 +37,6 @@ const getActiveRoute = (state: State): { name: string; params?: object } => {
   return route;
 };
 
-const cachedNormalizedConfigs = new WeakMap<
-  PathConfigMap<{}>,
-  Record<string, ConfigItem>
->();
-
-const getNormalizedConfigs = (options?: Options<{}>) => {
-  if (!options?.screens) return {};
-
-  const cached = cachedNormalizedConfigs.get(options?.screens);
-
-  if (cached) return cached;
-
-  const normalizedConfigs = createNormalizedConfigs(options.screens);
-
-  cachedNormalizedConfigs.set(options.screens, normalizedConfigs);
-
-  return normalizedConfigs;
-};
-
 /**
  * Utility to serialize a navigation state object to a path string.
  *
@@ -99,7 +80,10 @@ export function getPathFromState<ParamList extends {}>(
     validatePathConfig(options);
   }
 
-  const configs = getNormalizedConfigs(options);
+  // Create a normalized configs object which will be easier to use
+  const configs: Record<string, ConfigItem> = options?.screens
+    ? createNormalizedConfigs(options?.screens)
+    : {};
 
   let path = '/';
   let current: State | undefined = state;

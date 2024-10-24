@@ -1,8 +1,5 @@
 import backIcon from './assets/back-icon.png';
 import backIconMask from './assets/back-icon-mask.png';
-import clearIcon from './assets/clear-icon.png';
-import closeIcon from './assets/close-icon.png';
-import searchIcon from './assets/search-icon.png';
 
 export { Background } from './Background';
 export { Button } from './Button';
@@ -27,12 +24,6 @@ export { SafeAreaProviderCompat } from './SafeAreaProviderCompat';
 export { Screen } from './Screen';
 export { Text } from './Text';
 
-export const Assets = [
-  backIcon,
-  backIconMask,
-  searchIcon,
-  closeIcon,
-  clearIcon,
-];
+export const Assets = [backIcon, backIconMask];
 
 export * from './types';

@@ -1,4 +1,3 @@
-import { expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
   createNavigatorFactory,
@@ -15,10 +14,10 @@ import { createStaticNavigation } from '../createStaticNavigation';
 Object.assign(global, window);
 
 // We want to use the web version of useLinking
-// eslint-disable-next-line import-x/extensions
+// eslint-disable-next-line import/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
-test('integrates with the history API', async () => {
+it('integrates with the history API', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -147,7 +146,7 @@ test('integrates with the history API', async () => {
   await waitFor(() => expect(window.location.pathname).toBe('/edit'));
 });
 
-test("throws if linking is enabled but there's no linking configuration", () => {
+it("throws if linking is enabled but there's no linking configuration", () => {
   const createTestNavigator = createNavigatorFactory(() => null);
 
   const TestScreen = () => null;
