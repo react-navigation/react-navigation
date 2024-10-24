@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.20...@react-navigation/native@7.0.0-rc.21) (2024-10-24)
+
+### Bug Fixes
+
+* use * for react-native peer dep to support pre-release versions ([07267e5](https://github.com/react-navigation/react-navigation/commit/07267e54be752f600f808ec2898e5d76a1bc1d43)) - by @satya164
+
 # [7.0.0-rc.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.0-rc.19...@react-navigation/native@7.0.0-rc.20) (2024-10-11)
 
 ### Bug Fixes

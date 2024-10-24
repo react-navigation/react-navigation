@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.25...@react-navigation/elements@2.0.0-rc.26) (2024-10-24)
+
+### Bug Fixes
+
+* use * for react-native peer dep to support pre-release versions ([07267e5](https://github.com/react-navigation/react-navigation/commit/07267e54be752f600f808ec2898e5d76a1bc1d43)) - by @satya164
+
 # [2.0.0-rc.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.24...@react-navigation/elements@2.0.0-rc.25) (2024-10-11)
 
 **Note:** Version bump only for package @react-navigation/elements
