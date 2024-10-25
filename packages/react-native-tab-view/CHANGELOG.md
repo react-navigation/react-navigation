@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.11...react-native-tab-view@4.0.0-rc.12) (2024-10-24)
+
+### Bug Fixes
+
+* use * for react-native peer dep to support pre-release versions ([07267e5](https://github.com/react-navigation/react-navigation/commit/07267e54be752f600f808ec2898e5d76a1bc1d43)) - by @satya164
+
 # [4.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.10...react-native-tab-view@4.0.0-rc.11) (2024-10-11)
 
 ### Bug Fixes
