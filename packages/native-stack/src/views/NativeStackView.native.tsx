@@ -32,9 +32,7 @@ import {
 import {
   type GestureDetectorBridge,
   GHContext,
-  InnerScreen,
   Screen,
-  ScreenContext,
   type ScreenProps,
   ScreenStack,
   type StackPresentationTypes,
@@ -341,7 +339,7 @@ const SceneView = ({
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
 
   return (
-    <ScreenWithRef
+    <Screen
       key={route.key}
       ref={screenRef}
       enabled
@@ -529,7 +527,7 @@ const SceneView = ({
           </HeaderShownContext.Provider>
         </NavigationRouteContext.Provider>
       </NavigationContext.Provider>
-    </ScreenWithRef>
+    </Screen>
   );
 };
 
@@ -661,14 +659,6 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
     </SafeAreaProviderCompat>
   );
 }
-
-const ScreenWithRef = React.forwardRef<InnerScreen & View, ScreenProps>(
-  (props, ref) => {
-    const ScreenWrapper = React.useContext(ScreenContext) || InnerScreen;
-
-    return <ScreenWrapper {...props} ref={ref} />;
-  }
-);
 
 const styles = StyleSheet.create({
   container: {
