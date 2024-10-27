@@ -32,7 +32,7 @@ import {
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
-import { SimpleStack, type SimpleStackParams } from './SimpleStack';
+import { NativeStack, type NativeStackParams } from './NativeStack';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
@@ -41,7 +41,7 @@ const getTabBarIcon =
   );
 
 export type BottomTabParams = {
-  TabStack: NavigatorScreenParams<SimpleStackParams>;
+  TabStack: NavigatorScreenParams<NativeStackParams>;
   TabAlbums: undefined;
   TabContacts: undefined;
   TabChat: undefined;
@@ -50,7 +50,7 @@ export type BottomTabParams = {
 const linking: PathConfigMap<BottomTabParams> = {
   TabStack: {
     path: 'stack',
-    screens: SimpleStack.linking,
+    screens: NativeStack.linking,
   },
   TabAlbums: 'albums',
   TabContacts: 'contacts',
@@ -181,7 +181,7 @@ export function BottomTabs() {
       >
         <Tab.Screen
           name="TabStack"
-          component={SimpleStack}
+          component={NativeStack}
           options={{
             popToTopOnBlur: true,
             title: 'Article',
