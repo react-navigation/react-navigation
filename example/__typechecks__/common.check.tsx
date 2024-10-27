@@ -187,7 +187,14 @@ export const PopularScreen = ({
   expectTypeOf(navigation.addListener)
     .parameter(0)
     .toEqualTypeOf<
-      'focus' | 'blur' | 'state' | 'beforeRemove' | 'tabPress' | 'tabLongPress'
+      | 'focus'
+      | 'blur'
+      | 'state'
+      | 'beforeRemove'
+      | 'tabPress'
+      | 'tabLongPress'
+      | 'transitionStart'
+      | 'transitionEnd'
     >();
 
   expectTypeOf(navigation.setParams)

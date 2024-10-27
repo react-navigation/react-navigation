@@ -35,6 +35,14 @@ export type BottomTabNavigationEventMap = {
    * Event which fires on long press on the tab in the tab bar.
    */
   tabLongPress: { data: undefined };
+  /**
+   * Event which fires when a transition animation starts.
+   */
+  transitionStart: { data: undefined };
+  /**
+   * Event which fires when a transition animation ends.
+   */
+  transitionEnd: { data: undefined };
 };
 
 export type LabelPosition = 'beside-icon' | 'below-icon';
