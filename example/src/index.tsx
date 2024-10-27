@@ -2,7 +2,10 @@ import { ActionSheetProvider } from '@expo/react-native-action-sheet';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useReduxDevToolsExtension } from '@react-navigation/devtools';
+import {
+  useLogger,
+  useReduxDevToolsExtension,
+} from '@react-navigation/devtools';
 import {
   createDrawerNavigator,
   type DrawerContentComponentProps,
@@ -212,6 +215,7 @@ export function App() {
 
   const navigationRef = useNavigationContainerRef();
 
+  useLogger(navigationRef);
   useReduxDevToolsExtension(navigationRef);
 
   if (!isReady) {
