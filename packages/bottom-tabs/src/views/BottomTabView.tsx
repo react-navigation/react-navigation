@@ -123,6 +123,13 @@ export function BottomTabView(props: Props) {
     }
 
     const animateToIndex = () => {
+      if (previousRouteKey !== focusedRouteKey) {
+        navigation.emit({
+          type: 'transitionStart',
+          target: focusedRouteKey,
+        });
+      }
+
       Animated.parallel(
         state.routes
           .map((route, index) => {
@@ -159,6 +166,13 @@ export function BottomTabView(props: Props) {
       ).start(({ finished }) => {
         if (finished && popToTopAction) {
           navigation.dispatch(popToTopAction);
+        }
+
+        if (previousRouteKey !== focusedRouteKey) {
+          navigation.emit({
+            type: 'transitionEnd',
+            target: focusedRouteKey,
+          });
         }
       });
     };
