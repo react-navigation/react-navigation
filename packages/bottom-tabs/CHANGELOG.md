@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.34...@react-navigation/bottom-tabs@7.0.0-rc.35) (2024-10-27)
+
+### Features
+
+* add transition events to BottomTabs ([#12207](https://github.com/react-navigation/react-navigation/issues/12207)) ([bc4e50c](https://github.com/react-navigation/react-navigation/commit/bc4e50cfb9fa78c39ed2871a5465c2cc97e73b31)) - by @satya164
+
 # [7.0.0-rc.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.33...@react-navigation/bottom-tabs@7.0.0-rc.34) (2024-10-24)
 
 ### Bug Fixes
