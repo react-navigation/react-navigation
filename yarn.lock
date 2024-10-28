@@ -4800,6 +4800,7 @@ __metadata:
     react: "npm:18.2.0"
     react-native: "npm:0.74.5"
     react-native-builder-bob: "npm:^0.29.0"
+    react-native-is-edge-to-edge: "npm:^1.1.5"
     react-native-screens: "npm:4.0.0-beta.9"
     typescript: "npm:^5.5.2"
     warn-once: "npm:^0.1.1"
@@ -15036,6 +15037,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 227799f5e16f9725d81db524fc06c1fbef226835a5ee989642d132748832f7543ebc750d4309e49bcaa0fb6d1e7dd6b74028785e4b755978ab7f66f05b414c18
+  languageName: node
+  linkType: hard
+
+"react-native-is-edge-to-edge@npm:^1.1.5":
+  version: 1.1.5
+  resolution: "react-native-is-edge-to-edge@npm:1.1.5"
+  peerDependencies:
+    react: ">=18.2.0"
+    react-native: ">=0.73.0"
+  checksum: a8867b92b01de6b329cfdd12dc1245cf122e24fc7b8f280837614b68eee244978743fca0595538fd981abb7cb24d7f567f2f172e6e23567c1a9275d09b892e52
   languageName: node
   linkType: hard
 

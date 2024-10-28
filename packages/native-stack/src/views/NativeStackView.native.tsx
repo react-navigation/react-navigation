@@ -26,6 +26,10 @@ import {
   View,
 } from 'react-native';
 import {
+  controlEdgeToEdgeValues,
+  isEdgeToEdge,
+} from 'react-native-is-edge-to-edge';
+import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
@@ -46,6 +50,7 @@ import { ScreenStackContent } from './ScreenStackContent';
 import { useHeaderConfigProps } from './useHeaderConfigProps';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
+const IS_EDGE_TO_EDGE = isEdgeToEdge();
 
 type SceneViewProps = {
   index: number;
@@ -128,6 +133,13 @@ const SceneView = ({
     freezeOnBlur,
     contentStyle,
   } = options;
+
+  if (__DEV__) {
+    controlEdgeToEdgeValues({
+      navigationBarTranslucent,
+      statusBarTranslucent,
+    });
+  }
 
   // We want to allow only backgroundColor setting for now.
   // This allows to workaround one issue with truncated
@@ -240,9 +252,10 @@ const SceneView = ({
   // we apply additional padding in header only if its true.
   // For more details see: https://github.com/react-navigation/react-navigation/pull/12014
   const headerTopInsetEnabled =
-    typeof statusBarTranslucent === 'boolean'
+    IS_EDGE_TO_EDGE ||
+    (typeof statusBarTranslucent === 'boolean'
       ? statusBarTranslucent
-      : topInset !== 0;
+      : topInset !== 0);
 
   const canGoBack = previousDescriptor != null || parentHeaderBack != null;
   const backTitle = previousDescriptor
@@ -300,7 +313,7 @@ const SceneView = ({
       homeIndicatorHidden={autoHideHomeIndicator}
       hideKeyboardOnSwipe={keyboardHandlingEnabled}
       navigationBarColor={navigationBarColor}
-      navigationBarTranslucent={navigationBarTranslucent}
+      navigationBarTranslucent={IS_EDGE_TO_EDGE || navigationBarTranslucent}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
       stackPresentation={presentation === 'card' ? 'push' : presentation}
@@ -317,7 +330,7 @@ const SceneView = ({
       statusBarHidden={statusBarHidden}
       statusBarStyle={statusBarStyle}
       statusBarColor={statusBarBackgroundColor}
-      statusBarTranslucent={statusBarTranslucent}
+      statusBarTranslucent={IS_EDGE_TO_EDGE || statusBarTranslucent}
       swipeDirection={gestureDirectionOverride}
       transitionDuration={animationDuration}
       onWillAppear={onWillAppear}
