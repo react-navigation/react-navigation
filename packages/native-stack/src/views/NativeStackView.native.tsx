@@ -136,10 +136,8 @@ const SceneView = ({
 
   if (__DEV__) {
     controlEdgeToEdgeValues({
-      navigationBarColor,
       navigationBarTranslucent,
       statusBarTranslucent,
-      statusBarBackgroundColor,
     });
   }
 
@@ -314,7 +312,7 @@ const SceneView = ({
       }
       homeIndicatorHidden={autoHideHomeIndicator}
       hideKeyboardOnSwipe={keyboardHandlingEnabled}
-      navigationBarColor={IS_EDGE_TO_EDGE ? undefined : navigationBarColor}
+      navigationBarColor={navigationBarColor}
       navigationBarTranslucent={IS_EDGE_TO_EDGE || navigationBarTranslucent}
       navigationBarHidden={navigationBarHidden}
       replaceAnimation={animationTypeForReplace}
@@ -331,7 +329,7 @@ const SceneView = ({
       statusBarAnimation={statusBarAnimation}
       statusBarHidden={statusBarHidden}
       statusBarStyle={statusBarStyle}
-      statusBarColor={IS_EDGE_TO_EDGE ? undefined : statusBarBackgroundColor}
+      statusBarColor={statusBarBackgroundColor}
       statusBarTranslucent={IS_EDGE_TO_EDGE || statusBarTranslucent}
       swipeDirection={gestureDirectionOverride}
       transitionDuration={animationDuration}
