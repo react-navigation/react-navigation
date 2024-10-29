@@ -75,7 +75,7 @@
     "react-native": "*",
     "react-native-gesture-handler": ">= 2.0.0",
     "react-native-safe-area-context": ">= 4.0.0",
-    "react-native-screens": ">= 4.0.0"
+    "react-native-screens": ">= 4.0.0 || >= 4.0.0-beta.16"
   },
   "react-native-builder-bob": {
     "source": "src",
