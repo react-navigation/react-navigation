@@ -94,7 +94,6 @@ const SceneView = ({
     animationMatchesGesture,
     presentation = isPresentationModal ? 'modal' : 'card',
     fullScreenGestureEnabled,
-    unstable_screenStyle = null,
   } = options;
 
   const {
@@ -131,14 +130,6 @@ const SceneView = ({
     freezeOnBlur,
     contentStyle,
   } = options;
-
-  // We want to allow only backgroundColor setting for now.
-  // This allows to workaround one issue with truncated
-  // content with formSheet presentation.
-  unstable_screenStyle =
-    unstable_screenStyle && presentation === 'formSheet'
-      ? { backgroundColor: unstable_screenStyle.backgroundColor }
-      : null;
 
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
     // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
@@ -286,7 +277,7 @@ const SceneView = ({
     <ScreenStackItem
       key={route.key}
       activityState={isPreloaded ? 0 : 2}
-      style={[StyleSheet.absoluteFill, unstable_screenStyle]}
+      style={StyleSheet.absoluteFill}
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       customAnimationOnSwipe={animationMatchesGesture}
