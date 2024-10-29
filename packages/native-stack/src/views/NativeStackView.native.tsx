@@ -29,7 +29,11 @@ import {
   useSafeAreaFrame,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import { type ScreenProps, ScreenStack } from 'react-native-screens';
+import {
+  type ScreenProps,
+  ScreenStack,
+  ScreenStackItem,
+} from 'react-native-screens';
 
 import type {
   NativeStackDescriptor,
@@ -42,7 +46,6 @@ import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
 import { FooterComponent } from './FooterComponent';
-import { ScreenStackContent } from './ScreenStackContent';
 import { useHeaderConfigProps } from './useHeaderConfigProps';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
@@ -280,7 +283,7 @@ const SceneView = ({
   });
 
   return (
-    <ScreenStackContent
+    <ScreenStackItem
       key={route.key}
       activityState={isPreloaded ? 0 : 2}
       style={[StyleSheet.absoluteFill, unstable_screenStyle]}
@@ -451,7 +454,7 @@ const SceneView = ({
           </AnimatedHeaderHeightContext.Provider>
         </NavigationRouteContext.Provider>
       </NavigationContext.Provider>
-    </ScreenStackContent>
+    </ScreenStackItem>
   );
 };
 
