@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.36](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.35...@react-navigation/bottom-tabs@7.0.0-rc.36) (2024-10-29)
+
+### Bug Fixes
+
+* bump peer dep version requirement for screens ([63f1687](https://github.com/react-navigation/react-navigation/commit/63f16871c4db0c275c2d393f668adec45d31ac7a)) - by @satya164
+
 # [7.0.0-rc.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.34...@react-navigation/bottom-tabs@7.0.0-rc.35) (2024-10-27)
 
 ### Features
