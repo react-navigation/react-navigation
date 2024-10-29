@@ -445,8 +445,6 @@ export type NativeStackNavigationOptions = {
   gestureDirection?: ScreenProps['swipeDirection'];
   /**
    * Style object for the scene content.
-   *
-   * As a workaround to truncated sheet content, formSheet uses backgroundColor from contentStyle and applies it on Screen.
    */
   contentStyle?: StyleProp<ViewStyle>;
   /**
