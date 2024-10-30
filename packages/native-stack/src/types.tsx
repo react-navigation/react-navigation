@@ -18,6 +18,8 @@ import type {
   ViewStyle,
 } from 'react-native';
 import type {
+  AnimatedScreenTransition,
+  GoBackGesture,
   ScreenProps,
   ScreenStackHeaderConfigProps,
   SearchBarProps,
@@ -472,7 +474,7 @@ export type NativeStackNavigationOptions = {
    *
    * Only supported on iOS and Android.
    */
-  gestureType?: GestureType;
+  gestureType?: GoBackGesture;
   /**
    * Changes the animation for dismissing the screen when making a swipe gesture.
    * You can choose one of the built-in transition presets, by using `ScreenTransition` from `react-native-reanimated`.
@@ -645,50 +647,3 @@ export type NativeStackDescriptor = Descriptor<
 export type NativeStackDescriptorMap = {
   [key: string]: NativeStackDescriptor;
 };
-
-// copy from GestureHandler to avoid strong dependency
-export type PanGestureHandlerEventPayload = {
-  x: number;
-  y: number;
-  absoluteX: number;
-  absoluteY: number;
-  translationX: number;
-  translationY: number;
-  velocityX: number;
-  velocityY: number;
-};
-
-// copy from Reanimated to avoid strong dependency
-export type GestureType =
-  | 'swipeRight'
-  | 'swipeLeft'
-  | 'swipeUp'
-  | 'swipeDown'
-  | 'verticalSwipe'
-  | 'horizontalSwipe'
-  | 'twoDimensionalSwipe';
-
-export interface MeasuredDimensions {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  pageX: number;
-  pageY: number;
-}
-
-export type AnimatedScreenTransition = {
-  topScreenStyle: (
-    event: PanGestureHandlerEventPayload,
-    screenSize: MeasuredDimensions
-  ) => Record<string, unknown>;
-  belowTopScreenStyle: (
-    event: PanGestureHandlerEventPayload,
-    screenSize: MeasuredDimensions
-  ) => Record<string, unknown>;
-};
-
-export type ScreensRefsHolder = Record<
-  string,
-  React.MutableRefObject<React.Ref<NativeStackNavigatorProps>>
->;

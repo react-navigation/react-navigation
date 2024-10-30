@@ -32,6 +32,7 @@ import {
 import {
   Screen,
   type ScreenProps,
+  type ScreensRefsHolder,
   ScreenStack,
   type StackPresentationTypes,
 } from 'react-native-screens';
@@ -42,7 +43,6 @@ import type {
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
   NativeStackNavigationOptions,
-  ScreensRefsHolder,
 } from '../types';
 import { debounce } from '../utils/debounce';
 import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
@@ -558,7 +558,7 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
         transitionAnimation={topScreenOptions?.animationForGesture}
         screenEdgeGesture={topScreenOptions?.gestureFromEdgeEnabled ?? false}
         screensRefs={screensRefs}
-        currentRouteKey={currentRouteKey}
+        currentScreenId={currentRouteKey}
       >
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
