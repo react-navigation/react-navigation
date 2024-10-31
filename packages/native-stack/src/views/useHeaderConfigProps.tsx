@@ -51,7 +51,7 @@ export function useHeaderConfigProps({
   canGoBack,
 }: Props) {
   const { direction } = useLocale();
-  const { colors, fonts } = useTheme();
+  const { colors, fonts = {} } = useTheme();
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
 
