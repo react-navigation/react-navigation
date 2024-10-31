@@ -36,7 +36,6 @@ export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   initialLayout?: Partial<Layout>;
   lazy?: ((props: { route: T }) => boolean) | boolean;
   lazyPreloadDistance?: number;
-  sceneContainerStyle?: StyleProp<ViewStyle>;
   direction?: LocaleDirection;
   pagerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;

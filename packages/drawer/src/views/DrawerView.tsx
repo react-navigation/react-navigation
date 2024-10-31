@@ -250,7 +250,7 @@ function DrawerViewBase({
             headerShown,
             headerStatusBarHeight,
             headerTransparent,
-            sceneContainerStyle,
+            sceneStyle,
           } = descriptor.options;
 
           return (
@@ -275,7 +275,7 @@ function DrawerViewBase({
                     descriptor.navigation as DrawerNavigationProp<ParamListBase>,
                   options: descriptor.options,
                 })}
-                style={sceneContainerStyle}
+                style={sceneStyle}
               >
                 {descriptor.render()}
               </Screen>

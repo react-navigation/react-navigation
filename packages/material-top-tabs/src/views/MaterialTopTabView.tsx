@@ -32,7 +32,6 @@ export function MaterialTopTabView({
   state,
   navigation,
   descriptors,
-  sceneContainerStyle,
   ...rest
 }: Props) {
   const { colors } = useTheme();
@@ -88,10 +87,21 @@ export function MaterialTopTabView({
       onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
       onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
       direction={direction}
-      sceneContainerStyle={[
-        { backgroundColor: colors.background },
-        sceneContainerStyle,
-      ]}
+      options={Object.fromEntries(
+        state.routes.map((route) => {
+          const options = descriptors[route.key]?.options;
+
+          return [
+            route.key,
+            {
+              sceneStyle: [
+                { backgroundColor: colors.background },
+                options?.sceneStyle,
+              ],
+            },
+          ];
+        })
+      )}
     />
   );
 }

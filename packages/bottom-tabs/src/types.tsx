@@ -289,6 +289,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   freezeOnBlur?: boolean;
 
   /**
+   * Style object for the component wrapping the screen content.
+   */
+  sceneStyle?: StyleProp<ViewStyle>;
+
+  /**
    * How the screen should animate when switching tabs.
    *
    * Supported values:
@@ -397,10 +402,6 @@ export type BottomTabNavigationConfig = {
    * Defaults to `true` on Android.
    */
   detachInactiveScreens?: boolean;
-  /**
-   * Style object for the component wrapping the screen content.
-   */
-  sceneContainerStyle?: StyleProp<ViewStyle>;
 };
 
 export type BottomTabHeaderProps = {
