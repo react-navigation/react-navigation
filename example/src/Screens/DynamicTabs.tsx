@@ -4,10 +4,9 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { Button, HeaderBackButton, Text } from '@react-navigation/elements';
+import type { PathConfigMap } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-
-import type { PathConfigMap } from '../../../packages/core/src/types';
 
 export type DynamicBottomTabParams = {
   [key: `tab-${number}`]: undefined;

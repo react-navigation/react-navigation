@@ -33,7 +33,7 @@ function NativeStackNavigator({
   UNSTABLE_getStateForRouteNamesChange,
   ...rest
 }: NativeStackNavigatorProps) {
-  const { state, descriptors, navigation, NavigationContent } =
+  const { state, describe, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
       StackRouterOptions,
@@ -84,15 +84,16 @@ function NativeStackNavigator({
         state={state}
         navigation={navigation}
         descriptors={descriptors}
+        describe={describe}
       />
     </NavigationContent>
   );
 }
 
 export function createNativeStackNavigator<
-  ParamList extends ParamListBase,
-  NavigatorID extends string | undefined = undefined,
-  TypeBag extends NavigatorTypeBagBase = {
+  const ParamList extends ParamListBase,
+  const NavigatorID extends string | undefined = undefined,
+  const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
     NavigatorID: NavigatorID;
     State: StackNavigationState<ParamList>;
@@ -107,7 +108,7 @@ export function createNativeStackNavigator<
     };
     Navigator: typeof NativeStackNavigator;
   },
-  Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
+  const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(config?: Config): TypedNavigator<TypeBag, Config> {
   return createNavigatorFactory(NativeStackNavigator)(config);
 }

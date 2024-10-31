@@ -1,4 +1,4 @@
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import-x/no-extraneous-dependencies */
 
 const path = require('path');
 const fs = require('fs');
@@ -41,6 +41,7 @@ const modules = ['@expo/vector-icons']
       self.lastIndexOf(m) === i && !m.startsWith('@react-navigation/')
   );
 
+/** @type {import('metro-config').MetroConfig} */
 module.exports = {
   ...defaultConfig,
 
@@ -72,6 +73,22 @@ module.exports = {
       acc[name] = path.join(root, 'node_modules', name);
       return acc;
     }, {}),
+
+    resolveRequest: (context, realModuleName, platform) => {
+      // We mock out react-native-gesture-handler and react-native-reanimated on web
+      // This is an additional measure to ensure they don't get added accidentally
+      if (
+        platform === 'web' &&
+        (realModuleName === 'react-native-gesture-handler' ||
+          realModuleName === 'react-native-reanimated')
+      ) {
+        throw new Error(
+          `The module '${realModuleName}' should not be imported on Web.`
+        );
+      }
+
+      return context.resolveRequest(context, realModuleName, platform);
+    },
   },
 
   server: {

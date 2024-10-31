@@ -142,6 +142,10 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
+const renderButtonDefault = (props: BottomTabBarButtonProps) => (
+  <PlatformPressable {...props} />
+);
+
 export function BottomTabItem({
   route,
   href,
@@ -151,7 +155,7 @@ export function BottomTabItem({
   icon,
   badge,
   badgeStyle,
-  button = (props: BottomTabBarButtonProps) => <PlatformPressable {...props} />,
+  button = renderButtonDefault,
   accessibilityLabel,
   testID,
   onPress,

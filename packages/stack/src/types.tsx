@@ -1,5 +1,6 @@
 import type {
   HeaderBackButton,
+  HeaderBackButtonDisplayMode,
   HeaderBackButtonProps,
   HeaderOptions,
   HeaderTitleProps,
@@ -180,23 +181,31 @@ export type StackHeaderOptions = Omit<
   /**
    * Title string used by the back button on iOS.
    * Defaults to the previous screen's title, or "Back" if there's not enough space.
-   * Use `headerBackTitleVisible: false` to hide it.
+   * Use `headerBackButtonDisplayMode` to customize the behavior.
    */
   headerBackTitle?: string;
   /**
-   * Whether the back button title should be visible or not.
+   * Title string used by the back button when `headerBackTitle` doesn't fit on the screen.
+   * Use `headerBackButtonDisplayMode` to customize the behavior.
    *
-   * Defaults to `true` on iOS, `false on Android.
+   * Defaults to "Back".
    */
-  headerBackTitleVisible?: boolean;
+  headerBackTruncatedTitle?: string;
+  /**
+   * How the back button displays icon and title.
+   *
+   * Supported values:
+   * - "default" - Displays one of the following depending on the available space: previous screen's title, truncated title (e.g. 'Back') or no title (only icon).
+   * - "generic" – Displays one of the following depending on the available space: truncated title (e.g. 'Back') or no title (only icon).
+   * - "minimal" – Always displays only the icon without a title.
+   *
+   * Defaults to "default" on iOS, and "minimal" on other platforms.
+   */
+  headerBackButtonDisplayMode?: HeaderBackButtonDisplayMode;
   /**
    * Style object for the back title.
    */
   headerBackTitleStyle?: StyleProp<TextStyle>;
-  /**
-   * Title string used by the back button when `headerBackTitle` doesn't fit on the screen. `"Back"` by default.
-   */
-  headerTruncatedBackTitle?: string;
   /**
    * Function which returns a React Element to display custom image in header's back button.
    * It receives the `tintColor` in in the options object as an argument. object.
@@ -265,10 +274,6 @@ export type StackHeaderRightProps = {
 };
 
 export type StackHeaderLeftProps = HeaderBackButtonProps & {
-  /**
-   * The `href` to use for the anchor tag on web
-   */
-  href?: string;
   /**
    * Whether it's possible to navigate back in stack.
    */

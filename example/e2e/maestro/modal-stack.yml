@@ -1,0 +1,27 @@
+appId: ${APP_ID}
+name: Modal Stack
+---
+- openLink:
+    link: exp://127.0.0.1:8081/--/modal-stack
+- assertVisible:
+    text: 'Article by Gandalf'
+- tapOn:
+    text: 'Push albums'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Push article'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Article by Babel fish'
+- tapOn:
+    text: 'Go back'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Go back'
+    retryTapIfNoChange: false
+- assertVisible:
+    text: 'Article by Gandalf'

@@ -23,7 +23,6 @@ import type {
   ScreenProps,
   ScreenStackHeaderConfigProps,
   SearchBarProps,
-  SheetDetentTypes,
 } from 'react-native-screens';
 
 export type NativeStackNavigationEventMap = {
@@ -39,6 +38,15 @@ export type NativeStackNavigationEventMap = {
    * Event which fires when a swipe back is canceled on iOS.
    */
   gestureCancel: { data: undefined };
+  /**
+   * Event which fires when screen is in sheet presentation & it's detent changes.
+   *
+   * In payload it caries two fields:
+   *
+   * * `index` - current detent index in the `sheetAllowedDetents` array,
+   * * `stable` - on Android `false` value means that the user is dragging the sheet or it is settling; on iOS it is always `true`.
+   */
+  sheetDetentChange: { data: { index: number; stable: boolean } };
 };
 
 export type NativeStackNavigationProp<
@@ -116,7 +124,7 @@ export type NativeStackHeaderRightProps = {
   /**
    * Whether it's possible to navigate back in stack.
    */
-  canGoBack: boolean;
+  canGoBack?: boolean;
 };
 
 export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {
@@ -150,29 +158,21 @@ export type NativeStackNavigationOptions = {
   /**
    * Title string used by the back button on iOS.
    * Defaults to the previous scene's title, or "Back" if there's not enough space.
-   * Use `headerBackTitleVisible: false` to hide it.
+   * Use `headerBackButtonDisplayMode: "minimal"` to hide it.
    *
-   * Only supported on iOS.
+   * Only supported on iOS and Web.
    *
-   * @platform ios
+   * @platform ios, web
    */
   headerBackTitle?: string;
-  /**
-   * Whether the back button title should be visible or not.
-   *
-   * Only supported on iOS.
-   *
-   * @platform ios
-   */
-  headerBackTitleVisible?: boolean;
   /**
    * Style object for header back title. Supported properties:
    * - fontFamily
    * - fontSize
    *
-   * Only supported on iOS.
+   * Only supported on iOS and Web.
    *
-   * @platform ios
+   * @platform ios, web
    */
   headerBackTitleStyle?: StyleProp<{
     fontFamily?: string;
@@ -331,8 +331,6 @@ export type NativeStackNavigationOptions = {
    * Options to render a native search bar.
    * You also need to specify `contentInsetAdjustmentBehavior="automatic"` in your `ScrollView`, `FlatList` etc.
    * If you don't have a `ScrollView`, specify `headerTransparent: false`.
-   *
-   * Only supported on iOS and Android.
    */
   headerSearchBarOptions?: Omit<SearchBarProps, 'ref'>;
   /**
@@ -344,6 +342,29 @@ export type NativeStackNavigationOptions = {
    * @platform ios
    */
   headerBackButtonMenuEnabled?: boolean;
+  /**
+   * How the back button displays icon and title.
+   *
+   * Supported values:
+   * - "default" - Displays one of the following depending on the available space: previous screen's title, generic title (e.g. 'Back') or no title (only icon).
+   * - "generic" – Displays one of the following depending on the available space: generic title (e.g. 'Back') or no title (only icon).
+   * - "minimal" – Always displays only the icon without a title.
+   *
+   * The "generic" mode is not supported when:
+   * - The iOS version is lower than 14
+   * - Custom back title is set
+   * - Custom back title style is set
+   * - Back button menu is disabled
+   *
+   * In such cases, the "default" mode will be used instead.
+   *
+   * Defaults to "default" on iOS, and "minimal" on other platforms.
+   *
+   * Only supported on iOS and Web.
+   *
+   * @platform ios, web
+   */
+  headerBackButtonDisplayMode?: ScreenStackHeaderConfigProps['backButtonDisplayMode'];
   /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
@@ -447,6 +468,16 @@ export type NativeStackNavigationOptions = {
    */
   fullScreenGestureEnabled?: boolean;
   /**
+   * Whether the full screen dismiss gesture has shadow under view during transition. The gesture uses custom transition and thus
+   * doesn't have a shadow by default. When enabled, a custom shadow view is added during the transition which tries to mimic the
+   * default iOS shadow. Defaults to `false`.
+   *
+   * This does not affect the behavior of transitions that don't use gestures, enabled by `fullScreenGestureEnabled` prop.
+   *
+   * @platform ios
+   */
+  fullScreenGestureShadowEnabled?: boolean;
+  /**
    * Whether you can use gestures to dismiss this screen. Defaults to `true`.
    *
    * Only supported on iOS.
@@ -513,11 +544,14 @@ export type NativeStackNavigationOptions = {
    * Supported values:
    * - "default": use the platform default animation
    * - "fade": fade screen in or out
+   * - "fade_from_bottom" – performs a fade from bottom animation
    * - "flip": flip the screen, requires presentation: "modal" (iOS only)
    * - "simple_push": use the platform default animation, but without shadow and native header transition (iOS only)
    * - "slide_from_bottom": slide in the new screen from bottom
    * - "slide_from_right": slide in the new screen from right (Android only, uses default animation on iOS)
    * - "slide_from_left": slide in the new screen from left (Android only, uses default animation on iOS)
+   * - "ios_from_right" - iOS like slide in animation. pushes in the new screen from right to left (Android only, resolves to default transition on iOS)
+   * - "ios_from_left" - iOS like slide in animation. pushes in the new screen from left to right (Android only, resolves to default transition on iOS)
    * - "none": don't animate the screen
    *
    * Only supported on iOS and Android.
@@ -548,17 +582,32 @@ export type NativeStackNavigationOptions = {
   /**
    * Describes heights where a sheet can rest.
    * Works only when `presentation` is set to `formSheet`.
-   * Defaults to `large`.
    *
-   * Available values:
+   * Heights should be described as fraction (a number from `[0, 1]` interval) of screen height / maximum detent height.
+   * You can pass an array of ascending values each defining allowed sheet detent. iOS accepts any number of detents,
+   * while **Android is limited to three**.
    *
-   * - `large` - only large detent level will be allowed
-   * - `medium` - only medium detent level will be allowed
-   * - `all` - all detent levels will be allowed
+   * There is also possibility to specify `fitToContents` literal, which intents to set the sheet height
+   * to the height of its contents.
    *
-   * @platform ios
+   * Please note that the array **must** be sorted in ascending order. This invariant is verified only in developement mode,
+   * where violation results in error.
+   *
+   * **Android is limited to up 3 values in the array** -- any surplus values, beside first three are ignored.
+   *
+   * Defaults to `[1.0]`.
    */
-  sheetAllowedDetents?: SheetDetentTypes;
+  sheetAllowedDetents?: number[] | 'fitToContents';
+  /**
+   * Integer value describing elevation of the sheet, impacting shadow on the top edge of the sheet.
+   *
+   * Not dynamic - changing it after the component is rendered won't have an effect.
+   *
+   * Defaults to `24`.
+   *
+   * @platform Android
+   */
+  sheetElevation?: number;
   /**
    * Whether the sheet should expand to larger detent when scrolling.
    * Works only when `presentation` is set to `formSheet`.
@@ -574,10 +623,20 @@ export type NativeStackNavigationOptions = {
    * If set to non-negative value it will try to render sheet with provided radius, else it will apply system default.
    *
    * If left unset system default is used.
-   *
-   * @platform ios
    */
   sheetCornerRadius?: number;
+  /**
+   * Index of the detent the sheet should expand to after being opened.
+   * Works only when `stackPresentation` is set to `formSheet`.
+   *
+   * If the specified index is out of bounds of `sheetAllowedDetents` array, in dev environment more error will be thrown,
+   * in production the value will be reset to default value.
+   *
+   * Additionaly there is `last` value available, when set the sheet will expand initially to last (largest) detent.
+   *
+   * Defaults to `0` - which represents first detent in the detents array.
+   */
+  sheetInitialDetentIndex?: number | 'last';
   /**
    * Boolean indicating whether the sheet shows a grabber at the top.
    * Works only when `presentation` is set to `formSheet`.
@@ -588,19 +647,19 @@ export type NativeStackNavigationOptions = {
   sheetGrabberVisible?: boolean;
   /**
    * The largest sheet detent for which a view underneath won't be dimmed.
-   * Works only when `presentation` is se tto `formSheet`.
+   * Works only when `presentation` is set to `formSheet`.
    *
-   * If this prop is set to:
+   * This prop can be set to an number, which indicates index of detent in `sheetAllowedDetents` array for which
+   * there won't be a dimming view beneath the sheet.
    *
-   * - `large` - the view underneath won't be dimmed at any detent level
-   * - `medium` - the view underneath will be dimmed only when detent level is `large`
-   * - `all` - the view underneath will be dimmed for any detent level
+   * Additionaly there are following options available:
    *
-   * Defaults to `all`.
+   * * `none` - there will be dimming view for all detents levels,
+   * * `last` - there won't be a dimming view for any detent level.
    *
-   * @platform ios
+   * Defaults to `none`, indicating that the dimming view should be always present.
    */
-  sheetLargestUndimmedDetent?: SheetDetentTypes;
+  sheetLargestUndimmedDetentIndex?: number | 'none' | 'last';
   /**
    * The display orientation to use for the screen.
    *
@@ -625,6 +684,19 @@ export type NativeStackNavigationOptions = {
    * Only supported on iOS and Android.
    */
   freezeOnBlur?: boolean;
+  /**
+   * Footer component that can be used alongside formSheet stack presentation style.
+   *
+   * This option is provided, because due to implementation details it might be problematic
+   * to implement such layout with JS-only code.
+   *
+   * Please note that this prop is marked as unstable and might be subject of breaking changes,
+   * including removal, in particular when we find solution that will make implementing it with JS
+   * straightforward.
+   *
+   * @platform android
+   */
+  unstable_sheetFooter?: () => React.ReactNode;
 };
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<

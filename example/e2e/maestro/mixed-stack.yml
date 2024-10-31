@@ -1,0 +1,7 @@
+appId: ${APP_ID}
+name: Mixed Stack
+---
+- openLink:
+    link: exp://127.0.0.1:8081/--/mixed-stack
+- assertVisible:
+    text: 'Article by Gandalf'

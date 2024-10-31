@@ -39,6 +39,8 @@ export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   renderScene: (props: SceneRendererProps & { route: T }) => React.ReactNode;
 };
 
+const renderLazyPlaceholderDefault = () => null;
+
 export function TabView<T extends Route>({
   onIndexChange,
   navigationState,
@@ -49,7 +51,8 @@ export function TabView<T extends Route>({
   lazyPreloadDistance = 0,
   onSwipeStart,
   onSwipeEnd,
-  renderLazyPlaceholder = () => null,
+  renderLazyPlaceholder = renderLazyPlaceholderDefault,
+  // eslint-disable-next-line @eslint-react/no-unstable-default-props
   renderTabBar = (props) => <TabBar {...props} />,
   sceneContainerStyle,
   pagerStyle,

@@ -1,5 +1,5 @@
 /* eslint-env jest */
-/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable import-x/no-extraneous-dependencies */
 
 import 'react-native-gesture-handler/jestSetup';
 

@@ -64,12 +64,16 @@ const hasAnimation = (options: BottomTabNavigationOptions) => {
     return animation !== 'none';
   }
 
-  return !transitionSpec;
+  return Boolean(transitionSpec);
 };
+
+const renderTabBarDefault = (props: BottomTabBarProps) => (
+  <BottomTabBar {...props} />
+);
 
 export function BottomTabView(props: Props) {
   const {
-    tabBar = (props: BottomTabBarProps) => <BottomTabBar {...props} />,
+    tabBar = renderTabBarDefault,
     state,
     navigation,
     descriptors,
@@ -119,6 +123,13 @@ export function BottomTabView(props: Props) {
     }
 
     const animateToIndex = () => {
+      if (previousRouteKey !== focusedRouteKey) {
+        navigation.emit({
+          type: 'transitionStart',
+          target: focusedRouteKey,
+        });
+      }
+
       Animated.parallel(
         state.routes
           .map((route, index) => {
@@ -155,6 +166,13 @@ export function BottomTabView(props: Props) {
       ).start(({ finished }) => {
         if (finished && popToTopAction) {
           navigation.dispatch(popToTopAction);
+        }
+
+        if (previousRouteKey !== focusedRouteKey) {
+          navigation.emit({
+            type: 'transitionEnd',
+            target: focusedRouteKey,
+          });
         }
       });
     };

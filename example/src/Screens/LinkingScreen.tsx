@@ -87,13 +87,17 @@ const Stack = createStackNavigator<LinkingStackParams>();
 export function LinkingScreen() {
   const [isSignedIn, setSignedIn] = React.useState(false);
   const { getStateForRouteNamesChange } = UNSTABLE_useUnhandledLinking();
+
+  const context = React.useMemo(
+    () => ({
+      signIn: () => setSignedIn(true),
+      signOut: () => setSignedIn(false),
+    }),
+    []
+  );
+
   return (
-    <SigningContext.Provider
-      value={{
-        signOut: () => setSignedIn(false),
-        signIn: () => setSignedIn(true),
-      }}
-    >
+    <SigningContext.Provider value={context}>
       <Stack.Navigator
         UNSTABLE_getStateForRouteNamesChange={getStateForRouteNamesChange}
       >
@@ -108,6 +112,7 @@ export function LinkingScreen() {
             component={SignInScreen}
             options={{
               animationTypeForReplace: !isSignedIn ? 'pop' : 'push',
+              title: 'Sign In',
             }}
           />
         )}

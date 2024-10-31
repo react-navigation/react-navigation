@@ -1,8 +1,8 @@
+import { expect, jest, test } from '@jest/globals';
 import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
   NavigationContainer,
-  type ParamListBase,
   useFocusEffect,
   useIsFocused,
 } from '@react-navigation/native';
@@ -17,10 +17,14 @@ type StackParamList = {
   B: undefined;
 };
 
+type NestedStackParamList = {
+  C: undefined;
+};
+
 jest.useFakeTimers();
 
-it('renders a stack navigator with screens', async () => {
-  const Test = ({ route, navigation }: StackScreenProps<ParamListBase>) => (
+test('renders a stack navigator with screens', async () => {
+  const Test = ({ route, navigation }: StackScreenProps<StackParamList>) => (
     <View>
       <Text>Screen {route.name}</Text>
       <Button onPress={() => navigation.navigate('A')} title="Go to A" />
@@ -30,7 +34,7 @@ it('renders a stack navigator with screens', async () => {
 
   const Stack = createStackNavigator<StackParamList>();
 
-  const { findByText, queryByText } = render(
+  const { getByText, queryByText } = render(
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="A" component={Test} />
@@ -42,22 +46,45 @@ it('renders a stack navigator with screens', async () => {
   expect(queryByText('Screen A')).not.toBeNull();
   expect(queryByText('Screen B')).toBeNull();
 
-  fireEvent.press(await findByText('Go to B'));
+  fireEvent.press(getByText('Go to B'));
 
   act(() => jest.runAllTimers());
 
   expect(queryByText('Screen B')).not.toBeNull();
 });
 
-it('fires transition events on navigation', async () => {
-  const FirstScreen = ({ navigation }: StackScreenProps<ParamListBase>) => (
+test("doesn't show back button on the first screen", async () => {
+  const Test = ({ navigation }: StackScreenProps<StackParamList>) => (
+    <Button onPress={() => navigation.navigate('B')} title="Go to B" />
+  );
+
+  const Stack = createStackNavigator<StackParamList>();
+
+  const { getByText, queryByRole } = render(
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="A" component={Test} />
+        <Stack.Screen name="B" component={Test} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(queryByRole('button', { name: 'Go back' })).toBeNull();
+
+  fireEvent.press(getByText('Go to B'));
+
+  expect(queryByRole('button', { name: 'A, back' })).not.toBeNull();
+});
+
+test('fires transition events on navigation', async () => {
+  const FirstScreen = ({ navigation }: StackScreenProps<StackParamList>) => (
     <Button onPress={() => navigation.navigate('B')} title="Go to B" />
   );
 
   const onTransitionStart = jest.fn();
   const onTransitionEnd = jest.fn();
 
-  const SecondScreen = ({ navigation }: StackScreenProps<ParamListBase>) => {
+  const SecondScreen = ({ navigation }: StackScreenProps<StackParamList>) => {
     React.useLayoutEffect(
       () => navigation.addListener('transitionStart', onTransitionStart),
       [navigation]
@@ -73,7 +100,7 @@ it('fires transition events on navigation', async () => {
 
   const Stack = createStackNavigator<StackParamList>();
 
-  const { findByText } = render(
+  const { getByText } = render(
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="A" component={FirstScreen} />
@@ -85,7 +112,7 @@ it('fires transition events on navigation', async () => {
   expect(onTransitionStart).not.toHaveBeenCalled();
   expect(onTransitionEnd).not.toHaveBeenCalled();
 
-  fireEvent.press(await findByText('Go to B'));
+  fireEvent.press(getByText('Go to B'));
 
   expect(onTransitionStart).toHaveBeenCalledWith(
     expect.objectContaining({ data: { closing: false } })
@@ -99,7 +126,7 @@ it('fires transition events on navigation', async () => {
     expect.objectContaining({ data: { closing: false } })
   );
 
-  fireEvent.press(await findByText('Go back'));
+  fireEvent.press(getByText('Go back'));
 
   expect(onTransitionStart).toHaveBeenCalledTimes(2);
   expect(onTransitionStart).toHaveBeenCalledWith(
@@ -116,7 +143,7 @@ it('fires transition events on navigation', async () => {
   );
 });
 
-it('handles screens preloading', async () => {
+test('handles screens preloading', async () => {
   const Stack = createStackNavigator<StackParamList>();
 
   const navigation = createNavigationContainerRef<StackParamList>();
@@ -137,7 +164,7 @@ it('handles screens preloading', async () => {
   ).not.toBeNull();
 });
 
-it('runs focus effect on focus change on preloaded route', () => {
+test('runs focus effect on focus change on preloaded route', () => {
   const focusEffect = jest.fn();
   const focusEffectCleanup = jest.fn();
 
@@ -186,7 +213,7 @@ it('runs focus effect on focus change on preloaded route', () => {
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
-it('renders correct focus state with preloading', () => {
+test('renders correct focus state with preloading', () => {
   const Test = () => {
     const isFocused = useIsFocused();
 
@@ -234,4 +261,42 @@ it('renders correct focus state with preloading', () => {
   act(() => navigation.current.navigate('A'));
 
   expect(queryByText('focused', { includeHiddenElements: true })).toBeNull();
+});
+
+test('renders back button in the nested stack', async () => {
+  const StackA = createStackNavigator<NestedStackParamList>();
+
+  const StackAScreen = ({ route }: StackScreenProps<StackParamList>) => (
+    <StackA.Navigator>
+      <StackA.Screen name="C">
+        {({ navigation }) => {
+          const next = route.name === 'A' ? 'B' : 'A';
+
+          return (
+            <Button
+              onPress={() => navigation.navigate(next)}
+              title={`Go to ${next}`}
+            />
+          );
+        }}
+      </StackA.Screen>
+    </StackA.Navigator>
+  );
+
+  const StackB = createStackNavigator<StackParamList>();
+
+  const { getByText, queryByRole } = render(
+    <NavigationContainer>
+      <StackB.Navigator screenOptions={{ headerShown: false }}>
+        <StackB.Screen name="A" component={StackAScreen} />
+        <StackB.Screen name="B" component={StackAScreen} />
+      </StackB.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(queryByRole('button', { name: 'Go back' })).toBeNull();
+
+  fireEvent.press(getByText('Go to B'));
+
+  expect(queryByRole('button', { name: 'A, back' })).not.toBeNull();
 });

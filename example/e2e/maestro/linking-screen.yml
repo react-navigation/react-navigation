@@ -1,0 +1,7 @@
+appId: ${APP_ID}
+name: Linking Screen
+---
+- openLink:
+    link: exp://127.0.0.1:8081/--/linking-screen
+- assertVisible:
+    text: 'Sign in'

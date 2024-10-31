@@ -107,8 +107,11 @@ export function DrawerItem(props: Props) {
     labelStyle,
     focused = false,
     allowFontScaling,
+    // eslint-disable-next-line @eslint-react/no-unstable-default-props
     activeTintColor = colors.primary,
+    // eslint-disable-next-line @eslint-react/no-unstable-default-props
     inactiveTintColor = Color(colors.text).alpha(0.68).rgb().string(),
+    // eslint-disable-next-line @eslint-react/no-unstable-default-props
     activeBackgroundColor = Color(activeTintColor).alpha(0.12).rgb().string(),
     inactiveBackgroundColor = 'transparent',
     style,

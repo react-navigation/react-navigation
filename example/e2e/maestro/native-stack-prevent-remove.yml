@@ -1,0 +1,7 @@
+appId: ${APP_ID}
+name: Native Stack Prevent Remove
+---
+- openLink:
+    link: exp://127.0.0.1:8081/--/native-stack-prevent-remove
+- assertVisible:
+    text: 'Input'

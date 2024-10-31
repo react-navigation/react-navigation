@@ -3,6 +3,72 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.26...@react-navigation/material-top-tabs@7.0.0-rc.27) (2024-10-24)
+
+### Bug Fixes
+
+* use * for react-native peer dep to support pre-release versions ([07267e5](https://github.com/react-navigation/react-navigation/commit/07267e54be752f600f808ec2898e5d76a1bc1d43)) - by @satya164
+
+# [7.0.0-rc.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.25...@react-navigation/material-top-tabs@7.0.0-rc.26) (2024-10-11)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.24...@react-navigation/material-top-tabs@7.0.0-rc.25) (2024-09-10)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.23...@react-navigation/material-top-tabs@7.0.0-rc.24) (2024-09-08)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.22...@react-navigation/material-top-tabs@7.0.0-rc.23) (2024-08-09)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.21...@react-navigation/material-top-tabs@7.0.0-rc.22) (2024-08-08)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.20...@react-navigation/material-top-tabs@7.0.0-rc.21) (2024-08-07)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.19...@react-navigation/material-top-tabs@7.0.0-rc.20) (2024-08-05)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.18...@react-navigation/material-top-tabs@7.0.0-rc.19) (2024-08-02)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.17...@react-navigation/material-top-tabs@7.0.0-rc.18) (2024-08-01)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.16...@react-navigation/material-top-tabs@7.0.0-rc.17) (2024-07-25)
+
+### Bug Fixes
+
+* fix type inference for params. closes [#12071](https://github.com/react-navigation/react-navigation/issues/12071) ([3299b70](https://github.com/react-navigation/react-navigation/commit/3299b70682adbf55811369535cca1cdd0dc59860)) - by @
+
+# [7.0.0-rc.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.15...@react-navigation/material-top-tabs@7.0.0-rc.16) (2024-07-19)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.14...@react-navigation/material-top-tabs@7.0.0-rc.15) (2024-07-12)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.13...@react-navigation/material-top-tabs@7.0.0-rc.14) (2024-07-12)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.12...@react-navigation/material-top-tabs@7.0.0-rc.13) (2024-07-11)
+
+### Bug Fixes
+
+* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
+
 # [7.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.11...@react-navigation/material-top-tabs@7.0.0-rc.12) (2024-07-11)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

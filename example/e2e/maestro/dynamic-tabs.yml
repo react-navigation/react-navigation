@@ -1,0 +1,7 @@
+appId: ${APP_ID}
+name: Dynamic Tabs
+---
+- openLink:
+    link: exp://127.0.0.1:8081/--/dynamic-tabs
+- assertVisible:
+    text: 'Tab 0'

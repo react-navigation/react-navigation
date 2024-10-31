@@ -54,7 +54,7 @@ npx playwright install
 Run the e2e tests by:
 
 ```sh
-yarn example test --ui
+yarn example e2e:web --ui
 ```
 
 By default, this will use the local dev server for the app. If you want to test a production build, first build the [example app](/example/) for web:
@@ -66,7 +66,19 @@ yarn example expo export --platform web
 Then run the tests with the `CI` environment variable:
 
 ```sh
-CI=1 yarn example test
+CI=1 yarn example e2e:web
+```
+
+Before running Maestro tests:
+
+- Install it following the instructions [here](https://maestro.mobile.dev/getting-started/installing-maestro).
+- Start the Emulator or Simulator and install the Expo Go app.
+- Start the Metro server with `yarn example start`.
+
+Then run the Maestro tests by:
+
+```sh
+yarn example e2e:native
 ```
 
 ### Commit message convention
@@ -77,7 +89,7 @@ We follow the [conventional commits specification](https://www.conventionalcommi
 - `feat`: new features, e.g. add new method to the module.
 - `refactor`: code refactor, e.g. migrate from class components to hooks.
 - `docs`: changes to documentation, e.g. add usage example for the module.
-- `test`: adding or updating tests, eg add integration tests using detox.
+- `test`: adding or updating tests, eg add e2e tests using maestro.
 - `chore`: tooling changes, e.g. change CI config.
 
 Our pre-commit hooks verify that your commit message matches this format when committing.

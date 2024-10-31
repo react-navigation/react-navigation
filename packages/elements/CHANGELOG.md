@@ -3,6 +3,93 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.0.0-rc.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.25...@react-navigation/elements@2.0.0-rc.26) (2024-10-24)
+
+### Bug Fixes
+
+* use * for react-native peer dep to support pre-release versions ([07267e5](https://github.com/react-navigation/react-navigation/commit/07267e54be752f600f808ec2898e5d76a1bc1d43)) - by @satya164
+
+# [2.0.0-rc.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.24...@react-navigation/elements@2.0.0-rc.25) (2024-10-11)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-rc.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.23...@react-navigation/elements@2.0.0-rc.24) (2024-09-10)
+
+### Features
+
+* use href and precedence to deduplicate styles ([f830228](https://github.com/react-navigation/react-navigation/commit/f8302281a0589a7a774ee2d52d8579c7530f6290)) - by @satya164
+
+# [2.0.0-rc.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.22...@react-navigation/elements@2.0.0-rc.23) (2024-09-08)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-rc.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.21...@react-navigation/elements@2.0.0-rc.22) (2024-08-09)
+
+### Bug Fixes
+
+* fix alignment for center aligned title ([6e22370](https://github.com/react-navigation/react-navigation/commit/6e223705b8d8cf98b2e6e7fd8119571bffb11c61)) - by @satya164
+
+# [2.0.0-rc.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.20...@react-navigation/elements@2.0.0-rc.21) (2024-08-08)
+
+### Bug Fixes
+
+* avoid using column-reverse for header for a11y on web ([3101d04](https://github.com/react-navigation/react-navigation/commit/3101d0406c32163c0576cb5c4712755c01b1a17c)) - by @satya164
+* improve custom header in native stack & stack ([7e6b666](https://github.com/react-navigation/react-navigation/commit/7e6b6662342e63d241c1a2e8f57c56a3b5b0cef5)) - by @satya164
+* use pointer cursor only on web & iOS ([ce1ce06](https://github.com/react-navigation/react-navigation/commit/ce1ce06df75991cb25f3647bcb3e52e08dfff145)) - by @satya164
+
+### Features
+
+* implement search bar in elements header ([#12097](https://github.com/react-navigation/react-navigation/issues/12097)) ([78b1535](https://github.com/react-navigation/react-navigation/commit/78b1535e01de1b4a1dc462c0690d69d3d39ab964)) - by @satya164
+
+# [2.0.0-rc.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.19...@react-navigation/elements@2.0.0-rc.20) (2024-08-07)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-rc.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.18...@react-navigation/elements@2.0.0-rc.19) (2024-08-05)
+
+### Features
+
+* add headerBackButtonDisplayMode for stack ([#12090](https://github.com/react-navigation/react-navigation/issues/12090)) ([35cd213](https://github.com/react-navigation/react-navigation/commit/35cd213d366a60afe9955cf10dffb83d9006ce73)) - by @satya164
+
+### BREAKING CHANGES
+
+* This removes the `headerBackTitleVisible` option, and
+changes `headerTruncatedBackTitle` to `headerBackTruncatedTitle`.
+
+Similarly, `headerLeft` now receives `displayMode` instead of
+`labelVisible`, and `HeaderBackButton` accepts `displayMode` instead of
+`labelVisible`
+
+# [2.0.0-rc.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.17...@react-navigation/elements@2.0.0-rc.18) (2024-08-02)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-rc.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.16...@react-navigation/elements@2.0.0-rc.17) (2024-08-01)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-rc.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.15...@react-navigation/elements@2.0.0-rc.16) (2024-07-19)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.0.0-rc.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.14...@react-navigation/elements@2.0.0-rc.15) (2024-07-12)
+
+### Bug Fixes
+
+* add masked-view to peerDependencies ([08b3ef1](https://github.com/react-navigation/react-navigation/commit/08b3ef1e16dd85d12f4c75753a7a02774d5f9abf)) - by @
+
+# [2.0.0-rc.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.13...@react-navigation/elements@2.0.0-rc.14) (2024-07-12)
+
+### Bug Fixes
+
+* import from /native instead of /core ([66d5f45](https://github.com/react-navigation/react-navigation/commit/66d5f455b4a09b76c8f06690c1b01e4797eba393)) - by @
+
+# [2.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.12...@react-navigation/elements@2.0.0-rc.13) (2024-07-11)
+
+### Bug Fixes
+
+* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
+
 # [2.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.0-rc.11...@react-navigation/elements@2.0.0-rc.12) (2024-07-11)
 
 **Note:** Version bump only for package @react-navigation/elements

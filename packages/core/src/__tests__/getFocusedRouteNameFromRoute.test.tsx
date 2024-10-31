@@ -1,11 +1,13 @@
+import { expect, test } from '@jest/globals';
+
 import { getFocusedRouteNameFromRoute } from '../getFocusedRouteNameFromRoute';
 import { CHILD_STATE } from '../useRouteCache';
 
-it('gets undefined if there is no nested state', () => {
+test('gets undefined if there is no nested state', () => {
   expect(getFocusedRouteNameFromRoute({ name: 'Home' })).toBeUndefined();
 });
 
-it('gets focused route name from nested state', () => {
+test('gets focused route name from nested state', () => {
   expect(
     getFocusedRouteNameFromRoute({
       name: 'Home',
@@ -49,7 +51,7 @@ it('gets focused route name from nested state', () => {
   ).toBe('Article');
 });
 
-it('gets focused route name from nested state with symbol', () => {
+test('gets focused route name from nested state with symbol', () => {
   expect(
     getFocusedRouteNameFromRoute({
       name: 'Home',
@@ -93,7 +95,7 @@ it('gets focused route name from nested state with symbol', () => {
   ).toBe('Article');
 });
 
-it('gets nested screen in params if present', () => {
+test('gets nested screen in params if present', () => {
   expect(
     getFocusedRouteNameFromRoute({
       name: 'Home',

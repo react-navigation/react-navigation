@@ -187,7 +187,14 @@ export const PopularScreen = ({
   expectTypeOf(navigation.addListener)
     .parameter(0)
     .toEqualTypeOf<
-      'focus' | 'blur' | 'state' | 'beforeRemove' | 'tabPress' | 'tabLongPress'
+      | 'focus'
+      | 'blur'
+      | 'state'
+      | 'beforeRemove'
+      | 'tabPress'
+      | 'tabLongPress'
+      | 'transitionStart'
+      | 'transitionEnd'
     >();
 
   expectTypeOf(navigation.setParams)
@@ -460,6 +467,7 @@ type ThirdParamList = {
   HasParams1: { id: string };
   HasParams2: { user: string };
   NoParams: undefined;
+  NoParams2: undefined;
 };
 
 export const ThirdScreen = ({
@@ -494,6 +502,10 @@ export const ThirdScreen = ({
 
   // @ts-expect-error
   if (ScreenName === 'NoParams') navigation.navigate(ScreenName, { id: '123' });
+
+  const ScreenName2: 'NoParams' | 'NoParams2' = null as any;
+
+  navigation.navigate(ScreenName2);
 };
 
 /**

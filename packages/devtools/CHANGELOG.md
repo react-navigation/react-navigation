@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.0-rc.15...@react-navigation/devtools@7.0.0-rc.16) (2024-10-27)
+
+### Features
+
+* add a logger devtool ([#12208](https://github.com/react-navigation/react-navigation/issues/12208)) ([8497f78](https://github.com/react-navigation/react-navigation/commit/8497f78858b6a8d8a6b397ccd441d46b0c8ed8c7)) - by @satya164
+
+# [7.0.0-rc.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.0-rc.14...@react-navigation/devtools@7.0.0-rc.15) (2024-10-11)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+# [7.0.0-rc.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.0-rc.13...@react-navigation/devtools@7.0.0-rc.14) (2024-09-08)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+# [7.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.0-rc.12...@react-navigation/devtools@7.0.0-rc.13) (2024-08-07)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+# [7.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.0-rc.11...@react-navigation/devtools@7.0.0-rc.12) (2024-08-05)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+# [7.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.0-rc.10...@react-navigation/devtools@7.0.0-rc.11) (2024-08-01)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+# [7.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.0-rc.9...@react-navigation/devtools@7.0.0-rc.10) (2024-07-11)
+
+### Bug Fixes
+
+* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
+
 # [7.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.0-rc.8...@react-navigation/devtools@7.0.0-rc.9) (2024-07-11)
 
 **Note:** Version bump only for package @react-navigation/devtools

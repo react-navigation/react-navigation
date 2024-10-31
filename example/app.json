@@ -28,6 +28,10 @@
     "web": {
       "bundler": "metro"
     },
+    "androidStatusBar": {
+      "backgroundColor": "#00000088",
+      "translucent": true
+    },
     "updates": {
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/a7070fc4-41f3-403d-826d-292b5d868327"

@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.14...@react-navigation/core@7.0.0-rc.15) (2024-10-11)
+
+**Note:** Version bump only for package @react-navigation/core
+
+# [7.0.0-rc.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.13...@react-navigation/core@7.0.0-rc.14) (2024-09-08)
+
+### Bug Fixes
+
+* improve error message when navigating with invalid screen name ([9f2c310](https://github.com/react-navigation/react-navigation/commit/9f2c31020a7f39494de4b22d2fb591273ece1fd3)) - by @satya164
+
+# [7.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.12...@react-navigation/core@7.0.0-rc.13) (2024-08-07)
+
+### Bug Fixes
+
+* improve how navigate and other methods are typed ([#12093](https://github.com/react-navigation/react-navigation/issues/12093)) ([a528b9b](https://github.com/react-navigation/react-navigation/commit/a528b9b407dbaeaac0caae8edcb5b3c6840144fa)) - by @satya164
+
+# [7.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.11...@react-navigation/core@7.0.0-rc.12) (2024-08-05)
+
+### Bug Fixes
+
+* allow undefined in path config validation ([#12085](https://github.com/react-navigation/react-navigation/issues/12085)) ([4f20056](https://github.com/react-navigation/react-navigation/commit/4f2005621e3cacdbf9871b5cdbee3d992e67ae04)) - by @janicduplessis
+
+# [7.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.10...@react-navigation/core@7.0.0-rc.11) (2024-08-01)
+
+**Note:** Version bump only for package @react-navigation/core
+
+# [7.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.9...@react-navigation/core@7.0.0-rc.10) (2024-07-11)
+
+### Bug Fixes
+
+* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
+
 # [7.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.8...@react-navigation/core@7.0.0-rc.9) (2024-07-11)
 
 ### Bug Fixes

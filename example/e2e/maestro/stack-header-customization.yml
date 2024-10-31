@@ -1,0 +1,7 @@
+appId: ${APP_ID}
+name: Stack Header Customization
+---
+- openLink:
+    link: exp://127.0.0.1:8081/--/stack-header-customization
+- assertVisible:
+    text: 'Article by Gandalf'

@@ -5,7 +5,6 @@ import {
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
-  ScreenStackHeaderConfig,
   ScreenStackHeaderLeftView,
   ScreenStackHeaderRightView,
   ScreenStackHeaderSearchBarView,
@@ -22,12 +21,12 @@ type Props = NativeStackNavigationOptions & {
   canGoBack: boolean;
 };
 
-export function HeaderConfig({
+export function useHeaderConfigProps({
   headerBackImageSource,
+  headerBackButtonDisplayMode,
   headerBackButtonMenuEnabled,
   headerBackTitle,
   headerBackTitleStyle,
-  headerBackTitleVisible = true,
   headerBackVisible,
   headerShadowVisible,
   headerLargeStyle,
@@ -50,7 +49,7 @@ export function HeaderConfig({
   route,
   title,
   canGoBack,
-}: Props): JSX.Element {
+}: Props) {
   const { direction } = useLocale();
   const { colors, fonts } = useTheme();
   const tintColor =
@@ -164,9 +163,11 @@ export function HeaderConfig({
    * - Back button should stay visible when `headerLeft` is specified
    * - If `headerTitle` for Android is specified, so we only need to remove the title and keep the back button
    */
-  const backButtonInCustomView = headerBackVisible
-    ? headerLeftElement != null
-    : Platform.OS === 'android' && headerTitleElement != null;
+  const backButtonInCustomView =
+    headerBackVisible ||
+    (Platform.OS === 'android' &&
+      headerTitleElement != null &&
+      headerLeftElement == null);
 
   const translucent =
     headerBackground != null ||
@@ -176,43 +177,22 @@ export function HeaderConfig({
       Platform.OS === 'ios' &&
       headerTransparent !== false);
 
-  return (
-    <ScreenStackHeaderConfig
-      backButtonInCustomView={backButtonInCustomView}
-      backgroundColor={headerBackgroundColor}
-      backTitle={headerBackTitle}
-      backTitleVisible={headerBackTitleVisible}
-      backTitleFontFamily={backTitleFontFamily}
-      backTitleFontSize={backTitleFontSize}
-      blurEffect={headerBlurEffect}
-      color={tintColor}
-      direction={direction}
-      disableBackButtonMenu={headerBackButtonMenuEnabled === false}
-      hidden={headerShown === false}
-      hideBackButton={headerBackVisible === false}
-      hideShadow={
-        headerShadowVisible === false ||
-        headerBackground != null ||
-        (headerTransparent && headerShadowVisible !== true)
-      }
-      largeTitle={headerLargeTitle}
-      largeTitleBackgroundColor={largeTitleBackgroundColor}
-      largeTitleColor={largeTitleColor}
-      largeTitleFontFamily={largeTitleFontFamily}
-      largeTitleFontSize={largeTitleFontSize}
-      largeTitleFontWeight={largeTitleFontWeight}
-      largeTitleHideShadow={headerLargeTitleShadowVisible === false}
-      title={titleText}
-      titleColor={titleColor}
-      titleFontFamily={titleFontFamily}
-      titleFontSize={titleFontSize}
-      titleFontWeight={String(titleFontWeight)}
-      topInsetEnabled={headerTopInsetEnabled}
-      translucent={
-        // This defaults to `true`, so we can't pass `undefined`
-        translucent === true
-      }
-    >
+  const isBackButtonDisplayModeAvailable =
+    // On iOS 14+
+    Platform.OS === 'ios' &&
+    parseInt(Platform.Version, 10) >= 14 &&
+    // Doesn't have custom back title
+    headerBackTitle == null &&
+    // Doesn't have custom styling
+    backTitleFontFamily == null &&
+    backTitleFontSize == null &&
+    // Back button menu is not disabled
+    headerBackButtonMenuEnabled !== false;
+
+  const isCenterViewRenderedAndroid = headerTitleAlign === 'center';
+
+  const children = (
+    <>
       {Platform.OS === 'ios' ? (
         <>
           {headerLeftElement != null ? (
@@ -229,25 +209,30 @@ export function HeaderConfig({
       ) : (
         <>
           {headerLeftElement != null || typeof headerTitle === 'function' ? (
-            <ScreenStackHeaderLeftView>
-              <View style={styles.row}>
-                {headerLeftElement}
-                {headerTitleAlign !== 'center' ? (
-                  typeof headerTitle === 'function' ? (
-                    headerTitleElement
-                  ) : (
+            // The style passed to header left, together with title element being wrapped
+            // in flex view is reqruied for proper header layout, in particular,
+            // for the text truncation to work.
+            <ScreenStackHeaderLeftView
+              style={!isCenterViewRenderedAndroid ? { flex: 1 } : null}
+            >
+              {headerLeftElement}
+              {headerTitleAlign !== 'center' ? (
+                typeof headerTitle === 'function' ? (
+                  <View style={{ flex: 1 }}>{headerTitleElement}</View>
+                ) : (
+                  <View style={{ flex: 1 }}>
                     <HeaderTitle
                       tintColor={tintColor}
                       style={headerTitleStyleSupported}
                     >
                       {titleText}
                     </HeaderTitle>
-                  )
-                ) : null}
-              </View>
+                  </View>
+                )
+              ) : null}
             </ScreenStackHeaderLeftView>
           ) : null}
-          {headerTitleAlign === 'center' ? (
+          {isCenterViewRenderedAndroid ? (
             <ScreenStackHeaderCenterView>
               {typeof headerTitle === 'function' ? (
                 headerTitleElement
@@ -276,13 +261,45 @@ export function HeaderConfig({
           <SearchBar {...headerSearchBarOptions} />
         </ScreenStackHeaderSearchBarView>
       ) : null}
-    </ScreenStackHeaderConfig>
+    </>
   );
-}
 
-const styles = StyleSheet.create({
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-});
+  return {
+    backButtonInCustomView,
+    backgroundColor: headerBackgroundColor,
+    backTitle: headerBackTitle,
+    backTitleVisible: isBackButtonDisplayModeAvailable
+      ? undefined
+      : headerBackButtonDisplayMode !== 'minimal',
+    backButtonDisplayMode: isBackButtonDisplayModeAvailable
+      ? headerBackButtonDisplayMode
+      : undefined,
+    backTitleFontFamily,
+    backTitleFontSize,
+    blurEffect: headerBlurEffect,
+    color: tintColor,
+    direction,
+    disableBackButtonMenu: headerBackButtonMenuEnabled === false,
+    hidden: headerShown === false,
+    hideBackButton: headerBackVisible === false,
+    hideShadow:
+      headerShadowVisible === false ||
+      headerBackground != null ||
+      (headerTransparent && headerShadowVisible !== true),
+    largeTitle: headerLargeTitle,
+    largeTitleBackgroundColor,
+    largeTitleColor,
+    largeTitleFontFamily,
+    largeTitleFontSize,
+    largeTitleFontWeight,
+    largeTitleHideShadow: headerLargeTitleShadowVisible === false,
+    title: titleText,
+    titleColor,
+    titleFontFamily,
+    titleFontSize,
+    titleFontWeight: String(titleFontWeight),
+    topInsetEnabled: headerTopInsetEnabled,
+    translucent: translucent === true,
+    children,
+  } as const;
+}

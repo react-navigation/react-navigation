@@ -1,3 +1,4 @@
+import { beforeEach, expect, jest, test } from '@jest/globals';
 import type { NavigationState, Router } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
@@ -11,7 +12,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-it('fires focus and blur events in root navigator', () => {
+test('fires focus and blur events in root navigator', () => {
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation, descriptors } = useNavigationBuilder(
       MockRouter,
@@ -104,7 +105,7 @@ it('fires focus and blur events in root navigator', () => {
   expect(fourthBlurCallback).toHaveBeenCalledTimes(0);
 });
 
-it('fires focus event after blur', () => {
+test('fires focus event after blur', () => {
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation, descriptors } = useNavigationBuilder(
       MockRouter,
@@ -167,7 +168,7 @@ it('fires focus event after blur', () => {
   ]);
 });
 
-it('fires focus and blur events in nested navigator', () => {
+test('fires focus and blur events in nested navigator', () => {
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation, descriptors } = useNavigationBuilder(
       MockRouter,
@@ -308,7 +309,7 @@ it('fires focus and blur events in nested navigator', () => {
   expect(fourthBlurCallback).toHaveBeenCalledTimes(3);
 });
 
-it('fires blur event when a route is removed with a delay', async () => {
+test('fires blur event when a route is removed with a delay', async () => {
   const TestRouter = (options: any): Router<NavigationState, any> => {
     const router = MockRouter(options);
 
@@ -439,7 +440,7 @@ it('fires blur event when a route is removed with a delay', async () => {
   expect(blurCallback).toHaveBeenCalledTimes(1);
 });
 
-it('fires custom events added with addListener', () => {
+test('fires custom events added with addListener', () => {
   const eventName = 'someSuperCoolEvent';
 
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
@@ -456,9 +457,9 @@ it('fires custom events added with addListener', () => {
     return state.routes.map((route) => descriptors[route.key].render());
   });
 
-  const firstCallback = jest.fn();
-  const secondCallback = jest.fn();
-  const thirdCallback = jest.fn();
+  const firstCallback: any = jest.fn();
+  const secondCallback: any = jest.fn();
+  const thirdCallback: any = jest.fn();
 
   const createComponent =
     (callback: any) =>
@@ -522,7 +523,7 @@ it('fires custom events added with addListener', () => {
   expect(thirdCallback).toHaveBeenCalledTimes(2);
 });
 
-it("doesn't call same listener multiple times with addListener", () => {
+test("doesn't call same listener multiple times with addListener", () => {
   const eventName = 'someSuperCoolEvent';
 
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
@@ -573,9 +574,10 @@ it("doesn't call same listener multiple times with addListener", () => {
   expect(callback).toHaveBeenCalledTimes(1);
 });
 
-it('fires custom events added with listeners prop', () => {
+test('fires custom events added with listeners prop', () => {
   const eventName = 'someSuperCoolEvent';
 
+  // eslint-disable-next-line @eslint-react/no-missing-component-display-name
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation } = useNavigationBuilder(MockRouter, props);
 
@@ -587,9 +589,9 @@ it('fires custom events added with listeners prop', () => {
     return null;
   });
 
-  const firstCallback = jest.fn();
-  const secondCallback = jest.fn();
-  const thirdCallback = jest.fn();
+  const firstCallback: any = jest.fn();
+  const secondCallback: any = jest.fn();
+  const thirdCallback: any = jest.fn();
 
   const ref = React.createRef<any>();
 
@@ -652,9 +654,10 @@ it('fires custom events added with listeners prop', () => {
   expect(thirdCallback).toHaveBeenCalledTimes(1);
 });
 
-it("doesn't call same listener multiple times with listeners", () => {
+test("doesn't call same listener multiple times with listeners", () => {
   const eventName = 'someSuperCoolEvent';
 
+  // eslint-disable-next-line @eslint-react/no-missing-component-display-name
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation } = useNavigationBuilder(MockRouter, props);
 
@@ -703,9 +706,10 @@ it("doesn't call same listener multiple times with listeners", () => {
   expect(callback).toHaveBeenCalledTimes(1);
 });
 
-it('fires listeners when callback is provided for listeners prop', () => {
+test('fires listeners when callback is provided for listeners prop', () => {
   const eventName = 'someSuperCoolEvent';
 
+  // eslint-disable-next-line @eslint-react/no-missing-component-display-name
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {
     const { state, navigation } = useNavigationBuilder(MockRouter, props);
 
@@ -717,9 +721,9 @@ it('fires listeners when callback is provided for listeners prop', () => {
     return null;
   });
 
-  const firstCallback = jest.fn();
-  const secondCallback = jest.fn();
-  const thirdCallback = jest.fn();
+  const firstCallback: any = jest.fn();
+  const secondCallback: any = jest.fn();
+  const thirdCallback: any = jest.fn();
 
   const ref = React.createRef<any>();
 
@@ -788,7 +792,7 @@ it('fires listeners when callback is provided for listeners prop', () => {
   expect(thirdCallback).toHaveBeenCalledTimes(1);
 });
 
-it('has option to prevent default', () => {
+test('has option to prevent default', () => {
   expect.assertions(5);
 
   const eventName = 'someSuperCoolEvent';
@@ -848,7 +852,7 @@ it('has option to prevent default', () => {
   });
 });
 
-it('removes only one listener when unsubscribe is called multiple times', () => {
+test('removes only one listener when unsubscribe is called multiple times', () => {
   const eventName = 'someSuperCoolEvent';
 
   const TestNavigator = React.forwardRef((props: any, ref: any): any => {

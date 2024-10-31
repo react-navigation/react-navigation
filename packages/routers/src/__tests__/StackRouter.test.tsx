@@ -1,3 +1,5 @@
+import { expect, jest, test } from '@jest/globals';
+
 import {
   CommonActions,
   type RouterConfigOptions,
@@ -7,7 +9,7 @@ import {
 
 jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
 
-it('gets initial state from route names and params with initialRouteName', () => {
+test('gets initial state from route names and params with initialRouteName', () => {
   const router = StackRouter({ initialRouteName: 'baz' });
 
   expect(
@@ -30,7 +32,7 @@ it('gets initial state from route names and params with initialRouteName', () =>
   });
 });
 
-it('gets initial state from route names and params without initialRouteName', () => {
+test('gets initial state from route names and params without initialRouteName', () => {
   const router = StackRouter({});
 
   expect(
@@ -53,7 +55,7 @@ it('gets initial state from route names and params without initialRouteName', ()
   });
 });
 
-it('gets rehydrated state from partial state', () => {
+test('gets rehydrated state from partial state', () => {
   const router = StackRouter({});
 
   const options: RouterConfigOptions = {
@@ -134,7 +136,7 @@ it('gets rehydrated state from partial state', () => {
   });
 });
 
-it("doesn't rehydrate state if it's not stale", () => {
+test("doesn't rehydrate state if it's not stale", () => {
   const router = StackRouter({});
 
   const state = {
@@ -156,7 +158,7 @@ it("doesn't rehydrate state if it's not stale", () => {
   ).toBe(state);
 });
 
-it('gets state on route names change', () => {
+test('gets state on route names change', () => {
   const router = StackRouter({});
 
   expect(
@@ -231,7 +233,7 @@ it('gets state on route names change', () => {
   });
 });
 
-it('gets state on route names change with initialRouteName', () => {
+test('gets state on route names change with initialRouteName', () => {
   const router = StackRouter({ initialRouteName: 'qux' });
 
   expect(
@@ -268,7 +270,7 @@ it('gets state on route names change with initialRouteName', () => {
   });
 });
 
-it('handles navigate action', () => {
+test('handles navigate action', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -373,7 +375,7 @@ it('handles navigate action', () => {
   });
 });
 
-it("doesn't navigate to nonexistent screen", () => {
+test("doesn't navigate to nonexistent screen", () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -401,7 +403,7 @@ it("doesn't navigate to nonexistent screen", () => {
   ).toBeNull();
 });
 
-it('ensures unique ID for navigate', () => {
+test('ensures unique ID for navigate', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -501,7 +503,7 @@ it('ensures unique ID for navigate', () => {
   });
 });
 
-it('ensure unique ID is only per route name for navigate', () => {
+test('ensure unique ID is only per route name for navigate', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -545,7 +547,7 @@ it('ensure unique ID is only per route name for navigate', () => {
   });
 });
 
-it('handles navigate action (legacy)', () => {
+test('handles navigate action (legacy)', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -665,7 +667,7 @@ it('handles navigate action (legacy)', () => {
   ).toBeNull();
 });
 
-it("doesn't navigate to nonexistent screen (legacy)", () => {
+test("doesn't navigate to nonexistent screen (legacy)", () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -715,7 +717,7 @@ it("doesn't navigate to nonexistent screen (legacy)", () => {
   ).toBeNull();
 });
 
-it('ensures unique ID for navigate (legacy)', () => {
+test('ensures unique ID for navigate (legacy)', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -815,7 +817,7 @@ it('ensures unique ID for navigate (legacy)', () => {
   });
 });
 
-it('ensure unique ID is only per route name for navigate (legacy)', () => {
+test('ensure unique ID is only per route name for navigate (legacy)', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -859,7 +861,7 @@ it('ensure unique ID is only per route name for navigate (legacy)', () => {
   });
 });
 
-it('handles go back action', () => {
+test('handles go back action', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -911,7 +913,7 @@ it('handles go back action', () => {
   ).toBeNull();
 });
 
-it('handles pop action', () => {
+test('handles pop action', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1096,7 +1098,7 @@ it('handles pop action', () => {
   ).toBeNull();
 });
 
-it('handles pop to top action', () => {
+test('handles pop to top action', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1133,7 +1135,7 @@ it('handles pop to top action', () => {
   });
 });
 
-it('replaces focused screen with replace', () => {
+test('replaces focused screen with replace', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -1174,7 +1176,7 @@ it('replaces focused screen with replace', () => {
   });
 });
 
-it('replaces active screen with replace', () => {
+test('replaces active screen with replace', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -1218,7 +1220,7 @@ it('replaces active screen with replace', () => {
   });
 });
 
-it("doesn't handle replace if source key isn't present", () => {
+test("doesn't handle replace if source key isn't present", () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -1251,7 +1253,7 @@ it("doesn't handle replace if source key isn't present", () => {
   ).toBeNull();
 });
 
-it("doesn't handle replace if screen to replace with isn't present", () => {
+test("doesn't handle replace if screen to replace with isn't present", () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -1283,7 +1285,7 @@ it("doesn't handle replace if screen to replace with isn't present", () => {
   ).toBeNull();
 });
 
-it('handles push action', () => {
+test('handles push action', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1364,7 +1366,7 @@ it('handles push action', () => {
   ).toBeNull();
 });
 
-it("doesn't push nonexistent screen", () => {
+test("doesn't push nonexistent screen", () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1392,7 +1394,7 @@ it("doesn't push nonexistent screen", () => {
   ).toBeNull();
 });
 
-it('ensures unique ID for push', () => {
+test('ensures unique ID for push', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1492,7 +1494,7 @@ it('ensures unique ID for push', () => {
   });
 });
 
-it('ensure unique ID is only per route name for push', () => {
+test('ensure unique ID is only per route name for push', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1536,7 +1538,7 @@ it('ensure unique ID is only per route name for push', () => {
   });
 });
 
-it('adds path on navigate if provided', () => {
+test('adds path on navigate if provided', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1652,7 +1654,7 @@ it('adds path on navigate if provided', () => {
   });
 });
 
-it("doesn't remove existing path on navigate if not provided", () => {
+test("doesn't remove existing path on navigate if not provided", () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1695,7 +1697,7 @@ it("doesn't remove existing path on navigate if not provided", () => {
   });
 });
 
-it('handles popTo action', () => {
+test('handles popTo action', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1795,7 +1797,7 @@ it('handles popTo action', () => {
   });
 });
 
-it("doesn't popTo to nonexistent screen", () => {
+test("doesn't popTo to nonexistent screen", () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1823,7 +1825,7 @@ it("doesn't popTo to nonexistent screen", () => {
   ).toBeNull();
 });
 
-it("doesn't merge params on popTo to an existing screen", () => {
+test("doesn't merge params on popTo to an existing screen", () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1895,7 +1897,7 @@ it("doesn't merge params on popTo to an existing screen", () => {
   });
 });
 
-it('merges params on popTo to an existing screen if merge: true', () => {
+test('merges params on popTo to an existing screen if merge: true', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -2006,7 +2008,7 @@ it('merges params on popTo to an existing screen if merge: true', () => {
   });
 });
 
-it('handles screen preloading', () => {
+test('handles screen preloading', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],

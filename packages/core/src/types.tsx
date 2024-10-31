@@ -22,6 +22,21 @@ declare global {
 
 type Keyof<T extends {}> = Extract<keyof T, string>;
 
+type ScreenParamsPair<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+> = {
+  // First we use a mapped type to get an union of screen & params pairs
+  // Then we pick the pair which matches the RouteName
+  // Mapped type is used instead of just ParamList[RouteName]
+  // Otherwise it'll result in union of all params leading to incorrect types
+  [Screen in keyof ParamList]: undefined extends ParamList[Screen] // Params are either undefined or a union with undefined
+    ?
+        | [screen: Screen] // if the params are optional, we don't have to provide it
+        | [screen: Screen, params: ParamList[Screen]]
+    : [screen: Screen, params: ParamList[Screen]];
+}[RouteName];
+
 export type DefaultNavigatorOptions<
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined,
@@ -239,18 +254,7 @@ type NavigationHelpersCommon<
    * @param [params] Params object for the route.
    */
   navigate<RouteName extends keyof ParamList>(
-    ...args: // This condition allows us to iterate over a union type
-    // This is to avoid getting a union of all the params from `ParamList[RouteName]`,
-    // which will get our types all mixed up if a union RouteName is passed in.
-    RouteName extends unknown
-      ? // This condition checks if the params are optional,
-        // which means it's either undefined or a union with undefined
-        undefined extends ParamList[RouteName]
-        ?
-            | [screen: RouteName] // if the params are optional, we don't have to provide it
-            | [screen: RouteName, params: ParamList[RouteName]]
-        : [screen: RouteName, params: ParamList[RouteName]]
-      : never
+    ...args: ScreenParamsPair<ParamList, RouteName>
   ): void;
 
   /**
@@ -259,14 +263,14 @@ type NavigationHelpersCommon<
    * @param route Object with `name` for the route to navigate to, and a `params` object.
    */
   navigate<RouteName extends keyof ParamList>(
-    options: RouteName extends unknown
-      ? {
-          name: RouteName;
-          params: ParamList[RouteName];
-          path?: string;
-          merge?: boolean;
-        }
-      : never
+    options: {
+      [Screen in keyof ParamList]: {
+        name: Screen;
+        params: ParamList[Screen];
+        path?: string;
+        merge?: boolean;
+      };
+    }[RouteName]
   ): void;
 
   /**
@@ -278,18 +282,7 @@ type NavigationHelpersCommon<
    * @param [params] Params object for the route.
    */
   navigateDeprecated<RouteName extends keyof ParamList>(
-    ...args: // This condition allows us to iterate over a union type
-    // This is to avoid getting a union of all the params from `ParamList[RouteName]`,
-    // which will get our types all mixed up if a union RouteName is passed in.
-    RouteName extends unknown
-      ? // This condition checks if the params are optional,
-        // which means it's either undefined or a union with undefined
-        undefined extends ParamList[RouteName]
-        ?
-            | [screen: RouteName] // if the params are optional, we don't have to provide it
-            | [screen: RouteName, params: ParamList[RouteName]]
-        : [screen: RouteName, params: ParamList[RouteName]]
-      : never
+    ...args: ScreenParamsPair<ParamList, RouteName>
   ): void;
 
   /**
@@ -300,13 +293,13 @@ type NavigationHelpersCommon<
    * @param route Object with `name` for the route to navigate to, and a `params` object.
    */
   navigateDeprecated<RouteName extends keyof ParamList>(
-    options: RouteName extends unknown
-      ? {
-          name: RouteName;
-          params: ParamList[RouteName];
-          merge?: boolean;
-        }
-      : never
+    options: {
+      [Screen in keyof ParamList]: {
+        name: Screen;
+        params: ParamList[Screen];
+        merge?: boolean;
+      };
+    }[RouteName]
   ): void;
 
   /**
@@ -316,13 +309,7 @@ type NavigationHelpersCommon<
    * @param [params] Params object for the route.
    */
   preload<RouteName extends keyof ParamList>(
-    ...args: RouteName extends unknown
-      ? undefined extends ParamList[RouteName]
-        ?
-            | [screen: RouteName]
-            | [screen: RouteName, params: ParamList[RouteName]]
-        : [screen: RouteName, params: ParamList[RouteName]]
-      : never
+    ...args: ScreenParamsPair<ParamList, RouteName>
   ): void;
 
   /**

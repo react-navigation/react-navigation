@@ -17,7 +17,9 @@ export { useAnimatedHeaderHeight } from './utils/useAnimatedHeaderHeight';
  * Types
  */
 export type {
+  NativeStackHeaderLeftProps,
   NativeStackHeaderProps,
+  NativeStackHeaderRightProps,
   NativeStackNavigationEventMap,
   NativeStackNavigationOptions,
   NativeStackNavigationProp,
