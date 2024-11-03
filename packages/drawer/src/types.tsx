@@ -174,7 +174,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
   /**
    * Style object for the component wrapping the screen content.
    */
-  sceneContainerStyle?: StyleProp<ViewStyle>;
+  sceneStyle?: StyleProp<ViewStyle>;
 
   /**
    * Function to modify the pan gesture handler via RNGH properties API.

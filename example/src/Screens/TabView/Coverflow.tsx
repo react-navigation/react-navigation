@@ -95,8 +95,10 @@ export function Coverflow() {
 
   return (
     <TabView
+      commonOptions={{
+        sceneStyle: styles.scene,
+      }}
       style={styles.container}
-      sceneContainerStyle={styles.scene}
       offscreenPageLimit={3}
       navigationState={{
         index,

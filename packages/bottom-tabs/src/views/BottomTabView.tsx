@@ -81,7 +81,6 @@ export function BottomTabView(props: Props) {
     detachInactiveScreens = Platform.OS === 'web' ||
       Platform.OS === 'android' ||
       Platform.OS === 'ios',
-    sceneContainerStyle,
   } = props;
 
   const focusedRouteKey = state.routes[state.index].key;
@@ -123,6 +122,13 @@ export function BottomTabView(props: Props) {
     }
 
     const animateToIndex = () => {
+      if (previousRouteKey !== focusedRouteKey) {
+        navigation.emit({
+          type: 'transitionStart',
+          target: focusedRouteKey,
+        });
+      }
+
       Animated.parallel(
         state.routes
           .map((route, index) => {
@@ -159,6 +165,13 @@ export function BottomTabView(props: Props) {
       ).start(({ finished }) => {
         if (finished && popToTopAction) {
           navigation.dispatch(popToTopAction);
+        }
+
+        if (previousRouteKey !== focusedRouteKey) {
+          navigation.emit({
+            type: 'transitionEnd',
+            target: focusedRouteKey,
+          });
         }
       });
     };
@@ -272,6 +285,7 @@ export function BottomTabView(props: Props) {
             headerShown,
             headerStatusBarHeight,
             headerTransparent,
+            sceneStyle: customSceneStyle,
           } = descriptor.options;
 
           const { sceneStyle } =
@@ -321,7 +335,7 @@ export function BottomTabView(props: Props) {
                       descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
                     options: descriptor.options,
                   })}
-                  style={[sceneContainerStyle, animationEnabled && sceneStyle]}
+                  style={[customSceneStyle, animationEnabled && sceneStyle]}
                 >
                   {descriptor.render()}
                 </Screen>

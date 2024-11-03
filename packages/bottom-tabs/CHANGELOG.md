@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.36...@react-navigation/bottom-tabs@7.0.0-rc.37) (2024-10-31)
+
+### Code Refactoring
+
+* rename sceneContainerStyle to sceneStyle ([d1d0761](https://github.com/react-navigation/react-navigation/commit/d1d0761f0239caea1cc7b85d90de229f444f827d)) - by @satya164
+
+### BREAKING CHANGES
+
+* This does the following changes:
+
+- Remove the `sceneContainerStyle` prop from Bottom Tabs & Material Top Tabs
+- Add a `sceneStyle` option to Bottom Tabs & Material Top Tabs
+- Rename `sceneContainerStyle` option to `sceneStyle` for Drawer
+
+# [7.0.0-rc.36](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.35...@react-navigation/bottom-tabs@7.0.0-rc.36) (2024-10-29)
+
+### Bug Fixes
+
+* bump peer dep version requirement for screens ([63f1687](https://github.com/react-navigation/react-navigation/commit/63f16871c4db0c275c2d393f668adec45d31ac7a)) - by @satya164
+
+# [7.0.0-rc.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.34...@react-navigation/bottom-tabs@7.0.0-rc.35) (2024-10-27)
+
+### Features
+
+* add transition events to BottomTabs ([#12207](https://github.com/react-navigation/react-navigation/issues/12207)) ([bc4e50c](https://github.com/react-navigation/react-navigation/commit/bc4e50cfb9fa78c39ed2871a5465c2cc97e73b31)) - by @satya164
+
 # [7.0.0-rc.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.33...@react-navigation/bottom-tabs@7.0.0-rc.34) (2024-10-24)
 
 ### Bug Fixes

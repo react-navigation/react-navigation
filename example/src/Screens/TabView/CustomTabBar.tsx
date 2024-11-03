@@ -4,12 +4,7 @@ import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, Pressable, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  type NavigationState,
-  SceneMap,
-  type SceneRendererProps,
-  TabView,
-} from 'react-native-tab-view';
+import { type NavigationState, SceneMap, TabView } from 'react-native-tab-view';
 
 import { Albums } from '../../Shared/Albums';
 import { Article } from '../../Shared/Article';
@@ -86,9 +81,9 @@ export const CustomTabBar = () => {
       );
     };
 
-  const renderTabBar = (
-    props: SceneRendererProps & { navigationState: State }
-  ) => (
+  const renderTabBar: React.ComponentProps<
+    typeof TabView<Route>
+  >['renderTabBar'] = (props) => (
     <View
       style={[
         styles.tabbar,
@@ -110,7 +105,7 @@ export const CustomTabBar = () => {
   );
 
   return (
-    <TabView
+    <TabView<Route>
       navigationState={{
         index,
         routes,

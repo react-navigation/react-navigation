@@ -35,6 +35,14 @@ export type BottomTabNavigationEventMap = {
    * Event which fires on long press on the tab in the tab bar.
    */
   tabLongPress: { data: undefined };
+  /**
+   * Event which fires when a transition animation starts.
+   */
+  transitionStart: { data: undefined };
+  /**
+   * Event which fires when a transition animation ends.
+   */
+  transitionEnd: { data: undefined };
 };
 
 export type LabelPosition = 'beside-icon' | 'below-icon';
@@ -281,6 +289,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   freezeOnBlur?: boolean;
 
   /**
+   * Style object for the component wrapping the screen content.
+   */
+  sceneStyle?: StyleProp<ViewStyle>;
+
+  /**
    * How the screen should animate when switching tabs.
    *
    * Supported values:
@@ -389,10 +402,6 @@ export type BottomTabNavigationConfig = {
    * Defaults to `true` on Android.
    */
   detachInactiveScreens?: boolean;
-  /**
-   * Style object for the component wrapping the screen content.
-   */
-  sceneContainerStyle?: StyleProp<ViewStyle>;
 };
 
 export type BottomTabHeaderProps = {

@@ -19,6 +19,7 @@ import type {
   PagerProps,
   Route,
   SceneRendererProps,
+  TabDescriptor,
 } from './types';
 
 export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
@@ -26,17 +27,21 @@ export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   navigationState: NavigationState<T>;
   renderLazyPlaceholder?: (props: { route: T }) => React.ReactNode;
   renderTabBar?: (
-    props: SceneRendererProps & { navigationState: NavigationState<T> }
+    props: SceneRendererProps & {
+      navigationState: NavigationState<T>;
+      options: Record<string, TabDescriptor<T>> | undefined;
+    }
   ) => React.ReactNode;
   tabBarPosition?: 'top' | 'bottom';
   initialLayout?: Partial<Layout>;
   lazy?: ((props: { route: T }) => boolean) | boolean;
   lazyPreloadDistance?: number;
-  sceneContainerStyle?: StyleProp<ViewStyle>;
   direction?: LocaleDirection;
   pagerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   renderScene: (props: SceneRendererProps & { route: T }) => React.ReactNode;
+  options?: Record<string, TabDescriptor<T>>;
+  commonOptions?: TabDescriptor<T>;
 };
 
 const renderLazyPlaceholderDefault = () => null;
@@ -54,7 +59,6 @@ export function TabView<T extends Route>({
   renderLazyPlaceholder = renderLazyPlaceholderDefault,
   // eslint-disable-next-line @eslint-react/no-unstable-default-props
   renderTabBar = (props) => <TabBar {...props} />,
-  sceneContainerStyle,
   pagerStyle,
   style,
   direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
@@ -62,6 +66,8 @@ export function TabView<T extends Route>({
   tabBarPosition = 'top',
   animationEnabled = true,
   overScrollMode,
+  options: sceneOptions,
+  commonOptions,
 }: Props<T>) {
   if (
     Platform.OS !== 'web' &&
@@ -98,6 +104,16 @@ export function TabView<T extends Route>({
     });
   };
 
+  const options = Object.fromEntries(
+    navigationState.routes.map((route) => [
+      route.key,
+      {
+        ...commonOptions,
+        ...sceneOptions?.[route.key],
+      },
+    ])
+  );
+
   return (
     <View onLayout={handleLayout} style={[styles.pager, style]}>
       <Pager
@@ -127,10 +143,13 @@ export function TabView<T extends Route>({
               {tabBarPosition === 'top' &&
                 renderTabBar({
                   ...sceneRendererProps,
+                  options,
                   navigationState,
                 })}
               {render(
                 navigationState.routes.map((route, i) => {
+                  const { sceneStyle } = options?.[route.key] ?? {};
+
                   return (
                     <SceneView
                       {...sceneRendererProps}
@@ -140,7 +159,7 @@ export function TabView<T extends Route>({
                       lazy={typeof lazy === 'function' ? lazy({ route }) : lazy}
                       lazyPreloadDistance={lazyPreloadDistance}
                       navigationState={navigationState}
-                      style={sceneContainerStyle}
+                      style={sceneStyle}
                     >
                       {({ loading }) =>
                         loading
@@ -157,6 +176,7 @@ export function TabView<T extends Route>({
               {tabBarPosition === 'bottom' &&
                 renderTabBar({
                   ...sceneRendererProps,
+                  options,
                   navigationState,
                 })}
             </React.Fragment>
