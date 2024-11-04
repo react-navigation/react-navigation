@@ -31,7 +31,6 @@ import {
 } from 'react-native-safe-area-context';
 import {
   type ScreenProps,
-  type ScreensRefsHolder,
   ScreenStack,
   ScreenStackItem,
 } from 'react-native-screens';
@@ -57,7 +56,6 @@ type SceneViewProps = {
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
-  screenRefs: React.MutableRefObject<ScreensRefsHolder>;
   isPresentationModal?: boolean;
   isPreloaded?: boolean;
   onWillDisappear: () => void;
@@ -77,7 +75,6 @@ const SceneView = ({
   descriptor,
   previousDescriptor,
   nextDescriptor,
-  screenRefs,
   isPresentationModal,
   isPreloaded,
   onWillDisappear,
@@ -133,17 +130,6 @@ const SceneView = ({
     freezeOnBlur,
     contentStyle,
   } = options;
-
-  const screenRef = React.useRef(null);
-  React.useLayoutEffect(() => {
-    const currentRefs = screenRefs.current;
-    currentRefs[route.key] = screenRef;
-
-    return () => {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete currentRefs[route.key];
-    };
-  });
 
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
     // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
@@ -290,7 +276,7 @@ const SceneView = ({
   return (
     <ScreenStackItem
       key={route.key}
-      ref={screenRef}
+      screenId={route.key}
       activityState={isPreloaded ? 0 : 2}
       style={StyleSheet.absoluteFill}
       accessibilityElementsHidden={!focused}
@@ -487,8 +473,6 @@ export function NativeStackView({
   const currentRouteKey = state.routes[state.index].key;
   const topScreenOptions = descriptors[currentRouteKey].options;
 
-  const screensRefs = React.useRef<ScreensRefsHolder>({});
-
   useInvalidPreventRemoveError(descriptors);
 
   const modalRouteKeys = getModalRouteKeys(state.routes, descriptors);
@@ -507,7 +491,6 @@ export function NativeStackView({
         goBackGesture={topScreenOptions?.gestureType}
         transitionAnimation={topScreenOptions?.animationForGesture}
         screenEdgeGesture={topScreenOptions?.gestureFromEdgeEnabled ?? false}
-        screensRefs={screensRefs}
         currentScreenId={currentRouteKey}
       >
         {state.routes.concat(state.preloadedRoutes).map((route, index) => {
@@ -535,7 +518,6 @@ export function NativeStackView({
               descriptor={descriptor}
               previousDescriptor={previousDescriptor}
               nextDescriptor={nextDescriptor}
-              screenRefs={screensRefs}
               isPresentationModal={isModal}
               isPreloaded={isPreloaded}
               onWillDisappear={() => {
