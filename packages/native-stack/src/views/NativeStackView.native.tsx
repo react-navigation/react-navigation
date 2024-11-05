@@ -276,6 +276,7 @@ const SceneView = ({
   return (
     <ScreenStackItem
       key={route.key}
+      screenId={route.key}
       activityState={isPreloaded ? 0 : 2}
       style={StyleSheet.absoluteFill}
       accessibilityElementsHidden={!focused}
