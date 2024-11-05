@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.12...react-native-tab-view@4.0.0-rc.13) (2024-10-31)
+
+### Code Refactoring
+
+* rename sceneContainerStyle to sceneStyle ([d1d0761](https://github.com/react-navigation/react-navigation/commit/d1d0761f0239caea1cc7b85d90de229f444f827d)) - by @satya164
+
+### Features
+
+* move options and commonOptions to TabView for react-native-tab-view ([3643926](https://github.com/react-navigation/react-navigation/commit/36439266d9d29cc643e7159458999a1adfb101d0)) - by @satya164
+
+### BREAKING CHANGES
+
+* This does the following changes:
+
+- Remove the `sceneContainerStyle` prop from Bottom Tabs & Material Top Tabs
+- Add a `sceneStyle` option to Bottom Tabs & Material Top Tabs
+- Rename `sceneContainerStyle` option to `sceneStyle` for Drawer
+
 # [4.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.11...react-native-tab-view@4.0.0-rc.12) (2024-10-24)
 
 ### Bug Fixes

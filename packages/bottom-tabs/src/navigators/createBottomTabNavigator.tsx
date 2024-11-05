@@ -39,7 +39,6 @@ function BottomTabNavigator({
   layout,
   screenListeners,
   screenOptions,
-  sceneContainerStyle,
   UNSTABLE_getStateForRouteNamesChange,
   ...rest
 }: Props) {
@@ -68,7 +67,6 @@ function BottomTabNavigator({
         state={state}
         navigation={navigation}
         descriptors={descriptors}
-        sceneContainerStyle={sceneContainerStyle}
       />
     </NavigationContent>
   );

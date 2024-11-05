@@ -265,6 +265,11 @@ export type MaterialTopTabNavigationOptions = {
    * By default, this renders `null`.
    */
   lazyPlaceholder?: () => React.ReactNode;
+
+  /**
+   * Style object for the component wrapping the screen content.
+   */
+  sceneStyle?: StyleProp<ViewStyle>;
 };
 
 export type MaterialTopTabDescriptor = Descriptor<

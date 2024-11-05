@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.33...@react-navigation/drawer@7.0.0-rc.34) (2024-10-31)
+
+### Code Refactoring
+
+* rename sceneContainerStyle to sceneStyle ([d1d0761](https://github.com/react-navigation/react-navigation/commit/d1d0761f0239caea1cc7b85d90de229f444f827d)) - by @satya164
+
+### BREAKING CHANGES
+
+* This does the following changes:
+
+- Remove the `sceneContainerStyle` prop from Bottom Tabs & Material Top Tabs
+- Add a `sceneStyle` option to Bottom Tabs & Material Top Tabs
+- Rename `sceneContainerStyle` option to `sceneStyle` for Drawer
+
 # [7.0.0-rc.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.0-rc.32...@react-navigation/drawer@7.0.0-rc.33) (2024-10-29)
 
 ### Bug Fixes

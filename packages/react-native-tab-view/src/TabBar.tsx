@@ -43,7 +43,6 @@ export type Props<T extends Route> = SceneRendererProps & {
   pressColor?: string;
   pressOpacity?: number;
   options?: Record<string, TabDescriptor<T>>;
-  commonOptions?: TabDescriptor<T>;
   renderIndicator?: (props: IndicatorProps<T>) => React.ReactNode;
   renderTabBarItem?: (
     props: TabBarItemProps<T> & { key: string }
@@ -358,7 +357,6 @@ export function TabBar<T extends Route>({
   testID,
   android_ripple,
   options,
-  commonOptions,
 }: Props<T>) {
   const [layout, setLayout] = React.useState<Layout>(
     propLayout ?? { width: 0, height: 0 }
@@ -455,10 +453,7 @@ export function TabBar<T extends Route>({
         accessible = getAccessibleDefault({ route }),
         accessibilityLabel = getAccessibilityLabelDefault({ route }),
         ...rest
-      } = {
-        ...commonOptions,
-        ...options?.[route.key],
-      };
+      } = options?.[route.key] ?? {};
 
       const onLayout = isWidthDynamic
         ? (e: LayoutChangeEvent) => {
@@ -561,7 +556,6 @@ export function TabBar<T extends Route>({
     [
       position,
       navigationState,
-      commonOptions,
       options,
       activeColor,
       inactiveColor,
