@@ -6,7 +6,7 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import { type SceneRendererProps, TabView } from 'react-native-tab-view';
+import { TabView } from 'react-native-tab-view';
 
 import type {
   MaterialTopTabBarProps,
@@ -32,15 +32,22 @@ export function MaterialTopTabView({
   state,
   navigation,
   descriptors,
-  sceneContainerStyle,
   ...rest
 }: Props) {
   const { colors } = useTheme();
   const { direction } = useLocale();
 
-  const renderTabBar = (props: SceneRendererProps) => {
+  const renderTabBar: React.ComponentProps<
+    typeof TabView<Route<string>>
+  >['renderTabBar'] = ({
+    /* eslint-disable @typescript-eslint/no-unused-vars */
+    navigationState,
+    options,
+    /* eslint-enable @typescript-eslint/no-unused-vars */
+    ...rest
+  }) => {
     return tabBar({
-      ...props,
+      ...rest,
       state: state,
       navigation: navigation,
       descriptors: descriptors,
@@ -79,11 +86,22 @@ export function MaterialTopTabView({
       animationEnabled={focusedOptions.animationEnabled}
       onSwipeStart={() => navigation.emit({ type: 'swipeStart' })}
       onSwipeEnd={() => navigation.emit({ type: 'swipeEnd' })}
-      sceneContainerStyle={[
-        { backgroundColor: colors.background },
-        sceneContainerStyle,
-      ]}
       direction={direction}
+      options={Object.fromEntries(
+        state.routes.map((route) => {
+          const options = descriptors[route.key]?.options;
+
+          return [
+            route.key,
+            {
+              sceneStyle: [
+                { backgroundColor: colors.background },
+                options?.sceneStyle,
+              ],
+            },
+          ];
+        })
+      )}
     />
   );
 }

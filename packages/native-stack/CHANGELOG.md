@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.0.0-rc.30](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.29...@react-navigation/native-stack@7.0.0-rc.30) (2024-10-29)
+
+### Bug Fixes
+
+* bump peer dep version requirement for screens ([63f1687](https://github.com/react-navigation/react-navigation/commit/63f16871c4db0c275c2d393f668adec45d31ac7a)) - by @satya164
+
 # [7.0.0-rc.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.0-rc.28...@react-navigation/native-stack@7.0.0-rc.29) (2024-10-24)
 
 ### Bug Fixes
