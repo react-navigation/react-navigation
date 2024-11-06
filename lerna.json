@@ -15,6 +15,7 @@
       "createRelease": "github",
       "changelogIncludeCommitsClientLogin": " - by @%l",
       "message": "chore: publish",
+      "distTag": "6.x",
       "ignoreChanges": [
         "**/__fixtures__/**",
         "**/__tests__/**",
