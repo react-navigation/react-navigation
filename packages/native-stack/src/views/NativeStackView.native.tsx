@@ -97,7 +97,7 @@ const SceneView = ({
   const {
     animationDuration,
     animationTypeForReplace = 'push',
-    fullScreenGestureShadowEnabled = false,
+    fullScreenGestureShadowEnabled = true,
     gestureEnabled,
     gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
     gestureResponseDistance,
