@@ -1,5 +1,5 @@
-name: React Navigation 6
-description: Report an issue with React Navigation 6
+name: React Navigation 7
+description: Report an issue with React Navigation 7
 labels: [bug]
 body:
   - type: markdown
