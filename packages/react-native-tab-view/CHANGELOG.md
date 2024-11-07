@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.1](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0...react-native-tab-view@4.0.1) (2024-11-07)
+
+### Bug Fixes
+
+* fix custom tab bar label and style not working for material top tabs ([1a0805b](https://github.com/react-navigation/react-navigation/commit/1a0805babe288fc78ffdaf520e238ceb294ab89d)), closes [#12236](https://github.com/react-navigation/react-navigation/issues/12236) - by @satya164
+
 # [4.0.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.13...react-native-tab-view@4.0.0) (2024-11-06)
 
 **Note:** Version bump only for package react-native-tab-view
