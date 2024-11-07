@@ -468,7 +468,7 @@ export type NativeStackNavigationOptions = {
   /**
    * Whether the full screen dismiss gesture has shadow under view during transition. The gesture uses custom transition and thus
    * doesn't have a shadow by default. When enabled, a custom shadow view is added during the transition which tries to mimic the
-   * default iOS shadow. Defaults to `false`.
+   * default iOS shadow. Defaults to `true`.
    *
    * This does not affect the behavior of transitions that don't use gestures, enabled by `fullScreenGestureEnabled` prop.
    *
@@ -519,7 +519,7 @@ export type NativeStackNavigationOptions = {
    */
   animation?: ScreenProps['stackAnimation'];
   /**
-   * Changes the duration (in milliseconds) of `slide_from_bottom`, `fade_from_bottom`, `fade` and `simple_push` transitions on iOS. Defaults to `350`.
+   * Changes the duration (in milliseconds) of `slide_from_bottom`, `fade_from_bottom`, `fade` and `simple_push` transitions on iOS. Defaults to `500`.
    * The duration of `default` and `flip` transitions isn't customizable.
    *
    * @platform ios
