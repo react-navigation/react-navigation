@@ -4,11 +4,19 @@ import * as React from 'react';
 import { useDevToolsBase } from './useDevToolsBase';
 
 export function useLogger(ref: React.RefObject<NavigationContainerRef<any>>) {
+   // Simple dark mode check
+   const isDarkMode = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+    
+   // Define colors based on mode
+   const textColor = isDarkMode ? 'white' : 'black';
+   const keyColor = isDarkMode ? 'lightgreen' : 'green';
+   const valueColor = isDarkMode ? 'lightskyblue' : 'blue';
+
   useDevToolsBase(ref, (result) => {
     const log = [[`${result.type} `, 'color: gray; font-weight: lighter']];
 
     if (result.type === 'action') {
-      log.push([`${result.action.type} `, 'color: black; font-weight: bold']);
+      log.push([`${result.action.type} `, `color: ${textColor}; font-weight: bold`]);
 
       const payload = result.action.payload;
 
@@ -18,9 +26,9 @@ export function useLogger(ref: React.RefObject<NavigationContainerRef<any>>) {
           ...Object.entries(payload)
             .map(([key, value], i, self) => {
               const pair = [
-                [key, 'color: green; font-weight: normal'],
+                [key, `color: ${keyColor}; font-weight: normal`],
                 [': ', 'color: gray; font-weight: lighter'],
-                [JSON.stringify(value), 'color: blue; font-weight: normal'],
+                [JSON.stringify(value), `color: ${valueColor}; font-weight: normal`],
               ];
 
               if (i < self.length - 1) {
@@ -52,7 +60,7 @@ export function useLogger(ref: React.RefObject<NavigationContainerRef<any>>) {
         if (typeof value === 'string') {
           console.log(
             `%cstack`,
-            'color: black; font-weight: bold',
+            `color: ${textColor}; font-weight: bold`,
             `\n${value
               .split('\n')
               .map((line) => line.trim())
@@ -60,7 +68,7 @@ export function useLogger(ref: React.RefObject<NavigationContainerRef<any>>) {
           );
         }
       } else if (key !== 'type') {
-        console.log(`%c${key}`, 'color: black; font-weight: bold', value);
+        console.log(`%c${key}`, `color: ${textColor}; font-weight: bold`, value);
       }
     });
 
