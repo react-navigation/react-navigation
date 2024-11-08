@@ -4,19 +4,16 @@ import * as React from 'react';
 import { useDevToolsBase } from './useDevToolsBase';
 
 export function useLogger(ref: React.RefObject<NavigationContainerRef<any>>) {
-   // Simple dark mode check
-   const isDarkMode = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-    
-   // Define colors based on mode
-   const textColor = isDarkMode ? 'white' : 'black';
-   const keyColor = isDarkMode ? 'lightgreen' : 'green';
-   const valueColor = isDarkMode ? 'lightskyblue' : 'blue';
+  
+  const actionColor = '#C2185B';
+  const keyColor = '#43A047';
+  const valueColor = '#1E88E5';
 
   useDevToolsBase(ref, (result) => {
     const log = [[`${result.type} `, 'color: gray; font-weight: lighter']];
 
     if (result.type === 'action') {
-      log.push([`${result.action.type} `, `color: ${textColor}; font-weight: bold`]);
+      log.push([`${result.action.type} `, `color: ${actionColor}; font-weight: bold`]);
 
       const payload = result.action.payload;
 
@@ -60,7 +57,7 @@ export function useLogger(ref: React.RefObject<NavigationContainerRef<any>>) {
         if (typeof value === 'string') {
           console.log(
             `%cstack`,
-            `color: ${textColor}; font-weight: bold`,
+            `color: ${actionColor}; font-weight: bold`,
             `\n${value
               .split('\n')
               .map((line) => line.trim())
@@ -68,7 +65,7 @@ export function useLogger(ref: React.RefObject<NavigationContainerRef<any>>) {
           );
         }
       } else if (key !== 'type') {
-        console.log(`%c${key}`, `color: ${textColor}; font-weight: bold`, value);
+        console.log(`%c${key}`, `color: ${actionColor}; font-weight: bold`, value);
       }
     });
 
