@@ -4,7 +4,6 @@ import * as React from 'react';
 import { useDevToolsBase } from './useDevToolsBase';
 
 export function useLogger(ref: React.RefObject<NavigationContainerRef<any>>) {
-  
   const actionColor = '#C2185B';
   const keyColor = '#43A047';
   const valueColor = '#1E88E5';
@@ -13,7 +12,10 @@ export function useLogger(ref: React.RefObject<NavigationContainerRef<any>>) {
     const log = [[`${result.type} `, 'color: gray; font-weight: lighter']];
 
     if (result.type === 'action') {
-      log.push([`${result.action.type} `, `color: ${actionColor}; font-weight: bold`]);
+      log.push([
+        `${result.action.type} `,
+        `color: ${actionColor}; font-weight: bold`,
+      ]);
 
       const payload = result.action.payload;
 
@@ -25,7 +27,10 @@ export function useLogger(ref: React.RefObject<NavigationContainerRef<any>>) {
               const pair = [
                 [key, `color: ${keyColor}; font-weight: normal`],
                 [': ', 'color: gray; font-weight: lighter'],
-                [JSON.stringify(value), `color: ${valueColor}; font-weight: normal`],
+                [
+                  JSON.stringify(value),
+                  `color: ${valueColor}; font-weight: normal`,
+                ],
               ];
 
               if (i < self.length - 1) {
@@ -65,7 +70,11 @@ export function useLogger(ref: React.RefObject<NavigationContainerRef<any>>) {
           );
         }
       } else if (key !== 'type') {
-        console.log(`%c${key}`, `color: ${actionColor}; font-weight: bold`, value);
+        console.log(
+          `%c${key}`,
+          `color: ${actionColor}; font-weight: bold`,
+          value
+        );
       }
     });
 
