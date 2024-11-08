@@ -217,7 +217,7 @@ export function Drawer({
 
   const startX = useSharedValue(0);
 
-  let pan = Gesture.Pan()
+  let pan = Gesture?.Pan()
     .onBegin((event) => {
       'worklet';
       startX.value = translationX.value;
