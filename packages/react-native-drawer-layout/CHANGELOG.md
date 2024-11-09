@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0...react-native-drawer-layout@4.0.1) (2024-11-09)
+
+### Bug Fixes
+
+* **drawer:** fix gesture handler warnings to mark worklets explicitly  ([#12240](https://github.com/react-navigation/react-navigation/issues/12240)) ([13c0cc4](https://github.com/react-navigation/react-navigation/commit/13c0cc4126db6014e97ae4ff2e9d5f9af0697cfc)) - by @efstathiosntonas
+
 # [4.0.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.11...react-native-drawer-layout@4.0.0) (2024-11-06)
 
 **Note:** Version bump only for package react-native-drawer-layout
