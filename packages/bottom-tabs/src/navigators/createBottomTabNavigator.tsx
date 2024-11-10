@@ -39,6 +39,7 @@ function BottomTabNavigator({
   layout,
   screenListeners,
   screenOptions,
+  screenLayout,
   UNSTABLE_getStateForRouteNamesChange,
   ...rest
 }: Props) {
@@ -57,6 +58,7 @@ function BottomTabNavigator({
       layout,
       screenListeners,
       screenOptions,
+      screenLayout,
       UNSTABLE_getStateForRouteNamesChange,
     });
 
