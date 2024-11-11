@@ -406,7 +406,6 @@ export function Drawer({
               ) : null}
             </Animated.View>
             <Animated.View
-              removeClippedSubviews={Platform.OS !== 'ios'}
               style={[
                 styles.drawer,
                 {
