@@ -694,13 +694,8 @@ export function TabBar<T extends Route>({
   );
 }
 
-const styles = StyleSheet.create({
-  scroll: {
-    overflow: Platform.select({ default: 'scroll', web: undefined }),
-  },
-  tabBar: {
-    backgroundColor: '#2196f3',
-    elevation: 4,
+const shadowStyles = Platform.select({
+  default: {
     shadowColor: 'black',
     shadowOpacity: 0.1,
     shadowRadius: StyleSheet.hairlineWidth,
@@ -708,6 +703,20 @@ const styles = StyleSheet.create({
       height: StyleSheet.hairlineWidth,
       width: 0,
     },
+  },
+  web: {
+    boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.1)',
+  },
+});
+
+const styles = StyleSheet.create({
+  scroll: {
+    overflow: Platform.select({ default: 'scroll', web: undefined }),
+  },
+  tabBar: {
+    ...shadowStyles,
+    backgroundColor: '#2196f3',
+    elevation: 4,
     zIndex: 1,
   },
   tabContent: {
