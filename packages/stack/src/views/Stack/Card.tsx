@@ -23,6 +23,7 @@ import type {
 import { CardAnimationContext } from '../../utils/CardAnimationContext';
 import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
 import { getInvertedMultiplier } from '../../utils/getInvertedMultiplier';
+import { shadowDirections } from '../../utils/getShadowStyles';
 import { memoize } from '../../utils/memoize';
 import {
   GestureState,
@@ -610,15 +611,13 @@ const styles = StyleSheet.create({
   },
   shadow: {
     position: 'absolute',
-    shadowRadius: 5,
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
+    ...shadowDirections.base(),
   },
   shadowHorizontal: {
     top: 0,
     bottom: 0,
     width: 3,
-    shadowOffset: { width: -1, height: 1 },
+    ...shadowDirections.horizontal(),
   },
   shadowStart: {
     start: 0,
@@ -630,7 +629,7 @@ const styles = StyleSheet.create({
     start: 0,
     end: 0,
     height: 3,
-    shadowOffset: { width: 1, height: -1 },
+    ...shadowDirections.vertical(),
   },
   shadowTop: {
     top: 0,
