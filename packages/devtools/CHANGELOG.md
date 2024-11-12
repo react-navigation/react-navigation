@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.0...@react-navigation/devtools@7.0.1) (2024-11-09)
+
+### Bug Fixes
+
+* **devtools:** have proper colors in dark mode for the logger ([#12243](https://github.com/react-navigation/react-navigation/issues/12243)) ([e427534](https://github.com/react-navigation/react-navigation/commit/e4275346de2cd73f153d201642ae455b5c656fb4)) - by @mzaien
+
 # [7.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.0-rc.16...@react-navigation/devtools@7.0.0) (2024-11-06)
 
 **Note:** Version bump only for package @react-navigation/devtools

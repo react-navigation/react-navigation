@@ -6,7 +6,6 @@ import {
   type PressableAndroidRippleConfig,
   type StyleProp,
   StyleSheet,
-  type TextStyle,
   View,
   type ViewStyle,
 } from 'react-native';
@@ -28,7 +27,6 @@ export type Props<T extends Route> = TabDescriptor<T> & {
   onPress: () => void;
   onLongPress: () => void;
   defaultTabWidth?: number;
-  labelStyle?: StyleProp<TextStyle>;
   style: StyleProp<ViewStyle>;
   android_ripple?: PressableAndroidRippleConfig;
 };
@@ -188,7 +186,7 @@ const TabBarItemInternal = <T extends Route>({
           color={focused ? activeColor : inactiveColor}
           icon={icon}
           label={labelText}
-          labelStyle={labelStyle}
+          style={labelStyle}
         />
       ),
     [
