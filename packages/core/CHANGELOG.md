@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0...@react-navigation/core@7.0.1) (2024-11-13)
+
+### Bug Fixes
+
+* fix tearing of useNavigationState & useIsFocused on route names change ([d051fa9](https://github.com/react-navigation/react-navigation/commit/d051fa9a505729b9970a17ae2b9597fc796c0923)), closes [#12116](https://github.com/react-navigation/react-navigation/issues/12116) - by @
+
 # [7.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.15...@react-navigation/core@7.0.0) (2024-11-06)
 
 **Note:** Version bump only for package @react-navigation/core
