@@ -15,7 +15,7 @@ export function getShadowStyles(config: ShadowConfig = {}) {
   const result = Platform.select({
     web: {
       ...(config.offset && {
-        boxShadow: `${config.offset.width}px ${config.offset.height}px ${
+        boxShadow: `${config.offset.width ?? 0}px ${config.offset.height ?? 0}px ${
           config.radius ?? 5
         }px ${
           config.color
