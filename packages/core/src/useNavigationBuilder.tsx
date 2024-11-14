@@ -615,7 +615,7 @@ export function useNavigationBuilder<
       return stateRef.current;
     }
 
-    const currentState = shouldUpdate ? nextState : getCurrentState();
+    const currentState = getCurrentState();
 
     return deepFreeze(
       (isStateInitialized(currentState)
