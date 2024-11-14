@@ -45,7 +45,6 @@ import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
-import { FooterComponent } from './FooterComponent';
 import { useHeaderConfigProps } from './useHeaderConfigProps';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
@@ -126,7 +125,7 @@ const SceneView = ({
     statusBarStyle,
     statusBarTranslucent,
     statusBarBackgroundColor,
-    unstable_sheetFooter = null,
+    unstable_sheetFooter,
     freezeOnBlur,
     contentStyle,
   } = options;
@@ -384,6 +383,7 @@ const SceneView = ({
         contentStyle,
       ]}
       headerConfig={headerConfig}
+      unstable_sheetFooter={unstable_sheetFooter}
       // When ts-expect-error is added, it affects all the props below it
       // So we keep any props that need it at the end
       // Otherwise invalid props may not be caught by TypeScript
@@ -439,9 +439,6 @@ const SceneView = ({
                   {render()}
                 </HeaderBackContext.Provider>
               </HeaderShownContext.Provider>
-              {presentation === 'formSheet' && unstable_sheetFooter && (
-                <FooterComponent>{unstable_sheetFooter()}</FooterComponent>
-              )}
             </HeaderHeightContext.Provider>
           </AnimatedHeaderHeightContext.Provider>
         </NavigationRouteContext.Provider>
