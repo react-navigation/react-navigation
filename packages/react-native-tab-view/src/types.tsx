@@ -15,13 +15,14 @@ export type TabDescriptor<T extends Route> = {
     color: string;
     allowFontScaling?: boolean;
     style?: StyleProp<TextStyle>;
-  }) => React.ReactElement;
+  }) => React.ReactNode;
+  labelStyle?: StyleProp<TextStyle>;
   icon?: (props: {
     route: T;
     focused: boolean;
     color: string;
     size: number;
-  }) => React.ReactElement;
+  }) => React.ReactNode;
   badge?: (props: { route: T }) => React.ReactElement;
   sceneStyle?: StyleProp<ViewStyle>;
 };

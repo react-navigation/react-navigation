@@ -7,36 +7,34 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
-import { type StyleProp, StyleSheet, type ViewStyle } from 'react-native';
-import { TabBar, TabBarIndicator } from 'react-native-tab-view';
+import { StyleSheet } from 'react-native';
+import {
+  type Route,
+  TabBar,
+  TabBarIndicator,
+  type TabDescriptor,
+} from 'react-native-tab-view';
 
 import type { MaterialTopTabBarProps } from '../types';
 
-type MaterialLabelType = {
-  color: string;
-  labelText?: string;
-  labelStyle?: StyleProp<ViewStyle>;
-  allowScaling?: boolean;
-};
+type MaterialLabelProps = Parameters<
+  NonNullable<TabDescriptor<Route>['label']>
+>[0];
 
-const MaterialLabel = ({
+const renderLabelDefault = ({
   color,
   labelText,
-  labelStyle,
-  allowScaling,
-}: MaterialLabelType) => {
+  style,
+  allowFontScaling,
+}: MaterialLabelProps) => {
   return (
     <Text
-      style={[{ color }, styles.label, labelStyle]}
-      allowFontScaling={allowScaling}
+      style={[{ color }, styles.label, style]}
+      allowFontScaling={allowFontScaling}
     >
       {labelText}
     </Text>
   );
-};
-
-const renderLabel = (props: MaterialLabelType) => {
-  return <MaterialLabel {...props} />;
 };
 
 export function MaterialTopTabBar({
@@ -60,24 +58,48 @@ export function MaterialTopTabBar({
     state.routes.map((route) => {
       const { options } = descriptors[route.key];
 
+      const {
+        title,
+        tabBarLabel,
+        tabBarButtonTestID,
+        tabBarAccessibilityLabel,
+        tabBarBadge,
+        tabBarShowIcon,
+        tabBarShowLabel,
+        tabBarIcon,
+        tabBarAllowFontScaling,
+        tabBarLabelStyle,
+      } = options;
+
       return [
         route.key,
         {
           href: buildHref(route.name, route.params),
-          testID: options.tabBarButtonTestID,
-          accessibilityLabel: options.tabBarAccessibilityLabel,
-          badge: options.tabBarBadge,
-          icon:
-            options.tabBarShowIcon === false ? undefined : options.tabBarIcon,
-          label: options.tabBarShowLabel === false ? undefined : renderLabel,
-          labelAllowFontScaling: options.tabBarAllowFontScaling,
-          labelStyle: options.tabBarLabelStyle,
+          testID: tabBarButtonTestID,
+          accessibilityLabel: tabBarAccessibilityLabel,
+          badge: tabBarBadge,
+          icon: tabBarShowIcon === false ? undefined : tabBarIcon,
+          label:
+            tabBarShowLabel === false
+              ? undefined
+              : typeof tabBarLabel === 'function'
+                ? ({ labelText, color }: MaterialLabelProps) =>
+                    tabBarLabel({
+                      focused: state.routes[state.index].key === route.key,
+                      color,
+                      children: labelText ?? route.name,
+                    })
+                : renderLabelDefault,
+          labelAllowFontScaling: tabBarAllowFontScaling,
+          labelStyle: tabBarLabelStyle,
           labelText:
             options.tabBarShowLabel === false
               ? undefined
-              : options.title !== undefined
-                ? options.title
-                : route.name,
+              : typeof tabBarLabel === 'string'
+                ? tabBarLabel
+                : title !== undefined
+                  ? title
+                  : route.name,
         },
       ];
     })

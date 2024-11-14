@@ -22,32 +22,8 @@ type NestedStackParamList = {
   C: undefined;
 };
 
-jest.mock('react-native/Libraries/Utilities/Platform', () => ({
-  ...jest.requireActual<
-    typeof import('react-native/Libraries/Utilities/Platform')
-  >('react-native/Libraries/Utilities/Platform'),
-  OS: 'ios',
-}));
-
-jest.mock('react-native-safe-area-context', () => ({
-  ...jest.requireActual<typeof import('react-native-safe-area-context')>(
-    'react-native-safe-area-context'
-  ),
-  // eslint-disable-next-line @eslint-react/hooks-extra/ensure-custom-hooks-using-other-hooks
-  useSafeAreaInsets: () => ({
-    top: 0,
-  }),
-}));
-
-/**
- * Check if the element is "visible" (not hidden) from accessibility.
- */
-const isVisible = (element: any) => {
-  return !isHiddenFromAccessibility(element);
-};
-
 afterEach(() => {
-  jest.resetAllMocks();
+  jest.restoreAllMocks();
 });
 
 test('renders a native-stack navigator with screens', async () => {
@@ -73,18 +49,18 @@ test('renders a native-stack navigator with screens', async () => {
     </NavigationContainer>
   );
 
-  expect(isVisible(getByText('Screen A'))).toBe(true);
+  expect(isHiddenFromAccessibility(getByText('Screen A'))).toBe(false);
   expect(queryByText('Screen B')).toBeNull();
 
   fireEvent.press(getByText(/go to b/i));
 
-  expect(isVisible(queryByText('Screen A'))).toBe(false);
-  expect(isVisible(getByText('Screen B'))).toBe(true);
+  expect(isHiddenFromAccessibility(queryByText('Screen A'))).toBe(true);
+  expect(isHiddenFromAccessibility(getByText('Screen B'))).toBe(false);
 });
 
 describe('useHeaderHeight in native-stack', () => {
   test('returns header height on Android', async () => {
-    Platform.OS = 'android';
+    jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -111,7 +87,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns header height on iOS', async () => {
-    Platform.OS = 'ios';
+    jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -138,7 +114,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns header height on Web', async () => {
-    Platform.OS = 'web';
+    jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -165,7 +141,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns header height in modal on iOS', async () => {
-    Platform.OS = 'ios';
+    jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -198,7 +174,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns header height with transparent header on iOS', async () => {
-    Platform.OS = 'ios';
+    jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -238,7 +214,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns header height with transparent header on Android', async () => {
-    Platform.OS = 'android';
+    jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -278,7 +254,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test("doesn't return header height with headerShown: false on iOS", async () => {
-    Platform.OS = 'ios';
+    jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -309,7 +285,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test("doesn't return header height with headerShown: false on Android", async () => {
-    Platform.OS = 'android';
+    jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -340,7 +316,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test("doesn't return header height with headerShown: false on Web", async () => {
-    Platform.OS = 'web';
+    jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -371,7 +347,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns header height in nested stack on iOS', async () => {
-    Platform.OS = 'ios';
+    jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -405,7 +381,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns parent header height in nested stack when headerShown: false on iOS', async () => {
-    Platform.OS = 'ios';
+    jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -443,7 +419,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns header height 0 in nested stack when headerShown: false on both screens on iOS', async () => {
-    Platform.OS = 'ios';
+    jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -477,7 +453,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns header height in nested stack on Android', async () => {
-    Platform.OS = 'android';
+    jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -511,7 +487,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns parent header height in nested stack when headerShown: false on Android', async () => {
-    Platform.OS = 'android';
+    jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -549,7 +525,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns header height 0 in nested stack when headerShown: false on both screens on Android', async () => {
-    Platform.OS = 'android';
+    jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -583,7 +559,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns header height in nested stack on Web', async () => {
-    Platform.OS = 'web';
+    jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -617,7 +593,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns parent header height in nested stack when headerShown: false on Web', async () => {
-    Platform.OS = 'web';
+    jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
@@ -655,7 +631,7 @@ describe('useHeaderHeight in native-stack', () => {
   });
 
   test('returns header height 0 in nested stack when headerShown: false on both screens on Web', async () => {
-    Platform.OS = 'web';
+    jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {

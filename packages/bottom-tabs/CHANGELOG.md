@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.2...@react-navigation/bottom-tabs@7.0.3) (2024-11-14)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+## [7.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.1...@react-navigation/bottom-tabs@7.0.2) (2024-11-13)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+## [7.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0...@react-navigation/bottom-tabs@7.0.1) (2024-11-10)
+
+### Bug Fixes
+
+* add missing screenLayout prop to the bottom tab navigator ([#12246](https://github.com/react-navigation/react-navigation/issues/12246)) ([e5a8071](https://github.com/react-navigation/react-navigation/commit/e5a80714daa8543dfe9a98a5217f007adaf95f94)) - by @dimonnwc3
+
 # [7.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.0-rc.37...@react-navigation/bottom-tabs@7.0.0) (2024-11-06)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

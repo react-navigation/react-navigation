@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.2...@react-navigation/material-top-tabs@7.0.3) (2024-11-14)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.1...@react-navigation/material-top-tabs@7.0.2) (2024-11-13)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0...@react-navigation/material-top-tabs@7.0.1) (2024-11-07)
+
+### Bug Fixes
+
+* fix custom tab bar label and style not working for material top tabs ([1a0805b](https://github.com/react-navigation/react-navigation/commit/1a0805babe288fc78ffdaf520e238ceb294ab89d)), closes [#12236](https://github.com/react-navigation/react-navigation/issues/12236) - by @satya164
+
 # [7.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.0-rc.28...@react-navigation/material-top-tabs@7.0.0) (2024-11-06)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
