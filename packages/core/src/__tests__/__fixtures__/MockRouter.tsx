@@ -87,6 +87,13 @@ export function MockRouter(options: DefaultRouterOptions) {
         routeNames.includes(route.name)
       );
 
+      if (routes.length === 0) {
+        routes.push({
+          name: routeNames[0],
+          key: `${routeNames[0]}-${MockRouterKey.current++}`,
+        });
+      }
+
       return {
         ...state,
         routeNames,

@@ -597,8 +597,25 @@ export function useNavigationBuilder<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // In some cases (e.g. route names change), internal state might have changed
+  // But it hasn't been committed yet, so hasn't propagated to the sync external store
+  // During this time, we need to return the internal state in `getState`
+  // Otherwise it can result in inconsistent state during render in children
+  // To avoid this, we use a ref for render phase, and immediately clear it on commit
+  const stateRef = React.useRef<State | null>(state);
+
+  stateRef.current = state;
+
+  useIsomorphicLayoutEffect(() => {
+    stateRef.current = null;
+  }, []);
+
   const getState = useLatestCallback((): State => {
-    const currentState = shouldUpdate ? nextState : getCurrentState();
+    if (stateRef.current != null) {
+      return stateRef.current;
+    }
+
+    const currentState = getCurrentState();
 
     return deepFreeze(
       (isStateInitialized(currentState)
