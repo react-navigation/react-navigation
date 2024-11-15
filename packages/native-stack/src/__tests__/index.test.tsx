@@ -20,6 +20,7 @@ type StackParamList = {
 
 type NestedStackParamList = {
   C: undefined;
+  D: undefined;
 };
 
 afterEach(() => {
@@ -663,4 +664,64 @@ describe('useHeaderHeight in native-stack', () => {
     fireEvent.press(await findByText(/go to b/i));
     expect(headerHeight).toBe(0);
   });
+});
+
+test('can navigate within nested navigators', async () => {
+  const Stack = createNativeStackNavigator<StackParamList>();
+  const NestedStack = createNativeStackNavigator<NestedStackParamList>();
+
+  const { getByText, queryByText } = render(
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="A">
+          {({ route, navigation }) => (
+            <>
+              <Text>Screen {route.name}</Text>
+              <Button
+                onPress={() => navigation.navigate('B', { screen: 'C' })}
+                title="Go to C"
+              />
+            </>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="B">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen name="C">
+                {({ route, navigation }) => (
+                  <>
+                    <Text>Screen {route.name}</Text>
+                    <Button
+                      onPress={() =>
+                        navigation.reset({ index: 0, routes: [{ name: 'D' }] })
+                      }
+                      title="Reset to D"
+                    />
+                  </>
+                )}
+              </NestedStack.Screen>
+              <NestedStack.Screen name="D">
+                {({ route }) => <Text>Screen {route.name}</Text>}
+              </NestedStack.Screen>
+            </NestedStack.Navigator>
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(isHiddenFromAccessibility(getByText('Screen A'))).toBe(false);
+  expect(queryByText('Screen C')).toBeNull();
+  expect(queryByText('Screen D')).toBeNull();
+
+  fireEvent.press(getByText('Go to C'));
+
+  expect(isHiddenFromAccessibility(queryByText('Screen A'))).toBe(true);
+  expect(isHiddenFromAccessibility(getByText('Screen C'))).toBe(false);
+  expect(queryByText('Screen D')).toBeNull();
+
+  fireEvent.press(getByText('Reset to D'));
+
+  expect(isHiddenFromAccessibility(queryByText('Screen A'))).toBe(true);
+  expect(isHiddenFromAccessibility(getByText('Screen D'))).toBe(false);
 });
