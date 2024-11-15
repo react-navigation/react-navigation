@@ -13,5 +13,4 @@ export { type LinkProps, useLinkProps } from './useLinkProps';
 export { useLinkTo } from './useLinkTo';
 export { useLocale } from './useLocale';
 export { useScrollToTop } from './useScrollToTop';
-export { UNSTABLE_useUnhandledLinking } from './useUnhandledLinking';
 export * from '@react-navigation/core';
