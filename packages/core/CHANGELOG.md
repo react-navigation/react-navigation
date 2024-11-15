@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.2...@react-navigation/core@7.0.3) (2024-11-15)
+
+### Bug Fixes
+
+* batch and schedule updates to run them in correct order ([751f470](https://github.com/react-navigation/react-navigation/commit/751f4704daff4ddcc22d142081a51f4560efae10)), closes [#12262](https://github.com/react-navigation/react-navigation/issues/12262) [#12252](https://github.com/react-navigation/react-navigation/issues/12252) - by @
+* fix navigator trying to handle params with screens or state again ([#12264](https://github.com/react-navigation/react-navigation/issues/12264)) ([6349b51](https://github.com/react-navigation/react-navigation/commit/6349b51d4904efd25d40ac1d85f3b927a92c83ac)), closes [#12259](https://github.com/react-navigation/react-navigation/issues/12259) - by @satya164
+
 ## [7.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.1...@react-navigation/core@7.0.2) (2024-11-14)
 
 **Note:** Version bump only for package @react-navigation/core
