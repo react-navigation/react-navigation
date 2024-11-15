@@ -1131,7 +1131,6 @@ test('navigates to nested child in a navigator with initial: false', () => {
       {
         key: '7',
         name: 'bar',
-        params: { initial: false, params: { test: 42 }, screen: 'bar-b' },
         state: {
           index: 2,
           key: '8',
@@ -1349,15 +1348,15 @@ test('resets state of a nested child in a navigator', () => {
         },
         state: {
           index: 0,
-          key: '7',
+          key: '4',
           routeNames: ['bar-a', 'bar-b'],
           routes: [
             {
-              key: 'bar-a-5',
+              key: 'bar-a-2',
               name: 'bar-a',
             },
             {
-              key: 'bar-b-6',
+              key: 'bar-b-3',
               name: 'bar-b',
               params: { some: 'stuff' },
             },
@@ -1395,16 +1394,6 @@ test('resets state of a nested child in a navigator', () => {
       {
         key: 'bar',
         name: 'bar',
-        params: {
-          state: {
-            index: 2,
-            routes: [
-              { key: '37', name: 'bar-b' },
-              { name: 'bar-b' },
-              { name: 'bar-a', params: { test: 18 } },
-            ],
-          },
-        },
         state: {
           index: 2,
           key: '7',
@@ -1522,10 +1511,6 @@ test('resets state for navigator which has screen from params', () => {
       {
         key: 'bar',
         name: 'bar',
-        params: {
-          screen: 'qux',
-          params: { test: 42 },
-        },
         state: {
           index: 0,
           key: '4',

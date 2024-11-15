@@ -72,9 +72,37 @@ export function SceneView<
 
       setState({
         ...state,
-        routes: state.routes.map((r) =>
-          r.key === route.key ? { ...r, state: child } : r
-        ),
+        routes: state.routes.map((r) => {
+          if (r.key !== route.key) {
+            return r;
+          }
+
+          const nextRoute = { ...r, state: child };
+
+          // Before updating the state, cleanup any nested screen and state
+          // This will avoid the navigator trying to handle them again
+          if (
+            nextRoute.params &&
+            (('state' in nextRoute.params &&
+              typeof nextRoute.params.state === 'object' &&
+              nextRoute.params.state !== null) ||
+              ('screen' in nextRoute.params &&
+                typeof nextRoute.params.screen === 'string'))
+          ) {
+            // @ts-expect-error: we don't have correct type for params
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { state, screen, params, initial, ...rest } =
+              nextRoute.params;
+
+            if (Object.keys(rest).length) {
+              nextRoute.params = rest;
+            } else {
+              delete nextRoute.params;
+            }
+          }
+
+          return nextRoute;
+        }),
       });
     },
     [getState, route.key, setState]
