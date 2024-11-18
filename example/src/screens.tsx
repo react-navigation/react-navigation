@@ -10,7 +10,6 @@ import { DrawerView } from './Screens/DrawerView';
 import { DynamicTabs } from './Screens/DynamicTabs';
 import { ScreenLayout } from './Screens/Layouts';
 import { LinkComponent } from './Screens/LinkComponent';
-import { LinkingScreen } from './Screens/LinkingScreen';
 import { MasterDetail } from './Screens/MasterDetail';
 import { MaterialTopTabsScreen } from './Screens/MaterialTopTabs';
 import { MixedHeaderMode } from './Screens/MixedHeaderMode';
@@ -53,7 +52,6 @@ export const SCREENS = {
   TabView,
   DrawerView,
   StaticScreen,
-  LinkingScreen,
   StackPreloadFlow,
   TabPreloadFlow,
   NativeStackPreloadFlow,

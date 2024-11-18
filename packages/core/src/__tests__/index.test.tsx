@@ -1131,7 +1131,6 @@ test('navigates to nested child in a navigator with initial: false', () => {
       {
         key: '7',
         name: 'bar',
-        params: { initial: false, params: { test: 42 }, screen: 'bar-b' },
         state: {
           index: 2,
           key: '8',
@@ -1395,16 +1394,6 @@ test('resets state of a nested child in a navigator', () => {
       {
         key: 'bar',
         name: 'bar',
-        params: {
-          state: {
-            index: 2,
-            routes: [
-              { key: '37', name: 'bar-b' },
-              { name: 'bar-b' },
-              { name: 'bar-a', params: { test: 18 } },
-            ],
-          },
-        },
         state: {
           index: 2,
           key: '7',
@@ -1426,6 +1415,107 @@ test('resets state of a nested child in a navigator', () => {
               params: { test: 18 },
             },
           ],
+          stale: false,
+          type: 'test',
+        },
+      },
+    ],
+    stale: false,
+    type: 'test',
+  });
+});
+
+test('resets state for navigator which has screen from params', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar">
+          {() => (
+            <TestNavigator>
+              <Screen name="baz" component={TestScreen} />
+              <Screen name="qux" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.getRootState()).toEqual({
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+    ],
+    stale: false,
+    type: 'test',
+  });
+
+  act(() =>
+    navigation.navigate('bar', {
+      screen: 'qux',
+      params: { test: 42 },
+    })
+  );
+
+  expect(navigation.getRootState()).toEqual({
+    index: 1,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      {
+        key: 'bar',
+        name: 'bar',
+        params: { screen: 'qux', params: { test: 42 } },
+        state: {
+          index: 0,
+          key: '2',
+          routeNames: ['baz', 'qux'],
+          routes: [{ key: 'qux-1', name: 'qux', params: { test: 42 } }],
+          stale: false,
+          type: 'test',
+        },
+      },
+    ],
+    stale: false,
+    type: 'test',
+  });
+
+  act(() =>
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'baz' }],
+    })
+  );
+
+  expect(navigation.getRootState()).toEqual({
+    index: 1,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      {
+        key: 'bar',
+        name: 'bar',
+        state: {
+          index: 0,
+          key: '4',
+          routeNames: ['baz', 'qux'],
+          routes: [{ key: 'baz-3', name: 'baz' }],
           stale: false,
           type: 'test',
         },

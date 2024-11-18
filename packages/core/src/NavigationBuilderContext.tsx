@@ -61,8 +61,12 @@ export const NavigationBuilderContext = React.createContext<{
   onRouteFocus?: (key: string) => void;
   onDispatchAction: (action: NavigationAction, noop: boolean) => void;
   onOptionsChange: (options: object) => void;
+  scheduleUpdate: (callback: () => void) => void;
   stackRef?: React.MutableRefObject<string | undefined>;
 }>({
   onDispatchAction: () => undefined,
   onOptionsChange: () => undefined,
+  scheduleUpdate: () => {
+    throw new Error("Couldn't find a context for scheduling updates.");
+  },
 });

@@ -313,7 +313,6 @@ export function App() {
                             <ListItem
                               title={SCREENS[name].title}
                               onPress={() => {
-                                // @ts-expect-error TypeScript has some issues with more than 25 screens. Needs workaround.
                                 navigation.navigate(name);
                               }}
                             />
