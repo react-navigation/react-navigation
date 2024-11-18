@@ -234,8 +234,15 @@ export function Header(props: Props) {
     safeStyles,
     headerShadowVisible === false && {
       elevation: 0,
-      shadowOpacity: 0,
       borderBottomWidth: 0,
+      ...Platform.select({
+        default: {
+          shadowOpacity: 0,
+        },
+        web: {
+          boxShadow: 'none',
+        },
+      }),
     },
   ];
 

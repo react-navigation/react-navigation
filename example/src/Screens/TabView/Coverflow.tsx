@@ -6,6 +6,7 @@ import {
   Animated,
   Image,
   type ImageRequireSource,
+  Platform,
   StyleSheet,
   View,
 } from 'react-native';
@@ -144,13 +145,20 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     elevation: 12,
-    shadowColor: '#000000',
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    shadowOffset: {
-      height: 8,
-      width: 0,
-    },
+    ...Platform.select({
+      default: {
+        shadowColor: '#000',
+        shadowOpacity: 0.5,
+        shadowRadius: 8,
+        shadowOffset: {
+          height: 8,
+          width: 0,
+        },
+      },
+      web: {
+        boxShadow: '0 8px 8px rgba(0, 0, 0, 0.5)',
+      },
+    }),
   },
   cover: {
     width: 200,
