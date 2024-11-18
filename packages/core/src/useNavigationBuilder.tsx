@@ -18,6 +18,7 @@ import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
+import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationRouteContext } from './NavigationRouteContext';
 import { NavigationStateContext } from './NavigationStateContext';
@@ -559,12 +560,17 @@ export function useNavigationBuilder<
         : nextState;
   }
 
+  const { scheduleUpdate } = React.useContext(NavigationBuilderContext);
+
   const shouldUpdate = state !== nextState;
 
   useIsomorphicLayoutEffect(() => {
     if (shouldUpdate) {
       // If the state needs to be updated, we'll schedule an update
-      setState(nextState);
+      // These updates will be batched and run in the reverse order
+      scheduleUpdate(() => {
+        setState(nextState);
+      });
     }
   });
 
