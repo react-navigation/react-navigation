@@ -31,6 +31,7 @@ This branch contains the code for the latest stable version of React Navigation.
 | [@react-navigation/native](/packages/native)                                 |               [![badge](https://img.shields.io/npm/v/@react-navigation/native.svg)](https://www.npmjs.com/package/@react-navigation/native)               |
 | [@react-navigation/routers](/packages/routers)                               |              [![badge](https://img.shields.io/npm/v/@react-navigation/routers.svg)](https://www.npmjs.com/package/@react-navigation/routers)              |
 | [@react-navigation/stack](/packages/stack)                                   |                [![badge](https://img.shields.io/npm/v/@react-navigation/stack.svg)](https://www.npmjs.com/package/@react-navigation/stack)                |
+| [react-native-drawer-layout](/packages/react-native-drawer-layout) |        [![badge](https://img.shields.io/npm/v/react-native-drawer-layout.svg)](https://www.npmjs.com/package/react-native-drawer-layout)        |
 | [react-native-tab-view](/packages/react-native-tab-view) |        [![badge](https://img.shields.io/npm/v/react-native-tab-view.svg)](https://www.npmjs.com/package/react-native-tab-view)        |
 
 ## Contributing
