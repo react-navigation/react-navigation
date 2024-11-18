@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.3...@react-navigation/stack@7.0.4) (2024-11-18)
+
+### Bug Fixes
+
+* fix deprecation warning for shadow styles on react-native-web ([#12253](https://github.com/react-navigation/react-navigation/issues/12253)) ([4d444f7](https://github.com/react-navigation/react-navigation/commit/4d444f77a446b622d75e6e19a3cf1c024d248a2d)), closes [#000](https://github.com/react-navigation/react-navigation/issues/000) [#000](https://github.com/react-navigation/react-navigation/issues/000) [#000](https://github.com/react-navigation/react-navigation/issues/000) - by @kubabutkiewicz
+
 ## [7.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.2...@react-navigation/stack@7.0.3) (2024-11-15)
 
 **Note:** Version bump only for package @react-navigation/stack

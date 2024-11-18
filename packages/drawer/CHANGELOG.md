@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.4...@react-navigation/drawer@7.0.5) (2024-11-18)
+
+### Bug Fixes
+
+* add default a11y label to drawer toggle button ([a98eb8c](https://github.com/react-navigation/react-navigation/commit/a98eb8ce659f75ca11892aa92f96bd5f755ced6e)) - by @satya164
+
 ## [7.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.0.3...@react-navigation/drawer@7.0.4) (2024-11-15)
 
 **Note:** Version bump only for package @react-navigation/drawer

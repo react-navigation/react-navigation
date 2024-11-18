@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.3...@react-navigation/elements@2.0.4) (2024-11-18)
+
+### Bug Fixes
+
+* `displayMode` description ([#12265](https://github.com/react-navigation/react-navigation/issues/12265)) ([9edabae](https://github.com/react-navigation/react-navigation/commit/9edabaea87ad0b7f2c189b690b1a02661995ca84)) - by @KirillTregubov
+* fix deprecation warning for shadow styles on react-native-web ([#12253](https://github.com/react-navigation/react-navigation/issues/12253)) ([4d444f7](https://github.com/react-navigation/react-navigation/commit/4d444f77a446b622d75e6e19a3cf1c024d248a2d)), closes [#000](https://github.com/react-navigation/react-navigation/issues/000) [#000](https://github.com/react-navigation/react-navigation/issues/000) [#000](https://github.com/react-navigation/react-navigation/issues/000) - by @kubabutkiewicz
+
 ## [2.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.0.2...@react-navigation/elements@2.0.3) (2024-11-15)
 
 **Note:** Version bump only for package @react-navigation/elements

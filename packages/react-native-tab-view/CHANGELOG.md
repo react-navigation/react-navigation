@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.1...react-native-tab-view@4.0.2) (2024-11-18)
+
+### Bug Fixes
+
+* fix deprecation warning for shadow styles on react-native-web ([#12253](https://github.com/react-navigation/react-navigation/issues/12253)) ([4d444f7](https://github.com/react-navigation/react-navigation/commit/4d444f77a446b622d75e6e19a3cf1c024d248a2d)), closes [#000](https://github.com/react-navigation/react-navigation/issues/000) [#000](https://github.com/react-navigation/react-navigation/issues/000) [#000](https://github.com/react-navigation/react-navigation/issues/000) - by @kubabutkiewicz
+
 ## [4.0.1](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0...react-native-tab-view@4.0.1) (2024-11-07)
 
 ### Bug Fixes
