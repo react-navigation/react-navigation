@@ -691,30 +691,28 @@ export function TabBar<T extends Route>({
   );
 }
 
-const shadowStyles = Platform.select({
-  default: {
-    shadowColor: 'black',
-    shadowOpacity: 0.1,
-    shadowRadius: StyleSheet.hairlineWidth,
-    shadowOffset: {
-      height: StyleSheet.hairlineWidth,
-      width: 0,
-    },
-  },
-  web: {
-    boxShadow: '0px 1px 1px rgba(0, 0, 0, 0.1)',
-  },
-});
-
 const styles = StyleSheet.create({
   scroll: {
     overflow: Platform.select({ default: 'scroll', web: undefined }),
   },
   tabBar: {
-    ...shadowStyles,
+    zIndex: 1,
     backgroundColor: '#2196f3',
     elevation: 4,
-    zIndex: 1,
+    ...Platform.select({
+      default: {
+        shadowColor: 'black',
+        shadowOpacity: 0.1,
+        shadowRadius: StyleSheet.hairlineWidth,
+        shadowOffset: {
+          height: StyleSheet.hairlineWidth,
+          width: 0,
+        },
+      },
+      web: {
+        boxShadow: '0 1px 1px rgba(0, 0, 0, 0.1)',
+      },
+    }),
   },
   tabContent: {
     flexGrow: 1,
