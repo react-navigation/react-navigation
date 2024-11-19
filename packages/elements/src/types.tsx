@@ -11,7 +11,26 @@ export type HeaderBackButtonDisplayMode = 'default' | 'generic' | 'minimal';
 
 export type Layout = { width: number; height: number };
 
-type HeaderSearchBarOptions = {
+export type HeaderSearchBarRef = {
+  focus: () => void;
+  blur: () => void;
+  setText: (text: string) => void;
+  clearText: () => void;
+  cancelSearch: () => void;
+};
+
+export type HeaderSearchBarOptions = {
+  /**
+   * Ref to imperatively update the search bar.
+   *
+   * Supported operations:
+   * - `focus` - focuses the search bar
+   * - `blur` - removes focus from the search bar
+   * - `setText` - sets the search bar's content to given value
+   * - `clearText` - removes any text present in the search bar input field
+   * - `cancelSearch` - cancel the search and close the search bar
+   */
+  ref?: React.Ref<HeaderSearchBarRef>;
   /**
    * The auto-capitalization behavior
    */

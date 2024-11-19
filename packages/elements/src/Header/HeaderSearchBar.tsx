@@ -17,11 +17,11 @@ import closeIcon from '../assets/close-icon.png';
 import searchIcon from '../assets/search-icon.png';
 import { PlatformPressable } from '../PlatformPressable';
 import { Text } from '../Text';
-import type { HeaderOptions } from '../types';
+import type { HeaderSearchBarOptions, HeaderSearchBarRef } from '../types';
 import { HeaderButton } from './HeaderButton';
 import { HeaderIcon } from './HeaderIcon';
 
-type Props = HeaderOptions['headerSearchBarOptions'] & {
+type Props = Omit<HeaderSearchBarOptions, 'ref'> & {
   visible: boolean;
   onClose: () => void;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
@@ -34,17 +34,20 @@ const INPUT_TYPE_TO_MODE = {
   email: 'email',
 } as const;
 
-export function HeaderSearchBar({
-  visible,
-  inputType,
-  autoFocus = true,
-  placeholder = 'Search',
-  cancelButtonText = 'Cancel',
-  onChangeText,
-  onClose,
-  style,
-  ...rest
-}: Props) {
+function HeaderSearchBarInternal(
+  {
+    visible,
+    inputType,
+    autoFocus = true,
+    placeholder = 'Search',
+    cancelButtonText = 'Cancel',
+    onChangeText,
+    onClose,
+    style,
+    ...rest
+  }: Props,
+  ref: React.ForwardedRef<HeaderSearchBarRef>
+) {
   const navigation = useNavigation();
   const { dark, colors, fonts } = useTheme();
   const [value, setValue] = React.useState('');
@@ -98,22 +101,46 @@ export function HeaderSearchBar({
     });
   }, [clearVisibleAnim, hasText]);
 
-  const onClear = React.useCallback(() => {
+  const clearText = React.useCallback(() => {
     inputRef.current?.clear();
     inputRef.current?.focus();
     setValue('');
+  }, []);
+
+  const onClear = React.useCallback(() => {
+    clearText();
     // FIXME: figure out how to create a SyntheticEvent
     // @ts-expect-error: we don't have the native event here
     onChangeText?.({ nativeEvent: { text: '' } });
-  }, [onChangeText]);
+  }, [clearText, onChangeText]);
+
+  const cancelSearch = React.useCallback(() => {
+    onClear();
+    onClose();
+  }, [onClear, onClose]);
 
   React.useEffect(
-    () =>
-      navigation?.addListener('blur', () => {
-        onClear();
-        onClose();
-      }),
-    [navigation, onClear, onClose]
+    () => navigation?.addListener('blur', cancelSearch),
+    [cancelSearch, navigation]
+  );
+
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      focus: () => {
+        inputRef.current?.focus();
+      },
+      blur: () => {
+        inputRef.current?.blur();
+      },
+      setText: (text: string) => {
+        inputRef.current?.setNativeProps({ text });
+        setValue(text);
+      },
+      clearText,
+      cancelSearch,
+    }),
+    [cancelSearch, clearText]
   );
 
   if (!visible && !rendered) {
@@ -189,13 +216,7 @@ export function HeaderSearchBar({
         </HeaderButton>
       ) : null}
       {Platform.OS === 'ios' ? (
-        <PlatformPressable
-          onPress={() => {
-            onClear();
-            onClose();
-          }}
-          style={styles.cancelButton}
-        >
+        <PlatformPressable onPress={cancelSearch} style={styles.cancelButton}>
           <Text
             style={[
               fonts.regular,
@@ -281,3 +302,5 @@ const styles = StyleSheet.create({
     },
   }),
 });
+
+export const HeaderSearchBar = React.forwardRef(HeaderSearchBarInternal);
