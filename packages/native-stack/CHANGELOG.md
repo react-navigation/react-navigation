@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.4...@react-navigation/native-stack@7.1.0) (2024-11-19)
+
+### Features
+
+* add ref to header search bar ([360247d](https://github.com/react-navigation/react-navigation/commit/360247db2f3f9f28afe572b67dd28d33857d413c)) - by @
+
 ## [7.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.0.3...@react-navigation/native-stack@7.0.4) (2024-11-18)
 
 **Note:** Version bump only for package @react-navigation/native-stack
