@@ -4047,6 +4047,7 @@ __metadata:
     react-dom: "npm:18.3.1"
     react-native: "npm:0.76.2"
     react-native-builder-bob: "npm:^0.29.0"
+    react-native-edge-to-edge: "npm:^1.1.3"
     react-native-gesture-handler: "npm:~2.20.2"
     react-native-pager-view: "npm:6.5.1"
     react-native-reanimated: "npm:~3.16.1"
@@ -14087,6 +14088,16 @@ __metadata:
     react-native-reanimated: ">= 2.0.0"
   languageName: unknown
   linkType: soft
+
+"react-native-edge-to-edge@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "react-native-edge-to-edge@npm:1.1.3"
+  peerDependencies:
+    react: ">=18.2.0"
+    react-native: ">=0.73.0"
+  checksum: c3c025addeacf1a734c3aff6f5acf85e5f83ac932910836a4c78658a8fe482bb23c3a8e71e04b4b337af0a2e11ae04db0d64d800b4baac943267e48663e3dd73
+  languageName: node
+  linkType: hard
 
 "react-native-gesture-handler@npm:~2.20.2":
   version: 2.20.2

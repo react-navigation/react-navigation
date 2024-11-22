@@ -23,11 +23,11 @@ import {
   Image,
   Platform,
   ScrollView,
-  StatusBar,
   StyleSheet,
   useWindowDimensions,
   View,
 } from 'react-native';
+import { SystemBars } from 'react-native-edge-to-edge';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
@@ -64,9 +64,7 @@ const AlbumsScreen = () => {
 
   return (
     <>
-      {isFocused && Platform.OS === 'android' && (
-        <StatusBar barStyle="light-content" />
-      )}
+      {isFocused && Platform.OS === 'android' && <SystemBars style="light" />}
       <ScrollView
         contentContainerStyle={{
           paddingTop: headerHeight,
