@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.5...@react-navigation/stack@7.0.6) (2024-11-22)
+
+### Bug Fixes
+
+* remove background from stack ([eaadbeb](https://github.com/react-navigation/react-navigation/commit/eaadbebb67d3d0a49d301b23b981d9e630bb9b43)), closes [#12287](https://github.com/react-navigation/react-navigation/issues/12287) - by @
+
 ## [7.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.4...@react-navigation/stack@7.0.5) (2024-11-19)
 
 **Note:** Version bump only for package @react-navigation/stack

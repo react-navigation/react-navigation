@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.3...@react-navigation/core@7.0.4) (2024-11-22)
+
+### Bug Fixes
+
+* revert back to how updates were scheduled in 6.x ([fac89e8](https://github.com/react-navigation/react-navigation/commit/fac89e823ca15bc9068799cae3732237d6343e88)), closes [#12283](https://github.com/react-navigation/react-navigation/issues/12283) - by @
+
 ## [7.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.2...@react-navigation/core@7.0.3) (2024-11-15)
 
 ### Bug Fixes
