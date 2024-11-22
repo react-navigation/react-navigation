@@ -467,6 +467,9 @@ export function NativeStackView({
 
   const { colors } = useTheme();
 
+  const currentRouteKey = state.routes[state.index].key;
+  const topScreenOptions = descriptors[currentRouteKey].options;
+
   useInvalidPreventRemoveError(descriptors);
 
   const modalRouteKeys = getModalRouteKeys(state.routes, descriptors);
@@ -479,7 +482,14 @@ export function NativeStackView({
 
   return (
     <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
-      <ScreenStack style={styles.container}>
+      <ScreenStack
+        style={styles.container}
+        /** Props for custom screen transitions */
+        goBackGesture={topScreenOptions?.gestureType}
+        transitionAnimation={topScreenOptions?.animationForGesture}
+        screenEdgeGesture={topScreenOptions?.gestureFromEdgeEnabled ?? false}
+        currentScreenId={currentRouteKey}
+      >
         {state.routes.concat(state.preloadedRoutes).map((route, index) => {
           const descriptor =
             descriptors[route.key] ?? preloadedDescriptors[route.key];
