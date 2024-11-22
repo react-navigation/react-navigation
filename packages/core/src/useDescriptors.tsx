@@ -116,8 +116,13 @@ export function useDescriptors<
   const [options, setOptions] = React.useState<Record<string, ScreenOptions>>(
     {}
   );
-  const { onDispatchAction, onOptionsChange, scheduleUpdate, stackRef } =
-    React.useContext(NavigationBuilderContext);
+  const {
+    onDispatchAction,
+    onOptionsChange,
+    scheduleUpdate,
+    flushUpdates,
+    stackRef,
+  } = React.useContext(NavigationBuilderContext);
 
   const context = React.useMemo(
     () => ({
@@ -129,6 +134,7 @@ export function useDescriptors<
       onDispatchAction,
       onOptionsChange,
       scheduleUpdate,
+      flushUpdates,
       stackRef,
     }),
     [
@@ -140,6 +146,7 @@ export function useDescriptors<
       onDispatchAction,
       onOptionsChange,
       scheduleUpdate,
+      flushUpdates,
       stackRef,
     ]
   );

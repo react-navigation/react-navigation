@@ -18,7 +18,6 @@ import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
-import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationRouteContext } from './NavigationRouteContext';
 import { NavigationStateContext } from './NavigationStateContext';
@@ -47,6 +46,7 @@ import { useOnAction } from './useOnAction';
 import { useOnGetState } from './useOnGetState';
 import { useOnRouteFocus } from './useOnRouteFocus';
 import { useRegisterNavigator } from './useRegisterNavigator';
+import { useScheduleUpdate } from './useScheduleUpdate';
 
 // This is to make TypeScript compiler happy
 PrivateValueStore;
@@ -560,17 +560,12 @@ export function useNavigationBuilder<
         : nextState;
   }
 
-  const { scheduleUpdate } = React.useContext(NavigationBuilderContext);
-
   const shouldUpdate = state !== nextState;
 
-  useIsomorphicLayoutEffect(() => {
+  useScheduleUpdate(() => {
     if (shouldUpdate) {
       // If the state needs to be updated, we'll schedule an update
-      // These updates will be batched and run in the reverse order
-      scheduleUpdate(() => {
-        setState(nextState);
-      });
+      setState(nextState);
     }
   });
 

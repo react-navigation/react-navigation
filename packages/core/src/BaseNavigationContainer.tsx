@@ -103,9 +103,10 @@ export const BaseNavigationContainer = React.forwardRef(
       );
     }
 
-    const [state, getState, setState, scheduleUpdate] = useSyncState<State>(
-      () => getPartialState(initialState == null ? undefined : initialState)
-    );
+    const { state, getState, setState, scheduleUpdate, flushUpdates } =
+      useSyncState<State>(() =>
+        getPartialState(initialState == null ? undefined : initialState)
+      );
 
     const isFirstMountRef = React.useRef<boolean>(true);
 
@@ -261,6 +262,7 @@ export const BaseNavigationContainer = React.forwardRef(
         onDispatchAction,
         onOptionsChange,
         scheduleUpdate,
+        flushUpdates,
         stackRef,
       }),
       [
@@ -269,6 +271,7 @@ export const BaseNavigationContainer = React.forwardRef(
         onDispatchAction,
         onOptionsChange,
         scheduleUpdate,
+        flushUpdates,
       ]
     );
 
