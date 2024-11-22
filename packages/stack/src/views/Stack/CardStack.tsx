@@ -1,5 +1,4 @@
 import {
-  Background,
   getDefaultHeaderHeight,
   SafeAreaProviderCompat,
 } from '@react-navigation/elements';
@@ -15,6 +14,7 @@ import {
   type LayoutChangeEvent,
   Platform,
   StyleSheet,
+  View,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
@@ -660,7 +660,7 @@ export class CardStack extends React.Component<Props, State> {
     );
 
     return (
-      <Background>
+      <View style={styles.container}>
         {isFloatHeaderAbsolute ? null : floatingHeader}
         <MaybeScreenContainer
           enabled={detachInactiveScreens}
@@ -795,7 +795,7 @@ export class CardStack extends React.Component<Props, State> {
           })}
         </MaybeScreenContainer>
         {isFloatHeaderAbsolute ? floatingHeader : null}
-      </Background>
+      </View>
     );
   }
 }

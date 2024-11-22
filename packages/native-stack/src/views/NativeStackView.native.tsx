@@ -465,8 +465,6 @@ export function NativeStackView({
 }: Props) {
   const { setNextDismissedKey } = useDismissedRouteError(state);
 
-  const { colors } = useTheme();
-
   useInvalidPreventRemoveError(descriptors);
 
   const modalRouteKeys = getModalRouteKeys(state.routes, descriptors);
@@ -478,7 +476,7 @@ export function NativeStackView({
     }, {});
 
   return (
-    <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
+    <SafeAreaProviderCompat>
       <ScreenStack style={styles.container}>
         {state.routes.concat(state.preloadedRoutes).map((route, index) => {
           const descriptor =

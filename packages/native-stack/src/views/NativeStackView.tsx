@@ -12,7 +12,6 @@ import {
   type RouteProp,
   type StackNavigationState,
   useLinkBuilder,
-  useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, Image, StyleSheet, View } from 'react-native';
@@ -43,7 +42,6 @@ const TRANSPARENT_PRESENTATIONS = [
 export function NativeStackView({ state, descriptors, describe }: Props) {
   const parentHeaderBack = React.useContext(HeaderBackContext);
   const { buildHref } = useLinkBuilder();
-  const { colors } = useTheme();
 
   const preloadedDescriptors =
     state.preloadedRoutes.reduce<NativeStackDescriptorMap>((acc, route) => {
@@ -52,7 +50,7 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
     }, {});
 
   return (
-    <SafeAreaProviderCompat style={{ backgroundColor: colors.background }}>
+    <SafeAreaProviderCompat>
       {state.routes.concat(state.preloadedRoutes).map((route, i) => {
         const isFocused = state.index === i;
         const previousKey = state.routes[i - 1]?.key;
