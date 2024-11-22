@@ -334,7 +334,14 @@ export function Drawer({
               },
             ],
     };
-  });
+  }, [
+    direction,
+    drawerPosition,
+    drawerType,
+    drawerWidth,
+    layout.width,
+    translateX,
+  ]);
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -354,7 +361,7 @@ export function Drawer({
               },
             ],
     };
-  });
+  }, [drawerPosition, drawerType, drawerWidth, translateX]);
 
   const progress = useDerivedValue(() => {
     return drawerType === 'permanent'

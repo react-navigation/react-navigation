@@ -37,7 +37,8 @@
     "@lerna-lite/cli": "^3.9.3",
     "@lerna-lite/publish": "^3.9.3",
     "@lerna-lite/run": "^3.9.3",
-    "@react-native/babel-preset": "^0.74.84",
+    "@react-native/babel-preset": "^0.74.88",
+    "babel-plugin-syntax-hermes-parser": "^0.25.1",
     "check-dependency-version-consistency": "^4.1.0",
     "commitlint": "^18.5.0",
     "eslint": "^8.56.0",
@@ -51,7 +52,7 @@
   "jest": {
     "testEnvironment": "node",
     "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
-    "setupFiles": [
+    "setupFilesAfterEnv": [
       "<rootDir>/jest/setup.js"
     ],
     "transformIgnorePatterns": [

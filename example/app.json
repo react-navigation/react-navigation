@@ -29,7 +29,6 @@
       "bundler": "metro"
     },
     "androidStatusBar": {
-      "backgroundColor": "#00000088",
       "translucent": true
     },
     "updates": {

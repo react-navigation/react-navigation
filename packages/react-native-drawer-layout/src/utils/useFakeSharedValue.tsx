@@ -20,6 +20,14 @@ class FakeSharedValue {
     this.value = modifier !== undefined ? modifier(this.value) : this.value;
   }
 
+  get() {
+    return this.value;
+  }
+
+  set(value: number) {
+    this.value = value;
+  }
+
   set value(value: number) {
     this._value = value;
 

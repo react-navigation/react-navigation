@@ -1,14 +1,12 @@
 /* eslint-env jest */
 /* eslint-disable import-x/no-extraneous-dependencies */
 
+import '@testing-library/react-native/extend-expect';
 import 'react-native-gesture-handler/jestSetup';
 
-jest.mock('react-native-reanimated', () =>
-  require('react-native-reanimated/mock')
-);
+import { setUpTests } from 'react-native-reanimated';
 
-// Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+setUpTests();
 
 const error = console.error;
 

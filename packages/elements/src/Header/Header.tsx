@@ -165,7 +165,6 @@ export function Header(props: Props) {
     borderTopStartRadius,
     borderTopWidth,
     borderWidth,
-    // @ts-expect-error: web support for shadow
     boxShadow,
     elevation,
     shadowColor,
@@ -207,7 +206,6 @@ export function Header(props: Props) {
     borderTopStartRadius,
     borderTopWidth,
     borderWidth,
-    // @ts-expect-error: boxShadow is only for Web
     boxShadow,
     elevation,
     shadowColor,
