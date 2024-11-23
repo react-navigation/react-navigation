@@ -72,6 +72,10 @@ type Props = {
    */
   accessibilityLabel?: string;
   /**
+   * The iOS large content title for the tab.
+   */
+  accessibilityLargeContentTitle?: string;
+  /**
    * An unique ID for testing for the tab.
    */
   testID?: string;
@@ -157,6 +161,7 @@ export function BottomTabItem({
   badgeStyle,
   button = renderButtonDefault,
   accessibilityLabel,
+  accessibilityLargeContentTitle,
   testID,
   onPress,
   onLongPress,
@@ -326,6 +331,8 @@ export function BottomTabItem({
         onPress,
         onLongPress,
         testID,
+        accessibilityShowsLargeContentViewer: !!accessibilityLargeContentTitle,
+        accessibilityLargeContentTitle,
         accessibilityLabel,
         // FIXME: accessibilityRole: 'tab' doesn't seem to work as expected on iOS
         accessibilityRole: Platform.select({ ios: 'button', default: 'tab' }),

@@ -445,6 +445,7 @@ export function BottomTabBar({
                   onPress={onPress}
                   onLongPress={onLongPress}
                   accessibilityLabel={accessibilityLabel}
+                  accessibilityLargeContentTitle={options.tabBarAccessibilityLargeContentTitle}
                   testID={options.tabBarButtonTestID}
                   allowFontScaling={options.tabBarAllowFontScaling}
                   activeTintColor={tabBarActiveTintColor}
