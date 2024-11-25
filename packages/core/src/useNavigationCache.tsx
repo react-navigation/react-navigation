@@ -217,7 +217,7 @@ export function useNavigationCache<
           }));
         },
         isFocused: () => {
-          const state = getState();
+          const state = base.getState();
 
           if (state.routes[state.index].key !== route.key) {
             return false;

@@ -612,10 +612,6 @@ export function useNavigationBuilder<
   });
 
   const getState = useLatestCallback((): State => {
-    if (stateRef.current != null) {
-      return stateRef.current;
-    }
-
     const currentState = getCurrentState();
 
     return deepFreeze(
@@ -721,6 +717,7 @@ export function useNavigationBuilder<
     getState,
     emitter,
     router,
+    stateRef,
   });
 
   useFocusedListenersChildrenAdapter({
