@@ -260,7 +260,6 @@ const SceneView = ({
   const headerConfig = useHeaderConfigProps({
     ...options,
     route,
-    canGoBack,
     headerBackButtonMenuEnabled:
       isRemovePrevented !== undefined
         ? !isRemovePrevented
@@ -272,6 +271,7 @@ const SceneView = ({
     headerHeight,
     headerShown: header !== undefined ? false : headerShown,
     headerTopInsetEnabled,
+    headerBack,
   });
 
   return (
