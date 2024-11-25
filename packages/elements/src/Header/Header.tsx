@@ -375,12 +375,7 @@ export function Header(props: Props) {
                   pressOpacity={headerPressOpacity}
                   onPress={() => setSearchBarVisible(true)}
                 >
-                  <HeaderIcon
-                    style={
-                      Boolean(iconTintColor) && { tintColor: iconTintColor }
-                    }
-                    source={searchIcon}
-                  />
+                  <HeaderIcon source={searchIcon} tintColor={iconTintColor} />
                 </HeaderButton>
               ) : null}
             </Animated.View>
