@@ -60,8 +60,8 @@
     ],
     "moduleNameMapper": {
       "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src",
-      "react-native-tab-view": "<rootDir>/packages/react-native-tab-view/src",
-      "react-native-drawer-layout": "<rootDir>/packages/react-native-drawer-layout/src"
+      "react-native-drawer-layout": "<rootDir>/packages/react-native-drawer-layout/src",
+      "react-native-tab-view": "<rootDir>/packages/react-native-tab-view/src"
     },
     "prettierPath": null,
     "preset": "react-native"
