@@ -177,7 +177,6 @@ const HeaderHeightView = ({
         {
           backgroundColor: colors.card,
           borderColor: colors.border,
-          shadowColor: colors.border,
         },
         hasOffset && {
           transform: [{ translateY: animatedHeaderHeight }],
