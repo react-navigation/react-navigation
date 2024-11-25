@@ -61,6 +61,8 @@ export type Props<T extends Route> = SceneRendererProps & {
   android_ripple?: PressableAndroidRippleConfig;
 };
 
+const useNativeDriver = Platform.OS !== 'web';
+
 const Separator = ({ width }: { width: number }) => {
   return <View style={{ width }} />;
 };
@@ -596,7 +598,7 @@ export function TabBar<T extends Route>({
             },
           },
         ],
-        { useNativeDriver: true }
+        { useNativeDriver }
       ),
     [scrollAmount]
   );

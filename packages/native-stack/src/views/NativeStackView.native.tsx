@@ -68,6 +68,8 @@ type SceneViewProps = {
   onSheetDetentChanged: ScreenProps['onSheetDetentChanged'];
 };
 
+const useNativeDriver = Platform.OS !== 'web';
+
 const SceneView = ({
   index,
   focused,
@@ -339,7 +341,7 @@ const SceneView = ({
           },
         ],
         {
-          useNativeDriver: true,
+          useNativeDriver,
           listener: (e) => {
             if (
               Platform.OS === 'android' &&

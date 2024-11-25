@@ -28,6 +28,8 @@ export type Props<T extends Route> = SceneRendererProps & {
   children?: React.ReactNode;
 };
 
+const useNativeDriver = Platform.OS !== 'web';
+
 const getTranslateX = (
   position: Animated.AnimatedInterpolation<number>,
   routes: Route[],
@@ -104,7 +106,7 @@ export function TabBarIndicator<T extends Route>({
           toValue: 1,
           duration: 150,
           easing: Easing.in(Easing.linear),
-          useNativeDriver: true,
+          useNativeDriver,
         }).start();
       }
     };
