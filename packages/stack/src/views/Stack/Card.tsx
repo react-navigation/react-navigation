@@ -34,6 +34,7 @@ import { CardSheet, type CardSheetRef } from './CardSheet';
 
 type Props = ViewProps & {
   interpolationIndex: number;
+  opening: boolean;
   closing: boolean;
   next?: Animated.AnimatedInterpolation<number>;
   current: Animated.AnimatedInterpolation<number>;
@@ -115,7 +116,8 @@ export class Card extends React.Component<Props> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    const { direction, layout, gestureDirection, closing } = this.props;
+    const { gesture, direction, layout, gestureDirection, opening, closing } =
+      this.props;
     const { width, height } = layout;
 
     if (width !== prevProps.layout.width) {
@@ -143,6 +145,14 @@ export class Card extends React.Component<Props> {
       // When route was closed due to a gesture, the animation would've happened already
       // It's still important to trigger the animation so that `onClose` is called
       // If `onClose` is not called, cleanup step won't be performed for gestures
+      this.animate({ closing });
+    } else if (opening && !prevProps.opening) {
+      // This can happen when screen somewhere below in the stack comes into focus via rearranging
+      // Also reset the animated value to make sure that the animation starts from the beginning
+      gesture.setValue(
+        getDistanceForDirection(layout, gestureDirection, direction === 'rtl')
+      );
+
       this.animate({ closing });
     }
   }

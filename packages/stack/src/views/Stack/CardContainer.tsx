@@ -24,6 +24,7 @@ type Props = {
   index: number;
   active: boolean;
   focused: boolean;
+  opening: boolean;
   closing: boolean;
   modal: boolean;
   layout: Layout;
@@ -64,6 +65,7 @@ function CardContainerInner({
   interpolationIndex,
   index,
   active,
+  opening,
   closing,
   gesture,
   focused,
@@ -240,6 +242,7 @@ function CardContainerInner({
       gesture={gesture}
       current={scene.progress.current}
       next={scene.progress.next}
+      opening={opening}
       closing={closing}
       onOpen={handleOpen}
       onClose={handleClose}

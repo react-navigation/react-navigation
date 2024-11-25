@@ -569,6 +569,7 @@ export class CardStack extends React.Component<Props, State> {
       insets,
       state,
       routes,
+      openingRouteKeys,
       closingRouteKeys,
       onOpenRoute,
       onCloseRoute,
@@ -762,6 +763,7 @@ export class CardStack extends React.Component<Props, State> {
                   modal={isModal}
                   active={index === routes.length - 1}
                   focused={focused}
+                  opening={openingRouteKeys.includes(route.key)}
                   closing={closingRouteKeys.includes(route.key)}
                   layout={layout}
                   gesture={gesture}

@@ -39,9 +39,9 @@ const ArticleScreen = ({
       <View style={styles.buttons}>
         <Button
           variant="filled"
-          onPress={() => navigation.replace('NewsFeed', { date: Date.now() })}
+          onPress={() => navigation.navigate('NewsFeed', { date: Date.now() })}
         >
-          Replace with feed
+          Navigate to feed
         </Button>
         <Button variant="filled" onPress={() => navigation.popTo('Albums')}>
           Pop to albums
@@ -76,11 +76,8 @@ const NewsFeedScreen = ({
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button
-          variant="filled"
-          onPress={() => navigation.navigate('Contacts')}
-        >
-          Navigate to contacts
+        <Button variant="filled" onPress={() => navigation.replace('Contacts')}>
+          Replace with contacts
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
@@ -161,6 +158,7 @@ export function SimpleStack() {
           title: `Article by ${route.params?.author ?? 'Unknown'}`,
         })}
         initialParams={{ author: 'Gandalf' }}
+        getId={({ params }) => params?.author}
       />
       <Stack.Screen
         name="NewsFeed"
