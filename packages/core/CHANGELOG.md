@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.4...@react-navigation/core@7.0.5) (2024-11-25)
+
+### Bug Fixes
+
+* fix incorrect dep array when clearing state ([5a6988b](https://github.com/react-navigation/react-navigation/commit/5a6988b4408919ac1cbb0316ddea678120917bd6)), closes [#12296](https://github.com/react-navigation/react-navigation/issues/12296) - by @
+
 ## [7.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.3...@react-navigation/core@7.0.4) (2024-11-22)
 
 ### Bug Fixes
