@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.6...@react-navigation/stack@7.0.7) (2024-11-25)
+
+### Bug Fixes
+
+* animate rearranging screens as push ([dd16a57](https://github.com/react-navigation/react-navigation/commit/dd16a5715783a3fc02f899ad2a0470f7b22b04eb)) - by @
+
 ## [7.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.5...@react-navigation/stack@7.0.6) (2024-11-22)
 
 ### Bug Fixes
