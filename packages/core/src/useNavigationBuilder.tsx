@@ -609,7 +609,7 @@ export function useNavigationBuilder<
 
   useIsomorphicLayoutEffect(() => {
     stateRef.current = null;
-  }, []);
+  });
 
   const getState = useLatestCallback((): State => {
     if (stateRef.current != null) {
