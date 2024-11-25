@@ -10,12 +10,8 @@ export function HeaderIcon({ source, style, ...rest }: ImageProps) {
       source={source}
       resizeMode="contain"
       fadeDuration={0}
-      style={[
-        styles.icon,
-        direction === 'rtl' && styles.flip,
-        { tintColor: colors.text },
-        style,
-      ]}
+      tintColor={colors.text}
+      style={[styles.icon, direction === 'rtl' && styles.flip, style]}
       {...rest}
     />
   );

@@ -196,7 +196,8 @@ function HeaderSearchBarInternal(
             <Image
               source={clearIcon}
               resizeMode="contain"
-              style={[styles.clearIcon, { tintColor: colors.text }]}
+              tintColor={colors.text}
+              style={styles.clearIcon}
             />
           </PlatformPressable>
         ) : null}

@@ -51,12 +51,12 @@ export function HeaderBackButton({
     } else {
       return (
         <HeaderIcon
+          source={backIcon}
+          tintColor={tintColor}
           style={[
             styles.icon,
             displayMode !== 'minimal' && styles.iconWithLabel,
-            Boolean(tintColor) && { tintColor },
           ]}
-          source={backIcon}
         />
       );
     }

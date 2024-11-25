@@ -36,10 +36,11 @@ export function DrawerToggleButton({
       })}
     >
       <Image
-        style={[styles.icon, tintColor ? { tintColor } : null]}
         resizeMode="contain"
         source={toggleDrawerIcon}
         fadeDuration={0}
+        tintColor={tintColor}
+        style={styles.icon}
       />
     </PlatformPressable>
   );

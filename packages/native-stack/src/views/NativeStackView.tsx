@@ -135,10 +135,8 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
                                       <Image
                                         source={headerBackImageSource}
                                         resizeMode="contain"
-                                        style={[
-                                          styles.backImage,
-                                          { tintColor },
-                                        ]}
+                                        tintColor={tintColor}
+                                        style={styles.backImage}
                                       />
                                     )
                                   : undefined
