@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.5...@react-navigation/core@7.0.6) (2024-11-25)
+
+### Bug Fixes
+
+* fix getState returning outdated state when handling action ([1489a81](https://github.com/react-navigation/react-navigation/commit/1489a8160d5eabba9320d57d5c5a0bd3b5463ce5)), closes [#672735](https://github.com/react-navigation/react-navigation/issues/672735) - by @
+
 ## [7.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.4...@react-navigation/core@7.0.5) (2024-11-25)
 
 ### Bug Fixes
