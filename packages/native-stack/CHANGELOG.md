@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.6...@react-navigation/native-stack@7.1.7) (2024-11-25)
+
+### Bug Fixes
+
+* pass back label to headerLeft on native ([be45804](https://github.com/react-navigation/react-navigation/commit/be458044f3b82369a38c5addc7ab9b1ca5d673e3)) - by @
+
 ## [7.1.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.5...@react-navigation/native-stack@7.1.6) (2024-11-25)
 
 **Note:** Version bump only for package @react-navigation/native-stack
