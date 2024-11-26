@@ -354,6 +354,7 @@ export function TabBar<T extends Route>({
   renderTabBarItem,
   style,
   tabStyle,
+  labelStyle,
   layout: propLayout,
   testID,
   android_ripple,
@@ -538,6 +539,7 @@ export function TabBar<T extends Route>({
         onPress,
         onLongPress,
         style: tabStyle,
+        labelStyle,
         defaultTabWidth,
         android_ripple,
       } satisfies TabBarItemProps<T> & { key: string };
@@ -563,6 +565,7 @@ export function TabBar<T extends Route>({
       pressOpacity,
       isWidthDynamic,
       tabStyle,
+      labelStyle,
       layout,
       routes,
       scrollEnabled,
