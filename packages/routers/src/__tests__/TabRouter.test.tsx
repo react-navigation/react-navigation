@@ -672,7 +672,7 @@ test('handles navigate action', () => {
         index: 1,
         routeNames: ['baz', 'bar'],
         routes: [
-          { key: 'baz', name: 'baz' },
+          { key: 'baz', name: 'baz', params: { color: 'tomato' } },
           { key: 'bar', name: 'bar' },
         ],
         history: [{ type: 'route', key: 'bar' }],
@@ -693,6 +693,56 @@ test('handles navigate action', () => {
     ],
     history: [{ type: 'route', key: 'baz' }],
   });
+});
+
+test('merges params on navigate when specified', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        preloadedRouteKeys: [],
+        key: 'root',
+        index: 1,
+        routeNames: ['baz', 'bar'],
+        routes: [
+          { key: 'baz', name: 'baz', params: { color: 'tomato' } },
+          { key: 'bar', name: 'bar' },
+        ],
+        history: [{ type: 'route', key: 'bar' }],
+      },
+      CommonActions.navigate('baz', { answer: 42 }, true),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: [],
+    key: 'root',
+    index: 0,
+    routeNames: ['baz', 'bar'],
+    routes: [
+      { key: 'baz', name: 'baz', params: { color: 'tomato', answer: 42 } },
+      { key: 'bar', name: 'bar' },
+    ],
+    history: [{ type: 'route', key: 'baz' }],
+  });
+});
+
+test("doesn't navigate to nonexistent screen", () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
 
   expect(
     router.getStateForAction(
@@ -713,15 +763,6 @@ test('handles navigate action', () => {
       options
     )
   ).toBeNull();
-});
-
-test("doesn't navigate to nonexistent screen", () => {
-  const router = TabRouter({});
-  const options: RouterConfigOptions = {
-    routeNames: ['baz', 'bar'],
-    routeParamList: {},
-    routeGetIdList: {},
-  };
 
   expect(
     router.getStateForAction(

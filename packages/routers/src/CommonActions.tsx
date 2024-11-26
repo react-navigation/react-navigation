@@ -60,18 +60,27 @@ export function goBack(): Action {
   return { type: 'GO_BACK' };
 }
 
+export function navigate(
+  name: string,
+  params?: object,
+  merge?: boolean
+): Action;
+
 export function navigate(options: {
   name: string;
   params?: object;
-  path?: string;
   merge?: boolean;
+  path?: string;
 }): Action;
-
-export function navigate(name: string, params?: object): Action;
 
 export function navigate(...args: any): Action {
   if (typeof args[0] === 'string') {
-    return { type: 'NAVIGATE', payload: { name: args[0], params: args[1] } };
+    const [name, params, merge] = args;
+
+    return {
+      type: 'NAVIGATE',
+      payload: { name, params, merge },
+    };
   } else {
     const payload = args[0] || {};
 
@@ -89,7 +98,7 @@ export function navigateDeprecated(
   ...args:
     | [name: string]
     | [name: string, params: object | undefined]
-    | [route: { name: string; params?: object }]
+    | [options: { name: string; params?: object }]
 ): Action {
   if (typeof args[0] === 'string') {
     return {

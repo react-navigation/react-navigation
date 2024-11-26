@@ -248,19 +248,30 @@ type NavigationHelpersCommon<
   ): void;
 
   /**
-   * Navigate to a route in current navigation tree.
+   * Navigate to a screen in the current or parent navigator.
+   * If we're already on the screen, update the params instead.
    *
    * @param name Name of the route to navigate to.
    * @param [params] Params object for the route.
+   * @param [merge] Whether to merge the params onto the route.
    */
   navigate<RouteName extends keyof ParamList>(
-    ...args: ScreenParamsPair<ParamList, RouteName>
+    ...args: {
+      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
+        ?
+            | [screen: Screen]
+            | [screen: Screen, params: ParamList[Screen]]
+            | [screen: Screen, params: ParamList[Screen], merge: boolean]
+        :
+            | [screen: Screen, params: ParamList[Screen]]
+            | [screen: Screen, params: ParamList[Screen], merge: boolean];
+    }[RouteName]
   ): void;
 
   /**
    * Navigate to a route in current navigation tree.
    *
-   * @param route Object with `name` for the route to navigate to, and a `params` object.
+   * @param options Object with `name` for the route to navigate to, and a `params` object.
    */
   navigate<RouteName extends keyof ParamList>(
     options: {
@@ -278,7 +289,7 @@ type NavigationHelpersCommon<
    *
    * @deprecated Use `navigate` instead.
    *
-   * @param name Route name of the route.
+   * @param name Name of the route to navigate to.
    * @param [params] Params object for the route.
    */
   navigateDeprecated<RouteName extends keyof ParamList>(
@@ -290,7 +301,7 @@ type NavigationHelpersCommon<
    *
    * @deprecated Use `navigate` instead.
    *
-   * @param route Object with `name` for the route to navigate to, and a `params` object.
+   * @param options Object with `name` for the route to navigate to, and a `params` object.
    */
   navigateDeprecated<RouteName extends keyof ParamList>(
     options: {
