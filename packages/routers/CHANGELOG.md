@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0...@react-navigation/routers@7.1.0) (2024-11-26)
+
+### Features
+
+* add merge as third param to navigate and update tests ([b8bdd01](https://github.com/react-navigation/react-navigation/commit/b8bdd019b9e9381f7ae060eb3dd291b3bac3c4b7)) - by @
+
 # [7.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-rc.8...@react-navigation/routers@7.0.0) (2024-11-06)
 
 **Note:** Version bump only for package @react-navigation/routers
