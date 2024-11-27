@@ -1,7 +1,4 @@
-import type {
-  HeaderOptions,
-  PlatformPressable,
-} from '@react-navigation/elements';
+import type { HeaderOptions } from '@react-navigation/elements';
 import type {
   Descriptor,
   NavigationHelpers,
@@ -16,6 +13,7 @@ import type * as React from 'react';
 import type {
   Animated,
   GestureResponderEvent,
+  Pressable,
   StyleProp,
   TextStyle,
   ViewStyle,
@@ -190,7 +188,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
 
   /**
    * Function which returns a React element to render as the tab bar button.
-   * Renders `Pressable` by default.
+   * Renders `PlatformPressable` by default.
    */
   tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
 
@@ -431,11 +429,12 @@ export type BottomTabBarProps = {
 };
 
 export type BottomTabBarButtonProps = Omit<
-  React.ComponentProps<typeof PlatformPressable>,
-  'onPress'
+  React.ComponentProps<typeof Pressable>,
+  'style'
 > & {
   href?: string;
   children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
   onPress?: (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => void;
