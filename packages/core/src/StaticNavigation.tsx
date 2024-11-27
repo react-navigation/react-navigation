@@ -568,8 +568,13 @@ export function createPathConfigForStaticNavigation(
               screenConfig.screens = screens;
             }
 
-            if (auto && !screenConfig.screens && !('linking' in item)) {
-              if (screenConfig.path) {
+            if (
+              auto &&
+              !screenConfig.screens &&
+              // Skip generating path for screens that specify linking config as `undefined` or `null` explicitly
+              !('linking' in item && item.linking == null)
+            ) {
+              if (screenConfig.path != null) {
                 if (!skipInitialDetection) {
                   // Normalize the path to remove leading and trailing slashes
                   const path = screenConfig.path
