@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.12...@react-navigation/bottom-tabs@7.0.13) (2024-11-27)
+
+### Bug Fixes
+
+* use a narrower type for tabBarButton ([ec4b764](https://github.com/react-navigation/react-navigation/commit/ec4b7640c4aab9b0dbd691be69cf92e1c7039800)), closes [#12304](https://github.com/react-navigation/react-navigation/issues/12304) - by @satya164
+
 ## [7.0.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.11...@react-navigation/bottom-tabs@7.0.12) (2024-11-26)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

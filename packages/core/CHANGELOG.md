@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.1.0...@react-navigation/core@7.1.1) (2024-11-27)
+
+### Bug Fixes
+
+* fix initial screen detection if empty path is already present ([f3ae7a9](https://github.com/react-navigation/react-navigation/commit/f3ae7a94f152208c9ba83d7fa80a23a09bb8a9e3)) - by @satya164
+* fix linking.enable: auto not working with only groups ([1129071](https://github.com/react-navigation/react-navigation/commit/1129071c6f406d89138dff6154335f18bac8b6d7)) - by @satya164
+
 # [7.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.6...@react-navigation/core@7.1.0) (2024-11-26)
 
 ### Features
