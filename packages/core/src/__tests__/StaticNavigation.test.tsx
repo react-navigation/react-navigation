@@ -953,3 +953,49 @@ test('use initialRouteName for the automatic home screen', () => {
     ],
   });
 });
+
+test('handles config with only groups', () => {
+  const Root = createTestNavigator({
+    groups: {
+      Support: {
+        screens: {
+          Contact: {
+            screen: TestScreen,
+          },
+          FAQ: {
+            screen: TestScreen,
+          },
+        },
+      },
+      Legal: {
+        screens: {
+          Terms: {
+            screen: TestScreen,
+          },
+          Privacy: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  expect(screens).toMatchInlineSnapshot(`
+{
+  "Contact": {
+    "path": "",
+  },
+  "FAQ": {
+    "path": "faq",
+  },
+  "Privacy": {
+    "path": "privacy",
+  },
+  "Terms": {
+    "path": "terms",
+  },
+}
+`);
+});

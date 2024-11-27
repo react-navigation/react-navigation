@@ -52,7 +52,7 @@ export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
     ref: React.Ref<NavigationContainerRef<ParamListBase>>
   ) {
     const linkingConfig = React.useMemo(() => {
-      if (!tree.config.screens) return;
+      // if (!tree.config.screens) return;
 
       const screens = createPathConfigForStaticNavigation(
         tree,
