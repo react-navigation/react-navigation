@@ -94,7 +94,7 @@ type StaticRouteConfig<
   Navigation,
 > = RouteConfigProps<
   ParamList,
-  string,
+  RouteName,
   State,
   ScreenOptions,
   EventMap,
