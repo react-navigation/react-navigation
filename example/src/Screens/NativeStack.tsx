@@ -35,7 +35,7 @@ const ArticleScreen = ({
   route,
 }: NativeStackScreenProps<NativeStackParams, 'Article'>) => {
   return (
-    <View>
+    <View style={styles.container}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={styles.buttons}>
           <Button
@@ -79,7 +79,7 @@ const NewsFeedScreen = ({
   navigation,
 }: NativeStackScreenProps<NativeStackParams, 'NewsFeed'>) => {
   return (
-    <View>
+    <View style={styles.container}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={styles.buttons}>
           <Button
@@ -140,7 +140,7 @@ const AlbumsScreen = ({
   const headerHeight = useHeaderHeight();
 
   return (
-    <View>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={{ paddingTop: headerHeight }}>
         <View style={styles.buttons}>
           <Button
@@ -251,6 +251,9 @@ NativeStack.options = {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',
