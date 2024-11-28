@@ -14,6 +14,7 @@ type Props = {
   route: Route<string>;
   variant: 'uikit' | 'material';
   size: 'compact' | 'regular';
+  allowFontScaling?: boolean;
   badge?: string | number;
   badgeStyle?: StyleProp<TextStyle>;
   activeOpacity: number;
@@ -44,6 +45,7 @@ export function TabBarIcon({
   route: _,
   variant,
   size,
+  allowFontScaling,
   badge,
   badgeStyle,
   activeOpacity,
@@ -97,6 +99,7 @@ export function TabBarIcon({
         })}
       </View>
       <Badge
+        allowFontScaling={allowFontScaling}
         visible={badge != null}
         style={[styles.badge, badgeStyle]}
         size={iconSize * 0.75}

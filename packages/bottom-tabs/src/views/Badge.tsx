@@ -10,6 +10,10 @@ import {
 
 type Props = {
   /**
+   * Whether the font should scale to respect Text Size accessibility settings.
+   */
+  allowFontScaling?: boolean;
+  /**
    * Whether the badge is visible
    */
   visible: boolean;

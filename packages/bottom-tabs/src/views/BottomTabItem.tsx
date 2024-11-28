@@ -72,10 +72,6 @@ type Props = {
    */
   accessibilityLabel?: string;
   /**
-   * The iOS large content title for the tab.
-   */
-  accessibilityLargeContentTitle?: string;
-  /**
    * An unique ID for testing for the tab.
    */
   testID?: string;
@@ -161,7 +157,6 @@ export function BottomTabItem({
   badgeStyle,
   button = renderButtonDefault,
   accessibilityLabel,
-  accessibilityLargeContentTitle,
   testID,
   onPress,
   onLongPress,
@@ -174,7 +169,7 @@ export function BottomTabItem({
   activeBackgroundColor: customActiveBackgroundColor,
   inactiveBackgroundColor = 'transparent',
   showLabel = true,
-  allowFontScaling,
+  allowFontScaling = false,
   labelStyle,
   iconStyle,
   style,
@@ -204,6 +199,18 @@ export function BottomTabItem({
         ? colors.primary
         : 'transparent');
 
+  const { options } = descriptor;
+  const labelString = getLabel(
+    {
+      label:
+        typeof options.tabBarLabel === 'string'
+          ? options.tabBarLabel
+          : undefined,
+      title: options.title,
+    },
+    route.name
+  );
+
   let labelInactiveTintColor = inactiveTintColor;
   let iconInactiveTintColor = inactiveTintColor;
 
@@ -225,23 +232,11 @@ export function BottomTabItem({
     const color = focused ? activeTintColor : labelInactiveTintColor;
 
     if (typeof label !== 'string') {
-      const { options } = descriptor;
-      const children = getLabel(
-        {
-          label:
-            typeof options.tabBarLabel === 'string'
-              ? options.tabBarLabel
-              : undefined,
-          title: options.title,
-        },
-        route.name
-      );
-
       return label({
         focused,
         color,
         position: horizontal ? 'beside-icon' : 'below-icon',
-        children,
+        children: labelString,
       });
     }
 
@@ -290,6 +285,7 @@ export function BottomTabItem({
         badge={badge}
         badgeStyle={badgeStyle}
         activeOpacity={activeOpacity}
+        allowFontScaling={allowFontScaling}
         inactiveOpacity={inactiveOpacity}
         activeTintColor={activeTintColor}
         inactiveTintColor={iconInactiveTintColor}
@@ -331,8 +327,8 @@ export function BottomTabItem({
         onPress,
         onLongPress,
         testID,
-        accessibilityShowsLargeContentViewer: !!accessibilityLargeContentTitle,
-        accessibilityLargeContentTitle,
+        accessibilityShowsLargeContentViewer: true,
+        accessibilityLargeContentTitle: labelString,
         accessibilityLabel,
         // FIXME: accessibilityRole: 'tab' doesn't seem to work as expected on iOS
         accessibilityRole: Platform.select({ ios: 'button', default: 'tab' }),

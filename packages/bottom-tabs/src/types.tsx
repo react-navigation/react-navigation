@@ -184,13 +184,6 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   tabBarAccessibilityLabel?: string;
 
   /**
-   * Large content title for the tab button.
-   * This is displayed when the user uses one of the Larger Text Accessibility Sizes and holds one of the tab buttons.
-   * Available on iOS 13+ only and react-native 0.76+
-   */
-  tabBarAccessibilityLargeContentTitle?: string;
-
-  /**
    * ID to locate this tab button in tests.
    */
   tabBarButtonTestID?: string;

@@ -185,7 +185,6 @@ export function BottomTabs() {
             title: 'Article',
             headerShown: false,
             tabBarIcon: getTabBarIcon('file-document'),
-            tabBarAccessibilityLargeContentTitle: 'Article',
           }}
         />
         <Tab.Screen
@@ -195,7 +194,6 @@ export function BottomTabs() {
             title: 'Chat',
             tabBarIcon: getTabBarIcon('message-reply'),
             tabBarBadge: 2,
-            tabBarAccessibilityLargeContentTitle: 'Chat',
           }}
         />
         <Tab.Screen
@@ -204,7 +202,6 @@ export function BottomTabs() {
           options={{
             title: 'Contacts',
             tabBarIcon: getTabBarIcon('contacts'),
-            tabBarAccessibilityLargeContentTitle: 'Contacts',
           }}
         />
         <Tab.Screen
@@ -212,7 +209,6 @@ export function BottomTabs() {
           component={AlbumsScreen}
           options={{
             title: 'Albums',
-            tabBarAccessibilityLargeContentTitle: 'Albums',
             headerTintColor: '#fff',
             headerTransparent: true,
             headerBackground: () => (
