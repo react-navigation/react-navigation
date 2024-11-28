@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.1.1...@react-navigation/core@7.1.2) (2024-11-28)
+
+### Bug Fixes
+
+* fix initial screen detection being skipped if parent has empty path ([8717bcf](https://github.com/react-navigation/react-navigation/commit/8717bcf1c77a6e3889cf82c81528049f0e283bfc)) - by @satya164
+
 ## [7.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.1.0...@react-navigation/core@7.1.1) (2024-11-27)
 
 ### Bug Fixes
