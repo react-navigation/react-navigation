@@ -146,6 +146,9 @@ const renderButtonDefault = (props: BottomTabBarButtonProps) => (
   <PlatformPressable {...props} />
 );
 
+// largeContentViewer is only available on iOS 13+
+const IOS_13 = Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 13;
+
 export function BottomTabItem({
   route,
   href,
@@ -169,7 +172,7 @@ export function BottomTabItem({
   activeBackgroundColor: customActiveBackgroundColor,
   inactiveBackgroundColor = 'transparent',
   showLabel = true,
-  allowFontScaling = false,
+  allowFontScaling = IOS_13 ? false : undefined,
   labelStyle,
   iconStyle,
   style,
