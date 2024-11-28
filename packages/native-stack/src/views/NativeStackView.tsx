@@ -146,6 +146,7 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
                           )
                         : headerLeft
                   }
+                  headerTransparent={headerTransparent}
                 />
               )
             }
