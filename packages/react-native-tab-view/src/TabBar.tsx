@@ -10,7 +10,6 @@ import {
   type PressableAndroidRippleConfig,
   type StyleProp,
   StyleSheet,
-  type TextStyle,
   View,
   type ViewStyle,
   type ViewToken,
@@ -52,7 +51,6 @@ export type Props<T extends Route> = SceneRendererProps & {
   tabStyle?: StyleProp<ViewStyle>;
   indicatorStyle?: StyleProp<ViewStyle>;
   indicatorContainerStyle?: StyleProp<ViewStyle>;
-  labelStyle?: StyleProp<TextStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   direction?: LocaleDirection;
