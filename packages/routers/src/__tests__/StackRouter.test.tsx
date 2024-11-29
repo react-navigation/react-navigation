@@ -343,6 +343,15 @@ test('handles navigate action', () => {
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
     ],
   });
+});
+
+test('updates params on navigate if already on the screen', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
 
   expect(
     router.getStateForAction(
@@ -355,7 +364,7 @@ test('handles navigate action', () => {
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
           { key: 'baz', name: 'baz' },
-          { key: 'bar', name: 'bar', params: { answer: 42 } },
+          { key: 'bar', name: 'bar', params: { answer: 42, color: 'tomato' } },
         ],
       },
       CommonActions.navigate('bar', { answer: 96 }),
@@ -371,6 +380,45 @@ test('handles navigate action', () => {
     routes: [
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar', params: { answer: 96 } },
+    ],
+  });
+});
+
+test('merges params on navigate when specified', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar', params: { color: 'tomato' } },
+        ],
+      },
+      CommonActions.navigate('bar', { answer: 96 }, true),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    preloadedRoutes: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar', params: { answer: 96, color: 'tomato' } },
     ],
   });
 });
@@ -453,6 +501,36 @@ test('ensures unique ID for navigate', () => {
         routes: [
           { key: 'bar', name: 'bar' },
           { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+        ],
+      },
+      CommonActions.navigate('bar', { foo: 'a' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    preloadedRoutes: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+          { key: 'bar', name: 'bar' },
         ],
       },
       CommonActions.navigate('bar', { foo: 'a' }),

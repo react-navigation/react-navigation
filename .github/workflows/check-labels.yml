@@ -16,7 +16,7 @@ jobs:
             const body = context.payload.issue.body;
 
             const packages = Array.from(
-              body.matchAll(/- \[x\] (@react-navigation\/([\S]+)|react-native-tab-view)/gim)
+              body.matchAll(/- \[x\] (@react-navigation\/([\S]+)|react-native-drawer-layout|react-native-tab-view)/gim)
             )
               .map((match) => match[1])
               .filter((name) =>
@@ -26,6 +26,7 @@ jobs:
                   'material-top-tabs',
                   'stack',
                   'native-stack',
+                  'react-native-drawer-layout',
                   'react-native-tab-view',
                 ].includes(name)
               )

@@ -158,9 +158,35 @@ export class StackView extends React.Component<Props, State> {
       // We only need to animate routes if the focused route changed
       // Animating previous routes won't be visible coz the focused route is on top of everything
 
-      if (!previousRoutes.some((r) => r.key === nextFocusedRoute.key)) {
-        // A new route has come to the focus, we treat this as a push
-        // A replace can also trigger this, the animation should look like push
+      if (
+        previousRoutes.some((r) => r.key === nextFocusedRoute.key) &&
+        !routes.some((r) => r.key === previousFocusedRoute.key)
+      ) {
+        // The previously focused route was removed, and the new focused route was already present
+        // We treat this as a pop
+
+        if (
+          isAnimationEnabled(previousFocusedRoute.key) &&
+          !closingRouteKeys.includes(previousFocusedRoute.key)
+        ) {
+          closingRouteKeys = [...closingRouteKeys, previousFocusedRoute.key];
+
+          // Sometimes a route can be closed before the opening animation finishes
+          // So we also need to remove it from the opening list
+          openingRouteKeys = openingRouteKeys.filter(
+            (key) => key !== previousFocusedRoute.key
+          );
+          replacingRouteKeys = replacingRouteKeys.filter(
+            (key) => key !== previousFocusedRoute.key
+          );
+
+          // Keep a copy of route being removed in the state to be able to animate it
+          routes = [...routes, previousFocusedRoute];
+        }
+      } else {
+        // A route has come to the focus, we treat this as a push
+        // A replace or rearranging can also trigger this
+        // The animation should look like push
 
         if (
           isAnimationEnabled(nextFocusedRoute.key) &&
@@ -217,31 +243,6 @@ export class StackView extends React.Component<Props, State> {
             }
           }
         }
-      } else if (!routes.some((r) => r.key === previousFocusedRoute.key)) {
-        // The previously focused route was removed, we treat this as a pop
-
-        if (
-          isAnimationEnabled(previousFocusedRoute.key) &&
-          !closingRouteKeys.includes(previousFocusedRoute.key)
-        ) {
-          closingRouteKeys = [...closingRouteKeys, previousFocusedRoute.key];
-
-          // Sometimes a route can be closed before the opening animation finishes
-          // So we also need to remove it from the opening list
-          openingRouteKeys = openingRouteKeys.filter(
-            (key) => key !== previousFocusedRoute.key
-          );
-          replacingRouteKeys = replacingRouteKeys.filter(
-            (key) => key !== previousFocusedRoute.key
-          );
-
-          // Keep a copy of route being removed in the state to be able to animate it
-          routes = [...routes, previousFocusedRoute];
-        }
-      } else {
-        // Looks like some routes were re-arranged and no focused routes were added/removed
-        // i.e. the currently focused route already existed and the previously focused route still exists
-        // We don't know how to animate this
       }
     } else if (replacingRouteKeys.length || closingRouteKeys.length) {
       // Keep the routes we are closing or replacing if animation is enabled for them

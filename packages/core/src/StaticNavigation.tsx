@@ -94,7 +94,7 @@ type StaticRouteConfig<
   Navigation,
 > = RouteConfigProps<
   ParamList,
-  string,
+  RouteName,
   State,
   ScreenOptions,
   EventMap,
@@ -542,15 +542,27 @@ export function createPathConfigForStaticNavigation(
               } else {
                 Object.assign(screenConfig, item.linking);
               }
+
+              if (typeof screenConfig.path === 'string') {
+                // Normalize the path to remove leading and trailing slashes
+                screenConfig.path = screenConfig.path
+                  .split('/')
+                  .filter(Boolean)
+                  .join('/');
+              }
             }
 
             let screens;
+
+            const skipInitialDetectionInChild =
+              skipInitialDetection ||
+              (screenConfig.path != null && screenConfig.path !== '');
 
             if ('config' in item) {
               screens = createPathConfigForTree(
                 item,
                 undefined,
-                skipInitialDetection || screenConfig.path != null
+                skipInitialDetectionInChild
               );
             } else if (
               'screen' in item &&
@@ -560,7 +572,7 @@ export function createPathConfigForStaticNavigation(
               screens = createPathConfigForTree(
                 item.screen,
                 undefined,
-                skipInitialDetection || screenConfig.path != null
+                skipInitialDetectionInChild
               );
             }
 
@@ -568,20 +580,17 @@ export function createPathConfigForStaticNavigation(
               screenConfig.screens = screens;
             }
 
-            if (auto && !screenConfig.screens && !('linking' in item)) {
-              if (screenConfig.path) {
-                if (!skipInitialDetection) {
-                  // Normalize the path to remove leading and trailing slashes
-                  const path = screenConfig.path
-                    ?.split('/')
-                    .filter(Boolean)
-                    .join('/');
-
+            if (
+              auto &&
+              !screenConfig.screens &&
+              // Skip generating path for screens that specify linking config as `undefined` or `null` explicitly
+              !('linking' in item && item.linking == null)
+            ) {
+              if (screenConfig.path != null) {
+                if (!skipInitialDetection && screenConfig.path === '') {
                   // We encounter a leaf screen with empty path,
                   // Clear the initial screen config as it's not needed anymore
-                  if (!skipInitialDetection && path === '') {
-                    initialScreenConfig = undefined;
-                  }
+                  initialScreenConfig = undefined;
                 }
               } else {
                 if (!skipInitialDetection && initialScreenConfig == null) {

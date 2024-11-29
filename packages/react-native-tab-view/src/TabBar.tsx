@@ -10,7 +10,6 @@ import {
   type PressableAndroidRippleConfig,
   type StyleProp,
   StyleSheet,
-  type TextStyle,
   View,
   type ViewStyle,
   type ViewToken,
@@ -52,7 +51,6 @@ export type Props<T extends Route> = SceneRendererProps & {
   tabStyle?: StyleProp<ViewStyle>;
   indicatorStyle?: StyleProp<ViewStyle>;
   indicatorContainerStyle?: StyleProp<ViewStyle>;
-  labelStyle?: StyleProp<TextStyle>;
   contentContainerStyle?: StyleProp<ViewStyle>;
   style?: StyleProp<ViewStyle>;
   direction?: LocaleDirection;
@@ -60,6 +58,8 @@ export type Props<T extends Route> = SceneRendererProps & {
   testID?: string;
   android_ripple?: PressableAndroidRippleConfig;
 };
+
+const useNativeDriver = Platform.OS !== 'web';
 
 const Separator = ({ width }: { width: number }) => {
   return <View style={{ width }} />;
@@ -596,7 +596,7 @@ export function TabBar<T extends Route>({
             },
           },
         ],
-        { useNativeDriver: true }
+        { useNativeDriver }
       ),
     [scrollAmount]
   );

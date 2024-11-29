@@ -64,7 +64,7 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   /**
    * Replace the current route with a new one.
    *
-   * @param name Route name of the new route.
+   * @param name Name of the new route.
    * @param [params] Params object for the new route.
    */
   replace<RouteName extends keyof ParamList>(
@@ -78,7 +78,7 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   /**
    * Push a new screen onto the stack.
    *
-   * @param name Name of the route for the tab.
+   * @param name Name of the route to push onto the stack.
    * @param [params] Params object for the route.
    */
   push<RouteName extends keyof ParamList>(
@@ -113,10 +113,10 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
         ?
             | [screen: Screen]
             | [screen: Screen, params: ParamList[Screen]]
-            | [screen: RouteName, params: ParamList[Screen], merge: boolean]
+            | [screen: Screen, params: ParamList[Screen], merge: boolean]
         :
             | [screen: Screen, params: ParamList[Screen]]
-            | [screen: RouteName, params: ParamList[Screen], merge: boolean];
+            | [screen: Screen, params: ParamList[Screen], merge: boolean];
     }[RouteName]
   ): void;
 };

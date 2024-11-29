@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.1.7...@react-navigation/elements@2.2.0) (2024-11-28)
+
+### Bug Fixes
+
+* make it possible to click through transparent header ([#12307](https://github.com/react-navigation/react-navigation/issues/12307)) ([bcac0e1](https://github.com/react-navigation/react-navigation/commit/bcac0e1046841af7941aeb5f0cd29ea5b4220483)) - by @hirbod
+
+### Features
+
+* support header style when header is transparent ([cdb5bfb](https://github.com/react-navigation/react-navigation/commit/cdb5bfbe9c83cdcdb0ea91896ea3da22f9657755)) - by @
+
+## [2.1.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.1.6...@react-navigation/elements@2.1.7) (2024-11-27)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.1.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.1.5...@react-navigation/elements@2.1.6) (2024-11-26)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.1.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.1.4...@react-navigation/elements@2.1.5) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.1.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.1.3...@react-navigation/elements@2.1.4) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.1.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.1.2...@react-navigation/elements@2.1.3) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.1.1...@react-navigation/elements@2.1.2) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/elements
+
 ## [2.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.1.0...@react-navigation/elements@2.1.1) (2024-11-22)
 
 **Note:** Version bump only for package @react-navigation/elements

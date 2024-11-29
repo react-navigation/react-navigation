@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.1.1...@react-navigation/core@7.1.2) (2024-11-28)
+
+### Bug Fixes
+
+* fix initial screen detection being skipped if parent has empty path ([8717bcf](https://github.com/react-navigation/react-navigation/commit/8717bcf1c77a6e3889cf82c81528049f0e283bfc)) - by @satya164
+
+## [7.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.1.0...@react-navigation/core@7.1.1) (2024-11-27)
+
+### Bug Fixes
+
+* fix initial screen detection if empty path is already present ([f3ae7a9](https://github.com/react-navigation/react-navigation/commit/f3ae7a94f152208c9ba83d7fa80a23a09bb8a9e3)) - by @satya164
+* fix linking.enable: auto not working with only groups ([1129071](https://github.com/react-navigation/react-navigation/commit/1129071c6f406d89138dff6154335f18bac8b6d7)) - by @satya164
+
+# [7.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.6...@react-navigation/core@7.1.0) (2024-11-26)
+
+### Features
+
+* add merge as third param to navigate and update tests ([b8bdd01](https://github.com/react-navigation/react-navigation/commit/b8bdd019b9e9381f7ae060eb3dd291b3bac3c4b7)) - by @
+
+## [7.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.5...@react-navigation/core@7.0.6) (2024-11-25)
+
+### Bug Fixes
+
+* fix getState returning outdated state when handling action ([1489a81](https://github.com/react-navigation/react-navigation/commit/1489a8160d5eabba9320d57d5c5a0bd3b5463ce5)), closes [#672735](https://github.com/react-navigation/react-navigation/issues/672735) - by @
+
+## [7.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.4...@react-navigation/core@7.0.5) (2024-11-25)
+
+### Bug Fixes
+
+* fix incorrect dep array when clearing state ([5a6988b](https://github.com/react-navigation/react-navigation/commit/5a6988b4408919ac1cbb0316ddea678120917bd6)), closes [#12296](https://github.com/react-navigation/react-navigation/issues/12296) - by @
+
 ## [7.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.3...@react-navigation/core@7.0.4) (2024-11-22)
 
 ### Bug Fixes

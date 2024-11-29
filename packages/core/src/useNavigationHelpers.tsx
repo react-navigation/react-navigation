@@ -21,6 +21,7 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
   getState: () => State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
+  stateRef: React.RefObject<State | null>;
 };
 
 /**
@@ -38,6 +39,7 @@ export function useNavigationHelpers<
   getState,
   emitter,
   router,
+  stateRef,
 }: Options<State, Action>) {
   const onUnhandledAction = React.useContext(UnhandledActionContext);
   const parentNavigationHelpers = React.useContext(NavigationContext);
@@ -99,17 +101,29 @@ export function useNavigationHelpers<
 
         return parentNavigationHelpers;
       },
-      getState,
+      getState: (): State => {
+        // FIXME: Workaround for when the state is read during render
+        // By this time, we haven't committed the new state yet
+        // Without this `useSyncExternalStore` will keep reading the old state
+        // This may result in `useNavigationState` or `useIsFocused` returning wrong values
+        // Apart from `useSyncExternalStore`, `getState` should never be called during render
+        if (stateRef.current != null) {
+          return stateRef.current;
+        }
+
+        return getState();
+      },
     } as NavigationHelpers<ParamListBase, EventMap> & ActionHelpers;
 
     return navigationHelpers;
   }, [
-    navigatorId,
+    router,
+    parentNavigationHelpers,
     emitter.emit,
     getState,
     onAction,
     onUnhandledAction,
-    parentNavigationHelpers,
-    router,
+    navigatorId,
+    stateRef,
   ]);
 }

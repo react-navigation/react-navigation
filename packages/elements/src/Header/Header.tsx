@@ -1,4 +1,5 @@
 import { useNavigation, useTheme } from '@react-navigation/native';
+import Color from 'color';
 import * as React from 'react';
 import {
   Animated,
@@ -228,21 +229,24 @@ export function Header(props: Props) {
     }
   }
 
-  const backgroundStyle = [
-    safeStyles,
-    headerShadowVisible === false && {
-      elevation: 0,
+  const backgroundStyle = {
+    ...(headerTransparent && { backgroundColor: 'transparent' }),
+    ...((headerTransparent || headerShadowVisible === false) && {
       borderBottomWidth: 0,
       ...Platform.select({
-        default: {
-          shadowOpacity: 0,
+        android: {
+          elevation: 0,
         },
         web: {
           boxShadow: 'none',
         },
+        default: {
+          shadowOpacity: 0,
+        },
       }),
-    },
-  ];
+    }),
+    ...safeStyles,
+  };
 
   const iconTintColor =
     headerTintColor ??
@@ -294,8 +298,18 @@ export function Header(props: Props) {
       >
         {headerBackground ? (
           headerBackground({ style: backgroundStyle })
-        ) : headerTransparent ? null : (
-          <HeaderBackground style={backgroundStyle} />
+        ) : (
+          <HeaderBackground
+            pointerEvents={
+              // Allow touch through the header when background color is transparent
+              headerTransparent &&
+              (backgroundStyle.backgroundColor === 'transparent' ||
+                Color(backgroundStyle.backgroundColor).alpha() === 0)
+                ? 'none'
+                : 'auto'
+            }
+            style={backgroundStyle}
+          />
         )}
       </Animated.View>
       <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
@@ -375,12 +389,7 @@ export function Header(props: Props) {
                   pressOpacity={headerPressOpacity}
                   onPress={() => setSearchBarVisible(true)}
                 >
-                  <HeaderIcon
-                    style={
-                      Boolean(iconTintColor) && { tintColor: iconTintColor }
-                    }
-                    source={searchIcon}
-                  />
+                  <HeaderIcon source={searchIcon} tintColor={iconTintColor} />
                 </HeaderButton>
               ) : null}
             </Animated.View>

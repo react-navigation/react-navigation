@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.13...@react-navigation/material-top-tabs@7.0.14) (2024-11-28)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.0.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.12...@react-navigation/material-top-tabs@7.0.13) (2024-11-27)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.0.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.11...@react-navigation/material-top-tabs@7.0.12) (2024-11-26)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.0.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.10...@react-navigation/material-top-tabs@7.0.11) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.0.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.9...@react-navigation/material-top-tabs@7.0.10) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.0.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.8...@react-navigation/material-top-tabs@7.0.9) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.0.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.7...@react-navigation/material-top-tabs@7.0.8) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
 ## [7.0.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.0.6...@react-navigation/material-top-tabs@7.0.7) (2024-11-22)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

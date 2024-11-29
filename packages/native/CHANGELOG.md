@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.8...@react-navigation/native@7.0.9) (2024-11-28)
+
+**Note:** Version bump only for package @react-navigation/native
+
+## [7.0.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.7...@react-navigation/native@7.0.8) (2024-11-27)
+
+### Bug Fixes
+
+* fix linking.enable: auto not working with only groups ([1129071](https://github.com/react-navigation/react-navigation/commit/1129071c6f406d89138dff6154335f18bac8b6d7)) - by @satya164
+
+## [7.0.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.6...@react-navigation/native@7.0.7) (2024-11-26)
+
+**Note:** Version bump only for package @react-navigation/native
+
+## [7.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.5...@react-navigation/native@7.0.6) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/native
+
+## [7.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.4...@react-navigation/native@7.0.5) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/native
+
 ## [7.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.3...@react-navigation/native@7.0.4) (2024-11-22)
 
 **Note:** Version bump only for package @react-navigation/native

@@ -34,6 +34,8 @@ const INPUT_TYPE_TO_MODE = {
   email: 'email',
 } as const;
 
+const useNativeDriver = Platform.OS !== 'web';
+
 function HeaderSearchBarInternal(
   {
     visible,
@@ -70,7 +72,7 @@ function HeaderSearchBarInternal(
     Animated.timing(visibleAnim, {
       toValue: visible ? 1 : 0,
       duration: 100,
-      useNativeDriver: true,
+      useNativeDriver,
     }).start(({ finished }) => {
       if (finished) {
         setRendered(visible);
@@ -93,7 +95,7 @@ function HeaderSearchBarInternal(
     Animated.timing(clearVisibleAnim, {
       toValue: hasText ? 1 : 0,
       duration: 100,
-      useNativeDriver: true,
+      useNativeDriver,
     }).start(({ finished }) => {
       if (finished) {
         clearVisibleValueRef.current = hasText;
@@ -196,7 +198,8 @@ function HeaderSearchBarInternal(
             <Image
               source={clearIcon}
               resizeMode="contain"
-              style={[styles.clearIcon, { tintColor: colors.text }]}
+              tintColor={colors.text}
+              style={styles.clearIcon}
             />
           </PlatformPressable>
         ) : null}

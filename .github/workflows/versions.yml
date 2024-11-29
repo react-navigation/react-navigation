@@ -24,17 +24,5 @@ jobs:
             @react-navigation/material-top-tabs
             @react-navigation/routers
             @react-navigation/stack
+            react-native-drawer-layout
             react-native-tab-view
-
-      - uses: react-navigation/check-versions-action@v1.0.0
-        if: contains(github.event.issue.labels.*.name, 'version-4')
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          required-packages: |
-            react-navigation
-          optional-packages: |
-            react-navigation-animated-switch
-            react-navigation-drawer
-            react-navigation-material-bottom-tabs
-            react-navigation-stack
-            react-navigation-tabs

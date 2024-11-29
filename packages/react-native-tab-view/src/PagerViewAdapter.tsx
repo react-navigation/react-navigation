@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Animated, Keyboard, StyleSheet } from 'react-native';
+import { Animated, Keyboard, Platform, StyleSheet } from 'react-native';
 import ViewPager, {
   type PageScrollStateChangedNativeEvent,
 } from 'react-native-pager-view';
@@ -33,6 +33,8 @@ type Props<T extends Route> = PagerProps & {
     }
   ) => React.ReactElement;
 };
+
+const useNativeDriver = Platform.OS !== 'web';
 
 export function PagerViewAdapter<T extends Route>({
   keyboardDismissMode = 'auto',
@@ -157,7 +159,7 @@ export function PagerViewAdapter<T extends Route>({
               },
             },
           ],
-          { useNativeDriver: true }
+          { useNativeDriver }
         )}
         onPageSelected={(e) => {
           const index = e.nativeEvent.position;

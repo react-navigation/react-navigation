@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.9...@react-navigation/native-stack@7.1.10) (2024-11-28)
+
+### Bug Fixes
+
+* fix headerTransparent not making the header transparent ([b3222e0](https://github.com/react-navigation/react-navigation/commit/b3222e0e3de2e5f9728ef341d165018d5e2a09a1)) - by @
+
+## [7.1.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.8...@react-navigation/native-stack@7.1.9) (2024-11-27)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.1.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.7...@react-navigation/native-stack@7.1.8) (2024-11-26)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.1.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.6...@react-navigation/native-stack@7.1.7) (2024-11-25)
+
+### Bug Fixes
+
+* pass back label to headerLeft on native ([be45804](https://github.com/react-navigation/react-navigation/commit/be458044f3b82369a38c5addc7ab9b1ca5d673e3)) - by @
+
+## [7.1.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.5...@react-navigation/native-stack@7.1.6) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.1.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.4...@react-navigation/native-stack@7.1.5) (2024-11-25)
+
+### Bug Fixes
+
+* provide correct navigation and route objects to header ([701d38b](https://github.com/react-navigation/react-navigation/commit/701d38b46bc6632895eece5fa1c16f14090043d6)), closes [#12293](https://github.com/react-navigation/react-navigation/issues/12293) - by @
+
+## [7.1.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.3...@react-navigation/native-stack@7.1.4) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.1.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.2...@react-navigation/native-stack@7.1.3) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.1...@react-navigation/native-stack@7.1.2) (2024-11-25)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
 ## [7.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.0...@react-navigation/native-stack@7.1.1) (2024-11-22)
 
 ### Bug Fixes
