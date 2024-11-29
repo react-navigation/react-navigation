@@ -1750,3 +1750,84 @@ test('handles path at top level', () => {
     getPathFromState<object>(getStateFromPath<object>(path, config)!, config)
   ).toEqual(path);
 });
+
+test('ignores regexp patterns when provided', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo/:id(\\d+)',
+        parse: {
+          id: Number,
+        },
+      },
+      Bar: {
+        path: 'foo/:id([a-z]+)',
+      },
+      Baz: {
+        path: 'foo/:id(\\d+)/:name([a-z]+)',
+      },
+      Qux: {
+        path: 'foo/:id(@[a-z]+)',
+        stringify: {
+          id: (id: string) => `@${id}`,
+        },
+      },
+    },
+  };
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Foo',
+            params: { id: 42 },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/42');
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Bar',
+            params: { id: 'bar' },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/bar');
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Baz',
+            params: { id: 42, name: 'bar' },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/42/bar');
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Qux',
+            params: { id: 'bar' },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/@bar');
+});

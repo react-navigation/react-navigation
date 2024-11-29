@@ -16,7 +16,7 @@ type Options<ParamList extends {}> = {
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
-type StringifyConfig = Record<string, (value: any) => string>;
+type StringifyConfig = Record<string, (value: unknown) => string>;
 
 type ConfigItem = {
   pattern?: string;
@@ -91,7 +91,7 @@ export function getPathFromState<ParamList extends {}>(
 ): string {
   if (state == null) {
     throw Error(
-      "Got 'undefined' for the navigation state. You must pass a valid state object."
+      `Got '${String(state)}' for the navigation state. You must pass a valid state object.`
     );
   }
 
@@ -104,7 +104,7 @@ export function getPathFromState<ParamList extends {}>(
   let path = '/';
   let current: State | undefined = state;
 
-  const allParams: Record<string, any> = {};
+  const allParams: Record<string, string> = {};
 
   while (current) {
     let index = typeof current.index === 'number' ? current.index : 0;
@@ -114,9 +114,10 @@ export function getPathFromState<ParamList extends {}>(
 
     let pattern: string | undefined;
 
-    let focusedParams: Record<string, any> | undefined;
-    const focusedRoute = getActiveRoute(state);
+    let focusedParams: Record<string, string> | undefined;
     let currentOptions = configs;
+
+    const focusedRoute = getActiveRoute(state);
 
     // Keep all the route names that appeared during going deeper in config in case the pattern is resolved to undefined
     const nestedRouteNames = [];
@@ -194,8 +195,6 @@ export function getPathFromState<ParamList extends {}>(
       path += pattern
         .split('/')
         .map((p) => {
-          const name = getParamName(p);
-
           // We don't know what to show for wildcard patterns
           // Showing the route name seems ok, though whatever we show here will be incorrect
           // Since the page doesn't actually exist
@@ -205,6 +204,7 @@ export function getPathFromState<ParamList extends {}>(
 
           // If the path has a pattern for a param, put the param in the path
           if (p.startsWith(':')) {
+            const name = getParamName(p);
             const value = allParams[name];
 
             if (value === undefined && p.endsWith('?')) {
@@ -227,8 +227,13 @@ export function getPathFromState<ParamList extends {}>(
       path += encodeURIComponent(route.name);
     }
 
-    if (!focusedParams) {
-      focusedParams = focusedRoute.params;
+    if (!focusedParams && focusedRoute.params) {
+      focusedParams = Object.fromEntries(
+        Object.entries(focusedRoute.params).map(([key, value]) => [
+          key,
+          String(value),
+        ])
+      );
     }
 
     if (route.state) {
@@ -263,8 +268,17 @@ export function getPathFromState<ParamList extends {}>(
   return path;
 }
 
-const getParamName = (pattern: string) =>
-  pattern.replace(/^:/, '').replace(/\?$/, '');
+const getParamName = (pattern: string): string => {
+  pattern = pattern.replace(/^:/, '').replace(/\?$/, '');
+
+  if (pattern.includes('(')) {
+    const [name] = pattern.split(/\((.+)\)$/);
+
+    return name;
+  } else {
+    return pattern;
+  }
+};
 
 const joinPaths = (...paths: string[]): string =>
   ([] as string[])

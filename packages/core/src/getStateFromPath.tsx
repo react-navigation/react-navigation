@@ -16,7 +16,7 @@ type Options<ParamList extends {}> = {
   screens: PathConfigMap<ParamList>;
 };
 
-type ParseConfig = Record<string, (value: string) => any>;
+type ParseConfig = Record<string, (value: string) => unknown>;
 
 type RouteConfig = {
   screen: string;
@@ -39,7 +39,7 @@ type ResultState = PartialState<NavigationState> & {
 type ParsedRoute = {
   name: string;
   path?: string;
-  params?: Record<string, any> | undefined;
+  params?: Record<string, unknown> | undefined;
 };
 
 type ConfigResources = {
@@ -256,29 +256,47 @@ function getNormalizedConfigs(
       const bParts = b.pattern.split('/');
 
       for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
-        // if b is longer, b get higher priority
+        // if b is longer, b gets higher priority
         if (aParts[i] == null) {
           return 1;
         }
-        // if a is longer, a get higher priority
+
+        // if a is longer, a gets higher priority
         if (bParts[i] == null) {
           return -1;
         }
+
         const aWildCard = aParts[i] === '*' || aParts[i].startsWith(':');
         const bWildCard = bParts[i] === '*' || bParts[i].startsWith(':');
-        // if both are wildcard we compare next component
-        if (aWildCard && bWildCard) {
+        const aRegex = aParts[i].startsWith(':') && aParts[i].includes('(');
+        const bRegex = bParts[i].startsWith(':') && bParts[i].includes('(');
+
+        // if both are wildcard & regex we compare next component
+        if (aWildCard && bWildCard && aRegex && bRegex) {
           continue;
         }
-        // if only a is wild card, b get higher priority
-        if (aWildCard) {
+
+        // if only a has regex, a gets higher priority
+        if (aRegex && !bRegex) {
+          return -1;
+        }
+
+        // if only b has regex, b gets higher priority
+        if (bRegex && !aRegex) {
           return 1;
         }
-        // if only b is wild card, a get higher priority
-        if (bWildCard) {
+
+        // if only a is wildcard, b gets higher priority
+        if (aWildCard && !bWildCard) {
+          return 1;
+        }
+
+        // if only b is wildcard, a gets higher priority
+        if (bWildCard && !aWildCard) {
           return -1;
         }
       }
+
       return bParts.length - aParts.length;
     });
 }
@@ -478,8 +496,17 @@ const createConfigItem = (
     .map(({ screen, path }) => {
       return path.split('/').map((it) => {
         if (it.startsWith(':')) {
-          const name = it.replace(/^:/, '').replace(/\?$/, '');
-          const reg = '[^/]+';
+          let name, reg;
+
+          if (it.includes('(')) {
+            [name, reg] = it
+              .replace(/^:/, '')
+              .replace(/\?$/, '')
+              .split(/\((.+)\)$/);
+          } else {
+            name = it.replace(/^:/, '').replace(/\?$/, '');
+            reg = '[^/]+';
+          }
 
           return {
             screen,
@@ -651,10 +678,10 @@ const createNestedStateObject = (
 
 const parseQueryParams = (
   path: string,
-  parseConfig?: Record<string, (value: string) => any>
+  parseConfig?: Record<string, (value: string) => unknown>
 ) => {
   const query = path.split('?')[1];
-  const params = queryString.parse(query);
+  const params: Record<string, unknown> = queryString.parse(query);
 
   if (parseConfig) {
     Object.keys(params).forEach((name) => {
@@ -662,7 +689,7 @@ const parseQueryParams = (
         Object.hasOwnProperty.call(parseConfig, name) &&
         typeof params[name] === 'string'
       ) {
-        params[name] = parseConfig[name](params[name] as string);
+        params[name] = parseConfig[name](params[name]);
       }
     });
   }

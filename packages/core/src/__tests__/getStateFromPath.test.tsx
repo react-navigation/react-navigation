@@ -2819,3 +2819,106 @@ test('parses / same as empty string', () => {
     getStateFromPath<object>('', config)
   );
 });
+
+test('matches regexp patterns when provided', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo/:id(\\d+)',
+        parse: {
+          id: Number,
+        },
+      },
+      Bar: {
+        path: 'foo/:id([a-z]+)',
+      },
+      Baz: {
+        path: 'foo/:id(\\d+)/:name([a-z]+)',
+      },
+      Qux: {
+        path: 'foo/:id(@[a-z]+)',
+        parse: {
+          id: (id: string) => id.slice(1),
+        },
+      },
+      Quy: {
+        path: 'foo/bar/:category',
+      },
+      Quz: {
+        path: 'foo/bar/:special([a-z]+)',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: 42 },
+        path: 'foo/42',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/bar', config)).toEqual({
+    routes: [
+      {
+        name: 'Bar',
+        params: { id: 'bar' },
+        path: 'foo/bar',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/42/bar', config)).toEqual({
+    routes: [
+      {
+        name: 'Baz',
+        params: { id: '42', name: 'bar' },
+        path: 'foo/42/bar',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/@bar', config)).toEqual({
+    routes: [
+      {
+        name: 'Qux',
+        params: { id: 'bar' },
+        path: 'foo/@bar',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/@bar', config)).toEqual({
+    routes: [
+      {
+        name: 'Qux',
+        params: { id: 'bar' },
+        path: 'foo/@bar',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/42a', config)).toBeUndefined();
+
+  expect(getStateFromPath<object>('foo/bar/123', config)).toEqual({
+    routes: [
+      {
+        name: 'Quy',
+        params: { category: '123' },
+        path: 'foo/bar/123',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/bar/baz', config)).toEqual({
+    routes: [
+      {
+        name: 'Quz',
+        params: { special: 'baz' },
+        path: 'foo/bar/baz',
+      },
+    ],
+  });
+});
