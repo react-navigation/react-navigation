@@ -687,7 +687,7 @@ test('automatically generates paths if auto is specified', () => {
 
   expect(getStateFromPath('/', { screens })).toEqual({
     routes: [
-      { name: 'NestedA', state: { routes: [{ name: 'Home', path: '/' }] } },
+      { name: 'NestedA', state: { routes: [{ name: 'Home', path: '' }] } },
     ],
   });
 
@@ -898,7 +898,7 @@ test('use initialRouteName for the automatic home screen', () => {
 
   expect(getStateFromPath('/', { screens })).toEqual({
     routes: [
-      { name: 'NestedA', state: { routes: [{ name: 'Profile', path: '/' }] } },
+      { name: 'NestedA', state: { routes: [{ name: 'Profile', path: '' }] } },
     ],
   });
 

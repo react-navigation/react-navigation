@@ -1044,7 +1044,7 @@ test('returns matching screen if path is empty', () => {
   expect(getStateFromPath<object>(path, config)).toEqual(state);
   expect(
     getStateFromPath<object>(getPathFromState<object>(state, config), config)
-  ).toEqual(changePath(state, '/'));
+  ).toEqual(changePath(state, ''));
 });
 
 test('returns matching screen if path is only slash', () => {
@@ -1074,7 +1074,7 @@ test('returns matching screen if path is only slash', () => {
             {
               name: 'Bar',
               state: {
-                routes: [{ name: 'Qux', path }],
+                routes: [{ name: 'Qux', path: '' }],
               },
             },
           ],
@@ -1086,7 +1086,7 @@ test('returns matching screen if path is only slash', () => {
   expect(getStateFromPath<object>(path, config)).toEqual(state);
   expect(
     getStateFromPath<object>(getPathFromState<object>(state, config), config)
-  ).toEqual(changePath(state, '/'));
+  ).toEqual(changePath(state, ''));
 });
 
 test('returns matching screen with params if path is empty', () => {
