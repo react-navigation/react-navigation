@@ -1831,3 +1831,27 @@ test('ignores regexp patterns when provided', () => {
     )
   ).toBe('/foo/@bar');
 });
+
+test('correctly handles regex pattern with slash', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo/:id([a-z]+\\/)',
+      },
+    },
+  };
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Foo',
+            params: { id: 'bar' },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/bar');
+});

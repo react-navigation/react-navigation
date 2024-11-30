@@ -6,7 +6,10 @@ import type {
 import escape from 'escape-string-regexp';
 import * as queryString from 'query-string';
 
+import { arrayStartsWith } from './arrayStartsWith';
 import { findFocusedRoute } from './findFocusedRoute';
+import { getPatternParts, type PatternPart } from './getPatternParts';
+import { isArrayEqual } from './isArrayEqual';
 import type { PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
@@ -21,8 +24,8 @@ type ParseConfig = Record<string, (value: string) => unknown>;
 type RouteConfig = {
   screen: string;
   regex?: RegExp;
-  pattern: string;
-  params: { screen: string; name?: string }[];
+  segments: string[];
+  params: { screen: string; name?: string; index: number }[];
   routeNames: string[];
   parse?: ParseConfig;
 };
@@ -121,7 +124,7 @@ export function getStateFromPath<ParamList extends {}>(
   if (remaining === '/') {
     // We need to add special handling of empty path so navigation to empty path also works
     // When handling empty path, we should only look at the root level config
-    const match = configs.find((config) => config.pattern === '');
+    const match = configs.find((config) => config.segments.join('/') === '');
 
     if (match) {
       return createNestedStateObject(
@@ -238,38 +241,39 @@ function getNormalizedConfigs(
 
       // If 2 patterns are same, move the one with less route names up
       // This is an error state, so it's only useful for consistent error messages
-      if (a.pattern === b.pattern) {
+      if (isArrayEqual(a.segments, b.segments)) {
         return b.routeNames.join('>').localeCompare(a.routeNames.join('>'));
       }
 
       // If one of the patterns starts with the other, it's more exhaustive
       // So move it up
-      if (a.pattern.startsWith(b.pattern)) {
+      if (arrayStartsWith(a.segments, b.segments)) {
         return -1;
       }
 
-      if (b.pattern.startsWith(a.pattern)) {
+      if (arrayStartsWith(b.segments, a.segments)) {
         return 1;
       }
 
-      const aParts = a.pattern.split('/');
-      const bParts = b.pattern.split('/');
-
-      for (let i = 0; i < Math.max(aParts.length, bParts.length); i++) {
+      for (let i = 0; i < Math.max(a.segments.length, b.segments.length); i++) {
         // if b is longer, b gets higher priority
-        if (aParts[i] == null) {
+        if (a.segments[i] == null) {
           return 1;
         }
 
         // if a is longer, a gets higher priority
-        if (bParts[i] == null) {
+        if (b.segments[i] == null) {
           return -1;
         }
 
-        const aWildCard = aParts[i] === '*' || aParts[i].startsWith(':');
-        const bWildCard = bParts[i] === '*' || bParts[i].startsWith(':');
-        const aRegex = aParts[i].startsWith(':') && aParts[i].includes('(');
-        const bRegex = bParts[i].startsWith(':') && bParts[i].includes('(');
+        const aWildCard =
+          a.segments[i] === '*' || a.segments[i].startsWith(':');
+        const bWildCard =
+          b.segments[i] === '*' || b.segments[i].startsWith(':');
+        const aRegex =
+          a.segments[i].startsWith(':') && a.segments[i].includes('(');
+        const bRegex =
+          b.segments[i].startsWith(':') && b.segments[i].includes('(');
 
         // if both are wildcard & regex we compare next component
         if (aWildCard && bWildCard && aRegex && bRegex) {
@@ -297,15 +301,17 @@ function getNormalizedConfigs(
         }
       }
 
-      return bParts.length - aParts.length;
+      return a.segments.length - b.segments.length;
     });
 }
 
 function checkForDuplicatedConfigs(configs: RouteConfig[]) {
   // Check for duplicate patterns in the config
   configs.reduce<Record<string, RouteConfig>>((acc, config) => {
-    if (acc[config.pattern]) {
-      const a = acc[config.pattern].routeNames;
+    const pattern = config.segments.join('/');
+
+    if (acc[pattern]) {
+      const a = acc[pattern].routeNames;
       const b = config.routeNames;
 
       // It's not a problem if the path string omitted from a inner most screen
@@ -318,7 +324,7 @@ function checkForDuplicatedConfigs(configs: RouteConfig[]) {
       if (!intersects) {
         throw new Error(
           `Found conflicting screens with the same pattern. The pattern '${
-            config.pattern
+            pattern
           }' resolves to both '${a.join(' > ')}' and '${b.join(
             ' > '
           )}'. Patterns must be unique and cannot resolve to more than one screen.`
@@ -327,7 +333,7 @@ function checkForDuplicatedConfigs(configs: RouteConfig[]) {
     }
 
     return Object.assign(acc, {
-      [config.pattern]: config,
+      [pattern]: config,
     });
   }, {});
 }
@@ -357,7 +363,10 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
       routes = config.routeNames.map((routeName) => {
         const routeConfig = configs.find((c) => {
           // Check matching name AND pattern in case same screen is used at different levels in config
-          return c.screen === routeName && config.pattern.startsWith(c.pattern);
+          return (
+            c.screen === routeName &&
+            arrayStartsWith(config.segments, c.segments)
+          );
         });
 
         const params =
@@ -366,7 +375,9 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
                 Object.entries(match.groups)
                   .map(([key, value]) => {
                     const index = Number(key.replace('param_', ''));
-                    const param = routeConfig.params[index];
+                    const param = routeConfig.params.find(
+                      (it) => it.index === index
+                    );
 
                     if (param?.screen === routeName && param?.name) {
                       return [param.name, value];
@@ -484,64 +495,46 @@ const createConfigItem = (
   paths: { screen: string; path: string }[],
   parse?: ParseConfig
 ): RouteConfig => {
-  paths = paths
-    // Normalize pattern and path to remove any leading, trailing slashes, duplicate slashes etc.
-    .map(({ screen, path }) => ({
-      screen,
-      path: path?.split('/').filter(Boolean).join('/'),
-    }))
-    .filter((it) => it.path);
+  const parts: (PatternPart & { screen: string })[] = [];
 
-  const params = paths
-    .map(({ screen, path }) => {
-      return path.split('/').map((it) => {
-        if (it.startsWith(':')) {
-          let name, reg;
+  // Parse the path string into parts for easier matching
+  for (const { screen, path } of paths) {
+    parts.push(...getPatternParts(path).map((part) => ({ ...part, screen })));
+  }
 
-          if (it.includes('(')) {
-            [name, reg] = it
-              .replace(/^:/, '')
-              .replace(/\?$/, '')
-              .split(/\((.+)\)$/);
-          } else {
-            name = it.replace(/^:/, '').replace(/\?$/, '');
-            reg = '[^/]+';
-          }
-
-          return {
-            screen,
-            name,
-            reg,
-            optional: it.endsWith('?'),
-          };
-        }
-
-        return {
-          screen,
-          reg: `${it === '*' ? '.*' : escape(it)}\\/`,
-        };
-      });
-    })
-    .flat(1);
-
-  const regex = params.length
+  const regex = parts.length
     ? new RegExp(
-        `^(${params
+        `^(${parts
           .map((it, i) => {
-            if (it.name) {
-              return `(((?<param_${i}>${it.reg})\\/)${it.optional ? '?' : ''})`;
+            if (it.param) {
+              const reg = it.regex || '[^/]+';
+
+              return `(((?<param_${i}>${reg})\\/)${it.optional ? '?' : ''})`;
             }
 
-            return it.reg;
+            return `${it.segment === '*' ? '.*' : escape(it.segment)}\\/`;
           })
           .join('')})`
       )
     : undefined;
 
+  const segments = parts.map((it) => it.segment);
+  const params = parts
+    .map((it, i) =>
+      it.param
+        ? {
+            index: i,
+            screen: it.screen,
+            name: it.param,
+          }
+        : null
+    )
+    .filter((it) => it != null);
+
   return {
     screen,
     regex,
-    pattern: paths.map(({ path }) => path).join('/'),
+    segments,
     params,
     routeNames,
     parse,

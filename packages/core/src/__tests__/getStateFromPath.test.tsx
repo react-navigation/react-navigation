@@ -2922,3 +2922,19 @@ test('matches regexp patterns when provided', () => {
     ],
   });
 });
+
+test("regexp pattern doesn't match slash", () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo/:id([a-z]+\\/)',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/bar/', config)).toBeUndefined();
+
+  expect(getStateFromPath<object>('foo/bar/baz', config)).toBeUndefined();
+
+  expect(getStateFromPath<object>('foo/bar/baz/qux', config)).toBeUndefined();
+});
