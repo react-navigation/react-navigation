@@ -126,6 +126,7 @@ type Props = {
   showLabel?: boolean;
   /**
    * Whether to allow scaling the font for the label for accessibility purposes.
+   * Defaults to `false` on iOS 13+ where it uses `largeContentTitle`.
    */
   allowFontScaling?: boolean;
   /**
@@ -146,8 +147,8 @@ const renderButtonDefault = (props: BottomTabBarButtonProps) => (
   <PlatformPressable {...props} />
 );
 
-// largeContentViewer is only available on iOS 13+
-const IOS_13 = Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 13;
+const SUPPORTS_LARGE_CONTENT_VIEWER =
+  Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 13;
 
 export function BottomTabItem({
   route,
@@ -172,7 +173,10 @@ export function BottomTabItem({
   activeBackgroundColor: customActiveBackgroundColor,
   inactiveBackgroundColor = 'transparent',
   showLabel = true,
-  allowFontScaling = IOS_13 ? false : undefined,
+  // On iOS 13+, we use `largeContentTitle` for accessibility
+  // So we don't need the font to scale up
+  // https://developer.apple.com/documentation/uikit/uiview/3183939-largecontenttitle
+  allowFontScaling = SUPPORTS_LARGE_CONTENT_VIEWER ? false : undefined,
   labelStyle,
   iconStyle,
   style,
@@ -330,9 +334,9 @@ export function BottomTabItem({
         onPress,
         onLongPress,
         testID,
-        accessibilityShowsLargeContentViewer: true,
-        accessibilityLargeContentTitle: labelString,
         accessibilityLabel,
+        accessibilityLargeContentTitle: labelString,
+        accessibilityShowsLargeContentViewer: true,
         // FIXME: accessibilityRole: 'tab' doesn't seem to work as expected on iOS
         accessibilityRole: Platform.select({ ios: 'button', default: 'tab' }),
         accessibilityState: { selected: focused },

@@ -6,14 +6,11 @@ import {
   Platform,
   type StyleProp,
   StyleSheet,
+  type TextProps,
   type TextStyle,
 } from 'react-native';
 
-type Props = {
-  /**
-   * Whether the font should scale to respect Text Size accessibility settings.
-   */
-  allowFontScaling?: boolean;
+type Props = TextProps & {
   /**
    * Whether the badge is visible
    */
