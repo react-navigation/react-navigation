@@ -281,6 +281,16 @@ function getNormalizedConfigs(
           continue;
         }
 
+        // if only a is wildcard, b gets higher priority
+        if (aWildCard && !bWildCard) {
+          return 1;
+        }
+
+        // if only b is wildcard, a gets higher priority
+        if (bWildCard && !aWildCard) {
+          return -1;
+        }
+
         // If only a has a param, b gets higher priority
         if (aParam && !bParam) {
           return 1;
@@ -299,16 +309,6 @@ function getNormalizedConfigs(
         // if only b has regex, b gets higher priority
         if (bRegex && !aRegex) {
           return 1;
-        }
-
-        // if only a is wildcard, b gets higher priority
-        if (aWildCard && !bWildCard) {
-          return 1;
-        }
-
-        // if only b is wildcard, a gets higher priority
-        if (bWildCard && !aWildCard) {
-          return -1;
         }
       }
 

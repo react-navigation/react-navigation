@@ -2850,6 +2850,9 @@ test('matches regexp patterns when provided', () => {
       Quu: {
         path: 'foo/bar/baz',
       },
+      NotFound: {
+        path: 'foo/bar/*',
+      },
     },
   };
 
@@ -2932,6 +2935,10 @@ test('matches regexp patterns when provided', () => {
         path: 'foo/bar/baz',
       },
     ],
+  });
+
+  expect(getStateFromPath<object>('foo/bar/hello/world', config)).toEqual({
+    routes: [{ name: 'NotFound', path: 'foo/bar/hello/world' }],
   });
 });
 
