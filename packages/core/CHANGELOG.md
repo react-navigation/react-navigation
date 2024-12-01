@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.2.0...@react-navigation/core@7.2.1) (2024-12-01)
+
+### Bug Fixes
+
+* prioritize segements without param ([f68767c](https://github.com/react-navigation/react-navigation/commit/f68767cff386f70971a3289c61d3a70bd8afdc9f)) - by @
+
 # [7.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.1.2...@react-navigation/core@7.2.0) (2024-12-01)
 
 ### Bug Fixes
