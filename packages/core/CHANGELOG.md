@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.1.2...@react-navigation/core@7.2.0) (2024-12-01)
+
+### Bug Fixes
+
+* make sure paths start with a slash. fixes [#12163](https://github.com/react-navigation/react-navigation/issues/12163) ([e89ae7a](https://github.com/react-navigation/react-navigation/commit/e89ae7a25dcf5cf5c1c0447e3835dacf66e39e53)) - by @satya164
+
+### Features
+
+* add support for regex to linking config ([cf7c16e](https://github.com/react-navigation/react-navigation/commit/cf7c16e789b70704a393fe605273c4444f833bd3)) - by @satya164
+
 ## [7.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.1.1...@react-navigation/core@7.1.2) (2024-11-28)
 
 ### Bug Fixes

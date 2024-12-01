@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.14...@react-navigation/bottom-tabs@7.1.0) (2024-12-01)
+
+### Features
+
+* show large content title on iOS for better accessibility ([#12290](https://github.com/react-navigation/react-navigation/issues/12290)) ([1924f07](https://github.com/react-navigation/react-navigation/commit/1924f07f91191c482671b1a1a61d0a267f86077d)), closes [facebook/react-native#45903](https://github.com/facebook/react-native/issues/45903) - by @bacarybruno
+
 ## [7.0.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.0.13...@react-navigation/bottom-tabs@7.0.14) (2024-11-28)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
