@@ -2847,6 +2847,9 @@ test('matches regexp patterns when provided', () => {
       Quz: {
         path: 'foo/bar/:special([a-z]+)',
       },
+      Quu: {
+        path: 'foo/bar/baz',
+      },
     },
   };
 
@@ -2912,11 +2915,20 @@ test('matches regexp patterns when provided', () => {
     ],
   });
 
-  expect(getStateFromPath<object>('foo/bar/baz', config)).toEqual({
+  expect(getStateFromPath<object>('foo/bar/test', config)).toEqual({
     routes: [
       {
         name: 'Quz',
-        params: { special: 'baz' },
+        params: { special: 'test' },
+        path: 'foo/bar/test',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/bar/baz', config)).toEqual({
+    routes: [
+      {
+        name: 'Quu',
         path: 'foo/bar/baz',
       },
     ],

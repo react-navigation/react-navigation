@@ -235,9 +235,12 @@ function getNormalizedConfigs(
       )
     )
     .sort((a, b) => {
-      // Sort config so that:
-      // - the most exhaustive ones are always at the beginning
-      // - patterns with wildcard are always at the end
+      // Sort config from most specific to least specific:
+      // - more segments
+      // - static segments
+      // - params with regex
+      // - regular params
+      // - wildcard
 
       // If 2 patterns are same, move the one with less route names up
       // This is an error state, so it's only useful for consistent error messages
@@ -266,18 +269,26 @@ function getNormalizedConfigs(
           return -1;
         }
 
-        const aWildCard =
-          a.segments[i] === '*' || a.segments[i].startsWith(':');
-        const bWildCard =
-          b.segments[i] === '*' || b.segments[i].startsWith(':');
-        const aRegex =
-          a.segments[i].startsWith(':') && a.segments[i].includes('(');
-        const bRegex =
-          b.segments[i].startsWith(':') && b.segments[i].includes('(');
+        const aWildCard = a.segments[i] === '*';
+        const bWildCard = b.segments[i] === '*';
+        const aParam = a.segments[i].startsWith(':');
+        const bParam = b.segments[i].startsWith(':');
+        const aRegex = aParam && a.segments[i].includes('(');
+        const bRegex = bParam && b.segments[i].includes('(');
 
-        // if both are wildcard & regex we compare next component
-        if (aWildCard && bWildCard && aRegex && bRegex) {
+        // if both are wildcard or regex, we compare next component
+        if ((aWildCard && bWildCard) || (aRegex && bRegex)) {
           continue;
+        }
+
+        // If only a has a param, b gets higher priority
+        if (aParam && !bParam) {
+          return 1;
+        }
+
+        // If only b has a param, a gets higher priority
+        if (bParam && !aParam) {
+          return -1;
         }
 
         // if only a has regex, a gets higher priority
