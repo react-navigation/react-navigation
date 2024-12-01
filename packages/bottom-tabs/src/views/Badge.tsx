@@ -6,10 +6,11 @@ import {
   Platform,
   type StyleProp,
   StyleSheet,
+  type TextProps,
   type TextStyle,
 } from 'react-native';
 
-type Props = {
+type Props = TextProps & {
   /**
    * Whether the badge is visible
    */

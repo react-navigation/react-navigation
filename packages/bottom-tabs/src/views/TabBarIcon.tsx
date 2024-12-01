@@ -25,6 +25,7 @@ type Props = {
     color: string;
     size: number;
   }) => React.ReactNode;
+  allowFontScaling?: boolean;
   style: StyleProp<ViewStyle>;
 };
 
@@ -51,6 +52,7 @@ export function TabBarIcon({
   activeTintColor,
   inactiveTintColor,
   renderIcon,
+  allowFontScaling,
   style,
 }: Props) {
   const iconSize =
@@ -98,8 +100,9 @@ export function TabBarIcon({
       </View>
       <Badge
         visible={badge != null}
-        style={[styles.badge, badgeStyle]}
         size={iconSize * 0.75}
+        allowFontScaling={allowFontScaling}
+        style={[styles.badge, badgeStyle]}
       >
         {badge}
       </Badge>
