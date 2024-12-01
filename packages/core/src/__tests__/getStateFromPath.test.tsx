@@ -586,7 +586,7 @@ test('handles parse in nested object for second route depth and and path and par
 });
 
 test('handles path at top level', () => {
-  const path = 'foo/fruits/apple';
+  const path = '/foo/fruits/apple';
   const config = {
     path: 'foo',
     screens: {
@@ -2759,10 +2759,10 @@ test('encodes special characters in params', () => {
     ],
   };
 
-  expect(getPathFromState<object>(state, config)).toEqual(path);
+  expect(getPathFromState<object>(state, config)).toBe(`/${path}`);
   expect(
     getPathFromState<object>(getStateFromPath<object>(path, config)!, config)
-  ).toEqual(path);
+  ).toBe(`/${path}`);
 });
 
 test('resolves nested path params with same name to correct screen', () => {

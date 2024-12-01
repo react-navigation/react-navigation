@@ -258,6 +258,12 @@ export function getPathFromState<ParamList extends {}>(
   path = path.replace(/\/+/g, '/');
   path = path.length > 1 ? path.replace(/\/$/, '') : path;
 
+  // If path doesn't start with a slash, add it
+  // This makes sure that history.pushState will update the path correctly instead of appending
+  if (!path.startsWith('/')) {
+    path = `/${path}`;
+  }
+
   return path;
 }
 
