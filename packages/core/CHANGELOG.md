@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.2.1...@react-navigation/core@7.2.2) (2024-12-01)
+
+### Bug Fixes
+
+* fix priority of matching wildcard path ([ff21b7e](https://github.com/react-navigation/react-navigation/commit/ff21b7ecdc1d0c3de68c589aac409e49ecc6e44c)) - by @
+
 ## [7.2.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.2.0...@react-navigation/core@7.2.1) (2024-12-01)
 
 ### Bug Fixes
