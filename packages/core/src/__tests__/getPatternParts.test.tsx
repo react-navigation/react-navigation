@@ -4,7 +4,7 @@ import { getPatternParts } from '../getPatternParts';
 
 test('splits a path into parts', () => {
   const path =
-    '/users/:type//:page(profile|settings)/:id([a-z]+(\\d+))?/:name?';
+    '/users/:type//:page(profile|settings)/:id([a-z]+:(\\d+))?/:name?';
 
   expect(getPatternParts(path)).toEqual([
     { segment: 'users' },
@@ -15,9 +15,9 @@ test('splits a path into parts', () => {
       regex: 'profile|settings',
     },
     {
-      segment: ':id([a-z]+(\\d+))?',
+      segment: ':id([a-z]+:(\\d+))?',
       param: 'id',
-      regex: '[a-z]+(\\d+)',
+      regex: '[a-z]+:(\\d+)',
       optional: true,
     },
     {

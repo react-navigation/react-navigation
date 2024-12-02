@@ -29,7 +29,7 @@ export function getPatternParts(path: string): PatternPart[] {
       // The segment must start with a colon if it's a param
       if (current.segment === ':') {
         isParam = true;
-      } else {
+      } else if (!isRegex) {
         throw new Error(
           `Encountered ':' in the middle of a segment in path: ${path}`
         );
