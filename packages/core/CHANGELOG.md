@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.2.2...@react-navigation/core@7.3.0) (2024-12-02)
+
+### Bug Fixes
+
+* allow : inside of a regex for linking path ([cf610ef](https://github.com/react-navigation/react-navigation/commit/cf610ef532c5f6d08bd6e28bfd58578d66893b0a)) - by @satya164
+
+### Features
+
+* add support for alias in linking config ([bf1184c](https://github.com/react-navigation/react-navigation/commit/bf1184c3c5f1f5c907195c53c3b0c30e5f3b9634)) - by @
+
 ## [7.2.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.2.1...@react-navigation/core@7.2.2) (2024-12-01)
 
 ### Bug Fixes
