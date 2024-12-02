@@ -1,6 +1,7 @@
 import type {
   InitialState,
   NavigationState,
+  ParamListBase,
   PartialState,
 } from '@react-navigation/routers';
 import escape from 'escape-string-regexp';
@@ -10,7 +11,7 @@ import { arrayStartsWith } from './arrayStartsWith';
 import { findFocusedRoute } from './findFocusedRoute';
 import { getPatternParts, type PatternPart } from './getPatternParts';
 import { isArrayEqual } from './isArrayEqual';
-import type { PathConfigMap } from './types';
+import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
 type Options<ParamList extends {}> = {
@@ -48,7 +49,6 @@ type ParsedRoute = {
 type ConfigResources = {
   initialRoutes: InitialRouteConfig[];
   configs: RouteConfig[];
-  configWithRegexes: RouteConfig[];
 };
 
 /**
@@ -76,8 +76,7 @@ export function getStateFromPath<ParamList extends {}>(
   path: string,
   options?: Options<ParamList>
 ): ResultState | undefined {
-  const { initialRoutes, configs, configWithRegexes } =
-    getConfigResources(options);
+  const { initialRoutes, configs } = getConfigResources(options);
 
   const screens = options?.screens;
 
@@ -143,10 +142,7 @@ export function getStateFromPath<ParamList extends {}>(
 
   // We match the whole path against the regex instead of segments
   // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
-  const { routes, remainingPath } = matchAgainstConfigs(
-    remaining,
-    configWithRegexes
-  );
+  const { routes, remainingPath } = matchAgainstConfigs(remaining, configs);
 
   if (routes !== undefined) {
     // This will always be empty if full path matched
@@ -189,8 +185,7 @@ function prepareConfigResources(options?: Options<{}>) {
   }
 
   const initialRoutes = getInitialRoutes(options);
-
-  const configs = getNormalizedConfigs(initialRoutes, options?.screens);
+  const configs = getSortedNormalizedConfigs(initialRoutes, options?.screens);
 
   checkForDuplicatedConfigs(configs);
 
@@ -216,22 +211,15 @@ function getInitialRoutes(options?: Options<{}>) {
   return initialRoutes;
 }
 
-function getNormalizedConfigs(
+function getSortedNormalizedConfigs(
   initialRoutes: InitialRouteConfig[],
-  screens: PathConfigMap<object> = {}
+  screens: Record<string, string | PathConfig<ParamListBase>> = {}
 ) {
   // Create a normalized configs array which will be easier to use
   return ([] as RouteConfig[])
     .concat(
       ...Object.keys(screens).map((key) =>
-        createNormalizedConfigs(
-          key,
-          screens as PathConfigMap<object>,
-          initialRoutes,
-          [],
-          [],
-          []
-        )
+        createNormalizedConfigs(key, screens, initialRoutes, [], [], [])
       )
     )
     .sort((a, b) => {
@@ -430,7 +418,7 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 
 const createNormalizedConfigs = (
   screen: string,
-  routeConfig: PathConfigMap<object>,
+  routeConfig: Record<string, string | PathConfig<ParamListBase>>,
   initials: InitialRouteConfig[],
   paths: { screen: string; path: string }[],
   parentScreens: string[],
@@ -442,7 +430,6 @@ const createNormalizedConfigs = (
 
   parentScreens.push(screen);
 
-  // @ts-expect-error: we can't strongly typecheck this for now
   const config = routeConfig[screen];
 
   if (typeof config === 'string') {
@@ -453,10 +440,40 @@ const createNormalizedConfigs = (
     // it can have `path` property and
     // it could have `screens` prop which has nested configs
     if (typeof config.path === 'string') {
-      if (config.exact && config.path === undefined) {
+      if (config.exact && config.path == null) {
         throw new Error(
-          "A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. `path: ''`."
+          `Screen '${screen}' doesn't specify a 'path'. A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. \`path: ''\`.`
         );
+      }
+
+      // We should add alias configs after the main config
+      // So unless they are more specific, main config will be matched first
+      const aliasConfigs = [];
+
+      if (config.alias) {
+        for (const alias of config.alias) {
+          if (typeof alias === 'string') {
+            aliasConfigs.push(
+              createConfigItem(
+                screen,
+                [...routeNames],
+                [...paths, { screen, path: alias }],
+                config.parse
+              )
+            );
+          } else if (typeof alias === 'object') {
+            aliasConfigs.push(
+              createConfigItem(
+                screen,
+                [...routeNames],
+                alias.exact
+                  ? [{ screen, path: alias.path }]
+                  : [...paths, { screen, path: alias.path }],
+                alias.parse
+              )
+            );
+          }
+        }
       }
 
       if (config.exact) {
@@ -468,6 +485,18 @@ const createNormalizedConfigs = (
       paths.push({ screen, path: config.path });
       configs.push(
         createConfigItem(screen, [...routeNames], [...paths], config.parse)
+      );
+
+      configs.push(...aliasConfigs);
+    }
+
+    if (
+      typeof config !== 'string' &&
+      typeof config.path !== 'string' &&
+      config.alias?.length
+    ) {
+      throw new Error(
+        `Screen '${screen}' doesn't specify a 'path'. A 'path' needs to be specified in order to use 'alias'.`
       );
     }
 
@@ -483,7 +512,7 @@ const createNormalizedConfigs = (
       Object.keys(config.screens).forEach((nestedConfig) => {
         const result = createNormalizedConfigs(
           nestedConfig,
-          config.screens as PathConfigMap<object>,
+          config.screens as Record<string, string | PathConfig<ParamListBase>>,
           initials,
           [...paths],
           [...parentScreens],
@@ -525,7 +554,7 @@ const createConfigItem = (
 
             return `${it.segment === '*' ? '.*' : escape(it.segment)}\\/`;
           })
-          .join('')})`
+          .join('')})$`
       )
     : undefined;
 

@@ -2693,21 +2693,22 @@ test('throws when invalid properties are specified in the config', () => {
       },
     } as any)
   ).toThrowErrorMatchingInlineSnapshot(`
-    "Found invalid properties in the configuration:
-    - Qux (extraneous)
+"Found invalid properties in the configuration:
+- Qux (extraneous)
 
-    You can only specify the following properties:
-    - path (string)
-    - initialRouteName (string)
-    - screens (object)
-    - exact (boolean)
-    - stringify (object)
-    - parse (object)
+You can only specify the following properties:
+- path (string)
+- initialRouteName (string)
+- screens (object)
+- alias (array)
+- exact (boolean)
+- stringify (object)
+- parse (object)
 
-    If you want to specify configuration for screens, you need to specify them under a 'screens' property.
+If you want to specify configuration for screens, you need to specify them under a 'screens' property.
 
-    See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
-  `);
+See https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration."
+`);
 
   expect(() =>
     getStateFromPath<object>('', {
@@ -2956,4 +2957,188 @@ test("regexp pattern doesn't match slash", () => {
   expect(getStateFromPath<object>('foo/bar/baz', config)).toBeUndefined();
 
   expect(getStateFromPath<object>('foo/bar/baz/qux', config)).toBeUndefined();
+});
+
+test('handles alias for paths', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        alias: ['first'],
+        screens: {
+          Baz: {
+            path: 'baz/:id?',
+            parse: {
+              id: (value: string) => value.replace(/@/, ''),
+            },
+            alias: [
+              {
+                path: 'second/:id',
+                exact: true,
+              },
+              'third',
+              {
+                path: 'fourth/:id',
+                parse: {
+                  id: (value: string) => value.replace(/\$/, ''),
+                },
+              },
+            ],
+          },
+          Qux: {
+            path: 'qux/:id',
+          },
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo', config)).toEqual({
+    routes: [{ name: 'Foo', path: 'foo' }],
+  });
+
+  expect(
+    getPathFromState<object>(getStateFromPath<object>('foo', config)!, config)
+  ).toBe('/foo');
+
+  expect(getStateFromPath<object>('first', config)).toEqual({
+    routes: [{ name: 'Foo', path: 'first' }],
+  });
+
+  expect(
+    getPathFromState<object>(getStateFromPath<object>('first', config)!, config)
+  ).toBe('/foo');
+
+  expect(getStateFromPath<object>('foo/baz/@$test', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Baz',
+              params: { id: '$test' },
+              path: 'foo/baz/@$test',
+            },
+          ],
+        },
+      },
+    ],
+  });
+
+  expect(
+    getPathFromState<object>(
+      getStateFromPath<object>('foo/baz/@$test', config)!,
+      config
+    )
+  ).toBe('/foo/baz/$test');
+
+  expect(getStateFromPath<object>('second/42', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Baz',
+              params: { id: '42' },
+              path: 'second/42',
+            },
+          ],
+        },
+      },
+    ],
+  });
+
+  expect(
+    getPathFromState<object>(
+      getStateFromPath<object>('second/42', config)!,
+      config
+    )
+  ).toBe('/foo/baz/42');
+
+  expect(getStateFromPath<object>('foo/third', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Baz',
+              path: 'foo/third',
+            },
+          ],
+        },
+      },
+    ],
+  });
+
+  expect(
+    getPathFromState<object>(
+      getStateFromPath<object>('foo/third', config)!,
+      config
+    )
+  ).toBe('/foo/baz');
+
+  expect(getStateFromPath<object>('foo/fourth/@$test', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Baz',
+              params: { id: '@test' },
+              path: 'foo/fourth/@$test',
+            },
+          ],
+        },
+      },
+    ],
+  });
+
+  expect(
+    getPathFromState<object>(
+      getStateFromPath<object>('foo/fourth/@$test', config)!,
+      config
+    )
+  ).toBe('/foo/baz/@test');
+
+  expect(getStateFromPath<object>('foo/qux/42', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        state: {
+          routes: [
+            {
+              name: 'Qux',
+              params: { id: '42' },
+              path: 'foo/qux/42',
+            },
+          ],
+        },
+      },
+    ],
+  });
+
+  expect(
+    getPathFromState<object>(
+      getStateFromPath<object>('foo/qux/42', config)!,
+      config
+    )
+  ).toBe('/foo/qux/42');
+});
+
+test('throws if screen has alias but no path', () => {
+  expect(() =>
+    getStateFromPath<object>('', {
+      screens: {
+        Foo: {
+          alias: ['bar'],
+        },
+      },
+    })
+  ).toThrow(
+    `Screen 'Foo' doesn't specify a 'path'. A 'path' needs to be specified in order to use 'alias'.`
+  );
 });

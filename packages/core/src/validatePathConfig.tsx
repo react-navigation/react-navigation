@@ -11,6 +11,7 @@ export function validatePathConfig(config: unknown, root = true) {
     ...(root
       ? null
       : {
+          alias: 'array',
           exact: 'boolean',
           stringify: 'object',
           parse: 'object',
@@ -33,8 +34,14 @@ export function validatePathConfig(config: unknown, root = true) {
           // @ts-expect-error: we know the key exists
           const value = config[key];
 
-          if (value !== undefined && typeof value !== type) {
-            return [key, `expected '${type}', got '${typeof value}'`];
+          if (value !== undefined) {
+            if (type === 'array') {
+              if (!Array.isArray(value)) {
+                return [key, `expected 'Array', got '${typeof value}'`];
+              }
+            } else if (typeof value !== type) {
+              return [key, `expected '${type}', got '${typeof value}'`];
+            }
           }
         } else {
           return [key, 'extraneous'];
