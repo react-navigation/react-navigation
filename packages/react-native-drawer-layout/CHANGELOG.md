@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.4](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.3...react-native-drawer-layout@4.0.4) (2024-12-03)
+
+### Bug Fixes
+
+* remove zIndex from overlay to avoid flicker ([f662e27](https://github.com/react-navigation/react-navigation/commit/f662e274247088b142ef3087bf560f7542d4ef29)), closes [#12137](https://github.com/react-navigation/react-navigation/issues/12137) - by @
+
 ## [4.0.3](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.2...react-native-drawer-layout@4.0.3) (2024-11-28)
 
 **Note:** Version bump only for package react-native-drawer-layout
