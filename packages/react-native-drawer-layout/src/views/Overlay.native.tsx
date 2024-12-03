@@ -18,9 +18,6 @@ export function Overlay({
   const animatedStyle = useAnimatedStyle(() => {
     return {
       opacity: progress.value,
-      // We don't want the user to be able to press through the overlay when drawer is open
-      // We can send the overlay behind the screen to avoid it
-      zIndex: progress.value > PROGRESS_EPSILON ? 0 : -1,
     };
   }, [progress]);
 
