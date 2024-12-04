@@ -152,9 +152,9 @@ export function TabView<T extends Route>({
 
                   return (
                     <SceneView
+                      key={route.key}
                       {...sceneRendererProps}
                       addEnterListener={addEnterListener}
-                      key={route.key}
                       index={i}
                       lazy={typeof lazy === 'function' ? lazy({ route }) : lazy}
                       lazyPreloadDistance={lazyPreloadDistance}
