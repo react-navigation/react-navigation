@@ -30,6 +30,7 @@ export {
 export type {
   DrawerContentComponentProps,
   DrawerHeaderProps,
+  DrawerNavigationConfig,
   DrawerNavigationEventMap,
   DrawerNavigationOptions,
   DrawerNavigationProp,
