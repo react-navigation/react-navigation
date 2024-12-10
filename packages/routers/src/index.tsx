@@ -24,5 +24,5 @@ export type {
   TabNavigationState,
   TabRouterOptions,
 } from './TabRouter';
-export { TabActions, TabRouter } from './TabRouter';
+export { type BackBehavior, TabActions, TabRouter } from './TabRouter';
 export * from './types';
