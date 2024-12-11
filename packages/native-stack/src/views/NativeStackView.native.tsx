@@ -509,6 +509,8 @@ export function NativeStackView({
             preloadedDescriptors[route.key] !== undefined &&
             descriptors[route.key] === undefined;
 
+          // On Fabric, when screen is frozen, animated and reanimated values are not updated
+          // due to component being unmounted. To avoid this, we don't freeze the previous screen there
           const shouldFreeze = isFabric()
             ? !isPreloaded && !isFocused && !isBelowFocused
             : !isPreloaded && !isFocused;

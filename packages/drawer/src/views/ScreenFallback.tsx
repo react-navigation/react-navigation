@@ -12,6 +12,7 @@ type Props = {
   children: React.ReactNode;
   enabled: boolean;
   freezeOnBlur?: boolean;
+  shouldFreeze: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
