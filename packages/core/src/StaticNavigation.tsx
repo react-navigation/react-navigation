@@ -544,11 +544,9 @@ export function createPathConfigForStaticNavigation(
               }
 
               if (typeof screenConfig.path === 'string') {
-                // Normalize the path to remove leading and trailing slashes
                 screenConfig.path = screenConfig.path
-                  .split('/')
-                  .filter(Boolean)
-                  .join('/');
+                  .replace(/^\//, '') // Remove extra leading slash
+                  .replace(/\/$/, ''); // Remove extra trailing slash
               }
             }
 
