@@ -1,4 +1,5 @@
 import type {
+  DefaultNavigatorOptions,
   Descriptor,
   NavigationHelpers,
   NavigationProp,
@@ -7,6 +8,7 @@ import type {
   RouteProp,
   TabActionHelpers,
   TabNavigationState,
+  TabRouterOptions,
   Theme,
 } from '@react-navigation/native';
 import type React from 'react';
@@ -316,3 +318,14 @@ export type MaterialTopTabBarProps = SceneRendererProps & {
 export type MaterialTopTabAnimationContext = {
   position: Animated.AnimatedInterpolation<number>;
 };
+
+export type MaterialTopTabNavigatorProps = DefaultNavigatorOptions<
+  ParamListBase,
+  string | undefined,
+  TabNavigationState<ParamListBase>,
+  MaterialTopTabNavigationOptions,
+  MaterialTopTabNavigationEventMap,
+  MaterialTopTabNavigationProp<ParamListBase>
+> &
+  TabRouterOptions &
+  MaterialTopTabNavigationConfig;

@@ -6,6 +6,7 @@ import type {
   HeaderTitleProps,
 } from '@react-navigation/elements';
 import type {
+  DefaultNavigatorOptions,
   Descriptor,
   LocaleDirection,
   NavigationHelpers,
@@ -15,6 +16,7 @@ import type {
   RouteProp,
   StackActionHelpers,
   StackNavigationState,
+  StackRouterOptions,
   Theme,
 } from '@react-navigation/native';
 import type * as React from 'react';
@@ -624,3 +626,14 @@ export type TransitionPreset = {
    */
   headerStyleInterpolator: StackHeaderStyleInterpolator;
 };
+
+export type StackNavigatorProps = DefaultNavigatorOptions<
+  ParamListBase,
+  string | undefined,
+  StackNavigationState<ParamListBase>,
+  StackNavigationOptions,
+  StackNavigationEventMap,
+  StackNavigationProp<ParamListBase>
+> &
+  StackRouterOptions &
+  StackNavigationConfig;

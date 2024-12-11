@@ -1,6 +1,5 @@
 import {
   createNavigatorFactory,
-  type DefaultNavigatorOptions,
   type NavigatorTypeBagBase,
   type ParamListBase,
   type StaticConfig,
@@ -13,23 +12,12 @@ import {
 } from '@react-navigation/native';
 
 import type {
-  BottomTabNavigationConfig,
   BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
+  BottomTabNavigatorProps,
 } from '../types';
 import { BottomTabView } from '../views/BottomTabView';
-
-type Props = DefaultNavigatorOptions<
-  ParamListBase,
-  string | undefined,
-  TabNavigationState<ParamListBase>,
-  BottomTabNavigationOptions,
-  BottomTabNavigationEventMap,
-  BottomTabNavigationProp<ParamListBase>
-> &
-  TabRouterOptions &
-  BottomTabNavigationConfig;
 
 function BottomTabNavigator({
   id,
@@ -42,7 +30,7 @@ function BottomTabNavigator({
   screenLayout,
   UNSTABLE_getStateForRouteNamesChange,
   ...rest
-}: Props) {
+}: BottomTabNavigatorProps) {
   const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       TabNavigationState<ParamListBase>,
