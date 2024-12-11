@@ -1,5 +1,6 @@
 import type { HeaderOptions } from '@react-navigation/elements';
 import type {
+  DefaultNavigatorOptions,
   Descriptor,
   NavigationHelpers,
   NavigationProp,
@@ -7,6 +8,7 @@ import type {
   RouteProp,
   TabActionHelpers,
   TabNavigationState,
+  TabRouterOptions,
   Theme,
 } from '@react-navigation/native';
 import type * as React from 'react';
@@ -439,3 +441,14 @@ export type BottomTabBarButtonProps = Omit<
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => void;
 };
+
+export type BottomTabNavigatorProps = DefaultNavigatorOptions<
+  ParamListBase,
+  string | undefined,
+  TabNavigationState<ParamListBase>,
+  BottomTabNavigationOptions,
+  BottomTabNavigationEventMap,
+  BottomTabNavigationProp<ParamListBase>
+> &
+  TabRouterOptions &
+  BottomTabNavigationConfig;

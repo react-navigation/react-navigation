@@ -1,8 +1,10 @@
 import type { HeaderOptions } from '@react-navigation/elements';
 import type {
+  DefaultNavigatorOptions,
   Descriptor,
   DrawerActionHelpers,
   DrawerNavigationState,
+  DrawerRouterOptions,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
@@ -333,3 +335,14 @@ export type DrawerProps = {
   swipeVelocityThreshold: number;
   overlayAccessibilityLabel?: string;
 };
+
+export type DrawerNavigatorProps = DefaultNavigatorOptions<
+  ParamListBase,
+  string | undefined,
+  DrawerNavigationState<ParamListBase>,
+  DrawerNavigationOptions,
+  DrawerNavigationEventMap,
+  DrawerNavigationProp<ParamListBase>
+> &
+  DrawerRouterOptions &
+  DrawerNavigationConfig;

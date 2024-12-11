@@ -1,6 +1,5 @@
 import {
   createNavigatorFactory,
-  type DefaultNavigatorOptions,
   type DrawerActionHelpers,
   type DrawerNavigationState,
   DrawerRouter,
@@ -13,23 +12,12 @@ import {
 } from '@react-navigation/native';
 
 import type {
-  DrawerNavigationConfig,
   DrawerNavigationEventMap,
   DrawerNavigationOptions,
   DrawerNavigationProp,
+  DrawerNavigatorProps,
 } from '../types';
 import { DrawerView } from '../views/DrawerView';
-
-type Props = DefaultNavigatorOptions<
-  ParamListBase,
-  string | undefined,
-  DrawerNavigationState<ParamListBase>,
-  DrawerNavigationOptions,
-  DrawerNavigationEventMap,
-  DrawerNavigationProp<ParamListBase>
-> &
-  DrawerRouterOptions &
-  DrawerNavigationConfig;
 
 function DrawerNavigator({
   id,
@@ -43,7 +31,7 @@ function DrawerNavigator({
   screenLayout,
   UNSTABLE_getStateForRouteNamesChange,
   ...rest
-}: Props) {
+}: DrawerNavigatorProps) {
   const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       DrawerNavigationState<ParamListBase>,

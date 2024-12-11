@@ -1,6 +1,5 @@
 import {
   createNavigatorFactory,
-  type DefaultNavigatorOptions,
   type EventArg,
   type NavigatorTypeBagBase,
   type ParamListBase,
@@ -17,23 +16,12 @@ import {
 import * as React from 'react';
 
 import type {
-  StackNavigationConfig,
   StackNavigationEventMap,
   StackNavigationOptions,
   StackNavigationProp,
+  StackNavigatorProps,
 } from '../types';
 import { StackView } from '../views/Stack/StackView';
-
-type Props = DefaultNavigatorOptions<
-  ParamListBase,
-  string | undefined,
-  StackNavigationState<ParamListBase>,
-  StackNavigationOptions,
-  StackNavigationEventMap,
-  StackNavigationProp<ParamListBase>
-> &
-  StackRouterOptions &
-  StackNavigationConfig;
 
 function StackNavigator({
   id,
@@ -45,7 +33,7 @@ function StackNavigator({
   screenLayout,
   UNSTABLE_getStateForRouteNamesChange,
   ...rest
-}: Props) {
+}: StackNavigatorProps) {
   const { direction } = useLocale();
 
   const { state, describe, descriptors, navigation, NavigationContent } =
