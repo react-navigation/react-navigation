@@ -16,12 +16,17 @@ type Props = {
   tintColor?: string;
 };
 
-export function DrawerToggleButton({ tintColor, ...rest }: Props) {
+export function DrawerToggleButton({
+  tintColor,
+  accessibilityLabel = 'Show navigation menu',
+  ...rest
+}: Props) {
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
 
   return (
     <PlatformPressable
       {...rest}
+      accessibilityLabel={accessibilityLabel}
       android_ripple={{ borderless: true }}
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
       style={styles.touchable}
@@ -31,10 +36,11 @@ export function DrawerToggleButton({ tintColor, ...rest }: Props) {
       })}
     >
       <Image
-        style={[styles.icon, tintColor ? { tintColor } : null]}
         resizeMode="contain"
         source={toggleDrawerIcon}
         fadeDuration={0}
+        tintColor={tintColor}
+        style={styles.icon}
       />
     </PlatformPressable>
   );

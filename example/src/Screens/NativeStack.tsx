@@ -35,23 +35,30 @@ const ArticleScreen = ({
   route,
 }: NativeStackScreenProps<NativeStackParams, 'Article'>) => {
   return (
-    <View>
+    <View style={styles.container}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={styles.buttons}>
           <Button
             variant="filled"
-            onPress={() => navigation.push('NewsFeed', { date: Date.now() })}
+            onPress={() =>
+              navigation.navigate('NewsFeed', { date: Date.now() })
+            }
           >
-            Push feed
-          </Button>
-          <Button
-            variant="filled"
-            onPress={() => navigation.replace('NewsFeed', { date: Date.now() })}
-          >
-            Replace with feed
+            Navigate to feed
           </Button>
           <Button variant="filled" onPress={() => navigation.popTo('Albums')}>
             Pop to albums
+          </Button>
+          <Button
+            variant="tinted"
+            onPress={() =>
+              navigation.setParams({
+                author:
+                  route.params?.author === 'Gandalf' ? 'Babel fish' : 'Gandalf',
+              })
+            }
+          >
+            Update params
           </Button>
           <Button variant="tinted" onPress={() => navigation.pop()}>
             Pop screen
@@ -72,11 +79,14 @@ const NewsFeedScreen = ({
   navigation,
 }: NativeStackScreenProps<NativeStackParams, 'NewsFeed'>) => {
   return (
-    <View>
+    <View style={styles.container}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
         <View style={styles.buttons}>
-          <Button variant="filled" onPress={() => navigation.push('Contacts')}>
-            Push contacts
+          <Button
+            variant="filled"
+            onPress={() => navigation.replace('Contacts')}
+          >
+            Replace with contacts
           </Button>
           <Button variant="tinted" onPress={() => navigation.goBack()}>
             Go back
@@ -130,16 +140,14 @@ const AlbumsScreen = ({
   const headerHeight = useHeaderHeight();
 
   return (
-    <View>
+    <View style={styles.container}>
       <ScrollView contentContainerStyle={{ paddingTop: headerHeight }}>
         <View style={styles.buttons}>
           <Button
             variant="filled"
-            onPress={() =>
-              navigation.navigate('Article', { author: 'Babel fish' })
-            }
+            onPress={() => navigation.push('Article', { author: 'Babel fish' })}
           >
-            Navigate to article
+            Push article
           </Button>
           <Button variant="tinted" onPress={() => navigation.pop(2)}>
             Pop by 2
@@ -169,7 +177,6 @@ const HeaderHeightView = ({
         {
           backgroundColor: colors.card,
           borderColor: colors.border,
-          shadowColor: colors.border,
         },
         hasOffset && {
           transform: [{ translateY: animatedHeaderHeight }],
@@ -197,6 +204,7 @@ export function NativeStack() {
           headerLargeTitleShadowVisible: false,
         })}
         initialParams={{ author: 'Gandalf' }}
+        getId={({ params }) => params?.author}
       />
       <Stack.Screen
         name="NewsFeed"
@@ -243,6 +251,9 @@ NativeStack.options = {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   buttons: {
     flexDirection: 'row',
     flexWrap: 'wrap',

@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/routers",
   "description": "Routers to help build custom navigators",
-  "version": "7.0.0",
+  "version": "7.1.1",
   "keywords": [
     "react",
     "react-native",
@@ -52,7 +52,7 @@
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "del-cli": "^5.1.0",
-    "react-native-builder-bob": "^0.29.0",
+    "react-native-builder-bob": "^0.33.2",
     "typescript": "^5.5.2"
   },
   "react-native-builder-bob": {

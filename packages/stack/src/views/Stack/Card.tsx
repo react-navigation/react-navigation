@@ -23,6 +23,7 @@ import type {
 import { CardAnimationContext } from '../../utils/CardAnimationContext';
 import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
 import { getInvertedMultiplier } from '../../utils/getInvertedMultiplier';
+import { getShadowStyle } from '../../utils/getShadowStyle';
 import { memoize } from '../../utils/memoize';
 import {
   GestureState,
@@ -33,6 +34,7 @@ import { CardSheet, type CardSheetRef } from './CardSheet';
 
 type Props = ViewProps & {
   interpolationIndex: number;
+  opening: boolean;
   closing: boolean;
   next?: Animated.AnimatedInterpolation<number>;
   current: Animated.AnimatedInterpolation<number>;
@@ -114,7 +116,8 @@ export class Card extends React.Component<Props> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    const { direction, layout, gestureDirection, closing } = this.props;
+    const { gesture, direction, layout, gestureDirection, opening, closing } =
+      this.props;
     const { width, height } = layout;
 
     if (width !== prevProps.layout.width) {
@@ -142,6 +145,14 @@ export class Card extends React.Component<Props> {
       // When route was closed due to a gesture, the animation would've happened already
       // It's still important to trigger the animation so that `onClose` is called
       // If `onClose` is not called, cleanup step won't be performed for gestures
+      this.animate({ closing });
+    } else if (opening && !prevProps.opening) {
+      // This can happen when screen somewhere below in the stack comes into focus via rearranging
+      // Also reset the animated value to make sure that the animation starts from the beginning
+      gesture.setValue(
+        getDistanceForDirection(layout, gestureDirection, direction === 'rtl')
+      );
+
       this.animate({ closing });
     }
   }
@@ -610,15 +621,19 @@ const styles = StyleSheet.create({
   },
   shadow: {
     position: 'absolute',
-    shadowRadius: 5,
-    shadowColor: '#000',
-    shadowOpacity: 0.3,
   },
   shadowHorizontal: {
     top: 0,
     bottom: 0,
     width: 3,
-    shadowOffset: { width: -1, height: 1 },
+    ...getShadowStyle({
+      offset: {
+        width: -1,
+        height: 1,
+      },
+      radius: 5,
+      opacity: 0.3,
+    }),
   },
   shadowStart: {
     start: 0,
@@ -630,7 +645,14 @@ const styles = StyleSheet.create({
     start: 0,
     end: 0,
     height: 3,
-    shadowOffset: { width: 1, height: -1 },
+    ...getShadowStyle({
+      offset: {
+        width: 1,
+        height: -1,
+      },
+      radius: 5,
+      opacity: 0.3,
+    }),
   },
   shadowTop: {
     top: 0,

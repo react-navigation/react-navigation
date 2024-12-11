@@ -32,6 +32,8 @@ const ANDROID_VERSION_LOLLIPOP = 21;
 const ANDROID_SUPPORTS_RIPPLE =
   Platform.OS === 'android' && Platform.Version >= ANDROID_VERSION_LOLLIPOP;
 
+const useNativeDriver = Platform.OS !== 'web';
+
 /**
  * PlatformPressable provides an abstraction on top of Pressable to handle platform differences.
  */
@@ -60,7 +62,7 @@ export function PlatformPressable({
       toValue,
       duration,
       easing: Easing.inOut(Easing.quad),
-      useNativeDriver: true,
+      useNativeDriver,
     }).start();
   };
 

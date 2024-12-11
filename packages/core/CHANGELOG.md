@@ -3,6 +3,92 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.2.2...@react-navigation/core@7.3.0) (2024-12-02)
+
+### Bug Fixes
+
+* allow : inside of a regex for linking path ([cf610ef](https://github.com/react-navigation/react-navigation/commit/cf610ef532c5f6d08bd6e28bfd58578d66893b0a)) - by @satya164
+
+### Features
+
+* add support for alias in linking config ([bf1184c](https://github.com/react-navigation/react-navigation/commit/bf1184c3c5f1f5c907195c53c3b0c30e5f3b9634)) - by @
+
+## [7.2.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.2.1...@react-navigation/core@7.2.2) (2024-12-01)
+
+### Bug Fixes
+
+* fix priority of matching wildcard path ([ff21b7e](https://github.com/react-navigation/react-navigation/commit/ff21b7ecdc1d0c3de68c589aac409e49ecc6e44c)) - by @
+
+## [7.2.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.2.0...@react-navigation/core@7.2.1) (2024-12-01)
+
+### Bug Fixes
+
+* prioritize segements without param ([f68767c](https://github.com/react-navigation/react-navigation/commit/f68767cff386f70971a3289c61d3a70bd8afdc9f)) - by @
+
+# [7.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.1.2...@react-navigation/core@7.2.0) (2024-12-01)
+
+### Bug Fixes
+
+* make sure paths start with a slash. fixes [#12163](https://github.com/react-navigation/react-navigation/issues/12163) ([e89ae7a](https://github.com/react-navigation/react-navigation/commit/e89ae7a25dcf5cf5c1c0447e3835dacf66e39e53)) - by @satya164
+
+### Features
+
+* add support for regex to linking config ([cf7c16e](https://github.com/react-navigation/react-navigation/commit/cf7c16e789b70704a393fe605273c4444f833bd3)) - by @satya164
+
+## [7.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.1.1...@react-navigation/core@7.1.2) (2024-11-28)
+
+### Bug Fixes
+
+* fix initial screen detection being skipped if parent has empty path ([8717bcf](https://github.com/react-navigation/react-navigation/commit/8717bcf1c77a6e3889cf82c81528049f0e283bfc)) - by @satya164
+
+## [7.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.1.0...@react-navigation/core@7.1.1) (2024-11-27)
+
+### Bug Fixes
+
+* fix initial screen detection if empty path is already present ([f3ae7a9](https://github.com/react-navigation/react-navigation/commit/f3ae7a94f152208c9ba83d7fa80a23a09bb8a9e3)) - by @satya164
+* fix linking.enable: auto not working with only groups ([1129071](https://github.com/react-navigation/react-navigation/commit/1129071c6f406d89138dff6154335f18bac8b6d7)) - by @satya164
+
+# [7.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.6...@react-navigation/core@7.1.0) (2024-11-26)
+
+### Features
+
+* add merge as third param to navigate and update tests ([b8bdd01](https://github.com/react-navigation/react-navigation/commit/b8bdd019b9e9381f7ae060eb3dd291b3bac3c4b7)) - by @
+
+## [7.0.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.5...@react-navigation/core@7.0.6) (2024-11-25)
+
+### Bug Fixes
+
+* fix getState returning outdated state when handling action ([1489a81](https://github.com/react-navigation/react-navigation/commit/1489a8160d5eabba9320d57d5c5a0bd3b5463ce5)), closes [#672735](https://github.com/react-navigation/react-navigation/issues/672735) - by @
+
+## [7.0.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.4...@react-navigation/core@7.0.5) (2024-11-25)
+
+### Bug Fixes
+
+* fix incorrect dep array when clearing state ([5a6988b](https://github.com/react-navigation/react-navigation/commit/5a6988b4408919ac1cbb0316ddea678120917bd6)), closes [#12296](https://github.com/react-navigation/react-navigation/issues/12296) - by @
+
+## [7.0.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.3...@react-navigation/core@7.0.4) (2024-11-22)
+
+### Bug Fixes
+
+* revert back to how updates were scheduled in 6.x ([fac89e8](https://github.com/react-navigation/react-navigation/commit/fac89e823ca15bc9068799cae3732237d6343e88)), closes [#12283](https://github.com/react-navigation/react-navigation/issues/12283) - by @
+
+## [7.0.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.2...@react-navigation/core@7.0.3) (2024-11-15)
+
+### Bug Fixes
+
+* batch and schedule updates to run them in correct order ([751f470](https://github.com/react-navigation/react-navigation/commit/751f4704daff4ddcc22d142081a51f4560efae10)), closes [#12262](https://github.com/react-navigation/react-navigation/issues/12262) [#12252](https://github.com/react-navigation/react-navigation/issues/12252) - by @
+* fix navigator trying to handle params with screens or state again ([#12264](https://github.com/react-navigation/react-navigation/issues/12264)) ([6349b51](https://github.com/react-navigation/react-navigation/commit/6349b51d4904efd25d40ac1d85f3b927a92c83ac)), closes [#12259](https://github.com/react-navigation/react-navigation/issues/12259) - by @satya164
+
+## [7.0.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.1...@react-navigation/core@7.0.2) (2024-11-14)
+
+**Note:** Version bump only for package @react-navigation/core
+
+## [7.0.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0...@react-navigation/core@7.0.1) (2024-11-13)
+
+### Bug Fixes
+
+* fix tearing of useNavigationState & useIsFocused on route names change ([d051fa9](https://github.com/react-navigation/react-navigation/commit/d051fa9a505729b9970a17ae2b9597fc796c0923)), closes [#12116](https://github.com/react-navigation/react-navigation/issues/12116) - by @
+
 # [7.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.0.0-rc.15...@react-navigation/core@7.0.0) (2024-11-06)
 
 **Note:** Version bump only for package @react-navigation/core

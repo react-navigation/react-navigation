@@ -687,7 +687,7 @@ test('automatically generates paths if auto is specified', () => {
 
   expect(getStateFromPath('/', { screens })).toEqual({
     routes: [
-      { name: 'NestedA', state: { routes: [{ name: 'Home', path: '/' }] } },
+      { name: 'NestedA', state: { routes: [{ name: 'Home', path: '' }] } },
     ],
   });
 
@@ -898,7 +898,7 @@ test('use initialRouteName for the automatic home screen', () => {
 
   expect(getStateFromPath('/', { screens })).toEqual({
     routes: [
-      { name: 'NestedA', state: { routes: [{ name: 'Profile', path: '/' }] } },
+      { name: 'NestedA', state: { routes: [{ name: 'Profile', path: '' }] } },
     ],
   });
 
@@ -952,4 +952,192 @@ test('use initialRouteName for the automatic home screen', () => {
       },
     ],
   });
+});
+
+test('handles config with only groups', () => {
+  const Root = createTestNavigator({
+    groups: {
+      Support: {
+        screens: {
+          Contact: {
+            screen: TestScreen,
+          },
+          FAQ: {
+            screen: TestScreen,
+          },
+        },
+      },
+      Legal: {
+        screens: {
+          Terms: {
+            screen: TestScreen,
+          },
+          Privacy: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  expect(screens).toMatchInlineSnapshot(`
+{
+  "Contact": {
+    "path": "",
+  },
+  "FAQ": {
+    "path": "faq",
+  },
+  "Privacy": {
+    "path": "privacy",
+  },
+  "Terms": {
+    "path": "terms",
+  },
+}
+`);
+});
+
+test("doesn't generate empty path if it's already present", () => {
+  const Nested = createTestNavigator({
+    initialRouteName: 'Updates',
+    screens: {
+      Home: {
+        screen: TestScreen,
+        options: {
+          title: 'Feed',
+        },
+        linking: {
+          path: '',
+        },
+      },
+      Updates: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    groups: {
+      Guest: {
+        screens: {
+          SignIn: {
+            screen: TestScreen,
+            options: {
+              title: 'Welcome!',
+            },
+            linking: {
+              path: 'sign-in',
+            },
+          },
+        },
+      },
+      User: {
+        screens: {
+          Profile: {
+            screen: TestScreen,
+          },
+          HomeTabs: {
+            screen: Nested,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  expect(screens).toMatchInlineSnapshot(`
+{
+  "HomeTabs": {
+    "screens": {
+      "Home": {
+        "path": "",
+      },
+      "Updates": {
+        "path": "updates",
+      },
+    },
+  },
+  "Profile": {
+    "path": "profile",
+  },
+  "SignIn": {
+    "path": "sign-in",
+  },
+}
+`);
+});
+
+test("doesn't skip initial screen detection if parent has empty path", () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+        options: {
+          title: 'Feed',
+        },
+      },
+      Updates: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    groups: {
+      Guest: {
+        screens: {
+          SignIn: {
+            screen: TestScreen,
+            options: {
+              title: 'Welcome!',
+            },
+            linking: {
+              path: 'sign-in',
+            },
+          },
+        },
+      },
+      User: {
+        screens: {
+          HomeTabs: {
+            screen: Nested,
+            linking: {
+              path: '/',
+            },
+          },
+          Profile: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  expect(screens).toMatchInlineSnapshot(`
+{
+  "HomeTabs": {
+    "path": "",
+    "screens": {
+      "Home": {
+        "path": "",
+      },
+      "Updates": {
+        "path": "updates",
+      },
+    },
+  },
+  "Profile": {
+    "path": "profile",
+  },
+  "SignIn": {
+    "path": "sign-in",
+  },
+}
+`);
 });

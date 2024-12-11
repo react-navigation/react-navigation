@@ -274,7 +274,7 @@ test('handles navigate action', () => {
         index: 1,
         routeNames: ['baz', 'bar'],
         routes: [
-          { key: 'baz', name: 'baz' },
+          { key: 'baz', name: 'baz', params: { color: 'tomato' } },
           { key: 'bar', name: 'bar' },
         ],
         history: [{ type: 'route', key: 'bar' }],

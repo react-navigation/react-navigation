@@ -110,6 +110,34 @@ test('converts state to path string with config', () => {
   ).toBe(path);
 });
 
+test('prepends trailing slash to path', () => {
+  expect(
+    getPathFromState<object>({
+      routes: [
+        {
+          name: 'foo',
+          state: {
+            routes: [{ name: 'bar' }],
+          },
+        },
+      ],
+    })
+  ).toBe('/foo/bar');
+
+  expect(
+    getPathFromState<object>({
+      routes: [
+        {
+          name: 'foo',
+          state: {
+            routes: [{ name: 'bar', path: 'foo/bar' }],
+          },
+        },
+      ],
+    })
+  ).toBe('/foo/bar');
+});
+
 test('handles route without param', () => {
   const path = '/foo/bar';
   const state = {
@@ -1745,8 +1773,113 @@ test('handles path at top level', () => {
     ],
   };
 
-  expect(getPathFromState<object>(state, config)).toEqual(path);
+  expect(getPathFromState<object>(state, config)).toBe(`/${path}`);
   expect(
     getPathFromState<object>(getStateFromPath<object>(path, config)!, config)
-  ).toEqual(path);
+  ).toBe(`/${path}`);
+});
+
+test('ignores regexp patterns when provided', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo/:id(\\d+)',
+        parse: {
+          id: Number,
+        },
+      },
+      Bar: {
+        path: 'foo/:id([a-z]+)',
+      },
+      Baz: {
+        path: 'foo/:id(\\d+)/:name([a-z]+)',
+      },
+      Qux: {
+        path: 'foo/:id(@[a-z]+)',
+        stringify: {
+          id: (id: string) => `@${id}`,
+        },
+      },
+    },
+  };
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Foo',
+            params: { id: 42 },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/42');
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Bar',
+            params: { id: 'bar' },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/bar');
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Baz',
+            params: { id: 42, name: 'bar' },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/42/bar');
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Qux',
+            params: { id: 'bar' },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/@bar');
+});
+
+test('correctly handles regex pattern with slash', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo/:id([a-z]+\\/)',
+      },
+    },
+  };
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Foo',
+            params: { id: 'bar' },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/bar');
 });

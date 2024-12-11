@@ -248,19 +248,30 @@ type NavigationHelpersCommon<
   ): void;
 
   /**
-   * Navigate to a route in current navigation tree.
+   * Navigate to a screen in the current or parent navigator.
+   * If we're already on the screen, update the params instead.
    *
    * @param name Name of the route to navigate to.
    * @param [params] Params object for the route.
+   * @param [merge] Whether to merge the params onto the route.
    */
   navigate<RouteName extends keyof ParamList>(
-    ...args: ScreenParamsPair<ParamList, RouteName>
+    ...args: {
+      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
+        ?
+            | [screen: Screen]
+            | [screen: Screen, params: ParamList[Screen]]
+            | [screen: Screen, params: ParamList[Screen], merge: boolean]
+        :
+            | [screen: Screen, params: ParamList[Screen]]
+            | [screen: Screen, params: ParamList[Screen], merge: boolean];
+    }[RouteName]
   ): void;
 
   /**
    * Navigate to a route in current navigation tree.
    *
-   * @param route Object with `name` for the route to navigate to, and a `params` object.
+   * @param options Object with `name` for the route to navigate to, and a `params` object.
    */
   navigate<RouteName extends keyof ParamList>(
     options: {
@@ -278,7 +289,7 @@ type NavigationHelpersCommon<
    *
    * @deprecated Use `navigate` instead.
    *
-   * @param name Route name of the route.
+   * @param name Name of the route to navigate to.
    * @param [params] Params object for the route.
    */
   navigateDeprecated<RouteName extends keyof ParamList>(
@@ -290,7 +301,7 @@ type NavigationHelpersCommon<
    *
    * @deprecated Use `navigate` instead.
    *
-   * @param route Object with `name` for the route to navigate to, and a `params` object.
+   * @param options Object with `name` for the route to navigate to, and a `params` object.
    */
   navigateDeprecated<RouteName extends keyof ParamList>(
     options: {
@@ -960,12 +971,12 @@ export type NavigatorScreenParams<ParamList extends {}> =
           };
     }[keyof ParamList];
 
-export type PathConfig<ParamList extends {}> = {
+type PathConfigAlias = {
   /**
    * Path string to match against.
    * e.g. `/users/:id` will match `/users/1` and extract `id` param as `1`.
    */
-  path?: string;
+  path: string;
   /**
    * Whether the path should be consider parent paths or use the exact path.
    * By default, paths are relating to the path config on the parent screen.
@@ -984,6 +995,9 @@ export type PathConfig<ParamList extends {}> = {
    * ```
    */
   parse?: Record<string, (value: string) => any>;
+};
+
+export type PathConfig<ParamList extends {}> = Partial<PathConfigAlias> & {
   /**
    * An object mapping the param name to a function which converts the param value to a string.
    * By default, all params are converted to strings using `String(value)`.
@@ -997,6 +1011,10 @@ export type PathConfig<ParamList extends {}> = {
    */
   stringify?: Record<string, (value: any) => string>;
   /**
+   * Additional path alias that will be matched to the same screen.
+   */
+  alias?: (string | PathConfigAlias)[];
+  /**
    * Path configuration for child screens.
    */
   screens?: PathConfigMap<ParamList>;
@@ -1004,12 +1022,6 @@ export type PathConfig<ParamList extends {}> = {
    * Name of the initial route to use for the navigator when the path matches.
    */
   initialRouteName?: keyof ParamList;
-  /**
-   * A function returning a state, which may be set after modifying the routes name.
-   */
-  getStateForRouteNamesChange?: (
-    state: NavigationState
-  ) => PartialState<NavigationState> | undefined;
 };
 
 export type PathConfigMap<ParamList extends {}> = {

@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/material-top-tabs",
   "description": "Integration for the animated tab view component from react-native-tab-view",
-  "version": "7.0.1",
+  "version": "7.0.18",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -52,20 +52,20 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "^2.0.0",
+    "@react-navigation/elements": "^2.2.4",
     "color": "^4.2.3",
-    "react-native-tab-view": "^4.0.1"
+    "react-native-tab-view": "^4.0.5"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "@react-navigation/native": "workspace:^",
-    "@testing-library/react-native": "^12.4.3",
-    "@types/react": "~18.2.79",
+    "@testing-library/react-native": "^12.8.1",
+    "@types/react": "~18.3.12",
     "del-cli": "^5.1.0",
-    "react": "18.2.0",
-    "react-native": "0.74.5",
-    "react-native-builder-bob": "^0.29.0",
-    "react-native-pager-view": "6.3.0",
+    "react": "18.3.1",
+    "react-native": "0.76.2",
+    "react-native-builder-bob": "^0.33.2",
+    "react-native-pager-view": "6.5.1",
     "typescript": "^5.5.2"
   },
   "peerDependencies": {

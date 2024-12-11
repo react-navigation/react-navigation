@@ -6,10 +6,10 @@ contact_links:
   - name: Documentation
     url: https://reactnavigation.org
     about: Read the official documentation.
-  - name: Feature requests
+  - name: Feature request
     url: https://react-navigation.canny.io/feature-requests
     about: Post a feature request on Canny.
-  - name: Discussions
+  - name: Discussion
     url: https://github.com/react-navigation/react-navigation/discussions
     about: Discuss questions, ideas etc. and share resources related to the library.
   - name: StackOverflow
@@ -17,4 +17,4 @@ contact_links:
     about: Ask and answer questions using the react-navigation label.
   - name: Reactiflux
     url: https://www.reactiflux.com/
-    about: Chat with other community members in the help-react-native channel.
+    about: Chat with other community members in the `help-react-native` channel.

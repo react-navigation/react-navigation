@@ -57,6 +57,8 @@ const NAMED_TRANSITIONS_PRESETS = {
   },
 } as const;
 
+const useNativeDriver = Platform.OS !== 'web';
+
 const hasAnimation = (options: BottomTabNavigationOptions) => {
   const { animation, transitionSpec } = options;
 
@@ -158,7 +160,7 @@ export function BottomTabView(props: Props) {
             return Animated[spec.animation](tabAnims[route.key], {
               ...spec.config,
               toValue,
-              useNativeDriver: true,
+              useNativeDriver,
             });
           })
           .filter(Boolean) as Animated.CompositeAnimation[]

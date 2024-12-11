@@ -16,7 +16,7 @@ export function DrawerProgress() {
         },
       ],
     };
-  });
+  }, [progress]);
 
   return (
     <View style={styles.container}>

@@ -48,6 +48,12 @@ module.exports = {
     'import-x/no-default-export': 'error',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
+    'react-hooks/exhaustive-deps': [
+      'error',
+      {
+        additionalHooks: '(useAnimatedStyle|useAnimatedProps)',
+      },
+    ],
   },
   overrides: [
     {

@@ -17,8 +17,8 @@ import { processFonts } from './FontProcessor';
 type Props = NativeStackNavigationOptions & {
   headerTopInsetEnabled: boolean;
   headerHeight: number;
+  headerBack: { title?: string | undefined; href: undefined } | undefined;
   route: Route<string>;
-  canGoBack: boolean;
 };
 
 export function useHeaderConfigProps({
@@ -46,9 +46,9 @@ export function useHeaderConfigProps({
   headerTransparent,
   headerSearchBarOptions,
   headerTopInsetEnabled,
+  headerBack,
   route,
   title,
-  canGoBack,
 }: Props) {
   const { direction } = useLocale();
   const { colors, fonts } = useTheme();
@@ -124,17 +124,21 @@ export function useHeaderConfigProps({
       ? 'transparent'
       : colors.card);
 
+  const canGoBack = headerBack != null;
+
   const headerLeftElement = headerLeft?.({
     tintColor,
     canGoBack,
-    label: headerBackTitle,
+    label: headerBackTitle ?? headerBack?.title,
     // `href` is only applicable to web
     href: undefined,
   });
+
   const headerRightElement = headerRight?.({
     tintColor,
     canGoBack,
   });
+
   const headerTitleElement =
     typeof headerTitle === 'function'
       ? headerTitle({

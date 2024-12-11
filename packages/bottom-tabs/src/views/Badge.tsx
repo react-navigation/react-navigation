@@ -3,12 +3,14 @@ import color from 'color';
 import * as React from 'react';
 import {
   Animated,
+  Platform,
   type StyleProp,
   StyleSheet,
+  type TextProps,
   type TextStyle,
 } from 'react-native';
 
-type Props = {
+type Props = TextProps & {
   /**
    * Whether the badge is visible
    */
@@ -26,6 +28,8 @@ type Props = {
    */
   style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
+
+const useNativeDriver = Platform.OS !== 'web';
 
 export function Badge({
   children,
@@ -47,7 +51,7 @@ export function Badge({
     Animated.timing(opacity, {
       toValue: visible ? 1 : 0,
       duration: 150,
-      useNativeDriver: true,
+      useNativeDriver,
     }).start(({ finished }) => {
       if (finished && !visible) {
         setRendered(false);

@@ -11,7 +11,26 @@ export type HeaderBackButtonDisplayMode = 'default' | 'generic' | 'minimal';
 
 export type Layout = { width: number; height: number };
 
-type HeaderSearchBarOptions = {
+export type HeaderSearchBarRef = {
+  focus: () => void;
+  blur: () => void;
+  setText: (text: string) => void;
+  clearText: () => void;
+  cancelSearch: () => void;
+};
+
+export type HeaderSearchBarOptions = {
+  /**
+   * Ref to imperatively update the search bar.
+   *
+   * Supported operations:
+   * - `focus` - focuses the search bar
+   * - `blur` - removes focus from the search bar
+   * - `setText` - sets the search bar's content to given value
+   * - `clearText` - removes any text present in the search bar input field
+   * - `cancelSearch` - cancel the search and close the search bar
+   */
+  ref?: React.Ref<HeaderSearchBarRef>;
   /**
    * The auto-capitalization behavior
    */
@@ -273,8 +292,14 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    */
   truncatedLabel?: string;
   /**
-   * Whether the label text is visible.
-   * Defaults to `true` on iOS and `false` on Android.
+   * How the back button displays icon and title.
+   *
+   * Supported values:
+   * - "default" - Displays one of the following depending on the available space: previous screen's title, truncated title (e.g. 'Back') or no title (only icon).
+   * - "generic" – Displays one of the following depending on the available space: truncated title (e.g. 'Back') or no title (only icon).
+   * - "minimal" – Always displays only the icon without a title.
+   *
+   * Defaults to "default" on iOS, and "minimal" on other platforms.
    */
   displayMode?: HeaderBackButtonDisplayMode;
   /**

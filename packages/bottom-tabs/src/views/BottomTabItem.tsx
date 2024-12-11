@@ -126,6 +126,7 @@ type Props = {
   showLabel?: boolean;
   /**
    * Whether to allow scaling the font for the label for accessibility purposes.
+   * Defaults to `false` on iOS 13+ where it uses `largeContentTitle`.
    */
   allowFontScaling?: boolean;
   /**
@@ -145,6 +146,9 @@ type Props = {
 const renderButtonDefault = (props: BottomTabBarButtonProps) => (
   <PlatformPressable {...props} />
 );
+
+const SUPPORTS_LARGE_CONTENT_VIEWER =
+  Platform.OS === 'ios' && parseInt(Platform.Version, 10) >= 13;
 
 export function BottomTabItem({
   route,
@@ -169,7 +173,10 @@ export function BottomTabItem({
   activeBackgroundColor: customActiveBackgroundColor,
   inactiveBackgroundColor = 'transparent',
   showLabel = true,
-  allowFontScaling,
+  // On iOS 13+, we use `largeContentTitle` for accessibility
+  // So we don't need the font to scale up
+  // https://developer.apple.com/documentation/uikit/uiview/3183939-largecontenttitle
+  allowFontScaling = SUPPORTS_LARGE_CONTENT_VIEWER ? false : undefined,
   labelStyle,
   iconStyle,
   style,
@@ -199,6 +206,18 @@ export function BottomTabItem({
         ? colors.primary
         : 'transparent');
 
+  const { options } = descriptor;
+  const labelString = getLabel(
+    {
+      label:
+        typeof options.tabBarLabel === 'string'
+          ? options.tabBarLabel
+          : undefined,
+      title: options.title,
+    },
+    route.name
+  );
+
   let labelInactiveTintColor = inactiveTintColor;
   let iconInactiveTintColor = inactiveTintColor;
 
@@ -220,23 +239,11 @@ export function BottomTabItem({
     const color = focused ? activeTintColor : labelInactiveTintColor;
 
     if (typeof label !== 'string') {
-      const { options } = descriptor;
-      const children = getLabel(
-        {
-          label:
-            typeof options.tabBarLabel === 'string'
-              ? options.tabBarLabel
-              : undefined,
-          title: options.title,
-        },
-        route.name
-      );
-
       return label({
         focused,
         color,
         position: horizontal ? 'beside-icon' : 'below-icon',
-        children,
+        children: labelString,
       });
     }
 
@@ -285,6 +292,7 @@ export function BottomTabItem({
         badge={badge}
         badgeStyle={badgeStyle}
         activeOpacity={activeOpacity}
+        allowFontScaling={allowFontScaling}
         inactiveOpacity={inactiveOpacity}
         activeTintColor={activeTintColor}
         inactiveTintColor={iconInactiveTintColor}
@@ -327,6 +335,8 @@ export function BottomTabItem({
         onLongPress,
         testID,
         accessibilityLabel,
+        accessibilityLargeContentTitle: labelString,
+        accessibilityShowsLargeContentViewer: true,
         // FIXME: accessibilityRole: 'tab' doesn't seem to work as expected on iOS
         accessibilityRole: Platform.select({ ios: 'button', default: 'tab' }),
         accessibilityState: { selected: focused },

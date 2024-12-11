@@ -24,7 +24,11 @@ export function HeaderBackground({ style, ...rest }: Props) {
         {
           backgroundColor: colors.card,
           borderBottomColor: colors.border,
-          shadowColor: dark ? 'rgba(255, 255, 255, 0.45)' : 'rgba(0, 0, 0, 1)',
+          ...(Platform.OS === 'ios' && {
+            shadowColor: dark
+              ? 'rgba(255, 255, 255, 0.45)'
+              : 'rgba(0, 0, 0, 1)',
+          }),
         },
         style,
       ]}

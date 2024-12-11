@@ -39,9 +39,9 @@ import {
   Linking,
   Platform,
   ScrollView,
-  StatusBar,
   useWindowDimensions,
 } from 'react-native';
+import { SystemBars } from 'react-native-edge-to-edge';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
@@ -226,11 +226,7 @@ export function App() {
 
   return (
     <Providers>
-      <StatusBar
-        translucent
-        barStyle={theme.dark ? 'light-content' : 'dark-content'}
-        backgroundColor="rgba(0, 0, 0, 0.24)"
-      />
+      <SystemBars style="auto" />
       <NavigationContainer
         ref={navigationRef}
         initialState={initialState}
@@ -312,7 +308,6 @@ export function App() {
                             <ListItem
                               title={SCREENS[name].title}
                               onPress={() => {
-                                // @ts-expect-error TypeScript has some issues with more than 25 screens. Needs workaround.
                                 navigation.navigate(name);
                               }}
                             />

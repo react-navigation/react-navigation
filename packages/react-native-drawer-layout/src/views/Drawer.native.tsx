@@ -21,6 +21,7 @@ import Animated, {
 import useLatestCallback from 'use-latest-callback';
 
 import type { DrawerProps } from '../types';
+import { DrawerGestureContext } from '../utils/DrawerGestureContext';
 import { DrawerProgressContext } from '../utils/DrawerProgressContext';
 import { getDrawerWidth } from '../utils/getDrawerWidth';
 import {
@@ -110,47 +111,51 @@ export function Drawer({
 
   const interactionHandleRef = React.useRef<number | null>(null);
 
-  const startInteraction = () => {
+  const startInteraction = React.useCallback(() => {
     interactionHandleRef.current = InteractionManager.createInteractionHandle();
-  };
+  }, []);
 
-  const endInteraction = () => {
+  const endInteraction = React.useCallback(() => {
     if (interactionHandleRef.current != null) {
       InteractionManager.clearInteractionHandle(interactionHandleRef.current);
       interactionHandleRef.current = null;
     }
-  };
+  }, []);
 
-  const hideKeyboard = () => {
+  const hideKeyboard = React.useCallback(() => {
     if (keyboardDismissMode === 'on-drag') {
       Keyboard.dismiss();
     }
-  };
+  }, [keyboardDismissMode]);
 
-  const onGestureBegin = () => {
+  const onGestureBegin = React.useCallback(() => {
     onGestureStart?.();
     startInteraction();
     hideKeyboard();
     hideStatusBar(true);
-  };
+  }, [onGestureStart, startInteraction, hideKeyboard, hideStatusBar]);
 
-  const onGestureFinish = () => {
+  const onGestureFinish = React.useCallback(() => {
     onGestureEnd?.();
     endInteraction();
-  };
+  }, [onGestureEnd, endInteraction]);
 
-  const onGestureAbort = () => {
+  const onGestureAbort = React.useCallback(() => {
     onGestureCancel?.();
     endInteraction();
-  };
+  }, [onGestureCancel, endInteraction]);
 
   // FIXME: Currently hitSlop is broken when on Android when drawer is on right
   // https://github.com/software-mansion/react-native-gesture-handler/issues/569
-  const hitSlop = isRight
-    ? // Extend hitSlop to the side of the screen when drawer is closed
-      // This lets the user drag the drawer from the side of the screen
-      { right: 0, width: isOpen ? undefined : swipeEdgeWidth }
-    : { left: 0, width: isOpen ? undefined : swipeEdgeWidth };
+  const hitSlop = React.useMemo(
+    () =>
+      isRight
+        ? // Extend hitSlop to the side of the screen when drawer is closed
+          // This lets the user drag the drawer from the side of the screen
+          { right: 0, width: isOpen ? undefined : swipeEdgeWidth }
+        : { left: 0, width: isOpen ? undefined : swipeEdgeWidth },
+    [isRight, isOpen, swipeEdgeWidth]
+  );
 
   const touchStartX = useSharedValue(0);
   const touchX = useSharedValue(0);
@@ -217,53 +222,76 @@ export function Drawer({
 
   const startX = useSharedValue(0);
 
-  let pan = Gesture?.Pan()
-    .onBegin((event) => {
-      'worklet';
-      startX.value = translationX.value;
-      gestureState.value = event.state;
-      touchStartX.value = event.x;
-    })
-    .onStart(() => {
-      'worklet';
-      runOnJS(onGestureBegin)();
-    })
-    .onChange((event) => {
-      'worklet';
-      touchX.value = event.x;
-      translationX.value = startX.value + event.translationX;
-      gestureState.value = event.state;
-    })
-    .onEnd((event, success) => {
-      'worklet';
-      gestureState.value = event.state;
+  const pan = React.useMemo(() => {
+    let panGesture = Gesture?.Pan()
+      .onBegin((event) => {
+        'worklet';
+        startX.value = translationX.value;
+        gestureState.value = event.state;
+        touchStartX.value = event.x;
+      })
+      .onStart(() => {
+        'worklet';
+        runOnJS(onGestureBegin)();
+      })
+      .onChange((event) => {
+        'worklet';
+        touchX.value = event.x;
+        translationX.value = startX.value + event.translationX;
+        gestureState.value = event.state;
+      })
+      .onEnd((event, success) => {
+        'worklet';
+        gestureState.value = event.state;
 
-      if (!success) {
-        runOnJS(onGestureAbort)();
-      }
+        if (!success) {
+          runOnJS(onGestureAbort)();
+        }
 
-      const nextOpen =
-        (Math.abs(event.translationX) > SWIPE_MIN_OFFSET &&
-          Math.abs(event.translationX) > swipeMinVelocity) ||
-        Math.abs(event.translationX) > swipeMinDistance
-          ? drawerPosition === 'left'
-            ? // If swiped to right, open the drawer, otherwise close it
-              (event.velocityX === 0 ? event.translationX : event.velocityX) > 0
-            : // If swiped to left, open the drawer, otherwise close it
-              (event.velocityX === 0 ? event.translationX : event.velocityX) < 0
-          : open;
+        const nextOpen =
+          (Math.abs(event.translationX) > SWIPE_MIN_OFFSET &&
+            Math.abs(event.translationX) > swipeMinVelocity) ||
+          Math.abs(event.translationX) > swipeMinDistance
+            ? drawerPosition === 'left'
+              ? // If swiped to right, open the drawer, otherwise close it
+                (event.velocityX === 0 ? event.translationX : event.velocityX) >
+                0
+              : // If swiped to left, open the drawer, otherwise close it
+                (event.velocityX === 0 ? event.translationX : event.velocityX) <
+                0
+            : open;
 
-      toggleDrawer(nextOpen, event.velocityX);
-      runOnJS(onGestureFinish)();
-    })
-    .activeOffsetX([-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET])
-    .failOffsetY([-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET])
-    .hitSlop(hitSlop)
-    .enabled(drawerType !== 'permanent' && swipeEnabled);
+        toggleDrawer(nextOpen, event.velocityX);
+        runOnJS(onGestureFinish)();
+      })
+      .activeOffsetX([-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET])
+      .failOffsetY([-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET])
+      .hitSlop(hitSlop)
+      .enabled(drawerType !== 'permanent' && swipeEnabled);
 
-  if (pan && configureGestureHandler) {
-    pan = configureGestureHandler(pan);
-  }
+    if (panGesture && configureGestureHandler) {
+      panGesture = configureGestureHandler(panGesture);
+    }
+    return panGesture;
+  }, [
+    configureGestureHandler,
+    drawerPosition,
+    drawerType,
+    gestureState,
+    hitSlop,
+    onGestureBegin,
+    onGestureAbort,
+    onGestureFinish,
+    open,
+    startX,
+    swipeEnabled,
+    swipeMinDistance,
+    swipeMinVelocity,
+    toggleDrawer,
+    touchStartX,
+    touchX,
+    translationX,
+  ]);
 
   const translateX = useDerivedValue(() => {
     // Comment stolen from react-native-gesture-handler/DrawerLayout
@@ -334,7 +362,14 @@ export function Drawer({
               },
             ],
     };
-  });
+  }, [
+    direction,
+    drawerPosition,
+    drawerType,
+    drawerWidth,
+    layout.width,
+    translateX,
+  ]);
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -354,7 +389,7 @@ export function Drawer({
               },
             ],
     };
-  });
+  }, [drawerPosition, drawerType, drawerWidth, translateX]);
 
   const progress = useDerivedValue(() => {
     return drawerType === 'permanent'
@@ -369,64 +404,66 @@ export function Drawer({
   return (
     <GestureHandlerRootView style={[styles.container, style]}>
       <DrawerProgressContext.Provider value={progress}>
-        <GestureDetector gesture={pan}>
-          {/* Immediate child of gesture handler needs to be an Animated.View */}
-          <Animated.View
-            style={[
-              styles.main,
-              {
-                flexDirection:
-                  drawerType === 'permanent'
-                    ? (isRight && direction === 'ltr') ||
-                      (!isRight && direction === 'rtl')
-                      ? 'row'
-                      : 'row-reverse'
-                    : 'row',
-              },
-            ]}
-          >
-            <Animated.View style={[styles.content, contentAnimatedStyle]}>
-              <View
-                accessibilityElementsHidden={
-                  isOpen && drawerType !== 'permanent'
-                }
-                importantForAccessibility={
-                  isOpen && drawerType !== 'permanent'
-                    ? 'no-hide-descendants'
-                    : 'auto'
-                }
-                style={styles.content}
-              >
-                {children}
-              </View>
-              {drawerType !== 'permanent' ? (
-                <Overlay
-                  open={open}
-                  progress={progress}
-                  onPress={() => toggleDrawer(false)}
-                  style={overlayStyle}
-                  accessibilityLabel={overlayAccessibilityLabel}
-                />
-              ) : null}
-            </Animated.View>
+        <DrawerGestureContext.Provider value={pan}>
+          <GestureDetector gesture={pan}>
+            {/* Immediate child of gesture handler needs to be an Animated.View */}
             <Animated.View
-              removeClippedSubviews={Platform.OS !== 'ios'}
               style={[
-                styles.drawer,
+                styles.main,
                 {
-                  width: drawerWidth,
-                  position:
-                    drawerType === 'permanent' ? 'relative' : 'absolute',
-                  zIndex: drawerType === 'back' ? -1 : 0,
+                  flexDirection:
+                    drawerType === 'permanent'
+                      ? (isRight && direction === 'ltr') ||
+                        (!isRight && direction === 'rtl')
+                        ? 'row'
+                        : 'row-reverse'
+                      : 'row',
                 },
-                drawerAnimatedStyle,
-                drawerStyle,
               ]}
             >
-              {renderDrawerContent()}
+              <Animated.View style={[styles.content, contentAnimatedStyle]}>
+                <View
+                  accessibilityElementsHidden={
+                    isOpen && drawerType !== 'permanent'
+                  }
+                  importantForAccessibility={
+                    isOpen && drawerType !== 'permanent'
+                      ? 'no-hide-descendants'
+                      : 'auto'
+                  }
+                  style={styles.content}
+                >
+                  {children}
+                </View>
+                {drawerType !== 'permanent' ? (
+                  <Overlay
+                    open={open}
+                    progress={progress}
+                    onPress={() => toggleDrawer(false)}
+                    style={overlayStyle}
+                    accessibilityLabel={overlayAccessibilityLabel}
+                  />
+                ) : null}
+              </Animated.View>
+              <Animated.View
+                removeClippedSubviews={Platform.OS !== 'ios'}
+                style={[
+                  styles.drawer,
+                  {
+                    width: drawerWidth,
+                    position:
+                      drawerType === 'permanent' ? 'relative' : 'absolute',
+                    zIndex: drawerType === 'back' ? -1 : 0,
+                  },
+                  drawerAnimatedStyle,
+                  drawerStyle,
+                ]}
+              >
+                {renderDrawerContent()}
+              </Animated.View>
             </Animated.View>
-          </Animated.View>
-        </GestureDetector>
+          </GestureDetector>
+        </DrawerGestureContext.Provider>
       </DrawerProgressContext.Provider>
     </GestureHandlerRootView>
   );
