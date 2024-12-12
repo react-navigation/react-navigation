@@ -754,6 +754,7 @@ export class CardStack extends React.Component<Props, State> {
                 enabled={detachInactiveScreens}
                 active={isScreenActive}
                 freezeOnBlur={freezeOnBlur}
+                shouldFreeze={isScreenActive === STATE_INACTIVE && !isPreloaded}
                 homeIndicatorHidden={autoHideHomeIndicator}
                 pointerEvents="box-none"
               >

@@ -49,9 +49,14 @@ import { useHeaderConfigProps } from './useHeaderConfigProps';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
 
+function isFabric() {
+  return 'nativeFabricUIManager' in global;
+}
+
 type SceneViewProps = {
   index: number;
   focused: boolean;
+  shouldFreeze: boolean;
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
@@ -73,6 +78,7 @@ const useNativeDriver = Platform.OS !== 'web';
 const SceneView = ({
   index,
   focused,
+  shouldFreeze,
   descriptor,
   previousDescriptor,
   nextDescriptor,
@@ -393,6 +399,8 @@ const SceneView = ({
           // When ts-expect-error is added, it affects all the props below it
           // So we keep any props that need it at the end
           // Otherwise invalid props may not be caught by TypeScript
+          // @ts-expect-error: `shouldFreeze` is not available in lower RNScreens versions
+          shouldFreeze={shouldFreeze}
         >
           <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
             <HeaderHeightContext.Provider
@@ -486,6 +494,7 @@ export function NativeStackView({
           const descriptor =
             descriptors[route.key] ?? preloadedDescriptors[route.key];
           const isFocused = state.index === index;
+          const isBelowFocused = state.index - 1 === index;
           const previousKey = state.routes[index - 1]?.key;
           const nextKey = state.routes[index + 1]?.key;
           const previousDescriptor = previousKey
@@ -499,11 +508,18 @@ export function NativeStackView({
             preloadedDescriptors[route.key] !== undefined &&
             descriptors[route.key] === undefined;
 
+          // On Fabric, when screen is frozen, animated and reanimated values are not updated
+          // due to component being unmounted. To avoid this, we don't freeze the previous screen there
+          const shouldFreeze = isFabric()
+            ? !isPreloaded && !isFocused && !isBelowFocused
+            : !isPreloaded && !isFocused;
+
           return (
             <SceneView
               key={route.key}
               index={index}
               focused={isFocused}
+              shouldFreeze={shouldFreeze}
               descriptor={descriptor}
               previousDescriptor={previousDescriptor}
               nextDescriptor={nextDescriptor}

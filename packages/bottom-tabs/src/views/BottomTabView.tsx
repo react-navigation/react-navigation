@@ -264,12 +264,13 @@ export function BottomTabView(props: Props) {
               .sceneStyleInterpolator,
           } = descriptor.options;
           const isFocused = state.index === index;
+          const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
           if (
             lazy &&
             !loaded.includes(route.key) &&
             !isFocused &&
-            !state.preloadedRouteKeys.includes(route.key)
+            !isPreloaded
           ) {
             // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
             return null;
@@ -319,6 +320,7 @@ export function BottomTabView(props: Props) {
               active={activityState}
               enabled={detachInactiveScreens}
               freezeOnBlur={freezeOnBlur}
+              shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
             >
               <BottomTabBarHeightContext.Provider
                 value={tabBarPosition === 'bottom' ? tabBarHeight : 0}

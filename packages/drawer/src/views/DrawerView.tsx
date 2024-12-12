@@ -223,12 +223,13 @@ function DrawerViewBase({
           const descriptor = descriptors[route.key];
           const { lazy = true } = descriptor.options;
           const isFocused = state.index === index;
+          const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
           if (
             lazy &&
             !loaded.includes(route.key) &&
             !isFocused &&
-            !state.preloadedRouteKeys.includes(route.key)
+            !isPreloaded
           ) {
             // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
             return null;
@@ -260,6 +261,7 @@ function DrawerViewBase({
               visible={isFocused}
               enabled={detachInactiveScreens}
               freezeOnBlur={freezeOnBlur}
+              shouldFreeze={!isFocused && !isPreloaded}
             >
               <Screen
                 focused={isFocused}

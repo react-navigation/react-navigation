@@ -12,6 +12,7 @@ type Props = {
   active: 0 | 1 | 2 | Animated.AnimatedInterpolation<0 | 1>;
   children: React.ReactNode;
   freezeOnBlur?: boolean;
+  shouldFreeze: boolean;
   style?: StyleProp<ViewStyle>;
 };
 
