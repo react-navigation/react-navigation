@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.18...@react-navigation/stack@7.1.0) (2024-12-12)
+
+### Bug Fixes
+
+* don't freeze active and preloaded screens ([#12332](https://github.com/react-navigation/react-navigation/issues/12332)) ([015d94d](https://github.com/react-navigation/react-navigation/commit/015d94d61e8631c6f4d5471ca3c3372fe477e930)) - by @WoLewicki
+
+### Features
+
+* export *NavigatorProps for each navigator ([#12327](https://github.com/react-navigation/react-navigation/issues/12327)) ([316e2ff](https://github.com/react-navigation/react-navigation/commit/316e2ff7126c2c1e38ddd7296342a07155f78817)) - by @marklawlor
+
 ## [7.0.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.17...@react-navigation/stack@7.0.18) (2024-12-02)
 
 **Note:** Version bump only for package @react-navigation/stack

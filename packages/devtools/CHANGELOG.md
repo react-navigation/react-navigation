@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.14...@react-navigation/devtools@7.0.15) (2024-12-12)
+
+### Bug Fixes
+
+* nanoid vulberable version ([#12328](https://github.com/react-navigation/react-navigation/issues/12328)) ([2a745c8](https://github.com/react-navigation/react-navigation/commit/2a745c8c598f95fcec5bbf5442045478d4046663)) - by @khushilms
+
 ## [7.0.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.13...@react-navigation/devtools@7.0.14) (2024-12-02)
 
 **Note:** Version bump only for package @react-navigation/devtools

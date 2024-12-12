@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.3.0...@react-navigation/core@7.3.1) (2024-12-12)
+
+### Bug Fixes
+
+* align path normalization behavior in static config ([b70823f](https://github.com/react-navigation/react-navigation/commit/b70823fa58ea36217534e646f172516665b684a0)) - by @satya164
+* flush state updates before `setPreventRemove` called ([#12335](https://github.com/react-navigation/react-navigation/issues/12335)) ([70e9a2f](https://github.com/react-navigation/react-navigation/commit/70e9a2f2fc0e4e652bf219ed249bb3e1894c1c5f)), closes [/github.com/react-navigation/react-navigation/blob/2a745c8c598f95fcec5bbf5442045478d4046663/packages/core/src/PreventRemoveProvider.tsx#L69-L71](https://github.com//github.com/react-navigation/react-navigation/blob/2a745c8c598f95fcec5bbf5442045478d4046663/packages/core/src/PreventRemoveProvider.tsx/issues/L69-L71) [/github.com/react-navigation/react-navigation/blob/2a745c8c598f95fcec5bbf5442045478d4046663/packages/core/src/useScheduleUpdate.tsx#L11-L21](https://github.com//github.com/react-navigation/react-navigation/blob/2a745c8c598f95fcec5bbf5442045478d4046663/packages/core/src/useScheduleUpdate.tsx/issues/L11-L21) [/github.com/react-navigation/react-navigation/blob/fd2dda1bc43804f1a4c1cb9ee2739b39e8163210/packages/core/src/useSyncState.tsx#L43-L51](https://github.com//github.com/react-navigation/react-navigation/blob/fd2dda1bc43804f1a4c1cb9ee2739b39e8163210/packages/core/src/useSyncState.tsx/issues/L43-L51) [/github.com/react-navigation/react-navigation/blob/2a745c8c598f95fcec5bbf5442045478d4046663/packages/core/src/PreventRemoveProvider.tsx#L65-L67](https://github.com//github.com/react-navigation/react-navigation/blob/2a745c8c598f95fcec5bbf5442045478d4046663/packages/core/src/PreventRemoveProvider.tsx/issues/L65-L67) - by @andrejpavlovic
+* nanoid vulberable version ([#12328](https://github.com/react-navigation/react-navigation/issues/12328)) ([2a745c8](https://github.com/react-navigation/react-navigation/commit/2a745c8c598f95fcec5bbf5442045478d4046663)) - by @khushilms
+
 # [7.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.2.2...@react-navigation/core@7.3.0) (2024-12-02)
 
 ### Bug Fixes

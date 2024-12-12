@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.13...@react-navigation/native@7.0.14) (2024-12-12)
+
+### Bug Fixes
+
+* correctly extract path from url with multiple `?` characters ([#12334](https://github.com/react-navigation/react-navigation/issues/12334)) ([234d07d](https://github.com/react-navigation/react-navigation/commit/234d07d37066d831be0f356c8766b03ec094a90f)) - by @andrejpavlovic
+* nanoid vulberable version ([#12328](https://github.com/react-navigation/react-navigation/issues/12328)) ([2a745c8](https://github.com/react-navigation/react-navigation/commit/2a745c8c598f95fcec5bbf5442045478d4046663)) - by @khushilms
+
 ## [7.0.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.12...@react-navigation/native@7.0.13) (2024-12-02)
 
 **Note:** Version bump only for package @react-navigation/native
