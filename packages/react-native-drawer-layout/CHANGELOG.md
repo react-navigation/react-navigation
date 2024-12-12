@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.0...react-native-drawer-layout@4.1.1) (2024-12-12)
+
+### Bug Fixes
+
+* fix pressables not receiving touch in drawer ([9831292](https://github.com/react-navigation/react-navigation/commit/9831292375ddf6daca1cbf82cbe904ed4d73f7db)), closes [#12324](https://github.com/react-navigation/react-navigation/issues/12324) - by @
+
 # [4.1.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.4...react-native-drawer-layout@4.1.0) (2024-12-11)
 
 ### Features
