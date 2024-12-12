@@ -111,42 +111,40 @@ export function Drawer({
 
   const interactionHandleRef = React.useRef<number | null>(null);
 
-  const startInteraction = React.useCallback(() => {
+  const startInteraction = useLatestCallback(() => {
     interactionHandleRef.current = InteractionManager.createInteractionHandle();
-  }, []);
+  });
 
-  const endInteraction = React.useCallback(() => {
+  const endInteraction = useLatestCallback(() => {
     if (interactionHandleRef.current != null) {
       InteractionManager.clearInteractionHandle(interactionHandleRef.current);
       interactionHandleRef.current = null;
     }
-  }, []);
+  });
 
-  const hideKeyboard = React.useCallback(() => {
+  const hideKeyboard = useLatestCallback(() => {
     if (keyboardDismissMode === 'on-drag') {
       Keyboard.dismiss();
     }
-  }, [keyboardDismissMode]);
+  });
 
-  const onGestureBegin = React.useCallback(() => {
+  const onGestureBegin = useLatestCallback(() => {
     onGestureStart?.();
     startInteraction();
     hideKeyboard();
     hideStatusBar(true);
-  }, [onGestureStart, startInteraction, hideKeyboard, hideStatusBar]);
+  });
 
-  const onGestureFinish = React.useCallback(() => {
+  const onGestureFinish = useLatestCallback(() => {
     onGestureEnd?.();
     endInteraction();
-  }, [onGestureEnd, endInteraction]);
+  });
 
-  const onGestureAbort = React.useCallback(() => {
+  const onGestureAbort = useLatestCallback(() => {
     onGestureCancel?.();
     endInteraction();
-  }, [onGestureCancel, endInteraction]);
+  });
 
-  // FIXME: Currently hitSlop is broken when on Android when drawer is on right
-  // https://github.com/software-mansion/react-native-gesture-handler/issues/569
   const hitSlop = React.useMemo(
     () =>
       isRight
@@ -162,13 +160,16 @@ export function Drawer({
   const translationX = useSharedValue(getDrawerTranslationX(open));
   const gestureState = useSharedValue<GestureState>(GestureState.UNDETERMINED);
 
-  const handleAnimationStart = useLatestCallback((open: boolean) => {
+  const onAnimationStart = useLatestCallback((open: boolean) => {
     onTransitionStart?.(!open);
   });
 
-  const handleAnimationEnd = useLatestCallback(
+  const onAnimationEnd = useLatestCallback(
     (open: boolean, finished?: boolean) => {
-      if (!finished) return;
+      if (!finished) {
+        return;
+      }
+
       onTransitionEnd?.(!open);
     }
   );
@@ -180,7 +181,7 @@ export function Drawer({
       const translateX = getDrawerTranslationX(open);
 
       if (velocity === undefined) {
-        runOnJS(handleAnimationStart)(open);
+        runOnJS(onAnimationStart)(open);
       }
 
       touchStartX.value = 0;
@@ -197,7 +198,7 @@ export function Drawer({
           restSpeedThreshold: 0.01,
           reduceMotion: ReduceMotion.Never,
         },
-        (finished) => runOnJS(handleAnimationEnd)(open, finished)
+        (finished) => runOnJS(onAnimationEnd)(open, finished)
       );
 
       if (open) {
@@ -208,8 +209,8 @@ export function Drawer({
     },
     [
       getDrawerTranslationX,
-      handleAnimationEnd,
-      handleAnimationStart,
+      onAnimationEnd,
+      onAnimationStart,
       onClose,
       onOpen,
       touchStartX,
@@ -226,22 +227,26 @@ export function Drawer({
     let panGesture = Gesture?.Pan()
       .onBegin((event) => {
         'worklet';
+
         startX.value = translationX.value;
         gestureState.value = event.state;
         touchStartX.value = event.x;
       })
       .onStart(() => {
         'worklet';
+
         runOnJS(onGestureBegin)();
       })
       .onChange((event) => {
         'worklet';
+
         touchX.value = event.x;
         translationX.value = startX.value + event.translationX;
         gestureState.value = event.state;
       })
       .onEnd((event, success) => {
         'worklet';
+
         gestureState.value = event.state;
 
         if (!success) {
@@ -272,6 +277,7 @@ export function Drawer({
     if (panGesture && configureGestureHandler) {
       panGesture = configureGestureHandler(panGesture);
     }
+
     return panGesture;
   }, [
     configureGestureHandler,
