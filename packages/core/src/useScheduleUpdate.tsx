@@ -1,6 +1,8 @@
 import * as React from 'react';
 
 import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
+
 /**
  * When screen config changes, we want to update the navigator in the same update phase.
  * However, navigation state is in the root component and React won't let us update it from a child.
@@ -17,5 +19,5 @@ export function useScheduleUpdate(callback: () => void) {
   // However, since we are using sync store, it might be fine
   scheduleUpdate(callback);
 
-  React.useEffect(flushUpdates);
+  useIsomorphicLayoutEffect(flushUpdates);
 }

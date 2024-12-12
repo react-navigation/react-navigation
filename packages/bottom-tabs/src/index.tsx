@@ -35,6 +35,7 @@ export type {
   BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
+  BottomTabNavigatorProps,
   BottomTabOptionsArgs,
   BottomTabScreenProps,
 } from './types';

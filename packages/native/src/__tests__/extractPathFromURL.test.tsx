@@ -334,4 +334,11 @@ test('returns a valid search query when it has a url as param', () => {
       'https://mysite.com/readPolicy?url=https://test.com'
     )
   ).toBe('/readPolicy?url=https://test.com');
+
+  expect(
+    extractPathFromURL(
+      ['https://mysite.com'],
+      'https://mysite.com/readPolicy?url=https://test.com?param=1'
+    )
+  ).toBe('/readPolicy?url=https://test.com?param=1');
 });

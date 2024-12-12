@@ -1,6 +1,5 @@
 import {
   createNavigatorFactory,
-  type DefaultNavigatorOptions,
   type NavigatorTypeBagBase,
   type ParamListBase,
   type StaticConfig,
@@ -13,23 +12,12 @@ import {
 } from '@react-navigation/native';
 
 import type {
-  MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationEventMap,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationProp,
+  MaterialTopTabNavigatorProps,
 } from '../types';
 import { MaterialTopTabView } from '../views/MaterialTopTabView';
-
-type Props = DefaultNavigatorOptions<
-  ParamListBase,
-  string | undefined,
-  TabNavigationState<ParamListBase>,
-  MaterialTopTabNavigationOptions,
-  MaterialTopTabNavigationEventMap,
-  MaterialTopTabNavigationProp<ParamListBase>
-> &
-  TabRouterOptions &
-  MaterialTopTabNavigationConfig;
 
 function MaterialTopTabNavigator({
   id,
@@ -42,7 +30,7 @@ function MaterialTopTabNavigator({
   screenLayout,
   UNSTABLE_getStateForRouteNamesChange,
   ...rest
-}: Props) {
+}: MaterialTopTabNavigatorProps) {
   const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       TabNavigationState<ParamListBase>,
