@@ -15,10 +15,10 @@ export function extractPathFromURL(prefixes: string[], url: string) {
         .join('\\.')}`
     );
 
-    const [originAndPath, searchParams] = url.split('?');
+    const [originAndPath, ...searchParams] = url.split('?');
     const normalizedURL = originAndPath
       .replace(/\/+/g, '/')
-      .concat(searchParams ? `?${searchParams}` : '');
+      .concat(searchParams.length ? `?${searchParams.join('?')}` : '');
 
     if (prefixRegex.test(normalizedURL)) {
       return normalizedURL.replace(prefixRegex, '');
