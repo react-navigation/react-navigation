@@ -348,6 +348,10 @@ export function Drawer({
     const distanceFromEdge = layout.width - drawerWidth;
 
     return {
+      // FIXME: Reanimated skips committing to the shadow tree if no layout props are animated
+      // This results in pressables not getting their correct position and can't be pressed
+      // So we animate the zIndex to force the commit - it doesn't affect the drawer visually
+      zIndex: translateX.value === 0 ? 0 : 1,
       transform:
         drawerType === 'permanent'
           ? // Reanimated needs the property to be present, but it results in Browser bug
@@ -379,6 +383,8 @@ export function Drawer({
 
   const contentAnimatedStyle = useAnimatedStyle(() => {
     return {
+      // FIXME: Force Reanimated to commit to the shadow tree
+      zIndex: translateX.value === 0 ? 0 : drawerType === 'back' ? 2 : 1,
       transform:
         drawerType === 'permanent'
           ? // Reanimated needs the property to be present, but it results in Browser bug
