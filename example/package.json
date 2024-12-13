@@ -9,8 +9,8 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
-    "e2e:web": "npx playwright test --config=e2e/playwright.config.ts",
-    "e2e:native": "maestro test -e APP_ID=host.exp.exponent e2e/maestro"
+    "e2e:native": "maestro test --debug-output maestro-debug-output -e APP_ID=org.reactnavigation.playground -e APP_SCHEME=rne:// e2e/maestro",
+    "e2e:web": "npx playwright test --config=e2e/playwright.config.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",
@@ -52,7 +52,6 @@
     "babel-preset-expo": "~13.0.0",
     "cheerio": "^1.1.0",
     "expect-type": "^1.2.1",
-    "expo-dev-client": "~5.2.0",
     "mock-require-assets": "^0.0.3",
     "nodemon": "^3.1.10",
     "npm-run-all2": "^8.0.4",

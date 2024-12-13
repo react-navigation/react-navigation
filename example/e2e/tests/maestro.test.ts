@@ -20,9 +20,9 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
       try {
         switch (Object.keys(step)[0]) {
           case 'openLink': {
-            await page.goto(
-              step.openLink.link.replace('exp://127.0.0.1:8081/--', '')
-            );
+            // eslint-disable-next-line no-template-curly-in-string
+            await page.goto(step.openLink.link.replace('${APP_SCHEME}', ''));
+
             break;
           }
 
@@ -38,6 +38,7 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
               .filter({ visible: true })
               .first()
               .click({ force: true });
+
             break;
           }
 
@@ -48,7 +49,25 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
                 .filter({ visible: true })
                 .first()
             ).toBeVisible();
+
             break;
+          }
+
+          case 'extendedWaitUntil': {
+            const element = page
+              .getByText(step.extendedWaitUntil.visible)
+              .filter({ visible: true })
+              .first();
+
+            await element.waitFor({
+              timeout: step.extendedWaitUntil.timeout,
+            });
+
+            break;
+          }
+
+          default: {
+            throw new Error(`Unknown command: ${JSON.stringify(step)}`);
           }
         }
       } catch (error) {

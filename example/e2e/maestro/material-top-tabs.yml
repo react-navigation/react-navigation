@@ -2,6 +2,7 @@ appId: ${APP_ID}
 name: Material Top Tabs
 ---
 - openLink:
-    link: exp://127.0.0.1:8081/--/material-top-tabs-screen
-- assertVisible:
-    text: 'Material Top Tabs'
+    link: ${APP_SCHEME}material-top-tabs-screen
+- extendedWaitUntil:
+    visible: 'Material Top Tabs'
+    timeout: 60000

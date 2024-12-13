@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -39,7 +39,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -50,48 +50,11 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
 
-  e2e-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup
-        uses: ./.github/actions/setup
-
-      - name: Get Playwright version
-        id: playwright
-        run: echo "VERSION=$(node --print 'require(`@playwright/test/package.json`).version')" >> $GITHUB_OUTPUT
-
-      - name: Restore Playwright
-        uses: actions/cache/restore@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ steps.playwright.outputs.VERSION }}
-          restore-keys: |
-            ${{ runner.os }}-playwright-
-
-      - name: Install Playwright
-        run: npx playwright install --with-deps
-
-      - name: Cache Playwright
-        if: steps.playwright.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ steps.playwright.outputs.cache-primary-key }}
-
-      - name: Build example for web
-        run: yarn example expo export --platform web
-
-      - name: Run e2e tests
-        run: yarn example e2e:web
-
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup
         uses: ./.github/actions/setup

@@ -1,15 +1,14 @@
-name: Expo Preview
+name: Expo
 on:
   pull_request:
 
 jobs:
-  publish:
-    name: Install and publish
+  preview:
     runs-on: ubuntu-latest
     if: github.event.pull_request.head.repo.owner.login == 'react-navigation'
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup
         uses: ./.github/actions/setup
