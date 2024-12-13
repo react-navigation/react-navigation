@@ -9,8 +9,12 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
-    "e2e:web": "npx playwright test --config=e2e/playwright.config.ts",
-    "e2e:native": "maestro test -e APP_ID=host.exp.exponent e2e/maestro"
+    "fingerprint:android": "npx expo-updates fingerprint:generate --platform android | jq -r '.hash' | xargs -n 1 echo 'fingerprint:'",
+    "fingerprint:ios": "npx expo-updates fingerprint:generate --platform ios | jq -r '.hash' | xargs -n 1 echo 'fingerprint:'",
+    "build:debug:android": "npx expo prebuild --yarn && cd android && ./gradlew assembleDebug -DtestBuildType=debug -Dorg.gradle.jvmargs=-Xmx4g",
+    "build:debug:ios": "npx expo prebuild --yarn && xcodebuild ONLY_ACTIVE_ARCH=YES -workspace ios/ReactNavigation.xcworkspace -UseNewBuildSystem=YES -scheme ReactNavigation -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -quiet",
+    "e2e:native": "maestro test -e APP_ID=org.reactnavigation.example -e APP_SCHEME=rne:// e2e/maestro",
+    "e2e:web": "npx playwright test --config=e2e/playwright.config.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~4.0.0",

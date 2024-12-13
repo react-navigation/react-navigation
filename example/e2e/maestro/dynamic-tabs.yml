@@ -1,7 +1,8 @@
 appId: ${APP_ID}
 name: Dynamic Tabs
 ---
+- clearState: ${APP_ID}
 - openLink:
-    link: exp://127.0.0.1:8081/--/dynamic-tabs
+    link: ${APP_SCHEME}/dynamic-tabs
 - assertVisible:
     text: 'Tab 0'

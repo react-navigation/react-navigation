@@ -1,7 +1,8 @@
 appId: ${APP_ID}
 name: Bottom Tabs
 ---
+- clearState: ${APP_ID}
 - openLink:
-    link: exp://127.0.0.1:8081/--/bottom-tabs
+    link: ${APP_SCHEME}/bottom-tabs
 - assertVisible:
     text: 'Article by Gandalf'

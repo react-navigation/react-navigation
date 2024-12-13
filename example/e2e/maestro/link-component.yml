@@ -1,7 +1,8 @@
 appId: ${APP_ID}
 name: Link Component
 ---
+- clearState: ${APP_ID}
 - openLink:
-    link: exp://127.0.0.1:8081/--/link-component
+    link: ${APP_SCHEME}/link-component
 - assertVisible:
     text: 'Article by Gandalf'

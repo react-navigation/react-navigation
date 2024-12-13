@@ -1,7 +1,8 @@
 appId: ${APP_ID}
 name: Tab Preload Flow
 ---
+- clearState: ${APP_ID}
 - openLink:
-    link: exp://127.0.0.1:8081/--/tab-preload-flow
+    link: ${APP_SCHEME}/tab-preload-flow
 - assertVisible:
     text: 'Home'

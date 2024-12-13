@@ -1,8 +1,9 @@
 appId: ${APP_ID}
 name: Simple Stack
 ---
+- clearState: ${APP_ID}
 - openLink:
-    link: exp://127.0.0.1:8081/--/simple-stack
+    link: ${APP_SCHEME}/simple-stack
 - assertVisible:
     text: 'Article by Gandalf'
 - tapOn:
