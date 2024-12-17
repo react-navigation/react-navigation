@@ -3,6 +3,7 @@
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
 [![MIT License][license-badge]][license]
+[![Gurubase][gurubase-badge]][gurubase]
 
 Routing and navigation for your React Native apps.
 
