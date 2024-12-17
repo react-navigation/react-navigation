@@ -80,3 +80,5 @@ Remember to replace `<user>`, `<repo>` and `<name>` with right values.
 [coverage]: https://codecov.io/github/react-navigation/react-navigation
 [license-badge]: https://img.shields.io/npm/l/@react-navigation/core.svg
 [license]: https://opensource.org/licenses/MIT
+[gurubase-badge]: https://img.shields.io/badge/Gurubase-Ask%20React%20Navigation%20Guru-006BFF
+[gurubase]: https://gurubase.io/g/react-navigation
