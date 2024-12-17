@@ -10,7 +10,7 @@ jobs:
     if: "${{ startsWith(github.event.head_commit.message, 'chore: publish') }}"
     steps:
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
 
       - name: Bundle new versions
         env:
