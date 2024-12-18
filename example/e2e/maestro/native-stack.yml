@@ -1,8 +1,9 @@
 appId: ${APP_ID}
 name: Native Stack
 ---
+- clearState: ${APP_ID}
 - openLink:
-    link: exp://127.0.0.1:8081/--/native-stack
+    link: ${APP_SCHEME}/native-stack
 - assertVisible:
     text: 'Article by Gandalf'
 - tapOn:
