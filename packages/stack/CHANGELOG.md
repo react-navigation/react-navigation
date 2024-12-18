@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.1.0...@react-navigation/stack@7.1.1) (2024-12-18)
+
+### Bug Fixes
+
+* fix page not being resized to fit the screen on web ([9e398ea](https://github.com/react-navigation/react-navigation/commit/9e398ea4587833c16d43f5722ea07a21d66337b1)), closes [#12351](https://github.com/react-navigation/react-navigation/issues/12351) - by @
+
 # [7.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.0.18...@react-navigation/stack@7.1.0) (2024-12-12)
 
 ### Bug Fixes
