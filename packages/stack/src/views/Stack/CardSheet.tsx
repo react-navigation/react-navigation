@@ -45,20 +45,34 @@ export const CardSheet = React.forwardRef<CardSheetRef, Props>(
       const isFullHeight = height === layout.height;
       const id = '__react-navigation-stack-mobile-chrome-viewport-fix';
 
-      if (isFullHeight) {
-        const vh = window.innerHeight * 0.01;
+      let unsubscribe: (() => void) | undefined;
+
+      if (isFullHeight && navigator.maxTouchPoints > 0) {
         const style =
           document.getElementById(id) ?? document.createElement('style');
 
         style.id = id;
-        style.innerHTML = [
-          `:root { --vh: ${vh}px; }`,
-          `body { height: calc(var(--vh, 1vh) * 100); }`,
-        ].join('\n');
+
+        const updateStyle = () => {
+          const vh = window.innerHeight * 0.01;
+
+          style.textContent = [
+            `:root { --vh: ${vh}px; }`,
+            `body { height: calc(var(--vh, 1vh) * 100); }`,
+          ].join('\n');
+        };
+
+        updateStyle();
 
         if (!document.head.contains(style)) {
           document.head.appendChild(style);
         }
+
+        window.addEventListener('resize', updateStyle);
+
+        unsubscribe = () => {
+          window.removeEventListener('resize', updateStyle);
+        };
       } else {
         // Remove the workaround if the stack does not occupy the whole
         // height of the page
@@ -67,6 +81,8 @@ export const CardSheet = React.forwardRef<CardSheetRef, Props>(
 
       // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
       setFill(width === layout.width && height === layout.height);
+
+      return unsubscribe;
     }, [layout.height, layout.width]);
 
     return (
