@@ -160,9 +160,11 @@ function NavigationContainerInner(
     rest.initialState != null || !isLinkingEnabled || isResolved;
 
   if (!isLinkingReady) {
-    // This is temporary until we have Suspense for data-fetching
-    // Then the fallback will be handled by a parent `Suspense` component
-    return <ThemeProvider value={theme}>{fallback}</ThemeProvider>;
+    return (
+      <LocaleDirContext.Provider value={direction}>
+        <ThemeProvider value={theme}>{fallback}</ThemeProvider>
+      </LocaleDirContext.Provider>
+    );
   }
 
   return (
