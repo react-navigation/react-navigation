@@ -1,7 +1,8 @@
 appId: ${APP_ID}
 name: Native Stack Header Customization
 ---
+- clearState: ${APP_ID}
 - openLink:
-    link: exp://127.0.0.1:8081/--/native-stack-header-customization
+    link: ${APP_SCHEME}/native-stack-header-customization
 - assertVisible:
     text: 'What is Lorem Ipsum?'

@@ -1,8 +1,9 @@
 appId: ${APP_ID}
 name: Modal Stack
 ---
+- clearState: ${APP_ID}
 - openLink:
-    link: exp://127.0.0.1:8081/--/modal-stack
+    link: ${APP_SCHEME}/modal-stack
 - assertVisible:
     text: 'Article by Gandalf'
 - tapOn:
