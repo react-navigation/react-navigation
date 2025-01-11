@@ -32,6 +32,7 @@ type Props<T extends Route> = PagerProps & {
       jumpTo: (key: string) => void;
     }
   ) => React.ReactElement;
+  useNativeDriver?: boolean;
 };
 
 const canUseNativeDriver = Platform.OS !== 'web';
