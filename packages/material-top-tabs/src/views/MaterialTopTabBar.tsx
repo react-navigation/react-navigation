@@ -1,4 +1,3 @@
-import { Text } from '@react-navigation/elements';
 import {
   type ParamListBase,
   type TabNavigationState,
@@ -7,7 +6,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import Color from 'color';
-import { StyleSheet } from 'react-native';
+import { Animated, StyleSheet } from 'react-native';
 import {
   type Route,
   TabBar,
@@ -26,14 +25,16 @@ const renderLabelDefault = ({
   labelText,
   style,
   allowFontScaling,
+  fontSize,
+  fontWeight,
 }: MaterialLabelProps) => {
   return (
-    <Text
-      style={[{ color }, styles.label, style]}
+    <Animated.Text
+      style={[{ color, fontSize, fontWeight }, styles.label, style]}
       allowFontScaling={allowFontScaling}
     >
       {labelText}
-    </Text>
+    </Animated.Text>
   );
 };
 
@@ -53,6 +54,12 @@ export function MaterialTopTabBar({
   const inactiveColor =
     focusedOptions.tabBarInactiveTintColor ??
     Color(activeColor).alpha(0.5).rgb().string();
+
+  const activeFontSize = focusedOptions.tabBarActiveFontSize ?? 18;
+  const inactiveFontSize = focusedOptions.tabBarInactiveFontSize ?? 14;
+
+  const activeFontWeight = focusedOptions.tabBarActiveFontWeight ?? 500;
+  const inactiveFontWeight = focusedOptions.tabBarInactiveFontWeight ?? 500;
 
   const tabBarOptions = Object.fromEntries(
     state.routes.map((route) => {
@@ -83,10 +90,17 @@ export function MaterialTopTabBar({
             tabBarShowLabel === false
               ? undefined
               : typeof tabBarLabel === 'function'
-                ? ({ labelText, color }: MaterialLabelProps) =>
+                ? ({
+                    labelText,
+                    color,
+                    fontSize,
+                    fontWeight,
+                  }: MaterialLabelProps) =>
                     tabBarLabel({
                       focused: state.routes[state.index].key === route.key,
                       color,
+                      fontSize,
+                      fontWeight,
                       children: labelText ?? route.name,
                     })
                 : renderLabelDefault,
@@ -115,6 +129,10 @@ export function MaterialTopTabBar({
       bounces={focusedOptions.tabBarBounces}
       activeColor={activeColor}
       inactiveColor={inactiveColor}
+      activeFontSize={activeFontSize}
+      inactiveFontSize={inactiveFontSize}
+      activeFontWeight={activeFontWeight}
+      inactiveFontWeight={inactiveFontWeight}
       pressColor={focusedOptions.tabBarPressColor}
       pressOpacity={focusedOptions.tabBarPressOpacity}
       tabStyle={focusedOptions.tabBarItemStyle}
@@ -161,7 +179,6 @@ export function MaterialTopTabBar({
 const styles = StyleSheet.create({
   label: {
     textAlign: 'center',
-    fontSize: 14,
     margin: 4,
     backgroundColor: 'transparent',
   },
