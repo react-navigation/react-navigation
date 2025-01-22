@@ -1,4 +1,4 @@
-name: Expo Publish
+name: Expo
 on:
   push:
     branches:
@@ -7,7 +7,6 @@ on:
 
 jobs:
   publish:
-    name: Install and publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

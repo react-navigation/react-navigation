@@ -1,7 +1,8 @@
 appId: ${APP_ID}
 name: Master Detail
 ---
+- clearState: ${APP_ID}
 - openLink:
-    link: exp://127.0.0.1:8081/--/master-detail
+    link: ${APP_SCHEME}/master-detail
 - assertVisible:
     text: 'Pages'
