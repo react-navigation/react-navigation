@@ -333,20 +333,21 @@ export function StackRouter(options: StackRouterOptions) {
           let route: Route<string> | undefined;
 
           if (id !== undefined) {
-            route = state.routes.find(
+            route = state.routes.findLast(
               (route) =>
                 route.name === action.payload.name &&
                 id === getId?.({ params: route.params })
             );
-          } else {
+          } else if (action.type === 'NAVIGATE') {
             const currentRoute = state.routes[state.index];
 
             // If the route matches the current one, then navigate to it
-            if (
-              action.type === 'NAVIGATE' &&
-              action.payload.name === currentRoute.name
-            ) {
+            if (action.payload.name === currentRoute.name) {
               route = currentRoute;
+            } else if (action.payload.pop) {
+              route = state.routes.findLast(
+                (route) => route.name === action.payload.name
+              );
             }
           }
 
@@ -383,17 +384,37 @@ export function StackRouter(options: StackRouterOptions) {
           let routes: Route<string>[];
 
           if (route) {
-            const routeKey = route.key;
+            if (action.type === 'NAVIGATE' && action.payload.pop) {
+              routes = [];
 
-            routes = state.routes.filter((r) => r.key !== routeKey);
-            routes.push({
-              ...route,
-              path:
-                action.type === 'NAVIGATE' && action.payload.path !== undefined
-                  ? action.payload.path
-                  : route.path,
-              params,
-            });
+              // Get all routes until the matching one
+              for (const r of state.routes) {
+                if (r.key === route.key) {
+                  routes.push({
+                    ...route,
+                    path:
+                      action.payload.path !== undefined
+                        ? action.payload.path
+                        : route.path,
+                    params,
+                  });
+                  break;
+                }
+
+                routes.push(r);
+              }
+            } else {
+              routes = state.routes.filter((r) => r.key !== route.key);
+              routes.push({
+                ...route,
+                path:
+                  action.type === 'NAVIGATE' &&
+                  action.payload.path !== undefined
+                    ? action.payload.path
+                    : route.path,
+                params,
+              });
+            }
           } else {
             routes = [
               ...state.routes,

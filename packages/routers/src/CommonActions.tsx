@@ -20,6 +20,7 @@ export type Action =
         params?: object;
         path?: string;
         merge?: boolean;
+        pop?: boolean;
       };
       source?: string;
       target?: string;
@@ -69,8 +70,9 @@ export function navigate(
 export function navigate(options: {
   name: string;
   params?: object;
-  merge?: boolean;
   path?: string;
+  merge?: boolean;
+  pop?: boolean;
 }): Action;
 
 export function navigate(...args: any): Action {
@@ -110,7 +112,7 @@ export function navigateDeprecated(
 
     if (!('name' in payload)) {
       throw new Error(
-        'You need to specify a name when calling navigate with an object as the argument. See https://reactnavigation.org/docs/navigation-actions#navigatelegacy for usage.'
+        'You need to specify a name when calling navigateDeprecated with an object as the argument. See https://reactnavigation.org/docs/navigation-actions#navigatelegacy for usage.'
       );
     }
 
