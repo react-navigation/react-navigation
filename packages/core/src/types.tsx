@@ -271,7 +271,11 @@ type NavigationHelpersCommon<
   /**
    * Navigate to a route in current navigation tree.
    *
-   * @param options Object with `name` for the route to navigate to, and a `params` object.
+   * @param options.name Name of the route to navigate to.
+   * @param [options.params] Params object for the route.
+   * @param [options.path] Path to associate the route with (e.g. for deep links).
+   * @param [options.merge] Whether to merge the params onto the route.
+   * @param [options.pop] Whether to pop routes in a stack to go back to the matching route.
    */
   navigate<RouteName extends keyof ParamList>(
     options: {
@@ -280,6 +284,7 @@ type NavigationHelpersCommon<
         params: ParamList[Screen];
         path?: string;
         merge?: boolean;
+        pop?: boolean;
       };
     }[RouteName]
   ): void;
