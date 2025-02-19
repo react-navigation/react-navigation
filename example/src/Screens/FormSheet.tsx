@@ -139,7 +139,7 @@ function FormSheetView<T extends keyof typeof FORM_SHEETS>({
   const textContent = Array(paragraphs).fill(paragraph).join('\n\n');
 
   return (
-    <View style={styles.container}>
+    <View>
       <ScrollView>
         <View
           style={{
@@ -204,9 +204,6 @@ FormSheet.title = 'Form Sheet';
 FormSheet.linking = {};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   buttons: {
     flexDirection: 'column',
     gap: 12,
