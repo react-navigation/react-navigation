@@ -78,6 +78,13 @@ const FORM_SHEETS: Record<string, FormSheetConfig> = {
       paragraphs: 10,
     },
   },
+  FormSheetViewSheetElevation: {
+    name: 'Sheet Elevation',
+    options: {
+      sheetAllowedDetents: 'fitToContents',
+      sheetElevation: 48,
+    },
+  },
 };
 
 export type RouteParamList = {
