@@ -5,7 +5,7 @@ import {
   type NativeStackNavigationOptions,
   type NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 type FormSheetParams = {
@@ -23,15 +23,17 @@ const FORM_SHEETS: Record<string, FormSheetConfig> = {
     name: 'Fit To Contents',
     options: {
       sheetAllowedDetents: 'fitToContents',
+      sheetCornerRadius: 8,
     },
   },
   FormSheetViewHeightsArray: {
     name: 'Height Steps',
     options: {
-      sheetAllowedDetents: [0.24, 0.41, 0.7],
+      sheetAllowedDetents: [0.24, 0.41, 0.8],
+      sheetCornerRadius: 8,
     },
     params: {
-      paragraphs: 3,
+      paragraphs: 4,
     },
   },
   FormSheetViewNoRoundedCorners: {
@@ -45,33 +47,37 @@ const FORM_SHEETS: Record<string, FormSheetConfig> = {
     name: 'Grabber Visible',
     options: {
       sheetAllowedDetents: 'fitToContents',
+      sheetCornerRadius: 8,
       sheetGrabberVisible: true,
     },
   },
   FormSheetViewDimming: {
     name: 'Dimming',
     options: {
-      sheetAllowedDetents: [0.24, 0.41, 0.7],
+      sheetAllowedDetents: [0.24, 0.41, 0.8],
+      sheetCornerRadius: 8,
       sheetLargestUndimmedDetentIndex: 0,
     },
     params: {
-      paragraphs: 3,
+      paragraphs: 4,
     },
   },
   FormSheetViewInitialDetent: {
     name: 'Initial Detent',
     options: {
-      sheetAllowedDetents: [0.24, 0.41, 0.7],
+      sheetAllowedDetents: [0.24, 0.41, 0.8],
+      sheetCornerRadius: 8,
       sheetInitialDetentIndex: 'last',
     },
     params: {
-      paragraphs: 3,
+      paragraphs: 4,
     },
   },
   FormSheetViewScrollingExpand: {
     name: 'Lock Expanding With Scrolling',
     options: {
       sheetAllowedDetents: [0.41],
+      sheetCornerRadius: 8,
       sheetExpandsWhenScrolledToEdge: false,
     },
     params: {
@@ -82,6 +88,7 @@ const FORM_SHEETS: Record<string, FormSheetConfig> = {
     name: 'Sheet Elevation',
     options: {
       sheetAllowedDetents: 'fitToContents',
+      sheetCornerRadius: 8,
       sheetElevation: 48,
     },
   },
@@ -160,21 +167,15 @@ function FormSheetView<T extends keyof typeof FORM_SHEETS>({
           </Button>
         </View>
 
-        <View style={{ paddingVertical: 10, paddingHorizontal: 20, flex: 1 }}>
+        <View
+          style={{
+            paddingTop: 10,
+            paddingBottom: 20,
+            paddingHorizontal: 20,
+            flex: 1,
+          }}
+        >
           <Text>{textContent}</Text>
-        </View>
-        <View style={{ alignItems: 'center' }}>
-          <TextInput
-            style={{
-              marginVertical: 12,
-              paddingVertical: 8,
-              paddingHorizontal: 10,
-              backgroundColor: 'lightgray',
-              borderRadius: 24,
-              width: '80%',
-            }}
-            placeholder="Trigger keyboard..."
-          />
         </View>
       </ScrollView>
     </View>
