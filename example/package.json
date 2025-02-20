@@ -21,7 +21,7 @@
     "color": "^4.2.3",
     "expo": "^52.0.10",
     "expo-asset": "~11.0.1",
-    "expo-blur": "~14.0.1",
+    "expo-blur": "~14.0.3",
     "expo-linking": "~7.0.3",
     "expo-localization": "~16.0.0",
     "expo-splash-screen": "~0.29.12",
