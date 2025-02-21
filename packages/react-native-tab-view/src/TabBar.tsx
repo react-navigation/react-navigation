@@ -644,8 +644,8 @@ export function TabBar<T extends Route>({
                 (tabBarWidth - separatorsWidth - paddingsWidth) / routes.length
               ),
           style: [
-            indicatorStyle,
             { start: flattenedPaddingStart, end: flattenedPaddingEnd },
+            indicatorStyle,
           ],
           getTabWidth: (i: number) =>
             getComputedTabWidth(
