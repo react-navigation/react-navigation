@@ -52,7 +52,7 @@ const FORM_SHEETS: Record<string, FormSheetConfig> = {
     },
   },
   FormSheetViewDimming: {
-    name: 'Dimming',
+    name: 'Custom Dimming',
     options: {
       sheetAllowedDetents: [0.24, 0.41, 0.8],
       sheetCornerRadius: 8,
@@ -84,12 +84,22 @@ const FORM_SHEETS: Record<string, FormSheetConfig> = {
       paragraphs: 10,
     },
   },
-  FormSheetViewSheetElevation: {
-    name: 'Sheet Elevation',
+  FormSheetViewNoSheetElevation: {
+    name: 'Sheet Elevation: 0',
+    options: {
+      sheetAllowedDetents: 'fitToContents',
+      sheetCornerRadius: 8,
+      sheetElevation: 0,
+      sheetLargestUndimmedDetentIndex: 0,
+    },
+  },
+  FormSheetViewWithSheetElevation: {
+    name: 'Sheet Elevation: 48',
     options: {
       sheetAllowedDetents: 'fitToContents',
       sheetCornerRadius: 8,
       sheetElevation: 48,
+      sheetLargestUndimmedDetentIndex: 0,
     },
   },
 };
