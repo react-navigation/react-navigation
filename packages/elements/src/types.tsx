@@ -50,7 +50,7 @@ export type HeaderSearchBarOptions = {
    */
   inputType?: 'text' | 'phone' | 'number' | 'email';
   /**
-   * Determines how the return key should look.
+   * Determines how the return key should look. Defaults to `search`.
    */
   enterKeyHint?: TextInputProps['enterKeyHint'];
   /**
