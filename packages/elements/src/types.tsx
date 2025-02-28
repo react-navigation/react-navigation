@@ -59,6 +59,10 @@ export type HeaderSearchBarOptions = {
    */
   onChangeText?: TextInputProps['onChange'];
   /**
+   * A callback that gets called when search input is opened
+   */
+  onOpen?: () => void;
+  /**
    * A callback that gets called when search input is closed
    */
   onClose?: () => void;
