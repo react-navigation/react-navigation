@@ -50,6 +50,10 @@ export type HeaderSearchBarOptions = {
    */
   inputType?: 'text' | 'phone' | 'number' | 'email';
   /**
+   * Determines how the return key should look.
+   */
+  enterKeyHint?: TextInputProps['enterKeyHint'];
+  /**
    * A callback that gets called when search input has lost focus
    */
   onBlur?: TextInputProps['onBlur'];
