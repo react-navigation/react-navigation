@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.3.1...@react-navigation/core@7.4.0) (2025-03-02)
+
+### Bug Fixes
+
+* pop for deep links to screens containing navigators ([05d2d97](https://github.com/react-navigation/react-navigation/commit/05d2d97157ac1abf17957ee402634aa651b053ba)) - by @satya164
+
+### Features
+
+* add a pop option to navigate ([492237d](https://github.com/react-navigation/react-navigation/commit/492237d4a5ac2c3a3095a9a429bb1a440260301a)) - by @satya164
+
 ## [7.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.3.0...@react-navigation/core@7.3.1) (2024-12-12)
 
 ### Bug Fixes

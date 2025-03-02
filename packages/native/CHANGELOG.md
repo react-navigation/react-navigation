@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.14...@react-navigation/native@7.0.15) (2025-03-02)
+
+### Bug Fixes
+
+* make locale available in container fallback ([bddcc44](https://github.com/react-navigation/react-navigation/commit/bddcc44ab0e0ad5630f7ee0feb69496412a00217)) - by @satya164
+* pop for deep links to screens containing navigators ([05d2d97](https://github.com/react-navigation/react-navigation/commit/05d2d97157ac1abf17957ee402634aa651b053ba)) - by @satya164
+
 ## [7.0.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.13...@react-navigation/native@7.0.14) (2024-12-12)
 
 ### Bug Fixes

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.2.5...@react-navigation/elements@2.2.6) (2025-03-02)
+
+### Bug Fixes
+
+* add top spacing to search bar when there's no top inset. fixes [#12405](https://github.com/react-navigation/react-navigation/issues/12405) ([36e630d](https://github.com/react-navigation/react-navigation/commit/36e630dd4299113f6147f983f06bda4c4ee41a71)) - by @satya164
+* inherit header color for searchbar. fixes [#12405](https://github.com/react-navigation/react-navigation/issues/12405) ([ddcc07a](https://github.com/react-navigation/react-navigation/commit/ddcc07a9809f3bac70d05578d8af9fa32a0f3e2f)) - by @satya164
+
 ## [2.2.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.2.4...@react-navigation/elements@2.2.5) (2024-12-12)
 
 **Note:** Version bump only for package @react-navigation/elements
