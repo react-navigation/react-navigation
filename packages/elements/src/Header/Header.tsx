@@ -408,6 +408,7 @@ export function Header(props: Props) {
               Platform.OS === 'ios'
                 ? [
                     StyleSheet.absoluteFill,
+                    { paddingTop: headerStatusBarHeight ? 0 : 4 },
                     { backgroundColor: backgroundColor ?? colors.card },
                   ]
                 : !leftButton && { marginStart: 8 },
