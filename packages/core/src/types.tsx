@@ -955,6 +955,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
       screen?: never;
       params?: never;
       initial?: never;
+      pop?: never;
       path?: string;
       state: PartialState<NavigationState> | NavigationState | undefined;
     }
@@ -965,6 +966,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
             params?: ParamList[RouteName];
             initial?: boolean;
             path?: string;
+            pop?: boolean;
             state?: never;
           }
         : {
@@ -972,6 +974,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
             params: ParamList[RouteName];
             initial?: boolean;
             path?: string;
+            pop?: boolean;
             state?: never;
           };
     }[keyof ParamList];

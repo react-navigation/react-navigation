@@ -7,55 +7,67 @@ type ResetState =
       routes: Omit<Route<string>, 'key'>[];
     });
 
+type GoBackAction = {
+  type: 'GO_BACK';
+  source?: string;
+  target?: string;
+};
+
+type NavigateAction = {
+  type: 'NAVIGATE';
+  payload: {
+    name: string;
+    params?: object;
+    path?: string;
+    merge?: boolean;
+    pop?: boolean;
+  };
+  source?: string;
+  target?: string;
+};
+
+type NavigateDeprecatedAction = {
+  type: 'NAVIGATE_DEPRECATED';
+  payload: {
+    name: string;
+    params?: object;
+    merge?: boolean;
+  };
+  source?: string;
+  target?: string;
+};
+
+type ResetAction = {
+  type: 'RESET';
+  payload: ResetState | undefined;
+  source?: string;
+  target?: string;
+};
+
+type SetParamsAction = {
+  type: 'SET_PARAMS';
+  payload: { params?: object };
+  source?: string;
+  target?: string;
+};
+
+type PreloadAction = {
+  type: 'PRELOAD';
+  payload: {
+    name: string;
+    params?: object;
+  };
+  source?: string;
+  target?: string;
+};
+
 export type Action =
-  | {
-      type: 'GO_BACK';
-      source?: string;
-      target?: string;
-    }
-  | {
-      type: 'NAVIGATE';
-      payload: {
-        name: string;
-        params?: object;
-        path?: string;
-        merge?: boolean;
-        pop?: boolean;
-      };
-      source?: string;
-      target?: string;
-    }
-  | {
-      type: 'NAVIGATE_DEPRECATED';
-      payload: {
-        name: string;
-        params?: object;
-        merge?: boolean;
-      };
-      source?: string;
-      target?: string;
-    }
-  | {
-      type: 'RESET';
-      payload: ResetState | undefined;
-      source?: string;
-      target?: string;
-    }
-  | {
-      type: 'SET_PARAMS';
-      payload: { params?: object };
-      source?: string;
-      target?: string;
-    }
-  | {
-      type: 'PRELOAD';
-      payload: {
-        name: string;
-        params?: object;
-      };
-      source?: string;
-      target?: string;
-    };
+  | GoBackAction
+  | NavigateAction
+  | NavigateDeprecatedAction
+  | ResetAction
+  | SetParamsAction
+  | PreloadAction;
 
 export function goBack(): Action {
   return { type: 'GO_BACK' };

@@ -538,6 +538,7 @@ export function useNavigationBuilder<
         name: route.params.screen,
         params: route.params.params,
         path: route.params.path,
+        pop: route.params.pop,
       });
     }
 

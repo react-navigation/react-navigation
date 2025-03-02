@@ -111,7 +111,12 @@ test('builds action from href', () => {
 
     expect(action).toEqual({
       type: 'NAVIGATE',
-      payload: { name: 'Foo', path: '/foo', params: {} },
+      payload: {
+        name: 'Foo',
+        path: '/foo',
+        params: {},
+        pop: true,
+      },
     });
 
     return null;
@@ -152,6 +157,7 @@ test('builds action from href', () => {
           params: { id: '42' },
           path: '/foo/bar/42',
         },
+        pop: true,
       },
     });
 
