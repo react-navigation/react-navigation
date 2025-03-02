@@ -403,9 +403,13 @@ export function Header(props: Props) {
               setSearchBarVisible(false);
               headerSearchBarOptions?.onClose?.();
             }}
+            tintColor={headerTintColor}
             style={[
               Platform.OS === 'ios'
-                ? [StyleSheet.absoluteFill, { backgroundColor: colors.card }]
+                ? [
+                    StyleSheet.absoluteFill,
+                    { backgroundColor: backgroundColor ?? colors.card },
+                  ]
                 : !leftButton && { marginStart: 8 },
             ]}
           />

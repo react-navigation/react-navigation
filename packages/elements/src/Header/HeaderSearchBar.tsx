@@ -24,6 +24,7 @@ import { HeaderIcon } from './HeaderIcon';
 type Props = Omit<HeaderSearchBarOptions, 'ref'> & {
   visible: boolean;
   onClose: () => void;
+  tintColor?: string;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
@@ -45,6 +46,7 @@ function HeaderSearchBarInternal(
     cancelButtonText = 'Cancel',
     onChangeText,
     onClose,
+    tintColor,
     style,
     ...rest
   }: Props,
@@ -149,6 +151,8 @@ function HeaderSearchBarInternal(
     return null;
   }
 
+  const textColor = tintColor ?? colors.text;
+
   return (
     <Animated.View
       pointerEvents={visible ? 'auto' : 'none'}
@@ -158,7 +162,11 @@ function HeaderSearchBarInternal(
       style={[styles.container, { opacity: visibleAnim }, style]}
     >
       <View style={styles.searchbarContainer}>
-        <HeaderIcon source={searchIcon} style={styles.inputSearchIcon} />
+        <HeaderIcon
+          source={searchIcon}
+          tintColor={textColor}
+          style={styles.inputSearchIcon}
+        />
         <TextInput
           {...rest}
           ref={inputRef}
@@ -167,7 +175,7 @@ function HeaderSearchBarInternal(
           autoFocus={autoFocus}
           inputMode={INPUT_TYPE_TO_MODE[inputType ?? 'text']}
           placeholder={placeholder}
-          placeholderTextColor={Color(colors.text).alpha(0.5).string()}
+          placeholderTextColor={Color(textColor).alpha(0.5).string()}
           cursorColor={colors.primary}
           selectionHandleColor={colors.primary}
           selectionColor={Color(colors.primary).alpha(0.3).string()}
@@ -179,8 +187,8 @@ function HeaderSearchBarInternal(
                 ios: dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
                 default: 'transparent',
               }),
-              color: colors.text,
-              borderBottomColor: colors.border,
+              color: textColor,
+              borderBottomColor: Color(textColor).alpha(0.2).string(),
             },
           ]}
         />
@@ -198,7 +206,7 @@ function HeaderSearchBarInternal(
             <Image
               source={clearIcon}
               resizeMode="contain"
-              tintColor={colors.text}
+              tintColor={textColor}
               style={styles.clearIcon}
             />
           </PlatformPressable>
@@ -215,7 +223,7 @@ function HeaderSearchBarInternal(
           }}
           style={styles.closeButton}
         >
-          <HeaderIcon source={closeIcon} />
+          <HeaderIcon source={closeIcon} tintColor={textColor} />
         </HeaderButton>
       ) : null}
       {Platform.OS === 'ios' ? (
@@ -223,7 +231,7 @@ function HeaderSearchBarInternal(
           <Text
             style={[
               fonts.regular,
-              { color: colors.primary },
+              { color: tintColor ?? colors.primary },
               styles.cancelText,
             ]}
           >
@@ -290,8 +298,8 @@ const styles = StyleSheet.create({
       fontSize: 17,
       paddingHorizontal: 32,
       marginLeft: 16,
-      marginTop: -2,
-      marginBottom: 5,
+      marginTop: -1,
+      marginBottom: 4,
       borderRadius: 8,
     },
     default: {
