@@ -326,7 +326,7 @@ export function Header(props: Props) {
           pointerEvents="box-none"
           style={[
             styles.start,
-            headerTitleAlign === 'center' && styles.expand,
+            !searchBarVisible && headerTitleAlign === 'center' && styles.expand,
             { marginStart: insets.left },
             leftContainerStyle,
           ]}
