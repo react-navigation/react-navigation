@@ -12,7 +12,9 @@ export type TabDescriptor<T extends Route> = {
     route: T;
     labelText?: string;
     focused: boolean;
-    color: string;
+    color: string | Animated.AnimatedInterpolation<number | string>;
+    fontSize: number | Animated.AnimatedInterpolation<number>;
+    fontWeight: TextStyle['fontWeight'];
     allowFontScaling?: boolean;
     style?: StyleProp<TextStyle>;
   }) => React.ReactNode;
