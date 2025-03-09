@@ -39,7 +39,7 @@ export function forHorizontalIOS({
 
   const overlayOpacity = current.progress.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, 0.07],
+    outputRange: [0, 0.7],
     extrapolate: 'clamp',
   });
 
