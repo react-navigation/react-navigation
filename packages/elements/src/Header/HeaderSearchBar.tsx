@@ -4,10 +4,12 @@ import * as React from 'react';
 import {
   Animated,
   Image,
+  type NativeSyntheticEvent,
   Platform,
   type StyleProp,
   StyleSheet,
   TextInput,
+  type TextInputChangeEventData,
   View,
   type ViewStyle,
 } from 'react-native';
@@ -38,20 +40,22 @@ const INPUT_TYPE_TO_MODE = {
 const useNativeDriver = Platform.OS !== 'web';
 
 function HeaderSearchBarInternal(
-  {
+  props: Props,
+  ref: React.ForwardedRef<HeaderSearchBarRef>
+) {
+  const {
     visible,
     inputType,
-    autoFocus = true,
-    placeholder = 'Search',
     cancelButtonText = 'Cancel',
-    onChangeText,
     onClose,
     tintColor,
     style,
+    inputStyle,
+    onChange,
+    onChangeText,
     ...rest
-  }: Props,
-  ref: React.ForwardedRef<HeaderSearchBarRef>
-) {
+  } = props;
+
   const navigation = useNavigation();
   const { dark, colors, fonts } = useTheme();
   const [value, setValue] = React.useState('');
@@ -104,6 +108,14 @@ function HeaderSearchBarInternal(
       }
     });
   }, [clearVisibleAnim, hasText]);
+
+  const handleChange = React.useCallback(
+    (e: NativeSyntheticEvent<TextInputChangeEventData>) => {
+      setValue(e.nativeEvent.text);
+      onChangeText?.(e);
+    },
+    [onChangeText]
+  );
 
   const clearText = React.useCallback(() => {
     inputRef.current?.clear();
@@ -168,17 +180,16 @@ function HeaderSearchBarInternal(
           style={styles.inputSearchIcon}
         />
         <TextInput
-          {...rest}
-          ref={inputRef}
-          onChange={onChangeText}
-          onChangeText={setValue}
-          autoFocus={autoFocus}
+          enterKeyHint="search"
           inputMode={INPUT_TYPE_TO_MODE[inputType ?? 'text']}
-          placeholder={placeholder}
           placeholderTextColor={Color(textColor).alpha(0.5).string()}
           cursorColor={colors.primary}
           selectionHandleColor={colors.primary}
           selectionColor={Color(colors.primary).alpha(0.3).string()}
+          {...rest}
+          ref={inputRef}
+          onChange={handleChange}
+          onChangeText={onChange}
           style={[
             fonts.regular,
             styles.searchbar,
@@ -190,6 +201,7 @@ function HeaderSearchBarInternal(
               color: textColor,
               borderBottomColor: Color(textColor).alpha(0.2).string(),
             },
+            inputStyle,
           ]}
         />
         {Platform.OS === 'ios' ? (

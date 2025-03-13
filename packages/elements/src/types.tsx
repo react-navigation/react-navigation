@@ -19,7 +19,10 @@ export type HeaderSearchBarRef = {
   cancelSearch: () => void;
 };
 
-export type HeaderSearchBarOptions = {
+export type HeaderSearchBarOptions = Omit<
+  TextInputProps,
+  'style' | 'value' | 'onChange' | 'onChangeText'
+> & {
   /**
    * Ref to imperatively update the search bar.
    *
@@ -32,14 +35,6 @@ export type HeaderSearchBarOptions = {
    */
   ref?: React.Ref<HeaderSearchBarRef>;
   /**
-   * The auto-capitalization behavior
-   */
-  autoCapitalize?: 'none' | 'words' | 'sentences' | 'characters';
-  /**
-   * Automatically focuses search input on mount
-   */
-  autoFocus?: boolean;
-  /**
    * The text to be used instead of default `Cancel` button text
    *
    * @platform ios
@@ -50,26 +45,22 @@ export type HeaderSearchBarOptions = {
    */
   inputType?: 'text' | 'phone' | 'number' | 'email';
   /**
-   * A callback that gets called when search input has lost focus
+   * Style that gets passed to the underlying TextInput.
    */
-  onBlur?: TextInputProps['onBlur'];
+  inputStyle?: TextInputProps['style'];
   /**
-   * A callback that gets called when the text changes.
-   * It receives the current text value of the search input.
+   * Callback that is called when the text input's text changes.
+   * Changed text is passed as a single string argument to the callback handler.
+   */
+  onChange?: TextInputProps['onChangeText']; // FIXME: onChange and onChangeText are reversed
+  /**
+   * Callback that is called when the text input's text changes.
    */
   onChangeText?: TextInputProps['onChange'];
   /**
    * A callback that gets called when search input is closed
    */
   onClose?: () => void;
-  /**
-   * A callback that gets called when search input has received focus
-   */
-  onFocus?: TextInputProps['onFocus'];
-  /**
-   * Text displayed when search field is empty
-   */
-  placeholder?: string;
 };
 
 export type HeaderOptions = {
