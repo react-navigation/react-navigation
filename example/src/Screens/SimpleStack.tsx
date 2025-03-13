@@ -6,7 +6,7 @@ import {
   type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Alert, Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
@@ -97,6 +97,9 @@ const ContactsScreen = ({
     navigation.setOptions({
       headerSearchBarOptions: {
         placeholder: 'Filter contacts',
+        onSubmitEditing: (e) => {
+          Alert.alert(`Submitted: ${e.nativeEvent.text}`);
+        },
         onChangeText: (e) => {
           setQuery(e.nativeEvent.text);
         },
