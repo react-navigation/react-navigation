@@ -74,7 +74,6 @@ export function Screen(props: Props) {
         <NavigationContext.Provider value={navigation}>
           <NavigationRouteContext.Provider value={route}>
             <View
-              pointerEvents="box-none"
               onLayout={(e) => {
                 const { height } = e.nativeEvent.layout;
 
@@ -83,6 +82,7 @@ export function Screen(props: Props) {
               style={[
                 styles.header,
                 headerTransparent ? styles.absolute : null,
+                { pointerEvents: 'box-none' },
               ]}
             >
               {header}

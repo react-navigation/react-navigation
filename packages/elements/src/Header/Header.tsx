@@ -289,46 +289,59 @@ export function Header(props: Props) {
 
   return (
     <Animated.View
-      pointerEvents="box-none"
-      style={[{ height, minHeight, maxHeight, opacity, transform }]}
+      style={[
+        {
+          height,
+          minHeight,
+          maxHeight,
+          opacity,
+          transform,
+        },
+        { pointerEvents: 'box-none' },
+      ]}
     >
       <Animated.View
-        pointerEvents="box-none"
-        style={[StyleSheet.absoluteFill, backgroundContainerStyle]}
+        style={[
+          StyleSheet.absoluteFill,
+          backgroundContainerStyle,
+          { pointerEvents: 'box-none' },
+        ]}
       >
         {headerBackground ? (
           headerBackground({ style: backgroundStyle })
         ) : (
           <HeaderBackground
-            pointerEvents={
+            style={[
+              backgroundStyle,
               // Allow touch through the header when background color is transparent
               headerTransparent &&
               (backgroundStyle.backgroundColor === 'transparent' ||
                 Color(backgroundStyle.backgroundColor).alpha() === 0)
-                ? 'none'
-                : 'auto'
-            }
-            style={backgroundStyle}
+                ? { pointerEvents: 'none' }
+                : { pointerEvents: 'auto' },
+            ]}
           />
         )}
       </Animated.View>
-      <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
       <View
-        pointerEvents="box-none"
+        style={[{ height: headerStatusBarHeight }, { pointerEvents: 'none' }]}
+      />
+      <View
         style={[
           styles.content,
           Platform.OS === 'ios' && frame.width >= IPAD_MINI_MEDIUM_WIDTH
             ? styles.large
             : null,
+          { pointerEvents: 'box-none' },
         ]}
       >
         <Animated.View
-          pointerEvents="box-none"
           style={[
             styles.start,
             headerTitleAlign === 'center' && styles.expand,
             { marginStart: insets.left },
             leftContainerStyle,
+            { pointerEvents: 'box-none' },
           ]}
         >
           {leftButton}
@@ -336,7 +349,6 @@ export function Header(props: Props) {
         {Platform.OS === 'ios' || !searchBarVisible ? (
           <>
             <Animated.View
-              pointerEvents="box-none"
               style={[
                 styles.title,
                 {
@@ -362,6 +374,7 @@ export function Header(props: Props) {
                   ? { marginStart: 4 }
                   : { marginHorizontal: 16 },
                 titleContainerStyle,
+                { pointerEvents: 'box-none' },
               ]}
             >
               {headerTitle({
@@ -373,12 +386,12 @@ export function Header(props: Props) {
               })}
             </Animated.View>
             <Animated.View
-              pointerEvents="box-none"
               style={[
                 styles.end,
                 styles.expand,
                 { marginEnd: insets.right },
                 rightContainerStyle,
+                { pointerEvents: 'box-none' },
               ]}
             >
               {rightButton}

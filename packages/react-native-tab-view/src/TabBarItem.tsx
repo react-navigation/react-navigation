@@ -228,7 +228,7 @@ const TabBarItemInternal = <T extends Route>({
       href={href}
       style={[styles.pressable, tabContainerStyle]}
     >
-      <View pointerEvents="none" style={[styles.item, tabStyle]}>
+      <View style={[styles.item, tabStyle, { pointerEvents: 'none' }]}>
         {icon}
         <View>
           <Animated.View style={{ opacity: inactiveOpacity }}>

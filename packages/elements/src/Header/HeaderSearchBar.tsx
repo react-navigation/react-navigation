@@ -155,11 +155,15 @@ function HeaderSearchBarInternal(
 
   return (
     <Animated.View
-      pointerEvents={visible ? 'auto' : 'none'}
       accessibilityLiveRegion="polite"
       accessibilityElementsHidden={!visible}
       importantForAccessibility={visible ? 'auto' : 'no-hide-descendants'}
-      style={[styles.container, { opacity: visibleAnim }, style]}
+      style={[
+        styles.container,
+        { opacity: visibleAnim },
+        style,
+        { pointerEvents: visible ? 'auto' : 'none' },
+      ]}
     >
       <View style={styles.searchbarContainer}>
         <HeaderIcon

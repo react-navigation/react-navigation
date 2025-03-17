@@ -57,7 +57,7 @@ export function HeaderContainer({
   const { buildHref } = useLinkBuilder();
 
   return (
-    <Animated.View pointerEvents="box-none" style={style}>
+    <Animated.View style={[style, { pointerEvents: 'box-none' }]}>
       {scenes.slice(-3).map((scene, i, self) => {
         if ((mode === 'screen' && i !== self.length - 1) || !scene) {
           return null;
@@ -164,18 +164,18 @@ export function HeaderContainer({
                       }
                     : undefined
                 }
-                pointerEvents={isFocused ? 'box-none' : 'none'}
                 accessibilityElementsHidden={!isFocused}
                 importantForAccessibility={
                   isFocused ? 'auto' : 'no-hide-descendants'
                 }
-                style={
+                style={[
                   // Avoid positioning the focused header absolutely
                   // Otherwise accessibility tools don't seem to be able to find it
                   (mode === 'float' && !isFocused) || headerTransparent
                     ? styles.header
-                    : null
-                }
+                    : null,
+                  { pointerEvents: isFocused ? 'box-none' : 'none' },
+                ]}
               >
                 {header !== undefined ? header(props) : <Header {...props} />}
               </View>

@@ -102,7 +102,9 @@ export class Card extends React.Component<Props> {
       style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
     }) =>
       style ? (
-        <Animated.View pointerEvents="none" style={[styles.overlay, style]} />
+        <Animated.View
+          style={[styles.overlay, style, { pointerEvents: 'none' }]}
+        />
       ) : null,
   };
 
@@ -552,20 +554,26 @@ export class Card extends React.Component<Props> {
           collapsable={false}
         />
         <View
-          pointerEvents="box-none"
+          style={{ pointerEvents: 'box-none' }}
           // Make sure this view is not removed on the new architecture, as it causes focus loss during navigation on Android.
           // This can happen when the view flattening results in different trees - due to `overflow` style changing in a parent.
           collapsable={false}
           {...rest}
         >
           {overlayEnabled ? (
-            <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
+            <View
+              style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}
+            >
               {overlay({ style: overlayStyle })}
             </View>
           ) : null}
           <Animated.View
-            style={[styles.container, containerStyle, customContainerStyle]}
-            pointerEvents="box-none"
+            style={[
+              styles.container,
+              containerStyle,
+              customContainerStyle,
+              { pointerEvents: 'box-none' },
+            ]}
           >
             <PanGestureHandler
               enabled={layout.width !== 0 && gestureEnabled}
@@ -590,8 +598,8 @@ export class Card extends React.Component<Props> {
                             : [styles.shadowVertical, styles.shadowBottom],
                       { backgroundColor },
                       shadowStyle,
+                      { pointerEvents: 'none' },
                     ]}
-                    pointerEvents="none"
                   />
                 ) : null}
                 <CardSheet

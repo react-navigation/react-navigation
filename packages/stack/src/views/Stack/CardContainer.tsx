@@ -260,7 +260,6 @@ function CardContainerInner({
       styleInterpolator={cardStyleInterpolator}
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
-      pointerEvents={active ? 'box-none' : pointerEvents}
       pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
       preloaded={preloaded}
       containerStyle={
@@ -293,6 +292,7 @@ function CardContainerInner({
               : 'flex',
         },
         StyleSheet.absoluteFill,
+        { pointerEvents: active ? 'box-none' : pointerEvents },
       ]}
     >
       <View style={styles.container}>

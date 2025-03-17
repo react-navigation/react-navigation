@@ -88,8 +88,11 @@ export const CardSheet = React.forwardRef<CardSheetRef, Props>(
     return (
       <View
         {...rest}
-        pointerEvents={pointerEvents}
-        style={[enabled && fill ? styles.page : styles.card, style]}
+        style={[
+          enabled && fill ? styles.page : styles.card,
+          style,
+          { pointerEvents: pointerEvents },
+        ]}
       />
     );
   }

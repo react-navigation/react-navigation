@@ -623,12 +623,12 @@ export function TabBar<T extends Route>({
   return (
     <Animated.View onLayout={handleLayout} style={[styles.tabBar, style]}>
       <Animated.View
-        pointerEvents="none"
         style={[
           styles.indicatorContainer,
           scrollEnabled ? { transform: [{ translateX }] as any } : null,
           scrollEnabled ? { width: tabBarWidth } : null,
           indicatorContainerStyle,
+          { pointerEvents: 'none' },
         ]}
       >
         {renderIndicator({

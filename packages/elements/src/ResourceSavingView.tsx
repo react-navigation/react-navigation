@@ -30,8 +30,8 @@ export function ResourceSavingView({
           { display: visible ? 'flex' : 'none' },
           styles.container,
           style,
+          { pointerEvents: visible ? 'auto' : 'none' },
         ]}
-        pointerEvents={visible ? 'auto' : 'none'}
         {...rest}
       >
         {children}
@@ -41,9 +41,12 @@ export function ResourceSavingView({
 
   return (
     <View
-      style={[styles.container, style]}
+      style={[
+        styles.container,
+        style,
+        { pointerEvents: visible ? 'auto' : 'none' },
+      ]}
       // box-none doesn't seem to work properly on Android
-      pointerEvents={visible ? 'auto' : 'none'}
     >
       <View
         collapsable={false}
@@ -52,8 +55,10 @@ export function ResourceSavingView({
           // This is an workaround for a bug where the clipped view never re-appears
           Platform.OS === 'ios' || Platform.OS === 'macos' ? !visible : true
         }
-        pointerEvents={visible ? 'auto' : 'none'}
-        style={visible ? styles.attached : styles.detached}
+        style={[
+          visible ? styles.attached : styles.detached,
+          { pointerEvents: visible ? 'auto' : 'none' },
+        ]}
       >
         {children}
       </View>
