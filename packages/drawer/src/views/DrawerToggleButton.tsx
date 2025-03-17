@@ -38,7 +38,7 @@ export function DrawerToggleButton({
     >
       <Image
         resizeMode="contain"
-        source={iconImage}
+        source={iconImage ? iconImage : toggleDrawerIcon}
         fadeDuration={0}
         tintColor={tintColor}
         style={styles.icon}
