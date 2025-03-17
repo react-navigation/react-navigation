@@ -4,7 +4,8 @@ import {
   type ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
-import { Image, Platform, StyleSheet, ImageSourcePropType } from 'react-native';
+import { Image, Platform, StyleSheet } from 'react-native';
+import type { ImageSourcePropType } from 'react-native';
 
 import type { DrawerNavigationProp } from '../types';
 import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
