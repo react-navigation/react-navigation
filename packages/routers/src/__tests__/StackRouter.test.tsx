@@ -540,10 +540,11 @@ test('ensures unique ID for navigate', () => {
     stale: false,
     type: 'stack',
     key: 'root',
-    index: 1,
+    index: 2,
     preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
+      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
       { key: 'bar', name: 'bar' },
       { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
     ],
@@ -1727,11 +1728,12 @@ test('ensures unique ID for push', () => {
     stale: false,
     type: 'stack',
     key: 'root',
-    index: 1,
+    index: 2,
     preloadedRoutes: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
+      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
       { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
     ],
   });
@@ -2488,7 +2490,7 @@ test('handles screen preloading', () => {
     stale: false,
     type: 'stack',
     key: 'root',
-    index: 1,
+    index: 2,
     preloadedRoutes: [
       {
         key: 'bar-test',
@@ -2497,6 +2499,7 @@ test('handles screen preloading', () => {
     ],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
+      { key: 'qux-some', name: 'qux' },
       {
         key: 'bar-test',
         name: 'bar',

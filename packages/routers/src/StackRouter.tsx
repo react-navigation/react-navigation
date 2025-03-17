@@ -404,7 +404,12 @@ export function StackRouter(options: StackRouterOptions) {
                 routes.push(r);
               }
             } else {
-              routes = state.routes.filter((r) => r.key !== route.key);
+              routes =
+                action.type === 'NAVIGATE' &&
+                state.routes[state.index].key === route.key
+                  ? state.routes.slice(0, -1)
+                  : [...state.routes];
+
               routes.push({
                 ...route,
                 path:
