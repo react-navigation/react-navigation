@@ -21,6 +21,7 @@ type Props = {
 export function DrawerToggleButton({
   tintColor,
   accessibilityLabel = 'Show navigation menu',
+  iconImage,
   ...rest
 }: Props) {
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
@@ -39,7 +40,7 @@ export function DrawerToggleButton({
     >
       <Image
         resizeMode="contain"
-        source={iconImage ? iconImage : toggleDrawerIcon}
+        source={iconImage? iconImage : toggleDrawerIcon}
         fadeDuration={0}
         tintColor={tintColor}
         style={styles.icon}
