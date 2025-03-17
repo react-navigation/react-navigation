@@ -120,6 +120,7 @@ test('tab bar cannot be tapped when hidden', async () => {
   act(() => jest.runAllTimers());
 
   expect(queryByText('Screen B')).not.toBeNull();
+  expect(queryByText('Screen A')).toBeNull();
 
   act(() => {
     // Show the keyboard to hide the tab bar
@@ -133,8 +134,8 @@ test('tab bar cannot be tapped when hidden', async () => {
 
   act(() => jest.runAllTimers());
 
-  expect(queryByText('Screen A')).toBeNull();
-  expect(queryByText('Screen B')).not.toBeNull();
+  expect(queryByText('Screen A')).not.toBeNull();
+  expect(queryByText('Screen B')).toBeNull();
 
   spy.mockRestore();
 });
