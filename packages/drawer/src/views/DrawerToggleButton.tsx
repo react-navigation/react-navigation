@@ -24,14 +24,13 @@ type Props = {
 export function DrawerToggleButton({
   tintColor,
   accessibilityLabel = "Show navigation menu",
-  iconSource = toggleDrawerIcon
+  iconSource = toggleDrawerIcon,
   ...rest
 }: Props) {
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
 
-  const imageSource = typeof iconSource === 'string'
-      ? { uri: iconSource }
-      : iconSource;
+  const imageSource =
+    typeof iconSource === "string" ? { uri: iconSource } : iconSource;
 
   return (
     <PlatformPressable
