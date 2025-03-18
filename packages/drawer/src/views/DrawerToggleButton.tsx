@@ -20,6 +20,7 @@ type Props = {
 export function DrawerToggleButton({
   tintColor,
   accessibilityLabel = "Show navigation menu",
+  iconImage = {toggleDrawerIcon}
   ...rest
 }: Props) {
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
