@@ -3,7 +3,7 @@ import {
   DrawerActions,
   type ParamListBase,
   useNavigation,
-} from "@react-navigation/native";
+} from '@react-navigation/native';
 import { Image, Platform, StyleSheet } from 'react-native';
 
 import type { DrawerNavigationProp } from '../types';
