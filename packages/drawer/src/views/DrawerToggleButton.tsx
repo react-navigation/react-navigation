@@ -1,24 +1,25 @@
-import { PlatformPressable } from '@react-navigation/elements';
+import { PlatformPressable } from "@react-navigation/elements";
 import {
   DrawerActions,
   type ParamListBase,
   useNavigation,
-} from '@react-navigation/native';
-import { Image, Platform, StyleSheet } from 'react-native';
-
-import type { DrawerNavigationProp } from '../types';
-import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
+} from "@react-navigation/native";
+import { Image, Platform, StyleSheet } from "react-native";
+import type { ImageSourcePropType } from "react-native";
+import type { DrawerNavigationProp } from "../types";
+import toggleDrawerIcon from "./assets/toggle-drawer-icon.png";
 
 type Props = {
   accessibilityLabel?: string;
   pressColor?: string;
   pressOpacity?: number;
   tintColor?: string;
+  iconImage?: ImageSourcePropType;
 };
 
 export function DrawerToggleButton({
   tintColor,
-  accessibilityLabel = 'Show navigation menu',
+  accessibilityLabel = "Show navigation menu",
   ...rest
 }: Props) {
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
@@ -37,7 +38,7 @@ export function DrawerToggleButton({
     >
       <Image
         resizeMode="contain"
-        source={toggleDrawerIcon}
+        source={iconImage ? iconImage : toggleDrawerIcon}
         fadeDuration={0}
         tintColor={tintColor}
         style={styles.icon}
