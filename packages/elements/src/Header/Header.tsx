@@ -224,7 +224,7 @@ export function Header(props: Props) {
     // @ts-expect-error: typescript wrongly complains that styleProp cannot be used to index safeStyles
     if (safeStyles[styleProp] === undefined) {
       // @ts-expect-error don't need to care about index signature for deletion
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+       
       delete safeStyles[styleProp];
     }
   }

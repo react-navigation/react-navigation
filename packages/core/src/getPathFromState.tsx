@@ -150,12 +150,12 @@ export function getPathFromState<ParamList extends {}>(
           focusedParams = { ...currentParams };
 
           parts
-            // eslint-disable-next-line no-loop-func
+             
             ?.forEach(({ param }) => {
               if (param) {
                 // Remove the params present in the pattern since we'll only use the rest for query string
                 if (focusedParams) {
-                  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                   
                   delete focusedParams[param];
                 }
               }
@@ -234,7 +234,7 @@ export function getPathFromState<ParamList extends {}>(
     } else if (focusedParams) {
       for (const param in focusedParams) {
         if (focusedParams[param] === 'undefined') {
-          // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+           
           delete focusedParams[param];
         }
       }

@@ -79,7 +79,7 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
       optionsChangeListener();
 
       return () => {
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+         
         delete optionsGettersFromChildRef.current[key];
         optionsChangeListener();
       };

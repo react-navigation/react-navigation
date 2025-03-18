@@ -22,7 +22,7 @@ jest.mock('nanoid/non-secure', () => {
 beforeEach(() => {
   MockRouterKey.current = 0;
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+   
   require('nanoid/non-secure').__key = 0;
 });
 
