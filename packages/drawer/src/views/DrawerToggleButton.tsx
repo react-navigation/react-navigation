@@ -1,13 +1,13 @@
-import { PlatformPressable } from "@react-navigation/elements";
+import { PlatformPressable } from '@react-navigation/elements';
 import {
   DrawerActions,
   type ParamListBase,
   useNavigation,
 } from "@react-navigation/native";
-import { Image, Platform, StyleSheet } from "react-native";
+import { Image, Platform, StyleSheet } from 'react-native';
 
-import type { DrawerNavigationProp } from "../types";
-import toggleDrawerIcon from "./assets/toggle-drawer-icon.png";
+import type { DrawerNavigationProp } from '../types';
+import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
 
 type Props = {
   accessibilityLabel?: string;
@@ -23,14 +23,14 @@ type Props = {
 
 export function DrawerToggleButton({
   tintColor,
-  accessibilityLabel = "Show navigation menu",
+  accessibilityLabel = 'Show navigation menu',
   iconSource = toggleDrawerIcon,
   ...rest
 }: Props) {
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
 
   const imageSource =
-    typeof iconSource === "string" ? { uri: iconSource } : iconSource;
+    typeof iconSource === 'string' ? { uri: iconSource } : iconSource;
 
   return (
     <PlatformPressable
