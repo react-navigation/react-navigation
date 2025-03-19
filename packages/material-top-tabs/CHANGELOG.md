@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.1.1...@react-navigation/material-top-tabs@7.2.0) (2025-03-19)
+
+### Features
+
+* add an option to override router in navigators ([5f201ee](https://github.com/react-navigation/react-navigation/commit/5f201ee435f887e655457c3aa1a81cbeb392ba05)) - by @
+
 ## [7.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.1.0...@react-navigation/material-top-tabs@7.1.1) (2025-03-02)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

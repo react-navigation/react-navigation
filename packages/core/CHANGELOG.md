@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.4.0...@react-navigation/core@7.5.0) (2025-03-19)
+
+### Bug Fixes
+
+* don't freeze objects in params ([881b97f](https://github.com/react-navigation/react-navigation/commit/881b97fe42720a5c71493ff450a1e47c1c43c81c)) - by @satya164
+
+### Features
+
+* add an option to override router in navigators ([5f201ee](https://github.com/react-navigation/react-navigation/commit/5f201ee435f887e655457c3aa1a81cbeb392ba05)) - by @
+
 # [7.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.3.1...@react-navigation/core@7.4.0) (2025-03-02)
 
 ### Bug Fixes
