@@ -254,7 +254,7 @@ export function useNavigationBuilder<
   ScreenOptions extends {},
   EventMap extends Record<string, any>,
 >(
-  createRouter: RouterFactory<State, any, RouterOptions>,
+  createRouter: RouterFactory<State, NavigationAction, RouterOptions>,
   options: DefaultNavigatorOptions<
     ParamListBase,
     string | undefined,
@@ -277,6 +277,7 @@ export function useNavigationBuilder<
     screenOptions,
     screenLayout,
     screenListeners,
+    UNSTABLE_router,
     ...rest
   } = options;
 
@@ -298,7 +299,18 @@ export function useNavigationBuilder<
       );
     }
 
-    return createRouter(rest as unknown as RouterOptions);
+    const original = createRouter(rest as unknown as RouterOptions);
+
+    if (UNSTABLE_router != null) {
+      const overrides = UNSTABLE_router(original);
+
+      return {
+        ...original,
+        ...overrides,
+      };
+    }
+
+    return original;
   });
 
   const screens = routeConfigs.reduce<
@@ -488,26 +500,17 @@ export function useNavigationBuilder<
     !isArrayEqual(state.routeNames, routeNames) ||
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
-    const navigatorStateForNextRouteNamesChange =
-      options.UNSTABLE_getStateForRouteNamesChange?.(state);
     // When the list of route names change, the router should handle it to remove invalid routes
-    nextState = navigatorStateForNextRouteNamesChange
-      ? // @ts-expect-error this is ok
-        router.getRehydratedState(navigatorStateForNextRouteNamesChange, {
-          routeNames,
-          routeParamList,
-          routeGetIdList,
-        })
-      : router.getStateForRouteNamesChange(state, {
-          routeNames,
-          routeParamList,
-          routeGetIdList,
-          routeKeyChanges: Object.keys(routeKeyList).filter(
-            (name) =>
-              name in previousRouteKeyList &&
-              routeKeyList[name] !== previousRouteKeyList[name]
-          ),
-        });
+    nextState = router.getStateForRouteNamesChange(state, {
+      routeNames,
+      routeParamList,
+      routeGetIdList,
+      routeKeyChanges: Object.keys(routeKeyList).filter(
+        (name) =>
+          name in previousRouteKeyList &&
+          routeKeyList[name] !== previousRouteKeyList[name]
+      ),
+    });
   }
 
   const previousNestedParamsRef = React.useRef(route?.params);

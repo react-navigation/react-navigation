@@ -6,6 +6,7 @@ import type {
   ParamListBase,
   PartialState,
   Route,
+  Router,
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
@@ -108,11 +109,15 @@ export type DefaultNavigatorOptions<
   }) => React.ReactElement;
 
   /**
-   A function returning a state, which may be set after modifying the routes name.
+   * A function returning overrides for the underlying router used by the navigator.
+   * The overrides will be shallow merged into the original router.
+   * It receives the original router as an argument to the function.
+   *
+   * This must be a pure function and cannot reference outside dynamic variables.
    */
-  UNSTABLE_getStateForRouteNamesChange?: (
-    state: NavigationState
-  ) => PartialState<NavigationState> | undefined;
+  UNSTABLE_router?: <Action extends NavigationAction>(
+    original: Router<State, Action>
+  ) => Partial<Router<State, Action>>;
 } & (NavigatorID extends string
     ? {
         /**

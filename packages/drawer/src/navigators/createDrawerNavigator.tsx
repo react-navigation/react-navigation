@@ -29,7 +29,7 @@ function DrawerNavigator({
   screenListeners,
   screenOptions,
   screenLayout,
-  UNSTABLE_getStateForRouteNamesChange,
+  UNSTABLE_router,
   ...rest
 }: DrawerNavigatorProps) {
   const { state, descriptors, navigation, NavigationContent } =
@@ -49,7 +49,7 @@ function DrawerNavigator({
       screenListeners,
       screenOptions,
       screenLayout,
-      UNSTABLE_getStateForRouteNamesChange,
+      UNSTABLE_router,
     });
 
   return (

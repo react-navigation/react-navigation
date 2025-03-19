@@ -28,7 +28,7 @@ function BottomTabNavigator({
   screenListeners,
   screenOptions,
   screenLayout,
-  UNSTABLE_getStateForRouteNamesChange,
+  UNSTABLE_router,
   ...rest
 }: BottomTabNavigatorProps) {
   const { state, descriptors, navigation, NavigationContent } =
@@ -47,7 +47,7 @@ function BottomTabNavigator({
       screenListeners,
       screenOptions,
       screenLayout,
-      UNSTABLE_getStateForRouteNamesChange,
+      UNSTABLE_router,
     });
 
   return (

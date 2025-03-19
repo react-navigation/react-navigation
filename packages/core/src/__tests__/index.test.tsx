@@ -1,5 +1,10 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
-import type { NavigationState, ParamListBase } from '@react-navigation/routers';
+import type {
+  NavigationAction,
+  NavigationState,
+  ParamListBase,
+  Router,
+} from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
@@ -1523,6 +1528,95 @@ test('resets state for navigator which has screen from params', () => {
     ],
     stale: false,
     type: 'test',
+  });
+});
+
+test('overrides router with UNSTABLE_router', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator
+        UNSTABLE_router={(
+          original: Router<NavigationState, NavigationAction>
+        ): Partial<Router<NavigationState, NavigationAction>> => {
+          return {
+            getStateForAction(state, action, options) {
+              if (action.type === 'REVERSE') {
+                return {
+                  ...state,
+                  routes: [...state.routes].reverse(),
+                };
+              }
+
+              return original.getStateForAction(state, action, options);
+            },
+          };
+        }}
+      >
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.getRootState()).toEqual({
+    type: 'test',
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+    ],
+    stale: false,
+  });
+
+  act(() => {
+    navigation.dispatch({
+      type: 'REVERSE',
+    });
+  });
+
+  expect(navigation.getRootState()).toEqual({
+    type: 'test',
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      { key: 'foo', name: 'foo' },
+    ],
+    stale: false,
+  });
+
+  act(() => {
+    navigation.dispatch({
+      type: 'NAVIGATE',
+      payload: {
+        name: 'foo',
+      },
+    });
+  });
+
+  expect(navigation.getRootState()).toEqual({
+    type: 'test',
+    index: 1,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      { key: 'foo', name: 'foo' },
+    ],
+    stale: false,
   });
 });
 
