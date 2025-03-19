@@ -70,7 +70,7 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   replace<RouteName extends keyof ParamList>(
     ...args: {
       [Screen in keyof ParamList]: undefined extends ParamList[Screen]
-        ? [screen: Screen] | [screen: Screen, params: ParamList[Screen]]
+        ? [screen: Screen, params?: ParamList[Screen]]
         : [screen: Screen, params: ParamList[Screen]];
     }[RouteName]
   ): void;
@@ -84,7 +84,7 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   push<RouteName extends keyof ParamList>(
     ...args: {
       [Screen in keyof ParamList]: undefined extends ParamList[Screen]
-        ? [screen: Screen] | [screen: Screen, params: ParamList[Screen]]
+        ? [screen: Screen, params?: ParamList[Screen]]
         : [screen: Screen, params: ParamList[Screen]];
     }[RouteName]
   ): void;
@@ -110,13 +110,16 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   popTo<RouteName extends keyof ParamList>(
     ...args: {
       [Screen in keyof ParamList]: undefined extends ParamList[Screen]
-        ?
-            | [screen: Screen]
-            | [screen: Screen, params: ParamList[Screen]]
-            | [screen: Screen, params: ParamList[Screen], merge: boolean]
-        :
-            | [screen: Screen, params: ParamList[Screen]]
-            | [screen: Screen, params: ParamList[Screen], merge: boolean];
+        ? [
+            screen: Screen,
+            params?: ParamList[Screen],
+            options?: { merge?: boolean },
+          ]
+        : [
+            screen: Screen,
+            params: ParamList[Screen],
+            options?: { merge?: boolean },
+          ];
     }[RouteName]
   ): void;
 };
@@ -134,8 +137,25 @@ export const StackActions = {
   popToTop(): StackActionType {
     return { type: 'POP_TO_TOP' };
   },
-  popTo(name: string, params?: object, merge?: boolean): StackActionType {
-    return { type: 'POP_TO', payload: { name, params, merge } };
+  popTo(
+    name: string,
+    params?: object,
+    options?: { merge?: boolean }
+  ): StackActionType {
+    if (typeof options === 'boolean') {
+      console.warn(
+        `Passing a boolean as the third argument to 'popTo' is deprecated. Pass '{ merge: true }' instead.`
+      );
+    }
+
+    return {
+      type: 'POP_TO',
+      payload: {
+        name,
+        params,
+        merge: typeof options === 'boolean' ? options : options?.merge,
+      },
+    };
   },
 };
 

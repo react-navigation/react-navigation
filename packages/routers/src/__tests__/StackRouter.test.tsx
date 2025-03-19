@@ -406,7 +406,7 @@ test('merges params on navigate when specified', () => {
           { key: 'bar', name: 'bar', params: { color: 'tomato' } },
         ],
       },
-      CommonActions.navigate('bar', { answer: 96 }, true),
+      CommonActions.navigate('bar', { answer: 96 }, { merge: true }),
       options
     )
   ).toEqual({
@@ -2198,7 +2198,7 @@ test('merges params on popTo to an existing screen if merge: true', () => {
         ],
       },
 
-      StackActions.popTo('bar', {}, true),
+      StackActions.popTo('bar', {}, { merge: true }),
       options
     )
   ).toEqual({
@@ -2228,7 +2228,7 @@ test('merges params on popTo to an existing screen if merge: true', () => {
           { key: 'bar', name: 'bar', params: { answer: 42 } },
         ],
       },
-      StackActions.popTo('bar', { fruit: 'orange' }, true),
+      StackActions.popTo('bar', { fruit: 'orange' }, { merge: true }),
       options
     )
   ).toEqual({
@@ -2262,7 +2262,7 @@ test('merges params on popTo to an existing screen if merge: true', () => {
           { key: 'bar', name: 'bar', params: { answer: 42 } },
         ],
       },
-      StackActions.popTo('baz', { color: 'black' }, true),
+      StackActions.popTo('baz', { color: 'black' }, { merge: true }),
       options
     )
   ).toEqual({

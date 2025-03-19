@@ -32,9 +32,7 @@ type ScreenParamsPair<
   // Mapped type is used instead of just ParamList[RouteName]
   // Otherwise it'll result in union of all params leading to incorrect types
   [Screen in keyof ParamList]: undefined extends ParamList[Screen] // Params are either undefined or a union with undefined
-    ?
-        | [screen: Screen] // if the params are optional, we don't have to provide it
-        | [screen: Screen, params: ParamList[Screen]]
+    ? [screen: Screen, params?: ParamList[Screen]]
     : [screen: Screen, params: ParamList[Screen]];
 }[RouteName];
 
@@ -263,13 +261,16 @@ type NavigationHelpersCommon<
   navigate<RouteName extends keyof ParamList>(
     ...args: {
       [Screen in keyof ParamList]: undefined extends ParamList[Screen]
-        ?
-            | [screen: Screen]
-            | [screen: Screen, params: ParamList[Screen]]
-            | [screen: Screen, params: ParamList[Screen], merge: boolean]
-        :
-            | [screen: Screen, params: ParamList[Screen]]
-            | [screen: Screen, params: ParamList[Screen], merge: boolean];
+        ? [
+            screen: Screen,
+            params?: ParamList[Screen],
+            options?: { merge?: boolean; pop?: boolean },
+          ]
+        : [
+            screen: Screen,
+            params: ParamList[Screen],
+            options?: { merge?: boolean; pop?: boolean },
+          ];
     }[RouteName]
   ): void;
 

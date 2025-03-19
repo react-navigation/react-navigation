@@ -718,7 +718,7 @@ test('merges params on navigate when specified', () => {
         ],
         history: [{ type: 'route', key: 'bar' }],
       },
-      CommonActions.navigate('baz', { answer: 42 }, true),
+      CommonActions.navigate('baz', { answer: 42 }, { merge: true }),
       options
     )
   ).toEqual({

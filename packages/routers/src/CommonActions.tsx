@@ -76,7 +76,10 @@ export function goBack(): Action {
 export function navigate(
   name: string,
   params?: object,
-  merge?: boolean
+  options?: {
+    merge?: boolean;
+    pop?: boolean;
+  }
 ): Action;
 
 export function navigate(options: {
@@ -89,11 +92,22 @@ export function navigate(options: {
 
 export function navigate(...args: any): Action {
   if (typeof args[0] === 'string') {
-    const [name, params, merge] = args;
+    const [name, params, options] = args;
+
+    if (typeof options === 'boolean') {
+      console.warn(
+        `Passing a boolean as the third argument to 'navigate' is deprecated. Pass '{ merge: true }' instead.`
+      );
+    }
 
     return {
       type: 'NAVIGATE',
-      payload: { name, params, merge },
+      payload: {
+        name,
+        params,
+        merge: typeof options === 'boolean' ? options : options?.merge,
+        pop: options?.pop,
+      },
     };
   } else {
     const payload = args[0] || {};
