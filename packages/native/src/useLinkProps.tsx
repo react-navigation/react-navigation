@@ -19,11 +19,11 @@ export type LinkProps<
   | ({
       href?: string;
       action?: NavigationAction;
-    } & {
-      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
-        ? { screen: Screen; params?: ParamList[Screen] }
-        : { screen: Screen; params: ParamList[Screen] };
-    }[RouteName])
+    } & (RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
+        ? { screen: RouteName; params?: ParamList[RouteName] }
+        : { screen: RouteName; params: ParamList[RouteName] }
+      : never))
   | {
       href?: string;
       action: NavigationAction;

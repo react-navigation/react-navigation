@@ -68,11 +68,11 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
    * @param [params] Params object for the new route.
    */
   replace<RouteName extends keyof ParamList>(
-    ...args: {
-      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
-        ? [screen: Screen, params?: ParamList[Screen]]
-        : [screen: Screen, params: ParamList[Screen]];
-    }[RouteName]
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
+        ? [screen: RouteName, params?: ParamList[RouteName]]
+        : [screen: RouteName, params: ParamList[RouteName]]
+      : never
   ): void;
 
   /**
@@ -82,11 +82,11 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
    * @param [params] Params object for the route.
    */
   push<RouteName extends keyof ParamList>(
-    ...args: {
-      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
-        ? [screen: Screen, params?: ParamList[Screen]]
-        : [screen: Screen, params: ParamList[Screen]];
-    }[RouteName]
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
+        ? [screen: RouteName, params?: ParamList[RouteName]]
+        : [screen: RouteName, params: ParamList[RouteName]]
+      : never
   ): void;
 
   /**
@@ -108,19 +108,19 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
    * @param [merge] Whether to merge the params onto the route.
    */
   popTo<RouteName extends keyof ParamList>(
-    ...args: {
-      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
         ? [
-            screen: Screen,
-            params?: ParamList[Screen],
+            screen: RouteName,
+            params?: ParamList[RouteName],
             options?: { merge?: boolean },
           ]
         : [
-            screen: Screen,
-            params: ParamList[Screen],
+            screen: RouteName,
+            params: ParamList[RouteName],
             options?: { merge?: boolean },
-          ];
-    }[RouteName]
+          ]
+      : never
   ): void;
 };
 
