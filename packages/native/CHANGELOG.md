@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.16...@react-navigation/native@7.0.17) (2025-03-19)
+
+### Bug Fixes
+
+* revert types for screen & params pair ([154b90c](https://github.com/react-navigation/react-navigation/commit/154b90cd86d4231b6f1d68738f22541c18d5f9df)), closes [/github.com/react-navigation/react-navigation/commit/a528b9b407dbaeaac0caae8edcb5b3c6840144fa#diff-9c2709d8522a6b9ec9697dd54c966da28deee393cc5effe69b47fdf93a2dbc5](https://github.com//github.com/react-navigation/react-navigation/commit/a528b9b407dbaeaac0caae8edcb5b3c6840144fa/issues/diff-9c2709d8522a6b9ec9697dd54c966da28deee393cc5effe69b47fdf93a2dbc5) [#12372](https://github.com/react-navigation/react-navigation/issues/12372) - by @satya164
+
 ## [7.0.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.15...@react-navigation/native@7.0.16) (2025-03-19)
 
 **Note:** Version bump only for package @react-navigation/native

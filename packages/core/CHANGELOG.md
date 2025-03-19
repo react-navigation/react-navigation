@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.5.0...@react-navigation/core@7.6.0) (2025-03-19)
+
+### Bug Fixes
+
+* revert types for screen & params pair ([154b90c](https://github.com/react-navigation/react-navigation/commit/154b90cd86d4231b6f1d68738f22541c18d5f9df)), closes [/github.com/react-navigation/react-navigation/commit/a528b9b407dbaeaac0caae8edcb5b3c6840144fa#diff-9c2709d8522a6b9ec9697dd54c966da28deee393cc5effe69b47fdf93a2dbc5](https://github.com//github.com/react-navigation/react-navigation/commit/a528b9b407dbaeaac0caae8edcb5b3c6840144fa/issues/diff-9c2709d8522a6b9ec9697dd54c966da28deee393cc5effe69b47fdf93a2dbc5) [#12372](https://github.com/react-navigation/react-navigation/issues/12372) - by @satya164
+
+### Features
+
+* add pop option to navigate ([af19493](https://github.com/react-navigation/react-navigation/commit/af1949312d752849bfa72a708880e43fdcfab575)) - by @satya164
+
 # [7.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.4.0...@react-navigation/core@7.5.0) (2025-03-19)
 
 ### Bug Fixes
