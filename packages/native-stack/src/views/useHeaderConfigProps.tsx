@@ -188,7 +188,7 @@ export function useHeaderConfigProps({
     // Doesn't have custom back title
     headerBackTitle == null &&
     // Doesn't have custom styling
-    backTitleFontFamily == null &&
+    backTitleFontFamily === 'System' &&
     backTitleFontSize == null &&
     // Back button menu is not disabled
     headerBackButtonMenuEnabled !== false;
