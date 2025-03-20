@@ -630,6 +630,7 @@ export type NativeStackNavigationOptions = {
    * - "containedTransparentModal": will use "UIModalPresentationOverCurrentContext" modal style on iOS and will fallback to "transparentModal" on Android.
    * - "fullScreenModal": will use "UIModalPresentationFullScreen" modal style on iOS and will fallback to "modal" on Android.
    * - "formSheet": will use "UIModalPresentationFormSheet" modal style on iOS and will fallback to "modal" on Android.
+   * - "pageSheet": will use "UIModalPresentationPageSheet" modal style on iOS and will fallback to "modal" on Android.
    *
    * Only supported on iOS and Android.
    */
