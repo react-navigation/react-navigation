@@ -187,7 +187,7 @@ export function useHeaderConfigProps({
     parseInt(Platform.Version, 10) >= 14 &&
     // Doesn't have custom back title
     headerBackTitle == null &&
-    // Doesn't have custom styling
+    // Doesn't have custom styling, by default System, see: https://github.com/software-mansion/react-native-screens/pull/2105#discussion_r1565222738
     backTitleFontFamily === 'System' &&
     backTitleFontSize == null &&
     // Back button menu is not disabled
