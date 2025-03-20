@@ -1,5 +1,6 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import { Button } from '@react-navigation/elements';
+import { DrawerItem } from '@react-navigation/drawer';
+import { Button, Text } from '@react-navigation/elements';
 import { useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -20,6 +21,9 @@ export function DrawerView() {
   const [drawerPosition, setDrawerPosition] = React.useState<'left' | 'right'>(
     'left'
   );
+  const [drawerIconPosition, setDrawerIconPosition] = React.useState<
+    'left' | 'right'
+  >('left');
 
   return (
     <Drawer
@@ -31,7 +35,34 @@ export function DrawerView() {
       drawerPosition={drawerPosition}
       renderDrawerContent={() => {
         return (
-          <View style={styles.container}>
+          <View style={[styles.container, styles.gap]}>
+            <View style={styles.fullWidth}>
+              <DrawerItem
+                label="Focused drawer item"
+                focused
+                icon={() => <Text>💎</Text>}
+                iconPosition={drawerIconPosition}
+                onPress={() => {}}
+              />
+
+              <DrawerItem
+                label="Unfocused drawer item"
+                icon={() => <Text>🪨</Text>}
+                iconPosition={drawerIconPosition}
+                onPress={() => {}}
+              />
+            </View>
+
+            <Button
+              onPress={() =>
+                setDrawerIconPosition((prevPosition) =>
+                  prevPosition === 'left' ? 'right' : 'left'
+                )
+              }
+            >
+              Change icon position ({drawerIconPosition})
+            </Button>
+
             <Button color="tomato" onPress={() => setOpen(false)}>
               Close drawer
             </Button>
@@ -41,7 +72,7 @@ export function DrawerView() {
     >
       <View style={[styles.container, { backgroundColor: colors.background }]}>
         <DrawerProgress />
-        <View style={styles.buttons}>
+        <View style={styles.gap}>
           <Button
             variant="filled"
             onPress={() => setOpen((prevOpen) => !prevOpen)}
@@ -98,7 +129,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 8,
   },
-  buttons: {
+  fullWidth: {
+    width: '100%',
+  },
+  gap: {
     gap: 8,
   },
 });
