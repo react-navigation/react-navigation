@@ -34,6 +34,10 @@ type Props = {
     color: string;
   }) => React.ReactNode;
   /**
+   * Display icon on the left or right side.
+   */
+  iconPosition?: 'left' | 'right';
+  /**
    * Whether to highlight the drawer item as active.
    */
   focused?: boolean;
@@ -103,6 +107,7 @@ export function DrawerItem(props: Props) {
   const {
     href,
     icon,
+    iconPosition = 'left',
     label,
     labelStyle,
     focused = false,
@@ -149,8 +154,16 @@ export function DrawerItem(props: Props) {
         href={href}
       >
         <View style={[styles.wrapper, { borderRadius }]}>
-          {iconNode}
-          <View style={[styles.label, { marginStart: iconNode ? 12 : 0 }]}>
+          {iconPosition === 'left' ? iconNode : null}
+          <View
+            style={[
+              styles.label,
+              {
+                [iconPosition === 'left' ? 'marginStart' : 'marginEnd']:
+                  iconNode ? 12 : 0,
+              },
+            ]}
+          >
             {typeof label === 'string' ? (
               <Text
                 numberOfLines={1}
@@ -163,6 +176,7 @@ export function DrawerItem(props: Props) {
               label({ color, focused })
             )}
           </View>
+          {iconPosition === 'right' ? iconNode : null}
         </View>
       </PlatformPressable>
     </View>

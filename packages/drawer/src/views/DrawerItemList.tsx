@@ -57,6 +57,7 @@ export function DrawerItemList({ state, navigation, descriptors }: Props) {
       title,
       drawerLabel,
       drawerIcon,
+      drawerIconPosition,
       drawerLabelStyle,
       drawerItemStyle,
       drawerAllowFontScaling,
@@ -75,6 +76,7 @@ export function DrawerItemList({ state, navigation, descriptors }: Props) {
               : route.name
         }
         icon={drawerIcon}
+        iconPosition={drawerIconPosition}
         focused={focused}
         activeTintColor={drawerActiveTintColor}
         inactiveTintColor={drawerInactiveTintColor}
