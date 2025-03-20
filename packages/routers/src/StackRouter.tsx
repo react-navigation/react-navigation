@@ -64,7 +64,7 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   /**
    * Replace the current route with a new one.
    *
-   * @param name Name of the new route.
+   * @param screen Name of the new route that will replace the current one.
    * @param [params] Params object for the new route.
    */
   replace<RouteName extends keyof ParamList>(
@@ -78,7 +78,7 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   /**
    * Push a new screen onto the stack.
    *
-   * @param name Name of the route to push onto the stack.
+   * @param screen Name of the route to push onto the stack.
    * @param [params] Params object for the route.
    */
   push<RouteName extends keyof ParamList>(
@@ -103,9 +103,9 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
    * Pop any screens to go back to the specified screen.
    * If the specified screen doesn't exist, it'll be added to the stack.
    *
-   * @param name Name of the route to navigate to.
+   * @param screen Name of the route to pop to.
    * @param [params] Params object for the route.
-   * @param [merge] Whether to merge the params onto the route.
+   * @param [options.merge] Whether to merge the params onto the route. Defaults to `false`.
    */
   popTo<RouteName extends keyof ParamList>(
     ...args: RouteName extends unknown

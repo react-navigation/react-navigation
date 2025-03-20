@@ -95,7 +95,7 @@ export type DefaultNavigatorOptions<
 
   /**
    * A function returning overrides for the underlying router used by the navigator.
-   * The overrides will be shallow merged into the original router.
+   * The overrides will be shallow merged onto the original router.
    * It receives the original router as an argument to the function.
    *
    * This must be a pure function and cannot reference outside dynamic variables.
@@ -241,9 +241,10 @@ type NavigationHelpersCommon<
    * Navigate to a screen in the current or parent navigator.
    * If we're already on the screen, update the params instead.
    *
-   * @param name Name of the route to navigate to.
+   * @param screen Name of the route to navigate to.
    * @param [params] Params object for the route.
-   * @param [merge] Whether to merge the params onto the route.
+   * @param [options.merge] Whether to merge the params onto the route. Defaults to `false`.
+   * @param [options.pop] Whether to pop routes in a stack to go back to the matching route. Defaults to `false`.
    */
   navigate<RouteName extends keyof ParamList>(
     ...args: // This condition allows us to iterate over a union type
@@ -272,8 +273,8 @@ type NavigationHelpersCommon<
    * @param options.name Name of the route to navigate to.
    * @param [options.params] Params object for the route.
    * @param [options.path] Path to associate the route with (e.g. for deep links).
-   * @param [options.merge] Whether to merge the params onto the route.
-   * @param [options.pop] Whether to pop routes in a stack to go back to the matching route.
+   * @param [options.merge] Whether to merge the params onto the route. Defaults to `false`.
+   * @param [options.pop] Whether to pop routes in a stack to go back to the matching route. Defaults to `false`.
    */
   navigate<RouteName extends keyof ParamList>(
     options: RouteName extends unknown
@@ -292,7 +293,7 @@ type NavigationHelpersCommon<
    *
    * @deprecated Use `navigate` instead.
    *
-   * @param name Name of the route to navigate to.
+   * @param screen Name of the route to navigate to.
    * @param [params] Params object for the route.
    */
   navigateDeprecated<RouteName extends keyof ParamList>(
@@ -323,7 +324,7 @@ type NavigationHelpersCommon<
   /**
    * Preloads the route in current navigation tree.
    *
-   * @param name Name of the route to navigate to.
+   * @param screen Name of the route to preload.
    * @param [params] Params object for the route.
    */
   preload<RouteName extends keyof ParamList>(

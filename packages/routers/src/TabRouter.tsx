@@ -51,7 +51,7 @@ export type TabActionHelpers<ParamList extends ParamListBase> = {
   /**
    * Jump to an existing tab.
    *
-   * @param name Name of the route for the tab.
+   * @param screen Name of the route to jump to.
    * @param [params] Params object for the route.
    */
   jumpTo<RouteName extends Extract<keyof ParamList, string>>(
