@@ -387,7 +387,10 @@ export function Header(props: Props) {
                   tintColor={iconTintColor}
                   pressColor={headerPressColor}
                   pressOpacity={headerPressOpacity}
-                  onPress={() => setSearchBarVisible(true)}
+                  onPress={() => {
+                    setSearchBarVisible(true);
+                    headerSearchBarOptions?.onOpen?.();
+                  }}
                 >
                   <HeaderIcon source={searchIcon} tintColor={iconTintColor} />
                 </HeaderButton>
