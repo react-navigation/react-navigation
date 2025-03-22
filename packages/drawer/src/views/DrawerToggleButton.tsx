@@ -4,7 +4,12 @@ import {
   type ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
-import { Image, Platform, StyleSheet } from 'react-native';
+import {
+  Image,
+  type ImageSourcePropType,
+  Platform,
+  StyleSheet,
+} from 'react-native';
 
 import type { DrawerNavigationProp } from '../types';
 import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
@@ -14,23 +19,16 @@ type Props = {
   pressColor?: string;
   pressOpacity?: number;
   tintColor?: string;
-  iconSource?:
-    | number
-    | string
-    | { uri: string }
-    | { uri?: string; [key: string]: any };
+  imageSource?: ImageSourcePropType;
 };
 
 export function DrawerToggleButton({
   tintColor,
   accessibilityLabel = 'Show navigation menu',
-  iconSource = toggleDrawerIcon,
+  imageSource = toggleDrawerIcon,
   ...rest
 }: Props) {
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
-
-  const imageSource =
-    typeof iconSource === 'string' ? { uri: iconSource } : iconSource;
 
   return (
     <PlatformPressable
