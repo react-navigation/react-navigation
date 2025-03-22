@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.6.0...@react-navigation/core@7.6.1) (2025-03-22)
+
+### Bug Fixes
+
+* fix JSX and useScrollToTop types for React 19 compatibility ([#12501](https://github.com/react-navigation/react-navigation/issues/12501)) ([4a7dfe1](https://github.com/react-navigation/react-navigation/commit/4a7dfe1f9b6dac66ea0651bf69dc9f5835dcd838)), closes [#12468](https://github.com/react-navigation/react-navigation/issues/12468) - by @teaualune
+
 # [7.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.5.0...@react-navigation/core@7.6.0) (2025-03-19)
 
 ### Bug Fixes

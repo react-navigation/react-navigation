@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.2.8...@react-navigation/elements@2.3.0) (2025-03-22)
+
+### Bug Fixes
+
+* header search not taking remaining space when title is centered on Android ([#12461](https://github.com/react-navigation/react-navigation/issues/12461)) ([f06df9f](https://github.com/react-navigation/react-navigation/commit/f06df9f9af929f1629166554a69dadcda749fd00)) - by @ferretwithaberet
+
+### Features
+
+* add enterKeyHint option for search bar ([#12464](https://github.com/react-navigation/react-navigation/issues/12464)) ([96d25ce](https://github.com/react-navigation/react-navigation/commit/96d25cec3d51170e2183863e1085740a061d7797)) - by @ferretwithaberet
+* add onOpen handler ([#12463](https://github.com/react-navigation/react-navigation/issues/12463)) ([e7e6562](https://github.com/react-navigation/react-navigation/commit/e7e65622ec6c9662fa39fe1989ae1f2788c2d4c6)) - by @ferretwithaberet
+* add typing for onSubmitEditing ([#12462](https://github.com/react-navigation/react-navigation/issues/12462)) ([80278f4](https://github.com/react-navigation/react-navigation/commit/80278f4b3ac8ea08388f29e38a50ace04a7759c6)) - by @ferretwithaberet
+
 ## [2.2.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.2.7...@react-navigation/elements@2.2.8) (2025-03-19)
 
 **Note:** Version bump only for package @react-navigation/elements

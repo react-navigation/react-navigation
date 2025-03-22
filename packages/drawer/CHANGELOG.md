@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.2.1...@react-navigation/drawer@7.3.0) (2025-03-22)
+
+### Bug Fixes
+
+* position toggle button correctly based on drawer position ([238b539](https://github.com/react-navigation/react-navigation/commit/238b53980644a280f268caccbbbd75e9bbd0804e)) - by @satya164
+
+### Features
+
+* add imageSource prop to DrawerToggleButton ([#12492](https://github.com/react-navigation/react-navigation/issues/12492)) ([7a1f1dc](https://github.com/react-navigation/react-navigation/commit/7a1f1dcb3067d5c24d7a92583690beba99698e14)) - by @prateeksure
+
 ## [7.2.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.2.0...@react-navigation/drawer@7.2.1) (2025-03-19)
 
 **Note:** Version bump only for package @react-navigation/drawer
