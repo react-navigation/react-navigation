@@ -1,15 +1,10 @@
-import { PlatformPressable } from '@react-navigation/elements';
+import { HeaderButton } from '@react-navigation/elements';
 import {
   DrawerActions,
   type ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
-import {
-  Image,
-  type ImageSourcePropType,
-  Platform,
-  StyleSheet,
-} from 'react-native';
+import { Image, type ImageSourcePropType, StyleSheet } from 'react-native';
 
 import type { DrawerNavigationProp } from '../types';
 import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
@@ -31,16 +26,10 @@ export function DrawerToggleButton({
   const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
 
   return (
-    <PlatformPressable
+    <HeaderButton
       {...rest}
       accessibilityLabel={accessibilityLabel}
-      android_ripple={{ borderless: true }}
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-      style={styles.touchable}
-      hitSlop={Platform.select({
-        ios: undefined,
-        default: { top: 16, right: 16, bottom: 16, left: 16 },
-      })}
     >
       <Image
         resizeMode="contain"
@@ -49,7 +38,7 @@ export function DrawerToggleButton({
         tintColor={tintColor}
         style={styles.icon}
       />
-    </PlatformPressable>
+    </HeaderButton>
   );
 }
 
@@ -58,10 +47,6 @@ const styles = StyleSheet.create({
     height: 24,
     width: 24,
     marginVertical: 8,
-    marginHorizontal: 13,
-  },
-  touchable: {
-    // Roundness for iPad hover effect
-    borderRadius: 10,
+    marginHorizontal: 5,
   },
 });
