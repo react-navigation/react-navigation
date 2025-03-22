@@ -403,7 +403,7 @@ export function createComponentForStaticNavigation(
     );
   }
 
-  const items: (() => JSX.Element | null)[] = [];
+  const items: (() => React.JSX.Element | null)[] = [];
 
   // Loop through the config to find screens and groups
   // So we add the screens and groups in the same order as they are defined
