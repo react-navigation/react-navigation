@@ -44,6 +44,7 @@ function HeaderSearchBarInternal(
     autoFocus = true,
     placeholder = 'Search',
     cancelButtonText = 'Cancel',
+    enterKeyHint = 'search',
     onChangeText,
     onClose,
     tintColor,
@@ -174,6 +175,7 @@ function HeaderSearchBarInternal(
           onChangeText={setValue}
           autoFocus={autoFocus}
           inputMode={INPUT_TYPE_TO_MODE[inputType ?? 'text']}
+          enterKeyHint={enterKeyHint}
           placeholder={placeholder}
           placeholderTextColor={Color(textColor).alpha(0.5).string()}
           cursorColor={colors.primary}
