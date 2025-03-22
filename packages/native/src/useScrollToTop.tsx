@@ -19,7 +19,8 @@ type ScrollableView =
 type ScrollableWrapper =
   | { getScrollResponder(): React.ReactNode | ScrollView }
   | { getNode(): ScrollableView }
-  | ScrollableView;
+  | ScrollableView
+  | null;
 
 function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
   if (ref.current == null) {
