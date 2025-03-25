@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/core",
   "description": "Core utilities for building navigators",
-  "version": "7.6.1",
+  "version": "7.7.0",
   "keywords": [
     "react",
     "react-native",

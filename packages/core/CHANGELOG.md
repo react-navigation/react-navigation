@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.6.1...@react-navigation/core@7.7.0) (2025-03-25)
+
+### Features
+
+* add ready event to the container ref ([24de3d8](https://github.com/react-navigation/react-navigation/commit/24de3d81508d67422298cbf2e18793f23b872419)) - by @
+
 ## [7.6.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.6.0...@react-navigation/core@7.6.1) (2025-03-22)
 
 ### Bug Fixes

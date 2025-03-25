@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.19...@react-navigation/devtools@7.0.20) (2025-03-25)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
 ## [7.0.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.18...@react-navigation/devtools@7.0.19) (2025-03-22)
 
 **Note:** Version bump only for package @react-navigation/devtools
