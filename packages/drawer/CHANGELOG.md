@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.3.1...@react-navigation/drawer@7.3.2) (2025-03-25)
+
+### Bug Fixes
+
+* fix drawer not respecting headerLeft & headerRight ([2003293](https://github.com/react-navigation/react-navigation/commit/2003293b1d5129179ab1fa20afdd7a13aeb4f535)) - by @
+
 ## [7.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.3.0...@react-navigation/drawer@7.3.1) (2025-03-25)
 
 **Note:** Version bump only for package @react-navigation/drawer
