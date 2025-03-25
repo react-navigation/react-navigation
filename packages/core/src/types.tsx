@@ -755,7 +755,13 @@ export type RouteGroupConfig<
 
 export type NavigationContainerEventMap = {
   /**
-   * Event which fires when the navigation state changes.
+   * Event that fires when the navigation container is ready to be used.
+   */
+  ready: {
+    data: undefined;
+  };
+  /**
+   * Event that fires when the navigation state changes.
    */
   state: {
     data: {
@@ -766,18 +772,18 @@ export type NavigationContainerEventMap = {
     };
   };
   /**
-   * Event which fires when current options changes.
+   * Event that fires when current options changes.
    */
   options: { data: { options: object } };
   /**
-   * Event which fires when an action is dispatched.
+   * Event that fires when an action is dispatched.
    * Only intended for debugging purposes, don't use it for app logic.
    * This event will be emitted before state changes have been applied.
    */
   __unsafe_action__: {
     data: {
       /**
-       * The action object which was dispatched.
+       * The action object that was dispatched.
        */
       action: NavigationAction;
       /**

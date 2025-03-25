@@ -315,8 +315,9 @@ export const BaseNavigationContainer = React.forwardRef(
       if (!onReadyCalledRef.current && isReady()) {
         onReadyCalledRef.current = true;
         onReadyRef.current?.();
+        emitter.emit({ type: 'ready' });
       }
-    }, [state, isReady]);
+    }, [state, isReady, emitter]);
 
     React.useEffect(() => {
       const hydratedState = getRootState();
