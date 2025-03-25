@@ -155,7 +155,7 @@ export type NativeStackNavigationOptions = {
   headerBackVisible?: boolean;
   /**
    * Title string used by the back button on iOS.
-   * Defaults to the previous scene's title, or "Back" if there's not enough space.
+   * Defaults to the previous scene's title.
    * Use `headerBackButtonDisplayMode: "minimal"` to hide it.
    *
    * Only supported on iOS and Web.
@@ -348,13 +348,12 @@ export type NativeStackNavigationOptions = {
    * - "generic" – Displays one of the following depending on the available space: generic title (e.g. 'Back') or no title (only icon).
    * - "minimal" – Always displays only the icon without a title.
    *
-   * The "generic" mode is not supported when:
-   * - The iOS version is lower than 14
-   * - Custom back title is set
-   * - Custom back title style is set
-   * - Back button menu is disabled
-   *
-   * In such cases, the "default" mode will be used instead.
+   * When any of following props will be set:
+   * - headerBackTitle
+   * - headerBackTitleStyle
+   * - headerBackButtonMenuEnabled
+   * or iOS 13 or lower is in use, the space-aware behavior will be omitted resulting in
+   * static title and icon.
    *
    * Defaults to "default" on iOS, and "minimal" on other platforms.
    *
