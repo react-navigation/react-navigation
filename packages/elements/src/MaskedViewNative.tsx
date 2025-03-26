@@ -16,7 +16,6 @@ let RNCMaskedView: MaskedViewType | undefined;
 try {
   // Add try/catch to support usage even if it's not installed, since it's optional.
   // Newer versions of Metro will handle it properly.
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   RNCMaskedView = require('@react-native-masked-view/masked-view').default;
 } catch (e) {
   // Ignore

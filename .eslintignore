@@ -1,8 +1,0 @@
-node_modules/
-coverage/
-dist/
-lib/
-
-.expo/
-.yarn/
-.vscode/

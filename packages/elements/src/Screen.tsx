@@ -49,7 +49,6 @@ export function Screen(props: Props) {
     header,
     headerShown = true,
     headerTransparent,
-    // eslint-disable-next-line @eslint-react/no-unstable-default-props
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
     navigation,
     route,

@@ -13,6 +13,7 @@ import { UnhandledActionContext } from './UnhandledActionContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
 // This is to make TypeScript compiler happy
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 PrivateValueStore;
 
 type Options<State extends NavigationState, Action extends NavigationAction> = {

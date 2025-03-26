@@ -36,6 +36,7 @@ test('throws when getState is accessed without a container', () => {
   const Test = () => {
     const { getState } = React.useContext(NavigationStateContext);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     getState;
 
     return null;
@@ -54,6 +55,7 @@ test('throws when setState is accessed without a container', () => {
   const Test = () => {
     const { setState } = React.useContext(NavigationStateContext);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     setState;
 
     return null;

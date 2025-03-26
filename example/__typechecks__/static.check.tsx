@@ -18,7 +18,7 @@ const NativeStack = createNativeStackNavigator({
     GroupA: {
       screenLayout: ({ navigation, children }) => {
         expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
-        expectTypeOf(navigation.push).toMatchTypeOf<Function>();
+        expectTypeOf(navigation.push).toMatchTypeOf<() => void>();
 
         return <>{children}</>;
       },
@@ -375,7 +375,7 @@ createBottomTabNavigator({
   screenOptions: ({ route, navigation, theme }) => {
     expectTypeOf(route.name).toMatchTypeOf<string>();
     expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
-    expectTypeOf(navigation.jumpTo).toMatchTypeOf<Function>();
+    expectTypeOf(navigation.jumpTo).toMatchTypeOf<() => void>();
     expectTypeOf(theme).toMatchTypeOf<ReactNavigation.Theme>();
 
     return {};
@@ -390,7 +390,7 @@ createBottomTabNavigator({
       options: ({ route, navigation, theme }) => {
         expectTypeOf(route.name).toMatchTypeOf<string>();
         expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
-        expectTypeOf(navigation.jumpTo).toMatchTypeOf<Function>();
+        expectTypeOf(navigation.jumpTo).toMatchTypeOf<() => void>();
         expectTypeOf(theme).toMatchTypeOf<ReactNavigation.Theme>();
 
         return {};
@@ -406,7 +406,7 @@ createBottomTabNavigator({
   screenListeners: ({ route, navigation }) => {
     expectTypeOf(route.name).toMatchTypeOf<string>();
     expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
-    expectTypeOf(navigation.jumpTo).toMatchTypeOf<Function>();
+    expectTypeOf(navigation.jumpTo).toMatchTypeOf<() => void>();
 
     return {};
   },
@@ -420,7 +420,7 @@ createBottomTabNavigator({
       listeners: ({ navigation, route }) => {
         expectTypeOf(route.name).toMatchTypeOf<string>();
         expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
-        expectTypeOf(navigation.jumpTo).toMatchTypeOf<Function>();
+        expectTypeOf(navigation.jumpTo).toMatchTypeOf<() => void>();
 
         return {};
       },
@@ -455,6 +455,7 @@ const MyTabs = createBottomTabNavigator({
   },
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MyStack = createStackNavigator({
   groups: {
     Guest: {

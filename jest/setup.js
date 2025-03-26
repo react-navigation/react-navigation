@@ -1,4 +1,4 @@
-/* eslint-env jest */
+/* global console */
 /* eslint-disable import-x/no-extraneous-dependencies */
 
 import '@testing-library/react-native/extend-expect';

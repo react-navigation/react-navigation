@@ -102,7 +102,6 @@ export function Header(props: Props) {
   };
 
   const {
-    // eslint-disable-next-line @eslint-react/no-unstable-default-props
     layout = frame,
     modal = false,
     back,
@@ -127,7 +126,6 @@ export function Header(props: Props) {
     headerShadowVisible,
     headerPressColor,
     headerPressOpacity,
-    // eslint-disable-next-line @eslint-react/no-unstable-default-props
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
   } = props;
 
