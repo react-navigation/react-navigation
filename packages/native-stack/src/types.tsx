@@ -348,12 +348,13 @@ export type NativeStackNavigationOptions = {
    * - "generic" – Displays one of the following depending on the available space: generic title (e.g. 'Back') or no title (only icon).
    * - "minimal" – Always displays only the icon without a title.
    *
-   * When any of following props will be set:
-   * - headerBackTitle
-   * - headerBackTitleStyle
-   * - headerBackButtonMenuEnabled
-   * or iOS 13 or lower is in use, the space-aware behavior will be omitted resulting in
-   * static title and icon.
+   * The space-aware behavior is disabled when:
+   * - The iOS version is 13 or lower
+   * - Custom back title is set (e.g. with `headerBackTitle`)
+   * - Custom font family or size is set (e.g. with `headerBackTitleStyle`)
+   * - Back button menu is enabled (e.g. with `headerBackButtonMenuEnabled`)
+   *
+   * In such cases, a static title and icon are always displayed.
    *
    * Defaults to "default" on iOS, and "minimal" on other platforms.
    *
