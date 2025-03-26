@@ -352,7 +352,7 @@ export type NativeStackNavigationOptions = {
    * - The iOS version is 13 or lower
    * - Custom back title is set (e.g. with `headerBackTitle`)
    * - Custom font family or size is set (e.g. with `headerBackTitleStyle`)
-   * - Back button menu is enabled (e.g. with `headerBackButtonMenuEnabled`)
+   * - Back button menu is disabled (e.g. with `headerBackButtonMenuEnabled`)
    *
    * In such cases, a static title and icon are always displayed.
    *
