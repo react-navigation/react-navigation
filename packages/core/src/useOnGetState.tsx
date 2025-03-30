@@ -25,7 +25,7 @@ export function useOnGetState({ getState, getStateListeners }: Options) {
     const routes = state.routes.map((route) => {
       const childState = getStateListeners[route.key]?.();
 
-      if (route.state === childState) {
+      if (!childState || route.state === childState) {
         return route;
       }
 
