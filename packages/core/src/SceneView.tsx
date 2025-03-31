@@ -7,6 +7,10 @@ import type {
 import * as React from 'react';
 
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
+import {
+  type FocusedRouteState,
+  NavigationFocusedRouteStateContext,
+} from './NavigationFocusedRouteStateContext';
 import { NavigationStateContext } from './NavigationStateContext';
 import { StaticContainer } from './StaticContainer';
 import type { NavigationProp, RouteConfigComponent } from './types';
@@ -122,6 +126,44 @@ export function SceneView<
 
   const getIsInitial = React.useCallback(() => isInitialRef.current, []);
 
+  const parentFocusedRouteState = React.useContext(
+    NavigationFocusedRouteStateContext
+  );
+
+  const focusedRouteState = React.useMemo(() => {
+    const state: FocusedRouteState = {
+      routes: [
+        {
+          name: route.name,
+          params: route.params,
+          path: route.path,
+        },
+      ],
+    };
+
+    // Add our state to the innermost route of the parent state
+    const addState = (
+      parent: FocusedRouteState | undefined
+    ): FocusedRouteState => {
+      const parentRoute = parent?.routes[0];
+
+      if (parentRoute) {
+        return {
+          routes: [
+            {
+              ...parentRoute,
+              state: addState(parentRoute.state),
+            },
+          ],
+        };
+      }
+
+      return state;
+    };
+
+    return addState(parentFocusedRouteState);
+  }, [parentFocusedRouteState, route.name, route.params, route.path]);
+
   const context = React.useMemo(
     () => ({
       state: routeState,
@@ -149,20 +191,22 @@ export function SceneView<
 
   return (
     <NavigationStateContext.Provider value={context}>
-      <EnsureSingleNavigator>
-        <StaticContainer
-          name={screen.name}
-          render={ScreenComponent || screen.children}
-          navigation={navigation}
-          route={route}
-        >
-          {ScreenComponent !== undefined ? (
-            <ScreenComponent navigation={navigation} route={route} />
-          ) : screen.children !== undefined ? (
-            screen.children({ navigation, route })
-          ) : null}
-        </StaticContainer>
-      </EnsureSingleNavigator>
+      <NavigationFocusedRouteStateContext.Provider value={focusedRouteState}>
+        <EnsureSingleNavigator>
+          <StaticContainer
+            name={screen.name}
+            render={ScreenComponent || screen.children}
+            navigation={navigation}
+            route={route}
+          >
+            {ScreenComponent !== undefined ? (
+              <ScreenComponent navigation={navigation} route={route} />
+            ) : screen.children !== undefined ? (
+              screen.children({ navigation, route })
+            ) : null}
+          </StaticContainer>
+        </EnsureSingleNavigator>
+      </NavigationFocusedRouteStateContext.Provider>
     </NavigationStateContext.Provider>
   );
 }

@@ -3,45 +3,14 @@ import {
   getActionFromState,
   getPathFromState,
   getStateFromPath,
-  type NavigationHelpers,
-  NavigationHelpersContext,
-  type NavigationProp,
-  type ParamListBase,
+  useStateForPath,
 } from '@react-navigation/core';
 import * as React from 'react';
 
 import { LinkingContext } from './LinkingContext';
 
-type NavigationObject =
-  | NavigationHelpers<ParamListBase>
-  | NavigationProp<ParamListBase>;
-
 type MinimalState = {
-  index: number;
-  routes: { name: string; params?: object; state?: MinimalState }[];
-};
-
-const getRootStateForNavigate = (
-  navigation: NavigationObject,
-  state: MinimalState
-): MinimalState => {
-  const parent = navigation.getParent();
-
-  if (parent) {
-    const parentState = parent.getState();
-
-    return getRootStateForNavigate(parent, {
-      index: 0,
-      routes: [
-        {
-          ...parentState.routes[parentState.index],
-          state: state,
-        },
-      ],
-    });
-  }
-
-  return state;
+  routes: [{ name: string; params?: object; state?: MinimalState }];
 };
 
 /**
@@ -49,8 +18,9 @@ const getRootStateForNavigate = (
  * @returns `buildHref` to build an `href` for screen and `buildAction` to build an action from an `href`.
  */
 export function useLinkBuilder() {
-  const navigation = React.useContext(NavigationHelpersContext);
   const linking = React.useContext(LinkingContext);
+
+  const focusedRouteState = useStateForPath();
 
   const buildHref = React.useCallback(
     (name: string, params?: object) => {
@@ -60,25 +30,36 @@ export function useLinkBuilder() {
         return undefined;
       }
 
-      const state = navigation
-        ? getRootStateForNavigate(navigation, {
-            index: 0,
-            routes: [{ name, params }],
-          })
-        : // If we couldn't find a navigation object in context, we're at root
-          // So we'll construct a basic state object to use
-          {
-            index: 0,
-            routes: [{ name, params }],
-          };
+      const addStateToInnermostRoute = (
+        state: MinimalState | undefined
+      ): MinimalState => {
+        const route = state?.routes[0];
 
-      const path = options?.getPathFromState
-        ? options.getPathFromState(state, options?.config)
-        : getPathFromState(state, options?.config);
+        if (route?.state) {
+          return {
+            routes: [
+              {
+                ...route,
+                state: addStateToInnermostRoute(route.state),
+              },
+            ],
+          };
+        }
+
+        return {
+          routes: [{ name, params }],
+        };
+      };
+
+      const getPathFromStateHelper =
+        options?.getPathFromState ?? getPathFromState;
+
+      const state = addStateToInnermostRoute(focusedRouteState);
+      const path = getPathFromStateHelper(state, options?.config);
 
       return path;
     },
-    [linking, navigation]
+    [focusedRouteState, linking]
   );
 
   const buildAction = React.useCallback(
