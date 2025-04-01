@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.3...@react-navigation/native-stack@7.3.4) (2025-04-01)
+
+### Bug Fixes
+
+* jumping back button in native stack ([#12500](https://github.com/react-navigation/react-navigation/issues/12500)) ([785c0cd](https://github.com/react-navigation/react-navigation/commit/785c0cda7be4cd49e76b45475cf60d5ceb4767db)), closes [/github.com/software-mansion/react-native-screens/pull/2105#discussion_r1565222738](https://github.com//github.com/software-mansion/react-native-screens/pull/2105/issues/discussion_r1565222738) [624077022#624077022](https://github.com/624077022/issues/624077022) - by @maciekstosio
+
 ## [7.3.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.2...@react-navigation/native-stack@7.3.3) (2025-03-25)
 
 **Note:** Version bump only for package @react-navigation/native-stack

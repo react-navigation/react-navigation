@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.19...@react-navigation/native@7.1.0) (2025-04-01)
+
+### Bug Fixes
+
+* always create link regardless of linking enabled status ([d242d73](https://github.com/react-navigation/react-navigation/commit/d242d731bfcc1f3951d920f1dc30502409a62e4c)) - by @
+* handle undefined event in useLinkProps ([2ede378](https://github.com/react-navigation/react-navigation/commit/2ede378bff1bba947202697cbe0f796fbf76e0e6)), closes [#12526](https://github.com/react-navigation/react-navigation/issues/12526) - by @satya164
+
+### Features
+
+* add a useRoutePath hook ([61e3561](https://github.com/react-navigation/react-navigation/commit/61e356100678f43874fb11e64de11c0da22c4695)) - by @
+* add an API to get a minimal state to build a path ([1320931](https://github.com/react-navigation/react-navigation/commit/1320931d3cd02c8bfe2a9493b4ec18c870be4f22)) - by @
+
 ## [7.0.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.0.18...@react-navigation/native@7.0.19) (2025-03-25)
 
 **Note:** Version bump only for package @react-navigation/native
