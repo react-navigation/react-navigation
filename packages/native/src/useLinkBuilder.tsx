@@ -15,21 +15,21 @@ type MinimalState = {
 
 /**
  * Helpers to build href or action based on the linking options.
+ *
  * @returns `buildHref` to build an `href` for screen and `buildAction` to build an action from an `href`.
  */
 export function useLinkBuilder() {
-  const linking = React.useContext(LinkingContext);
+  const { options } = React.useContext(LinkingContext);
 
   const focusedRouteState = useStateForPath();
 
+  const getPathFromStateHelper = options?.getPathFromState ?? getPathFromState;
+  const getStateFromPathHelper = options?.getStateFromPath ?? getStateFromPath;
+  const getActionFromStateHelper =
+    options?.getActionFromState ?? getActionFromState;
+
   const buildHref = React.useCallback(
     (name: string, params?: object) => {
-      const { options } = linking;
-
-      if (options?.enabled === false) {
-        return undefined;
-      }
-
       const addStateToInnermostRoute = (
         state: MinimalState | undefined
       ): MinimalState => {
@@ -51,15 +51,12 @@ export function useLinkBuilder() {
         };
       };
 
-      const getPathFromStateHelper =
-        options?.getPathFromState ?? getPathFromState;
-
       const state = addStateToInnermostRoute(focusedRouteState);
       const path = getPathFromStateHelper(state, options?.config);
 
       return path;
     },
-    [focusedRouteState, linking]
+    [options?.config, getPathFromStateHelper, focusedRouteState]
   );
 
   const buildAction = React.useCallback(
@@ -68,21 +65,17 @@ export function useLinkBuilder() {
         throw new Error(`The href must start with '/' (${href}).`);
       }
 
-      const { options } = linking;
-
-      const state = options?.getStateFromPath
-        ? options.getStateFromPath(href, options.config)
-        : getStateFromPath(href, options?.config);
+      const state = getStateFromPathHelper(href, options?.config);
 
       if (state) {
-        const action = getActionFromState(state, options?.config);
+        const action = getActionFromStateHelper(state, options?.config);
 
         return action ?? CommonActions.reset(state);
       } else {
         throw new Error('Failed to parse the href to a navigation state.');
       }
     },
-    [linking]
+    [options?.config, getStateFromPathHelper, getActionFromStateHelper]
   );
 
   return {
