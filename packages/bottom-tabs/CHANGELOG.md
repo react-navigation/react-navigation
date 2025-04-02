@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.5...@react-navigation/bottom-tabs@7.3.6) (2025-04-02)
+
+### Bug Fixes
+
+* revert always create link regardless of linking enabled ([400f0d8](https://github.com/react-navigation/react-navigation/commit/400f0d816fcc93b578e2dad6e0d9e7a1952d8045)) - by @
+
 ## [7.3.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.4...@react-navigation/bottom-tabs@7.3.5) (2025-04-02)
 
 ### Bug Fixes

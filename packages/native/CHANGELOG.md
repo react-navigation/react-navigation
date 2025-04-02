@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.1...@react-navigation/native@7.1.2) (2025-04-02)
+
+### Bug Fixes
+
+* make buildHref work inside screens of a navigator ([18387b8](https://github.com/react-navigation/react-navigation/commit/18387b87a1aeea67945e0387ac068a2e0cabe592)) - by @
+* revert always create link regardless of linking enabled ([400f0d8](https://github.com/react-navigation/react-navigation/commit/400f0d816fcc93b578e2dad6e0d9e7a1952d8045)) - by @
+
 ## [7.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.0...@react-navigation/native@7.1.1) (2025-04-02)
 
 ### Bug Fixes
