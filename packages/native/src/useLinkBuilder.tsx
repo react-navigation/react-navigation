@@ -33,9 +33,9 @@ export function useLinkBuilder() {
       const addStateToInnermostRoute = (
         state: MinimalState | undefined
       ): MinimalState => {
-        const route = state?.routes[0];
+        if (state) {
+          const route = state.routes[0];
 
-        if (route?.state) {
           return {
             routes: [
               {

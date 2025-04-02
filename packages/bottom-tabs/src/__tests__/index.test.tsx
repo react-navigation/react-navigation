@@ -1,4 +1,4 @@
-import { expect, jest, test } from '@jest/globals';
+import { afterEach, expect, jest, test } from '@jest/globals';
 import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
@@ -10,6 +10,7 @@ import {
   Keyboard,
   type KeyboardEventListener,
   type KeyboardEventName,
+  Platform,
   View,
 } from 'react-native';
 
@@ -21,6 +22,10 @@ type BottomTabParamList = {
 };
 
 jest.useFakeTimers();
+
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
 test('renders a bottom tab navigator with screens', async () => {
   const Test = ({ route }: BottomTabScreenProps<BottomTabParamList>) => (
@@ -137,4 +142,36 @@ test('tab bar cannot be tapped when hidden', async () => {
   expect(queryByText('Screen B')).not.toBeNull();
 
   spy.mockRestore();
+});
+
+test('tab bars render appropriate hrefs on web', () => {
+  jest.replaceProperty(Platform, 'OS', 'web');
+
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
+
+  const { getByText } = render(
+    <NavigationContainer
+      linking={{
+        enabled: false,
+        prefixes: [],
+        config: {
+          path: 'root',
+          screens: {
+            A: 'first',
+            B: 'second',
+          },
+        },
+      }}
+    >
+      <Tab.Navigator
+        screenOptions={{ tabBarButton: ({ href }) => <Text>{href}</Text> }}
+      >
+        <Tab.Screen name="A">{() => null}</Tab.Screen>
+        <Tab.Screen name="B">{() => null}</Tab.Screen>
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(getByText('/root/first')).not.toBeNull();
+  expect(getByText('/root/second')).not.toBeNull();
 });

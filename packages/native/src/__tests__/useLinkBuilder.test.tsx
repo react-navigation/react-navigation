@@ -47,8 +47,8 @@ test('builds href from name and params', () => {
 
   element = render(
     <NavigationContainer linking={config}>
-      <StackA.Navigator>
-        <StackA.Screen name="Foo" component={A} />
+      <StackA.Navigator layout={() => <A />}>
+        <StackA.Screen name="Foo">{() => null}</StackA.Screen>
       </StackA.Navigator>
     </NavigationContainer>
   );
@@ -72,8 +72,8 @@ test('builds href from name and params', () => {
       <StackA.Navigator>
         <StackA.Screen name="Foo">
           {() => (
-            <StackB.Navigator>
-              <StackB.Screen name="Bar" component={B} />
+            <StackB.Navigator layout={() => <B />}>
+              <StackB.Screen name="Bar">{() => null}</StackB.Screen>
             </StackB.Navigator>
           )}
         </StackA.Screen>
