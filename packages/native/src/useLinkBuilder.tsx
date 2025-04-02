@@ -1,5 +1,6 @@
 import {
   CommonActions,
+  findFocusedRoute,
   getActionFromState,
   getPathFromState,
   getStateFromPath,
@@ -39,10 +40,15 @@ export function useLinkBuilder() {
         return undefined;
       }
 
-      // If the parent route is one of the routes in the state, we're in a screen
+      // Check that we're inside:
+      // - navigator's context
+      // - route context of the navigator (could be a screen, tab, etc.)
+      // - route matches the state for path (from the screen's context)
+      // This ensures that we're inside a screen
       const isScreen =
-        navigation && route?.key
-          ? navigation.getState().routes.some((r) => r.key === route.key)
+        navigation && route?.key && focusedRouteState
+          ? route.key === findFocusedRoute(focusedRouteState)?.key &&
+            navigation.getState().routes.some((r) => r.key === route.key)
           : false;
 
       const stateForRoute: MinimalState = {

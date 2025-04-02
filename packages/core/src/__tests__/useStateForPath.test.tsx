@@ -44,9 +44,9 @@ test('gets focused route state at root', () => {
   expect(screen).toMatchInlineSnapshot(`
 [
   "bar",
-  "{"routes":[{"name":"bar"}]}",
+  "{"routes":[{"key":"bar","name":"bar"}]}",
   "xux",
-  "{"routes":[{"name":"xux"}]}",
+  "{"routes":[{"key":"xux","name":"xux"}]}",
 ]
 `);
 
@@ -55,9 +55,9 @@ test('gets focused route state at root', () => {
   expect(screen).toMatchInlineSnapshot(`
 [
   "bar",
-  "{"routes":[{"name":"bar"}]}",
+  "{"routes":[{"key":"bar","name":"bar"}]}",
   "xux",
-  "{"routes":[{"name":"xux"}]}",
+  "{"routes":[{"key":"xux","name":"xux"}]}",
 ]
 `);
 });
@@ -102,11 +102,11 @@ test('gets focused route state in nested navigator', () => {
   expect(screen).toMatchInlineSnapshot(`
 [
   "bar-a",
-  "{"routes":[{"name":"bar","state":{"routes":[{"name":"bar-a"}]}}]}",
+  "{"routes":[{"key":"bar","name":"bar","state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
   "bar-b",
-  "{"routes":[{"name":"bar","state":{"routes":[{"name":"bar-b"}]}}]}",
+  "{"routes":[{"key":"bar","name":"bar","state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
   "xux",
-  "{"routes":[{"name":"xux"}]}",
+  "{"routes":[{"key":"xux","name":"xux"}]}",
 ]
 `);
 
@@ -115,11 +115,11 @@ test('gets focused route state in nested navigator', () => {
   expect(screen).toMatchInlineSnapshot(`
 [
   "bar-a",
-  "{"routes":[{"name":"bar","params":{"answer":42},"state":{"routes":[{"name":"bar-a"}]}}]}",
+  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
   "bar-b",
-  "{"routes":[{"name":"bar","params":{"answer":42},"state":{"routes":[{"name":"bar-b"}]}}]}",
+  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
   "xux",
-  "{"routes":[{"name":"xux"}]}",
+  "{"routes":[{"key":"xux","name":"xux"}]}",
 ]
 `);
 
@@ -128,11 +128,11 @@ test('gets focused route state in nested navigator', () => {
   expect(screen).toMatchInlineSnapshot(`
 [
   "bar-a",
-  "{"routes":[{"name":"bar","params":{"answer":42},"state":{"routes":[{"name":"bar-a"}]}}]}",
+  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
   "bar-b",
-  "{"routes":[{"name":"bar","params":{"answer":42},"state":{"routes":[{"name":"bar-b"}]}}]}",
+  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
   "xux",
-  "{"routes":[{"name":"xux"}]}",
+  "{"routes":[{"key":"xux","name":"xux"}]}",
 ]
 `);
 
@@ -141,11 +141,11 @@ test('gets focused route state in nested navigator', () => {
   expect(screen).toMatchInlineSnapshot(`
 [
   "bar-a",
-  "{"routes":[{"name":"bar","params":{"answer":42},"state":{"routes":[{"name":"bar-a"}]}}]}",
+  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
   "bar-b",
-  "{"routes":[{"name":"bar","params":{"answer":42},"state":{"routes":[{"name":"bar-b"}]}}]}",
+  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
   "xux",
-  "{"routes":[{"name":"xux"}]}",
+  "{"routes":[{"key":"xux","name":"xux"}]}",
 ]
 `);
 
@@ -154,11 +154,11 @@ test('gets focused route state in nested navigator', () => {
   expect(screen).toMatchInlineSnapshot(`
 [
   "bar-a",
-  "{"routes":[{"name":"bar","params":{"answer":42},"state":{"routes":[{"name":"bar-a"}]}}]}",
+  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
   "bar-b",
-  "{"routes":[{"name":"bar","params":{"answer":42},"state":{"routes":[{"name":"bar-b"}]}}]}",
+  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
   "xux",
-  "{"routes":[{"name":"xux","params":{"fruit":"apple"}}]}",
+  "{"routes":[{"key":"xux","name":"xux","params":{"fruit":"apple"}}]}",
 ]
 `);
 });

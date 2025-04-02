@@ -3,6 +3,7 @@ import * as React from 'react';
 export type FocusedRouteState = {
   routes: [
     {
+      key?: string;
       name: string;
       params?: object;
       path?: string;

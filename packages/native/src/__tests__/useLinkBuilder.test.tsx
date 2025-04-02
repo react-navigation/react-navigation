@@ -1,4 +1,6 @@
 import { expect, test } from '@jest/globals';
+import { NavigationRouteContext } from '@react-navigation/core';
+import type { NavigationState } from '@react-navigation/routers';
 import { render } from '@testing-library/react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
@@ -6,7 +8,7 @@ import { NavigationContainer } from '../NavigationContainer';
 import { useLinkBuilder } from '../useLinkBuilder';
 
 test('builds href from name and params', () => {
-  expect.assertions(5);
+  expect.assertions(7);
 
   const config = {
     prefixes: ['https://example.com'],
@@ -25,14 +27,57 @@ test('builds href from name and params', () => {
     },
   };
 
-  const ALayout = ({ children }: { children: React.ReactNode }) => {
+  const Root = () => {
     const { buildHref } = useLinkBuilder();
 
     const href = buildHref('Foo');
 
     expect(href).toBe('/foo');
 
-    return children;
+    return null;
+  };
+
+  let element = render(
+    <NavigationContainer linking={config}>
+      <Root />
+    </NavigationContainer>
+  );
+
+  element.unmount();
+
+  const AContextChild = () => {
+    const { buildHref } = useLinkBuilder();
+
+    const href = buildHref('Foo');
+
+    expect(href).toBe('/foo');
+
+    return null;
+  };
+
+  const ALayout = ({
+    state,
+    children,
+  }: {
+    state: NavigationState;
+    children: React.ReactNode;
+  }) => {
+    const { buildHref } = useLinkBuilder();
+
+    const href = buildHref('Foo');
+
+    expect(href).toBe('/foo');
+
+    return (
+      <>
+        <NavigationRouteContext.Provider
+          value={state.routes.find((r) => r.name === 'Foo')}
+        >
+          <AContextChild />
+        </NavigationRouteContext.Provider>
+        {children}
+      </>
+    );
   };
 
   const AScreen = () => {
@@ -45,20 +90,14 @@ test('builds href from name and params', () => {
     return null;
   };
 
-  let element = render(
-    <NavigationContainer linking={config}>
-      <ALayout>{null}</ALayout>
-    </NavigationContainer>
-  );
-
-  element.unmount();
-
   const StackA = createStackNavigator<{ Foo: undefined }>();
 
   element = render(
     <NavigationContainer linking={config}>
       <StackA.Navigator
-        layout={({ children }) => <ALayout>{children}</ALayout>}
+        layout={({ state, children }) => (
+          <ALayout state={state}>{children}</ALayout>
+        )}
       >
         <StackA.Screen name="Foo" component={AScreen} />
       </StackA.Navigator>
@@ -67,14 +106,39 @@ test('builds href from name and params', () => {
 
   element.unmount();
 
-  const BLayout = ({ children }: { children: React.ReactNode }) => {
+  const BContextChild = () => {
     const { buildHref } = useLinkBuilder();
 
     const href = buildHref('Bar', { id: '42' });
 
     expect(href).toBe('/foo/bar/42');
 
-    return children;
+    return null;
+  };
+
+  const BLayout = ({
+    state,
+    children,
+  }: {
+    state: NavigationState;
+    children: React.ReactNode;
+  }) => {
+    const { buildHref } = useLinkBuilder();
+
+    const href = buildHref('Bar', { id: '42' });
+
+    expect(href).toBe('/foo/bar/42');
+
+    return (
+      <>
+        <NavigationRouteContext.Provider
+          value={state.routes.find((r) => r.name === 'Bar')}
+        >
+          <BContextChild />
+        </NavigationRouteContext.Provider>
+        {children}
+      </>
+    );
   };
 
   const BScreen = () => {
@@ -95,7 +159,9 @@ test('builds href from name and params', () => {
         <StackA.Screen name="Foo">
           {() => (
             <StackB.Navigator
-              layout={({ children }) => <BLayout>{children}</BLayout>}
+              layout={({ state, children }) => (
+                <BLayout state={state}>{children}</BLayout>
+              )}
             >
               <StackB.Screen name="Bar" component={BScreen} />
             </StackB.Navigator>
