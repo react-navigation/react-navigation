@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.4...@react-navigation/bottom-tabs@7.3.5) (2025-04-02)
+
+### Bug Fixes
+
+* fix buildHref returning incorrect path ([60b0d75](https://github.com/react-navigation/react-navigation/commit/60b0d75f6a6ebb67d7fdbe6bfb295285fb1b7b3d)) - by @
+
 ## [7.3.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.3...@react-navigation/bottom-tabs@7.3.4) (2025-04-01)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
