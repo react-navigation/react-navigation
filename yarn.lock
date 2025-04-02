@@ -3990,7 +3990,7 @@ __metadata:
   resolution: "@react-navigation/bottom-tabs@workspace:packages/bottom-tabs"
   dependencies:
     "@jest/globals": "npm:^29.7.0"
-    "@react-navigation/elements": "npm:^2.3.4"
+    "@react-navigation/elements": "npm:^2.3.5"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.8.1"
     "@types/color": "npm:^3.0.6"
@@ -4062,7 +4062,7 @@ __metadata:
   resolution: "@react-navigation/drawer@workspace:packages/drawer"
   dependencies:
     "@jest/globals": "npm:^29.7.0"
-    "@react-navigation/elements": "npm:^2.3.4"
+    "@react-navigation/elements": "npm:^2.3.5"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.8.1"
     "@types/react": "npm:~18.3.12"
@@ -4089,7 +4089,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/elements@npm:^2.3.4, @react-navigation/elements@workspace:packages/elements":
+"@react-navigation/elements@npm:^2.3.5, @react-navigation/elements@workspace:packages/elements":
   version: 0.0.0-use.local
   resolution: "@react-navigation/elements@workspace:packages/elements"
   dependencies:
@@ -4176,7 +4176,7 @@ __metadata:
   resolution: "@react-navigation/material-top-tabs@workspace:packages/material-top-tabs"
   dependencies:
     "@jest/globals": "npm:^29.7.0"
-    "@react-navigation/elements": "npm:^2.3.4"
+    "@react-navigation/elements": "npm:^2.3.5"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.8.1"
     "@types/react": "npm:~18.3.12"
@@ -4201,7 +4201,7 @@ __metadata:
   resolution: "@react-navigation/native-stack@workspace:packages/native-stack"
   dependencies:
     "@jest/globals": "npm:^29.7.0"
-    "@react-navigation/elements": "npm:^2.3.4"
+    "@react-navigation/elements": "npm:^2.3.5"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.8.1"
     "@types/react": "npm:~18.3.12"
@@ -4263,7 +4263,7 @@ __metadata:
   resolution: "@react-navigation/stack@workspace:packages/stack"
   dependencies:
     "@jest/globals": "npm:^29.7.0"
-    "@react-navigation/elements": "npm:^2.3.4"
+    "@react-navigation/elements": "npm:^2.3.5"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^12.8.1"
     "@types/color": "npm:^3.0.6"
