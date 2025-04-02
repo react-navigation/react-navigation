@@ -30,6 +30,10 @@ export function useLinkBuilder() {
 
   const buildHref = React.useCallback(
     (name: string, params?: object) => {
+      if (options?.enabled === false) {
+        return undefined;
+      }
+
       const addStateToInnermostRoute = (
         state: MinimalState | undefined
       ): MinimalState => {
@@ -56,7 +60,12 @@ export function useLinkBuilder() {
 
       return path;
     },
-    [options?.config, getPathFromStateHelper, focusedRouteState]
+    [
+      options?.enabled,
+      options?.config,
+      focusedRouteState,
+      getPathFromStateHelper,
+    ]
   );
 
   const buildAction = React.useCallback(

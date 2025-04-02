@@ -21,10 +21,14 @@ export function useRoutePath() {
   const getPathFromStateHelper = options?.getPathFromState ?? getPathFromState;
 
   const path = React.useMemo(() => {
+    if (options?.enabled === false) {
+      return undefined;
+    }
+
     const path = getPathFromStateHelper(state, options?.config);
 
     return path;
-  }, [state, options?.config, getPathFromStateHelper]);
+  }, [options?.enabled, options?.config, state, getPathFromStateHelper]);
 
   return path;
 }

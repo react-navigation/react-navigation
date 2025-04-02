@@ -152,7 +152,6 @@ test('tab bars render appropriate hrefs on web', () => {
   const { getByText } = render(
     <NavigationContainer
       linking={{
-        enabled: false,
         prefixes: [],
         config: {
           path: 'root',
@@ -161,6 +160,7 @@ test('tab bars render appropriate hrefs on web', () => {
             B: 'second',
           },
         },
+        getInitialURL: () => null,
       }}
     >
       <Tab.Navigator
