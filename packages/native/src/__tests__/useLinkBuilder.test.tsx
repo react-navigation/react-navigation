@@ -6,7 +6,7 @@ import { NavigationContainer } from '../NavigationContainer';
 import { useLinkBuilder } from '../useLinkBuilder';
 
 test('builds href from name and params', () => {
-  expect.assertions(3);
+  expect.assertions(5);
 
   const config = {
     prefixes: ['https://example.com'],
@@ -25,7 +25,17 @@ test('builds href from name and params', () => {
     },
   };
 
-  const A = () => {
+  const ALayout = ({ children }: { children: React.ReactNode }) => {
+    const { buildHref } = useLinkBuilder();
+
+    const href = buildHref('Foo');
+
+    expect(href).toBe('/foo');
+
+    return children;
+  };
+
+  const AScreen = () => {
     const { buildHref } = useLinkBuilder();
 
     const href = buildHref('Foo');
@@ -37,7 +47,7 @@ test('builds href from name and params', () => {
 
   let element = render(
     <NavigationContainer linking={config}>
-      <A />
+      <ALayout>{null}</ALayout>
     </NavigationContainer>
   );
 
@@ -47,15 +57,27 @@ test('builds href from name and params', () => {
 
   element = render(
     <NavigationContainer linking={config}>
-      <StackA.Navigator layout={() => <A />}>
-        <StackA.Screen name="Foo">{() => null}</StackA.Screen>
+      <StackA.Navigator
+        layout={({ children }) => <ALayout>{children}</ALayout>}
+      >
+        <StackA.Screen name="Foo" component={AScreen} />
       </StackA.Navigator>
     </NavigationContainer>
   );
 
   element.unmount();
 
-  const B = () => {
+  const BLayout = ({ children }: { children: React.ReactNode }) => {
+    const { buildHref } = useLinkBuilder();
+
+    const href = buildHref('Bar', { id: '42' });
+
+    expect(href).toBe('/foo/bar/42');
+
+    return children;
+  };
+
+  const BScreen = () => {
     const { buildHref } = useLinkBuilder();
 
     const href = buildHref('Bar', { id: '42' });
@@ -72,8 +94,10 @@ test('builds href from name and params', () => {
       <StackA.Navigator>
         <StackA.Screen name="Foo">
           {() => (
-            <StackB.Navigator layout={() => <B />}>
-              <StackB.Screen name="Bar">{() => null}</StackB.Screen>
+            <StackB.Navigator
+              layout={({ children }) => <BLayout>{children}</BLayout>}
+            >
+              <StackB.Screen name="Bar" component={BScreen} />
             </StackB.Navigator>
           )}
         </StackA.Screen>
