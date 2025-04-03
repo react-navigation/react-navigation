@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.8.2...@react-navigation/core@7.8.3) (2025-04-03)
+
+### Bug Fixes
+
+* don't add undefined to path for optional params. fixes [#12528](https://github.com/react-navigation/react-navigation/issues/12528) ([76e995a](https://github.com/react-navigation/react-navigation/commit/76e995af30fbf63ea3461b975c52e9790adb9fe2)) - by @
+
 ## [7.8.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.8.1...@react-navigation/core@7.8.2) (2025-04-02)
 
 ### Bug Fixes
