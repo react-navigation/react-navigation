@@ -131,13 +131,30 @@ export function getPathFromState<ParamList extends {}>(
       nestedRouteNames.push(route.name);
 
       if (route.params) {
-        const stringify = currentOptions[route.name]?.stringify;
+        const options = currentOptions[route.name];
 
         const currentParams = Object.fromEntries(
-          Object.entries(route.params).map(([key, value]) => [
-            key,
-            stringify?.[key] ? stringify[key](value) : String(value),
-          ])
+          Object.entries(route.params)
+            .map(([key, value]): [string, string] | null => {
+              if (value === undefined) {
+                if (options) {
+                  const optional = options.parts?.find(
+                    (part) => part.param === key
+                  )?.optional;
+
+                  if (optional) {
+                    return null;
+                  }
+                } else {
+                  return null;
+                }
+              }
+
+              const stringify = options?.stringify?.[key] ?? String;
+
+              return [key, stringify(value)];
+            })
+            .filter((entry) => entry != null)
         );
 
         if (parts?.length) {

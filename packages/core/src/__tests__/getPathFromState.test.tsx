@@ -1539,6 +1539,33 @@ test('replaces undefined query params', () => {
   ).toBe(path);
 });
 
+test("doesn't add undefined to path for optional params", () => {
+  const path = '/foo/bar';
+  const config = {
+    screens: {
+      Foo: '/foo/bar/:id?',
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: undefined },
+        path: '/foo/bar',
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+  expect(
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
+  ).toBe(path);
+});
+
 test('matches wildcard patterns at root', () => {
   const path = '/test/bar/42/whatever';
   const config = {
