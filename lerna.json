@@ -1,4 +1,5 @@
 {
+  "$schema": "node_modules/@lerna-lite/cli/schemas/lerna-schema.json",
   "packages": [
     "packages/*",
     "example"
@@ -14,6 +15,7 @@
       "allowPeerDependenciesUpdate": true,
       "conventionalCommits": true,
       "createRelease": "github",
+      "skipBumpOnlyReleases": true,
       "changelogIncludeCommitsClientLogin": " - by @%l",
       "message": "chore: publish",
       "ignoreChanges": [
