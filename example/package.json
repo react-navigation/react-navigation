@@ -58,7 +58,7 @@
     "mock-require-assets": "^0.0.3",
     "nodemon": "^3.0.3",
     "npm-run-all2": "^6.2.2",
-    "react-native-builder-bob": "^0.39.1",
+    "react-native-builder-bob": "^0.40.0",
     "react-test-renderer": "18.2.0",
     "serve": "^14.2.1",
     "typescript": "^5.5.2",
