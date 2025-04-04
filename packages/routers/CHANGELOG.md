@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.2...@react-navigation/routers@7.3.4) (2025-04-04)
+
+### Bug Fixes
+
+* drop commonjs module to avoid dual package hazard ([f0fbcc5](https://github.com/react-navigation/react-navigation/commit/f0fbcc5515e73b454f607bd95bba40a48e852d0f)) - by @satya164
+
 ## [7.3.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.2...@react-navigation/routers@7.3.3) (2025-04-02)
 
 **Note:** Version bump only for package @react-navigation/routers

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.4...@react-navigation/native@7.1.5) (2025-04-04)
+
+### Bug Fixes
+
+* drop commonjs module to avoid dual package hazard ([f0fbcc5](https://github.com/react-navigation/react-navigation/commit/f0fbcc5515e73b454f607bd95bba40a48e852d0f)) - by @satya164
+
 ## [7.1.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.3...@react-navigation/native@7.1.4) (2025-04-03)
 
 **Note:** Version bump only for package @react-navigation/native

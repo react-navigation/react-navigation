@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.0.9](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.7...react-native-tab-view@4.0.9) (2025-04-04)
+
+### Bug Fixes
+
+* drop commonjs module to avoid dual package hazard ([f0fbcc5](https://github.com/react-navigation/react-navigation/commit/f0fbcc5515e73b454f607bd95bba40a48e852d0f)) - by @satya164
+
 ## [4.0.8](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.7...react-native-tab-view@4.0.8) (2025-04-02)
 
 **Note:** Version bump only for package react-native-tab-view

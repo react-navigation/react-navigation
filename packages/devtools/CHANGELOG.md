@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.24...@react-navigation/devtools@7.0.25) (2025-04-04)
+
+### Bug Fixes
+
+* drop commonjs module to avoid dual package hazard ([f0fbcc5](https://github.com/react-navigation/react-navigation/commit/f0fbcc5515e73b454f607bd95bba40a48e852d0f)) - by @satya164
+
 ## [7.0.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.23...@react-navigation/devtools@7.0.24) (2025-04-03)
 
 **Note:** Version bump only for package @react-navigation/devtools
