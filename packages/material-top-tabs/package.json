@@ -59,13 +59,16 @@
     "react-native": "0.76.2",
     "react-native-builder-bob": "^0.40.0",
     "react-native-pager-view": "6.5.1",
+    "react-native-safe-area-context": "4.12.0",
+    "react-test-renderer": "18.2.0",
     "typescript": "^5.5.2"
   },
   "peerDependencies": {
     "@react-navigation/native": "workspace:^",
     "react": ">= 18.2.0",
     "react-native": "*",
-    "react-native-pager-view": ">= 6.0.0"
+    "react-native-pager-view": ">= 6.0.0",
+    "react-native-safe-area-context": ">= 4.0.0"
   },
   "react-native-builder-bob": {
     "source": "src",

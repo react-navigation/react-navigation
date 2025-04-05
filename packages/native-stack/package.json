@@ -58,6 +58,7 @@
     "react-native": "0.76.2",
     "react-native-builder-bob": "^0.40.0",
     "react-native-screens": "^4.3.0",
+    "react-test-renderer": "18.2.0",
     "typescript": "^5.5.2"
   },
   "peerDependencies": {
