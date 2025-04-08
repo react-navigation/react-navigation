@@ -19,6 +19,7 @@
   "homepage": "https://reactnavigation.org/docs/custom-routers/",
   "source": "./src/index.tsx",
   "main": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/typescript/src/index.d.ts",
