@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.2.9...@react-navigation/stack@7.2.10) (2025-04-08)
+
+### Bug Fixes
+
+* add types field back to support legacy moduleResolution ([6c021d4](https://github.com/react-navigation/react-navigation/commit/6c021d442ede3a231e32486b2c391c2e850bf76e)), closes [#12534](https://github.com/react-navigation/react-navigation/issues/12534) - by @
+
 ## [7.2.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.2.8...@react-navigation/stack@7.2.9) (2025-04-04)
 
 ### Bug Fixes
