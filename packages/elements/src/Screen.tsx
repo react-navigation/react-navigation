@@ -62,6 +62,7 @@ export function Screen(props: Props) {
 
   return (
     <Background
+      aria-hidden={!focused}
       accessibilityElementsHidden={!focused}
       importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       style={[styles.container, style]}
