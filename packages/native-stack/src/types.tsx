@@ -378,11 +378,19 @@ export type NativeStackNavigationOptions = {
   /**
    * Sets the navigation bar color. Defaults to initial navigation bar color.
    *
+   * @deprecated For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+   *  This prop is subject to removal in the future.
+   *  See: https://developer.android.com/about/versions/15/behavior-changes-15#ux.
+   *
    * @platform android
    */
   navigationBarColor?: string;
   /**
    * Boolean indicating whether the content should be visible behind the navigation bar. Defaults to `false`.
+   *
+   * @deprecated For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+   *  This prop is subject to removal in the future.
+   *  See: https://developer.android.com/about/versions/15/behavior-changes-15#ux.
    *
    * @platform android
    */
@@ -404,6 +412,10 @@ export type NativeStackNavigationOptions = {
   statusBarAnimation?: ScreenProps['statusBarAnimation'];
   /**
    * Sets the status bar color (similar to the `StatusBar` component). Defaults to initial status bar color.
+   *
+   * @deprecated For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+   *  This prop is subject to removal in the future.
+   *  See: https://developer.android.com/about/versions/15/behavior-changes-15#ux.
    *
    * @platform android
    */
@@ -428,6 +440,10 @@ export type NativeStackNavigationOptions = {
   statusBarStyle?: ScreenProps['statusBarStyle'];
   /**
    * Sets the translucency of the status bar. Defaults to `false`.
+   *
+   * @deprecated For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
+   *  This prop is subject to removal in the future.
+   *  See: https://developer.android.com/about/versions/15/behavior-changes-15#ux.
    *
    * @platform android
    */
