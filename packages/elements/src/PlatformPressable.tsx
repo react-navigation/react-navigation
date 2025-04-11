@@ -37,105 +37,116 @@ const useNativeDriver = Platform.OS !== 'web';
 /**
  * PlatformPressable provides an abstraction on top of Pressable to handle platform differences.
  */
-export function PlatformPressable({
-  disabled,
-  onPress,
-  onPressIn,
-  onPressOut,
-  android_ripple,
-  pressColor,
-  pressOpacity = 0.3,
-  hoverEffect,
-  style,
-  children,
-  ...rest
-}: Props) {
-  const { dark } = useTheme();
-  const [opacity] = React.useState(() => new Animated.Value(1));
+export const PlatformPressable = React.forwardRef<
+  React.ComponentRef<typeof AnimatedPressable>,
+  Props
+>(
+  (
+    {
+      disabled,
+      onPress,
+      onPressIn,
+      onPressOut,
+      android_ripple,
+      pressColor,
+      pressOpacity = 0.3,
+      hoverEffect,
+      style,
+      children,
+      ...rest
+    },
+    ref
+  ) => {
+    const { dark } = useTheme();
+    const [opacity] = React.useState(() => new Animated.Value(1));
 
-  const animateTo = (toValue: number, duration: number) => {
-    if (ANDROID_SUPPORTS_RIPPLE) {
-      return;
-    }
+    const animateTo = (toValue: number, duration: number) => {
+      if (ANDROID_SUPPORTS_RIPPLE) {
+        return;
+      }
 
-    Animated.timing(opacity, {
-      toValue,
-      duration,
-      easing: Easing.inOut(Easing.quad),
-      useNativeDriver,
-    }).start();
-  };
+      Animated.timing(opacity, {
+        toValue,
+        duration,
+        easing: Easing.inOut(Easing.quad),
+        useNativeDriver,
+      }).start();
+    };
 
-  const handlePress = (e: GestureResponderEvent) => {
-    if (Platform.OS === 'web' && rest.href != null) {
-      // @ts-expect-error: these properties exist on web, but not in React Native
-      const hasModifierKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey; // ignore clicks with modifier keys
-      // @ts-expect-error: these properties exist on web, but not in React Native
-      const isLeftClick = e.button == null || e.button === 0; // only handle left clicks
-      const isSelfTarget = [undefined, null, '', 'self'].includes(
+    const handlePress = (e: GestureResponderEvent) => {
+      if (Platform.OS === 'web' && rest.href != null) {
         // @ts-expect-error: these properties exist on web, but not in React Native
-        e.currentTarget?.target
-      ); // let browser handle "target=_blank" etc.
-      if (!hasModifierKey && isLeftClick && isSelfTarget) {
-        e.preventDefault();
+        const hasModifierKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey; // ignore clicks with modifier keys
+        // @ts-expect-error: these properties exist on web, but not in React Native
+        const isLeftClick = e.button == null || e.button === 0; // only handle left clicks
+        const isSelfTarget = [undefined, null, '', 'self'].includes(
+          // @ts-expect-error: these properties exist on web, but not in React Native
+          e.currentTarget?.target
+        ); // let browser handle "target=_blank" etc.
+        if (!hasModifierKey && isLeftClick && isSelfTarget) {
+          e.preventDefault();
+          onPress?.(e);
+        }
+      } else {
         onPress?.(e);
       }
-    } else {
-      onPress?.(e);
-    }
-  };
+    };
 
-  const handlePressIn = (e: GestureResponderEvent) => {
-    animateTo(pressOpacity, 0);
-    onPressIn?.(e);
-  };
+    const handlePressIn = (e: GestureResponderEvent) => {
+      animateTo(pressOpacity, 0);
+      onPressIn?.(e);
+    };
 
-  const handlePressOut = (e: GestureResponderEvent) => {
-    animateTo(1, 200);
-    onPressOut?.(e);
-  };
+    const handlePressOut = (e: GestureResponderEvent) => {
+      animateTo(1, 200);
+      onPressOut?.(e);
+    };
 
-  return (
-    <AnimatedPressable
-      accessible
-      accessibilityRole={
-        Platform.OS === 'web' && rest.href != null ? 'link' : 'button'
-      }
-      onPress={disabled ? undefined : handlePress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
-      android_ripple={
-        ANDROID_SUPPORTS_RIPPLE
-          ? {
-              color:
-                pressColor !== undefined
-                  ? pressColor
-                  : dark
-                    ? 'rgba(255, 255, 255, .32)'
-                    : 'rgba(0, 0, 0, .32)',
-              ...android_ripple,
-            }
-          : undefined
-      }
-      style={[
-        {
-          cursor:
-            Platform.OS === 'web' || Platform.OS === 'ios'
-              ? // Pointer cursor on web
-                // Hover effect on iPad and visionOS
-                'pointer'
-              : 'auto',
-          opacity: !ANDROID_SUPPORTS_RIPPLE ? opacity : 1,
-        },
-        style,
-      ]}
-      {...rest}
-    >
-      <HoverEffect {...hoverEffect} />
-      {children}
-    </AnimatedPressable>
-  );
-}
+    return (
+      <AnimatedPressable
+        ref={ref}
+        accessible
+        accessibilityRole={
+          Platform.OS === 'web' && rest.href != null ? 'link' : 'button'
+        }
+        onPress={disabled ? undefined : handlePress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        android_ripple={
+          ANDROID_SUPPORTS_RIPPLE
+            ? {
+                color:
+                  pressColor !== undefined
+                    ? pressColor
+                    : dark
+                      ? 'rgba(255, 255, 255, .32)'
+                      : 'rgba(0, 0, 0, .32)',
+                ...android_ripple,
+              }
+            : undefined
+        }
+        style={[
+          {
+            cursor:
+              Platform.OS === 'web' || Platform.OS === 'ios'
+                ? // Pointer cursor on web
+                  // Hover effect on iPad and visionOS
+                  'pointer'
+                : 'auto',
+            opacity: !ANDROID_SUPPORTS_RIPPLE ? opacity : 1,
+          },
+          style,
+        ]}
+        {...rest}
+      >
+        <HoverEffect {...hoverEffect} />
+        {children}
+      </AnimatedPressable>
+    );
+  }
+);
+
+PlatformPressable.displayName = 'PlatformPressable';
 
 const css = String.raw;
 
