@@ -1,0 +1,217 @@
+npm install -g react-native-cli
+npx react-native init MiniGamesApp
+cd MiniGamesApp
+import React from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+
+const App = ({ navigation }) => {
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Mini Games App</Text>
+      <Button
+        title="Jugar Puzzle"
+        onPress={() => navigation.navigate('Puzzle')}
+      />
+      <Button
+        title="Juego de Memoria"
+        onPress={() => navigation.navigate('Memory')}
+      />
+      <Button
+        title="Buscar Objetos"
+        onPress={() => navigation.navigate('Search')}
+      />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+});
+
+export default App;
+import React, { useState } from 'react';
+import { View, Text, Button, Image, StyleSheet } from 'react-native';
+
+const Puzzle = () => {
+  const [puzzleSolved, setPuzzleSolved] = useState(false);
+
+  const handleSolvePuzzle = () => {
+    setPuzzleSolved(true);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Puzzle</Text>
+      {puzzleSolved ? (
+        <Text style={styles.message}>¡Felicidades, resolviste el puzzle!</Text>
+      ) : (
+        <Image
+          source={{ uri: 'https://via.placeholder.com/300' }} // Reemplaza con tu imagen de puzzle
+          style={styles.puzzleImage}
+        />
+      )}
+      <Button title="Resolver" onPress={handleSolvePuzzle} />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  puzzleImage: {
+    width: 300,
+    height: 300,
+    marginBottom: 20,
+  },
+  message: {
+    fontSize: 18,
+    color: 'green',
+    marginBottom: 20,
+  },
+});
+
+export default Puzzle;
+import React, { useState } from 'react';
+import { View, Text, Button, StyleSheet, Alert } from 'react-native';
+
+const Memory = () => {
+  const [cards, setCards] = useState([
+    { id: 1, value: 'A', revealed: false },
+    { id: 2, value: 'A', revealed: false },
+    { id: 3, value: 'B', revealed: false },
+    { id: 4, value: 'B', revealed: false },
+  ]);
+  const [flippedCards, setFlippedCards] = useState([]);
+
+  const flipCard = (cardId) => {
+    setCards((prevCards) => 
+      prevCards.map((card) =>
+        card.id === cardId ? { ...card, revealed: true } : card
+      )
+    );
+
+    setFlippedCards((prevFlipped) => [...prevFlipped, cardId]);
+
+    if (flippedCards.length === 1) {
+      const firstCard = cards.find((card) => card.id === flippedCards[0]);
+      const secondCard = cards.find((card) => card.id === cardId);
+
+      if (firstCard.value !== secondCard.value) {
+        Alert.alert('Intento fallido');
+      } else {
+        Alert.alert('¡Coincidencia!');
+      }
+
+      setFlippedCards([]);
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Memoria</Text>
+      <View style={styles.cards}>
+        {cards.map((card) => (
+          <Button
+            key={card.id}
+            title={card.revealed ? card.value : ' '}
+            onPress={() => flipCard(card.id)}
+          />
+        ))}
+      </View>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  cards: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '80%',
+    marginTop: 20,
+  },
+});
+
+export default Memory;
+import React from 'react';
+import { View, Text, Button, StyleSheet } from 'react-native';
+
+const Search = () => {
+  const [foundObject, setFoundObject] = React.useState(false);
+
+  const handleSearch = () => {
+    setFoundObject(true);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Buscar Objetos</Text>
+      <Text>{foundObject ? '¡Encontraste el objeto!' : 'Busca el objeto en la imagen'}</Text>
+      <Button title="Buscar" onPress={handleSearch} />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+});
+
+export default Search;
+npm install @react-navigation/native @react-navigation/stack react-native-gesture-handler react-native-reanimated
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import App from './App';
+import Puzzle from './Puzzle';
+import Memory from './Memory';
+import Search from './Search';
+
+const Stack = createStackNavigator();
+
+const MainNavigation = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={App} />
+        <Stack.Screen name="Puzzle" component={Puzzle} />
+        <Stack.Screen name="Memory" component={Memory} />
+        <Stack.Screen name="Search" component={Search} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default MainNavigation;
+npx react-native run-android   # Para Android
+npx react-native run-ios       # Para iOS
