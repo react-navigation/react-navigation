@@ -156,6 +156,8 @@ export type NativeStackNavigationOptions = {
   /**
    * Title string used by the back button on iOS.
    * Defaults to the previous scene's title.
+   * On iOS the text might be shortened to "Back" or arrow icon depending on the available space, following native iOS behaviour.
+   * See `headerBackButtonDisplayMode` to read about limitations and interactions with other props.
    * Use `headerBackButtonDisplayMode: "minimal"` to hide it.
    *
    * Only supported on iOS and Web.
@@ -350,7 +352,6 @@ export type NativeStackNavigationOptions = {
    *
    * The space-aware behavior is disabled when:
    * - The iOS version is 13 or lower
-   * - Custom back title is set (e.g. with `headerBackTitle`)
    * - Custom font family or size is set (e.g. with `headerBackTitleStyle`)
    * - Back button menu is disabled (e.g. with `headerBackButtonMenuEnabled`)
    *
