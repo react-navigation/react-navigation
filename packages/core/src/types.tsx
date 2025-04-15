@@ -669,6 +669,7 @@ export type RouteConfigProps<
    */
   layout?: (props: {
     route: RouteProp<ParamList, RouteName>;
+    options: ScreenOptions;
     navigation: Navigation;
     theme: ReactNavigation.Theme;
     children: React.ReactElement;

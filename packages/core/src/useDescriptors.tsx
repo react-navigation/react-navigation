@@ -35,7 +35,7 @@ export type ScreenConfigWithParent<
 > = {
   keys: (string | undefined)[];
   options: (ScreenOptionsOrCallback<ScreenOptions> | undefined)[] | undefined;
-  layout: ScreenLayout | undefined;
+  layout: ScreenLayout<ScreenOptions> | undefined;
   props: RouteConfig<
     ParamListBase,
     string,
@@ -46,8 +46,9 @@ export type ScreenConfigWithParent<
   >;
 };
 
-type ScreenLayout = (props: {
+type ScreenLayout<ScreenOptions extends {}> = (props: {
   route: RouteProp<ParamListBase, string>;
+  options: ScreenOptions;
   navigation: any;
   theme: ReactNavigation.Theme;
   children: React.ReactElement;
@@ -73,7 +74,7 @@ type Options<
   >;
   navigation: NavigationHelpers<ParamListBase>;
   screenOptions: ScreenOptionsOrCallback<ScreenOptions> | undefined;
-  screenLayout: ScreenLayout | undefined;
+  screenLayout: ScreenLayout<ScreenOptions> | undefined;
   onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
@@ -258,6 +259,7 @@ export function useDescriptors<
       element = layout({
         route,
         navigation,
+        options: customOptions,
         // @ts-expect-error: in practice `theme` will be defined
         theme,
         children: element,
