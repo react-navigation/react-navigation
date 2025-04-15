@@ -86,12 +86,14 @@ export type DefaultNavigatorOptions<
   /**
    * Layout for all screens under this navigator.
    */
-  screenLayout?: (props: {
-    route: RouteProp<ParamList, keyof ParamList>;
-    navigation: Navigation;
-    theme: ReactNavigation.Theme;
-    children: React.ReactElement;
-  }) => React.ReactElement;
+  screenLayout?: (
+    props: ScreenLayoutArgs<
+      ParamList,
+      keyof ParamList,
+      ScreenOptions,
+      Navigation
+    >
+  ) => React.ReactElement;
 
   /**
    * A function returning overrides for the underlying router used by the navigator.
@@ -543,6 +545,19 @@ export type CompositeScreenProps<
   route: A['route'];
 };
 
+export type ScreenLayoutArgs<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+  ScreenOptions extends {},
+  Navigation,
+> = {
+  route: RouteProp<ParamList, RouteName>;
+  options: ScreenOptions;
+  navigation: Navigation;
+  theme: ReactNavigation.Theme;
+  children: React.ReactElement;
+};
+
 export type Descriptor<
   ScreenOptions extends {},
   Navigation extends NavigationProp<any, any, any, any, any, any>,
@@ -667,12 +682,9 @@ export type RouteConfigProps<
    * Useful for wrapping the screen with custom containers.
    * e.g. for styling, error boundaries, suspense, etc.
    */
-  layout?: (props: {
-    route: RouteProp<ParamList, RouteName>;
-    navigation: Navigation;
-    theme: ReactNavigation.Theme;
-    children: React.ReactElement;
-  }) => React.ReactElement;
+  layout?: (
+    props: ScreenLayoutArgs<ParamList, RouteName, ScreenOptions, Navigation>
+  ) => React.ReactElement;
 
   /**
    * Function to return an unique ID for this screen.
@@ -736,12 +748,14 @@ export type RouteGroupConfig<
    * This will override the `screenLayout` of parent group or navigator.
    */
   screenLayout?:
-    | ((props: {
-        route: RouteProp<ParamList, keyof ParamList>;
-        navigation: Navigation;
-        theme: ReactNavigation.Theme;
-        children: React.ReactElement;
-      }) => React.ReactElement)
+    | ((
+        props: ScreenLayoutArgs<
+          ParamList,
+          keyof ParamList,
+          ScreenOptions,
+          Navigation
+        >
+      ) => React.ReactElement)
     | {
         // FIXME: TypeScript doesn't seem to infer `navigation` correctly without this
       };
