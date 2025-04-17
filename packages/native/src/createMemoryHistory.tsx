@@ -176,21 +176,20 @@ export function createMemoryHistory() {
         // But on Firefox, it seems to take much longer, around 50ms from our testing
         // We're using a hacky timeout since there doesn't seem to be way to know for sure
         const timer = setTimeout(() => {
-          const index = pending.findIndex((it) => it.ref === done);
+          const foundIndex = pending.findIndex((it) => it.ref === done);
 
-          if (index > -1) {
-            pending[index].cb();
-            pending.splice(index, 1);
+          if (foundIndex > -1) {
+            pending[foundIndex].cb();
+            pending.splice(foundIndex, 1);
           }
+
+          index = this.index;
         }, 100);
 
         const onPopState = () => {
-          const id = window.history.state?.id;
-          const currentIndex = items.findIndex((item) => item.id === id);
-
           // Fix createMemoryHistory.index variable's value
           // as it may go out of sync when navigating in the browser.
-          index = Math.max(currentIndex, 0);
+          index = this.index;
 
           const last = pending.pop();
 
@@ -208,6 +207,10 @@ export function createMemoryHistory() {
     // Here we normalize it so that only external changes (e.g. user pressing back/forward) trigger the listener
     listen(listener: () => void) {
       const onPopState = () => {
+        // Fix createMemoryHistory.index variable's value
+        // as it may go out of sync when navigating in the browser.
+        index = this.index;
+
         if (pending.length) {
           // This was triggered by `history.go(n)`, we shouldn't call the listener
           return;
