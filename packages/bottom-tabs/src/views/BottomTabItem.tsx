@@ -347,7 +347,8 @@ export function BottomTabItem({
           variant === 'material' || (sidebar && horizontal)
             ? { color: colors.text }
             : undefined,
-        pressOpacity: 1,
+        pressOpacity: options.headerPressOpacity ?? 1,
+        pressColor: options.headerPressColor,
         style: [
           styles.tab,
           { flex, backgroundColor, borderRadius },
