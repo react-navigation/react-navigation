@@ -102,7 +102,7 @@ type StaticRouteConfig<
 > &
   RouteConfigComponent<ParamList, RouteName>;
 
-type StaticConfigScreens<
+export type StaticConfigScreens<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
@@ -156,7 +156,7 @@ type StaticConfigScreens<
       });
 };
 
-type GroupConfig<
+export type GroupConfig<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
