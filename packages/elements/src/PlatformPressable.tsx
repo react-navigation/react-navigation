@@ -40,19 +40,22 @@ const useNativeDriver = Platform.OS !== 'web';
 /**
  * PlatformPressable provides an abstraction on top of Pressable to handle platform differences.
  */
-export function PlatformPressable({
-  disabled,
-  onPress,
-  onPressIn,
-  onPressOut,
-  android_ripple,
-  pressColor,
-  pressOpacity = 0.3,
-  hoverEffect,
-  style,
-  children,
-  ...rest
-}: Props) {
+function PlatformPressableInternal(
+  {
+    disabled,
+    onPress,
+    onPressIn,
+    onPressOut,
+    android_ripple,
+    pressColor,
+    pressOpacity = 0.3,
+    hoverEffect,
+    style,
+    children,
+    ...rest
+  }: Props,
+  ref: React.Ref<React.ComponentRef<typeof AnimatedPressable>>
+) {
   const { dark } = useTheme();
   const [opacity] = React.useState(() => new Animated.Value(1));
 
@@ -113,6 +116,7 @@ export function PlatformPressable({
 
   return (
     <AnimatedPressable
+      ref={ref}
       accessible
       accessibilityRole={
         Platform.OS === 'web' && rest.href != null ? 'link' : 'button'
@@ -152,6 +156,10 @@ export function PlatformPressable({
     </AnimatedPressable>
   );
 }
+
+export const PlatformPressable = React.forwardRef(PlatformPressableInternal);
+
+PlatformPressable.displayName = 'PlatformPressable';
 
 const css = String.raw;
 
