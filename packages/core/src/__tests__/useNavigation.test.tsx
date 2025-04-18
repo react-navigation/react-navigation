@@ -1,7 +1,10 @@
-import { beforeEach, expect, test } from '@jest/globals';
-import { render } from '@testing-library/react-native';
+import { beforeEach, expect, jest, test } from '@jest/globals';
+import { act, render } from '@testing-library/react-native';
+import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
+import { NavigationContainerRefContext } from '../NavigationContainerRefContext';
+import { NavigationContext } from '../NavigationContext';
 import { Screen } from '../Screen';
 import { useNavigation } from '../useNavigation';
 import { useNavigationBuilder } from '../useNavigationBuilder';
@@ -149,4 +152,47 @@ test('throws if called outside a navigation context', () => {
   };
 
   render(<Test />);
+});
+
+test('queues navigation actions before container is ready', () => {
+  jest.useFakeTimers();
+  const navigateMock = jest.fn();
+  const dispatchMock = jest.fn();
+  const goBackMock = jest.fn();
+  const pushMock = jest.fn();
+  const replaceMock = jest.fn();
+
+  const rootRef = {
+    isReady: () => false,
+    navigate: navigateMock,
+    dispatch: dispatchMock,
+    goBack: goBackMock,
+    push: pushMock,
+    replace: replaceMock,
+  };
+
+  const TestComponent = () => {
+    const navigation = useNavigation<any>();
+    React.useEffect(() => {
+      navigation.navigate('baz');
+    }, [navigation]);
+    return null;
+  };
+
+  render(
+    <NavigationContainerRefContext.Provider value={rootRef as any}>
+      <NavigationContext.Provider value={undefined as any}>
+        <TestComponent />
+      </NavigationContext.Provider>
+    </NavigationContainerRefContext.Provider>
+  );
+
+  expect(navigateMock).not.toHaveBeenCalled();
+
+  act(() => {
+    (rootRef as any).isReady = () => true;
+    jest.advanceTimersByTime(10);
+  });
+
+  expect(navigateMock).toHaveBeenCalledWith('baz');
 });
