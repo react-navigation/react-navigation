@@ -24,6 +24,32 @@ export function useNavigation<
     );
   }
 
-  // FIXME: Figure out a better way to do this
-  return (navigation ?? root) as unknown as T;
+  const nav = (navigation ?? root) as unknown as T;
+
+  if (root && typeof (root as any).isReady === 'function') {
+    const wrapped = { ...(nav as object) } as any;
+    const methodsToWrap = ['navigate', 'dispatch', 'goBack', 'push', 'replace'];
+
+    methodsToWrap.forEach((method) => {
+      if (typeof (nav as any)[method] === 'function') {
+        const original = (nav as any)[method] as (...args: any[]) => any;
+        wrapped[method] = (...args: any[]) => {
+          if ((root as any).isReady()) {
+            original(...args);
+          } else {
+            const interval = setInterval(() => {
+              if ((root as any).isReady()) {
+                clearInterval(interval);
+                original(...args);
+              }
+            }, 10);
+          }
+        };
+      }
+    });
+
+    return wrapped as T;
+  }
+
+  return nav;
 }
