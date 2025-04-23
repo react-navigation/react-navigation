@@ -8,6 +8,7 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import type { NativeProps } from 'react-native-pager-view/lib/typescript/specs/PagerViewNativeComponent';
 import useLatestCallback from 'use-latest-callback';
 
 import type {
@@ -24,6 +25,7 @@ type Props<T extends Route> = PagerProps & {
   layout: Layout;
   onIndexChange: (index: number) => void;
   navigationState: NavigationState<T>;
+  onPageSelected?: NativeProps['onPageSelected'];
   children: (
     props: EventEmitterProps & {
       // Animated value which represents the state of current index

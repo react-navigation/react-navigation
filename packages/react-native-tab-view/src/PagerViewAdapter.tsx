@@ -3,6 +3,7 @@ import { Animated, Keyboard, Platform, StyleSheet } from 'react-native';
 import ViewPager, {
   type PageScrollStateChangedNativeEvent,
 } from 'react-native-pager-view';
+import type { NativeProps } from 'react-native-pager-view/lib/typescript/specs/PagerViewNativeComponent';
 import useLatestCallback from 'use-latest-callback';
 
 import type {
@@ -19,6 +20,7 @@ const AnimatedViewPager = Animated.createAnimatedComponent(ViewPager);
 type Props<T extends Route> = PagerProps & {
   onIndexChange: (index: number) => void;
   navigationState: NavigationState<T>;
+  onPageSelected?: NativeProps['onPageSelected'];
   children: (
     props: EventEmitterProps & {
       // Animated value which represents the state of current index
@@ -46,6 +48,7 @@ export function PagerViewAdapter<T extends Route>({
   children,
   style,
   animationEnabled,
+  onPageSelected,
   ...rest
 }: Props<T>) {
   const { index } = navigationState;
@@ -165,6 +168,7 @@ export function PagerViewAdapter<T extends Route>({
           const index = e.nativeEvent.position;
           indexRef.current = index;
           onIndexChange(index);
+          onPageSelected?.(e);
         }}
         onPageScrollStateChanged={onPageScrollStateChanged}
         scrollEnabled={swipeEnabled}
