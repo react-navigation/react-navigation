@@ -1,7 +1,7 @@
 import type { NavigationState } from '@react-navigation/core';
 import { nanoid } from 'nanoid/non-secure';
 
-type HistoryRecord = {
+export type HistoryRecord = {
   // Unique identifier for this record to match it with window.history.state
   id: string;
   // Navigation state object for the history entry
@@ -10,9 +10,44 @@ type HistoryRecord = {
   path: string;
 };
 
+type PopStateCallbacks = {
+  onPopStateIn: () => void;
+  onPopStateOut: () => void;
+};
+
+const historyRef: {
+  current: ReturnType<typeof createMemoryHistory> | undefined;
+} = {
+  current: undefined,
+};
+
 export default function createMemoryHistory() {
   let index = 0;
   let items: HistoryRecord[] = [];
+  const popStateCallbacks: Record<HistoryRecord['id'], PopStateCallbacks> = {};
+  const pendingPopStateOutCallbacks: Record<
+    HistoryRecord['id'],
+    PopStateCallbacks['onPopStateOut']
+  > = {};
+
+  const log = () => {
+    console.log(
+      JSON.stringify(
+        {
+          index,
+          indexGetter: history.index,
+          items: items.map((item, i) => ({
+            selected: history.index === i ? '<<<<<<<' : undefined,
+            path: item.path,
+            id: item.id,
+            state: item.state?.key || null,
+          })),
+        },
+        null,
+        4
+      )
+    );
+  };
 
   // Pending callbacks for `history.go(n)`
   // We might modify the callback stored if it was interrupted, so we have a ref to identify it
@@ -29,6 +64,9 @@ export default function createMemoryHistory() {
   };
 
   const history = {
+    get items() {
+      return items;
+    },
     get index(): number {
       // We store an id in the state instead of an index
       // Index could get out of sync with in-memory values if page reloads
@@ -60,6 +98,58 @@ export default function createMemoryHistory() {
       return -1;
     },
 
+    // This function will update the items array and call history.pushState
+    externalPush({
+      onPopStateIn,
+      onPopStateOut,
+    }: {
+      onPopStateIn: () => void;
+      onPopStateOut: () => void;
+    }) {
+      interrupt();
+
+      const id = nanoid();
+
+      // We will copy the current state as externalPush is used when the navigation state is unchanged.
+      const currentItem = items[index];
+
+      // When a new entry is pushed, all the existing entries after index will be inaccessible
+      // So we remove any existing entries after the current index to clean them up
+      items = items.slice(0, index + 1);
+
+      // We creates a new id to avoid collision with the current item.
+      items.push({ ...currentItem, id });
+      index = items.length - 1;
+
+      // We merge the state that the user wanted to save and our internal id.
+      window.history.pushState({ id }, '', currentItem.path);
+
+      // Add callbacks to the popCallbacks object
+      popStateCallbacks[id] = { onPopStateIn, onPopStateOut };
+
+      pendingPopStateOutCallbacks[id] = onPopStateOut;
+      log();
+
+      return () => {
+        const indexOfPushedEntry = index;
+
+        // We should pop before the index of newly created entry only if the current index is equal or greater than this entry index.
+        if (
+          !historyRef.current ||
+          indexOfPushedEntry > historyRef.current.index
+        ) {
+          return;
+        }
+
+        const targetIndex = Math.max(
+          items.findIndex((item) => item.id === id) - 1,
+          0
+        );
+
+        historyRef.current?.go(targetIndex - index);
+      };
+    },
+
     push({ path, state }: { path: string; state: NavigationState }) {
       interrupt();
 
@@ -77,6 +167,7 @@ export default function createMemoryHistory() {
       // - browsers have limits on how big it can be, and we don't control the size
       // - while not recommended, there could be non-serializable data in state
       window.history.pushState({ id }, '', path);
+      log();
     },
 
     replace({ path, state }: { path: string; state: NavigationState }) {
@@ -106,6 +197,7 @@ export default function createMemoryHistory() {
       }
 
       window.history.replaceState({ id }, '', pathWithHash);
+      log();
     },
 
     // `history.go(n)` is asynchronous, there are couple of things to keep in mind:
@@ -174,21 +266,20 @@ export default function createMemoryHistory() {
         // But on Firefox, it seems to take much longer, around 50ms from our testing
         // We're using a hacky timeout since there doesn't seem to be way to know for sure
         const timer = setTimeout(() => {
-          const index = pending.findIndex((it) => it.ref === done);
+          const foundIndex = pending.findIndex((it) => it.ref === done);
 
-          if (index > -1) {
-            pending[index].cb();
-            pending.splice(index, 1);
+          if (foundIndex > -1) {
+            pending[foundIndex].cb();
+            pending.splice(foundIndex, 1);
           }
+
+          index = this.index;
         }, 100);
 
         const onPopState = () => {
-          const id = window.history.state?.id;
-          const currentIndex = items.findIndex((item) => item.id === id);
-
           // Fix createMemoryHistory.index variable's value
           // as it may go out of sync when navigating in the browser.
-          index = Math.max(currentIndex, 0);
+          index = this.index;
 
           const last = pending.pop();
 
@@ -206,12 +297,50 @@ export default function createMemoryHistory() {
     // Here we normalize it so that only external changes (e.g. user pressing back/forward) trigger the listener
     listen(listener: () => void) {
       const onPopState = () => {
+        // Fix createMemoryHistory.index variable's value
+        // as it may go out of sync when navigating in the browser.
+        index = this.index;
+
         if (pending.length) {
           // This was triggered by `history.go(n)`, we shouldn't call the listener
           return;
         }
 
+        const idsToCurrentIndex = items
+          .slice(0, index + 1)
+          .map((item) => item.id);
+
+        for (const id of Object.keys(popStateCallbacks)) {
+          // If there are popStateCallbacks that matches the ids to the current index,
+          // we should check if there is a corresponding pending callback already.
+          // If not, we can assume that popStateIn callback was not called yet.
+          // So we can call popStateIn callback and add popStateOut to the pending dict.
+          if (
+            idsToCurrentIndex.includes(id) &&
+            !pendingPopStateOutCallbacks[id]
+          ) {
+            popStateCallbacks[id].onPopStateIn();
+            pendingPopStateOutCallbacks[id] =
+              popStateCallbacks[id].onPopStateOut;
+          }
+        }
+
+        const idsPastCurrentIndex = items
+          .slice(index + 1)
+          .map((item) => item.id);
+
+        for (const id of Object.keys(pendingPopStateOutCallbacks)) {
+          // If there are any pending popStateOut callbacks that are after the current index,
+          // we should call the callback functions and remove them from the pending dicts.
+          if (idsPastCurrentIndex.includes(id)) {
+            pendingPopStateOutCallbacks[id]();
+            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+            delete pendingPopStateOutCallbacks[id];
+          }
+        }
+
         listener();
+        log();
       };
 
       window.addEventListener('popstate', onPopState);
@@ -220,5 +349,24 @@ export default function createMemoryHistory() {
     },
   };
 
+  historyRef.current = history;
+
   return history;
+}
+
+type PushBrowserHistoryArgs = {
+  onPopStateIn: () => void;
+  onPopStateOut: () => void;
+};
+
+export function pushBrowserHistoryState({
+  onPopStateIn,
+  onPopStateOut,
+}: PushBrowserHistoryArgs) {
+  if (!historyRef.current) {
+    // noop just in case
+    return () => {};
+  }
+
+  return historyRef.current.externalPush({ onPopStateIn, onPopStateOut });
 }
