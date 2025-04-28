@@ -35,6 +35,9 @@ import { useOptionsGetters } from './useOptionsGetters';
 import { useSyncState } from './useSyncState';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
+type NavigationDispatchAction =
+  | NavigationAction
+  | ((state: NavigationState) => NavigationAction);
 
 const serializableWarnings: string[] = [];
 const duplicateNameWarnings: string[] = [];
@@ -122,19 +125,42 @@ export const BaseNavigationContainer = React.forwardRef(
 
     const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
 
-    const dispatch = useLatestCallback(
-      (
-        action:
-          | NavigationAction
-          | ((state: NavigationState) => NavigationAction)
-      ) => {
+    const pendingActionsRef = React.useRef<NavigationDispatchAction[]>([]);
+    const isReadyRef = React.useRef(false);
+
+    const dispatchAction = useLatestCallback(
+      (action: NavigationDispatchAction) => {
         if (listeners.focus[0] == null) {
           console.error(NOT_INITIALIZED_ERROR);
+          return false;
         } else {
           listeners.focus[0]((navigation) => navigation.dispatch(action));
+          return true;
         }
       }
     );
+
+    const dispatch = useLatestCallback((action: NavigationDispatchAction) => {
+      if (listeners.focus[0] == null) {
+        pendingActionsRef.current.push(action);
+        console.error(NOT_INITIALIZED_ERROR);
+        return;
+      }
+
+      if (!isReadyRef.current) {
+        pendingActionsRef.current.push(action);
+
+        if (process.env.NODE_ENV !== 'production') {
+          console.warn(
+            'The navigation container is not ready yet. The action has been queued and will be processed when the container is ready.'
+          );
+        }
+
+        return;
+      }
+
+      dispatchAction(action);
+    });
 
     const canGoBack = useLatestCallback(() => {
       if (listeners.focus[0] == null) {
@@ -159,12 +185,10 @@ export const BaseNavigationContainer = React.forwardRef(
         if (target == null) {
           console.error(NOT_INITIALIZED_ERROR);
         } else {
-          listeners.focus[0]((navigation) =>
-            navigation.dispatch({
-              ...CommonActions.reset(state),
-              target,
-            })
-          );
+          dispatch({
+            ...CommonActions.reset(state),
+            target,
+          });
         }
       }
     );
@@ -174,18 +198,26 @@ export const BaseNavigationContainer = React.forwardRef(
     });
 
     const getCurrentRoute = useLatestCallback(() => {
-      const state = getRootState();
+      const rootState = getRootState();
 
-      if (state == null) {
+      if (rootState == null) {
         return undefined;
       }
 
-      const route = findFocusedRoute(state);
+      const route = findFocusedRoute(rootState);
 
       return route as Route<string> | undefined;
     });
 
-    const isReady = useLatestCallback(() => listeners.focus[0] != null);
+    const isReady = useLatestCallback(() => {
+      const ready = listeners.focus[0] != null;
+
+      if (ready && !isReadyRef.current) {
+        isReadyRef.current = true;
+      }
+
+      return ready;
+    });
 
     const emitter = useEventEmitter<NavigationContainerEventMap>();
 
@@ -314,10 +346,20 @@ export const BaseNavigationContainer = React.forwardRef(
     React.useEffect(() => {
       if (!onReadyCalledRef.current && isReady()) {
         onReadyCalledRef.current = true;
+
+        if (pendingActionsRef.current.length > 0) {
+          const actions = [...pendingActionsRef.current];
+          pendingActionsRef.current = [];
+
+          actions.forEach((action) => {
+            dispatchAction(action);
+          });
+        }
+
         onReadyRef.current?.();
         emitter.emit({ type: 'ready' });
       }
-    }, [state, isReady, emitter]);
+    }, [state, isReady, emitter, dispatchAction]);
 
     React.useEffect(() => {
       const hydratedState = getRootState();
