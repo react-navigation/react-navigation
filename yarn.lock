@@ -4230,7 +4230,6 @@ __metadata:
     "@types/mock-require": "npm:^2.0.3"
     "@types/react": "npm:~18.3.12"
     "@types/react-dom": "npm:~18.3.1"
-    babel-plugin-module-resolver: "npm:^5.0.0"
     babel-preset-expo: "npm:~12.0.0"
     cheerio: "npm:^1.0.0-rc.12"
     color: "npm:^4.2.3"
@@ -5721,7 +5720,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-plugin-module-resolver@npm:^5.0.0, babel-plugin-module-resolver@npm:^5.0.2":
+"babel-plugin-module-resolver@npm:^5.0.2":
   version: 5.0.2
   resolution: "babel-plugin-module-resolver@npm:5.0.2"
   dependencies:

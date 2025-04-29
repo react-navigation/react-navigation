@@ -49,7 +49,6 @@
     "@types/mock-require": "^2.0.3",
     "@types/react": "~18.3.12",
     "@types/react-dom": "~18.3.1",
-    "babel-plugin-module-resolver": "^5.0.0",
     "babel-preset-expo": "~12.0.0",
     "cheerio": "^1.0.0-rc.12",
     "expect-type": "^0.17.3",
