@@ -1,12 +1,10 @@
 {
   "description": "Routing and navigation for your React Native apps",
   "private": true,
-  "workspaces": {
-    "packages": [
-      "packages/*",
-      "example"
-    ]
-  },
+  "workspaces": [
+    "packages/*",
+    "example"
+  ],
   "publishConfig": {
     "access": "public"
   },
