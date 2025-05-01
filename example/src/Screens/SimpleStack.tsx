@@ -9,6 +9,7 @@ import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
+import type { RootStackParamList } from '../screens';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
@@ -73,11 +74,17 @@ const NewsFeedScreen = ({
   route,
   navigation,
 }: StackScreenProps<SimpleStackParams, 'NewsFeed'>) => {
+  const rootNavigation =
+    navigation.getParent<StackScreenProps<RootStackParamList>['navigation']>();
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.replace('Contacts')}>
           Replace with contacts
+        </Button>
+        <Button variant="tinted" onPress={() => rootNavigation.popTo('Home')}>
+          Pop to home
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
