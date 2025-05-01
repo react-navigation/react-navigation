@@ -156,7 +156,7 @@ export type StaticConfigScreens<
       });
 };
 
-export type GroupConfig<
+export type StaticConfigGroup<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
@@ -240,7 +240,7 @@ type StaticConfigInternal<
          * Groups of screens to render in the navigator and their configuration.
          */
         groups?: {
-          [key: string]: GroupConfig<
+          [key: string]: StaticConfigGroup<
             ParamList,
             State,
             ScreenOptions,
@@ -264,7 +264,7 @@ type StaticConfigInternal<
          * Groups of screens to render in the navigator and their configuration.
          */
         groups: {
-          [key: string]: GroupConfig<
+          [key: string]: StaticConfigGroup<
             ParamList,
             State,
             ScreenOptions,
