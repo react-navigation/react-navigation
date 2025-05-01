@@ -1,14 +1,12 @@
 import * as React from 'react';
-import { type HostComponent, Keyboard, TextInput } from 'react-native';
-
-type InputRef = React.ElementRef<HostComponent<unknown>> | undefined;
+import { type HostInstance, Keyboard, TextInput } from 'react-native';
 
 export function useKeyboardManager(isEnabled: () => boolean) {
   // Numeric id of the previously focused text input
   // When a gesture didn't change the tab, we can restore the focused input with this
-  const previouslyFocusedTextInputRef = React.useRef<InputRef>(undefined);
+  const previouslyFocusedTextInputRef = React.useRef<HostInstance>(undefined);
   const startTimestampRef = React.useRef<number>(0);
-  const keyboardTimeoutRef = React.useRef<any>();
+  const keyboardTimeoutRef = React.useRef<NodeJS.Timeout>(undefined);
 
   const clearKeyboardTimeout = React.useCallback(() => {
     if (keyboardTimeoutRef.current !== undefined) {
@@ -24,7 +22,7 @@ export function useKeyboardManager(isEnabled: () => boolean) {
 
     clearKeyboardTimeout();
 
-    const input: InputRef = TextInput.State.currentlyFocusedInput();
+    const input = TextInput.State.currentlyFocusedInput();
 
     // When a page change begins, blur the currently focused input
     input?.blur();

@@ -73,7 +73,7 @@ export function PanResponderAdapter<T extends Route>({
   const onIndexChangeRef = React.useRef(onIndexChange);
 
   const currentIndexRef = React.useRef(index);
-  const pendingIndexRef = React.useRef<number>();
+  const pendingIndexRef = React.useRef<number>(undefined);
 
   const swipeVelocityThreshold = 0.15;
   const swipeDistanceThreshold = layout.width / 1.75;

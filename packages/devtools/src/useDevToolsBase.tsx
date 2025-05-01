@@ -36,13 +36,13 @@ type ActionData = {
 };
 
 export function useDevToolsBase(
-  ref: React.RefObject<NavigationContainerRef<any>>,
+  ref: React.RefObject<NavigationContainerRef<any> | null>,
   callback: (result: InitData | ActionData) => void
 ) {
-  const lastStateRef = React.useRef<NavigationState | undefined>();
+  const lastStateRef = React.useRef<NavigationState | undefined>(undefined);
   const lastActionRef = React.useRef<
     { action: NavigationAction; stack: string | undefined } | undefined
-  >();
+  >(undefined);
   const callbackRef = React.useRef(callback);
   const lastResetRef = React.useRef<NavigationState | undefined>(undefined);
 

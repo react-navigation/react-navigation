@@ -154,6 +154,8 @@ function NavigationContainerInner(
 
   const [isResolved, initialState] = useThenable(getInitialState);
 
+  // FIXME
+  // @ts-expect-error not sure why this is not working
   React.useImperativeHandle(ref, () => refContainer.current);
 
   const isLinkingReady =

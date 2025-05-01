@@ -57,7 +57,27 @@ type NavigatorRoute = {
   params?: NavigatorScreenParams<ParamListBase>;
 };
 
-const isValidKey = (key: unknown) =>
+const isScreen = (
+  child: React.ReactElement<unknown>
+): child is React.ReactElement<{
+  name?: unknown;
+  navigationKey?: unknown;
+}> => {
+  return child.type === Screen;
+};
+
+const isGroup = (
+  child: React.ReactElement<unknown>
+): child is React.ReactElement<{
+  navigationKey?: unknown;
+  screenOptions?: unknown;
+  screenLayout?: unknown;
+  children?: unknown;
+}> => {
+  return child.type === React.Fragment || child.type === Group;
+};
+
+const isValidKey = (key: unknown): key is string | undefined =>
   key === undefined || (typeof key === 'string' && key !== '');
 
 /**
@@ -83,11 +103,27 @@ const getRouteConfigsFromChildren = <
     ScreenConfigWithParent<State, ScreenOptions, EventMap>[]
   >((acc, child) => {
     if (React.isValidElement(child)) {
-      if (child.type === Screen) {
+      if (isScreen(child)) {
         // We can only extract the config from `Screen` elements
         // If something else was rendered, it's probably a bug
 
-        if (!isValidKey(child.props.navigationKey)) {
+        if (typeof child.props !== 'object' || child.props === null) {
+          throw new Error(`Got an invalid element for screen.`);
+        }
+
+        if (typeof child.props.name !== 'string' || child.props.name === '') {
+          throw new Error(
+            `Got an invalid name (${JSON.stringify(
+              child.props.name
+            )}) for the screen. It must be a non-empty string.`
+          );
+        }
+
+        if (
+          child.props.navigationKey !== undefined &&
+          (typeof child.props.navigationKey !== 'string' ||
+            child.props.navigationKey === '')
+        ) {
           throw new Error(
             `Got an invalid 'navigationKey' prop (${JSON.stringify(
               child.props.navigationKey
@@ -114,7 +150,7 @@ const getRouteConfigsFromChildren = <
         return acc;
       }
 
-      if (child.type === React.Fragment || child.type === Group) {
+      if (isGroup(child)) {
         if (!isValidKey(child.props.navigationKey)) {
           throw new Error(
             `Got an invalid 'navigationKey' prop (${JSON.stringify(
@@ -127,8 +163,10 @@ const getRouteConfigsFromChildren = <
         // This is handy to conditionally define a group of screens
         acc.push(
           ...getRouteConfigsFromChildren<State, ScreenOptions, EventMap>(
-            child.props.children,
+            child.props.children as React.ReactNode,
             child.props.navigationKey,
+            // FIXME
+            // @ts-expect-error: add validation
             child.type !== Group
               ? groupOptions
               : groupOptions != null
@@ -139,6 +177,7 @@ const getRouteConfigsFromChildren = <
               : groupLayout
           )
         );
+
         return acc;
       }
     }
@@ -166,14 +205,6 @@ const getRouteConfigsFromChildren = <
   if (process.env.NODE_ENV !== 'production') {
     configs.forEach((config) => {
       const { name, children, component, getComponent } = config.props;
-
-      if (typeof name !== 'string' || !name) {
-        throw new Error(
-          `Got an invalid name (${JSON.stringify(
-            name
-          )}) for the screen. It must be a non-empty string.`
-        );
-      }
 
       if (
         children != null ||

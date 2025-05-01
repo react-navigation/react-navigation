@@ -86,7 +86,7 @@ export function useHeaderConfigProps({
   const titleColor =
     'color' in headerTitleStyleFlattened
       ? headerTitleStyleFlattened.color
-      : headerTintColor ?? colors.text;
+      : (headerTintColor ?? colors.text);
   const titleFontSize =
     'fontSize' in headerTitleStyleFlattened
       ? headerTitleStyleFlattened.fontSize

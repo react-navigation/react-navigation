@@ -72,11 +72,11 @@ type FeedTabScreenProps<T extends keyof FeedTabParamList> =
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-expectTypeOf(Stack.Navigator).parameter(0).toMatchTypeOf<{
+expectTypeOf(Stack.Navigator).parameter(0).toMatchObjectType<{
   initialRouteName?: keyof RootStackParamList;
 }>();
 
-expectTypeOf(Stack.Screen).parameter(0).toMatchTypeOf<{
+expectTypeOf(Stack.Screen).parameter(0).toExtend<{
   name?: keyof RootStackParamList;
 }>();
 
@@ -92,7 +92,7 @@ export const PostDetailsScreen = ({
 
   expectTypeOf(navigation.setParams)
     .parameter(0)
-    .toMatchTypeOf<{ id?: string }>();
+    .toMatchObjectType<{ id?: string }>();
 
   expectTypeOf(navigation.push)
     .parameter(0)
@@ -100,7 +100,7 @@ export const PostDetailsScreen = ({
 
   expectTypeOf(navigation.setOptions)
     .parameter(0)
-    .toMatchTypeOf<Partial<StackNavigationOptions>>();
+    .toEqualTypeOf<Partial<StackNavigationOptions>>();
 
   expectTypeOf(navigation.addListener)
     .parameter(0)
@@ -174,15 +174,16 @@ export const PopularScreen = ({
   expectTypeOf(navigation.push)
     .parameter(0)
     .toEqualTypeOf<keyof RootStackParamList>();
-  expectTypeOf(navigation.jumpTo)
-    .parameter(0)
-    .toEqualTypeOf<keyof HomeDrawerParamList>();
+
+  expectTypeOf<Parameters<typeof navigation.jumpTo>[0]>().toEqualTypeOf<
+    keyof HomeDrawerParamList
+  >();
 
   expectTypeOf(navigation.openDrawer).toBeFunction();
 
   expectTypeOf(navigation.setOptions)
     .parameter(0)
-    .toMatchTypeOf<Partial<BottomTabNavigationOptions>>();
+    .toEqualTypeOf<Partial<BottomTabNavigationOptions>>();
 
   expectTypeOf(navigation.addListener)
     .parameter(0)
@@ -216,15 +217,16 @@ export const LatestScreen = ({
   expectTypeOf(navigation.push)
     .parameter(0)
     .toEqualTypeOf<keyof RootStackParamList>();
-  expectTypeOf(navigation.jumpTo)
-    .parameter(0)
-    .toEqualTypeOf<keyof HomeDrawerParamList>();
+
+  expectTypeOf<Parameters<typeof navigation.jumpTo>[0]>().toEqualTypeOf<
+    keyof HomeDrawerParamList
+  >();
 
   expectTypeOf(navigation.openDrawer).toBeFunction();
 
   expectTypeOf(navigation.setOptions)
     .parameter(0)
-    .toMatchTypeOf<Partial<BottomTabNavigationOptions>>();
+    .toEqualTypeOf<Partial<BottomTabNavigationOptions>>();
 
   expectTypeOf(navigation.setParams).parameter(0).toEqualTypeOf<undefined>();
 
@@ -374,11 +376,11 @@ const SecondStack = createStackNavigator<SecondParamList>();
   options={({ route, navigation, theme }) => {
     expectTypeOf(route.name).toEqualTypeOf<'HasParams1'>();
     expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
-    expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
     expectTypeOf(navigation.push)
       .parameter(0)
       .toEqualTypeOf<keyof SecondParamList>();
-    expectTypeOf(theme).toMatchTypeOf<ReactNavigation.Theme>();
+    expectTypeOf(theme).toEqualTypeOf<ReactNavigation.Theme>();
 
     return {};
   }}
@@ -394,11 +396,11 @@ const SecondStack = createStackNavigator<SecondParamList>();
   }: StackOptionsArgs<SecondParamList, 'HasParams1'>) => {
     expectTypeOf(route.name).toEqualTypeOf<'HasParams1'>();
     expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
-    expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
     expectTypeOf(navigation.push)
       .parameter(0)
       .toEqualTypeOf<keyof SecondParamList>();
-    expectTypeOf(theme).toMatchTypeOf<ReactNavigation.Theme>();
+    expectTypeOf(theme).toEqualTypeOf<ReactNavigation.Theme>();
 
     return {};
   }}
@@ -433,7 +435,7 @@ const SecondStack = createStackNavigator<SecondParamList>();
   listeners={({ route, navigation }) => {
     expectTypeOf(route.name).toEqualTypeOf<'HasParams1'>();
     expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
-    expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
     expectTypeOf(navigation.push)
       .parameter(0)
       .toEqualTypeOf<keyof SecondParamList>();
@@ -451,7 +453,7 @@ const SecondStack = createStackNavigator<SecondParamList>();
   }: StackScreenProps<SecondParamList, 'HasParams1'>) => {
     expectTypeOf(route.name).toEqualTypeOf<'HasParams1'>();
     expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
-    expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
     expectTypeOf(navigation.push)
       .parameter(0)
       .toEqualTypeOf<keyof SecondParamList>();
@@ -519,7 +521,7 @@ type FourthParamList = {
 
 const FourthStack = createStackNavigator<FourthParamList, 'MyID'>();
 
-expectTypeOf(FourthStack.Navigator).parameter(0).toMatchTypeOf<{
+expectTypeOf(FourthStack.Navigator).parameter(0).toExtend<{
   id: 'MyID';
 }>();
 
@@ -531,34 +533,34 @@ const route = navigationRef.getCurrentRoute()!;
 
 switch (route.name) {
   case 'PostDetails':
-    expectTypeOf(route.params).toMatchTypeOf<{
+    expectTypeOf(route.params).toExtend<{
       id: string;
       section?: string;
     }>();
     break;
   case 'Login':
-    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
     break;
   case 'NotFound':
-    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
     break;
   // Checks for nested routes
   case 'Account':
-    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
     break;
   case 'Popular':
-    expectTypeOf(route.params).toMatchTypeOf<{
+    expectTypeOf(route.params).toExtend<{
       filter: 'day' | 'week' | 'month';
     }>();
     break;
   case 'Latest':
-    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
     break;
 }
 
 declare const navigationRefUntyped: NavigationContainerRef<string>;
 
-expectTypeOf(navigationRefUntyped.getCurrentRoute()).toMatchTypeOf<
+expectTypeOf(navigationRefUntyped.getCurrentRoute()).toEqualTypeOf<
   Route<string> | undefined
 >();
 

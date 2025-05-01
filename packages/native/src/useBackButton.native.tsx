@@ -6,7 +6,7 @@ import * as React from 'react';
 import { BackHandler } from 'react-native';
 
 export function useBackButton(
-  ref: React.RefObject<NavigationContainerRef<ParamListBase>>
+  ref: React.RefObject<NavigationContainerRef<ParamListBase> | null>
 ) {
   React.useEffect(() => {
     const subscription = BackHandler.addEventListener(
