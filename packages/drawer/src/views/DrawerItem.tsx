@@ -139,9 +139,9 @@ export function DrawerItem(props: Props) {
       <PlatformPressable
         testID={testID}
         onPress={onPress}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="button"
-        accessibilityState={{ selected: focused }}
+        role="button"
+        aria-label={accessibilityLabel}
+        aria-selected={focused}
         pressColor={pressColor}
         pressOpacity={pressOpacity}
         hoverEffect={{ color }}

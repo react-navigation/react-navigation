@@ -118,9 +118,7 @@ function PlatformPressableInternal(
     <AnimatedPressable
       ref={ref}
       accessible
-      accessibilityRole={
-        Platform.OS === 'web' && rest.href != null ? 'link' : 'button'
-      }
+      role={Platform.OS === 'web' && rest.href != null ? 'link' : 'button'}
       onPress={disabled ? undefined : handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}

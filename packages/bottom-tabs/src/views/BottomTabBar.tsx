@@ -383,7 +383,7 @@ export function BottomTabBar({
         {tabBarBackgroundElement}
       </View>
       <View
-        accessibilityRole="tablist"
+        role="tablist"
         style={sidebar ? styles.sideContent : styles.bottomContent}
       >
         {routes.map((route, index) => {

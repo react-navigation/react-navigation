@@ -62,7 +62,7 @@
     "prettierPath": null
   },
   "prettier": {
-    "quoteProps": "consistent",
+    "quoteProps": "as-needed",
     "tabWidth": 2,
     "useTabs": false,
     "singleQuote": true,
