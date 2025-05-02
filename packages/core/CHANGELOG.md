@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.8.5...@react-navigation/core@7.9.0) (2025-05-02)
+
+### Features
+
+* add `options` parameter to `layout` and `screenLayout` ([#12551](https://github.com/react-navigation/react-navigation/issues/12551)) ([68e2c92](https://github.com/react-navigation/react-navigation/commit/68e2c92ec7c5a99337eb7a184f98100260cd7c6c)) - by @Bram-dc
+
 ## [7.8.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.8.4...@react-navigation/core@7.8.5) (2025-04-08)
 
 ### Bug Fixes

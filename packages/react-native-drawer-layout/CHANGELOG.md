@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.7](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.6...react-native-drawer-layout@4.1.7) (2025-05-02)
+
+### Bug Fixes
+
+* use aria props instead of accessibilityX ([#11848](https://github.com/react-navigation/react-navigation/issues/11848)) ([347ca97](https://github.com/react-navigation/react-navigation/commit/347ca975406e84a5e7452679b1dde7b9ecca1a22)) - by @satya164
+
 ## [4.1.6](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.5...react-native-drawer-layout@4.1.6) (2025-04-08)
 
 ### Bug Fixes

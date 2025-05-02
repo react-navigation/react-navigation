@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.10...@react-navigation/native-stack@7.3.11) (2025-05-02)
+
+### Bug Fixes
+
+* **native-stack:** align headerBackTitle with iOS behavior  ([#12543](https://github.com/react-navigation/react-navigation/issues/12543)) ([38a2a32](https://github.com/react-navigation/react-navigation/commit/38a2a320b0a4b5514152f8e31d7ef480cae94d67)) - by @maciekstosio
+* use aria props instead of accessibilityX ([#11848](https://github.com/react-navigation/react-navigation/issues/11848)) ([347ca97](https://github.com/react-navigation/react-navigation/commit/347ca975406e84a5e7452679b1dde7b9ecca1a22)) - by @satya164
+
 ## [7.3.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.9...@react-navigation/native-stack@7.3.10) (2025-04-08)
 
 ### Bug Fixes

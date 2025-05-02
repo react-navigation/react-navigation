@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.2.10...@react-navigation/stack@7.3.0) (2025-05-02)
+
+### Bug Fixes
+
+* use aria props instead of accessibilityX ([#11848](https://github.com/react-navigation/react-navigation/issues/11848)) ([347ca97](https://github.com/react-navigation/react-navigation/commit/347ca975406e84a5e7452679b1dde7b9ecca1a22)) - by @satya164
+
+### Features
+
+* export StackHeaderLeftProps and StackHeaderRightProps types ([#12520](https://github.com/react-navigation/react-navigation/issues/12520)) ([1886f29](https://github.com/react-navigation/react-navigation/commit/1886f29347ccc9564965abb3e622d3c20a7bdbd8)) - by @alexanderjhughes
+
 ## [7.2.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.2.9...@react-navigation/stack@7.2.10) (2025-04-08)
 
 ### Bug Fixes
