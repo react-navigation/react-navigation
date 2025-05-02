@@ -42,6 +42,7 @@ export type {
   StackCardStyleInterpolator,
   StackHeaderInterpolatedStyle,
   StackHeaderInterpolationProps,
+  StackHeaderLeftProps,
   StackHeaderProps,
   StackHeaderRightProps,
   StackHeaderStyleInterpolator,
