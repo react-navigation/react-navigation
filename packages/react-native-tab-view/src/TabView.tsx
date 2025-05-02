@@ -25,7 +25,7 @@ import type {
 
 export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   onIndexChange: (index: number) => void;
-  onTabSelect?: React.ComponentProps<ViewPager>['onPageSelected'];
+  onTabSelect?: React.ComponentProps<typeof ViewPager>['onPageSelected'];
   navigationState: NavigationState<T>;
   renderLazyPlaceholder?: (props: { route: T }) => React.ReactNode;
   renderTabBar?: (

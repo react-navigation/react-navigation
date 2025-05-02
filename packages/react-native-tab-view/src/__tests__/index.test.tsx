@@ -67,7 +67,9 @@ const ComponentWithTabView = () => {
       renderScene={renderScene}
       onIndexChange={setIndex}
       onTabSelect={
-        onTabSelectMock as React.ComponentProps<ViewPager>['onPageSelected']
+        onTabSelectMock as React.ComponentProps<
+          typeof ViewPager
+        >['onPageSelected']
       }
     />
   );

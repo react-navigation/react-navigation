@@ -26,7 +26,7 @@ type Props<T extends Route> = PagerProps & {
   layout: Layout;
   onIndexChange: (index: number) => void;
   navigationState: NavigationState<T>;
-  onPageSelected?: React.ComponentProps<ViewPager>['onPageSelected'];
+  onPageSelected?: React.ComponentProps<typeof ViewPager>['onPageSelected'];
   children: (
     props: EventEmitterProps & {
       // Animated value which represents the state of current index
