@@ -198,12 +198,7 @@ const HoverEffect = ({
 
   return (
     <>
-      <style
-        // @ts-expect-error: href and precedence are only available on React 19
-        href={CLASS_NAME}
-        // eslint-disable-next-line @eslint-react/dom/no-unknown-property
-        precedence="elements"
-      >
+      <style href={CLASS_NAME} precedence="elements">
         {CSS_TEXT}
       </style>
       <div

@@ -317,7 +317,7 @@ function CardContainerInner({
                   value={
                     headerShown !== false
                       ? headerHeight
-                      : parentHeaderHeight ?? 0
+                      : (parentHeaderHeight ?? 0)
                   }
                 >
                   {scene.descriptor.render()}

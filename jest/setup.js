@@ -1,7 +1,5 @@
 /* global console */
 /* eslint-disable import-x/no-extraneous-dependencies */
-
-import '@testing-library/react-native/extend-expect';
 import 'react-native-gesture-handler/jestSetup';
 
 import { setUpTests } from 'react-native-reanimated';

@@ -191,7 +191,7 @@ const getTabBarWidth = <T extends Route>({
   return routes.reduce<number>(
     (acc, _, i) =>
       acc +
-      (i > 0 ? gap ?? 0 : 0) +
+      (i > 0 ? (gap ?? 0) : 0) +
       getComputedTabWidth(
         i,
         layout,
@@ -289,7 +289,7 @@ const getScrollAmount = <T extends Route>({
     // 0 through (i - 1) and add half the width of current index i
     return (
       total +
-      (i > 0 ? gap ?? 0 : 0) +
+      (i > 0 ? (gap ?? 0) : 0) +
       (navigationState.index === i ? tabWidth / 2 : tabWidth)
     );
   }, paddingInitial);

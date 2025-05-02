@@ -1,5 +1,6 @@
 import { expect, jest, test } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react-native';
+import { Platform } from 'react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { Link } from '../Link';
@@ -7,12 +8,7 @@ import { NavigationContainer } from '../NavigationContainer';
 
 type RootParamList = { Foo: undefined; Bar: { id: string } };
 
-jest.mock('react-native/Libraries/Utilities/Platform', () => ({
-  ...jest.requireActual<
-    typeof import('react-native/Libraries/Utilities/Platform')
-  >('react-native/Libraries/Utilities/Platform'),
-  OS: 'web',
-}));
+jest.replaceProperty(Platform, 'OS', 'web');
 
 test('renders link with href on web', () => {
   const config = {

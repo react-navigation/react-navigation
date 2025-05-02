@@ -3,7 +3,9 @@ import * as React from 'react';
 
 import { useDevToolsBase } from './useDevToolsBase';
 
-export function useLogger(ref: React.RefObject<NavigationContainerRef<any>>) {
+export function useLogger(
+  ref: React.RefObject<NavigationContainerRef<any> | null>
+) {
   const actionColor = '#C2185B';
   const keyColor = '#43A047';
   const valueColor = '#1E88E5';

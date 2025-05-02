@@ -399,13 +399,12 @@ const SceneView = ({
           // When ts-expect-error is added, it affects all the props below it
           // So we keep any props that need it at the end
           // Otherwise invalid props may not be caught by TypeScript
-          // @ts-expect-error: `shouldFreeze` is not available in lower RNScreens versions
           shouldFreeze={shouldFreeze}
         >
           <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
             <HeaderHeightContext.Provider
               value={
-                headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
+                headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)
               }
             >
               {headerBackground != null ? (

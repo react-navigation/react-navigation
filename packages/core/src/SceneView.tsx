@@ -50,7 +50,7 @@ export function SceneView<
   options,
   clearOptions,
 }: Props<State, ScreenOptions>) {
-  const navigatorKeyRef = React.useRef<string | undefined>();
+  const navigatorKeyRef = React.useRef<string | undefined>(undefined);
   const getKey = React.useCallback(() => navigatorKeyRef.current, []);
 
   const { addOptionsGetter } = useOptionsGetters({

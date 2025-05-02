@@ -18,7 +18,7 @@ type Options = LinkingOptions<ParamListBase>;
 const linkingHandlers: symbol[] = [];
 
 export function useLinking(
-  ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
+  ref: React.RefObject<NavigationContainerRef<ParamListBase> | null>,
   {
     enabled = true,
     prefixes,

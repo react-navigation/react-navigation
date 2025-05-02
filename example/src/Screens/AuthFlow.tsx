@@ -130,8 +130,8 @@ type Action =
   | { type: 'SIGN_OUT' };
 
 export function AuthFlow() {
-  const [state, dispatch] = React.useReducer<React.Reducer<State, Action>>(
-    (prevState, action) => {
+  const [state, dispatch] = React.useReducer(
+    (prevState: State, action: Action) => {
       switch (action.type) {
         case 'RESTORE_TOKEN':
           return {
