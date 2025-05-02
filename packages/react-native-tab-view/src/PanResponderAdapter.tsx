@@ -3,12 +3,13 @@ import {
   Animated,
   type GestureResponderEvent,
   Keyboard,
+  type NativeSyntheticEvent,
   PanResponder,
   type PanResponderGestureState,
   StyleSheet,
   View,
 } from 'react-native';
-import type { NativeProps } from 'react-native-pager-view/lib/typescript/specs/PagerViewNativeComponent';
+import type ViewPager from 'react-native-pager-view';
 import useLatestCallback from 'use-latest-callback';
 
 import type {
@@ -25,7 +26,7 @@ type Props<T extends Route> = PagerProps & {
   layout: Layout;
   onIndexChange: (index: number) => void;
   navigationState: NavigationState<T>;
-  onPageSelected?: NativeProps['onPageSelected'];
+  onPageSelected?: React.ComponentProps<ViewPager>['onPageSelected'];
   children: (
     props: EventEmitterProps & {
       // Animated value which represents the state of current index
@@ -63,6 +64,7 @@ export function PanResponderAdapter<T extends Route>({
   style,
   animationEnabled = false,
   layoutDirection = 'ltr',
+  onPageSelected,
 }: Props<T>) {
   const { routes, index } = navigationState;
 
@@ -73,12 +75,24 @@ export function PanResponderAdapter<T extends Route>({
   const navigationStateRef = React.useRef(navigationState);
   const layoutRef = React.useRef(layout);
   const onIndexChangeRef = React.useRef(onIndexChange);
+  const onPageSelectedRef = React.useRef(onPageSelected);
 
   const currentIndexRef = React.useRef(index);
   const pendingIndexRef = React.useRef<number>();
 
   const swipeVelocityThreshold = 0.15;
   const swipeDistanceThreshold = layout.width / 1.75;
+
+  const triggerPageSelected = useLatestCallback((index: number) => {
+    if (onPageSelectedRef.current) {
+      const event = {
+        nativeEvent: {
+          position: index,
+        },
+      } as NativeSyntheticEvent<{ position: number }>;
+      onPageSelectedRef.current(event);
+    }
+  });
 
   const jumpToIndex = useLatestCallback(
     (index: number, animate = animationEnabled) => {
@@ -97,6 +111,7 @@ export function PanResponderAdapter<T extends Route>({
           if (finished) {
             onIndexChangeRef.current(index);
             pendingIndexRef.current = undefined;
+            triggerPageSelected(index);
           }
         });
         pendingIndexRef.current = index;
@@ -104,6 +119,7 @@ export function PanResponderAdapter<T extends Route>({
         panX.setValue(offset);
         onIndexChangeRef.current(index);
         pendingIndexRef.current = undefined;
+        triggerPageSelected(index);
       }
     }
   );
@@ -112,6 +128,7 @@ export function PanResponderAdapter<T extends Route>({
     navigationStateRef.current = navigationState;
     layoutRef.current = layout;
     onIndexChangeRef.current = onIndexChange;
+    onPageSelectedRef.current = onPageSelected;
   });
 
   React.useEffect(() => {
