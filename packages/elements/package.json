@@ -53,7 +53,7 @@
     "del-cli": "^6.0.0",
     "react": "19.0.0",
     "react-native": "0.79.2",
-    "react-native-builder-bob": "^0.40.7",
+    "react-native-builder-bob": "^0.40.9",
     "react-test-renderer": "19.0.0",
     "typescript": "^5.8.3"
   },
