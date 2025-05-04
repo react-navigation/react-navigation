@@ -59,7 +59,7 @@
   },
   "peerDependencies": {
     "react": ">= 18.2.0",
-    "react-native": "0.79.2",
+    "react-native": "*",
     "react-native-pager-view": ">= 6.0.0"
   },
   "react-native-builder-bob": {
