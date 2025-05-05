@@ -18,8 +18,8 @@ const AnimatedViewPager = Animated.createAnimatedComponent(ViewPager);
 
 type Props<T extends Route> = PagerProps & {
   onIndexChange: (index: number) => void;
+  onTabSelect?: (index: number) => void;
   navigationState: NavigationState<T>;
-  onPageSelected?: React.ComponentProps<typeof ViewPager>['onPageSelected'];
   children: (
     props: EventEmitterProps & {
       // Animated value which represents the state of current index
@@ -42,12 +42,12 @@ export function PagerViewAdapter<T extends Route>({
   swipeEnabled = true,
   navigationState,
   onIndexChange,
+  onTabSelect,
   onSwipeStart,
   onSwipeEnd,
   children,
   style,
   animationEnabled,
-  onPageSelected,
   ...rest
 }: Props<T>) {
   const { index } = navigationState;
@@ -167,7 +167,7 @@ export function PagerViewAdapter<T extends Route>({
           const index = e.nativeEvent.position;
           indexRef.current = index;
           onIndexChange(index);
-          onPageSelected?.(e);
+          onTabSelect?.(index);
         }}
         onPageScrollStateChanged={onPageScrollStateChanged}
         scrollEnabled={swipeEnabled}

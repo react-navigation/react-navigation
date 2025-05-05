@@ -8,7 +8,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-import type ViewPager from 'react-native-pager-view';
 
 import { Pager } from './Pager';
 import { SceneView } from './SceneView';
@@ -25,7 +24,7 @@ import type {
 
 export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   onIndexChange: (index: number) => void;
-  onTabSelect?: React.ComponentProps<typeof ViewPager>['onPageSelected'];
+  onTabSelect?: (index: number) => void;
   navigationState: NavigationState<T>;
   renderLazyPlaceholder?: (props: { route: T }) => React.ReactNode;
   renderTabBar?: (
@@ -127,7 +126,7 @@ export function TabView<T extends Route>({
         onSwipeStart={onSwipeStart}
         onSwipeEnd={onSwipeEnd}
         onIndexChange={jumpToIndex}
-        onPageSelected={onTabSelect}
+        onTabSelect={onTabSelect}
         animationEnabled={animationEnabled}
         overScrollMode={overScrollMode}
         style={pagerStyle}
