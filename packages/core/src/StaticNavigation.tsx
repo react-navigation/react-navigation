@@ -428,7 +428,7 @@ export function createComponentForStaticNavigation(
             }
 
             return (
-              <Group navigationKey={key} {...group} key={key}>
+              <Group key={key} navigationKey={key} {...group}>
                 {children}
               </Group>
             );

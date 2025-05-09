@@ -520,7 +520,6 @@ export function TabBar<T extends Route>({
 
       const props = {
         ...rest,
-        key: route.key,
         position,
         route,
         navigationState,
@@ -538,15 +537,15 @@ export function TabBar<T extends Route>({
         style: tabStyle,
         defaultTabWidth,
         android_ripple,
-      } satisfies TabBarItemProps<T> & { key: string };
+      } satisfies TabBarItemProps<T>;
 
       return (
         <>
           {gap > 0 && index > 0 ? <Separator width={gap} /> : null}
           {renderTabBarItem ? (
-            renderTabBarItem(props)
+            renderTabBarItem({ key: route.key, ...props })
           ) : (
-            <TabBarItem {...props} key={props.key} />
+            <TabBarItem key={route.key} {...props} />
           )}
         </>
       );
