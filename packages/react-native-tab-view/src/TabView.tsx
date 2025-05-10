@@ -42,6 +42,7 @@ export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   renderScene: (props: SceneRendererProps & { route: T }) => React.ReactNode;
   options?: Record<string, TabDescriptor<T>>;
   commonOptions?: TabDescriptor<T>;
+  useNativeDriver?: boolean;
 };
 
 const renderLazyPlaceholderDefault = () => null;
@@ -68,6 +69,7 @@ export function TabView<T extends Route>({
   overScrollMode,
   options: sceneOptions,
   commonOptions,
+  useNativeDriver,
 }: Props<T>) {
   if (
     Platform.OS !== 'web' &&
@@ -128,6 +130,7 @@ export function TabView<T extends Route>({
         overScrollMode={overScrollMode}
         style={pagerStyle}
         layoutDirection={direction}
+        useNativeDriver={useNativeDriver ?? true}
       >
         {({ position, render, addEnterListener, jumpTo }) => {
           // All the props here must not change between re-renders

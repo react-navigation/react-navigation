@@ -37,6 +37,8 @@ type Props<T extends Route> = PagerProps & {
       jumpTo: (key: string) => void;
     }
   ) => React.ReactElement;
+  // On web, this prop has no effect.
+  useNativeDriver?: boolean;
 };
 
 const DEAD_ZONE = 12;
