@@ -411,6 +411,7 @@ export const BaseNavigationContainer = React.forwardRef(
         } was not handled by any navigator.`;
 
         switch (action.type) {
+          case 'PRELOAD':
           case 'NAVIGATE':
           case 'PUSH':
           case 'REPLACE':
