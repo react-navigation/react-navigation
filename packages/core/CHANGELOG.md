@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.9.1...@react-navigation/core@7.9.2) (2025-05-11)
+
+### Bug Fixes
+
+* add PRELOAD to unhandled error message ([bfa7ac1](https://github.com/react-navigation/react-navigation/commit/bfa7ac121424d24fb80c3d422db2e1771d28cde6)) - by @satya164
+
 ## [7.9.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.9.0...@react-navigation/core@7.9.1) (2025-05-04)
 
 **Note:** Version bump only for package @react-navigation/core

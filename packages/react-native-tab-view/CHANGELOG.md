@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.1.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.12...react-native-tab-view@4.1.0) (2025-05-11)
+
+### Features
+
+* add `onTabSelect` prop to tab view to detect when tab has finished switching  ([#12563](https://github.com/react-navigation/react-navigation/issues/12563)) ([5fd7046](https://github.com/react-navigation/react-navigation/commit/5fd7046af7f838d560f72f9335d3a88e1aece9b2)) - by @ikevin127
+
 ## [4.0.12](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.11...react-native-tab-view@4.0.12) (2025-05-04)
 
 ### Bug Fixes
