@@ -24,6 +24,7 @@ import type {
 
 export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   onIndexChange: (index: number) => void;
+  onTabSelect?: (props: { index: number }) => void;
   navigationState: NavigationState<T>;
   renderLazyPlaceholder?: (props: { route: T }) => React.ReactNode;
   renderTabBar?: (
@@ -48,6 +49,7 @@ const renderLazyPlaceholderDefault = () => null;
 
 export function TabView<T extends Route>({
   onIndexChange,
+  onTabSelect,
   navigationState,
   renderScene,
   initialLayout,
@@ -124,6 +126,7 @@ export function TabView<T extends Route>({
         onSwipeStart={onSwipeStart}
         onSwipeEnd={onSwipeEnd}
         onIndexChange={jumpToIndex}
+        onTabSelect={onTabSelect}
         animationEnabled={animationEnabled}
         overScrollMode={overScrollMode}
         style={pagerStyle}
