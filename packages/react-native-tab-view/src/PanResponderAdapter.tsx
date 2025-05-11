@@ -24,7 +24,7 @@ import { useAnimatedValue } from './useAnimatedValue';
 type Props<T extends Route> = PagerProps & {
   layout: Layout;
   onIndexChange: (index: number) => void;
-  onTabSelect?: (index: number) => void;
+  onTabSelect?: (props: { index: number }) => void;
   navigationState: NavigationState<T>;
   children: (
     props: EventEmitterProps & {
@@ -83,7 +83,7 @@ export function PanResponderAdapter<T extends Route>({
 
   const onTabSelectHandler = useLatestCallback((tabIndex = index) => {
     InteractionManager.runAfterInteractions(() => {
-      onTabSelectRef.current?.(tabIndex);
+      onTabSelectRef.current?.({ index: tabIndex });
     });
   });
 

@@ -1,17 +1,16 @@
-import { afterAll, describe, expect, jest, test } from '@jest/globals';
-import { fireEvent, render } from '@testing-library/react-native';
-import React from 'react';
-import { type GestureResponderEvent, View } from 'react-native';
+import { beforeEach, describe, expect, jest, test } from '@jest/globals';
+import { act, render, userEvent } from '@testing-library/react-native';
+import * as React from 'react';
+import { Platform, View } from 'react-native';
 
 import { SceneMap, TabView } from '../index';
 
-jest.mock('../Pager', () => {
-  return jest.requireActual('../Pager');
-});
+jest.useFakeTimers();
 
 jest.mock('react-native-pager-view', () => {
   const React = require('react');
   const { View } = require('react-native');
+
   return class MockViewPager extends React.Component {
     // eslint-disable-next-line @eslint-react/no-unused-class-component-members
     setPage = (index: number) => {
@@ -35,6 +34,14 @@ jest.mock('react-native-pager-view', () => {
   };
 });
 
+jest.mock('../Pager', () => {
+  const Platform = require('react-native').Platform;
+
+  return Platform.OS === 'web'
+    ? jest.requireActual('../Pager.tsx')
+    : jest.requireActual('../Pager.ios.tsx');
+});
+
 const FirstRoute = () => (
   <View style={{ flex: 1, backgroundColor: '#ff4081' }} testID={'route1'} />
 );
@@ -48,9 +55,11 @@ const renderScene = SceneMap({
   second: SecondRoute,
 });
 
-const onTabSelectMock = jest.fn();
-
-const ComponentWithTabView = () => {
+const Test = ({
+  onTabSelect,
+}: {
+  onTabSelect?: (props: { index: number }) => void;
+}) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: 'first', title: 'First' },
@@ -62,75 +71,60 @@ const ComponentWithTabView = () => {
       navigationState={{ index, routes }}
       renderScene={renderScene}
       onIndexChange={setIndex}
-      onTabSelect={onTabSelectMock}
+      onTabSelect={onTabSelect}
     />
   );
 };
 
-describe.each([{ type: 'native' }, { type: 'js' }])(
+describe.each([{ type: 'ios' as const }, { type: 'web' as const }])(
   '$type implementation',
   ({ type }) => {
-    if (type === 'native') {
-      jest.mock('react-native-pager-view', () => {
-        const React = require('react');
-        const { View } = require('react-native');
-        return class MockViewPager extends React.Component {
-          // eslint-disable-next-line @eslint-react/no-unused-class-component-members
-          setPage = (index: number) => {
-            if (this.props.onPageSelected) {
-              this.props.onPageSelected({
-                nativeEvent: { position: index },
-              });
-            }
-          };
-          // eslint-disable-next-line @eslint-react/no-unused-class-component-members
-          setPageWithoutAnimation = (index: number) => {
-            if (this.props.onPageSelected) {
-              this.props.onPageSelected({
-                nativeEvent: { position: index },
-              });
-            }
-          };
-          render() {
-            return <View>{this.props.children}</View>;
-          }
-        };
-      });
-    } else {
-      const mockPager = jest.requireActual('../Pager.tsx');
-      jest.mock('../Pager', () => mockPager);
-    }
-
-    afterAll(() => {
+    beforeEach(() => {
       jest.restoreAllMocks();
+      jest.replaceProperty(Platform, 'OS', type);
     });
 
     test('renders using the scene for the initial index', () => {
-      const { getByTestId, queryByTestId } = render(<ComponentWithTabView />);
+      const { getByTestId, queryByTestId } = render(<Test />);
+
+      act(() => jest.runAllTimers());
 
       expect(getByTestId('route1')).toBeTruthy();
       expect(queryByTestId('route2')).toBeNull();
     });
 
-    test('switches tabs when the tab header for another route is pressed', () => {
-      const { getByTestId, getByLabelText } = render(<ComponentWithTabView />);
+    test('switches tabs on tab press in the tab bar', async () => {
+      const user = userEvent.setup();
+
+      const { getByTestId, getByLabelText } = render(<Test />);
+
+      act(() => jest.runAllTimers());
 
       expect(getByTestId('route1')).toBeTruthy();
 
-      fireEvent.press(getByLabelText('Second'), {} as GestureResponderEvent);
+      await user.press(getByLabelText('Second'));
+
+      act(() => jest.runAllTimers());
+
       expect(getByTestId('route2')).toBeTruthy();
     });
 
-    test('calls onTabSelect when Second tab is selected', () => {
-      const { getByLabelText } = render(<ComponentWithTabView />);
+    test('calls onTabSelect when tab is selected', async () => {
+      const user = userEvent.setup();
+      const onTabSelect = jest.fn();
 
-      onTabSelectMock.mockReset();
-      expect(onTabSelectMock).not.toHaveBeenCalled();
+      const { getByLabelText } = render(<Test onTabSelect={onTabSelect} />);
 
-      fireEvent.press(getByLabelText('Second'), {} as GestureResponderEvent);
+      act(() => jest.runAllTimers());
 
-      expect(onTabSelectMock).toHaveBeenCalledTimes(1);
-      expect(onTabSelectMock).toHaveBeenCalledWith(1);
+      expect(onTabSelect).not.toHaveBeenCalled();
+
+      await user.press(getByLabelText('Second'));
+
+      act(() => jest.runAllTimers());
+
+      expect(onTabSelect).toHaveBeenCalledTimes(1);
+      expect(onTabSelect).toHaveBeenCalledWith({ index: 1 });
     });
   }
 );
