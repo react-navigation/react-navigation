@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   Animated,
   type GestureResponderEvent,
-  InteractionManager,
   Keyboard,
   PanResponder,
   type PanResponderGestureState,
@@ -81,12 +80,6 @@ export function PanResponderAdapter<T extends Route>({
   const swipeVelocityThreshold = 0.15;
   const swipeDistanceThreshold = layout.width / 1.75;
 
-  const onTabSelectHandler = useLatestCallback((tabIndex = index) => {
-    InteractionManager.runAfterInteractions(() => {
-      onTabSelectRef.current?.({ index: tabIndex });
-    });
-  });
-
   const jumpToIndex = useLatestCallback(
     (index: number, animate = animationEnabled) => {
       const offset = -index * layoutRef.current.width;
@@ -103,7 +96,7 @@ export function PanResponderAdapter<T extends Route>({
         ]).start(({ finished }) => {
           if (finished) {
             onIndexChangeRef.current(index);
-            onTabSelectHandler(index);
+            onTabSelectRef.current?.({ index });
             pendingIndexRef.current = undefined;
           }
         });
@@ -111,7 +104,7 @@ export function PanResponderAdapter<T extends Route>({
       } else {
         panX.setValue(offset);
         onIndexChangeRef.current(index);
-        onTabSelectHandler(index);
+        onTabSelectRef.current?.({ index });
         pendingIndexRef.current = undefined;
       }
     }
@@ -128,8 +121,7 @@ export function PanResponderAdapter<T extends Route>({
     const offset = -navigationStateRef.current.index * layout.width;
 
     panX.setValue(offset);
-    onTabSelectHandler();
-  }, [layout.width, panX, onTabSelectHandler]);
+  }, [layout.width, panX]);
 
   React.useEffect(() => {
     if (keyboardDismissMode === 'auto') {
