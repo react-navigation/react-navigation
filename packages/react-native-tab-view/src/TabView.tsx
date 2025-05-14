@@ -78,7 +78,7 @@ export function TabView<T extends Route>({
     console.warn(
       `The 'direction' prop is set to '${direction}' but the effective value is '${
         I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'
-      }'. This is not supported. Please use I18nManager.forceRTL to change the layout direction.`
+      }'. This is not supported. Make sure to match the 'direction' prop with the writing direction of the app.`
     );
   }
 

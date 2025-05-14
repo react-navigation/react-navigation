@@ -156,12 +156,6 @@ export function useHeaderConfigProps({
   const hasHeaderSearchBar =
     supportsHeaderSearchBar && headerSearchBarOptions != null;
 
-  if (headerSearchBarOptions != null && !supportsHeaderSearchBar) {
-    throw new Error(
-      `The current version of 'react-native-screens' doesn't support SearchBar in the header. Please update to the latest version to use this option.`
-    );
-  }
-
   /**
    * We need to set this in if:
    * - Back button should stay visible when `headerLeft` is specified
