@@ -41,6 +41,7 @@ export function Overlay({
         style={styles.pressable}
         role="button"
         aria-label={accessibilityLabel}
+        accessible
       />
     </Animated.View>
   );
