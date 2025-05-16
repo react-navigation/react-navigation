@@ -1,7 +1,8 @@
 appId: ${APP_ID}
 name: Drawer View
 ---
+- clearState: ${APP_ID}
 - openLink:
-    link: exp://127.0.0.1:8081/--/drawer-view
+    link: ${APP_SCHEME}/drawer-view
 - assertVisible:
     text: 'Drawer Layout'
