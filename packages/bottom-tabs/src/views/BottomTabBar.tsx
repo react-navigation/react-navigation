@@ -304,7 +304,7 @@ export function BottomTabBar({
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
-  const {transform = [], ...restTabBarStyle} = (tabBarStyle ?? {}) as ViewStyle;
+  const { transform = [], ...restTabBarStyle } = (tabBarStyle ?? {}) as ViewStyle;
 
   return (
     <Animated.View
