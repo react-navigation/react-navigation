@@ -304,6 +304,8 @@ export function BottomTabBar({
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
+  const {transform = [], ...restTabBarStyle} = (tabBarStyle as ViewStyle);
+
   return (
     <Animated.View
       style={[
@@ -335,19 +337,22 @@ export function BottomTabBar({
           borderColor: colors.border,
         },
         sidebar
-          ? {
-              paddingTop:
-                (hasHorizontalLabels ? spacing : spacing / 2) + insets.top,
-              paddingBottom:
-                (hasHorizontalLabels ? spacing : spacing / 2) + insets.bottom,
-              paddingStart:
-                spacing + (tabBarPosition === 'left' ? insets.left : 0),
-              paddingEnd:
-                spacing + (tabBarPosition === 'right' ? insets.right : 0),
-              minWidth: hasHorizontalLabels
-                ? getDefaultSidebarWidth(dimensions)
-                : 0,
-            }
+          ? [
+              {
+                paddingTop:
+                  (hasHorizontalLabels ? spacing : spacing / 2) + insets.top,
+                paddingBottom:
+                  (hasHorizontalLabels ? spacing : spacing / 2) + insets.bottom,
+                paddingStart:
+                  spacing + (tabBarPosition === 'left' ? insets.left : 0),
+                paddingEnd:
+                  spacing + (tabBarPosition === 'right' ? insets.right : 0),
+                minWidth: hasHorizontalLabels
+                  ? getDefaultSidebarWidth(dimensions)
+                  : 0,
+              },
+              tabBarStyle,
+            ]
           : [
               {
                 transform: [
@@ -362,6 +367,7 @@ export function BottomTabBar({
                       ],
                     }),
                   },
+                  ...(transform as []),
                 ],
                 // Absolutely position the tab bar so that the content is below it
                 // This is needed to avoid gap at bottom when the tab bar is hidden
@@ -373,8 +379,8 @@ export function BottomTabBar({
                 paddingTop: tabBarPosition === 'top' ? insets.top : 0,
                 paddingHorizontal: Math.max(insets.left, insets.right),
               },
+              restTabBarStyle,
             ],
-        tabBarStyle,
       ]}
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
       onLayout={sidebar ? undefined : handleLayout}
