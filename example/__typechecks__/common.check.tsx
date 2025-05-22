@@ -92,7 +92,11 @@ export const PostDetailsScreen = ({
 
   expectTypeOf(navigation.setParams)
     .parameter(0)
-    .toMatchObjectType<{ id?: string }>();
+    .toEqualTypeOf<{ id?: string; section?: string }>();
+
+  expectTypeOf(navigation.replaceParams)
+    .parameter(0)
+    .toEqualTypeOf<{ id: string; section?: string }>();
 
   expectTypeOf(navigation.push)
     .parameter(0)
@@ -142,7 +146,7 @@ export const FeedScreen = ({
 
   expectTypeOf(navigation.setOptions)
     .parameter(0)
-    .toMatchTypeOf<Partial<DrawerNavigationOptions>>();
+    .toEqualTypeOf<Partial<DrawerNavigationOptions>>();
 
   expectTypeOf(navigation.addListener)
     .parameter(0)

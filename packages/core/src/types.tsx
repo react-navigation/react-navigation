@@ -392,21 +392,40 @@ type NavigationHelpersCommon<
   setStateForNextRouteNamesChange(state: PartialState<State> | State): void;
 } & PrivateValueStore<[ParamList, unknown, unknown]>;
 
+type NavigationHelpersRoute<
+  ParamList extends {},
+  RouteName extends keyof ParamList = Keyof<ParamList>,
+> = {
+  /**
+   * Update the param object for the route.
+   * The new params will be shallow merged with the old one.
+   *
+   * @param params Partial params object for the current route.
+   */
+  setParams(
+    params: ParamList[RouteName] extends undefined
+      ? undefined
+      : Partial<ParamList[RouteName]>
+  ): void;
+
+  /**
+   * Replace the param object for the route
+   *
+   * @param params Params object for the current route.
+   */
+  replaceParams(
+    params: ParamList[RouteName] extends undefined
+      ? undefined
+      : ParamList[RouteName]
+  ): void;
+};
+
 export type NavigationHelpers<
   ParamList extends ParamListBase,
   EventMap extends EventMapBase = {},
 > = NavigationHelpersCommon<ParamList> &
-  EventEmitter<EventMap> & {
-    /**
-     * Update the param object for the route.
-     * The new params will be shallow merged with the old one.
-     *
-     * @param params Params object for the current route.
-     */
-    setParams<RouteName extends keyof ParamList>(
-      params: Partial<ParamList[RouteName]>
-    ): void;
-  };
+  EventEmitter<EventMap> &
+  NavigationHelpersRoute<ParamList, keyof ParamList>;
 
 export type NavigationContainerProps = {
   /**
@@ -463,25 +482,14 @@ export type NavigationProp<
   getParent<T = NavigationProp<ParamListBase> | undefined>(id?: NavigatorID): T;
 
   /**
-   * Update the param object for the route.
-   * The new params will be shallow merged with the old one.
-   *
-   * @param params Params object for the current route.
-   */
-  setParams(
-    params: ParamList[RouteName] extends undefined
-      ? undefined
-      : Partial<ParamList[RouteName]>
-  ): void;
-
-  /**
    * Update the options for the route.
    * The options object will be shallow merged with default options object.
    *
    * @param update Options object or a callback which takes the options from navigator config and returns a new options object.
    */
   setOptions(options: Partial<ScreenOptions>): void;
-} & EventConsumer<EventMap & EventMapCore<State>> &
+} & NavigationHelpersRoute<ParamList, RouteName> &
+  EventConsumer<EventMap & EventMapCore<State>> &
   PrivateValueStore<[ParamList, RouteName, EventMap]>;
 
 export type RouteProp<

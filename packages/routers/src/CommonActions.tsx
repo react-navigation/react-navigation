@@ -51,6 +51,13 @@ type SetParamsAction = {
   target?: string;
 };
 
+type ReplaceParamsAction = {
+  type: 'REPLACE_PARAMS';
+  payload: { params?: object };
+  source?: string;
+  target?: string;
+};
+
 type PreloadAction = {
   type: 'PRELOAD';
   payload: {
@@ -67,6 +74,7 @@ export type Action =
   | NavigateDeprecatedAction
   | ResetAction
   | SetParamsAction
+  | ReplaceParamsAction
   | PreloadAction;
 
 export function goBack(): Action {
@@ -152,6 +160,10 @@ export function reset(state: ResetState | undefined): Action {
 
 export function setParams(params: object): Action {
   return { type: 'SET_PARAMS', payload: { params } };
+}
+
+export function replaceParams(params: object): Action {
+  return { type: 'REPLACE_PARAMS', payload: { params } };
 }
 
 export function preload(name: string, params?: object): Action {
