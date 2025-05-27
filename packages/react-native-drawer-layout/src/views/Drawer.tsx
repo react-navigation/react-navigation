@@ -110,7 +110,7 @@ export function Drawer({
         {
           width: drawerWidth,
           position: drawerType === 'permanent' ? 'relative' : 'absolute',
-          zIndex: drawerType === 'back' ? -1 : 0,
+          zIndex: drawerType === 'back' ? -1 : 1,
         },
         drawerAnimatedStyle,
         drawerStyle,
