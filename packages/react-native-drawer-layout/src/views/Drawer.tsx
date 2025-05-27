@@ -102,23 +102,29 @@ export function Drawer({
         }
       : null;
 
+  const maybeRenderDrawer = () => (
+    <View
+      ref={drawerRef}
+      style={[
+        styles.drawer,
+        {
+          width: drawerWidth,
+          position: drawerType === 'permanent' ? 'relative' : 'absolute',
+          zIndex: drawerType === 'back' ? -1 : 0,
+        },
+        drawerAnimatedStyle,
+        drawerStyle,
+      ]}
+    >
+      {renderDrawerContent()}
+    </View>
+  );
+
   return (
-    <View style={[styles.container, style]}>
-      <DrawerProgressContext.Provider value={progress}>
-        <View
-          style={[
-            styles.main,
-            {
-              flexDirection:
-                drawerType === 'permanent'
-                  ? (isRight && direction === 'ltr') ||
-                    (!isRight && direction === 'rtl')
-                    ? 'row'
-                    : 'row-reverse'
-                  : 'row',
-            },
-          ]}
-        >
+    <DrawerProgressContext.Provider value={progress}>
+      <View style={[styles.container, style]}>
+        {!isRight && maybeRenderDrawer()}
+        <View style={[styles.main]}>
           <View style={[styles.content, contentAnimatedStyle]}>
             <View
               aria-hidden={isOpen && drawerType !== 'permanent'}
@@ -136,30 +142,17 @@ export function Drawer({
               />
             ) : null}
           </View>
-          <View
-            ref={drawerRef}
-            style={[
-              styles.drawer,
-              {
-                width: drawerWidth,
-                position: drawerType === 'permanent' ? 'relative' : 'absolute',
-                zIndex: drawerType === 'back' ? -1 : 0,
-              },
-              drawerAnimatedStyle,
-              drawerStyle,
-            ]}
-          >
-            {renderDrawerContent()}
-          </View>
         </View>
-      </DrawerProgressContext.Provider>
-    </View>
+        {isRight && maybeRenderDrawer()}
+      </View>
+    </DrawerProgressContext.Provider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'row',
   },
   drawer: {
     top: 0,
@@ -172,5 +165,6 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
+    flexDirection: 'row',
   },
 });
