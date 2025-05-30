@@ -102,64 +102,62 @@ export function Drawer({
         }
       : null;
 
-  return (
-    <View style={[styles.container, style]}>
-      <DrawerProgressContext.Provider value={progress}>
-        <View
-          style={[
-            styles.main,
-            {
-              flexDirection:
-                drawerType === 'permanent'
-                  ? (isRight && direction === 'ltr') ||
-                    (!isRight && direction === 'rtl')
-                    ? 'row'
-                    : 'row-reverse'
-                  : 'row',
-            },
-          ]}
-        >
-          <View style={[styles.content, contentAnimatedStyle]}>
-            <View
-              aria-hidden={isOpen && drawerType !== 'permanent'}
-              style={styles.content}
-            >
-              {children}
-            </View>
-            {drawerType !== 'permanent' ? (
-              <Overlay
-                open={open}
-                progress={progress}
-                onPress={() => onClose()}
-                style={overlayStyle}
-                accessibilityLabel={overlayAccessibilityLabel}
-              />
-            ) : null}
-          </View>
-          <View
-            ref={drawerRef}
-            style={[
-              styles.drawer,
-              {
-                width: drawerWidth,
-                position: drawerType === 'permanent' ? 'relative' : 'absolute',
-                zIndex: drawerType === 'back' ? -1 : 0,
-              },
-              drawerAnimatedStyle,
-              drawerStyle,
-            ]}
-          >
-            {renderDrawerContent()}
-          </View>
-        </View>
-      </DrawerProgressContext.Provider>
+  const drawerElement = (
+    <View
+      key="drawer"
+      ref={drawerRef}
+      style={[
+        styles.drawer,
+        {
+          width: drawerWidth,
+          position: drawerType === 'permanent' ? 'relative' : 'absolute',
+          zIndex: drawerType === 'back' ? -1 : 1,
+        },
+        drawerAnimatedStyle,
+        drawerStyle,
+      ]}
+    >
+      {renderDrawerContent()}
     </View>
+  );
+
+  const mainContent = (
+    <View key="main" style={styles.main}>
+      <View style={[styles.content, contentAnimatedStyle]}>
+        <View
+          aria-hidden={isOpen && drawerType !== 'permanent'}
+          style={styles.content}
+        >
+          {children}
+        </View>
+        {drawerType !== 'permanent' ? (
+          <Overlay
+            open={open}
+            progress={progress}
+            onPress={() => onClose()}
+            style={overlayStyle}
+            accessibilityLabel={overlayAccessibilityLabel}
+          />
+        ) : null}
+      </View>
+    </View>
+  );
+
+  return (
+    <DrawerProgressContext.Provider value={progress}>
+      <View style={[styles.container, style]}>
+        {!isRight && drawerElement}
+        {mainContent}
+        {isRight && drawerElement}
+      </View>
+    </DrawerProgressContext.Provider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'row',
   },
   drawer: {
     top: 0,
@@ -172,5 +170,6 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
+    flexDirection: 'row',
   },
 });
