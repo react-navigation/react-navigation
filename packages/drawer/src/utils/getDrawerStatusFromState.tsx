@@ -13,7 +13,7 @@ export function getDrawerStatusFromState(
     );
   }
 
-  const entry = state.history.find((it) => it.type === 'drawer') as
+  const entry = state.history.findLast((it) => it.type === 'drawer') as
     | { type: 'drawer'; status: DrawerStatus }
     | undefined;
 

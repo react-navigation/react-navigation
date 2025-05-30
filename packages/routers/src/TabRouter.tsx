@@ -19,13 +19,23 @@ export type TabActionType = {
 };
 
 export type BackBehavior =
-  | 'initialRoute'
   | 'firstRoute'
-  | 'history'
+  | 'initialRoute'
   | 'order'
+  | 'history'
+  | 'fullHistory'
   | 'none';
 
 export type TabRouterOptions = DefaultRouterOptions & {
+  /**
+   * Control how going back should behave
+   * - `firstRoute` - return to the first defined route
+   * - `initialRoute` - return to the route from `initialRouteName`
+   * - `order` - return to the route defined before the focused route
+   * - `history` - return to last visited route; if the same route is visited multiple times, the older entries are dropped from the history
+   * - `fullHistory` - return to last visited route; doesn't drop duplicate entries unlike `history` - matches behavior of web pages
+   * - `none` - do not handle going back
+   */
   backBehavior?: BackBehavior;
 };
 
@@ -108,6 +118,7 @@ const getRouteHistory = (
       }
       break;
     case 'history':
+    case 'fullHistory':
       // The history will fill up on navigation
       break;
   }
@@ -121,14 +132,36 @@ const changeIndex = (
   backBehavior: BackBehavior,
   initialRouteName: string | undefined
 ) => {
-  let history;
+  let history = state.history;
 
-  if (backBehavior === 'history') {
-    const currentKey = state.routes[index].key;
+  if (backBehavior === 'history' || backBehavior === 'fullHistory') {
+    const currentRouteKey = state.routes[index].key;
 
-    history = state.history
-      .filter((it) => (it.type === 'route' ? it.key !== currentKey : false))
-      .concat({ type: TYPE_ROUTE, key: currentKey });
+    if (backBehavior === 'history') {
+      // Remove the existing key from the history to de-duplicate it
+      history = history.filter((it) =>
+        it.type === 'route' ? it.key !== currentRouteKey : false
+      );
+    } else if (backBehavior === 'fullHistory') {
+      const lastHistoryRouteItemIndex = history.findLastIndex(
+        (item) => item.type === 'route'
+      );
+
+      if (currentRouteKey === history[lastHistoryRouteItemIndex]?.key) {
+        // For full-history, only remove if it matches the last route
+        // Useful for drawer, if current route was in history, then drawer state changed
+        // Then we only need to move the route to the front
+        history = [
+          ...history.slice(0, lastHistoryRouteItemIndex),
+          ...history.slice(lastHistoryRouteItemIndex + 1),
+        ];
+      }
+    }
+
+    history = history.concat({
+      type: TYPE_ROUTE,
+      key: currentRouteKey,
+    });
   } else {
     history = getRouteHistory(
       state.routes,
@@ -389,7 +422,7 @@ export function TabRouter({
           }
 
           const previousKey = state.history[state.history.length - 2]?.key;
-          const index = state.routes.findIndex(
+          const index = state.routes.findLastIndex(
             (route) => route.key === previousKey
           );
 
@@ -411,9 +444,11 @@ export function TabRouter({
           const routeIndex = state.routes.findIndex(
             (route) => route.name === action.payload.name
           );
+
           if (routeIndex === -1) {
             return null;
           }
+
           const route = state.routes[routeIndex];
 
           const getId = routeGetIdList[route.name];
