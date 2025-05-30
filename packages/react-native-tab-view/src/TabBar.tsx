@@ -10,6 +10,7 @@ import {
   type PressableAndroidRippleConfig,
   type StyleProp,
   StyleSheet,
+  type TextStyle,
   View,
   type ViewStyle,
   type ViewToken,
@@ -39,6 +40,10 @@ export type Props<T extends Route> = SceneRendererProps & {
   bounces?: boolean;
   activeColor?: string;
   inactiveColor?: string;
+  activeFontSize?: number;
+  inactiveFontSize?: number;
+  activeFontWeight?: TextStyle['fontWeight'];
+  inactiveFontWeight?: TextStyle['fontWeight'];
   pressColor?: string;
   pressOpacity?: number;
   options?: Record<string, TabDescriptor<T>>;
@@ -342,6 +347,10 @@ export function TabBar<T extends Route>({
   bounces,
   contentContainerStyle,
   inactiveColor,
+  activeFontSize,
+  inactiveFontSize,
+  activeFontWeight,
+  inactiveFontWeight,
   indicatorContainerStyle,
   indicatorStyle,
   onTabLongPress,
@@ -387,6 +396,8 @@ export function TabBar<T extends Route>({
     routes
       .slice(0, navigationState.index)
       .every((r) => typeof tabWidths[r.key] === 'number');
+
+  const cannotUseNativeDriver = !!activeFontSize || !!inactiveFontSize;
 
   React.useEffect(() => {
     if (isFirst.current) {
@@ -529,6 +540,10 @@ export function TabBar<T extends Route>({
         accessibilityLabel,
         activeColor,
         inactiveColor,
+        activeFontSize,
+        inactiveFontSize,
+        activeFontWeight,
+        inactiveFontWeight,
         pressColor,
         pressOpacity,
         onLayout,
@@ -551,6 +566,10 @@ export function TabBar<T extends Route>({
       );
     },
     [
+      activeFontSize,
+      inactiveFontSize,
+      activeFontWeight,
+      inactiveFontWeight,
       position,
       navigationState,
       options,
@@ -595,9 +614,9 @@ export function TabBar<T extends Route>({
             },
           },
         ],
-        { useNativeDriver }
+        { useNativeDriver: useNativeDriver && !cannotUseNativeDriver }
       ),
-    [scrollAmount]
+    [scrollAmount, cannotUseNativeDriver]
   );
 
   const handleViewableItemsChanged = useLatestCallback(
