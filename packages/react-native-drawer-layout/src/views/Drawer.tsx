@@ -102,8 +102,9 @@ export function Drawer({
         }
       : null;
 
-  const maybeRenderDrawer = () => (
+  const drawerElement = (
     <View
+      key="drawer"
       ref={drawerRef}
       style={[
         styles.drawer,
@@ -120,30 +121,34 @@ export function Drawer({
     </View>
   );
 
+  const mainContent = (
+    <View key="main" style={styles.main}>
+      <View style={[styles.content, contentAnimatedStyle]}>
+        <View
+          aria-hidden={isOpen && drawerType !== 'permanent'}
+          style={styles.content}
+        >
+          {children}
+        </View>
+        {drawerType !== 'permanent' ? (
+          <Overlay
+            open={open}
+            progress={progress}
+            onPress={() => onClose()}
+            style={overlayStyle}
+            accessibilityLabel={overlayAccessibilityLabel}
+          />
+        ) : null}
+      </View>
+    </View>
+  );
+
   return (
     <DrawerProgressContext.Provider value={progress}>
       <View style={[styles.container, style]}>
-        {!isRight && maybeRenderDrawer()}
-        <View style={[styles.main]}>
-          <View style={[styles.content, contentAnimatedStyle]}>
-            <View
-              aria-hidden={isOpen && drawerType !== 'permanent'}
-              style={styles.content}
-            >
-              {children}
-            </View>
-            {drawerType !== 'permanent' ? (
-              <Overlay
-                open={open}
-                progress={progress}
-                onPress={() => onClose()}
-                style={overlayStyle}
-                accessibilityLabel={overlayAccessibilityLabel}
-              />
-            ) : null}
-          </View>
-        </View>
-        {isRight && maybeRenderDrawer()}
+        {!isRight && drawerElement}
+        {mainContent}
+        {isRight && drawerElement}
       </View>
     </DrawerProgressContext.Provider>
   );
