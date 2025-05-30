@@ -65,10 +65,10 @@ export function Drawer({
   const translateX =
     // The drawer stays in place at open position when `drawerType` is `back`
     open || drawerType === 'back'
-      ? 0
-      : drawerPosition === 'left'
-        ? -drawerWidth
-        : drawerWidth;
+      ? drawerPosition === 'left'
+        ? drawerWidth
+        : -drawerWidth
+      : 0;
 
   const drawerAnimatedStyle =
     drawerType !== 'permanent'
@@ -106,7 +106,14 @@ export function Drawer({
           position: drawerType === 'permanent' ? 'relative' : 'absolute',
           zIndex: drawerType === 'back' ? -1 : 1,
         },
-        drawerPosition === 'right' ? { right: 0 } : { left: 0 },
+        drawerType !== 'permanent'
+          ? // Position drawer off-screen by default in closed state
+            // And add a translation only when drawer is open
+            // So changing position in closed state won't trigger a visible transition
+            drawerPosition === 'right'
+            ? { right: -drawerWidth }
+            : { left: -drawerWidth }
+          : null,
         drawerAnimatedStyle,
         drawerStyle,
       ]}
