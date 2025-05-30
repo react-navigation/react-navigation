@@ -425,18 +425,21 @@ export type NativeStackNavigationOptions = {
    * Whether the status bar should be hidden on this screen.
    * Requires setting `View controller-based status bar appearance -> YES` in your Info.plist file.
    *
-   * Only supported on iOS.
+   * Only supported on Android and iOS.
    *
-   * @platform ios
+   * @platform android, ios
    */
   statusBarHidden?: boolean;
   /**
    * Sets the status bar color (similar to the `StatusBar` component).
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
+   * `auto` and `inverted` are supported only on iOS. On Android, they will fallback to `light`.
    *
-   * Only supported on iOS.
+   * Defaults to `auto` on iOS and `light` on Android.
    *
-   * @platform ios
+   * Only supported on Android and iOS.
+   *
+   * @platform android, ios
    */
   statusBarStyle?: ScreenProps['statusBarStyle'];
   /**
