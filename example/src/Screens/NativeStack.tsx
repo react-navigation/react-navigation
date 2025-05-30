@@ -204,7 +204,6 @@ export function NativeStack() {
           headerLargeTitleShadowVisible: false,
         })}
         initialParams={{ author: 'Gandalf' }}
-        getId={({ params }) => params?.author}
       />
       <Stack.Screen
         name="NewsFeed"

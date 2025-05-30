@@ -19,9 +19,8 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
     for (const step of steps) {
       switch (Object.keys(step)[0]) {
         case 'openLink': {
-          await page.goto(
-            step.openLink.link.replace('exp://127.0.0.1:8081/--', '')
-          );
+          // eslint-disable-next-line no-template-curly-in-string
+          await page.goto(step.openLink.link.replace('${APP_SCHEME}/', ''));
           break;
         }
 
@@ -42,6 +41,15 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
               .first()
           ).toBeVisible();
           break;
+        }
+
+        case 'clearState': {
+          // Do nothing for now
+          break;
+        }
+
+        default: {
+          throw new Error(`Unknown command: ${JSON.stringify(step)}`);
         }
       }
     }
