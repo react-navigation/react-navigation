@@ -26,8 +26,10 @@ export function Drawer({
 }: DrawerProps) {
   const windowDimensions = useWindowDimensions();
 
-  const layout = customLayout ?? windowDimensions;
-  const drawerWidth = getDrawerWidth({ layout, drawerStyle });
+  const drawerWidth = getDrawerWidth({
+    layout: customLayout ?? windowDimensions,
+    drawerStyle,
+  });
 
   const progress = useFakeSharedValue(open ? 1 : 0);
 
@@ -60,22 +62,13 @@ export function Drawer({
   const isOpen = drawerType === 'permanent' ? true : open;
   const isRight = drawerPosition === 'right';
 
-  let translateX = 0;
-
-  // The drawer stays in place at open position when `drawerType` is `back`
-  if (open || drawerType === 'back') {
-    if (direction === 'rtl') {
-      translateX = drawerPosition === 'left' ? drawerWidth - layout.width : 0;
-    } else {
-      translateX = drawerPosition === 'left' ? 0 : layout.width - drawerWidth;
-    }
-  } else {
-    if (direction === 'rtl') {
-      translateX = drawerPosition === 'left' ? -layout.width : drawerWidth;
-    } else {
-      translateX = drawerPosition === 'left' ? -drawerWidth : layout.width;
-    }
-  }
+  const translateX =
+    // The drawer stays in place at open position when `drawerType` is `back`
+    open || drawerType === 'back'
+      ? 0
+      : drawerPosition === 'left'
+        ? -drawerWidth
+        : drawerWidth;
 
   const drawerAnimatedStyle =
     drawerType !== 'permanent'
@@ -113,6 +106,7 @@ export function Drawer({
           position: drawerType === 'permanent' ? 'relative' : 'absolute',
           zIndex: drawerType === 'back' ? -1 : 1,
         },
+        drawerPosition === 'right' ? { right: 0 } : { left: 0 },
         drawerAnimatedStyle,
         drawerStyle,
       ]}
@@ -122,24 +116,22 @@ export function Drawer({
   );
 
   const mainContent = (
-    <View key="main" style={styles.main}>
-      <View style={[styles.content, contentAnimatedStyle]}>
-        <View
-          aria-hidden={isOpen && drawerType !== 'permanent'}
-          style={styles.content}
-        >
-          {children}
-        </View>
-        {drawerType !== 'permanent' ? (
-          <Overlay
-            open={open}
-            progress={progress}
-            onPress={() => onClose()}
-            style={overlayStyle}
-            accessibilityLabel={overlayAccessibilityLabel}
-          />
-        ) : null}
+    <View key="content" style={[styles.content, contentAnimatedStyle]}>
+      <View
+        aria-hidden={isOpen && drawerType !== 'permanent'}
+        style={styles.content}
+      >
+        {children}
       </View>
+      {drawerType !== 'permanent' ? (
+        <Overlay
+          open={open}
+          progress={progress}
+          onPress={() => onClose()}
+          style={overlayStyle}
+          accessibilityLabel={overlayAccessibilityLabel}
+        />
+      ) : null}
     </View>
   );
 
@@ -167,9 +159,5 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-  },
-  main: {
-    flex: 1,
-    flexDirection: 'row',
   },
 });
