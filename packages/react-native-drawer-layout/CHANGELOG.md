@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.10](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.9...react-native-drawer-layout@4.1.10) (2025-05-30)
+
+### Bug Fixes
+
+* position drawer offscreen by default on web ([833bfa6](https://github.com/react-navigation/react-navigation/commit/833bfa63004deeb0fd6e17faf6d65ea220ad1527)) - by @
+
 ## [4.1.9](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.8...react-native-drawer-layout@4.1.9) (2025-05-30)
 
 ### Bug Fixes
