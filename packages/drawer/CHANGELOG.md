@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.3.12...@react-navigation/drawer@7.4.0) (2025-05-30)
+
+### Features
+
+* add backBehavior: fullHistory to TabRouter ([e95e8bb](https://github.com/react-navigation/react-navigation/commit/e95e8bbf1f096929c6d443696459bf55af70c9d6)) - by @satya164
+
 ## [7.3.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.3.11...@react-navigation/drawer@7.3.12) (2025-05-11)
 
 **Note:** Version bump only for package @react-navigation/drawer

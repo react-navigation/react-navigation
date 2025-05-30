@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.9](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.8...react-native-drawer-layout@4.1.9) (2025-05-30)
+
+### Bug Fixes
+
+* allow Overlay to be focusable in iOS with Full Keyboard Access enabled ([#12600](https://github.com/react-navigation/react-navigation/issues/12600)) ([e1a6387](https://github.com/react-navigation/react-navigation/commit/e1a6387f420631e57a6736ac0ed67a1f434d554b)) - by @ckknight
+* fix drawer tab order on web for better accessibility ([#12616](https://github.com/react-navigation/react-navigation/issues/12616)) ([ac51096](https://github.com/react-navigation/react-navigation/commit/ac51096e40d879cd8d065d4d2fc6497ecbe552bc)) - by @angelalagao
+* keep drawer anchored to left/right on web ([0d7379b](https://github.com/react-navigation/react-navigation/commit/0d7379b2f7338cb28fbba8473d7d93c2e4458f8c)) - by @satya164
+
 ## [4.1.8](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.7...react-native-drawer-layout@4.1.8) (2025-05-04)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.10.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.9.2...@react-navigation/core@7.10.0) (2025-05-30)
+
+### Features
+
+* add a REPLACE_PARAMS action ([9739421](https://github.com/react-navigation/react-navigation/commit/97394212d88ccfc464db850b8a95d129befa5c80)) - by @satya164
+
 ## [7.9.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.9.1...@react-navigation/core@7.9.2) (2025-05-11)
 
 ### Bug Fixes

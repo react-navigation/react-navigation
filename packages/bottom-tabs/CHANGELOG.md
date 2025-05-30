@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.13...@react-navigation/bottom-tabs@7.3.14) (2025-05-30)
+
+### Bug Fixes
+
+* don't use row-reverse for tab position ([86ae0d6](https://github.com/react-navigation/react-navigation/commit/86ae0d6adfd6cd842b97a980dd0176ed6c5c3b1e)) - by @satya164
+
 ## [7.3.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.12...@react-navigation/bottom-tabs@7.3.13) (2025-05-11)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
