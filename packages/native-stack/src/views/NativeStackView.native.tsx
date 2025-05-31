@@ -45,6 +45,7 @@ import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
+import { useRouteKeyMappings } from '../utils/useRouteKeyMappings';
 import { useHeaderConfigProps } from './useHeaderConfigProps';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
@@ -473,6 +474,8 @@ export function NativeStackView({
   descriptors,
   describe,
 }: Props) {
+  const routeKeyMappings = useRouteKeyMappings(state);
+
   const { setNextDismissedKey } = useDismissedRouteError(state);
 
   useInvalidPreventRemoveError(descriptors);
@@ -512,9 +515,14 @@ export function NativeStackView({
             ? !isPreloaded && !isFocused && !isBelowFocused
             : !isPreloaded && !isFocused;
 
+          const key =
+            routeKeyMappings[route.key] != null
+              ? `${route.key}-${routeKeyMappings[route.key]}`
+              : route.key;
+
           return (
             <SceneView
-              key={route.key}
+              key={key}
               index={index}
               focused={isFocused}
               shouldFreeze={shouldFreeze}
