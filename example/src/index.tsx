@@ -51,6 +51,7 @@ import {
 } from './screens';
 import { NotFound } from './Screens/NotFound';
 import { Divider } from './Shared/Divider';
+import { ErrorBoundary } from './Shared/ErrorBoundary';
 import { ListItem } from './Shared/LIstItem';
 import { SettingsItem } from './Shared/SettingsItem';
 
@@ -351,9 +352,15 @@ export function App() {
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
-    <ActionSheetProvider>
-      <>{children}</>
-    </ActionSheetProvider>
+    <ErrorBoundary
+      onError={() => {
+        AsyncStorage.removeItem(NAVIGATION_PERSISTENCE_KEY);
+      }}
+    >
+      <ActionSheetProvider>
+        <>{children}</>
+      </ActionSheetProvider>
+    </ErrorBoundary>
   );
 };
 
