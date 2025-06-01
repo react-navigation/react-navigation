@@ -80,6 +80,12 @@ const styles = StyleSheet.create({
       item: {
         width: '100%',
       },
+      photo: {
+        flex: 1,
+        paddingTop: '100%',
+        height: 'auto',
+        width: 'auto',
+      },
     },
     default: {
       content: {
@@ -87,12 +93,10 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
       },
       item: {},
+      photo: {
+        height: '100%',
+        width: '100%',
+      },
     },
   }),
-  photo: {
-    flex: 1,
-    paddingTop: '100%',
-    height: 'auto',
-    width: 'auto',
-  },
 });
