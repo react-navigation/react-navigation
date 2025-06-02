@@ -315,6 +315,22 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
    */
   transitionSpec?: TransitionSpec;
+
+  /**
+   * Hanldes all bottom tab scrolling logic
+   */
+  scrollEnabled?: boolean;
+  scrollViewProps?: ScrollViewProps;
+
+  /**
+   * Option to add icons for scroll view paging
+   */
+  pagingIcons?: ScrollViewPagingIcons;
+
+  /**
+   * Count of tab items per page, when scroll is enabled
+   */
+  tabCountPerPage?: number;
 };
 
 export type BottomTabDescriptor = Descriptor<
