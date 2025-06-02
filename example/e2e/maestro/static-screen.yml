@@ -1,7 +1,8 @@
 appId: ${APP_ID}
 name: Static Screen
 ---
+- clearState: ${APP_ID}
 - openLink:
-    link: exp://127.0.0.1:8081/--/static-screen
+    link: ${APP_SCHEME}/static-screen
 - assertVisible:
     text: 'Albums'
