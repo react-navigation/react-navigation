@@ -317,13 +317,12 @@ export function BottomTabBar({
   descriptors,
   insets,
   style,
-  scrollEnabled,
-  scrollViewProps,
-  pagingIcons,
-  tabCountPerPage = 4,
+  scrollableProps,
 }: Props) {
   const { colors } = useTheme();
   const { direction } = useLocale();
+
+  console.log('BottomTabBar rendered', scrollableProps);
 
   const focusedRoute = state.routes[state.index];
   const focusedDescriptor = descriptors[focusedRoute.key];
@@ -420,12 +419,12 @@ export function BottomTabBar({
   }, [visible, shouldShowTabBar]);
 
   const pages = React.useMemo(() => {
-    if (scrollEnabled) {
-      return chunkArray(state.routes, tabCountPerPage);
+    if (scrollableProps) {
+      return chunkArray(state.routes, scrollableProps?.tabCountPerPage || 4);
     } else {
       return [];
     }
-  }, [tabCountPerPage, scrollEnabled, state.routes]);
+  }, [scrollableProps, state.routes]);
 
   const [layout, setLayout] = React.useState({
     height: 0,
@@ -547,22 +546,27 @@ export function BottomTabBar({
       <View pointerEvents="none" style={StyleSheet.absoluteFill}>
         {tabBarBackgroundElement}
       </View>
-      {scrollEnabled ? (
+      {scrollableProps ? (
         <View style={scrollViewStyles.content}>
-          {(selectedPage <= 1 && pages?.[selectedPage + 1] && (
-            <View style={scrollViewStyles.rightIcon}>{pagingIcons?.right}</View>
-          )) ||
+          {(scrollableProps?.pagingIcons?.right &&
+            selectedPage <= 1 &&
+            pages?.[selectedPage + 1] && (
+              <View style={scrollViewStyles.rightIcon}>
+                {scrollableProps?.pagingIcons?.right}
+              </View>
+            )) ||
             null}
 
-          {(selectedPage >= 1 && (
-            <View style={scrollViewStyles.leftIcon}>{pagingIcons?.left}</View>
+          {(scrollableProps?.pagingIcons?.left && selectedPage >= 1 && (
+            <View style={scrollViewStyles.leftIcon}>
+              {scrollableProps?.pagingIcons?.left}
+            </View>
           )) ||
             null}
-
           <ScrollView
             accessibilityRole="tablist"
             horizontal
-            {...(pagingIcons
+            {...(scrollableProps?.pagingIcons
               ? {
                   onMomentumScrollEnd: ({ nativeEvent }) => {
                     const index = Math.round(
@@ -575,7 +579,12 @@ export function BottomTabBar({
                   },
                 }
               : undefined)}
-            {...(scrollViewProps || {})}
+            {...(scrollableProps?.scrollViewProps || {
+              pagingEnabled: true,
+              showsHorizontalScrollIndicator: false,
+              disableIntervalMomentum: true,
+              snapToInterval: layout.width,
+            })}
           >
             <TabRoutes
               state={state}
@@ -583,7 +592,7 @@ export function BottomTabBar({
               focusedOptions={focusedOptions}
               layout={layout}
               navigation={navigation}
-              tabCountPerPage={tabCountPerPage}
+              tabCountPerPage={scrollableProps?.tabCountPerPage || 4}
             />
           </ScrollView>
         </View>
@@ -598,7 +607,6 @@ export function BottomTabBar({
             layout={layout}
             navigation={navigation}
             state={state}
-            tabCountPerPage={tabCountPerPage}
           />
         </View>
       )}

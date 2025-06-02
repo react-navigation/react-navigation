@@ -11,12 +11,7 @@ import {
   type TabNavigationState,
 } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  Animated,
-  Platform,
-  type ScrollViewProps,
-  StyleSheet,
-} from 'react-native';
+import { Animated, Platform, StyleSheet } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import {
@@ -31,7 +26,7 @@ import type {
   BottomTabNavigationHelpers,
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
-  ScrollViewPagingIcons,
+  ScrollableProps,
 } from '../types';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
@@ -43,10 +38,7 @@ type Props = BottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
   navigation: BottomTabNavigationHelpers;
   descriptors: BottomTabDescriptorMap;
-  scrollEnabled?: boolean;
-  scrollViewProps?: ScrollViewProps;
-  pagingIcons?: ScrollViewPagingIcons;
-  tabCountPerPage?: number;
+  scrollableProps?: ScrollableProps;
 };
 
 const EPSILON = 1e-5;
@@ -92,10 +84,7 @@ export function BottomTabView(props: Props) {
     detachInactiveScreens = Platform.OS === 'web' ||
       Platform.OS === 'android' ||
       Platform.OS === 'ios',
-    scrollEnabled,
-    scrollViewProps,
-    pagingIcons,
-    tabCountPerPage,
+    scrollableProps,
   } = props;
 
   const focusedRouteKey = state.routes[state.index].key;
@@ -220,10 +209,7 @@ export function BottomTabView(props: Props) {
       <SafeAreaInsetsContext.Consumer>
         {(insets) =>
           tabBar({
-            scrollEnabled,
-            scrollViewProps,
-            tabCountPerPage: tabCountPerPage,
-            pagingIcons,
+            scrollableProps,
             state: state,
             descriptors: descriptors,
             navigation: navigation,

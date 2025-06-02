@@ -109,6 +109,17 @@ export type TabBarVisibilityAnimationConfig =
 
 export type TabAnimationName = 'none' | 'fade' | 'shift';
 
+export type ScrollViewPagingIcons = {
+  left?: React.JSX.Element;
+  right?: React.JSX.Element;
+};
+
+export type ScrollableProps = {
+  scrollViewProps?: ScrollViewProps;
+  pagingIcons?: ScrollViewPagingIcons;
+  tabCountPerPage?: number;
+};
+
 export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Title text for the screen.
@@ -317,20 +328,10 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   transitionSpec?: TransitionSpec;
 
   /**
-   * Hanldes all bottom tab scrolling logic
+   * Whether to enable swipe gestures to switch tabs.
+   * Defaults to `true`.
    */
-  scrollEnabled?: boolean;
-  scrollViewProps?: ScrollViewProps;
-
-  /**
-   * Option to add icons for scroll view paging
-   */
-  pagingIcons?: ScrollViewPagingIcons;
-
-  /**
-   * Count of tab items per page, when scroll is enabled
-   */
-  tabCountPerPage?: number;
+  scrollableProps?: ScrollableProps;
 };
 
 export type BottomTabDescriptor = Descriptor<
@@ -442,20 +443,12 @@ export type BottomTabHeaderProps = {
   navigation: BottomTabNavigationProp<ParamListBase>;
 };
 
-export interface ScrollViewPagingIcons {
-  left?: React.JSX.Element;
-  right?: React.JSX.Element;
-}
-
 export type BottomTabBarProps = {
   state: TabNavigationState<ParamListBase>;
   descriptors: BottomTabDescriptorMap;
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
   insets: EdgeInsets;
-  scrollEnabled?: boolean;
-  scrollViewProps?: ScrollViewProps;
-  pagingIcons?: ScrollViewPagingIcons;
-  tabCountPerPage?: number;
+  scrollableProps?: ScrollableProps;
 };
 
 export type BottomTabBarButtonProps = Omit<
@@ -479,4 +472,6 @@ export type BottomTabNavigatorProps = DefaultNavigatorOptions<
   BottomTabNavigationProp<ParamListBase>
 > &
   TabRouterOptions &
-  BottomTabNavigationConfig;
+  BottomTabNavigationConfig & {
+    scrollableProps?: ScrollableProps;
+  };

@@ -8,6 +8,7 @@ import {
   type StyleProp,
   StyleSheet,
   type TextStyle,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native';
@@ -184,8 +185,9 @@ export function BottomTabItem({
   iconStyle,
   style,
   tabCountPerPage,
-  width,
 }: Props) {
+  const { width } = useWindowDimensions();
+
   if (style && width !== undefined && tabCountPerPage !== undefined) {
     style = [...[style], { width: width / tabCountPerPage }];
   }
