@@ -322,8 +322,6 @@ export function BottomTabBar({
   const { colors } = useTheme();
   const { direction } = useLocale();
 
-  console.log('BottomTabBar rendered', scrollableProps);
-
   const focusedRoute = state.routes[state.index];
   const focusedDescriptor = descriptors[focusedRoute.key];
   const focusedOptions = focusedDescriptor.options;
