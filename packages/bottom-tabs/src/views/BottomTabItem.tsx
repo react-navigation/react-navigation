@@ -141,6 +141,9 @@ type Props = {
    * Style object for the wrapper element.
    */
   style?: StyleProp<ViewStyle>;
+  tabCountPerPage?: number;
+
+  width?: number;
 };
 
 const renderButtonDefault = (props: BottomTabBarButtonProps) => (
@@ -180,7 +183,13 @@ export function BottomTabItem({
   labelStyle,
   iconStyle,
   style,
+  tabCountPerPage,
+  width,
 }: Props) {
+  if (style && width !== undefined && tabCountPerPage !== undefined) {
+    style = [...[style], { width: width / tabCountPerPage }];
+  }
+
   const { colors, fonts } = useTheme();
 
   const activeTintColor =

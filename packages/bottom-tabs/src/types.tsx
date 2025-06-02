@@ -18,6 +18,7 @@ import type * as React from 'react';
 import type {
   Animated,
   GestureResponderEvent,
+  ScrollViewProps,
   StyleProp,
   TextStyle,
   ViewStyle,
@@ -425,11 +426,20 @@ export type BottomTabHeaderProps = {
   navigation: BottomTabNavigationProp<ParamListBase>;
 };
 
+export interface ScrollViewPagingIcons {
+  left?: React.JSX.Element;
+  right?: React.JSX.Element;
+}
+
 export type BottomTabBarProps = {
   state: TabNavigationState<ParamListBase>;
   descriptors: BottomTabDescriptorMap;
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
   insets: EdgeInsets;
+  scrollEnabled?: boolean;
+  scrollViewProps?: ScrollViewProps;
+  pagingIcons?: ScrollViewPagingIcons;
+  tabCountPerPage?: number;
 };
 
 export type BottomTabBarButtonProps = Omit<
