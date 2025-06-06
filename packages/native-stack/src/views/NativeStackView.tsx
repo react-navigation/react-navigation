@@ -14,7 +14,7 @@ import {
   useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, Image, StyleSheet, View } from 'react-native';
+import { Animated, Image, Platform, StyleSheet, View } from 'react-native';
 
 import type {
   NativeStackDescriptor,
@@ -35,6 +35,13 @@ type Props = {
 };
 
 const TRANSPARENT_PRESENTATIONS = [
+  'transparentModal',
+  'containedTransparentModal',
+];
+
+const MODAL_PRESENTATIONS = [
+  'modal',
+  'fullScreenModal',
   'transparentModal',
   'containedTransparentModal',
 ];
@@ -152,6 +159,12 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
             }
             style={[
               StyleSheet.absoluteFill,
+              // Always fill the whole screen, even in the case of nested navigators.
+              Platform.OS === 'web' &&
+              presentation != null &&
+              MODAL_PRESENTATIONS.includes(presentation)
+                ? { position: 'fixed' as 'absolute' }
+                : null,
               {
                 display:
                   (isFocused ||
