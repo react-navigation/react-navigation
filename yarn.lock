@@ -3814,7 +3814,7 @@ __metadata:
     react-native: "npm:0.79.2"
     react-native-builder-bob: "npm:^0.40.9"
     react-native-safe-area-context: "npm:5.4.0"
-    react-native-screens: "npm:~4.10.0"
+    react-native-screens: "npm:~4.11.1"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
   peerDependencies:
@@ -3890,7 +3890,7 @@ __metadata:
     react-native-gesture-handler: "npm:~2.25.0"
     react-native-reanimated: "npm:~3.17.5"
     react-native-safe-area-context: "npm:5.4.0"
-    react-native-screens: "npm:~4.10.0"
+    react-native-screens: "npm:~4.11.1"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
     use-latest-callback: "npm:^0.2.3"
@@ -3978,7 +3978,7 @@ __metadata:
     react-native-pager-view: "npm:6.7.1"
     react-native-reanimated: "npm:~3.17.5"
     react-native-safe-area-context: "npm:5.4.0"
-    react-native-screens: "npm:~4.10.0"
+    react-native-screens: "npm:~4.11.1"
     react-native-web: "npm:~0.20.0"
     react-test-renderer: "npm:19.0.0"
     serve: "npm:^14.2.4"
@@ -4028,7 +4028,7 @@ __metadata:
     react: "npm:19.0.0"
     react-native: "npm:0.79.2"
     react-native-builder-bob: "npm:^0.40.9"
-    react-native-screens: "npm:~4.10.0"
+    react-native-screens: "npm:~4.11.1"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
     warn-once: "npm:^0.1.1"
@@ -4096,7 +4096,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.9"
     react-native-gesture-handler: "npm:~2.25.0"
     react-native-safe-area-context: "npm:5.4.0"
-    react-native-screens: "npm:~4.10.0"
+    react-native-screens: "npm:~4.11.1"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
   peerDependencies:
@@ -13883,7 +13883,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-is-edge-to-edge@npm:1.1.7, react-native-is-edge-to-edge@npm:^1.1.6":
+"react-native-is-edge-to-edge@npm:1.1.7, react-native-is-edge-to-edge@npm:^1.1.6, react-native-is-edge-to-edge@npm:^1.1.7":
   version: 1.1.7
   resolution: "react-native-is-edge-to-edge@npm:1.1.7"
   peerDependencies:
@@ -13947,16 +13947,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:~4.10.0":
-  version: 4.10.0
-  resolution: "react-native-screens@npm:4.10.0"
+"react-native-screens@npm:~4.11.1":
+  version: 4.11.1
+  resolution: "react-native-screens@npm:4.11.1"
   dependencies:
     react-freeze: "npm:^1.0.0"
+    react-native-is-edge-to-edge: "npm:^1.1.7"
     warn-once: "npm:^0.1.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/09d1f55431b85e556ef7b5efd776ac5e85303e47d9138f910cb8c25ff3804effc43185f84e8842bcae2219e8fee12366b3725f955f638c109387efb82e0260f3
+  checksum: 10c0/88a33ba419bd571cc318e80d25eb172f5829677f2dd80dcb69cbeaa6a35ba26214e0e82af87baa375182afe41a276e8ef1a9d13b826f662f3a389982492c2879
   languageName: node
   linkType: hard
 
