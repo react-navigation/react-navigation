@@ -512,8 +512,11 @@ export function NativeStackView({
           // On Fabric, when screen is frozen, animated and reanimated values are not updated
           // due to component being unmounted. To avoid this, we don't freeze the previous screen there
           const shouldFreeze = isFabric()
-            ? !isPreloaded && !isFocused && !isBelowFocused
-            : !isPreloaded && !isFocused;
+            ? !isPreloaded &&
+              !isFocused &&
+              !isBelowFocused &&
+              !(Platform.OS === 'ios' && isModal)
+            : !isPreloaded && !isFocused && !(Platform.OS === 'ios' && isModal);
 
           return (
             <SceneView

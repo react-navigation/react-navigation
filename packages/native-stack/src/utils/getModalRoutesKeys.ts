@@ -12,8 +12,12 @@ export const getModalRouteKeys = (
     if (
       (acc.length && !presentation) ||
       presentation === 'modal' ||
-      presentation === 'pageSheet' ||
-      presentation === 'transparentModal'
+      presentation === 'transparentModal' ||
+      presentation === 'containedModal' ||
+      presentation === 'containedTransparentModal' ||
+      presentation === 'formSheet' ||
+      presentation === 'fullScreenModal' ||
+      presentation === 'pageSheet'
     ) {
       acc.push(route.key);
     }
