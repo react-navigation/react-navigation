@@ -383,13 +383,6 @@ type NavigationHelpersCommon<
    * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
    */
   getState(): State;
-  /**
-   * Schedules the given state to be used as navigation state when the list of screens defined in the navigator changes
-   * instead of automatically calculating the new state, e.g. due to conditional rendering or dynamically defining screens.
-   *
-   * @param state Navigation state object.
-   */
-  setStateForNextRouteNamesChange(state: PartialState<State> | State): void;
 } & PrivateValueStore<[ParamList, unknown, unknown]>;
 
 type NavigationHelpersRoute<
