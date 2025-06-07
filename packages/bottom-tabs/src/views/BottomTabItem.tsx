@@ -8,6 +8,7 @@ import {
   type StyleProp,
   StyleSheet,
   type TextStyle,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native';
@@ -141,6 +142,9 @@ type Props = {
    * Style object for the wrapper element.
    */
   style?: StyleProp<ViewStyle>;
+  tabCountPerPage?: number;
+
+  width?: number;
 };
 
 const renderButtonDefault = (props: BottomTabBarButtonProps) => (
@@ -180,7 +184,14 @@ export function BottomTabItem({
   labelStyle,
   iconStyle,
   style,
+  tabCountPerPage,
 }: Props) {
+  const { width } = useWindowDimensions();
+
+  if (style && width !== undefined && tabCountPerPage !== undefined) {
+    style = [...[style], { width: width / tabCountPerPage }];
+  }
+
   const { colors, fonts } = useTheme();
 
   const activeTintColor =

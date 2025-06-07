@@ -29,6 +29,7 @@ function BottomTabNavigator({
   screenOptions,
   screenLayout,
   UNSTABLE_router,
+  scrollableProps,
   ...rest
 }: BottomTabNavigatorProps) {
   const { state, descriptors, navigation, NavigationContent } =
@@ -55,6 +56,7 @@ function BottomTabNavigator({
       <BottomTabView
         {...rest}
         state={state}
+        scrollableProps={scrollableProps}
         navigation={navigation}
         descriptors={descriptors}
       />
