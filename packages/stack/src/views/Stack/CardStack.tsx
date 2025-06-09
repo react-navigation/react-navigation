@@ -715,6 +715,7 @@ export class CardStack extends React.Component<Props, State> {
                   })
                 : STATE_TRANSITIONING_OR_BELOW_TOP;
             }
+            const shouldNotDetachScreen = route?.dontDetachScreen;
 
             const {
               headerShown = true,
@@ -752,7 +753,11 @@ export class CardStack extends React.Component<Props, State> {
                 key={route.key}
                 style={[StyleSheet.absoluteFill]}
                 enabled={detachInactiveScreens}
-                active={isScreenActive}
+                active={
+                  shouldNotDetachScreen
+                    ? STATE_TRANSITIONING_OR_BELOW_TOP
+                    : isScreenActive
+                }
                 freezeOnBlur={freezeOnBlur}
                 shouldFreeze={isScreenActive === STATE_INACTIVE && !isPreloaded}
                 homeIndicatorHidden={autoHideHomeIndicator}
@@ -790,7 +795,9 @@ export class CardStack extends React.Component<Props, State> {
                   onTransitionStart={onTransitionStart}
                   onTransitionEnd={onTransitionEnd}
                   isNextScreenTransparent={isNextScreenTransparent}
-                  detachCurrentScreen={detachCurrentScreen}
+                  detachCurrentScreen={
+                    shouldNotDetachScreen ? false : detachCurrentScreen
+                  }
                   preloaded={isPreloaded}
                 />
               </MaybeScreen>

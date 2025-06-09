@@ -79,6 +79,8 @@ export type Route<
    * Usually present when the screen was opened from a deep link.
    */
   path?: string;
+  /**It provides information on whether we shouldn't detach the screen.*/
+  dontDetachScreen?: boolean;
 }> &
   (undefined extends Params
     ? Readonly<{
