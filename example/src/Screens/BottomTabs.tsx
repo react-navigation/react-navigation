@@ -9,6 +9,7 @@ import {
   HeaderBackButton,
   HeaderButton,
   PlatformPressable,
+  Text,
   useHeaderHeight,
 } from '@react-navigation/elements';
 import {
@@ -28,6 +29,7 @@ import {
   View,
 } from 'react-native';
 import { SystemBars } from 'react-native-edge-to-edge';
+import { Switch } from 'react-native-gesture-handler';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
@@ -92,7 +94,7 @@ export function BottomTabs() {
     React.useState<(typeof variants)[number]>('material');
   const [animation, setAnimation] =
     React.useState<(typeof animations)[number]>('none');
-
+  const [scrollingEnabled, setScrollingEnabled] = React.useState(true);
   const [isCompact, setIsCompact] = React.useState(false);
 
   const isLargeScreen = dimensions.width >= 1024;
@@ -100,6 +102,25 @@ export function BottomTabs() {
   return (
     <>
       <Tab.Navigator
+        scrollableProps={
+          scrollingEnabled
+            ? {
+                tabCountPerPage: 2,
+                pagingIcons: {
+                  left: (
+                    <View>
+                      <Text>{`<`}</Text>
+                    </View>
+                  ),
+                  right: (
+                    <View>
+                      <Text>{`>`}</Text>
+                    </View>
+                  ),
+                },
+              }
+            : undefined
+        }
         screenOptions={({
           navigation,
         }: BottomTabScreenProps<BottomTabParams>) => ({
@@ -272,6 +293,10 @@ export function BottomTabs() {
           />
         </PlatformPressable>
       ) : null}
+      <View style={styles.scrollingContainer}>
+        <Switch value={scrollingEnabled} onValueChange={setScrollingEnabled} />
+        <Text>Scrolling enabled</Text>
+      </View>
     </>
   );
 }
@@ -285,5 +310,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 16,
     marginEnd: 16,
+  },
+  scrollingContainer: {
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 16,
   },
 });

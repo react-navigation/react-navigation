@@ -26,6 +26,7 @@ import type {
   BottomTabNavigationHelpers,
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
+  ScrollableProps,
 } from '../types';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
@@ -37,6 +38,7 @@ type Props = BottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
   navigation: BottomTabNavigationHelpers;
   descriptors: BottomTabDescriptorMap;
+  scrollableProps?: ScrollableProps;
 };
 
 const EPSILON = 1e-5;
@@ -82,6 +84,7 @@ export function BottomTabView(props: Props) {
     detachInactiveScreens = Platform.OS === 'web' ||
       Platform.OS === 'android' ||
       Platform.OS === 'ios',
+    scrollableProps,
   } = props;
 
   const focusedRouteKey = state.routes[state.index].key;
@@ -206,6 +209,7 @@ export function BottomTabView(props: Props) {
       <SafeAreaInsetsContext.Consumer>
         {(insets) =>
           tabBar({
+            scrollableProps,
             state: state,
             descriptors: descriptors,
             navigation: navigation,

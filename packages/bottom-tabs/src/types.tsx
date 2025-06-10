@@ -18,6 +18,7 @@ import type * as React from 'react';
 import type {
   Animated,
   GestureResponderEvent,
+  ScrollViewProps,
   StyleProp,
   TextStyle,
   ViewStyle,
@@ -107,6 +108,17 @@ export type TabBarVisibilityAnimationConfig =
   | SpringKeyboardAnimationConfig;
 
 export type TabAnimationName = 'none' | 'fade' | 'shift';
+
+export type ScrollViewPagingIcons = {
+  left?: React.JSX.Element;
+  right?: React.JSX.Element;
+};
+
+export type ScrollableProps = {
+  scrollViewProps?: ScrollViewProps;
+  pagingIcons?: ScrollViewPagingIcons;
+  tabCountPerPage?: number;
+};
 
 export type BottomTabNavigationOptions = HeaderOptions & {
   /**
@@ -314,6 +326,12 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
    */
   transitionSpec?: TransitionSpec;
+
+  /**
+   * Whether to enable swipe gestures to switch tabs.
+   * Defaults to `true`.
+   */
+  scrollableProps?: ScrollableProps;
 };
 
 export type BottomTabDescriptor = Descriptor<
@@ -430,6 +448,7 @@ export type BottomTabBarProps = {
   descriptors: BottomTabDescriptorMap;
   navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
   insets: EdgeInsets;
+  scrollableProps?: ScrollableProps;
 };
 
 export type BottomTabBarButtonProps = Omit<
@@ -453,4 +472,6 @@ export type BottomTabNavigatorProps = DefaultNavigatorOptions<
   BottomTabNavigationProp<ParamListBase>
 > &
   TabRouterOptions &
-  BottomTabNavigationConfig;
+  BottomTabNavigationConfig & {
+    scrollableProps?: ScrollableProps;
+  };
