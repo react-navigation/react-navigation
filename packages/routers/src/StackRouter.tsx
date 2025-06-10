@@ -125,23 +125,28 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
 };
 
 export const StackActions = {
-  replace(name: string, params?: object): StackActionType {
-    return { type: 'REPLACE', payload: { name, params } };
+  replace(name: string, params?: object) {
+    return {
+      type: 'REPLACE',
+      payload: { name, params },
+    } as const satisfies StackActionType;
   },
-  push(name: string, params?: object): StackActionType {
-    return { type: 'PUSH', payload: { name, params } };
+  push(name: string, params?: object) {
+    return {
+      type: 'PUSH',
+      payload: { name, params },
+    } as const satisfies StackActionType;
   },
-  pop(count: number = 1): StackActionType {
-    return { type: 'POP', payload: { count } };
+  pop(count: number = 1) {
+    return {
+      type: 'POP',
+      payload: { count },
+    } as const satisfies StackActionType;
   },
-  popToTop(): StackActionType {
-    return { type: 'POP_TO_TOP' };
+  popToTop() {
+    return { type: 'POP_TO_TOP' } as const satisfies StackActionType;
   },
-  popTo(
-    name: string,
-    params?: object,
-    options?: { merge?: boolean }
-  ): StackActionType {
+  popTo(name: string, params?: object, options?: { merge?: boolean }) {
     if (typeof options === 'boolean') {
       console.warn(
         `Passing a boolean as the third argument to 'popTo' is deprecated. Pass '{ merge: true }' instead.`
@@ -155,7 +160,7 @@ export const StackActions = {
         params,
         merge: typeof options === 'boolean' ? options : options?.merge,
       },
-    };
+    } as const satisfies StackActionType;
   },
 };
 

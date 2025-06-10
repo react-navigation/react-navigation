@@ -76,8 +76,11 @@ export type TabActionHelpers<ParamList extends ParamListBase> = {
 const TYPE_ROUTE = 'route' as const;
 
 export const TabActions = {
-  jumpTo(name: string, params?: object): TabActionType {
-    return { type: 'JUMP_TO', payload: { name, params } };
+  jumpTo(name: string, params?: object) {
+    return {
+      type: 'JUMP_TO',
+      payload: { name, params },
+    } as const satisfies TabActionType;
   },
 };
 
