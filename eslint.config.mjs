@@ -54,6 +54,12 @@ export default defineConfig([
                 'Import `Text` from `@react-navigation/elements` instead.',
             },
             {
+              name: 'react-native-safe-area-context',
+              importNames: ['useSafeAreaFrame'],
+              message:
+                'Import `useFrameSize` from `@react-navigation/elements` instead.',
+            },
+            {
               name: '@react-navigation/core',
               message: 'Import from `@react-navigation/native` instead.',
             },
@@ -74,7 +80,8 @@ export default defineConfig([
       'react-hooks/exhaustive-deps': [
         'error',
         {
-          additionalHooks: '(useAnimatedStyle|useAnimatedProps)',
+          additionalHooks:
+            '(useIsomorphicLayoutEffect|useAnimatedStyle|useAnimatedProps)',
         },
       ],
     },

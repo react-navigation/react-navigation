@@ -5,6 +5,7 @@ import {
   HeaderHeightContext,
   HeaderShownContext,
   SafeAreaProviderCompat,
+  useFrameSize,
 } from '@react-navigation/elements';
 import {
   NavigationContext,
@@ -25,10 +26,7 @@ import {
   useAnimatedValue,
   View,
 } from 'react-native';
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   type ScreenProps,
   ScreenStack,
@@ -171,18 +169,18 @@ const SceneView = ({
 
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const frame = useSafeAreaFrame();
 
   // `modal` and `formSheet` presentations do not take whole screen, so should not take the inset.
   const isModal = presentation === 'modal' || presentation === 'formSheet';
 
   // Modals are fullscreen in landscape only on iPhone
   const isIPhone = Platform.OS === 'ios' && !(Platform.isPad || Platform.isTV);
-  const isLandscape = frame.width > frame.height;
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
   const parentHeaderBack = React.useContext(HeaderBackContext);
+
+  const isLandscape = useFrameSize((frame) => frame.width > frame.height);
 
   const topInset =
     isParentHeaderShown ||
@@ -191,15 +189,17 @@ const SceneView = ({
       ? 0
       : insets.top;
 
-  const { preventedRoutes } = usePreventRemoveContext();
+  const defaultHeaderHeight = useFrameSize((frame) =>
+    Platform.select({
+      // FIXME: Currently screens isn't using Material 3
+      // So our `getDefaultHeaderHeight` doesn't return the correct value
+      // So we hardcode the value here for now until screens is updated
+      android: ANDROID_DEFAULT_HEADER_HEIGHT + topInset,
+      default: getDefaultHeaderHeight(frame, isModal, topInset),
+    })
+  );
 
-  const defaultHeaderHeight = Platform.select({
-    // FIXME: Currently screens isn't using Material 3
-    // So our `getDefaultHeaderHeight` doesn't return the correct value
-    // So we hardcode the value here for now until screens is updated
-    android: ANDROID_DEFAULT_HEADER_HEIGHT + topInset,
-    default: getDefaultHeaderHeight(frame, isModal, topInset),
-  });
+  const { preventedRoutes } = usePreventRemoveContext();
 
   const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
 

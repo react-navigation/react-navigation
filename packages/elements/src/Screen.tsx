@@ -13,15 +13,13 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Background } from './Background';
 import { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 import { HeaderHeightContext } from './Header/HeaderHeightContext';
 import { HeaderShownContext } from './Header/HeaderShownContext';
+import { useFrameSize } from './useFrameSize';
 
 type Props = {
   focused: boolean;
@@ -37,7 +35,6 @@ type Props = {
 };
 
 export function Screen(props: Props) {
-  const dimensions = useSafeAreaFrame();
   const insets = useSafeAreaInsets();
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
@@ -56,9 +53,11 @@ export function Screen(props: Props) {
     style,
   } = props;
 
-  const [headerHeight, setHeaderHeight] = React.useState(() =>
-    getDefaultHeaderHeight(dimensions, modal, headerStatusBarHeight)
+  const defaultHeaderHeight = useFrameSize((size) =>
+    getDefaultHeaderHeight(size, modal, headerStatusBarHeight)
   );
+
+  const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
 
   return (
     <Background
