@@ -1,7 +1,8 @@
 appId: ${APP_ID}
 name: Tab View
 ---
+- clearState: ${APP_ID}
 - openLink:
-    link: exp://127.0.0.1:8081/--/tab-view
+    link: ${APP_SCHEME}/tab-view
 - assertVisible:
     text: 'TabView Examples'

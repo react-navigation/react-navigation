@@ -1,4 +1,4 @@
-name: Expo Publish
+name: Expo
 on:
   push:
     branches:
@@ -7,11 +7,10 @@ on:
 
 jobs:
   publish:
-    name: Install and publish
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup
         uses: ./.github/actions/setup
