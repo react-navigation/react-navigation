@@ -170,8 +170,11 @@ const SceneView = ({
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
-  // `modal` and `formSheet` presentations do not take whole screen, so should not take the inset.
-  const isModal = presentation === 'modal' || presentation === 'formSheet';
+  // `modal`, `formSheet` and `pageSheet` presentations do not take whole screen, so should not take the inset.
+  const isModal =
+    presentation === 'modal' ||
+    presentation === 'formSheet' ||
+    presentation === 'pageSheet';
 
   // Modals are fullscreen in landscape only on iPhone
   const isIPhone = Platform.OS === 'ios' && !(Platform.isPad || Platform.isTV);
@@ -509,8 +512,11 @@ export function NativeStackView({
           // On Fabric, when screen is frozen, animated and reanimated values are not updated
           // due to component being unmounted. To avoid this, we don't freeze the previous screen there
           const shouldFreeze = isFabric()
-            ? !isPreloaded && !isFocused && !isBelowFocused
-            : !isPreloaded && !isFocused;
+            ? !isPreloaded &&
+              !isFocused &&
+              !isBelowFocused &&
+              !(Platform.OS === 'ios' && isModal)
+            : !isPreloaded && !isFocused && !(Platform.OS === 'ios' && isModal);
 
           return (
             <SceneView
