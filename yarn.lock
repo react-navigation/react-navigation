@@ -3921,6 +3921,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.9"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
+    use-latest-callback: "npm:^0.2.3"
   peerDependencies:
     "@react-native-masked-view/masked-view": ">= 0.2.0"
     "@react-navigation/native": "workspace:^"

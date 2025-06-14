@@ -42,7 +42,8 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "color": "^4.2.3"
+    "color": "^4.2.3",
+    "use-latest-callback": "^0.2.3"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
