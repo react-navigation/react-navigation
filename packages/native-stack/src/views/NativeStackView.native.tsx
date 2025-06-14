@@ -210,7 +210,7 @@ const SceneView = ({
     []
   );
 
-  const hasCustomHeader = header !== undefined;
+  const hasCustomHeader = header != null;
 
   let headerHeightCorrectionOffset = 0;
 
@@ -350,6 +350,11 @@ const SceneView = ({
             {
               useNativeDriver,
               listener: (e) => {
+                if (hasCustomHeader) {
+                  // If we have a custom header, don't use native header height
+                  return;
+                }
+
                 if (
                   Platform.OS === 'android' &&
                   (options.headerBackground != null ||
@@ -421,7 +426,7 @@ const SceneView = ({
                   {headerBackground()}
                 </View>
               ) : null}
-              {header !== undefined && headerShown !== false ? (
+              {header != null && headerShown !== false ? (
                 <View
                   onLayout={(e) => {
                     const headerHeight = e.nativeEvent.layout.height;
