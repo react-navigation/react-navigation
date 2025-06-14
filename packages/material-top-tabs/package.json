@@ -22,11 +22,11 @@
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
   "homepage": "https://reactnavigation.org/docs/material-top-tab-navigator/",
-  "source": "./src/index.tsx",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
+      "source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
@@ -58,7 +58,7 @@
     "del-cli": "^6.0.0",
     "react": "19.0.0",
     "react-native": "0.79.3",
-    "react-native-builder-bob": "^0.40.11",
+    "react-native-builder-bob": "^0.40.12",
     "react-native-pager-view": "6.8.1",
     "react-native-safe-area-context": "5.4.1",
     "react-test-renderer": "19.0.0",

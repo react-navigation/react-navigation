@@ -21,11 +21,11 @@
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
   "homepage": "https://reactnavigation.org/docs/stack-navigator/",
-  "source": "./src/index.tsx",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
+      "source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
@@ -57,7 +57,7 @@
     "del-cli": "^6.0.0",
     "react": "19.0.0",
     "react-native": "0.79.3",
-    "react-native-builder-bob": "^0.40.11",
+    "react-native-builder-bob": "^0.40.12",
     "react-native-gesture-handler": "~2.26.0",
     "react-native-safe-area-context": "5.4.1",
     "react-native-screens": "~4.11.1",

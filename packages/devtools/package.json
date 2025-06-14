@@ -17,11 +17,11 @@
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
   "homepage": "https://reactnavigation.org",
-  "source": "./src/index.tsx",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
+      "source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
@@ -50,7 +50,7 @@
     "@types/react": "~19.0.10",
     "del-cli": "^6.0.0",
     "react": "19.0.0",
-    "react-native-builder-bob": "^0.40.11",
+    "react-native-builder-bob": "^0.40.12",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {
