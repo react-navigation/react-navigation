@@ -3,7 +3,6 @@ import * as React from 'react';
 const contexts = '__react_navigation__elements_contexts';
 
 declare global {
-  // eslint-disable-next-line no-var
   var __react_navigation__elements_contexts: Map<string, React.Context<any>>;
 }
 
