@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.10.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.10.0...@react-navigation/core@7.10.1) (2025-06-14)
+
+### Bug Fixes
+
+* remove non-existed method from navigation type ([8d2b1ec](https://github.com/react-navigation/react-navigation/commit/8d2b1ec3b56f6769c8bb0cba4d14b1802337ded8)) - by @satya164
+
 # [7.10.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.9.2...@react-navigation/core@7.10.0) (2025-05-30)
 
 ### Features
