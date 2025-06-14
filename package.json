@@ -45,6 +45,9 @@
     "prettier": "^3.5.3",
     "typescript": "^5.8.3"
   },
+  "resolutions": {
+    "pretty-format": "^29.7.0"
+  },
   "jest": {
     "preset": "react-native",
     "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",

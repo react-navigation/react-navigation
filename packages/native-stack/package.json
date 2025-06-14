@@ -22,11 +22,11 @@
     "url": "https://github.com/software-mansion/react-native-screens/issues"
   },
   "homepage": "https://github.com/software-mansion/react-native-screens#readme",
-  "source": "./src/index.tsx",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
+      "source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
@@ -57,7 +57,7 @@
     "del-cli": "^6.0.0",
     "react": "19.0.0",
     "react-native": "0.79.3",
-    "react-native-builder-bob": "^0.40.11",
+    "react-native-builder-bob": "^0.40.12",
     "react-native-screens": "~4.11.1",
     "react-test-renderer": "19.0.0",
     "typescript": "^5.8.3"
