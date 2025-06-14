@@ -42,13 +42,13 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "use-latest-callback": "^0.2.3"
+    "use-latest-callback": "^0.2.4"
   },
   "devDependencies": {
     "del-cli": "^6.0.0",
     "react": "19.0.0",
-    "react-native": "0.79.2",
-    "react-native-builder-bob": "^0.40.9",
+    "react-native": "0.79.3",
+    "react-native-builder-bob": "^0.40.11",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {
