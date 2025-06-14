@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
 import type { DrawerProps } from '../types';
 import { DrawerProgressContext } from '../utils/DrawerProgressContext';
-import { getDrawerWidth } from '../utils/getDrawerWidth';
+import { getDrawerWidthWeb } from '../utils/getDrawerWidth';
 import { useFakeSharedValue } from '../utils/useFakeSharedValue';
 import { Overlay } from './Overlay';
 
 export function Drawer({
-  layout: customLayout,
   direction = 'ltr',
   drawerPosition = direction === 'rtl' ? 'right' : 'left',
   drawerStyle,
@@ -24,10 +23,7 @@ export function Drawer({
   children,
   style,
 }: DrawerProps) {
-  const windowDimensions = useWindowDimensions();
-
-  const drawerWidth = getDrawerWidth({
-    layout: customLayout ?? windowDimensions,
+  const drawerWidth = getDrawerWidthWeb({
     drawerStyle,
   });
 
@@ -62,36 +58,34 @@ export function Drawer({
   const isOpen = drawerType === 'permanent' ? true : open;
   const isRight = drawerPosition === 'right';
 
-  const translateX =
+  const drawerTranslateX =
     // The drawer stays in place at open position when `drawerType` is `back`
     open || drawerType === 'back'
       ? drawerPosition === 'left'
-        ? drawerWidth
-        : -drawerWidth
+        ? '100%'
+        : '-100%'
       : 0;
 
   const drawerAnimatedStyle =
     drawerType !== 'permanent'
       ? {
           transition: 'transform 0.3s',
-          transform: [{ translateX }],
+          transform: `translateX(${drawerTranslateX})`,
         }
       : null;
+
+  const contentTranslateX = open
+    ? // The screen content stays in place when `drawerType` is `front`
+      drawerType === 'front'
+      ? 0
+      : `calc(${drawerWidth} * ${drawerPosition === 'left' ? 1 : -1})`
+    : 0;
 
   const contentAnimatedStyle =
     drawerType !== 'permanent'
       ? {
           transition: 'transform 0.3s',
-          transform: [
-            {
-              translateX: open
-                ? // The screen content stays in place when `drawerType` is `front`
-                  drawerType === 'front'
-                  ? 0
-                  : drawerWidth * (drawerPosition === 'left' ? 1 : -1)
-                : 0,
-            },
-          ],
+          transform: `translateX(${contentTranslateX})`,
         }
       : null;
 
@@ -102,17 +96,19 @@ export function Drawer({
       style={[
         styles.drawer,
         {
-          width: drawerWidth,
           position: drawerType === 'permanent' ? 'relative' : 'absolute',
           zIndex: drawerType === 'back' ? -1 : 1,
         },
+        // @ts-expect-error: width contains `calc` for web
+        { width: drawerWidth },
+        // @ts-expect-error: offset contains `calc` for web
         drawerType !== 'permanent'
           ? // Position drawer off-screen by default in closed state
             // And add a translation only when drawer is open
             // So changing position in closed state won't trigger a visible transition
             drawerPosition === 'right'
-            ? { right: -drawerWidth }
-            : { left: -drawerWidth }
+            ? { right: `calc(${drawerWidth} * -1)` }
+            : { left: `calc(${drawerWidth} * -1)` }
           : null,
         drawerAnimatedStyle,
         drawerStyle,
