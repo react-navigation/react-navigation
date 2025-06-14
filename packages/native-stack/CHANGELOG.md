@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.15...@react-navigation/native-stack@7.3.16) (2025-06-14)
+
+### Bug Fixes
+
+* don't use native header height if custom header is specified ([eaf1100](https://github.com/react-navigation/react-navigation/commit/eaf1100ac7d99cb93ba11a999549dd0752809a78)), closes [#12545](https://github.com/react-navigation/react-navigation/issues/12545) - by @
+
 ## [7.3.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.14...@react-navigation/native-stack@7.3.15) (2025-06-14)
 
 **Note:** Version bump only for package @react-navigation/native-stack
