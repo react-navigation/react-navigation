@@ -573,6 +573,7 @@ export function useNavigationBuilder<
         name: route.params.screen,
         params: route.params.params,
         path: route.params.path,
+        merge: route.params.merge,
         pop: route.params.pop,
       });
     }

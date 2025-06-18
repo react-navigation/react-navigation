@@ -982,6 +982,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
   | {
       screen?: never;
       params?: never;
+      merge?: never;
       initial?: never;
       pop?: never;
       path?: string;
@@ -992,6 +993,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
         ? {
             screen: RouteName;
             params?: ParamList[RouteName];
+            merge?: boolean;
             initial?: boolean;
             path?: string;
             pop?: boolean;
@@ -1000,6 +1002,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
         : {
             screen: RouteName;
             params: ParamList[RouteName];
+            merge?: boolean;
             initial?: boolean;
             path?: string;
             pop?: boolean;
