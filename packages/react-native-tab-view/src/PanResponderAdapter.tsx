@@ -149,8 +149,6 @@ export function PanResponderAdapter<T extends Route>({
     const maxTranslate = layout.width * (routes.length - 1);
 
     // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
-    setPosition(layout.width ? Animated.divide(panX, -layout.width) : null);
-    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setTranslateX(
       Animated.multiply(
         panX.interpolate({
