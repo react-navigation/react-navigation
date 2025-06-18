@@ -128,9 +128,9 @@ export function PanResponderAdapter<T extends Route>({
 
     panX.setValue(offset);
 
-    // If the layout.width is 0 it means we still waiting for calculating it.
+    // layout.width is 0 which means we still waiting for it to be calculated.
     if (!layout.width) {
-      // Non null values of these states indicates that we have a proper layout.width
+      // Non-null values of these states indicate that we have a proper layout.width
       // We should make them null again if the layout.width is 0 again to avoid glitching.
       // This can happen if the component is still mounted but not rendered anymore. e.g. on the screen
       // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
