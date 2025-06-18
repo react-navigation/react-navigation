@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.11.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.10.1...@react-navigation/core@7.11.0) (2025-06-18)
+
+### Features
+
+* support merging params when navigating to nested navigator ([7754c15](https://github.com/react-navigation/react-navigation/commit/7754c153122ccfaff353da36efaa2a78d92cc1e5)) - by @satya164
+
 ## [7.10.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.10.0...@react-navigation/core@7.10.1) (2025-06-14)
 
 ### Bug Fixes
