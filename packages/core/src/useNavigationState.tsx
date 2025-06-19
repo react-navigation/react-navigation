@@ -21,7 +21,7 @@ export function useNavigationState<ParamList extends ParamListBase, T>(
 
   if (stateListener == null) {
     throw new Error(
-      'useNavigationState must be used within a NavigationStateListenerProvider'
+      "Couldn't get the navigation state. Is your component inside a navigator?"
     );
   }
 
