@@ -15,9 +15,16 @@ beforeEach(() => {
 
 test('gets the current navigation state', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return state.routes.map((route) => descriptors[route.key].render());
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const callback = jest.fn<(state: NavigationState) => void>();
@@ -66,9 +73,16 @@ test('gets the current navigation state', () => {
 
 test('gets the current navigation state with selector', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return state.routes.map((route) => descriptors[route.key].render());
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const callback = jest.fn();
@@ -116,9 +130,16 @@ test('gets the current navigation state with selector', () => {
 
 test('gets the correct value if selector changes', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return state.routes.map((route) => descriptors[route.key].render());
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const callback = jest.fn();
@@ -159,4 +180,124 @@ test('gets the correct value if selector changes', () => {
 
   expect(callback).toHaveBeenCalledTimes(2);
   expect(callback.mock.calls[1][0]).toBe('first');
+});
+
+test('gets the current navigation state at navigator level', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
+  };
+
+  const Test = () => {
+    const index = useNavigationState((state) => state.index);
+    const routes = useNavigationState((state) => state.routes);
+
+    return JSON.stringify({ index, routes }, null, 2);
+  };
+
+  const navigation = React.createRef<any>();
+
+  const root = render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator layout={() => <Test />}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="second">{() => null}</Screen>
+        <Screen name="third">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+"{
+  "index": 0,
+  "routes": [
+    {
+      "name": "first",
+      "key": "first"
+    },
+    {
+      "name": "second",
+      "key": "second"
+    },
+    {
+      "name": "third",
+      "key": "third"
+    }
+  ]
+}"
+`);
+
+  act(() => navigation.current.navigate('second'));
+
+  expect(root).toMatchInlineSnapshot(`
+"{
+  "index": 1,
+  "routes": [
+    {
+      "name": "first",
+      "key": "first"
+    },
+    {
+      "name": "second",
+      "key": "second"
+    },
+    {
+      "name": "third",
+      "key": "third"
+    }
+  ]
+}"
+`);
+
+  act(() => navigation.current.navigate('third'));
+
+  expect(root).toMatchInlineSnapshot(`
+"{
+  "index": 2,
+  "routes": [
+    {
+      "name": "first",
+      "key": "first"
+    },
+    {
+      "name": "second",
+      "key": "second"
+    },
+    {
+      "name": "third",
+      "key": "third"
+    }
+  ]
+}"
+`);
+
+  act(() => navigation.current.navigate('second'));
+
+  expect(root).toMatchInlineSnapshot(`
+"{
+  "index": 1,
+  "routes": [
+    {
+      "name": "first",
+      "key": "first"
+    },
+    {
+      "name": "second",
+      "key": "second"
+    },
+    {
+      "name": "third",
+      "key": "third"
+    }
+  ]
+}"
+`);
 });

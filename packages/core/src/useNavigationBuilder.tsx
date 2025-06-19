@@ -42,6 +42,7 @@ import { useFocusEvents } from './useFocusEvents';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
 import { useLazyValue } from './useLazyValue';
 import { useNavigationHelpers } from './useNavigationHelpers';
+import { NavigationStateListenerProvider } from './useNavigationState';
 import { useOnAction } from './useOnAction';
 import { useOnGetState } from './useOnGetState';
 import { useOnRouteFocus } from './useOnRouteFocus';
@@ -808,7 +809,9 @@ export function useNavigationBuilder<
 
     return (
       <NavigationHelpersContext.Provider value={navigation}>
-        <PreventRemoveProvider>{element}</PreventRemoveProvider>
+        <NavigationStateListenerProvider state={state}>
+          <PreventRemoveProvider>{element}</PreventRemoveProvider>
+        </NavigationStateListenerProvider>
       </NavigationHelpersContext.Provider>
     );
   });
