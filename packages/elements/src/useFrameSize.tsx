@@ -3,6 +3,7 @@ import { Dimensions, Platform, StyleSheet } from 'react-native';
 // eslint-disable-next-line no-restricted-imports
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import useLatestCallback from 'use-latest-callback';
+import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 
 type Size = {
   width: number;
@@ -33,10 +34,11 @@ export function useFrameSize<T>(
     throw new Error('useFrameSize must be used within a FrameSizeProvider');
   }
 
-  const value = React.useSyncExternalStore(
+  const value = useSyncExternalStoreWithSelector(
     debounce ? context.subscribeDebounced : context.subscribe,
-    () => selector(context.getCurrent()),
-    () => selector(context.getCurrent())
+    context.getCurrent,
+    context.getCurrent,
+    selector
   );
 
   return value;

@@ -43,7 +43,8 @@
   },
   "dependencies": {
     "color": "^4.2.3",
-    "use-latest-callback": "^0.2.4"
+    "use-latest-callback": "^0.2.4",
+    "use-sync-external-store": "^1.5.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.0",
@@ -51,6 +52,7 @@
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^13.2.0",
     "@types/react": "~19.0.10",
+    "@types/use-sync-external-store": "^1.5.0",
     "del-cli": "^6.0.0",
     "react": "19.0.0",
     "react-native": "0.79.3",
