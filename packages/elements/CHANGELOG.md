@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.4.5...@react-navigation/elements@2.4.6) (2025-06-19)
+
+### Bug Fixes
+
+* use use-sync-external-store for selector for frame size ([51ad10c](https://github.com/react-navigation/react-navigation/commit/51ad10c7ecbc5c24b9e916927296f66799e73261)) - by @
+
 ## [2.4.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.4.4...@react-navigation/elements@2.4.5) (2025-06-18)
 
 **Note:** Version bump only for package @react-navigation/elements

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.12.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.11.0...@react-navigation/core@7.12.0) (2025-06-19)
+
+### Bug Fixes
+
+* remove .native extension in core for ESM compat ([93e5a83](https://github.com/react-navigation/react-navigation/commit/93e5a83319fb0f41485f9f86c5cb46af5057235f)) - by @
+
+### Features
+
+* make useNavigationState work in navigator level, e.g. layouts ([ba6be7d](https://github.com/react-navigation/react-navigation/commit/ba6be7d73a9805df29b7e00559caa292ccca6532)) - by @
+
 # [7.11.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.10.1...@react-navigation/core@7.11.0) (2025-06-18)
 
 ### Features
