@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { NavigationBuilderContext } from './NavigationBuilderContext';
-import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
+import { useClientLayoutEffect } from './useClientLayoutEffect';
 
 /**
  * When screen config changes, we want to update the navigator in the same update phase.
@@ -19,5 +19,5 @@ export function useScheduleUpdate(callback: () => void) {
   // However, since we are using sync store, it might be fine
   scheduleUpdate(callback);
 
-  useIsomorphicLayoutEffect(flushUpdates);
+  useClientLayoutEffect(flushUpdates);
 }

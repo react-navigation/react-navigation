@@ -32,13 +32,13 @@ import {
   type RouteConfig,
 } from './types';
 import { useChildListeners } from './useChildListeners';
+import { useClientLayoutEffect } from './useClientLayoutEffect';
 import { useComponent } from './useComponent';
 import { useCurrentRender } from './useCurrentRender';
 import { type ScreenConfigWithParent, useDescriptors } from './useDescriptors';
 import { useEventEmitter } from './useEventEmitter';
 import { useFocusedListenersChildrenAdapter } from './useFocusedListenersChildrenAdapter';
 import { useFocusEvents } from './useFocusEvents';
-import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
 import { useLazyValue } from './useLazyValue';
 import { useNavigationHelpers } from './useNavigationHelpers';
@@ -644,7 +644,7 @@ export function useNavigationBuilder<
 
   stateRef.current = state;
 
-  useIsomorphicLayoutEffect(() => {
+  useClientLayoutEffect(() => {
     stateRef.current = null;
   });
 
