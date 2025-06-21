@@ -1,4 +1,3 @@
-// eslint-disable-next-line import-x/no-unresolved, import-x/extensions
 import { defineConfig, globalIgnores } from 'eslint/config';
 import { jest, react, recommended } from 'eslint-config-satya164';
 import sort from 'eslint-plugin-simple-import-sort';

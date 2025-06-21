@@ -60,7 +60,7 @@
     "react-native": "0.79.3",
     "react-native-builder-bob": "^0.40.12",
     "react-native-pager-view": "6.8.1",
-    "react-native-safe-area-context": "5.4.1",
+    "react-native-safe-area-context": "5.5.0",
     "react-test-renderer": "19.0.0",
     "typescript": "^5.8.3"
   },

@@ -1,22 +1,30 @@
 import * as React from 'react';
-import { Dimensions, Platform, StyleSheet } from 'react-native';
-// eslint-disable-next-line no-restricted-imports
-import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import {
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  type ViewStyle,
+} from 'react-native';
+import {
+  SafeAreaListener,
+  // eslint-disable-next-line no-restricted-imports
+  useSafeAreaFrame,
+} from 'react-native-safe-area-context';
 import useLatestCallback from 'use-latest-callback';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 
-type Size = {
+type Frame = {
   width: number;
   height: number;
 };
 
-type Listener = (size: Size) => void;
+type Listener = (frame: Frame) => void;
 
 type RemoveListener = () => void;
 
 type FrameContextType = {
-  getCurrent: () => Size;
-  subscribe: (listener: Listener, debounce?: boolean) => RemoveListener;
+  getCurrent: () => Frame;
+  subscribe: (listener: Listener) => RemoveListener;
   subscribeDebounced: (listener: Listener) => RemoveListener;
 };
 
@@ -25,7 +33,7 @@ const FrameContext = React.createContext<FrameContextType | undefined>(
 );
 
 export function useFrameSize<T>(
-  selector: (size: Size) => T,
+  selector: (frame: Frame) => T,
   debounce?: boolean
 ): T {
   const context = React.useContext(FrameContext);
@@ -44,7 +52,16 @@ export function useFrameSize<T>(
   return value;
 }
 
-export function FrameSizeProvider({ children }: { children: React.ReactNode }) {
+type FrameSizeProviderProps = {
+  initialFrame: Frame;
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+};
+
+export function FrameSizeProvider({
+  initialFrame,
+  children,
+}: FrameSizeProviderProps) {
   const context = React.useContext(FrameContext);
 
   if (context != null) {
@@ -52,21 +69,21 @@ export function FrameSizeProvider({ children }: { children: React.ReactNode }) {
     return children;
   }
 
-  return <FrameSizeProviderInner>{children}</FrameSizeProviderInner>;
+  return (
+    <FrameSizeProviderInner initialFrame={initialFrame}>
+      {children}
+    </FrameSizeProviderInner>
+  );
 }
 
 function FrameSizeProviderInner({
+  initialFrame,
   children,
-}: {
-  children: React.ReactNode;
-}): React.JSX.Element {
+}: FrameSizeProviderProps) {
+  const frameRef = React.useRef<Frame>(initialFrame);
   const listeners = React.useRef<Set<Listener>>(new Set());
 
-  const { element, get } = useResizeListener((size) => {
-    listeners.current.forEach((listener) => listener(size));
-  });
-
-  const getCurrent = useLatestCallback(get);
+  const getCurrent = useLatestCallback(() => frameRef.current);
 
   const subscribe = useLatestCallback((listener: Listener): RemoveListener => {
     listeners.current.add(listener);
@@ -80,19 +97,14 @@ function FrameSizeProviderInner({
     (listener: Listener): RemoveListener => {
       let timer: ReturnType<typeof setTimeout>;
 
-      const debouncedListener = (size: Size) => {
+      const debouncedListener = (frame: Frame) => {
         clearTimeout(timer);
         timer = setTimeout(() => {
-          listener(size);
+          listener(frame);
         }, 100);
       };
 
-      listeners.current.add(debouncedListener);
-
-      return () => {
-        clearTimeout(timer);
-        listeners.current.delete(debouncedListener);
-      };
+      return subscribe(debouncedListener);
     }
   );
 
@@ -105,40 +117,58 @@ function FrameSizeProviderInner({
     [subscribe, subscribeDebounced, getCurrent]
   );
 
+  const onChange = useLatestCallback((frame: Frame) => {
+    if (
+      frameRef.current.height === frame.height &&
+      frameRef.current.width === frame.width
+    ) {
+      return;
+    }
+
+    listeners.current.forEach((listener) => listener(frame));
+    frameRef.current = frame;
+  });
+
   return (
-    <FrameContext.Provider value={context}>
-      {element}
-      {children}
-    </FrameContext.Provider>
+    <>
+      {Platform.OS === 'web' ? (
+        <FrameSizeListenerWeb onChange={onChange} />
+      ) : typeof SafeAreaListener === 'undefined' ? (
+        <FrameSizeListenerNativeFallback onChange={onChange} />
+      ) : (
+        <SafeAreaListener
+          onChange={({ frame }) => onChange(frame)}
+          style={StyleSheet.absoluteFill}
+        />
+      )}
+      <FrameContext.Provider value={context}>{children}</FrameContext.Provider>
+    </>
   );
 }
 
-const useResizeListener =
-  Platform.OS === 'web' ? useResizeListenerWeb : useResizeListenerNative;
-
-function useResizeListenerNative(onChange: (size: Size) => void) {
+// SafeAreaListener is available only on newer versions
+// Fallback to an effect-based shim for older versions
+function FrameSizeListenerNativeFallback({
+  onChange,
+}: {
+  onChange: (frame: Frame) => void;
+}) {
   const frame = useSafeAreaFrame();
 
   React.useLayoutEffect(() => {
     onChange(frame);
   }, [frame, onChange]);
 
-  return {
-    element: null,
-    get: () => frame,
-  };
+  return null;
 }
-
-const { width = 0, height = 0 } = Dimensions.get('window');
 
 // FIXME: On the Web, the safe area frame value doesn't update on resize
 // So we workaround this by measuring the frame on resize
-function useResizeListenerWeb(onChange: (size: Size) => void) {
-  const frameRef = React.useRef<Size>({
-    width,
-    height,
-  });
-
+function FrameSizeListenerWeb({
+  onChange,
+}: {
+  onChange: (frame: Frame) => void;
+}) {
   const elementRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
@@ -146,21 +176,9 @@ function useResizeListenerWeb(onChange: (size: Size) => void) {
       return;
     }
 
-    const update = (size: Size) => {
-      if (
-        frameRef.current.width === size.width &&
-        frameRef.current.height === size.height
-      ) {
-        return;
-      }
-
-      frameRef.current = size;
-      onChange(size);
-    };
-
     const rect = elementRef.current.getBoundingClientRect();
 
-    update({
+    onChange({
       width: rect.width,
       height: rect.height,
     });
@@ -171,7 +189,7 @@ function useResizeListenerWeb(onChange: (size: Size) => void) {
       if (entry) {
         const { width, height } = entry.contentRect;
 
-        update({ width, height });
+        onChange({ width, height });
       }
     });
 
@@ -182,7 +200,7 @@ function useResizeListenerWeb(onChange: (size: Size) => void) {
     };
   }, [onChange]);
 
-  const element = (
+  return (
     <div
       ref={elementRef}
       style={{
@@ -192,9 +210,4 @@ function useResizeListenerWeb(onChange: (size: Size) => void) {
       }}
     />
   );
-
-  return {
-    element,
-    get: () => frameRef.current,
-  };
 }

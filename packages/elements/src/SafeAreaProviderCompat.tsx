@@ -36,7 +36,11 @@ const initialMetrics =
 export function SafeAreaProviderCompat({ children, style }: Props) {
   const insets = React.useContext(SafeAreaInsetsContext);
 
-  children = <FrameSizeProvider>{children}</FrameSizeProvider>;
+  children = (
+    <FrameSizeProvider initialFrame={initialMetrics.frame}>
+      {children}
+    </FrameSizeProvider>
+  );
 
   if (insets) {
     // If we already have insets, don't wrap the stack in another safe area provider
