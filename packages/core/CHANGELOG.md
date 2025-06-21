@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.12.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.12.0...@react-navigation/core@7.12.1) (2025-06-21)
+
+### Bug Fixes
+
+* fix error message for useNavigationState ([8740ae0](https://github.com/react-navigation/react-navigation/commit/8740ae0f495a2e55dd05ce3e4da6f35cc13a1e1f)) - by @satya164
+
 # [7.12.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.11.0...@react-navigation/core@7.12.0) (2025-06-19)
 
 ### Bug Fixes

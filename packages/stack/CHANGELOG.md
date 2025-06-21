@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.3.6...@react-navigation/stack@7.4.0) (2025-06-21)
+
+### Features
+
+* use the new SafeAreaListener to listen to frame changes ([d9e295e](https://github.com/react-navigation/react-navigation/commit/d9e295eef251393b5280d661957e7d2c31a36ae1)) - by @satya164
+
 ## [7.3.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.3.5...@react-navigation/stack@7.3.6) (2025-06-19)
 
 **Note:** Version bump only for package @react-navigation/stack
