@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.5.0...@react-navigation/elements@2.5.1) (2025-06-22)
+
+### Bug Fixes
+
+* throttle frame size instead of debounce ([d016bd7](https://github.com/react-navigation/react-navigation/commit/d016bd7bdfbd6fd73cee4c2bcf890574237239f4)) - by @
+
 # [2.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.4.6...@react-navigation/elements@2.5.0) (2025-06-21)
 
 ### Features
