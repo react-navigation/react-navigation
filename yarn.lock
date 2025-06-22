@@ -4747,6 +4747,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/semver@npm:^7":
+  version: 7.7.0
+  resolution: "@types/semver@npm:7.7.0"
+  checksum: 10c0/6b5f65f647474338abbd6ee91a6bbab434662ddb8fe39464edcbcfc96484d388baad9eb506dff217b6fc1727a88894930eb1f308617161ac0f376fe06be4e1ee
+  languageName: node
+  linkType: hard
+
 "@types/send@npm:*":
   version: 0.17.5
   resolution: "@types/send@npm:0.17.5"
@@ -14069,6 +14076,7 @@ __metadata:
     "@lerna-lite/publish": "npm:^4.4.1"
     "@lerna-lite/run": "npm:^4.4.1"
     "@react-native/babel-preset": "npm:^0.79.3"
+    "@types/semver": "npm:^7"
     check-dependency-version-consistency: "npm:^5.0.0"
     commitlint: "npm:^19.8.1"
     eslint: "npm:^9.29.0"
@@ -14077,6 +14085,7 @@ __metadata:
     jest: "npm:^30.0.0"
     npm-run-all2: "npm:^8.0.4"
     prettier: "npm:^3.5.3"
+    semver: "npm:^7.7.2"
     typescript: "npm:^5.8.3"
   languageName: unknown
   linkType: soft
