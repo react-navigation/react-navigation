@@ -18,14 +18,14 @@ type Frame = {
   height: number;
 };
 
-type Listener = (frame: Frame) => void;
+type Listener = () => void;
 
 type RemoveListener = () => void;
 
 type FrameContextType = {
   getCurrent: () => Frame;
   subscribe: (listener: Listener) => RemoveListener;
-  subscribeDebounced: (listener: Listener) => RemoveListener;
+  subscribeThrottled: (listener: Listener) => RemoveListener;
 };
 
 const FrameContext = React.createContext<FrameContextType | undefined>(
@@ -34,7 +34,7 @@ const FrameContext = React.createContext<FrameContextType | undefined>(
 
 export function useFrameSize<T>(
   selector: (frame: Frame) => T,
-  debounce?: boolean
+  throttle?: boolean
 ): T {
   const context = React.useContext(FrameContext);
 
@@ -43,7 +43,7 @@ export function useFrameSize<T>(
   }
 
   const value = useSyncExternalStoreWithSelector(
-    debounce ? context.subscribeDebounced : context.subscribe,
+    throttle ? context.subscribeThrottled : context.subscribe,
     context.getCurrent,
     context.getCurrent,
     selector
@@ -80,7 +80,11 @@ function FrameSizeProviderInner({
   initialFrame,
   children,
 }: FrameSizeProviderProps) {
-  const frameRef = React.useRef<Frame>(initialFrame);
+  const frameRef = React.useRef<Frame>({
+    width: initialFrame.width,
+    height: initialFrame.height,
+  });
+
   const listeners = React.useRef<Set<Listener>>(new Set());
 
   const getCurrent = useLatestCallback(() => frameRef.current);
@@ -93,18 +97,45 @@ function FrameSizeProviderInner({
     };
   });
 
-  const subscribeDebounced = useLatestCallback(
+  const subscribeThrottled = useLatestCallback(
     (listener: Listener): RemoveListener => {
-      let timer: ReturnType<typeof setTimeout>;
+      const delay = 100; // Throttle delay in milliseconds
 
-      const debouncedListener = (frame: Frame) => {
+      let timer: ReturnType<typeof setTimeout>;
+      let updated = false;
+      let waiting = false;
+
+      const throttledListener = () => {
         clearTimeout(timer);
-        timer = setTimeout(() => {
-          listener(frame);
-        }, 100);
+
+        updated = true;
+
+        if (waiting) {
+          // Schedule a timer to call the listener at the end
+          timer = setTimeout(() => {
+            if (updated) {
+              updated = false;
+              listener();
+            }
+          }, delay);
+        } else {
+          waiting = true;
+          setTimeout(function () {
+            waiting = false;
+          }, delay);
+
+          // Call the listener immediately at start
+          updated = false;
+          listener();
+        }
       };
 
-      return subscribe(debouncedListener);
+      const unsubscribe = subscribe(throttledListener);
+
+      return () => {
+        unsubscribe();
+        clearTimeout(timer);
+      };
     }
   );
 
@@ -112,9 +143,9 @@ function FrameSizeProviderInner({
     () => ({
       getCurrent,
       subscribe,
-      subscribeDebounced,
+      subscribeThrottled,
     }),
-    [subscribe, subscribeDebounced, getCurrent]
+    [subscribe, subscribeThrottled, getCurrent]
   );
 
   const onChange = useLatestCallback((frame: Frame) => {
@@ -125,8 +156,8 @@ function FrameSizeProviderInner({
       return;
     }
 
-    listeners.current.forEach((listener) => listener(frame));
-    frameRef.current = frame;
+    frameRef.current = { width: frame.width, height: frame.height };
+    listeners.current.forEach((listener) => listener());
   });
 
   return (
