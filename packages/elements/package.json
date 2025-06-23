@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/elements",
   "description": "UI Components for React Navigation",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "keywords": [
     "react-native",
     "react-navigation",
@@ -65,7 +65,7 @@
     "@react-navigation/native": "workspace:^",
     "react": ">= 18.2.0",
     "react-native": "*",
-    "react-native-safe-area-context": ">= 4.0.0"
+    "react-native-safe-area-context": ">= 5.5.0"
   },
   "peerDependenciesMeta": {
     "@react-native-masked-view/masked-view": {
