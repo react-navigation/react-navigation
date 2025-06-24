@@ -6,12 +6,18 @@ import {
   type ViewStyle,
 } from 'react-native';
 import {
-  SafeAreaListener,
   // eslint-disable-next-line no-restricted-imports
   useSafeAreaFrame,
 } from 'react-native-safe-area-context';
 import useLatestCallback from 'use-latest-callback';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
+
+// Load with require to avoid error from webpack due to missing export in older versions
+// eslint-disable-next-line import-x/no-commonjs
+const SafeAreaListener = require('react-native-safe-area-context')
+  .SafeAreaListener as
+  | typeof import('react-native-safe-area-context').SafeAreaListener
+  | undefined;
 
 type Frame = {
   width: number;
