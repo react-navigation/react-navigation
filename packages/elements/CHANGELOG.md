@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.5.1...@react-navigation/elements@2.5.2) (2025-06-24)
+
+### Bug Fixes
+
+* load SafeAreaListener with require to avoid webpack error ([4094a75](https://github.com/react-navigation/react-navigation/commit/4094a75bab1aaec407411528e59cbd9466b99267)), closes [#12654](https://github.com/react-navigation/react-navigation/issues/12654) - by @
+
 ## [2.5.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.5.0...@react-navigation/elements@2.5.1) (2025-06-22)
 
 ### Bug Fixes
