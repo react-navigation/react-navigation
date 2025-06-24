@@ -23,7 +23,17 @@ const ChatScreen = () => <Chat bottom />;
 
 export function MaterialTopTabsScreen() {
   return (
-    <MaterialTopTabs.Navigator>
+    <MaterialTopTabs.Navigator
+      screenOptions={{
+        tabBarActiveFontSize: 18,
+        tabBarInactiveFontSize: 14,
+        tabBarActiveTintColor: '#FF0000',
+        tabBarInactiveTintColor: '#000000',
+        tabBarActiveFontWeight: 900,
+        tabBarInactiveFontWeight: 500,
+        tabBarStyle: { height: 50 },
+      }}
+    >
       <MaterialTopTabs.Screen
         name="Chat"
         component={ChatScreen}
