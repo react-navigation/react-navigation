@@ -12,6 +12,7 @@ import type {
   Theme,
 } from '@react-navigation/native';
 import type {
+  ColorValue,
   ImageRequireSource,
   ImageSourcePropType,
   StyleProp,
@@ -702,13 +703,55 @@ export interface HeaderBarButtonItem {
    */
   title?: string;
   /**
-   * Callback to be called when the button is pressed.
-   */
-  onPress: () => void;
-  /**
    * Image source for the button.
    */
   image?: ImageRequireSource;
+  /**
+   * The style of the item.
+   * "Prominent" only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/style-swift.property
+   */
+  style?: 'Plain' | 'Done' | 'Prominent';
+  /**
+   * The tint color to apply to the button item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/tintcolor
+   */
+  tintColor?: ColorValue;
+  /**
+   * A boolean that determines the visibility of the item.
+   * Only available from iOS 16.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/ishidden
+   */
+  hidden?: boolean;
+  /**
+   * A Boolean value that indicates whether the button is in a selected state.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
+   */
+  selected?: boolean;
+  /**
+   * A Boolean value that indicates whether the button is in a enabled state.
+   */
+  enabled?: boolean;
+  /**
+   * The width of the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/width
+   */
+  width?: number;
+  /**
+   * The set of possible titles to display on the bar button.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/possibletitles
+   */
+  possibleTitles?: string[];
+  /**
+   * Function to be called when the button is pressed.
+   */
+  onPress?: () => void;
 }
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
