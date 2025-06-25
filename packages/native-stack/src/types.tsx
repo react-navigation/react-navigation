@@ -703,6 +703,14 @@ interface SharedHeaderBarButtonItem {
    */
   title?: string;
   /**
+   * Style for the button title.
+   */
+  titleStyle?: {
+    fontFamily?: string;
+    fontSize?: number;
+    fontWeight?: string;
+  };
+  /**
    * Image source for the button.
    */
   image?: ImageRequireSource;
@@ -727,12 +735,6 @@ interface SharedHeaderBarButtonItem {
    */
   hidden?: boolean;
   /**
-   * A Boolean value that indicates whether the button is in a selected state.
-   *
-   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
-   */
-  selected?: boolean;
-  /**
    * A Boolean value that indicates whether the button is in a enabled state.
    */
   enabled?: boolean;
@@ -748,6 +750,27 @@ interface SharedHeaderBarButtonItem {
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/possibletitles
    */
   possibleTitles?: string[];
+  /**
+   * A boolean value indicating whether the background this item may share with other items in the bar should be hidden.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/hidessharedbackground
+   */
+  hidesSharedBackground?: boolean;
+  /**
+   * A boolean value indicating whether this bar button item can share a background with other items in a navigation bar or a toolbar.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/sharesbackground
+   */
+  sharesBackground?: boolean;
+  /**
+   * An identifier used to match bar button items across transitions in a navigation bar or toolbar..
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/identifier
+   */
+  identifier?: string;
 }
 
 export interface HeaderBarButtonItemWithAction
@@ -756,6 +779,19 @@ export interface HeaderBarButtonItemWithAction
    * Function to call when the button is pressed.
    */
   onPress: () => void;
+  /**
+   * A Boolean value that indicates whether the button is in a selected state.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
+   */
+  selected?: boolean;
+  /**
+   * A Boolean value that indicates whether the button represents an action or selection.
+   * Only available from iOS 15.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
+   */
+  changesSelectionAsPrimaryAction?: boolean;
 }
 
 export interface HeaderBarButtonItemWithMenu extends SharedHeaderBarButtonItem {
