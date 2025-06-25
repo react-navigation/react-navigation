@@ -12,6 +12,7 @@ import type {
   Theme,
 } from '@react-navigation/native';
 import type {
+  ImageRequireSource,
   ImageSourcePropType,
   StyleProp,
   TextStyle,
@@ -287,6 +288,18 @@ export type NativeStackNavigationOptions = {
    * Function which returns a React Element to display on the right side of the header.
    */
   headerRight?: (props: NativeStackHeaderRightProps) => React.ReactNode;
+  /**
+   * iOS native UIBarButtomItem to the right side of the header.
+   *
+   * @platform ios
+   */
+  headerRightBarButtonItems?: HeaderBarButtonItem[];
+  /**
+   * iOS native UIBarButtomItem to the left side of the header.
+   *
+   * @platform ios
+   */
+  headerLeftBarButtonItems?: HeaderBarButtonItem[];
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
@@ -682,6 +695,21 @@ export type NativeStackNavigationOptions = {
    */
   unstable_sheetFooter?: () => React.ReactNode;
 };
+
+export interface HeaderBarButtonItem {
+  /**
+   * Title of the button.
+   */
+  title?: string;
+  /**
+   * Callback to be called when the button is pressed.
+   */
+  onPress: () => void;
+  /**
+   * Image source for the button.
+   */
+  image?: ImageRequireSource;
+}
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,

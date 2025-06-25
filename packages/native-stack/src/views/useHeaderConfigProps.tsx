@@ -1,6 +1,12 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
 import { type Route, useLocale, useTheme } from '@react-navigation/native';
-import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
+import {
+  type NativeSyntheticEvent,
+  Platform,
+  StyleSheet,
+  type TextStyle,
+  View,
+} from 'react-native';
 import {
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
@@ -12,6 +18,7 @@ import {
 } from 'react-native-screens';
 
 import type { NativeStackNavigationOptions } from '../types';
+import { prepareHeaderBarButtonItems } from '../utils/prepareHeaderBarButtonItems';
 import { processFonts } from './FontProcessor';
 
 type Props = NativeStackNavigationOptions & {
@@ -49,6 +56,8 @@ export function useHeaderConfigProps({
   headerBack,
   route,
   title,
+  headerLeftBarButtonItems,
+  headerRightBarButtonItems,
 }: Props) {
   const { direction } = useLocale();
   const { colors, fonts } = useTheme();
@@ -260,6 +269,22 @@ export function useHeaderConfigProps({
     </>
   );
 
+  const preparedHeaderLeftBarButtonItems = headerLeftBarButtonItems
+    ? prepareHeaderBarButtonItems(headerLeftBarButtonItems)
+    : undefined;
+  const preparedHeaderRightBarButtonItems = headerRightBarButtonItems
+    ? prepareHeaderBarButtonItems(headerRightBarButtonItems)
+    : undefined;
+  const onPressHeaderBarButtonItem = (
+    event: NativeSyntheticEvent<{ buttonId: string }>
+  ) => {
+    const pressedItem = [
+      ...(preparedHeaderLeftBarButtonItems ?? []),
+      ...(preparedHeaderRightBarButtonItems ?? []),
+    ].find((item) => item.buttonId === event.nativeEvent.buttonId);
+    pressedItem?.onPress?.();
+  };
+
   return {
     backButtonInCustomView,
     backgroundColor: headerBackgroundColor,
@@ -297,5 +322,8 @@ export function useHeaderConfigProps({
     topInsetEnabled: headerTopInsetEnabled,
     translucent: translucent === true,
     children,
+    headerLeftBarButtonItems: preparedHeaderLeftBarButtonItems,
+    headerRightBarButtonItems: preparedHeaderRightBarButtonItems,
+    onPressHeaderBarButtonItem,
   } as const;
 }
