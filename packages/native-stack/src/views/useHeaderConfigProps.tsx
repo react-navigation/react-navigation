@@ -17,7 +17,7 @@ import {
   SearchBar,
 } from 'react-native-screens';
 
-import type { NativeStackNavigationOptions } from '../types';
+import { type NativeStackNavigationOptions } from '../types';
 import { prepareHeaderBarButtonItems } from '../utils/prepareHeaderBarButtonItems';
 import { processFonts } from './FontProcessor';
 
@@ -270,19 +270,25 @@ export function useHeaderConfigProps({
   );
 
   const preparedHeaderLeftBarButtonItems = headerLeftBarButtonItems
-    ? prepareHeaderBarButtonItems(headerLeftBarButtonItems)
+    ? prepareHeaderBarButtonItems(headerLeftBarButtonItems, route.key)
     : undefined;
   const preparedHeaderRightBarButtonItems = headerRightBarButtonItems
-    ? prepareHeaderBarButtonItems(headerRightBarButtonItems)
+    ? prepareHeaderBarButtonItems(headerRightBarButtonItems, route.key)
     : undefined;
+
   const onPressHeaderBarButtonItem = (
     event: NativeSyntheticEvent<{ buttonId: string }>
   ) => {
     const pressedItem = [
       ...(preparedHeaderLeftBarButtonItems ?? []),
       ...(preparedHeaderRightBarButtonItems ?? []),
-    ].find((item) => item.buttonId === event.nativeEvent.buttonId);
-    pressedItem?.onPress?.();
+    ].find(
+      (item) =>
+        'onPress' in item && item.buttonId === event.nativeEvent.buttonId
+    );
+    if (pressedItem && 'onPress' in pressedItem && pressedItem.onPress) {
+      pressedItem.onPress();
+    }
   };
 
   return {

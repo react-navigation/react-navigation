@@ -697,7 +697,7 @@ export type NativeStackNavigationOptions = {
   unstable_sheetFooter?: () => React.ReactNode;
 };
 
-export interface HeaderBarButtonItem {
+interface SharedHeaderBarButtonItem {
   /**
    * Title of the button.
    */
@@ -748,11 +748,28 @@ export interface HeaderBarButtonItem {
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/possibletitles
    */
   possibleTitles?: string[];
-  /**
-   * Function to be called when the button is pressed.
-   */
-  onPress?: () => void;
 }
+
+export interface HeaderBarButtonItemWithAction
+  extends SharedHeaderBarButtonItem {
+  /**
+   * Function to call when the button is pressed.
+   */
+  onPress: () => void;
+}
+
+export interface HeaderBarButtonItemWithMenu extends SharedHeaderBarButtonItem {
+  menu: any[];
+}
+
+export interface HeaderBarButtonItemSpacing {
+  spacing: number;
+}
+
+export type HeaderBarButtonItem =
+  | HeaderBarButtonItemWithAction
+  | HeaderBarButtonItemWithMenu
+  | HeaderBarButtonItemSpacing;
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
