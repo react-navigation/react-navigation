@@ -37,11 +37,19 @@ export const prepareHeaderBarButtonItems = (
       ? { ...item.titleStyle, color: processColor(item.titleStyle.color) }
       : undefined;
     const tintColor = item.tintColor ? processColor(item.tintColor) : undefined;
+    const badge = item.badge
+      ? {
+          ...item.badge,
+          color: processColor(item.badge.color),
+          backgroundColor: processColor(item.badge.backgroundColor),
+        }
+      : undefined;
     const processedItem = {
       ...item,
       image,
       titleStyle,
       tintColor,
+      badge,
     };
     if ('onPress' in item) {
       return {

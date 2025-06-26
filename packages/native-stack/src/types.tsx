@@ -772,6 +772,31 @@ interface SharedHeaderBarButtonItem {
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/identifier
    */
   identifier?: string;
+  /**
+   * A badge to be rendered on a bar button item.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitembadge
+   */
+  badge?: {
+    /**
+     * The text to display in the badge.
+     */
+    value: string;
+    /**
+     * The color of the badge.
+     */
+    color?: ColorValue;
+    /**
+     * The background color of the badge.
+     */
+    backgroundColor?: ColorValue;
+    style?: {
+      fontFamily?: string;
+      fontSize?: number;
+      fontWeight?: string;
+    };
+  };
   accessibilityLabel?: string;
   accessibilityHint?: string;
 }
