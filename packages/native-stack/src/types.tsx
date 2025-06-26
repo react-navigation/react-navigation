@@ -772,6 +772,8 @@ interface SharedHeaderBarButtonItem {
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/identifier
    */
   identifier?: string;
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
 }
 
 export interface HeaderBarButtonItemWithAction
@@ -795,8 +797,22 @@ export interface HeaderBarButtonItemWithAction
   changesSelectionAsPrimaryAction?: boolean;
 }
 
+export interface HeaderBarButtonItemMenuAction {
+  title?: string;
+  onPress: () => void;
+  /**
+   * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
+   */
+  systemImage?: string;
+}
 export interface HeaderBarButtonItemWithMenu extends SharedHeaderBarButtonItem {
-  menu: { title: string; onPress: () => void }[];
+  menu: {
+    title?: string;
+    items: (
+      | HeaderBarButtonItemMenuAction
+      | HeaderBarButtonItemWithMenu['menu']
+    )[];
+  };
 }
 
 export interface HeaderBarButtonItemSpacing {

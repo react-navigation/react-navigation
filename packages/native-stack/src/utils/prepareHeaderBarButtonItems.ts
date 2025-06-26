@@ -1,6 +1,28 @@
 import { Image, processColor } from 'react-native';
 
-import type { HeaderBarButtonItem } from '../types';
+import type {
+  HeaderBarButtonItem,
+  HeaderBarButtonItemWithMenu,
+} from '../types';
+
+const prepareMenu = (
+  menu: HeaderBarButtonItemWithMenu['menu'],
+  index: number,
+  routeKey: string
+): any => {
+  return {
+    ...menu,
+    items: menu.items.map((menuItem, menuIndex) => {
+      if ('items' in menuItem) {
+        return prepareMenu(menuItem, menuIndex, routeKey);
+      }
+      return {
+        ...menuItem,
+        menuId: `${menuItem.title ?? menuItem.systemImage}-${menuIndex}-${index}-${routeKey}`,
+      };
+    }),
+  };
+};
 
 export const prepareHeaderBarButtonItems = (
   barButtonItems: HeaderBarButtonItem[],
@@ -30,13 +52,7 @@ export const prepareHeaderBarButtonItems = (
     if ('menu' in item) {
       return {
         ...processedItem,
-        menu: item.menu.map((menuItem, menuIndex) => ({
-          ...menuItem,
-          // ...(menuItem.image ? { image: Image.resolveAssetSource(menuItem.image) } : {}),
-          // ...(menuItem.tintColor ? { tintColor: processColor(menuItem.tintColor) } : {}),
-          // buttonId: `${menuItem.title ?? menuItem.image}-${menuIndex}-${routeKey}`,
-          menuId: `${menuItem.title}-${menuIndex}-${routeKey}`,
-        })),
+        menu: prepareMenu(item.menu, index, routeKey),
       };
     }
     return item;
