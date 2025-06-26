@@ -721,7 +721,7 @@ interface SharedHeaderBarButtonItem {
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/style-swift.property
    */
-  style?: 'Plain' | 'Done' | 'Prominent';
+  style?: 'plain' | 'done' | 'prominent';
   /**
    * The tint color to apply to the button item.
    *
@@ -804,6 +804,24 @@ export interface HeaderBarButtonItemMenuAction {
    * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
    */
   systemImage?: string;
+  /**
+   * State of the menu item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/state
+   */
+  state?: 'on' | 'off' | 'mixed';
+  /**
+   * Style of the menu item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes
+   */
+  attributes?: 'destructive' | 'disabled' | 'hidden' | 'keepsMenuPresented';
+  /**
+   * Discoverability title of the menu item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uiaction/discoverabilitytitle
+   */
+  discoverabilityTitle?: string;
 }
 export interface HeaderBarButtonItemWithMenu extends SharedHeaderBarButtonItem {
   menu: {
