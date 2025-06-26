@@ -709,6 +709,7 @@ interface SharedHeaderBarButtonItem {
     fontFamily?: string;
     fontSize?: number;
     fontWeight?: string;
+    color?: ColorValue;
   };
   /**
    * Image source for the button.
@@ -795,7 +796,7 @@ export interface HeaderBarButtonItemWithAction
 }
 
 export interface HeaderBarButtonItemWithMenu extends SharedHeaderBarButtonItem {
-  menu: any[];
+  menu: { title: string; onPress: () => void }[];
 }
 
 export interface HeaderBarButtonItemSpacing {
