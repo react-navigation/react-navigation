@@ -12,6 +12,8 @@ import type {
   Theme,
 } from '@react-navigation/native';
 import type {
+  ColorValue,
+  ImageRequireSource,
   ImageSourcePropType,
   StyleProp,
   TextStyle,
@@ -287,6 +289,18 @@ export type NativeStackNavigationOptions = {
    * Function which returns a React Element to display on the right side of the header.
    */
   headerRight?: (props: NativeStackHeaderRightProps) => React.ReactNode;
+  /**
+   * iOS native UIBarButtomItem to the right side of the header.
+   *
+   * @platform ios
+   */
+  headerRightBarButtonItems?: HeaderBarButtonItem[];
+  /**
+   * iOS native UIBarButtomItem to the left side of the header.
+   *
+   * @platform ios
+   */
+  headerLeftBarButtonItems?: HeaderBarButtonItem[];
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
@@ -682,6 +696,176 @@ export type NativeStackNavigationOptions = {
    */
   unstable_sheetFooter?: () => React.ReactNode;
 };
+
+interface SharedHeaderBarButtonItem {
+  /**
+   * Title of the button.
+   */
+  title?: string;
+  /**
+   * Style for the button title.
+   */
+  titleStyle?: {
+    fontFamily?: string;
+    fontSize?: number;
+    fontWeight?: string;
+    color?: ColorValue;
+  };
+  /**
+   * Image source for the button.
+   */
+  image?: ImageRequireSource;
+  /**
+   * The style of the item.
+   * "Prominent" only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/style-swift.property
+   */
+  style?: 'plain' | 'done' | 'prominent';
+  /**
+   * The tint color to apply to the button item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/tintcolor
+   */
+  tintColor?: ColorValue;
+  /**
+   * A boolean that determines the visibility of the item.
+   * Only available from iOS 16.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/ishidden
+   */
+  hidden?: boolean;
+  /**
+   * A Boolean value that indicates whether the button is in a enabled state.
+   */
+  enabled?: boolean;
+  /**
+   * The width of the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/width
+   */
+  width?: number;
+  /**
+   * The set of possible titles to display on the bar button.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/possibletitles
+   */
+  possibleTitles?: string[];
+  /**
+   * A boolean value indicating whether the background this item may share with other items in the bar should be hidden.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/hidessharedbackground
+   */
+  hidesSharedBackground?: boolean;
+  /**
+   * A boolean value indicating whether this bar button item can share a background with other items in a navigation bar or a toolbar.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/sharesbackground
+   */
+  sharesBackground?: boolean;
+  /**
+   * An identifier used to match bar button items across transitions in a navigation bar or toolbar..
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/identifier
+   */
+  identifier?: string;
+  /**
+   * A badge to be rendered on a bar button item.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitembadge
+   */
+  badge?: {
+    /**
+     * The text to display in the badge.
+     */
+    value: string;
+    /**
+     * The color of the badge.
+     */
+    color?: ColorValue;
+    /**
+     * The background color of the badge.
+     */
+    backgroundColor?: ColorValue;
+    style?: {
+      fontFamily?: string;
+      fontSize?: number;
+      fontWeight?: string;
+    };
+  };
+  accessibilityLabel?: string;
+  accessibilityHint?: string;
+}
+
+export interface HeaderBarButtonItemWithAction
+  extends SharedHeaderBarButtonItem {
+  /**
+   * Function to call when the button is pressed.
+   */
+  onPress: () => void;
+  /**
+   * A Boolean value that indicates whether the button is in a selected state.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
+   */
+  selected?: boolean;
+  /**
+   * A Boolean value that indicates whether the button represents an action or selection.
+   * Only available from iOS 15.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
+   */
+  changesSelectionAsPrimaryAction?: boolean;
+}
+
+export interface HeaderBarButtonItemMenuAction {
+  title?: string;
+  onPress: () => void;
+  /**
+   * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
+   */
+  systemImage?: string;
+  /**
+   * State of the menu item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/state
+   */
+  state?: 'on' | 'off' | 'mixed';
+  /**
+   * Style of the menu item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes
+   */
+  attributes?: 'destructive' | 'disabled' | 'hidden' | 'keepsMenuPresented';
+  /**
+   * Discoverability title of the menu item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uiaction/discoverabilitytitle
+   */
+  discoverabilityTitle?: string;
+}
+export interface HeaderBarButtonItemWithMenu extends SharedHeaderBarButtonItem {
+  menu: {
+    title?: string;
+    items: (
+      | HeaderBarButtonItemMenuAction
+      | HeaderBarButtonItemWithMenu['menu']
+    )[];
+  };
+}
+
+export interface HeaderBarButtonItemSpacing {
+  spacing: number;
+}
+
+export type HeaderBarButtonItem =
+  | HeaderBarButtonItemWithAction
+  | HeaderBarButtonItemWithMenu
+  | HeaderBarButtonItemSpacing;
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
