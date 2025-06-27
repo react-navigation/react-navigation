@@ -79,11 +79,12 @@ export function PagerViewAdapter<T extends Route>({
   });
 
   React.useEffect(() => {
+    let subscription: { detach: () => void } | null = null;
     if (pagerRef.current) {
       // @ts-expect-error - Typescript types are missing but this API is exported by Animated since React Native 0.60.2
       // https://github.com/facebook/react-native/commit/77b8c097277b5cf248d08e772ea8bb8d8583e9a1
       // It allows to attach native event using native element's ref instead of passing in an event callback
-      const subscription = Animated.attachNativeEvent(
+      subscription = Animated.attachNativeEvent(
         pagerRef.current,
         'onPageScroll',
         [
@@ -95,12 +96,10 @@ export function PagerViewAdapter<T extends Route>({
           },
         ]
       );
-
-      return () => {
-        subscription.detach();
-      };
     }
-    return;
+    return () => {
+      subscription?.detach();
+    };
   }, [offset, position]);
 
   React.useEffect(() => {
