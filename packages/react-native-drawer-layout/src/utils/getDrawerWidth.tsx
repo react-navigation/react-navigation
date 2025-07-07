@@ -40,10 +40,16 @@ export function getDrawerWidthWeb({
   drawerStyle,
 }: {
   drawerStyle?: StyleProp<ViewStyle>;
-}) {
+}): string {
   const { width } = StyleSheet.flatten(drawerStyle) || {};
 
-  return typeof width === 'string' || typeof width === 'number'
-    ? width
-    : DRAWER_DEFAULT_WIDTH_WEB;
+  if (typeof width === 'number') {
+    return `${width}px`;
+  }
+
+  if (typeof width === 'string') {
+    return width;
+  }
+
+  return DRAWER_DEFAULT_WIDTH_WEB;
 }
