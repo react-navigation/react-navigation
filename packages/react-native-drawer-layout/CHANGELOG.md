@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.12](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.11...react-native-drawer-layout@4.1.12) (2025-07-07)
+
+### Bug Fixes
+
+* add px to drawer width on web. fixes [#12674](https://github.com/react-navigation/react-navigation/issues/12674) ([7e5ecb3](https://github.com/react-navigation/react-navigation/commit/7e5ecb39a025d0f6b94a9fe2a316b42450fde25d)) - by @
+
 ## [4.1.11](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.10...react-native-drawer-layout@4.1.11) (2025-06-14)
 
 **Note:** Version bump only for package react-native-drawer-layout
