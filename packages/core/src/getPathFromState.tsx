@@ -224,10 +224,13 @@ export function getPathFromState<ParamList extends {}>(
 
             // Valid characters according to
             // https://datatracker.ietf.org/doc/html/rfc3986#section-3.3 (see pchar definition)
-            return String(value).replace(
-              /[^A-Za-z0-9\-._~!$&'()*+,;=:@]/g,
-              (char) => encodeURIComponent(char)
-            );
+            return Array.from(String(value))
+              .map((char) =>
+                /[^A-Za-z0-9\-._~!$&'()*+,;=:@]/g.test(char)
+                  ? encodeURIComponent(char)
+                  : char
+              )
+              .join('');
           }
 
           return encodeURIComponent(segment);
