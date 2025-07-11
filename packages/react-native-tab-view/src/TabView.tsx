@@ -24,6 +24,7 @@ import type {
 
 export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
   onIndexChange: (index: number) => void;
+  onTabSelect?: (props: { index: number }) => void;
   navigationState: NavigationState<T>;
   renderLazyPlaceholder?: (props: { route: T }) => React.ReactNode;
   renderTabBar?: (
@@ -48,6 +49,7 @@ const renderLazyPlaceholderDefault = () => null;
 
 export function TabView<T extends Route>({
   onIndexChange,
+  onTabSelect,
   navigationState,
   renderScene,
   initialLayout,
@@ -76,7 +78,7 @@ export function TabView<T extends Route>({
     console.warn(
       `The 'direction' prop is set to '${direction}' but the effective value is '${
         I18nManager.getConstants().isRTL ? 'rtl' : 'ltr'
-      }'. This is not supported. Please use I18nManager.forceRTL to change the layout direction.`
+      }'. This is not supported. Make sure to match the 'direction' prop with the writing direction of the app.`
     );
   }
 
@@ -124,6 +126,7 @@ export function TabView<T extends Route>({
         onSwipeStart={onSwipeStart}
         onSwipeEnd={onSwipeEnd}
         onIndexChange={jumpToIndex}
+        onTabSelect={onTabSelect}
         animationEnabled={animationEnabled}
         overScrollMode={overScrollMode}
         style={pagerStyle}
@@ -152,9 +155,9 @@ export function TabView<T extends Route>({
 
                   return (
                     <SceneView
+                      key={route.key}
                       {...sceneRendererProps}
                       addEnterListener={addEnterListener}
-                      key={route.key}
                       index={i}
                       lazy={typeof lazy === 'function' ? lazy({ route }) : lazy}
                       lazyPreloadDistance={lazyPreloadDistance}

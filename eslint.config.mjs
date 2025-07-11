@@ -1,9 +1,11 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
-import satya164 from 'eslint-config-satya164';
+import { jest, react, recommended } from 'eslint-config-satya164';
 import sort from 'eslint-plugin-simple-import-sort';
 
 export default defineConfig([
-  ...satya164,
+  recommended,
+  react,
+  jest,
 
   globalIgnores([
     '**/node_modules/',
@@ -21,10 +23,6 @@ export default defineConfig([
     },
 
     settings: {
-      'react': {
-        version: '16',
-      },
-
       'import-x/core-modules': [
         '@react-navigation/core',
         '@react-navigation/native',
@@ -55,6 +53,12 @@ export default defineConfig([
                 'Import `Text` from `@react-navigation/elements` instead.',
             },
             {
+              name: 'react-native-safe-area-context',
+              importNames: ['useSafeAreaFrame'],
+              message:
+                'Import `useFrameSize` from `@react-navigation/elements` instead.',
+            },
+            {
               name: '@react-navigation/core',
               message: 'Import from `@react-navigation/native` instead.',
             },
@@ -75,7 +79,8 @@ export default defineConfig([
       'react-hooks/exhaustive-deps': [
         'error',
         {
-          additionalHooks: '(useAnimatedStyle|useAnimatedProps)',
+          additionalHooks:
+            '(useIsomorphicLayoutEffect|useAnimatedStyle|useAnimatedProps)',
         },
       ],
     },

@@ -110,7 +110,7 @@ export const BaseNavigationContainer = React.forwardRef(
 
     const isFirstMountRef = React.useRef<boolean>(true);
 
-    const navigatorKeyRef = React.useRef<string | undefined>();
+    const navigatorKeyRef = React.useRef<string | undefined>(undefined);
 
     const getKey = React.useCallback(() => navigatorKeyRef.current, []);
 
@@ -238,7 +238,7 @@ export const BaseNavigationContainer = React.forwardRef(
       }
     );
 
-    const lastEmittedOptionsRef = React.useRef<object | undefined>();
+    const lastEmittedOptionsRef = React.useRef<object | undefined>(undefined);
 
     const onOptionsChange = useLatestCallback((options: object) => {
       if (lastEmittedOptionsRef.current === options) {
@@ -253,7 +253,7 @@ export const BaseNavigationContainer = React.forwardRef(
       });
     });
 
-    const stackRef = React.useRef<string | undefined>();
+    const stackRef = React.useRef<string | undefined>(undefined);
 
     const builderContext = React.useMemo(
       () => ({
@@ -411,6 +411,7 @@ export const BaseNavigationContainer = React.forwardRef(
         } was not handled by any navigator.`;
 
         switch (action.type) {
+          case 'PRELOAD':
           case 'NAVIGATE':
           case 'PUSH':
           case 'REPLACE':

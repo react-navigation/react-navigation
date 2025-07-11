@@ -9,13 +9,11 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import searchIcon from '../assets/search-icon.png';
 import type { HeaderOptions, Layout } from '../types';
+import { useFrameSize } from '../useFrameSize';
 import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
 import { HeaderBackButton } from './HeaderBackButton';
 import { HeaderBackground } from './HeaderBackground';
@@ -74,7 +72,7 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
 
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
-  const frame = useSafeAreaFrame();
+  const frame = useFrameSize((size) => size, true);
   const { colors } = useTheme();
 
   const navigation = useNavigation();

@@ -7,7 +7,7 @@ import { Drawer } from 'react-native-drawer-layout';
 
 import { DrawerProgress } from '../Shared/DrawerProgress';
 
-const DRAWER_TYPES = ['front', 'back', 'slide'] as const;
+const DRAWER_TYPES = ['front', 'back', 'slide', 'permanent'] as const;
 
 export function DrawerView() {
   const { showActionSheetWithOptions } = useActionSheet();

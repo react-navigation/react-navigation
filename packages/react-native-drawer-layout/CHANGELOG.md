@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.12](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.11...react-native-drawer-layout@4.1.12) (2025-07-07)
+
+### Bug Fixes
+
+* add px to drawer width on web. fixes [#12674](https://github.com/react-navigation/react-navigation/issues/12674) ([7e5ecb3](https://github.com/react-navigation/react-navigation/commit/7e5ecb39a025d0f6b94a9fe2a316b42450fde25d)) - by @
+
+## [4.1.11](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.10...react-native-drawer-layout@4.1.11) (2025-06-14)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
+## [4.1.10](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.9...react-native-drawer-layout@4.1.10) (2025-05-30)
+
+### Bug Fixes
+
+* position drawer offscreen by default on web ([833bfa6](https://github.com/react-navigation/react-navigation/commit/833bfa63004deeb0fd6e17faf6d65ea220ad1527)) - by @
+
+## [4.1.9](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.8...react-native-drawer-layout@4.1.9) (2025-05-30)
+
+### Bug Fixes
+
+* allow Overlay to be focusable in iOS with Full Keyboard Access enabled ([#12600](https://github.com/react-navigation/react-navigation/issues/12600)) ([e1a6387](https://github.com/react-navigation/react-navigation/commit/e1a6387f420631e57a6736ac0ed67a1f434d554b)) - by @ckknight
+* fix drawer tab order on web for better accessibility ([#12616](https://github.com/react-navigation/react-navigation/issues/12616)) ([ac51096](https://github.com/react-navigation/react-navigation/commit/ac51096e40d879cd8d065d4d2fc6497ecbe552bc)) - by @angelalagao
+* keep drawer anchored to left/right on web ([0d7379b](https://github.com/react-navigation/react-navigation/commit/0d7379b2f7338cb28fbba8473d7d93c2e4458f8c)) - by @satya164
+
+## [4.1.8](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.7...react-native-drawer-layout@4.1.8) (2025-05-04)
+
+### Bug Fixes
+
+* fix peer dep versions. closes [#12580](https://github.com/react-navigation/react-navigation/issues/12580) ([6fc3dd6](https://github.com/react-navigation/react-navigation/commit/6fc3dd677aecdcf8696fe723e17b9c028de7ad85)) - by @satya164
+
+## [4.1.7](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.6...react-native-drawer-layout@4.1.7) (2025-05-02)
+
+### Bug Fixes
+
+* use aria props instead of accessibilityX ([#11848](https://github.com/react-navigation/react-navigation/issues/11848)) ([347ca97](https://github.com/react-navigation/react-navigation/commit/347ca975406e84a5e7452679b1dde7b9ecca1a22)) - by @satya164
+
 ## [4.1.6](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.5...react-native-drawer-layout@4.1.6) (2025-04-08)
 
 ### Bug Fixes

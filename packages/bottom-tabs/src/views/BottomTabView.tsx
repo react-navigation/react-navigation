@@ -9,7 +9,6 @@ import {
   type ParamListBase,
   StackActions,
   type TabNavigationState,
-  useLocale,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
@@ -86,8 +85,6 @@ export function BottomTabView(props: Props) {
   } = props;
 
   const focusedRouteKey = state.routes[state.index].key;
-
-  const { direction } = useLocale();
 
   /**
    * List of loaded tabs, tabs will be loaded when navigated to.
@@ -233,24 +230,29 @@ export function BottomTabView(props: Props) {
 
   const { tabBarPosition = 'bottom' } = descriptors[focusedRouteKey].options;
 
+  const tabBarElement = (
+    <BottomTabBarHeightCallbackContext.Provider
+      key="tabbar"
+      value={setTabBarHeight}
+    >
+      {renderTabBar()}
+    </BottomTabBarHeightCallbackContext.Provider>
+  );
+
   return (
     <SafeAreaProviderCompat
       style={{
         flexDirection:
           tabBarPosition === 'left' || tabBarPosition === 'right'
-            ? (tabBarPosition === 'left' && direction === 'ltr') ||
-              (tabBarPosition === 'right' && direction === 'rtl')
-              ? 'row-reverse'
-              : 'row'
+            ? 'row'
             : 'column',
       }}
     >
-      {tabBarPosition === 'top' ? (
-        <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
-          {renderTabBar()}
-        </BottomTabBarHeightCallbackContext.Provider>
-      ) : null}
+      {tabBarPosition === 'top' || tabBarPosition === 'left'
+        ? tabBarElement
+        : null}
       <MaybeScreenContainer
+        key="screens"
         enabled={detachInactiveScreens}
         hasTwoStates={hasTwoStates}
         style={styles.screens}
@@ -348,11 +350,9 @@ export function BottomTabView(props: Props) {
           );
         })}
       </MaybeScreenContainer>
-      {tabBarPosition !== 'top' ? (
-        <BottomTabBarHeightCallbackContext.Provider value={setTabBarHeight}>
-          {renderTabBar()}
-        </BottomTabBarHeightCallbackContext.Provider>
-      ) : null}
+      {tabBarPosition === 'bottom' || tabBarPosition === 'right'
+        ? tabBarElement
+        : null}
     </SafeAreaProviderCompat>
   );
 }

@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/core",
   "description": "Core utilities for building navigators",
-  "version": "7.8.5",
+  "version": "7.12.1",
   "keywords": [
     "react",
     "react-native",
@@ -17,11 +17,11 @@
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
   "homepage": "https://reactnavigation.org",
-  "source": "./src/index.tsx",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
+      "source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
@@ -40,26 +40,26 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/routers": "^7.3.5",
+    "@react-navigation/routers": "^7.4.1",
     "escape-string-regexp": "^4.0.0",
-    "nanoid": "3.3.8",
+    "nanoid": "^3.3.11",
     "query-string": "^7.1.3",
-    "react-is": "^18.2.0",
-    "use-latest-callback": "^0.2.1",
-    "use-sync-external-store": "^1.2.2"
+    "react-is": "^19.1.0",
+    "use-latest-callback": "^0.2.4",
+    "use-sync-external-store": "^1.5.0"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
-    "@testing-library/react-native": "^12.8.1",
-    "@types/react": "~18.3.12",
-    "@types/react-is": "^18.2.3",
-    "@types/use-sync-external-store": "^0.0.6",
-    "del-cli": "^5.1.0",
-    "immer": "^10.0.3",
-    "react": "18.3.1",
-    "react-native-builder-bob": "^0.40.0",
-    "react-test-renderer": "18.2.0",
-    "typescript": "^5.5.2"
+    "@jest/globals": "^30.0.0",
+    "@testing-library/react-native": "^13.2.0",
+    "@types/react": "~19.0.10",
+    "@types/react-is": "^19.0.0",
+    "@types/use-sync-external-store": "^1.5.0",
+    "del-cli": "^6.0.0",
+    "immer": "^10.1.1",
+    "react": "19.0.0",
+    "react-native-builder-bob": "^0.40.12",
+    "react-test-renderer": "19.0.0",
+    "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "react": ">= 18.2.0"

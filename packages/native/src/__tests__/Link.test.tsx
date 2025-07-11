@@ -1,5 +1,6 @@
 import { expect, jest, test } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react-native';
+import { Platform } from 'react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { Link } from '../Link';
@@ -7,12 +8,7 @@ import { NavigationContainer } from '../NavigationContainer';
 
 type RootParamList = { Foo: undefined; Bar: { id: string } };
 
-jest.mock('react-native/Libraries/Utilities/Platform', () => ({
-  ...jest.requireActual<
-    typeof import('react-native/Libraries/Utilities/Platform')
-  >('react-native/Libraries/Utilities/Platform'),
-  OS: 'web',
-}));
+jest.replaceProperty(Platform, 'OS', 'web');
 
 test('renders link with href on web', () => {
   const config = {
@@ -53,9 +49,9 @@ test('renders link with href on web', () => {
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
-  accessibilityRole="link"
   href="/bar/42"
   onPress={[Function]}
+  role="link"
   style={
     [
       {
@@ -84,9 +80,9 @@ test('renders link with href on web', () => {
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
-  accessibilityRole="link"
   href="/foo"
   onPress={[Function]}
+  role="link"
   style={
     [
       {
@@ -148,9 +144,9 @@ test("doesn't navigate if default was prevented", () => {
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
-  accessibilityRole="link"
   href="/bar/42"
   onPress={[Function]}
+  role="link"
   style={
     [
       {
@@ -179,9 +175,9 @@ test("doesn't navigate if default was prevented", () => {
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
-  accessibilityRole="link"
   href="/bar/42"
   onPress={[Function]}
+  role="link"
   style={
     [
       {

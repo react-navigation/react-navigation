@@ -26,6 +26,7 @@ export { ResourceSavingView } from './ResourceSavingView';
 export { SafeAreaProviderCompat } from './SafeAreaProviderCompat';
 export { Screen } from './Screen';
 export { Text } from './Text';
+export { useFrameSize } from './useFrameSize';
 
 export const Assets = [
   backIcon,

@@ -75,8 +75,7 @@ export function SceneView<T extends Route>({
 
   return (
     <View
-      accessibilityElementsHidden={!focused}
-      importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
+      aria-hidden={!focused}
       style={[
         styles.route,
         // If we don't have the layout yet, make the focused screen fill the container

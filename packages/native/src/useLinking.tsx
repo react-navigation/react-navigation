@@ -74,7 +74,7 @@ const linkingHandlers: symbol[] = [];
 type Options = LinkingOptions<ParamListBase>;
 
 export function useLinking(
-  ref: React.RefObject<NavigationContainerRef<ParamListBase>>,
+  ref: React.RefObject<NavigationContainerRef<ParamListBase> | null>,
   {
     enabled = true,
     config,
@@ -403,7 +403,7 @@ export function useLinking(
               nextIndex !== -1 &&
               nextIndex < currentIndex &&
               // We should only go back if the entry exists and it's less than current index
-              history.get(nextIndex - currentIndex)
+              history.get(nextIndex)
             ) {
               // An existing entry for this path exists and it's less than current index, go back to that
               await history.go(nextIndex - currentIndex);

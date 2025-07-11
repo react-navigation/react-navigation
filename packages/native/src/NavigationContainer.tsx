@@ -29,7 +29,6 @@ import { useLinking } from './useLinking';
 import { useThenable } from './useThenable';
 
 declare global {
-  // eslint-disable-next-line no-var
   var REACT_NAVIGATION_DEVTOOLS: WeakMap<
     NavigationContainerRef<any>,
     { readonly linking: LinkingOptions<any> }
@@ -154,6 +153,8 @@ function NavigationContainerInner(
 
   const [isResolved, initialState] = useThenable(getInitialState);
 
+  // FIXME
+  // @ts-expect-error not sure why this is not working
   React.useImperativeHandle(ref, () => refContainer.current);
 
   const isLinkingReady =

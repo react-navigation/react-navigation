@@ -23,7 +23,7 @@ import useLatestCallback from 'use-latest-callback';
 import type { DrawerProps } from '../types';
 import { DrawerGestureContext } from '../utils/DrawerGestureContext';
 import { DrawerProgressContext } from '../utils/DrawerProgressContext';
-import { getDrawerWidth } from '../utils/getDrawerWidth';
+import { getDrawerWidthNative } from '../utils/getDrawerWidth';
 import {
   Gesture,
   GestureDetector,
@@ -76,7 +76,7 @@ export function Drawer({
   const windowDimensions = useWindowDimensions();
 
   const layout = customLayout ?? windowDimensions;
-  const drawerWidth = getDrawerWidth({ layout, drawerStyle });
+  const drawerWidth = getDrawerWidthNative({ layout, drawerStyle });
 
   const isOpen = drawerType === 'permanent' ? true : open;
   const isRight = drawerPosition === 'right';
@@ -435,14 +435,7 @@ export function Drawer({
             >
               <Animated.View style={[styles.content, contentAnimatedStyle]}>
                 <View
-                  accessibilityElementsHidden={
-                    isOpen && drawerType !== 'permanent'
-                  }
-                  importantForAccessibility={
-                    isOpen && drawerType !== 'permanent'
-                      ? 'no-hide-descendants'
-                      : 'auto'
-                  }
+                  aria-hidden={isOpen && drawerType !== 'permanent'}
                   style={styles.content}
                 >
                   {children}

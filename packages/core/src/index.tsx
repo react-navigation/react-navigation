@@ -18,6 +18,8 @@ export {
   createComponentForStaticNavigation,
   createPathConfigForStaticNavigation,
   type StaticConfig,
+  type StaticConfigGroup,
+  type StaticConfigScreens,
   type StaticNavigation,
   type StaticParamList,
   type StaticScreenProps,

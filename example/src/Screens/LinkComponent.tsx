@@ -55,7 +55,7 @@ const ArticleScreen = ({
         <Button
           variant="tinted"
           onPress={() =>
-            navigation.setParams({
+            navigation.replaceParams({
               author:
                 route.params?.author === 'Gandalf' ? 'Babel fish' : 'Gandalf',
             })

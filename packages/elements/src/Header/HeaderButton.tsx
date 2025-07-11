@@ -1,24 +1,29 @@
+import * as React from 'react';
 import { Platform, StyleSheet } from 'react-native';
 
 import { PlatformPressable } from '../PlatformPressable';
 import type { HeaderButtonProps } from '../types';
 
-export function HeaderButton({
-  disabled,
-  onPress,
-  pressColor,
-  pressOpacity,
-  accessibilityLabel,
-  testID,
-  style,
-  href,
-  children,
-}: HeaderButtonProps) {
+function HeaderButtonInternal(
+  {
+    disabled,
+    onPress,
+    pressColor,
+    pressOpacity,
+    accessibilityLabel,
+    testID,
+    style,
+    href,
+    children,
+  }: HeaderButtonProps,
+  ref: React.Ref<React.ComponentRef<typeof PlatformPressable>>
+) {
   return (
     <PlatformPressable
+      ref={ref}
       disabled={disabled}
       href={href}
-      accessibilityLabel={accessibilityLabel}
+      aria-label={accessibilityLabel}
       testID={testID}
       onPress={onPress}
       pressColor={pressColor}
@@ -34,6 +39,10 @@ export function HeaderButton({
     </PlatformPressable>
   );
 }
+
+export const HeaderButton = React.forwardRef(HeaderButtonInternal);
+
+HeaderButton.displayName = 'HeaderButton';
 
 const androidRipple = {
   borderless: true,

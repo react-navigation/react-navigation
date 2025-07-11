@@ -5,6 +5,7 @@ import {
   HeaderHeightContext,
   HeaderShownContext,
   SafeAreaProviderCompat,
+  useFrameSize,
 } from '@react-navigation/elements';
 import {
   NavigationContext,
@@ -25,10 +26,7 @@ import {
   useAnimatedValue,
   View,
 } from 'react-native';
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   type ScreenProps,
   ScreenStack,
@@ -171,18 +169,18 @@ const SceneView = ({
 
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const frame = useSafeAreaFrame();
 
   // `modal` and `formSheet` presentations do not take whole screen, so should not take the inset.
   const isModal = presentation === 'modal' || presentation === 'formSheet';
 
   // Modals are fullscreen in landscape only on iPhone
   const isIPhone = Platform.OS === 'ios' && !(Platform.isPad || Platform.isTV);
-  const isLandscape = frame.width > frame.height;
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
   const parentHeaderBack = React.useContext(HeaderBackContext);
+
+  const isLandscape = useFrameSize((frame) => frame.width > frame.height);
 
   const topInset =
     isParentHeaderShown ||
@@ -191,15 +189,17 @@ const SceneView = ({
       ? 0
       : insets.top;
 
-  const { preventedRoutes } = usePreventRemoveContext();
+  const defaultHeaderHeight = useFrameSize((frame) =>
+    Platform.select({
+      // FIXME: Currently screens isn't using Material 3
+      // So our `getDefaultHeaderHeight` doesn't return the correct value
+      // So we hardcode the value here for now until screens is updated
+      android: ANDROID_DEFAULT_HEADER_HEIGHT + topInset,
+      default: getDefaultHeaderHeight(frame, isModal, topInset),
+    })
+  );
 
-  const defaultHeaderHeight = Platform.select({
-    // FIXME: Currently screens isn't using Material 3
-    // So our `getDefaultHeaderHeight` doesn't return the correct value
-    // So we hardcode the value here for now until screens is updated
-    android: ANDROID_DEFAULT_HEADER_HEIGHT + topInset,
-    default: getDefaultHeaderHeight(frame, isModal, topInset),
-  });
+  const { preventedRoutes } = usePreventRemoveContext();
 
   const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
 
@@ -210,7 +210,7 @@ const SceneView = ({
     []
   );
 
-  const hasCustomHeader = header !== undefined;
+  const hasCustomHeader = header != null;
 
   let headerHeightCorrectionOffset = 0;
 
@@ -288,8 +288,7 @@ const SceneView = ({
           screenId={route.key}
           activityState={isPreloaded ? 0 : 2}
           style={StyleSheet.absoluteFill}
-          accessibilityElementsHidden={!focused}
-          importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
+          aria-hidden={!focused}
           customAnimationOnSwipe={animationMatchesGesture}
           fullScreenSwipeEnabled={fullScreenGestureEnabled}
           fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
@@ -351,6 +350,11 @@ const SceneView = ({
             {
               useNativeDriver,
               listener: (e) => {
+                if (hasCustomHeader) {
+                  // If we have a custom header, don't use native header height
+                  return;
+                }
+
                 if (
                   Platform.OS === 'android' &&
                   (options.headerBackground != null ||
@@ -399,13 +403,12 @@ const SceneView = ({
           // When ts-expect-error is added, it affects all the props below it
           // So we keep any props that need it at the end
           // Otherwise invalid props may not be caught by TypeScript
-          // @ts-expect-error: `shouldFreeze` is not available in lower RNScreens versions
           shouldFreeze={shouldFreeze}
         >
           <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
             <HeaderHeightContext.Provider
               value={
-                headerShown !== false ? headerHeight : parentHeaderHeight ?? 0
+                headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)
               }
             >
               {headerBackground != null ? (
@@ -423,7 +426,7 @@ const SceneView = ({
                   {headerBackground()}
                 </View>
               ) : null}
-              {header !== undefined && headerShown !== false ? (
+              {header != null && headerShown !== false ? (
                 <View
                   onLayout={(e) => {
                     const headerHeight = e.nativeEvent.layout.height;

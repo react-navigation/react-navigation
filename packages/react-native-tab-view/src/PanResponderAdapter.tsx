@@ -23,6 +23,7 @@ import { useAnimatedValue } from './useAnimatedValue';
 type Props<T extends Route> = PagerProps & {
   layout: Layout;
   onIndexChange: (index: number) => void;
+  onTabSelect?: (props: { index: number }) => void;
   navigationState: NavigationState<T>;
   children: (
     props: EventEmitterProps & {
@@ -55,6 +56,7 @@ export function PanResponderAdapter<T extends Route>({
   swipeEnabled = true,
   navigationState,
   onIndexChange,
+  onTabSelect,
   onSwipeStart,
   onSwipeEnd,
   children,
@@ -71,9 +73,9 @@ export function PanResponderAdapter<T extends Route>({
   const navigationStateRef = React.useRef(navigationState);
   const layoutRef = React.useRef(layout);
   const onIndexChangeRef = React.useRef(onIndexChange);
-
+  const onTabSelectRef = React.useRef(onTabSelect);
   const currentIndexRef = React.useRef(index);
-  const pendingIndexRef = React.useRef<number>();
+  const pendingIndexRef = React.useRef<number>(undefined);
 
   const swipeVelocityThreshold = 0.15;
   const swipeDistanceThreshold = layout.width / 1.75;
@@ -94,6 +96,7 @@ export function PanResponderAdapter<T extends Route>({
         ]).start(({ finished }) => {
           if (finished) {
             onIndexChangeRef.current(index);
+            onTabSelectRef.current?.({ index });
             pendingIndexRef.current = undefined;
           }
         });
@@ -101,6 +104,7 @@ export function PanResponderAdapter<T extends Route>({
       } else {
         panX.setValue(offset);
         onIndexChangeRef.current(index);
+        onTabSelectRef.current?.({ index });
         pendingIndexRef.current = undefined;
       }
     }
@@ -110,6 +114,7 @@ export function PanResponderAdapter<T extends Route>({
     navigationStateRef.current = navigationState;
     layoutRef.current = layout;
     onIndexChangeRef.current = onIndexChange;
+    onTabSelectRef.current = onTabSelect;
   });
 
   React.useEffect(() => {

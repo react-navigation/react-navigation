@@ -25,9 +25,8 @@ export function Overlay({
     const active = progress.value > PROGRESS_EPSILON;
 
     return {
-      pointerEvents: active ? 'auto' : 'none',
-      accessibilityElementsHidden: !active,
-      importantForAccessibility: active ? 'auto' : 'no-hide-descendants',
+      'pointerEvents': active ? 'auto' : 'none',
+      'aria-hidden': !active,
     } as const;
   }, [progress]);
 
@@ -40,8 +39,9 @@ export function Overlay({
       <Pressable
         onPress={onPress}
         style={styles.pressable}
-        accessibilityRole="button"
-        accessibilityLabel={accessibilityLabel}
+        role="button"
+        aria-label={accessibilityLabel}
+        accessible
       />
     </Animated.View>
   );

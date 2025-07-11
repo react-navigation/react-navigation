@@ -1,4 +1,7 @@
-import type { HeaderOptions } from '@react-navigation/elements';
+import type {
+  HeaderOptions,
+  PlatformPressable,
+} from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -15,7 +18,6 @@ import type * as React from 'react';
 import type {
   Animated,
   GestureResponderEvent,
-  Pressable,
   StyleProp,
   TextStyle,
   ViewStyle,
@@ -431,7 +433,7 @@ export type BottomTabBarProps = {
 };
 
 export type BottomTabBarButtonProps = Omit<
-  React.ComponentProps<typeof Pressable>,
+  React.ComponentProps<typeof PlatformPressable>,
   'style'
 > & {
   href?: string;

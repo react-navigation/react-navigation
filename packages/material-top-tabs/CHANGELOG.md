@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.3.1...@react-navigation/material-top-tabs@7.3.2) (2025-06-24)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.3.0...@react-navigation/material-top-tabs@7.3.1) (2025-06-22)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [7.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.2.17...@react-navigation/material-top-tabs@7.3.0) (2025-06-21)
+
+### Features
+
+* use the new SafeAreaListener to listen to frame changes ([d9e295e](https://github.com/react-navigation/react-navigation/commit/d9e295eef251393b5280d661957e7d2c31a36ae1)) - by @satya164
+
+## [7.2.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.2.16...@react-navigation/material-top-tabs@7.2.17) (2025-06-19)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.2.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.2.15...@react-navigation/material-top-tabs@7.2.16) (2025-06-18)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.2.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.2.14...@react-navigation/material-top-tabs@7.2.15) (2025-06-14)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.2.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.2.13...@react-navigation/material-top-tabs@7.2.14) (2025-05-30)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.2.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.2.12...@react-navigation/material-top-tabs@7.2.13) (2025-05-11)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+## [7.2.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.2.11...@react-navigation/material-top-tabs@7.2.12) (2025-05-04)
+
+### Bug Fixes
+
+* fix peer dep versions. closes [#12580](https://github.com/react-navigation/react-navigation/issues/12580) ([6fc3dd6](https://github.com/react-navigation/react-navigation/commit/6fc3dd677aecdcf8696fe723e17b9c028de7ad85)) - by @satya164
+
+## [7.2.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.2.10...@react-navigation/material-top-tabs@7.2.11) (2025-05-02)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
 ## [7.2.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.2.9...@react-navigation/material-top-tabs@7.2.10) (2025-04-08)
 
 ### Bug Fixes

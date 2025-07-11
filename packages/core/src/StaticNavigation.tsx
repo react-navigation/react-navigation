@@ -102,7 +102,7 @@ type StaticRouteConfig<
 > &
   RouteConfigComponent<ParamList, RouteName>;
 
-type StaticConfigScreens<
+export type StaticConfigScreens<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
@@ -156,7 +156,7 @@ type StaticConfigScreens<
       });
 };
 
-type GroupConfig<
+export type StaticConfigGroup<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
@@ -240,7 +240,7 @@ type StaticConfigInternal<
          * Groups of screens to render in the navigator and their configuration.
          */
         groups?: {
-          [key: string]: GroupConfig<
+          [key: string]: StaticConfigGroup<
             ParamList,
             State,
             ScreenOptions,
@@ -264,7 +264,7 @@ type StaticConfigInternal<
          * Groups of screens to render in the navigator and their configuration.
          */
         groups: {
-          [key: string]: GroupConfig<
+          [key: string]: StaticConfigGroup<
             ParamList,
             State,
             ScreenOptions,
@@ -428,7 +428,7 @@ export function createComponentForStaticNavigation(
             }
 
             return (
-              <Group navigationKey={key} {...group} key={key}>
+              <Group key={key} navigationKey={key} {...group}>
                 {children}
               </Group>
             );

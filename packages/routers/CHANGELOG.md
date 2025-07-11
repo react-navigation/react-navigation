@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.4.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.4.0...@react-navigation/routers@7.4.1) (2025-06-14)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+# [7.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.7...@react-navigation/routers@7.4.0) (2025-05-30)
+
+### Features
+
+* add a REPLACE_PARAMS action ([9739421](https://github.com/react-navigation/react-navigation/commit/97394212d88ccfc464db850b8a95d129befa5c80)) - by @satya164
+* add backBehavior: fullHistory to TabRouter ([e95e8bb](https://github.com/react-navigation/react-navigation/commit/e95e8bbf1f096929c6d443696459bf55af70c9d6)) - by @satya164
+
+## [7.3.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.6...@react-navigation/routers@7.3.7) (2025-05-04)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+## [7.3.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.5...@react-navigation/routers@7.3.6) (2025-05-02)
+
+**Note:** Version bump only for package @react-navigation/routers
+
 ## [7.3.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.4...@react-navigation/routers@7.3.5) (2025-04-08)
 
 ### Bug Fixes

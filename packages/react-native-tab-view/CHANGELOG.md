@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.1.1...react-native-tab-view@4.1.2) (2025-06-14)
+
+**Note:** Version bump only for package react-native-tab-view
+
+## [4.1.1](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.1.0...react-native-tab-view@4.1.1) (2025-05-30)
+
+**Note:** Version bump only for package react-native-tab-view
+
+# [4.1.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.12...react-native-tab-view@4.1.0) (2025-05-11)
+
+### Features
+
+* add `onTabSelect` prop to tab view to detect when tab has finished switching  ([#12563](https://github.com/react-navigation/react-navigation/issues/12563)) ([5fd7046](https://github.com/react-navigation/react-navigation/commit/5fd7046af7f838d560f72f9335d3a88e1aece9b2)) - by @ikevin127
+
+## [4.0.12](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.11...react-native-tab-view@4.0.12) (2025-05-04)
+
+### Bug Fixes
+
+* fix peer dep versions. closes [#12580](https://github.com/react-navigation/react-navigation/issues/12580) ([6fc3dd6](https://github.com/react-navigation/react-navigation/commit/6fc3dd677aecdcf8696fe723e17b9c028de7ad85)) - by @satya164
+
+## [4.0.11](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.10...react-native-tab-view@4.0.11) (2025-05-02)
+
+### Bug Fixes
+
+* use aria props instead of accessibilityX ([#11848](https://github.com/react-navigation/react-navigation/issues/11848)) ([347ca97](https://github.com/react-navigation/react-navigation/commit/347ca975406e84a5e7452679b1dde7b9ecca1a22)) - by @satya164
+
 ## [4.0.10](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.9...react-native-tab-view@4.0.10) (2025-04-08)
 
 ### Bug Fixes

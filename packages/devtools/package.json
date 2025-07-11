@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/devtools",
   "description": "Developer tools for React Navigation",
-  "version": "7.0.26",
+  "version": "7.0.34",
   "keywords": [
     "react",
     "react-native",
@@ -17,11 +17,11 @@
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
   "homepage": "https://reactnavigation.org",
-  "source": "./src/index.tsx",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
+      "source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
@@ -42,16 +42,16 @@
   },
   "dependencies": {
     "fast-deep-equal": "^3.1.3",
-    "nanoid": "3.3.8",
-    "stacktrace-parser": "^0.1.10"
+    "nanoid": "^3.3.11",
+    "stacktrace-parser": "^0.1.11"
   },
   "devDependencies": {
     "@react-navigation/core": "workspace:^",
-    "@types/react": "~18.3.12",
-    "del-cli": "^5.1.0",
-    "react": "18.3.1",
-    "react-native-builder-bob": "^0.40.0",
-    "typescript": "^5.5.2"
+    "@types/react": "~19.0.10",
+    "del-cli": "^6.0.0",
+    "react": "19.0.0",
+    "react-native-builder-bob": "^0.40.12",
+    "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "react": ">= 18.2.0"

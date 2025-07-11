@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.13...@react-navigation/native@7.1.14) (2025-06-21)
+
+**Note:** Version bump only for package @react-navigation/native
+
+## [7.1.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.12...@react-navigation/native@7.1.13) (2025-06-19)
+
+**Note:** Version bump only for package @react-navigation/native
+
+## [7.1.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.11...@react-navigation/native@7.1.12) (2025-06-18)
+
+**Note:** Version bump only for package @react-navigation/native
+
+## [7.1.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.10...@react-navigation/native@7.1.11) (2025-06-14)
+
+**Note:** Version bump only for package @react-navigation/native
+
+## [7.1.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.9...@react-navigation/native@7.1.10) (2025-05-30)
+
+**Note:** Version bump only for package @react-navigation/native
+
+## [7.1.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.8...@react-navigation/native@7.1.9) (2025-05-11)
+
+**Note:** Version bump only for package @react-navigation/native
+
+## [7.1.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.7...@react-navigation/native@7.1.8) (2025-05-04)
+
+### Bug Fixes
+
+* fix peer dep versions. closes [#12580](https://github.com/react-navigation/react-navigation/issues/12580) ([6fc3dd6](https://github.com/react-navigation/react-navigation/commit/6fc3dd677aecdcf8696fe723e17b9c028de7ad85)) - by @satya164
+
+## [7.1.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.6...@react-navigation/native@7.1.7) (2025-05-02)
+
+### Bug Fixes
+
+* fix issues with browser history ([#12553](https://github.com/react-navigation/react-navigation/issues/12553)) ([7d01b03](https://github.com/react-navigation/react-navigation/commit/7d01b032af05290492869cb15632857d8cb92cc6)) - by @adamgrzybowski
+* use aria props instead of accessibilityX ([#11848](https://github.com/react-navigation/react-navigation/issues/11848)) ([347ca97](https://github.com/react-navigation/react-navigation/commit/347ca975406e84a5e7452679b1dde7b9ecca1a22)) - by @satya164
+
 ## [7.1.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.5...@react-navigation/native@7.1.6) (2025-04-08)
 
 ### Bug Fixes

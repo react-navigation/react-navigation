@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.4.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.4.1...@react-navigation/bottom-tabs@7.4.2) (2025-06-24)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+## [7.4.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.4.0...@react-navigation/bottom-tabs@7.4.1) (2025-06-22)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [7.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.17...@react-navigation/bottom-tabs@7.4.0) (2025-06-21)
+
+### Features
+
+* use the new SafeAreaListener to listen to frame changes ([d9e295e](https://github.com/react-navigation/react-navigation/commit/d9e295eef251393b5280d661957e7d2c31a36ae1)) - by @satya164
+
+## [7.3.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.16...@react-navigation/bottom-tabs@7.3.17) (2025-06-19)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+## [7.3.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.15...@react-navigation/bottom-tabs@7.3.16) (2025-06-18)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+## [7.3.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.14...@react-navigation/bottom-tabs@7.3.15) (2025-06-14)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+## [7.3.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.13...@react-navigation/bottom-tabs@7.3.14) (2025-05-30)
+
+### Bug Fixes
+
+* don't use row-reverse for tab position ([86ae0d6](https://github.com/react-navigation/react-navigation/commit/86ae0d6adfd6cd842b97a980dd0176ed6c5c3b1e)) - by @satya164
+
+## [7.3.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.12...@react-navigation/bottom-tabs@7.3.13) (2025-05-11)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+## [7.3.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.11...@react-navigation/bottom-tabs@7.3.12) (2025-05-04)
+
+### Bug Fixes
+
+* fix peer dep versions. closes [#12580](https://github.com/react-navigation/react-navigation/issues/12580) ([6fc3dd6](https://github.com/react-navigation/react-navigation/commit/6fc3dd677aecdcf8696fe723e17b9c028de7ad85)) - by @satya164
+
+## [7.3.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.10...@react-navigation/bottom-tabs@7.3.11) (2025-05-02)
+
+### Bug Fixes
+
+* use aria props instead of accessibilityX ([#11848](https://github.com/react-navigation/react-navigation/issues/11848)) ([347ca97](https://github.com/react-navigation/react-navigation/commit/347ca975406e84a5e7452679b1dde7b9ecca1a22)) - by @satya164
+
 ## [7.3.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.3.9...@react-navigation/bottom-tabs@7.3.10) (2025-04-08)
 
 ### Bug Fixes

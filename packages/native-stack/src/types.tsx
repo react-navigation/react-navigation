@@ -404,11 +404,14 @@ export type NativeStackNavigationOptions = {
   navigationBarHidden?: boolean;
   /**
    * Sets the status bar animation (similar to the `StatusBar` component).
+   * On Android, setting either `fade` or `slide` will set the transition of status bar color. On iOS, this option applies to appereance animation of the status bar.
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
    *
-   * Only supported on iOS.
+   * Defaults to `fade` on iOS and `none` on Android.
    *
-   * @platform ios
+   * Only supported on Android and iOS.
+   *
+   * @platform android, ios
    */
   statusBarAnimation?: ScreenProps['statusBarAnimation'];
   /**
@@ -425,18 +428,21 @@ export type NativeStackNavigationOptions = {
    * Whether the status bar should be hidden on this screen.
    * Requires setting `View controller-based status bar appearance -> YES` in your Info.plist file.
    *
-   * Only supported on iOS.
+   * Only supported on Android and iOS.
    *
-   * @platform ios
+   * @platform android, ios
    */
   statusBarHidden?: boolean;
   /**
    * Sets the status bar color (similar to the `StatusBar` component).
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
+   * `auto` and `inverted` are supported only on iOS. On Android, they will fallback to `light`.
    *
-   * Only supported on iOS.
+   * Defaults to `auto` on iOS and `light` on Android.
    *
-   * @platform ios
+   * Only supported on Android and iOS.
+   *
+   * @platform android, ios
    */
   statusBarStyle?: ScreenProps['statusBarStyle'];
   /**
@@ -568,7 +574,7 @@ export type NativeStackNavigationOptions = {
    * There is also possibility to specify `fitToContents` literal, which intents to set the sheet height
    * to the height of its contents.
    *
-   * Please note that the array **must** be sorted in ascending order. This invariant is verified only in developement mode,
+   * Note that the array **must** be sorted in ascending order. This invariant is verified only in developement mode,
    * where violation results in error.
    *
    * **Android is limited to up 3 values in the array** -- any surplus values, beside first three are ignored.
@@ -668,7 +674,7 @@ export type NativeStackNavigationOptions = {
    * This option is provided, because due to implementation details it might be problematic
    * to implement such layout with JS-only code.
    *
-   * Please note that this prop is marked as unstable and might be subject of breaking changes,
+   * Note that this prop is marked as unstable and might be subject of breaking changes,
    * including removal, in particular when we find solution that will make implementing it with JS
    * straightforward.
    *

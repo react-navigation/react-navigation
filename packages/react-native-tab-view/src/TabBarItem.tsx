@@ -208,7 +208,7 @@ const TabBarItemInternal = <T extends Route>({
     ? null
     : { width: defaultTabWidth };
 
-  accessibilityLabel =
+  const ariaLabel =
     typeof accessibilityLabel !== 'undefined' ? accessibilityLabel : labelText;
 
   return (
@@ -216,9 +216,9 @@ const TabBarItemInternal = <T extends Route>({
       android_ripple={android_ripple}
       testID={testID}
       accessible={accessible}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="tab"
-      accessibilityState={{ selected: isFocused }}
+      role="tab"
+      aria-label={ariaLabel}
+      aria-selected={isFocused}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
       unstable_pressDelay={0}

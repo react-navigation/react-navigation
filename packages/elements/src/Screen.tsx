@@ -13,15 +13,13 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Background } from './Background';
 import { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 import { HeaderHeightContext } from './Header/HeaderHeightContext';
 import { HeaderShownContext } from './Header/HeaderShownContext';
+import { useFrameSize } from './useFrameSize';
 
 type Props = {
   focused: boolean;
@@ -37,7 +35,6 @@ type Props = {
 };
 
 export function Screen(props: Props) {
-  const dimensions = useSafeAreaFrame();
   const insets = useSafeAreaInsets();
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
@@ -56,15 +53,15 @@ export function Screen(props: Props) {
     style,
   } = props;
 
-  const [headerHeight, setHeaderHeight] = React.useState(() =>
-    getDefaultHeaderHeight(dimensions, modal, headerStatusBarHeight)
+  const defaultHeaderHeight = useFrameSize((size) =>
+    getDefaultHeaderHeight(size, modal, headerStatusBarHeight)
   );
+
+  const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
 
   return (
     <Background
       aria-hidden={!focused}
-      accessibilityElementsHidden={!focused}
-      importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
       style={[styles.container, style]}
       // On Fabric we need to disable collapsing for the background to ensure
       // that we won't render unnecessary views due to the view flattening.
@@ -95,7 +92,7 @@ export function Screen(props: Props) {
           value={isParentHeaderShown || headerShown !== false}
         >
           <HeaderHeightContext.Provider
-            value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
+            value={headerShown ? headerHeight : (parentHeaderHeight ?? 0)}
           >
             {children}
           </HeaderHeightContext.Provider>

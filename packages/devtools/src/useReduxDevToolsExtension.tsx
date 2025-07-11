@@ -19,9 +19,9 @@ type DevToolsExtension = {
 declare const __REDUX_DEVTOOLS_EXTENSION__: DevToolsExtension | undefined;
 
 export function useReduxDevToolsExtension(
-  ref: React.RefObject<NavigationContainerRef<any>>
+  ref: React.RefObject<NavigationContainerRef<any> | null>
 ) {
-  const devToolsRef = React.useRef<DevToolsConnection>();
+  const devToolsRef = React.useRef<DevToolsConnection>(undefined);
 
   if (
     devToolsRef.current === undefined &&

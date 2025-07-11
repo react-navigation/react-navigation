@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/routers",
   "description": "Routers to help build custom navigators",
-  "version": "7.3.5",
+  "version": "7.4.1",
   "keywords": [
     "react",
     "react-native",
@@ -17,11 +17,11 @@
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
   "homepage": "https://reactnavigation.org/docs/custom-routers/",
-  "source": "./src/index.tsx",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
+      "source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
@@ -41,13 +41,13 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "nanoid": "3.3.8"
+    "nanoid": "^3.3.11"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
-    "del-cli": "^5.1.0",
-    "react-native-builder-bob": "^0.40.0",
-    "typescript": "^5.5.2"
+    "@jest/globals": "^30.0.0",
+    "del-cli": "^6.0.0",
+    "react-native-builder-bob": "^0.40.12",
+    "typescript": "^5.8.3"
   },
   "react-native-builder-bob": {
     "source": "src",

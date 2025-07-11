@@ -1,9 +1,9 @@
 import {
-  getDefaultSidebarWidth,
   getHeaderTitle,
   Header,
   SafeAreaProviderCompat,
   Screen,
+  useFrameSize,
 } from '@react-navigation/elements';
 import {
   DrawerActions,
@@ -17,7 +17,6 @@ import {
 import * as React from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
-import { useSafeAreaFrame } from 'react-native-safe-area-context';
 import useLatestCallback from 'use-latest-callback';
 
 import type {
@@ -109,7 +108,7 @@ function DrawerViewBase({
     previousRouteKeyRef.current = focusedRouteKey;
   }, [descriptors, focusedRouteKey, navigation, state.routes]);
 
-  const dimensions = useSafeAreaFrame();
+  const dimensions = useFrameSize((size) => size, true);
 
   const { colors } = useTheme();
 
@@ -318,10 +317,7 @@ function DrawerViewBase({
         overlayAccessibilityLabel={overlayAccessibilityLabel}
         drawerPosition={drawerPosition}
         drawerStyle={[
-          {
-            backgroundColor: colors.card,
-            width: getDefaultSidebarWidth(dimensions),
-          },
+          { backgroundColor: colors.card },
           drawerType === 'permanent' &&
             ((
               Platform.OS === 'web'

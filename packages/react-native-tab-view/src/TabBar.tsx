@@ -191,7 +191,7 @@ const getTabBarWidth = <T extends Route>({
   return routes.reduce<number>(
     (acc, _, i) =>
       acc +
-      (i > 0 ? gap ?? 0 : 0) +
+      (i > 0 ? (gap ?? 0) : 0) +
       getComputedTabWidth(
         i,
         layout,
@@ -289,7 +289,7 @@ const getScrollAmount = <T extends Route>({
     // 0 through (i - 1) and add half the width of current index i
     return (
       total +
-      (i > 0 ? gap ?? 0 : 0) +
+      (i > 0 ? (gap ?? 0) : 0) +
       (navigationState.index === i ? tabWidth / 2 : tabWidth)
     );
   }, paddingInitial);
@@ -520,7 +520,6 @@ export function TabBar<T extends Route>({
 
       const props = {
         ...rest,
-        key: route.key,
         position,
         route,
         navigationState,
@@ -538,15 +537,15 @@ export function TabBar<T extends Route>({
         style: tabStyle,
         defaultTabWidth,
         android_ripple,
-      } satisfies TabBarItemProps<T> & { key: string };
+      } satisfies TabBarItemProps<T>;
 
       return (
         <>
           {gap > 0 && index > 0 ? <Separator width={gap} /> : null}
           {renderTabBarItem ? (
-            renderTabBarItem(props)
+            renderTabBarItem({ key: route.key, ...props })
           ) : (
-            <TabBarItem {...props} key={props.key} />
+            <TabBarItem key={route.key} {...props} />
           )}
         </>
       );
@@ -667,7 +666,7 @@ export function TabBar<T extends Route>({
           data={routes as Animated.WithAnimatedValue<T>[]}
           keyExtractor={keyExtractor}
           horizontal
-          accessibilityRole="tablist"
+          role="tablist"
           keyboardShouldPersistTaps="handled"
           scrollEnabled={scrollEnabled}
           bounces={bounces}

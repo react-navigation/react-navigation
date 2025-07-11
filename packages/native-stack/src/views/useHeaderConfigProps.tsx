@@ -86,7 +86,7 @@ export function useHeaderConfigProps({
   const titleColor =
     'color' in headerTitleStyleFlattened
       ? headerTitleStyleFlattened.color
-      : headerTintColor ?? colors.text;
+      : (headerTintColor ?? colors.text);
   const titleFontSize =
     'fontSize' in headerTitleStyleFlattened
       ? headerTitleStyleFlattened.fontSize
@@ -155,12 +155,6 @@ export function useHeaderConfigProps({
 
   const hasHeaderSearchBar =
     supportsHeaderSearchBar && headerSearchBarOptions != null;
-
-  if (headerSearchBarOptions != null && !supportsHeaderSearchBar) {
-    throw new Error(
-      `The current version of 'react-native-screens' doesn't support SearchBar in the header. Please update to the latest version to use this option.`
-    );
-  }
 
   /**
    * We need to set this in if:

@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/elements",
   "description": "UI Components for React Navigation",
-  "version": "2.3.8",
+  "version": "2.5.2",
   "keywords": [
     "react-native",
     "react-navigation",
@@ -18,11 +18,11 @@
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
   "homepage": "https://reactnavigation.org",
-  "source": "./src/index.tsx",
   "main": "./lib/module/index.js",
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
+      "source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
@@ -42,20 +42,23 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "color": "^4.2.3"
+    "color": "^4.2.3",
+    "use-latest-callback": "^0.2.4",
+    "use-sync-external-store": "^1.5.0"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
+    "@jest/globals": "^30.0.0",
     "@react-native-masked-view/masked-view": "0.3.2",
     "@react-navigation/native": "workspace:^",
-    "@testing-library/react-native": "^12.8.1",
-    "@types/react": "~18.3.12",
-    "del-cli": "^5.1.0",
-    "react": "18.3.1",
-    "react-native": "0.76.2",
-    "react-native-builder-bob": "^0.40.0",
-    "react-test-renderer": "18.2.0",
-    "typescript": "^5.5.2"
+    "@testing-library/react-native": "^13.2.0",
+    "@types/react": "~19.0.10",
+    "@types/use-sync-external-store": "^1.5.0",
+    "del-cli": "^6.0.0",
+    "react": "19.0.0",
+    "react-native": "0.79.3",
+    "react-native-builder-bob": "^0.40.12",
+    "react-test-renderer": "19.0.0",
+    "typescript": "^5.8.3"
   },
   "peerDependencies": {
     "@react-native-masked-view/masked-view": ">= 0.2.0",

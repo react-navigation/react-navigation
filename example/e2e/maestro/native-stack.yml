@@ -39,4 +39,4 @@ name: Native Stack
     text: 'Pop by 2'
     retryTapIfNoChange: false
 - assertVisible:
-    text: 'Contacts'
+    text: 'Article by Babel fish'

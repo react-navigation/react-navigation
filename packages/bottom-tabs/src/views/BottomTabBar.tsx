@@ -2,6 +2,7 @@ import {
   getDefaultSidebarWidth,
   getLabel,
   MissingIcon,
+  useFrameSize,
 } from '@react-navigation/elements';
 import {
   CommonActions,
@@ -23,10 +24,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-import {
-  type EdgeInsets,
-  useSafeAreaFrame,
-} from 'react-native-safe-area-context';
+import { type EdgeInsets } from 'react-native-safe-area-context';
 
 import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
@@ -203,7 +201,6 @@ export function BottomTabBar({
     );
   }
 
-  const dimensions = useSafeAreaFrame();
   const isKeyboardShown = useIsKeyboardShown();
 
   const onHeightChange = React.useContext(BottomTabBarHeightCallbackContext);
@@ -283,24 +280,35 @@ export function BottomTabBar({
 
   const { routes } = state;
 
-  const tabBarHeight = getTabBarHeight({
-    state,
-    descriptors,
-    insets,
-    dimensions,
-    style: [tabBarStyle, style],
-  });
+  const tabBarHeight = useFrameSize((dimensions) =>
+    getTabBarHeight({
+      state,
+      descriptors,
+      insets,
+      dimensions,
+      style: [tabBarStyle, style],
+    })
+  );
 
-  const hasHorizontalLabels = shouldUseHorizontalLabels({
-    state,
-    descriptors,
-    dimensions,
-  });
+  const hasHorizontalLabels = useFrameSize((dimensions) =>
+    shouldUseHorizontalLabels({
+      state,
+      descriptors,
+      dimensions,
+    })
+  );
 
-  const compact = isCompact({ state, descriptors, dimensions });
+  const compact = useFrameSize((dimensions) =>
+    isCompact({ state, descriptors, dimensions })
+  );
+
   const sidebar = tabBarPosition === 'left' || tabBarPosition === 'right';
   const spacing =
     tabBarVariant === 'material' ? SPACING_MATERIAL : SPACING_UIKIT;
+
+  const minSidebarWidth = useFrameSize((size) =>
+    sidebar && hasHorizontalLabels ? getDefaultSidebarWidth(size) : 0
+  );
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
@@ -344,9 +352,7 @@ export function BottomTabBar({
                 spacing + (tabBarPosition === 'left' ? insets.left : 0),
               paddingEnd:
                 spacing + (tabBarPosition === 'right' ? insets.right : 0),
-              minWidth: hasHorizontalLabels
-                ? getDefaultSidebarWidth(dimensions)
-                : 0,
+              minWidth: minSidebarWidth,
             }
           : [
               {
@@ -383,7 +389,7 @@ export function BottomTabBar({
         {tabBarBackgroundElement}
       </View>
       <View
-        accessibilityRole="tablist"
+        role="tablist"
         style={sidebar ? styles.sideContent : styles.bottomContent}
       >
         {routes.map((route, index) => {

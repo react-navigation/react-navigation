@@ -34,7 +34,7 @@ test('preserves reference for navigation objects', () => {
   const router = MockRouter({});
 
   const Test = () => {
-    const previous = React.useRef<any>();
+    const previous = React.useRef<any>(undefined);
 
     const emitter = useEventEmitter();
     const { navigations } = useNavigationCache({

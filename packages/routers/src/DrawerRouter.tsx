@@ -69,14 +69,14 @@ export type DrawerActionHelpers<ParamList extends ParamListBase> =
 
 export const DrawerActions = {
   ...TabActions,
-  openDrawer(): DrawerActionType {
-    return { type: 'OPEN_DRAWER' };
+  openDrawer() {
+    return { type: 'OPEN_DRAWER' } as const satisfies DrawerActionType;
   },
-  closeDrawer(): DrawerActionType {
-    return { type: 'CLOSE_DRAWER' };
+  closeDrawer() {
+    return { type: 'CLOSE_DRAWER' } as const satisfies DrawerActionType;
   },
-  toggleDrawer(): DrawerActionType {
-    return { type: 'TOGGLE_DRAWER' };
+  toggleDrawer() {
+    return { type: 'TOGGLE_DRAWER' } as const satisfies DrawerActionType;
   },
 };
 

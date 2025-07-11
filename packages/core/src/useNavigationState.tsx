@@ -1,9 +1,9 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
+import useLatestCallback from 'use-latest-callback';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 
-import type { NavigationProp } from './types';
-import { useNavigation } from './useNavigation';
+import { useClientLayoutEffect } from './useClientLayoutEffect';
 
 type Selector<ParamList extends ParamListBase, T> = (
   state: NavigationState<ParamList>
@@ -17,23 +17,67 @@ type Selector<ParamList extends ParamListBase, T> = (
 export function useNavigationState<ParamList extends ParamListBase, T>(
   selector: Selector<ParamList, T>
 ): T {
-  const navigation = useNavigation<NavigationProp<ParamList>>();
+  const stateListener = React.useContext(NavigationStateListenerContext);
 
-  const subscribe = React.useCallback(
-    (callback: () => void) => {
-      const unsubscribe = navigation.addListener('state', callback);
-
-      return unsubscribe;
-    },
-    [navigation]
-  );
+  if (stateListener == null) {
+    throw new Error(
+      "Couldn't get the navigation state. Is your component inside a navigator?"
+    );
+  }
 
   const value = useSyncExternalStoreWithSelector(
-    subscribe,
-    navigation.getState,
-    navigation.getState,
+    stateListener.subscribe,
+    // @ts-expect-error: this is unsafe, but needed to make the generic work
+    stateListener.getState,
+    stateListener.getState,
     selector
   );
 
   return value;
 }
+
+export function NavigationStateListenerProvider({
+  state,
+  children,
+}: {
+  state: NavigationState<ParamListBase>;
+  children: React.ReactNode;
+}) {
+  const listeners = React.useRef<(() => void)[]>([]);
+
+  const getState = useLatestCallback(() => state);
+
+  const subscribe = useLatestCallback((callback: () => void) => {
+    listeners.current.push(callback);
+
+    return () => {
+      listeners.current = listeners.current.filter((cb) => cb !== callback);
+    };
+  });
+
+  useClientLayoutEffect(() => {
+    listeners.current.forEach((callback) => callback());
+  }, [state]);
+
+  const context = React.useMemo(
+    () => ({
+      getState,
+      subscribe,
+    }),
+    [getState, subscribe]
+  );
+
+  return (
+    <NavigationStateListenerContext.Provider value={context}>
+      {children}
+    </NavigationStateListenerContext.Provider>
+  );
+}
+
+const NavigationStateListenerContext = React.createContext<
+  | {
+      getState: () => NavigationState<ParamListBase>;
+      subscribe: (callback: () => void) => () => void;
+    }
+  | undefined
+>(undefined);

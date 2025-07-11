@@ -86,12 +86,14 @@ export type DefaultNavigatorOptions<
   /**
    * Layout for all screens under this navigator.
    */
-  screenLayout?: (props: {
-    route: RouteProp<ParamList, keyof ParamList>;
-    navigation: Navigation;
-    theme: ReactNavigation.Theme;
-    children: React.ReactElement;
-  }) => React.ReactElement;
+  screenLayout?: (
+    props: ScreenLayoutArgs<
+      ParamList,
+      keyof ParamList,
+      ScreenOptions,
+      Navigation
+    >
+  ) => React.ReactElement;
 
   /**
    * A function returning overrides for the underlying router used by the navigator.
@@ -381,30 +383,42 @@ type NavigationHelpersCommon<
    * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
    */
   getState(): State;
-  /**
-   * Schedules the given state to be used as navigation state when the list of screens defined in the navigator changes
-   * instead of automatically calculating the new state, e.g. due to conditional rendering or dynamically defining screens.
-   *
-   * @param state Navigation state object.
-   */
-  setStateForNextRouteNamesChange(state: PartialState<State> | State): void;
 } & PrivateValueStore<[ParamList, unknown, unknown]>;
+
+type NavigationHelpersRoute<
+  ParamList extends {},
+  RouteName extends keyof ParamList = Keyof<ParamList>,
+> = {
+  /**
+   * Update the param object for the route.
+   * The new params will be shallow merged with the old one.
+   *
+   * @param params Partial params object for the current route.
+   */
+  setParams(
+    params: ParamList[RouteName] extends undefined
+      ? undefined
+      : Partial<ParamList[RouteName]>
+  ): void;
+
+  /**
+   * Replace the param object for the route
+   *
+   * @param params Params object for the current route.
+   */
+  replaceParams(
+    params: ParamList[RouteName] extends undefined
+      ? undefined
+      : ParamList[RouteName]
+  ): void;
+};
 
 export type NavigationHelpers<
   ParamList extends ParamListBase,
   EventMap extends EventMapBase = {},
 > = NavigationHelpersCommon<ParamList> &
-  EventEmitter<EventMap> & {
-    /**
-     * Update the param object for the route.
-     * The new params will be shallow merged with the old one.
-     *
-     * @param params Params object for the current route.
-     */
-    setParams<RouteName extends keyof ParamList>(
-      params: Partial<ParamList[RouteName]>
-    ): void;
-  };
+  EventEmitter<EventMap> &
+  NavigationHelpersRoute<ParamList, keyof ParamList>;
 
 export type NavigationContainerProps = {
   /**
@@ -461,25 +475,14 @@ export type NavigationProp<
   getParent<T = NavigationProp<ParamListBase> | undefined>(id?: NavigatorID): T;
 
   /**
-   * Update the param object for the route.
-   * The new params will be shallow merged with the old one.
-   *
-   * @param params Params object for the current route.
-   */
-  setParams(
-    params: ParamList[RouteName] extends undefined
-      ? undefined
-      : Partial<ParamList[RouteName]>
-  ): void;
-
-  /**
    * Update the options for the route.
    * The options object will be shallow merged with default options object.
    *
    * @param update Options object or a callback which takes the options from navigator config and returns a new options object.
    */
   setOptions(options: Partial<ScreenOptions>): void;
-} & EventConsumer<EventMap & EventMapCore<State>> &
+} & NavigationHelpersRoute<ParamList, RouteName> &
+  EventConsumer<EventMap & EventMapCore<State>> &
   PrivateValueStore<[ParamList, RouteName, EventMap]>;
 
 export type RouteProp<
@@ -541,6 +544,19 @@ export type CompositeScreenProps<
 > = {
   navigation: CompositeNavigationProp<A['navigation'], B['navigation']>;
   route: A['route'];
+};
+
+export type ScreenLayoutArgs<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+  ScreenOptions extends {},
+  Navigation,
+> = {
+  route: RouteProp<ParamList, RouteName>;
+  options: ScreenOptions;
+  navigation: Navigation;
+  theme: ReactNavigation.Theme;
+  children: React.ReactElement;
 };
 
 export type Descriptor<
@@ -667,12 +683,9 @@ export type RouteConfigProps<
    * Useful for wrapping the screen with custom containers.
    * e.g. for styling, error boundaries, suspense, etc.
    */
-  layout?: (props: {
-    route: RouteProp<ParamList, RouteName>;
-    navigation: Navigation;
-    theme: ReactNavigation.Theme;
-    children: React.ReactElement;
-  }) => React.ReactElement;
+  layout?: (
+    props: ScreenLayoutArgs<ParamList, RouteName, ScreenOptions, Navigation>
+  ) => React.ReactElement;
 
   /**
    * Function to return an unique ID for this screen.
@@ -736,12 +749,14 @@ export type RouteGroupConfig<
    * This will override the `screenLayout` of parent group or navigator.
    */
   screenLayout?:
-    | ((props: {
-        route: RouteProp<ParamList, keyof ParamList>;
-        navigation: Navigation;
-        theme: ReactNavigation.Theme;
-        children: React.ReactElement;
-      }) => React.ReactElement)
+    | ((
+        props: ScreenLayoutArgs<
+          ParamList,
+          keyof ParamList,
+          ScreenOptions,
+          Navigation
+        >
+      ) => React.ReactElement)
     | {
         // FIXME: TypeScript doesn't seem to infer `navigation` correctly without this
       };
@@ -967,6 +982,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
   | {
       screen?: never;
       params?: never;
+      merge?: never;
       initial?: never;
       pop?: never;
       path?: string;
@@ -977,6 +993,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
         ? {
             screen: RouteName;
             params?: ParamList[RouteName];
+            merge?: boolean;
             initial?: boolean;
             path?: string;
             pop?: boolean;
@@ -985,6 +1002,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
         : {
             screen: RouteName;
             params: ParamList[RouteName];
+            merge?: boolean;
             initial?: boolean;
             path?: string;
             pop?: boolean;
