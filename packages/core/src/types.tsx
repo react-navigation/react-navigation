@@ -811,6 +811,26 @@ export type NavigationContainerEventMap = {
       stack: string | undefined;
     };
   };
+  /**
+   * Event that fires when an event is emitted in any navigator.
+   * Only intended for debugging purposes, don't use it for app logic.
+   */
+  __unsafe_event__: {
+    data: {
+      /**
+       * Type of the event that was emitted.
+       */
+      type: string;
+      /**
+       * Target route key that the event was emitted for.
+       */
+      target: string | undefined;
+      /**
+       * Data associated with the event.
+       */
+      data: unknown | undefined;
+    };
+  };
 };
 
 type NotUndefined<T> = T extends undefined ? never : T;
@@ -827,40 +847,42 @@ type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
   ? ParamListRoute<ParamList>
   : Route<string>;
 
-export type NavigationContainerRef<ParamList extends {}> =
-  NavigationHelpers<ParamList> &
-    EventConsumer<NavigationContainerEventMap> & {
-      /**
-       * Reset the navigation state of the root navigator to the provided state.
-       *
-       * @param state Navigation state object.
-       */
-      resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
-      /**
-       * Get the rehydrated navigation state of the navigation tree.
-       */
-      getRootState(): NavigationState;
-      /**
-       * Get the currently focused navigation route.
-       */
-      getCurrentRoute(): MaybeParamListRoute<ParamList> | undefined;
-      /**
-       * Get the currently focused route's options.
-       */
-      getCurrentOptions(): object | undefined;
-      /**
-       * Whether the navigation container is ready to handle actions.
-       */
-      isReady(): boolean;
-      /**
-       * Stub function for setOptions on navigation object for use with useNavigation.
-       */
-      setOptions(): never;
-      /**
-       * Stub function for getParent on navigation object for use with useNavigation.
-       */
-      getParent(): undefined;
-    };
+export type NavigationContainerRef<ParamList extends {}> = Omit<
+  NavigationHelpers<ParamList>,
+  'emit'
+> &
+  EventConsumer<NavigationContainerEventMap> & {
+    /**
+     * Reset the navigation state of the root navigator to the provided state.
+     *
+     * @param state Navigation state object.
+     */
+    resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
+    /**
+     * Get the rehydrated navigation state of the navigation tree.
+     */
+    getRootState(): NavigationState;
+    /**
+     * Get the currently focused navigation route.
+     */
+    getCurrentRoute(): MaybeParamListRoute<ParamList> | undefined;
+    /**
+     * Get the currently focused route's options.
+     */
+    getCurrentOptions(): object | undefined;
+    /**
+     * Whether the navigation container is ready to handle actions.
+     */
+    isReady(): boolean;
+    /**
+     * Stub function for setOptions on navigation object for use with useNavigation.
+     */
+    setOptions(): never;
+    /**
+     * Stub function for getParent on navigation object for use with useNavigation.
+     */
+    getParent(): undefined;
+  };
 
 export type NavigationContainerRefWithCurrent<ParamList extends {}> =
   NavigationContainerRef<ParamList> & {

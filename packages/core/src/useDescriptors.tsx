@@ -119,6 +119,7 @@ export function useDescriptors<
   );
   const {
     onDispatchAction,
+    onEmitEvent,
     onOptionsChange,
     scheduleUpdate,
     flushUpdates,
@@ -133,6 +134,7 @@ export function useDescriptors<
       addKeyedListener,
       onRouteFocus,
       onDispatchAction,
+      onEmitEvent,
       onOptionsChange,
       scheduleUpdate,
       flushUpdates,
@@ -145,6 +147,7 @@ export function useDescriptors<
       addKeyedListener,
       onRouteFocus,
       onDispatchAction,
+      onEmitEvent,
       onOptionsChange,
       scheduleUpdate,
       flushUpdates,

@@ -18,6 +18,7 @@ import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
+import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationRouteContext } from './NavigationRouteContext';
 import { NavigationStateContext } from './NavigationStateContext';
@@ -659,7 +660,11 @@ export function useNavigationBuilder<
     );
   });
 
+  const { onEmitEvent } = React.useContext(NavigationBuilderContext);
+
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
+    onEmitEvent(e.type, e.target, e.data);
+
     const routeNames = [];
 
     let route: Route<string> | undefined;

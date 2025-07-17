@@ -6,44 +6,34 @@ import { useDevToolsBase } from './useDevToolsBase';
 export function useLogger(
   ref: React.RefObject<NavigationContainerRef<any> | null>
 ) {
-  const actionColor = '#C2185B';
-  const keyColor = '#43A047';
-  const valueColor = '#1E88E5';
-
   useDevToolsBase(ref, (result) => {
     const log = [[`${result.type} `, 'color: gray; font-weight: lighter']];
 
-    if (result.type === 'action') {
-      log.push([
-        `${result.action.type} `,
-        `color: ${actionColor}; font-weight: bold`,
-      ]);
+    switch (result.type) {
+      case 'action': {
+        log.push([
+          `${result.action.type} `,
+          `color: ${actionColor}; font-weight: bold`,
+        ]);
 
-      const payload = result.action.payload;
+        const payload = result.action.payload;
 
-      if (payload && Object.keys(payload).length > 0) {
-        log.push(
-          ['{ ', 'color: gray; font-weight: lighter'],
-          ...Object.entries(payload)
-            .map(([key, value], i, self) => {
-              const pair = [
-                [key, `color: ${keyColor}; font-weight: normal`],
-                [': ', 'color: gray; font-weight: lighter'],
-                [
-                  JSON.stringify(value),
-                  `color: ${valueColor}; font-weight: normal`,
-                ],
-              ];
+        if (payload && Object.keys(payload).length > 0) {
+          log.push(...colorize(payload));
+        }
+        break;
+      }
+      case 'event': {
+        log.push([
+          `${result.name} `,
+          `color: ${actionColor}; font-weight: bold`,
+        ]);
 
-              if (i < self.length - 1) {
-                pair.push([', ', 'color: gray; font-weight: lighter']);
-              }
+        if (result.data) {
+          log.push(...colorize(result.data));
+        }
 
-              return pair;
-            })
-            .flat(1),
-          [' } ', 'color: gray; font-weight: lighter']
-        );
+        break;
       }
     }
 
@@ -83,3 +73,35 @@ export function useLogger(
     console.groupEnd();
   });
 }
+
+function colorize(payload: unknown): string[][] {
+  if (typeof payload !== 'object' || payload === null) {
+    return [
+      [JSON.stringify(payload), `color: ${valueColor}; font-weight: normal`],
+    ];
+  }
+
+  return [
+    ['{ ', 'color: gray; font-weight: lighter'],
+    ...Object.entries(payload)
+      .map(([key, value], i, self) => {
+        const pair = [
+          [key, `color: ${keyColor}; font-weight: normal`],
+          [': ', 'color: gray; font-weight: lighter'],
+          ...colorize(value),
+        ];
+
+        if (i < self.length - 1) {
+          pair.push([', ', 'color: gray; font-weight: lighter']);
+        }
+
+        return pair;
+      })
+      .flat(1),
+    [' } ', 'color: gray; font-weight: lighter'],
+  ];
+}
+
+const actionColor = '#C2185B';
+const keyColor = '#43A047';
+const valueColor = '#1E88E5';

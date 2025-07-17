@@ -22,6 +22,7 @@ import { NavigationIndependentTreeContext } from './NavigationIndependentTreeCon
 import { NavigationStateContext } from './NavigationStateContext';
 import { ThemeProvider } from './theming/ThemeProvider';
 import type {
+  EventMapCore,
   NavigationContainerEventMap,
   NavigationContainerProps,
   NavigationContainerRef,
@@ -38,6 +39,13 @@ type State = NavigationState | PartialState<NavigationState> | undefined;
 
 const serializableWarnings: string[] = [];
 const duplicateNameWarnings: string[] = [];
+
+const CORE_EVENT_TYPES: string[] = [
+  'focus',
+  'blur',
+  'state',
+  'beforeRemove',
+] satisfies (keyof EventMapCore<any>)[];
 
 /**
  * Remove `key` and `routeNames` from the state objects recursively to get partial state.
@@ -238,6 +246,20 @@ export const BaseNavigationContainer = React.forwardRef(
       }
     );
 
+    const onEmitEvent = useLatestCallback(
+      (type: string, target: string | undefined, data: unknown) => {
+        // Ignore core events to avoid noise
+        if (CORE_EVENT_TYPES.includes(type)) {
+          return;
+        }
+
+        emitter.emit({
+          type: '__unsafe_event__',
+          data: { type, target, data },
+        });
+      }
+    );
+
     const lastEmittedOptionsRef = React.useRef<object | undefined>(undefined);
 
     const onOptionsChange = useLatestCallback((options: object) => {
@@ -260,6 +282,7 @@ export const BaseNavigationContainer = React.forwardRef(
         addListener,
         addKeyedListener,
         onDispatchAction,
+        onEmitEvent,
         onOptionsChange,
         scheduleUpdate,
         flushUpdates,
@@ -269,6 +292,7 @@ export const BaseNavigationContainer = React.forwardRef(
         addListener,
         addKeyedListener,
         onDispatchAction,
+        onEmitEvent,
         onOptionsChange,
         scheduleUpdate,
         flushUpdates,
