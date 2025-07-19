@@ -2690,6 +2690,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@jest/diff-sequences@npm:30.0.1":
+  version: 30.0.1
+  resolution: "@jest/diff-sequences@npm:30.0.1"
+  checksum: 10c0/3a840404e6021725ef7f86b11f7b2d13dd02846481264db0e447ee33b7ee992134e402cdc8b8b0ac969d37c6c0183044e382dedee72001cdf50cfb3c8088de74
+  languageName: node
+  linkType: hard
+
 "@jest/environment@npm:30.0.0":
   version: 30.0.0
   resolution: "@jest/environment@npm:30.0.0"
@@ -2765,6 +2772,13 @@ __metadata:
   version: 30.0.0
   resolution: "@jest/get-type@npm:30.0.0"
   checksum: 10c0/1e455fe8f04e0dab5964b80b9ab3a8f2b34015f4c3590b57a911f6e563eeffe8368fc0ebd33eb6ef374c66fd804595528dca9a36cdc5f742357a6d940bba4b49
+  languageName: node
+  linkType: hard
+
+"@jest/get-type@npm:30.0.1":
+  version: 30.0.1
+  resolution: "@jest/get-type@npm:30.0.1"
+  checksum: 10c0/92437ae42d0df57e8acc2d067288151439db4752cde4f5e680c73c8a6e34568bbd8c1c81a2f2f9a637a619c2aac8bc87553fb80e31475b59e2ed789a71e5e540
   languageName: node
   linkType: hard
 
@@ -3887,7 +3901,7 @@ __metadata:
     "@jest/globals": "npm:^30.0.0"
     "@react-navigation/elements": "npm:^2.6.0"
     "@react-navigation/native": "workspace:^"
-    "@testing-library/react-native": "npm:^13.2.0"
+    "@testing-library/react-native": "npm:^13.2.1"
     "@types/color": "npm:^4.2.0"
     "@types/react": "npm:~19.0.10"
     color: "npm:^4.2.3"
@@ -3914,7 +3928,7 @@ __metadata:
   dependencies:
     "@jest/globals": "npm:^30.0.0"
     "@react-navigation/routers": "npm:^7.5.0"
-    "@testing-library/react-native": "npm:^13.2.0"
+    "@testing-library/react-native": "npm:^13.2.1"
     "@types/react": "npm:~19.0.10"
     "@types/react-is": "npm:^19.0.0"
     "@types/use-sync-external-store": "npm:^1.5.0"
@@ -3961,7 +3975,7 @@ __metadata:
     "@jest/globals": "npm:^30.0.0"
     "@react-navigation/elements": "npm:^2.6.0"
     "@react-navigation/native": "workspace:^"
-    "@testing-library/react-native": "npm:^13.2.0"
+    "@testing-library/react-native": "npm:^13.2.1"
     "@types/react": "npm:~19.0.10"
     color: "npm:^4.2.3"
     del-cli: "npm:^6.0.0"
@@ -3994,7 +4008,7 @@ __metadata:
     "@jest/globals": "npm:^30.0.0"
     "@react-native-masked-view/masked-view": "npm:0.3.2"
     "@react-navigation/native": "workspace:^"
-    "@testing-library/react-native": "npm:^13.2.0"
+    "@testing-library/react-native": "npm:^13.2.1"
     "@types/react": "npm:~19.0.10"
     "@types/use-sync-external-store": "npm:^1.5.0"
     color: "npm:^4.2.3"
@@ -4064,7 +4078,7 @@ __metadata:
     react-native-reanimated: "npm:~3.18.0"
     react-native-safe-area-context: "npm:5.5.0"
     react-native-screens: "npm:~4.11.1"
-    react-native-web: "npm:~0.20.0"
+    react-native-web: "npm:~0.21.0"
     react-test-renderer: "npm:19.0.0"
     serve: "npm:^14.2.4"
     typescript: "npm:^5.8.3"
@@ -4079,7 +4093,7 @@ __metadata:
     "@jest/globals": "npm:^30.0.0"
     "@react-navigation/elements": "npm:^2.6.0"
     "@react-navigation/native": "workspace:^"
-    "@testing-library/react-native": "npm:^13.2.0"
+    "@testing-library/react-native": "npm:^13.2.1"
     "@types/react": "npm:~19.0.10"
     color: "npm:^4.2.3"
     del-cli: "npm:^6.0.0"
@@ -4107,7 +4121,7 @@ __metadata:
     "@jest/globals": "npm:^30.0.0"
     "@react-navigation/elements": "npm:^2.6.0"
     "@react-navigation/native": "workspace:^"
-    "@testing-library/react-native": "npm:^13.2.0"
+    "@testing-library/react-native": "npm:^13.2.1"
     "@types/react": "npm:~19.0.10"
     del-cli: "npm:^6.0.0"
     react: "npm:19.0.0"
@@ -4132,7 +4146,7 @@ __metadata:
   dependencies:
     "@jest/globals": "npm:^30.0.0"
     "@react-navigation/core": "workspace:^"
-    "@testing-library/react-native": "npm:^13.2.0"
+    "@testing-library/react-native": "npm:^13.2.1"
     "@types/react": "npm:~19.0.10"
     "@types/react-dom": "npm:~19.1.3"
     del-cli: "npm:^6.0.0"
@@ -4171,7 +4185,7 @@ __metadata:
     "@jest/globals": "npm:^30.0.0"
     "@react-navigation/elements": "npm:^2.6.0"
     "@react-navigation/native": "workspace:^"
-    "@testing-library/react-native": "npm:^13.2.0"
+    "@testing-library/react-native": "npm:^13.2.1"
     "@types/color": "npm:^4.2.0"
     "@types/react": "npm:~19.0.10"
     color: "npm:^4.2.3"
@@ -4333,13 +4347,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react-native@npm:^13.2.0":
-  version: 13.2.0
-  resolution: "@testing-library/react-native@npm:13.2.0"
+"@testing-library/react-native@npm:^13.2.1":
+  version: 13.2.1
+  resolution: "@testing-library/react-native@npm:13.2.1"
   dependencies:
     chalk: "npm:^4.1.2"
-    jest-matcher-utils: "npm:^29.7.0"
-    pretty-format: "npm:^29.7.0"
+    jest-matcher-utils: "npm:^30.0.2"
+    pretty-format: "npm:^30.0.2"
     redent: "npm:^3.0.0"
   peerDependencies:
     jest: ">=29.0.0"
@@ -4349,7 +4363,7 @@ __metadata:
   peerDependenciesMeta:
     jest:
       optional: true
-  checksum: 10c0/5ed8e09f82f45c057f12a716008f31abf934e6a3d84955540e2ab96d7534c82b9afdb0af050e986d8b63ae9dd8272f8a752c45ecb847a11e7549f30de3d84427
+  checksum: 10c0/573f68df59665e207aaadf068e9357dbe03318f766940d40cc11439671716eb35cb86529635993ff148ecdcb8679f4ac5c1d8eba19a908a9be19a2293eada8e3
   languageName: node
   linkType: hard
 
@@ -7197,13 +7211,6 @@ __metadata:
   version: 3.1.0
   resolution: "detect-newline@npm:3.1.0"
   checksum: 10c0/c38cfc8eeb9fda09febb44bcd85e467c970d4e3bf526095394e5a4f18bc26dd0cf6b22c69c1fa9969261521c593836db335c2795218f6d781a512aea2fb8209d
-  languageName: node
-  linkType: hard
-
-"diff-sequences@npm:^29.6.3":
-  version: 29.6.3
-  resolution: "diff-sequences@npm:29.6.3"
-  checksum: 10c0/32e27ac7dbffdf2fb0eb5a84efd98a9ad084fbabd5ac9abb8757c6770d5320d2acd172830b28c4add29bb873d59420601dfc805ac4064330ce59b1adfd0593b2
   languageName: node
   linkType: hard
 
@@ -10395,15 +10402,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-diff@npm:^29.7.0":
-  version: 29.7.0
-  resolution: "jest-diff@npm:29.7.0"
+"jest-diff@npm:30.0.5":
+  version: 30.0.5
+  resolution: "jest-diff@npm:30.0.5"
   dependencies:
-    chalk: "npm:^4.0.0"
-    diff-sequences: "npm:^29.6.3"
-    jest-get-type: "npm:^29.6.3"
-    pretty-format: "npm:^29.7.0"
-  checksum: 10c0/89a4a7f182590f56f526443dde69acefb1f2f0c9e59253c61d319569856c4931eae66b8a3790c443f529267a0ddba5ba80431c585deed81827032b2b2a1fc999
+    "@jest/diff-sequences": "npm:30.0.1"
+    "@jest/get-type": "npm:30.0.1"
+    chalk: "npm:^4.1.2"
+    pretty-format: "npm:30.0.5"
+  checksum: 10c0/b218ced37b7676f578ea866762f04caa74901bdcf3f593872aa9a4991a586302651a1d16bb0386772adacc7580a452ec621359af75d733c0b50ea947fe1881d3
   languageName: node
   linkType: hard
 
@@ -10532,15 +10539,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-matcher-utils@npm:^29.7.0":
-  version: 29.7.0
-  resolution: "jest-matcher-utils@npm:29.7.0"
+"jest-matcher-utils@npm:^30.0.2":
+  version: 30.0.5
+  resolution: "jest-matcher-utils@npm:30.0.5"
   dependencies:
-    chalk: "npm:^4.0.0"
-    jest-diff: "npm:^29.7.0"
-    jest-get-type: "npm:^29.6.3"
-    pretty-format: "npm:^29.7.0"
-  checksum: 10c0/0d0e70b28fa5c7d4dce701dc1f46ae0922102aadc24ed45d594dd9b7ae0a8a6ef8b216718d1ab79e451291217e05d4d49a82666e1a3cc2b428b75cd9c933244e
+    "@jest/get-type": "npm:30.0.1"
+    chalk: "npm:^4.1.2"
+    jest-diff: "npm:30.0.5"
+    pretty-format: "npm:30.0.5"
+  checksum: 10c0/231d891b29bfc218f2f5739c10873b6671426e31ad1c5538eed1531e62608fd3f60d32f41821332a6cf41f1614fd37361434c754fdd49c849b35ef2e5156c02e
   languageName: node
   linkType: hard
 
@@ -13624,7 +13631,7 @@ __metadata:
   resolution: "react-native-tab-view@workspace:packages/react-native-tab-view"
   dependencies:
     "@jest/globals": "npm:^30.0.0"
-    "@testing-library/react-native": "npm:^13.2.0"
+    "@testing-library/react-native": "npm:^13.2.1"
     del-cli: "npm:^6.0.0"
     react: "npm:19.0.0"
     react-native: "npm:0.79.3"
@@ -13640,9 +13647,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"react-native-web@npm:~0.20.0":
-  version: 0.20.0
-  resolution: "react-native-web@npm:0.20.0"
+"react-native-web@npm:~0.21.0":
+  version: 0.21.0
+  resolution: "react-native-web@npm:0.21.0"
   dependencies:
     "@babel/runtime": "npm:^7.18.6"
     "@react-native/normalize-colors": "npm:^0.74.1"
@@ -13655,7 +13662,7 @@ __metadata:
   peerDependencies:
     react: ^18.0.0 || ^19.0.0
     react-dom: ^18.0.0 || ^19.0.0
-  checksum: 10c0/266c16c67ccc4114864cf4facac14c3736412c937af8cf031eaaa618e801723f2c4aac5bf2d680536bbbe95602b97c13a819e775602884e900dd1362bbe2f3f5
+  checksum: 10c0/942f8696281927dfc2970b08939fce62d1dec9486e41ce913f659f132a7fa35d704e18b48d79df9407d17ff51a4986c872c79852616e522f11fa6f41286b6510
   languageName: node
   linkType: hard
 

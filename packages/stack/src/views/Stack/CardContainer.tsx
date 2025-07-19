@@ -259,7 +259,6 @@ function CardContainerInner({
       transitionSpec={transitionSpec}
       styleInterpolator={cardStyleInterpolator}
       aria-hidden={!focused}
-      pointerEvents={active ? 'box-none' : pointerEvents}
       pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
       preloaded={preloaded}
       containerStyle={
@@ -278,6 +277,7 @@ function CardContainerInner({
       ]}
       style={[
         {
+          pointerEvents: active ? 'box-none' : pointerEvents,
           // This is necessary to avoid unfocused larger pages increasing scroll area
           // The issue can be seen on the web when a smaller screen is pushed over a larger one
           overflow: active ? undefined : 'hidden',
