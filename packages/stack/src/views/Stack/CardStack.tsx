@@ -750,13 +750,12 @@ export class CardStack extends React.Component<Props, State> {
             return (
               <MaybeScreen
                 key={route.key}
-                style={[StyleSheet.absoluteFill]}
+                style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}
                 enabled={detachInactiveScreens}
                 active={isScreenActive}
                 freezeOnBlur={freezeOnBlur}
                 shouldFreeze={isScreenActive === STATE_INACTIVE && !isPreloaded}
                 homeIndicatorHidden={autoHideHomeIndicator}
-                pointerEvents="box-none"
               >
                 <CardContainer
                   index={index}

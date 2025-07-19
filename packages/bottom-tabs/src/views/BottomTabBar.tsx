@@ -382,10 +382,12 @@ export function BottomTabBar({
             ],
         tabBarStyle,
       ]}
+      // TODO This should be moved into styles after the following PR lands:
+      // https://github.com/callstack/react-native-testing-library/pull/1799
       pointerEvents={isTabBarHidden ? 'none' : 'auto'}
       onLayout={sidebar ? undefined : handleLayout}
     >
-      <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+      <View style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]}>
         {tabBarBackgroundElement}
       </View>
       <View

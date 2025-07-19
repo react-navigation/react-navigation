@@ -16,8 +16,11 @@ export function Overlay({
   ...rest
 }: OverlayProps) {
   const animatedStyle = useAnimatedStyle(() => {
+    const active = progress.value > PROGRESS_EPSILON;
+
     return {
       opacity: progress.value,
+      pointerEvents: active ? 'auto' : 'none',
     };
   }, [progress]);
 
@@ -25,7 +28,6 @@ export function Overlay({
     const active = progress.value > PROGRESS_EPSILON;
 
     return {
-      'pointerEvents': active ? 'auto' : 'none',
       'aria-hidden': !active,
     } as const;
   }, [progress]);
