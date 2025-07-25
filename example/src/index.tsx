@@ -309,6 +309,7 @@ export function App() {
                             <ListItem
                               title={SCREENS[name].title}
                               onPress={() => {
+                                // @ts-expect-error TS has a limit of 24 items https://github.com/microsoft/TypeScript/issues/40803
                                 navigation.navigate(name);
                               }}
                             />

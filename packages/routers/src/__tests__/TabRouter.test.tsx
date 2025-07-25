@@ -1710,6 +1710,66 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ]);
 });
 
+test('preserves params in history with backBehavior: fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState({
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  });
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('baz', { value: 'first' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.routes[1].params).toEqual({ value: 'first' });
+  expect(state.history[1].params).toEqual({ value: 'first' });
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('qux', { value: 'second' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.routes[2].params).toEqual({ value: 'second' });
+  expect(state.history[2].params).toEqual({ value: 'second' });
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('baz', { value: 'updated' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.routes[1].params).toEqual({ value: 'updated' });
+  expect(state.history[3].params).toEqual({ value: 'updated' });
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.index).toBe(2);
+  expect(state.routes[2].params).toEqual({ value: 'second' });
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.index).toBe(1);
+  expect(state.routes[1].params).toEqual({ value: 'first' });
+});
+
 test('updates route key history on focus change with backBehavior: fullHistory', () => {
   const router = TabRouter({ backBehavior: 'fullHistory' });
 
@@ -1736,42 +1796,42 @@ test('updates route key history on focus change with backBehavior: fullHistory',
 
   expect(state.history).toEqual([
     { type: 'route', key: 'bar-0' },
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
   ]);
 
   state = router.getStateForRouteFocus(state, 'qux-0');
 
   expect(state.history).toEqual([
     { type: 'route', key: 'bar-0' },
-    { type: 'route', key: 'baz-0' },
-    { type: 'route', key: 'qux-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
+    { type: 'route', key: 'qux-0', params: { name: 'Jane' } },
   ]);
 
   state = router.getStateForRouteFocus(state, 'baz-0');
 
   expect(router.getStateForRouteFocus(state, 'baz-0').history).toEqual([
     { type: 'route', key: 'bar-0' },
-    { type: 'route', key: 'baz-0' },
-    { type: 'route', key: 'qux-0' },
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
+    { type: 'route', key: 'qux-0', params: { name: 'Jane' } },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
   ]);
 
   state = router.getStateForRouteFocus(state, 'baz-0');
 
   expect(router.getStateForRouteFocus(state, 'baz-0').history).toEqual([
     { type: 'route', key: 'bar-0' },
-    { type: 'route', key: 'baz-0' },
-    { type: 'route', key: 'qux-0' },
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
+    { type: 'route', key: 'qux-0', params: { name: 'Jane' } },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
   ]);
 
   state = router.getStateForRouteFocus(state, 'baz-0');
 
   expect(router.getStateForRouteFocus(state, 'baz-0').history).toEqual([
     { type: 'route', key: 'bar-0' },
-    { type: 'route', key: 'baz-0' },
-    { type: 'route', key: 'qux-0' },
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
+    { type: 'route', key: 'qux-0', params: { name: 'Jane' } },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
   ]);
 });
 

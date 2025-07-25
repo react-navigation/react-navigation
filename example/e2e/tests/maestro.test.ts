@@ -17,32 +17,38 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
 
   test(metadata.name, async ({ page }) => {
     for (const step of steps) {
-      switch (Object.keys(step)[0]) {
-        case 'openLink': {
-          await page.goto(
-            step.openLink.link.replace('exp://127.0.0.1:8081/--', '')
-          );
-          break;
-        }
+      try {
+        switch (Object.keys(step)[0]) {
+          case 'openLink': {
+            await page.goto(
+              step.openLink.link.replace('exp://127.0.0.1:8081/--', '')
+            );
+            break;
+          }
 
-        case 'tapOn': {
-          await page
-            .getByText(step.tapOn.text)
-            .locator('visible=true')
-            .first()
-            .click();
-          break;
-        }
-
-        case 'assertVisible': {
-          await expect(
-            page
-              .getByText(step.assertVisible.text)
-              .locator('visible=true')
+          case 'tapOn': {
+            await page
+              .getByText(step.tapOn.text)
+              .filter({ visible: true })
               .first()
-          ).toBeVisible();
-          break;
+              .click({ force: true });
+            break;
+          }
+
+          case 'assertVisible': {
+            await expect(
+              page
+                .getByText(step.assertVisible.text)
+                .filter({ visible: true })
+                .first()
+            ).toBeVisible();
+            break;
+          }
         }
+      } catch (error) {
+        throw new Error(`Failed at step: ${JSON.stringify(step)}`, {
+          cause: error,
+        });
       }
     }
   });

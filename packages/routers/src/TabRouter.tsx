@@ -50,7 +50,7 @@ export type TabNavigationState<ParamList extends ParamListBase> = Omit<
   /**
    * List of previously visited route keys.
    */
-  history: { type: 'route'; key: string }[];
+  history: { type: 'route'; key: string; params?: object | undefined }[];
   /**
    * List of routes' key, which are supposed to be preloaded before navigating to.
    */
@@ -90,13 +90,22 @@ const getRouteHistory = (
   backBehavior: BackBehavior,
   initialRouteName: string | undefined
 ) => {
-  const history = [{ type: TYPE_ROUTE, key: routes[index].key }];
+  const history = [
+    {
+      type: TYPE_ROUTE,
+      key: routes[index].key,
+    },
+  ];
+
   let initialRouteIndex;
 
   switch (backBehavior) {
     case 'order':
       for (let i = index; i > 0; i--) {
-        history.unshift({ type: TYPE_ROUTE, key: routes[i - 1].key });
+        history.unshift({
+          type: TYPE_ROUTE,
+          key: routes[i - 1].key,
+        });
       }
       break;
     case 'firstRoute':
@@ -138,19 +147,19 @@ const changeIndex = (
   let history = state.history;
 
   if (backBehavior === 'history' || backBehavior === 'fullHistory') {
-    const currentRouteKey = state.routes[index].key;
+    const currentRoute = state.routes[index];
 
     if (backBehavior === 'history') {
       // Remove the existing key from the history to de-duplicate it
       history = history.filter((it) =>
-        it.type === 'route' ? it.key !== currentRouteKey : false
+        it.type === 'route' ? it.key !== currentRoute.key : false
       );
     } else if (backBehavior === 'fullHistory') {
       const lastHistoryRouteItemIndex = history.findLastIndex(
         (item) => item.type === 'route'
       );
 
-      if (currentRouteKey === history[lastHistoryRouteItemIndex]?.key) {
+      if (currentRoute.key === history[lastHistoryRouteItemIndex]?.key) {
         // For full-history, only remove if it matches the last route
         // Useful for drawer, if current route was in history, then drawer state changed
         // Then we only need to move the route to the front
@@ -163,7 +172,8 @@ const changeIndex = (
 
     history = history.concat({
       type: TYPE_ROUTE,
-      key: currentRouteKey,
+      key: currentRoute.key,
+      params: backBehavior === 'fullHistory' ? currentRoute.params : undefined,
     });
   } else {
     history = getRouteHistory(
@@ -424,7 +434,8 @@ export function TabRouter({
             return null;
           }
 
-          const previousKey = state.history[state.history.length - 2]?.key;
+          const previousHistoryItem = state.history[state.history.length - 2];
+          const previousKey = previousHistoryItem?.key;
           const index = state.routes.findLastIndex(
             (route) => route.key === previousKey
           );
@@ -433,8 +444,22 @@ export function TabRouter({
             return null;
           }
 
+          let routes = state.routes;
+
+          if (
+            backBehavior === 'fullHistory' &&
+            routes[index].params !== previousHistoryItem.params
+          ) {
+            routes = [...state.routes];
+            routes[index] = {
+              ...routes[index],
+              params: previousHistoryItem.params,
+            };
+          }
+
           return {
             ...state,
+            routes,
             preloadedRouteKeys: state.preloadedRouteKeys.filter(
               (key) => key !== state.routes[index].key
             ),

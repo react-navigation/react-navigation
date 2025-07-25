@@ -174,6 +174,7 @@ const CSS_TEXT = css`
     background-color: var(--overlay-color);
     opacity: 0;
     transition: opacity 0.15s;
+    pointer-events: none;
   }
 
   a:hover > .${CLASS_NAME}, button:hover > .${CLASS_NAME} {

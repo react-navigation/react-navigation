@@ -6,6 +6,7 @@ import {
   useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
 import {
+  Button,
   HeaderBackButton,
   HeaderButton,
   PlatformPressable,
@@ -16,6 +17,7 @@ import {
   type PathConfigMap,
   useIsFocused,
   useLocale,
+  useNavigation,
 } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
@@ -44,7 +46,7 @@ export type BottomTabParams = {
   TabStack: NavigatorScreenParams<NativeStackParams>;
   TabAlbums: undefined;
   TabContacts: undefined;
-  TabChat: undefined;
+  TabChat: { count: number } | undefined;
 };
 
 const linking: PathConfigMap<BottomTabParams> = {
@@ -58,6 +60,8 @@ const linking: PathConfigMap<BottomTabParams> = {
 };
 
 const AlbumsScreen = () => {
+  const navigation =
+    useNavigation<BottomTabScreenProps<BottomTabParams>['navigation']>();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
   const isFocused = useIsFocused();
@@ -71,11 +75,20 @@ const AlbumsScreen = () => {
           paddingBottom: tabBarHeight,
         }}
       >
+        <Button
+          onPress={() => {
+            navigation.navigate('TabChat', { count: i++ });
+          }}
+        >
+          Go to Chat
+        </Button>
         <Albums scrollEnabled={false} />
       </ScrollView>
     </>
   );
 };
+
+let i = 0;
 
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
@@ -100,6 +113,7 @@ export function BottomTabs() {
   return (
     <>
       <Tab.Navigator
+        backBehavior="fullHistory"
         screenOptions={({
           navigation,
         }: BottomTabScreenProps<BottomTabParams>) => ({
@@ -190,11 +204,11 @@ export function BottomTabs() {
         <Tab.Screen
           name="TabChat"
           component={Chat}
-          options={{
+          options={({ route }) => ({
             title: 'Chat',
             tabBarIcon: getTabBarIcon('message-reply'),
-            tabBarBadge: 2,
-          }}
+            tabBarBadge: route.params?.count,
+          })}
         />
         <Tab.Screen
           name="TabContacts"

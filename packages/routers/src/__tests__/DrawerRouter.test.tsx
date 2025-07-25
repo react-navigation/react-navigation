@@ -638,24 +638,24 @@ test('updates history on focus change with backBehavior: fullHistory', () => {
 
   expect(state.history).toEqual([
     { type: 'route', key: 'bar-0' },
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
   ]);
 
   state = router.getStateForRouteFocus(state, 'qux-0');
 
   expect(state.history).toEqual([
     { type: 'route', key: 'bar-0' },
-    { type: 'route', key: 'baz-0' },
-    { type: 'route', key: 'qux-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
+    { type: 'route', key: 'qux-0', params: { name: 'Jane' } },
   ]);
 
   state = router.getStateForRouteFocus(state, 'baz-0');
 
   expect(state.history).toEqual([
     { type: 'route', key: 'bar-0' },
-    { type: 'route', key: 'baz-0' },
-    { type: 'route', key: 'qux-0' },
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
+    { type: 'route', key: 'qux-0', params: { name: 'Jane' } },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
   ]);
 });
 
