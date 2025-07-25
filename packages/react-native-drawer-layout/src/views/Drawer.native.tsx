@@ -184,21 +184,23 @@ export function Drawer({
         runOnJS(onAnimationStart)(open);
       }
 
-      touchStartX.value = 0;
-      touchX.value = 0;
-      translationX.value = withSpring(
-        translateX,
-        {
-          velocity,
-          stiffness: 1000,
-          damping: 500,
-          mass: 3,
-          overshootClamping: true,
-          restDisplacementThreshold: 0.01,
-          restSpeedThreshold: 0.01,
-          reduceMotion: ReduceMotion.Never,
-        },
-        (finished) => runOnJS(onAnimationEnd)(open, finished)
+      touchStartX.set(0);
+      touchX.set(0);
+      translationX.set(
+        withSpring(
+          translateX,
+          {
+            velocity,
+            stiffness: 1000,
+            damping: 500,
+            mass: 3,
+            overshootClamping: true,
+            restDisplacementThreshold: 0.01,
+            restSpeedThreshold: 0.01,
+            reduceMotion: ReduceMotion.Never,
+          },
+          (finished) => runOnJS(onAnimationEnd)(open, finished)
+        )
       );
 
       if (open) {
@@ -228,9 +230,9 @@ export function Drawer({
       .onBegin((event) => {
         'worklet';
 
-        startX.value = translationX.value;
-        gestureState.value = event.state;
-        touchStartX.value = event.x;
+        startX.set(translationX.get());
+        gestureState.set(event.state);
+        touchStartX.set(event.x);
       })
       .onStart(() => {
         'worklet';
@@ -240,14 +242,14 @@ export function Drawer({
       .onChange((event) => {
         'worklet';
 
-        touchX.value = event.x;
-        translationX.value = startX.value + event.translationX;
-        gestureState.value = event.state;
+        touchX.set(event.x);
+        translationX.set(startX.get() + event.translationX);
+        gestureState.set(event.state);
       })
       .onEnd((event, success) => {
         'worklet';
 
-        gestureState.value = event.state;
+        gestureState.set(event.state);
 
         if (!success) {
           runOnJS(onGestureAbort)();
@@ -326,11 +328,11 @@ export function Drawer({
     //
     // This is used only when drawerType is "front"
     const touchDistance =
-      drawerType === 'front' && gestureState.value === GestureState.ACTIVE
+      drawerType === 'front' && gestureState.get() === GestureState.ACTIVE
         ? minmax(
             drawerPosition === 'left'
-              ? touchStartX.value - drawerWidth
-              : layout.width - drawerWidth - touchStartX.value,
+              ? touchStartX.get() - drawerWidth
+              : layout.width - drawerWidth - touchStartX.get(),
             0,
             layout.width
           )
@@ -351,7 +353,7 @@ export function Drawer({
       // FIXME: Reanimated skips committing to the shadow tree if no layout props are animated
       // This results in pressables not getting their correct position and can't be pressed
       // So we animate the zIndex to force the commit - it doesn't affect the drawer visually
-      zIndex: translateX.value === 0 ? 0 : 1,
+      zIndex: translateX.get() === 0 ? 0 : 1,
       transform:
         drawerType === 'permanent'
           ? // Reanimated needs the property to be present, but it results in Browser bug
@@ -384,7 +386,7 @@ export function Drawer({
   const contentAnimatedStyle = useAnimatedStyle(() => {
     return {
       // FIXME: Force Reanimated to commit to the shadow tree
-      zIndex: translateX.value === 0 ? 0 : drawerType === 'back' ? 2 : 1,
+      zIndex: translateX.get() === 0 ? 0 : drawerType === 'back' ? 2 : 1,
       transform:
         drawerType === 'permanent'
           ? // Reanimated needs the property to be present, but it results in Browser bug

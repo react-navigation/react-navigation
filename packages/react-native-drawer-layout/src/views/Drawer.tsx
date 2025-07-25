@@ -30,7 +30,7 @@ export function Drawer({
   const progress = useFakeSharedValue(open ? 1 : 0);
 
   React.useEffect(() => {
-    progress.value = open ? 1 : 0;
+    progress.set(open ? 1 : 0);
   }, [open, progress]);
 
   const drawerRef = React.useRef<View>(null);
