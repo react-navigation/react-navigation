@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.12.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.12.1...@react-navigation/core@7.12.2) (2025-07-25)
+
+### Bug Fixes
+
+* don't generate empty path if initial route already has a path ([4306ddd](https://github.com/react-navigation/react-navigation/commit/4306ddd754f1b554d9d8bed6056db528f9e2329b)) - by @satya164
+
 ## [7.12.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.12.0...@react-navigation/core@7.12.1) (2025-06-21)
 
 ### Bug Fixes

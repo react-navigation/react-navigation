@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.4.1...@react-navigation/routers@7.5.0) (2025-07-25)
+
+### Features
+
+* preserve params for backBehavior=fullHistory ([3f854bc](https://github.com/react-navigation/react-navigation/commit/3f854bc8f450672b7c24cb4c6fea1dce0682f6aa)) - by @satya164
+
 ## [7.4.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.4.0...@react-navigation/routers@7.4.1) (2025-06-14)
 
 **Note:** Version bump only for package @react-navigation/routers

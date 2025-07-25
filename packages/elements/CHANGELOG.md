@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.5.2...@react-navigation/elements@2.6.0) (2025-07-25)
+
+### Features
+
+* preserve params for backBehavior=fullHistory ([3f854bc](https://github.com/react-navigation/react-navigation/commit/3f854bc8f450672b7c24cb4c6fea1dce0682f6aa)) - by @satya164
+
 ## [2.5.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.5.1...@react-navigation/elements@2.5.2) (2025-06-24)
 
 ### Bug Fixes
