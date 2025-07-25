@@ -1000,6 +1000,74 @@ test('handles config with only groups', () => {
 `);
 });
 
+test("doesn't generate empty path if initialRouteName already has a path", () => {
+  const Nested = createTestNavigator({
+    initialRouteName: 'Second',
+    screens: {
+      First: {
+        screen: TestScreen,
+      },
+      Second: {
+        screen: TestScreen,
+        linking: {
+          path: 'second',
+        },
+      },
+      Third: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Nested, {}, true))
+    .toMatchInlineSnapshot(`
+{
+  "First": {
+    "path": "first",
+  },
+  "Second": {
+    "path": "second",
+  },
+  "Third": {
+    "path": "third",
+  },
+}
+`);
+
+  const Root = createTestNavigator({
+    screens: {
+      Nested: {
+        screen: Nested,
+      },
+      Other: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Root, {}, true))
+    .toMatchInlineSnapshot(`
+{
+  "Nested": {
+    "screens": {
+      "First": {
+        "path": "first",
+      },
+      "Second": {
+        "path": "second",
+      },
+      "Third": {
+        "path": "third",
+      },
+    },
+  },
+  "Other": {
+    "path": "other",
+  },
+}
+`);
+});
+
 test("doesn't generate empty path if it's already present", () => {
   const Nested = createTestNavigator({
     initialRouteName: 'Updates',

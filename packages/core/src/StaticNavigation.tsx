@@ -499,6 +499,7 @@ export function createPathConfigForStaticNavigation(
   },
   auto?: boolean
 ) {
+  let initialScreenHasPath: boolean = false;
   let initialScreenConfig: PathConfig<ParamListBase> | undefined;
 
   const createPathConfigForTree = (
@@ -585,10 +586,14 @@ export function createPathConfigForStaticNavigation(
               !('linking' in item && item.linking == null)
             ) {
               if (screenConfig.path != null) {
-                if (!skipInitialDetection && screenConfig.path === '') {
-                  // We encounter a leaf screen with empty path,
-                  // Clear the initial screen config as it's not needed anymore
-                  initialScreenConfig = undefined;
+                if (!skipInitialDetection) {
+                  if (key === initialRouteName && screenConfig.path != null) {
+                    initialScreenHasPath = true;
+                  } else if (screenConfig.path === '') {
+                    // We encounter a leaf screen with empty path,
+                    // Clear the initial screen config as it's not needed anymore
+                    initialScreenConfig = undefined;
+                  }
                 }
               } else {
                 if (!skipInitialDetection && initialScreenConfig == null) {
@@ -645,7 +650,7 @@ export function createPathConfigForStaticNavigation(
 
   const screens = createPathConfigForTree(tree, options, false);
 
-  if (auto && initialScreenConfig) {
+  if (auto && initialScreenConfig && !initialScreenHasPath) {
     initialScreenConfig.path = '';
   }
 
