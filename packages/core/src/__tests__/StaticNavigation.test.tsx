@@ -3,7 +3,7 @@ import type {
   DefaultRouterOptions,
   NavigationState,
 } from '@react-navigation/routers';
-import { render } from '@testing-library/react-native';
+import { act, render } from '@testing-library/react-native';
 import assert from 'assert';
 import * as React from 'react';
 
@@ -213,6 +213,101 @@ test('renders the specified nested navigator configuration with groups', () => {
       </div>
     </main>
   `);
+});
+
+test('handles conditional groups with nested if hooks', () => {
+  const useShowNested = () => {
+    return React.useSyncExternalStore(
+      (subscriber) => {
+        onUpdate = subscriber;
+
+        return () => {
+          onUpdate = undefined;
+        };
+      },
+      () => showNested,
+      () => showNested
+    );
+  };
+
+  const createUseTest = (value: boolean) => () => {
+    // Use a hook to test that it follows rules of hooks
+    const [state] = React.useState(value);
+
+    return state;
+  };
+
+  const Root = createTestNavigator({
+    groups: {
+      User: {
+        if: useShowNested,
+        screens: {
+          Profile: TestScreen,
+          Settings: {
+            screen: TestScreen,
+            if: createUseTest(true),
+          },
+        },
+      },
+      Guest: {
+        screens: {
+          Feed: TestScreen,
+          Details: {
+            screen: TestScreen,
+            if: createUseTest(false),
+          },
+        },
+      },
+    },
+  });
+
+  let onUpdate: (() => void) | undefined;
+  let showNested = true;
+
+  const Component = createComponentForStaticNavigation(Root, 'RootNavigator');
+
+  const element = (
+    <BaseNavigationContainer>
+      <Component />
+    </BaseNavigationContainer>
+  );
+
+  const root = render(element);
+
+  expect(root).toMatchInlineSnapshot(`
+<main>
+  <div>
+    Screen:
+    Profile
+    (focused)
+  </div>
+  <div>
+    Screen:
+    Settings
+  </div>
+  <div>
+    Screen:
+    Feed
+  </div>
+</main>
+`);
+
+  act(() => {
+    showNested = false;
+    onUpdate?.();
+  });
+
+  root.rerender(element);
+
+  expect(root).toMatchInlineSnapshot(`
+<main>
+  <div>
+    Screen:
+    Feed
+    (focused)
+  </div>
+</main>
+`);
 });
 
 test('handles non-function screens', () => {
