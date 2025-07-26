@@ -377,26 +377,6 @@ export type NativeStackNavigationOptions = {
    */
   keyboardHandlingEnabled?: boolean;
   /**
-   * Sets the navigation bar color. Defaults to initial navigation bar color.
-   *
-   * @deprecated For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
-   *  This prop is subject to removal in the future.
-   *  See: https://developer.android.com/about/versions/15/behavior-changes-15#ux.
-   *
-   * @platform android
-   */
-  navigationBarColor?: string;
-  /**
-   * Boolean indicating whether the content should be visible behind the navigation bar. Defaults to `false`.
-   *
-   * @deprecated For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
-   *  This prop is subject to removal in the future.
-   *  See: https://developer.android.com/about/versions/15/behavior-changes-15#ux.
-   *
-   * @platform android
-   */
-  navigationBarTranslucent?: boolean;
-  /**
    * Sets the visibility of the navigation bar. Defaults to `false`.
    *
    * @platform android
@@ -414,16 +394,6 @@ export type NativeStackNavigationOptions = {
    * @platform android, ios
    */
   statusBarAnimation?: ScreenProps['statusBarAnimation'];
-  /**
-   * Sets the status bar color (similar to the `StatusBar` component). Defaults to initial status bar color.
-   *
-   * @deprecated For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
-   *  This prop is subject to removal in the future.
-   *  See: https://developer.android.com/about/versions/15/behavior-changes-15#ux.
-   *
-   * @platform android
-   */
-  statusBarBackgroundColor?: string;
   /**
    * Whether the status bar should be hidden on this screen.
    * Requires setting `View controller-based status bar appearance -> YES` in your Info.plist file.
@@ -445,16 +415,6 @@ export type NativeStackNavigationOptions = {
    * @platform android, ios
    */
   statusBarStyle?: ScreenProps['statusBarStyle'];
-  /**
-   * Sets the translucency of the status bar. Defaults to `false`.
-   *
-   * @deprecated For all apps targeting Android SDK 35 or above edge-to-edge is enabled by default.
-   *  This prop is subject to removal in the future.
-   *  See: https://developer.android.com/about/versions/15/behavior-changes-15#ux.
-   *
-   * @platform android
-   */
-  statusBarTranslucent?: boolean;
   /**
    * Sets the direction in which you should swipe to dismiss the screen.
    * When using `vertical` option, options `fullScreenGestureEnabled: true`, `animationMatchesGesture: true` and `animation: 'slide_from_bottom'` are set by default.

@@ -115,8 +115,6 @@ const SceneView = ({
     headerTransparent,
     autoHideHomeIndicator,
     keyboardHandlingEnabled,
-    navigationBarColor,
-    navigationBarTranslucent,
     navigationBarHidden,
     orientation,
     sheetAllowedDetents = [1.0],
@@ -129,8 +127,6 @@ const SceneView = ({
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
-    statusBarTranslucent,
-    statusBarBackgroundColor,
     unstable_sheetFooter,
     freezeOnBlur,
     contentStyle,
@@ -234,16 +230,7 @@ const SceneView = ({
     [headerHeightCorrectionOffset, rawAnimatedHeaderHeight]
   );
 
-  // During the very first render topInset is > 0 when running
-  // in non edge-to-edge mode on Android, while on every consecutive render
-  // topInset === 0, causing header content to jump, as we add padding on the first frame,
-  // just to remove it in next one. To prevent this, when statusBarTranslucent is set,
-  // we apply additional padding in header only if its true.
-  // For more details see: https://github.com/react-navigation/react-navigation/pull/12014
-  const headerTopInsetEnabled =
-    typeof statusBarTranslucent === 'boolean'
-      ? statusBarTranslucent
-      : topInset !== 0;
+  const headerTopInsetEnabled = topInset !== 0;
 
   const canGoBack = previousDescriptor != null || parentHeaderBack != null;
   const backTitle = previousDescriptor
@@ -302,8 +289,6 @@ const SceneView = ({
           }
           homeIndicatorHidden={autoHideHomeIndicator}
           hideKeyboardOnSwipe={keyboardHandlingEnabled}
-          navigationBarColor={navigationBarColor}
-          navigationBarTranslucent={navigationBarTranslucent}
           navigationBarHidden={navigationBarHidden}
           replaceAnimation={animationTypeForReplace}
           stackPresentation={presentation === 'card' ? 'push' : presentation}
@@ -319,8 +304,6 @@ const SceneView = ({
           statusBarAnimation={statusBarAnimation}
           statusBarHidden={statusBarHidden}
           statusBarStyle={statusBarStyle}
-          statusBarColor={statusBarBackgroundColor}
-          statusBarTranslucent={statusBarTranslucent}
           swipeDirection={gestureDirectionOverride}
           transitionDuration={animationDuration}
           onWillAppear={onWillAppear}

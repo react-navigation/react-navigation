@@ -59,7 +59,7 @@ export type DrawerProps = {
 
   /**
    * Locale direction of the drawer.
-   * Defaults to `rtl` when `I18nManager.isRTL` is `true` on Android & iOS, otherwise `ltr`.
+   * Defaults to `rtl` when `I18nManager.getConstants().isRTL` is `true` on Android & iOS, otherwise `ltr`.
    */
   direction?: 'ltr' | 'rtl';
 
