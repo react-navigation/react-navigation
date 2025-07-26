@@ -1744,6 +1744,24 @@ test('preserves params in history with backBehavior: fullHistory', () => {
 
   state = router.getStateForAction(
     state,
+    CommonActions.setParams({ value: 'updated with setParams' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.routes[2].params).toEqual({ value: 'updated with setParams' });
+  expect(state.history[2].params).toEqual({ value: 'updated with setParams' });
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.replaceParams({ value: 'replaced params' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.routes[2].params).toEqual({ value: 'replaced params' });
+  expect(state.history[2].params).toEqual({ value: 'replaced params' });
+
+  state = router.getStateForAction(
+    state,
     CommonActions.navigate('baz', { value: 'updated' }),
     options
   ) as TabNavigationState<ParamListBase>;
@@ -1758,7 +1776,7 @@ test('preserves params in history with backBehavior: fullHistory', () => {
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.index).toBe(2);
-  expect(state.routes[2].params).toEqual({ value: 'second' });
+  expect(state.routes[2].params).toEqual({ value: 'replaced params' });
 
   state = router.getStateForAction(
     state,
