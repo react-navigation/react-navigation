@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.4.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.4.3...@react-navigation/stack@7.4.4) (2025-07-26)
+
+### Bug Fixes
+
+* use Object.is for equality checks ([13231ae](https://github.com/react-navigation/react-navigation/commit/13231ae7c72af707a2da113c7dde8ddc79e9308b)) - by @satya164
+
 ## [7.4.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.4.2...@react-navigation/stack@7.4.3) (2025-07-25)
 
 **Note:** Version bump only for package @react-navigation/stack

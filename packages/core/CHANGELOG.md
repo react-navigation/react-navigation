@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.12.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.12.2...@react-navigation/core@7.12.3) (2025-07-26)
+
+### Bug Fixes
+
+* crash when path contains emoji ([#12679](https://github.com/react-navigation/react-navigation/issues/12679)) ([8123808](https://github.com/react-navigation/react-navigation/commit/81238086397eab1137ee8f0df246f8ea812a61c4)) - by @bernhardoj
+* remove production check in useRouteCache ([#12686](https://github.com/react-navigation/react-navigation/issues/12686)) ([c492234](https://github.com/react-navigation/react-navigation/commit/c492234a61431d36bde6c7d9cc86dbc4ccd1ff93)) - by @Ubax
+* use Object.is for equality checks ([13231ae](https://github.com/react-navigation/react-navigation/commit/13231ae7c72af707a2da113c7dde8ddc79e9308b)) - by @satya164
+
 ## [7.12.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.12.1...@react-navigation/core@7.12.2) (2025-07-25)
 
 ### Bug Fixes
