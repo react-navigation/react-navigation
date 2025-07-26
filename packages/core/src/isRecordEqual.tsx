@@ -13,5 +13,5 @@ export function isRecordEqual(a: Record<string, any>, b: Record<string, any>) {
     return false;
   }
 
-  return aKeys.every((key) => a[key] === b[key]);
+  return aKeys.every((key) => Object.is(a[key], b[key]));
 }

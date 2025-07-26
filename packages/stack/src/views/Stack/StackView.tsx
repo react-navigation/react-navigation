@@ -65,7 +65,7 @@ const GestureHandlerWrapper = GestureHandlerRootView ?? View;
  * We need to make sure that both values and order match.
  */
 const isArrayEqual = (a: any[], b: any[]) =>
-  a.length === b.length && a.every((it, index) => it === b[index]);
+  a.length === b.length && a.every((it, index) => Object.is(it, b[index]));
 
 export class StackView extends React.Component<Props, State> {
   static getDerivedStateFromProps(
