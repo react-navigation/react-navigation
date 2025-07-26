@@ -23,11 +23,6 @@ export function useRouteCache<State extends NavigationState>(
   // Cache object which holds route objects for each screen
   const cache = React.useMemo(() => ({ current: new Map() as RouteCache }), []);
 
-  if (process.env.NODE_ENV === 'production') {
-    // We don't want the overhead of creating extra maps every render in prod
-    return routes;
-  }
-
   cache.current = routes.reduce((acc, route) => {
     const previous = cache.current.get(route.key);
     const { state, ...routeWithoutState } = route;
