@@ -27,11 +27,13 @@ export function ResourceSavingView({
         // @ts-expect-error: hidden exists on web, but not in React Native
         hidden={!visible}
         style={[
-          { display: visible ? 'flex' : 'none' },
+          {
+            display: visible ? 'flex' : 'none',
+            pointerEvents: visible ? 'auto' : 'none',
+          },
           styles.container,
           style,
         ]}
-        pointerEvents={visible ? 'auto' : 'none'}
         {...rest}
       >
         {children}
@@ -52,7 +54,6 @@ export function ResourceSavingView({
           // This is an workaround for a bug where the clipped view never re-appears
           Platform.OS === 'ios' || Platform.OS === 'macos' ? !visible : true
         }
-        pointerEvents={visible ? 'auto' : 'none'}
         style={visible ? styles.attached : styles.detached}
       >
         {children}
@@ -68,9 +69,11 @@ const styles = StyleSheet.create({
   },
   attached: {
     flex: 1,
+    pointerEvents: 'auto',
   },
   detached: {
     flex: 1,
     top: FAR_FAR_AWAY,
+    pointerEvents: 'none',
   },
 });
