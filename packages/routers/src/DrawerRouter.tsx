@@ -221,8 +221,7 @@ export function DrawerRouter({
           return addDrawerToHistory(state);
 
         case 'JUMP_TO':
-        case 'NAVIGATE':
-        case 'NAVIGATE_DEPRECATED': {
+        case 'NAVIGATE': {
           const result = router.getStateForAction(state, action, options);
 
           if (result != null && result.index !== state.index) {

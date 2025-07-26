@@ -13,7 +13,6 @@ import useLatestCallback from 'use-latest-callback';
 import { checkDuplicateRouteNames } from './checkDuplicateRouteNames';
 import { checkSerializable } from './checkSerializable';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
-import { DeprecatedNavigationInChildContext } from './DeprecatedNavigationInChildContext';
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
 import { findFocusedRoute } from './findFocusedRoute';
 import { NavigationBuilderContext } from './NavigationBuilderContext';
@@ -88,7 +87,6 @@ export const BaseNavigationContainer = React.forwardRef(
       onStateChange,
       onReady,
       onUnhandledAction,
-      navigationInChildEnabled = false,
       theme,
       children,
     }: NavigationContainerProps,
@@ -450,13 +448,9 @@ export const BaseNavigationContainer = React.forwardRef(
               <UnhandledActionContext.Provider
                 value={onUnhandledAction ?? defaultOnUnhandledAction}
               >
-                <DeprecatedNavigationInChildContext.Provider
-                  value={navigationInChildEnabled}
-                >
-                  <EnsureSingleNavigator>
-                    <ThemeProvider value={theme}>{children}</ThemeProvider>
-                  </EnsureSingleNavigator>
-                </DeprecatedNavigationInChildContext.Provider>
+                <EnsureSingleNavigator>
+                  <ThemeProvider value={theme}>{children}</ThemeProvider>
+                </EnsureSingleNavigator>
               </UnhandledActionContext.Provider>
             </NavigationStateContext.Provider>
           </NavigationBuilderContext.Provider>

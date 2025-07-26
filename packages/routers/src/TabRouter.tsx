@@ -351,8 +351,7 @@ export function TabRouter({
     getStateForAction(state, action, { routeParamList, routeGetIdList }) {
       switch (action.type) {
         case 'JUMP_TO':
-        case 'NAVIGATE':
-        case 'NAVIGATE_DEPRECATED': {
+        case 'NAVIGATE': {
           const index = state.routes.findIndex(
             (route) => route.name === action.payload.name
           );
@@ -382,8 +381,7 @@ export function TabRouter({
                 let params;
 
                 if (
-                  (action.type === 'NAVIGATE' ||
-                    action.type === 'NAVIGATE_DEPRECATED') &&
+                  action.type === 'NAVIGATE' &&
                   action.payload.merge &&
                   currentId === nextId
                 ) {

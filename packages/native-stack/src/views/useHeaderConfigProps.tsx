@@ -147,14 +147,8 @@ export function useHeaderConfigProps({
         })
       : null;
 
-  const supportsHeaderSearchBar =
-    typeof isSearchBarAvailableForCurrentPlatform === 'boolean'
-      ? isSearchBarAvailableForCurrentPlatform
-      : // Fallback for older versions of react-native-screens
-        Platform.OS === 'ios' && SearchBar != null;
-
   const hasHeaderSearchBar =
-    supportsHeaderSearchBar && headerSearchBarOptions != null;
+    isSearchBarAvailableForCurrentPlatform && headerSearchBarOptions != null;
 
   /**
    * We need to set this in if:

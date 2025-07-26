@@ -5,19 +5,9 @@ import {
   StyleSheet,
   type ViewStyle,
 } from 'react-native';
-import {
-  // eslint-disable-next-line no-restricted-imports
-  useSafeAreaFrame,
-} from 'react-native-safe-area-context';
+import { SafeAreaListener } from 'react-native-safe-area-context';
 import useLatestCallback from 'use-latest-callback';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
-
-// Load with require to avoid error from webpack due to missing export in older versions
-// eslint-disable-next-line import-x/no-commonjs
-const SafeAreaListener = require('react-native-safe-area-context')
-  .SafeAreaListener as
-  | typeof import('react-native-safe-area-context').SafeAreaListener
-  | undefined;
 
 type Frame = {
   width: number;
@@ -170,8 +160,6 @@ function FrameSizeProviderInner({
     <>
       {Platform.OS === 'web' ? (
         <FrameSizeListenerWeb onChange={onChange} />
-      ) : typeof SafeAreaListener === 'undefined' ? (
-        <FrameSizeListenerNativeFallback onChange={onChange} />
       ) : (
         <SafeAreaListener
           onChange={({ frame }) => onChange(frame)}
@@ -181,22 +169,6 @@ function FrameSizeProviderInner({
       <FrameContext.Provider value={context}>{children}</FrameContext.Provider>
     </>
   );
-}
-
-// SafeAreaListener is available only on newer versions
-// Fallback to an effect-based shim for older versions
-function FrameSizeListenerNativeFallback({
-  onChange,
-}: {
-  onChange: (frame: Frame) => void;
-}) {
-  const frame = useSafeAreaFrame();
-
-  React.useLayoutEffect(() => {
-    onChange(frame);
-  }, [frame, onChange]);
-
-  return null;
 }
 
 // FIXME: On the Web, the safe area frame value doesn't update on resize

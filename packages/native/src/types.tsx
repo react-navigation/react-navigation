@@ -153,9 +153,11 @@ export type LinkingOptions<ParamList extends {}> = {
    *    subscribe: (listener) => {
    *      const onReceiveURL = ({ url }) => listener(url);
    *
-   *      Linking.addEventListener('url', onReceiveURL);
+   *      const subscription = Linking.addEventListener('url', onReceiveURL);
    *
-   *      return () => Linking.removeEventListener('url', onReceiveURL);
+   *      return () => {
+   *        subscription.remove();
+   *      };
    *   }
    * }
    * ```
