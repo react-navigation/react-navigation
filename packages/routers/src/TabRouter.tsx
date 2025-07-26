@@ -429,6 +429,39 @@ export function TabRouter({
           };
         }
 
+        case 'SET_PARAMS':
+        case 'REPLACE_PARAMS': {
+          const nextState = BaseRouter.getStateForAction(state, action);
+
+          if (nextState !== null) {
+            const index = nextState.index;
+
+            if (index != null) {
+              const focusedRoute = nextState.routes[index];
+              const historyItemIndex = state.history.findLastIndex(
+                (item) => item.key === focusedRoute.key
+              );
+
+              let updatedHistory = state.history;
+
+              if (historyItemIndex !== -1) {
+                updatedHistory = [...state.history];
+                updatedHistory[historyItemIndex] = {
+                  ...updatedHistory[historyItemIndex],
+                  params: focusedRoute.params,
+                };
+              }
+
+              return {
+                ...nextState,
+                history: updatedHistory,
+              };
+            }
+          }
+
+          return nextState;
+        }
+
         case 'GO_BACK': {
           if (state.history.length === 1) {
             return null;
