@@ -97,7 +97,11 @@ export type MaterialTopTabNavigationOptions = {
     | string
     | ((props: {
         focused: boolean;
-        color: string;
+        color: string | Animated.AnimatedInterpolation<string | number>;
+        fontSize: number | Animated.AnimatedInterpolation<number>;
+        fontWeight:
+          | TextStyle['fontWeight']
+          | Animated.AnimatedInterpolation<string | number>;
         children: string;
       }) => React.ReactNode);
 
@@ -171,6 +175,26 @@ export type MaterialTopTabNavigationOptions = {
    * Color for the icon and label in the inactive tabs.
    */
   tabBarInactiveTintColor?: string;
+
+  /**
+   * Font size for the label in the active tab.
+   */
+  tabBarActiveFontSize?: number;
+
+  /**
+   * Font size for the label in the inactive tabs.
+   */
+  tabBarInactiveFontSize?: number;
+
+  /**
+   * Font weight for the label in the active tab.
+   */
+  tabBarActiveFontWeight?: TextStyle['fontWeight'];
+
+  /**
+   * Font weight for the label in the inactive tabs.
+   */
+  tabBarInactiveFontWeight?: TextStyle['fontWeight'];
 
   /**
    * Color for material ripple (Android >= 5.0 only).
