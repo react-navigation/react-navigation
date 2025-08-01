@@ -32,7 +32,6 @@ import {
   type RouteConfig,
 } from './types';
 import { useChildListeners } from './useChildListeners';
-import { useClientLayoutEffect } from './useClientLayoutEffect';
 import { useComponent } from './useComponent';
 import { useCurrentRender } from './useCurrentRender';
 import { type ScreenConfigWithParent, useDescriptors } from './useDescriptors';
@@ -645,7 +644,7 @@ export function useNavigationBuilder<
 
   stateRef.current = state;
 
-  useClientLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     stateRef.current = null;
   });
 
