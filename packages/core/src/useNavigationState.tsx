@@ -3,8 +3,6 @@ import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 
-import { useClientLayoutEffect } from './useClientLayoutEffect';
-
 type Selector<ParamList extends ParamListBase, T> = (
   state: NavigationState<ParamList>
 ) => T;
@@ -55,7 +53,7 @@ export function NavigationStateListenerProvider({
     };
   });
 
-  useClientLayoutEffect(() => {
+  React.useEffect(() => {
     listeners.current.forEach((callback) => callback());
   }, [state]);
 
