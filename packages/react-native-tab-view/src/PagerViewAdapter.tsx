@@ -102,6 +102,7 @@ export function PagerViewAdapter<T extends Route>({
 
     switch (pageScrollState) {
       case 'idle':
+        offset.setValue(0);
         onSwipeEnd?.();
         return;
       case 'dragging': {
