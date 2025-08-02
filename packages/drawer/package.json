@@ -55,7 +55,7 @@
     "@babel/core": "^7.27.4",
     "@jest/globals": "^30.0.0",
     "@react-navigation/native": "workspace:^",
-    "@testing-library/react-native": "^13.2.0",
+    "@testing-library/react-native": "^13.2.1",
     "@types/react": "~19.0.10",
     "del-cli": "^6.0.0",
     "react": "19.0.0",

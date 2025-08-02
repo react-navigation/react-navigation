@@ -285,32 +285,45 @@ export function Header(props: Props) {
 
   return (
     <Animated.View
-      pointerEvents="box-none"
-      style={[{ height, minHeight, maxHeight, opacity, transform }]}
+      style={[
+        {
+          pointerEvents: 'box-none',
+          height,
+          minHeight,
+          maxHeight,
+          opacity,
+          transform,
+        },
+      ]}
     >
       <Animated.View
-        pointerEvents="box-none"
-        style={[StyleSheet.absoluteFill, backgroundContainerStyle]}
+        style={[
+          StyleSheet.absoluteFill,
+          { pointerEvents: 'box-none' },
+          backgroundContainerStyle,
+        ]}
       >
         {headerBackground ? (
           headerBackground({ style: backgroundStyle })
         ) : (
           <HeaderBackground
-            pointerEvents={
-              // Allow touch through the header when background color is transparent
-              headerTransparent &&
-              (backgroundStyle.backgroundColor === 'transparent' ||
-                Color(backgroundStyle.backgroundColor).alpha() === 0)
-                ? 'none'
-                : 'auto'
-            }
-            style={backgroundStyle}
+            style={[
+              {
+                // Allow touch through the header when background color is transparent
+                pointerEvents:
+                  headerTransparent &&
+                  (backgroundStyle.backgroundColor === 'transparent' ||
+                    Color(backgroundStyle.backgroundColor).alpha() === 0)
+                    ? 'none'
+                    : 'auto',
+              },
+              backgroundStyle,
+            ]}
           />
         )}
       </Animated.View>
-      <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
+      <View style={{ pointerEvents: 'none', height: headerStatusBarHeight }} />
       <View
-        pointerEvents="box-none"
         style={[
           styles.content,
           Platform.OS === 'ios' && frame.width >= IPAD_MINI_MEDIUM_WIDTH
@@ -319,7 +332,6 @@ export function Header(props: Props) {
         ]}
       >
         <Animated.View
-          pointerEvents="box-none"
           style={[
             styles.start,
             !searchBarVisible && headerTitleAlign === 'center' && styles.expand,
@@ -332,7 +344,6 @@ export function Header(props: Props) {
         {Platform.OS === 'ios' || !searchBarVisible ? (
           <>
             <Animated.View
-              pointerEvents="box-none"
               style={[
                 styles.title,
                 {
@@ -369,7 +380,6 @@ export function Header(props: Props) {
               })}
             </Animated.View>
             <Animated.View
-              pointerEvents="box-none"
               style={[
                 styles.end,
                 styles.expand,
@@ -421,6 +431,7 @@ export function Header(props: Props) {
 
 const styles = StyleSheet.create({
   content: {
+    pointerEvents: 'box-none',
     flex: 1,
     flexDirection: 'row',
     alignItems: 'stretch',
@@ -430,16 +441,19 @@ const styles = StyleSheet.create({
   },
   title: {
     justifyContent: 'center',
+    pointerEvents: 'box-none',
   },
   start: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-start',
+    pointerEvents: 'box-none',
   },
   end: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
+    pointerEvents: 'box-none',
   },
   expand: {
     flexGrow: 1,
