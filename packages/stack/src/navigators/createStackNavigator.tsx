@@ -31,7 +31,7 @@ function StackNavigator({
   screenListeners,
   screenOptions,
   screenLayout,
-  UNSTABLE_router,
+  router,
   ...rest
 }: StackNavigatorProps) {
   const { direction } = useLocale();
@@ -51,7 +51,7 @@ function StackNavigator({
       screenListeners,
       screenOptions,
       screenLayout,
-      UNSTABLE_router,
+      router,
     });
 
   React.useEffect(

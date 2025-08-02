@@ -1531,7 +1531,7 @@ test('resets state for navigator which has screen from params', () => {
   });
 });
 
-test('overrides router with UNSTABLE_router', () => {
+test('overrides router with router prop', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -1545,7 +1545,7 @@ test('overrides router with UNSTABLE_router', () => {
   render(
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator
-        UNSTABLE_router={(
+        router={(
           original: Router<NavigationState, NavigationAction>
         ): Partial<Router<NavigationState, NavigationAction>> => {
           return {

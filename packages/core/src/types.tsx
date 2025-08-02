@@ -102,7 +102,7 @@ export type DefaultNavigatorOptions<
    *
    * This must be a pure function and cannot reference outside dynamic variables.
    */
-  UNSTABLE_router?: <Action extends NavigationAction>(
+  router?: <Action extends NavigationAction>(
     original: Router<State, Action>
   ) => Partial<Router<State, Action>>;
 } & (NavigatorID extends string

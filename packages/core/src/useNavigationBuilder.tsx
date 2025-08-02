@@ -309,7 +309,7 @@ export function useNavigationBuilder<
     screenOptions,
     screenLayout,
     screenListeners,
-    UNSTABLE_router,
+    router: routerOverrides,
     ...rest
   } = options;
 
@@ -333,8 +333,8 @@ export function useNavigationBuilder<
 
     const original = createRouter(rest as unknown as RouterOptions);
 
-    if (UNSTABLE_router != null) {
-      const overrides = UNSTABLE_router(original);
+    if (routerOverrides != null) {
+      const overrides = routerOverrides(original);
 
       return {
         ...original,
