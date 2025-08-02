@@ -22,6 +22,7 @@ import {
   type InitialState,
   type LinkingOptions,
   NavigationContainer,
+  type Theme,
   useNavigationContainerRef,
 } from '@react-navigation/native';
 import {
@@ -38,7 +39,9 @@ import {
   I18nManager,
   Linking,
   Platform,
+  PlatformColor,
   ScrollView,
+  Switch,
   useWindowDimensions,
 } from 'react-native';
 import { SystemBars } from 'react-native-edge-to-edge';
@@ -53,7 +56,7 @@ import { NotFound } from './Screens/NotFound';
 import { Divider } from './Shared/Divider';
 import { ErrorBoundary } from './Shared/ErrorBoundary';
 import { ListItem } from './Shared/LIstItem';
-import { SettingsItem } from './Shared/SettingsItem';
+import { SegmentedPicker } from './Shared/SegmentedPicker';
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
@@ -99,6 +102,48 @@ const linking: LinkingOptions<RootStackParamList> = {
   },
 };
 
+const WEB_COLORS = {
+  primary: '#5850ec',
+  background: '#f3f4f6',
+  card: '#ffffff',
+  text: '#1f2937',
+  border: '#e5e7eb',
+  notification: '#f05252',
+} satisfies Theme['colors'];
+
+const PlatformTheme: Theme = {
+  ...DefaultTheme,
+  colors: Platform.select<() => Theme['colors']>({
+    ios: () => ({
+      primary: PlatformColor('systemRed'),
+      background: PlatformColor('systemGroupedBackground'),
+      card: PlatformColor('tertiarySystemBackground'),
+      text: PlatformColor('label'),
+      border: PlatformColor('separator'),
+      notification: PlatformColor('systemRed'),
+    }),
+    android: () => ({
+      primary: PlatformColor('@android:color/system_primary_light'),
+      background: PlatformColor(
+        '@android:color/system_surface_container_light'
+      ),
+      card: PlatformColor('@android:color/system_background_light'),
+      text: PlatformColor('@android:color/system_on_surface_light'),
+      border: PlatformColor('@android:color/system_outline_variant_light'),
+      notification: PlatformColor('@android:color/holo_red_light'),
+    }),
+    web: () => ({
+      primary: 'var(--color-primary)',
+      background: 'var(--color-background)',
+      card: 'var(--color-card)',
+      text: 'var(--color-text)',
+      border: 'var(--color-border)',
+      notification: 'var(--color-notification)',
+    }),
+    default: () => DefaultTheme.colors,
+  })(),
+};
+
 let previousDirection = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr';
 
 if (Platform.OS === 'web') {
@@ -123,7 +168,9 @@ if (Platform.OS === 'web') {
 }
 
 export function App() {
-  const [theme, setTheme] = React.useState(DefaultTheme);
+  const [themeName, setThemeName] = React.useState<'light' | 'dark' | 'custom'>(
+    'custom'
+  );
 
   const [isReady, setIsReady] = React.useState(Platform.OS === 'web');
   const [initialState, setInitialState] = React.useState<
@@ -150,9 +197,17 @@ export function App() {
         }
       } finally {
         try {
-          const themeName = await AsyncStorage.getItem(THEME_PERSISTENCE_KEY);
+          const savedThemeName = await AsyncStorage.getItem(
+            THEME_PERSISTENCE_KEY
+          );
 
-          setTheme(themeName === 'dark' ? DarkTheme : DefaultTheme);
+          setThemeName(
+            savedThemeName === 'dark'
+              ? 'dark'
+              : savedThemeName === 'light'
+                ? 'light'
+                : 'custom'
+          );
         } catch (e) {
           // Ignore
         }
@@ -179,16 +234,16 @@ export function App() {
       return;
     }
 
-    const name = theme.dark ? 'dark' : 'light';
+    AsyncStorage.setItem(THEME_PERSISTENCE_KEY, themeName);
 
-    AsyncStorage.setItem(THEME_PERSISTENCE_KEY, name);
+    const colorScheme = themeName === 'dark' ? 'dark' : 'light';
 
     if (Platform.OS === 'web') {
-      document.documentElement.style.colorScheme = name;
+      document.documentElement.style.colorScheme = colorScheme;
     } else {
-      Appearance.setColorScheme(name);
+      Appearance.setColorScheme(colorScheme);
     }
-  }, [isReady, theme.dark]);
+  }, [isReady, themeName]);
 
   React.useEffect(() => {
     const direction = isRTL ? 'rtl' : 'ltr';
@@ -221,10 +276,23 @@ export function App() {
   }
 
   const isLargeScreen = dimensions.width >= 1024;
+  const theme =
+    themeName === 'dark'
+      ? DarkTheme
+      : themeName === 'light'
+        ? DefaultTheme
+        : PlatformTheme;
 
   return (
     <Providers>
       <SystemBars style="auto" />
+      {Platform.OS === 'web' ? (
+        <style>
+          {`:root { ${Object.entries(WEB_COLORS)
+            .map(([key, value]) => `--color-${key}: ${value};`)
+            .join('')} }`}
+        </style>
+      ) : null}
       <NavigationContainer
         ref={navigationRef}
         initialState={initialState}
@@ -284,23 +352,30 @@ export function App() {
                       style={{ backgroundColor: theme.colors.background }}
                     >
                       <SafeAreaView edges={['right', 'bottom', 'left']}>
-                        <SettingsItem
-                          label="Right to left"
-                          value={isRTL}
-                          onValueChange={() => setIsRTL((rtl) => !rtl)}
-                          disabled={
-                            // Set expo.extra.forcesRTL: true in app.json to enable RTL in Expo Go
-                            Platform.OS !== 'web'
-                          }
-                        />
+                        <ListItem title="Right to left">
+                          <Switch
+                            value={isRTL}
+                            onValueChange={setIsRTL}
+                            disabled={
+                              // Set expo.extra.forcesRTL: true in app.json to enable RTL in Expo Go
+                              Platform.OS !== 'web'
+                            }
+                            trackColor={{ true: theme.colors.primary }}
+                          />
+                        </ListItem>
                         <Divider />
-                        <SettingsItem
-                          label="Dark theme"
-                          value={theme.dark}
-                          onValueChange={() =>
-                            setTheme((t) => (t.dark ? DefaultTheme : DarkTheme))
-                          }
-                        />
+                        <ListItem title="Theme">
+                          <SegmentedPicker
+                            choices={[
+                              { label: 'Custom', value: 'custom' },
+                              { label: 'Light', value: 'light' },
+                              { label: 'Dark', value: 'dark' },
+                            ]}
+                            value={themeName}
+                            onValueChange={setThemeName}
+                          />
+                        </ListItem>
+                        <Divider />
                         {SCREEN_NAMES.map((name) => (
                           <React.Fragment key={name}>
                             <ListItem
@@ -310,7 +385,6 @@ export function App() {
                                 navigation.navigate(name);
                               }}
                             />
-
                             <Divider />
                           </React.Fragment>
                         ))}

@@ -22,6 +22,7 @@ import {
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import {
+  type ColorValue,
   Image,
   Platform,
   ScrollView,
@@ -38,7 +39,7 @@ import { NativeStack, type NativeStackParams } from './NativeStack';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: string; size: number }) => (
+  ({ color, size }: { color: ColorValue; size: number }) => (
     <MaterialCommunityIcons name={name} color={color} size={size} />
   );
 
@@ -88,7 +89,7 @@ const AlbumsScreen = () => {
   );
 };
 
-let i = 0;
+let i = 1;
 
 const Tab = createBottomTabNavigator<BottomTabParams>();
 
@@ -204,6 +205,7 @@ export function BottomTabs() {
         <Tab.Screen
           name="TabChat"
           component={Chat}
+          initialParams={{ count: i }}
           options={({ route }) => ({
             title: 'Chat',
             tabBarIcon: getTabBarIcon('message-reply'),

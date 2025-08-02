@@ -1,5 +1,5 @@
+import { Color } from '@react-navigation/elements';
 import type { LocaleDirection } from '@react-navigation/native';
-import Color from 'color';
 import * as React from 'react';
 import {
   Animated,
@@ -534,7 +534,7 @@ export class Card extends React.Component<Props> {
     const { backgroundColor } = StyleSheet.flatten(contentStyle || {});
     const isTransparent =
       typeof backgroundColor === 'string'
-        ? Color(backgroundColor).alpha() === 0
+        ? Color(backgroundColor)?.alpha() === 0
         : false;
 
     return (

@@ -1,4 +1,3 @@
-import Color from 'color';
 import { Platform } from 'react-native';
 
 type ShadowConfig = {
@@ -8,27 +7,17 @@ type ShadowConfig = {
   };
   radius: number;
   opacity: number;
-  color?: string;
 };
 
-export function getShadowStyle({
-  offset,
-  radius,
-  opacity,
-  color = '#000',
-}: ShadowConfig) {
+export function getShadowStyle({ offset, radius, opacity }: ShadowConfig) {
   const result = Platform.select({
     web: {
-      boxShadow: `${offset.width}px ${offset.height}px ${radius}px ${Color(
-        color
-      )
-        .alpha(opacity)
-        .toString()}`,
+      boxShadow: `${offset.width}px ${offset.height}px ${radius}px rgba(0, 0, 0, ${opacity})`,
     },
     default: {
       shadowOffset: offset,
       shadowRadius: radius,
-      shadowColor: color,
+      shadowColor: '#000',
       shadowOpacity: opacity,
     },
   });

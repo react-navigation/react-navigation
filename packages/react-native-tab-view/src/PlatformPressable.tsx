@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  type ColorValue,
   type GestureResponderEvent,
   Platform,
   Pressable,
@@ -8,7 +9,7 @@ import {
 
 export type Props = Omit<PressableProps, 'onPress'> & {
   href?: string;
-  pressColor?: string;
+  pressColor?: ColorValue;
   pressOpacity?: number;
   onPress?: (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent

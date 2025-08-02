@@ -4,16 +4,21 @@ import {
   type ParamListBase,
   useNavigation,
 } from '@react-navigation/native';
-import { Image, type ImageSourcePropType, StyleSheet } from 'react-native';
+import {
+  type ColorValue,
+  Image,
+  type ImageSourcePropType,
+  StyleSheet,
+} from 'react-native';
 
 import type { DrawerNavigationProp } from '../types';
 import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
 
 type Props = {
   accessibilityLabel?: string;
-  pressColor?: string;
+  pressColor?: ColorValue;
   pressOpacity?: number;
-  tintColor?: string;
+  tintColor?: ColorValue;
   imageSource?: ImageSourcePropType;
 };
 

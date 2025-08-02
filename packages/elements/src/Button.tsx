@@ -3,10 +3,10 @@ import {
   useLinkProps,
   useTheme,
 } from '@react-navigation/native';
-import Color from 'color';
 import * as React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { type ColorValue, Platform, StyleSheet } from 'react-native';
 
+import { Color } from './Color';
 import {
   PlatformPressable,
   type Props as PlatformPressableProps,
@@ -15,7 +15,7 @@ import { Text } from './Text';
 
 type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
   variant?: 'plain' | 'tinted' | 'filled';
-  color?: string;
+  color?: ColorValue;
   children: string | string[];
 };
 
@@ -62,12 +62,12 @@ function ButtonBase({
   children,
   ...rest
 }: ButtonBaseProps) {
-  const { colors, fonts } = useTheme();
+  const { dark, colors, fonts } = useTheme();
 
   const color = customColor ?? colors.primary;
 
-  let backgroundColor;
-  let textColor;
+  let backgroundColor: ColorValue;
+  let textColor: ColorValue;
 
   switch (variant) {
     case 'plain':
@@ -75,14 +75,16 @@ function ButtonBase({
       textColor = color;
       break;
     case 'tinted':
-      backgroundColor = Color(color).fade(0.85).string();
+      backgroundColor =
+        Color(color)?.fade(0.85).string() ??
+        (dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)');
       textColor = color;
       break;
     case 'filled':
       backgroundColor = color;
-      textColor = Color(color).isDark()
+      textColor = Color(color)?.isDark()
         ? 'white'
-        : Color(color).darken(0.71).string();
+        : (Color(color)?.darken(0.71).string() ?? '#fff');
       break;
   }
 
@@ -91,11 +93,13 @@ function ButtonBase({
       {...rest}
       android_ripple={{
         radius: BUTTON_RADIUS,
-        color: Color(textColor).fade(0.85).string(),
+        color: Color(textColor)?.fade(0.85).string() ?? 'rgba(0, 0, 0, 0.1)',
         ...android_ripple,
       }}
       pressOpacity={Platform.OS === 'ios' ? undefined : 1}
-      hoverEffect={{ color: textColor }}
+      hoverEffect={
+        typeof textColor === 'string' ? { color: textColor } : undefined
+      }
       style={[{ backgroundColor }, styles.button, style]}
     >
       <Text style={[{ color: textColor }, fonts.regular, styles.text]}>

@@ -1,4 +1,5 @@
 import {
+  type ColorValue,
   type StyleProp,
   StyleSheet,
   type TextProps,
@@ -8,7 +9,7 @@ import {
 import { Text } from '../Text';
 
 type Props = Omit<TextProps, 'style'> & {
-  tintColor?: string;
+  tintColor?: ColorValue;
   children?: string;
   style?: StyleProp<TextStyle>;
 };
