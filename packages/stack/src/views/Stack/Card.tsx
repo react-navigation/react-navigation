@@ -100,10 +100,7 @@ export class Card extends React.Component<Props> {
       style,
     }: {
       style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-    }) =>
-      style ? (
-        <Animated.View pointerEvents="none" style={[styles.overlay, style]} />
-      ) : null,
+    }) => (style ? <Animated.View style={[styles.overlay, style]} /> : null),
   };
 
   componentDidMount() {
@@ -552,20 +549,21 @@ export class Card extends React.Component<Props> {
           collapsable={false}
         />
         <View
-          pointerEvents="box-none"
+          style={{ pointerEvents: 'box-none' }}
           // Make sure this view is not removed on the new architecture, as it causes focus loss during navigation on Android.
           // This can happen when the view flattening results in different trees - due to `overflow` style changing in a parent.
           collapsable={false}
           {...rest}
         >
           {overlayEnabled ? (
-            <View pointerEvents="box-none" style={StyleSheet.absoluteFill}>
+            <View
+              style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}
+            >
               {overlay({ style: overlayStyle })}
             </View>
           ) : null}
           <Animated.View
             style={[styles.container, containerStyle, customContainerStyle]}
-            pointerEvents="box-none"
           >
             <PanGestureHandler
               enabled={layout.width !== 0 && gestureEnabled}
@@ -591,7 +589,6 @@ export class Card extends React.Component<Props> {
                       { backgroundColor },
                       shadowStyle,
                     ]}
-                    pointerEvents="none"
                   />
                 ) : null}
                 <CardSheet
@@ -614,13 +611,16 @@ export class Card extends React.Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    pointerEvents: 'box-none',
   },
   overlay: {
     flex: 1,
     backgroundColor: '#000',
+    pointerEvents: 'none',
   },
   shadow: {
     position: 'absolute',
+    pointerEvents: 'none',
   },
   shadowHorizontal: {
     top: 0,

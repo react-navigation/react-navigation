@@ -228,7 +228,7 @@ const TabBarItemInternal = <T extends Route>({
       href={href}
       style={[styles.pressable, tabContainerStyle]}
     >
-      <View pointerEvents="none" style={[styles.item, tabStyle]}>
+      <View style={[styles.item, tabStyle]}>
         {icon}
         <View>
           <Animated.View style={{ opacity: inactiveOpacity }}>
@@ -286,6 +286,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 10,
     minHeight: 48,
+    pointerEvents: 'none',
   },
   badge: {
     position: 'absolute',

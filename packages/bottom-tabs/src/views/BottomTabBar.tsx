@@ -380,12 +380,14 @@ export function BottomTabBar({
                 paddingHorizontal: Math.max(insets.left, insets.right),
               },
             ],
+        {
+          pointerEvents: isTabBarHidden ? 'none' : 'auto',
+        },
         tabBarStyle,
       ]}
-      pointerEvents={isTabBarHidden ? 'none' : 'auto'}
       onLayout={sidebar ? undefined : handleLayout}
     >
-      <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+      <View style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]}>
         {tabBarBackgroundElement}
       </View>
       <View
