@@ -7,7 +7,6 @@ export { ServerContainer } from './ServerContainer';
 export { DarkTheme } from './theming/DarkTheme';
 export { DefaultTheme } from './theming/DefaultTheme';
 export * from './types';
-export { UnhandledLinkingContext as UNSTABLE_UnhandledLinkingContext } from './UnhandledLinkingContext';
 export { useLinkBuilder } from './useLinkBuilder';
 export { type LinkProps, useLinkProps } from './useLinkProps';
 export { useLinkTo } from './useLinkTo';
