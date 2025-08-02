@@ -81,15 +81,15 @@ function FrameSizeProviderInner({
     height: initialFrame.height,
   });
 
-  const listeners = React.useRef<Set<Listener>>(new Set());
+  const listeners = React.useRef<Set<Listener>>(new Set()).current;
 
   const getCurrent = useLatestCallback(() => frameRef.current);
 
   const subscribe = useLatestCallback((listener: Listener): RemoveListener => {
-    listeners.current.add(listener);
+    listeners.add(listener);
 
     return () => {
-      listeners.current.delete(listener);
+      listeners.delete(listener);
     };
   });
 
@@ -153,7 +153,7 @@ function FrameSizeProviderInner({
     }
 
     frameRef.current = { width: frame.width, height: frame.height };
-    listeners.current.forEach((listener) => listener());
+    listeners.forEach((listener) => listener());
   });
 
   return (

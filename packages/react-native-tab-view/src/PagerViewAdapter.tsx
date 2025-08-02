@@ -52,7 +52,7 @@ export function PagerViewAdapter<T extends Route>({
 }: Props<T>) {
   const { index } = navigationState;
 
-  const listenersRef = React.useRef<Listener[]>([]);
+  const listeners = React.useRef<Set<Listener>>(new Set()).current;
 
   const pagerRef = React.useRef<ViewPager>(null);
   const indexRef = React.useRef<number>(index);
@@ -110,7 +110,7 @@ export function PagerViewAdapter<T extends Route>({
             index + (value > 0 ? Math.ceil(value) : Math.floor(value));
 
           if (next !== index) {
-            listenersRef.current.forEach((listener) => listener(next));
+            listeners.forEach((listener) => listener(next));
           }
 
           offset.removeListener(subscription);
@@ -123,14 +123,10 @@ export function PagerViewAdapter<T extends Route>({
   };
 
   const addEnterListener = useLatestCallback((listener: Listener) => {
-    listenersRef.current.push(listener);
+    listeners.add(listener);
 
     return () => {
-      const index = listenersRef.current.indexOf(listener);
-
-      if (index > -1) {
-        listenersRef.current.splice(index, 1);
-      }
+      listeners.delete(listener);
     };
   });
 

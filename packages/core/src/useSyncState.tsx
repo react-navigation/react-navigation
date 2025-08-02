@@ -5,7 +5,7 @@ import { deepFreeze } from './deepFreeze';
 import { useLazyValue } from './useLazyValue';
 
 const createStore = <T,>(getInitialState: () => T) => {
-  const listeners: (() => void)[] = [];
+  const listeners = new Set<() => void>();
 
   let initialized = false;
   let state: T;
@@ -34,14 +34,10 @@ const createStore = <T,>(getInitialState: () => T) => {
   };
 
   const subscribe = (callback: () => void) => {
-    listeners.push(callback);
+    listeners.add(callback);
 
     return () => {
-      const index = listeners.indexOf(callback);
-
-      if (index > -1) {
-        listeners.splice(index, 1);
-      }
+      listeners.delete(callback);
     };
   };
 

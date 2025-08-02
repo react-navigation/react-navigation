@@ -68,7 +68,7 @@ export function PanResponderAdapter<T extends Route>({
 
   const panX = useAnimatedValue(0);
 
-  const listenersRef = React.useRef<Listener[]>([]);
+  const listeners = React.useRef<Set<Listener>>(new Set()).current;
 
   const navigationStateRef = React.useRef(navigationState);
   const layoutRef = React.useRef(layout);
@@ -197,7 +197,7 @@ export function PanResponderAdapter<T extends Route>({
         position > index ? Math.ceil(position) : Math.floor(position);
 
       if (next !== index) {
-        listenersRef.current.forEach((listener) => listener(next));
+        listeners.forEach((listener) => listener(next));
       }
     }
 
@@ -248,14 +248,10 @@ export function PanResponderAdapter<T extends Route>({
   };
 
   const addEnterListener = useLatestCallback((listener: Listener) => {
-    listenersRef.current.push(listener);
+    listeners.add(listener);
 
     return () => {
-      const index = listenersRef.current.indexOf(listener);
-
-      if (index > -1) {
-        listenersRef.current.splice(index, 1);
-      }
+      listeners.delete(listener);
     };
   });
 

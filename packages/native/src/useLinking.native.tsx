@@ -15,7 +15,7 @@ type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
 type Options = LinkingOptions<ParamListBase>;
 
-const linkingHandlers: symbol[] = [];
+const linkingHandlers = new Set<symbol>();
 
 export function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase> | null>,
@@ -58,7 +58,7 @@ export function useLinking(
       return undefined;
     }
 
-    if (enabled !== false && linkingHandlers.length) {
+    if (enabled !== false && linkingHandlers.size) {
       console.error(
         [
           'Looks like you have configured linking in multiple places. This is likely an error since deep links should only be handled in one place to avoid conflicts. Make sure that:',
@@ -76,15 +76,11 @@ export function useLinking(
     const handler = Symbol();
 
     if (enabled !== false) {
-      linkingHandlers.push(handler);
+      linkingHandlers.add(handler);
     }
 
     return () => {
-      const index = linkingHandlers.indexOf(handler);
-
-      if (index > -1) {
-        linkingHandlers.splice(index, 1);
-      }
+      linkingHandlers.delete(handler);
     };
   }, [enabled, independent]);
 
