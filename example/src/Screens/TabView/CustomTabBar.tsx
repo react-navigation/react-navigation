@@ -105,7 +105,7 @@ export const CustomTabBar = () => {
   );
 
   return (
-    <TabView<Route>
+    <TabView
       navigationState={{
         index,
         routes,

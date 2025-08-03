@@ -12,16 +12,17 @@ import { Pager } from './Pager';
 import { SceneView } from './SceneView';
 import { TabBar } from './TabBar';
 import type {
+  AdapterCommonProps,
+  AdapterProps,
   Layout,
   LocaleDirection,
   NavigationState,
   Route,
   SceneRendererProps,
   TabDescriptor,
-  TabViewPagerProps,
 } from './types';
 
-export type Props<T extends Route> = TabViewPagerProps & {
+export type Props<T extends Route> = AdapterCommonProps & {
   onIndexChange: (index: number) => void;
   onTabSelect?: (props: { index: number }) => void;
   navigationState: NavigationState<T>;
@@ -32,6 +33,7 @@ export type Props<T extends Route> = TabViewPagerProps & {
       options: Record<string, TabDescriptor<T>> | undefined;
     }
   ) => React.ReactNode;
+  renderAdapter?: (props: AdapterProps) => React.ReactElement;
   tabBarPosition?: 'top' | 'bottom';
   initialLayout?: Partial<Layout>;
   lazy?: ((props: { route: T }) => boolean) | boolean;
@@ -60,6 +62,8 @@ export function TabView<T extends Route>({
   renderLazyPlaceholder = renderLazyPlaceholderDefault,
   // eslint-disable-next-line @eslint-react/no-unstable-default-props
   renderTabBar = (props) => <TabBar {...props} />,
+  // eslint-disable-next-line @eslint-react/no-unstable-default-props
+  renderAdapter = (props) => <Pager {...props} />,
   pagerStyle,
   style,
   direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
@@ -97,7 +101,6 @@ export function TabView<T extends Route>({
       if (prevLayout.width === width && prevLayout.height === height) {
         return prevLayout;
       }
-
       return { height, width };
     });
   };
@@ -120,79 +123,80 @@ export function TabView<T extends Route>({
     });
   });
 
+  const element = renderAdapter({
+    layout,
+    navigationState,
+    keyboardDismissMode,
+    swipeEnabled,
+    onSwipeStart,
+    onSwipeEnd,
+    onIndexChange: jumpToIndex,
+    onTabSelect,
+    animationEnabled,
+    layoutDirection: direction,
+    style: pagerStyle,
+    children: ({ position, render, subscribe, jumpTo }) => {
+      // All the props here must not change between re-renders
+      // This is crucial to optimizing the routes with PureComponent
+      const sceneRendererProps = {
+        position,
+        layout,
+        jumpTo,
+      };
+
+      return (
+        <React.Fragment>
+          {tabBarPosition === 'top' &&
+            renderTabBar({
+              ...sceneRendererProps,
+              options,
+              navigationState,
+            })}
+          {render(
+            navigationState.routes.map((route, i) => {
+              const { sceneStyle } = options?.[route.key] ?? {};
+
+              return (
+                <SceneView
+                  key={route.key}
+                  {...sceneRendererProps}
+                  subscribe={subscribe}
+                  index={i}
+                  lazy={typeof lazy === 'function' ? lazy({ route }) : lazy}
+                  lazyPreloadDistance={lazyPreloadDistance}
+                  navigationState={navigationState}
+                  style={sceneStyle}
+                >
+                  {({ loading }) =>
+                    loading
+                      ? renderLazyPlaceholder({ route })
+                      : renderScene({
+                          ...sceneRendererProps,
+                          route,
+                        })
+                  }
+                </SceneView>
+              );
+            })
+          )}
+          {tabBarPosition === 'bottom' &&
+            renderTabBar({
+              ...sceneRendererProps,
+              options,
+              navigationState,
+            })}
+        </React.Fragment>
+      );
+    },
+  });
+
   return (
     <View
       ref={ref}
       onLayout={(e) => onMeasure(e.nativeEvent.layout)}
       style={[styles.pager, style]}
     >
-      <Pager
-        layout={layout}
-        navigationState={navigationState}
-        keyboardDismissMode={keyboardDismissMode}
-        swipeEnabled={swipeEnabled}
-        onSwipeStart={onSwipeStart}
-        onSwipeEnd={onSwipeEnd}
-        onIndexChange={jumpToIndex}
-        onTabSelect={onTabSelect}
-        animationEnabled={animationEnabled}
-        style={pagerStyle}
-        layoutDirection={direction}
-      >
-        {({ position, render, addEnterListener, jumpTo }) => {
-          // All the props here must not change between re-renders
-          // This is crucial to optimizing the routes with PureComponent
-          const sceneRendererProps = {
-            position,
-            layout,
-            jumpTo,
-          };
-
-          return (
-            <React.Fragment>
-              {tabBarPosition === 'top' &&
-                renderTabBar({
-                  ...sceneRendererProps,
-                  options,
-                  navigationState,
-                })}
-              {render(
-                navigationState.routes.map((route, i) => {
-                  const { sceneStyle } = options?.[route.key] ?? {};
-
-                  return (
-                    <SceneView
-                      key={route.key}
-                      {...sceneRendererProps}
-                      addEnterListener={addEnterListener}
-                      index={i}
-                      lazy={typeof lazy === 'function' ? lazy({ route }) : lazy}
-                      lazyPreloadDistance={lazyPreloadDistance}
-                      navigationState={navigationState}
-                      style={sceneStyle}
-                    >
-                      {({ loading }) =>
-                        loading
-                          ? renderLazyPlaceholder({ route })
-                          : renderScene({
-                              ...sceneRendererProps,
-                              route,
-                            })
-                      }
-                    </SceneView>
-                  );
-                })
-              )}
-              {tabBarPosition === 'bottom' &&
-                renderTabBar({
-                  ...sceneRendererProps,
-                  options,
-                  navigationState,
-                })}
-            </React.Fragment>
-          );
-        }}
-      </Pager>
+      {element}
     </View>
   );
 }

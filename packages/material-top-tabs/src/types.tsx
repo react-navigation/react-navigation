@@ -294,6 +294,7 @@ export type MaterialTopTabNavigationConfig = Omit<
   | 'renderScene'
   | 'renderTabBar'
   | 'renderLazyPlaceholder'
+  | 'renderAdapter'
   | 'swipeEnabled'
   | 'animationEnabled'
   | 'lazy'
@@ -304,6 +305,10 @@ export type MaterialTopTabNavigationConfig = Omit<
    * Function that returns a React element to display as the tab bar.
    */
   tabBar?: (props: MaterialTopTabBarProps) => React.ReactNode;
+  /**
+   * Function that returns a React element to override the underlying adapter.
+   */
+  adapter?: TabViewProps<Route<string>>['renderAdapter'];
 };
 
 export type MaterialTopTabBarProps = SceneRendererProps & {

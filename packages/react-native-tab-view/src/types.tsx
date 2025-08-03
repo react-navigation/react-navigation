@@ -57,7 +57,7 @@ export type Layout = {
   height: number;
 };
 
-export type Listener = (value: number) => void;
+export type Listener = (event: { type: 'enter'; index: number }) => void;
 
 export type SceneRendererProps = {
   layout: Layout;
@@ -66,23 +66,68 @@ export type SceneRendererProps = {
 };
 
 export type EventEmitterProps = {
-  addEnterListener: (listener: Listener) => () => void;
+  subscribe: (listener: Listener) => () => void;
 };
 
-export type TabViewPagerProps = {
+export type AdapterCommonProps = {
+  /**
+   * Determines whether the keyboard gets dismissed in response to a drag.
+   * - 'auto' (default) - the keyboard is dismissed on drag and tab changes
+   * - 'on-drag' - the keyboard is dismissed when a drag begins
+   * - 'none' - drags and tab changes do not dismiss the keyboard
+   */
   keyboardDismissMode?: 'none' | 'on-drag' | 'auto';
+  /**
+   * Whether swiping between tabs is enabled.
+   */
   swipeEnabled?: boolean;
+  /**
+   * Whether the tab switch animation is enabled.
+   * If set to false, the tab switch will happen immediately without animation.
+   */
   animationEnabled?: boolean;
+  /**
+   * Callback that is called when the swipe gesture starts.
+   */
   onSwipeStart?: () => void;
+  /**
+   * Callback that is called when the swipe gesture ends.
+   */
   onSwipeEnd?: () => void;
+  /**
+   * Callback that is called when a tab is selected.
+   * This is called regardless of whether the index has changed or not.
+   */
+  onTabSelect?: (props: { index: number }) => void;
+  /**
+   * Style for the pager adapter.
+   */
+  style?: StyleProp<ViewStyle>;
 };
 
-export type CommonPagerProps<T extends Route> = TabViewPagerProps & {
+export type AdapterRendererProps = {
+  /**
+   * Layout information for the adapter.
+   * This will default to `initialLayout` from the tab view props.
+   * On layout changes, it will be updated automatically.
+   */
   layout: Layout;
+  /**
+   * Callback to call when the index changes.
+   */
   onIndexChange: (index: number) => void;
-  onTabSelect?: (props: { index: number }) => void;
-  navigationState: NavigationState<T>;
+  /**
+   * The current navigation state of the tab view.
+   */
+  navigationState: NavigationState<Route>;
+  /**
+   * The writing direction of the layout.
+   * This can be 'ltr' or 'rtl' based on tab view's `direction` prop.
+   */
   layoutDirection?: LocaleDirection;
+  /**
+   * Render callback that should render the pages of the tab view.
+   */
   children: (
     props: EventEmitterProps & {
       // Animated value which represents the state of current index
@@ -97,3 +142,5 @@ export type CommonPagerProps<T extends Route> = TabViewPagerProps & {
     }
   ) => React.ReactElement;
 };
+
+export type AdapterProps = AdapterRendererProps & AdapterCommonProps;

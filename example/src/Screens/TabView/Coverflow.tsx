@@ -10,7 +10,11 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { type SceneRendererProps, TabView } from 'react-native-tab-view';
+import {
+  type SceneRendererProps,
+  ScrollViewAdapter,
+  TabView,
+} from 'react-native-tab-view';
 
 type Route = {
   key: string;
@@ -100,7 +104,6 @@ export function Coverflow() {
         sceneStyle: styles.scene,
       }}
       style={styles.container}
-      offscreenPageLimit={3}
       navigationState={{
         index,
         routes,
@@ -115,6 +118,7 @@ export function Coverflow() {
           length={routes.length}
         />
       )}
+      renderAdapter={(props) => <ScrollViewAdapter {...props} />}
     />
   );
 }

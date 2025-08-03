@@ -50,7 +50,7 @@ export const AutoWidthTabBar = () => {
   );
 
   return (
-    <TabView<Route>
+    <TabView
       navigationState={{
         index,
         routes,

@@ -6,27 +6,26 @@ import ViewPager, {
 } from 'react-native-pager-view';
 import useLatestCallback from 'use-latest-callback';
 
-import type { CommonPagerProps, Listener, Route } from './types';
+import type { AdapterProps, Listener } from './types';
 import { useAnimatedValue } from './useAnimatedValue';
 
 const AnimatedViewPager = Animated.createAnimatedComponent(ViewPager);
 
-type Props<T extends Route> = CommonPagerProps<T> &
+export type PagerViewAdapterProps = AdapterProps &
   Omit<
     PagerViewProps,
+    | keyof AdapterProps
     | 'initialPage'
     | 'scrollEnabled'
     | 'onPageScroll'
     | 'onPageSelected'
     | 'onPageScrollStateChanged'
-    | 'keyboardDismissMode'
-    | 'layoutDirection'
     | 'children'
   >;
 
 const useNativeDriver = Platform.OS !== 'web';
 
-export function PagerViewAdapter<T extends Route>({
+export function PagerViewAdapter({
   keyboardDismissMode = 'auto',
   swipeEnabled = true,
   navigationState,
@@ -38,7 +37,7 @@ export function PagerViewAdapter<T extends Route>({
   style,
   animationEnabled,
   ...rest
-}: Props<T>) {
+}: PagerViewAdapterProps) {
   const { index } = navigationState;
 
   const listeners = React.useRef<Set<Listener>>(new Set()).current;
@@ -99,7 +98,12 @@ export function PagerViewAdapter<T extends Route>({
             index + (value > 0 ? Math.ceil(value) : Math.floor(value));
 
           if (next !== index) {
-            listeners.forEach((listener) => listener(next));
+            listeners.forEach((listener) =>
+              listener({
+                type: 'enter',
+                index: next,
+              })
+            );
           }
 
           offset.removeListener(subscription);
@@ -111,7 +115,7 @@ export function PagerViewAdapter<T extends Route>({
     }
   };
 
-  const addEnterListener = useLatestCallback((listener: Listener) => {
+  const subscribe = useLatestCallback((listener: Listener) => {
     listeners.add(listener);
 
     return () => {
@@ -126,7 +130,7 @@ export function PagerViewAdapter<T extends Route>({
 
   return children({
     position: memoizedPosition,
-    addEnterListener,
+    subscribe,
     jumpTo,
     render: (children) => (
       <AnimatedViewPager

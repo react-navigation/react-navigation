@@ -13,6 +13,7 @@ import { Coverflow } from './TabView/Coverflow';
 import { CustomIndicator } from './TabView/CustomIndicator';
 import { CustomTabBar } from './TabView/CustomTabBar';
 import { ScrollableTabBar } from './TabView/ScrollableTabBar';
+import { ScrollAdapter } from './TabView/ScrollAdapter';
 import { TabBarIcon } from './TabView/TabBarIcon';
 
 const EXAMPLE_SCREENS = {
@@ -22,6 +23,7 @@ const EXAMPLE_SCREENS = {
   CustomIndicator,
   CustomTabBar,
   Coverflow,
+  ScrollAdapter,
 } as const;
 
 const EXAMPLE_SCREEN_NAMES = Object.keys(

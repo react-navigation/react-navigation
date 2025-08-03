@@ -5,19 +5,15 @@ import {
   Keyboard,
   PanResponder,
   type PanResponderGestureState,
-  type StyleProp,
   StyleSheet,
   View,
-  type ViewStyle,
 } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
-import type { CommonPagerProps, Listener, Route } from './types';
+import type { AdapterProps, Listener } from './types';
 import { useAnimatedValue } from './useAnimatedValue';
 
-type Props<T extends Route> = CommonPagerProps<T> & {
-  style?: StyleProp<ViewStyle>;
-};
+export type PanResponderAdapterProps = AdapterProps;
 
 const DEAD_ZONE = 12;
 
@@ -29,9 +25,9 @@ const DefaultTransitionSpec = {
   overshootClamping: true,
 };
 
-export function PanResponderAdapter<T extends Route>({
+export function PanResponderAdapter({
   layout,
-  keyboardDismissMode = 'auto',
+  keyboardDismissMode,
   swipeEnabled = true,
   navigationState,
   onIndexChange,
@@ -42,7 +38,7 @@ export function PanResponderAdapter<T extends Route>({
   style,
   animationEnabled = false,
   layoutDirection = 'ltr',
-}: Props<T>) {
+}: PanResponderAdapterProps) {
   const { routes, index } = navigationState;
 
   const panX = useAnimatedValue(0);
@@ -176,7 +172,12 @@ export function PanResponderAdapter<T extends Route>({
         position > index ? Math.ceil(position) : Math.floor(position);
 
       if (next !== index) {
-        listeners.forEach((listener) => listener(next));
+        listeners.forEach((listener) =>
+          listener({
+            type: 'enter',
+            index: next,
+          })
+        );
       }
     }
 
@@ -226,7 +227,7 @@ export function PanResponderAdapter<T extends Route>({
     jumpToIndex(nextIndex, true);
   };
 
-  const addEnterListener = useLatestCallback((listener: Listener) => {
+  const subscribe = useLatestCallback((listener: Listener) => {
     listeners.add(listener);
 
     return () => {
@@ -270,7 +271,7 @@ export function PanResponderAdapter<T extends Route>({
 
   return children({
     position: position ?? new Animated.Value(index),
-    addEnterListener,
+    subscribe,
     jumpTo,
     render: (children) => (
       <Animated.View

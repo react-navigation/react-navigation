@@ -46,7 +46,7 @@ export const TabBarIcon = () => {
   );
 
   return (
-    <TabView<Route>
+    <TabView
       lazy
       navigationState={{
         index,
