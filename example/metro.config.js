@@ -16,13 +16,15 @@ module.exports = {
     ...defaultConfig.resolver,
 
     resolveRequest: (context, realModuleName, platform) => {
-      // We mock out react-native-gesture-handler and react-native-reanimated on web
+      // We mock out these native deps on web
       // This is an additional measure to ensure they don't get added accidentally
-      if (
-        platform === 'web' &&
-        (realModuleName === 'react-native-gesture-handler' ||
-          realModuleName === 'react-native-reanimated')
-      ) {
+      const excludedModules = [
+        'react-native-gesture-handler',
+        'react-native-reanimated',
+        'react-native-page-view',
+      ];
+
+      if (platform === 'web' && excludedModules.includes(realModuleName)) {
         throw new Error(
           `The module '${realModuleName}' should not be imported on Web.`
         );
