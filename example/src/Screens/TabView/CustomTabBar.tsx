@@ -58,7 +58,7 @@ export const CustomTabBar = () => {
       });
 
       return (
-        <View style={[styles.tab]}>
+        <View>
           <Animated.View style={[styles.item, { opacity: inactiveOpacity }]}>
             <Ionicons
               name={route.icon}
@@ -94,13 +94,19 @@ export const CustomTabBar = () => {
         },
       ]}
     >
-      {props.navigationState.routes.map((route: Route, index: number) => {
-        return (
-          <Pressable key={route.key} onPress={() => props.jumpTo(route.key)}>
-            {renderItem(props)({ route, index })}
-          </Pressable>
-        );
-      })}
+      <View style={styles.inner}>
+        {props.navigationState.routes.map((route: Route, index: number) => {
+          return (
+            <Pressable
+              key={route.key}
+              onPress={() => props.jumpTo(route.key)}
+              style={[styles.tab]}
+            >
+              {renderItem(props)({ route, index })}
+            </Pressable>
+          );
+        })}
+      </View>
     </View>
   );
 
@@ -125,15 +131,19 @@ CustomTabBar.options = {
 
 const styles = StyleSheet.create({
   tabbar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     backgroundColor: '#fafafa',
+    borderTopWidth: StyleSheet.hairlineWidth,
+    borderTopColor: 'rgba(0, 0, 0, .2)',
+  },
+  inner: {
+    flexDirection: 'row',
+    width: '100%',
+    maxWidth: 600,
+    marginHorizontal: 'auto',
   },
   tab: {
     flex: 1,
     alignItems: 'center',
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: 'rgba(0, 0, 0, .2)',
   },
   item: {
     alignItems: 'center',
