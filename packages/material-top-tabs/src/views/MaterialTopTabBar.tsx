@@ -21,21 +21,27 @@ type MaterialLabelProps = Parameters<
   NonNullable<TabDescriptor<Route>['label']>
 >[0];
 
-const renderLabelDefault = ({
+const MaterialLabel = ({
   color,
   labelText,
   style,
   allowFontScaling,
 }: MaterialLabelProps) => {
+  const { fonts } = useTheme();
+
   return (
     <Text
-      style={[{ color }, styles.label, style]}
+      style={[{ color }, fonts.medium, styles.label, style]}
       allowFontScaling={allowFontScaling}
     >
       {labelText}
     </Text>
   );
 };
+
+const renderLabelDefault = (props: MaterialLabelProps) => (
+  <MaterialLabel {...props} />
+);
 
 export function MaterialTopTabBar({
   state,

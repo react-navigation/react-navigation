@@ -40,8 +40,6 @@ export const AutoWidthTabBar = () => {
     <TabBar
       {...props}
       scrollEnabled
-      indicatorStyle={styles.indicator}
-      style={styles.tabbar}
       contentContainerStyle={styles.tabbarContentContainer}
       tabStyle={styles.tabStyle}
       gap={20}
@@ -66,21 +64,11 @@ export const AutoWidthTabBar = () => {
 AutoWidthTabBar.options = {
   title: 'Scrollable tab bar (auto width)',
   headerShadowVisible: false,
-  headerTintColor: '#fff',
-  headerStyle: {
-    backgroundColor: '#3f51b5',
-  },
 };
 
 const styles = StyleSheet.create({
-  tabbar: {
-    backgroundColor: '#3f51b5',
-  },
   tabbarContentContainer: {
     paddingHorizontal: 10,
-  },
-  indicator: {
-    backgroundColor: '#ffeb3b',
   },
   tabStyle: {
     width: 'auto',

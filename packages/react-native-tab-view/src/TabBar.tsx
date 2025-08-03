@@ -695,7 +695,7 @@ const styles = StyleSheet.create({
   },
   tabBar: {
     zIndex: 1,
-    backgroundColor: '#2196f3',
+    backgroundColor: '#fff',
     elevation: 4,
     ...Platform.select({
       default: {

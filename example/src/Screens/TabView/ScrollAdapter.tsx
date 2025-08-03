@@ -38,8 +38,4 @@ export function ScrollAdapter() {
 ScrollAdapter.options = {
   title: 'ScrollView Adapter',
   headerShadowVisible: false,
-  headerTintColor: '#fff',
-  headerStyle: {
-    backgroundColor: '#2196f3',
-  },
 };

@@ -31,8 +31,8 @@ export type Props<T extends Route> = TabDescriptor<T> & {
   android_ripple?: PressableAndroidRippleConfig;
 };
 
-const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
-const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
+const DEFAULT_ACTIVE_COLOR = 'rgba(0, 0, 0, 1)';
+const DEFAULT_INACTIVE_COLOR = 'rgba(0, 0, 0, 0.5)';
 const ICON_SIZE = 24;
 
 const getActiveOpacity = (

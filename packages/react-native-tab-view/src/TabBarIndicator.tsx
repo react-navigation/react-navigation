@@ -180,7 +180,7 @@ export function TabBarIndicator<T extends Route>({
 
 const styles = StyleSheet.create({
   indicator: {
-    backgroundColor: '#ffeb3b',
+    backgroundColor: 'rgb(0, 122, 255)',
     position: 'absolute',
     start: 0,
     bottom: 0,
