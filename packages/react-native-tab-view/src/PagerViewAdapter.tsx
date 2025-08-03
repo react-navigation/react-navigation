@@ -1,39 +1,28 @@
 import * as React from 'react';
 import { Animated, Keyboard, Platform, StyleSheet } from 'react-native';
 import ViewPager, {
+  type PagerViewProps,
   type PageScrollStateChangedNativeEvent,
 } from 'react-native-pager-view';
 import useLatestCallback from 'use-latest-callback';
 
-import type {
-  EventEmitterProps,
-  Listener,
-  NavigationState,
-  PagerProps,
-  Route,
-} from './types';
+import type { CommonPagerProps, Listener, Route } from './types';
 import { useAnimatedValue } from './useAnimatedValue';
 
 const AnimatedViewPager = Animated.createAnimatedComponent(ViewPager);
 
-type Props<T extends Route> = PagerProps & {
-  onIndexChange: (index: number) => void;
-  onTabSelect?: (props: { index: number }) => void;
-  navigationState: NavigationState<T>;
-  children: (
-    props: EventEmitterProps & {
-      // Animated value which represents the state of current index
-      // It can include fractional digits as it represents the intermediate value
-      position: Animated.AnimatedInterpolation<number>;
-      // Function to actually render the content of the pager
-      // The parent component takes care of rendering
-      render: (children: React.ReactNode) => React.ReactNode;
-      // Callback to call when switching the tab
-      // The tab switch animation is performed even if the index in state is unchanged
-      jumpTo: (key: string) => void;
-    }
-  ) => React.ReactElement;
-};
+type Props<T extends Route> = CommonPagerProps<T> &
+  Omit<
+    PagerViewProps,
+    | 'initialPage'
+    | 'scrollEnabled'
+    | 'onPageScroll'
+    | 'onPageSelected'
+    | 'onPageScrollStateChanged'
+    | 'keyboardDismissMode'
+    | 'layoutDirection'
+    | 'children'
+  >;
 
 const useNativeDriver = Platform.OS !== 'web';
 

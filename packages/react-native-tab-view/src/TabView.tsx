@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   I18nManager,
-  type LayoutChangeEvent,
   Platform,
   type StyleProp,
   StyleSheet,
@@ -16,13 +15,13 @@ import type {
   Layout,
   LocaleDirection,
   NavigationState,
-  PagerProps,
   Route,
   SceneRendererProps,
   TabDescriptor,
+  TabViewPagerProps,
 } from './types';
 
-export type Props<T extends Route> = Omit<PagerProps, 'layoutDirection'> & {
+export type Props<T extends Route> = TabViewPagerProps & {
   onIndexChange: (index: number) => void;
   onTabSelect?: (props: { index: number }) => void;
   navigationState: NavigationState<T>;
@@ -67,7 +66,6 @@ export function TabView<T extends Route>({
   swipeEnabled = true,
   tabBarPosition = 'top',
   animationEnabled = true,
-  overScrollMode,
   options: sceneOptions,
   commonOptions,
 }: Props<T>) {
@@ -94,9 +92,7 @@ export function TabView<T extends Route>({
     }
   };
 
-  const handleLayout = (e: LayoutChangeEvent) => {
-    const { height, width } = e.nativeEvent.layout;
-
+  const onMeasure = ({ height, width }: { height: number; width: number }) => {
     setLayout((prevLayout) => {
       if (prevLayout.width === width && prevLayout.height === height) {
         return prevLayout;
@@ -116,8 +112,20 @@ export function TabView<T extends Route>({
     ])
   );
 
+  const ref = React.useRef<View>(null);
+
+  React.useLayoutEffect(() => {
+    ref.current?.measure((_x, _y, width, height) => {
+      onMeasure({ width, height });
+    });
+  });
+
   return (
-    <View onLayout={handleLayout} style={[styles.pager, style]}>
+    <View
+      ref={ref}
+      onLayout={(e) => onMeasure(e.nativeEvent.layout)}
+      style={[styles.pager, style]}
+    >
       <Pager
         layout={layout}
         navigationState={navigationState}
@@ -128,7 +136,6 @@ export function TabView<T extends Route>({
         onIndexChange={jumpToIndex}
         onTabSelect={onTabSelect}
         animationEnabled={animationEnabled}
-        overScrollMode={overScrollMode}
         style={pagerStyle}
         layoutDirection={direction}
       >

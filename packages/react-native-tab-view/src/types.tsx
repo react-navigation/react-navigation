@@ -1,5 +1,5 @@
+import * as React from 'react';
 import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
-import type { PagerViewProps } from 'react-native-pager-view';
 
 export type TabDescriptor<T extends Route> = {
   accessibilityLabel?: string;
@@ -69,19 +69,31 @@ export type EventEmitterProps = {
   addEnterListener: (listener: Listener) => () => void;
 };
 
-export type PagerProps = Omit<
-  PagerViewProps,
-  | 'initialPage'
-  | 'scrollEnabled'
-  | 'onPageScroll'
-  | 'onPageSelected'
-  | 'onPageScrollStateChanged'
-  | 'keyboardDismissMode'
-  | 'children'
-> & {
+export type TabViewPagerProps = {
   keyboardDismissMode?: 'none' | 'on-drag' | 'auto';
   swipeEnabled?: boolean;
   animationEnabled?: boolean;
   onSwipeStart?: () => void;
   onSwipeEnd?: () => void;
+};
+
+export type CommonPagerProps<T extends Route> = TabViewPagerProps & {
+  layout: Layout;
+  onIndexChange: (index: number) => void;
+  onTabSelect?: (props: { index: number }) => void;
+  navigationState: NavigationState<T>;
+  layoutDirection?: LocaleDirection;
+  children: (
+    props: EventEmitterProps & {
+      // Animated value which represents the state of current index
+      // It can include fractional digits as it represents the intermediate value
+      position: Animated.AnimatedInterpolation<number>;
+      // Function to actually render the content of the pager
+      // The parent component takes care of rendering
+      render: (children: React.ReactNode) => React.ReactNode;
+      // Callback to call when switching the tab
+      // The tab switch animation is performed even if the index in state is unchanged
+      jumpTo: (key: string) => void;
+    }
+  ) => React.ReactElement;
 };
