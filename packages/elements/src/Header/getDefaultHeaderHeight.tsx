@@ -25,14 +25,10 @@ export function getDefaultHeaderHeight(
         headerHeight = 50;
       }
     } else {
-      if (isLandscape) {
-        headerHeight = 32;
+      if (modalPresentation && !isLandscape) {
+        headerHeight = 56;
       } else {
-        if (modalPresentation) {
-          headerHeight = 56;
-        } else {
-          headerHeight = 44;
-        }
+        headerHeight = 44;
       }
     }
   } else {
