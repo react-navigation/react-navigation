@@ -9,11 +9,11 @@
     "platforms": ["ios", "android", "web"],
     "scheme": "rne",
     "android": {
-      "package": "org.reactnavigation.example"
+      "package": "org.reactnavigation.playground"
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "org.reactnavigation.example"
+      "bundleIdentifier": "org.reactnavigation.playground"
     },
     "web": {
       "bundler": "metro"
