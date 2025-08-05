@@ -40,9 +40,9 @@ import type {
   Scene,
   StackAnimationName,
   StackCardStyleInterpolator,
-  StackDescriptor,
   StackDescriptorMap,
   StackHeaderMode,
+  StackNavigationOptions,
   TransitionPreset,
 } from '../../types';
 import { findLastIndex } from '../../utils/findLastIndex';
@@ -198,24 +198,20 @@ const getHeaderHeights = (
 
 const getDistanceFromOptions = (
   layout: Layout,
-  descriptor: StackDescriptor | undefined,
+  options: StackNavigationOptions | undefined,
   isRTL: boolean
 ) => {
-  if (descriptor?.options.gestureDirection) {
-    return getDistanceForDirection(
-      layout,
-      descriptor?.options.gestureDirection,
-      isRTL
-    );
+  if (options?.gestureDirection) {
+    return getDistanceForDirection(layout, options.gestureDirection, isRTL);
   }
 
   const defaultGestureDirection =
-    descriptor?.options.presentation === 'modal'
+    options?.presentation === 'modal'
       ? ModalTransition.gestureDirection
       : DefaultTransition.gestureDirection;
 
-  const gestureDirection = descriptor?.options.animation
-    ? NAMED_TRANSITIONS_PRESETS[descriptor?.options.animation]?.gestureDirection
+  const gestureDirection = options?.animation
+    ? NAMED_TRANSITIONS_PRESETS[options?.animation]?.gestureDirection
     : defaultGestureDirection;
 
   return getDistanceForDirection(layout, gestureDirection, isRTL);
@@ -224,7 +220,7 @@ const getDistanceFromOptions = (
 const getProgressFromGesture = (
   gesture: Animated.Value,
   layout: Layout,
-  descriptor: StackDescriptor | undefined,
+  options: StackNavigationOptions | undefined,
   isRTL: boolean
 ) => {
   const distance = getDistanceFromOptions(
@@ -234,7 +230,7 @@ const getProgressFromGesture = (
       width: Math.max(1, layout.width),
       height: Math.max(1, layout.height),
     },
-    descriptor,
+    options,
     isRTL
   );
 
@@ -278,7 +274,7 @@ export class CardStack extends React.Component<Props, State> {
           props.state.preloadedRoutes.includes(curr)
             ? getDistanceFromOptions(
                 state.layout,
-                descriptor,
+                descriptor?.options,
                 props.direction === 'rtl'
               )
             : 0
@@ -317,15 +313,19 @@ export class CardStack extends React.Component<Props, State> {
           state.descriptors[route.key] ||
           (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
 
-        const nextDescriptor =
+        const nextOptions =
           nextRoute &&
-          (props.descriptors[nextRoute?.key] ||
-            state.descriptors[nextRoute?.key]);
+          (
+            props.descriptors[nextRoute?.key] ||
+            state.descriptors[nextRoute?.key]
+          )?.options;
 
-        const previousDescriptor =
+        const previousOptions =
           previousRoute &&
-          (props.descriptors[previousRoute?.key] ||
-            state.descriptors[previousRoute?.key]);
+          (
+            props.descriptors[previousRoute?.key] ||
+            state.descriptors[previousRoute?.key]
+          )?.options;
 
         // When a screen is not the last, it should use next screen's transition config
         // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
@@ -335,9 +335,9 @@ export class CardStack extends React.Component<Props, State> {
         // but the majority of the transitions look alright
         const optionsForTransitionConfig =
           index !== self.length - 1 &&
-          nextDescriptor &&
-          nextDescriptor.options.presentation !== 'transparentModal'
-            ? nextDescriptor.options
+          nextOptions &&
+          nextOptions?.presentation !== 'transparentModal'
+            ? nextOptions
             : descriptor.options;
 
         // Assume modal if there are already modal screens in the stack
@@ -382,8 +382,8 @@ export class CardStack extends React.Component<Props, State> {
           (!(
             optionsForTransitionConfig.presentation === 'modal' ||
             optionsForTransitionConfig.presentation === 'transparentModal' ||
-            nextDescriptor?.options.presentation === 'modal' ||
-            nextDescriptor?.options.presentation === 'transparentModal' ||
+            nextOptions?.presentation === 'modal' ||
+            nextOptions?.presentation === 'transparentModal' ||
             getIsModalPresentation(cardStyleInterpolator)
           ) &&
           Platform.OS === 'ios' &&
@@ -413,16 +413,15 @@ export class CardStack extends React.Component<Props, State> {
             current: getProgressFromGesture(
               currentGesture,
               state.layout,
-              descriptor,
+              descriptor.options,
               isRTL
             ),
             next:
-              nextGesture &&
-              nextDescriptor?.options.presentation !== 'transparentModal'
+              nextGesture && nextOptions?.presentation !== 'transparentModal'
                 ? getProgressFromGesture(
                     nextGesture,
                     state.layout,
-                    nextDescriptor,
+                    nextOptions,
                     isRTL
                   )
                 : undefined,
@@ -430,7 +429,7 @@ export class CardStack extends React.Component<Props, State> {
               ? getProgressFromGesture(
                   previousGesture,
                   state.layout,
-                  previousDescriptor,
+                  previousOptions,
                   isRTL
                 )
               : undefined,
@@ -438,8 +437,8 @@ export class CardStack extends React.Component<Props, State> {
           __memo: [
             state.layout,
             descriptor,
-            nextDescriptor,
-            previousDescriptor,
+            nextOptions,
+            previousOptions,
             currentGesture,
             nextGesture,
             previousGesture,
