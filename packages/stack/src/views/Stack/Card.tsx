@@ -483,7 +483,9 @@ export class Card extends React.Component<Props> {
       containerStyle: customContainerStyle,
       contentStyle,
       /* eslint-disable @typescript-eslint/no-unused-vars */
+      opening,
       closing,
+      preloaded,
       direction,
       gestureResponseDistance,
       gestureVelocityImpact,
