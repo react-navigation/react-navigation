@@ -6,6 +6,7 @@ import {
   type PressableAndroidRippleConfig,
   type StyleProp,
   StyleSheet,
+  type TextStyle,
   View,
   type ViewStyle,
 } from 'react-native';
@@ -21,6 +22,10 @@ export type Props<T extends Route> = TabDescriptor<T> & {
   navigationState: NavigationState<T>;
   activeColor?: string;
   inactiveColor?: string;
+  activeFontSize?: number;
+  inactiveFontSize?: number;
+  activeFontWeight?: TextStyle['fontWeight'];
+  inactiveFontWeight?: TextStyle['fontWeight'];
   pressColor?: string;
   pressOpacity?: number;
   onLayout?: (event: LayoutChangeEvent) => void;
@@ -34,6 +39,8 @@ export type Props<T extends Route> = TabDescriptor<T> & {
 const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
 const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
 const ICON_SIZE = 24;
+const DEFAULT_FONT_SIZE = 14;
+const DEFAULT_FONT_WEIGHT = 500;
 
 const getActiveOpacity = (
   position: Animated.AnimatedInterpolation<number>,
@@ -69,6 +76,53 @@ const getInactiveOpacity = (
   }
 };
 
+const getLabelColor = (
+  position: Animated.AnimatedInterpolation<number>,
+  routesLength: number,
+  tabIndex: number,
+  activeColor: string,
+  inactiveColor: string
+) => {
+  if (routesLength > 1) {
+    const inputRange = Array.from({ length: routesLength }, (_, i) => i);
+    const outputRange = inputRange.map((i: number) =>
+      i === tabIndex ? activeColor.toString() : inactiveColor.toString()
+    );
+    return position.interpolate({
+      inputRange,
+      outputRange,
+    });
+  } else {
+    return activeColor;
+  }
+};
+
+const getLabelFontSize = (
+  position: Animated.AnimatedInterpolation<number>,
+  routesLength: number,
+  tabIndex: number,
+  activeFontSize?: number,
+  inactiveFontSize?: number
+): number | Animated.AnimatedInterpolation<number> => {
+  if (routesLength > 1) {
+    const inputRange = Array.from({ length: routesLength }, (_, i) => i);
+    const checkedActiveFontSize = activeFontSize ?? DEFAULT_FONT_SIZE;
+    const checkedInactiveFontSize = inactiveFontSize ?? DEFAULT_FONT_SIZE;
+    if (checkedActiveFontSize === checkedInactiveFontSize) {
+      return checkedActiveFontSize;
+    }
+    const outputRange = inputRange.map((i: number) =>
+      i === tabIndex ? checkedActiveFontSize : checkedInactiveFontSize
+    );
+    return position.interpolate({
+      inputRange,
+      outputRange,
+    });
+  } else {
+    return activeFontSize ?? DEFAULT_FONT_SIZE;
+  }
+};
+
 type TabBarItemInternalProps<T extends Route> = Omit<
   Props<T>,
   | 'navigationState'
@@ -97,6 +151,10 @@ const TabBarItemInternal = <T extends Route>({
   style,
   inactiveColor: inactiveColorCustom,
   activeColor: activeColorCustom,
+  activeFontSize,
+  inactiveFontSize,
+  activeFontWeight,
+  inactiveFontWeight,
   labelStyle,
   onLayout,
   index: tabIndex,
@@ -126,9 +184,28 @@ const TabBarItemInternal = <T extends Route>({
       : typeof labelColorFromStyle === 'string'
         ? labelColorFromStyle
         : DEFAULT_INACTIVE_COLOR;
+  const labelColor = getLabelColor(
+    position,
+    routesLength,
+    tabIndex,
+    activeColor,
+    inactiveColor
+  );
 
   const activeOpacity = getActiveOpacity(position, routesLength, tabIndex);
   const inactiveOpacity = getInactiveOpacity(position, routesLength, tabIndex);
+  const labelFontSize = getLabelFontSize(
+    position,
+    routesLength,
+    tabIndex,
+    activeFontSize,
+    inactiveFontSize
+  );
+  const checkedActiveFontWeight = activeFontWeight ?? DEFAULT_FONT_WEIGHT;
+  const checkedInactiveFontWeight = inactiveFontWeight ?? DEFAULT_FONT_WEIGHT;
+  const fontWeight = isFocused
+    ? checkedActiveFontWeight
+    : checkedInactiveFontWeight;
 
   const icon = React.useMemo(() => {
     if (!customIcon) {
@@ -175,7 +252,9 @@ const TabBarItemInternal = <T extends Route>({
       customlabel ? (
         customlabel({
           focused,
-          color: focused ? activeColor : inactiveColor,
+          color: labelColor,
+          fontSize: labelFontSize,
+          fontWeight: fontWeight,
           style: labelStyle,
           labelText,
           allowFontScaling: labelAllowFontScaling,
@@ -183,21 +262,24 @@ const TabBarItemInternal = <T extends Route>({
         })
       ) : (
         <TabBarItemLabel
-          color={focused ? activeColor : inactiveColor}
+          color={labelColor}
           icon={icon}
           label={labelText}
           style={labelStyle}
+          fontSize={labelFontSize}
+          fontWeight={fontWeight}
         />
       ),
     [
       customlabel,
-      activeColor,
+      labelColor,
       labelStyle,
       labelText,
       labelAllowFontScaling,
       route,
-      inactiveColor,
       icon,
+      labelFontSize,
+      fontWeight,
     ]
   );
 
@@ -230,16 +312,7 @@ const TabBarItemInternal = <T extends Route>({
     >
       <View pointerEvents="none" style={[styles.item, tabStyle]}>
         {icon}
-        <View>
-          <Animated.View style={{ opacity: inactiveOpacity }}>
-            {renderLabel(false)}
-          </Animated.View>
-          <Animated.View
-            style={[StyleSheet.absoluteFill, { opacity: activeOpacity }]}
-          >
-            {renderLabel(true)}
-          </Animated.View>
-        </View>
+        {renderLabel(isFocused)}
         {customBadge != null ? (
           <View style={styles.badge}>{customBadge({ route })}</View>
         ) : null}

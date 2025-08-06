@@ -55,6 +55,9 @@ export function MaterialTopTabView({
   };
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
+  const doNotSupportNativeDrive =
+    !!focusedOptions.tabBarActiveFontSize ||
+    !!focusedOptions.tabBarInactiveFontSize;
 
   return (
     <TabView<Route<string>>
@@ -102,6 +105,7 @@ export function MaterialTopTabView({
           ];
         })
       )}
+      useNativeDriver={!doNotSupportNativeDrive}
     />
   );
 }
