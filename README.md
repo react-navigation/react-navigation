@@ -8,8 +8,9 @@ Routing and navigation for your React Native apps.
 
 Documentation can be found at [reactnavigation.org](https://reactnavigation.org/).
 
-This branch contains the code for the latest stable version of React Navigation. You can find the code for previous versions in the following branches:
+This branch contains the code for the upcoming major version of React Navigation. You can find the code for other versions in the following branches:
 
+- [7.x](https://github.com/react-navigation/react-navigation/tree/7.x) (latest stable)
 - [6.x](https://github.com/react-navigation/react-navigation/tree/6.x)
 - [5.x](https://github.com/react-navigation/react-navigation/tree/5.x)
 - [4.x](https://github.com/react-navigation/react-navigation/tree/4.x)
