@@ -17,6 +17,7 @@ import type {
 import type * as React from 'react';
 import type {
   Animated,
+  ColorValue,
   GestureResponderEvent,
   StyleProp,
   TextStyle,
@@ -116,7 +117,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
 
   /**
    * Title string of a tab displayed in the tab bar
-   * or a function that given { focused: boolean, color: string, position: 'below-icon' | 'beside-icon', children: string } returns a React.Node to display in tab bar.
+   * or a function that given { focused: boolean, color: ColorValue, position: 'below-icon' | 'beside-icon', children: string } returns a React.Node to display in tab bar.
    *
    * When undefined, scene title is used. Use `tabBarShowLabel` to hide the label.
    */
@@ -124,7 +125,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
     | string
     | ((props: {
         focused: boolean;
-        color: string;
+        color: ColorValue;
         position: LabelPosition;
         children: string;
       }) => React.ReactNode);
@@ -155,11 +156,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   tabBarAllowFontScaling?: boolean;
 
   /**
-   * A function that given { focused: boolean, color: string } returns a React.Node to display in the tab bar.
+   * A function that given { focused: boolean, color: ColorValue } returns a React.Node to display in the tab bar.
    */
   tabBarIcon?: (props: {
     focused: boolean;
-    color: string;
+    color: ColorValue;
     size: number;
   }) => React.ReactNode;
 
@@ -199,22 +200,22 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Color for the icon and label in the active tab.
    */
-  tabBarActiveTintColor?: string;
+  tabBarActiveTintColor?: ColorValue;
 
   /**
    * Color for the icon and label in the inactive tabs.
    */
-  tabBarInactiveTintColor?: string;
+  tabBarInactiveTintColor?: ColorValue;
 
   /**
    * Background color for the active tab.
    */
-  tabBarActiveBackgroundColor?: string;
+  tabBarActiveBackgroundColor?: ColorValue;
 
   /**
    * Background color for the inactive tabs.
    */
-  tabBarInactiveBackgroundColor?: string;
+  tabBarInactiveBackgroundColor?: ColorValue;
 
   /**
    * Style object for the tab item container.

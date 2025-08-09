@@ -1,5 +1,4 @@
 import { useNavigation, useTheme } from '@react-navigation/native';
-import Color from 'color';
 import * as React from 'react';
 import {
   Animated,
@@ -12,6 +11,7 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import searchIcon from '../assets/search-icon.png';
+import { Color } from '../Color';
 import type { HeaderOptions, Layout } from '../types';
 import { useFrameSize } from '../useFrameSize';
 import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
@@ -313,7 +313,8 @@ export function Header(props: Props) {
                 pointerEvents:
                   headerTransparent &&
                   (backgroundStyle.backgroundColor === 'transparent' ||
-                    Color(backgroundStyle.backgroundColor).alpha() === 0)
+                    (backgroundStyle.backgroundColor &&
+                      Color(backgroundStyle.backgroundColor)?.alpha() === 0))
                     ? 'none'
                     : 'auto',
               },

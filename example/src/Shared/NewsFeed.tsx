@@ -1,7 +1,6 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { PlatformPressable, Text } from '@react-navigation/elements';
+import { Color, PlatformPressable, Text } from '@react-navigation/elements';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
-import Color from 'color';
 import * as React from 'react';
 import {
   Image,
@@ -78,7 +77,7 @@ export function NewsFeed(props: Props) {
       <Card>
         <TextInput
           placeholder="What's on your mind?"
-          placeholderTextColor={Color(colors.text).alpha(0.5).rgb().string()}
+          placeholderTextColor={Color(colors.text)?.alpha(0.5).string()}
           style={styles.input}
         />
       </Card>

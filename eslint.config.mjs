@@ -47,6 +47,11 @@ export default defineConfig([
 
           paths: [
             {
+              name: 'color',
+              message:
+                'Import `Color` from `@react-navigation/elements` instead.',
+            },
+            {
               name: 'react-native',
               importNames: ['Text'],
               message:

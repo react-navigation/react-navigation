@@ -1,5 +1,5 @@
+import { Color } from '@react-navigation/elements';
 import { useTheme } from '@react-navigation/native';
-import color from 'color';
 import * as React from 'react';
 import {
   Animated,
@@ -72,7 +72,7 @@ export function Badge({
   // @ts-expect-error: backgroundColor definitely exists
   const { backgroundColor = colors.notification, ...restStyle } =
     StyleSheet.flatten(style) || {};
-  const textColor = color(backgroundColor).isLight() ? 'black' : 'white';
+  const textColor = Color(backgroundColor)?.isLight() ? 'black' : 'white';
 
   const borderRadius = size / 2;
   const fontSize = Math.floor((size * 3) / 4);

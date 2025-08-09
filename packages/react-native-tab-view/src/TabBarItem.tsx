@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Animated,
+  type ColorValue,
   type LayoutChangeEvent,
   Platform,
   type PressableAndroidRippleConfig,
@@ -19,9 +20,9 @@ export type Props<T extends Route> = TabDescriptor<T> & {
   position: Animated.AnimatedInterpolation<number>;
   route: T;
   navigationState: NavigationState<T>;
-  activeColor?: string;
-  inactiveColor?: string;
-  pressColor?: string;
+  activeColor?: ColorValue;
+  inactiveColor?: ColorValue;
+  pressColor?: ColorValue;
   pressOpacity?: number;
   onLayout?: (event: LayoutChangeEvent) => void;
   onPress: () => void;

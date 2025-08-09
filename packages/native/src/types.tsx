@@ -5,6 +5,7 @@ import type {
   PathConfigMap,
   Route,
 } from '@react-navigation/core';
+import type { ColorValue as ReactNativeColorValue } from 'react-native';
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -12,6 +13,17 @@ declare global {
     interface Theme extends NativeTheme {}
   }
 }
+
+type ColorValue =
+  | `#${string}`
+  | `rgb(${string})`
+  | `rgba(${string})`
+  | `hsl(${string})`
+  | `hsla(${string})`
+  | `hwb(${string})`
+  | `hwba(${string})`
+  | `var(--${string})`
+  | ReactNativeColorValue;
 
 type FontStyle = {
   fontFamily: string;
@@ -32,12 +44,12 @@ type FontStyle = {
 interface NativeTheme {
   dark: boolean;
   colors: {
-    primary: string;
-    background: string;
-    card: string;
-    text: string;
-    border: string;
-    notification: string;
+    primary: ColorValue;
+    background: ColorValue;
+    card: ColorValue;
+    text: ColorValue;
+    border: ColorValue;
+    notification: ColorValue;
   };
   fonts: {
     regular: FontStyle;

@@ -1,6 +1,5 @@
-import { Text } from '@react-navigation/elements';
+import { Color, Text } from '@react-navigation/elements';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
-import Color from 'color';
 import * as React from 'react';
 import {
   Image,
@@ -73,7 +72,7 @@ export function Chat({
           styles.input,
           { backgroundColor: colors.card, color: colors.text },
         ]}
-        placeholderTextColor={Color(colors.text).alpha(0.5).rgb().string()}
+        placeholderTextColor={Color(colors.text)?.alpha(0.5).string()}
         placeholder="Write a message"
         underlineColorAndroid="transparent"
       />

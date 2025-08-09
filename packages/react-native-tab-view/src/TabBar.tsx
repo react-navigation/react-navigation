@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Animated,
+  type ColorValue,
   type DimensionValue,
   FlatList,
   I18nManager,
@@ -37,9 +38,9 @@ export type Props<T extends Route> = SceneRendererProps & {
   navigationState: NavigationState<T>;
   scrollEnabled?: boolean;
   bounces?: boolean;
-  activeColor?: string;
-  inactiveColor?: string;
-  pressColor?: string;
+  activeColor?: ColorValue;
+  inactiveColor?: ColorValue;
+  pressColor?: ColorValue;
   pressOpacity?: number;
   options?: Record<string, TabDescriptor<T>>;
   renderIndicator?: (props: IndicatorProps<T>) => React.ReactNode;

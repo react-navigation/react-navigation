@@ -20,7 +20,13 @@ import type {
   Theme,
 } from '@react-navigation/native';
 import type * as React from 'react';
-import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type {
+  Animated,
+  ColorValue,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
 export type StackNavigationEventMap = {
   /**
@@ -260,11 +266,11 @@ export type StackHeaderRightProps = {
   /**
    * Tint color for the header button.
    */
-  tintColor?: string;
+  tintColor?: ColorValue;
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
-  pressColor?: string;
+  pressColor?: ColorValue;
   /**
    * Opacity when the button is pressed, used when ripple is not supported.
    */
