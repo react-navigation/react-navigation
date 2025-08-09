@@ -120,10 +120,10 @@ function PlatformPressableInternal(
       accessible
       role={Platform.OS === 'web' && rest.href != null ? 'link' : 'button'}
       onPress={disabled ? undefined : handlePress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
+      onPressIn={disabled ? undefined : handlePressIn}
+      onPressOut={disabled ? undefined : handlePressOut}
       android_ripple={
-        ANDROID_SUPPORTS_RIPPLE
+        ANDROID_SUPPORTS_RIPPLE && !disabled
           ? {
               color:
                 pressColor !== undefined
@@ -138,18 +138,18 @@ function PlatformPressableInternal(
       style={[
         {
           cursor:
-            Platform.OS === 'web' || Platform.OS === 'ios'
+            (Platform.OS === 'web' || Platform.OS === 'ios') && !disabled
               ? // Pointer cursor on web
                 // Hover effect on iPad and visionOS
                 'pointer'
               : 'auto',
-          opacity: !ANDROID_SUPPORTS_RIPPLE ? opacity : 1,
+          opacity: !ANDROID_SUPPORTS_RIPPLE && !disabled ? opacity : 1,
         },
         style,
       ]}
       {...rest}
     >
-      <HoverEffect {...hoverEffect} />
+      {!disabled ? <HoverEffect {...hoverEffect} /> : null}
       {children}
     </AnimatedPressable>
   );

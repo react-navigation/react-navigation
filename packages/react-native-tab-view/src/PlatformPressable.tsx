@@ -67,19 +67,20 @@ export function PlatformPressable({
   return (
     <Pressable
       android_ripple={
-        ANDROID_SUPPORTS_RIPPLE
+        ANDROID_SUPPORTS_RIPPLE && !disabled
           ? { color: pressColor, ...android_ripple }
           : undefined
       }
       style={({ pressed }) => [
         {
           cursor:
-            Platform.OS === 'web' || Platform.OS === 'ios'
+            (Platform.OS === 'web' || Platform.OS === 'ios') && !disabled
               ? // Pointer cursor on web
                 // Hover effect on iPad and visionOS
                 'pointer'
               : 'auto',
-          opacity: pressed && !ANDROID_SUPPORTS_RIPPLE ? pressOpacity : 1,
+          opacity:
+            !ANDROID_SUPPORTS_RIPPLE && pressed && !disabled ? pressOpacity : 1,
         } as const,
         typeof style === 'function' ? style({ pressed }) : style,
       ]}
