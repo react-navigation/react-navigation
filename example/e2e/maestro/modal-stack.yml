@@ -23,5 +23,6 @@ name: Modal Stack
 - tapOn:
     text: 'Go back'
     retryTapIfNoChange: false
+    delay: 500
 - assertVisible:
     text: 'Article by Gandalf'

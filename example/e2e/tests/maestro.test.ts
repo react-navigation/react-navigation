@@ -27,6 +27,12 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
           }
 
           case 'tapOn': {
+            if (step.tapOn.delay) {
+              await new Promise((resolve) => {
+                setTimeout(resolve, step.tapOn.delay);
+              });
+            }
+
             await page
               .getByText(step.tapOn.text)
               .filter({ visible: true })
