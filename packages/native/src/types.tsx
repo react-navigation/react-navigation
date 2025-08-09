@@ -51,6 +51,8 @@ export type Theme = NativeTheme;
 
 export type LocaleDirection = 'ltr' | 'rtl';
 
+export type LinkingPrefix = '*' | (string & {});
+
 export type LinkingOptions<ParamList extends {}> = {
   /**
    * Whether deep link handling should be enabled.
@@ -74,7 +76,7 @@ export type LinkingOptions<ParamList extends {}> = {
    * }
    * ```
    */
-  prefixes: string[];
+  prefixes: LinkingPrefix[];
   /**
    * Optional function which takes an incoming URL returns a boolean
    * indicating whether React Navigation should handle it.
