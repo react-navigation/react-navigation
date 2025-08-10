@@ -1,7 +1,7 @@
 import '@expo/metro-runtime'; // Necessary for Fast Refresh on Web
 import './gesture-handler';
 
-import { Assets } from '@react-navigation/elements';
+import { Assets, Button, Text } from '@react-navigation/elements';
 import {
   createStaticNavigation,
   useNavigation,
@@ -10,7 +10,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { registerRootComponent } from 'expo';
 import { Asset } from 'expo-asset';
 import * as React from 'react';
-import { LogBox } from 'react-native';
+import { LogBox, SafeAreaView, View } from 'react-native';
 import { enableScreens } from 'react-native-screens';
 
 LogBox.ignoreLogs([
@@ -30,16 +30,15 @@ const First = () => {
   const navigation = useNavigation();
 
   return (
-    <div>
-      <button
-        type="button"
-        onClick={() => {
+    <SafeAreaView>
+      <Button
+        onPress={() => {
           navigation.navigate('Second');
         }}
       >
         Click Me
-      </button>
-    </div>
+      </Button>
+    </SafeAreaView>
   );
 };
 
@@ -47,17 +46,16 @@ const Second = () => {
   const navigation = useNavigation();
 
   return (
-    <div>
-      <h1>Second Screen</h1>
-      <button
-        type="button"
-        onClick={() => {
+    <SafeAreaView>
+      <Text>Second Screen</Text>
+      <Button
+        onPress={() => {
           navigation.goBack();
         }}
       >
         Go Back
-      </button>
-    </div>
+      </Button>
+    </SafeAreaView>
   );
 };
 
