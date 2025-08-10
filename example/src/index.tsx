@@ -22,6 +22,7 @@ import {
   type InitialState,
   type LinkingOptions,
   NavigationContainer,
+  type NavigationState,
   type Theme,
   useNavigationContainerRef,
 } from '@react-navigation/native';
@@ -167,102 +168,37 @@ if (Platform.OS === 'web') {
   }
 }
 
-export function App() {
-  const [themeName, setThemeName] = React.useState<'light' | 'dark' | 'custom'>(
-    'custom'
-  );
+type ThemeName = 'light' | 'dark' | 'custom';
 
-  const [isReady, setIsReady] = React.useState(Platform.OS === 'web');
-  const [initialState, setInitialState] = React.useState<
-    InitialState | undefined
-  >();
+type AppState = {
+  isPersistenceEnabled: boolean;
+  isReady: boolean;
+  themeName: ThemeName;
+  isRTL: boolean;
+  navigationState: InitialState | NavigationState | undefined;
+};
 
-  const [isRTL, setIsRTL] = React.useState(previousDirection === 'rtl');
-
-  React.useEffect(() => {
-    const restoreState = async () => {
-      try {
-        const initialUrl = await Linking.getInitialURL();
-
-        if (Platform.OS !== 'web' && initialUrl === null) {
-          const savedState = await AsyncStorage.getItem(
-            NAVIGATION_PERSISTENCE_KEY
-          );
-
-          const state = savedState ? JSON.parse(savedState) : undefined;
-
-          if (state !== undefined) {
-            setInitialState(state);
-          }
-        }
-      } finally {
-        try {
-          const savedThemeName = await AsyncStorage.getItem(
-            THEME_PERSISTENCE_KEY
-          );
-
-          setThemeName(
-            savedThemeName === 'dark'
-              ? 'dark'
-              : savedThemeName === 'light'
-                ? 'light'
-                : 'custom'
-          );
-        } catch (e) {
-          // Ignore
-        }
-
-        try {
-          const direction = await AsyncStorage.getItem(
-            DIRECTION_PERSISTENCE_KEY
-          );
-
-          setIsRTL(direction === 'rtl');
-        } catch (e) {
-          // Ignore
-        }
-
-        setIsReady(true);
-      }
+type AppAction =
+  | { type: 'SET_THEME'; payload: ThemeName }
+  | { type: 'SET_RTL'; payload: boolean }
+  | {
+      type: 'SET_NAVIGATION_STATE';
+      payload: InitialState | NavigationState | undefined;
+    }
+  | { type: 'RESTORE_CANCEL' }
+  | { type: 'RESTORE_FAILURE' }
+  | {
+      type: 'RESTORE_SUCCESS';
+      payload: {
+        themeName: ThemeName;
+        isRTL: boolean;
+        navigationState: InitialState | undefined;
+      };
     };
 
-    restoreState();
-  }, []);
-
-  React.useEffect(() => {
-    if (!isReady) {
-      return;
-    }
-
-    AsyncStorage.setItem(THEME_PERSISTENCE_KEY, themeName);
-
-    const colorScheme = themeName === 'dark' ? 'dark' : 'light';
-
-    if (Platform.OS === 'web') {
-      document.documentElement.style.colorScheme = colorScheme;
-    } else {
-      Appearance.setColorScheme(colorScheme);
-    }
-  }, [isReady, themeName]);
-
-  React.useEffect(() => {
-    const direction = isRTL ? 'rtl' : 'ltr';
-
-    AsyncStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
-
-    if (Platform.OS === 'web') {
-      document.documentElement.dir = direction;
-      localStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
-    }
-
-    if (isRTL !== I18nManager.getConstants().isRTL) {
-      I18nManager.forceRTL(isRTL);
-
-      if (Platform.OS !== 'web') {
-        reloadAsync();
-      }
-    }
-  }, [isRTL]);
+export function App() {
+  const [{ isReady, themeName, isRTL, navigationState }, dispatch] =
+    useAppState();
 
   const dimensions = useWindowDimensions();
 
@@ -295,16 +231,13 @@ export function App() {
       ) : null}
       <NavigationContainer
         ref={navigationRef}
-        initialState={initialState}
+        initialState={navigationState}
         onReady={() => {
           SplashScreen.hideAsync();
         }}
-        onStateChange={(state) =>
-          AsyncStorage.setItem(
-            NAVIGATION_PERSISTENCE_KEY,
-            JSON.stringify(state)
-          )
-        }
+        onStateChange={(state) => {
+          dispatch({ type: 'SET_NAVIGATION_STATE', payload: state });
+        }}
         theme={theme}
         direction={isRTL ? 'rtl' : 'ltr'}
         linking={linking}
@@ -355,7 +288,12 @@ export function App() {
                         <ListItem title="Right to left">
                           <Switch
                             value={isRTL}
-                            onValueChange={setIsRTL}
+                            onValueChange={(value) =>
+                              dispatch({
+                                type: 'SET_RTL',
+                                payload: value,
+                              })
+                            }
                             disabled={
                               // Set expo.extra.forcesRTL: true in app.json to enable RTL in Expo Go
                               Platform.OS !== 'web'
@@ -372,7 +310,12 @@ export function App() {
                               { label: 'Dark', value: 'dark' },
                             ]}
                             value={themeName}
-                            onValueChange={setThemeName}
+                            onValueChange={(value) => {
+                              dispatch({
+                                type: 'SET_THEME',
+                                payload: value,
+                              });
+                            }}
                           />
                         </ListItem>
                         <Divider />
@@ -421,6 +364,155 @@ export function App() {
     </Providers>
   );
 }
+
+const useAppState = () => {
+  const [state, dispatch] = React.useReducer(
+    (state: AppState, action: AppAction) => {
+      switch (action.type) {
+        case 'RESTORE_CANCEL':
+          return {
+            ...state,
+            isReady: true,
+            isPersistenceEnabled: false,
+          };
+        case 'RESTORE_FAILURE':
+          return {
+            ...state,
+            isReady: true,
+            isPersistenceEnabled: true,
+          };
+        case 'RESTORE_SUCCESS':
+          return {
+            isReady: true,
+            isPersistenceEnabled: true,
+            themeName: action.payload.themeName,
+            isRTL: action.payload.isRTL,
+            navigationState: action.payload.navigationState,
+          };
+        case 'SET_THEME':
+          return { ...state, themeName: action.payload };
+        case 'SET_RTL':
+          return { ...state, isRTL: action.payload };
+        case 'SET_NAVIGATION_STATE':
+          return { ...state, navigationState: action.payload };
+        default:
+          return state;
+      }
+    },
+    {
+      isPersistenceEnabled: true,
+      themeName: 'custom',
+      isRTL: previousDirection === 'rtl',
+      isReady: Platform.OS === 'web',
+      navigationState: undefined,
+    }
+  );
+
+  React.useEffect(() => {
+    const restoreState = async () => {
+      try {
+        const initialUrl = await Linking.getInitialURL();
+
+        // Only enable state persistence if there's no initial URL
+        // This avoids persistence when testing with maestro
+        if (initialUrl == null) {
+          const savedState =
+            // On web, we always use browser URL
+            Platform.OS !== 'web'
+              ? await AsyncStorage.getItem(NAVIGATION_PERSISTENCE_KEY)
+              : undefined;
+
+          const savedThemeName = await AsyncStorage.getItem(
+            THEME_PERSISTENCE_KEY
+          );
+
+          const savedDirection =
+            Platform.OS !== 'web'
+              ? await AsyncStorage.getItem(DIRECTION_PERSISTENCE_KEY)
+              : undefined;
+
+          dispatch({
+            type: 'RESTORE_SUCCESS',
+            payload: {
+              themeName:
+                savedThemeName === 'dark'
+                  ? 'dark'
+                  : savedThemeName === 'light'
+                    ? 'light'
+                    : 'custom',
+              isRTL: savedDirection === 'rtl',
+              navigationState: savedState ? JSON.parse(savedState) : undefined,
+            },
+          });
+        } else {
+          dispatch({ type: 'RESTORE_CANCEL' });
+        }
+      } catch (e) {
+        dispatch({ type: 'RESTORE_FAILURE' });
+      }
+    };
+
+    restoreState();
+  }, []);
+
+  React.useEffect(() => {
+    if (!state.isReady) {
+      return;
+    }
+
+    if (state.isPersistenceEnabled) {
+      AsyncStorage.setItem(THEME_PERSISTENCE_KEY, state.themeName);
+    }
+
+    const colorScheme = state.themeName === 'dark' ? 'dark' : 'light';
+
+    if (Platform.OS === 'web') {
+      document.documentElement.style.colorScheme = colorScheme;
+    } else {
+      Appearance.setColorScheme(colorScheme);
+    }
+  }, [state.isPersistenceEnabled, state.isReady, state.themeName]);
+
+  React.useEffect(() => {
+    if (!state.isReady) {
+      return;
+    }
+
+    const direction = state.isRTL ? 'rtl' : 'ltr';
+
+    if (state.isPersistenceEnabled) {
+      AsyncStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
+    }
+
+    if (Platform.OS === 'web') {
+      document.documentElement.dir = direction;
+      localStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
+    }
+
+    if (state.isRTL !== I18nManager.getConstants().isRTL) {
+      I18nManager.forceRTL(state.isRTL);
+
+      if (Platform.OS !== 'web') {
+        reloadAsync();
+      }
+    }
+  }, [state.isPersistenceEnabled, state.isRTL, state.isReady]);
+
+  React.useEffect(() => {
+    if (!state.isReady) {
+      return;
+    }
+
+    if (state.isPersistenceEnabled) {
+      AsyncStorage.setItem(
+        NAVIGATION_PERSISTENCE_KEY,
+        JSON.stringify(state.navigationState)
+      );
+    }
+  }, [state.isPersistenceEnabled, state.isReady, state.navigationState]);
+
+  return [state, dispatch] as const;
+};
 
 const Providers = ({ children }: { children: React.ReactNode }) => {
   return (
