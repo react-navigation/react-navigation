@@ -38,6 +38,5 @@ name: Simple Stack
 - tapOn:
     text: 'Pop by 2'
     retryTapIfNoChange: false
-    delay: 500
 - assertVisible:
     text: 'Contacts'
