@@ -129,7 +129,7 @@ export function DrawerItem(props: Props) {
   const backgroundColor: ColorValue = focused
     ? (activeBackgroundColor ??
       Color(activeTintColor)?.alpha(0.12).string() ??
-      'rgba(0, 0, 0, 0.12)')
+      'rgba(0, 0, 0, 0.06)')
     : inactiveBackgroundColor;
 
   const iconNode = icon ? icon({ size: 24, focused, color }) : null;

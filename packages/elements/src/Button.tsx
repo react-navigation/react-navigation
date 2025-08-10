@@ -77,7 +77,7 @@ function ButtonBase({
     case 'tinted':
       backgroundColor =
         Color(color)?.fade(0.85).string() ??
-        (dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)');
+        (dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)');
       textColor = color;
       break;
     case 'filled':

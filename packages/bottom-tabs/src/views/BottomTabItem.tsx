@@ -206,7 +206,7 @@ export function BottomTabItem({
   const activeBackgroundColor: ColorValue =
     customActiveBackgroundColor ??
     (variant === 'material'
-      ? (Color(activeTintColor)?.alpha(0.12).string() ?? 'rgba(0, 0, 0, 0.12)')
+      ? (Color(activeTintColor)?.alpha(0.12).string() ?? 'rgba(0, 0, 0, 0.06)')
       : sidebar && horizontal
         ? colors.primary
         : 'transparent');
