@@ -8,6 +8,8 @@ import type {
   ViewStyle,
 } from 'react-native';
 
+import type { BlurEffectType } from './getBlurBackgroundColor';
+
 export type HeaderBackButtonDisplayMode = 'default' | 'generic' | 'minimal';
 
 export type Layout = { width: number; height: number };
@@ -196,6 +198,15 @@ export type HeaderOptions = {
    * This is useful if you want to render a semi-transparent header or a blurred background.
    */
   headerTransparent?: boolean;
+  /**
+   * Blur effect for the translucent header.
+   * The `headerTransparent` option needs to be set to `true` for this to work.
+   *
+   * Only supported on Web.
+   *
+   * @platform web
+   */
+  headerBlurEffect?: BlurEffectType | 'none';
   /**
    * Style object for the header. You can specify a custom background color here, for example.
    */

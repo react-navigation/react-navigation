@@ -111,6 +111,7 @@ export function Header(props: Props) {
     headerTransparent,
     headerTintColor,
     headerBackground,
+    headerBlurEffect,
     headerRight,
     headerTitleAllowFontScaling: titleAllowFontScaling,
     headerTitleStyle: titleStyle,
@@ -307,6 +308,7 @@ export function Header(props: Props) {
           headerBackground({ style: backgroundStyle })
         ) : (
           <HeaderBackground
+            blurEffect={headerBlurEffect}
             style={[
               {
                 // Allow touch through the header when background color is transparent
