@@ -23,7 +23,7 @@ name: Full History Tabs
 - assertVisible:
     text: 'Tab Second (4)'
 - tapOn:
-    text: 'First'
+    id: 'first-tab'
 - assertVisible:
     text: 'Tab First (2)'
 - tapOn:

@@ -16,6 +16,22 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
   );
 
   test(metadata.name, async ({ page }) => {
+    const query = (by: string | { text: string } | { id: string }) => {
+      if (typeof by === 'string') {
+        return page.getByText(by);
+      }
+
+      if ('text' in by) {
+        return page.getByText(by.text);
+      }
+
+      if ('id' in by) {
+        return page.getByTestId(by.id);
+      }
+
+      throw new Error(`Unknown step format: ${JSON.stringify(by)}`);
+    };
+
     for (const step of steps) {
       try {
         switch (Object.keys(step)[0]) {
@@ -33,8 +49,7 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
               });
             }
 
-            await page
-              .getByText(step.tapOn.text)
+            await query(step.tapOn)
               .filter({ visible: true })
               .first()
               .click({ force: true });
@@ -44,18 +59,14 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
 
           case 'assertVisible': {
             await expect(
-              page
-                .getByText(step.assertVisible.text)
-                .filter({ visible: true })
-                .first()
+              query(step.assertVisible).filter({ visible: true }).first()
             ).toBeVisible();
 
             break;
           }
 
           case 'extendedWaitUntil': {
-            const element = page
-              .getByText(step.extendedWaitUntil.visible)
+            const element = query(step.extendedWaitUntil.visible)
               .filter({ visible: true })
               .first();
 

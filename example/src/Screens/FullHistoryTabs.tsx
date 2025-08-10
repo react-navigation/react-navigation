@@ -58,14 +58,23 @@ const Tabs = createBottomTabNavigator({
     First: {
       screen: TestScreen,
       linking: 'first/:count?',
+      options: {
+        tabBarButtonTestID: 'first-tab',
+      },
     },
     Second: {
       screen: TestScreen,
       linking: 'second/:count?',
+      options: {
+        tabBarButtonTestID: 'second-tab',
+      },
     },
     Third: {
       screen: TestScreen,
       linking: 'third/:count?',
+      options: {
+        tabBarButtonTestID: 'third-tab',
+      },
     },
   },
 });
