@@ -14,7 +14,11 @@ type Props = {
 };
 
 export function MissingIcon({ color, size, style }: Props) {
-  return <Text style={[styles.icon, { color, fontSize: size }, style]}>⏷</Text>;
+  return (
+    <Text aria-hidden style={[styles.icon, { color, fontSize: size }, style]}>
+      ⏷
+    </Text>
+  );
 }
 
 const styles = StyleSheet.create({

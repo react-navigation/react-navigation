@@ -2,6 +2,7 @@ appId: ${APP_ID}
 name: Master Detail
 ---
 - openLink:
-    link: exp://127.0.0.1:8081/--/master-detail
-- assertVisible:
-    text: 'Pages'
+    link: ${APP_SCHEME}master-detail
+- extendedWaitUntil:
+    visible: 'Pages'
+    timeout: 60000

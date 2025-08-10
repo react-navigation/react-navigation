@@ -2,6 +2,7 @@ appId: ${APP_ID}
 name: Link Component
 ---
 - openLink:
-    link: exp://127.0.0.1:8081/--/link-component
-- assertVisible:
-    text: 'Article by Gandalf'
+    link: ${APP_SCHEME}link-component
+- extendedWaitUntil:
+    visible: 'Article by Gandalf'
+    timeout: 60000

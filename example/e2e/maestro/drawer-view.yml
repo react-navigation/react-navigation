@@ -2,6 +2,7 @@ appId: ${APP_ID}
 name: Drawer View
 ---
 - openLink:
-    link: exp://127.0.0.1:8081/--/drawer-view
-- assertVisible:
-    text: 'Drawer Layout'
+    link: ${APP_SCHEME}drawer-view
+- extendedWaitUntil:
+    visible: 'Drawer Layout'
+    timeout: 60000

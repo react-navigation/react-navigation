@@ -2,6 +2,7 @@ appId: ${APP_ID}
 name: Stack Transparent
 ---
 - openLink:
-    link: exp://127.0.0.1:8081/--/stack-transparent
-- assertVisible:
-    text: 'Article'
+    link: ${APP_SCHEME}stack-transparent
+- extendedWaitUntil:
+    visible: 'Article'
+    timeout: 60000

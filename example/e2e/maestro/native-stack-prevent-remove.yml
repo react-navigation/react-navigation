@@ -2,6 +2,7 @@ appId: ${APP_ID}
 name: Native Stack Prevent Remove
 ---
 - openLink:
-    link: exp://127.0.0.1:8081/--/native-stack-prevent-remove
-- assertVisible:
-    text: 'Input'
+    link: ${APP_SCHEME}native-stack-prevent-remove
+- extendedWaitUntil:
+    visible: 'Input'
+    timeout: 60000

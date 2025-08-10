@@ -2,54 +2,45 @@ appId: ${APP_ID}
 name: Full History Tabs
 ---
 - openLink:
-    link: exp://127.0.0.1:8081/--/full-history-tabs
-- assertVisible:
-    text: 'Tab First (-)'
+    link: ${APP_SCHEME}full-history-tabs
+- extendedWaitUntil:
+    visible: 'Tab First (-)'
+    timeout: 60000
 - tapOn:
     text: 'Navigate to Second'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Tab Second (1)'
 - tapOn:
     text: 'Navigate to First'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Tab First (2)'
 - tapOn:
     text: 'Navigate to Third'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Tab Third (3)'
 - tapOn:
     text: 'Navigate to Second'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Tab Second (4)'
 - tapOn:
     text: 'First'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Tab First (2)'
 - tapOn:
     text: 'Go back'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Tab Second (4)'
 - tapOn:
     text: 'Go back'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Tab Third (3)'
 - tapOn:
     text: 'Go back'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Tab First (2)'
 - tapOn:
     text: 'Go back'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Tab Second (1)'
 - tapOn:
     text: 'Go back'
-    retryTapIfNoChange: false
