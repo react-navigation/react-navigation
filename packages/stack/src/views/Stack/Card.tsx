@@ -1,4 +1,8 @@
-import { Color } from '@react-navigation/elements';
+import {
+  Color,
+  Container,
+  type ContainerProps,
+} from '@react-navigation/elements';
 import type { LocaleDirection } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -8,7 +12,6 @@ import {
   type StyleProp,
   StyleSheet,
   View,
-  type ViewProps,
   type ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
@@ -30,12 +33,13 @@ import {
   PanGestureHandler,
   type PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
-import { CardSheet, type CardSheetRef } from './CardSheet';
+import { CardSheet } from './CardSheet';
 
-type Props = ViewProps & {
+type Props = ContainerProps & {
   interpolationIndex: number;
   opening: boolean;
   closing: boolean;
+  animated: boolean;
   next?: Animated.AnimatedInterpolation<number>;
   current: Animated.AnimatedInterpolation<number>;
   gesture: Animated.Value;
@@ -191,7 +195,7 @@ export class Card extends React.Component<Props> {
     closing: boolean;
     velocity?: number;
   }) => {
-    const { transitionSpec, onOpen, onClose, onTransition, gesture } =
+    const { animated, transitionSpec, onOpen, onClose, onTransition, gesture } =
       this.props;
 
     const toValue = this.getAnimateToValue({
@@ -208,36 +212,48 @@ export class Card extends React.Component<Props> {
     const animation =
       spec.animation === 'spring' ? Animated.spring : Animated.timing;
 
-    this.setPointerEventsEnabled(!closing);
-    this.handleStartInteraction();
+    this.ref.current?.setInert(closing);
 
     clearTimeout(this.pendingGestureCallback);
 
     onTransition?.({ closing, gesture: velocity !== undefined });
-    animation(gesture, {
-      ...spec.config,
-      velocity,
-      toValue,
-      useNativeDriver,
-      isInteraction: false,
-    }).start(({ finished }) => {
-      this.handleEndInteraction();
 
-      clearTimeout(this.pendingGestureCallback);
+    const onFinish = () => {
+      if (closing) {
+        onClose();
+      } else {
+        onOpen();
+      }
 
-      if (finished) {
-        if (closing) {
-          onClose();
-        } else {
-          onOpen();
-        }
-
+      requestAnimationFrame(() => {
         if (this.isCurrentlyMounted) {
           // Make sure to re-open screen if it wasn't removed
           this.forceUpdate();
         }
-      }
-    });
+      });
+    };
+
+    if (animated) {
+      this.handleStartInteraction();
+
+      animation(gesture, {
+        ...spec.config,
+        velocity,
+        toValue,
+        useNativeDriver,
+        isInteraction: false,
+      }).start(({ finished }) => {
+        this.handleEndInteraction();
+
+        clearTimeout(this.pendingGestureCallback);
+
+        if (finished) {
+          onFinish();
+        }
+      });
+    } else {
+      onFinish();
+    }
   };
 
   private getAnimateToValue = ({
@@ -262,12 +278,6 @@ export class Card extends React.Component<Props> {
       gestureDirection,
       direction === 'rtl'
     );
-  };
-
-  private setPointerEventsEnabled = (enabled: boolean) => {
-    const pointerEvents = enabled ? 'box-none' : 'none';
-
-    this.ref.current?.setPointerEvents(pointerEvents);
   };
 
   private handleStartInteraction = () => {
@@ -459,7 +469,7 @@ export class Card extends React.Component<Props> {
     }
   }
 
-  private ref = React.createRef<CardSheetRef>();
+  private ref = React.createRef<InertContainerRef>();
 
   render() {
     const {
@@ -539,22 +549,24 @@ export class Card extends React.Component<Props> {
 
     return (
       <CardAnimationContext.Provider value={interpolationProps}>
-        <Animated.View
-          style={{
-            // This is a dummy style that doesn't actually change anything visually.
-            // Animated needs the animated value to be used somewhere, otherwise things don't update properly.
-            // If we disable animations and hide header, it could end up making the value unused.
-            // So we have this dummy style that will always be used regardless of what else changed.
-            opacity: current,
-          }}
-          // Make sure that this view isn't removed. If this view is removed, our style with animated value won't apply
-          collapsable={false}
-        />
-        <View
-          style={{ pointerEvents: 'box-none' }}
+        {Platform.OS !== 'web' ? (
+          <Animated.View
+            style={{
+              // This is a dummy style that doesn't actually change anything visually.
+              // Animated needs the animated value to be used somewhere, otherwise things don't update properly.
+              // If we disable animations and hide header, it could end up making the value unused.
+              // So we have this dummy style that will always be used regardless of what else changed.
+              opacity: current,
+            }}
+            // Make sure that this view isn't removed. If this view is removed, our style with animated value won't apply
+            collapsable={false}
+          />
+        ) : null}
+        <InertContainer
+          ref={this.ref}
           // Make sure this view is not removed on the new architecture, as it causes focus loss during navigation on Android.
           // This can happen when the view flattening results in different trees - due to `overflow` style changing in a parent.
-          collapsable={false}
+          // `Container` has `collapsable={false}` by default so we don't need to set it here.
           {...rest}
         >
           {overlayEnabled ? (
@@ -594,7 +606,6 @@ export class Card extends React.Component<Props> {
                   />
                 ) : null}
                 <CardSheet
-                  ref={this.ref}
                   enabled={pageOverflowEnabled}
                   layout={layout}
                   style={contentStyle}
@@ -604,11 +615,33 @@ export class Card extends React.Component<Props> {
               </Animated.View>
             </PanGestureHandler>
           </Animated.View>
-        </View>
+        </InertContainer>
       </CardAnimationContext.Provider>
     );
   }
 }
+
+type InertContainerRef = {
+  setInert: (inert: boolean) => void;
+};
+
+// Separate component to avoid rerender in Card during animation
+const InertContainer = React.forwardRef(function InertContainerInner(
+  { children, style }: ContainerProps,
+  ref: React.Ref<InertContainerRef>
+) {
+  const [inert, setInert] = React.useState(false);
+
+  React.useImperativeHandle(ref, () => {
+    return { setInert };
+  }, []);
+
+  return (
+    <Container inert={inert} style={style}>
+      {children}
+    </Container>
+  );
+});
 
 const styles = StyleSheet.create({
   container: {

@@ -11,7 +11,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, Platform, StyleSheet, View } from 'react-native';
 
 import type { Layout, Scene } from '../../types';
 import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
@@ -232,8 +232,15 @@ function CardContainerInner({
     return undefined;
   }, [canGoBack, backTitle, href]);
 
+  const isHidden =
+    animation === 'none' &&
+    isNextScreenTransparent === false &&
+    detachCurrentScreen !== false &&
+    !focused;
+
   return (
     <Card
+      animated={animation !== 'none'}
       interpolationIndex={interpolationIndex}
       gestureDirection={gestureDirection}
       layout={layout}
@@ -275,24 +282,17 @@ function CardContainerInner({
         },
         cardStyle,
       ]}
-      style={[
-        {
-          pointerEvents: active ? 'box-none' : pointerEvents,
-          // This is necessary to avoid unfocused larger pages increasing scroll area
-          // The issue can be seen on the web when a smaller screen is pushed over a larger one
-          overflow: active ? undefined : 'hidden',
-          display:
-            // Hide unfocused screens when animation isn't enabled
-            // This is also necessary for a11y on web
-            animation === 'none' &&
-            isNextScreenTransparent === false &&
-            detachCurrentScreen !== false &&
-            !focused
-              ? 'none'
-              : 'flex',
-        },
-        StyleSheet.absoluteFill,
-      ]}
+      style={{
+        ...StyleSheet.absoluteFillObject,
+        // This is necessary to avoid unfocused larger pages increasing scroll area
+        // The issue can be seen on the web when a smaller screen is pushed over a larger one
+        overflow: active ? undefined : 'hidden',
+        // Hide unfocused screens when animation isn't enabled
+        // This is also necessary for a11y on web
+        visibility: isHidden ? 'hidden' : 'visible',
+        // We use visibility on web
+        display: Platform.OS !== 'web' && isHidden ? 'none' : 'flex',
+      }}
     >
       <View style={styles.container}>
         <ModalPresentationContext.Provider value={modal}>
