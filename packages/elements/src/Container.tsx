@@ -1,17 +1,26 @@
 import { Platform, View, type ViewStyle } from 'react-native';
 
 export type Props = {
-  inert?: boolean;
-  style?: React.CSSProperties & ViewStyle;
-  children: React.ReactNode;
+  'inert'?: boolean;
+  'aria-hidden'?: boolean;
+  'style'?: React.CSSProperties & ViewStyle;
+  'children': React.ReactNode;
 };
 
-export function Container({ inert, children, style }: Props) {
+export function Container({
+  inert,
+  'aria-hidden': ariaHiddenCustom,
+  children,
+  style,
+}: Props) {
+  const ariaHidden =
+    inert !== true && ariaHiddenCustom !== undefined ? ariaHiddenCustom : inert;
+
   if (Platform.OS === 'web') {
     return (
       <div
         inert={inert}
-        aria-hidden={inert}
+        aria-hidden={ariaHidden}
         style={{ ...DEFAULT_STYLE, ...style }}
       >
         {children}
@@ -21,7 +30,7 @@ export function Container({ inert, children, style }: Props) {
 
   return (
     <View
-      aria-hidden={inert}
+      aria-hidden={ariaHidden}
       style={[{ pointerEvents: inert ? 'none' : 'box-none' }, style]}
       collapsable={false}
     >
