@@ -411,7 +411,8 @@ const useAppState = () => {
   React.useEffect(() => {
     const restoreState = async () => {
       try {
-        const initialUrl = await Linking.getInitialURL();
+        const initialUrl =
+          Platform.OS !== 'web' ? await Linking.getInitialURL() : null;
 
         // Only enable state persistence if there's no initial URL
         // This avoids persistence when testing with maestro
