@@ -8,7 +8,6 @@ import {
   type StyleProp,
   StyleSheet,
   View,
-  type ViewProps,
   type ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
@@ -30,9 +29,10 @@ import {
   PanGestureHandler,
   type PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
-import { CardSheet, type CardSheetRef } from './CardSheet';
+import { CardContent } from './CardContent';
 
-type Props = ViewProps & {
+type Props = {
+  animated: boolean;
   interpolationIndex: number;
   opening: boolean;
   closing: boolean;
@@ -178,11 +178,11 @@ export class Card extends React.Component<Props> {
 
   private isSwiping = new Animated.Value(FALSE);
 
-  private interactionHandle: number | undefined;
-
-  private pendingGestureCallback: number | undefined;
-
   private lastToValue: number | undefined;
+
+  private interactionHandle: number | undefined;
+  private pendingGestureCallback: number | undefined;
+  private animationHandle: number | undefined;
 
   private animate = ({
     closing,
@@ -191,7 +191,7 @@ export class Card extends React.Component<Props> {
     closing: boolean;
     velocity?: number;
   }) => {
-    const { transitionSpec, onOpen, onClose, onTransition, gesture } =
+    const { animated, transitionSpec, onOpen, onClose, onTransition, gesture } =
       this.props;
 
     const toValue = this.getAnimateToValue({
@@ -208,36 +208,50 @@ export class Card extends React.Component<Props> {
     const animation =
       spec.animation === 'spring' ? Animated.spring : Animated.timing;
 
-    this.setPointerEventsEnabled(!closing);
-    this.handleStartInteraction();
-
     clearTimeout(this.pendingGestureCallback);
 
+    if (this.animationHandle !== undefined) {
+      cancelAnimationFrame(this.animationHandle);
+    }
+
     onTransition?.({ closing, gesture: velocity !== undefined });
-    animation(gesture, {
-      ...spec.config,
-      velocity,
-      toValue,
-      useNativeDriver,
-      isInteraction: false,
-    }).start(({ finished }) => {
-      this.handleEndInteraction();
 
-      clearTimeout(this.pendingGestureCallback);
+    const onFinish = () => {
+      if (closing) {
+        onClose();
+      } else {
+        onOpen();
+      }
 
-      if (finished) {
-        if (closing) {
-          onClose();
-        } else {
-          onOpen();
-        }
-
+      this.animationHandle = requestAnimationFrame(() => {
         if (this.isCurrentlyMounted) {
           // Make sure to re-open screen if it wasn't removed
           this.forceUpdate();
         }
-      }
-    });
+      });
+    };
+
+    if (animated) {
+      this.handleStartInteraction();
+
+      animation(gesture, {
+        ...spec.config,
+        velocity,
+        toValue,
+        useNativeDriver,
+        isInteraction: false,
+      }).start(({ finished }) => {
+        this.handleEndInteraction();
+
+        clearTimeout(this.pendingGestureCallback);
+
+        if (finished) {
+          onFinish();
+        }
+      });
+    } else {
+      onFinish();
+    }
   };
 
   private getAnimateToValue = ({
@@ -262,12 +276,6 @@ export class Card extends React.Component<Props> {
       gestureDirection,
       direction === 'rtl'
     );
-  };
-
-  private setPointerEventsEnabled = (enabled: boolean) => {
-    const pointerEvents = enabled ? 'box-none' : 'none';
-
-    this.ref.current?.setPointerEvents(pointerEvents);
   };
 
   private handleStartInteraction = () => {
@@ -459,8 +467,6 @@ export class Card extends React.Component<Props> {
     }
   }
 
-  private ref = React.createRef<CardSheetRef>();
-
   render() {
     const {
       styleInterpolator,
@@ -479,22 +485,6 @@ export class Card extends React.Component<Props> {
       children,
       containerStyle: customContainerStyle,
       contentStyle,
-      /* eslint-disable @typescript-eslint/no-unused-vars */
-      opening,
-      closing,
-      preloaded,
-      direction,
-      gestureResponseDistance,
-      gestureVelocityImpact,
-      onClose,
-      onGestureBegin,
-      onGestureCanceled,
-      onGestureEnd,
-      onOpen,
-      onTransition,
-      transitionSpec,
-      /* eslint-enable @typescript-eslint/no-unused-vars */
-      ...rest
     } = this.props;
 
     const interpolationProps = this.getCardAnimation(
@@ -539,72 +529,65 @@ export class Card extends React.Component<Props> {
 
     return (
       <CardAnimationContext.Provider value={interpolationProps}>
-        <Animated.View
-          style={{
-            // This is a dummy style that doesn't actually change anything visually.
-            // Animated needs the animated value to be used somewhere, otherwise things don't update properly.
-            // If we disable animations and hide header, it could end up making the value unused.
-            // So we have this dummy style that will always be used regardless of what else changed.
-            opacity: current,
-          }}
-          // Make sure that this view isn't removed. If this view is removed, our style with animated value won't apply
-          collapsable={false}
-        />
-        <View
-          style={{ pointerEvents: 'box-none' }}
-          // Make sure this view is not removed on the new architecture, as it causes focus loss during navigation on Android.
-          // This can happen when the view flattening results in different trees - due to `overflow` style changing in a parent.
-          collapsable={false}
-          {...rest}
-        >
-          {overlayEnabled ? (
-            <View
-              style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}
-            >
-              {overlay({ style: overlayStyle })}
-            </View>
-          ) : null}
+        {Platform.OS !== 'web' ? (
           <Animated.View
-            style={[styles.container, containerStyle, customContainerStyle]}
+            style={{
+              // This is a dummy style that doesn't actually change anything visually.
+              // Animated needs the animated value to be used somewhere, otherwise things don't update properly.
+              // If we disable animations and hide header, it could end up making the value unused.
+              // So we have this dummy style that will always be used regardless of what else changed.
+              opacity: current,
+            }}
+            // Make sure that this view isn't removed. If this view is removed, our style with animated value won't apply
+            collapsable={false}
+          />
+        ) : null}
+        {overlayEnabled ? (
+          <View
+            style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}
           >
-            <PanGestureHandler
-              enabled={layout.width !== 0 && gestureEnabled}
-              onGestureEvent={handleGestureEvent}
-              onHandlerStateChange={this.handleGestureStateChange}
-              {...this.gestureActivationCriteria()}
+            {overlay({ style: overlayStyle })}
+          </View>
+        ) : null}
+        <Animated.View
+          style={[styles.container, containerStyle, customContainerStyle]}
+        >
+          <PanGestureHandler
+            enabled={layout.width !== 0 && gestureEnabled}
+            onGestureEvent={handleGestureEvent}
+            onHandlerStateChange={this.handleGestureStateChange}
+            {...this.gestureActivationCriteria()}
+          >
+            <Animated.View
+              needsOffscreenAlphaCompositing={hasOpacityStyle(cardStyle)}
+              style={[styles.container, cardStyle]}
             >
-              <Animated.View
-                needsOffscreenAlphaCompositing={hasOpacityStyle(cardStyle)}
-                style={[styles.container, cardStyle]}
+              {shadowEnabled && shadowStyle && !isTransparent ? (
+                <Animated.View
+                  style={[
+                    styles.shadow,
+                    gestureDirection === 'horizontal'
+                      ? [styles.shadowHorizontal, styles.shadowStart]
+                      : gestureDirection === 'horizontal-inverted'
+                        ? [styles.shadowHorizontal, styles.shadowEnd]
+                        : gestureDirection === 'vertical'
+                          ? [styles.shadowVertical, styles.shadowTop]
+                          : [styles.shadowVertical, styles.shadowBottom],
+                    { backgroundColor },
+                    shadowStyle,
+                  ]}
+                />
+              ) : null}
+              <CardContent
+                enabled={pageOverflowEnabled}
+                layout={layout}
+                style={contentStyle}
               >
-                {shadowEnabled && shadowStyle && !isTransparent ? (
-                  <Animated.View
-                    style={[
-                      styles.shadow,
-                      gestureDirection === 'horizontal'
-                        ? [styles.shadowHorizontal, styles.shadowStart]
-                        : gestureDirection === 'horizontal-inverted'
-                          ? [styles.shadowHorizontal, styles.shadowEnd]
-                          : gestureDirection === 'vertical'
-                            ? [styles.shadowVertical, styles.shadowTop]
-                            : [styles.shadowVertical, styles.shadowBottom],
-                      { backgroundColor },
-                      shadowStyle,
-                    ]}
-                  />
-                ) : null}
-                <CardSheet
-                  ref={this.ref}
-                  enabled={pageOverflowEnabled}
-                  layout={layout}
-                  style={contentStyle}
-                >
-                  {children}
-                </CardSheet>
-              </Animated.View>
-            </PanGestureHandler>
-          </Animated.View>
-        </View>
+                {children}
+              </CardContent>
+            </Animated.View>
+          </PanGestureHandler>
+        </Animated.View>
       </CardAnimationContext.Provider>
     );
   }
