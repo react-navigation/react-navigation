@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.6.2...@react-navigation/elements@2.6.3) (2025-08-10)
+
+### Bug Fixes
+
+* handle disabled in PlatformPressable ([2e35ab7](https://github.com/react-navigation/react-navigation/commit/2e35ab76b82d1c2710838a4106de5e58546ff6bf)) - by @satya164
+
 ## [2.6.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.6.1...@react-navigation/elements@2.6.2) (2025-08-02)
 
 **Note:** Version bump only for package @react-navigation/elements

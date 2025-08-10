@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.4.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.4.5...@react-navigation/stack@7.4.6) (2025-08-10)
+
+### Bug Fixes
+
+* fix detecting animation enabled ([bcbc8c0](https://github.com/react-navigation/react-navigation/commit/bcbc8c0c1c78a32fe8ee25a2cd4306f4b6b16e0b)) - by @satya164
+
 ## [7.4.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.4.4...@react-navigation/stack@7.4.5) (2025-08-02)
 
 **Note:** Version bump only for package @react-navigation/stack
