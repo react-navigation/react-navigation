@@ -76,13 +76,19 @@ const AlbumsScreen = () => {
           paddingBottom: tabBarHeight,
         }}
       >
-        <Button
-          onPress={() => {
-            navigation.navigate('TabChat', { count: i++ });
-          }}
-        >
-          Go to Chat
-        </Button>
+        <View style={styles.buttons}>
+          <Button
+            variant="filled"
+            onPress={() => {
+              navigation.navigate('TabChat', { count: i++ });
+            }}
+          >
+            Go to Chat
+          </Button>
+          <Button variant="tinted" onPress={() => navigation.goBack()}>
+            Go back
+          </Button>
+        </View>
         <Albums scrollEnabled={false} />
       </ScrollView>
     </>
@@ -122,7 +128,7 @@ export function BottomTabs() {
             <HeaderBackButton {...props} onPress={navigation.goBack} />
           ),
           headerRight: ({ tintColor }) => (
-            <View style={styles.buttons}>
+            <View style={styles.headerRight}>
               <HeaderButton
                 onPress={() => {
                   showActionSheetWithOptions(
@@ -296,10 +302,16 @@ BottomTabs.title = 'Bottom Tabs';
 BottomTabs.linking = linking;
 
 const styles = StyleSheet.create({
-  buttons: {
+  headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
     marginEnd: 16,
+  },
+  buttons: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    margin: 12,
   },
 });
