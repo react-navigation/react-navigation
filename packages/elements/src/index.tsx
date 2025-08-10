@@ -7,6 +7,7 @@ import searchIcon from './assets/search-icon.png';
 export { Background } from './Background';
 export { Button } from './Button';
 export { Color } from './Color';
+export { Container, type Props as ContainerProps } from './Container';
 export { getDefaultSidebarWidth } from './getDefaultSidebarWidth';
 export { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 export { getHeaderTitle } from './Header/getHeaderTitle';
