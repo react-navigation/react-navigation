@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.4.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.4.6...@react-navigation/stack@7.4.7) (2025-08-10)
+
+### Bug Fixes
+
+* add missing collapsable={false} ([eaaefef](https://github.com/react-navigation/react-navigation/commit/eaaefef3a66a9b8d37d6eaac7a46003cf1efe49b)) - by @
+
 ## [7.4.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.4.5...@react-navigation/stack@7.4.6) (2025-08-10)
 
 ### Bug Fixes
