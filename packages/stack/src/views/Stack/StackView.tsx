@@ -27,7 +27,7 @@ import {
   HeaderContainer,
   type Props as HeaderContainerProps,
 } from '../Header/HeaderContainer';
-import { CardStack } from './CardStack';
+import { CardStack, getAnimationEnabled } from './CardStack';
 
 type Props = StackNavigationConfig & {
   direction: LocaleDirection;
@@ -142,7 +142,7 @@ export class StackView extends React.Component<Props, State> {
     const isAnimationEnabled = (key: string) => {
       const descriptor = props.descriptors[key] || state.descriptors[key];
 
-      return descriptor ? descriptor.options.animation !== 'none' : true;
+      return getAnimationEnabled(descriptor?.options.animation);
     };
 
     const getAnimationTypeForReplace = (key: string) => {

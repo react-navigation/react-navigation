@@ -247,6 +247,20 @@ const getProgressFromGesture = (
   });
 };
 
+function getDefaultAnimation(animation: StackAnimationName | undefined) {
+  // Disable screen transition animation by default on web, windows and macos to match the native behavior
+  const excludedPlatforms =
+    Platform.OS !== 'web' &&
+    Platform.OS !== 'windows' &&
+    Platform.OS !== 'macos';
+
+  return animation ?? (excludedPlatforms ? 'default' : 'none');
+}
+
+export function getAnimationEnabled(animation: StackAnimationName | undefined) {
+  return getDefaultAnimation(animation) !== 'none';
+}
+
 export class CardStack extends React.Component<Props, State> {
   static getDerivedStateFromProps(
     props: Props,
@@ -270,7 +284,8 @@ export class CardStack extends React.Component<Props, State> {
       acc[curr.key] =
         state.gestures[curr.key] ||
         new Animated.Value(
-          (props.openingRouteKeys.includes(curr.key) && animation !== 'none') ||
+          (props.openingRouteKeys.includes(curr.key) &&
+            getAnimationEnabled(animation)) ||
           props.state.preloadedRoutes.includes(curr)
             ? getDistanceFromOptions(
                 state.layout,
@@ -344,16 +359,11 @@ export class CardStack extends React.Component<Props, State> {
         // or current screen is a modal when no presentation is specified
         const isModal = modalRouteKeys.includes(route.key);
 
-        // Disable screen transition animation by default on web, windows and macos to match the native behavior
-        const excludedPlatforms =
-          Platform.OS !== 'web' &&
-          Platform.OS !== 'windows' &&
-          Platform.OS !== 'macos';
+        const animation = getDefaultAnimation(
+          optionsForTransitionConfig.animation
+        );
 
-        const animation =
-          optionsForTransitionConfig.animation ??
-          (excludedPlatforms ? 'default' : 'none');
-        const isAnimationEnabled = animation !== 'none';
+        const isAnimationEnabled = getAnimationEnabled(animation);
 
         const transitionPreset =
           animation !== 'default'
