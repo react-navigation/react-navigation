@@ -54,7 +54,7 @@ export const CardA11yWrapper = React.forwardRef(
         }}
         // Make sure this view is not removed on the new architecture, as it causes focus loss during navigation on Android.
         // This can happen when the view flattening results in different trees - due to `overflow` style changing in a parent.
-        // `Container` has `collapsable={false}` by default so we don't need to set it here.
+        collapsable={false}
       >
         {children}
       </View>
