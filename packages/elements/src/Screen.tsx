@@ -4,6 +4,7 @@ import {
   NavigationRouteContext,
   type ParamListBase,
   type RouteProp,
+  useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -15,7 +16,6 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Background } from './Background';
 import { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 import { HeaderHeightContext } from './Header/HeaderHeightContext';
 import { HeaderShownContext } from './Header/HeaderShownContext';
@@ -36,6 +36,7 @@ type Props = {
 
 export function Screen(props: Props) {
   const insets = useSafeAreaInsets();
+  const { colors } = useTheme();
 
   const isParentHeaderShown = React.useContext(HeaderShownContext);
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
@@ -60,9 +61,9 @@ export function Screen(props: Props) {
   const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
 
   return (
-    <Background
+    <Animated.View
       aria-hidden={!focused}
-      style={[styles.container, style]}
+      style={[styles.container, { backgroundColor: colors.background }, style]}
       // On Fabric we need to disable collapsing for the background to ensure
       // that we won't render unnecessary views due to the view flattening.
       collapsable={false}
@@ -97,7 +98,7 @@ export function Screen(props: Props) {
           </HeaderHeightContext.Provider>
         </HeaderShownContext.Provider>
       </View>
-    </Background>
+    </Animated.View>
   );
 }
 

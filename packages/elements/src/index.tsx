@@ -4,7 +4,6 @@ import clearIcon from './assets/clear-icon.png';
 import closeIcon from './assets/close-icon.png';
 import searchIcon from './assets/search-icon.png';
 
-export { Background } from './Background';
 export { Button } from './Button';
 export { Color } from './Color';
 export { Container, type Props as ContainerProps } from './Container';
