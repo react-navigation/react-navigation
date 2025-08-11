@@ -50,21 +50,23 @@ export function Albums(props: Partial<ScrollViewProps>) {
 
   return (
     <ScrollView ref={ref} contentContainerStyle={styles.content} {...props}>
-      {COVERS.map((source, i) => (
-        <View
-          // eslint-disable-next-line @eslint-react/no-array-index-key
-          key={i}
-          style={[
-            styles.item,
-            Platform.OS !== 'web' && {
-              height: itemSize,
-              width: itemSize,
-            },
-          ]}
-        >
-          <Image source={source} resizeMode="cover" style={styles.photo} />
-        </View>
-      ))}
+      {Array.from({ length: 5 }, () => COVERS)
+        .flat()
+        .map((source, i) => (
+          <View
+            // eslint-disable-next-line @eslint-react/no-array-index-key
+            key={i}
+            style={[
+              styles.item,
+              Platform.OS !== 'web' && {
+                height: itemSize,
+                width: itemSize,
+              },
+            ]}
+          >
+            <Image source={source} resizeMode="cover" style={styles.photo} />
+          </View>
+        ))}
     </ScrollView>
   );
 }
