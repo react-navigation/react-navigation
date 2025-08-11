@@ -699,7 +699,7 @@ export class CardStack extends React.Component<Props, State> {
             // For those that should be active, but are not the top screen, the value is 1
             // For those on top of the stack and with interaction enabled, the value is 2
             // For the old implementation, it stays the same it was
-            let isScreenActive:
+            let activityState:
               | Animated.AnimatedInterpolation<0 | 1 | 2>
               | 0
               | 1
@@ -707,7 +707,7 @@ export class CardStack extends React.Component<Props, State> {
 
             if (index < routes.length - activeScreensLimit - 1 || isPreloaded) {
               // screen should be inactive because it is too deep in the stack
-              isScreenActive = STATE_INACTIVE;
+              activityState = STATE_INACTIVE;
             } else {
               const sceneForActivity = scenes[routes.length - 1];
               const outputValue =
@@ -716,7 +716,7 @@ export class CardStack extends React.Component<Props, State> {
                   : index >= routes.length - activeScreensLimit
                     ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
                     : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
-              isScreenActive = sceneForActivity
+              activityState = sceneForActivity
                 ? sceneForActivity.progress.current.interpolate({
                     inputRange: [0, 1 - EPSILON, 1],
                     outputRange: [1, 1, outputValue],
@@ -761,9 +761,9 @@ export class CardStack extends React.Component<Props, State> {
                 key={route.key}
                 style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}
                 enabled={detachInactiveScreens}
-                active={isScreenActive}
+                activityState={activityState}
                 freezeOnBlur={freezeOnBlur}
-                shouldFreeze={isScreenActive === STATE_INACTIVE && !isPreloaded}
+                shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
                 homeIndicatorHidden={autoHideHomeIndicator}
               >
                 <CardContainer

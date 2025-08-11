@@ -95,7 +95,6 @@ export function HeaderBackground({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    overflow: 'hidden',
     ...Platform.select({
       android: {
         elevation: 4,
