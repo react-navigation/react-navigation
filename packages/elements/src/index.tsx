@@ -23,7 +23,6 @@ export { getLabel } from './Label/getLabel';
 export { Label } from './Label/Label';
 export { MissingIcon } from './MissingIcon';
 export { PlatformPressable } from './PlatformPressable';
-export { ResourceSavingView } from './ResourceSavingView';
 export { SafeAreaProviderCompat } from './SafeAreaProviderCompat';
 export { Screen } from './Screen';
 export { Text } from './Text';

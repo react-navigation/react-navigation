@@ -17,6 +17,7 @@ import {
   View,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
+import { Screen, ScreenContainer } from 'react-native-screens';
 
 import {
   forModalPresentationIOS,
@@ -49,7 +50,6 @@ import { findLastIndex } from '../../utils/findLastIndex';
 import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
 import { getModalRouteKeys } from '../../utils/getModalRoutesKeys';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
-import { MaybeScreen, MaybeScreenContainer } from '../Screens';
 import { CardContainer } from './CardContainer';
 
 type GestureValues = {
@@ -672,7 +672,7 @@ export class CardStack extends React.Component<Props, State> {
     return (
       <View style={styles.container}>
         {isFloatHeaderAbsolute ? null : floatingHeader}
-        <MaybeScreenContainer
+        <ScreenContainer
           enabled={detachInactiveScreens}
           style={styles.container}
           onLayout={this.handleLayout}
@@ -757,7 +757,7 @@ export class CardStack extends React.Component<Props, State> {
               false;
 
             return (
-              <MaybeScreen
+              <Screen
                 key={route.key}
                 style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}
                 enabled={detachInactiveScreens}
@@ -801,10 +801,10 @@ export class CardStack extends React.Component<Props, State> {
                   detachCurrentScreen={detachCurrentScreen}
                   preloaded={isPreloaded}
                 />
-              </MaybeScreen>
+              </Screen>
             );
           })}
-        </MaybeScreenContainer>
+        </ScreenContainer>
         {isFloatHeaderAbsolute ? floatingHeader : null}
       </View>
     );

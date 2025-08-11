@@ -2,7 +2,7 @@ import {
   getHeaderTitle,
   Header,
   SafeAreaProviderCompat,
-  Screen,
+  Screen as ScreenContent,
   useFrameSize,
 } from '@react-navigation/elements';
 import {
@@ -17,6 +17,7 @@ import {
 import * as React from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
+import { Screen, ScreenContainer } from 'react-native-screens';
 import useLatestCallback from 'use-latest-callback';
 
 import type {
@@ -33,7 +34,6 @@ import { DrawerStatusContext } from '../utils/DrawerStatusContext';
 import { getDrawerStatusFromState } from '../utils/getDrawerStatusFromState';
 import { DrawerContent } from './DrawerContent';
 import { DrawerToggleButton } from './DrawerToggleButton';
-import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
 type Props = DrawerNavigationConfig & {
   defaultStatus: DrawerStatus;
@@ -213,7 +213,7 @@ function DrawerViewBase({
 
   const renderSceneContent = () => {
     return (
-      <MaybeScreenContainer
+      <ScreenContainer
         enabled={detachInactiveScreens}
         hasTwoStates
         style={styles.content}
@@ -260,15 +260,15 @@ function DrawerViewBase({
           } = descriptor.options;
 
           return (
-            <MaybeScreen
+            <Screen
               key={route.key}
               style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
-              visible={isFocused}
+              activityState={isFocused ? 2 : 0}
               enabled={detachInactiveScreens}
               freezeOnBlur={freezeOnBlur}
               shouldFreeze={!isFocused && !isPreloaded}
             >
-              <Screen
+              <ScreenContent
                 focused={isFocused}
                 route={descriptor.route}
                 navigation={descriptor.navigation}
@@ -285,11 +285,11 @@ function DrawerViewBase({
                 style={sceneStyle}
               >
                 {descriptor.render()}
-              </Screen>
-            </MaybeScreen>
+              </ScreenContent>
+            </Screen>
           );
         })}
-      </MaybeScreenContainer>
+      </ScreenContainer>
     );
   };
 

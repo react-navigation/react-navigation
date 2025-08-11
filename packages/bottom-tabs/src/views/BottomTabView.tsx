@@ -2,7 +2,7 @@ import {
   getHeaderTitle,
   Header,
   SafeAreaProviderCompat,
-  Screen,
+  Screen as ScreenContent,
 } from '@react-navigation/elements';
 import {
   type NavigationAction,
@@ -13,6 +13,7 @@ import {
 import * as React from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import { Screen, ScreenContainer } from 'react-native-screens';
 
 import {
   FadeTransition,
@@ -31,7 +32,6 @@ import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCa
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
 import { BottomTabBar, getTabBarHeight } from './BottomTabBar';
-import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
 type Props = BottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
@@ -251,7 +251,7 @@ export function BottomTabView(props: Props) {
       {tabBarPosition === 'top' || tabBarPosition === 'left'
         ? tabBarElement
         : null}
-      <MaybeScreenContainer
+      <ScreenContainer
         key="screens"
         enabled={detachInactiveScreens}
         hasTwoStates={hasTwoStates}
@@ -316,10 +316,10 @@ export function BottomTabView(props: Props) {
               : STATE_INACTIVE;
 
           return (
-            <MaybeScreen
+            <Screen
               key={route.key}
               style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
-              active={activityState}
+              activityState={activityState}
               enabled={detachInactiveScreens}
               freezeOnBlur={freezeOnBlur}
               shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
@@ -327,7 +327,7 @@ export function BottomTabView(props: Props) {
               <BottomTabBarHeightContext.Provider
                 value={tabBarPosition === 'bottom' ? tabBarHeight : 0}
               >
-                <Screen
+                <ScreenContent
                   focused={isFocused}
                   route={descriptor.route}
                   navigation={descriptor.navigation}
@@ -344,12 +344,12 @@ export function BottomTabView(props: Props) {
                   style={[customSceneStyle, animationEnabled && sceneStyle]}
                 >
                   {descriptor.render()}
-                </Screen>
+                </ScreenContent>
               </BottomTabBarHeightContext.Provider>
-            </MaybeScreen>
+            </Screen>
           );
         })}
-      </MaybeScreenContainer>
+      </ScreenContainer>
       {tabBarPosition === 'bottom' || tabBarPosition === 'right'
         ? tabBarElement
         : null}
