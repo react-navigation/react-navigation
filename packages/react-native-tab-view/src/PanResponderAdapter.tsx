@@ -12,6 +12,7 @@ import useLatestCallback from 'use-latest-callback';
 
 import type { AdapterProps, Listener } from './types';
 import { useAnimatedValue } from './useAnimatedValue';
+import { useMeasureLayout } from './useMeasureLayout';
 
 export type PanResponderAdapterProps = AdapterProps;
 
@@ -26,7 +27,6 @@ const DefaultTransitionSpec = {
 };
 
 export function PanResponderAdapter({
-  layout,
   keyboardDismissMode,
   swipeEnabled = true,
   navigationState,
@@ -41,12 +41,14 @@ export function PanResponderAdapter({
 }: PanResponderAdapterProps) {
   const { routes, index } = navigationState;
 
+  const containerRef = React.useRef<View>(null);
+  const [layout, onLayout] = useMeasureLayout(containerRef);
+
   const panX = useAnimatedValue(0);
 
   const listeners = React.useRef<Set<Listener>>(new Set()).current;
 
   const navigationStateRef = React.useRef(navigationState);
-  const layoutRef = React.useRef(layout);
   const onIndexChangeRef = React.useRef(onIndexChange);
   const onTabSelectRef = React.useRef(onTabSelect);
   const currentIndexRef = React.useRef(index);
@@ -57,7 +59,7 @@ export function PanResponderAdapter({
 
   const jumpToIndex = useLatestCallback(
     (index: number, animate = animationEnabled) => {
-      const offset = -index * layoutRef.current.width;
+      const offset = -index * layout.width;
 
       const { timing, ...transitionConfig } = DefaultTransitionSpec;
 
@@ -87,7 +89,6 @@ export function PanResponderAdapter({
 
   React.useEffect(() => {
     navigationStateRef.current = navigationState;
-    layoutRef.current = layout;
     onIndexChangeRef.current = onIndexChange;
     onTabSelectRef.current = onTabSelect;
   });
@@ -274,44 +275,54 @@ export function PanResponderAdapter({
     subscribe,
     jumpTo,
     render: (children) => (
-      <Animated.View
-        style={[
-          styles.sheet,
-          layout.width
-            ? {
-                width: routes.length * layout.width,
-                transform: [{ translateX }],
-              }
-            : null,
-          style,
-        ]}
-        {...panResponder.panHandlers}
-      >
-        {React.Children.map(children, (child, i) => {
-          const route = routes[i];
-          const focused = i === index;
+      <View ref={containerRef} onLayout={onLayout} style={styles.container}>
+        <Animated.View
+          style={[
+            styles.sheet,
+            layout.width
+              ? {
+                  width: routes.length * layout.width,
+                  transform: [{ translateX }],
+                }
+              : null,
+            style,
+          ]}
+          {...panResponder.panHandlers}
+        >
+          {children.map((child, i) => {
+            const route = routes[i];
+            const focused = i === index;
 
-          return (
-            <View
-              key={route.key}
-              style={
-                layout.width
-                  ? { width: layout.width }
-                  : focused
-                    ? StyleSheet.absoluteFill
-                    : null
-              }
-            >
-              {focused || layout.width ? child : null}
-            </View>
-          );
-        })}
-      </Animated.View>
+            if (!layout.width && !focused) {
+              return null;
+            }
+
+            return (
+              <View
+                key={route.key}
+                style={
+                  layout.width
+                    ? { width: layout.width }
+                    : focused
+                      ? StyleSheet.absoluteFill
+                      : null
+                }
+              >
+                {child}
+              </View>
+            );
+          })}
+        </Animated.View>
+      </View>
     ),
   });
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    overflow: 'hidden',
+  },
   sheet: {
     flex: 1,
     flexDirection: 'row',

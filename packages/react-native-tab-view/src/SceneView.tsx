@@ -22,7 +22,6 @@ export function SceneView<T extends Route>({
   children,
   navigationState,
   lazy,
-  layout,
   index,
   lazyPreloadDistance,
   subscribe,
@@ -72,26 +71,8 @@ export function SceneView<T extends Route>({
   const focused = navigationState.index === index;
 
   return (
-    <View
-      aria-hidden={!focused}
-      style={[
-        styles.route,
-        // If we don't have the layout yet, make the focused screen fill the container
-        // This avoids delay before we are able to render pages side by side
-        layout.width
-          ? { width: layout.width }
-          : focused
-            ? StyleSheet.absoluteFill
-            : null,
-        style,
-      ]}
-    >
-      {
-        // Only render the route only if it's either focused or layout is available
-        // When layout is not available, we must not render unfocused routes
-        // so that the focused route can fill the screen
-        focused || layout.width ? children({ loading: isLoading }) : null
-      }
+    <View aria-hidden={!focused} style={[styles.route, style]}>
+      {children({ loading: isLoading })}
     </View>
   );
 }
