@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.38](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.37...@react-navigation/devtools@7.0.38) (2025-08-12)
+
+### Bug Fixes
+
+* fix symbolicating stack in devtools ([175d9b9](https://github.com/react-navigation/react-navigation/commit/175d9b9704ec3acc0e0ce7c39b144223f158f90e)) - by @
+
 ## [7.0.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.36...@react-navigation/devtools@7.0.37) (2025-08-02)
 
 **Note:** Version bump only for package @react-navigation/devtools
