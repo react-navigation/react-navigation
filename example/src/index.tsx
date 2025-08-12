@@ -159,7 +159,10 @@ type AppAction =
     };
 
 export function App() {
-  const [{ isReady, themeName, isRTL, initialState }, dispatch] = useAppState();
+  const [
+    { isReady, themeName, isRTL, initialState, isPersistenceEnabled },
+    dispatch,
+  ] = useAppState();
 
   const dimensions = useWindowDimensions();
 
@@ -197,10 +200,12 @@ export function App() {
           SplashScreen.hideAsync();
         }}
         onStateChange={(state) => {
-          AsyncStorage.setItem(
-            NAVIGATION_PERSISTENCE_KEY,
-            JSON.stringify(state)
-          );
+          if (isPersistenceEnabled) {
+            AsyncStorage.setItem(
+              NAVIGATION_PERSISTENCE_KEY,
+              JSON.stringify(state)
+            );
+          }
         }}
         theme={theme}
         direction={isRTL ? 'rtl' : 'ltr'}
