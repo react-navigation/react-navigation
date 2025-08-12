@@ -23,8 +23,9 @@ export function Drawer({
   children,
   style,
 }: DrawerProps) {
+  const flattenedDrawerStyle = StyleSheet.flatten(drawerStyle) || {};
   const drawerWidth = getDrawerWidthWeb({
-    drawerStyle,
+    drawerStyle: flattenedDrawerStyle,
   });
 
   const progress = useFakeSharedValue(open ? 1 : 0);

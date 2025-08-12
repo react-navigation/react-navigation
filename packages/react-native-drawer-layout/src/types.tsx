@@ -3,8 +3,6 @@ import type { StyleProp, View, ViewStyle } from 'react-native';
 import type { PanGesture } from 'react-native-gesture-handler';
 import type { SharedValue } from 'react-native-reanimated';
 
-export type Layout = { width: number; height: number };
-
 export type DrawerProps = {
   /**
    * Whether the drawer is open or not.
@@ -50,12 +48,6 @@ export type DrawerProps = {
    * Callback which returns a react element to render as the content of the drawer.
    */
   renderDrawerContent: () => React.ReactNode;
-
-  /**
-   * Object containing the layout of the container.
-   * Defaults to the dimensions of the application's window.
-   */
-  layout?: { width: number; height: number };
 
   /**
    * Locale direction of the drawer.
