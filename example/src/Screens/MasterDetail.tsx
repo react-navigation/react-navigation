@@ -118,7 +118,7 @@ export function MasterDetail() {
         drawerType: isLargeScreen ? 'permanent' : 'back',
         drawerStyle: isLargeScreen ? null : { width: '100%' },
         drawerContentContainerStyle: { paddingTop: 4 },
-        overlayColor: 'transparent',
+        overlayStyle: { backgroundColor: 'transparent' },
       }}
     >
       <Drawer.Screen name="Article" component={ArticleScreen} />

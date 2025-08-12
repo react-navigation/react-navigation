@@ -68,12 +68,12 @@ function DrawerViewBase({
     drawerType = Platform.select({ ios: 'slide', default: 'front' }),
     configureGestureHandler,
     keyboardDismissMode,
-    overlayColor = 'rgba(0, 0, 0, 0.5)',
     swipeEdgeWidth,
     swipeEnabled = Platform.OS !== 'web' &&
       Platform.OS !== 'windows' &&
       Platform.OS !== 'macos',
     swipeMinDistance,
+    overlayStyle,
     overlayAccessibilityLabel,
   } = descriptors[focusedRouteKey].options;
 
@@ -340,7 +340,7 @@ function DrawerViewBase({
                 }),
           drawerStyle,
         ]}
-        overlayStyle={{ backgroundColor: overlayColor }}
+        overlayStyle={overlayStyle}
         renderDrawerContent={renderDrawerContent}
       >
         {renderSceneContent()}
