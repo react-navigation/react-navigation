@@ -22,7 +22,6 @@ import {
   type InitialState,
   type LinkingOptions,
   NavigationContainer,
-  type NavigationState,
   type Theme,
   useNavigationContainerRef,
 } from '@react-navigation/native';
@@ -142,16 +141,12 @@ type AppState = {
   isReady: boolean;
   themeName: ThemeName;
   isRTL: boolean;
-  navigationState: InitialState | NavigationState | undefined;
+  initialState: InitialState | undefined;
 };
 
 type AppAction =
   | { type: 'SET_THEME'; payload: ThemeName }
   | { type: 'SET_RTL'; payload: boolean }
-  | {
-      type: 'SET_NAVIGATION_STATE';
-      payload: InitialState | NavigationState | undefined;
-    }
   | { type: 'RESTORE_CANCEL' }
   | { type: 'RESTORE_FAILURE' }
   | {
@@ -164,8 +159,7 @@ type AppAction =
     };
 
 export function App() {
-  const [{ isReady, themeName, isRTL, navigationState }, dispatch] =
-    useAppState();
+  const [{ isReady, themeName, isRTL, initialState }, dispatch] = useAppState();
 
   const dimensions = useWindowDimensions();
 
@@ -198,12 +192,15 @@ export function App() {
       ) : null}
       <NavigationContainer
         ref={navigationRef}
-        initialState={navigationState}
+        initialState={initialState}
         onReady={() => {
           SplashScreen.hideAsync();
         }}
         onStateChange={(state) => {
-          dispatch({ type: 'SET_NAVIGATION_STATE', payload: state });
+          AsyncStorage.setItem(
+            NAVIGATION_PERSISTENCE_KEY,
+            JSON.stringify(state)
+          );
         }}
         theme={theme}
         direction={isRTL ? 'rtl' : 'ltr'}
@@ -354,14 +351,12 @@ const useAppState = () => {
             isPersistenceEnabled: true,
             themeName: action.payload.themeName,
             isRTL: action.payload.isRTL,
-            navigationState: action.payload.navigationState,
+            initialState: action.payload.navigationState,
           };
         case 'SET_THEME':
           return { ...state, themeName: action.payload };
         case 'SET_RTL':
           return { ...state, isRTL: action.payload };
-        case 'SET_NAVIGATION_STATE':
-          return { ...state, navigationState: action.payload };
         default:
           return state;
       }
@@ -371,7 +366,7 @@ const useAppState = () => {
       themeName: 'custom',
       isRTL: previousDirection === 'rtl',
       isReady: Platform.OS === 'web',
-      navigationState: undefined,
+      initialState: undefined,
     }
   );
 
@@ -465,19 +460,6 @@ const useAppState = () => {
       }
     }
   }, [state.isPersistenceEnabled, state.isRTL, state.isReady]);
-
-  React.useEffect(() => {
-    if (!state.isReady) {
-      return;
-    }
-
-    if (state.isPersistenceEnabled) {
-      AsyncStorage.setItem(
-        NAVIGATION_PERSISTENCE_KEY,
-        JSON.stringify(state.navigationState)
-      );
-    }
-  }, [state.isPersistenceEnabled, state.isReady, state.navigationState]);
 
   return [state, dispatch] as const;
 };
