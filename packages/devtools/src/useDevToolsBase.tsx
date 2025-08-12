@@ -79,7 +79,7 @@ export function useDevToolsBase(
         .filter((it) => !it.collapse)
         .map(
           ({ methodName, file, lineNumber, column }) =>
-            `${methodName}@${file}:${lineNumber}:${column}`
+            `at ${methodName} (${file}:${lineNumber}:${column})`
         )
         .join('\n');
     } catch (err) {
