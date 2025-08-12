@@ -224,10 +224,6 @@ export type StackHeaderOptions = Omit<
 
 export type StackHeaderProps = {
   /**
-   * Layout of the screen.
-   */
-  layout: Layout;
-  /**
    * Options for the back button.
    */
   back?: {

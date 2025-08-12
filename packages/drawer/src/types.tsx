@@ -225,10 +225,6 @@ export type DrawerContentComponentProps = {
 
 export type DrawerHeaderProps = {
   /**
-   * Layout of the screen.
-   */
-  layout: Layout;
-  /**
    * Options for the current screen.
    */
   options: DrawerNavigationOptions;

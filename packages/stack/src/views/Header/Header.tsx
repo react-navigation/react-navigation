@@ -10,7 +10,6 @@ import { HeaderSegment } from './HeaderSegment';
 
 export const Header = React.memo(function Header({
   back,
-  layout,
   progress,
   options,
   route,
@@ -57,7 +56,6 @@ export const Header = React.memo(function Header({
       {...options}
       title={getHeaderTitle(options, route.name)}
       progress={progress}
-      layout={layout}
       modal={isModal}
       headerBackTitle={
         options.headerBackTitle !== undefined

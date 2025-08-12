@@ -22,7 +22,6 @@ import {
   forSlideUp,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import type {
-  Layout,
   Scene,
   StackHeaderMode,
   StackHeaderProps,
@@ -32,7 +31,6 @@ import { Header } from './Header';
 
 export type Props = {
   mode: StackHeaderMode;
-  layout: Layout;
   scenes: (Scene | undefined)[];
   getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
   getFocusedRoute: () => Route<string>;
@@ -46,7 +44,6 @@ export type Props = {
 export function HeaderContainer({
   mode,
   scenes,
-  layout,
   getPreviousScene,
   getFocusedRoute,
   onContentHeightChange,
@@ -125,7 +122,6 @@ export function HeaderContainer({
           nextHeaderlessScene;
 
         const props: StackHeaderProps = {
-          layout,
           back: headerBack,
           progress: scene.progress,
           options: scene.descriptor.options,

@@ -14,7 +14,6 @@ import { TabBar } from './TabBar';
 import type {
   AdapterCommonProps,
   AdapterProps,
-  Layout,
   LocaleDirection,
   NavigationState,
   Route,
@@ -35,7 +34,6 @@ export type Props<T extends Route> = AdapterCommonProps & {
   ) => React.ReactNode;
   renderAdapter?: (props: AdapterProps) => React.ReactElement;
   tabBarPosition?: 'top' | 'bottom';
-  initialLayout?: Partial<Layout>;
   lazy?: ((props: { route: T }) => boolean) | boolean;
   lazyPreloadDistance?: number;
   direction?: LocaleDirection;
@@ -53,7 +51,6 @@ export function TabView<T extends Route>({
   onTabSelect,
   navigationState,
   renderScene,
-  initialLayout,
   keyboardDismissMode = 'auto',
   lazy = false,
   lazyPreloadDistance = 0,
@@ -84,25 +81,10 @@ export function TabView<T extends Route>({
     );
   }
 
-  const [layout, setLayout] = React.useState({
-    width: 0,
-    height: 0,
-    ...initialLayout,
-  });
-
   const jumpToIndex = (index: number) => {
     if (index !== navigationState.index) {
       onIndexChange(index);
     }
-  };
-
-  const onMeasure = ({ height, width }: { height: number; width: number }) => {
-    setLayout((prevLayout) => {
-      if (prevLayout.width === width && prevLayout.height === height) {
-        return prevLayout;
-      }
-      return { height, width };
-    });
   };
 
   const options = Object.fromEntries(
@@ -115,16 +97,7 @@ export function TabView<T extends Route>({
     ])
   );
 
-  const ref = React.useRef<View>(null);
-
-  React.useLayoutEffect(() => {
-    ref.current?.measure((_x, _y, width, height) => {
-      onMeasure({ width, height });
-    });
-  });
-
   const element = renderAdapter({
-    layout,
     navigationState,
     keyboardDismissMode,
     swipeEnabled,
@@ -140,7 +113,6 @@ export function TabView<T extends Route>({
       // This is crucial to optimizing the routes with PureComponent
       const sceneRendererProps = {
         position,
-        layout,
         jumpTo,
       };
 
@@ -190,20 +162,11 @@ export function TabView<T extends Route>({
     },
   });
 
-  return (
-    <View
-      ref={ref}
-      onLayout={(e) => onMeasure(e.nativeEvent.layout)}
-      style={[styles.pager, style]}
-    >
-      {element}
-    </View>
-  );
+  return <View style={[styles.pager, style]}>{element}</View>;
 }
 
 const styles = StyleSheet.create({
   pager: {
     flex: 1,
-    overflow: 'hidden',
   },
 });

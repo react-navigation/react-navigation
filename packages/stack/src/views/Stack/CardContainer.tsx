@@ -292,7 +292,6 @@ function CardContainerInner({
             {headerMode !== 'float'
               ? renderHeader({
                   mode: 'screen',
-                  layout,
                   scenes: [previousScene, scene],
                   getPreviousScene,
                   getFocusedRoute,

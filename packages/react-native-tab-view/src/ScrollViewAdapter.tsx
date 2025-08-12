@@ -3,13 +3,16 @@ import {
   Animated,
   InteractionManager,
   Keyboard,
-  type ScrollView,
+  Platform,
+  ScrollView,
   StyleSheet,
+  View,
   type ViewProps,
 } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
 import type { AdapterProps, Listener } from './types';
+import { useMeasureLayout } from './useMeasureLayout';
 
 export type ScrollViewAdapterProps = AdapterProps &
   Omit<ViewProps, 'children'> & {
@@ -24,7 +27,6 @@ type ScrollEvent = Parameters<
 >[0];
 
 export function ScrollViewAdapter({
-  layout,
   keyboardDismissMode,
   swipeEnabled = true,
   navigationState,
@@ -49,11 +51,41 @@ export function ScrollViewAdapter({
   const wasTouchedRef = React.useRef<boolean>(false);
   const interactionHandleRef = React.useRef<number | null>(null);
   const scrollViewRef = React.useRef<ScrollView>(null);
+  const containerRef = React.useRef<View>(null);
 
-  const [contentOffset, setInitialOffset] = React.useState(() => ({
+  const isInitialRef = React.useRef(true);
+
+  const [layout, onLayout] = useMeasureLayout(containerRef, ({ width }) => {
+    if (isInitialRef.current) {
+      const x = index * width;
+
+      setContentOffset({ x, y: 0 });
+
+      offsetX.setValue(x);
+    } else if (indexRef.current !== index) {
+      scrollToIndex(index);
+    }
+
+    isInitialRef.current = false;
+  });
+
+  const [contentOffset, setContentOffset] = React.useState(() => ({
     x: index * layout.width,
     y: 0,
   }));
+
+  React.useEffect(() => {
+    // FIXME: contentOffset is not supported on Android
+    // So we manually scroll after state update
+    if (Platform.OS === 'android') {
+      requestAnimationFrame(() => {
+        scrollViewRef.current?.scrollTo({
+          x: contentOffset.x,
+          animated: false,
+        });
+      });
+    }
+  }, [animationEnabled, contentOffset.x]);
 
   const [offsetX] = React.useState(() => new Animated.Value(contentOffset.x));
 
@@ -69,37 +101,12 @@ export function ScrollViewAdapter({
 
     const i = routes.findIndex((route) => route.key === key);
 
-    if (index === i) {
-      scrollToIndex(i);
-    } else {
-      onIndexChange(i);
+    scrollToIndex(i);
 
-      if (keyboardDismissMode === 'auto') {
-        Keyboard.dismiss();
-      }
+    if (keyboardDismissMode === 'auto') {
+      Keyboard.dismiss();
     }
   });
-
-  const isInitialRef = React.useRef(true);
-
-  React.useLayoutEffect(() => {
-    if (!layout.width) {
-      return;
-    }
-
-    if (isInitialRef.current) {
-      const x = index * layout.width;
-
-      // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-layout-effect
-      setInitialOffset({ x, y: 0 });
-
-      offsetX.setValue(x);
-    } else if (indexRef.current !== index) {
-      scrollToIndex(index);
-    }
-
-    isInitialRef.current = false;
-  }, [index, scrollToIndex, layout.width, offsetX]);
 
   React.useEffect(() => {
     return () => {
@@ -132,14 +139,26 @@ export function ScrollViewAdapter({
   });
 
   const position = React.useMemo(
-    () =>
-      layout.width
-        ? Animated.divide(offsetX, layout.width)
-        : new Animated.Value(index),
-    [index, layout.width, offsetX]
+    () => (layout.width ? Animated.divide(offsetX, layout.width) : null),
+    [layout.width, offsetX]
   );
 
   const indexRef = React.useRef(index);
+  const timerRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
+
+  const onScrollEnd = (x: number) => {
+    const value = clamp(x / layout.width, 0, routes.length - 1);
+
+    if (value % 1 === 0) {
+      indexRef.current = value;
+
+      if (value !== index) {
+        onIndexChange(value);
+      }
+
+      onTabSelect?.({ index: value });
+    }
+  };
 
   const onScroll = Animated.event(
     [
@@ -152,11 +171,9 @@ export function ScrollViewAdapter({
     {
       useNativeDriver: true,
       listener: (event: ScrollEvent) => {
-        const value = clamp(
-          event.nativeEvent.contentOffset.x / layout.width,
-          0,
-          routes.length - 1
-        );
+        const { x } = event.nativeEvent.contentOffset;
+
+        const value = clamp(x / layout.width, 0, routes.length - 1);
 
         // The offset will overlap the current and the adjacent page
         // So we need to get the index of the adjacent page
@@ -172,64 +189,86 @@ export function ScrollViewAdapter({
             })
           );
         }
+
+        // FIXME: onMomentumScrollEnd is not supported on Web
+        // So we workaround by using a timer
+        if (Platform.OS === 'web') {
+          clearTimeout(timerRef.current);
+
+          timerRef.current = setTimeout(() => {
+            onScrollEnd(x);
+          }, 100);
+        }
       },
     }
   );
 
   const onMomentumScrollEnd = (event: ScrollEvent) => {
-    const value = clamp(
-      event.nativeEvent.contentOffset.x / layout.width,
-      0,
-      routes.length - 1
-    );
-
-    if (value % 1 === 0) {
-      indexRef.current = value;
-
-      if (value !== index) {
-        onIndexChange(value);
-      }
-
-      onTabSelect?.({ index: value });
-    }
+    onScrollEnd(event.nativeEvent.contentOffset.x);
   };
 
   return children({
-    position,
+    position: position ?? new Animated.Value(index),
     subscribe,
     jumpTo,
     render: (children) => (
-      <Animated.ScrollView
-        {...rest}
-        horizontal
-        pagingEnabled
-        directionalLockEnabled
-        decelerationRate={decelerationRate}
-        bounces={bounces}
-        overScrollMode={overScrollMode}
-        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
-        keyboardDismissMode={
-          keyboardDismissMode === 'auto' ? 'on-drag' : keyboardDismissMode
-        }
-        scrollEnabled={swipeEnabled}
-        scrollToOverflowEnabled={false}
-        scrollsToTop={false}
-        automaticallyAdjustContentInsets={false}
-        showsHorizontalScrollIndicator={false}
-        scrollEventThrottle={1}
-        onScroll={onScroll}
-        onScrollBeginDrag={handleSwipeStart}
-        onScrollEndDrag={handleSwipeEnd}
-        onMomentumScrollEnd={onMomentumScrollEnd}
-        contentOffset={contentOffset}
-        style={[styles.container, style]}
-        contentContainerStyle={{
-          width: `${routes.length * 100}%`,
-        }}
-        ref={scrollViewRef}
-      >
-        {children}
-      </Animated.ScrollView>
+      <View ref={containerRef} onLayout={onLayout} style={styles.container}>
+        <Animated.ScrollView
+          {...rest}
+          ref={scrollViewRef}
+          horizontal
+          pagingEnabled
+          directionalLockEnabled
+          decelerationRate={decelerationRate}
+          bounces={bounces}
+          overScrollMode={overScrollMode}
+          keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+          keyboardDismissMode={
+            keyboardDismissMode === 'auto' ? 'on-drag' : keyboardDismissMode
+          }
+          scrollEnabled={swipeEnabled && Boolean(layout.width)}
+          scrollToOverflowEnabled={false}
+          scrollsToTop={false}
+          automaticallyAdjustContentInsets={false}
+          showsHorizontalScrollIndicator={false}
+          scrollEventThrottle={1}
+          onScroll={onScroll}
+          onScrollBeginDrag={handleSwipeStart}
+          onScrollEndDrag={handleSwipeEnd}
+          onMomentumScrollEnd={onMomentumScrollEnd}
+          contentOffset={contentOffset}
+          contentContainerStyle={{
+            width: layout.width ? `${routes.length * 100}%` : '100%',
+          }}
+          style={[styles.scroll, style]}
+        >
+          {children
+            .map((child, i) => {
+              const route = routes[i];
+              const focused = i === index;
+
+              if (!layout.width && !focused) {
+                return null;
+              }
+
+              return (
+                <View
+                  key={route.key}
+                  style={
+                    layout.width
+                      ? // FIXME: percentage width doesn't work on web
+                        // So we use a fixed width instead
+                        { width: layout.width }
+                      : { width: '100%' }
+                  }
+                >
+                  {child}
+                </View>
+              );
+            })
+            .filter((child) => child !== null)}
+        </Animated.ScrollView>
+      </View>
     ),
   });
 }
@@ -239,6 +278,10 @@ const clamp = (value: number, min: number, max: number) =>
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    overflow: 'hidden',
+  },
+  scroll: {
     flex: 1,
   },
 });

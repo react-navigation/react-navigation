@@ -409,10 +409,6 @@ export type BottomTabNavigationConfig = {
 
 export type BottomTabHeaderProps = {
   /**
-   * Layout of the screen.
-   */
-  layout: Layout;
-  /**
    * Options for the current screen.
    */
   options: BottomTabNavigationOptions;

@@ -4,6 +4,7 @@ import {
   HeaderBackButton,
   type HeaderBackButtonProps,
   HeaderTitle,
+  useFrameSize,
 } from '@react-navigation/elements';
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
@@ -25,7 +26,6 @@ import { memoize } from '../../utils/memoize';
 
 type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
   headerStatusBarHeight: number;
-  layout: Layout;
   title: string;
   modal: boolean;
   onGoBack?: () => void;
@@ -36,6 +36,7 @@ type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
 
 export function HeaderSegment(props: Props) {
   const { direction } = useLocale();
+  const layout = useFrameSize((frame) => frame, true);
 
   const [leftLabelLayout, setLeftLabelLayout] = React.useState<
     Layout | undefined
@@ -103,7 +104,6 @@ export function HeaderSegment(props: Props) {
 
   const {
     progress,
-    layout,
     modal,
     onGoBack,
     backHref,
@@ -192,7 +192,6 @@ export function HeaderSegment(props: Props) {
   return (
     <Header
       modal={modal}
-      layout={layout}
       headerTitle={headerTitle}
       headerLeft={headerLeft}
       headerRight={headerRight}

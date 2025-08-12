@@ -280,10 +280,9 @@ export function BottomTabView(props: Props) {
 
           const {
             freezeOnBlur,
-            header = ({ layout, options }: BottomTabHeaderProps) => (
+            header = ({ options }: BottomTabHeaderProps) => (
               <Header
                 {...options}
-                layout={layout}
                 title={getHeaderTitle(options, route.name)}
               />
             ),
@@ -335,7 +334,6 @@ export function BottomTabView(props: Props) {
                   headerStatusBarHeight={headerStatusBarHeight}
                   headerTransparent={headerTransparent}
                   header={header({
-                    layout: dimensions,
                     route: descriptor.route,
                     navigation:
                       descriptor.navigation as BottomTabNavigationProp<ParamListBase>,

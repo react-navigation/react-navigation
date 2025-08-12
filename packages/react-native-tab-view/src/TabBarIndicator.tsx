@@ -71,7 +71,6 @@ const getTranslateX = (
 
 export function TabBarIndicator<T extends Route>({
   getTabWidth,
-  layout,
   navigationState,
   position,
   width,
@@ -86,8 +85,7 @@ export function TabBarIndicator<T extends Route>({
   const opacity = useAnimatedValue(isWidthDynamic ? 0 : 1);
 
   const indicatorVisible = isWidthDynamic
-    ? layout.width &&
-      navigationState.routes
+    ? navigationState.routes
         .slice(0, navigationState.index)
         .every((_, r) => getTabWidth(r))
     : true;
@@ -120,14 +118,12 @@ export function TabBarIndicator<T extends Route>({
 
   const transform = [];
 
-  if (layout.width) {
-    const translateX =
-      routes.length > 1
-        ? getTranslateX(position, routes, getTabWidth, direction, gap, width)
-        : 0;
+  const translateX =
+    routes.length > 1
+      ? getTranslateX(position, routes, getTabWidth, direction, gap, width)
+      : 0;
 
-    transform.push({ translateX });
-  }
+  transform.push({ translateX });
 
   if (width === 'auto') {
     const inputRange = routes.map((_, i) => i);

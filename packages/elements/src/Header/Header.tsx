@@ -45,10 +45,6 @@ type Props = HeaderOptions & {
    */
   modal?: boolean;
   /**
-   * Layout of the screen.
-   */
-  layout?: Layout;
-  /**
    * Title text for the header.
    */
   title: string;
@@ -72,7 +68,7 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
 
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
-  const frame = useFrameSize((size) => size, true);
+  const layout = useFrameSize((size) => size, true);
   const { colors } = useTheme();
 
   const navigation = useNavigation();
@@ -100,7 +96,6 @@ export function Header(props: Props) {
   };
 
   const {
-    layout = frame,
     modal = false,
     back,
     title,
@@ -329,7 +324,7 @@ export function Header(props: Props) {
       <View
         style={[
           styles.content,
-          Platform.OS === 'ios' && frame.width >= IPAD_MINI_MEDIUM_WIDTH
+          Platform.OS === 'ios' && layout.width >= IPAD_MINI_MEDIUM_WIDTH
             ? styles.large
             : null,
         ]}

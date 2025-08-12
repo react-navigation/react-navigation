@@ -66,7 +66,6 @@ export type Layout = {
 export type Listener = (event: { type: 'enter'; index: number }) => void;
 
 export type SceneRendererProps = {
-  layout: Layout;
   position: Animated.AnimatedInterpolation<number>;
   jumpTo: (key: string) => void;
 };
@@ -113,12 +112,6 @@ export type AdapterCommonProps = {
 
 export type AdapterRendererProps = {
   /**
-   * Layout information for the adapter.
-   * This will default to `initialLayout` from the tab view props.
-   * On layout changes, it will be updated automatically.
-   */
-  layout: Layout;
-  /**
    * Callback to call when the index changes.
    */
   onIndexChange: (index: number) => void;
@@ -141,7 +134,7 @@ export type AdapterRendererProps = {
       position: Animated.AnimatedInterpolation<number>;
       // Function to actually render the content of the pager
       // The parent component takes care of rendering
-      render: (children: React.ReactNode) => React.ReactNode;
+      render: (children: React.ReactElement[]) => React.ReactNode;
       // Callback to call when switching the tab
       // The tab switch animation is performed even if the index in state is unchanged
       jumpTo: (key: string) => void;

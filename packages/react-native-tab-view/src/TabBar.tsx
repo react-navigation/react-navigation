@@ -33,6 +33,7 @@ import type {
   TabDescriptor,
 } from './types';
 import { useAnimatedValue } from './useAnimatedValue';
+import { useMeasureLayout } from './useMeasureLayout';
 
 export type Props<T extends Route> = SceneRendererProps & {
   navigationState: NavigationState<T>;
@@ -175,7 +176,8 @@ const getTabBarWidth = <T extends Route>({
   flattenedPaddingStart,
   flattenedPaddingEnd,
   tabWidths,
-}: Pick<Props<T>, 'navigationState' | 'gap' | 'layout' | 'scrollEnabled'> & {
+}: Pick<Props<T>, 'navigationState' | 'gap' | 'scrollEnabled'> & {
+  layout: Layout;
   tabWidths: Record<string, number>;
   flattenedPaddingStart: DimensionValue | undefined;
   flattenedPaddingEnd: DimensionValue | undefined;
@@ -219,7 +221,8 @@ const normalizeScrollValue = <T extends Route>({
   flattenedPaddingStart,
   flattenedPaddingEnd,
   direction,
-}: Pick<Props<T>, 'layout' | 'navigationState' | 'gap' | 'scrollEnabled'> & {
+}: Pick<Props<T>, 'navigationState' | 'gap' | 'scrollEnabled'> & {
+  layout: Layout;
   tabWidths: Record<string, number>;
   value: number;
   flattenedTabWidth: DimensionValue | undefined;
@@ -259,7 +262,8 @@ const getScrollAmount = <T extends Route>({
   flattenedPaddingStart,
   flattenedPaddingEnd,
   direction,
-}: Pick<Props<T>, 'layout' | 'navigationState' | 'scrollEnabled' | 'gap'> & {
+}: Pick<Props<T>, 'navigationState' | 'scrollEnabled' | 'gap'> & {
+  layout: Layout;
   tabWidths: Record<string, number>;
   flattenedTabWidth: DimensionValue | undefined;
   flattenedPaddingStart: DimensionValue | undefined;
@@ -353,14 +357,13 @@ export function TabBar<T extends Route>({
   renderTabBarItem,
   style,
   tabStyle,
-  layout: propLayout,
   testID,
   android_ripple,
   options,
 }: Props<T>) {
-  const [layout, setLayout] = React.useState<Layout>(
-    propLayout ?? { width: 0, height: 0 }
-  );
+  const containerRef = React.useRef<View>(null);
+  const [layout, onLayout] = useMeasureLayout(containerRef);
+
   const [tabWidths, setTabWidths] = React.useState<Record<string, number>>({});
   const flatListRef = React.useRef<FlatList | null>(null);
   const isFirst = React.useRef(true);
@@ -384,7 +387,7 @@ export function TabBar<T extends Route>({
   });
 
   const hasMeasuredTabWidths =
-    Boolean(layout.width) &&
+    Boolean(layout?.width) &&
     routes
       .slice(0, navigationState.index)
       .every((r) => typeof tabWidths[r.key] === 'number');
@@ -406,16 +409,6 @@ export function TabBar<T extends Route>({
       });
     }
   }, [hasMeasuredTabWidths, isWidthDynamic, scrollEnabled, scrollOffset]);
-
-  const handleLayout = (e: LayoutChangeEvent) => {
-    const { height, width } = e.nativeEvent.layout;
-
-    setLayout((layout) =>
-      layout.width === width && layout.height === height
-        ? layout
-        : { width, height }
-    );
-  };
 
   const tabBarWidth = getTabBarWidth({
     layout,
@@ -621,7 +614,11 @@ export function TabBar<T extends Route>({
   );
 
   return (
-    <Animated.View onLayout={handleLayout} style={[styles.tabBar, style]}>
+    <Animated.View
+      ref={containerRef}
+      onLayout={onLayout}
+      style={[styles.tabBar, style]}
+    >
       <Animated.View
         style={[
           styles.indicatorContainer,
@@ -632,7 +629,6 @@ export function TabBar<T extends Route>({
       >
         {renderIndicator({
           position,
-          layout,
           navigationState,
           jumpTo,
           direction,
