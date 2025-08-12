@@ -652,7 +652,6 @@ export class CardStack extends React.Component<Props, State> {
       <React.Fragment key="header">
         {renderHeader({
           mode: 'float',
-          layout,
           scenes,
           getPreviousScene: this.getPreviousScene,
           getFocusedRoute: this.getFocusedRoute,

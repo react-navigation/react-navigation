@@ -3,7 +3,6 @@ import {
   Header,
   SafeAreaProviderCompat,
   Screen as ScreenContent,
-  useFrameSize,
 } from '@react-navigation/elements';
 import {
   DrawerActions,
@@ -107,8 +106,6 @@ function DrawerViewBase({
 
     previousRouteKeyRef.current = focusedRouteKey;
   }, [descriptors, focusedRouteKey, navigation, state.routes]);
-
-  const dimensions = useFrameSize((size) => size, true);
 
   const { colors } = useTheme();
 
@@ -236,10 +233,9 @@ function DrawerViewBase({
 
           const {
             freezeOnBlur,
-            header = ({ layout, options }: DrawerHeaderProps) => (
+            header = ({ options }: DrawerHeaderProps) => (
               <Header
                 {...options}
-                layout={layout}
                 title={getHeaderTitle(options, route.name)}
                 headerLeft={
                   drawerPosition === 'left' && options.headerLeft == null
@@ -276,7 +272,6 @@ function DrawerViewBase({
                 headerStatusBarHeight={headerStatusBarHeight}
                 headerTransparent={headerTransparent}
                 header={header({
-                  layout: dimensions,
                   route: descriptor.route,
                   navigation:
                     descriptor.navigation as DrawerNavigationProp<ParamListBase>,
@@ -304,7 +299,6 @@ function DrawerViewBase({
         onGestureCancel={handleGestureCancel}
         onTransitionStart={handleTransitionStart}
         onTransitionEnd={handleTransitionEnd}
-        layout={dimensions}
         direction={direction}
         configureGestureHandler={configureGestureHandler}
         swipeEnabled={swipeEnabled}
