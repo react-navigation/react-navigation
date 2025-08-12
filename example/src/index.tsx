@@ -40,7 +40,6 @@ import {
   I18nManager,
   Linking,
   Platform,
-  PlatformColor,
   ScrollView,
   Switch,
   useWindowDimensions,
@@ -58,6 +57,7 @@ import { Divider } from './Shared/Divider';
 import { ErrorBoundary } from './Shared/ErrorBoundary';
 import { ListItem } from './Shared/LIstItem';
 import { SegmentedPicker } from './Shared/SegmentedPicker';
+import { PlatformTheme } from './theme';
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 const Stack = createStackNavigator<RootStackParamList>();
@@ -111,39 +111,6 @@ const WEB_COLORS = {
   border: '#e5e7eb',
   notification: '#f05252',
 } satisfies Theme['colors'];
-
-const PlatformTheme: Theme = {
-  ...DefaultTheme,
-  colors: Platform.select<() => Theme['colors']>({
-    ios: () => ({
-      primary: PlatformColor('systemRed'),
-      background: PlatformColor('systemGroupedBackground'),
-      card: PlatformColor('tertiarySystemBackground'),
-      text: PlatformColor('label'),
-      border: PlatformColor('separator'),
-      notification: PlatformColor('systemRed'),
-    }),
-    android: () => ({
-      primary: PlatformColor('@android:color/system_primary_light'),
-      background: PlatformColor(
-        '@android:color/system_surface_container_light'
-      ),
-      card: PlatformColor('@android:color/system_background_light'),
-      text: PlatformColor('@android:color/system_on_surface_light'),
-      border: PlatformColor('@android:color/system_outline_variant_light'),
-      notification: PlatformColor('@android:color/holo_red_light'),
-    }),
-    web: () => ({
-      primary: 'var(--color-primary)',
-      background: 'var(--color-background)',
-      card: 'var(--color-card)',
-      text: 'var(--color-text)',
-      border: 'var(--color-border)',
-      notification: 'var(--color-notification)',
-    }),
-    default: () => DefaultTheme.colors,
-  })(),
-};
 
 let previousDirection = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr';
 
