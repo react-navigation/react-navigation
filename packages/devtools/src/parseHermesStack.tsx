@@ -5,47 +5,54 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-interface HermesStackLocationNative {
+type HermesStackLocationNative = {
   type: 'NATIVE';
-}
+};
 
-interface HermesStackLocationSource {
+type HermesStackLocationSource = {
   type: 'SOURCE';
   sourceUrl: string;
   line1Based: number;
   column1Based: number;
-}
+};
 
-interface HermesStackLocationBytecode {
+type HermesStackLocationInternalBytecode = {
+  type: 'INTERNAL_BYTECODE';
+  sourceUrl: string;
+  line1Based: number;
+  virtualOffset0Based: number;
+};
+
+type HermesStackLocationBytecode = {
   type: 'BYTECODE';
   sourceUrl: string;
   line1Based: number;
   virtualOffset0Based: number;
-}
+};
 
 type HermesStackLocation =
   | HermesStackLocationNative
   | HermesStackLocationSource
+  | HermesStackLocationInternalBytecode
   | HermesStackLocationBytecode;
 
-interface HermesStackEntryFrame {
+type HermesStackEntryFrame = {
   type: 'FRAME';
   location: HermesStackLocation;
   functionName: string;
-}
+};
 
-interface HermesStackEntrySkipped {
+type HermesStackEntrySkipped = {
   type: 'SKIPPED';
   count: number;
-}
+};
 
 type HermesStackEntry = HermesStackEntryFrame | HermesStackEntrySkipped;
 
-export interface HermesParsedStack {
+export type HermesParsedStack = {
   message: string;
   entries: HermesStackEntry[];
-}
-
+};
 // Capturing groups:
 // 1. function name
 // 2. is this a native stack frame?
@@ -54,11 +61,17 @@ export interface HermesParsedStack {
 // 5. line number (1 based)
 // 6. column number (1 based) or virtual offset (0 based)
 const RE_FRAME =
-  /^ {0,4}at (.+?)(?: \((native)\)?| \((address at )?(.*?):(\d+):(\d+)\))$/;
+  /^ {4}at (.+?)(?: \((native)\)?| \((address at )?(.*?):(\d+):(\d+)\))$/;
 
 // Capturing groups:
 // 1. count of skipped frames
-const RE_SKIPPED = /^ {0,4}... skipping (\d) frames$/;
+const RE_SKIPPED = /^ {4}... skipping (\d+) frames$/;
+const RE_COMPONENT_NO_STACK = /^ {4}at .*$/;
+
+function isInternalBytecodeSourceUrl(sourceUrl: string): boolean {
+  // See https://github.com/facebook/hermes/blob/3332fa020cae0bab751f648db7c94e1d687eeec7/lib/VM/Runtime.cpp#L1100
+  return sourceUrl === 'InternalBytecode.js';
+}
 
 function parseLine(line: string): HermesStackEntry | undefined {
   const asFrame = line.match(RE_FRAME);
@@ -70,12 +83,19 @@ function parseLine(line: string): HermesStackEntry | undefined {
         asFrame[2] === 'native'
           ? { type: 'NATIVE' }
           : asFrame[3] === 'address at '
-            ? {
-                type: 'BYTECODE',
-                sourceUrl: asFrame[4],
-                line1Based: Number.parseInt(asFrame[5], 10),
-                virtualOffset0Based: Number.parseInt(asFrame[6], 10),
-              }
+            ? isInternalBytecodeSourceUrl(asFrame[4])
+              ? {
+                  type: 'INTERNAL_BYTECODE',
+                  sourceUrl: asFrame[4],
+                  line1Based: Number.parseInt(asFrame[5], 10),
+                  virtualOffset0Based: Number.parseInt(asFrame[6], 10),
+                }
+              : {
+                  type: 'BYTECODE',
+                  sourceUrl: asFrame[4],
+                  line1Based: Number.parseInt(asFrame[5], 10),
+                  virtualOffset0Based: Number.parseInt(asFrame[6], 10),
+                }
             : {
                 type: 'SOURCE',
                 sourceUrl: asFrame[4],
@@ -96,7 +116,7 @@ function parseLine(line: string): HermesStackEntry | undefined {
 
 export function parseHermesStack(stack: string): HermesParsedStack {
   const lines = stack.split(/\n/);
-  let entries = [];
+  let entries: (HermesStackEntryFrame | HermesStackEntrySkipped)[] = [];
   let lastMessageLine = -1;
   for (let i = 0; i < lines.length; ++i) {
     const line = lines[i];
@@ -106,6 +126,11 @@ export function parseHermesStack(stack: string): HermesParsedStack {
     const entry = parseLine(line);
     if (entry) {
       entries.push(entry);
+      continue;
+    }
+    if (RE_COMPONENT_NO_STACK.test(line)) {
+      // Skip component stacks without source location.
+      // TODO: This will not be displayed, not sure how to handle it.
       continue;
     }
     // No match - we're still in the message
