@@ -6,14 +6,7 @@ import type {
 import deepEqual from 'fast-deep-equal';
 import * as React from 'react';
 
-import { parseErrorStack } from './parseErrorStack';
-
-type StackFrame = {
-  lineNumber: number | null;
-  column: number | null;
-  file: string | null;
-  methodName: string;
-};
+import { parseErrorStack, type StackFrame } from './parseErrorStack';
 
 type StackFrameResult = StackFrame & {
   collapse: boolean;
