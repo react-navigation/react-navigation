@@ -130,11 +130,11 @@ export function HeaderSegment(props: Props) {
     ...rest
   } = props;
 
-  const defaultHeight = getDefaultHeaderHeight(
-    layout,
-    modal,
-    headerStatusBarHeight
-  );
+  const defaultHeight = getDefaultHeaderHeight({
+    landscape: layout.width > layout.height,
+    modalPresentation: modal,
+    topInset: headerStatusBarHeight,
+  });
 
   const { height = defaultHeight } = StyleSheet.flatten(
     customHeaderStyle || {}

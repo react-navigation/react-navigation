@@ -123,11 +123,11 @@ export function Header(props: Props) {
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
   } = props;
 
-  const defaultHeight = getDefaultHeaderHeight(
-    layout,
-    modal,
-    headerStatusBarHeight
-  );
+  const defaultHeight = getDefaultHeaderHeight({
+    landscape: layout.width > layout.height,
+    modalPresentation: modal,
+    topInset: headerStatusBarHeight,
+  });
 
   const {
     height = defaultHeight,

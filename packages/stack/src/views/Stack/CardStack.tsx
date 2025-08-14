@@ -190,7 +190,11 @@ const getHeaderHeights = (
     acc[curr.route.key] =
       typeof height === 'number'
         ? height
-        : getDefaultHeaderHeight(layout, isModal, headerStatusBarHeight);
+        : getDefaultHeaderHeight({
+            landscape: layout.width > layout.height,
+            modalPresentation: isModal,
+            topInset: headerStatusBarHeight,
+          });
 
     return acc;
   }, {});

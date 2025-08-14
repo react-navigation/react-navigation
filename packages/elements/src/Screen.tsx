@@ -55,7 +55,11 @@ export function Screen(props: Props) {
   } = props;
 
   const defaultHeaderHeight = useFrameSize((size) =>
-    getDefaultHeaderHeight(size, modal, headerStatusBarHeight)
+    getDefaultHeaderHeight({
+      landscape: size.width > size.height,
+      modalPresentation: modal,
+      topInset: headerStatusBarHeight,
+    })
   );
 
   const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);

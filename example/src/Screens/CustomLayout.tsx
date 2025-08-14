@@ -117,7 +117,11 @@ export function NavigatorLayout() {
 
   const insets = useSafeAreaInsets();
   const defaultHeaderHeight = useFrameSize((size) =>
-    getDefaultHeaderHeight(size, false, insets.top)
+    getDefaultHeaderHeight({
+      landscape: size.width > size.height,
+      modalPresentation: false,
+      topInset: insets.top,
+    })
   );
 
   return (
