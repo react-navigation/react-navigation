@@ -150,13 +150,7 @@ export function HeaderBackButton({
     return (
       <MaskedView
         maskElement={
-          <View
-            style={[
-              styles.iconMaskContainer,
-              // Extend the mask so that label isn't clipped during animation
-              { minWidth: '200%' },
-            ]}
-          >
+          <View style={styles.iconMaskContainer}>
             <Image
               source={backIconMask}
               resizeMode="contain"
@@ -239,6 +233,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
+    // FIXME:
+    // Extend the mask so that label isn't clipped during animation
+    minWidth: '500%',
   },
   iconMaskFillerRect: {
     flex: 1,
