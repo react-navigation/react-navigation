@@ -191,7 +191,11 @@ const SceneView = ({
       // So our `getDefaultHeaderHeight` doesn't return the correct value
       // So we hardcode the value here for now until screens is updated
       android: ANDROID_DEFAULT_HEADER_HEIGHT + topInset,
-      default: getDefaultHeaderHeight(frame, isModal, topInset),
+      default: getDefaultHeaderHeight({
+        landscape: frame.width > frame.height,
+        modalPresentation: isModal,
+        topInset,
+      }),
     })
   );
 
