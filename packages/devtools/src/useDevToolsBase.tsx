@@ -66,10 +66,14 @@ export function useDevToolsBase(
     }
 
     try {
-      const result: StackResult = await fetch(`${urlMatch[0]}symbolicate`, {
-        method: 'POST',
-        body: JSON.stringify({ stack: frames }),
-      }).then((res) => res.json());
+      const url = new URL(urlMatch[0]);
+      const result: StackResult = await fetch(
+        `${url.protocol}//${url.host}/symbolicate`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ stack: frames }),
+        }
+      ).then((res) => res.json());
 
       return result.stack
         .filter((it) => !it.collapse)
@@ -79,7 +83,24 @@ export function useDevToolsBase(
         )
         .join('\n');
     } catch (err) {
-      return stack;
+      // Symbolication can fail with other bundles such as vite
+      // Remove entries with node_modules to reduce noise
+      const lines = stack.split('\n');
+      const result: string[] = [];
+
+      for (const line of lines) {
+        if (line.trim() === 'Error') {
+          continue;
+        }
+
+        if (line.trim().startsWith('at ') && line.includes('/node_modules/')) {
+          break;
+        }
+
+        result.push(line);
+      }
+
+      return result.join('\n');
     }
   };
 

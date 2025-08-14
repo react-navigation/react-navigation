@@ -2,7 +2,7 @@ name: Snackager
 on:
   push:
     branches:
-      - main
+      - 7.x
 
 jobs:
   bundle:

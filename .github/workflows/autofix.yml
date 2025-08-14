@@ -3,7 +3,7 @@ name: autofix.ci
 on:
   pull_request:
     branches:
-      - main
+      - 7.x
 
 permissions:
   contents: read

@@ -2,7 +2,7 @@ name: Expo Publish
 on:
   push:
     branches:
-      - main
+      - 7.x
   workflow_dispatch:
 
 jobs:
@@ -24,4 +24,4 @@ jobs:
 
       - name: Publish Expo app
         working-directory: ./example
-        run: CI=1 eas update --auto
+        run: CI=1 eas update --auto --branch 7.x
