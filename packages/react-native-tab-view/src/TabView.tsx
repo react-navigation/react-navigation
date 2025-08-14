@@ -162,11 +162,12 @@ export function TabView<T extends Route>({
     },
   });
 
-  return <View style={[styles.pager, style]}>{element}</View>;
+  return <View style={[styles.container, style]}>{element}</View>;
 }
 
 const styles = StyleSheet.create({
-  pager: {
+  container: {
     flex: 1,
+    overflow: 'hidden',
   },
 });
