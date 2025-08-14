@@ -383,9 +383,9 @@ export function Header(props: Props) {
             }}
             tintColor={headerTintColor}
             style={[
+              StyleSheet.absoluteFill,
               Platform.OS === 'ios'
                 ? [
-                    StyleSheet.absoluteFill,
                     { paddingTop: headerStatusBarHeight ? 0 : 4 },
                     { backgroundColor: backgroundColor ?? colors.card },
                   ]
