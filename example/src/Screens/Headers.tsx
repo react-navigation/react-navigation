@@ -45,6 +45,11 @@ export function Headers() {
         headerStatusBarHeight={0}
       />
       <Header
+        title="Center aligned loooooooooooooooooooooooooooooong title"
+        headerTitleAlign="center"
+        headerStatusBarHeight={0}
+      />
+      <Header
         title="Center + back button"
         back={{ title: 'Profile', href: undefined }}
         headerTitleAlign="center"
@@ -80,6 +85,11 @@ export function Headers() {
       />
       <Header
         title="Left aligned"
+        headerTitleAlign="left"
+        headerStatusBarHeight={0}
+      />
+      <Header
+        title="Left aligned loooooooooooooooooooooooooooooong title"
         headerTitleAlign="left"
         headerStatusBarHeight={0}
       />
