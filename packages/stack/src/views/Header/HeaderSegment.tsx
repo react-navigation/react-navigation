@@ -170,8 +170,6 @@ export function HeaderSegment(props: Props) {
           truncatedLabel: headerBackTruncatedTitle,
           labelStyle: [leftLabelStyle, headerBackTitleStyle],
           onLabelLayout: handleLeftLabelLayout,
-          screenLayout: layout,
-          titleLayout,
           canGoBack: Boolean(onGoBack),
         })
     : undefined;

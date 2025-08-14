@@ -339,12 +339,4 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    * Callback to trigger when the size of the label changes.
    */
   onLabelLayout?: (e: LayoutChangeEvent) => void;
-  /**
-   * Layout of the screen.
-   */
-  screenLayout?: Layout;
-  /**
-   * Layout of the title element in the header.
-   */
-  titleLayout?: Layout;
 };

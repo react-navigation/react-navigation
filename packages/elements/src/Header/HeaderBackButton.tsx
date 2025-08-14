@@ -28,9 +28,7 @@ export function HeaderBackButton({
   onPress,
   pressColor,
   pressOpacity,
-  screenLayout,
   tintColor,
-  titleLayout,
   truncatedLabel = 'Back',
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
   testID,
@@ -40,10 +38,19 @@ export function HeaderBackButton({
   const { colors, fonts } = useTheme();
   const { direction } = useLocale();
 
+  const [wrapperWidth, setWrapperWidth] = React.useState<number | null>(null);
   const [labelWidth, setLabelWidth] = React.useState<number | null>(null);
   const [truncatedLabelWidth, setTruncatedLabelWidth] = React.useState<
     number | null
   >(null);
+
+  const wrapperRef = React.useRef<View | null>(null);
+
+  React.useLayoutEffect(() => {
+    wrapperRef.current?.measure((_x, _y, width) => {
+      setWrapperWidth(width);
+    });
+  }, []);
 
   const renderBackImage = () => {
     if (backImage) {
@@ -67,19 +74,15 @@ export function HeaderBackButton({
       return null;
     }
 
-    const availableSpace =
-      titleLayout && screenLayout
-        ? (screenLayout.width - titleLayout.width) / 2 -
-          (ICON_WIDTH + ICON_MARGIN)
-        : null;
+    const availableSpace = wrapperWidth;
 
     const potentialLabelText =
       displayMode === 'default' ? label : truncatedLabel;
     const finalLabelText =
       availableSpace && labelWidth && truncatedLabelWidth
-        ? availableSpace > labelWidth
+        ? availableSpace >= labelWidth
           ? potentialLabelText
-          : availableSpace > truncatedLabelWidth
+          : availableSpace >= truncatedLabelWidth
             ? truncatedLabel
             : null
         : potentialLabelText;
@@ -101,21 +104,25 @@ export function HeaderBackButton({
     ];
 
     const labelElement = (
-      <View style={styles.labelWrapper}>
+      <View
+        ref={wrapperRef}
+        onLayout={(e) => setWrapperWidth(e.nativeEvent.layout.width)}
+        style={styles.labelWrapper}
+      >
         {label && displayMode === 'default' ? (
           <Animated.Text
+            onLayout={(e) => setLabelWidth(e.nativeEvent.layout.width)}
             style={hiddenStyle}
             numberOfLines={1}
-            onLayout={(e) => setLabelWidth(e.nativeEvent.layout.width)}
           >
             {label}
           </Animated.Text>
         ) : null}
         {truncatedLabel ? (
           <Animated.Text
+            onLayout={(e) => setTruncatedLabelWidth(e.nativeEvent.layout.width)}
             style={hiddenStyle}
             numberOfLines={1}
-            onLayout={(e) => setTruncatedLabelWidth(e.nativeEvent.layout.width)}
           >
             {truncatedLabel}
           </Animated.Text>
@@ -146,8 +153,8 @@ export function HeaderBackButton({
           <View
             style={[
               styles.iconMaskContainer,
-              // Extend the mask to the center of the screen so that label isn't clipped during animation
-              screenLayout ? { minWidth: screenLayout.width / 2 - 27 } : null,
+              // Extend the mask so that label isn't clipped during animation
+              { minWidth: '200%' },
             ]}
           >
             <Image
@@ -194,6 +201,7 @@ const ICON_MARGIN_END = Platform.OS === 'ios' ? 22 : 3;
 
 const styles = StyleSheet.create({
   container: {
+    flexShrink: 1,
     paddingHorizontal: 0,
     minWidth: StyleSheet.hairlineWidth, // Avoid collapsing when title is long
     ...Platform.select({
