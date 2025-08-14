@@ -67,7 +67,6 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
 
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
-  const layout = useFrameSize((size) => size, true);
   const { colors } = useTheme();
 
   const navigation = useNavigation();
@@ -103,11 +102,17 @@ export function Header(props: Props) {
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
   } = props;
 
-  const defaultHeight = getDefaultHeaderHeight({
-    landscape: layout.width > layout.height,
-    modalPresentation: modal,
-    topInset: headerStatusBarHeight,
-  });
+  const isLargeIPad = useFrameSize(
+    (frame) => Platform.OS === 'ios' && frame.width >= IPAD_MINI_MEDIUM_WIDTH
+  );
+
+  const defaultHeight = useFrameSize((frame) =>
+    getDefaultHeaderHeight({
+      landscape: frame.width > frame.height,
+      modalPresentation: modal,
+      topInset: headerStatusBarHeight,
+    })
+  );
 
   const {
     height = defaultHeight,
@@ -306,14 +311,7 @@ export function Header(props: Props) {
         )}
       </Animated.View>
       <View style={{ pointerEvents: 'none', height: headerStatusBarHeight }} />
-      <View
-        style={[
-          styles.content,
-          Platform.OS === 'ios' && layout.width >= IPAD_MINI_MEDIUM_WIDTH
-            ? styles.large
-            : null,
-        ]}
-      >
+      <View style={[styles.content, isLargeIPad ? styles.large : null]}>
         <Animated.View
           style={[
             styles.start,
