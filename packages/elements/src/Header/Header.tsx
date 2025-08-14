@@ -279,6 +279,13 @@ export function Header(props: Props) {
         )
       : customTitle;
 
+  const buttonMinWidth =
+    headerTitleAlign === 'center' && (leftButton || rightButton)
+      ? headerBackButtonDisplayMode !== 'minimal'
+        ? 80
+        : 32
+      : 0;
+
   return (
     <Animated.View
       style={[
@@ -333,7 +340,10 @@ export function Header(props: Props) {
           style={[
             styles.start,
             !searchBarVisible && headerTitleAlign === 'center' && styles.expand,
-            { marginStart: insets.left },
+            {
+              minWidth: buttonMinWidth,
+              marginStart: insets.left,
+            },
             leftContainerStyle,
           ]}
         >
@@ -344,25 +354,6 @@ export function Header(props: Props) {
             <Animated.View
               style={[
                 styles.title,
-                {
-                  // Avoid the title from going offscreen or overlapping buttons
-                  maxWidth:
-                    headerTitleAlign === 'center'
-                      ? layout.width -
-                        ((leftButton
-                          ? headerBackButtonDisplayMode !== 'minimal'
-                            ? 80
-                            : 32
-                          : 16) +
-                          (rightButton || headerSearchBarOptions ? 16 : 0) +
-                          Math.max(insets.left, insets.right)) *
-                          2
-                      : layout.width -
-                        ((leftButton ? 52 : 16) +
-                          (rightButton || headerSearchBarOptions ? 52 : 16) +
-                          insets.left -
-                          insets.right),
-                },
                 headerTitleAlign === 'left' && leftButton
                   ? { marginStart: 4 }
                   : { marginHorizontal: 16 },
@@ -374,14 +365,17 @@ export function Header(props: Props) {
                 allowFontScaling: titleAllowFontScaling,
                 tintColor: headerTintColor,
                 onLayout: onTitleLayout,
-                style: titleStyle,
+                style: [styles.titleText, titleStyle],
               })}
             </Animated.View>
             <Animated.View
               style={[
                 styles.end,
                 styles.expand,
-                { marginEnd: insets.right },
+                {
+                  minWidth: buttonMinWidth,
+                  marginEnd: insets.right,
+                },
                 rightContainerStyle,
               ]}
             >
@@ -438,8 +432,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   title: {
+    flexShrink: 1,
     justifyContent: 'center',
     pointerEvents: 'box-none',
+  },
+  titleText: {
+    textAlign: 'center',
   },
   start: {
     flexDirection: 'row',
@@ -455,6 +453,7 @@ const styles = StyleSheet.create({
   },
   expand: {
     flexGrow: 1,
+    flexShrink: 1,
     flexBasis: 0,
   },
 });
