@@ -14,6 +14,7 @@ import { TabBar } from './TabBar';
 import type {
   AdapterCommonProps,
   AdapterProps,
+  EventEmitterProps,
   LocaleDirection,
   NavigationState,
   Route,
@@ -27,10 +28,11 @@ export type Props<T extends Route> = AdapterCommonProps & {
   navigationState: NavigationState<T>;
   renderLazyPlaceholder?: (props: { route: T }) => React.ReactNode;
   renderTabBar?: (
-    props: SceneRendererProps & {
-      navigationState: NavigationState<T>;
-      options: Record<string, TabDescriptor<T>> | undefined;
-    }
+    props: SceneRendererProps &
+      EventEmitterProps & {
+        navigationState: NavigationState<T>;
+        options: Record<string, TabDescriptor<T>> | undefined;
+      }
   ) => React.ReactNode;
   renderAdapter?: (props: AdapterProps) => React.ReactElement;
   tabBarPosition?: 'top' | 'bottom';
@@ -121,6 +123,7 @@ export function TabView<T extends Route>({
           {tabBarPosition === 'top' &&
             renderTabBar({
               ...sceneRendererProps,
+              subscribe,
               options,
               navigationState,
             })}
@@ -154,6 +157,7 @@ export function TabView<T extends Route>({
           {tabBarPosition === 'bottom' &&
             renderTabBar({
               ...sceneRendererProps,
+              subscribe,
               options,
               navigationState,
             })}
