@@ -24,13 +24,10 @@ export function HeaderBackButton({
   label,
   labelStyle,
   displayMode = Platform.OS === 'ios' ? 'default' : 'minimal',
-  onLabelLayout,
   onPress,
   pressColor,
   pressOpacity,
-  screenLayout,
   tintColor,
-  titleLayout,
   truncatedLabel = 'Back',
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
   testID,
@@ -67,11 +64,12 @@ export function HeaderBackButton({
       return null;
     }
 
-    const availableSpace =
-      titleLayout && screenLayout
-        ? (screenLayout.width - titleLayout.width) / 2 -
-          (ICON_WIDTH + ICON_MARGIN)
-        : null;
+    // const availableSpace =
+    //   titleLayout && screenLayout
+    //     ? (screenLayout.width - titleLayout.width) / 2 -
+    //       (ICON_WIDTH + ICON_MARGIN)
+    //     : null;
+    const availableSpace = null;
 
     const potentialLabelText =
       displayMode === 'default' ? label : truncatedLabel;
@@ -123,7 +121,6 @@ export function HeaderBackButton({
         {finalLabelText ? (
           <Animated.Text
             accessible={false}
-            onLayout={onLabelLayout}
             style={[tintColor ? { color: tintColor } : null, commonStyle]}
             numberOfLines={1}
             allowFontScaling={!!allowFontScaling}
@@ -147,7 +144,7 @@ export function HeaderBackButton({
             style={[
               styles.iconMaskContainer,
               // Extend the mask to the center of the screen so that label isn't clipped during animation
-              screenLayout ? { minWidth: screenLayout.width / 2 - 27 } : null,
+              // screenLayout ? { minWidth: screenLayout.width / 2 - 27 } : null,
             ]}
           >
             <Image
@@ -194,6 +191,7 @@ const ICON_MARGIN_END = Platform.OS === 'ios' ? 22 : 3;
 
 const styles = StyleSheet.create({
   container: {
+    flexShrink: 1,
     paddingHorizontal: 0,
     minWidth: StyleSheet.hairlineWidth, // Avoid collapsing when title is long
     ...Platform.select({

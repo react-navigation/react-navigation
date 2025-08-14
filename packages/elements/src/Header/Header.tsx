@@ -2,7 +2,6 @@ import { useNavigation, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
-  type LayoutChangeEvent,
   Platform,
   StyleSheet,
   View,
@@ -12,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import searchIcon from '../assets/search-icon.png';
 import { Color } from '../Color';
-import type { HeaderOptions, Layout } from '../types';
+import type { HeaderOptions } from '../types';
 import { useFrameSize } from '../useFrameSize';
 import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
 import { HeaderBackButton } from './HeaderBackButton';
@@ -75,25 +74,6 @@ export function Header(props: Props) {
   const isParentHeaderShown = React.useContext(HeaderShownContext);
 
   const [searchBarVisible, setSearchBarVisible] = React.useState(false);
-  const [titleLayout, setTitleLayout] = React.useState<Layout | undefined>(
-    undefined
-  );
-
-  const onTitleLayout = (e: LayoutChangeEvent) => {
-    const { height, width } = e.nativeEvent.layout;
-
-    setTitleLayout((titleLayout) => {
-      if (
-        titleLayout &&
-        height === titleLayout.height &&
-        width === titleLayout.width
-      ) {
-        return titleLayout;
-      }
-
-      return { height, width };
-    });
-  };
 
   const {
     modal = false,
@@ -253,8 +233,6 @@ export function Header(props: Props) {
         pressColor: headerPressColor,
         pressOpacity: headerPressOpacity,
         displayMode: headerBackButtonDisplayMode,
-        titleLayout,
-        screenLayout: layout,
         canGoBack: Boolean(back),
         onPress: back ? navigation.goBack : undefined,
         label: back?.title,
@@ -364,7 +342,6 @@ export function Header(props: Props) {
                 children: title,
                 allowFontScaling: titleAllowFontScaling,
                 tintColor: headerTintColor,
-                onLayout: onTitleLayout,
                 style: [styles.titleText, titleStyle],
               })}
             </Animated.View>

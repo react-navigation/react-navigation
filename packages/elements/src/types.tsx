@@ -250,10 +250,6 @@ export type HeaderTitleProps = {
    */
   tintColor?: ColorValue;
   /**
-   * Callback to trigger when the size of the title element changes.
-   */
-  onLayout?: (e: LayoutChangeEvent) => void;
-  /**
    * Style object for the title element.
    */
   style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
@@ -335,16 +331,4 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    * Whether label font should scale to respect Text Size accessibility settings.
    */
   allowFontScaling?: boolean;
-  /**
-   * Callback to trigger when the size of the label changes.
-   */
-  onLabelLayout?: (e: LayoutChangeEvent) => void;
-  /**
-   * Layout of the screen.
-   */
-  screenLayout?: Layout;
-  /**
-   * Layout of the title element in the header.
-   */
-  titleLayout?: Layout;
 };
