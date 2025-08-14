@@ -315,7 +315,9 @@ export function Header(props: Props) {
         <Animated.View
           style={[
             styles.start,
-            !searchBarVisible && headerTitleAlign === 'center' && styles.expand,
+            (Platform.OS === 'ios' || !searchBarVisible) &&
+              headerTitleAlign === 'center' &&
+              styles.expand,
             {
               minWidth: buttonMinWidth,
               marginStart: insets.left,
