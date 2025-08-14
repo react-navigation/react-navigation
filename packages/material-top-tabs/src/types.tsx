@@ -20,11 +20,7 @@ import type {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import type {
-  SceneRendererProps,
-  TabBar,
-  TabViewProps,
-} from 'react-native-tab-view';
+import type { TabBar, TabBarProps, TabViewProps } from 'react-native-tab-view';
 
 export type MaterialTopTabNavigationEventMap = {
   /**
@@ -312,7 +308,10 @@ export type MaterialTopTabNavigationConfig = Omit<
   adapter?: TabViewProps<Route<string>>['renderAdapter'];
 };
 
-export type MaterialTopTabBarProps = SceneRendererProps & {
+export type MaterialTopTabBarProps = Pick<
+  TabBarProps<Route<string>>,
+  'position' | 'subscribe' | 'jumpTo'
+> & {
   state: TabNavigationState<ParamListBase>;
   navigation: NavigationHelpers<
     ParamListBase,
