@@ -340,19 +340,19 @@ export function BottomTabItem({
         onLongPress,
         testID,
         'aria-label': accessibilityLabel,
-        'accessibilityLargeContentTitle': labelString,
-        'accessibilityShowsLargeContentViewer': true,
+        accessibilityLargeContentTitle: labelString,
+        accessibilityShowsLargeContentViewer: true,
         // FIXME: role: 'tab' doesn't seem to work as expected on iOS
-        'role': Platform.select({ ios: 'button', default: 'tab' }),
+        role: Platform.select({ ios: 'button', default: 'tab' }),
         'aria-selected': focused,
-        'android_ripple': { borderless: true },
-        'hoverEffect':
+        android_ripple: { borderless: true },
+        hoverEffect:
           (variant === 'material' || (sidebar && horizontal)) &&
           typeof colors.text === 'string'
             ? { color: colors.text }
             : undefined,
-        'pressOpacity': 1,
-        'style': [
+        pressOpacity: 1,
+        style: [
           styles.tab,
           { flex, backgroundColor, borderRadius },
           sidebar
@@ -369,7 +369,7 @@ export function BottomTabItem({
                 ? styles.tabHorizontalUiKit
                 : styles.tabVerticalUiKit,
         ],
-        'children': (
+        children: (
           <React.Fragment>
             {renderIcon(scene)}
             {renderLabel(scene)}
