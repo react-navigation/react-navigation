@@ -506,7 +506,8 @@ function Card({
 
   const isTransparent =
     typeof backgroundColor === 'string'
-      ? Color(backgroundColor)?.alpha() === 0
+      ? backgroundColor === 'transparent' ||
+        Color(backgroundColor)?.alpha() === 0
       : false;
 
   return (
