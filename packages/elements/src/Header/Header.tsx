@@ -299,9 +299,9 @@ export function Header(props: Props) {
                 // Allow touch through the header when background color is transparent
                 pointerEvents:
                   headerTransparent &&
+                  backgroundStyle.backgroundColor &&
                   (backgroundStyle.backgroundColor === 'transparent' ||
-                    (backgroundStyle.backgroundColor &&
-                      Color(backgroundStyle.backgroundColor)?.alpha() === 0))
+                    Color(backgroundStyle.backgroundColor)?.alpha() === 0)
                     ? 'none'
                     : 'auto',
               },
