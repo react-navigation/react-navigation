@@ -64,3 +64,6 @@ jobs:
 
       - name: Verify built type definitions are correct
         run: yarn typecheck
+
+      - name: Bundle example JavaScript and assets
+        run: yarn example expo export --platform all

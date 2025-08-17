@@ -26,9 +26,7 @@ export default defineConfig({
   webServer: [
     {
       cwd: path.join(__dirname, '..'),
-      command: process.env.CI
-        ? `yarn serve --no-port-switching --single --listen ${PORT} dist`
-        : `yarn web --port ${PORT}`,
+      command: `yarn web --port ${PORT}`,
       url: `http://localhost:${PORT}`,
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
