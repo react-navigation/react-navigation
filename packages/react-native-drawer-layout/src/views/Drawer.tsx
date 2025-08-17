@@ -157,7 +157,7 @@ function Inert({
   return (
     <div
       inert={enabled}
-      aria-hidden={!enabled}
+      aria-hidden={enabled}
       style={{
         display: 'flex',
         flexGrow: 1,
