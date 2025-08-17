@@ -78,14 +78,16 @@ jobs:
 
       - name: Boot iOS Simulator
         run: |
-          DEVICE_ID=$(xcrun simctl list devices available | grep "iPhone 15" | head -n 1 | awk -F "[()]" '{print $2}')
+          SIMULATOR_NAME="iPhone 16"
+          DEVICE_ID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -n 1 | awk -F "[()]" '{print $2}')
 
           if [ -z "$DEVICE_ID" ]; then
             echo "No available simulator found for the criteria."
+            xcrun simctl list devices available
             exit 1
           fi
 
-          echo "Booting iPhone 15 simulator with DEVICE_ID=$DEVICE_ID..."
+          echo "Booting $SIMULATOR_NAME simulator with DEVICE_ID=$DEVICE_ID..."
           xcrun simctl boot "$DEVICE_ID" || true
 
           TIMEOUT=120
