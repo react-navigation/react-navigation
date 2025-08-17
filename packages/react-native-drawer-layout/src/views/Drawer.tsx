@@ -115,18 +115,15 @@ export function Drawer({
         drawerStyle,
       ]}
     >
-      {renderDrawerContent()}
+      <Inert enabled={drawerType !== 'permanent' && !isOpen}>
+        {renderDrawerContent()}
+      </Inert>
     </View>
   );
 
   const mainContent = (
     <View key="content" style={[styles.content, contentAnimatedStyle]}>
-      <View
-        aria-hidden={isOpen && drawerType !== 'permanent'}
-        style={styles.content}
-      >
-        {children}
-      </View>
+      <Inert enabled={drawerType !== 'permanent' && isOpen}>{children}</Inert>
       {drawerType !== 'permanent' ? (
         <Overlay
           open={open}
@@ -147,6 +144,29 @@ export function Drawer({
         {isRight && drawerElement}
       </View>
     </DrawerProgressContext.Provider>
+  );
+}
+
+function Inert({
+  enabled,
+  children,
+}: {
+  enabled: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      inert={enabled}
+      aria-hidden={!enabled}
+      style={{
+        display: 'flex',
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 'auto',
+      }}
+    >
+      {children}
+    </div>
   );
 }
 
