@@ -3,6 +3,7 @@ import { type Route, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   type ColorValue,
+  Platform,
   type StyleProp,
   StyleSheet,
   type TextStyle,
@@ -150,6 +151,7 @@ export function DrawerItem(props: Props) {
         pressOpacity={pressOpacity}
         hoverEffect={typeof color === 'string' ? { color } : undefined}
         href={href}
+        style={{ borderRadius }}
       >
         <View style={[styles.wrapper, { borderRadius }]}>
           {iconNode}
@@ -173,9 +175,16 @@ export function DrawerItem(props: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    overflow: 'hidden',
-  },
+  container: Platform.select({
+    android: {
+      // Hide overflow to clip ripple effect
+      overflow: 'hidden',
+    },
+    default: {
+      // Don't hide overflow on web
+      // Otherwise the outline gets clipped
+    },
+  }),
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
