@@ -40,7 +40,6 @@ jobs:
           key: ios-debug-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}
 
       - name: Use appropriate Xcode version
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '16.2'
