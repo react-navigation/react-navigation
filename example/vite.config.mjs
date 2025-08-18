@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react';
-import { transformWithEsbuild } from 'vite';
+import { defineConfig, transformWithEsbuild } from 'vite';
 import commonjs from 'vite-plugin-commonjs';
 
 const extensions = [
@@ -32,17 +32,16 @@ const jsx = (regex) => ({
 });
 
 /** @type {import('vite').UserConfig} */
-export default {
+export default defineConfig(({ mode }) => ({
   plugins: [jsx(/\/(@expo|expo-.+)\//), commonjs(), react()],
   define: {
-    __DEV__: JSON.stringify(process.env.NODE_ENV !== 'production'),
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    __DEV__: JSON.stringify(mode !== 'production'),
     'process.env.EXPO_OS': JSON.stringify('web'),
     global: 'globalThis',
   },
   resolve: {
     extensions: extensions,
-    conditions: ['source', 'module', 'browser', 'development'],
+    conditions: ['source', 'module', 'browser', mode],
     alias: {
       'react-native': 'react-native-web',
     },
@@ -56,4 +55,4 @@ export default {
       },
     },
   },
-};
+}));
