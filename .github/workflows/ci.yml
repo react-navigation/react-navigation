@@ -62,8 +62,11 @@ jobs:
       - name: Build packages in the monorepo
         run: yarn lerna run prepack
 
-      - name: Verify built type definitions are correct
+      - name: Verify types are correct
         run: yarn typecheck
 
-      - name: Bundle example JavaScript and assets
+      - name: Bundle example JavaScript with Metro
         run: yarn example expo export --platform all
+
+      - name: Bundle example JavaScript with Vite
+        run: yarn example web build

@@ -43,9 +43,9 @@ import {
   Switch,
   useWindowDimensions,
 } from 'react-native';
-import { SystemBars } from 'react-native-edge-to-edge';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { SystemBars } from './edge-to-edge';
 import {
   type RootDrawerParamList,
   type RootStackParamList,
