@@ -33,6 +33,7 @@ export const prepareHeaderBarButtonItems = (
       return item;
     }
     const image = item.image ? Image.resolveAssetSource(item.image) : undefined;
+
     const titleStyle = item.titleStyle
       ? { ...item.titleStyle, color: processColor(item.titleStyle.color) }
       : undefined;
@@ -54,7 +55,7 @@ export const prepareHeaderBarButtonItems = (
     if ('onPress' in item) {
       return {
         ...processedItem,
-        buttonId: `${item.title ?? item.image}-${index}-${routeKey}`,
+        buttonId: `${index}-${routeKey}`,
       };
     }
     if ('menu' in item) {

@@ -24,6 +24,7 @@ import type {
   ScreenStackHeaderConfigProps,
   SearchBarProps,
 } from 'react-native-screens';
+import type { SFSymbol } from 'sf-symbols-typescript';
 
 export type NativeStackNavigationEventMap = {
   /**
@@ -696,7 +697,6 @@ export type NativeStackNavigationOptions = {
    */
   unstable_sheetFooter?: () => React.ReactNode;
 };
-
 interface SharedHeaderBarButtonItem {
   /**
    * Title of the button.
@@ -712,9 +712,13 @@ interface SharedHeaderBarButtonItem {
     color?: ColorValue;
   };
   /**
-   * Image source for the button.
+   * Image source for the button
    */
   image?: ImageRequireSource;
+  /**
+   * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
+   */
+  systemImage?: SFSymbol;
   /**
    * The style of the item.
    * "Prominent" only available from iOS 26.0 and later.
@@ -828,7 +832,7 @@ export interface HeaderBarButtonItemMenuAction {
   /**
    * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
    */
-  systemImage?: string;
+  systemImage?: SFSymbol;
   /**
    * State of the menu item.
    *

@@ -40,7 +40,7 @@ describe('prepareHeaderBarButtonItems', () => {
     const result = prepareHeaderBarButtonItems(items, routeKey);
     const btn = result.find(hasButtonId)!;
     expect(btn.title).toBe('Test');
-    expect(btn.buttonId).toContain('Test-0-route-key');
+    expect(btn.buttonId).toContain('0-route-key');
   });
 
   test('processes an icon button', () => {
@@ -51,7 +51,7 @@ describe('prepareHeaderBarButtonItems', () => {
     const btn = result.find(hasButtonId)!;
     expect(Image.resolveAssetSource).toHaveBeenCalledWith(123);
     expect(btn.image).toEqual({ uri: 'resolved:123' });
-    expect(btn.buttonId).toContain('123-0-route-key');
+    expect(btn.buttonId).toContain('0-route-key');
   });
 
   test('processes a button with titleStyle and tintColor', () => {

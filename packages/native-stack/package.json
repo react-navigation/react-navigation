@@ -60,6 +60,7 @@
     "react-native-builder-bob": "^0.40.12",
     "react-native-screens": "~4.11.1",
     "react-test-renderer": "19.0.0",
+    "sf-symbols-typescript": "^2.1.0",
     "typescript": "^5.8.3"
   },
   "peerDependencies": {

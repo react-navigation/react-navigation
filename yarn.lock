@@ -4115,6 +4115,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-native-screens: "npm:~4.11.1"
     react-test-renderer: "npm:19.0.0"
+    sf-symbols-typescript: "npm:^2.1.0"
     typescript: "npm:^5.8.3"
     warn-once: "npm:^0.1.1"
   peerDependencies:
@@ -14348,6 +14349,13 @@ __metadata:
   version: 1.2.0
   resolution: "setprototypeof@npm:1.2.0"
   checksum: 10c0/68733173026766fa0d9ecaeb07f0483f4c2dc70ca376b3b7c40b7cda909f94b0918f6c5ad5ce27a9160bdfb475efaa9d5e705a11d8eaae18f9835d20976028bc
+  languageName: node
+  linkType: hard
+
+"sf-symbols-typescript@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "sf-symbols-typescript@npm:2.1.0"
+  checksum: 10c0/b6e2482c2b3ba785aa00770013e343a2175475b9cb7c8703c30a2ec1da8b41acd982db2d953877afb35af32a3dfba337d0b29e703c399cd2138c3cf68685c9c2
   languageName: node
   linkType: hard
 
