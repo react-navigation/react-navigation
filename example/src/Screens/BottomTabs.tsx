@@ -30,8 +30,8 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { SystemBars } from 'react-native-edge-to-edge';
 
+import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
