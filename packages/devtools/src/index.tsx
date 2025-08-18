@@ -1,13 +1,7 @@
-const noop: any = () => {};
-
-export let useLogger: typeof import('./useLogger').useLogger;
-export let useReduxDevToolsExtension: typeof import('./useReduxDevToolsExtension').useReduxDevToolsExtension;
-
-if (process.env.NODE_ENV !== 'production') {
-  useLogger = require('./useLogger').useLogger;
-  useReduxDevToolsExtension =
-    require('./useReduxDevToolsExtension').useReduxDevToolsExtension;
-} else {
-  useLogger = noop;
-  useReduxDevToolsExtension = noop;
-}
+export const {
+  useLogger,
+  useReduxDevToolsExtension,
+}: typeof import('./index.development') =
+  process.env.NODE_ENV !== 'production'
+    ? require('./index.development')
+    : require('./index.production');

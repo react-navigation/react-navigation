@@ -23,6 +23,8 @@
     ".": {
       "source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
+      "production": "./lib/module/index.production.js",
+      "development": "./lib/module/index.development.js",
       "default": "./lib/module/index.js"
     },
     "./package.json": "./package.json"
