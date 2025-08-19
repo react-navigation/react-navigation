@@ -285,23 +285,25 @@ export type NativeStackNavigationOptions = {
    * Function which returns a React Element to display on the left side of the header.
    * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
    */
-  headerLeft?: (props: NativeStackHeaderLeftProps) => React.ReactNode;
+  headerLeft?: HeaderLeftReactElement;
   /**
    * Function which returns a React Element to display on the right side of the header.
    */
-  headerRight?: (props: NativeStackHeaderRightProps) => React.ReactNode;
+  headerRight?: HeaderRightReactElement;
   /**
-   * iOS native UIBarButtomItem to the right side of the header.
+   * Array of iOS native UIBarButtomItem or functions
+   * that returns a React Element to the left side of the header.
    *
    * @platform ios
    */
-  headerRightBarButtonItems?: HeaderBarButtonItem[];
+  headerLeftItems?: (HeaderBarButtonItem | HeaderLeftReactElement)[];
   /**
-   * iOS native UIBarButtomItem to the left side of the header.
+   * Array of iOS native UIBarButtomItem or functions
+   * that returns a React Element to the right side of the header.
    *
    * @platform ios
    */
-  headerLeftBarButtonItems?: HeaderBarButtonItem[];
+  headerRightItems?: (HeaderBarButtonItem | HeaderRightReactElement)[];
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
@@ -870,6 +872,14 @@ export type HeaderBarButtonItem =
   | HeaderBarButtonItemWithAction
   | HeaderBarButtonItemWithMenu
   | HeaderBarButtonItemSpacing;
+
+export type HeaderLeftReactElement = (
+  props: NativeStackHeaderLeftProps
+) => React.ReactNode;
+
+export type HeaderRightReactElement = (
+  props: NativeStackHeaderRightProps
+) => React.ReactNode;
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,

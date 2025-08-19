@@ -3,6 +3,8 @@ import { Image, processColor } from 'react-native';
 import type {
   HeaderBarButtonItem,
   HeaderBarButtonItemWithMenu,
+  HeaderLeftReactElement,
+  HeaderRightReactElement,
 } from '../types';
 
 const prepareMenu = (
@@ -25,12 +27,19 @@ const prepareMenu = (
 };
 
 export const prepareHeaderBarButtonItems = (
-  barButtonItems: HeaderBarButtonItem[],
+  barButtonItems: (
+    | HeaderLeftReactElement
+    | HeaderRightReactElement
+    | HeaderBarButtonItem
+  )[],
   routeKey: string
 ) => {
   return barButtonItems?.map((item, index) => {
+    if (typeof item === 'function') {
+      return null;
+    }
     if ('spacing' in item) {
-      return item;
+      return { ...item, index };
     }
     const image = item.image ? Image.resolveAssetSource(item.image) : undefined;
 
@@ -51,6 +60,7 @@ export const prepareHeaderBarButtonItems = (
       titleStyle,
       tintColor,
       badge,
+      index,
     };
     if ('onPress' in item) {
       return {

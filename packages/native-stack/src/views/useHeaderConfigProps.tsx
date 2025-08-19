@@ -60,8 +60,8 @@ export function useHeaderConfigProps({
   headerBack,
   route,
   title,
-  headerLeftBarButtonItems,
-  headerRightBarButtonItems,
+  headerLeftItems,
+  headerRightItems,
 }: Props) {
   const { direction } = useLocale();
   const { colors, fonts } = useTheme();
@@ -204,7 +204,25 @@ export function useHeaderConfigProps({
     <>
       {Platform.OS === 'ios' ? (
         <>
-          {headerLeftElement != null ? (
+          {headerLeftItems ? (
+            headerLeftItems.map((item, index) => {
+              if (typeof item === 'function') {
+                return (
+                  // eslint-disable-next-line @eslint-react/no-array-index-key
+                  <ScreenStackHeaderLeftView key={index}>
+                    {item({
+                      tintColor,
+                      canGoBack,
+                      label: headerBackTitle ?? headerBack?.title,
+                      // `href` is only applicable to web
+                      href: undefined,
+                    })}
+                  </ScreenStackHeaderLeftView>
+                );
+              }
+              return null;
+            })
+          ) : headerLeftElement != null ? (
             <ScreenStackHeaderLeftView>
               {headerLeftElement}
             </ScreenStackHeaderLeftView>
@@ -260,7 +278,22 @@ export function useHeaderConfigProps({
       {headerBackImageSource !== undefined ? (
         <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
       ) : null}
-      {headerRightElement != null ? (
+      {headerRightItems ? (
+        headerRightItems.map((item, index) => {
+          if (typeof item === 'function') {
+            return (
+              // eslint-disable-next-line @eslint-react/no-array-index-key
+              <ScreenStackHeaderRightView key={index}>
+                {item({
+                  tintColor,
+                  canGoBack,
+                })}
+              </ScreenStackHeaderRightView>
+            );
+          }
+          return null;
+        })
+      ) : headerRightElement != null ? (
         <ScreenStackHeaderRightView>
           {headerRightElement}
         </ScreenStackHeaderRightView>
@@ -273,14 +306,15 @@ export function useHeaderConfigProps({
     </>
   );
 
-  const preparedHeaderLeftBarButtonItems = headerLeftBarButtonItems
-    ? prepareHeaderBarButtonItems(headerLeftBarButtonItems, route.key)
+  const preparedHeaderLeftBarButtonItems = headerLeftItems
+    ? prepareHeaderBarButtonItems(headerLeftItems, route.key)
     : undefined;
-  const preparedHeaderRightBarButtonItems = headerRightBarButtonItems
-    ? prepareHeaderBarButtonItems(headerRightBarButtonItems, route.key)
+  const preparedHeaderRightBarButtonItems = headerRightItems
+    ? prepareHeaderBarButtonItems(headerRightItems, route.key)
     : undefined;
   const hasHeaderBarButtonItems =
-    headerLeftBarButtonItems?.length || headerRightBarButtonItems?.length;
+    preparedHeaderLeftBarButtonItems?.length ||
+    preparedHeaderRightBarButtonItems?.length;
 
   // Handle bar button item presses
   const onPressHeaderBarButtonItem = hasHeaderBarButtonItems
@@ -290,7 +324,9 @@ export function useHeaderConfigProps({
           ...(preparedHeaderRightBarButtonItems ?? []),
         ].find(
           (item) =>
-            'onPress' in item && item.buttonId === event.nativeEvent.buttonId
+            item &&
+            'onPress' in item &&
+            item.buttonId === event.nativeEvent.buttonId
         );
         if (pressedItem && 'onPress' in pressedItem && pressedItem.onPress) {
           pressedItem.onPress();
@@ -327,7 +363,7 @@ export function useHeaderConfigProps({
           ...(preparedHeaderRightBarButtonItems ?? []),
         ];
         for (const item of allItems) {
-          if ('menu' in item && item.menu) {
+          if (item && 'menu' in item && item.menu) {
             const action = findInMenu(item.menu, menuId);
             if (action) {
               action.onPress();

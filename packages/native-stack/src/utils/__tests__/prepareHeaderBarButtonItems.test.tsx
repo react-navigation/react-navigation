@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals';
-import { Image } from 'react-native';
+import { Image, View } from 'react-native';
 
 import { prepareHeaderBarButtonItems } from '../prepareHeaderBarButtonItems';
 
@@ -12,8 +12,10 @@ jest.mock('react-native', () => ({
 
 type BarButtonItem = ReturnType<typeof prepareHeaderBarButtonItems>[number];
 
-function isSpacing(item: BarButtonItem): item is { spacing: number } {
-  return 'spacing' in item;
+function isSpacing(
+  item: BarButtonItem
+): item is { spacing: number; index: number } {
+  return item ? 'spacing' in item : false;
 }
 
 function hasButtonId(
@@ -89,7 +91,7 @@ describe('prepareHeaderBarButtonItems', () => {
   test('passes through spacing item', () => {
     const items = [{ spacing: 24 }];
     const result = prepareHeaderBarButtonItems(items, routeKey);
-    expect(result[0]).toEqual({ spacing: 24 });
+    expect(result[0]).toEqual({ index: 0, spacing: 24 });
   });
 
   test('processes a button with a menu and submenu', () => {
@@ -118,5 +120,16 @@ describe('prepareHeaderBarButtonItems', () => {
     expect(btn.menu.items[1]?.items[0]?.menuId).toContain(
       'Sub Action 1-0-1-route-key'
     );
+  });
+
+  test('adds index to each item', () => {
+    const items = [
+      { title: 'First', onPress: jest.fn() },
+      () => <View />,
+      { title: 'Second', onPress: jest.fn() },
+    ];
+    const result = prepareHeaderBarButtonItems(items, routeKey);
+    expect(result[0]?.index).toBe(0);
+    expect(result[2]?.index).toBe(2);
   });
 });

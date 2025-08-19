@@ -134,8 +134,6 @@ const SceneView = ({
     unstable_sheetFooter,
     freezeOnBlur,
     contentStyle,
-    headerLeftBarButtonItems,
-    headerRightBarButtonItems,
   } = options;
 
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
@@ -280,8 +278,6 @@ const SceneView = ({
     headerShown: header !== undefined ? false : headerShown,
     headerTopInsetEnabled,
     headerBack,
-    headerLeftBarButtonItems,
-    headerRightBarButtonItems,
   });
 
   return (
