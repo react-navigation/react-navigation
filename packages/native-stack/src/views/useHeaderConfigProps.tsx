@@ -18,8 +18,8 @@ import {
 } from 'react-native-screens';
 
 import {
-  type HeaderBarButtonItemMenuAction,
-  type HeaderBarButtonItemWithMenu,
+  type NativeStackHeaderBarButtonItemMenuAction,
+  type NativeStackHeaderBarButtonItemWithMenu,
   type NativeStackNavigationOptions,
 } from '../types';
 import { prepareHeaderBarButtonItems } from '../utils/prepareHeaderBarButtonItems';
@@ -340,9 +340,9 @@ export function useHeaderConfigProps({
         const { menuId } = event.nativeEvent;
         // Recursively search menu tree
         const findInMenu = (
-          menu: HeaderBarButtonItemWithMenu['menu'],
+          menu: NativeStackHeaderBarButtonItemWithMenu['menu'],
           menuId: string
-        ): HeaderBarButtonItemMenuAction | undefined => {
+        ): NativeStackHeaderBarButtonItemMenuAction | undefined => {
           for (const item of menu.items) {
             if ('items' in item) {
               // submenu: recurse

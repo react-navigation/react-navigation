@@ -1,14 +1,12 @@
 import { Image, processColor } from 'react-native';
 
 import type {
-  HeaderBarButtonItem,
-  HeaderBarButtonItemWithMenu,
-  HeaderLeftReactElement,
-  HeaderRightReactElement,
+  NativeStackHeaderBarButtonItem,
+  NativeStackHeaderBarButtonItemWithMenu,
 } from '../types';
 
 const prepareMenu = (
-  menu: HeaderBarButtonItemWithMenu['menu'],
+  menu: NativeStackHeaderBarButtonItemWithMenu['menu'],
   index: number,
   routeKey: string
 ): any => {
@@ -28,9 +26,8 @@ const prepareMenu = (
 
 export const prepareHeaderBarButtonItems = (
   barButtonItems: (
-    | HeaderLeftReactElement
-    | HeaderRightReactElement
-    | HeaderBarButtonItem
+    | ((props: any) => React.ReactNode)
+    | NativeStackHeaderBarButtonItem
   )[],
   routeKey: string
 ) => {

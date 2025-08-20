@@ -285,25 +285,31 @@ export type NativeStackNavigationOptions = {
    * Function which returns a React Element to display on the left side of the header.
    * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
    */
-  headerLeft?: HeaderLeftReactElement;
+  headerLeft?: (props: NativeStackHeaderLeftProps) => React.ReactNode;
   /**
    * Function which returns a React Element to display on the right side of the header.
    */
-  headerRight?: HeaderRightReactElement;
+  headerRight?: (props: NativeStackHeaderRightProps) => React.ReactNode;
   /**
    * Array of iOS native UIBarButtomItem or functions
    * that returns a React Element to the left side of the header.
    *
    * @platform ios
    */
-  headerLeftItems?: (HeaderBarButtonItem | HeaderLeftReactElement)[];
+  headerLeftItems?: (
+    | NativeStackHeaderBarButtonItem
+    | ((props: NativeStackHeaderLeftProps) => React.ReactNode)
+  )[];
   /**
    * Array of iOS native UIBarButtomItem or functions
    * that returns a React Element to the right side of the header.
    *
    * @platform ios
    */
-  headerRightItems?: (HeaderBarButtonItem | HeaderRightReactElement)[];
+  headerRightItems?: (
+    | NativeStackHeaderBarButtonItem
+    | ((props: NativeStackHeaderRightProps) => React.ReactNode)
+  )[];
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
@@ -807,7 +813,7 @@ interface SharedHeaderBarButtonItem {
   accessibilityHint?: string;
 }
 
-export interface HeaderBarButtonItemWithAction
+export interface NativeStackHeaderBarButtonItemWithAction
   extends SharedHeaderBarButtonItem {
   /**
    * Function to call when the button is pressed.
@@ -828,7 +834,7 @@ export interface HeaderBarButtonItemWithAction
   changesSelectionAsPrimaryAction?: boolean;
 }
 
-export interface HeaderBarButtonItemMenuAction {
+export interface NativeStackHeaderBarButtonItemMenuAction {
   title?: string;
   onPress: () => void;
   /**
@@ -854,32 +860,25 @@ export interface HeaderBarButtonItemMenuAction {
    */
   discoverabilityTitle?: string;
 }
-export interface HeaderBarButtonItemWithMenu extends SharedHeaderBarButtonItem {
+export interface NativeStackHeaderBarButtonItemWithMenu
+  extends SharedHeaderBarButtonItem {
   menu: {
     title?: string;
     items: (
-      | HeaderBarButtonItemMenuAction
-      | HeaderBarButtonItemWithMenu['menu']
+      | NativeStackHeaderBarButtonItemMenuAction
+      | NativeStackHeaderBarButtonItemWithMenu['menu']
     )[];
   };
 }
 
-export interface HeaderBarButtonItemSpacing {
+export interface NativeStackHeaderBarButtonItemSpacing {
   spacing: number;
 }
 
-export type HeaderBarButtonItem =
-  | HeaderBarButtonItemWithAction
-  | HeaderBarButtonItemWithMenu
-  | HeaderBarButtonItemSpacing;
-
-export type HeaderLeftReactElement = (
-  props: NativeStackHeaderLeftProps
-) => React.ReactNode;
-
-export type HeaderRightReactElement = (
-  props: NativeStackHeaderRightProps
-) => React.ReactNode;
+export type NativeStackHeaderBarButtonItem =
+  | NativeStackHeaderBarButtonItemWithAction
+  | NativeStackHeaderBarButtonItemWithMenu
+  | NativeStackHeaderBarButtonItemSpacing;
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
