@@ -24,7 +24,6 @@ import type {
   ScreenStackHeaderConfigProps,
   SearchBarProps,
 } from 'react-native-screens';
-import type { SFSymbol } from 'sf-symbols-typescript';
 
 export type NativeStackNavigationEventMap = {
   /**
@@ -726,7 +725,7 @@ interface SharedHeaderBarButtonItem {
   /**
    * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
    */
-  systemImage?: SFSymbol;
+  sfSymbolName?: string;
   /**
    * The style of the item.
    * "Prominent" only available from iOS 26.0 and later.
@@ -840,7 +839,7 @@ export interface NativeStackHeaderBarButtonItemMenuAction {
   /**
    * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
    */
-  systemImage?: SFSymbol;
+  sfSymbolName?: string;
   /**
    * State of the menu item.
    *
