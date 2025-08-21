@@ -27,15 +27,15 @@ export function SceneView<T extends Route>({
   subscribe,
   style,
 }: Props<T>) {
-  const [isLoading, setIsLoading] = React.useState(
-    Math.abs(navigationState.index - index) > lazyPreloadDistance
-  );
+  const isFocused = navigationState.index === index;
+  const isLoaded =
+    isFocused || Math.abs(navigationState.index - index) <= lazyPreloadDistance;
 
-  if (
-    isLoading &&
-    Math.abs(navigationState.index - index) <= lazyPreloadDistance
-  ) {
+  const [isLoading, setIsLoading] = React.useState(!isLoaded);
+
+  if (isLoading && isLoaded) {
     // Always render the route when it becomes focused
+    // Or close to the focused route based on preload distance
     setIsLoading(false);
   }
 
@@ -52,6 +52,7 @@ export function SceneView<T extends Route>({
             if (prevState) {
               return false;
             }
+
             return prevState;
           });
         }
@@ -68,10 +69,8 @@ export function SceneView<T extends Route>({
     };
   }, [subscribe, index, isLoading, lazy]);
 
-  const focused = navigationState.index === index;
-
   return (
-    <View aria-hidden={!focused} style={[styles.route, style]}>
+    <View aria-hidden={!isFocused} style={[styles.route, style]}>
       {children({ loading: isLoading })}
     </View>
   );
