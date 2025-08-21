@@ -18,7 +18,7 @@ const prepareMenu = (
       }
       return {
         ...menuItem,
-        menuId: `${menuItem.title ?? menuItem.systemImage}-${menuIndex}-${index}-${routeKey}`,
+        menuId: `${menuItem.title ?? menuItem.sfSymbolName}-${menuIndex}-${index}-${routeKey}`,
       };
     }),
   };
