@@ -1,6 +1,12 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
 import { type Route, useLocale, useTheme } from '@react-navigation/native';
-import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
+import {
+  type NativeSyntheticEvent,
+  Platform,
+  StyleSheet,
+  type TextStyle,
+  View,
+} from 'react-native';
 import {
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
@@ -11,7 +17,12 @@ import {
   SearchBar,
 } from 'react-native-screens';
 
-import type { NativeStackNavigationOptions } from '../types';
+import {
+  type NativeStackHeaderBarButtonItemMenuAction,
+  type NativeStackHeaderBarButtonItemWithMenu,
+  type NativeStackNavigationOptions,
+} from '../types';
+import { prepareHeaderBarButtonItems } from '../utils/prepareHeaderBarButtonItems';
 import { processFonts } from './FontProcessor';
 
 type Props = NativeStackNavigationOptions & {
@@ -49,6 +60,8 @@ export function useHeaderConfigProps({
   headerBack,
   route,
   title,
+  headerLeftItems,
+  headerRightItems,
 }: Props) {
   const { direction } = useLocale();
   const { colors, fonts } = useTheme();
@@ -191,7 +204,25 @@ export function useHeaderConfigProps({
     <>
       {Platform.OS === 'ios' ? (
         <>
-          {headerLeftElement != null ? (
+          {headerLeftItems ? (
+            headerLeftItems.map((item, index) => {
+              if (typeof item === 'function') {
+                return (
+                  // eslint-disable-next-line @eslint-react/no-array-index-key
+                  <ScreenStackHeaderLeftView key={index}>
+                    {item({
+                      tintColor,
+                      canGoBack,
+                      label: headerBackTitle ?? headerBack?.title,
+                      // `href` is only applicable to web
+                      href: undefined,
+                    })}
+                  </ScreenStackHeaderLeftView>
+                );
+              }
+              return null;
+            })
+          ) : headerLeftElement != null ? (
             <ScreenStackHeaderLeftView>
               {headerLeftElement}
             </ScreenStackHeaderLeftView>
@@ -247,7 +278,22 @@ export function useHeaderConfigProps({
       {headerBackImageSource !== undefined ? (
         <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
       ) : null}
-      {headerRightElement != null ? (
+      {headerRightItems ? (
+        headerRightItems.map((item, index) => {
+          if (typeof item === 'function') {
+            return (
+              // eslint-disable-next-line @eslint-react/no-array-index-key
+              <ScreenStackHeaderRightView key={index}>
+                {item({
+                  tintColor,
+                  canGoBack,
+                })}
+              </ScreenStackHeaderRightView>
+            );
+          }
+          return null;
+        })
+      ) : headerRightElement != null ? (
         <ScreenStackHeaderRightView>
           {headerRightElement}
         </ScreenStackHeaderRightView>
@@ -259,6 +305,74 @@ export function useHeaderConfigProps({
       ) : null}
     </>
   );
+
+  const preparedHeaderLeftBarButtonItems = headerLeftItems
+    ? prepareHeaderBarButtonItems(headerLeftItems, route.key)
+    : undefined;
+  const preparedHeaderRightBarButtonItems = headerRightItems
+    ? prepareHeaderBarButtonItems(headerRightItems, route.key)
+    : undefined;
+  const hasHeaderBarButtonItems =
+    preparedHeaderLeftBarButtonItems?.length ||
+    preparedHeaderRightBarButtonItems?.length;
+
+  // Handle bar button item presses
+  const onPressHeaderBarButtonItem = hasHeaderBarButtonItems
+    ? (event: NativeSyntheticEvent<{ buttonId: string }>) => {
+        const pressedItem = [
+          ...(preparedHeaderLeftBarButtonItems ?? []),
+          ...(preparedHeaderRightBarButtonItems ?? []),
+        ].find(
+          (item) =>
+            item &&
+            'onPress' in item &&
+            item.buttonId === event.nativeEvent.buttonId
+        );
+        if (pressedItem && 'onPress' in pressedItem && pressedItem.onPress) {
+          pressedItem.onPress();
+        }
+      }
+    : undefined;
+
+  // Handle bar button menu item presses by deep-searching nested menus
+  const onPressHeaderBarButtonMenuItem = hasHeaderBarButtonItems
+    ? (event: NativeSyntheticEvent<{ menuId: string }>) => {
+        const { menuId } = event.nativeEvent;
+        // Recursively search menu tree
+        const findInMenu = (
+          menu: NativeStackHeaderBarButtonItemWithMenu['menu'],
+          menuId: string
+        ): NativeStackHeaderBarButtonItemMenuAction | undefined => {
+          for (const item of menu.items) {
+            if ('items' in item) {
+              // submenu: recurse
+              const found = findInMenu(item, menuId);
+              if (found) {
+                return found;
+              }
+            } else if ('menuId' in item && item.menuId === menuId) {
+              return item;
+            }
+          }
+          return undefined;
+        };
+
+        // Check each bar-button item with a menu
+        const allItems = [
+          ...(preparedHeaderLeftBarButtonItems ?? []),
+          ...(preparedHeaderRightBarButtonItems ?? []),
+        ];
+        for (const item of allItems) {
+          if (item && 'menu' in item && item.menu) {
+            const action = findInMenu(item.menu, menuId);
+            if (action) {
+              action.onPress();
+              return;
+            }
+          }
+        }
+      }
+    : undefined;
 
   return {
     backButtonInCustomView,
@@ -297,5 +411,9 @@ export function useHeaderConfigProps({
     topInsetEnabled: headerTopInsetEnabled,
     translucent: translucent === true,
     children,
+    headerLeftBarButtonItems: preparedHeaderLeftBarButtonItems,
+    headerRightBarButtonItems: preparedHeaderRightBarButtonItems,
+    onPressHeaderBarButtonItem,
+    onPressHeaderBarButtonMenuItem,
   } as const;
 }
