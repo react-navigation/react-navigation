@@ -39,17 +39,17 @@ describe('prepareHeaderBarButtonItems', () => {
 
   test('processes a plain button', () => {
     const items = [{ title: 'Test', onPress: jest.fn() }];
-    const result = prepareHeaderBarButtonItems(items, routeKey);
+    const result = prepareHeaderBarButtonItems(items, routeKey, 'left');
     const btn = result.find(hasButtonId)!;
     expect(btn.title).toBe('Test');
-    expect(btn.buttonId).toContain('0-route-key');
+    expect(btn.buttonId).toBe('0-route-key-left');
   });
 
   test('processes an icon button', () => {
     const items = [
       { image: 123, onPress: jest.fn() }, // image as number
     ];
-    const result = prepareHeaderBarButtonItems(items, routeKey);
+    const result = prepareHeaderBarButtonItems(items, routeKey, 'left');
     const btn = result.find(hasButtonId)!;
     expect(Image.resolveAssetSource).toHaveBeenCalledWith(123);
     expect(btn.image).toEqual({ uri: 'resolved:123' });
@@ -65,7 +65,7 @@ describe('prepareHeaderBarButtonItems', () => {
         tintColor: 'blue',
       },
     ];
-    const result = prepareHeaderBarButtonItems(items, routeKey);
+    const result = prepareHeaderBarButtonItems(items, routeKey, 'left');
     const btn = result.find(hasButtonId)!;
     expect(btn.titleStyle).toEqual({ color: 'processed(red)', fontSize: 16 });
     expect(btn.tintColor).toBe('processed(blue)');
@@ -79,7 +79,7 @@ describe('prepareHeaderBarButtonItems', () => {
         badge: { value: '1', color: 'white', backgroundColor: 'red' },
       },
     ];
-    const result = prepareHeaderBarButtonItems(items, routeKey);
+    const result = prepareHeaderBarButtonItems(items, routeKey, 'left');
     const btn = result.find(hasButtonId)!;
     expect(btn.badge).toEqual({
       value: '1',
@@ -90,7 +90,7 @@ describe('prepareHeaderBarButtonItems', () => {
 
   test('passes through spacing item', () => {
     const items = [{ spacing: 24 }];
-    const result = prepareHeaderBarButtonItems(items, routeKey);
+    const result = prepareHeaderBarButtonItems(items, routeKey, 'left');
     expect(result[0]).toEqual({ index: 0, spacing: 24 });
   });
 
@@ -113,13 +113,11 @@ describe('prepareHeaderBarButtonItems', () => {
         },
       },
     ];
-    const result = prepareHeaderBarButtonItems(items, routeKey);
+    const result = prepareHeaderBarButtonItems(items, routeKey, 'left');
     const btn = result.find(hasMenu)!;
     expect(btn.menu.title).toBe('Main Menu');
-    expect(btn.menu.items[0]?.menuId).toContain('Action 1-0-0-route-key');
-    expect(btn.menu.items[1]?.items[0]?.menuId).toContain(
-      'Sub Action 1-0-1-route-key'
-    );
+    expect(btn.menu.items[0]?.menuId).toContain('0-0-route-key');
+    expect(btn.menu.items[1]?.items[0]?.menuId).toContain('0-1-route-key');
   });
 
   test('adds index to each item', () => {
@@ -128,8 +126,15 @@ describe('prepareHeaderBarButtonItems', () => {
       () => <View />,
       { title: 'Second', onPress: jest.fn() },
     ];
-    const result = prepareHeaderBarButtonItems(items, routeKey);
+    const result = prepareHeaderBarButtonItems(items, routeKey, 'left');
     expect(result[0]?.index).toBe(0);
     expect(result[2]?.index).toBe(2);
+  });
+
+  test('adds side right', () => {
+    const items = [{ title: 'Test', onPress: jest.fn() }];
+    const result = prepareHeaderBarButtonItems(items, routeKey, 'right');
+    const btn = result.find(hasButtonId)!;
+    expect(btn.buttonId).toBe('0-route-key-right');
   });
 });

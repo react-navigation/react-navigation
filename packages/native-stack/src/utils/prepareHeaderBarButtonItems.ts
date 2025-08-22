@@ -8,17 +8,18 @@ import type {
 const prepareMenu = (
   menu: NativeStackHeaderBarButtonItemWithMenu['menu'],
   index: number,
-  routeKey: string
+  routeKey: string,
+  side: 'left' | 'right'
 ): any => {
   return {
     ...menu,
     items: menu.items.map((menuItem, menuIndex) => {
       if ('items' in menuItem) {
-        return prepareMenu(menuItem, menuIndex, routeKey);
+        return prepareMenu(menuItem, menuIndex, routeKey, side);
       }
       return {
         ...menuItem,
-        menuId: `${menuItem.title ?? menuItem.sfSymbolName}-${menuIndex}-${index}-${routeKey}`,
+        menuId: `${menuIndex}-${index}-${routeKey}-${side}`,
       };
     }),
   };
@@ -29,7 +30,8 @@ export const prepareHeaderBarButtonItems = (
     | ((props: any) => React.ReactNode)
     | NativeStackHeaderBarButtonItem
   )[],
-  routeKey: string
+  routeKey: string,
+  side: 'left' | 'right'
 ) => {
   return barButtonItems?.map((item, index) => {
     if (typeof item === 'function') {
@@ -62,13 +64,13 @@ export const prepareHeaderBarButtonItems = (
     if ('onPress' in item) {
       return {
         ...processedItem,
-        buttonId: `${index}-${routeKey}`,
+        buttonId: `${index}-${routeKey}-${side}`,
       };
     }
     if ('menu' in item) {
       return {
         ...processedItem,
-        menu: prepareMenu(item.menu, index, routeKey),
+        menu: prepareMenu(item.menu, index, routeKey, side),
       };
     }
     return item;

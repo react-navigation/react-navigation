@@ -307,10 +307,10 @@ export function useHeaderConfigProps({
   );
 
   const preparedHeaderLeftBarButtonItems = headerLeftItems
-    ? prepareHeaderBarButtonItems(headerLeftItems, route.key)
+    ? prepareHeaderBarButtonItems(headerLeftItems, route.key, 'left')
     : undefined;
   const preparedHeaderRightBarButtonItems = headerRightItems
-    ? prepareHeaderBarButtonItems(headerRightItems, route.key)
+    ? prepareHeaderBarButtonItems(headerRightItems, route.key, 'right')
     : undefined;
   const hasHeaderBarButtonItems =
     preparedHeaderLeftBarButtonItems?.length ||
