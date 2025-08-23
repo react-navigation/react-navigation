@@ -68,12 +68,18 @@ export type LinkingPrefix = '*' | (string & {});
 export type LinkingOptions<ParamList extends {}> = {
   /**
    * Whether deep link handling should be enabled.
-   * Defaults to true.
+   *
+   * Defaults to `true` when a linking config is specified.
    */
   enabled?: boolean;
   /**
    * The prefixes are stripped from the URL before parsing them.
    * Usually they are the `scheme` + `host` (e.g. `myapp://chat?user=jane`)
+   *
+   * Defaults to `[*]`: Matches any scheme or domain, e.g.
+   * - `myapp://`
+   * - `https://example.com`
+   * - `https://subdomain.example.com`
    *
    * This is not supported on Web.
    *
@@ -83,12 +89,12 @@ export type LinkingOptions<ParamList extends {}> = {
    *    prefixes: [
    *      "myapp://", // App-specific scheme
    *      "https://example.com", // Prefix for universal links
-   *      "https://*.example.com" // Prefix which matches any subdomain
+   *      "https://*.example.com" // Prefix that matches any subdomain
    *    ]
    * }
    * ```
    */
-  prefixes: LinkingPrefix[];
+  prefixes?: LinkingPrefix[];
   /**
    * Optional function which takes an incoming URL returns a boolean
    * indicating whether React Navigation should handle it.

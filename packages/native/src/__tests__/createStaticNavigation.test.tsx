@@ -96,7 +96,7 @@ test('integrates with the history API', async () => {
     <Navigation
       ref={navigation}
       linking={{
-        prefixes: [],
+        enabled: true,
       }}
     />
   );
@@ -182,18 +182,16 @@ test("throws if linking is enabled but there's no linking configuration", () => 
   const Navigation = createStaticNavigation(Tab);
 
   expect(() => {
-    render(<Navigation linking={{ enabled: true, prefixes: ['myapp://'] }} />);
+    render(<Navigation linking={{ enabled: true }} />);
   }).toThrow(
     'Linking is enabled but no linking configuration was found for the screens.'
   );
 
   expect(() => {
-    render(<Navigation linking={{ enabled: false, prefixes: ['myapp://'] }} />);
+    render(<Navigation linking={{ enabled: false }} />);
   }).not.toThrow();
 
   expect(() => {
-    render(
-      <Navigation linking={{ enabled: 'auto', prefixes: ['myapp://'] }} />
-    );
+    render(<Navigation linking={{ enabled: 'auto' }} />);
   }).not.toThrow();
 });

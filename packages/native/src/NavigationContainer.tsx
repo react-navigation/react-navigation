@@ -82,7 +82,6 @@ function NavigationContainerInner(
 
   const { getInitialState } = useLinking(refContainer, {
     enabled: isLinkingEnabled,
-    prefixes: [],
     ...linking,
   });
 

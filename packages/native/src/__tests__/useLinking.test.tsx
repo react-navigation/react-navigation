@@ -10,7 +10,7 @@ import { useLinking } from '../useLinking';
 test('throws if multiple instances of useLinking are used', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
 
-  const options = { prefixes: [] };
+  const options = { enabled: true };
 
   function Sample() {
     useLinking(ref, options);

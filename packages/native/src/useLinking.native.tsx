@@ -21,7 +21,7 @@ export function useLinking(
   ref: React.RefObject<NavigationContainerRef<ParamListBase> | null>,
   {
     enabled = true,
-    prefixes,
+    prefixes = ['*'],
     filter,
     config,
     getInitialURL = () =>
