@@ -112,7 +112,7 @@ test('renders correct state with location', () => {
   const element = (
     <NavigationContainer<StackAParamList>
       linking={{
-        prefixes: [],
+        enabled: true,
         config: {
           screens: {
             Home: {

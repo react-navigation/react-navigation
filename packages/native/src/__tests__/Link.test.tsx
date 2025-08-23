@@ -12,7 +12,6 @@ jest.replaceProperty(Platform, 'OS', 'web');
 
 test('renders link with href on web', () => {
   const config = {
-    prefixes: ['https://example.com'],
     config: {
       screens: {
         Foo: 'foo',
@@ -103,7 +102,6 @@ test('renders link with href on web', () => {
 
 test("doesn't navigate if default was prevented", () => {
   const config = {
-    prefixes: ['https://example.com'],
     config: {
       screens: {
         Foo: 'foo',

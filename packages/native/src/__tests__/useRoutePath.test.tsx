@@ -12,7 +12,6 @@ import { NavigationContainer } from '../NavigationContainer';
 import { useRoutePath } from '../useRoutePath';
 
 const config = {
-  prefixes: ['https://example.com'],
   config: {
     screens: {
       a: {

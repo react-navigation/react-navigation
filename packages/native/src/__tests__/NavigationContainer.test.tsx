@@ -60,7 +60,6 @@ test('integrates with the history API', async () => {
     `${route.name} ${JSON.stringify(route.params)}`;
 
   const linking = {
-    prefixes: [],
     config: {
       screens: {
         Home: {

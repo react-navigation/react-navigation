@@ -7,7 +7,6 @@ import { NavigationContainer } from '../NavigationContainer';
 import { useLinkBuilder } from '../useLinkBuilder';
 
 const config = {
-  prefixes: ['https://example.com'],
   config: {
     screens: {
       Foo: {
