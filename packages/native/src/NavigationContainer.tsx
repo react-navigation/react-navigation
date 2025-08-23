@@ -68,8 +68,6 @@ function NavigationContainerInner(
   }: Props<ParamListBase>,
   ref?: React.Ref<NavigationContainerRef<ParamListBase> | null>
 ) {
-  const isLinkingEnabled = linking ? linking.enabled !== false : false;
-
   if (linking?.config) {
     validatePathConfig(linking.config);
   }
@@ -80,12 +78,28 @@ function NavigationContainerInner(
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);
 
-  const { getInitialState } = useLinking(refContainer, {
-    enabled: isLinkingEnabled,
-    ...linking,
-  });
+  const linkingConfig = React.useMemo(() => {
+    if (linking == null) {
+      return {
+        options: {
+          enabled: false,
+        },
+      };
+    }
 
-  const linkingContext = React.useMemo(() => ({ options: linking }), [linking]);
+    return {
+      options: {
+        ...linking,
+        enabled: linking.enabled !== false,
+        prefixes: linking.prefixes ?? ['*'],
+        getStateFromPath: linking?.getStateFromPath ?? getStateFromPath,
+        getPathFromState: linking?.getPathFromState ?? getPathFromState,
+        getActionFromState: linking?.getActionFromState ?? getActionFromState,
+      },
+    };
+  }, [linking]);
+
+  const { getInitialState } = useLinking(refContainer, linkingConfig.options);
 
   // Add additional linking related info to the ref
   // This will be used by the devtools
@@ -93,15 +107,7 @@ function NavigationContainerInner(
     if (refContainer.current) {
       REACT_NAVIGATION_DEVTOOLS.set(refContainer.current, {
         get linking() {
-          return {
-            ...linking,
-            enabled: isLinkingEnabled,
-            prefixes: linking?.prefixes ?? [],
-            getStateFromPath: linking?.getStateFromPath ?? getStateFromPath,
-            getPathFromState: linking?.getPathFromState ?? getPathFromState,
-            getActionFromState:
-              linking?.getActionFromState ?? getActionFromState,
-          };
+          return linkingConfig.options;
         },
       });
     }
@@ -114,7 +120,7 @@ function NavigationContainerInner(
   React.useImperativeHandle(ref, () => refContainer.current);
 
   const isLinkingReady =
-    rest.initialState != null || !isLinkingEnabled || isResolved;
+    rest.initialState != null || !linkingConfig.options.enabled || isResolved;
 
   if (!isLinkingReady) {
     return (
@@ -126,7 +132,7 @@ function NavigationContainerInner(
 
   return (
     <LocaleDirContext.Provider value={direction}>
-      <LinkingContext.Provider value={linkingContext}>
+      <LinkingContext.Provider value={linkingConfig}>
         <BaseNavigationContainer
           {...rest}
           theme={theme}
