@@ -73,13 +73,18 @@ export type LinkingOptions<ParamList extends {}> = {
    */
   enabled?: boolean;
   /**
-   * The prefixes are stripped from the URL before parsing them.
-   * Usually they are the `scheme` + `host` (e.g. `myapp://chat?user=jane`)
+   * The prefixes to match to determine whether to handle a URL.
    *
-   * Defaults to `[*]`: Matches any scheme or domain, e.g.
-   * - `myapp://`
-   * - `https://example.com`
-   * - `https://subdomain.example.com`
+   * Supported prefix formats:
+   * - `${scheme}://` - App-specific scheme, e.g. `myapp://`
+   * - `${protocol}://${host}` - Universal links or app links, e.g. `https://example.com`, `https://subdomain.example.com`
+   * - `${protocol}://*.${domain}` - Any subdomain of given domain, e.g. `https://*.example.com`
+   * - `${protocol}://${host}/${path}` - Subpath of given host, e.g. `https://example.com/app`
+   * - `*` - Any domain or subdomain with `http://` and `https://` as well as any app-specific scheme
+   *
+   * The prefix will be stripped from the URL before it's parsed.
+   *
+   * Defaults to `[*]`.
    *
    * This is not supported on Web.
    *
@@ -87,9 +92,9 @@ export type LinkingOptions<ParamList extends {}> = {
    * ```js
    * {
    *    prefixes: [
-   *      "myapp://", // App-specific scheme
-   *      "https://example.com", // Prefix for universal links
-   *      "https://*.example.com" // Prefix that matches any subdomain
+   *      "myapp://",
+   *      "https://example.com",
+   *      "https://*.example.com"
    *    ]
    * }
    * ```
