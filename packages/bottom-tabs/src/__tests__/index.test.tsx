@@ -152,7 +152,6 @@ test('tab bars render appropriate hrefs on web', () => {
   const { getByText } = render(
     <NavigationContainer
       linking={{
-        prefixes: [],
         config: {
           path: 'root',
           screens: {
