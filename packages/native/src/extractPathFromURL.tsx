@@ -26,10 +26,12 @@ export function extractPathFromURL(prefixes: LinkingPrefix[], url: string) {
     const [originAndPath, ...searchParams] = url.split('?');
 
     if (prefixRegex.test(originAndPath)) {
-      return originAndPath
+      const result = originAndPath
         .replace(prefixRegex, '')
         .replace(/\/+/g, '/')
         .concat(searchParams.length ? `?${searchParams.join('?')}` : '');
+
+      return result.startsWith('/') ? result : `/${result}`;
     }
   }
 
