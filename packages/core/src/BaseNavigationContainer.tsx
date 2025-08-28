@@ -15,6 +15,7 @@ import { checkSerializable } from './checkSerializable';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
 import { findFocusedRoute } from './findFocusedRoute';
+import { LoaderContext, useLoadingContainer } from './Loading';
 import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
@@ -133,6 +134,8 @@ export const BaseNavigationContainer = React.forwardRef(
         }
       }
     );
+
+    const loadingContext = useLoadingContainer();
 
     const canGoBack = useLatestCallback(() => {
       if (listeners.focus[0] == null) {
@@ -444,15 +447,17 @@ export const BaseNavigationContainer = React.forwardRef(
       <NavigationIndependentTreeContext.Provider value={false}>
         <NavigationContainerRefContext.Provider value={navigation}>
           <NavigationBuilderContext.Provider value={builderContext}>
-            <NavigationStateContext.Provider value={context}>
-              <UnhandledActionContext.Provider
-                value={onUnhandledAction ?? defaultOnUnhandledAction}
-              >
-                <EnsureSingleNavigator>
-                  <ThemeProvider value={theme}>{children}</ThemeProvider>
-                </EnsureSingleNavigator>
-              </UnhandledActionContext.Provider>
-            </NavigationStateContext.Provider>
+            <LoaderContext value={loadingContext}>
+              <NavigationStateContext.Provider value={context}>
+                <UnhandledActionContext.Provider
+                  value={onUnhandledAction ?? defaultOnUnhandledAction}
+                >
+                  <EnsureSingleNavigator>
+                    <ThemeProvider value={theme}>{children}</ThemeProvider>
+                  </EnsureSingleNavigator>
+                </UnhandledActionContext.Provider>
+              </NavigationStateContext.Provider>
+            </LoaderContext>
           </NavigationBuilderContext.Provider>
         </NavigationContainerRefContext.Provider>
       </NavigationIndependentTreeContext.Provider>

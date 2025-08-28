@@ -2,6 +2,7 @@ import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
+import { LoadedScreenWrapper } from './Loading';
 import type {
   DefaultNavigatorOptions,
   EventMapBase,
@@ -153,6 +154,7 @@ export type StaticConfigScreens<
          * Static navigation config or Component to render for the screen.
          */
         screen: StaticNavigation<any, any, any> | React.ComponentType<any>;
+        asyncScreen?: () => Promise<React.ComponentType<any>>;
       });
 };
 

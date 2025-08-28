@@ -7,6 +7,7 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
+import { LoaderContext } from './Loading';
 import {
   type ChildActionListener,
   type ChildBeforeRemoveListener,
@@ -52,6 +53,8 @@ export function useOnAction({
     addListener: addListenerParent,
     onDispatchAction,
   } = React.useContext(NavigationBuilderContext);
+
+  const { initiateLoading, cancelLoading } = React.useContext(LoaderContext);
 
   const routerConfigOptionsRef =
     React.useRef<RouterConfigOptions>(routerConfigOptions);
@@ -103,7 +106,26 @@ export function useOnAction({
               return true;
             }
 
-            setState(result);
+            // if action is handled by this navigator, cancel any existing loading first
+            cancelLoading();
+
+            console.log(action);
+            const loader = router.shouldActionLoadAsynchronously(
+              action,
+              routerConfigOptions.routeLoaderList
+            );
+            // const loaderCode =
+            if (loader) {
+              initiateLoading(
+                async () => {
+                  // console.log('in initiate loading');
+                  await loader();
+                },
+                () => setState(result)
+              );
+            } else {
+              setState(result);
+            }
           }
 
           if (onRouteFocusParent !== undefined) {
@@ -143,13 +165,16 @@ export function useOnAction({
     [
       actionListeners,
       beforeRemoveListeners,
+      cancelLoading,
       emitter,
       getState,
+      initiateLoading,
       key,
       onActionParent,
       onDispatchAction,
       onRouteFocusParent,
       router,
+      routerConfigOptions.routeLoaderList,
       setState,
     ]
   );

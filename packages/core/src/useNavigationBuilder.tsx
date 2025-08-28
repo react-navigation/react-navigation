@@ -18,6 +18,8 @@ import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
+import { ScreenLoaderContext } from './Loading';
+import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationRouteContext } from './NavigationRouteContext';
 import { NavigationStateContext } from './NavigationStateContext';
@@ -384,6 +386,33 @@ export function useNavigationBuilder<
     {}
   );
 
+  const componentsRef = React.useRef<
+    Record<string, Promise<React.ComponentType<any>> | undefined>
+  >({});
+
+  const routeLoaderList = routeNames.reduce<
+    RouterConfigOptions['routeLoaderList']
+  >((acc, curr) => {
+    const { loader, asyncScreen } = screens[curr].props;
+    if (loader || asyncScreen) {
+      acc[curr] = [];
+      if (loader) {
+        acc[curr].push(loader);
+      }
+      if (asyncScreen) {
+        const loadCode = async () => {
+          console.log('Loading screen for', curr);
+          const asyncScreenPromise = asyncScreen();
+          componentsRef.current[curr] = asyncScreenPromise;
+          await asyncScreenPromise;
+          console.log('Loaded screen for', curr);
+        };
+        acc[curr].push(loadCode);
+      }
+    }
+    return acc;
+  }, {});
+
   if (!routeNames.length) {
     throw new Error(
       "Couldn't find any screens for the navigator. Have you defined any screens as its children?"
@@ -466,6 +495,7 @@ export function useNavigationBuilder<
           routeNames,
           routeParamList: initialRouteParamList,
           routeGetIdList,
+          routeLoaderList,
         }),
         true,
       ];
@@ -497,6 +527,7 @@ export function useNavigationBuilder<
             routeNames,
             routeParamList: initialRouteParamList,
             routeGetIdList,
+            routeLoaderList,
           }
         ),
         false,
@@ -537,6 +568,7 @@ export function useNavigationBuilder<
       routeNames,
       routeParamList,
       routeGetIdList,
+      routeLoaderList,
       routeKeyChanges: Object.keys(routeKeyList).filter(
         (name) =>
           name in previousRouteKeyList &&
@@ -584,6 +616,7 @@ export function useNavigationBuilder<
           routeNames,
           routeParamList,
           routeGetIdList,
+          routeLoaderList,
         })
       : null;
 
@@ -593,6 +626,7 @@ export function useNavigationBuilder<
             routeNames,
             routeParamList,
             routeGetIdList,
+            routeLoaderList,
           })
         : nextState;
   }
@@ -732,6 +766,7 @@ export function useNavigationBuilder<
       routeNames,
       routeParamList,
       routeGetIdList,
+      routeLoaderList,
     },
     emitter,
   });
@@ -809,7 +844,9 @@ export function useNavigationBuilder<
     return (
       <NavigationHelpersContext.Provider value={navigation}>
         <NavigationStateListenerProvider state={state}>
-          <PreventRemoveProvider>{element}</PreventRemoveProvider>
+          <ScreenLoaderContext.Provider value={componentsRef}>
+            <PreventRemoveProvider>{element}</PreventRemoveProvider>
+          </ScreenLoaderContext.Provider>
         </NavigationStateListenerProvider>
       </NavigationHelpersContext.Provider>
     );

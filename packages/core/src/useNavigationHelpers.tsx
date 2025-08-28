@@ -83,6 +83,7 @@ export function useNavigationHelpers<
             routeNames: state.routeNames,
             routeParamList: {},
             routeGetIdList: {},
+            routeLoaderList: {},
           }) !== null ||
           parentNavigationHelpers?.canGoBack() ||
           false

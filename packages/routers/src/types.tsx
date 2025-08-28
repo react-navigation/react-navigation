@@ -79,6 +79,10 @@ export type Route<
    * Usually present when the screen was opened from a deep link.
    */
   path?: string;
+  /**
+   * loader... TODO
+   */
+  // loader?: () => Promise<void>;
 }> &
   (undefined extends Params
     ? Readonly<{
@@ -141,6 +145,7 @@ export type RouterConfigOptions = {
     | ((options: { params?: Record<string, any> }) => string | undefined)
     | undefined
   >;
+  routeLoaderList: Record<string, (() => Promise<void>)[] | undefined>;
 };
 
 export type Router<
@@ -225,4 +230,12 @@ export type Router<
    * Action creators for the router.
    */
   actionCreators?: ActionCreators<Action>;
+
+  /**
+   * TODO: Decide whether we want to support async actions in the router
+   */
+  shouldActionLoadAsynchronously(
+    action: Action,
+    routeLoaderList: Record<string, (() => Promise<void>)[] | undefined>
+  ): undefined | (() => Promise<void>);
 };

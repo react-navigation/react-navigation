@@ -565,7 +565,11 @@ type ScreenComponentType<
 export type RouteConfigComponent<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
-> =
+> = {
+  // TODO
+  loader?: () => Promise<void>;
+  asyncScreen?: () => Promise<ScreenComponentType<ParamList, RouteName>>;
+} & (
   | {
       /**
        * React component to render for this screen.
@@ -582,6 +586,14 @@ export type RouteConfigComponent<
       component?: never;
       children?: never;
     }
+  // | {
+  //     /**
+  //      * Asynchronously get a React component to render for this screen.
+  //      */
+  //     getComponent: () => Promise<ScreenComponentType<ParamList, RouteName>>;
+  //     component?: never;
+  //     children?: never;
+  //   }
   | {
       /**
        * Render callback to render content of this screen.
@@ -592,7 +604,9 @@ export type RouteConfigComponent<
       }) => React.ReactNode;
       component?: never;
       getComponent?: never;
-    };
+      asyncScreen: () => Promise<ScreenComponentType<ParamList, RouteName>>;
+    }
+);
 
 export type RouteConfigProps<
   ParamList extends ParamListBase,
