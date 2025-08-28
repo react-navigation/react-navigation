@@ -10,6 +10,7 @@ import {
 } from '@react-navigation/core';
 import * as React from 'react';
 
+import { extractPathFromURL } from './extractPathFromURL';
 import { LinkingContext } from './LinkingContext';
 
 type MinimalState = {
@@ -103,21 +104,44 @@ export function useLinkBuilder() {
 
   const buildAction = React.useCallback(
     (href: string) => {
-      if (!href.startsWith('/')) {
-        throw new Error(`The href must start with '/' (${href}).`);
+      let path;
+
+      if (href.startsWith('/')) {
+        path = href;
+      } else {
+        if (options?.prefixes == null || options.prefixes.length === 0) {
+          throw new Error(
+            `Failed to parse href '${href}'. It doesn't start with '/' and no prefixes are defined in linking config.`
+          );
+        }
+
+        path = extractPathFromURL(options.prefixes, href);
       }
 
-      const state = getStateFromPathHelper(href, options?.config);
+      if (path == null) {
+        throw new Error(
+          `Got invalid href '${href}'. It must start with '/' or match one of the prefixes: ${options?.prefixes?.map((prefix) => `'${prefix}'`).join(', ')}.`
+        );
+      }
+
+      const state = getStateFromPathHelper(path, options?.config);
 
       if (state) {
         const action = getActionFromStateHelper(state, options?.config);
 
         return action ?? CommonActions.reset(state);
       } else {
-        throw new Error('Failed to parse the href to a navigation state.');
+        throw new Error(
+          `Failed to parse href '${href}' to a navigation state.`
+        );
       }
     },
-    [options?.config, getStateFromPathHelper, getActionFromStateHelper]
+    [
+      getStateFromPathHelper,
+      options?.config,
+      options?.prefixes,
+      getActionFromStateHelper,
+    ]
   );
 
   return {
