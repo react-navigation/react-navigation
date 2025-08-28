@@ -4,29 +4,31 @@ import { extractPathFromURL } from '../extractPathFromURL';
 
 test('extracts path from URL with protocol', () => {
   expect(extractPathFromURL(['scheme://'], 'scheme://some/path')).toBe(
-    'some/path'
+    '/some/path'
   );
 
   expect(extractPathFromURL(['scheme://'], 'scheme:some/path')).toBe(
-    'some/path'
+    '/some/path'
   );
 
   expect(extractPathFromURL(['scheme://'], 'scheme:///some/path')).toBe(
-    'some/path'
+    '/some/path'
   );
 
   expect(extractPathFromURL(['scheme:///'], 'scheme:some/path')).toBe(
-    'some/path'
+    '/some/path'
   );
 
-  expect(extractPathFromURL(['scheme:'], 'scheme:some/path')).toBe('some/path');
+  expect(extractPathFromURL(['scheme:'], 'scheme:some/path')).toBe(
+    '/some/path'
+  );
 
   expect(extractPathFromURL(['scheme:'], 'scheme://some/path')).toBe(
-    'some/path'
+    '/some/path'
   );
 
   expect(extractPathFromURL(['scheme:'], 'scheme:///some/path')).toBe(
-    'some/path'
+    '/some/path'
   );
 });
 
@@ -77,7 +79,7 @@ test('extracts path from URL with protocol and host', () => {
 
   expect(
     extractPathFromURL(['scheme://example.com'], 'scheme://example.com')
-  ).toBe('');
+  ).toBe('/');
 });
 
 test('extracts path from URL with protocol and host with wildcard', () => {
@@ -239,7 +241,7 @@ test('extracts path from URL with IP address and port', () => {
   // Test empty path
   expect(
     extractPathFromURL(['http://127.0.0.1:19000'], 'http://127.0.0.1:19000')
-  ).toBe('');
+  ).toBe('/');
   expect(
     extractPathFromURL(['http://127.0.0.1:19000'], 'http://127.0.0.1:19000/')
   ).toBe('/');
@@ -390,12 +392,12 @@ test('returns a valid search query when it has a url as param', () => {
 
 test('supports wildcard prefix that matches any scheme', () => {
   // Test with various schemes
-  expect(extractPathFromURL(['*'], 'myapp:some/path')).toBe('some/path');
-  expect(extractPathFromURL(['*'], 'myapp://some/path')).toBe('some/path');
+  expect(extractPathFromURL(['*'], 'myapp:some/path')).toBe('/some/path');
+  expect(extractPathFromURL(['*'], 'myapp://some/path')).toBe('/some/path');
   expect(extractPathFromURL(['*'], 'myapp:///some/path')).toBe('/some/path');
 
   expect(extractPathFromURL(['*'], 'customscheme:path/to/resource')).toBe(
-    'path/to/resource'
+    '/path/to/resource'
   );
 });
 
@@ -417,7 +419,7 @@ test('supports wildcard prefix that matches any URL', () => {
     extractPathFromURL(['*'], 'https://example.com/path?param=value')
   ).toBe('/path?param=value');
 
-  expect(extractPathFromURL(['*'], 'https://example.com')).toBe('');
+  expect(extractPathFromURL(['*'], 'https://example.com')).toBe('/');
   expect(extractPathFromURL(['*'], 'https://example.com/')).toBe('/');
 });
 
@@ -443,7 +445,7 @@ test('supports wildcard prefix that matches IP addresses and ports', () => {
     '/secure/path'
   );
 
-  expect(extractPathFromURL(['*'], 'http://127.0.0.1:19000')).toBe('');
+  expect(extractPathFromURL(['*'], 'http://127.0.0.1:19000')).toBe('/');
   expect(extractPathFromURL(['*'], 'http://127.0.0.1:19000/')).toBe('/');
 
   expect(
