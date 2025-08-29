@@ -8,7 +8,7 @@ import {
 import * as React from 'react';
 import { Linking, Platform } from 'react-native';
 
-import { extractPathFromURL } from './extractPathFromURL';
+import { getStateFromHref } from './getStateFromHref';
 import type { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
@@ -106,15 +106,20 @@ export function useLinking(
 
   const getStateFromURL = React.useCallback(
     (url: string | null | undefined) => {
-      if (!url || (filterRef.current && !filterRef.current(url))) {
+      if (!url) {
         return undefined;
       }
 
-      const path = extractPathFromURL(prefixesRef.current, url);
-
-      return path !== undefined
-        ? getStateFromPathRef.current(path, configRef.current)
-        : undefined;
+      try {
+        return getStateFromHref(url, {
+          prefixes: prefixesRef.current,
+          filter: filterRef.current,
+          config: configRef.current,
+          getStateFromPath: getStateFromPathRef.current,
+        });
+      } catch (e) {
+        return undefined;
+      }
     },
     []
   );

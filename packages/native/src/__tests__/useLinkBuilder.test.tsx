@@ -466,7 +466,7 @@ test('throws for invalid hrefs', () => {
 });
 
 test('throws if no prefixes are defined', () => {
-  // expect.assertions(2);
+  expect.assertions(3);
 
   const Root = () => {
     const { buildAction } = useLinkBuilder();
@@ -491,6 +491,35 @@ test('throws if no prefixes are defined', () => {
       linking={{
         ...config,
         prefixes: [],
+      }}
+    >
+      <Root />
+    </NavigationContainer>
+  );
+});
+
+test('throws for hrefs that do not match the filter', () => {
+  expect.assertions(2);
+
+  const Root = () => {
+    const { buildAction } = useLinkBuilder();
+
+    expect(() => buildAction('https://myapp.org/foo/bar/42')).not.toThrow(
+      "Failed to parse href 'https://myapp.org/foo/bar/42'. It doesn't match the filter specified in linking config."
+    );
+
+    expect(() => buildAction('https://myapp.org/foo/bar/42+skip-this')).toThrow(
+      "Failed to parse href 'https://myapp.org/foo/bar/42+skip-this'. It doesn't match the filter specified in linking config."
+    );
+
+    return null;
+  };
+
+  render(
+    <NavigationContainer
+      linking={{
+        ...config,
+        filter: (href) => !href.includes('+skip-this'),
       }}
     >
       <Root />
