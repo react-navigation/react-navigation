@@ -3,14 +3,13 @@ import {
   findFocusedRoute,
   getActionFromState,
   getPathFromState,
-  getStateFromPath,
   NavigationHelpersContext,
   NavigationRouteContext,
   useStateForPath,
 } from '@react-navigation/core';
 import * as React from 'react';
 
-import { extractPathFromURL } from './extractPathFromURL';
+import { getStateFromHref } from './getStateFromHref';
 import { LinkingContext } from './LinkingContext';
 
 type MinimalState = {
@@ -31,7 +30,6 @@ export function useLinkBuilder() {
   const focusedRouteState = useStateForPath();
 
   const getPathFromStateHelper = options?.getPathFromState ?? getPathFromState;
-  const getStateFromPathHelper = options?.getStateFromPath ?? getStateFromPath;
   const getActionFromStateHelper =
     options?.getActionFromState ?? getActionFromState;
 
@@ -104,27 +102,7 @@ export function useLinkBuilder() {
 
   const buildAction = React.useCallback(
     (href: string) => {
-      let path;
-
-      if (href.startsWith('/')) {
-        path = href;
-      } else {
-        if (options?.prefixes == null || options.prefixes.length === 0) {
-          throw new Error(
-            `Failed to parse href '${href}'. It doesn't start with '/' and no prefixes are defined in linking config.`
-          );
-        }
-
-        path = extractPathFromURL(options.prefixes, href);
-      }
-
-      if (path == null) {
-        throw new Error(
-          `Got invalid href '${href}'. It must start with '/' or match one of the prefixes: ${options?.prefixes?.map((prefix) => `'${prefix}'`).join(', ')}.`
-        );
-      }
-
-      const state = getStateFromPathHelper(path, options?.config);
+      const state = getStateFromHref(href, options);
 
       if (state) {
         const action = getActionFromStateHelper(state, options?.config);
@@ -136,12 +114,7 @@ export function useLinkBuilder() {
         );
       }
     },
-    [
-      getStateFromPathHelper,
-      options?.config,
-      options?.prefixes,
-      getActionFromStateHelper,
-    ]
+    [options, getActionFromStateHelper]
   );
 
   return {
