@@ -40,18 +40,20 @@ export const CardA11yWrapper = React.forwardRef(
       <View
         aria-hidden={!focused}
         pointerEvents={(animated ? inert : !focused) ? 'none' : 'box-none'}
-        style={{
-          ...StyleSheet.absoluteFillObject,
-          // This is necessary to avoid unfocused larger pages increasing scroll area
-          // The issue can be seen on the web when a smaller screen is pushed over a larger one
-          overflow: active ? undefined : 'hidden',
-          // We use visibility on web
-          display: Platform.OS !== 'web' && isHidden ? 'none' : 'flex',
-          // Hide unfocused screens when animation isn't enabled
-          // This is also necessary for a11y on web
-          // @ts-expect-error visibility is only available on web
-          visibility: isHidden ? 'hidden' : 'visible',
-        }}
+        style={[
+          StyleSheet.absoluteFill,
+          {
+            // This is necessary to avoid unfocused larger pages increasing scroll area
+            // The issue can be seen on the web when a smaller screen is pushed over a larger one
+            overflow: active ? undefined : 'hidden',
+            // We use visibility on web
+            display: Platform.OS !== 'web' && isHidden ? 'none' : 'flex',
+            // Hide unfocused screens when animation isn't enabled
+            // This is also necessary for a11y on web
+            // @ts-expect-error visibility is only available on web
+            visibility: isHidden ? 'hidden' : 'visible',
+          },
+        ]}
         // Make sure this view is not removed on the new architecture, as it causes focus loss during navigation on Android.
         // This can happen when the view flattening results in different trees - due to `overflow` style changing in a parent.
         collapsable={false}

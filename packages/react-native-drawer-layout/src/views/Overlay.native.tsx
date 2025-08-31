@@ -33,7 +33,7 @@ export function Overlay({
   return (
     <Animated.View
       {...rest}
-      style={[styles.overlay, animatedStyle, style]}
+      style={[StyleSheet.absoluteFill, styles.overlay, animatedStyle, style]}
       animatedProps={animatedProps}
     >
       <Pressable
@@ -49,7 +49,6 @@ export function Overlay({
 
 const styles = StyleSheet.create({
   overlay: {
-    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   pressable: {
