@@ -253,24 +253,28 @@ export function BottomTabs() {
                   <Image
                     source={require('../../assets/album-art-03.jpg')}
                     resizeMode="cover"
-                    style={{
-                      ...StyleSheet.absoluteFillObject,
-                      // Override default size of the image
-                      height: 'auto',
-                      width: 'auto',
-                    }}
+                    style={[
+                      StyleSheet.absoluteFill,
+                      {
+                        // Override default size of the image
+                        height: 'auto',
+                        width: 'auto',
+                      },
+                    ]}
                   />
                 )}
                 <BlurView
                   tint="dark"
                   intensity={100}
-                  style={{
-                    ...StyleSheet.absoluteFillObject,
-                    end: isLargeScreen
-                      ? // Offset for right border of the sidebar
-                        -StyleSheet.hairlineWidth
-                      : 0,
-                  }}
+                  style={[
+                    StyleSheet.absoluteFill,
+                    {
+                      end: isLargeScreen
+                        ? // Offset for right border of the sidebar
+                          -StyleSheet.hairlineWidth
+                        : 0,
+                    },
+                  ]}
                 />
               </>
             ),

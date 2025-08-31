@@ -43,7 +43,11 @@ export function HeaderBackground({
       blurBackground = (
         <div
           style={{
-            ...StyleSheet.absoluteFillObject,
+            position: 'absolute',
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
             zIndex: -1,
             backgroundColor: blurBackgroundColor,
           }}
@@ -57,11 +61,13 @@ export function HeaderBackground({
         'backgroundColor' in flattenedStyle &&
         flattenedStyle.backgroundColor !== 'transparent' ? (
           <Animated.View
-            style={{
-              ...StyleSheet.absoluteFillObject,
-              zIndex: -1,
-              backgroundColor: flattenedStyle.backgroundColor,
-            }}
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                zIndex: -1,
+                backgroundColor: flattenedStyle.backgroundColor,
+              },
+            ]}
           />
         ) : null;
     }
