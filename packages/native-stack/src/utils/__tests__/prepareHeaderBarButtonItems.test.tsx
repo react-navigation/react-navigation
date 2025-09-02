@@ -12,22 +12,31 @@ jest.mock('react-native', () => ({
 
 type BarButtonItem = ReturnType<typeof prepareHeaderBarButtonItems>[number];
 
-function isSpacing(
-  item: BarButtonItem
-): item is { spacing: number; index: number } {
-  return item ? 'spacing' in item : false;
-}
-
 function hasButtonId(
   item: BarButtonItem
-): item is Exclude<BarButtonItem, { spacing: number }> & { buttonId: string } {
-  return !isSpacing(item) && typeof (item as any).buttonId === 'string';
+): item is Exclude<
+  BarButtonItem,
+  { spacing: number } | { isSubview: boolean }
+> & { buttonId: string } {
+  return item ? 'buttonId' in item : false;
 }
 
 function hasMenu(
   item: BarButtonItem
-): item is Exclude<BarButtonItem, { spacing: number }> & { menu: any } {
-  return !isSpacing(item) && typeof (item as any).menu === 'object';
+): item is Exclude<
+  BarButtonItem,
+  { spacing: number } | { isSubview: boolean }
+> & { menu: any } {
+  return item ? 'menu' in item : false;
+}
+
+function hasCustomView(
+  item: BarButtonItem
+): item is Exclude<
+  BarButtonItem,
+  { spacing: number } | { buttonId: boolean } | { menu: any }
+> & { isSubview: boolean } {
+  return item ? 'isSubview' in item : false;
 }
 
 describe('prepareHeaderBarButtonItems', () => {
@@ -123,11 +132,12 @@ describe('prepareHeaderBarButtonItems', () => {
   test('adds index to each item', () => {
     const items = [
       { title: 'First', onPress: jest.fn() },
-      () => <View />,
+      { customView: () => <View /> },
       { title: 'Second', onPress: jest.fn() },
     ];
     const result = prepareHeaderBarButtonItems(items, routeKey, 'left');
     expect(result[0]?.index).toBe(0);
+    expect(result[1]?.index).toBe(1);
     expect(result[2]?.index).toBe(2);
   });
 
@@ -136,5 +146,17 @@ describe('prepareHeaderBarButtonItems', () => {
     const result = prepareHeaderBarButtonItems(items, routeKey, 'right');
     const btn = result.find(hasButtonId)!;
     expect(btn.buttonId).toBe('0-route-key-right');
+  });
+
+  test('adds isSubview to custom view items', () => {
+    const items = [
+      { title: 'First', onPress: jest.fn() },
+      { customView: () => <View /> },
+      { title: 'Second', onPress: jest.fn() },
+    ];
+    const result = prepareHeaderBarButtonItems(items, routeKey, 'left');
+    const customView = result.find(hasCustomView)!;
+    expect(customView.isSubview).toBe(true);
+    expect(customView.index).toBe(1);
   });
 });

@@ -2,6 +2,7 @@ import { Image, processColor } from 'react-native';
 
 import type {
   NativeStackHeaderBarButtonItem,
+  NativeStackHeaderBarButtonItemWithCustomView,
   NativeStackHeaderBarButtonItemWithMenu,
 } from '../types';
 
@@ -27,15 +28,20 @@ const prepareMenu = (
 
 export const prepareHeaderBarButtonItems = (
   barButtonItems: (
-    | ((props: any) => React.ReactNode)
     | NativeStackHeaderBarButtonItem
+    | NativeStackHeaderBarButtonItemWithCustomView<any>
   )[],
   routeKey: string,
   side: 'left' | 'right'
 ) => {
   return barButtonItems?.map((item, index) => {
-    if (typeof item === 'function') {
-      return null;
+    if ('customView' in item) {
+      const { hidesSharedBackground } = item;
+      return {
+        hidesSharedBackground,
+        isSubview: true,
+        index,
+      };
     }
     if ('spacing' in item) {
       return { ...item, index };

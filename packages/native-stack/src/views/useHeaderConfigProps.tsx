@@ -206,11 +206,11 @@ export function useHeaderConfigProps({
         <>
           {headerLeftItems ? (
             headerLeftItems.map((item, index) => {
-              if (typeof item === 'function') {
+              if ('customView' in item) {
                 return (
                   // eslint-disable-next-line @eslint-react/no-array-index-key
                   <ScreenStackHeaderLeftView key={index}>
-                    {item({
+                    {item.customView({
                       tintColor,
                       canGoBack,
                       label: headerBackTitle ?? headerBack?.title,
@@ -280,11 +280,11 @@ export function useHeaderConfigProps({
       ) : null}
       {headerRightItems ? (
         headerRightItems.map((item, index) => {
-          if (typeof item === 'function') {
+          if ('customView' in item) {
             return (
               // eslint-disable-next-line @eslint-react/no-array-index-key
               <ScreenStackHeaderRightView key={index}>
-                {item({
+                {item.customView({
                   tintColor,
                   canGoBack,
                 })}

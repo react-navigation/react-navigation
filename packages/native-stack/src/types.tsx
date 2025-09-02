@@ -297,7 +297,7 @@ export type NativeStackNavigationOptions = {
    */
   headerLeftItems?: (
     | NativeStackHeaderBarButtonItem
-    | ((props: NativeStackHeaderLeftProps) => React.ReactNode)
+    | NativeStackHeaderBarButtonItemWithCustomView<NativeStackHeaderLeftProps>
   )[];
   /**
    * Array of iOS native UIBarButtomItem or functions
@@ -307,7 +307,7 @@ export type NativeStackNavigationOptions = {
    */
   headerRightItems?: (
     | NativeStackHeaderBarButtonItem
-    | ((props: NativeStackHeaderRightProps) => React.ReactNode)
+    | NativeStackHeaderBarButtonItemWithCustomView<NativeStackHeaderRightProps>
   )[];
   /**
    * String or a function that returns a React Element to be used by the header.
@@ -873,6 +873,17 @@ export interface NativeStackHeaderBarButtonItemWithMenu
 export interface NativeStackHeaderBarButtonItemSpacing {
   spacing: number;
 }
+
+export type NativeStackHeaderBarButtonItemWithCustomView<T> = {
+  customView: (props: T) => React.ReactNode;
+  /**
+   * A boolean value indicating whether the background this item may share with other items in the bar should be hidden.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/hidessharedbackground
+   */
+  hidesSharedBackground?: boolean;
+};
 
 export type NativeStackHeaderBarButtonItem =
   | NativeStackHeaderBarButtonItemWithAction
