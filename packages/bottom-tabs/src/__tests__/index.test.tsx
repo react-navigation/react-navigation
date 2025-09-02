@@ -49,10 +49,16 @@ test('renders a bottom tab navigator with screens', async () => {
   expect(queryByText('Screen B')).toBeNull();
 
   expect(
-    getAllByRole('button', { name: /(A|B), tab, (1|2) of 2/ })
+    getAllByRole('none', {
+      name: /(A|B)/,
+      value: { text: /(tab, 1 of 2|tab, 2 of 2)/ },
+    })
   ).toHaveLength(2);
 
-  fireEvent.press(getByRole('button', { name: 'B, tab, 2 of 2' }), {});
+  fireEvent.press(
+    getByRole('none', { name: 'B', value: { text: 'tab, 2 of 2' } }),
+    {}
+  );
 
   expect(queryByText('Screen B')).not.toBeNull();
 });
@@ -120,7 +126,10 @@ test('tab bar cannot be tapped when hidden', async () => {
 
   expect(queryByText('Screen B')).toBeNull();
 
-  fireEvent.press(getByRole('button', { name: 'B, tab, 2 of 2' }), {});
+  fireEvent.press(
+    getByRole('none', { name: 'B', value: { text: 'tab, 2 of 2' } }),
+    {}
+  );
 
   act(() => jest.runAllTimers());
 
@@ -134,7 +143,10 @@ test('tab bar cannot be tapped when hidden', async () => {
     );
   });
 
-  fireEvent.press(getByRole('button', { name: 'A, tab, 1 of 2' }), {});
+  fireEvent.press(
+    getByRole('none', { name: 'A', value: { text: 'tab, 1 of 2' } }),
+    {}
+  );
 
   act(() => jest.runAllTimers());
 
