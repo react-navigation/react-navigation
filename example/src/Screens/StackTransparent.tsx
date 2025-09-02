@@ -83,7 +83,10 @@ const DialogScreen = ({
 
   return (
     <View style={styles.container}>
-      <Pressable style={styles.backdrop} onPress={navigation.goBack} />
+      <Pressable
+        style={[StyleSheet.absoluteFill, styles.backdrop]}
+        onPress={navigation.goBack}
+      />
       <Animated.View
         style={[
           styles.dialog,
@@ -173,7 +176,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   backdrop: {
-    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   paragraph: {
