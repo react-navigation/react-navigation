@@ -14,7 +14,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { I18nManager, Platform, StyleSheet } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 import { Screen, ScreenContainer } from 'react-native-screens';
 import useLatestCallback from 'use-latest-callback';
@@ -220,6 +220,7 @@ function DrawerViewBase({
           const { lazy = true } = descriptor.options;
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
+          const isRTL = I18nManager.isRTL ?? document?.dir === 'rtl';
 
           if (
             lazy &&
@@ -230,7 +231,6 @@ function DrawerViewBase({
             // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
             return null;
           }
-
           const {
             freezeOnBlur,
             header = ({ options }: DrawerHeaderProps) => (
@@ -238,9 +238,18 @@ function DrawerViewBase({
                 {...options}
                 title={getHeaderTitle(options, route.name)}
                 headerLeft={
+                  ((isRTL && drawerPosition === 'right') ||
+                    (!isRTL && drawerPosition === 'left')) &&
                   options.headerLeft == null
                     ? (props) => <DrawerToggleButton {...props} />
                     : options.headerLeft
+                }
+                headerRight={
+                  ((!isRTL && drawerPosition === 'right') ||
+                    (isRTL && drawerPosition === 'left')) &&
+                  options.headerRight == null
+                    ? (props) => <DrawerToggleButton {...props} />
+                    : options.headerRight
                 }
               />
             ),
