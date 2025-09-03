@@ -14,7 +14,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { I18nManager, Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 import { Screen, ScreenContainer } from 'react-native-screens';
 import useLatestCallback from 'use-latest-callback';
@@ -58,6 +58,7 @@ function DrawerViewBase({
     Platform.OS === 'ios',
 }: Props) {
   const { direction } = useLocale();
+  const isRTL = direction === 'rtl';
 
   const focusedRouteKey = state.routes[state.index].key;
   const {
@@ -220,7 +221,6 @@ function DrawerViewBase({
           const { lazy = true } = descriptor.options;
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
-          const isRTL = I18nManager.isRTL ?? document?.dir === 'rtl';
 
           if (
             lazy &&
