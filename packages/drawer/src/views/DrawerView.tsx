@@ -238,14 +238,9 @@ function DrawerViewBase({
                 {...options}
                 title={getHeaderTitle(options, route.name)}
                 headerLeft={
-                  drawerPosition === 'left' && options.headerLeft == null
+                  options.headerLeft == null
                     ? (props) => <DrawerToggleButton {...props} />
                     : options.headerLeft
-                }
-                headerRight={
-                  drawerPosition === 'right' && options.headerRight == null
-                    ? (props) => <DrawerToggleButton {...props} />
-                    : options.headerRight
                 }
               />
             ),
