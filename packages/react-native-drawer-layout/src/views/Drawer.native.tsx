@@ -510,11 +510,7 @@ export function Drawer({
           ],
           [0, 1]
         );
-  }, [
-    drawerType,
-    layoutWidth,
-    translateX,
-  ]);
+  }, [drawerType, layoutWidth, translateX]);
 
   return (
     <GestureHandlerRootView style={[styles.container, style]}>
