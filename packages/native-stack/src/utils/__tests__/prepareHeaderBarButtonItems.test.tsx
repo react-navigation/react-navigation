@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals';
 import { Image, View } from 'react-native';
 
+import type { NativeStackHeaderBarButtonItemWithMenu } from '../../types';
 import { prepareHeaderBarButtonItems } from '../prepareHeaderBarButtonItems';
 
 jest.mock('react-native', () => ({
@@ -104,7 +105,7 @@ describe('prepareHeaderBarButtonItems', () => {
   });
 
   test('processes a button with a menu and submenu', () => {
-    const items = [
+    const items: NativeStackHeaderBarButtonItemWithMenu[] = [
       {
         title: 'Menu',
         menu: {
@@ -112,11 +113,15 @@ describe('prepareHeaderBarButtonItems', () => {
           items: [
             {
               title: 'Action 1',
+              type: 'action',
               onPress: jest.fn(),
             },
             {
               title: 'Submenu',
-              items: [{ title: 'Sub Action 1', onPress: jest.fn() }],
+              type: 'submenu',
+              items: [
+                { title: 'Sub Action 1', type: 'action', onPress: jest.fn() },
+              ],
             },
           ],
         },

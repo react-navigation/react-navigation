@@ -20,6 +20,7 @@ export type {
   NativeStackHeaderBarButtonItem,
   NativeStackHeaderBarButtonItemMenuAction,
   NativeStackHeaderBarButtonItemSpacing,
+  NativeStackHeaderBarButtonItemSubmenu,
   NativeStackHeaderBarButtonItemWithAction,
   NativeStackHeaderBarButtonItemWithCustomView,
   NativeStackHeaderBarButtonItemWithMenu,

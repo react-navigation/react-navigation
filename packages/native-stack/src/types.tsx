@@ -835,6 +835,7 @@ export interface NativeStackHeaderBarButtonItemWithAction
 
 export interface NativeStackHeaderBarButtonItemMenuAction {
   title?: string;
+  type: 'action';
   onPress: () => void;
   /**
    * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
@@ -859,13 +860,23 @@ export interface NativeStackHeaderBarButtonItemMenuAction {
    */
   discoverabilityTitle?: string;
 }
+
+export interface NativeStackHeaderBarButtonItemSubmenu {
+  title?: string;
+  type: 'submenu';
+  /**
+   * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
+   */
+  sfSymbolName?: string;
+  items: NativeStackHeaderBarButtonItemWithMenu['menu']['items'];
+}
 export interface NativeStackHeaderBarButtonItemWithMenu
   extends SharedHeaderBarButtonItem {
   menu: {
     title?: string;
     items: (
       | NativeStackHeaderBarButtonItemMenuAction
-      | NativeStackHeaderBarButtonItemWithMenu['menu']
+      | NativeStackHeaderBarButtonItemSubmenu
     )[];
   };
 }
