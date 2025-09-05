@@ -84,7 +84,7 @@ export const BaseRouter = {
     return action.type === 'NAVIGATE';
   },
 
-  shouldActionLoadAsynchronously(
+  createAsyncLoader(
     action: CommonNavigationAction,
     routeLoaderList: Record<
       string,
@@ -99,7 +99,6 @@ export const BaseRouter = {
       return [
         action.payload.name,
         (signal: AbortSignal) =>
-          // TODO abort
           Promise.all(routeLoaders.map((loader) => loader(signal))),
       ];
     }

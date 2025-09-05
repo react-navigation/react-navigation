@@ -116,7 +116,7 @@ export function useOnAction({
               return true;
             }
 
-            const loaderWrapper = router.shouldActionLoadAsynchronously(
+            const loaderWrapper = router.createAsyncLoader(
               action,
               routerConfigOptions.routeLoaderList
             );

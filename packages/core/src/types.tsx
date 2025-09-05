@@ -587,14 +587,6 @@ export type RouteConfigComponent<
       component?: never;
       children?: never;
     }
-  // | {
-  //     /**
-  //      * Asynchronously get a React component to render for this screen.
-  //      */
-  //     getComponent: () => Promise<ScreenComponentType<ParamList, RouteName>>;
-  //     component?: never;
-  //     children?: never;
-  //   }
   | {
       /**
        * Render callback to render content of this screen.

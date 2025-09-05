@@ -235,9 +235,9 @@ export type Router<
   actionCreators?: ActionCreators<Action>;
 
   /**
-   * TODO: Decide whether we want to support async actions in the router
+   * Decide whether we want to support async actions
    */
-  shouldActionLoadAsynchronously(
+  createAsyncLoader(
     action: Action,
     routeLoaderList: Record<
       string,
