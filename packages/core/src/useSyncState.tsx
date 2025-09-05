@@ -25,7 +25,6 @@ const createStore = <T,>(getInitialState: () => T) => {
   let didUpdate = false;
 
   const setState = (newState: T) => {
-    console.log('setState');
     state = deepFreeze(newState);
     didUpdate = true;
 

@@ -18,8 +18,11 @@ import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
-import { ScreenLoaderContext } from './Loading';
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import {
+  type LoadersEntries,
+  registerLoader,
+  ScreenLoaderContext,
+} from './Loading';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationRouteContext } from './NavigationRouteContext';
 import { NavigationStateContext } from './NavigationStateContext';
@@ -386,9 +389,22 @@ export function useNavigationBuilder<
     {}
   );
 
-  const componentsRef = React.useRef<
-    Record<string, Promise<React.ComponentType<any>> | undefined>
-  >({});
+  const loadersRef = React.useRef<{
+    loadersEntries: LoadersEntries;
+    invokeLoader: (name: string) => void;
+  }>({
+    loadersEntries: {},
+    invokeLoader(name: string) {
+      const routeLoaders = routeLoaderList[name];
+      if (!routeLoaders) {
+        return undefined;
+      }
+      const loaderWrapped = (signal?: AbortSignal) =>
+        Promise.all(routeLoaders.map((loader) => loader(signal)));
+
+      loadersRef.current.loadersEntries[name] = registerLoader(loaderWrapped);
+    },
+  });
 
   const routeLoaderList = routeNames.reduce<
     RouterConfigOptions['routeLoaderList']
@@ -401,11 +417,15 @@ export function useNavigationBuilder<
       }
       if (asyncScreen) {
         const loadCode = async () => {
-          console.log('Loading screen for', curr);
           const asyncScreenPromise = asyncScreen();
-          componentsRef.current[curr] = asyncScreenPromise;
-          await asyncScreenPromise;
-          console.log('Loaded screen for', curr);
+          const comp = await asyncScreenPromise;
+          if (!loadersRef.current.loadersEntries[curr]) {
+            throw new Error('Loader entry not found');
+          }
+          loadersRef.current.loadersEntries[curr] = {
+            ...loadersRef.current.loadersEntries[curr],
+            component: comp,
+          };
         };
         acc[curr].push(loadCode);
       }
@@ -769,6 +789,7 @@ export function useNavigationBuilder<
       routeLoaderList,
     },
     emitter,
+    loaders: loadersRef.current.loadersEntries,
   });
 
   const onRouteFocus = useOnRouteFocus({
@@ -844,7 +865,7 @@ export function useNavigationBuilder<
     return (
       <NavigationHelpersContext.Provider value={navigation}>
         <NavigationStateListenerProvider state={state}>
-          <ScreenLoaderContext.Provider value={componentsRef}>
+          <ScreenLoaderContext.Provider value={loadersRef.current}>
             <PreventRemoveProvider>{element}</PreventRemoveProvider>
           </ScreenLoaderContext.Provider>
         </NavigationStateListenerProvider>

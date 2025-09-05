@@ -6,8 +6,14 @@ import type {
   RouterConfigOptions,
 } from '@react-navigation/routers';
 import * as React from 'react';
+import { useContext } from 'react';
 
-import { LoaderContext } from './Loading';
+import {
+  type LoadersEntries,
+  LoadState,
+  registerLoader,
+  SyncContext,
+} from './Loading';
 import {
   type ChildActionListener,
   type ChildBeforeRemoveListener,
@@ -26,6 +32,7 @@ type Options = {
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
+  loaders: LoadersEntries;
 };
 
 /**
@@ -46,6 +53,7 @@ export function useOnAction({
   beforeRemoveListeners,
   routerConfigOptions,
   emitter,
+  loaders,
 }: Options) {
   const {
     onAction: onActionParent,
@@ -54,14 +62,14 @@ export function useOnAction({
     onDispatchAction,
   } = React.useContext(NavigationBuilderContext);
 
-  const { initiateLoading, cancelLoading } = React.useContext(LoaderContext);
-
   const routerConfigOptionsRef =
     React.useRef<RouterConfigOptions>(routerConfigOptions);
 
   React.useEffect(() => {
     routerConfigOptionsRef.current = routerConfigOptions;
   });
+
+  const { syncLoading, cancelLoading } = useContext(SyncContext);
 
   const onAction = React.useCallback(
     (
@@ -102,27 +110,29 @@ export function useOnAction({
               action
             );
 
+            cancelLoading();
+
             if (isPrevented) {
               return true;
             }
 
-            // if action is handled by this navigator, cancel any existing loading first
-            cancelLoading();
-
-            console.log(action);
-            const loader = router.shouldActionLoadAsynchronously(
+            const loaderWrapper = router.shouldActionLoadAsynchronously(
               action,
               routerConfigOptions.routeLoaderList
             );
-            // const loaderCode =
-            if (loader) {
-              initiateLoading(
-                async () => {
-                  // console.log('in initiate loading');
-                  await loader();
-                },
-                () => setState(result)
-              );
+            if (loaderWrapper) {
+              const [name, loader] = loaderWrapper;
+              const loaderEntry = registerLoader(loader, () => {
+                setState(result);
+              });
+              loaders[name] = loaderEntry;
+              syncLoading(() => {
+                // if the loading is interrupted
+                loaderEntry.abortController.abort(
+                  'aborted by navigation action'
+                );
+                loaderEntry.state = LoadState.Interrupted;
+              });
             } else {
               setState(result);
             }
@@ -168,14 +178,15 @@ export function useOnAction({
       cancelLoading,
       emitter,
       getState,
-      initiateLoading,
       key,
+      loaders,
       onActionParent,
       onDispatchAction,
       onRouteFocusParent,
       router,
       routerConfigOptions.routeLoaderList,
       setState,
+      syncLoading,
     ]
   );
 

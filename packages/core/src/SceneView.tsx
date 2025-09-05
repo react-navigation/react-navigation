@@ -5,7 +5,6 @@ import type {
   Route,
 } from '@react-navigation/routers';
 import * as React from 'react';
-import { useContext } from 'react';
 
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
 import {
@@ -205,8 +204,6 @@ export function SceneView<
   const ScreenComponent = screen.getComponent
     ? screen.getComponent()
     : screen.component;
-
-  console.log(ScreenComponent, screen.children);
 
   return (
     <NavigationStateContext.Provider value={context}>

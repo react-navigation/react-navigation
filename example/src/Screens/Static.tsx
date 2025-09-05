@@ -1,7 +1,5 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-// eslint-disable-next-line no-restricted-imports
-import { LoadedScreenWrapper } from '@react-navigation/core/src/Loading';
 import { Button, HeaderBackButton } from '@react-navigation/elements';
 import {
   createComponentForStaticNavigation,
@@ -9,7 +7,6 @@ import {
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { useMemo } from 'react';
 import {
   type ColorValue,
   Platform,
@@ -19,6 +16,7 @@ import {
 } from 'react-native';
 
 import { Albums } from '../Shared/Albums';
+import { Article } from '../Shared/Article';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
 
@@ -56,17 +54,12 @@ const AlbumsScreen = () => {
   );
 };
 
-const loadScreen = () =>
-  new Promise<React.ComponentType<any>>((resolve) => {
-    setTimeout(() => resolve(Contacts), 1000);
-  });
-
-const suspenseLayout = ({ children }) => (
+const suspenseLayout = ({ children }: { children: React.ReactNode }) => (
   <React.Suspense
     fallback={
       <View style={{ flex: 1, justifyContent: 'center' }}>
         <MaterialCommunityIcons
-          name="loading"
+          name="timelapse"
           size={32}
           style={{ textAlign: 'center' }}
           accessibilityLabel="Loading"
@@ -77,6 +70,11 @@ const suspenseLayout = ({ children }) => (
     {children}
   </React.Suspense>
 );
+
+const loadScreen = () =>
+  new Promise<React.ComponentType<any>>((resolve) => {
+    setTimeout(() => resolve(Contacts), 2000);
+  });
 
 const HomeTabs = createBottomTabNavigator({
   screenOptions: ({ theme, navigation }) => ({
@@ -94,33 +92,30 @@ const HomeTabs = createBottomTabNavigator({
       linking: 'albums',
     },
     Contacts: {
-      loader: () => {
+      loader: (signal: AbortSignal) => {
         // Simulate a network request
-        return new Promise((resolve) => {
-          setTimeout(resolve, 1000);
+
+        return new Promise<void>((resolve) => {
+          setTimeout(() => {
+            console.log(signal);
+            resolve();
+          }, 2000);
         });
       },
       layout: suspenseLayout,
       asyncScreen: loadScreen,
-      screen: LoadedScreenWrapper,
       options: {
         tabBarIcon: getTabBarIcon('contacts'),
       },
       linking: 'contacts',
     },
-    Contacts2: {
-      // loader: () => {
-      //   // Simulate a network request
-      //   return new Promise((resolve) => {
-      //     setTimeout(resolve, 1000);
-      //   });
-      // },
+    Article: {
       layout: suspenseLayout,
-      screen: Contacts,
+      screen: Article,
       options: {
-        tabBarIcon: getTabBarIcon('contacts'),
+        tabBarIcon: getTabBarIcon('file-document'),
       },
-      linking: 'contacts2',
+      linking: 'article',
     },
     Chat: {
       screen: Chat,

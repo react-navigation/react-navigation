@@ -153,9 +153,18 @@ export type StaticConfigScreens<
         /**
          * Static navigation config or Component to render for the screen.
          */
-        screen: StaticNavigation<any, any, any> | React.ComponentType<any>;
-        asyncScreen?: () => Promise<React.ComponentType<any>>;
-      });
+      } & (
+          | {
+              asyncScreen?: () => Promise<React.ComponentType<any>>;
+              screen?: never;
+            }
+          | {
+              asyncScreen?: never;
+              screen:
+                | StaticNavigation<any, any, any>
+                | React.ComponentType<any>;
+            }
+        ));
 };
 
 export type StaticConfigGroup<
@@ -335,15 +344,28 @@ const getItemsFromScreens = (
 
     let isNavigator = false;
 
-    if ('screen' in item) {
-      const { screen, if: _if, ...rest } = item;
+    if ('screen' in item || 'asyncScreen' in item) {
+      const { if: _if, ...rest } = item;
+      // we use wrapped as a screen which will read the component from context
+      let screen = item.screen;
+
+      if (item.asyncScreen) {
+        screen = LoadedScreenWrapper;
+      }
 
       useIf = _if;
       props = rest;
 
+      if (!item.asyncScreen && item.loader) {
+        // TODO for now once the screen has a loader but the screen is not async, we wrap it.
+        screen = LoadedScreenWrapper;
+        rest.asyncScreen = () =>
+          Promise.resolve(item.screen as React.ComponentType<any>);
+      }
+
       if (isValidElementType(screen)) {
         component = screen;
-      } else if ('config' in screen) {
+      } else if (screen && 'config' in screen) {
         isNavigator = true;
         component = createComponentForStaticNavigation(
           screen,
@@ -567,6 +589,7 @@ export function createPathConfigForStaticNavigation(
               );
             } else if (
               'screen' in item &&
+              item.screen &&
               'config' in item.screen &&
               (item.screen.config.screens || item.screen.config.groups)
             ) {

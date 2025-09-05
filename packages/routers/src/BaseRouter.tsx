@@ -86,14 +86,22 @@ export const BaseRouter = {
 
   shouldActionLoadAsynchronously(
     action: CommonNavigationAction,
-    routeLoaderList: Record<string, (() => Promise<void>)[] | undefined>
+    routeLoaderList: Record<
+      string,
+      ((signal?: AbortSignal) => Promise<any>)[] | undefined
+    >
   ) {
     if (action.type === 'NAVIGATE') {
       const routeLoaders = routeLoaderList?.[action.payload.name];
       if (!routeLoaders) {
         return undefined;
       }
-      return () => Promise.all(routeLoaders.map((loader) => loader()));
+      return [
+        action.payload.name,
+        (signal: AbortSignal) =>
+          // TODO abort
+          Promise.all(routeLoaders.map((loader) => loader(signal))),
+      ];
     }
     return undefined;
   },

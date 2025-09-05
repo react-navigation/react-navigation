@@ -145,7 +145,10 @@ export type RouterConfigOptions = {
     | ((options: { params?: Record<string, any> }) => string | undefined)
     | undefined
   >;
-  routeLoaderList: Record<string, (() => Promise<void>)[] | undefined>;
+  routeLoaderList: Record<
+    string,
+    ((signal?: AbortSignal) => Promise<any>)[] | undefined
+  >;
 };
 
 export type Router<
@@ -236,6 +239,9 @@ export type Router<
    */
   shouldActionLoadAsynchronously(
     action: Action,
-    routeLoaderList: Record<string, (() => Promise<void>)[] | undefined>
-  ): undefined | (() => Promise<void>);
+    routeLoaderList: Record<
+      string,
+      ((signal?: AbortSignal) => Promise<void>)[] | undefined
+    >
+  ): undefined | [string, () => Promise<void>];
 };

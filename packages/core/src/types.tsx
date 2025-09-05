@@ -10,6 +10,8 @@ import type {
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
+import type { Loader } from './Loading';
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace ReactNavigation {
@@ -566,8 +568,7 @@ export type RouteConfigComponent<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
 > = {
-  // TODO
-  loader?: () => Promise<void>;
+  loader?: Loader;
   asyncScreen?: () => Promise<ScreenComponentType<ParamList, RouteName>>;
 } & (
   | {
@@ -604,7 +605,6 @@ export type RouteConfigComponent<
       }) => React.ReactNode;
       component?: never;
       getComponent?: never;
-      asyncScreen: () => Promise<ScreenComponentType<ParamList, RouteName>>;
     }
 );
 
