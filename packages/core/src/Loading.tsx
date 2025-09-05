@@ -83,7 +83,6 @@ export function useLoadingSync() {
         currentLoaderCallback.current = undefined;
       },
       syncLoading: (callback: () => void) => {
-        currentLoaderCallback.current?.();
         currentLoaderCallback.current = callback;
       },
     }),
