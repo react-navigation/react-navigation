@@ -92,8 +92,22 @@ const HomeTabs = createBottomTabNavigator({
       linking: 'albums',
     },
     Contacts: {
+      loader: (signal: AbortSignal) => {
+        // Simulate a network request
+
+        return new Promise<void>((resolve) => {
+          setTimeout(() => {
+            console.log(signal);
+            resolve();
+          }, 2000);
+        });
+      },
       layout: suspenseLayout,
       asyncScreen: loadScreen,
+      options: {
+        tabBarIcon: getTabBarIcon('contacts'),
+      },
+      linking: 'contacts',
     },
     Article: {
       layout: suspenseLayout,
