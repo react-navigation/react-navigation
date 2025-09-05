@@ -101,7 +101,7 @@ describe('prepareHeaderBarButtonItems', () => {
   test('passes through spacing item', () => {
     const items = [{ spacing: 24 }];
     const result = prepareHeaderBarButtonItems(items, routeKey, 'left');
-    expect(result[0]).toEqual({ index: 0, spacing: 24 });
+    expect(result[0]).toEqual({ spacing: 24 });
   });
 
   test('processes a button with a menu and submenu', () => {
@@ -134,18 +134,6 @@ describe('prepareHeaderBarButtonItems', () => {
     expect(btn.menu.items[1]?.items[0]?.menuId).toContain('0-1-route-key');
   });
 
-  test('adds index to each item', () => {
-    const items = [
-      { title: 'First', onPress: jest.fn() },
-      { customView: () => <View /> },
-      { title: 'Second', onPress: jest.fn() },
-    ];
-    const result = prepareHeaderBarButtonItems(items, routeKey, 'left');
-    expect(result[0]?.index).toBe(0);
-    expect(result[1]?.index).toBe(1);
-    expect(result[2]?.index).toBe(2);
-  });
-
   test('adds side right', () => {
     const items = [{ title: 'Test', onPress: jest.fn() }];
     const result = prepareHeaderBarButtonItems(items, routeKey, 'right');
@@ -162,6 +150,5 @@ describe('prepareHeaderBarButtonItems', () => {
     const result = prepareHeaderBarButtonItems(items, routeKey, 'left');
     const customView = result.find(hasCustomView)!;
     expect(customView.isSubview).toBe(true);
-    expect(customView.index).toBe(1);
   });
 });

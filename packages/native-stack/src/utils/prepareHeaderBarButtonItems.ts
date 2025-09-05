@@ -40,11 +40,10 @@ export const prepareHeaderBarButtonItems = (
       return {
         hidesSharedBackground,
         isSubview: true,
-        index,
       };
     }
     if ('spacing' in item) {
-      return { ...item, index };
+      return item;
     }
     const image = item.image ? Image.resolveAssetSource(item.image) : undefined;
 
@@ -65,7 +64,6 @@ export const prepareHeaderBarButtonItems = (
       titleStyle,
       tintColor,
       badge,
-      index,
     };
     if ('onPress' in item) {
       return {
