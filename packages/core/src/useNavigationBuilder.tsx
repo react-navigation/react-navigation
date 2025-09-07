@@ -18,6 +18,11 @@ import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
+import {
+  type LoadersEntries,
+  registerLoader,
+  ScreenLoaderContext,
+} from './Loading';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationRouteContext } from './NavigationRouteContext';
 import { NavigationStateContext } from './NavigationStateContext';
@@ -384,6 +389,50 @@ export function useNavigationBuilder<
     {}
   );
 
+  const loadersRef = React.useRef<{
+    loadersEntries: LoadersEntries;
+    invokeLoader: (name: string) => void;
+  }>({
+    loadersEntries: {},
+    invokeLoader(name: string) {
+      const routeLoaders = routeLoaderList[name];
+      if (!routeLoaders) {
+        return undefined;
+      }
+      const loaderWrapped = (signal?: AbortSignal) =>
+        Promise.all(routeLoaders.map((loader) => loader(signal)));
+
+      loadersRef.current.loadersEntries[name] = registerLoader(loaderWrapped);
+    },
+  });
+
+  const routeLoaderList = routeNames.reduce<
+    RouterConfigOptions['routeLoaderList']
+  >((acc, curr) => {
+    const { loader, asyncScreen } = screens[curr].props;
+    if (loader || asyncScreen) {
+      acc[curr] = [];
+      if (loader) {
+        acc[curr].push(loader);
+      }
+      if (asyncScreen) {
+        const loadCode = async () => {
+          const asyncScreenPromise = asyncScreen();
+          const comp = await asyncScreenPromise;
+          if (!loadersRef.current.loadersEntries[curr]) {
+            throw new Error('Loader entry not found');
+          }
+          loadersRef.current.loadersEntries[curr] = {
+            ...loadersRef.current.loadersEntries[curr],
+            component: comp,
+          };
+        };
+        acc[curr].push(loadCode);
+      }
+    }
+    return acc;
+  }, {});
+
   if (!routeNames.length) {
     throw new Error(
       "Couldn't find any screens for the navigator. Have you defined any screens as its children?"
@@ -466,6 +515,7 @@ export function useNavigationBuilder<
           routeNames,
           routeParamList: initialRouteParamList,
           routeGetIdList,
+          routeLoaderList,
         }),
         true,
       ];
@@ -497,6 +547,7 @@ export function useNavigationBuilder<
             routeNames,
             routeParamList: initialRouteParamList,
             routeGetIdList,
+            routeLoaderList,
           }
         ),
         false,
@@ -537,6 +588,7 @@ export function useNavigationBuilder<
       routeNames,
       routeParamList,
       routeGetIdList,
+      routeLoaderList,
       routeKeyChanges: Object.keys(routeKeyList).filter(
         (name) =>
           name in previousRouteKeyList &&
@@ -584,6 +636,7 @@ export function useNavigationBuilder<
           routeNames,
           routeParamList,
           routeGetIdList,
+          routeLoaderList,
         })
       : null;
 
@@ -593,6 +646,7 @@ export function useNavigationBuilder<
             routeNames,
             routeParamList,
             routeGetIdList,
+            routeLoaderList,
           })
         : nextState;
   }
@@ -732,8 +786,10 @@ export function useNavigationBuilder<
       routeNames,
       routeParamList,
       routeGetIdList,
+      routeLoaderList,
     },
     emitter,
+    loaders: loadersRef.current.loadersEntries,
   });
 
   const onRouteFocus = useOnRouteFocus({
@@ -809,7 +865,9 @@ export function useNavigationBuilder<
     return (
       <NavigationHelpersContext.Provider value={navigation}>
         <NavigationStateListenerProvider state={state}>
-          <PreventRemoveProvider>{element}</PreventRemoveProvider>
+          <ScreenLoaderContext.Provider value={loadersRef.current}>
+            <PreventRemoveProvider>{element}</PreventRemoveProvider>
+          </ScreenLoaderContext.Provider>
         </NavigationStateListenerProvider>
       </NavigationHelpersContext.Provider>
     );

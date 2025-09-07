@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 
 import { Albums } from '../Shared/Albums';
+import { Article } from '../Shared/Article';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
 
@@ -53,6 +54,28 @@ const AlbumsScreen = () => {
   );
 };
 
+const suspenseLayout = ({ children }: { children: React.ReactNode }) => (
+  <React.Suspense
+    fallback={
+      <View style={{ flex: 1, justifyContent: 'center' }}>
+        <MaterialCommunityIcons
+          name="timelapse"
+          size={32}
+          style={{ textAlign: 'center' }}
+          accessibilityLabel="Loading"
+        />
+      </View>
+    }
+  >
+    {children}
+  </React.Suspense>
+);
+
+const loadScreen = () =>
+  new Promise<React.ComponentType<any>>((resolve) => {
+    setTimeout(() => resolve(Contacts), 2000);
+  });
+
 const HomeTabs = createBottomTabNavigator({
   screenOptions: ({ theme, navigation }) => ({
     headerLeft: (props) => (
@@ -69,11 +92,30 @@ const HomeTabs = createBottomTabNavigator({
       linking: 'albums',
     },
     Contacts: {
-      screen: Contacts,
+      loader: (signal: AbortSignal) => {
+        // Simulate a network request
+
+        return new Promise<void>((resolve) => {
+          setTimeout(() => {
+            console.log(signal);
+            resolve();
+          }, 2000);
+        });
+      },
+      layout: suspenseLayout,
+      asyncScreen: loadScreen,
       options: {
         tabBarIcon: getTabBarIcon('contacts'),
       },
       linking: 'contacts',
+    },
+    Article: {
+      layout: suspenseLayout,
+      screen: Article,
+      options: {
+        tabBarIcon: getTabBarIcon('file-document'),
+      },
+      linking: 'article',
     },
     Chat: {
       screen: Chat,

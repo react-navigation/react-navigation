@@ -192,6 +192,15 @@ export function SceneView<
     ]
   );
 
+  if (
+    typeof screen.getComponent === 'function' &&
+    screen.getComponent.constructor.name === 'AsyncFunction'
+  ) {
+    throw new Error(
+      `Invalid getComponent for screen "${screen.name}". getComponent must return a component, not a promise. If you are using React.lazy, make sure to wrap the usage of SceneView in a <React.Suspense> component.`
+    );
+  }
+
   const ScreenComponent = screen.getComponent
     ? screen.getComponent()
     : screen.component;

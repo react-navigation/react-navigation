@@ -83,4 +83,25 @@ export const BaseRouter = {
   shouldActionChangeFocus(action: CommonNavigationAction) {
     return action.type === 'NAVIGATE';
   },
+
+  createAsyncLoader(
+    action: CommonNavigationAction,
+    routeLoaderList: Record<
+      string,
+      ((signal?: AbortSignal) => Promise<any>)[] | undefined
+    >
+  ) {
+    if (action.type === 'NAVIGATE') {
+      const routeLoaders = routeLoaderList?.[action.payload.name];
+      if (!routeLoaders) {
+        return undefined;
+      }
+      return [
+        action.payload.name,
+        (signal: AbortSignal) =>
+          Promise.all(routeLoaders.map((loader) => loader(signal))),
+      ];
+    }
+    return undefined;
+  },
 };

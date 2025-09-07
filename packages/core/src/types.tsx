@@ -10,6 +10,8 @@ import type {
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
+import type { Loader } from './Loading';
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace ReactNavigation {
@@ -565,7 +567,10 @@ type ScreenComponentType<
 export type RouteConfigComponent<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
-> =
+> = {
+  loader?: Loader;
+  asyncScreen?: () => Promise<ScreenComponentType<ParamList, RouteName>>;
+} & (
   | {
       /**
        * React component to render for this screen.
@@ -592,7 +597,8 @@ export type RouteConfigComponent<
       }) => React.ReactNode;
       component?: never;
       getComponent?: never;
-    };
+    }
+);
 
 export type RouteConfigProps<
   ParamList extends ParamListBase,

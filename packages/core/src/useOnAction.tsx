@@ -6,7 +6,14 @@ import type {
   RouterConfigOptions,
 } from '@react-navigation/routers';
 import * as React from 'react';
+import { useContext } from 'react';
 
+import {
+  type LoadersEntries,
+  LoadState,
+  registerLoader,
+  SyncContext,
+} from './Loading';
 import {
   type ChildActionListener,
   type ChildBeforeRemoveListener,
@@ -25,6 +32,7 @@ type Options = {
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
+  loaders: LoadersEntries;
 };
 
 /**
@@ -45,6 +53,7 @@ export function useOnAction({
   beforeRemoveListeners,
   routerConfigOptions,
   emitter,
+  loaders,
 }: Options) {
   const {
     onAction: onActionParent,
@@ -59,6 +68,8 @@ export function useOnAction({
   React.useEffect(() => {
     routerConfigOptionsRef.current = routerConfigOptions;
   });
+
+  const { syncLoading, cancelLoading } = useContext(SyncContext);
 
   const onAction = React.useCallback(
     (
@@ -99,11 +110,32 @@ export function useOnAction({
               action
             );
 
+            cancelLoading();
+
             if (isPrevented) {
               return true;
             }
 
-            setState(result);
+            const loaderWrapper = router.createAsyncLoader(
+              action,
+              routerConfigOptions.routeLoaderList
+            );
+            if (loaderWrapper) {
+              const [name, loader] = loaderWrapper;
+              const loaderEntry = registerLoader(loader, () => {
+                setState(result);
+              });
+              loaders[name] = loaderEntry;
+              syncLoading(() => {
+                // if the loading is interrupted
+                loaderEntry.abortController.abort(
+                  'aborted by navigation action'
+                );
+                loaderEntry.state = LoadState.Interrupted;
+              });
+            } else {
+              setState(result);
+            }
           }
 
           if (onRouteFocusParent !== undefined) {
@@ -143,14 +175,18 @@ export function useOnAction({
     [
       actionListeners,
       beforeRemoveListeners,
+      cancelLoading,
       emitter,
       getState,
       key,
+      loaders,
       onActionParent,
       onDispatchAction,
       onRouteFocusParent,
       router,
+      routerConfigOptions.routeLoaderList,
       setState,
+      syncLoading,
     ]
   );
 
