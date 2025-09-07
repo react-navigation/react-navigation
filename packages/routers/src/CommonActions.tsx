@@ -47,6 +47,13 @@ type ReplaceParamsAction = {
   target?: string;
 };
 
+type PushParamsAction = {
+  type: 'PUSH_PARAMS';
+  payload: { params?: object };
+  source?: string;
+  target?: string;
+};
+
 type PreloadAction = {
   type: 'PRELOAD';
   payload: {
@@ -63,6 +70,7 @@ export type Action =
   | ResetAction
   | SetParamsAction
   | ReplaceParamsAction
+  | PushParamsAction
   | PreloadAction;
 
 export function goBack(): Action {
@@ -128,6 +136,13 @@ export function replaceParams(params: object) {
     type: 'REPLACE_PARAMS',
     payload: { params },
   } as const satisfies ReplaceParamsAction;
+}
+
+export function pushParams(params: object) {
+  return {
+    type: 'PUSH_PARAMS',
+    payload: { params },
+  } as const satisfies PushParamsAction;
 }
 
 export function preload(name: string, params?: object) {

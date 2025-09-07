@@ -48,6 +48,7 @@ const ArticleScreen = ({
         <Button screen="Home" variant="filled">
           Go to Home
         </Button>
+
         <Button variant="tinted" action={CommonActions.goBack()}>
           Go back
         </Button>
@@ -61,7 +62,19 @@ const ArticleScreen = ({
             })
           }
         >
-          Update params
+          Replace params
+        </Button>
+
+        <Button
+          variant="tinted"
+          onPress={() =>
+            navigation.pushParams({
+              author:
+                route.params?.author === 'Gandalf' ? 'Babel fish' : 'Gandalf',
+            })
+          }
+        >
+          Push params
         </Button>
 
         {Platform.OS === 'web' && (

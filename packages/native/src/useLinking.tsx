@@ -18,6 +18,21 @@ import type { LinkingOptions } from './types';
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
 /**
+ * Calculate total history length including both navigator history and route history
+ */
+const getTotalHistoryLength = (state: NavigationState): number => {
+  const baseHistoryLength = state.history
+    ? state.history.length
+    : state.routes.length;
+
+  const routeHistoryLength = state.routes.reduce((acc, r) => {
+    return acc + (r.history ? r.history.length : 0);
+  }, 0);
+
+  return baseHistoryLength + routeHistoryLength;
+};
+
+/**
  * Find the matching navigation state that changed between 2 navigation states
  * e.g.: a -> b -> c -> d and a -> b -> c -> e -> f, if history in b changed, b is the matching state
  */
@@ -29,9 +44,8 @@ const findMatchingState = <T extends NavigationState>(
     return [undefined, undefined];
   }
 
-  // Tab and drawer will have `history` property, but stack will have history in `routes`
-  const aHistoryLength = a.history ? a.history.length : a.routes.length;
-  const bHistoryLength = b.history ? b.history.length : b.routes.length;
+  const aHistoryLength = getTotalHistoryLength(a);
+  const bHistoryLength = getTotalHistoryLength(b);
 
   const aRoute = a.routes[a.index];
   const bRoute = b.routes[b.index];
@@ -40,13 +54,15 @@ const findMatchingState = <T extends NavigationState>(
   const bChildState = bRoute.state as T | undefined;
 
   // Stop here if this is the state object that changed:
-  // - history length is different
+  // - total history length is different (including route.history)
   // - focused routes are different
+  // - route.history length is different
   // - one of them doesn't have child state
   // - child state keys are different
   if (
     aHistoryLength !== bHistoryLength ||
     aRoute.key !== bRoute.key ||
+    (aRoute.history?.length || 0) !== (bRoute.history?.length || 0) ||
     aChildState === undefined ||
     bChildState === undefined ||
     aChildState.key !== bChildState.key
@@ -365,12 +381,8 @@ export function useLinking(
         path !== pendingPath
       ) {
         const historyDelta =
-          (focusedState.history
-            ? focusedState.history.length
-            : focusedState.routes.length) -
-          (previousFocusedState.history
-            ? previousFocusedState.history.length
-            : previousFocusedState.routes.length);
+          getTotalHistoryLength(focusedState) -
+          getTotalHistoryLength(previousFocusedState);
 
         if (historyDelta > 0) {
           // If history length is increased, we should pushState
