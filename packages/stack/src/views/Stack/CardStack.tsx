@@ -1,6 +1,7 @@
 import {
   getDefaultHeaderHeight,
   SafeAreaProviderCompat,
+  TransparentModalContext,
 } from '@react-navigation/elements';
 import type {
   LocaleDirection,
@@ -604,6 +605,10 @@ export class CardStack extends React.Component<Props, State> {
     const focusedRoute = state.routes[state.index];
     const focusedHeaderHeight = headerHeights[focusedRoute.key];
 
+    // Check if there's a transparent modal currently visible on top
+    const hasTransparentModal = scenes.length > 0 && 
+      scenes[scenes.length - 1]?.descriptor.options.presentation === 'transparentModal';
+
     const isFloatHeaderAbsolute = this.state.scenes.slice(-2).some((scene) => {
       const options = scene.descriptor.options ?? {};
       const { headerMode, headerTransparent, headerShown = true } = options;
@@ -673,13 +678,14 @@ export class CardStack extends React.Component<Props, State> {
     );
 
     return (
-      <View style={styles.container}>
-        {isFloatHeaderAbsolute ? null : floatingHeader}
-        <ScreenContainer
-          enabled={detachInactiveScreens}
-          style={styles.container}
-          onLayout={this.handleLayout}
-        >
+      <TransparentModalContext.Provider value={hasTransparentModal}>
+        <View style={styles.container}>
+          {isFloatHeaderAbsolute ? null : floatingHeader}
+          <ScreenContainer
+            enabled={detachInactiveScreens}
+            style={styles.container}
+            onLayout={this.handleLayout}
+          >
           {[...routes, ...state.preloadedRoutes].map((route, index) => {
             const focused = focusedRoute.key === route.key;
             const gesture = gestures[route.key];
@@ -810,6 +816,7 @@ export class CardStack extends React.Component<Props, State> {
         </ScreenContainer>
         {isFloatHeaderAbsolute ? floatingHeader : null}
       </View>
+      </TransparentModalContext.Provider>
     );
   }
 }

@@ -1,4 +1,4 @@
-import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
+import { getHeaderTitle, HeaderBackContext, TransparentModalContext } from '@react-navigation/elements';
 import {
   NavigationContext,
   NavigationRouteContext,
@@ -52,6 +52,7 @@ export function HeaderContainer({
   const focusedRoute = getFocusedRoute();
   const parentHeaderBack = React.useContext(HeaderBackContext);
   const { buildHref } = useLinkBuilder();
+  const isTransparentModalVisible = React.useContext(TransparentModalContext);
 
   return (
     <Animated.View style={[styles.container, style]}>
@@ -160,7 +161,7 @@ export function HeaderContainer({
                       }
                     : undefined
                 }
-                aria-hidden={!isFocused}
+                aria-hidden={!isFocused || isTransparentModalVisible}
                 style={[
                   // Avoid positioning the focused header absolutely
                   // Otherwise accessibility tools don't seem to be able to find it
