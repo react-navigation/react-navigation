@@ -1,4 +1,8 @@
-import { getHeaderTitle, HeaderBackContext, TransparentModalContext } from '@react-navigation/elements';
+import {
+  getHeaderTitle,
+  HeaderBackContext,
+  TransparentModalContext,
+} from '@react-navigation/elements';
 import {
   NavigationContext,
   NavigationRouteContext,
