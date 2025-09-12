@@ -8,6 +8,7 @@ import { BottomTabs } from './Screens/BottomTabs';
 import { NavigatorLayout } from './Screens/CustomLayout';
 import { DrawerView } from './Screens/DrawerView';
 import { DynamicTabs } from './Screens/DynamicTabs';
+import { ExperimentalBottomTabs } from './Screens/ExperimentalBottomTabs';
 import { FullHistoryTabs } from './Screens/FullHistoryTabs';
 import { Headers } from './Screens/Headers';
 import { ScreenLayout } from './Screens/Layouts';
@@ -43,6 +44,7 @@ export const SCREENS = {
   NativeStackHeaderCustomization,
   Headers,
   BottomTabs,
+  ExperimentalBottomTabs,
   MaterialTopTabsScreen,
   DynamicTabs,
   FullHistoryTabs,

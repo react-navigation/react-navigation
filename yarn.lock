@@ -4335,7 +4335,7 @@ __metadata:
     react-native: "npm:0.79.3"
     react-native-builder-bob: "npm:^0.40.12"
     react-native-safe-area-context: "npm:5.5.0"
-    react-native-screens: "npm:~4.11.1"
+    react-native-screens: "npm:~4.16.0"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
   peerDependencies:
@@ -4484,6 +4484,7 @@ __metadata:
     expo: "npm:^53.0.11"
     expo-asset: "npm:~11.1.5"
     expo-blur: "npm:~14.1.5"
+    expo-build-properties: "npm:~0.14.8"
     expo-linking: "npm:~7.1.5"
     expo-splash-screen: "npm:~0.30.9"
     expo-status-bar: "npm:~2.2.3"
@@ -4502,7 +4503,7 @@ __metadata:
     react-native-pager-view: "npm:6.8.1"
     react-native-reanimated: "npm:~3.18.0"
     react-native-safe-area-context: "npm:5.5.0"
-    react-native-screens: "npm:~4.11.1"
+    react-native-screens: "npm:~4.16.0"
     react-native-web: "npm:~0.21.0"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
@@ -8776,6 +8777,18 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/4ffe9014219f23d53f66bc61ea5d00b74a012d120f94a810c71cbdd34901900282a40f7d0636877cd261bc7ff8a3db20da2e0be9393b1a950b8fc677e285bf65
+  languageName: node
+  linkType: hard
+
+"expo-build-properties@npm:~0.14.8":
+  version: 0.14.8
+  resolution: "expo-build-properties@npm:0.14.8"
+  dependencies:
+    ajv: "npm:^8.11.0"
+    semver: "npm:^7.6.0"
+  peerDependencies:
+    expo: "*"
+  checksum: 10c0/7c41bd282f0a35ce73da82d5a4bfcfe88ce3a1bf34737bcd06c9f2d4f7100bbf31653ff0171d92c18a13f5322f831b224f9e47bf5b05df8f15d9514d53d0c51b
   languageName: node
   linkType: hard
 
@@ -14052,6 +14065,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-is-edge-to-edge@npm:^1.2.1":
+  version: 1.2.1
+  resolution: "react-native-is-edge-to-edge@npm:1.2.1"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/87d20b900aded7d44c90afb946a7aa03c23a94ca3dd547bdddc2303b85357e4aab22567a57b19f1558d6c8be7058e3dcf34faa1e15182d1604f90974266d9a1d
+  languageName: node
+  linkType: hard
+
 "react-native-monorepo-config@npm:^0.1.8, react-native-monorepo-config@npm:^0.1.9":
   version: 0.1.9
   resolution: "react-native-monorepo-config@npm:0.1.9"
@@ -14117,6 +14140,20 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/88a33ba419bd571cc318e80d25eb172f5829677f2dd80dcb69cbeaa6a35ba26214e0e82af87baa375182afe41a276e8ef1a9d13b826f662f3a389982492c2879
+  languageName: node
+  linkType: hard
+
+"react-native-screens@npm:~4.16.0":
+  version: 4.16.0
+  resolution: "react-native-screens@npm:4.16.0"
+  dependencies:
+    react-freeze: "npm:^1.0.0"
+    react-native-is-edge-to-edge: "npm:^1.2.1"
+    warn-once: "npm:^0.1.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/8ec459ff52cbd317bfca598843a0010b4ca9070d05664f28d792594d8ceabb398b9d68abb578f40295e41f906308efe7ac7359046fba7aaf318a0d9d65446102
   languageName: node
   linkType: hard
 
