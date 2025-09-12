@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler/jestSetup';
+
 import { expect, test } from '@jest/globals';
 import { Text } from '@react-navigation/elements';
 import {
@@ -6,8 +8,11 @@ import {
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { Button, View } from 'react-native';
+import { setUpTests } from 'react-native-reanimated';
 
 import { createDrawerNavigator, type DrawerScreenProps } from '../index';
+
+setUpTests();
 
 type DrawerParamList = {
   A: undefined;
