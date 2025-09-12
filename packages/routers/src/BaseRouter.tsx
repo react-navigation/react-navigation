@@ -42,6 +42,32 @@ export const BaseRouter = {
         };
       }
 
+      case 'PUSH_PARAMS': {
+        const index = action.source
+          ? state.routes.findIndex((r) => r.key === action.source)
+          : state.index;
+
+        if (index === -1) {
+          return null;
+        }
+
+        return {
+          ...state,
+          routes: state.routes.map((r, i) =>
+            i === index
+              ? {
+                  ...r,
+                  params: action.payload.params,
+                  history: [
+                    ...(r.history ?? []),
+                    { type: 'params', params: r.params },
+                  ],
+                }
+              : r
+          ),
+        };
+      }
+
       case 'RESET': {
         const nextState = action.payload as State | PartialState<State>;
 
