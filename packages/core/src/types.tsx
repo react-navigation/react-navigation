@@ -378,6 +378,19 @@ type NavigationHelpersRoute<
       ? undefined
       : ParamList[RouteName]
   ): void;
+
+  /**
+   * Push new params for the route.
+   * The params are not merged with previous params.
+   * This adds an entry to navigation history.
+   *
+   * @param params Params object for the current route.
+   */
+  pushParams(
+    params: ParamList[RouteName] extends undefined
+      ? undefined
+      : ParamList[RouteName]
+  ): void;
 };
 
 export type NavigationHelpers<
