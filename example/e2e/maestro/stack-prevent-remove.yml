@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Stack Prevent Remove
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}stack-prevent-remove
 - extendedWaitUntil:

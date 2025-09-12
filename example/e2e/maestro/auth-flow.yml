@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Auth Flow
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}auth-flow
 - extendedWaitUntil:

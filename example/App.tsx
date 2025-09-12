@@ -10,8 +10,9 @@ import { LogBox } from 'react-native';
 import { App } from './src/index';
 
 LogBox.ignoreLogs([
-  'Warning: findHostInstance_DEPRECATED is deprecated in StrictMode',
-  'Warning: findNodeHandle is deprecated in StrictMode',
+  'Open debugger to view warnings',
+  'findHostInstance_DEPRECATED is deprecated in StrictMode',
+  'findNodeHandle is deprecated in StrictMode',
 ]);
 
 Asset.loadAsync(Assets);

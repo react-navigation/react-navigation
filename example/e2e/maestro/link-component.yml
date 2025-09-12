@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Link Component
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}link-component
 - extendedWaitUntil:

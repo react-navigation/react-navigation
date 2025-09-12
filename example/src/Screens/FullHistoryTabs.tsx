@@ -11,6 +11,7 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 let count = 0;
@@ -85,6 +86,10 @@ const FullHistoryTabsComponent = createComponentForStaticNavigation(
 );
 
 export function FullHistoryTabs() {
+  useEffect(() => {
+    count = 0;
+  }, []);
+
   return <FullHistoryTabsComponent />;
 }
 

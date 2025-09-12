@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Bottom Tabs
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}bottom-tabs
 - extendedWaitUntil:
