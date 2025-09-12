@@ -187,6 +187,16 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   tabBarAccessibilityLabel?: string;
 
   /**
+   * Accessibility value for the tab button. This is read by the screen reader when the user taps the tab.
+   */
+  tabBarAccessibilityValue?: {
+    text?: string;
+    min?: number;
+    max?: number;
+    now?: number;
+  };
+
+  /**
    * ID to locate this tab button in tests.
    */
   tabBarButtonTestID?: string;
