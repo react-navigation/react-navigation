@@ -13,7 +13,6 @@ import {
 } from '@react-navigation/native';
 import * as React from 'react';
 import { BottomTabs, BottomTabsScreen } from 'react-native-screens';
-import BottomTabsNativeComponent from 'react-native-screens/src/fabric/bottom-tabs/BottomTabsScreenNativeComponent';
 
 import type {
   BottomTabNavigationEventMap,
@@ -32,10 +31,42 @@ function TabNavigator({ ...rest }: BottomTabNavigatorProps) {
       BottomTabNavigationEventMap
     >(TabRouter, rest);
 
-  console.log(BottomTabsNativeComponent, 'BottomTabNativeComponent');
   return (
     <NavigationContent>
       <BottomTabs
+        // tabBarItemTitleFontSize={24}
+        // tabBarItemTitleFontSizeActive={32}
+        // tabBarItemActiveIndicatorEnabled={false}
+        // tabBarTintColor={'blue'}
+        tabBarTintColor={
+          descriptors[state.routes[state.index].key].options
+            .tabBarActiveTintColor
+        }
+        tabBarItemTitleFontColorActive={
+          descriptors[state.routes[state.index].key].options
+            .tabBarActiveTintColor
+        }
+        tabBarItemTitleFontColor={
+          descriptors[state.routes[state.index].key].options
+            .tabBarInactiveTintColor
+        }
+        tabBarItemIconColorActive={
+          descriptors[state.routes[state.index].key].options
+            .tabBarActiveTintColor
+        }
+        tabBarItemIconColor={
+          descriptors[state.routes[state.index].key].options
+            .tabBarInactiveTintColor
+        }
+        tabBarBackgroundColor={
+          descriptors[state.routes[state.index].key].options.tabBarStyle
+            ?.backgroundColor
+        }
+        // tabBarItemActiveIndicatorColor={'transparent'}
+        tabBarItemActiveIndicatorEnabled={false}
+        // tabBarItemRippleColor={'green'}
+        // tabBarItemLabelVisibilityMode={'selected'}
+        tabBarMinimizeBehavior={'onScrollDown'}
         experimentalControlNavigationStateInJS
         onNativeFocusChange={(e) => {
           const route = state.routes.find(
@@ -72,9 +103,6 @@ function TabNavigator({ ...rest }: BottomTabNavigatorProps) {
 
           if (typeof options.tabBarLabel === 'string') {
             title = options.tabBarLabel;
-          } else if (typeof options.tabBarLabel === 'function') {
-            // TODO: react element is not supported
-            title = '';
           } else {
             title = options.title ?? route.name;
           }
@@ -83,9 +111,49 @@ function TabNavigator({ ...rest }: BottomTabNavigatorProps) {
             <BottomTabsScreen
               key={route.key}
               tabKey={route.key}
-              icon={options.tabBarIcon}
+              icon={
+                options.tabBarIcon
+                  ? {
+                      sfSymbolName: options.tabBarIcon,
+                    }
+                  : undefined
+              }
+              iconResourceName={options.tabBarIcon}
+              // iconResource={require('../../../../example/assets/small.png')}
+              // tabBarItemBadgeTextColor={'blue'}
+              // rippleColor={'red'}
+              tabBarItemBadgeBackgroundColor={
+                options.tabBarBadgeStyle?.backgroundColor
+              }
+              tabBarItemBadgeTextColor={options.tabBarBadgeStyle?.textColor}
+              // systemItem={'contacts'}
+              badgeValue={options.tabBarBadge?.toString()}
+              // selectedIcon={options.tabBarActiveIcon}
+              // specialEffects={{
+              //   repeatedTabSelection: {
+              //     popToRoot: false,
+              //     scrollToTop: false, // seems not working
+              //   },
+              // }}
+              // orientation={'landscape'}
+              // standardAppearance={{
+              //   stacked: {
+              //     normal: {
+              //       tabBarItemTitleFontFamily: 'Arial',
+              //       // tabBarItemTitleFontColor: 'red',
+              //     },
+              //   },
+              // }}
+              // scrollEdgeAppearance={{
+              //   stacked: {
+              //     normal: {
+              //       // tabBarItemTitleFontFamily: 'Arial',
+              //       tabBarItemTitleFontColor: 'red',
+              //     },
+              //   },
+              // }}
               isFocused={isFocused}
-              title={title}
+              title={options.tabBarShowLabel !== false ? title : undefined}
             >
               {descriptors[route.key].render()}
             </BottomTabsScreen>

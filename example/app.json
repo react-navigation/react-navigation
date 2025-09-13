@@ -35,14 +35,6 @@
           "backgroundColor": "#7b61c1"
         }
       ],
-      [
-        "expo-build-properties",
-        {
-          "ios": {
-            "useFrameworks": "static"
-          }
-        }
-      ],
       "react-native-edge-to-edge"
     ],
     "extra": {

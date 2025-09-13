@@ -1,26 +1,7 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import {
-  type BottomTabScreenProps,
-  createExperimentalBottomTabNavigator,
-  useBottomTabBarHeight,
-} from '@react-navigation/bottom-tabs';
-import { Button, useHeaderHeight } from '@react-navigation/elements';
-import {
-  type NavigatorScreenParams,
-  type PathConfigMap,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
-import * as React from 'react';
-import {
-  type ColorValue,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { createExperimentalBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { type PathConfigMap } from '@react-navigation/native';
+import { Platform } from 'react-native';
 
-import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
 import { Contacts } from '../Shared/Contacts';
 
@@ -30,22 +11,15 @@ import { Contacts } from '../Shared/Contacts';
 //     <MaterialCommunityIcons name={name} color={color} size={size} />
 //   );
 
-// export type BottomTabParams = {
-//   TabStack: NavigatorScreenParams<NativeStackParams>;
-//   TabAlbums: undefined;
-//   TabContacts: undefined;
-//   TabChat: { count: number } | undefined;
-// };
+export type BottomTabParams = {
+  TabAlbums: undefined;
+  TabContacts: undefined;
+};
 
-// const linking: PathConfigMap<BottomTabParams> = {
-//   TabStack: {
-//     path: 'stack',
-//     screens: NativeStack.linking,
-//   },
-//   TabAlbums: 'albums',
-//   TabContacts: 'contacts',
-//   TabChat: 'chat',
-// };
+const linking: PathConfigMap<BottomTabParams> = {
+  TabAlbums: 'albums',
+  TabContacts: 'contacts',
+};
 
 // const AlbumsScreen = () => {
 //   const navigation =
@@ -106,26 +80,43 @@ export function ExperimentalBottomTabs() {
 
   return (
     <Tab.Navigator>
-      <Tab.Screen name="TabAlbums" component={Albums} />
-      <Tab.Screen name="TabContacts" component={Contacts} />
+      <Tab.Screen
+        name="TabAlbums"
+        component={Albums}
+        options={{
+          tabBarIcon: Platform.select({
+            // ios: { sfSymbolName: 'newspaper' },
+            ios: 'star',
+            android: 'star_on',
+            // android: { name: 'newspaper' },
+          }),
+          tabBarBadge: 'Hi',
+          tabBarBadgeStyle: {
+            backgroundColor: 'blue',
+            textColor: 'yellow',
+            // color: 'white',
+          },
+          tabBarActiveTintColor: 'green',
+          tabBarStyle: {
+            backgroundColor: 'pink',
+          },
+        }}
+      />
+      <Tab.Screen
+        name="TabContacts"
+        component={Contacts}
+        options={{
+          tabBarIcon: Platform.select({
+            // ios: { sfSymbolName: 'newspaper' },
+            ios: 'star',
+            android: 'star_on',
+            // android: { name: 'newspaper' },
+          }),
+        }}
+      />
     </Tab.Navigator>
   );
 }
 
 ExperimentalBottomTabs.title = 'Experimental Bottom Tabs';
-// ExperimentalBottomTabs.linking = linking;
-
-const styles = StyleSheet.create({
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-    marginEnd: 16,
-  },
-  buttons: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
-    margin: 12,
-  },
-});
+ExperimentalBottomTabs.linking = linking;

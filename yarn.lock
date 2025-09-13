@@ -4411,7 +4411,7 @@ __metadata:
     react-native-gesture-handler: "npm:~2.26.0"
     react-native-reanimated: "npm:~3.18.0"
     react-native-safe-area-context: "npm:5.5.0"
-    react-native-screens: "npm:~4.11.1"
+    react-native-screens: "npm:~4.16.0"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
     use-latest-callback: "npm:^0.2.4"
@@ -4484,7 +4484,6 @@ __metadata:
     expo: "npm:^53.0.11"
     expo-asset: "npm:~11.1.5"
     expo-blur: "npm:~14.1.5"
-    expo-build-properties: "npm:~0.14.8"
     expo-linking: "npm:~7.1.5"
     expo-splash-screen: "npm:~0.30.9"
     expo-status-bar: "npm:~2.2.3"
@@ -4554,7 +4553,7 @@ __metadata:
     react: "npm:19.0.0"
     react-native: "npm:0.79.3"
     react-native-builder-bob: "npm:^0.40.12"
-    react-native-screens: "npm:~4.11.1"
+    react-native-screens: "npm:~4.16.0"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
     warn-once: "npm:^0.1.1"
@@ -4622,7 +4621,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-native-gesture-handler: "npm:~2.26.0"
     react-native-safe-area-context: "npm:5.5.0"
-    react-native-screens: "npm:~4.11.1"
+    react-native-screens: "npm:~4.16.0"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
     use-latest-callback: "npm:^0.2.4"
@@ -14055,7 +14054,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-is-edge-to-edge@npm:1.1.7, react-native-is-edge-to-edge@npm:^1.1.6, react-native-is-edge-to-edge@npm:^1.1.7":
+"react-native-is-edge-to-edge@npm:1.1.7, react-native-is-edge-to-edge@npm:^1.1.6":
   version: 1.1.7
   resolution: "react-native-is-edge-to-edge@npm:1.1.7"
   peerDependencies:
@@ -14126,20 +14125,6 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/c1f6a656831853912084519ee19315eecb7181ddc61a765be627d9ac15138eb30fe58c8eead245d4e352c26c9cbd97ebb1030184d4c3929d6e04fdfab74492e2
-  languageName: node
-  linkType: hard
-
-"react-native-screens@npm:~4.11.1":
-  version: 4.11.1
-  resolution: "react-native-screens@npm:4.11.1"
-  dependencies:
-    react-freeze: "npm:^1.0.0"
-    react-native-is-edge-to-edge: "npm:^1.1.7"
-    warn-once: "npm:^0.1.0"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 10c0/88a33ba419bd571cc318e80d25eb172f5829677f2dd80dcb69cbeaa6a35ba26214e0e82af87baa375182afe41a276e8ef1a9d13b826f662f3a389982492c2879
   languageName: node
   linkType: hard
 

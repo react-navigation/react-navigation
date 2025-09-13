@@ -17,6 +17,7 @@ import type {
 import type * as React from 'react';
 import type {
   Animated,
+  ColorValue,
   GestureResponderEvent,
   // ImageSourcePropType,
   StyleProp,
@@ -24,7 +25,6 @@ import type {
   ViewStyle,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
-import type { Icon } from 'react-native-screens';
 
 export type Layout = { width: number; height: number };
 
@@ -114,6 +114,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Title text for the screen.
    */
+  // DONE
   title?: string;
 
   /**
@@ -122,18 +123,13 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    *
    * When undefined, scene title is used. Use `tabBarShowLabel` to hide the label.
    */
-  tabBarLabel?:
-    | string
-    | ((props: {
-        focused: boolean;
-        color: string;
-        position: LabelPosition;
-        children: string;
-      }) => React.ReactNode);
+  // DONE
+  tabBarLabel?: string;
 
   /**
    * Whether the tab label should be visible. Defaults to `true`.
    */
+  // DONE
   tabBarShowLabel?: boolean;
 
   /**
@@ -144,6 +140,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    *
    * By default, the position is chosen automatically based on device width.
    */
+  // IMPOSSIBLE
   tabBarLabelPosition?: LabelPosition;
 
   /**
@@ -154,12 +151,13 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Whether label font should scale to respect Text Size accessibility settings.
    */
+  // IMPOSSIBLE
   tabBarAllowFontScaling?: boolean;
 
   /**
    * Image to display as the icon for the tab.
    */
-  tabBarIcon?: Icon;
+  tabBarIcon?: string;
 
   /**
    * Style object for the tab icon.
@@ -169,64 +167,80 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Text to show in a badge on the tab icon.
    */
+  // DONE
   tabBarBadge?: number | string;
 
   /**
    * Custom style for the tab bar badge.
    * You can specify a background color or text color here.
    */
-  tabBarBadgeStyle?: StyleProp<TextStyle>;
+  // DONE
+  tabBarBadgeStyle?: {
+    // android specific
+    backgroundColor?: ColorValue;
+    textColor?: ColorValue;
+  };
 
   /**
    * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
    * It's recommended to set this if you don't have a label for the tab.
    */
+  // TODO
   tabBarAccessibilityLabel?: string;
 
   /**
    * ID to locate this tab button in tests.
    */
+  // TODO
   tabBarButtonTestID?: string;
 
   /**
    * Function which returns a React element to render as the tab bar button.
    * Renders `PlatformPressable` by default.
    */
+  // IMPOSSIBLE
   tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
 
   /**
    * Color for the icon and label in the active tab.
    */
+  // DONE
   tabBarActiveTintColor?: string;
 
   /**
    * Color for the icon and label in the inactive tabs.
    */
+  // DONE
   tabBarInactiveTintColor?: string;
 
   /**
    * Background color for the active tab.
    */
+  // IMPOSSIBLE
   tabBarActiveBackgroundColor?: string;
 
   /**
    * Background color for the inactive tabs.
    */
+  // IMPOSSIBLE
   tabBarInactiveBackgroundColor?: string;
 
   /**
    * Style object for the tab item container.
    */
+  // IMPOSSIBLE
   tabBarItemStyle?: StyleProp<ViewStyle>;
 
   /**
    * Whether the tab bar gets hidden when the keyboard is shown. Defaults to `false`.
    */
+  // IMPOSSIBLE
   tabBarHideOnKeyboard?: boolean;
 
   /**
    * Animation config for showing and hiding the tab bar when the keyboard is shown/hidden.
    */
+  // IMPOSSIBLE
   tabBarVisibilityAnimationConfig?: {
     show?: TabBarVisibilityAnimationConfig;
     hide?: TabBarVisibilityAnimationConfig;
@@ -235,12 +249,17 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Variant of the tab bar. Defaults to `uikit`.
    */
+  // IMPOSSIBLE
   tabBarVariant?: Variant;
 
   /**
    * Style object for the tab bar container.
    */
-  tabBarStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  // DONE
+  tabBarStyle?: {
+    backgroundColor?: ColorValue;
+    // width?: number | string;
+  };
 
   /**
    * Function which returns a React Element to use as background for the tab bar.
@@ -249,11 +268,13 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * When using `BlurView`, make sure to set `position: 'absolute'` in `tabBarStyle` as well.
    * You'd also need to use `useBottomTabBarHeight()` to add a bottom padding to your content.
    */
+  // IMPOSSIBLE
   tabBarBackground?: () => React.ReactNode;
 
   /**
    * Position of the tab bar on the screen. Defaults to `bottom`.
    */
+  // IMPOSSIBLE
   tabBarPosition?: 'bottom' | 'left' | 'right' | 'top';
 
   /**
@@ -301,16 +322,19 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * - 'fade': cross-fade the screens.
    * - 'shift': shift the screens slightly shift to left/right.
    */
+  // IMPOSSIBLE
   animation?: TabAnimationName;
 
   /**
    * Function which specifies interpolated styles for bottom-tab scenes.
    */
+  // IMPOSSIBLE
   sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
 
   /**
    * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
    */
+  // IMPOSSIBLE
   transitionSpec?: TransitionSpec;
 };
 
