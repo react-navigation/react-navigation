@@ -26,6 +26,7 @@ export { PlatformPressable } from './PlatformPressable';
 export { SafeAreaProviderCompat } from './SafeAreaProviderCompat';
 export { Screen } from './Screen';
 export { Text } from './Text';
+export { TransparentModalContext } from './TransparentModalContext';
 export { useFrameSize } from './useFrameSize';
 
 export const Assets = [

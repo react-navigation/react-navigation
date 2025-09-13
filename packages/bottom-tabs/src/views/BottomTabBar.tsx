@@ -2,6 +2,7 @@ import {
   getDefaultSidebarWidth,
   getLabel,
   MissingIcon,
+  TransparentModalContext,
   useFrameSize,
 } from '@react-navigation/elements';
 import {
@@ -161,6 +162,7 @@ export function BottomTabBar({
   const { colors } = useTheme();
   const { direction } = useLocale();
   const { buildHref } = useLinkBuilder();
+  const isTransparentModalVisible = React.useContext(TransparentModalContext);
 
   const focusedRoute = state.routes[state.index];
   const focusedDescriptor = descriptors[focusedRoute.key];
@@ -314,6 +316,7 @@ export function BottomTabBar({
 
   return (
     <Animated.View
+      aria-hidden={isTransparentModalVisible}
       style={[
         tabBarPosition === 'left'
           ? styles.start
