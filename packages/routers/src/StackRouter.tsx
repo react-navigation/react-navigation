@@ -458,16 +458,57 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         case 'POP': {
-          const index =
+          let index =
             action.target === state.key && action.source
               ? state.routes.findIndex((r) => r.key === action.source)
               : state.index;
 
-          if (index > 0) {
-            const count = Math.max(index - action.payload.count + 1, 1);
-            const routes = state.routes
-              .slice(0, count)
-              .concat(state.routes.slice(index + 1));
+          let route = state.routes[index];
+
+          /**
+           * When popping entries,
+           * - Pop entries from route.history
+           * - Pop routes from state.routes
+           *
+           * Repeat until:
+           * - We have popped the amount of items in count
+           * - There are no more items to pop
+           */
+          if (route.history?.length || index > 0) {
+            let count = action.payload.count;
+            let routes = state.routes;
+
+            while (count > 0 && (route.history?.length || index > 0)) {
+              if (route.history?.length) {
+                routes = [...routes];
+
+                const end = Math.min(count, route.history.length);
+                const last = route.history.at(-end);
+                const history = route.history.slice(0, -end);
+                const removed = route.history.length - history.length;
+
+                count = count - removed;
+
+                routes[index] = {
+                  ...route,
+                  params: last?.type === 'params' ? last.params : route.params,
+                  history,
+                };
+              }
+
+              if (index > 0 && count > 0) {
+                const length = routes.length;
+                const end = Math.max(index - count + 1, 1);
+
+                routes = routes.slice(0, end).concat(routes.slice(index + 1));
+
+                const removed = length - routes.length;
+
+                count = count - removed;
+                index = routes.length - 1;
+                route = routes[index];
+              }
+            }
 
             return {
               ...state,
@@ -578,7 +619,7 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         case 'GO_BACK':
-          if (state.index > 0) {
+          if (state.index > 0 || state.routes[state.index].history?.length) {
             return router.getStateForAction(
               state,
               {
