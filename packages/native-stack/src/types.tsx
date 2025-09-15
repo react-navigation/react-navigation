@@ -757,12 +757,6 @@ interface SharedHeaderBarButtonItem {
    */
   width?: number;
   /**
-   * The set of possible titles to display on the bar button.
-   *
-   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/possibletitles
-   */
-  possibleTitles?: string[];
-  /**
    * A boolean value indicating whether the background this item may share with other items in the bar should be hidden.
    * Only available from iOS 26.0 and later.
    *
