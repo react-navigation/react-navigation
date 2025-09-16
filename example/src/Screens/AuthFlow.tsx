@@ -9,12 +9,14 @@ import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
 
 export type AuthStackParams = {
   Home: undefined;
+  Profile: undefined;
   SignIn: undefined;
   Chat: undefined;
 };
 
 const linking: PathConfigMap<AuthStackParams> = {
   Home: '',
+  Profile: 'profile',
   SignIn: 'signin',
   Chat: 'chat',
 };
@@ -87,6 +89,24 @@ const HomeScreen = ({
   return (
     <View style={styles.content}>
       <Text style={styles.heading}>Signed in successfully 🎉</Text>
+      <Button onPress={signOut} style={styles.button}>
+        Sign out
+      </Button>
+      <Button onPress={() => navigation.navigate('Chat')} style={styles.button}>
+        Go to Chat
+      </Button>
+    </View>
+  );
+};
+
+const ProfileScreen = ({
+  navigation,
+}: StackScreenProps<AuthStackParams, 'Profile'>) => {
+  const { signOut } = React.useContext(AuthContext);
+
+  return (
+    <View style={styles.content}>
+      <Text style={styles.heading}>This is your profile</Text>
       <Button onPress={signOut} style={styles.button}>
         Sign out
       </Button>
@@ -190,13 +210,16 @@ export function AuthFlow() {
           <SimpleStack.Screen
             name="SignIn"
             options={{
-              title: 'Sign in',
+              title: 'Welcome',
               animationTypeForReplace: state.isSignout ? 'pop' : 'push',
             }}
             component={SignInScreen}
           />
         ) : (
-          <SimpleStack.Screen name="Home" component={HomeScreen} />
+          <>
+            <SimpleStack.Screen name="Home" component={HomeScreen} />
+            <SimpleStack.Screen name="Profile" component={ProfileScreen} />
+          </>
         )}
         <SimpleStack.Screen
           navigationKey={String(isSignedIn)}

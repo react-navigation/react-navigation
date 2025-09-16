@@ -59,6 +59,14 @@ export function MockRouter(options: DefaultRouterOptions) {
             }) as Route<string>
         );
 
+      if (routes.length === 0) {
+        routes.push({
+          name: routeNames[0],
+          key: `${routeNames[0]}-${MockRouterKey.current++}`,
+          params: routeParamList[routeNames[0]],
+        });
+      }
+
       const previousIndex = state.index;
       const index = Math.min(
         Math.max(
