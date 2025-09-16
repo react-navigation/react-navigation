@@ -105,6 +105,25 @@ export type DefaultNavigatorOptions<
   router?: <Action extends NavigationAction>(
     original: Router<State, Action>
   ) => Partial<Router<State, Action>>;
+
+  /**
+   * What should happen when the available route names change.
+   * e.g. when different screens are rendered based on a condition.
+   *
+   * - 'firstMatch': Navigate to the first route in the new list of routes (default).
+   * - 'lastUnhandled': Restore the last state that was unhandled due to conditional render.
+   *
+   * Example cases where previous state might have been unhandled:
+   * - Opened a deep link to a screen, but a login screen was shown.
+   * - Navigated to a screen containing a navigator, but a different screen was shown.
+   * - Reset the navigator to a state with different routes not matching the current list of routes.
+   *
+   * In these cases, 'lastUnhandled' will reuse the unhandled state if present.
+   * If there's no unhandled state, it will fallback to 'firstMatch' behavior.
+   *
+   * It won't work for direct navigation, except `NAVIGATE` in the root navigator.
+   */
+  UNSTABLE_routeNamesChangeBehavior?: 'firstMatch' | 'lastUnhandled';
 } & (NavigatorID extends string
     ? {
         /**
