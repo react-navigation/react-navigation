@@ -283,15 +283,18 @@ export type NativeStackNavigationOptions = {
   /**
    * Function which returns a React Element to display on the left side of the header.
    * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
+   * Will be overriden by `headerLeftItems` on iOS.
    */
   headerLeft?: (props: NativeStackHeaderLeftProps) => React.ReactNode;
   /**
    * Function which returns a React Element to display on the right side of the header.
+   * Will be overriden by `headerRightItems` on iOS.
    */
   headerRight?: (props: NativeStackHeaderRightProps) => React.ReactNode;
   /**
    * Array of iOS native UIBarButtomItem or functions
    * that returns a React Element to the left side of the header.
+   * Overrides `headerLeft`.
    *
    * @platform ios
    */
@@ -302,6 +305,7 @@ export type NativeStackNavigationOptions = {
   /**
    * Array of iOS native UIBarButtomItem or functions
    * that returns a React Element to the right side of the header.
+   * Overrides `headerRight`.
    *
    * @platform ios
    */
