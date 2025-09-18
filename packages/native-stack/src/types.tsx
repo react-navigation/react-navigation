@@ -284,6 +284,20 @@ export type NativeStackNavigationOptions = {
    */
   headerLeft?: (props: NativeStackHeaderLeftProps) => React.ReactNode;
   /**
+   * Boolean indicating whether the left header button should draw the default glass effect background. Defaults to `false`.
+   * Only supported on iOS 26.0+.
+   *
+   * @platform ios
+   */
+  headerLeftHidesSharedBackground?: boolean;
+  /**
+   * Boolean indicating whether the right header button should draw the default glass effect background. Defaults to `false`.
+   * Only supported on iOS 26.0+.
+   *
+   * @platform ios
+   */
+  headerRightHidesSharedBackground?: boolean;
+  /**
    * Function which returns a React Element to display on the right side of the header.
    */
   headerRight?: (props: NativeStackHeaderRightProps) => React.ReactNode;
