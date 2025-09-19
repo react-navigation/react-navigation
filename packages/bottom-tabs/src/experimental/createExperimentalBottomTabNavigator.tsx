@@ -1,8 +1,14 @@
 import {
+  getHeaderTitle,
+  Header,
+  Screen as ScreenContent,
+} from '@react-navigation/elements';
+import {
   CommonActions,
   createNavigatorFactory,
   type NavigatorTypeBagBase,
   type ParamListBase,
+  StackActions,
   type StaticConfig,
   type TabActionHelpers,
   type TabNavigationState,
@@ -14,22 +20,58 @@ import {
 import * as React from 'react';
 import { BottomTabs, BottomTabsScreen } from 'react-native-screens';
 
+import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
 import type {
-  BottomTabNavigationEventMap,
-  BottomTabNavigationOptions,
-  BottomTabNavigationProp,
-  BottomTabNavigatorProps,
+  ExperimentalBottomTabHeaderProps,
+  ExperimentalBottomTabNavigationEventMap,
+  ExperimentalBottomTabNavigationOptions,
+  ExperimentalBottomTabNavigationProp,
+  ExperimentalBottomTabNavigatorProps,
 } from './types';
 
-function TabNavigator({ ...rest }: BottomTabNavigatorProps) {
+function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
   const { state, navigation, descriptors, NavigationContent } =
     useNavigationBuilder<
       TabNavigationState<ParamListBase>,
       TabRouterOptions,
       TabActionHelpers<ParamListBase>,
-      BottomTabNavigationOptions,
-      BottomTabNavigationEventMap
+      ExperimentalBottomTabNavigationOptions,
+      ExperimentalBottomTabNavigationEventMap
     >(TabRouter, rest);
+
+  const focusedRouteKey = state.routes[state.index].key;
+  const previousRouteKeyRef = React.useRef(focusedRouteKey);
+  const tabAnims = useAnimatedHashMap(state);
+
+  React.useEffect(() => {
+    const previousRouteKey = previousRouteKeyRef.current;
+
+    if (
+      previousRouteKey !== focusedRouteKey &&
+      descriptors[previousRouteKey]?.options.popToTopOnBlur
+    ) {
+      const prevRoute = state.routes.find(
+        (route) => route.key === previousRouteKey
+      );
+
+      if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
+        const popToTopAction = {
+          ...StackActions.popToTop(),
+          target: prevRoute.state.key,
+        };
+        navigation.dispatch(popToTopAction);
+      }
+    }
+
+    previousRouteKeyRef.current = focusedRouteKey;
+  }, [
+    descriptors,
+    focusedRouteKey,
+    navigation,
+    state.index,
+    state.routes,
+    tabAnims,
+  ]);
 
   return (
     <NavigationContent>
@@ -99,6 +141,19 @@ function TabNavigator({ ...rest }: BottomTabNavigatorProps) {
           const { options } = descriptors[route.key];
           const isFocused = state.index === index;
 
+          const {
+            header = ({ options }: ExperimentalBottomTabHeaderProps) => (
+              <Header
+                {...options}
+                title={getHeaderTitle(options, route.name)}
+              />
+            ),
+            headerShown,
+            headerStatusBarHeight,
+            headerTransparent,
+            sceneStyle: customSceneStyle,
+          } = options;
+
           let title: string;
 
           if (typeof options.tabBarLabel === 'string') {
@@ -119,43 +174,31 @@ function TabNavigator({ ...rest }: BottomTabNavigatorProps) {
                   : undefined
               }
               iconResourceName={options.tabBarIcon}
-              // iconResource={require('../../../../example/assets/small.png')}
-              // tabBarItemBadgeTextColor={'blue'}
-              // rippleColor={'red'}
               tabBarItemBadgeBackgroundColor={
                 options.tabBarBadgeStyle?.backgroundColor
               }
               tabBarItemBadgeTextColor={options.tabBarBadgeStyle?.textColor}
-              // systemItem={'contacts'}
               badgeValue={options.tabBarBadge?.toString()}
-              // selectedIcon={options.tabBarActiveIcon}
-              // specialEffects={{
-              //   repeatedTabSelection: {
-              //     popToRoot: false,
-              //     scrollToTop: false, // seems not working
-              //   },
-              // }}
-              // orientation={'landscape'}
-              // standardAppearance={{
-              //   stacked: {
-              //     normal: {
-              //       tabBarItemTitleFontFamily: 'Arial',
-              //       // tabBarItemTitleFontColor: 'red',
-              //     },
-              //   },
-              // }}
-              // scrollEdgeAppearance={{
-              //   stacked: {
-              //     normal: {
-              //       // tabBarItemTitleFontFamily: 'Arial',
-              //       tabBarItemTitleFontColor: 'red',
-              //     },
-              //   },
-              // }}
               isFocused={isFocused}
               title={options.tabBarShowLabel !== false ? title : undefined}
             >
-              {descriptors[route.key].render()}
+              <ScreenContent
+                focused={isFocused}
+                route={descriptors[route.key].route}
+                navigation={descriptors[route.key].navigation}
+                headerShown={headerShown}
+                headerStatusBarHeight={headerStatusBarHeight}
+                headerTransparent={headerTransparent}
+                header={header({
+                  route: descriptors[route.key].route,
+                  navigation: descriptors[route.key]
+                    .navigation as ExperimentalBottomTabNavigationProp<ParamListBase>,
+                  options: descriptors[route.key].options,
+                })}
+                style={customSceneStyle}
+              >
+                {descriptors[route.key].render()}
+              </ScreenContent>
             </BottomTabsScreen>
           );
         })}
@@ -171,10 +214,10 @@ export function createExperimentalBottomTabNavigator<
     ParamList: ParamList;
     NavigatorID: NavigatorID;
     State: TabNavigationState<ParamList>;
-    ScreenOptions: BottomTabNavigationOptions;
-    EventMap: BottomTabNavigationEventMap;
+    ScreenOptions: ExperimentalBottomTabNavigationOptions;
+    EventMap: ExperimentalBottomTabNavigationEventMap;
     NavigationList: {
-      [RouteName in keyof ParamList]: BottomTabNavigationProp<
+      [RouteName in keyof ParamList]: ExperimentalBottomTabNavigationProp<
         ParamList,
         RouteName,
         NavigatorID

@@ -1,7 +1,4 @@
-import type {
-  HeaderOptions,
-  PlatformPressable,
-} from '@react-navigation/elements';
+import type { HeaderOptions } from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -15,49 +12,21 @@ import type {
   Theme,
 } from '@react-navigation/native';
 import type * as React from 'react';
-import type {
-  Animated,
-  ColorValue,
-  GestureResponderEvent,
-  // ImageSourcePropType,
-  StyleProp,
-  TextStyle,
-  ViewStyle,
-} from 'react-native';
+import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
 export type Layout = { width: number; height: number };
 
-export type Variant = 'uikit' | 'material';
-
-export type BottomTabNavigationEventMap = {
+export type ExperimentalBottomTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
    */
   tabPress: { data: undefined; canPreventDefault: true };
-  /**
-   * Event which fires on long press on the tab in the tab bar.
-   */
-  tabLongPress: { data: undefined };
-  /**
-   * Event which fires when a transition animation starts.
-   */
-  transitionStart: { data: undefined };
-  /**
-   * Event which fires when a transition animation ends.
-   */
-  transitionEnd: { data: undefined };
 };
 
 export type LabelPosition = 'beside-icon' | 'below-icon';
 
-export type BottomTabNavigationHelpers = NavigationHelpers<
-  ParamListBase,
-  BottomTabNavigationEventMap
-> &
-  TabActionHelpers<ParamListBase>;
-
-export type BottomTabNavigationProp<
+export type ExperimentalBottomTabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
   NavigatorID extends string | undefined = undefined,
@@ -66,51 +35,33 @@ export type BottomTabNavigationProp<
   RouteName,
   NavigatorID,
   TabNavigationState<ParamList>,
-  BottomTabNavigationOptions,
-  BottomTabNavigationEventMap
+  ExperimentalBottomTabNavigationOptions,
+  ExperimentalBottomTabNavigationEventMap
 > &
   TabActionHelpers<ParamList>;
 
-export type BottomTabScreenProps<
+export type ExperimentalBottomTabScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
   NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: BottomTabNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: ExperimentalBottomTabNavigationProp<
+    ParamList,
+    RouteName,
+    NavigatorID
+  >;
   route: RouteProp<ParamList, RouteName>;
 };
 
-export type BottomTabOptionsArgs<
+export type ExperimentalBottomTabOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
   NavigatorID extends string | undefined = undefined,
-> = BottomTabScreenProps<ParamList, RouteName, NavigatorID> & {
+> = ExperimentalBottomTabScreenProps<ParamList, RouteName, NavigatorID> & {
   theme: Theme;
 };
 
-export type TimingKeyboardAnimationConfig = {
-  animation: 'timing';
-  config?: Omit<
-    Partial<Animated.TimingAnimationConfig>,
-    'toValue' | 'useNativeDriver'
-  >;
-};
-
-export type SpringKeyboardAnimationConfig = {
-  animation: 'spring';
-  config?: Omit<
-    Partial<Animated.SpringAnimationConfig>,
-    'toValue' | 'useNativeDriver'
-  >;
-};
-
-export type TabBarVisibilityAnimationConfig =
-  | TimingKeyboardAnimationConfig
-  | SpringKeyboardAnimationConfig;
-
-export type TabAnimationName = 'none' | 'fade' | 'shift';
-
-export type BottomTabNavigationOptions = HeaderOptions & {
+export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   /**
    * Title text for the screen.
    */
@@ -146,6 +97,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Style object for the tab label.
    */
+  // TODO TEXT
   tabBarLabelStyle?: StyleProp<TextStyle>;
 
   /**
@@ -157,12 +109,14 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   /**
    * Image to display as the icon for the tab.
    */
+  // TODO
   tabBarIcon?: string;
 
   /**
    * Style object for the tab icon.
    */
-  tabBarIconStyle?: StyleProp<TextStyle>;
+  // IMPOSSIBLE
+  // tabBarIconStyle?: StyleProp<TextStyle>;
 
   /**
    * Text to show in a badge on the tab icon.
@@ -199,7 +153,9 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Renders `PlatformPressable` by default.
    */
   // IMPOSSIBLE
-  tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
+  // tabBarButton?: (
+  //   props: any //ExperimentalBottomTabBarButtonProps
+  // ) => React.ReactNode;
 
   /**
    * Color for the icon and label in the active tab.
@@ -217,40 +173,40 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Background color for the active tab.
    */
   // IMPOSSIBLE
-  tabBarActiveBackgroundColor?: string;
+  // tabBarActiveBackgroundColor?: string;
 
   /**
    * Background color for the inactive tabs.
    */
   // IMPOSSIBLE
-  tabBarInactiveBackgroundColor?: string;
+  // tabBarInactiveBackgroundColor?: string;
 
   /**
    * Style object for the tab item container.
    */
   // IMPOSSIBLE
-  tabBarItemStyle?: StyleProp<ViewStyle>;
+  // tabBarItemStyle?: StyleProp<ViewStyle>;
 
   /**
    * Whether the tab bar gets hidden when the keyboard is shown. Defaults to `false`.
    */
   // IMPOSSIBLE
-  tabBarHideOnKeyboard?: boolean;
+  // tabBarHideOnKeyboard?: boolean;
 
   /**
    * Animation config for showing and hiding the tab bar when the keyboard is shown/hidden.
    */
   // IMPOSSIBLE
-  tabBarVisibilityAnimationConfig?: {
-    show?: TabBarVisibilityAnimationConfig;
-    hide?: TabBarVisibilityAnimationConfig;
-  };
+  // tabBarVisibilityAnimationConfig?: {
+  //   show?: TabBarVisibilityAnimationConfig;
+  //   hide?: TabBarVisibilityAnimationConfig;
+  // };
 
   /**
    * Variant of the tab bar. Defaults to `uikit`.
    */
   // IMPOSSIBLE
-  tabBarVariant?: Variant;
+  // tabBarVariant?: any; //Variant;
 
   /**
    * Style object for the tab bar container.
@@ -269,35 +225,39 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * You'd also need to use `useBottomTabBarHeight()` to add a bottom padding to your content.
    */
   // IMPOSSIBLE
-  tabBarBackground?: () => React.ReactNode;
+  // tabBarBackground?: () => React.ReactNode;
 
   /**
    * Position of the tab bar on the screen. Defaults to `bottom`.
    */
   // IMPOSSIBLE
-  tabBarPosition?: 'bottom' | 'left' | 'right' | 'top';
+  // tabBarPosition?: 'bottom' | 'left' | 'right' | 'top';
 
   /**
    * Whether this screens should render the first time it's accessed. Defaults to `true`.
    * Set it to `false` if you want to render the screen on initial render.
    */
-  lazy?: boolean;
+  // NOT EXPECTED
+  // lazy?: boolean;
 
   /**
    * Function that given returns a React Element to display as a header.
    */
-  header?: (props: BottomTabHeaderProps) => React.ReactNode;
+  // DONE
+  header?: (props: ExperimentalBottomTabHeaderProps) => React.ReactNode;
 
   /**
    * Whether to show the header. Setting this to `false` hides the header.
    * Defaults to `true`.
    */
+  // DONE
   headerShown?: boolean;
 
   /**
    * Whether any nested stack should be popped to top when navigating away from the tab.
    * Defaults to `false`.
    */
+  // DONE // TEST
   popToTopOnBlur?: boolean;
 
   /**
@@ -307,11 +267,13 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    *
    * Only supported on iOS and Android.
    */
-  freezeOnBlur?: boolean;
+  // NOT EXPECTED
+  // freezeOnBlur?: boolean;
 
   /**
    * Style object for the component wrapping the screen content.
    */
+  // DONE
   sceneStyle?: StyleProp<ViewStyle>;
 
   /**
@@ -323,93 +285,38 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * - 'shift': shift the screens slightly shift to left/right.
    */
   // IMPOSSIBLE
-  animation?: TabAnimationName;
+  // animation?: TabAnimationName;
 
   /**
    * Function which specifies interpolated styles for bottom-tab scenes.
    */
   // IMPOSSIBLE
-  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
+  // sceneStyleInterpolator?: any; //ExperimentalBottomTabSceneStyleInterpolator;
 
   /**
    * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
    */
   // IMPOSSIBLE
-  transitionSpec?: TransitionSpec;
+  // transitionSpec?: any; //TransitionSpec;
 };
 
-export type BottomTabDescriptor = Descriptor<
-  BottomTabNavigationOptions,
-  BottomTabNavigationProp<ParamListBase>,
+export type ExperimentalBottomTabDescriptor = Descriptor<
+  ExperimentalBottomTabNavigationOptions,
+  ExperimentalBottomTabNavigationProp<ParamListBase>,
   RouteProp<ParamListBase>
 >;
 
-export type BottomTabDescriptorMap = Record<string, BottomTabDescriptor>;
+export type ExperimentalBottomTabDescriptorMap = Record<
+  string,
+  ExperimentalBottomTabDescriptor
+>;
 
-export type BottomTabSceneInterpolationProps = {
-  /**
-   * Values for the current screen.
-   */
-  current: {
-    /**
-     * Animated value for the current screen:
-     * - -1 if the index is lower than active tab,
-     * - 0 if they're active,
-     * - 1 if the index is higher than active tab
-     */
-    progress: Animated.Value;
-  };
-};
-
-export type BottomTabSceneInterpolatedStyle = {
-  /**
-   * Interpolated style for the view representing the scene containing screen content.
-   */
-  sceneStyle: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-};
-
-export type BottomTabSceneStyleInterpolator = (
-  props: BottomTabSceneInterpolationProps
-) => BottomTabSceneInterpolatedStyle;
-
-export type TransitionSpec =
-  | {
-      animation: 'timing';
-      config: Omit<
-        Animated.TimingAnimationConfig,
-        'toValue' | keyof Animated.AnimationConfig
-      >;
-    }
-  | {
-      animation: 'spring';
-      config: Omit<
-        Animated.SpringAnimationConfig,
-        'toValue' | keyof Animated.AnimationConfig
-      >;
-    };
-
-export type BottomTabTransitionPreset = {
-  /**
-   * Whether transition animations should be enabled when switching tabs.
-   */
-  animationEnabled?: boolean;
-
-  /**
-   * Function which specifies interpolated styles for bottom-tab scenes.
-   */
-  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
-
-  /**
-   * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
-   */
-  transitionSpec?: TransitionSpec;
-};
-
-export type BottomTabNavigationConfig = {
+export type ExperimentalBottomTabNavigationConfig = {
   /**
    * Function that returns a React element to display as the tab bar.
    */
-  tabBar?: (props: BottomTabBarProps) => React.ReactNode;
+  // TODO
+  tabBar?: (props: ExperimentalBottomTabBarProps) => React.ReactNode;
   /**
    * Safe area insets for the tab bar. This is used to avoid elements like the navigation bar on Android and bottom safe area on iOS.
    * By default, the device's safe area insets are automatically detected. You can override the behavior with this option.
@@ -425,18 +332,15 @@ export type BottomTabNavigationConfig = {
    * Make sure to call `enableScreens` from `react-native-screens` to make it work.
    * Defaults to `true` on Android.
    */
+  // NOT EXPECTED
   detachInactiveScreens?: boolean;
 };
 
-export type BottomTabHeaderProps = {
-  /**
-   * Layout of the screen.
-   */
-  layout: Layout;
+export type ExperimentalBottomTabHeaderProps = {
   /**
    * Options for the current screen.
    */
-  options: BottomTabNavigationOptions;
+  options: ExperimentalBottomTabNavigationOptions;
   /**
    * Route object for the current screen.
    */
@@ -444,35 +348,26 @@ export type BottomTabHeaderProps = {
   /**
    * Navigation prop for the header.
    */
-  navigation: BottomTabNavigationProp<ParamListBase>;
+  navigation: ExperimentalBottomTabNavigationProp<ParamListBase>;
 };
 
-export type BottomTabBarProps = {
+export type ExperimentalBottomTabBarProps = {
   state: TabNavigationState<ParamListBase>;
-  descriptors: BottomTabDescriptorMap;
-  navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>;
+  descriptors: ExperimentalBottomTabDescriptorMap;
+  navigation: NavigationHelpers<
+    ParamListBase,
+    ExperimentalBottomTabNavigationEventMap
+  >;
   insets: EdgeInsets;
 };
 
-export type BottomTabBarButtonProps = Omit<
-  React.ComponentProps<typeof PlatformPressable>,
-  'style'
-> & {
-  href?: string;
-  children: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
-  onPress?: (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
-  ) => void;
-};
-
-export type BottomTabNavigatorProps = DefaultNavigatorOptions<
+export type ExperimentalBottomTabNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
   string | undefined,
   TabNavigationState<ParamListBase>,
-  BottomTabNavigationOptions,
-  BottomTabNavigationEventMap,
-  BottomTabNavigationProp<ParamListBase>
+  ExperimentalBottomTabNavigationOptions,
+  ExperimentalBottomTabNavigationEventMap,
+  ExperimentalBottomTabNavigationProp<ParamListBase>
 > &
   TabRouterOptions &
-  BottomTabNavigationConfig;
+  ExperimentalBottomTabNavigationConfig;
