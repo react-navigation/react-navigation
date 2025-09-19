@@ -214,6 +214,7 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   // DONE
   tabBarStyle?: {
     backgroundColor?: ColorValue;
+    shadowColor?: ColorValue;
     // width?: number | string;
   };
 

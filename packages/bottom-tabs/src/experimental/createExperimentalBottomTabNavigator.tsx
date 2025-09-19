@@ -18,6 +18,7 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
+import type { TextStyle } from 'react-native';
 import { BottomTabs, BottomTabsScreen } from 'react-native-screens';
 
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
@@ -73,42 +74,39 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
     tabAnims,
   ]);
 
+  const activeDescriptor = descriptors[state.routes[state.index].key];
+
+  const { tabBarLabelStyle } = activeDescriptor.options;
+
+  const { fontFamily, fontSize, fontWeight, fontStyle, color } =
+    (tabBarLabelStyle || {}) as TextStyle;
+
   return (
     <NavigationContent>
       <BottomTabs
-        // tabBarItemTitleFontSize={24}
-        // tabBarItemTitleFontSizeActive={32}
-        // tabBarItemActiveIndicatorEnabled={false}
-        // tabBarTintColor={'blue'}
-        tabBarTintColor={
-          descriptors[state.routes[state.index].key].options
-            .tabBarActiveTintColor
-        }
+        // ios
+        tabBarTintColor={activeDescriptor.options.tabBarActiveTintColor}
+        // android
         tabBarItemTitleFontColorActive={
-          descriptors[state.routes[state.index].key].options
-            .tabBarActiveTintColor
+          activeDescriptor.options.tabBarActiveTintColor
         }
         tabBarItemTitleFontColor={
-          descriptors[state.routes[state.index].key].options
-            .tabBarInactiveTintColor
+          activeDescriptor.options.tabBarInactiveTintColor || color
         }
         tabBarItemIconColorActive={
-          descriptors[state.routes[state.index].key].options
-            .tabBarActiveTintColor
+          activeDescriptor.options.tabBarActiveTintColor || color
         }
-        tabBarItemIconColor={
-          descriptors[state.routes[state.index].key].options
-            .tabBarInactiveTintColor
-        }
+        tabBarItemIconColor={activeDescriptor.options.tabBarInactiveTintColor}
         tabBarBackgroundColor={
-          descriptors[state.routes[state.index].key].options.tabBarStyle
-            ?.backgroundColor
+          activeDescriptor.options.tabBarStyle?.backgroundColor
         }
         // tabBarItemActiveIndicatorColor={'transparent'}
         tabBarItemActiveIndicatorEnabled={false}
-        // tabBarItemRippleColor={'green'}
-        // tabBarItemLabelVisibilityMode={'selected'}
-        tabBarMinimizeBehavior={'onScrollDown'}
+        // android
+        tabBarItemTitleFontSize={fontSize}
+        tabBarItemTitleFontFamily={fontFamily}
+        tabBarItemTitleFontWeight={fontWeight as TextStyle['fontWeight']}
+        tabBarItemTitleFontStyle={fontStyle as TextStyle['fontStyle']}
         experimentalControlNavigationStateInJS
         onNativeFocusChange={(e) => {
           const route = state.routes.find(
@@ -162,6 +160,25 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
             title = options.title ?? route.name;
           }
 
+          const { fontFamily, fontSize, fontWeight, fontStyle, color } =
+            (options.tabBarLabelStyle || {}) as TextStyle;
+
+          // ios
+          const labelStyle = {
+            tabBarItemTitleFontFamily: fontFamily,
+            tabBarItemTitleFontSize: fontSize,
+            tabBarItemTitleFontWeight: fontWeight,
+            tabBarItemTitleFontStyle: fontStyle,
+            tabBarItemTitleFontColor:
+              activeDescriptor.options.tabBarInactiveTintColor ?? color,
+          };
+
+          const selectedLabelStyle = {
+            ...labelStyle,
+            tabBarItemTitleFontColor:
+              activeDescriptor.options.tabBarActiveTintColor ?? color,
+          };
+
           return (
             <BottomTabsScreen
               key={route.key}
@@ -173,6 +190,11 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
                     }
                   : undefined
               }
+              // icon={{
+              //   imageSource: {
+              //     uri: require('../../../../example/assets/icon.png'),
+              //   },
+              // }}
               iconResourceName={options.tabBarIcon}
               tabBarItemBadgeBackgroundColor={
                 options.tabBarBadgeStyle?.backgroundColor
@@ -181,6 +203,23 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
               badgeValue={options.tabBarBadge?.toString()}
               isFocused={isFocused}
               title={options.tabBarShowLabel !== false ? title : undefined}
+              standardAppearance={{
+                // on ios it styles all bar, not just one entry
+                tabBarBackgroundColor: options.tabBarStyle?.backgroundColor,
+                tabBarShadowColor: options.tabBarStyle?.shadowColor,
+                stacked: {
+                  normal: labelStyle,
+                  selected: selectedLabelStyle,
+                },
+                inline: {
+                  normal: labelStyle,
+                  selected: selectedLabelStyle,
+                },
+                compactInline: {
+                  normal: labelStyle,
+                  selected: selectedLabelStyle,
+                },
+              }}
             >
               <ScreenContent
                 focused={isFocused}

@@ -97,13 +97,33 @@ export function ExperimentalBottomTabs() {
             // color: 'white',
           },
           tabBarActiveTintColor: 'green',
+          tabBarInactiveTintColor: 'red', // android only
           tabBarStyle: {
             backgroundColor: 'pink',
+            shadowColor: 'black', //ios
+          },
+          tabBarLabelStyle: {
+            fontSize: 14,
+            fontWeight: '600',
+            color: 'purple',
+            fontStyle: 'italic',
           },
         }}
       />
       <Tab.Screen
         name="TabContacts"
+        component={Contacts}
+        options={{
+          tabBarIcon: Platform.select({
+            // ios: { sfSymbolName: 'newspaper' },
+            ios: 'star',
+            android: 'star_on',
+            // android: { name: 'newspaper' },
+          }),
+        }}
+      />
+      <Tab.Screen
+        name="TabContacts2"
         component={Contacts}
         options={{
           tabBarIcon: Platform.select({
