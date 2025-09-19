@@ -88,14 +88,12 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
         tabBarTintColor={activeDescriptor.options.tabBarActiveTintColor}
         // android
         tabBarItemTitleFontColorActive={
-          activeDescriptor.options.tabBarActiveTintColor
+          color || activeDescriptor.options.tabBarActiveTintColor
         }
         tabBarItemTitleFontColor={
-          activeDescriptor.options.tabBarInactiveTintColor || color
+          color || activeDescriptor.options.tabBarInactiveTintColor
         }
-        tabBarItemIconColorActive={
-          activeDescriptor.options.tabBarActiveTintColor || color
-        }
+        tabBarItemIconColorActive={color}
         tabBarItemIconColor={activeDescriptor.options.tabBarInactiveTintColor}
         tabBarBackgroundColor={
           activeDescriptor.options.tabBarStyle?.backgroundColor
@@ -170,13 +168,13 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
             tabBarItemTitleFontWeight: fontWeight,
             tabBarItemTitleFontStyle: fontStyle,
             tabBarItemTitleFontColor:
-              activeDescriptor.options.tabBarInactiveTintColor ?? color,
+              color || activeDescriptor.options.tabBarInactiveTintColor,
           };
 
           const selectedLabelStyle = {
             ...labelStyle,
             tabBarItemTitleFontColor:
-              activeDescriptor.options.tabBarActiveTintColor ?? color,
+              color || activeDescriptor.options.tabBarActiveTintColor,
           };
 
           return (
