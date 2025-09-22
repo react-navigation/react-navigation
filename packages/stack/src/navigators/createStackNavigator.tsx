@@ -64,7 +64,6 @@ function StackNavigator({
         // This is necessary to know if preventDefault() has been called
         requestAnimationFrame(() => {
           if (
-            state.index > 0 &&
             isFocused &&
             !(e as unknown as EventArg<'tabPress', true>).defaultPrevented
           ) {

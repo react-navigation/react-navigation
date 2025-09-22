@@ -1045,6 +1045,39 @@ test('handles pop to top action', () => {
   });
 });
 
+test('handles pop to top action with no history', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [{ key: 'qux', name: 'qux' }],
+      },
+      StackActions.popToTop(),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    preloadedRoutes: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [{ key: 'baz-test', name: 'baz' }],
+  });
+});
+
 test('handles pop action with route history', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {

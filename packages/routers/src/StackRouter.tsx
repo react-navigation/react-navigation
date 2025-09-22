@@ -524,8 +524,8 @@ export function StackRouter(options: StackRouterOptions) {
           return router.getStateForAction(
             state,
             {
-              type: 'POP',
-              payload: { count: state.routes.length - 1 },
+              type: 'POP_TO',
+              payload: { name: router.getInitialState(options).routes[0].name },
             },
             options
           );
