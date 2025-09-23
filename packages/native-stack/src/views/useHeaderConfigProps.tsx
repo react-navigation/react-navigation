@@ -1,12 +1,6 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
 import { type Route, useLocale, useTheme } from '@react-navigation/native';
-import {
-  type NativeSyntheticEvent,
-  Platform,
-  StyleSheet,
-  type TextStyle,
-  View,
-} from 'react-native';
+import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
@@ -17,12 +11,7 @@ import {
   SearchBar,
 } from 'react-native-screens';
 
-import {
-  type NativeStackHeaderBarButtonItemMenuAction,
-  type NativeStackHeaderBarButtonItemWithMenu,
-  type NativeStackNavigationOptions,
-} from '../types';
-import { prepareHeaderBarButtonItems } from '../utils/prepareHeaderBarButtonItems';
+import { type NativeStackNavigationOptions } from '../types';
 import { processFonts } from './FontProcessor';
 
 type Props = NativeStackNavigationOptions & {
@@ -306,74 +295,6 @@ export function useHeaderConfigProps({
     </>
   );
 
-  const preparedHeaderLeftBarButtonItems = headerLeftItems
-    ? prepareHeaderBarButtonItems(headerLeftItems, route.key, 'left')
-    : undefined;
-  const preparedHeaderRightBarButtonItems = headerRightItems
-    ? prepareHeaderBarButtonItems(headerRightItems, route.key, 'right')
-    : undefined;
-  const hasHeaderBarButtonItems =
-    preparedHeaderLeftBarButtonItems?.length ||
-    preparedHeaderRightBarButtonItems?.length;
-
-  // Handle bar button item presses
-  const onPressHeaderBarButtonItem = hasHeaderBarButtonItems
-    ? (event: NativeSyntheticEvent<{ buttonId: string }>) => {
-        const pressedItem = [
-          ...(preparedHeaderLeftBarButtonItems ?? []),
-          ...(preparedHeaderRightBarButtonItems ?? []),
-        ].find(
-          (item) =>
-            item &&
-            'onPress' in item &&
-            item.buttonId === event.nativeEvent.buttonId
-        );
-        if (pressedItem && 'onPress' in pressedItem && pressedItem.onPress) {
-          pressedItem.onPress();
-        }
-      }
-    : undefined;
-
-  // Handle bar button menu item presses by deep-searching nested menus
-  const onPressHeaderBarButtonMenuItem = hasHeaderBarButtonItems
-    ? (event: NativeSyntheticEvent<{ menuId: string }>) => {
-        const { menuId } = event.nativeEvent;
-        // Recursively search menu tree
-        const findInMenu = (
-          menu: NativeStackHeaderBarButtonItemWithMenu['menu'],
-          menuId: string
-        ): NativeStackHeaderBarButtonItemMenuAction | undefined => {
-          for (const item of menu.items) {
-            if ('items' in item) {
-              // submenu: recurse
-              const found = findInMenu(item, menuId);
-              if (found) {
-                return found;
-              }
-            } else if ('menuId' in item && item.menuId === menuId) {
-              return item;
-            }
-          }
-          return undefined;
-        };
-
-        // Check each bar-button item with a menu
-        const allItems = [
-          ...(preparedHeaderLeftBarButtonItems ?? []),
-          ...(preparedHeaderRightBarButtonItems ?? []),
-        ];
-        for (const item of allItems) {
-          if (item && 'menu' in item && item.menu) {
-            const action = findInMenu(item.menu, menuId);
-            if (action) {
-              action.onPress();
-              return;
-            }
-          }
-        }
-      }
-    : undefined;
-
   return {
     backButtonInCustomView,
     backgroundColor: headerBackgroundColor,
@@ -411,9 +332,7 @@ export function useHeaderConfigProps({
     topInsetEnabled: headerTopInsetEnabled,
     translucent: translucent === true,
     children,
-    headerLeftBarButtonItems: preparedHeaderLeftBarButtonItems,
-    headerRightBarButtonItems: preparedHeaderRightBarButtonItems,
-    onPressHeaderBarButtonItem,
-    onPressHeaderBarButtonMenuItem,
+    headerLeftItems,
+    headerRightItems,
   } as const;
 }
