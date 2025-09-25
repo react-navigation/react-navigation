@@ -710,11 +710,11 @@ export type NativeStackNavigationOptions = {
 };
 type SharedHeaderBarButtonItem = {
   /**
-   * Title of the button.
+   * Title of the item.
    */
   title?: string;
   /**
-   * Style for the button title.
+   * Style for the item title.
    */
   titleStyle?: {
     fontFamily?: string;
@@ -723,7 +723,7 @@ type SharedHeaderBarButtonItem = {
     color?: ColorValue;
   };
   /**
-   * Image source for the button
+   * Image source for the item
    */
   image?: ImageRequireSource;
   /**
@@ -738,7 +738,7 @@ type SharedHeaderBarButtonItem = {
    */
   style?: 'plain' | 'done' | 'prominent';
   /**
-   * The tint color to apply to the button item.
+   * The tint color to apply to the item.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/tintcolor
    */
@@ -751,7 +751,7 @@ type SharedHeaderBarButtonItem = {
    */
   hidden?: boolean;
   /**
-   * A Boolean value that indicates whether the button is in a enabled state.
+   * A Boolean value that indicates whether the item is in a enabled state.
    */
   enabled?: boolean;
   /**
@@ -768,21 +768,21 @@ type SharedHeaderBarButtonItem = {
    */
   hidesSharedBackground?: boolean;
   /**
-   * A boolean value indicating whether this bar button item can share a background with other items in a navigation bar or a toolbar.
+   * A boolean value indicating whether this item can share a background with other items in a navigation bar or a toolbar.
    * Only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/sharesbackground
    */
   sharesBackground?: boolean;
   /**
-   * An identifier used to match bar button items across transitions in a navigation bar or toolbar..
+   * An identifier used to match items across transitions in a navigation bar or toolbar..
    * Only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/identifier
    */
   identifier?: string;
   /**
-   * A badge to be rendered on a bar button item.
+   * A badge to be rendered on a item.
    * Only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitembadge
@@ -813,17 +813,17 @@ type SharedHeaderBarButtonItem = {
 export type NativeStackHeaderBarButtonItemWithAction =
   SharedHeaderBarButtonItem & {
     /**
-     * Function to call when the button is pressed.
+     * Function to call when the item is pressed.
      */
     onPress: () => void;
     /**
-     * A Boolean value that indicates whether the button is in a selected state.
+     * A Boolean value that indicates whether the item is in a selected state.
      *
      * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
      */
     selected?: boolean;
     /**
-     * A Boolean value that indicates whether the button represents an action or selection.
+     * A Boolean value that indicates whether the item represents an action or selection.
      * Only available from iOS 15.0 and later.
      *
      * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
@@ -840,13 +840,13 @@ export type NativeStackHeaderBarButtonItemMenuAction = {
    */
   sfSymbolName?: string;
   /**
-   * State of the menu item.
+   * State of the item.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/state
    */
   state?: 'on' | 'off' | 'mixed';
   /**
-   * Style of the menu item.
+   * Style of the item.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes
    */
