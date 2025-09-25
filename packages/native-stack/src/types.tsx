@@ -791,14 +791,11 @@ type SharedHeaderButtonItem = {
      */
     value: string;
     /**
-     * The color of the badge.
+     * Style of the badge.
      */
-    color?: ColorValue;
-    /**
-     * The background color of the badge.
-     */
-    backgroundColor?: ColorValue;
     style?: {
+      color?: ColorValue;
+      backgroundColor?: ColorValue;
       fontFamily?: string;
       fontSize?: number;
       fontWeight?: string;
