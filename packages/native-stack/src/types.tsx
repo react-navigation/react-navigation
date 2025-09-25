@@ -292,8 +292,7 @@ export type NativeStackNavigationOptions = {
    */
   headerRight?: (props: NativeStackHeaderRightProps) => React.ReactNode;
   /**
-   * Array of iOS native UIBarButtomItem or functions
-   * that returns a React Element to the left side of the header.
+   * Array of items to display as UIBarButtonItems to the left side of the header.
    * Overrides `headerLeft`.
    *
    * @platform ios
@@ -303,8 +302,7 @@ export type NativeStackNavigationOptions = {
     | NativeStackHeaderButtonItemWithCustomView<NativeStackHeaderLeftProps>
   )[];
   /**
-   * Array of iOS native UIBarButtomItem or functions
-   * that returns a React Element to the right side of the header.
+   * Array of items to display as UIBarButtonItems to the right side of the header.
    * Overrides `headerRight`.
    *
    * @platform ios
