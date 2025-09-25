@@ -299,8 +299,8 @@ export type NativeStackNavigationOptions = {
    * @platform ios
    */
   headerLeftItems?: (
-    | NativeStackHeaderBarButtonItem
-    | NativeStackHeaderBarButtonItemWithCustomView<NativeStackHeaderLeftProps>
+    | NativeStackHeaderButtonItem
+    | NativeStackHeaderButtonItemWithCustomView<NativeStackHeaderLeftProps>
   )[];
   /**
    * Array of iOS native UIBarButtomItem or functions
@@ -310,8 +310,8 @@ export type NativeStackNavigationOptions = {
    * @platform ios
    */
   headerRightItems?: (
-    | NativeStackHeaderBarButtonItem
-    | NativeStackHeaderBarButtonItemWithCustomView<NativeStackHeaderRightProps>
+    | NativeStackHeaderButtonItem
+    | NativeStackHeaderButtonItemWithCustomView<NativeStackHeaderRightProps>
   )[];
   /**
    * String or a function that returns a React Element to be used by the header.
@@ -708,7 +708,7 @@ export type NativeStackNavigationOptions = {
    */
   unstable_sheetFooter?: () => React.ReactNode;
 };
-type SharedHeaderBarButtonItem = {
+type SharedHeaderButtonItem = {
   /**
    * Title of the item.
    */
@@ -810,28 +810,27 @@ type SharedHeaderBarButtonItem = {
   accessibilityHint?: string;
 };
 
-export type NativeStackHeaderBarButtonItemWithAction =
-  SharedHeaderBarButtonItem & {
-    /**
-     * Function to call when the item is pressed.
-     */
-    onPress: () => void;
-    /**
-     * A Boolean value that indicates whether the item is in a selected state.
-     *
-     * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
-     */
-    selected?: boolean;
-    /**
-     * A Boolean value that indicates whether the item represents an action or selection.
-     * Only available from iOS 15.0 and later.
-     *
-     * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
-     */
-    changesSelectionAsPrimaryAction?: boolean;
-  };
+export type NativeStackHeaderButtonItemWithAction = SharedHeaderButtonItem & {
+  /**
+   * Function to call when the item is pressed.
+   */
+  onPress: () => void;
+  /**
+   * A Boolean value that indicates whether the item is in a selected state.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
+   */
+  selected?: boolean;
+  /**
+   * A Boolean value that indicates whether the item represents an action or selection.
+   * Only available from iOS 15.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
+   */
+  changesSelectionAsPrimaryAction?: boolean;
+};
 
-export type NativeStackHeaderBarButtonItemMenuAction = {
+export type NativeStackHeaderButtonItemMenuAction = {
   title?: string;
   type: 'action';
   onPress: () => void;
@@ -859,31 +858,30 @@ export type NativeStackHeaderBarButtonItemMenuAction = {
   discoverabilityTitle?: string;
 };
 
-export type NativeStackHeaderBarButtonItemSubmenu = {
+export type NativeStackHeaderButtonItemSubmenu = {
   title?: string;
   type: 'submenu';
   /**
    * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
    */
   sfSymbolName?: string;
-  items: NativeStackHeaderBarButtonItemWithMenu['menu']['items'];
+  items: NativeStackHeaderButtonItemWithMenu['menu']['items'];
 };
-export type NativeStackHeaderBarButtonItemWithMenu =
-  SharedHeaderBarButtonItem & {
-    menu: {
-      title?: string;
-      items: (
-        | NativeStackHeaderBarButtonItemMenuAction
-        | NativeStackHeaderBarButtonItemSubmenu
-      )[];
-    };
+export type NativeStackHeaderButtonItemWithMenu = SharedHeaderButtonItem & {
+  menu: {
+    title?: string;
+    items: (
+      | NativeStackHeaderButtonItemMenuAction
+      | NativeStackHeaderButtonItemSubmenu
+    )[];
   };
+};
 
-export type NativeStackHeaderBarButtonItemSpacing = {
+export type NativeStackHeaderButtonItemSpacing = {
   spacing: number;
 };
 
-export type NativeStackHeaderBarButtonItemWithCustomView<T> = {
+export type NativeStackHeaderButtonItemWithCustomView<T> = {
   customView: (props: T) => React.ReactNode;
   /**
    * A boolean value indicating whether the background this item may share with other items in the bar should be hidden.
@@ -894,10 +892,10 @@ export type NativeStackHeaderBarButtonItemWithCustomView<T> = {
   hidesSharedBackground?: boolean;
 };
 
-export type NativeStackHeaderBarButtonItem =
-  | NativeStackHeaderBarButtonItemWithAction
-  | NativeStackHeaderBarButtonItemWithMenu
-  | NativeStackHeaderBarButtonItemSpacing;
+export type NativeStackHeaderButtonItem =
+  | NativeStackHeaderButtonItemWithAction
+  | NativeStackHeaderButtonItemWithMenu
+  | NativeStackHeaderButtonItemSpacing;
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
