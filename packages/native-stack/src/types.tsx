@@ -708,7 +708,7 @@ export type NativeStackNavigationOptions = {
    */
   unstable_sheetFooter?: () => React.ReactNode;
 };
-interface SharedHeaderBarButtonItem {
+type SharedHeaderBarButtonItem = {
   /**
    * Title of the button.
    */
@@ -808,30 +808,30 @@ interface SharedHeaderBarButtonItem {
   };
   accessibilityLabel?: string;
   accessibilityHint?: string;
-}
+};
 
-export interface NativeStackHeaderBarButtonItemWithAction
-  extends SharedHeaderBarButtonItem {
-  /**
-   * Function to call when the button is pressed.
-   */
-  onPress: () => void;
-  /**
-   * A Boolean value that indicates whether the button is in a selected state.
-   *
-   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
-   */
-  selected?: boolean;
-  /**
-   * A Boolean value that indicates whether the button represents an action or selection.
-   * Only available from iOS 15.0 and later.
-   *
-   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
-   */
-  changesSelectionAsPrimaryAction?: boolean;
-}
+export type NativeStackHeaderBarButtonItemWithAction =
+  SharedHeaderBarButtonItem & {
+    /**
+     * Function to call when the button is pressed.
+     */
+    onPress: () => void;
+    /**
+     * A Boolean value that indicates whether the button is in a selected state.
+     *
+     * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
+     */
+    selected?: boolean;
+    /**
+     * A Boolean value that indicates whether the button represents an action or selection.
+     * Only available from iOS 15.0 and later.
+     *
+     * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
+     */
+    changesSelectionAsPrimaryAction?: boolean;
+  };
 
-export interface NativeStackHeaderBarButtonItemMenuAction {
+export type NativeStackHeaderBarButtonItemMenuAction = {
   title?: string;
   type: 'action';
   onPress: () => void;
@@ -857,9 +857,9 @@ export interface NativeStackHeaderBarButtonItemMenuAction {
    * Read more: https://developer.apple.com/documentation/uikit/uiaction/discoverabilitytitle
    */
   discoverabilityTitle?: string;
-}
+};
 
-export interface NativeStackHeaderBarButtonItemSubmenu {
+export type NativeStackHeaderBarButtonItemSubmenu = {
   title?: string;
   type: 'submenu';
   /**
@@ -867,21 +867,21 @@ export interface NativeStackHeaderBarButtonItemSubmenu {
    */
   sfSymbolName?: string;
   items: NativeStackHeaderBarButtonItemWithMenu['menu']['items'];
-}
-export interface NativeStackHeaderBarButtonItemWithMenu
-  extends SharedHeaderBarButtonItem {
-  menu: {
-    title?: string;
-    items: (
-      | NativeStackHeaderBarButtonItemMenuAction
-      | NativeStackHeaderBarButtonItemSubmenu
-    )[];
+};
+export type NativeStackHeaderBarButtonItemWithMenu =
+  SharedHeaderBarButtonItem & {
+    menu: {
+      title?: string;
+      items: (
+        | NativeStackHeaderBarButtonItemMenuAction
+        | NativeStackHeaderBarButtonItemSubmenu
+      )[];
+    };
   };
-}
 
-export interface NativeStackHeaderBarButtonItemSpacing {
+export type NativeStackHeaderBarButtonItemSpacing = {
   spacing: number;
-}
+};
 
 export type NativeStackHeaderBarButtonItemWithCustomView<T> = {
   customView: (props: T) => React.ReactNode;
