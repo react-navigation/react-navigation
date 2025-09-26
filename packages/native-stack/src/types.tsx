@@ -729,12 +729,12 @@ type SharedHeaderButtonItem = {
    */
   sfSymbolName?: string;
   /**
-   * The style of the item.
+   * The variant of the item.
    * "Prominent" only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/style-swift.property
    */
-  style?: 'plain' | 'done' | 'prominent';
+  variant?: 'plain' | 'done' | 'prominent';
   /**
    * The tint color to apply to the item.
    *
