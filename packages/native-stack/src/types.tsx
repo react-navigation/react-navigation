@@ -13,7 +13,6 @@ import type {
 } from '@react-navigation/native';
 import type {
   ColorValue,
-  ImageRequireSource,
   ImageSourcePropType,
   StyleProp,
   TextStyle,
@@ -723,7 +722,7 @@ type SharedHeaderButtonItem = {
   /**
    * Image source for the item
    */
-  image?: ImageRequireSource;
+  imageSource?: ImageSourcePropType;
   /**
    * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
    */
