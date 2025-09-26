@@ -1,5 +1,10 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
-import { type Route, useLocale, useTheme } from '@react-navigation/native';
+import {
+  type Route,
+  type Theme,
+  useLocale,
+  useTheme,
+} from '@react-navigation/native';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   // @ts-expect-error Will be available when new react-native-screens is published
@@ -21,6 +26,50 @@ type Props = NativeStackNavigationOptions & {
   headerHeight: number;
   headerBack: { title?: string | undefined; href: undefined } | undefined;
   route: Route<string>;
+};
+
+const processBarButtonItems = (
+  barButtonItems:
+    | NativeStackNavigationOptions['headerLeftItems']
+    | NativeStackNavigationOptions['headerRightItems'],
+  colors: Theme['colors'],
+  fonts: Theme['fonts']
+) => {
+  return barButtonItems
+    ?.map((item, index) => {
+      if ('customView' in item) {
+        return null;
+      }
+      let processedItem = {
+        ...item,
+        index,
+      };
+      if ('spacing' in item) {
+        return processedItem;
+      }
+      processedItem = {
+        ...processedItem,
+        labelStyle: {
+          fontFamily: fonts.regular.fontFamily,
+          ...item.labelStyle,
+        },
+      };
+      if ('badge' in item && item.badge) {
+        processedItem = {
+          ...processedItem,
+          badge: {
+            ...item.badge,
+            style: {
+              fontFamily: fonts.regular.fontFamily,
+              backgroundColor: colors.notification,
+              ...item.badge.style,
+            },
+          },
+        };
+      }
+      return processedItem;
+    })
+    .filter(Boolean);
 };
 
 export function useHeaderConfigProps({
@@ -342,11 +391,15 @@ export function useHeaderConfigProps({
     topInsetEnabled: headerTopInsetEnabled,
     translucent: translucent === true,
     children,
-    headerLeftBarButtonItems: headerLeftItems
-      ?.map((item, index) => ('customView' in item ? null : { ...item, index }))
-      .filter(Boolean),
-    headerRightBarButtonItems: headerRightItems
-      ?.map((item, index) => ('customView' in item ? null : { ...item, index }))
-      .filter(Boolean),
+    headerLeftBarButtonItems: processBarButtonItems(
+      headerLeftItems,
+      colors,
+      fonts
+    ),
+    headerRightBarButtonItems: processBarButtonItems(
+      headerRightItems,
+      colors,
+      fonts
+    ),
   } as const;
 }
