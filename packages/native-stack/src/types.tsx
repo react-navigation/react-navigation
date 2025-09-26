@@ -708,13 +708,13 @@ export type NativeStackNavigationOptions = {
 };
 type SharedHeaderButtonItem = {
   /**
-   * Title of the item.
+   * Label of the item.
    */
-  title?: string;
+  label?: string;
   /**
-   * Style for the item title.
+   * Style for the item label.
    */
-  titleStyle?: {
+  labelStyle?: {
     fontFamily?: string;
     fontSize?: number;
     fontWeight?: string;
@@ -826,7 +826,7 @@ export type NativeStackHeaderButtonItemWithAction = SharedHeaderButtonItem & {
 };
 
 export type NativeStackHeaderButtonItemMenuAction = {
-  title?: string;
+  label?: string;
   type: 'action';
   onPress: () => void;
   /**
@@ -840,21 +840,21 @@ export type NativeStackHeaderButtonItemMenuAction = {
    */
   state?: 'on' | 'off' | 'mixed';
   /**
-   * Style of the item.
+   * Attributes of the item.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes
    */
   attributes?: 'destructive' | 'disabled' | 'hidden' | 'keepsMenuPresented';
   /**
-   * Discoverability title of the menu item.
+   * Discoverability label of the menu item.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uiaction/discoverabilitytitle
    */
-  discoverabilityTitle?: string;
+  discoverabilityLabel?: string;
 };
 
 export type NativeStackHeaderButtonItemSubmenu = {
-  title?: string;
+  label?: string;
   type: 'submenu';
   /**
    * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
@@ -864,7 +864,7 @@ export type NativeStackHeaderButtonItemSubmenu = {
 };
 export type NativeStackHeaderButtonItemWithMenu = SharedHeaderButtonItem & {
   menu: {
-    title?: string;
+    label?: string;
     items: (
       | NativeStackHeaderButtonItemMenuAction
       | NativeStackHeaderButtonItemSubmenu
