@@ -113,7 +113,7 @@ export type DefaultNavigatorOptions<
         id: NavigatorID;
       }
     : {
-        id?: undefined;
+        id?: string | undefined;
       });
 
 export type EventMapBase = Record<
