@@ -1027,3 +1027,16 @@ export type PathConfigMap<ParamList extends {}> = {
     ? string | PathConfig<T>
     : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
 };
+
+export type ParamsForRoute<
+  ParamList extends ParamListBase,
+  Key extends PropertyKey,
+> = {
+  [K in keyof ParamList]: K extends Key
+    ? ParamList[K] extends NavigatorScreenParams<any>
+      ? never
+      : ParamList[K]
+    : ParamList[K] extends NavigatorScreenParams<infer T>
+      ? ParamsForRoute<T, Key>
+      : never;
+}[keyof ParamList];

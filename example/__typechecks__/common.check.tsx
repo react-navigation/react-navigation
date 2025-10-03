@@ -17,6 +17,7 @@ import {
   type NavigationContainerRef,
   type NavigationHelpers,
   type NavigatorScreenParams,
+  type ParamsForRoute,
   type Route,
   useLinkProps,
 } from '@react-navigation/native';
@@ -27,6 +28,9 @@ import {
   type StackScreenProps,
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
+
+import type { BottomTabParams } from '../src/Screens/BottomTabs';
+import type { NativeStackParams } from '../src/Screens/NativeStack';
 
 /**
  * Check for the type of the `navigation` and `route` objects with regular usage
@@ -722,3 +726,30 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
   PostDetails
 </Button>;
 <Button<LinkParamList> screen="Login">Albums</Button>;
+
+// Check for ParamsForRoute
+
+// undefined
+expectTypeOf<ParamsForRoute<BottomTabParams, 'TabContacts'>>().toEqualTypeOf<
+  BottomTabParams['TabContacts']
+>();
+
+// not existing
+expectTypeOf<ParamsForRoute<BottomTabParams, 'TabContocts'>>().toBeNever();
+
+// not undefined
+expectTypeOf<ParamsForRoute<BottomTabParams, 'TabChat'>>().toEqualTypeOf<
+  BottomTabParams['TabChat']
+>();
+
+expectTypeOf<ParamsForRoute<BottomTabParams, 'TabChat'>>().not.toEqualTypeOf<
+  ParamsForRoute<BottomTabParams, 'TabContacts'>
+>();
+
+// nested
+expectTypeOf<ParamsForRoute<BottomTabParams, 'NewsFeed'>>().toEqualTypeOf<
+  NativeStackParams['NewsFeed']
+>();
+
+// if navigator under the key, then never
+expectTypeOf<ParamsForRoute<BottomTabParams, 'TabStack'>>().toBeNever();

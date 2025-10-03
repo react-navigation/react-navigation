@@ -1,5 +1,3 @@
-import type { NavigatorScreenParams } from '@react-navigation/core';
-
 import type * as CommonActions from './CommonActions';
 
 export type CommonNavigationAction = CommonActions.Action;
@@ -97,19 +95,6 @@ export type Route<
       }>);
 
 export type ParamListBase = Record<string, object | undefined>;
-
-export type ParamsForRoute<
-  ParamList extends ParamListBase,
-  Key extends PropertyKey,
-> = {
-  [K in keyof ParamList]: K extends Key
-    ? ParamList[K] extends NavigatorScreenParams<any>
-      ? never
-      : ParamList[K]
-    : ParamList[K] extends NavigatorScreenParams<infer T>
-      ? ParamsForRoute<T, Key>
-      : never;
-}[keyof ParamList];
 
 export type NavigationAction = Readonly<{
   /**
