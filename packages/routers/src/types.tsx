@@ -96,6 +96,11 @@ export type Route<
 
 export type ParamListBase = Record<string, object | undefined>;
 
+export type ParamsForRoute<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+> = undefined extends ParamList[RouteName] ? never : ParamList[RouteName];
+
 export type NavigationAction = Readonly<{
   /**
    * Type of the action (e.g. `NAVIGATE`)
