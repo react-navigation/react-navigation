@@ -97,7 +97,7 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   /**
    * Style object for the tab label.
    */
-  // TODO TEXT
+  // Done
   tabBarLabelStyle?: StyleProp<TextStyle>;
 
   /**
