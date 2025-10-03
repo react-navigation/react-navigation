@@ -1030,7 +1030,7 @@ export type PathConfigMap<ParamList extends {}> = {
 
 export type ParamsForRoute<
   ParamList extends ParamListBase,
-  Key extends PropertyKey,
+  Key extends string,
 > = {
   [K in keyof ParamList]: K extends Key
     ? ParamList[K]
