@@ -29,9 +29,6 @@ import {
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
 
-import type { BottomTabParams } from '../src/Screens/BottomTabs';
-import type { NativeStackParams } from '../src/Screens/NativeStack';
-
 /**
  * Check for the type of the `navigation` and `route` objects with regular usage
  */
@@ -730,26 +727,24 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
 // Check for ParamsForRoute
 
 // undefined
-expectTypeOf<ParamsForRoute<BottomTabParams, 'TabContacts'>>().toEqualTypeOf<
-  BottomTabParams['TabContacts']
+expectTypeOf<ParamsForRoute<RootStackParamList, 'Login'>>().toEqualTypeOf<
+  RootStackParamList['Login']
 >();
 
 // not existing
-expectTypeOf<ParamsForRoute<BottomTabParams, 'TabContocts'>>().toBeNever();
+expectTypeOf<ParamsForRoute<RootStackParamList, 'NotAKey'>>().toBeNever();
 
 // not undefined
-expectTypeOf<ParamsForRoute<BottomTabParams, 'TabChat'>>().toEqualTypeOf<
-  BottomTabParams['TabChat']
->();
-
-expectTypeOf<ParamsForRoute<BottomTabParams, 'TabChat'>>().not.toEqualTypeOf<
-  ParamsForRoute<BottomTabParams, 'TabContacts'>
+expectTypeOf<ParamsForRoute<RootStackParamList, 'PostDetails'>>().toEqualTypeOf<
+  RootStackParamList['PostDetails']
 >();
 
 // nested
-expectTypeOf<ParamsForRoute<BottomTabParams, 'NewsFeed'>>().toEqualTypeOf<
-  NativeStackParams['NewsFeed']
+expectTypeOf<ParamsForRoute<RootStackParamList, 'Artist'>>().toEqualTypeOf<
+  AlbumTabParamList['Artist']
 >();
 
-// if navigator under the key, then never
-expectTypeOf<ParamsForRoute<BottomTabParams, 'TabStack'>>().toBeNever();
+// navigator
+expectTypeOf<ParamsForRoute<HomeDrawerParamList, 'Feed'>>().toEqualTypeOf<
+  HomeDrawerParamList['Feed']
+>();

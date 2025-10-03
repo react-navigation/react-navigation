@@ -1033,9 +1033,7 @@ export type ParamsForRoute<
   Key extends PropertyKey,
 > = {
   [K in keyof ParamList]: K extends Key
-    ? ParamList[K] extends NavigatorScreenParams<any>
-      ? never
-      : ParamList[K]
+    ? ParamList[K]
     : ParamList[K] extends NavigatorScreenParams<infer T>
       ? ParamsForRoute<T, Key>
       : never;
