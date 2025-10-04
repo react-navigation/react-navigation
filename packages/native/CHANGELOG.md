@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.17...@react-navigation/native@7.1.18) (2025-10-04)
+
+### Bug Fixes
+
+* export useRoutePath to match docs - fixes [#12776](https://github.com/react-navigation/react-navigation/issues/12776) ([#12777](https://github.com/react-navigation/react-navigation/issues/12777)) ([9982868](https://github.com/react-navigation/react-navigation/commit/9982868df6f83f516f6fd2627587278343d0aaed)) - by @kevindice
+
 ## [7.1.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.16...@react-navigation/native@7.1.17) (2025-08-02)
 
 **Note:** Version bump only for package @react-navigation/native
