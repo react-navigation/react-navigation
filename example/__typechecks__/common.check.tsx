@@ -724,27 +724,34 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
 </Button>;
 <Button<LinkParamList> screen="Login">Albums</Button>;
 
-// Check for ParamsForRoute
+/**
+ * Check for ParamsForRoute
+ */
 
-// undefined
+/* Invalid route name */
+expectTypeOf<ParamsForRoute<RootStackParamList, 'NotAKey'>>().toBeNever();
+
+/* Undefined params */
 expectTypeOf<ParamsForRoute<RootStackParamList, 'Login'>>().toEqualTypeOf<
   RootStackParamList['Login']
 >();
 
-// not existing
-expectTypeOf<ParamsForRoute<RootStackParamList, 'NotAKey'>>().toBeNever();
-
-// not undefined
+/* Valid params */
 expectTypeOf<ParamsForRoute<RootStackParamList, 'PostDetails'>>().toEqualTypeOf<
   RootStackParamList['PostDetails']
 >();
 
-// nested
+/* Optional params */
+expectTypeOf<ParamsForRoute<RootStackParamList, 'Settings'>>().toEqualTypeOf<
+  RootStackParamList['Settings']
+>();
+
+/* Nested screen */
 expectTypeOf<ParamsForRoute<RootStackParamList, 'Artist'>>().toEqualTypeOf<
   AlbumTabParamList['Artist']
 >();
 
-// navigator
+/* Nested screen with navigator */
 expectTypeOf<ParamsForRoute<HomeDrawerParamList, 'Feed'>>().toEqualTypeOf<
   HomeDrawerParamList['Feed']
 >();
