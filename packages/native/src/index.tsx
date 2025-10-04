@@ -12,5 +12,6 @@ export { useLinkBuilder } from './useLinkBuilder';
 export { type LinkProps, useLinkProps } from './useLinkProps';
 export { useLinkTo } from './useLinkTo';
 export { useLocale } from './useLocale';
+export { useRoutePath } from './useRoutePath';
 export { useScrollToTop } from './useScrollToTop';
 export * from '@react-navigation/core';
