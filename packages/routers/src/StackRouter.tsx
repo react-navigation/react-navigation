@@ -520,15 +520,26 @@ export function StackRouter(options: StackRouterOptions) {
           return null;
         }
 
-        case 'POP_TO_TOP':
-          return router.getStateForAction(
-            state,
-            {
-              type: 'POP',
-              payload: { count: state.routes.length - 1 },
-            },
-            options
-          );
+        case 'POP_TO_TOP': {
+          let route = state.routes[0];
+
+          if (state.index > 0 || route.history?.length) {
+            if (route.history?.length) {
+              route = {
+                ...route,
+                history: undefined,
+              };
+            }
+
+            return {
+              ...state,
+              index: 0,
+              routes: [route],
+            };
+          }
+
+          return null;
+        }
 
         case 'POP_TO': {
           if (!state.routeNames.includes(action.payload.name)) {
