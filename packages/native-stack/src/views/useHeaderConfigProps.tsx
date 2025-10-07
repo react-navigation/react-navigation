@@ -8,7 +8,7 @@ import {
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   // @ts-expect-error Will be available when new react-native-screens is published
-  BarButtonItemCustomView,
+  CustomViewBarButtonItem,
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
@@ -250,7 +250,7 @@ export function useHeaderConfigProps({
                 return (
                   // eslint-disable-next-line @eslint-react/no-array-index-key
                   <ScreenStackHeaderLeftView key={index}>
-                    <BarButtonItemCustomView
+                    <CustomViewBarButtonItem
                       hidesSharedBackground={item.hidesSharedBackground}
                     >
                       {item.customView({
@@ -260,7 +260,7 @@ export function useHeaderConfigProps({
                         // `href` is only applicable to web
                         href: undefined,
                       })}
-                    </BarButtonItemCustomView>
+                    </CustomViewBarButtonItem>
                   </ScreenStackHeaderLeftView>
                 );
               }
@@ -328,14 +328,14 @@ export function useHeaderConfigProps({
             return (
               // eslint-disable-next-line @eslint-react/no-array-index-key
               <ScreenStackHeaderRightView key={index}>
-                <BarButtonItemCustomView
+                <CustomViewBarButtonItem
                   hidesSharedBackground={item.hidesSharedBackground}
                 >
                   {item.customView({
                     tintColor,
                     canGoBack,
                   })}
-                </BarButtonItemCustomView>
+                </CustomViewBarButtonItem>
               </ScreenStackHeaderRightView>
             );
           }
