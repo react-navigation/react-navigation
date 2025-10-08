@@ -705,6 +705,19 @@ export type NativeStackNavigationOptions = {
    */
   unstable_sheetFooter?: () => React.ReactNode;
 };
+
+type PlatformIconShared = {
+  type: 'imageSource';
+  imageSource: ImageSourcePropType;
+};
+
+type PlatformIconIOSSfSymbol = {
+  type: 'sfSymbol';
+  name: string;
+};
+
+type PlatformIconIOS = PlatformIconIOSSfSymbol | PlatformIconShared;
+
 type SharedHeaderButtonItem = {
   /**
    * Label of the item.
@@ -720,13 +733,9 @@ type SharedHeaderButtonItem = {
     color?: ColorValue;
   };
   /**
-   * Image source for the item
+   * Icon for the item
    */
-  imageSource?: ImageSourcePropType;
-  /**
-   * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
-   */
-  sfSymbolName?: string;
+  icon?: PlatformIconIOS;
   /**
    * The variant of the item.
    * "Prominent" only available from iOS 26.0 and later.
@@ -821,10 +830,7 @@ export type NativeStackHeaderButtonItemMenuAction = {
   label?: string;
   type: 'action';
   onPress: () => void;
-  /**
-   * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
-   */
-  sfSymbolName?: string;
+  icon?: PlatformIconIOSSfSymbol;
   /**
    * State of the item.
    *
@@ -848,10 +854,7 @@ export type NativeStackHeaderButtonItemMenuAction = {
 export type NativeStackHeaderButtonItemSubmenu = {
   label?: string;
   type: 'submenu';
-  /**
-   * Any SF symbol. Explore them here: https://developer.apple.com/sf-symbols/
-   */
-  sfSymbolName?: string;
+  icon?: PlatformIconIOSSfSymbol;
   items: NativeStackHeaderButtonItemWithMenu['menu']['items'];
 };
 export type NativeStackHeaderButtonItemWithMenu = SharedHeaderButtonItem & {
