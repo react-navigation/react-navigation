@@ -7,8 +7,6 @@ import {
 } from '@react-navigation/native';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
-  // @ts-expect-error Will be available when new react-native-screens is published
-  CustomViewBarButtonItem,
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
@@ -248,19 +246,19 @@ export function useHeaderConfigProps({
             headerLeftItems.map((item, index) => {
               if ('customView' in item) {
                 return (
-                  // eslint-disable-next-line @eslint-react/no-array-index-key
-                  <ScreenStackHeaderLeftView key={index}>
-                    <CustomViewBarButtonItem
-                      hidesSharedBackground={item.hidesSharedBackground}
-                    >
-                      {item.customView({
-                        tintColor,
-                        canGoBack,
-                        label: headerBackTitle ?? headerBack?.title,
-                        // `href` is only applicable to web
-                        href: undefined,
-                      })}
-                    </CustomViewBarButtonItem>
+                  <ScreenStackHeaderLeftView
+                    // eslint-disable-next-line @eslint-react/no-array-index-key
+                    key={index}
+                    // @ts-expect-error hidesSharedBackground will be available when new react-native-screens is published
+                    hidesSharedBackground={item.hidesSharedBackground}
+                  >
+                    {item.customView({
+                      tintColor,
+                      canGoBack,
+                      label: headerBackTitle ?? headerBack?.title,
+                      // `href` is only applicable to web
+                      href: undefined,
+                    })}
                   </ScreenStackHeaderLeftView>
                 );
               }
@@ -326,16 +324,16 @@ export function useHeaderConfigProps({
         headerRightItems.map((item, index) => {
           if ('customView' in item) {
             return (
-              // eslint-disable-next-line @eslint-react/no-array-index-key
-              <ScreenStackHeaderRightView key={index}>
-                <CustomViewBarButtonItem
-                  hidesSharedBackground={item.hidesSharedBackground}
-                >
-                  {item.customView({
-                    tintColor,
-                    canGoBack,
-                  })}
-                </CustomViewBarButtonItem>
+              <ScreenStackHeaderRightView
+                // eslint-disable-next-line @eslint-react/no-array-index-key
+                key={index}
+                // @ts-expect-error hidesSharedBackground will be available when new react-native-screens is published
+                hidesSharedBackground={item.hidesSharedBackground}
+              >
+                {item.customView({
+                  tintColor,
+                  canGoBack,
+                })}
               </ScreenStackHeaderRightView>
             );
           }
