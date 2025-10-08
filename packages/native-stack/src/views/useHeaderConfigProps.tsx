@@ -1,5 +1,10 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
-import { type Route, useLocale, useTheme } from '@react-navigation/native';
+import {
+  type Route,
+  type Theme,
+  useLocale,
+  useTheme,
+} from '@react-navigation/native';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   isSearchBarAvailableForCurrentPlatform,
@@ -11,7 +16,7 @@ import {
   SearchBar,
 } from 'react-native-screens';
 
-import type { NativeStackNavigationOptions } from '../types';
+import { type NativeStackNavigationOptions } from '../types';
 import { processFonts } from './FontProcessor';
 
 type Props = NativeStackNavigationOptions & {
@@ -19,6 +24,50 @@ type Props = NativeStackNavigationOptions & {
   headerHeight: number;
   headerBack: { title?: string | undefined; href: undefined } | undefined;
   route: Route<string>;
+};
+
+const processBarButtonItems = (
+  barButtonItems:
+    | NativeStackNavigationOptions['headerLeftItems']
+    | NativeStackNavigationOptions['headerRightItems'],
+  colors: Theme['colors'],
+  fonts: Theme['fonts']
+) => {
+  return barButtonItems
+    ?.map((item, index) => {
+      if ('customView' in item) {
+        return null;
+      }
+      let processedItem = {
+        ...item,
+        index,
+      };
+      if ('spacing' in item) {
+        return processedItem;
+      }
+      processedItem = {
+        ...processedItem,
+        labelStyle: {
+          fontFamily: fonts.regular.fontFamily,
+          ...item.labelStyle,
+        },
+      };
+      if ('badge' in item && item.badge) {
+        processedItem = {
+          ...processedItem,
+          badge: {
+            ...item.badge,
+            style: {
+              fontFamily: fonts.regular.fontFamily,
+              backgroundColor: colors.notification,
+              ...item.badge.style,
+            },
+          },
+        };
+      }
+      return processedItem;
+    })
+    .filter(Boolean);
 };
 
 export function useHeaderConfigProps({
@@ -49,6 +98,8 @@ export function useHeaderConfigProps({
   headerBack,
   route,
   title,
+  headerLeftItems,
+  headerRightItems,
 }: Props) {
   const { direction } = useLocale();
   const { colors, fonts } = useTheme();
@@ -191,7 +242,29 @@ export function useHeaderConfigProps({
     <>
       {Platform.OS === 'ios' ? (
         <>
-          {headerLeftElement != null ? (
+          {headerLeftItems ? (
+            headerLeftItems.map((item, index) => {
+              if ('customView' in item) {
+                return (
+                  <ScreenStackHeaderLeftView
+                    // eslint-disable-next-line @eslint-react/no-array-index-key
+                    key={index}
+                    // @ts-expect-error hidesSharedBackground will be available when new react-native-screens is published
+                    hidesSharedBackground={item.hidesSharedBackground}
+                  >
+                    {item.customView({
+                      tintColor,
+                      canGoBack,
+                      label: headerBackTitle ?? headerBack?.title,
+                      // `href` is only applicable to web
+                      href: undefined,
+                    })}
+                  </ScreenStackHeaderLeftView>
+                );
+              }
+              return null;
+            })
+          ) : headerLeftElement != null ? (
             <ScreenStackHeaderLeftView>
               {headerLeftElement}
             </ScreenStackHeaderLeftView>
@@ -247,7 +320,26 @@ export function useHeaderConfigProps({
       {headerBackImageSource !== undefined ? (
         <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
       ) : null}
-      {headerRightElement != null ? (
+      {headerRightItems ? (
+        headerRightItems.map((item, index) => {
+          if ('customView' in item) {
+            return (
+              <ScreenStackHeaderRightView
+                // eslint-disable-next-line @eslint-react/no-array-index-key
+                key={index}
+                // @ts-expect-error hidesSharedBackground will be available when new react-native-screens is published
+                hidesSharedBackground={item.hidesSharedBackground}
+              >
+                {item.customView({
+                  tintColor,
+                  canGoBack,
+                })}
+              </ScreenStackHeaderRightView>
+            );
+          }
+          return null;
+        })
+      ) : headerRightElement != null ? (
         <ScreenStackHeaderRightView>
           {headerRightElement}
         </ScreenStackHeaderRightView>
@@ -297,5 +389,15 @@ export function useHeaderConfigProps({
     topInsetEnabled: headerTopInsetEnabled,
     translucent: translucent === true,
     children,
+    headerLeftBarButtonItems: processBarButtonItems(
+      headerLeftItems,
+      colors,
+      fonts
+    ),
+    headerRightBarButtonItems: processBarButtonItems(
+      headerRightItems,
+      colors,
+      fonts
+    ),
   } as const;
 }
