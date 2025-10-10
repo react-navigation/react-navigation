@@ -3,7 +3,6 @@ import type { LocaleDirection } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
-  InteractionManager,
   Platform,
   type StyleProp,
   StyleSheet,
@@ -157,7 +156,6 @@ function Card({
   const didInitiallyAnimate = React.useRef(false);
   const lastToValueRef = React.useRef<number | undefined>(undefined);
 
-  const interactionHandleRef = React.useRef<number | undefined>(undefined);
   const animationHandleRef = React.useRef<number | undefined>(undefined);
   const pendingGestureCallbackRef =
     React.useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -177,20 +175,6 @@ function Card({
   }));
 
   const [isSwiping] = React.useState(() => new Animated.Value(FALSE));
-
-  const onStartInteraction = useLatestCallback(() => {
-    if (interactionHandleRef.current === undefined) {
-      interactionHandleRef.current =
-        InteractionManager.createInteractionHandle();
-    }
-  });
-
-  const onEndInteraction = useLatestCallback(() => {
-    if (interactionHandleRef.current !== undefined) {
-      InteractionManager.clearInteractionHandle(interactionHandleRef.current);
-      interactionHandleRef.current = undefined;
-    }
-  });
 
   const animate = useLatestCallback(
     ({
@@ -242,8 +226,6 @@ function Card({
       };
 
       if (animated) {
-        onStartInteraction();
-
         animation(gesture, {
           ...spec.config,
           velocity,
@@ -251,7 +233,6 @@ function Card({
           useNativeDriver,
           isInteraction: false,
         }).start(({ finished }) => {
-          onEndInteraction();
           clearTimeout(pendingGestureCallbackRef.current);
 
           if (finished) {
@@ -269,13 +250,11 @@ function Card({
       switch (nativeEvent.state) {
         case GestureState.ACTIVE:
           isSwiping.setValue(TRUE);
-          onStartInteraction();
           onGestureBegin?.();
           break;
         case GestureState.CANCELLED:
         case GestureState.FAILED: {
           isSwiping.setValue(FALSE);
-          onEndInteraction();
 
           const velocity =
             gestureDirection === 'vertical' ||
@@ -366,8 +345,6 @@ function Card({
 
   React.useEffect(() => {
     return () => {
-      onEndInteraction();
-
       if (animationHandleRef.current) {
         cancelAnimationFrame(animationHandleRef.current);
       }
@@ -376,7 +353,6 @@ function Card({
     };
 
     // We only want to clean up the animation on unmount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   React.useEffect(() => {

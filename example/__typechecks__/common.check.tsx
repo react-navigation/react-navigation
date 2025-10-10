@@ -17,6 +17,7 @@ import {
   type NavigationContainerRef,
   type NavigationHelpers,
   type NavigatorScreenParams,
+  type ParamsForRoute,
   type Route,
   useLinkProps,
 } from '@react-navigation/native';
@@ -722,3 +723,35 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
   PostDetails
 </Button>;
 <Button<LinkParamList> screen="Login">Albums</Button>;
+
+/**
+ * Check for ParamsForRoute
+ */
+
+/* Invalid route name */
+expectTypeOf<ParamsForRoute<RootStackParamList, 'NotAKey'>>().toBeNever();
+
+/* Undefined params */
+expectTypeOf<ParamsForRoute<RootStackParamList, 'Login'>>().toEqualTypeOf<
+  RootStackParamList['Login']
+>();
+
+/* Valid params */
+expectTypeOf<ParamsForRoute<RootStackParamList, 'PostDetails'>>().toEqualTypeOf<
+  RootStackParamList['PostDetails']
+>();
+
+/* Optional params */
+expectTypeOf<ParamsForRoute<RootStackParamList, 'Settings'>>().toEqualTypeOf<
+  RootStackParamList['Settings']
+>();
+
+/* Nested screen */
+expectTypeOf<ParamsForRoute<RootStackParamList, 'Artist'>>().toEqualTypeOf<
+  AlbumTabParamList['Artist']
+>();
+
+/* Nested screen with navigator */
+expectTypeOf<ParamsForRoute<HomeDrawerParamList, 'Feed'>>().toEqualTypeOf<
+  HomeDrawerParamList['Feed']
+>();
