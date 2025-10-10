@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import {
   NavigationRouteContext,
-  NavigationRouteContextOuter,
+  NavigationRouteParentContext,
 } from './NavigationRouteContext';
 import type { ParamsForRoute, RouteProp } from './types';
 
@@ -24,11 +24,11 @@ export function useRoute<T extends RouteProp<ParamListBase>>(): T {
   return route as T;
 }
 
-export function useNamedRoute<
+export function useParentRoute<
   ParamList extends ParamListBase,
   T extends string,
 >(name: T): ParamsForRoute<ParamList, T> {
-  const routeWrapper = React.useContext(NavigationRouteContextOuter);
+  const routeWrapper = React.useContext(NavigationRouteParentContext);
 
   if (routeWrapper === undefined) {
     throw new Error(

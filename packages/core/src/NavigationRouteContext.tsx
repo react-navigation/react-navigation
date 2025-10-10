@@ -10,8 +10,8 @@ export const NavigationRouteContext = React.createContext<
   Route<string> | undefined
 >(undefined);
 
-// TODO merge those contexts?
-export const NavigationRouteContextOuter = React.createContext<{
+// TODO: merge into one?
+export const NavigationRouteParentContext = React.createContext<{
   getRoute: (name: string) => Route<string> | undefined;
   getSubscribe: (name: string) => (callback: () => void) => () => void;
 }>({
@@ -34,7 +34,7 @@ export function NavigationRouteContextProvider({
   value: Route<string> | undefined;
   children: React.ReactNode;
 }) {
-  const parent = React.useContext(NavigationRouteContextOuter);
+  const parent = React.useContext(NavigationRouteParentContext);
 
   const getRoute = useLatestCallback((name: string) => {
     if (value?.name === name) {
@@ -71,7 +71,7 @@ export function NavigationRouteContextProvider({
   }
 
   return (
-    <NavigationRouteContextOuter.Provider
+    <NavigationRouteParentContext.Provider
       value={useMemo(
         () => ({
           getRoute,
@@ -83,6 +83,6 @@ export function NavigationRouteContextProvider({
       <NavigationRouteContext.Provider value={value}>
         {children}
       </NavigationRouteContext.Provider>
-    </NavigationRouteContextOuter.Provider>
+    </NavigationRouteParentContext.Provider>
   );
 }
