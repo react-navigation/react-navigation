@@ -11,7 +11,11 @@ export { NavigationContainerRefContext } from './NavigationContainerRefContext';
 export { NavigationContext } from './NavigationContext';
 export { NavigationHelpersContext } from './NavigationHelpersContext';
 export { NavigationIndependentTree } from './NavigationIndependentTree';
-export { NavigationRouteContext } from './NavigationRouteContext';
+export {
+  NavigationRouteContext,
+  NavigationRouteContextOuter,
+  NavigationRouteContextProvider,
+} from './NavigationRouteContext';
 export { PreventRemoveContext } from './PreventRemoveContext';
 export { PreventRemoveProvider } from './PreventRemoveProvider';
 export {
@@ -37,7 +41,7 @@ export { useNavigationIndependentTree } from './useNavigationIndependentTree';
 export { useNavigationState } from './useNavigationState';
 export { usePreventRemove } from './usePreventRemove';
 export { usePreventRemoveContext } from './usePreventRemoveContext';
-export { useRoute } from './useRoute';
+export { useNamedRoute, useRoute } from './useRoute';
 export { useStateForPath } from './useStateForPath';
 export { validatePathConfig } from './validatePathConfig';
 export * from '@react-navigation/routers';

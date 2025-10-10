@@ -1,7 +1,7 @@
 import {
   NavigationContext,
   type NavigationProp,
-  NavigationRouteContext,
+  NavigationRouteContextProvider,
   type ParamListBase,
   type RouteProp,
   useTheme,
@@ -74,7 +74,7 @@ export function Screen(props: Props) {
     >
       {headerShown ? (
         <NavigationContext.Provider value={navigation}>
-          <NavigationRouteContext.Provider value={route}>
+          <NavigationRouteContextProvider value={route}>
             <View
               onLayout={(e) => {
                 const { height } = e.nativeEvent.layout;
@@ -88,7 +88,7 @@ export function Screen(props: Props) {
             >
               {header}
             </View>
-          </NavigationRouteContext.Provider>
+          </NavigationRouteContextProvider>
         </NavigationContext.Provider>
       ) : null}
       <View style={styles.content}>

@@ -7,7 +7,7 @@ import {
 import {
   CommonActions,
   NavigationContext,
-  NavigationRouteContext,
+  NavigationRouteContextProvider,
   type ParamListBase,
   type TabNavigationState,
   useLinkBuilder,
@@ -440,7 +440,7 @@ export function BottomTabBar({
               key={route.key}
               value={descriptors[route.key].navigation}
             >
-              <NavigationRouteContext.Provider value={route}>
+              <NavigationRouteContextProvider value={route}>
                 <BottomTabItem
                   href={buildHref(route.name, route.params)}
                   route={route}
@@ -485,7 +485,7 @@ export function BottomTabBar({
                     options.tabBarItemStyle,
                   ]}
                 />
-              </NavigationRouteContext.Provider>
+              </NavigationRouteContextProvider>
             </NavigationContext.Provider>
           );
         })}

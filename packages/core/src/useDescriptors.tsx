@@ -13,7 +13,7 @@ import {
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
 import { NavigationContext } from './NavigationContext';
-import { NavigationRouteContext } from './NavigationRouteContext';
+import { NavigationRouteContextProvider } from './NavigationRouteContext';
 import { SceneView } from './SceneView';
 import { ThemeContext } from './theming/ThemeContext';
 import type {
@@ -269,9 +269,9 @@ export function useDescriptors<
     return (
       <NavigationBuilderContext.Provider key={route.key} value={context}>
         <NavigationContext.Provider value={navigation}>
-          <NavigationRouteContext.Provider value={route}>
+          <NavigationRouteContextProvider value={route}>
             {element}
-          </NavigationRouteContext.Provider>
+          </NavigationRouteContextProvider>
         </NavigationContext.Provider>
       </NavigationBuilderContext.Provider>
     );

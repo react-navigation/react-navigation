@@ -9,7 +9,7 @@ import {
 } from '@react-navigation/elements';
 import {
   NavigationContext,
-  NavigationRouteContext,
+  NavigationRouteContextProvider,
   type ParamListBase,
   type RouteProp,
   StackActions,
@@ -273,7 +273,7 @@ const SceneView = ({
 
   return (
     <NavigationContext.Provider value={navigation}>
-      <NavigationRouteContext.Provider value={route}>
+      <NavigationRouteContextProvider value={route}>
         <ScreenStackItem
           key={route.key}
           screenId={route.key}
@@ -444,7 +444,7 @@ const SceneView = ({
             </HeaderHeightContext.Provider>
           </AnimatedHeaderHeightContext.Provider>
         </ScreenStackItem>
-      </NavigationRouteContext.Provider>
+      </NavigationRouteContextProvider>
     </NavigationContext.Provider>
   );
 };
