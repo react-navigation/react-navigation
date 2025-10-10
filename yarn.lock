@@ -4484,6 +4484,7 @@ __metadata:
     expo: "npm:^53.0.11"
     expo-asset: "npm:~11.1.5"
     expo-blur: "npm:~14.1.5"
+    expo-build-properties: "npm:~0.14.8"
     expo-linking: "npm:~7.1.5"
     expo-splash-screen: "npm:~0.30.9"
     expo-status-bar: "npm:~2.2.3"
