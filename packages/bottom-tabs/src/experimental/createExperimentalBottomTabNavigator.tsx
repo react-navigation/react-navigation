@@ -21,7 +21,6 @@ import * as React from 'react';
 import type { TextStyle } from 'react-native';
 import { BottomTabs, BottomTabsScreen } from 'react-native-screens';
 
-import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
 import type {
   ExperimentalBottomTabHeaderProps,
   ExperimentalBottomTabNavigationEventMap,
@@ -42,7 +41,6 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
 
   const focusedRouteKey = state.routes[state.index].key;
   const previousRouteKeyRef = React.useRef(focusedRouteKey);
-  const tabAnims = useAnimatedHashMap(state);
 
   React.useEffect(() => {
     const previousRouteKey = previousRouteKeyRef.current;
@@ -65,14 +63,7 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
     }
 
     previousRouteKeyRef.current = focusedRouteKey;
-  }, [
-    descriptors,
-    focusedRouteKey,
-    navigation,
-    state.index,
-    state.routes,
-    tabAnims,
-  ]);
+  }, [descriptors, focusedRouteKey, navigation, state.index, state.routes]);
 
   const activeDescriptor = descriptors[state.routes[state.index].key];
 
@@ -84,9 +75,7 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
   return (
     <NavigationContent>
       <BottomTabs
-        // ios
         tabBarTintColor={activeDescriptor.options.tabBarActiveTintColor}
-        // android
         tabBarItemTitleFontColorActive={
           color || activeDescriptor.options.tabBarActiveTintColor
         }
@@ -98,9 +87,7 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
         tabBarBackgroundColor={
           activeDescriptor.options.tabBarStyle?.backgroundColor
         }
-        // tabBarItemActiveIndicatorColor={'transparent'}
         tabBarItemActiveIndicatorEnabled={false}
-        // android
         tabBarItemTitleFontSize={fontSize}
         tabBarItemTitleFontFamily={fontFamily}
         tabBarItemTitleFontWeight={fontWeight as TextStyle['fontWeight']}
@@ -202,7 +189,6 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
               isFocused={isFocused}
               title={options.tabBarShowLabel !== false ? title : undefined}
               standardAppearance={{
-                // on ios it styles all bar, not just one entry
                 tabBarBackgroundColor: options.tabBarStyle?.backgroundColor,
                 tabBarShadowColor: options.tabBarStyle?.shadowColor,
                 stacked: {

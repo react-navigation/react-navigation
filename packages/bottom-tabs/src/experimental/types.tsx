@@ -65,7 +65,6 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   /**
    * Title text for the screen.
    */
-  // DONE
   title?: string;
 
   /**
@@ -74,37 +73,17 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
    *
    * When undefined, scene title is used. Use `tabBarShowLabel` to hide the label.
    */
-  // DONE
   tabBarLabel?: string;
 
   /**
    * Whether the tab label should be visible. Defaults to `true`.
    */
-  // DONE
   tabBarShowLabel?: boolean;
-
-  /**
-   * Whether the label is shown below the icon or beside the icon.
-   *
-   * - `below-icon`: the label is shown below the icon (typical for iPhones)
-   * - `beside-icon` the label is shown next to the icon (typical for iPad)
-   *
-   * By default, the position is chosen automatically based on device width.
-   */
-  // IMPOSSIBLE
-  tabBarLabelPosition?: LabelPosition;
 
   /**
    * Style object for the tab label.
    */
-  // Done
   tabBarLabelStyle?: StyleProp<TextStyle>;
-
-  /**
-   * Whether label font should scale to respect Text Size accessibility settings.
-   */
-  // IMPOSSIBLE
-  tabBarAllowFontScaling?: boolean;
 
   /**
    * Image to display as the icon for the tab.
@@ -113,24 +92,16 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   tabBarIcon?: string;
 
   /**
-   * Style object for the tab icon.
-   */
-  // IMPOSSIBLE
-  // tabBarIconStyle?: StyleProp<TextStyle>;
-
-  /**
    * Text to show in a badge on the tab icon.
    */
-  // DONE
   tabBarBadge?: number | string;
 
   /**
    * Custom style for the tab bar badge.
    * You can specify a background color or text color here.
+   * Only supported on Android.
    */
-  // DONE
   tabBarBadgeStyle?: {
-    // android specific
     backgroundColor?: ColorValue;
     textColor?: ColorValue;
   };
@@ -149,156 +120,44 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   tabBarButtonTestID?: string;
 
   /**
-   * Function which returns a React element to render as the tab bar button.
-   * Renders `PlatformPressable` by default.
-   */
-  // IMPOSSIBLE
-  // tabBarButton?: (
-  //   props: any //ExperimentalBottomTabBarButtonProps
-  // ) => React.ReactNode;
-
-  /**
    * Color for the icon and label in the active tab.
    */
-  // DONE
   tabBarActiveTintColor?: string;
 
   /**
    * Color for the icon and label in the inactive tabs.
    */
-  // DONE
   tabBarInactiveTintColor?: string;
-
-  /**
-   * Background color for the active tab.
-   */
-  // IMPOSSIBLE
-  // tabBarActiveBackgroundColor?: string;
-
-  /**
-   * Background color for the inactive tabs.
-   */
-  // IMPOSSIBLE
-  // tabBarInactiveBackgroundColor?: string;
-
-  /**
-   * Style object for the tab item container.
-   */
-  // IMPOSSIBLE
-  // tabBarItemStyle?: StyleProp<ViewStyle>;
-
-  /**
-   * Whether the tab bar gets hidden when the keyboard is shown. Defaults to `false`.
-   */
-  // IMPOSSIBLE
-  // tabBarHideOnKeyboard?: boolean;
-
-  /**
-   * Animation config for showing and hiding the tab bar when the keyboard is shown/hidden.
-   */
-  // IMPOSSIBLE
-  // tabBarVisibilityAnimationConfig?: {
-  //   show?: TabBarVisibilityAnimationConfig;
-  //   hide?: TabBarVisibilityAnimationConfig;
-  // };
-
-  /**
-   * Variant of the tab bar. Defaults to `uikit`.
-   */
-  // IMPOSSIBLE
-  // tabBarVariant?: any; //Variant;
 
   /**
    * Style object for the tab bar container.
    */
-  // DONE
   tabBarStyle?: {
     backgroundColor?: ColorValue;
     shadowColor?: ColorValue;
-    // width?: number | string;
   };
-
-  /**
-   * Function which returns a React Element to use as background for the tab bar.
-   * You could render an image, a gradient, blur view etc.
-   *
-   * When using `BlurView`, make sure to set `position: 'absolute'` in `tabBarStyle` as well.
-   * You'd also need to use `useBottomTabBarHeight()` to add a bottom padding to your content.
-   */
-  // IMPOSSIBLE
-  // tabBarBackground?: () => React.ReactNode;
-
-  /**
-   * Position of the tab bar on the screen. Defaults to `bottom`.
-   */
-  // IMPOSSIBLE
-  // tabBarPosition?: 'bottom' | 'left' | 'right' | 'top';
-
-  /**
-   * Whether this screens should render the first time it's accessed. Defaults to `true`.
-   * Set it to `false` if you want to render the screen on initial render.
-   */
-  // NOT EXPECTED
-  // lazy?: boolean;
 
   /**
    * Function that given returns a React Element to display as a header.
    */
-  // DONE
   header?: (props: ExperimentalBottomTabHeaderProps) => React.ReactNode;
 
   /**
    * Whether to show the header. Setting this to `false` hides the header.
    * Defaults to `true`.
    */
-  // DONE
   headerShown?: boolean;
 
   /**
    * Whether any nested stack should be popped to top when navigating away from the tab.
    * Defaults to `false`.
    */
-  // DONE // TEST
   popToTopOnBlur?: boolean;
-
-  /**
-   * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
-   * Defaults to `true` when `enableFreeze()` is run at the top of the application.
-   * Requires `react-native-screens` version >=3.16.0.
-   *
-   * Only supported on iOS and Android.
-   */
-  // NOT EXPECTED
-  // freezeOnBlur?: boolean;
 
   /**
    * Style object for the component wrapping the screen content.
    */
-  // DONE
   sceneStyle?: StyleProp<ViewStyle>;
-
-  /**
-   * How the screen should animate when switching tabs.
-   *
-   * Supported values:
-   * - 'none': don't animate the screen (default)
-   * - 'fade': cross-fade the screens.
-   * - 'shift': shift the screens slightly shift to left/right.
-   */
-  // IMPOSSIBLE
-  // animation?: TabAnimationName;
-
-  /**
-   * Function which specifies interpolated styles for bottom-tab scenes.
-   */
-  // IMPOSSIBLE
-  // sceneStyleInterpolator?: any; //ExperimentalBottomTabSceneStyleInterpolator;
-
-  /**
-   * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
-   */
-  // IMPOSSIBLE
-  // transitionSpec?: any; //TransitionSpec;
 };
 
 export type ExperimentalBottomTabDescriptor = Descriptor<
