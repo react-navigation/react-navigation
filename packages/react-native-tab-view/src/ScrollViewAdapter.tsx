@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   Animated,
-  InteractionManager,
   Keyboard,
   Platform,
   ScrollView,
@@ -48,8 +47,6 @@ export function ScrollViewAdapter({
 
   const listeners = React.useRef<Set<Listener>>(new Set()).current;
 
-  const wasTouchedRef = React.useRef<boolean>(false);
-  const interactionHandleRef = React.useRef<number | null>(null);
   const scrollViewRef = React.useRef<ScrollView>(null);
   const containerRef = React.useRef<View>(null);
 
@@ -97,8 +94,6 @@ export function ScrollViewAdapter({
   });
 
   const jumpTo = useLatestCallback((key: string) => {
-    wasTouchedRef.current = false;
-
     const i = routes.findIndex((route) => route.key === key);
 
     scrollToIndex(i);
@@ -108,26 +103,12 @@ export function ScrollViewAdapter({
     }
   });
 
-  React.useEffect(() => {
-    return () => {
-      if (interactionHandleRef.current !== null) {
-        InteractionManager.clearInteractionHandle(interactionHandleRef.current);
-      }
-    };
-  }, []);
-
   const handleSwipeStart = React.useCallback(() => {
-    wasTouchedRef.current = false;
     onSwipeStart?.();
-    interactionHandleRef.current = InteractionManager.createInteractionHandle();
   }, [onSwipeStart]);
 
   const handleSwipeEnd = React.useCallback(() => {
-    wasTouchedRef.current = true;
     onSwipeEnd?.();
-    if (interactionHandleRef.current !== null) {
-      InteractionManager.clearInteractionHandle(interactionHandleRef.current);
-    }
   }, [onSwipeEnd]);
 
   const subscribe = useLatestCallback((listener: Listener) => {

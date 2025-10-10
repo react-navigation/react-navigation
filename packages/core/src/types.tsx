@@ -378,6 +378,19 @@ type NavigationHelpersRoute<
       ? undefined
       : ParamList[RouteName]
   ): void;
+
+  /**
+   * Push new params for the route.
+   * The params are not merged with previous params.
+   * This adds an entry to navigation history.
+   *
+   * @param params Params object for the current route.
+   */
+  pushParams(
+    params: ParamList[RouteName] extends undefined
+      ? undefined
+      : ParamList[RouteName]
+  ): void;
 };
 
 export type NavigationHelpers<
@@ -1027,3 +1040,14 @@ export type PathConfigMap<ParamList extends {}> = {
     ? string | PathConfig<T>
     : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
 };
+
+export type ParamsForRoute<
+  ParamList extends ParamListBase,
+  Key extends string,
+> = {
+  [K in keyof ParamList]: K extends Key
+    ? ParamList[K]
+    : ParamList[K] extends NavigatorScreenParams<infer T>
+      ? ParamsForRoute<T, Key>
+      : never;
+}[keyof ParamList];

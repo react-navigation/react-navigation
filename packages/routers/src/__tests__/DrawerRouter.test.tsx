@@ -900,3 +900,59 @@ test('closes drawer on focus change with backBehavior: fullHistory', () => {
     type: 'drawer',
   });
 });
+
+test('go back closes drawer if it is open', () => {
+  const router = DrawerRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        index: 1,
+        key: 'drawer-test',
+        routeNames: ['bar', 'baz', 'qux'],
+        preloadedRouteKeys: [],
+        routes: [
+          { key: 'bar-0', name: 'bar' },
+          {
+            key: 'baz-0',
+            name: 'baz',
+            history: [{ type: 'params', params: { foo: 'bar' } }],
+          },
+          { key: 'qux-0', name: 'qux' },
+        ],
+        history: [
+          { type: 'drawer', status: 'open' },
+          { type: 'route', key: 'baz-0' },
+        ],
+        default: 'open',
+        stale: false,
+        type: 'drawer',
+      },
+      CommonActions.goBack(),
+      options
+    )
+  ).toEqual({
+    index: 1,
+    key: 'drawer-test',
+    routeNames: ['bar', 'baz', 'qux'],
+    preloadedRouteKeys: [],
+    routes: [
+      { key: 'bar-0', name: 'bar' },
+      {
+        key: 'baz-0',
+        name: 'baz',
+        history: [{ type: 'params', params: { foo: 'bar' } }],
+      },
+      { key: 'qux-0', name: 'qux' },
+    ],
+    history: [{ type: 'route', key: 'baz-0' }],
+    default: 'open',
+    stale: false,
+    type: 'drawer',
+  });
+});

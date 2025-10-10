@@ -79,6 +79,10 @@ export type Route<
    * Usually present when the screen was opened from a deep link.
    */
   path?: string;
+  /**
+   * History of param changes for this route.
+   */
+  history?: { type: 'params'; params: object }[];
 }> &
   (undefined extends Params
     ? Readonly<{
