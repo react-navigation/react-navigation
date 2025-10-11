@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler/jestSetup';
+
 import { expect, jest, test } from '@jest/globals';
 import { Text } from '@react-navigation/elements';
 import {
