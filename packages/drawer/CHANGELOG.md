@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.5.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.5.9...@react-navigation/drawer@7.5.10) (2025-10-13)
+
+### Bug Fixes
+
+* default headerTransparent to false in native-stack ([b6d939c](https://github.com/react-navigation/react-navigation/commit/b6d939c320e427c86773471a230b638b81071ebe)) - by @satya164
+
 ## [7.5.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.5.8...@react-navigation/drawer@7.5.9) (2025-10-04)
 
 **Note:** Version bump only for package @react-navigation/drawer
