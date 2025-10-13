@@ -201,6 +201,7 @@ export function NativeStack() {
         options={({ route }) => ({
           title: `Article by ${route.params?.author ?? 'Unknown'}`,
           headerLargeTitle: true,
+          headerTransparent: false, // FIXME: title is invisible on iOS when true
           headerLargeTitleShadowVisible: false,
         })}
         initialParams={{ author: 'Gandalf' }}
