@@ -18,11 +18,11 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
   test(metadata.name, async ({ page }) => {
     const query = (by: string | { text: string } | { id: string }) => {
       if (typeof by === 'string') {
-        return page.getByText(by);
+        return page.getByText(by, { exact: true });
       }
 
       if ('text' in by) {
-        return page.getByText(by.text);
+        return page.getByText(by.text, { exact: true });
       }
 
       if ('id' in by) {
@@ -34,7 +34,9 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
 
     for (const step of steps) {
       try {
-        switch (Object.keys(step)[0]) {
+        const command = typeof step === 'object' ? Object.keys(step)[0] : step;
+
+        switch (command) {
           case 'openLink': {
             // eslint-disable-next-line no-template-curly-in-string
             await page.goto(step.openLink.link.replace('${APP_SCHEME}', ''));
@@ -73,6 +75,12 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
             await element.waitFor({
               timeout: step.extendedWaitUntil.timeout,
             });
+
+            break;
+          }
+
+          case 'stopApp': {
+            // No-op on web
 
             break;
           }

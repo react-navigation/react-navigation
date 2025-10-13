@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Screen Layout
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}screen-layout
 - extendedWaitUntil:

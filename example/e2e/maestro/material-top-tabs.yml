@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Material Top Tabs
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}material-top-tabs-screen
 - extendedWaitUntil:

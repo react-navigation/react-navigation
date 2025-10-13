@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Mixed Header Mode
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}mixed-header-mode
 - extendedWaitUntil:
