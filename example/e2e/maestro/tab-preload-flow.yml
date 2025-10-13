@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Tab Preload Flow
 ---
+- stopApp
 - openLink:
     link: exp://127.0.0.1:8081/--/tab-preload-flow
 - assertVisible:

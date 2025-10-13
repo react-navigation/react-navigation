@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Mixed Native Stack
 ---
+- stopApp
 - openLink:
     link: exp://127.0.0.1:8081/--/mixed-native-stack
 - assertVisible:

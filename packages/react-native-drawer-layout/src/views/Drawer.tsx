@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, type ViewStyle } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
 import type { DrawerProps } from '../types';
@@ -99,9 +99,9 @@ export function Drawer({
           position: drawerType === 'permanent' ? 'relative' : 'absolute',
           zIndex: drawerType === 'back' ? -1 : 1,
         },
-        // @ts-expect-error: width contains `calc` for web
-        { width: drawerWidth },
-        // @ts-expect-error: offset contains `calc` for web
+        // FIXME: width contains `px` on web
+        { width: drawerWidth } as ViewStyle,
+        // @ts-expect-error offset contains `calc` for web
         drawerType !== 'permanent'
           ? // Position drawer off-screen by default in closed state
             // And add a translation only when drawer is open

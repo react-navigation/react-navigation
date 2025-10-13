@@ -18,7 +18,9 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
   test(metadata.name, async ({ page }) => {
     for (const step of steps) {
       try {
-        switch (Object.keys(step)[0]) {
+        const command = typeof step === 'object' ? Object.keys(step)[0] : step;
+
+        switch (command) {
           case 'openLink': {
             await page.goto(
               step.openLink.link.replace('exp://127.0.0.1:8081/--', '')

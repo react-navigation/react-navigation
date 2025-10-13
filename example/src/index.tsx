@@ -72,6 +72,9 @@ const linking: LinkingOptions<RootStackParamList> = {
   // iOS (bare): xcrun simctl openurl booted rne://127.0.0.1:19000/--/simple-stack
   // The first segment of the link is the the scheme + host (returned by `Linking.makeUrl`)
   prefixes: [createURL('/')],
+  // When not using Dev Client, launching app from the server has an internal URL
+  // This is not a URL we can handle, so we filter it out
+  filter: (url) => !url.includes('/expo-development-client/'),
   config: {
     initialRouteName: 'Home',
     screens: {

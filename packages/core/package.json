@@ -51,16 +51,16 @@
   },
   "devDependencies": {
     "@jest/globals": "^30.0.0",
-    "@testing-library/react-native": "^13.2.0",
+    "@testing-library/react-native": "^13.2.1",
     "@types/react": "~19.0.10",
     "@types/react-is": "^19.0.0",
     "@types/use-sync-external-store": "^1.5.0",
     "del-cli": "^6.0.0",
     "immer": "^10.1.1",
-    "react": "19.0.0",
-    "react-native-builder-bob": "^0.40.12",
-    "react-test-renderer": "19.0.0",
-    "typescript": "^5.8.3"
+    "react": "19.1.0",
+    "react-native-builder-bob": "^0.40.17",
+    "react-test-renderer": "19.1.0",
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "react": ">= 18.2.0"

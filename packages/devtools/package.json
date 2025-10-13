@@ -49,9 +49,9 @@
     "@react-navigation/core": "workspace:^",
     "@types/react": "~19.0.10",
     "del-cli": "^6.0.0",
-    "react": "19.0.0",
-    "react-native-builder-bob": "^0.40.12",
-    "typescript": "^5.8.3"
+    "react": "19.1.0",
+    "react-native-builder-bob": "^0.40.17",
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "react": ">= 18.2.0"
