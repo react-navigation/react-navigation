@@ -14,6 +14,7 @@ import type {
 import type * as React from 'react';
 import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
+import type { Icon } from 'react-native-screens';
 
 export type Layout = { width: number; height: number };
 
@@ -83,13 +84,15 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   /**
    * Style object for the tab label.
    */
-  tabBarLabelStyle?: StyleProp<TextStyle>;
+  tabBarLabelStyle?: Pick<
+    TextStyle,
+    'fontFamily' | 'fontSize' | 'fontWeight' | 'fontStyle' | 'color'
+  >;
 
   /**
    * Image to display as the icon for the tab.
    */
-  // TODO
-  tabBarIcon?: string;
+  tabBarIcon?: Icon;
 
   /**
    * Text to show in a badge on the tab icon.
@@ -103,7 +106,7 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
    */
   tabBarBadgeStyle?: {
     backgroundColor?: ColorValue;
-    textColor?: ColorValue;
+    color?: ColorValue;
   };
 
   /**
@@ -133,7 +136,17 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
    * Style object for the tab bar container.
    */
   tabBarStyle?: {
+    /**
+     * Background color of the tab bar.
+     *
+     * Only supported on Android and iOS 18 and below.
+     */
     backgroundColor?: ColorValue;
+    /**
+     * Shadow color of the tab bar.
+     *
+     * Only supported on iOS 18 and below.
+     */
     shadowColor?: ColorValue;
   };
 
@@ -171,30 +184,7 @@ export type ExperimentalBottomTabDescriptorMap = Record<
   ExperimentalBottomTabDescriptor
 >;
 
-export type ExperimentalBottomTabNavigationConfig = {
-  /**
-   * Function that returns a React element to display as the tab bar.
-   */
-  // TODO
-  tabBar?: (props: ExperimentalBottomTabBarProps) => React.ReactNode;
-  /**
-   * Safe area insets for the tab bar. This is used to avoid elements like the navigation bar on Android and bottom safe area on iOS.
-   * By default, the device's safe area insets are automatically detected. You can override the behavior with this option.
-   */
-  safeAreaInsets?: {
-    top?: number;
-    right?: number;
-    bottom?: number;
-    left?: number;
-  };
-  /**
-   * Whether inactive screens should be detached from the view hierarchy to save memory.
-   * Make sure to call `enableScreens` from `react-native-screens` to make it work.
-   * Defaults to `true` on Android.
-   */
-  // NOT EXPECTED
-  detachInactiveScreens?: boolean;
-};
+export type ExperimentalBottomTabNavigationConfig = {};
 
 export type ExperimentalBottomTabHeaderProps = {
   /**

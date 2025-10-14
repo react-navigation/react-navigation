@@ -247,7 +247,6 @@ export function BottomTabs() {
               { borderRightWidth: 0, borderLeftWidth: 0, borderTopWidth: 0 },
               isLargeScreen ? null : { position: 'absolute' },
             ],
-            // tabBarLabelStyle: { fontWeight: '600', color: 'green' },
             tabBarBackground: () => (
               <>
                 {isLargeScreen && (

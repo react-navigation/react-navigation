@@ -1,10 +1,4 @@
 import {
-  getHeaderTitle,
-  Header,
-  Screen as ScreenContent,
-} from '@react-navigation/elements';
-import {
-  CommonActions,
   createNavigatorFactory,
   type NavigatorTypeBagBase,
   type ParamListBase,
@@ -18,18 +12,27 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import type { TextStyle } from 'react-native';
-import { BottomTabs, BottomTabsScreen } from 'react-native-screens';
 
+import { ExperimentalBottomTabView } from './ExperimentalBottomTabView';
 import type {
-  ExperimentalBottomTabHeaderProps,
   ExperimentalBottomTabNavigationEventMap,
   ExperimentalBottomTabNavigationOptions,
   ExperimentalBottomTabNavigationProp,
   ExperimentalBottomTabNavigatorProps,
 } from './types';
 
-function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
+function TabNavigator({
+  id,
+  initialRouteName,
+  backBehavior,
+  children,
+  layout,
+  screenListeners,
+  screenOptions,
+  screenLayout,
+  router,
+  ...rest
+}: ExperimentalBottomTabNavigatorProps) {
   const { state, navigation, descriptors, NavigationContent } =
     useNavigationBuilder<
       TabNavigationState<ParamListBase>,
@@ -37,7 +40,17 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
       TabActionHelpers<ParamListBase>,
       ExperimentalBottomTabNavigationOptions,
       ExperimentalBottomTabNavigationEventMap
-    >(TabRouter, rest);
+    >(TabRouter, {
+      id,
+      initialRouteName,
+      backBehavior,
+      children,
+      layout,
+      screenListeners,
+      screenOptions,
+      screenLayout,
+      router,
+    });
 
   const focusedRouteKey = state.routes[state.index].key;
   const previousRouteKeyRef = React.useRef(focusedRouteKey);
@@ -65,167 +78,14 @@ function TabNavigator({ ...rest }: ExperimentalBottomTabNavigatorProps) {
     previousRouteKeyRef.current = focusedRouteKey;
   }, [descriptors, focusedRouteKey, navigation, state.index, state.routes]);
 
-  const activeDescriptor = descriptors[state.routes[state.index].key];
-
-  const { tabBarLabelStyle } = activeDescriptor.options;
-
-  const { fontFamily, fontSize, fontWeight, fontStyle, color } =
-    (tabBarLabelStyle || {}) as TextStyle;
-
   return (
     <NavigationContent>
-      <BottomTabs
-        tabBarTintColor={activeDescriptor.options.tabBarActiveTintColor}
-        tabBarItemTitleFontColorActive={
-          color || activeDescriptor.options.tabBarActiveTintColor
-        }
-        tabBarItemTitleFontColor={
-          color || activeDescriptor.options.tabBarInactiveTintColor
-        }
-        tabBarItemIconColorActive={color}
-        tabBarItemIconColor={activeDescriptor.options.tabBarInactiveTintColor}
-        tabBarBackgroundColor={
-          activeDescriptor.options.tabBarStyle?.backgroundColor
-        }
-        tabBarItemActiveIndicatorEnabled={false}
-        tabBarItemTitleFontSize={fontSize}
-        tabBarItemTitleFontFamily={fontFamily}
-        tabBarItemTitleFontWeight={fontWeight as TextStyle['fontWeight']}
-        tabBarItemTitleFontStyle={fontStyle as TextStyle['fontStyle']}
-        experimentalControlNavigationStateInJS
-        onNativeFocusChange={(e) => {
-          const route = state.routes.find(
-            (route) => route.key === e.nativeEvent.tabKey
-          );
-
-          if (route) {
-            const isFocused =
-              state.index ===
-              state.routes.findIndex((r) => r.key === route.key);
-
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-            });
-
-            if (!isFocused && !event.defaultPrevented) {
-              React.startTransition(() => {
-                navigation.dispatch({
-                  ...CommonActions.navigate(route.name, route.params),
-                  target: state.key,
-                });
-              });
-            }
-          }
-        }}
-      >
-        {state.routes.map((route, index) => {
-          const { options } = descriptors[route.key];
-          const isFocused = state.index === index;
-
-          const {
-            header = ({ options }: ExperimentalBottomTabHeaderProps) => (
-              <Header
-                {...options}
-                title={getHeaderTitle(options, route.name)}
-              />
-            ),
-            headerShown,
-            headerStatusBarHeight,
-            headerTransparent,
-            sceneStyle: customSceneStyle,
-          } = options;
-
-          let title: string;
-
-          if (typeof options.tabBarLabel === 'string') {
-            title = options.tabBarLabel;
-          } else {
-            title = options.title ?? route.name;
-          }
-
-          const { fontFamily, fontSize, fontWeight, fontStyle, color } =
-            (options.tabBarLabelStyle || {}) as TextStyle;
-
-          // ios
-          const labelStyle = {
-            tabBarItemTitleFontFamily: fontFamily,
-            tabBarItemTitleFontSize: fontSize,
-            tabBarItemTitleFontWeight: fontWeight,
-            tabBarItemTitleFontStyle: fontStyle,
-            tabBarItemTitleFontColor:
-              color || activeDescriptor.options.tabBarInactiveTintColor,
-          };
-
-          const selectedLabelStyle = {
-            ...labelStyle,
-            tabBarItemTitleFontColor:
-              color || activeDescriptor.options.tabBarActiveTintColor,
-          };
-
-          return (
-            <BottomTabsScreen
-              key={route.key}
-              tabKey={route.key}
-              icon={
-                options.tabBarIcon
-                  ? {
-                      sfSymbolName: options.tabBarIcon,
-                    }
-                  : undefined
-              }
-              // icon={{
-              //   imageSource: {
-              //     uri: require('../../../../example/assets/icon.png'),
-              //   },
-              // }}
-              iconResourceName={options.tabBarIcon}
-              tabBarItemBadgeBackgroundColor={
-                options.tabBarBadgeStyle?.backgroundColor
-              }
-              tabBarItemBadgeTextColor={options.tabBarBadgeStyle?.textColor}
-              badgeValue={options.tabBarBadge?.toString()}
-              isFocused={isFocused}
-              title={options.tabBarShowLabel !== false ? title : undefined}
-              standardAppearance={{
-                tabBarBackgroundColor: options.tabBarStyle?.backgroundColor,
-                tabBarShadowColor: options.tabBarStyle?.shadowColor,
-                stacked: {
-                  normal: labelStyle,
-                  selected: selectedLabelStyle,
-                },
-                inline: {
-                  normal: labelStyle,
-                  selected: selectedLabelStyle,
-                },
-                compactInline: {
-                  normal: labelStyle,
-                  selected: selectedLabelStyle,
-                },
-              }}
-            >
-              <ScreenContent
-                focused={isFocused}
-                route={descriptors[route.key].route}
-                navigation={descriptors[route.key].navigation}
-                headerShown={headerShown}
-                headerStatusBarHeight={headerStatusBarHeight}
-                headerTransparent={headerTransparent}
-                header={header({
-                  route: descriptors[route.key].route,
-                  navigation: descriptors[route.key]
-                    .navigation as ExperimentalBottomTabNavigationProp<ParamListBase>,
-                  options: descriptors[route.key].options,
-                })}
-                style={customSceneStyle}
-              >
-                {descriptors[route.key].render()}
-              </ScreenContent>
-            </BottomTabsScreen>
-          );
-        })}
-      </BottomTabs>
+      <ExperimentalBottomTabView
+        {...rest}
+        state={state}
+        navigation={navigation}
+        descriptors={descriptors}
+      />
     </NavigationContent>
   );
 }
