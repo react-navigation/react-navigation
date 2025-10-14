@@ -1,5 +1,6 @@
 import {
   getHeaderTitle,
+  getLabel,
   Header,
   Screen as ScreenContent,
 } from '@react-navigation/elements';
@@ -37,6 +38,16 @@ export function ExperimentalBottomTabView({
 
   const focusedRouteKey = state.routes[state.index].key;
   const previousRouteKeyRef = React.useRef(focusedRouteKey);
+
+  /**
+   * List of loaded tabs, tabs will be loaded when navigated to.
+   */
+  const [loaded, setLoaded] = React.useState([focusedRouteKey]);
+
+  if (!loaded.includes(focusedRouteKey)) {
+    // Set the current tab to be loaded if it was not loaded before
+    setLoaded([...loaded, focusedRouteKey]);
+  }
 
   React.useEffect(() => {
     const previousRouteKey = previousRouteKeyRef.current;
@@ -114,8 +125,10 @@ export function ExperimentalBottomTabView({
       {state.routes.map((route, index) => {
         const { options } = descriptors[route.key];
         const isFocused = state.index === index;
+        const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
         const {
+          lazy = true,
           header = ({ options }: ExperimentalBottomTabHeaderProps) => (
             <Header {...options} title={getHeaderTitle(options, route.name)} />
           ),
@@ -125,13 +138,10 @@ export function ExperimentalBottomTabView({
           sceneStyle: customSceneStyle,
         } = options;
 
-        let title: string;
-
-        if (typeof options.tabBarLabel === 'string') {
-          title = options.tabBarLabel;
-        } else {
-          title = options.title ?? route.name;
-        }
+        const title = getLabel(
+          { label: options.tabBarLabel, title: options.title },
+          route.name
+        );
 
         const { fontFamily, fontSize, fontWeight, fontStyle, color } =
           options.tabBarLabelStyle || {};
@@ -186,7 +196,15 @@ export function ExperimentalBottomTabView({
               })}
               style={customSceneStyle}
             >
-              {descriptors[route.key].render()}
+              {
+                // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
+                lazy &&
+                !loaded.includes(route.key) &&
+                !isFocused &&
+                !isPreloaded
+                  ? null
+                  : descriptors[route.key].render()
+              }
             </ScreenContent>
           </BottomTabsScreen>
         );

@@ -151,6 +151,12 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   };
 
   /**
+   * Whether this screens should render the first time it's accessed. Defaults to `true`.
+   * Set it to `false` if you want to render the screen on initial render.
+   */
+  lazy?: boolean;
+
+  /**
    * Function that given returns a React Element to display as a header.
    */
   header?: (props: ExperimentalBottomTabHeaderProps) => React.ReactNode;
