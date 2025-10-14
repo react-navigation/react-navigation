@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Native Stack
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}native-stack
 - extendedWaitUntil:

@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Modal Stack
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}modal-stack
 - extendedWaitUntil:

@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Static Screen
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}static-screen
 - extendedWaitUntil:

@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Full History Tabs
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}full-history-tabs
 - extendedWaitUntil:

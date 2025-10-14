@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Stack Transparent
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}stack-transparent
 - extendedWaitUntil:

@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Stack Header Customization
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}stack-header-customization
 - extendedWaitUntil:
