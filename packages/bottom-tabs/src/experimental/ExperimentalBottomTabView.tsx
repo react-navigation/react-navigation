@@ -12,8 +12,13 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { PlatformColor } from 'react-native';
-import { BottomTabs, BottomTabsScreen } from 'react-native-screens';
+import { Platform, PlatformColor } from 'react-native';
+import {
+  BottomTabs,
+  BottomTabsScreen,
+  type BottomTabsScreenItemStateAppearance,
+  type Icon,
+} from 'react-native-screens';
 
 import type { BottomTabNavigationHelpers } from '../types';
 import type {
@@ -33,8 +38,9 @@ export function ExperimentalBottomTabView({
   state,
   navigation,
   descriptors,
+  tabBarExtraItem,
 }: Props) {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   const focusedRouteKey = state.routes[state.index].key;
   const previousRouteKeyRef = React.useRef(focusedRouteKey);
@@ -72,31 +78,63 @@ export function ExperimentalBottomTabView({
     previousRouteKeyRef.current = focusedRouteKey;
   }, [descriptors, focusedRouteKey, navigation, state.index, state.routes]);
 
-  const activeDescriptor = descriptors[state.routes[state.index].key];
+  const currentOptions = descriptors[state.routes[state.index].key]?.options;
 
   const {
     backgroundColor: tabBarBackgroundColor,
     shadowColor: tabBarShadowColor,
-  } = activeDescriptor.options.tabBarStyle || {};
+  } = currentOptions.tabBarStyle || {};
+
+  const {
+    fontFamily = Platform.select({
+      ios: fonts.medium.fontFamily,
+      default: fonts.regular.fontFamily,
+    }),
+    fontWeight = Platform.select({
+      ios: fonts.medium.fontWeight,
+      default: fonts.regular.fontWeight,
+    }),
+    fontSize = Platform.select({
+      // FIXME: setting font family or weight overrides the font size on iOS
+      ios: 10,
+      default: undefined,
+    }),
+    fontStyle,
+  } = currentOptions.tabBarLabelStyle || {};
+
+  // const { fontFamily, fontWeight, fontSize, fontStyle } =
+  //   currentOptions.tabBarLabelStyle || {};
 
   const activeTintColor =
-    activeDescriptor.options.tabBarActiveTintColor ?? colors.primary;
+    currentOptions.tabBarActiveTintColor ?? colors.primary;
+
   const inactiveTintColor =
-    activeDescriptor.options.tabBarInactiveTintColor ?? PlatformColor('label');
+    currentOptions.tabBarInactiveTintColor ??
+    Platform.select({ ios: PlatformColor('label'), default: colors.text });
+
+  const extraButtonAppearance: BottomTabsScreenItemStateAppearance = {
+    tabBarItemTitleFontColor: inactiveTintColor,
+    tabBarItemIconColor: inactiveTintColor,
+  };
 
   return (
     <BottomTabs
       tabBarTintColor={activeTintColor}
-      tabBarItemTitleFontColorActive={activeTintColor}
-      tabBarItemTitleFontColor={inactiveTintColor}
-      tabBarItemIconColorActive={activeTintColor}
       tabBarItemIconColor={inactiveTintColor}
-      tabBarBackgroundColor={
-        activeDescriptor.options.tabBarStyle?.backgroundColor
-      }
+      tabBarItemIconColorActive={activeTintColor}
+      tabBarItemTitleFontColor={inactiveTintColor}
+      tabBarItemTitleFontColorActive={activeTintColor}
+      tabBarItemTitleFontFamily={fontFamily}
+      tabBarItemTitleFontWeight={fontWeight}
+      tabBarBackgroundColor={currentOptions.tabBarStyle?.backgroundColor}
       tabBarItemActiveIndicatorEnabled={false}
       experimentalControlNavigationStateInJS
       onNativeFocusChange={(e) => {
+        if (e.nativeEvent.tabKey === SYSTEM_ITEM_KEY) {
+          tabBarExtraItem?.onPress();
+          return;
+        }
+
         const route = state.routes.find(
           (route) => route.key === e.nativeEvent.tabKey
         );
@@ -143,23 +181,20 @@ export function ExperimentalBottomTabView({
           route.name
         );
 
-        const { fontFamily, fontSize, fontWeight, fontStyle, color } =
-          options.tabBarLabelStyle || {};
-
-        // ios
-        const labelStyle = {
+        const tabItemAppearance: BottomTabsScreenItemStateAppearance = {
           tabBarItemTitleFontFamily: fontFamily,
           tabBarItemTitleFontSize: fontSize,
           tabBarItemTitleFontWeight: fontWeight,
           tabBarItemTitleFontStyle: fontStyle,
-          tabBarItemTitleFontColor: color,
+          tabBarItemTitleFontColor: inactiveTintColor,
+          tabBarItemIconColor: inactiveTintColor,
         };
 
         return (
           <BottomTabsScreen
             key={route.key}
             tabKey={route.key}
-            icon={options.tabBarIcon}
+            {...getIconProps(options.tabBarIcon)}
             tabBarItemBadgeBackgroundColor={
               options.tabBarBadgeStyle?.backgroundColor
             }
@@ -171,13 +206,13 @@ export function ExperimentalBottomTabView({
               tabBarBackgroundColor,
               tabBarShadowColor,
               stacked: {
-                normal: labelStyle,
+                normal: tabItemAppearance,
               },
               inline: {
-                normal: labelStyle,
+                normal: tabItemAppearance,
               },
               compactInline: {
-                normal: labelStyle,
+                normal: tabItemAppearance,
               },
             }}
           >
@@ -209,6 +244,46 @@ export function ExperimentalBottomTabView({
           </BottomTabsScreen>
         );
       })}
+      {Platform.OS === 'ios' && tabBarExtraItem ? (
+        <BottomTabsScreen
+          tabKey={SYSTEM_ITEM_KEY}
+          {...getIconProps(tabBarExtraItem.icon)}
+          systemItem={tabBarExtraItem.role}
+          standardAppearance={{
+            stacked: {
+              normal: extraButtonAppearance,
+            },
+            inline: {
+              normal: extraButtonAppearance,
+            },
+            compactInline: {
+              normal: extraButtonAppearance,
+            },
+          }}
+        />
+      ) : null}
     </BottomTabs>
   );
+}
+
+const SYSTEM_ITEM_KEY = 'system-item';
+
+function getIconProps(icon: Icon | undefined) {
+  if (!icon) {
+    return {};
+  }
+
+  if (Platform.OS === 'ios') {
+    return {
+      icon,
+    };
+  }
+
+  if ('imageSource' in icon) {
+    return {
+      iconResource: icon.imageSource,
+    };
+  }
+
+  return {};
 }

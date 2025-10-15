@@ -14,7 +14,7 @@ import type {
 import type * as React from 'react';
 import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
-import type { Icon } from 'react-native-screens';
+import type { BottomTabsSystemItem, Icon } from 'react-native-screens';
 
 export type Layout = { width: number; height: number };
 
@@ -24,8 +24,6 @@ export type ExperimentalBottomTabNavigationEventMap = {
    */
   tabPress: { data: undefined; canPreventDefault: true };
 };
-
-export type LabelPosition = 'beside-icon' | 'below-icon';
 
 export type ExperimentalBottomTabNavigationProp<
   ParamList extends ParamListBase,
@@ -70,7 +68,6 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
 
   /**
    * Title string of a tab displayed in the tab bar
-   * or a function that given { focused: boolean, color: string, position: 'below-icon' | 'beside-icon', children: string } returns a React.Node to display in tab bar.
    *
    * When undefined, scene title is used. Use `tabBarShowLabel` to hide the label.
    */
@@ -86,7 +83,7 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
    */
   tabBarLabelStyle?: Pick<
     TextStyle,
-    'fontFamily' | 'fontSize' | 'fontWeight' | 'fontStyle' | 'color'
+    'fontFamily' | 'fontSize' | 'fontWeight' | 'fontStyle'
   >;
 
   /**
@@ -190,7 +187,19 @@ export type ExperimentalBottomTabDescriptorMap = Record<
   ExperimentalBottomTabDescriptor
 >;
 
-export type ExperimentalBottomTabNavigationConfig = {};
+export type ExperimentalBottomTabNavigationConfig = {
+  /**
+   * Additional item to display in the tab bar.
+   * When `role` is set to `search`, it's positioned next to the tab bar on iOS 26 and above.
+   *
+   * @platform ios
+   */
+  tabBarExtraItem?: {
+    role: BottomTabsSystemItem;
+    icon?: Icon;
+    onPress: () => void;
+  };
+};
 
 export type ExperimentalBottomTabHeaderProps = {
   /**

@@ -6,7 +6,6 @@ export { createExperimentalBottomTabNavigator } from './createExperimentalBottom
 /**
  * Types
  */
-
 export type {
   ExperimentalBottomTabBarProps,
   ExperimentalBottomTabHeaderProps,

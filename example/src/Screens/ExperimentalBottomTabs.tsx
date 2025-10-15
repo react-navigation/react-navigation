@@ -22,6 +22,7 @@ import {
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import {
+  Alert,
   Platform,
   ScrollView,
   StyleSheet,
@@ -29,17 +30,19 @@ import {
   View,
 } from 'react-native';
 
+import iconBookUser from '../../assets/icons/book-user.png';
+import iconHeart from '../../assets/icons/heart.png';
+import iconMusic from '../../assets/icons/music.png';
+import iconNewspaper from '../../assets/icons/newspaper.png';
 import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
-import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
 import { NativeStack, type NativeStackParams } from './NativeStack';
 
 export type ExperimentalBottomTabParams = {
   TabStack: NavigatorScreenParams<NativeStackParams>;
   TabAlbums: undefined;
-  TabContacts: undefined;
-  TabChat: { count: number } | undefined;
+  TabContacts: { count: number };
 };
 
 const linking: PathConfigMap<ExperimentalBottomTabParams> = {
@@ -49,7 +52,6 @@ const linking: PathConfigMap<ExperimentalBottomTabParams> = {
   },
   TabAlbums: 'albums',
   TabContacts: 'contacts',
-  TabChat: 'chat',
 };
 
 const AlbumsScreen = () => {
@@ -73,10 +75,10 @@ const AlbumsScreen = () => {
           <Button
             variant="filled"
             onPress={() => {
-              navigation.navigate('TabChat', { count: i++ });
+              navigation.navigate('TabContacts', { count: i++ });
             }}
           >
-            Go to Chat
+            Go to Contacts
           </Button>
           <Button variant="tinted" onPress={() => navigation.goBack()}>
             Go back
@@ -114,6 +116,20 @@ export function ExperimentalBottomTabs() {
     <>
       <Tab.Navigator
         backBehavior="fullHistory"
+        tabBarExtraItem={{
+          role: 'search',
+          icon: Platform.select({
+            ios: {
+              sfSymbolName: 'heart',
+            },
+            default: {
+              imageSource: iconHeart,
+            },
+          }),
+          onPress: () => {
+            Alert.alert('Extra button pressed');
+          },
+        }}
         screenOptions={({
           navigation,
         }: ExperimentalBottomTabScreenProps<ExperimentalBottomTabParams>) => ({
@@ -199,31 +215,26 @@ export function ExperimentalBottomTabs() {
             title: 'Article',
             headerShown: false,
             tabBarIcon: {
-              sfSymbolName: 'newspaper',
+              imageSource: iconNewspaper,
             },
           }}
-        />
-        <Tab.Screen
-          name="TabChat"
-          component={Chat}
-          initialParams={{ count: i }}
-          options={({ route }) => ({
-            title: 'Chat',
-            tabBarIcon: {
-              sfSymbolName: 'bubble',
-            },
-            tabBarBadge: route.params?.count,
-          })}
         />
         <Tab.Screen
           name="TabContacts"
           component={Contacts}
-          options={{
+          initialParams={{ count: i }}
+          options={({ route }) => ({
             title: 'Contacts',
-            tabBarIcon: {
-              sfSymbolName: 'book.closed',
-            },
-          }}
+            tabBarIcon: Platform.select({
+              ios: {
+                sfSymbolName: 'person.2',
+              },
+              default: {
+                imageSource: iconBookUser,
+              },
+            }),
+            tabBarBadge: route.params?.count,
+          })}
         />
         <Tab.Screen
           name="TabAlbums"
@@ -240,7 +251,7 @@ export function ExperimentalBottomTabs() {
               />
             ),
             tabBarIcon: {
-              sfSymbolName: 'music.note',
+              imageSource: iconMusic,
             },
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
             tabBarActiveTintColor: '#fff',
