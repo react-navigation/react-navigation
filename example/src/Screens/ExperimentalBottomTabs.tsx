@@ -123,7 +123,7 @@ export function ExperimentalBottomTabs() {
               sfSymbolName: 'heart',
             },
             default: {
-              imageSource: iconHeart,
+              templateSource: iconHeart,
             },
           }),
           onPress: () => {
@@ -215,7 +215,7 @@ export function ExperimentalBottomTabs() {
             title: 'Article',
             headerShown: false,
             tabBarIcon: {
-              imageSource: iconNewspaper,
+              templateSource: iconNewspaper,
             },
           }}
         />
@@ -230,7 +230,7 @@ export function ExperimentalBottomTabs() {
                 sfSymbolName: 'person.2',
               },
               default: {
-                imageSource: iconBookUser,
+                templateSource: iconBookUser,
               },
             }),
             tabBarBadge: route.params?.count,
@@ -251,7 +251,7 @@ export function ExperimentalBottomTabs() {
               />
             ),
             tabBarIcon: {
-              imageSource: iconMusic,
+              templateSource: iconMusic,
             },
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
             tabBarActiveTintColor: '#fff',

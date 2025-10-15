@@ -74,11 +74,6 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   tabBarLabel?: string;
 
   /**
-   * Whether the tab label should be visible. Defaults to `true`.
-   */
-  tabBarShowLabel?: boolean;
-
-  /**
    * Style object for the tab label.
    */
   tabBarLabelStyle?: Pick<
@@ -107,25 +102,14 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   };
 
   /**
-   * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
-   * It's recommended to set this if you don't have a label for the tab.
-   */
-  // TODO
-  tabBarAccessibilityLabel?: string;
-
-  /**
-   * ID to locate this tab button in tests.
-   */
-  // TODO
-  tabBarButtonTestID?: string;
-
-  /**
    * Color for the icon and label in the active tab.
    */
   tabBarActiveTintColor?: string;
 
   /**
    * Color for the icon and label in the inactive tabs.
+   *
+   * @platform android
    */
   tabBarInactiveTintColor?: string;
 

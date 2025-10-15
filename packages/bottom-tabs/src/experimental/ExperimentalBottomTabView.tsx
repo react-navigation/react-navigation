@@ -1,4 +1,5 @@
 import {
+  Color,
   getHeaderTitle,
   getLabel,
   Header,
@@ -17,6 +18,7 @@ import {
   BottomTabs,
   BottomTabsScreen,
   type BottomTabsScreenItemStateAppearance,
+  type BottomTabsScreenProps,
   type Icon,
 } from 'react-native-screens';
 
@@ -102,9 +104,6 @@ export function ExperimentalBottomTabView({
     fontStyle,
   } = currentOptions.tabBarLabelStyle || {};
 
-  // const { fontFamily, fontWeight, fontSize, fontStyle } =
-  //   currentOptions.tabBarLabelStyle || {};
-
   const activeTintColor =
     currentOptions.tabBarActiveTintColor ?? colors.primary;
 
@@ -186,22 +185,24 @@ export function ExperimentalBottomTabView({
           tabBarItemTitleFontSize: fontSize,
           tabBarItemTitleFontWeight: fontWeight,
           tabBarItemTitleFontStyle: fontStyle,
-          tabBarItemTitleFontColor: inactiveTintColor,
-          tabBarItemIconColor: inactiveTintColor,
         };
+
+        const badgeBackgroundColor =
+          options.tabBarBadgeStyle?.backgroundColor ?? colors.notification;
+        const badgeTextColor = Color(badgeBackgroundColor)?.isLight()
+          ? 'black'
+          : 'white';
 
         return (
           <BottomTabsScreen
             key={route.key}
             tabKey={route.key}
             {...getIconProps(options.tabBarIcon)}
-            tabBarItemBadgeBackgroundColor={
-              options.tabBarBadgeStyle?.backgroundColor
-            }
-            tabBarItemBadgeTextColor={options.tabBarBadgeStyle?.color}
+            tabBarItemBadgeBackgroundColor={badgeBackgroundColor}
+            tabBarItemBadgeTextColor={badgeTextColor}
             badgeValue={options.tabBarBadge?.toString()}
             isFocused={isFocused}
-            title={options.tabBarShowLabel !== false ? title : undefined}
+            title={title}
             standardAppearance={{
               tabBarBackgroundColor,
               tabBarShadowColor,
@@ -268,7 +269,9 @@ export function ExperimentalBottomTabView({
 
 const SYSTEM_ITEM_KEY = 'system-item';
 
-function getIconProps(icon: Icon | undefined) {
+function getIconProps(
+  icon: Icon | undefined
+): Pick<BottomTabsScreenProps, 'icon' | 'iconResource'> {
   if (!icon) {
     return {};
   }
@@ -279,9 +282,9 @@ function getIconProps(icon: Icon | undefined) {
     };
   }
 
-  if ('imageSource' in icon) {
+  if ('templateSource' in icon) {
     return {
-      iconResource: icon.imageSource,
+      iconResource: icon.templateSource,
     };
   }
 
