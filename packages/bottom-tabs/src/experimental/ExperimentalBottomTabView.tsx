@@ -125,6 +125,8 @@ export function ExperimentalBottomTabView({
       tabBarItemTitleFontColorActive={activeTintColor}
       tabBarItemTitleFontFamily={fontFamily}
       tabBarItemTitleFontWeight={fontWeight}
+      tabBarItemTitleFontSize={fontSize}
+      tabBarItemTitleFontSizeActive={fontSize}
       tabBarBackgroundColor={currentOptions.tabBarStyle?.backgroundColor}
       tabBarItemActiveIndicatorEnabled={false}
       experimentalControlNavigationStateInJS
