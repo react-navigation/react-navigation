@@ -34,7 +34,12 @@ export type HeaderSearchBarOptions = {
   /**
    * The auto-capitalization behavior
    */
-  autoCapitalize?: 'none' | 'words' | 'sentences' | 'characters';
+  autoCapitalize?:
+    | 'none'
+    | 'words'
+    | 'sentences'
+    | 'characters'
+    | 'systemDefault';
   /**
    * Automatically focuses search input on mount
    */

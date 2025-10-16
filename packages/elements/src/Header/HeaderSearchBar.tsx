@@ -42,6 +42,7 @@ function HeaderSearchBarInternal(
     visible,
     inputType,
     autoFocus = true,
+    autoCapitalize,
     placeholder = 'Search',
     cancelButtonText = 'Cancel',
     enterKeyHint = 'search',
@@ -173,6 +174,9 @@ function HeaderSearchBarInternal(
           onChange={onChangeText}
           onChangeText={setValue}
           autoFocus={autoFocus}
+          autoCapitalize={
+            autoCapitalize === 'systemDefault' ? undefined : autoCapitalize
+          }
           inputMode={INPUT_TYPE_TO_MODE[inputType ?? 'text']}
           enterKeyHint={enterKeyHint}
           placeholder={placeholder}
