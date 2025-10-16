@@ -4113,6 +4113,7 @@ __metadata:
     "@testing-library/react-native": "npm:^13.2.0"
     "@types/color": "npm:^4.2.0"
     "@types/react": "npm:~19.0.10"
+    color: "npm:^4.2.3"
     del-cli: "npm:^6.0.0"
     react: "npm:19.0.0"
     react-native: "npm:0.79.3"

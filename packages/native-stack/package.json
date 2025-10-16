@@ -47,6 +47,7 @@
   },
   "dependencies": {
     "@react-navigation/elements": "^2.6.5",
+    "color": "^4.2.3",
     "warn-once": "^0.1.1"
   },
   "devDependencies": {
