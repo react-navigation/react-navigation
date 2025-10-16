@@ -67,7 +67,7 @@ const processBarButtonItems = (
       }
       return processedItem;
     })
-    .filter(Boolean);
+    .filter((item) => item != null);
 };
 
 export function useHeaderConfigProps({
@@ -249,7 +249,6 @@ export function useHeaderConfigProps({
                   <ScreenStackHeaderLeftView
                     // eslint-disable-next-line @eslint-react/no-array-index-key
                     key={index}
-                    // @ts-expect-error hidesSharedBackground will be available when new react-native-screens is published
                     hidesSharedBackground={item.hidesSharedBackground}
                   >
                     {item.customView({
@@ -327,7 +326,6 @@ export function useHeaderConfigProps({
               <ScreenStackHeaderRightView
                 // eslint-disable-next-line @eslint-react/no-array-index-key
                 key={index}
-                // @ts-expect-error hidesSharedBackground will be available when new react-native-screens is published
                 hidesSharedBackground={item.hidesSharedBackground}
               >
                 {item.customView({
