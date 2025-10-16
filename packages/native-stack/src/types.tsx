@@ -138,6 +138,16 @@ export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {
   href?: string;
 };
 
+export type NativeStackHeaderLeftItems = (
+  | NativeStackHeaderButtonItem
+  | NativeStackHeaderButtonItemWithCustomView<NativeStackHeaderLeftProps>
+)[];
+
+export type NativeStackHeaderRightItems = (
+  | NativeStackHeaderButtonItem
+  | NativeStackHeaderButtonItemWithCustomView<NativeStackHeaderRightProps>
+)[];
+
 export type NativeStackNavigationOptions = {
   /**
    * String that can be displayed in the header as a fallback for `headerTitle`.
@@ -296,20 +306,14 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  headerLeftItems?: (
-    | NativeStackHeaderButtonItem
-    | NativeStackHeaderButtonItemWithCustomView<NativeStackHeaderLeftProps>
-  )[];
+  headerLeftItems?: NativeStackHeaderLeftItems;
   /**
    * Array of items to display as UIBarButtonItems to the right side of the header.
    * Overrides `headerRight`.
    *
    * @platform ios
    */
-  headerRightItems?: (
-    | NativeStackHeaderButtonItem
-    | NativeStackHeaderButtonItemWithCustomView<NativeStackHeaderRightProps>
-  )[];
+  headerRightItems?: NativeStackHeaderRightItems;
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
@@ -857,6 +861,7 @@ export type NativeStackHeaderButtonItemSubmenu = {
   icon?: PlatformIconIOSSfSymbol;
   items: NativeStackHeaderButtonItemWithMenu['menu']['items'];
 };
+
 export type NativeStackHeaderButtonItemWithMenu = SharedHeaderButtonItem & {
   menu: {
     label?: string;

@@ -1,12 +1,27 @@
-import { Button, Text, useHeaderHeight } from '@react-navigation/elements';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import {
+  Button,
+  HeaderButton,
+  Text,
+  useHeaderHeight,
+} from '@react-navigation/elements';
 import { type PathConfigMap, useTheme } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
+  type NativeStackHeaderLeftItems,
+  type NativeStackHeaderRightItems,
   type NativeStackScreenProps,
   useAnimatedHeaderHeight,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Animated, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Animated,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
@@ -198,11 +213,91 @@ export function NativeStack() {
       <Stack.Screen
         name="Article"
         component={ArticleScreen}
-        options={({ route }) => ({
-          title: `Article by ${route.params?.author ?? 'Unknown'}`,
-          headerLargeTitle: true,
-          headerLargeTitleShadowVisible: false,
-        })}
+        options={({ route, navigation }) => {
+          const headerLeftItems: NativeStackHeaderLeftItems = [
+            {
+              label: 'Back',
+              onPress: () => navigation.goBack(),
+            },
+          ];
+
+          const headerRightItems: NativeStackHeaderRightItems = [
+            {
+              icon: {
+                type: 'sfSymbol',
+                name: 'heart',
+              },
+              onPress: () => Alert.alert('Favorite button pressed'),
+            },
+            {
+              customView: () => (
+                <HeaderButton onPress={() => Alert.alert('Follow pressed')}>
+                  <MaterialCommunityIcons
+                    name="account-plus-outline"
+                    size={28}
+                    color="green"
+                  />
+                </HeaderButton>
+              ),
+            },
+            {
+              icon: {
+                type: 'sfSymbol',
+                name: 'ellipsis',
+              },
+              menu: {
+                label: 'Article options',
+                items: [
+                  {
+                    type: 'action',
+                    label: 'Share',
+                    onPress: () => Alert.alert('Share pressed'),
+                  },
+                  {
+                    type: 'action',
+                    label: 'Delete',
+                    attributes: 'disabled',
+                    onPress: () => Alert.alert('Delete pressed'),
+                  },
+                  {
+                    type: 'action',
+                    label: 'Report',
+                    attributes: 'destructive',
+                    onPress: () => Alert.alert('Report pressed'),
+                  },
+                  {
+                    type: 'submenu',
+                    label: 'View history',
+                    items: [
+                      {
+                        type: 'action',
+                        label: 'Version 1.0',
+                        icon: {
+                          type: 'sfSymbol',
+                          name: 'checkmark',
+                        },
+                        onPress: () => Alert.alert('View version 1.0'),
+                      },
+                      {
+                        type: 'action',
+                        label: 'Version 0.9',
+                        onPress: () => Alert.alert('View version 0.9'),
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+          ];
+
+          return {
+            title: `Article by ${route.params?.author ?? 'Unknown'}`,
+            headerLargeTitle: true,
+            headerLargeTitleShadowVisible: false,
+            headerLeftItems,
+            headerRightItems,
+          };
+        }}
         initialParams={{ author: 'Gandalf' }}
       />
       <Stack.Screen
