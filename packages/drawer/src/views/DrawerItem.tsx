@@ -170,6 +170,7 @@ export function DrawerItem(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
+    borderCurve: 'continuous',
     overflow: 'hidden',
   },
   wrapper: {
@@ -178,6 +179,7 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
     paddingStart: 16,
     paddingEnd: 24,
+    borderCurve: 'continuous',
   },
   label: {
     marginEnd: 12,
