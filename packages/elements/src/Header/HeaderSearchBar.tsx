@@ -306,6 +306,7 @@ const styles = StyleSheet.create({
       marginTop: -1,
       marginBottom: 4,
       borderRadius: 8,
+      borderCurve: 'continuous',
     },
     default: {
       flex: 1,

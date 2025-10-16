@@ -110,6 +110,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 10,
     borderRadius: BUTTON_RADIUS,
+    borderCurve: 'continuous',
   },
   text: {
     fontSize: 14,

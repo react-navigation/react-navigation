@@ -379,6 +379,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // Roundness for iPad hover effect
     borderRadius: 10,
+    borderCurve: 'continuous',
   },
   tabVerticalUiKit: {
     justifyContent: 'flex-start',

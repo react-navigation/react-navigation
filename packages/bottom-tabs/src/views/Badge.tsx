@@ -98,6 +98,7 @@ export function Badge({
           backgroundColor,
           fontSize,
           borderRadius,
+          borderCurve: 'continuous',
         },
         fonts.regular,
         styles.container,

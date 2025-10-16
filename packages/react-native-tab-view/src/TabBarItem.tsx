@@ -298,7 +298,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     ...Platform.select({
       // Roundness for iPad hover effect
-      ios: { borderRadius: 10 },
+      ios: {
+        borderRadius: 10,
+        borderCurve: 'continuous',
+      },
       default: null,
     }),
   },
