@@ -215,6 +215,7 @@ export function NativeStack() {
         options={({ route, navigation }) => {
           const leftItems: NativeStackHeaderItem[] = [
             {
+              type: 'button',
               label: 'Back',
               onPress: () => navigation.goBack(),
             },
@@ -222,6 +223,7 @@ export function NativeStack() {
 
           const rightItems: NativeStackHeaderItem[] = [
             {
+              type: 'button',
               icon: {
                 type: 'sfSymbol',
                 name: 'heart',
@@ -229,7 +231,8 @@ export function NativeStack() {
               onPress: () => Alert.alert('Favorite button pressed'),
             },
             {
-              customView: (
+              type: 'custom',
+              element: (
                 <HeaderButton onPress={() => Alert.alert('Follow pressed')}>
                   <MaterialCommunityIcons
                     name="account-plus-outline"
@@ -239,9 +242,13 @@ export function NativeStack() {
               ),
             },
             {
+              type: 'menu',
               icon: {
                 type: 'sfSymbol',
                 name: 'ellipsis',
+              },
+              badge: {
+                value: 3,
               },
               menu: {
                 label: 'Article options',
@@ -287,7 +294,8 @@ export function NativeStack() {
               },
             },
             {
-              customView: (
+              type: 'custom',
+              element: (
                 <HeaderButton onPress={() => Alert.alert('Info pressed')}>
                   <MaterialCommunityIcons
                     name="information-outline"

@@ -39,47 +39,55 @@ const processBarButtonItems = (
 ) => {
   return items
     ?.map((item, index) => {
-      if ('customView' in item) {
+      if (item.type === 'custom') {
+        // Handled with `ScreenStackHeaderLeftView` or `ScreenStackHeaderRightView`
         return null;
       }
 
-      let processedItem: HeaderBarButtonItem = item;
+      if (item.type === 'spacing') {
+        return item;
+      }
 
-      if ('spacing' in item) {
+      if (item.type === 'button' || item.type === 'menu') {
+        const { badge, ...rest } = item;
+
+        let processedItem: HeaderBarButtonItem = {
+          ...rest,
+          index,
+          labelStyle: {
+            ...fonts.regular,
+            ...item.labelStyle,
+          },
+        };
+
+        if (badge) {
+          const badgeBackgroundColor =
+            badge.style?.backgroundColor ?? colors.notification;
+          const badgeTextColor = color(badgeBackgroundColor).isLight()
+            ? 'black'
+            : 'white';
+
+          processedItem = {
+            ...processedItem,
+            badge: {
+              ...badge,
+              value: String(badge.value),
+              style: {
+                backgroundColor: badgeBackgroundColor,
+                color: badgeTextColor,
+                ...fonts.regular,
+                ...badge.style,
+              },
+            },
+          };
+        }
+
         return processedItem;
       }
 
-      processedItem = {
-        index,
-        ...processedItem,
-        labelStyle: {
-          ...fonts.regular,
-          ...item.labelStyle,
-        },
-      };
-
-      if ('badge' in item && item.badge) {
-        const badgeBackgroundColor =
-          item.badge.style?.backgroundColor ?? colors.notification;
-        const badgeTextColor = color(badgeBackgroundColor).isLight()
-          ? 'black'
-          : 'white';
-
-        processedItem = {
-          ...processedItem,
-          badge: {
-            ...item.badge,
-            style: {
-              backgroundColor: badgeBackgroundColor,
-              color: badgeTextColor,
-              ...fonts.regular,
-              ...item.badge.style,
-            },
-          },
-        };
-      }
-
-      return processedItem;
+      throw new Error(
+        `Invalid item type: ${JSON.stringify(item)}. Valid types are 'button', 'menu', 'custom' and 'spacing'.`
+      );
     })
     .filter((item) => item != null);
 };
@@ -268,14 +276,14 @@ export function useHeaderConfigProps({
         <>
           {leftItems ? (
             leftItems.map((item, index) => {
-              if ('customView' in item) {
+              if (item.type === 'custom') {
                 return (
                   <ScreenStackHeaderLeftView
                     // eslint-disable-next-line @eslint-react/no-array-index-key
                     key={index}
                     hidesSharedBackground={item.hidesSharedBackground}
                   >
-                    {item.customView}
+                    {item.element}
                   </ScreenStackHeaderLeftView>
                 );
               }
@@ -340,14 +348,14 @@ export function useHeaderConfigProps({
       ) : null}
       {rightItems ? (
         rightItems.map((item, index) => {
-          if ('customView' in item) {
+          if (item.type === 'custom') {
             return (
               <ScreenStackHeaderRightView
                 // eslint-disable-next-line @eslint-react/no-array-index-key
                 key={index}
                 hidesSharedBackground={item.hidesSharedBackground}
               >
-                {item.customView}
+                {item.element}
               </ScreenStackHeaderRightView>
             );
           }

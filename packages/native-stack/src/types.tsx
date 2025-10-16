@@ -762,7 +762,7 @@ type SharedHeaderButtonItem = {
    */
   tintColor?: ColorValue;
   /**
-   * A Boolean value that indicates whether the item is in a disabled state.
+   * Whether the item is in a disabled state.
    */
   disabled?: boolean;
   /**
@@ -772,14 +772,14 @@ type SharedHeaderButtonItem = {
    */
   width?: number;
   /**
-   * A boolean value indicating whether the background this item may share with other items in the bar should be hidden.
+   * Whether the background this item may share with other items in the bar should be hidden.
    * Only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/hidessharedbackground
    */
   hidesSharedBackground?: boolean;
   /**
-   * A boolean value indicating whether this item can share a background with other items in a navigation bar or a toolbar.
+   * Whether this item can share a background with other items in a navigation bar or a toolbar.
    * Only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/sharesbackground
@@ -802,7 +802,7 @@ type SharedHeaderButtonItem = {
     /**
      * The text to display in the badge.
      */
-    value: string;
+    value: number | string;
     /**
      * Style of the badge.
      */
@@ -814,23 +814,33 @@ type SharedHeaderButtonItem = {
       fontWeight?: string;
     };
   };
+  /**
+   * Accessibility label for the item.
+   */
   accessibilityLabel?: string;
+  /**
+   * Accessibility hint for the item.
+   */
   accessibilityHint?: string;
 };
 
 export type NativeStackHeaderButtonItemWithAction = SharedHeaderButtonItem & {
   /**
+   * Type of the item.
+   */
+  type: 'button';
+  /**
    * Function to call when the item is pressed.
    */
   onPress: () => void;
   /**
-   * A Boolean value that indicates whether the item is in a selected state.
+   * Whether the item is in a selected state.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
    */
   selected?: boolean;
   /**
-   * A Boolean value that indicates whether the item represents an action or selection.
+   * Whether the item represents an action or selection.
    * Only available from iOS 15.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
@@ -839,24 +849,33 @@ export type NativeStackHeaderButtonItemWithAction = SharedHeaderButtonItem & {
 };
 
 export type NativeStackHeaderButtonItemMenuAction = {
-  label?: string;
   type: 'action';
-  onPress: () => void;
+  /**
+   * Label for the menu item.
+   */
+  label?: string;
+  /**
+   * Icon for the menu item.
+   */
   icon?: PlatformIconIOSSfSymbol;
   /**
-   * State of the item.
+   * Function to call when the menu item is pressed.
+   */
+  onPress: () => void;
+  /**
+   * The state of an action- or command-based menu item.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/state
    */
   state?: 'on' | 'off' | 'mixed';
   /**
-   * Attributes of the item.
+   * Attributes that determine the style of the menu item.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes
    */
   attributes?: 'destructive' | 'disabled' | 'hidden' | 'keepsMenuPresented';
   /**
-   * Discoverability label of the menu item.
+   * An elaborated title that explains the purpose of the action.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uiaction/discoverabilitytitle
    */
@@ -864,15 +883,34 @@ export type NativeStackHeaderButtonItemMenuAction = {
 };
 
 export type NativeStackHeaderButtonItemSubmenu = {
-  label?: string;
   type: 'submenu';
+  /**
+   * Label for the submenu item.
+   */
+  label?: string;
+  /**
+   * Icon for the submenu item.
+   */
   icon?: PlatformIconIOSSfSymbol;
+  /**
+   * Array of menu items (actions or submenus).
+   */
   items: NativeStackHeaderButtonItemWithMenu['menu']['items'];
 };
 
 export type NativeStackHeaderButtonItemWithMenu = SharedHeaderButtonItem & {
+  type: 'menu';
+  /**
+   * Menu for the item.
+   */
   menu: {
+    /**
+     * Optional label to show as the title of the menu.
+     */
     label?: string;
+    /**
+     * Array of menu items (actions or submenus).
+     */
     items: (
       | NativeStackHeaderButtonItemMenuAction
       | NativeStackHeaderButtonItemSubmenu
@@ -881,11 +919,19 @@ export type NativeStackHeaderButtonItemWithMenu = SharedHeaderButtonItem & {
 };
 
 export type NativeStackHeaderButtonItemSpacing = {
+  type: 'spacing';
+  /**
+   * The amount of spacing to add.
+   */
   spacing: number;
 };
 
 export type NativeStackHeaderButtonItemWithCustomView = {
-  customView: React.ReactNode;
+  type: 'custom';
+  /**
+   * A React Element to display as the item.
+   */
+  element: React.ReactElement;
   /**
    * A boolean value indicating whether the background this item may share with other items in the bar should be hidden.
    * Only available from iOS 26.0 and later.
