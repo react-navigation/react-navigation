@@ -286,6 +286,16 @@ export function NativeStack() {
                 ],
               },
             },
+            {
+              customView: (
+                <HeaderButton onPress={() => Alert.alert('Info pressed')}>
+                  <MaterialCommunityIcons
+                    name="information-outline"
+                    size={28}
+                  />
+                </HeaderButton>
+              ),
+            },
           ];
 
           return {
