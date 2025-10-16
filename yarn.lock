@@ -4108,6 +4108,7 @@ __metadata:
     "@react-navigation/elements": "npm:^2.6.5"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^13.2.0"
+    "@types/color": "npm:^4.2.0"
     "@types/react": "npm:~19.0.10"
     del-cli: "npm:^6.0.0"
     react: "npm:19.0.0"
