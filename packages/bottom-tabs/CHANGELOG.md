@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.4.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.4.8...@react-navigation/bottom-tabs@7.4.9) (2025-10-13)
+
+### Bug Fixes
+
+* default headerTransparent to false in native-stack ([b6d939c](https://github.com/react-navigation/react-navigation/commit/b6d939c320e427c86773471a230b638b81071ebe)) - by @satya164
+
+## [7.4.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.4.7...@react-navigation/bottom-tabs@7.4.8) (2025-10-04)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
 ## [7.4.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.4.6...@react-navigation/bottom-tabs@7.4.7) (2025-08-31)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

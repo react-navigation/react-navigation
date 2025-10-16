@@ -112,7 +112,7 @@ const SceneView = ({
     headerBackButtonMenuEnabled,
     headerShown,
     headerBackground,
-    headerTransparent,
+    headerTransparent = false,
     autoHideHomeIndicator,
     keyboardHandlingEnabled,
     navigationBarColor,
@@ -277,6 +277,7 @@ const SceneView = ({
     headerHeight,
     headerShown: header !== undefined ? false : headerShown,
     headerTopInsetEnabled,
+    headerTransparent,
     headerBack,
   });
 
@@ -357,8 +358,7 @@ const SceneView = ({
 
                 if (
                   Platform.OS === 'android' &&
-                  (options.headerBackground != null ||
-                    options.headerTransparent)
+                  (headerBackground != null || headerTransparent)
                 ) {
                   // FIXME: On Android, we get 0 if the header is translucent
                   // So we set a default height in that case
