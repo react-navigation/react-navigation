@@ -234,7 +234,6 @@ export function NativeStack() {
                   <MaterialCommunityIcons
                     name="account-plus-outline"
                     size={28}
-                    color="green"
                   />
                 </HeaderButton>
               ),

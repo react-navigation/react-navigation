@@ -8,6 +8,7 @@ import {
 import color from 'color';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
+  type HeaderBarButtonItem,
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
@@ -37,18 +38,19 @@ const processBarButtonItems = (
   fonts: Theme['fonts']
 ) => {
   return items
-    ?.map((item) => {
+    ?.map((item, index) => {
       if ('customView' in item) {
         return null;
       }
 
-      let processedItem = item;
+      let processedItem: HeaderBarButtonItem = item;
 
       if ('spacing' in item) {
         return processedItem;
       }
 
       processedItem = {
+        index,
         ...processedItem,
         labelStyle: {
           ...fonts.regular,
