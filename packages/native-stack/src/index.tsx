@@ -17,6 +17,7 @@ export { useAnimatedHeaderHeight } from './utils/useAnimatedHeaderHeight';
  * Types
  */
 export type {
+  NativeStackHeaderBackProps,
   NativeStackHeaderButtonItem,
   NativeStackHeaderButtonItemMenuAction,
   NativeStackHeaderButtonItemSpacing,
@@ -24,10 +25,10 @@ export type {
   NativeStackHeaderButtonItemWithAction,
   NativeStackHeaderButtonItemWithCustomView,
   NativeStackHeaderButtonItemWithMenu,
-  NativeStackHeaderLeftItems,
+  NativeStackHeaderItem,
+  NativeStackHeaderItemProps,
   NativeStackHeaderLeftProps,
   NativeStackHeaderProps,
-  NativeStackHeaderRightItems,
   NativeStackHeaderRightProps,
   NativeStackNavigationEventMap,
   NativeStackNavigationOptions,

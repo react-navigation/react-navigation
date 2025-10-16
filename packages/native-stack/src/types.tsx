@@ -115,7 +115,7 @@ export type NativeStackHeaderProps = {
   navigation: NativeStackNavigationProp<ParamListBase>;
 };
 
-export type NativeStackHeaderRightProps = {
+export type NativeStackHeaderItemProps = {
   /**
    * Tint color for the header.
    */
@@ -126,10 +126,10 @@ export type NativeStackHeaderRightProps = {
   canGoBack?: boolean;
 };
 
-export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {
+export type NativeStackHeaderBackProps = NativeStackHeaderItemProps & {
   /**
    * Label text for the button. Usually the title of the previous screen.
-   * By default, this is only shown on iOS.
+   * By default, this is only shown on iOS 18.
    */
   label?: string;
   /**
@@ -138,15 +138,19 @@ export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {
   href?: string;
 };
 
-export type NativeStackHeaderLeftItems = (
-  | NativeStackHeaderButtonItem
-  | NativeStackHeaderButtonItemWithCustomView<NativeStackHeaderLeftProps>
-)[];
+/**
+ * @deprecated Use `NativeStackHeaderBackProps` instead.
+ */
+export type NativeStackHeaderLeftProps = NativeStackHeaderBackProps;
 
-export type NativeStackHeaderRightItems = (
+/**
+ * @deprecated Use `NativeStackHeaderItemProps` instead.
+ */
+export type NativeStackHeaderRightProps = NativeStackHeaderItemProps;
+
+export type NativeStackHeaderItem =
   | NativeStackHeaderButtonItem
-  | NativeStackHeaderButtonItemWithCustomView<NativeStackHeaderRightProps>
-)[];
+  | NativeStackHeaderButtonItemWithCustomView;
 
 export type NativeStackNavigationOptions = {
   /**
@@ -294,26 +298,30 @@ export type NativeStackNavigationOptions = {
    * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
    * Will be overriden by `headerLeftItems` on iOS.
    */
-  headerLeft?: (props: NativeStackHeaderLeftProps) => React.ReactNode;
+  headerLeft?: (props: NativeStackHeaderBackProps) => React.ReactNode;
   /**
    * Function which returns a React Element to display on the right side of the header.
    * Will be overriden by `headerRightItems` on iOS.
    */
-  headerRight?: (props: NativeStackHeaderRightProps) => React.ReactNode;
+  headerRight?: (props: NativeStackHeaderItemProps) => React.ReactNode;
   /**
    * Array of items to display as UIBarButtonItems to the left side of the header.
    * Overrides `headerLeft`.
    *
    * @platform ios
    */
-  headerLeftItems?: NativeStackHeaderLeftItems;
+  headerLeftItems?: (
+    props: NativeStackHeaderItemProps
+  ) => NativeStackHeaderItem[];
   /**
    * Array of items to display as UIBarButtonItems to the right side of the header.
    * Overrides `headerRight`.
    *
    * @platform ios
    */
-  headerRightItems?: NativeStackHeaderRightItems;
+  headerRightItems?: (
+    props: NativeStackHeaderItemProps
+  ) => NativeStackHeaderItem[];
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
@@ -876,8 +884,8 @@ export type NativeStackHeaderButtonItemSpacing = {
   spacing: number;
 };
 
-export type NativeStackHeaderButtonItemWithCustomView<T> = {
-  customView: (props: T) => React.ReactNode;
+export type NativeStackHeaderButtonItemWithCustomView = {
+  customView: React.ReactNode;
   /**
    * A boolean value indicating whether the background this item may share with other items in the bar should be hidden.
    * Only available from iOS 26.0 and later.

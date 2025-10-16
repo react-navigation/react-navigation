@@ -8,8 +8,7 @@ import {
 import { type PathConfigMap, useTheme } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
-  type NativeStackHeaderLeftItems,
-  type NativeStackHeaderRightItems,
+  type NativeStackHeaderItem,
   type NativeStackScreenProps,
   useAnimatedHeaderHeight,
 } from '@react-navigation/native-stack';
@@ -214,14 +213,14 @@ export function NativeStack() {
         name="Article"
         component={ArticleScreen}
         options={({ route, navigation }) => {
-          const headerLeftItems: NativeStackHeaderLeftItems = [
+          const leftItems: NativeStackHeaderItem[] = [
             {
               label: 'Back',
               onPress: () => navigation.goBack(),
             },
           ];
 
-          const headerRightItems: NativeStackHeaderRightItems = [
+          const rightItems: NativeStackHeaderItem[] = [
             {
               icon: {
                 type: 'sfSymbol',
@@ -230,7 +229,7 @@ export function NativeStack() {
               onPress: () => Alert.alert('Favorite button pressed'),
             },
             {
-              customView: () => (
+              customView: (
                 <HeaderButton onPress={() => Alert.alert('Follow pressed')}>
                   <MaterialCommunityIcons
                     name="account-plus-outline"
@@ -294,8 +293,8 @@ export function NativeStack() {
             title: `Article by ${route.params?.author ?? 'Unknown'}`,
             headerLargeTitle: true,
             headerLargeTitleShadowVisible: false,
-            headerLeftItems,
-            headerRightItems,
+            headerLeftItems: () => leftItems,
+            headerRightItems: () => rightItems,
           };
         }}
         initialParams={{ author: 'Gandalf' }}

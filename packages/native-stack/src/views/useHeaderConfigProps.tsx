@@ -11,13 +11,17 @@ import {
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
+  type ScreenStackHeaderConfigProps,
   ScreenStackHeaderLeftView,
   ScreenStackHeaderRightView,
   ScreenStackHeaderSearchBarView,
   SearchBar,
 } from 'react-native-screens';
 
-import { type NativeStackNavigationOptions } from '../types';
+import type {
+  NativeStackHeaderItem,
+  NativeStackNavigationOptions,
+} from '../types';
 import { processFonts } from './FontProcessor';
 
 type Props = NativeStackNavigationOptions & {
@@ -28,13 +32,11 @@ type Props = NativeStackNavigationOptions & {
 };
 
 const processBarButtonItems = (
-  barButtonItems:
-    | NativeStackNavigationOptions['headerLeftItems']
-    | NativeStackNavigationOptions['headerRightItems'],
+  items: NativeStackHeaderItem[] | undefined,
   colors: Theme['colors'],
   fonts: Theme['fonts']
 ) => {
-  return barButtonItems
+  return items
     ?.map((item) => {
       if ('customView' in item) {
         return null;
@@ -110,7 +112,7 @@ export function useHeaderConfigProps({
   title,
   headerLeftItems,
   headerRightItems,
-}: Props) {
+}: Props): ScreenStackHeaderConfigProps {
   const { direction } = useLocale();
   const { colors, fonts } = useTheme();
   const tintColor =
@@ -248,12 +250,22 @@ export function useHeaderConfigProps({
 
   const isCenterViewRenderedAndroid = headerTitleAlign === 'center';
 
+  const leftItems = headerLeftItems?.({
+    tintColor,
+    canGoBack,
+  });
+
+  const rightItems = headerRightItems?.({
+    tintColor,
+    canGoBack,
+  });
+
   const children = (
     <>
       {Platform.OS === 'ios' ? (
         <>
-          {headerLeftItems ? (
-            headerLeftItems.map((item, index) => {
+          {leftItems ? (
+            leftItems.map((item, index) => {
               if ('customView' in item) {
                 return (
                   <ScreenStackHeaderLeftView
@@ -261,16 +273,11 @@ export function useHeaderConfigProps({
                     key={index}
                     hidesSharedBackground={item.hidesSharedBackground}
                   >
-                    {item.customView({
-                      tintColor,
-                      canGoBack,
-                      label: headerBackTitle ?? headerBack?.title,
-                      // `href` is only applicable to web
-                      href: undefined,
-                    })}
+                    {item.customView}
                   </ScreenStackHeaderLeftView>
                 );
               }
+
               return null;
             })
           ) : headerLeftElement != null ? (
@@ -329,8 +336,8 @@ export function useHeaderConfigProps({
       {headerBackImageSource !== undefined ? (
         <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
       ) : null}
-      {headerRightItems ? (
-        headerRightItems.map((item, index) => {
+      {rightItems ? (
+        rightItems.map((item, index) => {
           if ('customView' in item) {
             return (
               <ScreenStackHeaderRightView
@@ -338,13 +345,11 @@ export function useHeaderConfigProps({
                 key={index}
                 hidesSharedBackground={item.hidesSharedBackground}
               >
-                {item.customView({
-                  tintColor,
-                  canGoBack,
-                })}
+                {item.customView}
               </ScreenStackHeaderRightView>
             );
           }
+
           return null;
         })
       ) : headerRightElement != null ? (
@@ -397,15 +402,7 @@ export function useHeaderConfigProps({
     topInsetEnabled: headerTopInsetEnabled,
     translucent: translucent === true,
     children,
-    headerLeftBarButtonItems: processBarButtonItems(
-      headerLeftItems,
-      colors,
-      fonts
-    ),
-    headerRightBarButtonItems: processBarButtonItems(
-      headerRightItems,
-      colors,
-      fonts
-    ),
+    headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
+    headerRightBarButtonItems: processBarButtonItems(rightItems, colors, fonts),
   } as const;
 }
