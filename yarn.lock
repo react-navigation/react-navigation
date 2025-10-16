@@ -13493,6 +13493,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "react-native-drawer-layout@workspace:packages/react-native-drawer-layout"
   dependencies:
+    color: "npm:^4.2.3"
     del-cli: "npm:^6.0.0"
     react: "npm:19.0.0"
     react-native: "npm:0.79.3"

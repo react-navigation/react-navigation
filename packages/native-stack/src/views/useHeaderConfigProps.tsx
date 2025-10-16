@@ -5,6 +5,7 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
+import color from 'color';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   isSearchBarAvailableForCurrentPlatform,
@@ -34,37 +35,46 @@ const processBarButtonItems = (
   fonts: Theme['fonts']
 ) => {
   return barButtonItems
-    ?.map((item, index) => {
+    ?.map((item) => {
       if ('customView' in item) {
         return null;
       }
-      let processedItem = {
-        ...item,
-        index,
-      };
+
+      let processedItem = item;
+
       if ('spacing' in item) {
         return processedItem;
       }
+
       processedItem = {
         ...processedItem,
         labelStyle: {
-          fontFamily: fonts.regular.fontFamily,
+          ...fonts.regular,
           ...item.labelStyle,
         },
       };
+
       if ('badge' in item && item.badge) {
+        const badgeBackgroundColor =
+          item.badge.style?.backgroundColor ?? colors.notification;
+        const badgeTextColor = color(badgeBackgroundColor).isLight()
+          ? 'black'
+          : 'white';
+
         processedItem = {
           ...processedItem,
           badge: {
             ...item.badge,
             style: {
-              fontFamily: fonts.regular.fontFamily,
-              backgroundColor: colors.notification,
+              backgroundColor: badgeBackgroundColor,
+              color: badgeTextColor,
+              ...fonts.regular,
               ...item.badge.style,
             },
           },
         };
       }
+
       return processedItem;
     })
     .filter((item) => item != null);
