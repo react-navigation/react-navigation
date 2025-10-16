@@ -51,6 +51,7 @@
     "@react-native-masked-view/masked-view": "0.3.2",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^13.2.0",
+    "@types/color": "^4.2.0",
     "@types/react": "~19.0.10",
     "@types/use-sync-external-store": "^1.5.0",
     "del-cli": "^6.0.0",
