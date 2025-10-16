@@ -738,7 +738,7 @@ type SharedHeaderButtonItem = {
   icon?: PlatformIconIOS;
   /**
    * The variant of the item.
-   * "Prominent" only available from iOS 26.0 and later.
+   * "prominent" only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/style-swift.property
    */
