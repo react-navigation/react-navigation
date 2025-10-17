@@ -148,10 +148,6 @@ export type NativeStackHeaderLeftProps = NativeStackHeaderBackProps;
  */
 export type NativeStackHeaderRightProps = NativeStackHeaderItemProps;
 
-export type NativeStackHeaderItem =
-  | NativeStackHeaderButtonItem
-  | NativeStackHeaderButtonItemWithCustomView;
-
 export type NativeStackNavigationOptions = {
   /**
    * String that can be displayed in the header as a fallback for `headerTitle`.
@@ -730,11 +726,11 @@ type PlatformIconIOSSfSymbol = {
 
 type PlatformIconIOS = PlatformIconIOSSfSymbol | PlatformIconShared;
 
-type SharedHeaderButtonItem = {
+type SharedHeaderItem = {
   /**
    * Label of the item.
    */
-  label?: string;
+  label: string;
   /**
    * Style for the item label.
    */
@@ -824,7 +820,7 @@ type SharedHeaderButtonItem = {
   accessibilityHint?: string;
 };
 
-export type NativeStackHeaderButtonItemWithAction = SharedHeaderButtonItem & {
+export type NativeStackHeaderItemButton = SharedHeaderItem & {
   /**
    * Type of the item.
    */
@@ -848,12 +844,12 @@ export type NativeStackHeaderButtonItemWithAction = SharedHeaderButtonItem & {
   changesSelectionAsPrimaryAction?: boolean;
 };
 
-export type NativeStackHeaderButtonItemMenuAction = {
+export type NativeStackHeaderItemMenuAction = {
   type: 'action';
   /**
    * Label for the menu item.
    */
-  label?: string;
+  label: string;
   /**
    * Icon for the menu item.
    */
@@ -882,12 +878,12 @@ export type NativeStackHeaderButtonItemMenuAction = {
   discoverabilityLabel?: string;
 };
 
-export type NativeStackHeaderButtonItemSubmenu = {
+export type NativeStackHeaderItemMenuSubmenu = {
   type: 'submenu';
   /**
    * Label for the submenu item.
    */
-  label?: string;
+  label: string;
   /**
    * Icon for the submenu item.
    */
@@ -895,10 +891,10 @@ export type NativeStackHeaderButtonItemSubmenu = {
   /**
    * Array of menu items (actions or submenus).
    */
-  items: NativeStackHeaderButtonItemWithMenu['menu']['items'];
+  items: NativeStackHeaderItemMenu['menu']['items'];
 };
 
-export type NativeStackHeaderButtonItemWithMenu = SharedHeaderButtonItem & {
+export type NativeStackHeaderItemMenu = SharedHeaderItem & {
   type: 'menu';
   /**
    * Menu for the item.
@@ -912,13 +908,13 @@ export type NativeStackHeaderButtonItemWithMenu = SharedHeaderButtonItem & {
      * Array of menu items (actions or submenus).
      */
     items: (
-      | NativeStackHeaderButtonItemMenuAction
-      | NativeStackHeaderButtonItemSubmenu
+      | NativeStackHeaderItemMenuAction
+      | NativeStackHeaderItemMenuSubmenu
     )[];
   };
 };
 
-export type NativeStackHeaderButtonItemSpacing = {
+export type NativeStackHeaderItemSpacing = {
   type: 'spacing';
   /**
    * The amount of spacing to add.
@@ -926,7 +922,7 @@ export type NativeStackHeaderButtonItemSpacing = {
   spacing: number;
 };
 
-export type NativeStackHeaderButtonItemWithCustomView = {
+export type NativeStackHeaderItemCustom = {
   type: 'custom';
   /**
    * A React Element to display as the item.
@@ -941,10 +937,11 @@ export type NativeStackHeaderButtonItemWithCustomView = {
   hidesSharedBackground?: boolean;
 };
 
-export type NativeStackHeaderButtonItem =
-  | NativeStackHeaderButtonItemWithAction
-  | NativeStackHeaderButtonItemWithMenu
-  | NativeStackHeaderButtonItemSpacing;
+export type NativeStackHeaderItem =
+  | NativeStackHeaderItemButton
+  | NativeStackHeaderItemMenu
+  | NativeStackHeaderItemSpacing
+  | NativeStackHeaderItemCustom;
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,

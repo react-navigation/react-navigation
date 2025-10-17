@@ -45,10 +45,26 @@ const processBarButtonItems = (
       }
 
       if (item.type === 'spacing') {
+        if (item.spacing == null) {
+          throw new Error(
+            `Spacing item must have a 'spacing' property defined: ${JSON.stringify(
+              item
+            )}`
+          );
+        }
+
         return item;
       }
 
       if (item.type === 'button' || item.type === 'menu') {
+        if (item.type === 'menu' && item.menu == null) {
+          throw new Error(
+            `Menu item must have a 'menu' property defined: ${JSON.stringify(
+              item
+            )}`
+          );
+        }
+
         const { badge, ...rest } = item;
 
         let processedItem: HeaderBarButtonItem = {
@@ -265,10 +281,16 @@ export function useHeaderConfigProps({
     canGoBack,
   });
 
-  const rightItems = headerRightItems?.({
+  let rightItems = headerRightItems?.({
     tintColor,
     canGoBack,
   });
+
+  if (rightItems) {
+    // iOS renders right items in reverse order
+    // So we need to reverse them here to match the order
+    rightItems = [...rightItems].reverse();
+  }
 
   const children = (
     <>

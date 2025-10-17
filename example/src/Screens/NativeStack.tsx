@@ -224,6 +224,7 @@ export function NativeStack() {
           const rightItems: NativeStackHeaderItem[] = [
             {
               type: 'button',
+              label: 'Favorite',
               icon: {
                 type: 'sfSymbol',
                 name: 'heart',
@@ -243,6 +244,7 @@ export function NativeStack() {
             },
             {
               type: 'menu',
+              label: 'Options',
               icon: {
                 type: 'sfSymbol',
                 name: 'ellipsis',
