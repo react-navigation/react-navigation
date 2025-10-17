@@ -31,7 +31,9 @@ import {
 } from 'react-native';
 
 import iconBookUser from '../../assets/icons/book-user.png';
+// eslint-disable-next-line import-x/extensions
 import iconMusic from '../../assets/variableIcons/music.png';
+// eslint-disable-next-line import-x/extensions
 import iconNewspaper from '../../assets/variableIcons/newspaper.png';
 import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
