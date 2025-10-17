@@ -31,9 +31,8 @@ import {
 } from 'react-native';
 
 import iconBookUser from '../../assets/icons/book-user.png';
-import iconHeart from '../../assets/icons/heart.png';
-import iconMusic from '../../assets/icons/music.png';
-import iconNewspaper from '../../assets/icons/newspaper.png';
+import iconMusic from '../../assets/variableIcons/music.png';
+import iconNewspaper from '../../assets/variableIcons/newspaper.png';
 import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
 import { Contacts } from '../Shared/Contacts';
@@ -118,14 +117,9 @@ export function ExperimentalBottomTabs() {
         backBehavior="fullHistory"
         tabBarExtraItem={{
           role: 'search',
-          icon: Platform.select({
-            ios: {
-              sfSymbolName: 'heart',
-            },
-            default: {
-              templateSource: iconHeart,
-            },
-          }),
+          icon: {
+            sfSymbolName: 'heart',
+          },
           onPress: () => {
             Alert.alert('Extra button pressed');
           },

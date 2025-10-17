@@ -118,6 +118,8 @@ export function ExperimentalBottomTabView({
 
   return (
     <BottomTabs
+      tabBarControllerMode={currentOptions?.tabBarControllerMode}
+      tabBarMinimizeBehavior={currentOptions?.tabBarMinimizeBehavior}
       tabBarTintColor={activeTintColor}
       tabBarItemIconColor={inactiveTintColor}
       tabBarItemIconColorActive={activeTintColor}
@@ -128,7 +130,13 @@ export function ExperimentalBottomTabView({
       tabBarItemTitleFontSize={fontSize}
       tabBarItemTitleFontSizeActive={fontSize}
       tabBarBackgroundColor={currentOptions.tabBarStyle?.backgroundColor}
-      tabBarItemActiveIndicatorEnabled={false}
+      tabBarItemActiveIndicatorColor={
+        currentOptions?.tabBarItemActiveIndicatorColor
+      }
+      tabBarItemActiveIndicatorEnabled={
+        currentOptions?.tabBarItemActiveIndicatorEnabled
+      }
+      tabBarItemRippleColor={currentOptions?.tabBarItemRippleColor}
       experimentalControlNavigationStateInJS
       onNativeFocusChange={(e) => {
         if (e.nativeEvent.tabKey === SYSTEM_ITEM_KEY) {

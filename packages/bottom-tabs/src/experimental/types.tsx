@@ -14,7 +14,12 @@ import type {
 import type * as React from 'react';
 import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
-import type { BottomTabsSystemItem, Icon } from 'react-native-screens';
+import type {
+  BottomTabsSystemItem,
+  Icon,
+  TabBarControllerMode,
+} from 'react-native-screens';
+import type { TabBarMinimizeBehavior } from 'react-native-screens/src/components/bottom-tabs/BottomTabs.types';
 
 export type Layout = { width: number; height: number };
 
@@ -158,6 +163,65 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
    * Style object for the component wrapping the screen content.
    */
   sceneStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Specifies the display mode for the tab bar.
+   *
+   * Available starting from iOS 18.
+   * Not supported on tvOS.
+   *
+   * The following values are currently supported:
+   *
+   * - `automatic` - the system sets the display mode based on the tab’s content
+   * - `tabBar` - the system displays the content only as a tab bar
+   * - `tabSidebar` - the tab bar is displayed as a sidebar
+   *
+   * See the official documentation for more details:
+   * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/mode|UITabBarController.Mode}
+   *
+   * @default Defaults to `automatic`.
+   *
+   * @platform ios
+   * @supported iOS 18 or higher, not supported on tvOS
+   */
+  tabBarControllerMode?: TabBarControllerMode;
+  /**
+   * Specifies the minimize behavior for the tab bar.
+   *
+   * The following values are currently supported:
+   *
+   * - `automatic` - resolves to the system default minimize behavior
+   * - `never` - the tab bar does not minimize
+   * - `onScrollDown` - the tab bar minimizes when scrolling down and
+   *   expands when scrolling back up
+   * - `onScrollUp` - the tab bar minimizes when scrolling up and expands
+   *   when scrolling back down
+   *
+   * The supported values correspond to the official UIKit documentation:
+   * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/minimizebehavior|UITabBarController.MinimizeBehavior}
+   *
+   * @platform ios
+   * @supported iOS 26 or higher
+   */
+  tabBarMinimizeBehavior?: TabBarMinimizeBehavior;
+  /**
+   * Specifies the background color of the active indicator.
+   *
+   * @platform android
+   */
+  tabBarItemActiveIndicatorColor?: ColorValue;
+  /**
+   * Specifies if the active indicator should be used. Defaults to `true`.
+   *
+   * @platform android
+   */
+  tabBarItemActiveIndicatorEnabled?: boolean;
+  /**
+   * Specifies the color of each tab bar item's ripple effect.
+   *
+   * @platform android
+   */
+  tabBarItemRippleColor?: ColorValue;
 };
 
 export type ExperimentalBottomTabDescriptor = Descriptor<
