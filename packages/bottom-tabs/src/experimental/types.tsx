@@ -72,6 +72,14 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   title?: string;
 
   /**
+   * Uses iOS built-in tab bar items with standard iOS styling and localized titles.
+   * If set to `search`, it's positioned next to the tab bar on iOS 26 and above.
+   *
+   * @platform ios
+   */
+  tabBarSystemItem?: BottomTabsSystemItem;
+
+  /**
    * Title string of a tab displayed in the tab bar
    *
    * When undefined, scene title is used. Use `tabBarShowLabel` to hide the label.
@@ -235,19 +243,7 @@ export type ExperimentalBottomTabDescriptorMap = Record<
   ExperimentalBottomTabDescriptor
 >;
 
-export type ExperimentalBottomTabNavigationConfig = {
-  /**
-   * Additional item to display in the tab bar.
-   * When `role` is set to `search`, it's positioned next to the tab bar on iOS 26 and above.
-   *
-   * @platform ios
-   */
-  tabBarExtraItem?: {
-    role: BottomTabsSystemItem;
-    icon?: Icon;
-    onPress: () => void;
-  };
-};
+export type ExperimentalBottomTabNavigationConfig = {};
 
 export type ExperimentalBottomTabHeaderProps = {
   /**

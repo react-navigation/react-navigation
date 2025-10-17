@@ -40,7 +40,6 @@ export function ExperimentalBottomTabView({
   state,
   navigation,
   descriptors,
-  tabBarExtraItem,
 }: Props) {
   const { colors, fonts } = useTheme();
 
@@ -111,11 +110,6 @@ export function ExperimentalBottomTabView({
     currentOptions.tabBarInactiveTintColor ??
     Platform.select({ ios: PlatformColor('label'), default: colors.text });
 
-  const extraButtonAppearance: BottomTabsScreenItemStateAppearance = {
-    tabBarItemTitleFontColor: inactiveTintColor,
-    tabBarItemIconColor: inactiveTintColor,
-  };
-
   return (
     <BottomTabs
       tabBarControllerMode={currentOptions?.tabBarControllerMode}
@@ -139,11 +133,6 @@ export function ExperimentalBottomTabView({
       tabBarItemRippleColor={currentOptions?.tabBarItemRippleColor}
       experimentalControlNavigationStateInJS
       onNativeFocusChange={(e) => {
-        if (e.nativeEvent.tabKey === SYSTEM_ITEM_KEY) {
-          tabBarExtraItem?.onPress();
-          return;
-        }
-
         const route = state.routes.find(
           (route) => route.key === e.nativeEvent.tabKey
         );
@@ -211,6 +200,7 @@ export function ExperimentalBottomTabView({
             tabBarItemBadgeBackgroundColor={badgeBackgroundColor}
             tabBarItemBadgeTextColor={badgeTextColor}
             badgeValue={options.tabBarBadge?.toString()}
+            systemItem={options.tabBarSystemItem}
             isFocused={isFocused}
             title={title}
             standardAppearance={{
@@ -255,29 +245,9 @@ export function ExperimentalBottomTabView({
           </BottomTabsScreen>
         );
       })}
-      {Platform.OS === 'ios' && tabBarExtraItem ? (
-        <BottomTabsScreen
-          tabKey={SYSTEM_ITEM_KEY}
-          {...getIconProps(tabBarExtraItem.icon)}
-          systemItem={tabBarExtraItem.role}
-          standardAppearance={{
-            stacked: {
-              normal: extraButtonAppearance,
-            },
-            inline: {
-              normal: extraButtonAppearance,
-            },
-            compactInline: {
-              normal: extraButtonAppearance,
-            },
-          }}
-        />
-      ) : null}
     </BottomTabs>
   );
 }
-
-const SYSTEM_ITEM_KEY = 'system-item';
 
 function getIconProps(
   icon: Icon | undefined

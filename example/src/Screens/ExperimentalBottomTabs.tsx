@@ -31,6 +31,7 @@ import {
 } from 'react-native';
 
 import iconBookUser from '../../assets/icons/book-user.png';
+import iconHeart from '../../assets/icons/heart.png';
 // eslint-disable-next-line import-x/extensions
 import iconMusic from '../../assets/variableIcons/music.png';
 // eslint-disable-next-line import-x/extensions
@@ -44,6 +45,7 @@ export type ExperimentalBottomTabParams = {
   TabStack: NavigatorScreenParams<NativeStackParams>;
   TabAlbums: undefined;
   TabContacts: { count: number };
+  TabExtra: undefined;
 };
 
 const linking: PathConfigMap<ExperimentalBottomTabParams> = {
@@ -117,15 +119,6 @@ export function ExperimentalBottomTabs() {
     <>
       <Tab.Navigator
         backBehavior="fullHistory"
-        tabBarExtraItem={{
-          role: 'search',
-          icon: {
-            sfSymbolName: 'heart',
-          },
-          onPress: () => {
-            Alert.alert('Extra button pressed');
-          },
-        }}
         screenOptions={({
           navigation,
         }: ExperimentalBottomTabScreenProps<ExperimentalBottomTabParams>) => ({
@@ -256,6 +249,29 @@ export function ExperimentalBottomTabs() {
             },
           }}
         />
+        <Tab.Screen
+          name="TabExtra"
+          options={{
+            tabBarSystemItem: 'search',
+            tabBarLabel: 'Favorites',
+            tabBarIcon: Platform.select({
+              ios: {
+                sfSymbolName: 'heart',
+              },
+              default: {
+                templateSource: iconHeart,
+              },
+            }),
+          }}
+          listeners={{
+            tabPress: (e) => {
+              e.preventDefault();
+              Alert.alert('Extra Action', 'Favorites pressed.');
+            },
+          }}
+        >
+          {() => null}
+        </Tab.Screen>
       </Tab.Navigator>
       {isLargeScreen ? (
         <PlatformPressable
