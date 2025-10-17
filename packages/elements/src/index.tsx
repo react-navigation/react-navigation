@@ -25,6 +25,7 @@ export { MissingIcon } from './MissingIcon';
 export { PlatformPressable } from './PlatformPressable';
 export { SafeAreaProviderCompat } from './SafeAreaProviderCompat';
 export { Screen } from './Screen';
+export { TabBarIconBadge } from './TabBarIconBadge';
 export { Text } from './Text';
 export { useFrameSize } from './useFrameSize';
 
