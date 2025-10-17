@@ -22,17 +22,17 @@ import {
   type Icon,
 } from 'react-native-screens';
 
-import type { BottomTabNavigationHelpers } from '../types';
 import type {
   ExperimentalBottomTabDescriptorMap,
   ExperimentalBottomTabHeaderProps,
   ExperimentalBottomTabNavigationConfig,
+  ExperimentalBottomTabNavigationHelpers,
   ExperimentalBottomTabNavigationProp,
 } from './types';
 
 type Props = ExperimentalBottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
-  navigation: BottomTabNavigationHelpers;
+  navigation: ExperimentalBottomTabNavigationHelpers;
   descriptors: ExperimentalBottomTabDescriptorMap;
 };
 
@@ -194,6 +194,34 @@ export function ExperimentalBottomTabView({
 
         return (
           <BottomTabsScreen
+            onWillDisappear={() => {
+              navigation.emit({
+                type: 'transitionStart',
+                data: { closing: true },
+                target: route.key,
+              });
+            }}
+            onWillAppear={() => {
+              navigation.emit({
+                type: 'transitionStart',
+                data: { closing: false },
+                target: route.key,
+              });
+            }}
+            onDidAppear={() => {
+              navigation.emit({
+                type: 'transitionEnd',
+                data: { closing: false },
+                target: route.key,
+              });
+            }}
+            onDidDisappear={() => {
+              navigation.emit({
+                type: 'transitionEnd',
+                data: { closing: true },
+                target: route.key,
+              });
+            }}
             key={route.key}
             tabKey={route.key}
             {...getIconProps(options.tabBarIcon)}

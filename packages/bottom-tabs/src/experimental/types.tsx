@@ -28,6 +28,14 @@ export type ExperimentalBottomTabNavigationEventMap = {
    * Event which fires on tapping on the tab in the tab bar.
    */
   tabPress: { data: undefined; canPreventDefault: true };
+  /**
+   * Event which fires when a transition animation starts.
+   */
+  transitionStart: { data: { closing: boolean } };
+  /**
+   * Event which fires when a transition animation ends.
+   */
+  transitionEnd: { data: { closing: boolean } };
 };
 
 export type ExperimentalBottomTabNavigationProp<
@@ -280,3 +288,9 @@ export type ExperimentalBottomTabNavigatorProps = DefaultNavigatorOptions<
 > &
   TabRouterOptions &
   ExperimentalBottomTabNavigationConfig;
+
+export type ExperimentalBottomTabNavigationHelpers = NavigationHelpers<
+  ParamListBase,
+  ExperimentalBottomTabNavigationEventMap
+> &
+  TabActionHelpers<ParamListBase>;
