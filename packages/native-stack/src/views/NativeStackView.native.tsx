@@ -128,6 +128,7 @@ const SceneView = ({
     statusBarHidden,
     statusBarStyle,
     unstable_sheetFooter,
+    scrollEdgeEffects,
     freezeOnBlur,
     contentStyle,
   } = options;
@@ -321,6 +322,12 @@ const SceneView = ({
           nativeBackButtonDismissalEnabled={false} // on Android
           onHeaderBackButtonClicked={onHeaderBackButtonClicked}
           preventNativeDismiss={isRemovePrevented} // on iOS
+          scrollEdgeEffects={{
+            bottom: scrollEdgeEffects?.bottom ?? 'automatic',
+            top: scrollEdgeEffects?.top ?? 'automatic',
+            left: scrollEdgeEffects?.left ?? 'automatic',
+            right: scrollEdgeEffects?.right ?? 'automatic',
+          }}
           onNativeDismissCancelled={onNativeDismissCancelled}
           // Unfortunately, because of the bug that exists on Fabric, where native event drivers
           // for Animated objects are being created after the first notifications about the header height
