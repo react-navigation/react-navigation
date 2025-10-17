@@ -1,17 +1,28 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
-import { type Route, useLocale, useTheme } from '@react-navigation/native';
+import {
+  type Route,
+  type Theme,
+  useLocale,
+  useTheme,
+} from '@react-navigation/native';
+import color from 'color';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
+  type HeaderBarButtonItem,
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
+  type ScreenStackHeaderConfigProps,
   ScreenStackHeaderLeftView,
   ScreenStackHeaderRightView,
   ScreenStackHeaderSearchBarView,
   SearchBar,
 } from 'react-native-screens';
 
-import type { NativeStackNavigationOptions } from '../types';
+import type {
+  NativeStackHeaderItem,
+  NativeStackNavigationOptions,
+} from '../types';
 import { processFonts } from './FontProcessor';
 
 type Props = NativeStackNavigationOptions & {
@@ -19,6 +30,82 @@ type Props = NativeStackNavigationOptions & {
   headerHeight: number;
   headerBack: { title?: string | undefined; href: undefined } | undefined;
   route: Route<string>;
+};
+
+const processBarButtonItems = (
+  items: NativeStackHeaderItem[] | undefined,
+  colors: Theme['colors'],
+  fonts: Theme['fonts']
+) => {
+  return items
+    ?.map((item, index) => {
+      if (item.type === 'custom') {
+        // Handled with `ScreenStackHeaderLeftView` or `ScreenStackHeaderRightView`
+        return null;
+      }
+
+      if (item.type === 'spacing') {
+        if (item.spacing == null) {
+          throw new Error(
+            `Spacing item must have a 'spacing' property defined: ${JSON.stringify(
+              item
+            )}`
+          );
+        }
+
+        return item;
+      }
+
+      if (item.type === 'button' || item.type === 'menu') {
+        if (item.type === 'menu' && item.menu == null) {
+          throw new Error(
+            `Menu item must have a 'menu' property defined: ${JSON.stringify(
+              item
+            )}`
+          );
+        }
+
+        const { badge, ...rest } = item;
+
+        let processedItem: HeaderBarButtonItem = {
+          ...rest,
+          index,
+          labelStyle: {
+            ...fonts.regular,
+            ...item.labelStyle,
+          },
+        };
+
+        if (badge) {
+          const badgeBackgroundColor =
+            badge.style?.backgroundColor ?? colors.notification;
+          const badgeTextColor = color(badgeBackgroundColor).isLight()
+            ? 'black'
+            : 'white';
+
+          processedItem = {
+            ...processedItem,
+            badge: {
+              ...badge,
+              value: String(badge.value),
+              style: {
+                backgroundColor: badgeBackgroundColor,
+                color: badgeTextColor,
+                ...fonts.regular,
+                ...badge.style,
+              },
+            },
+          };
+        }
+
+        return processedItem;
+      }
+
+      throw new Error(
+        `Invalid item type: ${JSON.stringify(item)}. Valid types are 'button', 'menu', 'custom' and 'spacing'.`
+      );
+    })
+    .filter((item) => item != null);
 };
 
 export function useHeaderConfigProps({
@@ -49,7 +136,9 @@ export function useHeaderConfigProps({
   headerBack,
   route,
   title,
-}: Props) {
+  headerLeftItems,
+  headerRightItems,
+}: Props): ScreenStackHeaderConfigProps {
   const { direction } = useLocale();
   const { colors, fonts } = useTheme();
   const tintColor =
@@ -187,11 +276,43 @@ export function useHeaderConfigProps({
 
   const isCenterViewRenderedAndroid = headerTitleAlign === 'center';
 
+  const leftItems = headerLeftItems?.({
+    tintColor,
+    canGoBack,
+  });
+
+  let rightItems = headerRightItems?.({
+    tintColor,
+    canGoBack,
+  });
+
+  if (rightItems) {
+    // iOS renders right items in reverse order
+    // So we need to reverse them here to match the order
+    rightItems = [...rightItems].reverse();
+  }
+
   const children = (
     <>
       {Platform.OS === 'ios' ? (
         <>
-          {headerLeftElement != null ? (
+          {leftItems ? (
+            leftItems.map((item, index) => {
+              if (item.type === 'custom') {
+                return (
+                  <ScreenStackHeaderLeftView
+                    // eslint-disable-next-line @eslint-react/no-array-index-key
+                    key={index}
+                    hidesSharedBackground={item.hidesSharedBackground}
+                  >
+                    {item.element}
+                  </ScreenStackHeaderLeftView>
+                );
+              }
+
+              return null;
+            })
+          ) : headerLeftElement != null ? (
             <ScreenStackHeaderLeftView>
               {headerLeftElement}
             </ScreenStackHeaderLeftView>
@@ -247,7 +368,23 @@ export function useHeaderConfigProps({
       {headerBackImageSource !== undefined ? (
         <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
       ) : null}
-      {headerRightElement != null ? (
+      {rightItems ? (
+        rightItems.map((item, index) => {
+          if (item.type === 'custom') {
+            return (
+              <ScreenStackHeaderRightView
+                // eslint-disable-next-line @eslint-react/no-array-index-key
+                key={index}
+                hidesSharedBackground={item.hidesSharedBackground}
+              >
+                {item.element}
+              </ScreenStackHeaderRightView>
+            );
+          }
+
+          return null;
+        })
+      ) : headerRightElement != null ? (
         <ScreenStackHeaderRightView>
           {headerRightElement}
         </ScreenStackHeaderRightView>
@@ -297,5 +434,7 @@ export function useHeaderConfigProps({
     topInsetEnabled: headerTopInsetEnabled,
     translucent: translucent === true,
     children,
+    headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
+    headerRightBarButtonItems: processBarButtonItems(rightItems, colors, fonts),
   } as const;
 }
