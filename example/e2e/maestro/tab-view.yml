@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Tab View
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}tab-view
 - extendedWaitUntil:

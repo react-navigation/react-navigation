@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "composite": true,
-    "customConditions": ["source", "react-native-strict-api"],
+    "customConditions": ["source"],
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "esModuleInterop": true,

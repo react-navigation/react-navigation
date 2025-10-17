@@ -1,6 +1,7 @@
 appId: ${APP_ID}
 name: Master Detail
 ---
+- stopApp
 - openLink:
     link: ${APP_SCHEME}master-detail
 - extendedWaitUntil:
