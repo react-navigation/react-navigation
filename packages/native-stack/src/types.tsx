@@ -937,6 +937,14 @@ export type NativeStackHeaderItemCustom = {
   hidesSharedBackground?: boolean;
 };
 
+/**
+ * An item that can be displayed in the header.
+ * It can be a button, a menu, spacing, or a custom element.
+ *
+ * On iOS 26, when showing items on the right side of the header,
+ * if the items don't fit the available space, they will be collapsed into a menu automatically.
+ * Items with `type: 'custom'` will not be included in this automatic collapsing behavior.
+ */
 export type NativeStackHeaderItem =
   | NativeStackHeaderItemButton
   | NativeStackHeaderItemMenu
