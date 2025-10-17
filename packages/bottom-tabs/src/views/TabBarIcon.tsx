@@ -1,3 +1,4 @@
+import { TabBarIconBadge } from '@react-navigation/elements';
 import type { Route } from '@react-navigation/native';
 import React from 'react';
 import {
@@ -8,8 +9,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-
-import { Badge } from './Badge';
 
 type Props = {
   route: Route<string>;
@@ -99,14 +98,14 @@ export function TabBarIcon({
           color: inactiveTintColor,
         })}
       </View>
-      <Badge
+      <TabBarIconBadge
         visible={badge != null}
         size={iconSize * 0.75}
         allowFontScaling={allowFontScaling}
         style={[styles.badge, badgeStyle]}
       >
         {badge}
-      </Badge>
+      </TabBarIconBadge>
     </View>
   );
 }
