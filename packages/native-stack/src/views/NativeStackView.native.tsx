@@ -112,7 +112,7 @@ const SceneView = ({
     headerBackButtonMenuEnabled,
     headerShown,
     headerBackground,
-    headerTransparent = false,
+    headerTransparent,
     autoHideHomeIndicator,
     keyboardHandlingEnabled,
     navigationBarColor,
