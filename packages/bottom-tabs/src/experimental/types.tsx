@@ -16,6 +16,7 @@ import type {
   BottomTabsSystemItem,
   Icon,
   TabBarControllerMode,
+  TabBarItemLabelVisibilityMode,
   TabBarMinimizeBehavior,
 } from 'react-native-screens';
 
@@ -189,6 +190,20 @@ export type ExperimentalBottomTabNavigationOptions = {
    * Defaults to `false`.
    */
   popToTopOnBlur?: boolean;
+
+  /**
+   * Specifies the label visibility mode for the tab bar items.
+   *
+   * The following values are currently supported:
+   *
+   * - `automatic` - the system decides when to show or hide labels
+   * - `selected` - labels are shown only for the selected tab
+   * - `labeled` - labels are always shown
+   * - `unlabeled` - labels are never shown
+   *
+   * @platform android
+   */
+  tabBarLabelVisibilityMode?: TabBarItemLabelVisibilityMode;
 
   /**
    * Specifies the display mode for the tab bar.

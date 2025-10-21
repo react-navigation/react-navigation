@@ -104,6 +104,7 @@ export function ExperimentalBottomTabView({
 
   return (
     <BottomTabs
+      tabBarItemLabelVisibilityMode={currentOptions?.tabBarLabelVisibilityMode}
       tabBarControllerMode={currentOptions?.tabBarControllerMode}
       tabBarMinimizeBehavior={currentOptions?.tabBarMinimizeBehavior}
       tabBarTintColor={activeTintColor}
