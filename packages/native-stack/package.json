@@ -58,7 +58,7 @@
     "react": "19.1.0",
     "react-native": "0.81.4",
     "react-native-builder-bob": "^0.40.12",
-    "react-native-screens": "~4.17.0-nightly-20251012-12704e59c",
+    "react-native-screens": "~4.17.1",
     "react-test-renderer": "19.1.0",
     "typescript": "^5.9.2"
   },
