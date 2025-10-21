@@ -32,10 +32,8 @@ import {
 
 import iconBookUser from '../../assets/icons/book-user.png';
 import iconHeart from '../../assets/icons/heart.png';
-// eslint-disable-next-line import-x/extensions
-import iconMusic from '../../assets/variableIcons/music.png';
-// eslint-disable-next-line import-x/extensions
-import iconNewspaper from '../../assets/variableIcons/newspaper.png';
+import iconMusic from '../../assets/icons/music.png';
+import iconNewspaper from '../../assets/icons/newspaper.png';
 import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
 import { Contacts } from '../Shared/Contacts';
