@@ -125,12 +125,12 @@ export function ExperimentalBottomTabView({
       tabBarItemTitleFontSizeActive={fontSize}
       tabBarBackgroundColor={currentOptions.tabBarStyle?.backgroundColor}
       tabBarItemActiveIndicatorColor={
-        currentOptions?.tabBarItemActiveIndicatorColor
+        currentOptions?.tabBarActiveIndicatorColor
       }
       tabBarItemActiveIndicatorEnabled={
-        currentOptions?.tabBarItemActiveIndicatorEnabled
+        currentOptions?.tabBarActiveIndicatorEnabled
       }
-      tabBarItemRippleColor={currentOptions?.tabBarItemRippleColor}
+      tabBarItemRippleColor={currentOptions?.tabBarRippleColor}
       experimentalControlNavigationStateInJS
       onNativeFocusChange={(e) => {
         const route = state.routes.find(

@@ -135,14 +135,32 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   /**
    * Color for the icon and label in the active tab.
    */
-  tabBarActiveTintColor?: string;
+  tabBarActiveTintColor?: ColorValue;
 
   /**
    * Color for the icon and label in the inactive tabs.
    *
    * @platform android
    */
-  tabBarInactiveTintColor?: string;
+  tabBarInactiveTintColor?: ColorValue;
+  /**
+   * Specifies the background color of the active indicator.
+   *
+   * @platform android
+   */
+  tabBarActiveIndicatorColor?: ColorValue;
+  /**
+   * Specifies if the active indicator should be used. Defaults to `true`.
+   *
+   * @platform android
+   */
+  tabBarActiveIndicatorEnabled?: boolean;
+  /**
+   * Specifies the color of each tab bar item's ripple effect.
+   *
+   * @platform android
+   */
+  tabBarRippleColor?: ColorValue;
 
   /**
    * Style object for the tab bar container.
@@ -230,24 +248,6 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
    * @supported iOS 26 or higher
    */
   tabBarMinimizeBehavior?: TabBarMinimizeBehavior;
-  /**
-   * Specifies the background color of the active indicator.
-   *
-   * @platform android
-   */
-  tabBarItemActiveIndicatorColor?: ColorValue;
-  /**
-   * Specifies if the active indicator should be used. Defaults to `true`.
-   *
-   * @platform android
-   */
-  tabBarItemActiveIndicatorEnabled?: boolean;
-  /**
-   * Specifies the color of each tab bar item's ripple effect.
-   *
-   * @platform android
-   */
-  tabBarItemRippleColor?: ColorValue;
 };
 
 export type ExperimentalBottomTabDescriptor = Descriptor<
