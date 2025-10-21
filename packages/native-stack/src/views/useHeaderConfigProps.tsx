@@ -21,6 +21,8 @@ import {
 
 import type {
   NativeStackHeaderItem,
+  NativeStackHeaderItemMenuAction,
+  NativeStackHeaderItemMenuSubmenu,
   NativeStackNavigationOptions,
 } from '../types';
 import { processFonts } from './FontProcessor';
@@ -65,16 +67,27 @@ const processBarButtonItems = (
           );
         }
 
-        const { badge, ...rest } = item;
+        const { badge, label, labelStyle, ...rest } = item;
 
         let processedItem: HeaderBarButtonItem = {
           ...rest,
           index,
-          labelStyle: {
+          title: label,
+          titleStyle: {
             ...fonts.regular,
-            ...item.labelStyle,
+            ...labelStyle,
           },
         };
+
+        if (item.type === 'menu') {
+          processedItem = {
+            ...processedItem,
+            menu: {
+              ...item.menu,
+              items: item.menu.items.map(getMenuItem),
+            },
+          };
+        }
 
         if (badge) {
           const badgeBackgroundColor =
@@ -106,6 +119,27 @@ const processBarButtonItems = (
       );
     })
     .filter((item) => item != null);
+};
+
+const getMenuItem = <
+  T extends NativeStackHeaderItemMenuAction | NativeStackHeaderItemMenuSubmenu,
+>(
+  item: T
+): Omit<T, 'label'> & { title: string } => {
+  const { label, ...rest } = item;
+
+  if (item.type === 'submenu') {
+    return {
+      ...rest,
+      title: label,
+      items: item.items.map(getMenuItem),
+    };
+  }
+
+  return {
+    ...rest,
+    title: label,
+  };
 };
 
 export function useHeaderConfigProps({

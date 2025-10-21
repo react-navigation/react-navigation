@@ -301,7 +301,7 @@ export type NativeStackNavigationOptions = {
    */
   headerRight?: (props: NativeStackHeaderItemProps) => React.ReactNode;
   /**
-   * Array of items to display as UIBarButtonItems to the left side of the header.
+   * Function which returns an array of items to display as on the left side of the header.
    * Overrides `headerLeft`.
    *
    * @platform ios
@@ -310,7 +310,7 @@ export type NativeStackNavigationOptions = {
     props: NativeStackHeaderItemProps
   ) => NativeStackHeaderItem[];
   /**
-   * Array of items to display as UIBarButtonItems to the right side of the header.
+   * Function which returns an array of items to display as on the right side of the header.
    * Overrides `headerRight`.
    *
    * @platform ios
@@ -775,21 +775,21 @@ type SharedHeaderItem = {
    */
   hidesSharedBackground?: boolean;
   /**
-   * Whether this item can share a background with other items in a navigation bar or a toolbar.
+   * Whether this item can share a background with other items.
    * Only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/sharesbackground
    */
   sharesBackground?: boolean;
   /**
-   * An identifier used to match items across transitions in a navigation bar or toolbar..
+   * An identifier used to match items across transitions.
    * Only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/identifier
    */
   identifier?: string;
   /**
-   * A badge to be rendered on a item.
+   * A badge to display on a item.
    * Only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitembadge
@@ -820,6 +820,9 @@ type SharedHeaderItem = {
   accessibilityHint?: string;
 };
 
+/**
+ * A button item in the header.
+ */
 export type NativeStackHeaderItemButton = SharedHeaderItem & {
   /**
    * Type of the item.
@@ -835,15 +838,11 @@ export type NativeStackHeaderItemButton = SharedHeaderItem & {
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
    */
   selected?: boolean;
-  /**
-   * Whether the item represents an action or selection.
-   * Only available from iOS 15.0 and later.
-   *
-   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
-   */
-  changesSelectionAsPrimaryAction?: boolean;
 };
 
+/**
+ * An action item in a menu.
+ */
 export type NativeStackHeaderItemMenuAction = {
   type: 'action';
   /**
@@ -865,19 +864,43 @@ export type NativeStackHeaderItemMenuAction = {
    */
   state?: 'on' | 'off' | 'mixed';
   /**
-   * Attributes that determine the style of the menu item.
+   * Whether to apply disabled style to the item.
    *
-   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/disabled
    */
-  attributes?: 'destructive' | 'disabled' | 'hidden' | 'keepsMenuPresented';
+  disabled?: boolean;
+  /**
+   * Whether to apply destructive style to the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/destructive
+   */
+  destructive?: boolean;
+  /**
+   * Whether to apply hidden style to the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/hidden
+   */
+  hidden?: boolean;
+  /**
+   * Whether to keep the menu presented after firing the element’s action.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/keepsmenupresented
+   */
+  keepsMenuPresented?: boolean;
   /**
    * An elaborated title that explains the purpose of the action.
+   *
+   * On iOS, the system displays this title in the discoverability heads-up display (HUD).
+   * If this is not set, the HUD displays the title property.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uiaction/discoverabilitytitle
    */
   discoverabilityLabel?: string;
 };
 
+/**
+ * A submenu item that contains other menu items.
+ */
 export type NativeStackHeaderItemMenuSubmenu = {
   type: 'submenu';
   /**
@@ -894,6 +917,9 @@ export type NativeStackHeaderItemMenuSubmenu = {
   items: NativeStackHeaderItemMenu['menu']['items'];
 };
 
+/**
+ * An item that shows a menu when pressed.
+ */
 export type NativeStackHeaderItemMenu = SharedHeaderItem & {
   type: 'menu';
   /**
@@ -901,9 +927,9 @@ export type NativeStackHeaderItemMenu = SharedHeaderItem & {
    */
   menu: {
     /**
-     * Optional label to show as the title of the menu.
+     * Optional title to show on top of the menu.
      */
-    label?: string;
+    title?: string;
     /**
      * Array of menu items (actions or submenus).
      */
@@ -914,6 +940,9 @@ export type NativeStackHeaderItemMenu = SharedHeaderItem & {
   };
 };
 
+/**
+ * An item to add spacing between other items in the header.
+ */
 export type NativeStackHeaderItemSpacing = {
   type: 'spacing';
   /**
@@ -922,6 +951,9 @@ export type NativeStackHeaderItemSpacing = {
   spacing: number;
 };
 
+/**
+ * A custom item to display any React Element in the header.
+ */
 export type NativeStackHeaderItemCustom = {
   type: 'custom';
   /**
@@ -929,7 +961,7 @@ export type NativeStackHeaderItemCustom = {
    */
   element: React.ReactElement;
   /**
-   * A boolean value indicating whether the background this item may share with other items in the bar should be hidden.
+   * Whether the background this item may share with other items in the bar should be hidden.
    * Only available from iOS 26.0 and later.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/hidessharedbackground

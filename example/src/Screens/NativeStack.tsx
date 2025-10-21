@@ -253,7 +253,7 @@ export function NativeStack() {
                 value: 3,
               },
               menu: {
-                label: 'Article options',
+                title: 'Article options',
                 items: [
                   {
                     type: 'action',
@@ -263,13 +263,13 @@ export function NativeStack() {
                   {
                     type: 'action',
                     label: 'Delete',
-                    attributes: 'disabled',
+                    destructive: true,
                     onPress: () => Alert.alert('Delete pressed'),
                   },
                   {
                     type: 'action',
                     label: 'Report',
-                    attributes: 'destructive',
+                    destructive: true,
                     onPress: () => Alert.alert('Report pressed'),
                   },
                   {
