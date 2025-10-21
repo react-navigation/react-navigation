@@ -164,6 +164,7 @@ export function ExperimentalBottomTabView({
         const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
         const {
+          title,
           lazy = true,
           header = ({ options }: ExperimentalBottomTabHeaderProps) => (
             <Header {...options} title={getHeaderTitle(options, route.name)} />
@@ -171,13 +172,20 @@ export function ExperimentalBottomTabView({
           headerShown,
           headerStatusBarHeight,
           headerTransparent,
-          sceneStyle: customSceneStyle,
+          sceneStyle,
+          tabBarLabel,
+          tabBarBadgeStyle,
+          tabBarIcon,
+          tabBarBadge,
+          tabBarSystemItem,
         } = options;
 
-        const title = getLabel(
-          { label: options.tabBarLabel, title: options.title },
-          route.name
-        );
+        const tabTitle =
+          // On iOS, `systemItem` already provides a localized label
+          // So we should only use `tabBarLabel` if explicitly provided
+          Platform.OS === 'ios' && tabBarSystemItem != null
+            ? tabBarLabel
+            : getLabel({ label: tabBarLabel, title }, route.name);
 
         const tabItemAppearance: BottomTabsScreenItemStateAppearance = {
           tabBarItemTitleFontFamily: fontFamily,
@@ -187,7 +195,7 @@ export function ExperimentalBottomTabView({
         };
 
         const badgeBackgroundColor =
-          options.tabBarBadgeStyle?.backgroundColor ?? colors.notification;
+          tabBarBadgeStyle?.backgroundColor ?? colors.notification;
         const badgeTextColor = Color(badgeBackgroundColor)?.isLight()
           ? 'black'
           : 'white';
@@ -224,13 +232,13 @@ export function ExperimentalBottomTabView({
             }}
             key={route.key}
             tabKey={route.key}
-            {...getIconProps(options.tabBarIcon)}
+            {...getIconProps(tabBarIcon)}
             tabBarItemBadgeBackgroundColor={badgeBackgroundColor}
             tabBarItemBadgeTextColor={badgeTextColor}
-            badgeValue={options.tabBarBadge?.toString()}
-            systemItem={options.tabBarSystemItem}
+            badgeValue={tabBarBadge?.toString()}
+            systemItem={tabBarSystemItem}
             isFocused={isFocused}
-            title={title}
+            title={tabTitle}
             standardAppearance={{
               tabBarBackgroundColor,
               tabBarShadowColor,
@@ -258,7 +266,7 @@ export function ExperimentalBottomTabView({
                   .navigation as ExperimentalBottomTabNavigationProp<ParamListBase>,
                 options: descriptors[route.key].options,
               })}
-              style={customSceneStyle}
+              style={sceneStyle}
             >
               {
                 // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
