@@ -1,4 +1,3 @@
-import type { HeaderOptions } from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -11,15 +10,14 @@ import type {
   TabRouterOptions,
   Theme,
 } from '@react-navigation/native';
-import type * as React from 'react';
-import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { ColorValue, TextStyle } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type {
   BottomTabsSystemItem,
   Icon,
   TabBarControllerMode,
+  TabBarMinimizeBehavior,
 } from 'react-native-screens';
-import type { TabBarMinimizeBehavior } from 'react-native-screens/src/components/bottom-tabs/BottomTabs.types';
 
 export type Layout = { width: number; height: number };
 
@@ -73,7 +71,7 @@ export type ExperimentalBottomTabOptionsArgs<
   theme: Theme;
 };
 
-export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
+export type ExperimentalBottomTabNavigationOptions = {
   /**
    * Title text for the screen.
    */
@@ -187,26 +185,10 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   lazy?: boolean;
 
   /**
-   * Function that given returns a React Element to display as a header.
-   */
-  header?: (props: ExperimentalBottomTabHeaderProps) => React.ReactNode;
-
-  /**
-   * Whether to show the header. Setting this to `false` hides the header.
-   * Defaults to `true`.
-   */
-  headerShown?: boolean;
-
-  /**
    * Whether any nested stack should be popped to top when navigating away from the tab.
    * Defaults to `false`.
    */
   popToTopOnBlur?: boolean;
-
-  /**
-   * Style object for the component wrapping the screen content.
-   */
-  sceneStyle?: StyleProp<ViewStyle>;
 
   /**
    * Specifies the display mode for the tab bar.
@@ -262,21 +244,6 @@ export type ExperimentalBottomTabDescriptorMap = Record<
 >;
 
 export type ExperimentalBottomTabNavigationConfig = {};
-
-export type ExperimentalBottomTabHeaderProps = {
-  /**
-   * Options for the current screen.
-   */
-  options: ExperimentalBottomTabNavigationOptions;
-  /**
-   * Route object for the current screen.
-   */
-  route: RouteProp<ParamListBase>;
-  /**
-   * Navigation prop for the header.
-   */
-  navigation: ExperimentalBottomTabNavigationProp<ParamListBase>;
-};
 
 export type ExperimentalBottomTabBarProps = {
   state: TabNavigationState<ParamListBase>;

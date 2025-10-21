@@ -8,7 +8,6 @@ export { createExperimentalBottomTabNavigator } from './createExperimentalBottom
  */
 export type {
   ExperimentalBottomTabBarProps,
-  ExperimentalBottomTabHeaderProps,
   ExperimentalBottomTabNavigationEventMap,
   ExperimentalBottomTabNavigationOptions,
   ExperimentalBottomTabNavigationProp,

@@ -1,10 +1,4 @@
-import {
-  Color,
-  getHeaderTitle,
-  getLabel,
-  Header,
-  Screen as ScreenContent,
-} from '@react-navigation/elements';
+import { Color, getLabel } from '@react-navigation/elements';
 import {
   CommonActions,
   type ParamListBase,
@@ -24,10 +18,8 @@ import {
 
 import type {
   ExperimentalBottomTabDescriptorMap,
-  ExperimentalBottomTabHeaderProps,
   ExperimentalBottomTabNavigationConfig,
   ExperimentalBottomTabNavigationHelpers,
-  ExperimentalBottomTabNavigationProp,
 } from './types';
 
 type Props = ExperimentalBottomTabNavigationConfig & {
@@ -166,13 +158,6 @@ export function ExperimentalBottomTabView({
         const {
           title,
           lazy = true,
-          header = ({ options }: ExperimentalBottomTabHeaderProps) => (
-            <Header {...options} title={getHeaderTitle(options, route.name)} />
-          ),
-          headerShown,
-          headerStatusBarHeight,
-          headerTransparent,
-          sceneStyle,
           tabBarLabel,
           tabBarBadgeStyle,
           tabBarIcon,
@@ -253,31 +238,12 @@ export function ExperimentalBottomTabView({
               },
             }}
           >
-            <ScreenContent
-              focused={isFocused}
-              route={descriptors[route.key].route}
-              navigation={descriptors[route.key].navigation}
-              headerShown={headerShown}
-              headerStatusBarHeight={headerStatusBarHeight}
-              headerTransparent={headerTransparent}
-              header={header({
-                route: descriptors[route.key].route,
-                navigation: descriptors[route.key]
-                  .navigation as ExperimentalBottomTabNavigationProp<ParamListBase>,
-                options: descriptors[route.key].options,
-              })}
-              style={sceneStyle}
-            >
-              {
-                // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
-                lazy &&
-                !loaded.includes(route.key) &&
-                !isFocused &&
-                !isPreloaded
-                  ? null
-                  : descriptors[route.key].render()
-              }
-            </ScreenContent>
+            {
+              // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
+              lazy && !loaded.includes(route.key) && !isFocused && !isPreloaded
+                ? null
+                : descriptors[route.key].render()
+            }
           </BottomTabsScreen>
         );
       })}
