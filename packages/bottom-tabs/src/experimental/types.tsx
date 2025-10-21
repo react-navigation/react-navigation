@@ -83,6 +83,10 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
    * Uses iOS built-in tab bar items with standard iOS styling and localized titles.
    * If set to `search`, it's positioned next to the tab bar on iOS 26 and above.
    *
+   * The `tabBarIcon` and `tabBarLabel` options will override the icon and label from the system item.
+   * If you want to keep the system behavior on iOS, but need to provide icon and label for other platforms,
+   * Use `Platform.OS`  or `Platform.select`  to conditionally set `undefined` for `tabBarIcon` and `tabBarLabel` on iOS.
+   *
    * @platform ios
    */
   tabBarSystemItem?: BottomTabsSystemItem;
@@ -90,7 +94,11 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
   /**
    * Title string of a tab displayed in the tab bar
    *
-   * When undefined, scene title is used. Use `tabBarShowLabel` to hide the label.
+   * Overrides the label provided by `tabBarSystemItem` on iOS.
+   *
+   * If not provided, or set to `undefined`:
+   * - The system values are used if `tabBarSystemItem` is set on iOS.
+   * - Otherwise, it falls back to the `title` or route name.
    */
   tabBarLabel?: string;
 
@@ -104,6 +112,8 @@ export type ExperimentalBottomTabNavigationOptions = HeaderOptions & {
 
   /**
    * Image to display as the icon for the tab.
+   *
+   * Overrides the icon provided by `tabBarSystemItem` on iOS.
    */
   tabBarIcon?: Icon;
 
