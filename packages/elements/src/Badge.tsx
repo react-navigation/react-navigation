@@ -31,7 +31,7 @@ type Props = TextProps & {
 
 const useNativeDriver = Platform.OS !== 'web';
 
-export function TabBarIconBadge({
+export function Badge({
   children,
   style,
   visible = true,

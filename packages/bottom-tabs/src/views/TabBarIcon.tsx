@@ -1,4 +1,4 @@
-import { TabBarIconBadge } from '@react-navigation/elements';
+import { Badge } from '@react-navigation/elements';
 import type { Route } from '@react-navigation/native';
 import React from 'react';
 import {
@@ -98,14 +98,14 @@ export function TabBarIcon({
           color: inactiveTintColor,
         })}
       </View>
-      <TabBarIconBadge
+      <Badge
         visible={badge != null}
         size={iconSize * 0.75}
         allowFontScaling={allowFontScaling}
         style={[styles.badge, badgeStyle]}
       >
         {badge}
-      </TabBarIconBadge>
+      </Badge>
     </View>
   );
 }
