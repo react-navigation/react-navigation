@@ -9,6 +9,8 @@ import color from 'color';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   type HeaderBarButtonItem,
+  type HeaderBarButtonItemMenuAction,
+  type HeaderBarButtonItemSubmenu,
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
@@ -79,11 +81,11 @@ const processBarButtonItems = (
           },
         };
 
-        if (item.type === 'menu') {
+        if (processedItem.type === 'menu' && item.type === 'menu') {
           processedItem = {
             ...processedItem,
             menu: {
-              ...item.menu,
+              ...processedItem.menu,
               items: item.menu.items.map(getMenuItem),
             },
           };
@@ -121,18 +123,16 @@ const processBarButtonItems = (
     .filter((item) => item != null);
 };
 
-const getMenuItem = <
-  T extends NativeStackHeaderItemMenuAction | NativeStackHeaderItemMenuSubmenu,
->(
-  item: T
-): Omit<T, 'label'> & { title: string } => {
+const getMenuItem = (
+  item: NativeStackHeaderItemMenuAction | NativeStackHeaderItemMenuSubmenu
+): HeaderBarButtonItemMenuAction | HeaderBarButtonItemSubmenu => {
   const { label, ...rest } = item;
 
-  if (item.type === 'submenu') {
+  if (rest.type === 'submenu') {
     return {
       ...rest,
       title: label,
-      items: item.items.map(getMenuItem),
+      items: rest.items.map(getMenuItem),
     };
   }
 
@@ -170,8 +170,8 @@ export function useHeaderConfigProps({
   headerBack,
   route,
   title,
-  headerLeftItems,
-  headerRightItems,
+  unstable_headerLeftItems: headerLeftItems,
+  unstable_headerRightItems: headerRightItems,
 }: Props): ScreenStackHeaderConfigProps {
   const { direction } = useLocale();
   const { colors, fonts } = useTheme();

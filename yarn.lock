@@ -3896,7 +3896,7 @@ __metadata:
     react-native: "npm:0.79.3"
     react-native-builder-bob: "npm:^0.40.12"
     react-native-safe-area-context: "npm:5.5.0"
-    react-native-screens: "npm:^4.17.1"
+    react-native-screens: "npm:^4.18.0"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
   peerDependencies:
@@ -3973,7 +3973,7 @@ __metadata:
     react-native-gesture-handler: "npm:~2.26.0"
     react-native-reanimated: "npm:~3.18.0"
     react-native-safe-area-context: "npm:5.5.0"
-    react-native-screens: "npm:^4.17.1"
+    react-native-screens: "npm:^4.18.0"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
     use-latest-callback: "npm:^0.2.4"
@@ -4065,7 +4065,7 @@ __metadata:
     react-native-pager-view: "npm:6.8.1"
     react-native-reanimated: "npm:~3.18.0"
     react-native-safe-area-context: "npm:5.5.0"
-    react-native-screens: "npm:^4.17.1"
+    react-native-screens: "npm:^4.18.0"
     react-native-web: "npm:~0.20.0"
     react-test-renderer: "npm:19.0.0"
     serve: "npm:^14.2.4"
@@ -4118,7 +4118,7 @@ __metadata:
     react: "npm:19.0.0"
     react-native: "npm:0.79.3"
     react-native-builder-bob: "npm:^0.40.12"
-    react-native-screens: "npm:^4.17.1"
+    react-native-screens: "npm:^4.18.0"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
     warn-once: "npm:^0.1.1"
@@ -4186,7 +4186,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-native-gesture-handler: "npm:~2.26.0"
     react-native-safe-area-context: "npm:5.5.0"
-    react-native-screens: "npm:^4.17.1"
+    react-native-screens: "npm:^4.18.0"
     react-test-renderer: "npm:19.0.0"
     typescript: "npm:^5.8.3"
   peerDependencies:
@@ -13616,16 +13616,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^4.17.1":
-  version: 4.17.1
-  resolution: "react-native-screens@npm:4.17.1"
+"react-native-screens@npm:^4.18.0":
+  version: 4.18.0
+  resolution: "react-native-screens@npm:4.18.0"
   dependencies:
     react-freeze: "npm:^1.0.0"
     warn-once: "npm:^0.1.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/1058febb240dceb343a24620f62b4a85f4262dba736495ee02a805a122044beac3d0daab707be2bd38fffc0ef1b99d2ba992ac95a7adfd8c0ebd3325e984ac44
+  checksum: 10c0/a35d4b82b9ab5ef13913c54ab6751a5cad5430de3e6cd66335cd3bf4dac92cd9d0c5b8b9a021e151724a9a6f6ca7864e2653c9930af7a9379e5a37b45bce6a0c
   languageName: node
   linkType: hard
 

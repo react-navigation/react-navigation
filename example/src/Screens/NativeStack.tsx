@@ -312,8 +312,8 @@ export function NativeStack() {
             title: `Article by ${route.params?.author ?? 'Unknown'}`,
             headerLargeTitle: true,
             headerLargeTitleShadowVisible: false,
-            headerLeftItems: () => leftItems,
-            headerRightItems: () => rightItems,
+            unstable_headerLeftItems: () => leftItems,
+            unstable_headerRightItems: () => rightItems,
           };
         }}
         initialParams={{ author: 'Gandalf' }}

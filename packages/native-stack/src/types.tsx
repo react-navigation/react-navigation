@@ -304,18 +304,22 @@ export type NativeStackNavigationOptions = {
    * Function which returns an array of items to display as on the left side of the header.
    * Overrides `headerLeft`.
    *
+   * This is an unstable API and might change in the future.
+   *
    * @platform ios
    */
-  headerLeftItems?: (
+  unstable_headerLeftItems?: (
     props: NativeStackHeaderItemProps
   ) => NativeStackHeaderItem[];
   /**
    * Function which returns an array of items to display as on the right side of the header.
    * Overrides `headerRight`.
    *
+   * This is an unstable API and might change in the future.
+   *
    * @platform ios
    */
-  headerRightItems?: (
+  unstable_headerRightItems?: (
     props: NativeStackHeaderItemProps
   ) => NativeStackHeaderItem[];
   /**
@@ -922,6 +926,13 @@ export type NativeStackHeaderItemMenuSubmenu = {
  */
 export type NativeStackHeaderItemMenu = SharedHeaderItem & {
   type: 'menu';
+  /**
+   * Whether the menu is a selection menu.
+   * Tapping an item in a selection menu will add a checkmark to the selected item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
+   */
+  changesSelectionAsPrimaryAction?: boolean;
   /**
    * Menu for the item.
    */
