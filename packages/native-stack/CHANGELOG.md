@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.4.0...@react-navigation/native-stack@7.5.0) (2025-10-22)
+
+### Features
+
+* improve API for icons in header buttons ([94ce60a](https://github.com/react-navigation/react-navigation/commit/94ce60ab2bc9375ca2791dabb34b2d2273bcb8d6)) - by @satya164
+
 # [7.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.28...@react-navigation/native-stack@7.4.0) (2025-10-22)
 
 ### Bug Fixes
