@@ -42,7 +42,7 @@ jobs:
       - name: Use appropriate Xcode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '16.4'
+          xcode-version: '26'
 
       - name: Build iOS App
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -78,7 +78,7 @@ jobs:
 
       - name: Boot iOS Simulator
         run: |
-          SIMULATOR_NAME="iPhone 16"
+          SIMULATOR_NAME="iPhone 17 Pro"
           DEVICE_ID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -n 1 | awk -F "[()]" '{print $2}')
 
           if [ -z "$DEVICE_ID" ]; then
