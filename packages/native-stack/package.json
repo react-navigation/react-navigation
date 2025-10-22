@@ -48,6 +48,7 @@
   "dependencies": {
     "@react-navigation/elements": "^2.7.0",
     "color": "^4.2.3",
+    "sf-symbols-typescript": "^2.1.0",
     "warn-once": "^0.1.1"
   },
   "devDependencies": {

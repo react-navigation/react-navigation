@@ -24,6 +24,7 @@ import type {
   ScrollEdgeEffect,
   SearchBarProps,
 } from 'react-native-screens';
+import type { SFSymbol } from 'sf-symbols-typescript';
 
 export type NativeStackNavigationEventMap = {
   /**
@@ -738,13 +739,20 @@ export type NativeStackNavigationOptions = {
 };
 
 type PlatformIconShared = {
-  type: 'imageSource';
-  imageSource: ImageSourcePropType;
+  type: 'image';
+  source: ImageSourcePropType;
+  /**
+   * Whether to apply tint color to the icon.
+   * Defaults to `true`.
+   *
+   * @platform ios
+   */
+  tinted?: boolean;
 };
 
 type PlatformIconIOSSfSymbol = {
   type: 'sfSymbol';
-  name: string;
+  name: SFSymbol;
 };
 
 type PlatformIconIOS = PlatformIconIOSSfSymbol | PlatformIconShared;
