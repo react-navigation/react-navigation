@@ -251,7 +251,7 @@ export function BottomTabs() {
               <>
                 {isLargeScreen && (
                   <Image
-                    source={require('../../assets/album-art-03.jpg')}
+                    source={require('../../assets/album-art/03.jpg')}
                     resizeMode="cover"
                     style={[
                       StyleSheet.absoluteFill,

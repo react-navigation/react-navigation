@@ -27,14 +27,14 @@ type Props = SceneRendererProps & {
 };
 
 const ALBUMS: { [key: string]: ImageRequireSource } = {
-  'Abbey Road': require('../../../assets/album-art-01.jpg'),
-  'Bat Out of Hell': require('../../../assets/album-art-02.jpg'),
-  Homogenic: require('../../../assets/album-art-03.jpg'),
-  'Number of the Beast': require('../../../assets/album-art-04.jpg'),
-  "It's Blitz": require('../../../assets/album-art-05.jpg'),
-  'The Man-Machine': require('../../../assets/album-art-06.jpg'),
-  'The Score': require('../../../assets/album-art-07.jpg'),
-  'Lost Horizons': require('../../../assets/album-art-08.jpg'),
+  'Abbey Road': require('../../../assets/album-art/01.jpg'),
+  'Bat Out of Hell': require('../../../assets/album-art/02.jpg'),
+  Homogenic: require('../../../assets/album-art/03.jpg'),
+  'Number of the Beast': require('../../../assets/album-art/04.jpg'),
+  "It's Blitz": require('../../../assets/album-art/05.jpg'),
+  'The Man-Machine': require('../../../assets/album-art/06.jpg'),
+  'The Score': require('../../../assets/album-art/07.jpg'),
+  'Lost Horizons': require('../../../assets/album-art/08.jpg'),
 };
 
 const Scene = ({ route, position, index, length }: Props) => {
