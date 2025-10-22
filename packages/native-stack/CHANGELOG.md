@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.28...@react-navigation/native-stack@7.4.0) (2025-10-22)
+
+### Bug Fixes
+
+* revert defaulting headerTransparent to false ([53c06ed](https://github.com/react-navigation/react-navigation/commit/53c06ed52fefd3fda90a6959de0e711dc572b37b)) - by @satya164
+
+### Features
+
+* export scrollEdgeEffects prop from react-native-screens ([#12797](https://github.com/react-navigation/react-navigation/issues/12797)) ([e3bd4e2](https://github.com/react-navigation/react-navigation/commit/e3bd4e2f7632790e217fbbb748c571a8b9326784)) - by @
+* **ios:** add ability to render native buttons in header on iOS ([#12657](https://github.com/react-navigation/react-navigation/issues/12657)) ([9272077](https://github.com/react-navigation/react-navigation/commit/9272077d7bd38f7b9ce6808fb7bed0d9566a363b)) - by @johankasperi
+
 ## [7.3.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.27...@react-navigation/native-stack@7.3.28) (2025-10-13)
 
 ### Bug Fixes

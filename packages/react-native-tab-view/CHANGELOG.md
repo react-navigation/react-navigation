@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.1.3...react-native-tab-view@4.2.0) (2025-10-22)
+
+### Features
+
+* use continuous rounded corners ([55b00a4](https://github.com/react-navigation/react-navigation/commit/55b00a4f66672946973b0558c84c515f212a5f4a)) - by @satya164
+
 ## [4.1.3](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.1.2...react-native-tab-view@4.1.3) (2025-08-10)
 
 ### Bug Fixes

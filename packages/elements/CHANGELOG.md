@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.6.5...@react-navigation/elements@2.7.0) (2025-10-22)
+
+### Features
+
+* move Badge to elements and expose it in public API ([#12796](https://github.com/react-navigation/react-navigation/issues/12796)) ([2687f66](https://github.com/react-navigation/react-navigation/commit/2687f66f51a024e249fdfeda211e48df5d7614f6)) - by @Trancever
+* use continuous rounded corners ([55b00a4](https://github.com/react-navigation/react-navigation/commit/55b00a4f66672946973b0558c84c515f212a5f4a)) - by @satya164
+
 ## [2.6.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.6.4...@react-navigation/elements@2.6.5) (2025-10-04)
 
 **Note:** Version bump only for package @react-navigation/elements

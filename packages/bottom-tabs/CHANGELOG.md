@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.4.9...@react-navigation/bottom-tabs@7.5.0) (2025-10-22)
+
+### Features
+
+* **ios:** add ability to render native buttons in header on iOS ([#12657](https://github.com/react-navigation/react-navigation/issues/12657)) ([9272077](https://github.com/react-navigation/react-navigation/commit/9272077d7bd38f7b9ce6808fb7bed0d9566a363b)) - by @johankasperi
+* move Badge to elements and expose it in public API ([#12796](https://github.com/react-navigation/react-navigation/issues/12796)) ([2687f66](https://github.com/react-navigation/react-navigation/commit/2687f66f51a024e249fdfeda211e48df5d7614f6)) - by @Trancever
+* use continuous rounded corners ([55b00a4](https://github.com/react-navigation/react-navigation/commit/55b00a4f66672946973b0558c84c515f212a5f4a)) - by @satya164
+
 ## [7.4.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.4.8...@react-navigation/bottom-tabs@7.4.9) (2025-10-13)
 
 ### Bug Fixes

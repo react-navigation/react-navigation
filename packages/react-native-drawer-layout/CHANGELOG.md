@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.2.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.13...react-native-drawer-layout@4.2.0) (2025-10-22)
+
+### Features
+
+* **ios:** add ability to render native buttons in header on iOS ([#12657](https://github.com/react-navigation/react-navigation/issues/12657)) ([9272077](https://github.com/react-navigation/react-navigation/commit/9272077d7bd38f7b9ce6808fb7bed0d9566a363b)) - by @johankasperi
+
 ## [4.1.13](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.12...react-native-drawer-layout@4.1.13) (2025-08-31)
 
 **Note:** Version bump only for package react-native-drawer-layout
