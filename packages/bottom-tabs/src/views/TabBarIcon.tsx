@@ -1,3 +1,4 @@
+import { Badge } from '@react-navigation/elements';
 import type { Route } from '@react-navigation/native';
 import React from 'react';
 import {
@@ -7,8 +8,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-
-import { Badge } from './Badge';
 
 type Props = {
   route: Route<string>;

@@ -5,6 +5,7 @@ import closeIcon from './assets/close-icon.png';
 import searchIcon from './assets/search-icon.png';
 
 export { Background } from './Background';
+export { Badge } from './Badge';
 export { Button } from './Button';
 export { getDefaultSidebarWidth } from './getDefaultSidebarWidth';
 export { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
