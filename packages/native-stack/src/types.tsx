@@ -21,6 +21,7 @@ import type {
 import type {
   ScreenProps,
   ScreenStackHeaderConfigProps,
+  ScrollEdgeEffect,
   SearchBarProps,
 } from 'react-native-screens';
 
@@ -703,6 +704,24 @@ export type NativeStackNavigationOptions = {
    * Only supported on iOS and Android.
    */
   freezeOnBlur?: boolean;
+  /**
+   * Configures the scroll edge effect for the _content ScrollView_ (the ScrollView that is present in first descendants chain of the Screen).
+   * Depending on values set, it will blur the scrolling content below certain UI elements (Header Items, SearchBar)
+   * for the specifed edge of the ScrollView.
+   *
+   * When set in nested containers, i.e. ScreenStack inside BottomTabs, or the other way around,
+   * the ScrollView will use only the innermost one's config.
+   *
+   * @platform ios
+   *
+   * @supported iOS 26 or higher
+   */
+  scrollEdgeEffects?: {
+    bottom?: ScrollEdgeEffect;
+    left?: ScrollEdgeEffect;
+    right?: ScrollEdgeEffect;
+    top?: ScrollEdgeEffect;
+  };
   /**
    * Footer component that can be used alongside formSheet stack presentation style.
    *
