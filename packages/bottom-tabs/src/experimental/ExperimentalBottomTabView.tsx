@@ -12,8 +12,6 @@ import {
   BottomTabs,
   BottomTabsScreen,
   type BottomTabsScreenItemStateAppearance,
-  type BottomTabsScreenProps,
-  type Icon,
 } from 'react-native-screens';
 
 import type {
@@ -218,7 +216,7 @@ export function ExperimentalBottomTabView({
             }}
             key={route.key}
             tabKey={route.key}
-            {...getIconProps(tabBarIcon)}
+            icon={tabBarIcon}
             tabBarItemBadgeBackgroundColor={badgeBackgroundColor}
             tabBarItemBadgeTextColor={badgeTextColor}
             badgeValue={tabBarBadge?.toString()}
@@ -250,26 +248,4 @@ export function ExperimentalBottomTabView({
       })}
     </BottomTabs>
   );
-}
-
-function getIconProps(
-  icon: Icon | undefined
-): Pick<BottomTabsScreenProps, 'icon' | 'iconResource'> {
-  if (!icon) {
-    return {};
-  }
-
-  if (Platform.OS === 'ios') {
-    return {
-      icon,
-    };
-  }
-
-  if ('templateSource' in icon) {
-    return {
-      iconResource: icon.templateSource,
-    };
-  }
-
-  return {};
 }

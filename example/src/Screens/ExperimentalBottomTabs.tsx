@@ -106,7 +106,14 @@ export function ExperimentalBottomTabs() {
             popToTopOnBlur: true,
             title: 'Article',
             tabBarIcon: {
-              templateSource: iconNewspaper,
+              ios: {
+                type: 'templateSource',
+                templateSource: iconNewspaper,
+              },
+              android: {
+                type: 'imageSource',
+                imageSource: iconNewspaper,
+              },
             },
           }}
         />
@@ -116,14 +123,16 @@ export function ExperimentalBottomTabs() {
           initialParams={{ count: i }}
           options={({ route }) => ({
             title: 'Contacts',
-            tabBarIcon: Platform.select({
+            tabBarIcon: {
               ios: {
-                sfSymbolName: 'person.2',
+                type: 'sfSymbol',
+                name: 'person.2',
               },
-              default: {
-                templateSource: iconBookUser,
+              android: {
+                type: 'imageSource',
+                imageSource: iconBookUser,
               },
-            }),
+            },
             tabBarBadge: route.params?.count,
           })}
         />
@@ -133,7 +142,14 @@ export function ExperimentalBottomTabs() {
           options={{
             title: 'Albums',
             tabBarIcon: {
-              templateSource: iconMusic,
+              ios: {
+                type: 'templateSource',
+                templateSource: iconMusic,
+              },
+              android: {
+                type: 'imageSource',
+                imageSource: iconMusic,
+              },
             },
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
             tabBarActiveTintColor: '#fff',
@@ -147,14 +163,12 @@ export function ExperimentalBottomTabs() {
           options={{
             tabBarSystemItem: 'search',
             tabBarLabel: 'Favorites',
-            tabBarIcon: Platform.select({
-              ios: {
-                sfSymbolName: 'heart',
+            tabBarIcon: {
+              shared: {
+                type: 'imageSource',
+                imageSource: iconHeart,
               },
-              default: {
-                templateSource: iconHeart,
-              },
-            }),
+            },
           }}
           listeners={{
             tabPress: (e) => {

@@ -14,7 +14,7 @@ import type { ColorValue, TextStyle } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type {
   BottomTabsSystemItem,
-  Icon,
+  PlatformIcon,
   TabBarControllerMode,
   TabBarItemLabelVisibilityMode,
   TabBarMinimizeBehavior,
@@ -114,7 +114,7 @@ export type ExperimentalBottomTabNavigationOptions = {
    *
    * Overrides the icon provided by `tabBarSystemItem` on iOS.
    */
-  tabBarIcon?: Icon;
+  tabBarIcon?: PlatformIcon;
 
   /**
    * Text to show in a badge on the tab icon.

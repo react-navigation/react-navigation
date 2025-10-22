@@ -47,7 +47,7 @@ const Author = () => {
   return (
     <View style={[styles.row, styles.attribution]}>
       <Image
-        source={require('../../assets/avatar-1.png')}
+        source={require('../../assets/misc/avatar-1.png')}
         style={styles.avatar}
       />
       <Text style={styles.author}>Joke bot</Text>
@@ -101,7 +101,10 @@ export function NewsFeed(props: Props) {
             zookeeper about it and he said it was bread in captivity.
           </Text>
         </View>
-        <Image source={require('../../assets/book.jpg')} style={styles.cover} />
+        <Image
+          source={require('../../assets/misc/book.jpg')}
+          style={styles.cover}
+        />
         <Footer />
       </Card>
       <Card>

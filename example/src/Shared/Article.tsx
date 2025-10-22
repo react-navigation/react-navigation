@@ -64,7 +64,7 @@ export function Article({
       <View style={styles.author}>
         <Image
           style={styles.avatar}
-          source={require('../../assets/avatar-1.png')}
+          source={require('../../assets/misc/avatar-1.png')}
         />
         <View style={styles.meta}>
           <Text style={[styles.name, { color: colors.text }]}>
@@ -88,7 +88,7 @@ export function Article({
       <Image
         style={styles.image}
         resizeMode="cover"
-        source={require('../../assets/book.jpg')}
+        source={require('../../assets/misc/book.jpg')}
       />
       <Heading>Where does it come from?</Heading>
       <Paragraph>
