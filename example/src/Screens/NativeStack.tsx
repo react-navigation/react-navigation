@@ -22,6 +22,7 @@ import {
   View,
 } from 'react-native';
 
+import userRoundPlus from '../../assets/icons/user-round-plus.png';
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
@@ -224,23 +225,21 @@ export function NativeStack() {
           const rightItems: NativeStackHeaderItem[] = [
             {
               type: 'button',
+              label: 'Follow',
+              icon: {
+                type: 'image',
+                source: userRoundPlus,
+              },
+              onPress: () => Alert.alert('Follow button pressed'),
+            },
+            {
+              type: 'button',
               label: 'Favorite',
               icon: {
                 type: 'sfSymbol',
                 name: 'heart',
               },
               onPress: () => Alert.alert('Favorite button pressed'),
-            },
-            {
-              type: 'custom',
-              element: (
-                <HeaderButton onPress={() => Alert.alert('Follow pressed')}>
-                  <MaterialCommunityIcons
-                    name="account-plus-outline"
-                    size={28}
-                  />
-                </HeaderButton>
-              ),
             },
             {
               type: 'menu',
@@ -312,6 +311,17 @@ export function NativeStack() {
             title: `Article by ${route.params?.author ?? 'Unknown'}`,
             headerLargeTitle: true,
             headerLargeTitleShadowVisible: false,
+            headerRight: ({ tintColor }) => (
+              <HeaderButton
+                onPress={() => Alert.alert('Favorite button pressed')}
+              >
+                <MaterialCommunityIcons
+                  name="heart"
+                  size={24}
+                  color={tintColor}
+                />
+              </HeaderButton>
+            ),
             unstable_headerLeftItems: () => leftItems,
             unstable_headerRightItems: () => rightItems,
           };

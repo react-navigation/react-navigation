@@ -68,7 +68,7 @@ const processBarButtonItems = (
           );
         }
 
-        const { badge, label, labelStyle, ...rest } = item;
+        const { badge, label, labelStyle, icon, ...rest } = item;
 
         let processedItem: HeaderBarButtonItem = {
           ...rest,
@@ -78,6 +78,18 @@ const processBarButtonItems = (
             ...fonts.regular,
             ...labelStyle,
           },
+          icon:
+            icon?.type === 'image'
+              ? icon.tinted === false
+                ? {
+                    type: 'imageSource',
+                    imageSource: icon.source,
+                  }
+                : {
+                    type: 'templateSource',
+                    templateSource: icon.source,
+                  }
+              : icon,
         };
 
         if (processedItem.type === 'menu' && item.type === 'menu') {
@@ -395,7 +407,7 @@ export function useHeaderConfigProps({
       {headerBackImageSource !== undefined ? (
         <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
       ) : null}
-      {rightItems ? (
+      {Platform.OS === 'ios' && rightItems ? (
         rightItems.map((item, index) => {
           if (item.type === 'custom') {
             return (
