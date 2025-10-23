@@ -414,7 +414,7 @@ export function useHeaderConfigProps({
       {headerBackImageSource !== undefined ? (
         <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
       ) : null}
-      {rightItems ? (
+      {Platform.OS === 'ios' && rightItems ? (
         rightItems.map((item, index) => {
           if (item.type === 'custom') {
             return (

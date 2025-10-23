@@ -311,6 +311,17 @@ export function NativeStack() {
             title: `Article by ${route.params?.author ?? 'Unknown'}`,
             headerLargeTitle: true,
             headerLargeTitleShadowVisible: false,
+            headerRight: ({ tintColor }) => (
+              <HeaderButton
+                onPress={() => Alert.alert('Favorite button pressed')}
+              >
+                <MaterialCommunityIcons
+                  name="heart"
+                  size={24}
+                  color={tintColor}
+                />
+              </HeaderButton>
+            ),
             unstable_headerLeftItems: () => leftItems,
             unstable_headerRightItems: () => rightItems,
           };
