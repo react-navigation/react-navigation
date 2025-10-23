@@ -86,11 +86,7 @@ export function ExperimentalBottomTabView({
       ios: fonts.medium.fontWeight,
       default: fonts.regular.fontWeight,
     }),
-    fontSize = Platform.select({
-      // FIXME: setting font family or weight overrides the font size on iOS
-      ios: 10,
-      default: undefined,
-    }),
+    fontSize,
     fontStyle,
   } = currentOptions.tabBarLabelStyle || {};
 
