@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.5.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.5.0...@react-navigation/native-stack@7.5.1) (2025-10-23)
+
+### Bug Fixes
+
+* don't override headerRight with headerRightItems on Android ([0b69959](https://github.com/react-navigation/react-navigation/commit/0b699593a505cd42c237f8612af0ad8a279c2d40)) - by @satya164
+
 # [7.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.4.0...@react-navigation/native-stack@7.5.0) (2025-10-22)
 
 ### Features
