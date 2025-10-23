@@ -106,14 +106,8 @@ export function ExperimentalBottomTabs() {
             popToTopOnBlur: true,
             title: 'Article',
             tabBarIcon: {
-              ios: {
-                type: 'templateSource',
-                templateSource: iconNewspaper,
-              },
-              android: {
-                type: 'imageSource',
-                imageSource: iconNewspaper,
-              },
+              type: 'image',
+              source: iconNewspaper,
             },
           }}
         />
@@ -123,16 +117,16 @@ export function ExperimentalBottomTabs() {
           initialParams={{ count: i }}
           options={({ route }) => ({
             title: 'Contacts',
-            tabBarIcon: {
+            tabBarIcon: Platform.select({
               ios: {
                 type: 'sfSymbol',
                 name: 'person.2',
               },
-              android: {
-                type: 'imageSource',
-                imageSource: iconBookUser,
+              default: {
+                type: 'image',
+                source: iconBookUser,
               },
-            },
+            }),
             tabBarBadge: route.params?.count,
           })}
         />
@@ -142,14 +136,8 @@ export function ExperimentalBottomTabs() {
           options={{
             title: 'Albums',
             tabBarIcon: {
-              ios: {
-                type: 'templateSource',
-                templateSource: iconMusic,
-              },
-              android: {
-                type: 'imageSource',
-                imageSource: iconMusic,
-              },
+              type: 'image',
+              source: iconMusic,
             },
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
             tabBarActiveTintColor: '#fff',
@@ -164,10 +152,8 @@ export function ExperimentalBottomTabs() {
             tabBarSystemItem: 'search',
             tabBarLabel: 'Favorites',
             tabBarIcon: {
-              shared: {
-                type: 'imageSource',
-                imageSource: iconHeart,
-              },
+              type: 'image',
+              source: iconHeart,
             },
           }}
           listeners={{

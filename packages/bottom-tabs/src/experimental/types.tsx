@@ -10,15 +10,15 @@ import type {
   TabRouterOptions,
   Theme,
 } from '@react-navigation/native';
-import type { ColorValue, TextStyle } from 'react-native';
+import type { ColorValue, ImageSourcePropType, TextStyle } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type {
   BottomTabsSystemItem,
-  PlatformIcon,
   TabBarControllerMode,
   TabBarItemLabelVisibilityMode,
   TabBarMinimizeBehavior,
 } from 'react-native-screens';
+import type { SFSymbol } from 'sf-symbols-typescript';
 
 export type Layout = { width: number; height: number };
 
@@ -72,6 +72,57 @@ export type ExperimentalBottomTabOptionsArgs<
   theme: Theme;
 };
 
+type IconImage = {
+  /**
+   * - `image` - Use a local image as the icon.
+   */
+  type: 'image';
+  /**
+   * Image source to use as the icon.
+   * e.g., `require('./path/to/image.png')`
+   */
+  source: ImageSourcePropType;
+  /**
+   * Whether to apply tint color to the icon.
+   * Defaults to `true`.
+   *
+   * @platform ios
+   */
+  tinted?: boolean;
+};
+
+type IconIOSSfSymbol = {
+  /**
+   * - `sfSymbol` - Use an SF Symbol as the icon on iOS.
+   */
+  type: 'sfSymbol';
+  /**
+   * Name of the SF Symbol to use as the icon.
+   *
+   * @platform ios
+   */
+  name: SFSymbol;
+};
+
+type IconAndroidDrawable = {
+  /**
+   * - `drawableResource` - Use a drawable resource as the icon on Android.
+   */
+  type: 'drawableResource';
+  /**
+   * Name of the drawable resource to use as the icon.
+   *
+   * @platform android
+   */
+  name: string;
+};
+
+type IconIOS = IconIOSSfSymbol | IconImage;
+
+type IconAndroid = IconAndroidDrawable | IconImage;
+
+type Icon = IconIOS | IconAndroid;
+
 export type ExperimentalBottomTabNavigationOptions = {
   /**
    * Title text for the screen.
@@ -114,7 +165,7 @@ export type ExperimentalBottomTabNavigationOptions = {
    *
    * Overrides the icon provided by `tabBarSystemItem` on iOS.
    */
-  tabBarIcon?: PlatformIcon;
+  tabBarIcon?: Icon;
 
   /**
    * Text to show in a badge on the tab icon.

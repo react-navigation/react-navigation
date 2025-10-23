@@ -698,8 +698,15 @@ export type NativeStackNavigationOptions = {
   unstable_sheetFooter?: () => React.ReactNode;
 };
 
-type PlatformIconShared = {
+type IconImage = {
+  /**
+   * - `image` - Use a local image as the icon.
+   */
   type: 'image';
+  /**
+   * Image source to use as the icon.
+   * e.g., `require('./path/to/image.png')`
+   */
   source: ImageSourcePropType;
   /**
    * Whether to apply tint color to the icon.
@@ -710,12 +717,20 @@ type PlatformIconShared = {
   tinted?: boolean;
 };
 
-type PlatformIconIOSSfSymbol = {
+type IconIOSSfSymbol = {
+  /**
+   * - `sfSymbol` - Use an SF Symbol as the icon on iOS.
+   */
   type: 'sfSymbol';
+  /**
+   * Name of the SF Symbol to use as the icon.
+   *
+   * @platform ios
+   */
   name: SFSymbol;
 };
 
-type PlatformIconIOS = PlatformIconIOSSfSymbol | PlatformIconShared;
+type IconIOS = IconIOSSfSymbol | IconImage;
 
 type SharedHeaderItem = {
   /**
@@ -734,7 +749,7 @@ type SharedHeaderItem = {
   /**
    * Icon for the item
    */
-  icon?: PlatformIconIOS;
+  icon?: IconIOS;
   /**
    * The variant of the item.
    * "prominent" only available from iOS 26.0 and later.
@@ -843,7 +858,7 @@ export type NativeStackHeaderItemMenuAction = {
   /**
    * Icon for the menu item.
    */
-  icon?: PlatformIconIOSSfSymbol;
+  icon?: IconIOSSfSymbol;
   /**
    * Function to call when the menu item is pressed.
    */
@@ -901,7 +916,7 @@ export type NativeStackHeaderItemMenuSubmenu = {
   /**
    * Icon for the submenu item.
    */
-  icon?: PlatformIconIOSSfSymbol;
+  icon?: IconIOSSfSymbol;
   /**
    * Array of menu items (actions or submenus).
    */

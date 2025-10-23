@@ -12,6 +12,7 @@ import {
   BottomTabs,
   BottomTabsScreen,
   type BottomTabsScreenItemStateAppearance,
+  type PlatformIcon,
 } from 'react-native-screens';
 
 import type {
@@ -184,6 +185,27 @@ export function ExperimentalBottomTabView({
           ? 'black'
           : 'white';
 
+        const icon: PlatformIcon = {
+          ios:
+            tabBarIcon?.type === 'sfSymbol'
+              ? tabBarIcon
+              : tabBarIcon?.type === 'image' && tabBarIcon.tinted !== false
+                ? {
+                    type: 'templateSource',
+                    templateSource: tabBarIcon.source,
+                  }
+                : undefined,
+          android:
+            tabBarIcon?.type === 'drawableResource' ? tabBarIcon : undefined,
+          shared:
+            tabBarIcon?.type === 'image'
+              ? {
+                  type: 'imageSource',
+                  imageSource: tabBarIcon.source,
+                }
+              : undefined,
+        } as const;
+
         return (
           <BottomTabsScreen
             onWillDisappear={() => {
@@ -216,7 +238,7 @@ export function ExperimentalBottomTabView({
             }}
             key={route.key}
             tabKey={route.key}
-            icon={tabBarIcon}
+            icon={icon}
             tabBarItemBadgeBackgroundColor={badgeBackgroundColor}
             tabBarItemBadgeTextColor={badgeTextColor}
             badgeValue={tabBarBadge?.toString()}
