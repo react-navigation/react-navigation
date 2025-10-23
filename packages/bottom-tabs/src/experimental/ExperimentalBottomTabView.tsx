@@ -98,6 +98,10 @@ export function ExperimentalBottomTabView({
     currentOptions.tabBarInactiveTintColor ??
     Platform.select({ ios: PlatformColor('label'), default: colors.text });
 
+  const activeIndicatorColor =
+    currentOptions?.tabBarActiveIndicatorColor ??
+    Color(activeTintColor)?.alpha(0.1).string();
+
   return (
     <BottomTabs
       tabBarItemLabelVisibilityMode={currentOptions?.tabBarLabelVisibilityMode}
@@ -113,9 +117,7 @@ export function ExperimentalBottomTabView({
       tabBarItemTitleFontSize={fontSize}
       tabBarItemTitleFontSizeActive={fontSize}
       tabBarBackgroundColor={currentOptions.tabBarStyle?.backgroundColor}
-      tabBarItemActiveIndicatorColor={
-        currentOptions?.tabBarActiveIndicatorColor
-      }
+      tabBarItemActiveIndicatorColor={activeIndicatorColor}
       tabBarItemActiveIndicatorEnabled={
         currentOptions?.tabBarActiveIndicatorEnabled
       }

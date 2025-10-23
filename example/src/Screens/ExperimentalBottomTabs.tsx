@@ -140,10 +140,10 @@ export function ExperimentalBottomTabs() {
               type: 'image',
               source: focused ? iconListMusic : iconMusic,
             }),
-            tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
+            tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.7)',
             tabBarActiveTintColor: '#fff',
             tabBarStyle: {
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
             },
           }}
         />
