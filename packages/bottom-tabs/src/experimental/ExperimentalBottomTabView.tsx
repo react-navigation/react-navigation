@@ -19,6 +19,7 @@ import type {
   ExperimentalBottomTabDescriptorMap,
   ExperimentalBottomTabNavigationConfig,
   ExperimentalBottomTabNavigationHelpers,
+  Icon,
 } from './types';
 
 type Props = ExperimentalBottomTabNavigationConfig & {
@@ -181,26 +182,17 @@ export function ExperimentalBottomTabView({
           ? 'black'
           : 'white';
 
-        const icon: PlatformIcon = {
-          ios:
-            tabBarIcon?.type === 'sfSymbol'
-              ? tabBarIcon
-              : tabBarIcon?.type === 'image' && tabBarIcon.tinted !== false
-                ? {
-                    type: 'templateSource',
-                    templateSource: tabBarIcon.source,
-                  }
-                : undefined,
-          android:
-            tabBarIcon?.type === 'drawableResource' ? tabBarIcon : undefined,
-          shared:
-            tabBarIcon?.type === 'image'
-              ? {
-                  type: 'imageSource',
-                  imageSource: tabBarIcon.source,
-                }
-              : undefined,
-        } as const;
+        const icon =
+          typeof tabBarIcon === 'function'
+            ? getPlatformIcon(tabBarIcon({ focused: false }))
+            : tabBarIcon != null
+              ? getPlatformIcon(tabBarIcon)
+              : undefined;
+
+        const selectedIcon =
+          typeof tabBarIcon === 'function'
+            ? getPlatformIcon(tabBarIcon({ focused: true }))
+            : undefined;
 
         return (
           <BottomTabsScreen
@@ -235,6 +227,7 @@ export function ExperimentalBottomTabView({
             key={route.key}
             tabKey={route.key}
             icon={icon}
+            selectedIcon={selectedIcon?.ios ?? selectedIcon?.shared}
             tabBarItemBadgeBackgroundColor={badgeBackgroundColor}
             tabBarItemBadgeTextColor={badgeTextColor}
             badgeValue={tabBarBadge?.toString()}
@@ -266,4 +259,26 @@ export function ExperimentalBottomTabView({
       })}
     </BottomTabs>
   );
+}
+
+function getPlatformIcon(icon: Icon): PlatformIcon {
+  return {
+    ios:
+      icon?.type === 'sfSymbol'
+        ? icon
+        : icon?.type === 'image' && icon.tinted !== false
+          ? {
+              type: 'templateSource',
+              templateSource: icon.source,
+            }
+          : undefined,
+    android: icon?.type === 'drawableResource' ? icon : undefined,
+    shared:
+      icon?.type === 'image'
+        ? {
+            type: 'imageSource',
+            imageSource: icon.source,
+          }
+        : undefined,
+  } as const;
 }

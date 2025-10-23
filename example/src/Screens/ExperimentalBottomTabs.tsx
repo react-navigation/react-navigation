@@ -26,6 +26,7 @@ import {
 
 import iconBookUser from '../../assets/icons/book-user.png';
 import iconHeart from '../../assets/icons/heart.png';
+import iconListMusic from '../../assets/icons/list-music.png';
 import iconMusic from '../../assets/icons/music.png';
 import iconNewspaper from '../../assets/icons/newspaper.png';
 import { SystemBars } from '../edge-to-edge';
@@ -135,10 +136,10 @@ export function ExperimentalBottomTabs() {
           component={AlbumsScreen}
           options={{
             title: 'Albums',
-            tabBarIcon: {
+            tabBarIcon: ({ focused }) => ({
               type: 'image',
-              source: iconMusic,
-            },
+              source: focused ? iconListMusic : iconMusic,
+            }),
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
             tabBarActiveTintColor: '#fff',
             tabBarStyle: {

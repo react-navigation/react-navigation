@@ -121,7 +121,7 @@ type IconIOS = IconIOSSfSymbol | IconImage;
 
 type IconAndroid = IconAndroidDrawable | IconImage;
 
-type Icon = IconIOS | IconAndroid;
+export type Icon = IconIOS | IconAndroid;
 
 export type ExperimentalBottomTabNavigationOptions = {
   /**
@@ -161,11 +161,12 @@ export type ExperimentalBottomTabNavigationOptions = {
   >;
 
   /**
-   * Image to display as the icon for the tab.
+   * Icon to display for the tab.
+   * Showing a different icon for focused tab is only supported on iOS.
    *
    * Overrides the icon provided by `tabBarSystemItem` on iOS.
    */
-  tabBarIcon?: Icon;
+  tabBarIcon?: Icon | ((props: { focused: boolean }) => Icon);
 
   /**
    * Text to show in a badge on the tab icon.
