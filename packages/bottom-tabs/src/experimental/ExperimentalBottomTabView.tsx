@@ -1,6 +1,7 @@
 import {
   Color,
   getLabel,
+  SafeAreaProviderCompat,
   useHeaderConfig,
   useHeaderConfigProp,
 } from '@react-navigation/elements';
@@ -55,7 +56,7 @@ const SceneView = ({
     onHeaderHeightChange,
     headerHeight,
     headerTopInsetEnabled,
-    HeaderProvider,
+    renderHeaderProvider,
   } = useHeaderConfig({
     headerShown: headerShown === true,
     isModal: false,
@@ -76,16 +77,18 @@ const SceneView = ({
 
   // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
   return lazy && !loaded && !isFocused && !isPreloaded ? null : (
-    <ScreenStack style={styles.container}>
-      <ScreenStackItem
-        screenId={descriptor.route.key}
-        style={StyleSheet.absoluteFill}
-        headerConfig={headerConfig}
-        onHeaderHeightChange={onHeaderHeightChange}
-      >
-        <HeaderProvider>{descriptor.render()}</HeaderProvider>
-      </ScreenStackItem>
-    </ScreenStack>
+    <SafeAreaProviderCompat>
+      <ScreenStack style={styles.container}>
+        <ScreenStackItem
+          screenId={descriptor.route.key}
+          style={StyleSheet.absoluteFill}
+          headerConfig={headerConfig}
+          onHeaderHeightChange={onHeaderHeightChange}
+        >
+          {renderHeaderProvider(descriptor.render())}
+        </ScreenStackItem>
+      </ScreenStack>
+    </SafeAreaProviderCompat>
   );
 };
 

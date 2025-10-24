@@ -172,11 +172,12 @@ const SceneView = ({
     return undefined;
   }, [canGoBack, backTitle]);
 
+  console.log('Rendering SceneView for route:', route.name);
   const {
     onHeaderHeightChange,
     headerHeight,
     headerTopInsetEnabled,
-    HeaderProvider,
+    renderHeaderProvider,
   } = useHeaderConfig({
     isModal,
     options,
@@ -285,11 +286,11 @@ const SceneView = ({
           // Otherwise invalid props may not be caught by TypeScript
           shouldFreeze={shouldFreeze}
         >
-          <HeaderProvider>
+          {renderHeaderProvider(
             <HeaderBackContext.Provider value={headerBack}>
               {render()}
             </HeaderBackContext.Provider>
-          </HeaderProvider>
+          )}
         </ScreenStackItem>
       </NavigationRouteContext.Provider>
     </NavigationContext.Provider>

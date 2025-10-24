@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { type ReactNode, useMemo } from 'react';
 import {
   Animated,
   Platform,
@@ -150,69 +149,62 @@ export const useHeaderConfig = ({
   );
 
   // should this be useMemo?
-  const HeaderProvider = useMemo(
-    () =>
-      ({ children }: { children: ReactNode }) => (
-        <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
-          <HeaderHeightContext.Provider
-            value={headerShown ? headerHeight : (parentHeaderHeight ?? 0)}
+  const renderHeaderProvider = (children: React.ReactNode) => (
+    <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+      <HeaderHeightContext.Provider
+        value={headerShown ? headerHeight : (parentHeaderHeight ?? 0)}
+      >
+        {options.headerBackground != null ? (
+          /**
+           * To show a custom header background, we render it at the top of the screen below the header
+           * The header also needs to be positioned absolutely (with `translucent` style)
+           */
+          <View
+            style={[
+              styles.background,
+              options.headerTransparent ? styles.translucent : null,
+              { height: headerHeight },
+            ]}
           >
-            {options.headerBackground != null ? (
-              /**
-               * To show a custom header background, we render it at the top of the screen below the header
-               * The header also needs to be positioned absolutely (with `translucent` style)
-               */
-              <View
-                style={[
-                  styles.background,
-                  options.headerTransparent ? styles.translucent : null,
-                  { height: headerHeight },
-                ]}
-              >
-                {options.headerBackground()}
-              </View>
-            ) : null}
-            {hasCustomHeader != null && headerShown ? (
-              <View
-                onLayout={(e) => {
-                  const headerHeight = e.nativeEvent.layout.height;
+            {options.headerBackground()}
+          </View>
+        ) : null}
+        {hasCustomHeader != null && headerShown ? (
+          <View
+            onLayout={(e) => {
+              const headerHeight = e.nativeEvent.layout.height;
 
-                  setHeaderHeight(headerHeight);
-                  rawAnimatedHeaderHeight.setValue(headerHeight);
-                }}
-                style={[
-                  styles.header,
-                  options.headerTransparent ? styles.absolute : null,
-                ]}
-              >
-                {renderCustomHeader?.()}
-              </View>
-            ) : null}
-            <HeaderShownContext.Provider
-              value={isParentHeaderShown || headerShown}
-            >
-              {children}
-            </HeaderShownContext.Provider>
-          </HeaderHeightContext.Provider>
-        </AnimatedHeaderHeightContext.Provider>
-      ),
-    [
-      animatedHeaderHeight,
-      hasCustomHeader,
-      headerHeight,
-      isParentHeaderShown,
-      options,
-      parentHeaderHeight,
-      rawAnimatedHeaderHeight,
-      renderCustomHeader,
-      headerShown,
-    ]
+              setHeaderHeight(headerHeight);
+              rawAnimatedHeaderHeight.setValue(headerHeight);
+            }}
+            style={[
+              styles.header,
+              options.headerTransparent ? styles.absolute : null,
+            ]}
+          >
+            {renderCustomHeader?.()}
+          </View>
+        ) : null}
+        <HeaderShownContext.Provider value={isParentHeaderShown || headerShown}>
+          {children}
+        </HeaderShownContext.Provider>
+      </HeaderHeightContext.Provider>
+    </AnimatedHeaderHeightContext.Provider>
   );
+
+  // , [
+  //   animatedHeaderHeight,
+  //   // headerHeight,
+  //   isParentHeaderShown,
+  //   options,
+  //   parentHeaderHeight,
+  //   headerShown,
+  // ]);
   return {
     onHeaderHeightChange,
     headerTopInsetEnabled,
     headerHeight,
-    HeaderProvider,
+    renderHeaderProvider,
   };
 };
 
