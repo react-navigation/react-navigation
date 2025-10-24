@@ -653,7 +653,9 @@ export class CardStack extends React.Component<Props, State> {
     }
 
     const floatingHeader = (
-      <React.Fragment key="header">
+      <React.Fragment
+        key={isFloatHeaderAbsolute ? 'header-absolute' : 'header-float'}
+      >
         {renderHeader({
           mode: 'float',
           scenes,
