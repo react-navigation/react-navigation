@@ -1723,8 +1723,8 @@ __metadata:
   linkType: hard
 
 "@babel/register@npm:^7.27.1":
-  version: 7.28.3
-  resolution: "@babel/register@npm:7.28.3"
+  version: 7.27.1
+  resolution: "@babel/register@npm:7.27.1"
   dependencies:
     clone-deep: "npm:^4.0.1"
     find-cache-dir: "npm:^2.0.0"
@@ -1733,7 +1733,7 @@ __metadata:
     source-map-support: "npm:^0.5.16"
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 10c0/ff31870a24e862fca36d5c481eda40be610af215a922560834333a78000b0e159a209dae606d4d93d7456d35ea8caeaaea674cdeaa0c0362e7e30d7f095d2436
+  checksum: 10c0/9584f6c5d980aa7eb6f56f56dfc12fa01a47ab11d542908192cb455a5249d489ab24efcd5de7c1b8be0fb47cd5594e4ee5652c58ba9b857fb81e783541c6a0ff
   languageName: node
   linkType: hard
 
@@ -4577,6 +4577,7 @@ __metadata:
     react-native-safe-area-context: "npm:~5.6.0"
     react-native-screens: "npm:^4.18.0"
     react-test-renderer: "npm:19.1.0"
+    sf-symbols-typescript: "npm:^2.1.0"
     typescript: "npm:^5.9.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
@@ -4680,6 +4681,7 @@ __metadata:
     react: "npm:19.1.0"
     react-native: "npm:0.81.4"
     react-native-builder-bob: "npm:^0.40.12"
+    react-native-screens: "npm:^4.18.0"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.2.4"
@@ -7545,9 +7547,9 @@ __metadata:
   linkType: hard
 
 "core-js@npm:^3.30.2":
-  version: 3.45.1
-  resolution: "core-js@npm:3.45.1"
-  checksum: 10c0/c38e5fae5a05ee3a129c45e10056aafe61dbb15fd35d27e0c289f5490387541c89741185e0aeb61acb558559c6697e016c245cca738fa169a73f2b06cd30e6b6
+  version: 3.43.0
+  resolution: "core-js@npm:3.43.0"
+  checksum: 10c0/9d4ad66296e60380777de51d019b5c3e6cce023b7999750a5094f9a4b0ea53bf3600beb4ef11c56548f2c8791d43d4056e270d1cf55ba87273011aa7d4597871
   languageName: node
   linkType: hard
 

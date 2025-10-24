@@ -39,3 +39,8 @@ export type {
   BottomTabOptionsArgs,
   BottomTabScreenProps,
 } from './types';
+
+/**
+ * Experimental navigator
+ */
+export * from './experimental';

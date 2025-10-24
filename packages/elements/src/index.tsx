@@ -23,6 +23,10 @@ export { useHeaderHeight } from './Header/useHeaderHeight';
 export { getLabel } from './Label/getLabel';
 export { Label } from './Label/Label';
 export { MissingIcon } from './MissingIcon';
+export { AnimatedHeaderHeightContext } from './NativeHeaderUtils/useAnimatedHeaderHeight';
+export { useAnimatedHeaderHeight } from './NativeHeaderUtils/useAnimatedHeaderHeight';
+export { useHeaderConfig } from './NativeHeaderUtils/useHeaderConfig';
+export { useHeaderConfigProp } from './NativeHeaderUtils/useHeaderConfigProp';
 export { PlatformPressable } from './PlatformPressable';
 export { SafeAreaProviderCompat } from './SafeAreaProviderCompat';
 export { Screen } from './Screen';
@@ -37,4 +41,5 @@ export const Assets = [
   clearIcon,
 ];
 
+export * from './NativeHeaderUtils/types';
 export * from './types';

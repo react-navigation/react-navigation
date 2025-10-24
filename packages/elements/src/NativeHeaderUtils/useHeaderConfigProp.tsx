@@ -1,4 +1,3 @@
-import { Color, getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
 import {
   type Route,
   type Theme,
@@ -20,15 +19,16 @@ import {
   SearchBar,
 } from 'react-native-screens';
 
+import { Color, getHeaderTitle, HeaderTitle } from '..';
+import { processFonts } from './FontProcessor';
 import type {
+  NativeHeaderNavigationOptions,
   NativeStackHeaderItem,
   NativeStackHeaderItemMenuAction,
   NativeStackHeaderItemMenuSubmenu,
-  NativeStackNavigationOptions,
-} from '../types';
-import { processFonts } from './FontProcessor';
+} from './types';
 
-type Props = NativeStackNavigationOptions & {
+type Props = NativeHeaderNavigationOptions & {
   headerTopInsetEnabled: boolean;
   headerHeight: number;
   headerBack: { title?: string | undefined; href: undefined } | undefined;
@@ -153,7 +153,7 @@ const getMenuItem = (
   };
 };
 
-export function useHeaderConfigProps({
+export function useHeaderConfigProp({
   headerBackImageSource,
   headerBackButtonDisplayMode,
   headerBackButtonMenuEnabled,
