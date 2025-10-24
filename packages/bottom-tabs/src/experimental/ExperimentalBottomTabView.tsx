@@ -57,7 +57,7 @@ const SceneView = ({
     headerTopInsetEnabled,
     HeaderProvider,
   } = useHeaderConfig({
-    headerShown: headerShown !== false,
+    headerShown: headerShown === true,
     isModal: false,
     options: descriptor.options,
     renderCustomHeader: header ? () => header(descriptor) : null,
@@ -69,7 +69,7 @@ const SceneView = ({
     headerBackButtonMenuEnabled: false, // TODO: support this
     headerBackTitle: undefined,
     headerHeight,
-    headerShown: header !== undefined ? false : headerShown !== false,
+    headerShown: header !== undefined ? false : headerShown === true,
     headerTopInsetEnabled,
     headerBack: undefined,
   });
