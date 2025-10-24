@@ -1,3 +1,4 @@
+import type { NativeHeaderNavigationOptions } from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -10,6 +11,7 @@ import type {
   TabRouterOptions,
   Theme,
 } from '@react-navigation/native';
+import type * as React from 'react';
 import type { ColorValue, ImageSourcePropType, TextStyle } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type {
@@ -123,181 +125,193 @@ type IconAndroid = IconAndroidDrawable | IconImage;
 
 export type Icon = IconIOS | IconAndroid;
 
-export type ExperimentalBottomTabNavigationOptions = {
-  /**
-   * Title text for the screen.
-   */
-  title?: string;
-
-  /**
-   * Uses iOS built-in tab bar items with standard iOS styling and localized titles.
-   * If set to `search`, it's positioned next to the tab bar on iOS 26 and above.
-   *
-   * The `tabBarIcon` and `tabBarLabel` options will override the icon and label from the system item.
-   * If you want to keep the system behavior on iOS, but need to provide icon and label for other platforms,
-   * Use `Platform.OS`  or `Platform.select`  to conditionally set `undefined` for `tabBarIcon` and `tabBarLabel` on iOS.
-   *
-   * @platform ios
-   */
-  tabBarSystemItem?: BottomTabsSystemItem;
-
-  /**
-   * Title string of a tab displayed in the tab bar
-   *
-   * Overrides the label provided by `tabBarSystemItem` on iOS.
-   *
-   * If not provided, or set to `undefined`:
-   * - The system values are used if `tabBarSystemItem` is set on iOS.
-   * - Otherwise, it falls back to the `title` or route name.
-   */
-  tabBarLabel?: string;
-
-  /**
-   * Style object for the tab label.
-   */
-  tabBarLabelStyle?: Pick<
-    TextStyle,
-    'fontFamily' | 'fontSize' | 'fontWeight' | 'fontStyle'
-  >;
-
-  /**
-   * Icon to display for the tab.
-   * Showing a different icon for focused tab is only supported on iOS.
-   *
-   * Overrides the icon provided by `tabBarSystemItem` on iOS.
-   */
-  tabBarIcon?: Icon | ((props: { focused: boolean }) => Icon);
-
-  /**
-   * Text to show in a badge on the tab icon.
-   */
-  tabBarBadge?: number | string;
-
-  /**
-   * Custom style for the tab bar badge.
-   * You can specify a background color or text color here.
-   * Only supported on Android.
-   */
-  tabBarBadgeStyle?: {
-    backgroundColor?: ColorValue;
-    color?: ColorValue;
-  };
-
-  /**
-   * Color for the icon and label in the active tab.
-   */
-  tabBarActiveTintColor?: ColorValue;
-
-  /**
-   * Color for the icon and label in the inactive tabs.
-   *
-   * @platform android
-   */
-  tabBarInactiveTintColor?: ColorValue;
-  /**
-   * Specifies the background color of the active indicator.
-   *
-   * @platform android
-   */
-  tabBarActiveIndicatorColor?: ColorValue;
-  /**
-   * Specifies if the active indicator should be used. Defaults to `true`.
-   *
-   * @platform android
-   */
-  tabBarActiveIndicatorEnabled?: boolean;
-  /**
-   * Specifies the color of each tab bar item's ripple effect.
-   *
-   * @platform android
-   */
-  tabBarRippleColor?: ColorValue;
-
-  /**
-   * Style object for the tab bar container.
-   */
-  tabBarStyle?: {
+export type ExperimentalBottomTabNavigationOptions =
+  NativeHeaderNavigationOptions & {
     /**
-     * Background color of the tab bar.
-     *
-     * Only supported on Android and iOS 18 and below.
+     * Title text for the screen.
      */
-    backgroundColor?: ColorValue;
+    title?: string;
+
     /**
-     * Shadow color of the tab bar.
+     * Uses iOS built-in tab bar items with standard iOS styling and localized titles.
+     * If set to `search`, it's positioned next to the tab bar on iOS 26 and above.
      *
-     * Only supported on iOS 18 and below.
+     * The `tabBarIcon` and `tabBarLabel` options will override the icon and label from the system item.
+     * If you want to keep the system behavior on iOS, but need to provide icon and label for other platforms,
+     * Use `Platform.OS`  or `Platform.select`  to conditionally set `undefined` for `tabBarIcon` and `tabBarLabel` on iOS.
+     *
+     * @platform ios
      */
-    shadowColor?: ColorValue;
+    tabBarSystemItem?: BottomTabsSystemItem;
+
+    /**
+     * Title string of a tab displayed in the tab bar
+     *
+     * Overrides the label provided by `tabBarSystemItem` on iOS.
+     *
+     * If not provided, or set to `undefined`:
+     * - The system values are used if `tabBarSystemItem` is set on iOS.
+     * - Otherwise, it falls back to the `title` or route name.
+     */
+    tabBarLabel?: string;
+
+    /**
+     * Style object for the tab label.
+     */
+    tabBarLabelStyle?: Pick<
+      TextStyle,
+      'fontFamily' | 'fontSize' | 'fontWeight' | 'fontStyle'
+    >;
+
+    /**
+     * Icon to display for the tab.
+     * Showing a different icon for focused tab is only supported on iOS.
+     *
+     * Overrides the icon provided by `tabBarSystemItem` on iOS.
+     */
+    tabBarIcon?: Icon | ((props: { focused: boolean }) => Icon);
+
+    /**
+     * Text to show in a badge on the tab icon.
+     */
+    tabBarBadge?: number | string;
+
+    /**
+     * Custom style for the tab bar badge.
+     * You can specify a background color or text color here.
+     * Only supported on Android.
+     */
+    tabBarBadgeStyle?: {
+      backgroundColor?: ColorValue;
+      color?: ColorValue;
+    };
+
+    /**
+     * Color for the icon and label in the active tab.
+     */
+    tabBarActiveTintColor?: ColorValue;
+
+    /**
+     * Color for the icon and label in the inactive tabs.
+     *
+     * @platform android
+     */
+    tabBarInactiveTintColor?: ColorValue;
+    /**
+     * Specifies the background color of the active indicator.
+     *
+     * @platform android
+     */
+    tabBarActiveIndicatorColor?: ColorValue;
+    /**
+     * Specifies if the active indicator should be used. Defaults to `true`.
+     *
+     * @platform android
+     */
+    tabBarActiveIndicatorEnabled?: boolean;
+    /**
+     * Specifies the color of each tab bar item's ripple effect.
+     *
+     * @platform android
+     */
+    tabBarRippleColor?: ColorValue;
+
+    /**
+     * Style object for the tab bar container.
+     */
+    tabBarStyle?: {
+      /**
+       * Background color of the tab bar.
+       *
+       * Only supported on Android and iOS 18 and below.
+       */
+      backgroundColor?: ColorValue;
+      /**
+       * Shadow color of the tab bar.
+       *
+       * Only supported on iOS 18 and below.
+       */
+      shadowColor?: ColorValue;
+    };
+
+    /**
+     * Whether this screens should render the first time it's accessed. Defaults to `true`.
+     * Set it to `false` if you want to render the screen on initial render.
+     */
+    lazy?: boolean;
+
+    /**
+     * Function that given returns a React Element to display as a header.
+     */
+    header?: (props: ExperimentalBottomTabHeaderProps) => React.ReactNode;
+
+    /**
+     * Whether to show the header. Setting this to `false` hides the header.
+     * Defaults to `true`.
+     */
+    headerShown?: boolean;
+
+    /**
+     * Whether any nested stack should be popped to top when navigating away from the tab.
+     * Defaults to `false`.
+     */
+    popToTopOnBlur?: boolean;
+
+    /**
+     * Specifies the label visibility mode for the tab bar items.
+     *
+     * The following values are currently supported:
+     *
+     * - `automatic` - the system decides when to show or hide labels
+     * - `selected` - labels are shown only for the selected tab
+     * - `labeled` - labels are always shown
+     * - `unlabeled` - labels are never shown
+     *
+     * @platform android
+     */
+    tabBarLabelVisibilityMode?: TabBarItemLabelVisibilityMode;
+
+    /**
+     * Specifies the display mode for the tab bar.
+     *
+     * Available starting from iOS 18.
+     * Not supported on tvOS.
+     *
+     * The following values are currently supported:
+     *
+     * - `automatic` - the system sets the display mode based on the tab’s content
+     * - `tabBar` - the system displays the content only as a tab bar
+     * - `tabSidebar` - the tab bar is displayed as a sidebar
+     *
+     * See the official documentation for more details:
+     * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/mode|UITabBarController.Mode}
+     *
+     * @default Defaults to `automatic`.
+     *
+     * @platform ios
+     * @supported iOS 18 or higher, not supported on tvOS
+     */
+    tabBarControllerMode?: TabBarControllerMode;
+    /**
+     * Specifies the minimize behavior for the tab bar.
+     *
+     * The following values are currently supported:
+     *
+     * - `automatic` - resolves to the system default minimize behavior
+     * - `never` - the tab bar does not minimize
+     * - `onScrollDown` - the tab bar minimizes when scrolling down and
+     *   expands when scrolling back up
+     * - `onScrollUp` - the tab bar minimizes when scrolling up and expands
+     *   when scrolling back down
+     *
+     * The supported values correspond to the official UIKit documentation:
+     * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/minimizebehavior|UITabBarController.MinimizeBehavior}
+     *
+     * @platform ios
+     * @supported iOS 26 or higher
+     */
+    tabBarMinimizeBehavior?: TabBarMinimizeBehavior;
   };
-
-  /**
-   * Whether this screens should render the first time it's accessed. Defaults to `true`.
-   * Set it to `false` if you want to render the screen on initial render.
-   */
-  lazy?: boolean;
-
-  /**
-   * Whether any nested stack should be popped to top when navigating away from the tab.
-   * Defaults to `false`.
-   */
-  popToTopOnBlur?: boolean;
-
-  /**
-   * Specifies the label visibility mode for the tab bar items.
-   *
-   * The following values are currently supported:
-   *
-   * - `automatic` - the system decides when to show or hide labels
-   * - `selected` - labels are shown only for the selected tab
-   * - `labeled` - labels are always shown
-   * - `unlabeled` - labels are never shown
-   *
-   * @platform android
-   */
-  tabBarLabelVisibilityMode?: TabBarItemLabelVisibilityMode;
-
-  /**
-   * Specifies the display mode for the tab bar.
-   *
-   * Available starting from iOS 18.
-   * Not supported on tvOS.
-   *
-   * The following values are currently supported:
-   *
-   * - `automatic` - the system sets the display mode based on the tab’s content
-   * - `tabBar` - the system displays the content only as a tab bar
-   * - `tabSidebar` - the tab bar is displayed as a sidebar
-   *
-   * See the official documentation for more details:
-   * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/mode|UITabBarController.Mode}
-   *
-   * @default Defaults to `automatic`.
-   *
-   * @platform ios
-   * @supported iOS 18 or higher, not supported on tvOS
-   */
-  tabBarControllerMode?: TabBarControllerMode;
-  /**
-   * Specifies the minimize behavior for the tab bar.
-   *
-   * The following values are currently supported:
-   *
-   * - `automatic` - resolves to the system default minimize behavior
-   * - `never` - the tab bar does not minimize
-   * - `onScrollDown` - the tab bar minimizes when scrolling down and
-   *   expands when scrolling back up
-   * - `onScrollUp` - the tab bar minimizes when scrolling up and expands
-   *   when scrolling back down
-   *
-   * The supported values correspond to the official UIKit documentation:
-   * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/minimizebehavior|UITabBarController.MinimizeBehavior}
-   *
-   * @platform ios
-   * @supported iOS 26 or higher
-   */
-  tabBarMinimizeBehavior?: TabBarMinimizeBehavior;
-};
 
 export type ExperimentalBottomTabDescriptor = Descriptor<
   ExperimentalBottomTabNavigationOptions,
@@ -338,3 +352,18 @@ export type ExperimentalBottomTabNavigationHelpers = NavigationHelpers<
   ExperimentalBottomTabNavigationEventMap
 > &
   TabActionHelpers<ParamListBase>;
+
+export type ExperimentalBottomTabHeaderProps = {
+  /**
+   * Options for the current screen.
+   */
+  options: ExperimentalBottomTabNavigationOptions;
+  /**
+   * Route object for the current screen.
+   */
+  route: RouteProp<ParamListBase>;
+  /**
+   * Navigation prop for the header.
+   */
+  navigation: ExperimentalBottomTabNavigationProp<ParamListBase>;
+};

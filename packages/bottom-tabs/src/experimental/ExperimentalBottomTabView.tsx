@@ -1,4 +1,9 @@
-import { Color, getLabel } from '@react-navigation/elements';
+import {
+  Color,
+  getLabel,
+  useHeaderConfig,
+  useHeaderConfigProp,
+} from '@react-navigation/elements';
 import {
   CommonActions,
   type ParamListBase,
@@ -7,15 +12,18 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform, PlatformColor } from 'react-native';
+import { Platform, PlatformColor, StyleSheet } from 'react-native';
 import {
   BottomTabs,
   BottomTabsScreen,
   type BottomTabsScreenItemStateAppearance,
   type PlatformIcon,
+  ScreenStack,
+  ScreenStackItem,
 } from 'react-native-screens';
 
 import type {
+  ExperimentalBottomTabDescriptor,
   ExperimentalBottomTabDescriptorMap,
   ExperimentalBottomTabNavigationConfig,
   ExperimentalBottomTabNavigationHelpers,
@@ -26,6 +34,57 @@ type Props = ExperimentalBottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
   navigation: ExperimentalBottomTabNavigationHelpers;
   descriptors: ExperimentalBottomTabDescriptorMap;
+};
+
+const SceneView = ({
+  lazy,
+  loaded,
+  isFocused,
+  isPreloaded,
+  descriptor,
+}: {
+  lazy: boolean;
+  loaded: boolean;
+  isFocused: boolean;
+  isPreloaded: boolean;
+  descriptor: ExperimentalBottomTabDescriptor;
+}) => {
+  const { header, headerShown } = descriptor.options;
+
+  const {
+    onHeaderHeightChange,
+    headerHeight,
+    headerTopInsetEnabled,
+    HeaderProvider,
+  } = useHeaderConfig({
+    isModal: false,
+    options: descriptor.options,
+    renderCustomHeader: header ? () => header(descriptor) : null,
+  });
+
+  const headerConfig = useHeaderConfigProp({
+    ...descriptor.options,
+    route: descriptor.route,
+    headerBackButtonMenuEnabled: false, // TODO: support this
+    headerBackTitle: undefined,
+    headerHeight,
+    headerShown: header !== undefined ? false : headerShown,
+    headerTopInsetEnabled,
+    headerBack: undefined,
+  });
+
+  // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
+  return lazy && !loaded && !isFocused && !isPreloaded ? null : (
+    <ScreenStack style={StyleSheet.absoluteFill}>
+      <ScreenStackItem
+        screenId={descriptor.route.key}
+        headerConfig={headerConfig}
+        onHeaderHeightChange={onHeaderHeightChange}
+      >
+        <HeaderProvider>{descriptor.render()}</HeaderProvider>
+      </ScreenStackItem>
+    </ScreenStack>
+  );
 };
 
 export function ExperimentalBottomTabView({
@@ -250,12 +309,19 @@ export function ExperimentalBottomTabView({
               },
             }}
           >
-            {
-              // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
-              lazy && !loaded.includes(route.key) && !isFocused && !isPreloaded
-                ? null
-                : descriptors[route.key].render()
-            }
+            {/*{*/}
+            {/*  // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded*/}
+            {/*  lazy && !loaded.includes(route.key) && !isFocused && !isPreloaded*/}
+            {/*    ? null*/}
+            {/*    : descriptors[route.key].render()*/}
+            {/*}*/}
+            <SceneView
+              lazy={lazy}
+              loaded={loaded.includes(route.key)}
+              descriptor={descriptors[route.key]}
+              isFocused={isFocused}
+              isPreloaded={isPreloaded}
+            />
           </BottomTabsScreen>
         );
       })}

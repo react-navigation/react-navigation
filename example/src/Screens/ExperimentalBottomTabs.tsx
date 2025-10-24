@@ -5,6 +5,8 @@ import {
 } from '@react-navigation/bottom-tabs';
 import {
   Button,
+  HeaderButton,
+  type NativeStackHeaderItem,
   PlatformPressable,
   useHeaderHeight,
 } from '@react-navigation/elements';
@@ -29,8 +31,10 @@ import iconHeart from '../../assets/icons/heart.png';
 import iconListMusic from '../../assets/icons/list-music.png';
 import iconMusic from '../../assets/icons/music.png';
 import iconNewspaper from '../../assets/icons/newspaper.png';
+import userRoundPlus from '../../assets/icons/user-round-plus.png';
 import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
+import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
 import { NativeStack, type NativeStackParams } from './NativeStack';
 
@@ -102,7 +106,7 @@ export function ExperimentalBottomTabs() {
       <Tab.Navigator backBehavior="fullHistory">
         <Tab.Screen
           name="TabStack"
-          component={NativeStack}
+          component={Article}
           options={{
             popToTopOnBlur: true,
             title: 'Article',
@@ -131,22 +135,149 @@ export function ExperimentalBottomTabs() {
             tabBarBadge: route.params?.count,
           })}
         />
+        {/*<Tab.Screen*/}
+        {/*  name="TabAlbums"*/}
+        {/*  component={AlbumsScreen}*/}
+        {/*  options={{*/}
+        {/*    title: 'Albums',*/}
+        {/*    tabBarIcon: ({ focused }) => ({*/}
+        {/*      type: 'image',*/}
+        {/*      source: focused ? iconListMusic : iconMusic,*/}
+        {/*    }),*/}
+        {/*    tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.7)',*/}
+        {/*    tabBarActiveTintColor: '#fff',*/}
+        {/*    tabBarStyle: {*/}
+        {/*      backgroundColor: 'rgba(0, 0, 0, 0.8)',*/}
+        {/*    },*/}
+        {/*  }}*/}
+        {/*/>*/}
         <Tab.Screen
           name="TabAlbums"
           component={AlbumsScreen}
-          options={{
-            title: 'Albums',
-            tabBarIcon: ({ focused }) => ({
-              type: 'image',
-              source: focused ? iconListMusic : iconMusic,
-            }),
-            tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.7)',
-            tabBarActiveTintColor: '#fff',
-            tabBarStyle: {
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            },
+          options={({ navigation }) => {
+            const leftItems: NativeStackHeaderItem[] = [
+              {
+                type: 'button',
+                label: 'Back',
+                onPress: () => navigation.goBack(),
+              },
+            ];
+
+            const rightItems: NativeStackHeaderItem[] = [
+              {
+                type: 'button',
+                label: 'Follow',
+                icon: {
+                  type: 'image',
+                  source: userRoundPlus,
+                },
+                onPress: () => Alert.alert('Follow button pressed'),
+              },
+              {
+                type: 'button',
+                label: 'Favorite',
+                icon: {
+                  type: 'sfSymbol',
+                  name: 'heart',
+                },
+                onPress: () => Alert.alert('Favorite button pressed'),
+              },
+              {
+                type: 'menu',
+                label: 'Options',
+                icon: {
+                  type: 'sfSymbol',
+                  name: 'ellipsis',
+                },
+                badge: {
+                  value: 3,
+                },
+                menu: {
+                  title: 'Article options',
+                  items: [
+                    {
+                      type: 'action',
+                      label: 'Share',
+                      onPress: () => Alert.alert('Share pressed'),
+                    },
+                    {
+                      type: 'action',
+                      label: 'Delete',
+                      destructive: true,
+                      onPress: () => Alert.alert('Delete pressed'),
+                    },
+                    {
+                      type: 'action',
+                      label: 'Report',
+                      destructive: true,
+                      onPress: () => Alert.alert('Report pressed'),
+                    },
+                    {
+                      type: 'submenu',
+                      label: 'View history',
+                      items: [
+                        {
+                          type: 'action',
+                          label: 'Version 1.0',
+                          icon: {
+                            type: 'sfSymbol',
+                            name: 'checkmark',
+                          },
+                          onPress: () => Alert.alert('View version 1.0'),
+                        },
+                        {
+                          type: 'action',
+                          label: 'Version 0.9',
+                          onPress: () => Alert.alert('View version 0.9'),
+                        },
+                      ],
+                    },
+                  ],
+                },
+              },
+              {
+                type: 'custom',
+                element: (
+                  <HeaderButton onPress={() => Alert.alert('Info pressed')}>
+                    <MaterialCommunityIcons
+                      name="information-outline"
+                      size={28}
+                    />
+                  </HeaderButton>
+                ),
+              },
+            ];
+
+            return {
+              title: 'Albums',
+              tabBarIcon: ({ focused }) => ({
+                type: 'image',
+                source: focused ? iconListMusic : iconMusic,
+              }),
+              tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.7)',
+              tabBarActiveTintColor: '#fff',
+              tabBarStyle: {
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              },
+              headerLargeTitle: true,
+              headerLargeTitleShadowVisible: false,
+              headerRight: ({ tintColor }) => (
+                <HeaderButton
+                  onPress={() => Alert.alert('Favorite button pressed')}
+                >
+                  <MaterialCommunityIcons
+                    name="heart"
+                    size={24}
+                    color={tintColor}
+                  />
+                </HeaderButton>
+              ),
+              unstable_headerLeftItems: () => leftItems,
+              unstable_headerRightItems: () => rightItems,
+            };
           }}
         />
+
         <Tab.Screen
           name="TabExtra"
           options={{

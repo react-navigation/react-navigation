@@ -1,4 +1,5 @@
 import {
+  AnimatedHeaderHeightContext,
   getHeaderTitle,
   Header,
   HeaderBackButton,
@@ -21,7 +22,6 @@ import type {
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
 } from '../types';
-import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 
 type Props = {
   state: StackNavigationState<ParamListBase>;
@@ -38,6 +38,27 @@ const TRANSPARENT_PRESENTATIONS = [
   'transparentModal',
   'containedTransparentModal',
 ];
+
+const AnimatedHeaderHeightProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const headerHeight = useHeaderHeight();
+  const [animatedHeaderHeight] = React.useState(
+    () => new Animated.Value(headerHeight)
+  );
+
+  React.useEffect(() => {
+    animatedHeaderHeight.setValue(headerHeight);
+  }, [animatedHeaderHeight, headerHeight]);
+
+  return (
+    <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+      {children}
+    </AnimatedHeaderHeightContext.Provider>
+  );
+};
 
 export function NativeStackView({ state, descriptors, describe }: Props) {
   const parentHeaderBack = React.useContext(HeaderBackContext);
@@ -180,27 +201,6 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
     </SafeAreaProviderCompat>
   );
 }
-
-const AnimatedHeaderHeightProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const headerHeight = useHeaderHeight();
-  const [animatedHeaderHeight] = React.useState(
-    () => new Animated.Value(headerHeight)
-  );
-
-  React.useEffect(() => {
-    animatedHeaderHeight.setValue(headerHeight);
-  }, [animatedHeaderHeight, headerHeight]);
-
-  return (
-    <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
-      {children}
-    </AnimatedHeaderHeightContext.Provider>
-  );
-};
 
 const styles = StyleSheet.create({
   contentContainer: {

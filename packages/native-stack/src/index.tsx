@@ -11,11 +11,19 @@ export { NativeStackView } from './views/NativeStackView';
 /**
  * Hooks
  */
-export { useAnimatedHeaderHeight } from './utils/useAnimatedHeaderHeight';
+export { useAnimatedHeaderHeight } from '@react-navigation/elements';
 
 /**
  * Types
  */
+export type {
+  NativeStackNavigationEventMap,
+  NativeStackNavigationOptions,
+  NativeStackNavigationProp,
+  NativeStackNavigatorProps,
+  NativeStackOptionsArgs,
+  NativeStackScreenProps,
+} from './types';
 export type {
   NativeStackHeaderBackProps,
   NativeStackHeaderItem,
@@ -29,10 +37,4 @@ export type {
   NativeStackHeaderLeftProps,
   NativeStackHeaderProps,
   NativeStackHeaderRightProps,
-  NativeStackNavigationEventMap,
-  NativeStackNavigationOptions,
-  NativeStackNavigationProp,
-  NativeStackNavigatorProps,
-  NativeStackOptionsArgs,
-  NativeStackScreenProps,
-} from './types';
+} from '@react-navigation/elements';
