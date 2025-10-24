@@ -57,6 +57,7 @@ const SceneView = ({
     headerTopInsetEnabled,
     HeaderProvider,
   } = useHeaderConfig({
+    headerShown: headerShown !== false,
     isModal: false,
     options: descriptor.options,
     renderCustomHeader: header ? () => header(descriptor) : null,
@@ -68,16 +69,17 @@ const SceneView = ({
     headerBackButtonMenuEnabled: false, // TODO: support this
     headerBackTitle: undefined,
     headerHeight,
-    headerShown: header !== undefined ? false : headerShown,
+    headerShown: header !== undefined ? false : headerShown !== false,
     headerTopInsetEnabled,
     headerBack: undefined,
   });
 
   // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
   return lazy && !loaded && !isFocused && !isPreloaded ? null : (
-    <ScreenStack style={StyleSheet.absoluteFill}>
+    <ScreenStack style={styles.container}>
       <ScreenStackItem
         screenId={descriptor.route.key}
+        style={StyleSheet.absoluteFill}
         headerConfig={headerConfig}
         onHeaderHeightChange={onHeaderHeightChange}
       >
@@ -350,3 +352,9 @@ function getPlatformIcon(icon: Icon): PlatformIcon {
         : undefined,
   } as const;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

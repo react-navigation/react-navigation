@@ -26,8 +26,10 @@ export const useHeaderConfig = ({
   isModal,
   renderCustomHeader,
   options,
+  headerShown,
 }: {
   isModal: boolean;
+  headerShown: boolean;
   renderCustomHeader: null | (() => React.ReactNode);
   options: NativeHeaderNavigationOptions;
 }) => {
@@ -153,11 +155,7 @@ export const useHeaderConfig = ({
       ({ children }: { children: ReactNode }) => (
         <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
           <HeaderHeightContext.Provider
-            value={
-              options.headerShown !== false
-                ? headerHeight
-                : (parentHeaderHeight ?? 0)
-            }
+            value={headerShown ? headerHeight : (parentHeaderHeight ?? 0)}
           >
             {options.headerBackground != null ? (
               /**
@@ -174,7 +172,7 @@ export const useHeaderConfig = ({
                 {options.headerBackground()}
               </View>
             ) : null}
-            {hasCustomHeader != null && options.headerShown !== false ? (
+            {hasCustomHeader != null && headerShown ? (
               <View
                 onLayout={(e) => {
                   const headerHeight = e.nativeEvent.layout.height;
@@ -191,7 +189,7 @@ export const useHeaderConfig = ({
               </View>
             ) : null}
             <HeaderShownContext.Provider
-              value={isParentHeaderShown || options.headerShown !== false}
+              value={isParentHeaderShown || headerShown}
             >
               {children}
             </HeaderShownContext.Provider>
@@ -207,6 +205,7 @@ export const useHeaderConfig = ({
       parentHeaderHeight,
       rawAnimatedHeaderHeight,
       renderCustomHeader,
+      headerShown,
     ]
   );
   return {

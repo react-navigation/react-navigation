@@ -180,6 +180,7 @@ const SceneView = ({
   } = useHeaderConfig({
     isModal,
     options,
+    headerShown: options.headerShown !== false,
     renderCustomHeader: header
       ? () =>
           header({

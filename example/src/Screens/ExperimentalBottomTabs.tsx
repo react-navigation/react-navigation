@@ -110,6 +110,7 @@ export function ExperimentalBottomTabs() {
           options={{
             popToTopOnBlur: true,
             title: 'Article',
+            headerShown: false,
             tabBarIcon: {
               type: 'image',
               source: iconNewspaper,
@@ -135,22 +136,6 @@ export function ExperimentalBottomTabs() {
             tabBarBadge: route.params?.count,
           })}
         />
-        {/*<Tab.Screen*/}
-        {/*  name="TabAlbums"*/}
-        {/*  component={AlbumsScreen}*/}
-        {/*  options={{*/}
-        {/*    title: 'Albums',*/}
-        {/*    tabBarIcon: ({ focused }) => ({*/}
-        {/*      type: 'image',*/}
-        {/*      source: focused ? iconListMusic : iconMusic,*/}
-        {/*    }),*/}
-        {/*    tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.7)',*/}
-        {/*    tabBarActiveTintColor: '#fff',*/}
-        {/*    tabBarStyle: {*/}
-        {/*      backgroundColor: 'rgba(0, 0, 0, 0.8)',*/}
-        {/*    },*/}
-        {/*  }}*/}
-        {/*/>*/}
         <Tab.Screen
           name="TabAlbums"
           component={AlbumsScreen}
