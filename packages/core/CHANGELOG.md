@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.13.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.12.4...@react-navigation/core@7.13.0) (2025-10-27)
+
+### Features
+
+* restore unhandled state after route names change ([#12812](https://github.com/react-navigation/react-navigation/issues/12812)) ([d773976](https://github.com/react-navigation/react-navigation/commit/d7739761e9d93b66226747d35afdd7bc60b12655)) - by @
+
 ## [7.12.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.12.3...@react-navigation/core@7.12.4) (2025-08-02)
 
 ### Bug Fixes

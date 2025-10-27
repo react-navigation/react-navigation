@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.5.0...@react-navigation/bottom-tabs@7.6.0) (2025-10-27)
+
+### Features
+
+* restore unhandled state after route names change ([#12812](https://github.com/react-navigation/react-navigation/issues/12812)) ([d773976](https://github.com/react-navigation/react-navigation/commit/d7739761e9d93b66226747d35afdd7bc60b12655)) - by @
+
 # [7.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.4.9...@react-navigation/bottom-tabs@7.5.0) (2025-10-22)
 
 ### Features
