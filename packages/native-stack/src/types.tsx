@@ -476,9 +476,14 @@ export type NativeStackNavigationOptions = {
    */
   animationMatchesGesture?: boolean;
   /**
-   * Whether the gesture to dismiss should work on the whole screen. Using gesture to dismiss with this option results in the same
-   * transition animation as `simple_push`. This behavior can be changed by setting `animationMatchesGesture` prop. Achieving the
-   * default iOS animation isn't possible due to platform limitations. Defaults to `false`.
+   * Whether the gesture to dismiss should work on the whole screen. The behavior depends on iOS version.
+
+   * For iOS prior to 26, swiping with this option results in the same transition animation as `simple_push` by default.
+   * It can be changed to other custom animations with `customAnimationOnSwipe` prop, but default iOS swipe animation
+   * is not achievable due to usage of custom recognizer.
+   *
+   * For iOS 26 and up, native `interactiveContentPopGestureRecognizer` is used, and this prop controls whether it should
+   * be enabled or not.
    *
    * Doesn't affect the behavior of screens presented modally.
    *
@@ -491,6 +496,9 @@ export type NativeStackNavigationOptions = {
    * default iOS shadow. Defaults to `true`.
    *
    * This does not affect the behavior of transitions that don't use gestures, enabled by `fullScreenGestureEnabled` prop.
+   *
+   * @deprecated since iOS 26, full screen swipe is handled by native recognizer, and this prop is ignored. We still fallback
+   * to the legacy implementation when handling custom animations, but we assume `true` for shadows.
    *
    * @platform ios
    */
