@@ -3,5 +3,40 @@ name: Auth Flow
 ---
 - openLink:
     link: exp://127.0.0.1:8081/--/auth-flow
+- extendedWaitUntil:
+    visible: 'Welcome'
+    timeout: 60000
+- tapOn:
+    text: 'Sign in'
+- assertVisible:
+    text: 'Home'
+- tapOn:
+    text: 'Go to Chat'
+- assertVisible:
+    text: 'Chat'
+- tapOn:
+    text: 'Sign out'
 - assertVisible:
     text: 'Sign in'
+- openLink:
+    link: exp://127.0.0.1:8081/--/auth-flow/profile
+- assertVisible:
+    text: 'Welcome'
+- tapOn:
+    text: 'Sign in'
+- assertVisible:
+    text: 'This is your profile'
+- tapOn:
+    text: 'Go to Chat'
+- assertVisible:
+    text: 'Chat'
+- tapOn:
+    text: 'Sign out'
+- assertVisible:
+    text: 'Sign in'
+- openLink:
+    link: exp://127.0.0.1:8081/--/auth-flow
+- tapOn:
+    text: 'Sign in'
+- assertVisible:
+    text: 'Home'
