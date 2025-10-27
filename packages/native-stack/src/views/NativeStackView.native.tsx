@@ -104,6 +104,7 @@ const SceneView = ({
   const {
     animationDuration,
     animationTypeForReplace = 'push',
+    backgroundComponent,
     fullScreenGestureShadowEnabled = true,
     gestureEnabled,
     gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
@@ -281,6 +282,7 @@ const SceneView = ({
           activityState={isPreloaded ? 0 : 2}
           style={StyleSheet.absoluteFill}
           aria-hidden={!focused}
+          backgroundComponent={backgroundComponent}
           customAnimationOnSwipe={animationMatchesGesture}
           fullScreenSwipeEnabled={fullScreenGestureEnabled}
           fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
