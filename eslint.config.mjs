@@ -43,7 +43,10 @@ export default defineConfig([
       'no-restricted-imports': [
         'error',
         {
-          patterns: ['@react-navigation/*/*'],
+          patterns: [
+            '@react-navigation/*/*',
+            '!@react-navigation/bottom-tabs/unstable',
+          ],
 
           paths: [
             {

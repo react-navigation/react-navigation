@@ -1723,8 +1723,8 @@ __metadata:
   linkType: hard
 
 "@babel/register@npm:^7.27.1":
-  version: 7.28.3
-  resolution: "@babel/register@npm:7.28.3"
+  version: 7.27.1
+  resolution: "@babel/register@npm:7.27.1"
   dependencies:
     clone-deep: "npm:^4.0.1"
     find-cache-dir: "npm:^2.0.0"
@@ -1733,7 +1733,7 @@ __metadata:
     source-map-support: "npm:^0.5.16"
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 10c0/ff31870a24e862fca36d5c481eda40be610af215a922560834333a78000b0e159a209dae606d4d93d7456d35ea8caeaaea674cdeaa0c0362e7e30d7f095d2436
+  checksum: 10c0/9584f6c5d980aa7eb6f56f56dfc12fa01a47ab11d542908192cb455a5249d489ab24efcd5de7c1b8be0fb47cd5594e4ee5652c58ba9b857fb81e783541c6a0ff
   languageName: node
   linkType: hard
 
@@ -4577,6 +4577,7 @@ __metadata:
     react-native-safe-area-context: "npm:~5.6.0"
     react-native-screens: "npm:^4.18.0"
     react-test-renderer: "npm:19.1.0"
+    sf-symbols-typescript: "npm:^2.1.0"
     typescript: "npm:^5.9.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
@@ -4738,7 +4739,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-native-edge-to-edge: "npm:^1.6.1"
     react-native-gesture-handler: "npm:~2.28.0"
-    react-native-monorepo-config: "npm:^0.1.10"
+    react-native-monorepo-config: "npm:^0.3.0"
     react-native-pager-view: "npm:6.9.1"
     react-native-reanimated: "npm:~4.1.1"
     react-native-safe-area-context: "npm:~5.6.0"
@@ -7546,9 +7547,9 @@ __metadata:
   linkType: hard
 
 "core-js@npm:^3.30.2":
-  version: 3.45.1
-  resolution: "core-js@npm:3.45.1"
-  checksum: 10c0/c38e5fae5a05ee3a129c45e10056aafe61dbb15fd35d27e0c289f5490387541c89741185e0aeb61acb558559c6697e016c245cca738fa169a73f2b06cd30e6b6
+  version: 3.43.0
+  resolution: "core-js@npm:3.43.0"
+  checksum: 10c0/9d4ad66296e60380777de51d019b5c3e6cce023b7999750a5094f9a4b0ea53bf3600beb4ef11c56548f2c8791d43d4056e270d1cf55ba87273011aa7d4597871
   languageName: node
   linkType: hard
 
@@ -14329,16 +14330,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-monorepo-config@npm:^0.1.10":
-  version: 0.1.10
-  resolution: "react-native-monorepo-config@npm:0.1.10"
-  dependencies:
-    escape-string-regexp: "npm:^5.0.0"
-    fast-glob: "npm:^3.3.3"
-  checksum: 10c0/fa88a725b4fe65443291fba746cccf2a3732defe6c8e1f7aab532b8345feac2b34af7fe17a28a96d30c7b9520f0f99e42962069ef8eb31acc4d33e7aa3b68a83
-  languageName: node
-  linkType: hard
-
 "react-native-monorepo-config@npm:^0.1.8":
   version: 0.1.9
   resolution: "react-native-monorepo-config@npm:0.1.9"
@@ -14346,6 +14337,16 @@ __metadata:
     escape-string-regexp: "npm:^5.0.0"
     fast-glob: "npm:^3.3.3"
   checksum: 10c0/7bff1eca0184008d145c7faa2b0556cca786d0afaf46b8ecd1d828aa5ceec3fb940223ee3db5147c16cc607c9785940fe3b4a52ac0d855f2e1d4c97d096a5635
+  languageName: node
+  linkType: hard
+
+"react-native-monorepo-config@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "react-native-monorepo-config@npm:0.3.0"
+  dependencies:
+    escape-string-regexp: "npm:^5.0.0"
+    fast-glob: "npm:^3.3.3"
+  checksum: 10c0/547e00eb0e48e321cec644134590cdac8000c45e7816ac346eb7c8f8e399b3add14aafef8c9e609052f3da9972f5232a895122b6507194bea14ad09b4c4b1182
   languageName: node
   linkType: hard
 
