@@ -22,6 +22,7 @@ export { HeaderTitle } from './Header/HeaderTitle';
 export { useHeaderHeight } from './Header/useHeaderHeight';
 export { getLabel } from './Label/getLabel';
 export { Label } from './Label/Label';
+export { Lazy } from './Lazy';
 export { MissingIcon } from './MissingIcon';
 export { PlatformPressable } from './PlatformPressable';
 export { SafeAreaProviderCompat } from './SafeAreaProviderCompat';
