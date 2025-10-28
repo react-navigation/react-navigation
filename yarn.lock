@@ -4682,7 +4682,6 @@ __metadata:
     react: "npm:19.1.0"
     react-native: "npm:0.81.4"
     react-native-builder-bob: "npm:^0.40.12"
-    react-native-screens: "npm:^4.18.0"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.2.4"
@@ -4693,7 +4692,6 @@ __metadata:
     react: ">= 19.0.0"
     react-native: "*"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.0.0"
   peerDependenciesMeta:
     "@react-native-masked-view/masked-view":
       optional: true

@@ -1,3 +1,9 @@
+import {
+  getDefaultHeaderHeight,
+  HeaderHeightContext,
+  HeaderShownContext,
+  useFrameSize,
+} from '@react-navigation/elements';
 import * as React from 'react';
 import {
   Animated,
@@ -8,31 +14,29 @@ import {
   View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { ScreenStack, ScreenStackItem } from 'react-native-screens';
 
-import { getDefaultHeaderHeight } from '../Header/getDefaultHeaderHeight';
-import { HeaderHeightContext } from '../Header/HeaderHeightContext';
-import { HeaderShownContext } from '../Header/HeaderShownContext';
-import { useFrameSize } from '../useFrameSize';
+import type { ExperimentalBottomTabHeaderProps } from '../types';
 import { debounce } from './debounce';
-import type { NativeHeaderNavigationOptions } from './types';
 import { AnimatedHeaderHeightContext } from './useAnimatedHeaderHeight';
+import { useHeaderConfig } from './useHeaderConfig';
 
-const useNativeDriver = Platform.OS !== 'web';
+type Props = ExperimentalBottomTabHeaderProps & {
+  route: { key: string };
+  children: React.ReactNode;
+};
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
 
-export const useHeaderConfig = ({
-  isModal,
-  renderCustomHeader,
-  options,
-  headerShown,
-}: {
-  isModal: boolean;
-  headerShown: boolean;
-  renderCustomHeader: null | (() => React.ReactNode);
-  options: NativeHeaderNavigationOptions;
-}) => {
-  const hasCustomHeader = renderCustomHeader != null;
+export function NativeScreen({ route, navigation, options, children }: Props) {
+  const {
+    headerShown = true,
+    headerTransparent,
+    headerBackground,
+    header: renderCustomHeader,
+  } = options;
+
+  const isModal = false;
   const insets = useSafeAreaInsets();
 
   // Modals are fullscreen in landscape only on iPhone
@@ -73,6 +77,8 @@ export const useHeaderConfig = ({
     []
   );
 
+  const hasCustomHeader = renderCustomHeader != null;
+
   let headerHeightCorrectionOffset = 0;
 
   if (Platform.OS === 'android' && !hasCustomHeader) {
@@ -106,7 +112,7 @@ export const useHeaderConfig = ({
       },
     ],
     {
-      useNativeDriver,
+      useNativeDriver: true,
       listener: (e) => {
         if (hasCustomHeader) {
           // If we have a custom header, don't use native header height
@@ -148,65 +154,71 @@ export const useHeaderConfig = ({
     }
   );
 
-  // should this be useMemo?
-  const renderHeaderProvider = (children: React.ReactNode) => (
-    <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
-      <HeaderHeightContext.Provider
-        value={headerShown ? headerHeight : (parentHeaderHeight ?? 0)}
-      >
-        {options.headerBackground != null ? (
-          /**
-           * To show a custom header background, we render it at the top of the screen below the header
-           * The header also needs to be positioned absolutely (with `translucent` style)
-           */
-          <View
-            style={[
-              styles.background,
-              options.headerTransparent ? styles.translucent : null,
-              { height: headerHeight },
-            ]}
-          >
-            {options.headerBackground()}
-          </View>
-        ) : null}
-        {hasCustomHeader != null && headerShown ? (
-          <View
-            onLayout={(e) => {
-              const headerHeight = e.nativeEvent.layout.height;
-
-              setHeaderHeight(headerHeight);
-              rawAnimatedHeaderHeight.setValue(headerHeight);
-            }}
-            style={[
-              styles.header,
-              options.headerTransparent ? styles.absolute : null,
-            ]}
-          >
-            {renderCustomHeader?.()}
-          </View>
-        ) : null}
-        <HeaderShownContext.Provider value={isParentHeaderShown || headerShown}>
-          {children}
-        </HeaderShownContext.Provider>
-      </HeaderHeightContext.Provider>
-    </AnimatedHeaderHeightContext.Provider>
-  );
-
-  // , [
-  //   animatedHeaderHeight,
-  //   // headerHeight,
-  //   isParentHeaderShown,
-  //   options,
-  //   parentHeaderHeight,
-  //   headerShown,
-  // ]);
-  return {
-    onHeaderHeightChange,
-    headerTopInsetEnabled,
+  const headerConfig = useHeaderConfig({
+    ...options,
+    route,
     headerHeight,
-    renderHeaderProvider,
-  };
-};
+    headerShown: hasCustomHeader ? false : headerShown === true,
+    headerTopInsetEnabled,
+  });
+
+  return (
+    <ScreenStack style={styles.container}>
+      <ScreenStackItem
+        screenId={route.key}
+        headerConfig={headerConfig}
+        onHeaderHeightChange={onHeaderHeightChange}
+      >
+        <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+          <HeaderHeightContext.Provider
+            value={headerShown ? headerHeight : (parentHeaderHeight ?? 0)}
+          >
+            {headerBackground != null ? (
+              /**
+               * To show a custom header background, we render it at the top of the screen below the header
+               * The header also needs to be positioned absolutely (with `translucent` style)
+               */
+              <View
+                style={[
+                  styles.background,
+                  headerTransparent ? styles.translucent : null,
+                  { height: headerHeight },
+                ]}
+              >
+                {headerBackground()}
+              </View>
+            ) : null}
+            {hasCustomHeader && headerShown ? (
+              <View
+                onLayout={(e) => {
+                  const headerHeight = e.nativeEvent.layout.height;
+
+                  setHeaderHeight(headerHeight);
+                  rawAnimatedHeaderHeight.setValue(headerHeight);
+                }}
+                style={[
+                  styles.header,
+                  headerTransparent ? styles.absolute : null,
+                ]}
+              >
+                {renderCustomHeader?.({
+                  route,
+                  navigation,
+                  options,
+                })}
+              </View>
+            ) : null}
+            <HeaderShownContext.Provider
+              value={isParentHeaderShown || headerShown}
+            >
+              {children}
+            </HeaderShownContext.Provider>
+          </HeaderHeightContext.Provider>
+        </AnimatedHeaderHeightContext.Provider>
+      </ScreenStackItem>
+    </ScreenStack>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {

@@ -1,4 +1,4 @@
-import type { Route } from '@react-navigation/native';
+import * as React from 'react';
 import type {
   ColorValue,
   ImageSourcePropType,
@@ -11,50 +11,13 @@ import type {
 } from 'react-native-screens';
 import type { SFSymbol } from 'sf-symbols-typescript';
 
-export type NativeHeaderNavigationOptions = {
+import type { ExperimentalBottomTabHeaderProps } from '../types';
+
+export type NativeHeaderOptions = {
   /**
    * String that can be displayed in the header as a fallback for `headerTitle`.
    */
   title?: string;
-  /**
-   * Whether the back button is visible in the header.
-   * You can use it to show a back button alongside `headerLeft` if you have specified it.
-   *
-   * This will have no effect on the first screen in the stack.
-   */
-  headerBackVisible?: boolean;
-  /**
-   * Title string used by the back button on iOS.
-   * Defaults to the previous scene's title.
-   * On iOS the text might be shortened to "Back" or arrow icon depending on the available space, following native iOS behaviour.
-   * See `headerBackButtonDisplayMode` to read about limitations and interactions with other props.
-   * Use `headerBackButtonDisplayMode: "minimal"` to hide it.
-   *
-   * Only supported on iOS and Web.
-   *
-   * @platform ios, web
-   */
-  headerBackTitle?: string;
-  /**
-   * Style object for header back title. Supported properties:
-   * - fontFamily
-   * - fontSize
-   *
-   * Only supported on iOS and Web.
-   *
-   * @platform ios, web
-   */
-  headerBackTitleStyle?: StyleProp<{
-    fontFamily?: string;
-    fontSize?: number;
-  }>;
-  /**
-   * Image to display in the header as the icon in the back button.
-   * Defaults to back icon image for the platform
-   * - A chevron on iOS
-   * - An arrow on Android
-   */
-  headerBackImageSource?: ImageSourcePropType;
   /**
    * Style of the header when a large title is shown.
    * The large title is shown if `headerLargeTitle` is `true` and
@@ -108,27 +71,25 @@ export type NativeHeaderNavigationOptions = {
     color?: ColorValue;
   }>;
   /**
-   * Whether to show the header. The header is shown by default.
-   * Setting this to `false` hides the header.
-   */
-  headerShown?: boolean;
-  /**
    * Style object for header. Supported properties:
    * - backgroundColor
    */
   headerStyle?: StyleProp<{
     backgroundColor?: ColorValue;
   }>;
+
   /**
    * Whether to hide the elevation shadow (Android) or the bottom border (iOS) on the header.
    */
   headerShadowVisible?: boolean;
+
   /**
    * Boolean indicating whether the navigation bar is translucent.
    * Setting this to `true` makes the header absolutely positioned,
    * and changes the background color to `transparent` unless specified in `headerStyle`.
    */
   headerTransparent?: boolean;
+
   /**
    * Blur effect for the translucent header.
    * The `headerTransparent` option needs to be set to `true` for this to work.
@@ -138,27 +99,32 @@ export type NativeHeaderNavigationOptions = {
    * @platform ios
    */
   headerBlurEffect?: ScreenStackHeaderConfigProps['blurEffect'];
+
   /**
    * Tint color for the header. Changes the color of back button and title.
    */
   headerTintColor?: ColorValue;
+
   /**
    * Function which returns a React Element to render as the background of the header.
    * This is useful for using backgrounds such as an image, a gradient, blur effect etc.
    * You can use this with `headerTransparent` to render content underneath a translucent header.
    */
   headerBackground?: () => React.ReactNode;
+
   /**
    * Function which returns a React Element to display on the left side of the header.
    * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
    * Will be overriden by `headerLeftItems` on iOS.
    */
-  headerLeft?: (props: NativeStackHeaderBackProps) => React.ReactNode;
+  headerLeft?: (props: NativeScreenHeaderItemProps) => React.ReactNode;
+
   /**
    * Function which returns a React Element to display on the right side of the header.
    * Will be overriden by `headerRightItems` on iOS.
    */
-  headerRight?: (props: NativeStackHeaderItemProps) => React.ReactNode;
+  headerRight?: (props: NativeScreenHeaderItemProps) => React.ReactNode;
+
   /**
    * Function which returns an array of items to display as on the left side of the header.
    * Overrides `headerLeft`.
@@ -168,8 +134,9 @@ export type NativeHeaderNavigationOptions = {
    * @platform ios
    */
   unstable_headerLeftItems?: (
-    props: NativeStackHeaderItemProps
-  ) => NativeStackHeaderItem[];
+    props: NativeScreenHeaderItemProps
+  ) => NativeScreenHeaderItem[];
+
   /**
    * Function which returns an array of items to display as on the right side of the header.
    * Overrides `headerRight`.
@@ -179,8 +146,9 @@ export type NativeHeaderNavigationOptions = {
    * @platform ios
    */
   unstable_headerRightItems?: (
-    props: NativeStackHeaderItemProps
-  ) => NativeStackHeaderItem[];
+    props: NativeScreenHeaderItemProps
+  ) => NativeScreenHeaderItem[];
+
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
@@ -202,6 +170,7 @@ export type NativeHeaderNavigationOptions = {
          */
         tintColor?: ColorValue;
       }) => React.ReactNode);
+
   /**
    * How to align the the header title.
    * Defaults to `left` on platforms other than iOS.
@@ -209,6 +178,7 @@ export type NativeHeaderNavigationOptions = {
    * Not supported on iOS. It's always `center` on iOS and cannot be changed.
    */
   headerTitleAlign?: 'left' | 'center';
+
   /**
    * Style object for header title. Supported properties:
    * - fontFamily
@@ -221,113 +191,37 @@ export type NativeHeaderNavigationOptions = {
       color?: ColorValue;
     }
   >;
+
   /**
    * Options to render a native search bar.
    * You also need to specify `contentInsetAdjustmentBehavior="automatic"` in your `ScrollView`, `FlatList` etc.
    * If you don't have a `ScrollView`, specify `headerTransparent: false`.
    */
   headerSearchBarOptions?: SearchBarProps;
+
   /**
-   * Boolean indicating whether to show the menu on longPress of iOS >= 14 back button. Defaults to `true`.
-   * Requires `react-native-screens` version >=3.3.0.
-   *
-   * Only supported on iOS.
-   *
-   * @platform ios
+   * Whether to show the header. Setting this to `false` hides the header.
+   * Defaults to `true`.
    */
-  headerBackButtonMenuEnabled?: boolean;
+  headerShown?: boolean;
+
   /**
-   * How the back button displays icon and title.
-   *
-   * Supported values:
-   * - "default" - Displays one of the following depending on the available space: previous screen's title, generic title (e.g. 'Back') or no title (only icon).
-   * - "generic" – Displays one of the following depending on the available space: generic title (e.g. 'Back') or no title (only icon).
-   * - "minimal" – Always displays only the icon without a title.
-   *
-   * The space-aware behavior is disabled when:
-   * - The iOS version is 13 or lower
-   * - Custom font family or size is set (e.g. with `headerBackTitleStyle`)
-   * - Back button menu is disabled (e.g. with `headerBackButtonMenuEnabled`)
-   *
-   * In such cases, a static title and icon are always displayed.
-   *
-   * Defaults to "default" on iOS, and "minimal" on other platforms.
-   *
-   * Only supported on iOS and Web.
-   *
-   * @platform ios, web
+   * Function that given returns a React Element to display as a header.
    */
-  headerBackButtonDisplayMode?: ScreenStackHeaderConfigProps['backButtonDisplayMode'];
+  header?: (props: ExperimentalBottomTabHeaderProps) => React.ReactNode;
 };
 
-export type NativeStackHeaderProps<
-  NativeStackNavigationOptions extends NativeHeaderNavigationOptions,
-  NativeStackNavigationProp,
-> = {
-  /**
-   * Options for the back button.
-   */
-  back?: {
-    /**
-     * Title of the previous screen.
-     */
-    title: string | undefined;
-    /**
-     * The `href` to use for the anchor tag on web
-     */
-    href: string | undefined;
-  };
-  /**
-   * Options for the current screen.
-   */
-  options: NativeStackNavigationOptions;
-  /**
-   * Route object for the current screen.
-   */
-  route: Route<string>;
-  /**
-   * Navigation prop for the header.
-   */
-  navigation: NativeStackNavigationProp;
-};
-
-export type NativeStackHeaderItemProps = {
+export type NativeScreenHeaderItemProps = {
   /**
    * Tint color for the header.
    */
   tintColor?: ColorValue;
-  /**
-   * Whether it's possible to navigate back in stack.
-   */
-  canGoBack?: boolean;
 };
-
-export type NativeStackHeaderBackProps = NativeStackHeaderItemProps & {
-  /**
-   * Label text for the button. Usually the title of the previous screen.
-   * By default, this is only shown on iOS 18.
-   */
-  label?: string;
-  /**
-   * The `href` to use for the anchor tag on web
-   */
-  href?: string;
-};
-
-/**
- * @deprecated Use `NativeStackHeaderBackProps` instead.
- */
-export type NativeStackHeaderLeftProps = NativeStackHeaderBackProps;
-
-/**
- * @deprecated Use `NativeStackHeaderItemProps` instead.
- */
-export type NativeStackHeaderRightProps = NativeStackHeaderItemProps;
 
 /**
  * A button item in the header.
  */
-export type NativeStackHeaderItemButton = SharedHeaderItem & {
+export type NativeScreenHeaderItemButton = SharedHeaderItem & {
   /**
    * Type of the item.
    */
@@ -347,7 +241,7 @@ export type NativeStackHeaderItemButton = SharedHeaderItem & {
 /**
  * An action item in a menu.
  */
-export type NativeStackHeaderItemMenuAction = {
+export type NativeScreenHeaderItemMenuAction = {
   type: 'action';
   /**
    * Label for the menu item.
@@ -405,7 +299,7 @@ export type NativeStackHeaderItemMenuAction = {
 /**
  * A submenu item that contains other menu items.
  */
-export type NativeStackHeaderItemMenuSubmenu = {
+export type NativeScreenHeaderItemMenuSubmenu = {
   type: 'submenu';
   /**
    * Label for the submenu item.
@@ -418,13 +312,13 @@ export type NativeStackHeaderItemMenuSubmenu = {
   /**
    * Array of menu items (actions or submenus).
    */
-  items: NativeStackHeaderItemMenu['menu']['items'];
+  items: NativeScreenHeaderItemMenu['menu']['items'];
 };
 
 /**
  * An item that shows a menu when pressed.
  */
-export type NativeStackHeaderItemMenu = SharedHeaderItem & {
+export type NativeScreenHeaderItemMenu = SharedHeaderItem & {
   type: 'menu';
   /**
    * Whether the menu is a selection menu.
@@ -445,8 +339,8 @@ export type NativeStackHeaderItemMenu = SharedHeaderItem & {
      * Array of menu items (actions or submenus).
      */
     items: (
-      | NativeStackHeaderItemMenuAction
-      | NativeStackHeaderItemMenuSubmenu
+      | NativeScreenHeaderItemMenuAction
+      | NativeScreenHeaderItemMenuSubmenu
     )[];
   };
 };
@@ -454,7 +348,7 @@ export type NativeStackHeaderItemMenu = SharedHeaderItem & {
 /**
  * An item to add spacing between other items in the header.
  */
-export type NativeStackHeaderItemSpacing = {
+export type NativeScreenHeaderItemSpacing = {
   type: 'spacing';
   /**
    * The amount of spacing to add.
@@ -465,7 +359,7 @@ export type NativeStackHeaderItemSpacing = {
 /**
  * A custom item to display any React Element in the header.
  */
-export type NativeStackHeaderItemCustom = {
+export type NativeScreenHeaderItemCustom = {
   type: 'custom';
   /**
    * A React Element to display as the item.
@@ -488,11 +382,11 @@ export type NativeStackHeaderItemCustom = {
  * if the items don't fit the available space, they will be collapsed into a menu automatically.
  * Items with `type: 'custom'` will not be included in this automatic collapsing behavior.
  */
-export type NativeStackHeaderItem =
-  | NativeStackHeaderItemButton
-  | NativeStackHeaderItemMenu
-  | NativeStackHeaderItemSpacing
-  | NativeStackHeaderItemCustom;
+export type NativeScreenHeaderItem =
+  | NativeScreenHeaderItemButton
+  | NativeScreenHeaderItemMenu
+  | NativeScreenHeaderItemSpacing
+  | NativeScreenHeaderItemCustom;
 
 type IconImage = {
   /**
