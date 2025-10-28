@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.7.1...@react-navigation/elements@2.8.0) (2025-10-28)
+
+### Features
+
+* add unstable native bottom tabs integration ([#12791](https://github.com/react-navigation/react-navigation/issues/12791)) ([e97db56](https://github.com/react-navigation/react-navigation/commit/e97db56c74414ce3dbc2d99d8cd0599f99ddad87)) - by @
+
 ## [2.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.7.0...@react-navigation/elements@2.7.1) (2025-10-27)
 
 **Note:** Version bump only for package @react-navigation/elements

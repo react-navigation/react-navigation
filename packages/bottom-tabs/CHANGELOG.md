@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.6.0...@react-navigation/bottom-tabs@7.7.0) (2025-10-28)
+
+### Features
+
+* add unstable native bottom tabs integration ([#12791](https://github.com/react-navigation/react-navigation/issues/12791)) ([e97db56](https://github.com/react-navigation/react-navigation/commit/e97db56c74414ce3dbc2d99d8cd0599f99ddad87)) - by @
+
 # [7.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.5.0...@react-navigation/bottom-tabs@7.6.0) (2025-10-27)
 
 ### Features
