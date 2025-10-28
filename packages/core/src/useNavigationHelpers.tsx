@@ -9,7 +9,6 @@ import * as React from 'react';
 
 import { NavigationContext } from './NavigationContext';
 import { type NavigationHelpers, PrivateValueStore } from './types';
-import { UnhandledActionContext } from './UnhandledActionContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
 // This is to make TypeScript compiler happy
@@ -19,6 +18,7 @@ PrivateValueStore;
 type Options<State extends NavigationState, Action extends NavigationAction> = {
   id: string | undefined;
   onAction: (action: NavigationAction) => boolean;
+  onUnhandledAction: (action: NavigationAction) => void;
   getState: () => State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
@@ -37,12 +37,12 @@ export function useNavigationHelpers<
 >({
   id: navigatorId,
   onAction,
+  onUnhandledAction,
   getState,
   emitter,
   router,
   stateRef,
 }: Options<State, Action>) {
-  const onUnhandledAction = React.useContext(UnhandledActionContext);
   const parentNavigationHelpers = React.useContext(NavigationContext);
 
   return React.useMemo(() => {

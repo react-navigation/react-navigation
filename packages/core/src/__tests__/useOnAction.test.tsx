@@ -513,8 +513,11 @@ test('logs error if no navigator handled the action', () => {
 
   render(element).update(element);
 
-  expect(spy.mock.calls[0][0]).toMatch(
-    "The action 'UNKNOWN' was not handled by any navigator."
+  expect(spy).toHaveBeenCalledTimes(1);
+  expect(spy).toHaveBeenCalledWith(
+    expect.stringContaining(
+      "The action 'UNKNOWN' was not handled by any navigator."
+    )
   );
 
   spy.mockRestore();
