@@ -57,7 +57,7 @@
     "nodemon": "^3.1.10",
     "npm-run-all2": "^8.0.4",
     "react-native-builder-bob": "^0.40.12",
-    "react-native-monorepo-config": "^0.1.9",
+    "react-native-monorepo-config": "^0.3.0",
     "react-test-renderer": "19.0.0",
     "serve": "^14.2.4",
     "typescript": "^5.8.3",

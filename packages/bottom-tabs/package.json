@@ -25,6 +25,11 @@
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
+    "./unstable": {
+      "source": "./src/unstable/index.tsx",
+      "types": "./lib/typescript/src/unstable/index.d.ts",
+      "default": "./lib/module/unstable/index.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -42,7 +47,8 @@
   },
   "dependencies": {
     "@react-navigation/elements": "^2.7.1",
-    "color": "^4.2.3"
+    "color": "^4.2.3",
+    "sf-symbols-typescript": "^2.1.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.0",

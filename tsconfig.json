@@ -2,6 +2,7 @@
   "compilerOptions": {
     "paths": {
       "@react-navigation/*": ["./packages/*/src"],
+      "@react-navigation/bottom-tabs/unstable": ["./packages/bottom-tabs/src/unstable"],
       "react-native-drawer-layout": ["./packages/react-native-drawer-layout/src"],
       "react-native-tab-view": ["./packages/react-native-tab-view/src"],
     },
