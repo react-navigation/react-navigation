@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.7.0...@react-navigation/bottom-tabs@7.7.1) (2025-10-28)
+
+### Bug Fixes
+
+* add missing options ([503aef2](https://github.com/react-navigation/react-navigation/commit/503aef21e349df5513a75173f4579fbdd1ecbc93)) - by @
+
 # [7.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.6.0...@react-navigation/bottom-tabs@7.7.0) (2025-10-28)
 
 ### Features
