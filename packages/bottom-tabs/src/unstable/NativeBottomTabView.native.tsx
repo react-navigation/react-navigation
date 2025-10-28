@@ -67,11 +67,6 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
   const currentOptions = descriptors[state.routes[state.index].key]?.options;
 
   const {
-    backgroundColor: tabBarBackgroundColor,
-    shadowColor: tabBarShadowColor,
-  } = currentOptions.tabBarStyle || {};
-
-  const {
     fontFamily = Platform.select({
       ios: fonts.medium.fontFamily,
       default: fonts.regular.fontFamily,
@@ -140,6 +135,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
         tabBarItemTitleFontWeight={fontWeight}
         tabBarItemTitleFontSize={fontSize}
         tabBarItemTitleFontSizeActive={fontSize}
+        tabBarItemTitleFontStyle={fontStyle}
         tabBarBackgroundColor={currentOptions.tabBarStyle?.backgroundColor}
         tabBarItemActiveIndicatorColor={activeIndicatorColor}
         tabBarItemActiveIndicatorEnabled={
@@ -187,7 +183,14 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
             tabBarIcon,
             tabBarBadge,
             tabBarSystemItem,
+            tabBarBlurEffect,
+            tabBarStyle,
           } = options;
+
+          const {
+            backgroundColor: tabBarBackgroundColor,
+            shadowColor: tabBarShadowColor,
+          } = tabBarStyle || {};
 
           const tabTitle =
             // On iOS, `systemItem` already provides a localized label
@@ -242,6 +245,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
               standardAppearance={{
                 tabBarBackgroundColor,
                 tabBarShadowColor,
+                tabBarBlurEffect,
                 stacked: {
                   normal: tabItemAppearance,
                 },
