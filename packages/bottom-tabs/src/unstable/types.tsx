@@ -13,6 +13,7 @@ import type {
 import type { ColorValue, ImageSourcePropType, TextStyle } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type {
+  BottomTabsScreenBlurEffect,
   BottomTabsSystemItem,
   TabBarControllerMode,
   TabBarItemLabelVisibilityMode,
@@ -140,7 +141,7 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
   tabBarSystemItem?: BottomTabsSystemItem;
 
   /**
-   * Title string of a tab displayed in the tab bar
+   * Title string of the tab displayed in the tab bar
    *
    * Overrides the label provided by `tabBarSystemItem` on iOS.
    *
@@ -149,6 +150,22 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    * - Otherwise, it falls back to the `title` or route name.
    */
   tabBarLabel?: string;
+
+  /**
+   * Label visibility mode for the tab bar items.
+   *
+   * The following values are currently supported:
+   *
+   * - `auto` - the system decides when to show or hide labels
+   * - `selected` - labels are shown only for the selected tab
+   * - `labeled` - labels are always shown
+   * - `unlabeled` - labels are never shown
+   *
+   * Defaults to `auto`.
+   *
+   * @platform android
+   */
+  tabBarLabelVisibilityMode?: TabBarItemLabelVisibilityMode;
 
   /**
    * Style object for the tab label.
@@ -160,6 +177,7 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
 
   /**
    * Icon to display for the tab.
+   *
    * Showing a different icon for focused tab is only supported on iOS.
    *
    * Overrides the icon provided by `tabBarSystemItem` on iOS.
@@ -174,7 +192,8 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
   /**
    * Custom style for the tab bar badge.
    * You can specify a background color or text color here.
-   * Only supported on Android.
+   *
+   * @platform android
    */
   tabBarBadgeStyle?: {
     backgroundColor?: ColorValue;
@@ -192,20 +211,23 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    * @platform android
    */
   tabBarInactiveTintColor?: ColorValue;
+
   /**
-   * Specifies the background color of the active indicator.
+   * Background color of the active indicator.
    *
    * @platform android
    */
   tabBarActiveIndicatorColor?: ColorValue;
+
   /**
    * Specifies if the active indicator should be used. Defaults to `true`.
    *
    * @platform android
    */
   tabBarActiveIndicatorEnabled?: boolean;
+
   /**
-   * Specifies the color of each tab bar item's ripple effect.
+   * Color of tab bar item's ripple effect.
    *
    * @platform android
    */
@@ -230,6 +252,71 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
   };
 
   /**
+   * Blur effect applied to the tab bar when tab screen is selected.
+   *
+   * Works with backgroundColor's alpha < 1.
+   *
+   * Only supported on iOS 18 and lower.
+   *
+   * The following values are currently supported:
+   *
+   * - `none` - disables blur effect
+   * - `systemDefault` - uses UIKit's default tab bar blur effect
+   * - one of styles mapped from UIKit's UIBlurEffectStyle, e.g. `systemUltraThinMaterial`
+   *
+   * Defaults to `systemDefault`.
+   *
+   * Complete list of possible blur effect styles is available in the official UIKit documentation:
+   * @see {@link https://developer.apple.com/documentation/uikit/uiblureffect/style|UIBlurEffect.Style}
+   *
+   * @platform ios
+   */
+  tabBarBlurEffect?: BottomTabsScreenBlurEffect;
+
+  /**
+   * Display mode for the tab bar.
+   *
+   * Available starting from iOS 18.
+   * Not supported on tvOS.
+   *
+   * The following values are currently supported:
+   *
+   * - `auto` - the system sets the display mode based on the tab’s content
+   * - `tabBar` - the system displays the content only as a tab bar
+   * - `tabSidebar` - the tab bar is displayed as a sidebar
+   *
+   * Defaults to `auto`.
+   *
+   * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/mode|UITabBarController.Mode}
+   *
+   * @platform ios
+   */
+  tabBarControllerMode?: TabBarControllerMode;
+
+  /**
+   * Minimize behavior for the tab bar.
+   *
+   * Available starting from iOS 26.
+   *
+   * The following values are currently supported:
+   *
+   * - `auto` - resolves to the system default minimize behavior
+   * - `never` - the tab bar does not minimize
+   * - `onScrollDown` - the tab bar minimizes when scrolling down and
+   *   expands when scrolling back up
+   * - `onScrollUp` - the tab bar minimizes when scrolling up and expands
+   *   when scrolling back down
+   *
+   * Defaults to `auto`.
+   *
+   * The supported values correspond to the official UIKit documentation:
+   * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/minimizebehavior|UITabBarController.MinimizeBehavior}
+   *
+   * @platform ios
+   */
+  tabBarMinimizeBehavior?: TabBarMinimizeBehavior;
+
+  /**
    * Whether this screens should render the first time it's accessed. Defaults to `true`.
    * Set it to `false` if you want to render the screen on initial render.
    */
@@ -240,61 +327,6 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    * Defaults to `false`.
    */
   popToTopOnBlur?: boolean;
-
-  /**
-   * Specifies the label visibility mode for the tab bar items.
-   *
-   * The following values are currently supported:
-   *
-   * - `automatic` - the system decides when to show or hide labels
-   * - `selected` - labels are shown only for the selected tab
-   * - `labeled` - labels are always shown
-   * - `unlabeled` - labels are never shown
-   *
-   * @platform android
-   */
-  tabBarLabelVisibilityMode?: TabBarItemLabelVisibilityMode;
-
-  /**
-   * Specifies the display mode for the tab bar.
-   *
-   * Available starting from iOS 18.
-   * Not supported on tvOS.
-   *
-   * The following values are currently supported:
-   *
-   * - `automatic` - the system sets the display mode based on the tab’s content
-   * - `tabBar` - the system displays the content only as a tab bar
-   * - `tabSidebar` - the tab bar is displayed as a sidebar
-   *
-   * See the official documentation for more details:
-   * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/mode|UITabBarController.Mode}
-   *
-   * @default Defaults to `automatic`.
-   *
-   * @platform ios
-   * @supported iOS 18 or higher, not supported on tvOS
-   */
-  tabBarControllerMode?: TabBarControllerMode;
-  /**
-   * Specifies the minimize behavior for the tab bar.
-   *
-   * The following values are currently supported:
-   *
-   * - `automatic` - resolves to the system default minimize behavior
-   * - `never` - the tab bar does not minimize
-   * - `onScrollDown` - the tab bar minimizes when scrolling down and
-   *   expands when scrolling back up
-   * - `onScrollUp` - the tab bar minimizes when scrolling up and expands
-   *   when scrolling back down
-   *
-   * The supported values correspond to the official UIKit documentation:
-   * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/minimizebehavior|UITabBarController.MinimizeBehavior}
-   *
-   * @platform ios
-   * @supported iOS 26 or higher
-   */
-  tabBarMinimizeBehavior?: TabBarMinimizeBehavior;
 };
 
 export type NativeBottomTabDescriptor = Descriptor<
