@@ -22,7 +22,6 @@ import { AnimatedHeaderHeightContext } from './useAnimatedHeaderHeight';
 import { useHeaderConfig } from './useHeaderConfig';
 
 type Props = NativeBottomTabHeaderProps & {
-  route: { key: string };
   children: React.ReactNode;
 };
 
