@@ -94,7 +94,7 @@ const Tab = createNativeBottomTabNavigator<NativeBottomTabParams>();
 
 export function NativeBottomTabs() {
   return (
-    <Tab.Navigator backBehavior="fullHistory">
+    <Tab.Navigator>
       <Tab.Screen
         name="TabStack"
         component={Article}
@@ -194,7 +194,7 @@ export function NativeBottomTabs() {
   );
 }
 
-NativeBottomTabs.title = 'Experimental Bottom Tabs';
+NativeBottomTabs.title = 'Native Bottom Tabs';
 NativeBottomTabs.linking = linking;
 
 const styles = StyleSheet.create({
