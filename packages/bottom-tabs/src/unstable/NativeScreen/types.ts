@@ -11,7 +11,7 @@ import type {
 } from 'react-native-screens';
 import type { SFSymbol } from 'sf-symbols-typescript';
 
-import type { ExperimentalBottomTabHeaderProps } from '../types';
+import type { NativeBottomTabHeaderProps } from '../types';
 
 export type NativeHeaderOptions = {
   /**
@@ -19,7 +19,7 @@ export type NativeHeaderOptions = {
    */
   title?: string;
   /**
-   * Style of the header when a large title is shown.
+   * Style of the header when a large title is shown
    * The large title is shown if `headerLargeTitle` is `true` and
    * the edge of any scrollable content reaches the matching edge of the header.
    *
@@ -208,7 +208,7 @@ export type NativeHeaderOptions = {
   /**
    * Function that given returns a React Element to display as a header.
    */
-  header?: (props: ExperimentalBottomTabHeaderProps) => React.ReactNode;
+  header?: (props: NativeBottomTabHeaderProps) => React.ReactNode;
 };
 
 export type NativeScreenHeaderItemProps = {

@@ -13,12 +13,12 @@ import {
 } from '@react-navigation/native';
 import * as React from 'react';
 
-import { ExperimentalBottomTabView } from './ExperimentalBottomTabView';
+import { NativeBottomTabView } from './NativeBottomTabView';
 import type {
-  ExperimentalBottomTabNavigationEventMap,
-  ExperimentalBottomTabNavigationOptions,
-  ExperimentalBottomTabNavigationProp,
-  ExperimentalBottomTabNavigatorProps,
+  NativeBottomTabNavigationEventMap,
+  NativeBottomTabNavigationOptions,
+  NativeBottomTabNavigationProp,
+  NativeBottomTabNavigatorProps,
 } from './types';
 
 function TabNavigator({
@@ -32,14 +32,14 @@ function TabNavigator({
   screenLayout,
   router,
   ...rest
-}: ExperimentalBottomTabNavigatorProps) {
+}: NativeBottomTabNavigatorProps) {
   const { state, navigation, descriptors, NavigationContent } =
     useNavigationBuilder<
       TabNavigationState<ParamListBase>,
       TabRouterOptions,
       TabActionHelpers<ParamListBase>,
-      ExperimentalBottomTabNavigationOptions,
-      ExperimentalBottomTabNavigationEventMap
+      NativeBottomTabNavigationOptions,
+      NativeBottomTabNavigationEventMap
     >(TabRouter, {
       id,
       initialRouteName,
@@ -80,7 +80,7 @@ function TabNavigator({
 
   return (
     <NavigationContent>
-      <ExperimentalBottomTabView
+      <NativeBottomTabView
         {...rest}
         state={state}
         navigation={navigation}
@@ -90,17 +90,17 @@ function TabNavigator({
   );
 }
 
-export function createExperimentalBottomTabNavigator<
+export function createNativeBottomTabNavigator<
   const ParamList extends ParamListBase,
   const NavigatorID extends string | undefined = undefined,
   const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
     NavigatorID: NavigatorID;
     State: TabNavigationState<ParamList>;
-    ScreenOptions: ExperimentalBottomTabNavigationOptions;
-    EventMap: ExperimentalBottomTabNavigationEventMap;
+    ScreenOptions: NativeBottomTabNavigationOptions;
+    EventMap: NativeBottomTabNavigationEventMap;
     NavigationList: {
-      [RouteName in keyof ParamList]: ExperimentalBottomTabNavigationProp<
+      [RouteName in keyof ParamList]: NativeBottomTabNavigationProp<
         ParamList,
         RouteName,
         NavigatorID

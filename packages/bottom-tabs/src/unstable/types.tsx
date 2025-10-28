@@ -24,7 +24,7 @@ import type { NativeHeaderOptions } from './NativeScreen/types';
 
 export type Layout = { width: number; height: number };
 
-export type ExperimentalBottomTabNavigationEventMap = {
+export type NativeBottomTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
    */
@@ -39,7 +39,7 @@ export type ExperimentalBottomTabNavigationEventMap = {
   transitionEnd: { data: { closing: boolean } };
 };
 
-export type ExperimentalBottomTabNavigationProp<
+export type NativeBottomTabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
   NavigatorID extends string | undefined = undefined,
@@ -48,29 +48,25 @@ export type ExperimentalBottomTabNavigationProp<
   RouteName,
   NavigatorID,
   TabNavigationState<ParamList>,
-  ExperimentalBottomTabNavigationOptions,
-  ExperimentalBottomTabNavigationEventMap
+  NativeBottomTabNavigationOptions,
+  NativeBottomTabNavigationEventMap
 > &
   TabActionHelpers<ParamList>;
 
-export type ExperimentalBottomTabScreenProps<
+export type NativeBottomTabScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
   NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: ExperimentalBottomTabNavigationProp<
-    ParamList,
-    RouteName,
-    NavigatorID
-  >;
+  navigation: NativeBottomTabNavigationProp<ParamList, RouteName, NavigatorID>;
   route: RouteProp<ParamList, RouteName>;
 };
 
-export type ExperimentalBottomTabOptionsArgs<
+export type NativeBottomTabOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
   NavigatorID extends string | undefined = undefined,
-> = ExperimentalBottomTabScreenProps<ParamList, RouteName, NavigatorID> & {
+> = NativeBottomTabScreenProps<ParamList, RouteName, NavigatorID> & {
   theme: Theme;
 };
 
@@ -125,7 +121,7 @@ type IconAndroid = IconAndroidDrawable | IconImage;
 
 export type Icon = IconIOS | IconAndroid;
 
-export type ExperimentalBottomTabNavigationOptions = NativeHeaderOptions & {
+export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
   /**
    * Title text for the screen.
    */
@@ -301,51 +297,51 @@ export type ExperimentalBottomTabNavigationOptions = NativeHeaderOptions & {
   tabBarMinimizeBehavior?: TabBarMinimizeBehavior;
 };
 
-export type ExperimentalBottomTabDescriptor = Descriptor<
-  ExperimentalBottomTabNavigationOptions,
-  ExperimentalBottomTabNavigationProp<ParamListBase>,
+export type NativeBottomTabDescriptor = Descriptor<
+  NativeBottomTabNavigationOptions,
+  NativeBottomTabNavigationProp<ParamListBase>,
   RouteProp<ParamListBase>
 >;
 
-export type ExperimentalBottomTabDescriptorMap = Record<
+export type NativeBottomTabDescriptorMap = Record<
   string,
-  ExperimentalBottomTabDescriptor
+  NativeBottomTabDescriptor
 >;
 
-export type ExperimentalBottomTabNavigationConfig = {};
+export type NativeBottomTabNavigationConfig = {};
 
-export type ExperimentalBottomTabBarProps = {
+export type NativeBottomTabBarProps = {
   state: TabNavigationState<ParamListBase>;
-  descriptors: ExperimentalBottomTabDescriptorMap;
+  descriptors: NativeBottomTabDescriptorMap;
   navigation: NavigationHelpers<
     ParamListBase,
-    ExperimentalBottomTabNavigationEventMap
+    NativeBottomTabNavigationEventMap
   >;
   insets: EdgeInsets;
 };
 
-export type ExperimentalBottomTabNavigatorProps = DefaultNavigatorOptions<
+export type NativeBottomTabNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
   string | undefined,
   TabNavigationState<ParamListBase>,
-  ExperimentalBottomTabNavigationOptions,
-  ExperimentalBottomTabNavigationEventMap,
-  ExperimentalBottomTabNavigationProp<ParamListBase>
+  NativeBottomTabNavigationOptions,
+  NativeBottomTabNavigationEventMap,
+  NativeBottomTabNavigationProp<ParamListBase>
 > &
   TabRouterOptions &
-  ExperimentalBottomTabNavigationConfig;
+  NativeBottomTabNavigationConfig;
 
-export type ExperimentalBottomTabNavigationHelpers = NavigationHelpers<
+export type NativeBottomTabNavigationHelpers = NavigationHelpers<
   ParamListBase,
-  ExperimentalBottomTabNavigationEventMap
+  NativeBottomTabNavigationEventMap
 > &
   TabActionHelpers<ParamListBase>;
 
-export type ExperimentalBottomTabHeaderProps = {
+export type NativeBottomTabHeaderProps = {
   /**
    * Options for the current screen.
    */
-  options: ExperimentalBottomTabNavigationOptions;
+  options: NativeBottomTabNavigationOptions;
   /**
    * Route object for the current screen.
    */
@@ -353,5 +349,5 @@ export type ExperimentalBottomTabHeaderProps = {
   /**
    * Navigation prop for the header.
    */
-  navigation: ExperimentalBottomTabNavigationProp<ParamListBase>;
+  navigation: NativeBottomTabNavigationProp<ParamListBase>;
 };

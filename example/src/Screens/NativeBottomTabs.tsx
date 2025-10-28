@@ -1,8 +1,8 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
-  type BottomTabScreenProps,
-  createExperimentalBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
+  createNativeBottomTabNavigator,
+  type NativeBottomTabScreenProps,
+} from '@react-navigation/bottom-tabs/unstable';
 import {
   Button,
   getHeaderTitle,
@@ -31,14 +31,14 @@ import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
 import { NativeStack, type NativeStackParams } from './NativeStack';
 
-export type ExperimentalBottomTabParams = {
+export type NativeBottomTabParams = {
   TabStack: NavigatorScreenParams<NativeStackParams>;
   TabAlbums: undefined;
   TabContacts: { count: number };
   TabExtra: undefined;
 };
 
-const linking: PathConfigMap<ExperimentalBottomTabParams> = {
+const linking: PathConfigMap<NativeBottomTabParams> = {
   TabStack: {
     path: 'stack',
     screens: NativeStack.linking,
@@ -50,7 +50,7 @@ const linking: PathConfigMap<ExperimentalBottomTabParams> = {
 const AlbumsScreen = () => {
   const navigation =
     useNavigation<
-      BottomTabScreenProps<ExperimentalBottomTabParams>['navigation']
+      NativeBottomTabScreenProps<NativeBottomTabParams>['navigation']
     >();
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
@@ -90,9 +90,9 @@ const AlbumsScreen = () => {
 
 let i = 1;
 
-const Tab = createExperimentalBottomTabNavigator<ExperimentalBottomTabParams>();
+const Tab = createNativeBottomTabNavigator<NativeBottomTabParams>();
 
-export function ExperimentalBottomTabs() {
+export function NativeBottomTabs() {
   return (
     <Tab.Navigator backBehavior="fullHistory">
       <Tab.Screen
@@ -194,8 +194,8 @@ export function ExperimentalBottomTabs() {
   );
 }
 
-ExperimentalBottomTabs.title = 'Experimental Bottom Tabs';
-ExperimentalBottomTabs.linking = linking;
+NativeBottomTabs.title = 'Experimental Bottom Tabs';
+NativeBottomTabs.linking = linking;
 
 const styles = StyleSheet.create({
   headerRight: {

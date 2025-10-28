@@ -23,23 +23,19 @@ import {
 
 import { NativeScreen } from './NativeScreen/NativeScreen';
 import type {
-  ExperimentalBottomTabDescriptorMap,
-  ExperimentalBottomTabNavigationConfig,
-  ExperimentalBottomTabNavigationHelpers,
   Icon,
+  NativeBottomTabDescriptorMap,
+  NativeBottomTabNavigationConfig,
+  NativeBottomTabNavigationHelpers,
 } from './types';
 
-type Props = ExperimentalBottomTabNavigationConfig & {
+type Props = NativeBottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
-  navigation: ExperimentalBottomTabNavigationHelpers;
-  descriptors: ExperimentalBottomTabDescriptorMap;
+  navigation: NativeBottomTabNavigationHelpers;
+  descriptors: NativeBottomTabDescriptorMap;
 };
 
-export function ExperimentalBottomTabView({
-  state,
-  navigation,
-  descriptors,
-}: Props) {
+export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
   const { colors, fonts } = useTheme();
 
   const focusedRouteKey = state.routes[state.index].key;

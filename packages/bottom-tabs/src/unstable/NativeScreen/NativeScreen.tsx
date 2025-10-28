@@ -16,12 +16,12 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenStack, ScreenStackItem } from 'react-native-screens';
 
-import type { ExperimentalBottomTabHeaderProps } from '../types';
+import type { NativeBottomTabHeaderProps } from '../types';
 import { debounce } from './debounce';
 import { AnimatedHeaderHeightContext } from './useAnimatedHeaderHeight';
 import { useHeaderConfig } from './useHeaderConfig';
 
-type Props = ExperimentalBottomTabHeaderProps & {
+type Props = NativeBottomTabHeaderProps & {
   route: { key: string };
   children: React.ReactNode;
 };
