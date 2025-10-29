@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.7.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.7.1...@react-navigation/bottom-tabs@7.7.2) (2025-10-29)
+
+### Bug Fixes
+
+* disable prevent default for native tabs ([bc5b2e1](https://github.com/react-navigation/react-navigation/commit/bc5b2e1868cc61e14ae379908cb4a8e2fa553b8e)) - by @satya164
+
 ## [7.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.7.0...@react-navigation/bottom-tabs@7.7.1) (2025-10-28)
 
 ### Bug Fixes
