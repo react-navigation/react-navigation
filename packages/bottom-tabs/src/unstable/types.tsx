@@ -29,7 +29,7 @@ export type NativeBottomTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
    */
-  tabPress: { data: undefined; canPreventDefault: true };
+  tabPress: { data: undefined; canPreventDefault: false };
   /**
    * Event which fires when a transition animation starts.
    */
