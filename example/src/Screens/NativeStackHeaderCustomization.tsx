@@ -164,7 +164,7 @@ export function NativeStackHeaderCustomization() {
           ),
           headerBackground: () => (
             <Image
-              source={require('../../assets/cpu.jpg')}
+              source={require('../../assets/misc/cpu.jpg')}
               resizeMode="cover"
               style={styles.headerBackground}
             />
