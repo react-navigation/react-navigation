@@ -35,7 +35,7 @@ export type NativeBottomTabParams = {
   TabStack: NavigatorScreenParams<NativeStackParams>;
   TabAlbums: undefined;
   TabContacts: { count: number };
-  TabExtra: undefined;
+  TabFavorites: undefined;
 };
 
 const linking: PathConfigMap<NativeBottomTabParams> = {
@@ -172,19 +172,14 @@ export function NativeBottomTabs() {
       />
 
       <Tab.Screen
-        name="TabExtra"
+        name="TabFavorites"
         options={{
+          title: 'Favorites',
           tabBarSystemItem: 'search',
           tabBarLabel: 'Favorites',
           tabBarIcon: {
             type: 'image',
             source: iconHeart,
-          },
-        }}
-        listeners={{
-          tabPress: (e) => {
-            e.preventDefault();
-            Alert.alert('Extra Action', 'Favorites pressed.');
           },
         }}
       >
