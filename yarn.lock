@@ -4609,7 +4609,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
-    use-latest-callback: "npm:^0.2.4"
+    use-latest-callback: "npm:^0.3.2"
     use-sync-external-store: "npm:^1.5.0"
   peerDependencies:
     react: ">= 19.0.0"
@@ -4655,7 +4655,7 @@ __metadata:
     react-native-screens: "npm:^4.18.0"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
-    use-latest-callback: "npm:^0.2.4"
+    use-latest-callback: "npm:^0.3.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
     react: ">= 19.0.0"
@@ -4684,7 +4684,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
-    use-latest-callback: "npm:^0.2.4"
+    use-latest-callback: "npm:^0.3.2"
     use-sync-external-store: "npm:^1.5.0"
   peerDependencies:
     "@react-native-masked-view/masked-view": ">= 0.2.0"
@@ -4828,7 +4828,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
-    use-latest-callback: "npm:^0.2.4"
+    use-latest-callback: "npm:^0.3.2"
   peerDependencies:
     react: ">= 19.0.0"
     react-native: "*"
@@ -4867,7 +4867,7 @@ __metadata:
     react-native-screens: "npm:^4.18.0"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
-    use-latest-callback: "npm:^0.2.4"
+    use-latest-callback: "npm:^0.3.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
     react: ">= 19.0.0"
@@ -14287,7 +14287,7 @@ __metadata:
     react-native: "npm:0.81.4"
     react-native-builder-bob: "npm:^0.40.12"
     typescript: "npm:^5.9.2"
-    use-latest-callback: "npm:^0.2.4"
+    use-latest-callback: "npm:^0.3.2"
   peerDependencies:
     react: ">= 19.0.0"
     react-native: "*"
@@ -14411,7 +14411,7 @@ __metadata:
     react-native-pager-view: "npm:6.9.1"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
-    use-latest-callback: "npm:^0.2.4"
+    use-latest-callback: "npm:^0.3.2"
   peerDependencies:
     react: ">= 19.0.0"
     react-native: "*"
@@ -16503,12 +16503,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-latest-callback@npm:^0.2.4":
-  version: 0.2.4
-  resolution: "use-latest-callback@npm:0.2.4"
+"use-latest-callback@npm:^0.3.2":
+  version: 0.3.2
+  resolution: "use-latest-callback@npm:0.3.2"
   peerDependencies:
     react: ">=16.8"
-  checksum: 10c0/dcdcb4849225638100f662c82ae44eaa7c635ea3a2419f521b45e7f36ede28a49b77f324fa008dccb840acd41a377c0ca8ab36cf4903ee746e96c41c86a9eeb5
+  checksum: 10c0/4cf833e47db8f62819af24065cc1597c1fa2a3f562fe2cf1c6142bc8bc578dfaeee512d9449735fd2b1737e01a7c1cdf5a16bffa8b9b338fb3e941a273130923
   languageName: node
   linkType: hard
 
