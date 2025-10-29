@@ -5,5 +5,39 @@ name: Auth Flow
 - openLink:
     link: ${APP_SCHEME}auth-flow
 - extendedWaitUntil:
-    visible: 'Sign in'
+    visible: 'Welcome'
     timeout: 60000
+- tapOn:
+    text: 'Sign in'
+- assertVisible:
+    text: 'Home'
+- tapOn:
+    text: 'Go to Chat'
+- assertVisible:
+    text: 'Chat'
+- tapOn:
+    text: 'Sign out'
+- assertVisible:
+    text: 'Sign in'
+- openLink:
+    link: ${APP_SCHEME}auth-flow/profile
+- assertVisible:
+    text: 'Welcome'
+- tapOn:
+    text: 'Sign in'
+- assertVisible:
+    text: 'This is your profile'
+- tapOn:
+    text: 'Go to Chat'
+- assertVisible:
+    text: 'Chat'
+- tapOn:
+    text: 'Sign out'
+- assertVisible:
+    text: 'Sign in'
+- openLink:
+    link: ${APP_SCHEME}auth-flow
+- tapOn:
+    text: 'Sign in'
+- assertVisible:
+    text: 'Home'
