@@ -142,24 +142,23 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
           currentOptions?.tabBarActiveIndicatorEnabled
         }
         tabBarItemRippleColor={currentOptions?.tabBarRippleColor}
-        experimentalControlNavigationStateInJS
+        experimentalControlNavigationStateInJS={false}
         onNativeFocusChange={(e) => {
           const route = state.routes.find(
             (route) => route.key === e.nativeEvent.tabKey
           );
 
           if (route) {
+            navigation.emit({
+              type: 'tabPress',
+              target: route.key,
+            });
+
             const isFocused =
               state.index ===
               state.routes.findIndex((r) => r.key === route.key);
 
-            const event = navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-              canPreventDefault: true,
-            });
-
-            if (!isFocused && !event.defaultPrevented) {
+            if (!isFocused) {
               React.startTransition(() => {
                 navigation.dispatch({
                   ...CommonActions.navigate(route.name, route.params),
