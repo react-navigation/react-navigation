@@ -1,9 +1,8 @@
 appId: ${APP_ID}
 name: Drawer View
 ---
-- stopApp
-- openLink:
-    link: ${APP_SCHEME}drawer-view
-- extendedWaitUntil:
-    visible: 'Drawer Layout'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: drawer-view
+      TEXT: 'Drawer Layout'

@@ -1,9 +1,8 @@
 appId: ${APP_ID}
 name: Tab Preload Flow
 ---
-- stopApp
-- openLink:
-    link: ${APP_SCHEME}tab-preload-flow
-- extendedWaitUntil:
-    visible: 'Home'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: tab-preload-flow
+      TEXT: 'Home'

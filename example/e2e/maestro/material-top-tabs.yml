@@ -1,9 +1,8 @@
 appId: ${APP_ID}
 name: Material Top Tabs
 ---
-- stopApp
-- openLink:
-    link: ${APP_SCHEME}material-top-tabs-screen
-- extendedWaitUntil:
-    visible: 'Material Top Tabs'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: material-top-tabs-screen
+      TEXT: 'Material Top Tabs'
