@@ -37,6 +37,7 @@ import * as React from 'react';
 import {
   Appearance,
   I18nManager,
+  Linking,
   Platform,
   ScrollView,
   Switch,
@@ -136,7 +137,6 @@ if (Platform.OS === 'web') {
 type ThemeName = 'light' | 'dark' | 'custom';
 
 type AppState = {
-  isPersistenceEnabled: boolean;
   isReady: boolean;
   themeName: ThemeName;
   isRTL: boolean;
@@ -157,10 +157,7 @@ type AppAction =
     };
 
 export function App() {
-  const [
-    { isReady, themeName, isRTL, initialState, isPersistenceEnabled },
-    dispatch,
-  ] = useAppState();
+  const [{ isReady, themeName, isRTL, initialState }, dispatch] = useAppState();
 
   const dimensions = useWindowDimensions();
 
@@ -198,12 +195,10 @@ export function App() {
           SplashScreen.hideAsync();
         }}
         onStateChange={(state) => {
-          if (isPersistenceEnabled) {
-            AsyncStorage.setItem(
-              NAVIGATION_PERSISTENCE_KEY,
-              JSON.stringify(state)
-            );
-          }
+          AsyncStorage.setItem(
+            NAVIGATION_PERSISTENCE_KEY,
+            JSON.stringify(state)
+          );
         }}
         theme={theme}
         direction={isRTL ? 'rtl' : 'ltr'}
@@ -340,12 +335,10 @@ const useAppState = () => {
           return {
             ...state,
             isReady: true,
-            isPersistenceEnabled: true,
           };
         case 'RESTORE_SUCCESS':
           return {
             isReady: true,
-            isPersistenceEnabled: true,
             themeName: action.payload.themeName,
             isRTL: action.payload.isRTL,
             initialState: action.payload.navigationState,
@@ -359,7 +352,6 @@ const useAppState = () => {
       }
     },
     {
-      isPersistenceEnabled: true,
       themeName: 'custom',
       isRTL: previousDirection === 'rtl',
       isReady: Platform.OS === 'web',
@@ -370,34 +362,43 @@ const useAppState = () => {
   React.useEffect(() => {
     const restoreState = async () => {
       try {
-        const savedState =
-          // On web, we always use browser URL
-          Platform.OS !== 'web'
-            ? await AsyncStorage.getItem(NAVIGATION_PERSISTENCE_KEY)
-            : undefined;
+        const initialUrl =
+          Platform.OS !== 'web' ? await Linking.getInitialURL() : null;
 
-        const savedThemeName = await AsyncStorage.getItem(
-          THEME_PERSISTENCE_KEY
-        );
+        // Only restore state if there's no initial URL
+        // This avoids breaking opening with deep links
+        if (initialUrl == null) {
+          const savedState =
+            // On web, we always use browser URL
+            Platform.OS !== 'web'
+              ? await AsyncStorage.getItem(NAVIGATION_PERSISTENCE_KEY)
+              : undefined;
 
-        const savedDirection =
-          Platform.OS !== 'web'
-            ? await AsyncStorage.getItem(DIRECTION_PERSISTENCE_KEY)
-            : undefined;
+          const savedThemeName = await AsyncStorage.getItem(
+            THEME_PERSISTENCE_KEY
+          );
 
-        dispatch({
-          type: 'RESTORE_SUCCESS',
-          payload: {
-            themeName:
-              savedThemeName === 'dark'
-                ? 'dark'
-                : savedThemeName === 'light'
-                  ? 'light'
-                  : 'custom',
-            isRTL: savedDirection === 'rtl',
-            navigationState: savedState ? JSON.parse(savedState) : undefined,
-          },
-        });
+          const savedDirection =
+            Platform.OS !== 'web'
+              ? await AsyncStorage.getItem(DIRECTION_PERSISTENCE_KEY)
+              : undefined;
+
+          dispatch({
+            type: 'RESTORE_SUCCESS',
+            payload: {
+              themeName:
+                savedThemeName === 'dark'
+                  ? 'dark'
+                  : savedThemeName === 'light'
+                    ? 'light'
+                    : 'custom',
+              isRTL: savedDirection === 'rtl',
+              navigationState: savedState ? JSON.parse(savedState) : undefined,
+            },
+          });
+        } else {
+          dispatch({ type: 'RESTORE_FAILURE' });
+        }
       } catch (e) {
         dispatch({ type: 'RESTORE_FAILURE' });
       }
@@ -411,9 +412,7 @@ const useAppState = () => {
       return;
     }
 
-    if (state.isPersistenceEnabled) {
-      AsyncStorage.setItem(THEME_PERSISTENCE_KEY, state.themeName);
-    }
+    AsyncStorage.setItem(THEME_PERSISTENCE_KEY, state.themeName);
 
     const colorScheme = state.themeName === 'dark' ? 'dark' : 'light';
 
@@ -422,7 +421,7 @@ const useAppState = () => {
     } else {
       Appearance.setColorScheme(colorScheme);
     }
-  }, [state.isPersistenceEnabled, state.isReady, state.themeName]);
+  }, [state.isReady, state.themeName]);
 
   React.useEffect(() => {
     if (!state.isReady) {
@@ -431,9 +430,7 @@ const useAppState = () => {
 
     const direction = state.isRTL ? 'rtl' : 'ltr';
 
-    if (state.isPersistenceEnabled) {
-      AsyncStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
-    }
+    AsyncStorage.setItem(DIRECTION_PERSISTENCE_KEY, direction);
 
     if (Platform.OS === 'web') {
       document.documentElement.dir = direction;
@@ -447,7 +444,7 @@ const useAppState = () => {
         reloadAsync();
       }
     }
-  }, [state.isPersistenceEnabled, state.isRTL, state.isReady]);
+  }, [state.isRTL, state.isReady]);
 
   return [state, dispatch] as const;
 };
