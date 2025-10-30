@@ -579,8 +579,17 @@ export type NativeStackNavigationOptions = {
    */
   animation?: ScreenProps['stackAnimation'];
   /**
-   * Changes the duration (in milliseconds) of `slide_from_bottom`, `fade_from_bottom`, `fade` and `simple_push` transitions on iOS. Defaults to `500`.
-   * The duration of `default` and `flip` transitions isn't customizable.
+   * Duration (in milliseconds) for the following transition animations on iOS:
+   * - `slide_from_bottom`
+   * - `fade_from_bottom`
+   * - `fade`
+   * - `simple_push`
+   *
+   * Defaults to `500`.
+   *
+   * The duration is not customizable for:
+   * - Screens with `default` and `flip` animations
+   * - Screens with `presentation` set to `modal`, `formSheet`, `pageSheet` (regardless of animation)
    *
    * @platform ios
    */
