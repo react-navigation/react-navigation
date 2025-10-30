@@ -483,8 +483,7 @@ export type NativeStackNavigationOptions = {
    * with `animation` & `animationMatchesGesture` props, but default iOS swipe animation is not achievable.
    *
    * On iOS 26 and up:
-   * `true` by default. Swipe gesture will use the new [contentPopGestureRecognizer](https://developer.apple.com/documentation/uikit/uinavigationcontroller/interactivecontentpopgesturerecognizer)
-   * introduced in iOS 26 if possible. Set the prop to `false` to match iOS 18 default behavior.
+   * `true` by default to match new native behavior. You can still customize it with `animation` & `animationMatchesGesture` props.
    *
    * Doesn't affect the behavior of screens presented modally.
    *
@@ -492,14 +491,13 @@ export type NativeStackNavigationOptions = {
    */
   fullScreenGestureEnabled?: boolean;
   /**
-   * Whether the full screen dismiss gesture has shadow under view during transition. The gesture uses custom transition and thus
-   * doesn't have a shadow by default. When enabled, a custom shadow view is added during the transition which tries to mimic the
-   * default iOS shadow. Defaults to `true`.
+   * iOS 18 and below. Controls whether the full screen dismiss gesture has shadow under view during transition.
+   * The gesture uses custom transition and thus doesn't have a shadow by default. When enabled, a custom shadow view
+   * is added during the transition which tries to mimic the default iOS shadow. Defaults to `true`.
    *
    * This does not affect the behavior of transitions that don't use gestures, enabled by `fullScreenGestureEnabled` prop.
    *
-   * @deprecated since iOS 26, full screen swipe is handled by native recognizer, and this prop is ignored. We still fallback
-   * to the legacy implementation when handling custom animations, but we assume `true` for shadows.
+   * @deprecated since iOS 26.
    *
    * @platform ios
    */
