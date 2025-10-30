@@ -476,9 +476,14 @@ export type NativeStackNavigationOptions = {
    */
   animationMatchesGesture?: boolean;
   /**
-   * Whether the gesture to dismiss should work on the whole screen. Using gesture to dismiss with this option results in the same
-   * transition animation as `simple_push`. This behavior can be changed by setting `animationMatchesGesture` prop. Achieving the
-   * default iOS animation isn't possible due to platform limitations. Defaults to `false`.
+   * Whether the gesture to dismiss should work on the whole screen. The behavior depends on iOS version.
+   *
+   * On iOS 18 and below:
+   * `false` by default. If enabled, swipe gesture will use `simple_push` transition animation by default. It can be changed
+   * with `animation` & `animationMatchesGesture` props, but default iOS swipe animation is not achievable.
+   *
+   * On iOS 26 and up:
+   * `true` by default to match new native behavior. You can still customize it with `animation` & `animationMatchesGesture` props.
    *
    * Doesn't affect the behavior of screens presented modally.
    *
@@ -486,11 +491,13 @@ export type NativeStackNavigationOptions = {
    */
   fullScreenGestureEnabled?: boolean;
   /**
-   * Whether the full screen dismiss gesture has shadow under view during transition. The gesture uses custom transition and thus
-   * doesn't have a shadow by default. When enabled, a custom shadow view is added during the transition which tries to mimic the
-   * default iOS shadow. Defaults to `true`.
+   * iOS 18 and below. Controls whether the full screen dismiss gesture has shadow under view during transition.
+   * The gesture uses custom transition and thus doesn't have a shadow by default. When enabled, a custom shadow view
+   * is added during the transition which tries to mimic the default iOS shadow. Defaults to `true`.
    *
    * This does not affect the behavior of transitions that don't use gestures, enabled by `fullScreenGestureEnabled` prop.
+   *
+   * @deprecated since iOS 26.
    *
    * @platform ios
    */
