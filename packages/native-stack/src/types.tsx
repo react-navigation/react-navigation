@@ -477,13 +477,14 @@ export type NativeStackNavigationOptions = {
   animationMatchesGesture?: boolean;
   /**
    * Whether the gesture to dismiss should work on the whole screen. The behavior depends on iOS version.
-
-   * For iOS prior to 26, swiping with this option results in the same transition animation as `simple_push` by default.
-   * It can be changed to other custom animations with `customAnimationOnSwipe` prop, but default iOS swipe animation
-   * is not achievable due to usage of custom recognizer.
    *
-   * For iOS 26 and up, native `interactiveContentPopGestureRecognizer` is used, and this prop controls whether it should
-   * be enabled or not.
+   * On iOS 18 and below:
+   * `false` by default. If enabled, swipe gesture will use `simple_push` transition animation by default. It can be changed
+   * with `animation` & `animationMatchesGesture` props, but default iOS swipe animation is not achievable.
+   *
+   * On iOS 26 and up:
+   * `true` by default. Swipe gesture will use the new [contentPopGestureRecognizer](https://developer.apple.com/documentation/uikit/uinavigationcontroller/interactivecontentpopgesturerecognizer)
+   * introduced in iOS 26 if possible. Set the prop to `false` to match iOS 18 default behavior.
    *
    * Doesn't affect the behavior of screens presented modally.
    *
