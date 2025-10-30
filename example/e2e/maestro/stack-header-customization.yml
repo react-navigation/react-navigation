@@ -1,9 +1,8 @@
 appId: ${APP_ID}
 name: Stack Header Customization
 ---
-- stopApp
-- openLink:
-    link: ${APP_SCHEME}stack-header-customization
-- extendedWaitUntil:
-    visible: 'Article by Gandalf'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-header-customization
+      TEXT: 'Article by Gandalf'

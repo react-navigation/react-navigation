@@ -1,9 +1,8 @@
 appId: ${APP_ID}
 name: Stack Preload Flow
 ---
-- stopApp
-- openLink:
-    link: ${APP_SCHEME}stack-preload-flow
-- extendedWaitUntil:
-    visible: 'Home'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-preload-flow
+      TEXT: 'Home'

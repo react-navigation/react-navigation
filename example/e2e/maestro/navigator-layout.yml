@@ -1,9 +1,8 @@
 appId: ${APP_ID}
 name: Navigator Layout
 ---
-- stopApp
-- openLink:
-    link: ${APP_SCHEME}navigator-layout
-- extendedWaitUntil:
-    visible: 'Article by Gandalf'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: navigator-layout
+      TEXT: 'Article by Gandalf'
