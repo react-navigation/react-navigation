@@ -17,6 +17,9 @@ jobs:
     concurrency:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
+    env:
+      MAESTRO_VERSION: 2.0.8
+      SIMULATOR_NAME: iPhone 17 Pro
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -73,12 +76,9 @@ jobs:
         run: |
           curl -fsSL "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
-        env:
-          MAESTRO_VERSION: 1.41.0
 
       - name: Boot iOS Simulator
         run: |
-          SIMULATOR_NAME="iPhone 17 Pro"
           DEVICE_ID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -n 1 | awk -F "[()]" '{print $2}')
 
           if [ -z "$DEVICE_ID" ]; then

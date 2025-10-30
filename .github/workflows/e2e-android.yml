@@ -18,7 +18,9 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
+      MAESTRO_VERSION: 2.0.8
       API_LEVEL: 34
+      AVD_NAME: e2e_emulator
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -86,8 +88,6 @@ jobs:
         run: |
           curl -fsSL "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
-        env:
-          MAESTRO_VERSION: 1.41.0
 
       - name: Enable KVM
         run: |
@@ -113,8 +113,9 @@ jobs:
           disable-animations: false
           target: google_apis
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
-          avd-name: e2e_emulator
+          avd-name: ${{ env.AVD_NAME }}
           arch: x86_64
+          profile: pixel_7_pro
           script: echo "Generated AVD snapshot for caching."
 
       - name: Store AVD cache
@@ -146,7 +147,7 @@ jobs:
           disable-animations: false
           target: google_apis
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
-          avd-name: e2e_emulator
+          avd-name: ${{ env.AVD_NAME }}
           arch: x86_64
           script: |
             adb install ../android-debug-build/android-debug.apk
