@@ -1,9 +1,8 @@
 appId: ${APP_ID}
 name: Tab View
 ---
-- stopApp
-- openLink:
-    link: ${APP_SCHEME}tab-view
-- extendedWaitUntil:
-    visible: 'TabView Examples'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: tab-view
+      TEXT: 'TabView Examples'

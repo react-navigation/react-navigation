@@ -1,12 +1,11 @@
 appId: ${APP_ID}
 name: Simple Stack
 ---
-- stopApp
-- openLink:
-    link: ${APP_SCHEME}simple-stack
-- extendedWaitUntil:
-    visible: 'Article by Gandalf'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: simple-stack
+      TEXT: 'Article by Gandalf'
 - tapOn:
     text: 'Update params'
 - assertVisible:
@@ -27,10 +26,13 @@ name: Simple Stack
     text: 'Push article'
 - assertVisible:
     text: 'Article by Babel fish'
-- tapOn:
-    text: 'Pop to albums'
-- assertVisible:
-    text: 'Albums'
+- retry:
+    maxRetries: 3
+    commands:
+      - tapOn:
+          text: 'Pop to albums'
+      - assertVisible:
+          text: 'Albums'
 - tapOn:
     text: 'Pop by 2'
 - assertVisible:

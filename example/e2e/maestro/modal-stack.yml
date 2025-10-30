@@ -1,12 +1,11 @@
 appId: ${APP_ID}
 name: Modal Stack
 ---
-- stopApp
-- openLink:
-    link: ${APP_SCHEME}modal-stack
-- extendedWaitUntil:
-    visible: 'Article by Gandalf'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: modal-stack
+      TEXT: 'Article by Gandalf'
 - tapOn:
     text: 'Push albums'
 - assertVisible:

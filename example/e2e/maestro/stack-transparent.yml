@@ -1,9 +1,8 @@
 appId: ${APP_ID}
 name: Stack Transparent
 ---
-- stopApp
-- openLink:
-    link: ${APP_SCHEME}stack-transparent
-- extendedWaitUntil:
-    visible: 'Article'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-transparent
+      TEXT: 'Article'

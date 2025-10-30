@@ -2,8 +2,8 @@ appId: ${APP_ID}
 name: Native Stack Header Customization
 ---
 - stopApp
-- openLink:
-    link: ${APP_SCHEME}native-stack-header-customization
-- extendedWaitUntil:
-    visible: 'What is Lorem Ipsum?'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: native-stack-header-customization
+      TEXT: 'What is Lorem Ipsum?'

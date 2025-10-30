@@ -1,9 +1,8 @@
 appId: ${APP_ID}
 name: Link Component
 ---
-- stopApp
-- openLink:
-    link: ${APP_SCHEME}link-component
-- extendedWaitUntil:
-    visible: 'Article by Gandalf'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: link-component
+      TEXT: 'Article by Gandalf'

@@ -1,9 +1,8 @@
 appId: ${APP_ID}
 name: Native Stack Prevent Remove
 ---
-- stopApp
-- openLink:
-    link: ${APP_SCHEME}native-stack-prevent-remove
-- extendedWaitUntil:
-    visible: 'Input'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: native-stack-prevent-remove
+      TEXT: 'Input'
