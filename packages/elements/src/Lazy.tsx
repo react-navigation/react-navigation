@@ -8,13 +8,11 @@ type Props = {
 export function Lazy({ enabled, render }: Props) {
   const [rendered, setRendered] = React.useState(enabled);
 
-  React.useLayoutEffect(() => {
-    setImmediate(() => {
-      if (enabled) {
-        setRendered(true);
-      }
-    });
-  }, [enabled]);
+  if (enabled === true && rendered === false) {
+    setRendered(true);
+
+    return render();
+  }
 
   if (rendered) {
     return render();
