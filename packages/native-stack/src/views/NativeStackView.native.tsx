@@ -78,7 +78,6 @@ const SceneView = ({
   shouldFreeze,
   descriptor,
   previousDescriptor,
-  nextDescriptor,
   isPresentationModal,
   isPreloaded,
   onWillDisappear,
@@ -93,19 +92,15 @@ const SceneView = ({
 }: SceneViewProps) => {
   const { route, navigation, options, render } = descriptor;
 
-  let {
-    animation,
-    animationMatchesGesture,
-    presentation = isPresentationModal ? 'modal' : 'card',
-    fullScreenGestureEnabled,
-  } = options;
-
   const {
+    animation,
     animationDuration,
+    animationMatchesGesture,
     animationTypeForReplace = 'push',
+    fullScreenGestureEnabled,
     fullScreenGestureShadowEnabled = true,
     gestureEnabled,
-    gestureDirection = presentation === 'card' ? 'horizontal' : 'vertical',
+    gestureDirection,
     gestureResponseDistance,
     header,
     headerBackButtonMenuEnabled,
@@ -132,30 +127,7 @@ const SceneView = ({
     contentStyle,
   } = options;
 
-  if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
-    // for `vertical` direction to work, we need to set `fullScreenGestureEnabled` to `true`
-    // so the screen can be dismissed from any point on screen.
-    // `animationMatchesGesture` needs to be set to `true` so the `animation` set by user can be used,
-    // otherwise `simple_push` will be used.
-    // Also, the default animation for this direction seems to be `slide_from_bottom`.
-    if (fullScreenGestureEnabled === undefined) {
-      fullScreenGestureEnabled = true;
-    }
-
-    if (animationMatchesGesture === undefined) {
-      animationMatchesGesture = true;
-    }
-
-    if (animation === undefined) {
-      animation = 'slide_from_bottom';
-    }
-  }
-
-  // workaround for rn-screens where gestureDirection has to be set on both
-  // current and previous screen - software-mansion/react-native-screens/pull/1509
-  const nextGestureDirection = nextDescriptor?.options.gestureDirection;
-  const gestureDirectionOverride =
-    nextGestureDirection != null ? nextGestureDirection : gestureDirection;
+  let { presentation = isPresentationModal ? 'modal' : 'card' } = options;
 
   if (index === 0) {
     // first screen should always be treated as `card`, it resolves problems with no header animation
@@ -307,7 +279,7 @@ const SceneView = ({
         statusBarAnimation={statusBarAnimation}
         statusBarHidden={statusBarHidden}
         statusBarStyle={statusBarStyle}
-        swipeDirection={gestureDirectionOverride}
+        swipeDirection={gestureDirection}
         transitionDuration={animationDuration}
         onWillAppear={onWillAppear}
         onWillDisappear={onWillDisappear}
