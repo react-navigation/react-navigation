@@ -37,7 +37,6 @@ import * as React from 'react';
 import {
   Appearance,
   I18nManager,
-  Linking,
   Platform,
   ScrollView,
   Switch,
@@ -147,7 +146,6 @@ type AppState = {
 type AppAction =
   | { type: 'SET_THEME'; payload: ThemeName }
   | { type: 'SET_RTL'; payload: boolean }
-  | { type: 'RESTORE_CANCEL' }
   | { type: 'RESTORE_FAILURE' }
   | {
       type: 'RESTORE_SUCCESS';
@@ -338,12 +336,6 @@ const useAppState = () => {
   const [state, dispatch] = React.useReducer(
     (state: AppState, action: AppAction) => {
       switch (action.type) {
-        case 'RESTORE_CANCEL':
-          return {
-            ...state,
-            isReady: true,
-            isPersistenceEnabled: false,
-          };
         case 'RESTORE_FAILURE':
           return {
             ...state,
@@ -378,43 +370,34 @@ const useAppState = () => {
   React.useEffect(() => {
     const restoreState = async () => {
       try {
-        const initialUrl =
-          Platform.OS !== 'web' ? await Linking.getInitialURL() : null;
+        const savedState =
+          // On web, we always use browser URL
+          Platform.OS !== 'web'
+            ? await AsyncStorage.getItem(NAVIGATION_PERSISTENCE_KEY)
+            : undefined;
 
-        // Only enable state persistence if there's no initial URL
-        // This avoids persistence when testing with maestro
-        if (initialUrl == null) {
-          const savedState =
-            // On web, we always use browser URL
-            Platform.OS !== 'web'
-              ? await AsyncStorage.getItem(NAVIGATION_PERSISTENCE_KEY)
-              : undefined;
+        const savedThemeName = await AsyncStorage.getItem(
+          THEME_PERSISTENCE_KEY
+        );
 
-          const savedThemeName = await AsyncStorage.getItem(
-            THEME_PERSISTENCE_KEY
-          );
+        const savedDirection =
+          Platform.OS !== 'web'
+            ? await AsyncStorage.getItem(DIRECTION_PERSISTENCE_KEY)
+            : undefined;
 
-          const savedDirection =
-            Platform.OS !== 'web'
-              ? await AsyncStorage.getItem(DIRECTION_PERSISTENCE_KEY)
-              : undefined;
-
-          dispatch({
-            type: 'RESTORE_SUCCESS',
-            payload: {
-              themeName:
-                savedThemeName === 'dark'
-                  ? 'dark'
-                  : savedThemeName === 'light'
-                    ? 'light'
-                    : 'custom',
-              isRTL: savedDirection === 'rtl',
-              navigationState: savedState ? JSON.parse(savedState) : undefined,
-            },
-          });
-        } else {
-          dispatch({ type: 'RESTORE_CANCEL' });
-        }
+        dispatch({
+          type: 'RESTORE_SUCCESS',
+          payload: {
+            themeName:
+              savedThemeName === 'dark'
+                ? 'dark'
+                : savedThemeName === 'light'
+                  ? 'light'
+                  : 'custom',
+            isRTL: savedDirection === 'rtl',
+            navigationState: savedState ? JSON.parse(savedState) : undefined,
+          },
+        });
       } catch (e) {
         dispatch({ type: 'RESTORE_FAILURE' });
       }
