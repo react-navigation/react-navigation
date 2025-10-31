@@ -7,7 +7,7 @@ export function useTheme() {
 
   if (theme == null) {
     throw new Error(
-      "Couldn't find a theme. Is your component inside NavigationContainer or does it have a theme?"
+      "Couldn't find a theme. Is your component inside NavigationContainer or a ThemeProvider?"
     );
   }
 
