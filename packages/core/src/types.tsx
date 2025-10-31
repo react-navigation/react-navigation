@@ -806,12 +806,17 @@ export type NavigationContainerEventMap = {
 
 type NotUndefined<T> = T extends undefined ? never : T;
 
+export type ParamsForRoute<ParamList extends {}, Key extends string> = Extract<
+  ParamListRoute<ParamList>,
+  { name: Key }
+>['params'];
+
 export type ParamListRoute<ParamList extends ParamListBase> = {
   [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
     ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<infer T>
-      ? ParamListRoute<T>
-      : Route<Extract<RouteName, string>, ParamList[RouteName]>
-    : Route<Extract<RouteName, string>, ParamList[RouteName]>;
+      ? ParamListRoute<T> | RouteProp<ParamList, RouteName>
+      : RouteProp<ParamList, RouteName>
+    : RouteProp<ParamList, RouteName>;
 }[keyof ParamList];
 
 type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
@@ -1061,24 +1066,3 @@ export type PathConfigMap<ParamList extends {}> = {
     ? string | PathConfig<T>
     : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
 };
-
-export type ParamsForRoute<
-  ParamList extends {},
-  Key extends string,
-> = FlattenIfLeafRoute<
-  {
-    [K in keyof ParamList]: K extends Key
-      ? ParamList[K]
-      : NotUndefined<ParamList[K]> extends NavigatorScreenParams<infer T>
-        ? ParamsForRoute<T, Key>
-        : never;
-  }[keyof ParamList]
->;
-
-/**
- * If the params type is a leaf route (i.e. not a navigator),
- * flatten it to remove all type alias names, unions etc.
- * This will show a plain object when hovering over the type.
- */
-type FlattenIfLeafRoute<T> =
-  T extends NavigatorScreenParams<{}> ? T : { [K in keyof T]: T[K] } & {};

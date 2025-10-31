@@ -750,32 +750,48 @@ expectTypeOf<ParamsForRoute<RootStackParamList, 'NotAKey'>>().toBeNever();
 
 /* Undefined params */
 expectTypeOf<ParamsForRoute<RootStackParamList, 'Login'>>().toEqualTypeOf<
-  RootStackParamList['Login']
+  Readonly<RootStackParamList['Login']>
 >();
 
 /* Valid params */
 expectTypeOf<ParamsForRoute<RootStackParamList, 'PostDetails'>>().toEqualTypeOf<
-  RootStackParamList['PostDetails']
+  Readonly<RootStackParamList['PostDetails']>
 >();
 
 /* Optional params */
 expectTypeOf<ParamsForRoute<RootStackParamList, 'Settings'>>().toEqualTypeOf<
-  RootStackParamList['Settings']
+  Readonly<RootStackParamList['Settings']>
 >();
 
 /* Nested screen */
 expectTypeOf<ParamsForRoute<RootStackParamList, 'Artist'>>().toEqualTypeOf<
-  AlbumTabParamList['Artist']
+  Readonly<AlbumTabParamList['Artist']>
 >();
 
 /* Nested screen with optional params */
 expectTypeOf<
   ParamsForRoute<RootStackParamList, 'Notifications'>
->().toEqualTypeOf<UpdatesTabParamList['Notifications']>();
+>().toEqualTypeOf<Readonly<UpdatesTabParamList['Notifications']>>();
 
 /* Nested screen with navigator */
 expectTypeOf<ParamsForRoute<HomeDrawerParamList, 'Feed'>>().toEqualTypeOf<
-  HomeDrawerParamList['Feed']
+  Readonly<HomeDrawerParamList['Feed']>
+>();
+
+/* Multiple screens with same name */
+type MultiParamList = {
+  MyScreen: { id: string };
+  A: NavigatorScreenParams<{
+    MyScreen: { user: string };
+  }>;
+  B: NavigatorScreenParams<{
+    MyScreen: { group: string };
+  }>;
+  C: { other: number };
+};
+
+expectTypeOf<ParamsForRoute<MultiParamList, 'MyScreen'>>().toEqualTypeOf<
+  Readonly<{ id: string } | { user: string } | { group: string }>
 >();
 
 /**
@@ -817,6 +833,10 @@ expectTypeOf(useRoute<RootStackParamList, 'Artist'>('Artist')).toEqualTypeOf<
 expectTypeOf(
   useRoute<RootStackParamList, 'Notifications'>('Notifications')
 ).toEqualTypeOf<Route<'Notifications', UpdatesTabParamList['Notifications']>>();
+
+expectTypeOf(useRoute<MultiParamList, 'MyScreen'>('MyScreen')).toEqualTypeOf<
+  Route<'MyScreen', { id: string } | { user: string } | { group: string }>
+>();
 
 expectTypeOf(useRoute('Home')).toEqualTypeOf<
   RouteProp<ReactNavigation.RootParamList, 'Home'>
