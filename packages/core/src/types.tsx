@@ -1063,12 +1063,22 @@ export type PathConfigMap<ParamList extends {}> = {
 };
 
 export type ParamsForRoute<
-  ParamList extends ParamListBase,
+  ParamList extends {},
   Key extends string,
-> = {
-  [K in keyof ParamList]: K extends Key
-    ? ParamList[K]
-    : ParamList[K] extends NavigatorScreenParams<infer T>
-      ? ParamsForRoute<T, Key>
-      : never;
-}[keyof ParamList];
+> = FlattenIfLeafRoute<
+  {
+    [K in keyof ParamList]: K extends Key
+      ? ParamList[K]
+      : NotUndefined<ParamList[K]> extends NavigatorScreenParams<infer T>
+        ? ParamsForRoute<T, Key>
+        : never;
+  }[keyof ParamList]
+>;
+
+/**
+ * If the params type is a leaf route (i.e. not a navigator),
+ * flatten it to remove all type alias names, unions etc.
+ * This will show a plain object when hovering over the type.
+ */
+type FlattenIfLeafRoute<T> =
+  T extends NavigatorScreenParams<{}> ? T : { [K in keyof T]: T[K] } & {};

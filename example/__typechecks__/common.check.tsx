@@ -17,9 +17,12 @@ import {
   type NavigationContainerRef,
   type NavigationHelpers,
   type NavigatorScreenParams,
+  type ParamListRoute,
   type ParamsForRoute,
   type Route,
+  type RouteProp,
   useLinkProps,
+  useRoute,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -35,6 +38,7 @@ import { expectTypeOf } from 'expect-type';
 type RootStackParamList = {
   Home: NavigatorScreenParams<HomeDrawerParamList>;
   Albums: NavigatorScreenParams<AlbumTabParamList>;
+  Updates: NavigatorScreenParams<UpdatesTabParamList> | undefined;
   PostDetails: { id: string; section?: string };
   Settings: { path: string } | undefined;
   Login: undefined;
@@ -52,6 +56,11 @@ type HomeDrawerParamList = {
 type AlbumTabParamList = {
   Playlist: undefined;
   Artist: { id: string };
+};
+
+type UpdatesTabParamList = {
+  Notifications: { type: 'all' | 'mentions' | 'replies' };
+  Timeline: undefined;
 };
 
 type HomeDrawerScreenProps<T extends keyof HomeDrawerParamList> =
@@ -302,8 +311,8 @@ const SecondStack = createStackNavigator<SecondParamList>();
 
 // Error if props don't match type
 <SecondStack.Screen
-  // @ts-expect-error
   name="HasParams1"
+  // @ts-expect-error
   component={(_: StackScreenProps<SecondParamList, 'HasParams2'>) => <></>}
 />;
 
@@ -314,8 +323,8 @@ const SecondStack = createStackNavigator<SecondParamList>();
 />;
 
 <SecondStack.Screen
-  // @ts-expect-error
   name="NoParams"
+  // @ts-expect-error
   component={(_: StackScreenProps<SecondParamList, 'HasParams1'>) => <></>}
 />;
 
@@ -671,6 +680,10 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
   PostDetails
 </Link>;
 <Link<LinkParamList> screen="Login">Albums</Link>;
+<Link<LinkParamList> screen="Updates">Updates</Link>;
+<Link<LinkParamList> screen="Updates" params={{ screen: 'Timeline' }}>
+  Timeline
+</Link>;
 
 // @ts-expect-error
 <Button<LinkParamList> screen="Album">Albums</Button>;
@@ -723,6 +736,10 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
   PostDetails
 </Button>;
 <Button<LinkParamList> screen="Login">Albums</Button>;
+<Button<LinkParamList> screen="Updates">Updates</Button>;
+<Button<LinkParamList> screen="Updates" params={{ screen: 'Timeline' }}>
+  Timeline
+</Button>;
 
 /**
  * Check for ParamsForRoute
@@ -751,7 +768,70 @@ expectTypeOf<ParamsForRoute<RootStackParamList, 'Artist'>>().toEqualTypeOf<
   AlbumTabParamList['Artist']
 >();
 
+/* Nested screen with optional params */
+expectTypeOf<
+  ParamsForRoute<RootStackParamList, 'Notifications'>
+>().toEqualTypeOf<UpdatesTabParamList['Notifications']>();
+
 /* Nested screen with navigator */
 expectTypeOf<ParamsForRoute<HomeDrawerParamList, 'Feed'>>().toEqualTypeOf<
   HomeDrawerParamList['Feed']
 >();
+
+/**
+ * Check for useRoute return type based on the arguments
+ */
+expectTypeOf(useRoute()).toEqualTypeOf<
+  ParamListRoute<ReactNavigation.RootParamList>
+>();
+
+{
+  const route = useRoute();
+
+  if (route.name === 'NotFound') {
+    expectTypeOf(route).toEqualTypeOf<
+      RouteProp<ReactNavigation.RootParamList, 'NotFound'>
+    >();
+  }
+
+  if (route.name === 'TabChat') {
+    expectTypeOf(route).toEqualTypeOf<
+      Route<'TabChat', { count: number } | undefined>
+    >();
+  }
+
+  // @ts-expect-error
+  if (route.name === 'Invalid') {
+    // error
+  }
+}
+
+expectTypeOf(
+  useRoute<RootStackParamList, 'Settings'>('Settings')
+).toEqualTypeOf<RouteProp<RootStackParamList, 'Settings'>>();
+
+expectTypeOf(useRoute<RootStackParamList, 'Artist'>('Artist')).toEqualTypeOf<
+  Route<'Artist', AlbumTabParamList['Artist']>
+>();
+
+expectTypeOf(
+  useRoute<RootStackParamList, 'Notifications'>('Notifications')
+).toEqualTypeOf<Route<'Notifications', UpdatesTabParamList['Notifications']>>();
+
+expectTypeOf(useRoute('Home')).toEqualTypeOf<
+  RouteProp<ReactNavigation.RootParamList, 'Home'>
+>();
+
+expectTypeOf(useRoute('NotFound')).toEqualTypeOf<
+  RouteProp<ReactNavigation.RootParamList, 'NotFound'>
+>();
+
+expectTypeOf(useRoute('TabChat')).toEqualTypeOf<
+  Route<'TabChat', { count: number } | undefined>
+>();
+
+// @ts-expect-error
+useRoute<RootStackParamList, 'Invalid'>('Invalid');
+
+// @ts-expect-error
+useRoute('Invalid');
