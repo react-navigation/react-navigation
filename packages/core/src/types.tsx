@@ -806,12 +806,12 @@ export type NavigationContainerEventMap = {
 
 type NotUndefined<T> = T extends undefined ? never : T;
 
-export type ParamsForRoute<ParamList extends {}, Key extends string> = Extract<
-  ParamListRoute<ParamList>,
-  { name: Key }
->['params'];
+export type RouteForName<
+  ParamList extends {},
+  RouteName extends string,
+> = Extract<ParamListRoute<ParamList>, { name: RouteName }>;
 
-export type ParamListRoute<ParamList extends ParamListBase> = {
+type ParamListRoute<ParamList extends {}> = {
   [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
     ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<infer T>
       ? ParamListRoute<T> | RouteProp<ParamList, RouteName>
