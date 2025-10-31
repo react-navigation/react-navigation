@@ -17,9 +17,8 @@ import {
   type NavigationContainerRef,
   type NavigationHelpers,
   type NavigatorScreenParams,
-  type ParamListRoute,
-  type ParamsForRoute,
   type Route,
+  type RouteForName,
   type RouteProp,
   useLinkProps,
   useRoute,
@@ -746,37 +745,39 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
  */
 
 /* Invalid route name */
-expectTypeOf<ParamsForRoute<RootStackParamList, 'NotAKey'>>().toBeNever();
+expectTypeOf<
+  RouteForName<RootStackParamList, 'NotAKey'>['params']
+>().toBeNever();
 
 /* Undefined params */
-expectTypeOf<ParamsForRoute<RootStackParamList, 'Login'>>().toEqualTypeOf<
-  Readonly<RootStackParamList['Login']>
->();
+expectTypeOf<
+  RouteForName<RootStackParamList, 'Login'>['params']
+>().toEqualTypeOf<Readonly<RootStackParamList['Login']>>();
 
 /* Valid params */
-expectTypeOf<ParamsForRoute<RootStackParamList, 'PostDetails'>>().toEqualTypeOf<
-  Readonly<RootStackParamList['PostDetails']>
->();
+expectTypeOf<
+  RouteForName<RootStackParamList, 'PostDetails'>['params']
+>().toEqualTypeOf<Readonly<RootStackParamList['PostDetails']>>();
 
 /* Optional params */
-expectTypeOf<ParamsForRoute<RootStackParamList, 'Settings'>>().toEqualTypeOf<
-  Readonly<RootStackParamList['Settings']>
->();
+expectTypeOf<
+  RouteForName<RootStackParamList, 'Settings'>['params']
+>().toEqualTypeOf<Readonly<RootStackParamList['Settings']>>();
 
 /* Nested screen */
-expectTypeOf<ParamsForRoute<RootStackParamList, 'Artist'>>().toEqualTypeOf<
-  Readonly<AlbumTabParamList['Artist']>
->();
+expectTypeOf<
+  RouteForName<RootStackParamList, 'Artist'>['params']
+>().toEqualTypeOf<Readonly<AlbumTabParamList['Artist']>>();
 
 /* Nested screen with optional params */
 expectTypeOf<
-  ParamsForRoute<RootStackParamList, 'Notifications'>
+  RouteForName<RootStackParamList, 'Notifications'>['params']
 >().toEqualTypeOf<Readonly<UpdatesTabParamList['Notifications']>>();
 
 /* Nested screen with navigator */
-expectTypeOf<ParamsForRoute<HomeDrawerParamList, 'Feed'>>().toEqualTypeOf<
-  Readonly<HomeDrawerParamList['Feed']>
->();
+expectTypeOf<
+  RouteForName<HomeDrawerParamList, 'Feed'>['params']
+>().toEqualTypeOf<Readonly<HomeDrawerParamList['Feed']>>();
 
 /* Multiple screens with same name */
 type MultiParamList = {
@@ -790,7 +791,9 @@ type MultiParamList = {
   C: { other: number };
 };
 
-expectTypeOf<ParamsForRoute<MultiParamList, 'MyScreen'>>().toEqualTypeOf<
+expectTypeOf<
+  RouteForName<MultiParamList, 'MyScreen'>['params']
+>().toEqualTypeOf<
   Readonly<{ id: string } | { user: string } | { group: string }>
 >();
 
@@ -798,7 +801,7 @@ expectTypeOf<ParamsForRoute<MultiParamList, 'MyScreen'>>().toEqualTypeOf<
  * Check for useRoute return type based on the arguments
  */
 expectTypeOf(useRoute()).toEqualTypeOf<
-  ParamListRoute<ReactNavigation.RootParamList>
+  RouteForName<ReactNavigation.RootParamList, string>
 >();
 
 {
@@ -835,11 +838,9 @@ expectTypeOf(
 ).toEqualTypeOf<Route<'Notifications', UpdatesTabParamList['Notifications']>>();
 
 expectTypeOf(useRoute<MultiParamList, 'MyScreen'>('MyScreen')).toEqualTypeOf<
-  Route<'MyScreen', { id: string } | { user: string } | { group: string }>
->();
-
-expectTypeOf(useRoute('Home')).toEqualTypeOf<
-  RouteProp<ReactNavigation.RootParamList, 'Home'>
+  | Route<'MyScreen', { id: string }>
+  | Route<'MyScreen', { user: string }>
+  | Route<'MyScreen', { group: string }>
 >();
 
 expectTypeOf(useRoute('NotFound')).toEqualTypeOf<

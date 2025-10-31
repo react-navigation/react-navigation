@@ -1,8 +1,16 @@
-import type { ParamListBase, Route } from '@react-navigation/routers';
+import type { ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
 import { NavigationRouteContext } from './NavigationRouteContext';
-import type { ParamListRoute, ParamsForRoute, RouteProp } from './types';
+import type { RouteForName, RouteProp } from './types';
+
+/**
+ * Get all possible route names from a param list and its nested navigators.
+ */
+type AllRouteNames<RootParamList extends {}> = RouteForName<
+  RootParamList,
+  string
+>['name'];
 
 /**
  * Hook to access the route prop of the parent screen anywhere.
@@ -12,18 +20,11 @@ import type { ParamListRoute, ParamsForRoute, RouteProp } from './types';
 export function useRoute<
   RootParamList extends {} = ReactNavigation.RootParamList,
   RouteName extends AllRouteNames<RootParamList> = AllRouteNames<RootParamList>,
->(
-  name: RouteName
-): Route<
-  RouteName,
-  RootParamList extends ParamListBase
-    ? ParamsForRoute<RootParamList, RouteName>
-    : undefined
->;
+>(name: RouteName): RouteForName<RootParamList, RouteName>;
 export function useRoute<
   RootParamList extends {} = ReactNavigation.RootParamList,
 >(): RootParamList extends ParamListBase
-  ? ParamListRoute<RootParamList>
+  ? RouteForName<RootParamList, string>
   : RouteProp<ParamListBase>;
 export function useRoute(name?: string) {
   const route = React.useContext(NavigationRouteContext);
@@ -42,11 +43,3 @@ export function useRoute(name?: string) {
 
   return route;
 }
-
-/**
- * Get all possible route names from a param list and its nested navigators.
- */
-type AllRouteNames<RootParamList extends {}> =
-  RootParamList extends ParamListBase
-    ? ParamListRoute<RootParamList>['name']
-    : string;
