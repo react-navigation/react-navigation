@@ -1,7 +1,7 @@
 import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
 import {
   NavigationContext,
-  NavigationRouteContext,
+  NavigationRouteContextProvider,
   type ParamListBase,
   type Route,
   useLinkBuilder,
@@ -146,7 +146,7 @@ export function HeaderContainer({
             key={scene.descriptor.route.key}
             value={scene.descriptor.navigation}
           >
-            <NavigationRouteContext.Provider value={scene.descriptor.route}>
+            <NavigationRouteContextProvider value={scene.descriptor.route}>
               <View
                 onLayout={
                   onContentHeightChange
@@ -174,7 +174,7 @@ export function HeaderContainer({
               >
                 {header !== undefined ? header(props) : <Header {...props} />}
               </View>
-            </NavigationRouteContext.Provider>
+            </NavigationRouteContextProvider>
           </NavigationContext.Provider>
         );
       })}
