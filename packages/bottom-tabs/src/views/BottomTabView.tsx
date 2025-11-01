@@ -266,7 +266,7 @@ export function BottomTabView(props: Props) {
               .sceneStyleInterpolator,
           } = descriptor.options;
           const isFocused = state.index === index;
-          const isPreloaded = state.preloadedRouteKeys.includes(route.key);
+          const isPreloaded = !!state.preloadedRouteKeys?.includes(route.key);
 
           if (
             lazy &&
