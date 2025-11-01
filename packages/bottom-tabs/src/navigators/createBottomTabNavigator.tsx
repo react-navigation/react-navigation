@@ -20,7 +20,6 @@ import type {
 import { BottomTabView } from '../views/BottomTabView';
 
 function BottomTabNavigator({
-  id,
   initialRouteName,
   backBehavior,
   UNSTABLE_routeNamesChangeBehavior,
@@ -40,7 +39,6 @@ function BottomTabNavigator({
       BottomTabNavigationOptions,
       BottomTabNavigationEventMap
     >(TabRouter, {
-      id,
       initialRouteName,
       backBehavior,
       UNSTABLE_routeNamesChangeBehavior,
@@ -66,18 +64,15 @@ function BottomTabNavigator({
 
 export function createBottomTabNavigator<
   const ParamList extends ParamListBase,
-  const NavigatorID extends string | undefined = undefined,
   const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
-    NavigatorID: NavigatorID;
     State: TabNavigationState<ParamList>;
     ScreenOptions: BottomTabNavigationOptions;
     EventMap: BottomTabNavigationEventMap;
     NavigationList: {
       [RouteName in keyof ParamList]: BottomTabNavigationProp<
         ParamList,
-        RouteName,
-        NavigatorID
+        RouteName
       >;
     };
     Navigator: typeof BottomTabNavigator;

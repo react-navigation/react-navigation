@@ -50,31 +50,27 @@ export type MaterialTopTabNavigationHelpers = NavigationHelpers<
 export type MaterialTopTabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   TabNavigationState<ParamList>,
   MaterialTopTabNavigationOptions,
-  MaterialTopTabNavigationEventMap
-> &
-  TabActionHelpers<ParamList>;
+  MaterialTopTabNavigationEventMap,
+  TabActionHelpers<ParamList>
+>;
 
 export type MaterialTopTabScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: MaterialTopTabNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: MaterialTopTabNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
 export type MaterialTopTabOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = MaterialTopTabScreenProps<ParamList, RouteName, NavigatorID> & {
+> = MaterialTopTabScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -326,7 +322,6 @@ export type MaterialTopTabAnimationContext = {
 
 export type MaterialTopTabNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
-  string | undefined,
   TabNavigationState<ParamListBase>,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap,

@@ -53,31 +53,27 @@ export type NativeStackNavigationEventMap = {
 export type NativeStackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   StackNavigationState<ParamList>,
   NativeStackNavigationOptions,
-  NativeStackNavigationEventMap
-> &
-  StackActionHelpers<ParamList>;
+  NativeStackNavigationEventMap,
+  StackActionHelpers<ParamList>
+>;
 
 export type NativeStackScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: NativeStackNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: NativeStackNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
 export type NativeStackOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = NativeStackScreenProps<ParamList, RouteName, NavigatorID> & {
+> = NativeStackScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -999,7 +995,6 @@ export type NativeStackHeaderItem =
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
-  string | undefined,
   StackNavigationState<ParamListBase>,
   NativeStackNavigationOptions,
   NativeStackNavigationEventMap,

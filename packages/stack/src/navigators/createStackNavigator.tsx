@@ -24,7 +24,6 @@ import type {
 import { StackView } from '../views/Stack/StackView';
 
 function StackNavigator({
-  id,
   initialRouteName,
   UNSTABLE_routeNamesChangeBehavior,
   children,
@@ -45,7 +44,6 @@ function StackNavigator({
       StackNavigationOptions,
       StackNavigationEventMap
     >(StackRouter, {
-      id,
       initialRouteName,
       UNSTABLE_routeNamesChangeBehavior,
       children,
@@ -98,19 +96,13 @@ function StackNavigator({
 
 export function createStackNavigator<
   const ParamList extends ParamListBase,
-  const NavigatorID extends string | undefined = undefined,
   const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
-    NavigatorID: NavigatorID;
     State: StackNavigationState<ParamList>;
     ScreenOptions: StackNavigationOptions;
     EventMap: StackNavigationEventMap;
     NavigationList: {
-      [RouteName in keyof ParamList]: StackNavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
+      [RouteName in keyof ParamList]: StackNavigationProp<ParamList, RouteName>;
     };
     Navigator: typeof StackNavigator;
   },

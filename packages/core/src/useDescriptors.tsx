@@ -95,7 +95,7 @@ type Options<
  */
 export function useDescriptors<
   State extends NavigationState,
-  ActionHelpers extends Record<string, () => void>,
+  ActionHelpers extends Record<string, (...args: any) => void>,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
 >({
@@ -173,7 +173,6 @@ export function useDescriptors<
     navigation: NavigationProp<
       ParamListBase,
       string,
-      string | undefined,
       State,
       ScreenOptions,
       EventMap
@@ -212,7 +211,6 @@ export function useDescriptors<
     navigation: NavigationProp<
       ParamListBase,
       string,
-      string | undefined,
       State,
       ScreenOptions,
       EventMap
@@ -285,12 +283,11 @@ export function useDescriptors<
         NavigationProp<
           ParamListBase,
           string,
-          string | undefined,
           State,
           ScreenOptions,
-          EventMap
-        > &
-          ActionHelpers,
+          EventMap,
+          ActionHelpers
+        >,
         RouteProp<ParamListBase>
       >
     >
@@ -306,7 +303,6 @@ export function useDescriptors<
 
     acc[route.key] = {
       route,
-      // @ts-expect-error: it's missing action helpers, fix later
       navigation,
       render() {
         return element;

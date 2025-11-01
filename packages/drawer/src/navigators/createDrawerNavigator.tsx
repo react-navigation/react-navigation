@@ -20,7 +20,6 @@ import type {
 import { DrawerView } from '../views/DrawerView';
 
 function DrawerNavigator({
-  id,
   initialRouteName,
   defaultStatus = 'closed',
   backBehavior,
@@ -41,7 +40,6 @@ function DrawerNavigator({
       DrawerNavigationOptions,
       DrawerNavigationEventMap
     >(DrawerRouter, {
-      id,
       initialRouteName,
       defaultStatus,
       backBehavior,
@@ -69,18 +67,15 @@ function DrawerNavigator({
 
 export function createDrawerNavigator<
   const ParamList extends ParamListBase,
-  const NavigatorID extends string | undefined = undefined,
   const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
-    NavigatorID: NavigatorID;
     State: DrawerNavigationState<ParamList>;
     ScreenOptions: DrawerNavigationOptions;
     EventMap: DrawerNavigationEventMap;
     NavigationList: {
       [RouteName in keyof ParamList]: DrawerNavigationProp<
         ParamList,
-        RouteName,
-        NavigatorID
+        RouteName
       >;
     };
     Navigator: typeof DrawerNavigator;

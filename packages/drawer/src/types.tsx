@@ -274,31 +274,27 @@ export type DrawerNavigationHelpers = NavigationHelpers<
 export type DrawerNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   DrawerNavigationState<ParamList>,
   DrawerNavigationOptions,
-  DrawerNavigationEventMap
-> &
-  DrawerActionHelpers<ParamList>;
+  DrawerNavigationEventMap,
+  DrawerActionHelpers<ParamList>
+>;
 
 export type DrawerScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: DrawerNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: DrawerNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
 export type DrawerOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = DrawerScreenProps<ParamList, RouteName, NavigatorID> & {
+> = DrawerScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -334,7 +330,6 @@ export type DrawerProps = {
 
 export type DrawerNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
-  string | undefined,
   DrawerNavigationState<ParamListBase>,
   DrawerNavigationOptions,
   DrawerNavigationEventMap,

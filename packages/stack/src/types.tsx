@@ -60,31 +60,27 @@ export type StackNavigationHelpers = NavigationHelpers<
 export type StackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   StackNavigationState<ParamList>,
   StackNavigationOptions,
-  StackNavigationEventMap
-> &
-  StackActionHelpers<ParamList>;
+  StackNavigationEventMap,
+  StackActionHelpers<ParamList>
+>;
 
 export type StackScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: StackNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: StackNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
 export type StackOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = StackScreenProps<ParamList, RouteName, NavigatorID> & {
+> = StackScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -631,7 +627,6 @@ export type TransitionPreset = {
 
 export type StackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
-  string | undefined,
   StackNavigationState<ParamListBase>,
   StackNavigationOptions,
   StackNavigationEventMap,
