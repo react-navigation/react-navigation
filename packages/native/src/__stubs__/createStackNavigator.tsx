@@ -12,7 +12,6 @@ import {
 const StackNavigator = (
   props: DefaultNavigatorOptions<
     ParamListBase,
-    string | undefined,
     StackNavigationState<ParamListBase>,
     {},
     {},
@@ -35,7 +34,6 @@ export function createStackNavigator<
   ParamList extends ParamListBase,
 >(): TypedNavigator<{
   ParamList: ParamList;
-  NavigatorID: string | undefined;
   State: StackNavigationState<ParamList>;
   ScreenOptions: {};
   EventMap: {};

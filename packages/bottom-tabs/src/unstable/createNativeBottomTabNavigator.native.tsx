@@ -22,7 +22,6 @@ import type {
 } from './types';
 
 function NativeBottomTabNavigator({
-  id,
   initialRouteName,
   backBehavior,
   UNSTABLE_routeNamesChangeBehavior,
@@ -42,7 +41,6 @@ function NativeBottomTabNavigator({
       NativeBottomTabNavigationOptions,
       NativeBottomTabNavigationEventMap
     >(TabRouter, {
-      id,
       initialRouteName,
       backBehavior,
       UNSTABLE_routeNamesChangeBehavior,
@@ -94,18 +92,15 @@ function NativeBottomTabNavigator({
 
 export function createNativeBottomTabNavigator<
   const ParamList extends ParamListBase,
-  const NavigatorID extends string | undefined = undefined,
   const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
-    NavigatorID: NavigatorID;
     State: TabNavigationState<ParamList>;
     ScreenOptions: NativeBottomTabNavigationOptions;
     EventMap: NativeBottomTabNavigationEventMap;
     NavigationList: {
       [RouteName in keyof ParamList]: NativeBottomTabNavigationProp<
         ParamList,
-        RouteName,
-        NavigatorID
+        RouteName
       >;
     };
     Navigator: typeof NativeBottomTabNavigator;

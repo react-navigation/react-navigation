@@ -25,7 +25,6 @@ type Keyof<T extends {}> = Extract<keyof T, string>;
 
 export type DefaultNavigatorOptions<
   ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
@@ -51,7 +50,6 @@ export type DefaultNavigatorOptions<
         NavigationProp<
           ParamList,
           keyof ParamList,
-          string | undefined,
           State,
           ScreenOptions,
           EventMap
@@ -126,16 +124,7 @@ export type DefaultNavigatorOptions<
    * - Unhandled state is restored only if the current state becomes invalid, i.e. it doesn't contain any currently defined screens.
    */
   UNSTABLE_routeNamesChangeBehavior?: 'firstMatch' | 'lastUnhandled';
-} & (NavigatorID extends string
-    ? {
-        /**
-         * Optional ID for the navigator. Can be used with `navigation.getParent(id)` to refer to a parent.
-         */
-        id: NavigatorID;
-      }
-    : {
-        id?: undefined;
-      });
+};
 
 export type EventMapBase = Record<
   string,
@@ -352,21 +341,6 @@ type NavigationHelpersCommon<
   canGoBack(): boolean;
 
   /**
-   * Returns the name of the navigator specified in the `name` prop.
-   * If no name is specified, returns `undefined`.
-   */
-  getId(): string | undefined;
-
-  /**
-   * Returns the navigation helpers from a parent navigator based on the ID.
-   * If an ID is provided, the navigation helper from the parent navigator with matching ID (including current) will be returned.
-   * If no ID is provided, the navigation helper from the immediate parent navigator will be returned.
-   *
-   * @param id Optional ID of a parent navigator.
-   */
-  getParent<T = NavigationHelpers<ParamListBase> | undefined>(id?: string): T;
-
-  /**
    * Returns the navigator's state.
    * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
    */
@@ -451,30 +425,40 @@ export type NavigationContainerProps = {
 export type NavigationProp<
   ParamList extends {},
   RouteName extends keyof ParamList = Keyof<ParamList>,
-  NavigatorID extends string | undefined = undefined,
   State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {},
-> = Omit<NavigationHelpersCommon<ParamList, State>, 'getParent'> & {
-  /**
-   * Returns the navigation prop from a parent navigator based on the ID.
-   * If an ID is provided, the navigation prop from the parent navigator with matching ID (including current) will be returned.
-   * If no ID is provided, the navigation prop from the immediate parent navigator will be returned.
-   *
-   * @param id Optional ID of a parent navigator.
-   */
-  getParent<T = NavigationProp<ParamListBase> | undefined>(id?: NavigatorID): T;
-
-  /**
-   * Update the options for the route.
-   * The options object will be shallow merged with default options object.
-   *
-   * @param update Options object or a callback which takes the options from navigator config and returns a new options object.
-   */
-  setOptions(options: Partial<ScreenOptions>): void;
-} & NavigationHelpersRoute<ParamList, RouteName> &
-  EventConsumer<EventMap & EventMapCore<State>> &
+  ActionHelpers extends Record<string, (...args: any) => void> = {},
+> = WithParent<
+  RouteName,
+  NavigationHelpersCommon<ParamList, State> & {
+    /**
+     * Update the options for the route.
+     * The options object will be shallow merged with default options object.
+     *
+     * @param update Options object or a callback which takes the options from navigator config and returns a new options object.
+     */
+    setOptions(options: Partial<ScreenOptions>): void;
+  } & NavigationHelpersRoute<ParamList, RouteName> &
+    ActionHelpers &
+    EventConsumer<EventMap & EventMapCore<State>>
+> &
   PrivateValueStore<[ParamList, RouteName, EventMap]>;
+
+type WithParent<RouteName, NavigationPropType> = Omit<
+  NavigationPropType,
+  'getParent'
+> & {
+  /**
+   * Returns the navigation prop of the parent screen.
+   * If a route name is provided, the navigation prop from the parent screen with matching route name (including current) will be returned.
+   * If no route name is provided, the navigation prop from the immediate parent screen will be returned.
+   *
+   * @param routeName Optional route name of a parent screen.
+   */
+  getParent(routeName: RouteName): WithParent<RouteName, NavigationPropType>;
+  getParent(): NavigationProp<ParamListBase> | undefined;
+};
 
 export type RouteProp<
   ParamList extends ParamListBase,
@@ -483,54 +467,47 @@ export type RouteProp<
 
 export type CompositeNavigationProp<
   A extends NavigationProp<ParamListBase, string, any, any, any>,
-  B extends NavigationHelpersCommon<ParamListBase, any>,
-> = Omit<A & B, keyof NavigationProp<any>> &
-  NavigationProp<
-    /**
-     * Param list from both navigation objects needs to be combined
-     * For example, we should be able to navigate to screens in both A and B
-     */
-    (A extends NavigationHelpersCommon<infer T> ? T : never) &
-      (B extends NavigationHelpersCommon<infer U> ? U : never),
-    /**
-     * The route name should refer to the route name specified in the first type
-     * Ideally it should work for any of them, but it's not possible to infer that way
-     */
-    A extends NavigationProp<any, infer R> ? R : string,
-    /**
-     * ID from both navigation objects needs to be combined for `getParent`
-     */
-    | (A extends NavigationProp<any, any, infer I> ? I : never)
-    | (B extends NavigationProp<any, any, infer J> ? J : never),
-    /**
-     * The type of state should refer to the state specified in the first type
-     */
-    A extends NavigationProp<any, any, any, infer S> ? S : NavigationState,
-    /**
-     * Screen options should refer to the options specified in the first type
-     */
-    A extends NavigationProp<any, any, any, any, infer O> ? O : {},
-    /**
-     * Event consumer config should refer to the config specified in the first type
-     * This allows typechecking `addListener`/`removeListener`
-     */
-    A extends NavigationProp<any, any, any, any, any, infer E> ? E : {}
-  >;
+  B extends NavigationProp<ParamListBase, string, any, any, any>,
+> = Omit<A & B, keyof NavigationProp<any, any, any, any, any>> &
+  Omit<
+    NavigationProp<
+      /**
+       * Param list from both navigation objects needs to be combined
+       * For example, we should be able to navigate to screens in both A and B
+       */
+      (A extends NavigationHelpersCommon<infer T> ? T : never) &
+        (B extends NavigationHelpersCommon<infer U> ? U : never),
+      /**
+       * The route name should refer to the route name specified in the first type
+       * Ideally it should work for any of them, but it's not possible to infer that way
+       */
+      A extends NavigationProp<any, infer R> ? R : string,
+      /**
+       * The type of state should refer to the state specified in the first type
+       */
+      A extends NavigationProp<any, any, infer S> ? S : NavigationState,
+      /**
+       * Screen options should refer to the options specified in the first type
+       */
+      A extends NavigationProp<any, any, any, infer O> ? O : {},
+      /**
+       * Event consumer config should refer to the config specified in the first type
+       * This allows typechecking `addListener`/`removeListener`
+       */
+      A extends NavigationProp<any, any, any, any, infer E> ? E : {}
+    >,
+    'getParent'
+  > & {
+    getParent: A['getParent'] & B['getParent'];
+  };
 
 export type CompositeScreenProps<
   A extends {
-    navigation: NavigationProp<
-      ParamListBase,
-      string,
-      string | undefined,
-      any,
-      any,
-      any
-    >;
+    navigation: NavigationProp<ParamListBase, string, any, any, any>;
     route: RouteProp<ParamListBase>;
   },
   B extends {
-    navigation: NavigationHelpersCommon<any, any>;
+    navigation: NavigationProp<ParamListBase, string, any, any, any>;
   },
 > = {
   navigation: CompositeNavigationProp<A['navigation'], B['navigation']>;
@@ -552,7 +529,7 @@ export type ScreenLayoutArgs<
 
 export type Descriptor<
   ScreenOptions extends {},
-  Navigation extends NavigationProp<any, any, any, any, any, any>,
+  Navigation extends NavigationProp<any, any, any, any, any>,
   Route extends RouteProp<any, any>,
 > = {
   /**
@@ -869,7 +846,6 @@ export type NavigationListBase<ParamList extends ParamListBase> = {
 
 export type TypeBag<
   ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
@@ -877,7 +853,6 @@ export type TypeBag<
   Navigator extends React.ComponentType<any>,
 > = {
   ParamList: ParamList;
-  NavigatorID: NavigatorID;
   State: State;
   ScreenOptions: ScreenOptions;
   EventMap: EventMap;
@@ -887,7 +862,6 @@ export type TypeBag<
 
 export type NavigatorTypeBagBase = {
   ParamList: {};
-  NavigatorID: string | undefined;
   State: NavigationState;
   ScreenOptions: {};
   EventMap: {};
@@ -897,7 +871,6 @@ export type NavigatorTypeBagBase = {
 
 export type NavigatorTypeBag<
   ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
@@ -905,7 +878,6 @@ export type NavigatorTypeBag<
   Navigator extends React.ComponentType<any>,
 > = {
   ParamList: ParamList;
-  NavigatorID: NavigatorID;
   State: State;
   ScreenOptions: ScreenOptions;
   EventMap: EventMap;
@@ -918,7 +890,6 @@ export type TypedNavigator<
   Config = unknown,
 > = TypedNavigatorInternal<
   Bag['ParamList'],
-  Bag['NavigatorID'],
   Bag['State'],
   Bag['ScreenOptions'],
   Bag['EventMap'],
@@ -929,7 +900,6 @@ export type TypedNavigator<
 
 type TypedNavigatorInternal<
   ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
@@ -942,11 +912,10 @@ type TypedNavigatorInternal<
   Navigator: React.ComponentType<
     Omit<
       React.ComponentProps<Navigator>,
-      keyof DefaultNavigatorOptions<any, any, any, any, any, any>
+      keyof DefaultNavigatorOptions<any, any, any, any, any>
     > &
       DefaultNavigatorOptions<
         ParamList,
-        NavigatorID,
         State,
         ScreenOptions,
         EventMap,

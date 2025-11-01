@@ -16,7 +16,6 @@ import type { NavigationEventEmitter } from './useEventEmitter';
 PrivateValueStore;
 
 type Options<State extends NavigationState, Action extends NavigationAction> = {
-  id: string | undefined;
   onAction: (action: NavigationAction) => boolean;
   onUnhandledAction: (action: NavigationAction) => void;
   getState: () => State;
@@ -31,11 +30,10 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
  */
 export function useNavigationHelpers<
   State extends NavigationState,
-  ActionHelpers extends Record<string, () => void>,
+  ActionHelpers extends Record<string, (...args: any) => void>,
   Action extends NavigationAction,
   EventMap extends Record<string, any>,
 >({
-  id: navigatorId,
   onAction,
   onUnhandledAction,
   getState,
@@ -88,20 +86,6 @@ export function useNavigationHelpers<
           false
         );
       },
-      getId: () => navigatorId,
-      getParent: (id?: string) => {
-        if (id !== undefined) {
-          let current = navigationHelpers;
-
-          while (current && id !== current.getId()) {
-            current = current.getParent();
-          }
-
-          return current;
-        }
-
-        return parentNavigationHelpers;
-      },
       getState: (): State => {
         // FIXME: Workaround for when the state is read during render
         // By this time, we haven't committed the new state yet
@@ -124,7 +108,6 @@ export function useNavigationHelpers<
     getState,
     onAction,
     onUnhandledAction,
-    navigatorId,
     stateRef,
   ]);
 }

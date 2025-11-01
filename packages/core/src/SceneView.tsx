@@ -18,13 +18,7 @@ import { useOptionsGetters } from './useOptionsGetters';
 
 type Props<State extends NavigationState, ScreenOptions extends {}> = {
   screen: RouteConfigComponent<ParamListBase, string> & { name: string };
-  navigation: NavigationProp<
-    ParamListBase,
-    string,
-    string | undefined,
-    State,
-    ScreenOptions
-  >;
+  navigation: NavigationProp<ParamListBase, string, State, ScreenOptions>;
   route: Route<string>;
   routeState: NavigationState | PartialState<NavigationState> | undefined;
   getState: () => State;

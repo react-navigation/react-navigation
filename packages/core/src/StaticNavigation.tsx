@@ -208,7 +208,6 @@ export type StaticConfigGroup<
 export type StaticConfig<Bag extends NavigatorTypeBagBase> =
   StaticConfigInternal<
     Bag['ParamList'],
-    Bag['NavigatorID'],
     Bag['State'],
     Bag['ScreenOptions'],
     Bag['EventMap'],
@@ -218,7 +217,6 @@ export type StaticConfig<Bag extends NavigatorTypeBagBase> =
 
 type StaticConfigInternal<
   ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
@@ -229,7 +227,6 @@ type StaticConfigInternal<
     React.ComponentProps<Navigator>,
     keyof DefaultNavigatorOptions<
       ParamListBase,
-      string | undefined,
       NavigationState,
       {},
       EventMapBase,
@@ -238,7 +235,6 @@ type StaticConfigInternal<
   > &
     DefaultNavigatorOptions<
       ParamList,
-      NavigatorID,
       State,
       ScreenOptions,
       EventMap,

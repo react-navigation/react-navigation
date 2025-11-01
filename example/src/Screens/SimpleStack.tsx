@@ -1,5 +1,8 @@
 import { Button } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  CompositeScreenProps,
+  PathConfigMap,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
@@ -70,12 +73,13 @@ const ArticleScreen = ({
   );
 };
 
-const NewsFeedScreen = ({
-  route,
-  navigation,
-}: StackScreenProps<SimpleStackParams, 'NewsFeed'>) => {
-  const rootNavigation =
-    navigation.getParent<StackScreenProps<RootStackParamList>['navigation']>();
+type NewsFeedScreenProps = CompositeScreenProps<
+  StackScreenProps<SimpleStackParams, 'NewsFeed'>,
+  StackScreenProps<RootStackParamList, 'SimpleStack'>
+>;
+
+const NewsFeedScreen = ({ route, navigation }: NewsFeedScreenProps) => {
+  const rootNavigation = navigation.getParent('SimpleStack');
 
   return (
     <ScrollView>

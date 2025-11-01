@@ -2060,7 +2060,7 @@ test('gets immediate parent with getParent()', () => {
   expect(element).toMatchInlineSnapshot(`"bar [foo-a]"`);
 });
 
-test('gets parent with a ID with getParent(id)', () => {
+test('gets parent with a route name with getParent(routeName)', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -2069,7 +2069,7 @@ test('gets parent with a ID with getParent(id)', () => {
 
   const TestComponent = ({ route, navigation }: any): any =>
     `${route.name} [${navigation
-      .getParent('Test')
+      .getParent('foo')
       .getState()
       .routes.map((r: any) => r.name)
       .join()}]`;
@@ -2078,7 +2078,7 @@ test('gets parent with a ID with getParent(id)', () => {
 
   const element = render(
     <BaseNavigationContainer onStateChange={onStateChange}>
-      <TestNavigator id="Test">
+      <TestNavigator>
         <Screen name="foo">
           {() => (
             <TestNavigator>
@@ -2099,7 +2099,7 @@ test('gets parent with a ID with getParent(id)', () => {
   expect(element).toMatchInlineSnapshot(`"bar [foo]"`);
 });
 
-test('gets self with a ID with getParent(id)', () => {
+test('gets self with a route name with getParent(routeName)', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -2108,7 +2108,7 @@ test('gets self with a ID with getParent(id)', () => {
 
   const TestComponent = ({ route, navigation }: any): any =>
     `${route.name} [${navigation
-      .getParent('Test')
+      .getParent('bar')
       .getState()
       .routes.map((r: any) => r.name)
       .join()}]`;
@@ -2123,7 +2123,7 @@ test('gets self with a ID with getParent(id)', () => {
             <TestNavigator>
               <Screen name="foo-a">
                 {() => (
-                  <TestNavigator id="Test">
+                  <TestNavigator>
                     <Screen name="bar" component={TestComponent} />
                   </TestNavigator>
                 )}
@@ -2138,7 +2138,7 @@ test('gets self with a ID with getParent(id)', () => {
   expect(element).toMatchInlineSnapshot(`"bar [bar]"`);
 });
 
-test('returns undefined when ID is not found with getParent(id)', () => {
+test('returns undefined when route name is not found with getParent(routeName)', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
 
@@ -2146,7 +2146,7 @@ test('returns undefined when ID is not found with getParent(id)', () => {
   };
 
   const TestComponent = ({ route, navigation }: any): any =>
-    `${route.name} [${navigation.getParent('Tes')}]`;
+    `${route.name} [${navigation.getParent('foo-non-existent')}]`;
 
   const onStateChange = jest.fn();
 
@@ -2155,7 +2155,7 @@ test('returns undefined when ID is not found with getParent(id)', () => {
       <TestNavigator>
         <Screen name="foo">
           {() => (
-            <TestNavigator id="Test">
+            <TestNavigator>
               <Screen name="foo-a">
                 {() => (
                   <TestNavigator>
