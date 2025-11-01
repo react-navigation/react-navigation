@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.8.0...@react-navigation/elements@2.8.1) (2025-11-01)
+
+### Bug Fixes
+
+* tweak lazy rendering logic ([3d1e4ef](https://github.com/react-navigation/react-navigation/commit/3d1e4effe82daba682df308556eaabb73052a45c)) - by @satya164
+
 # [2.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.7.1...@react-navigation/elements@2.8.0) (2025-10-28)
 
 ### Features

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.6.1...@react-navigation/native-stack@7.6.2) (2025-11-01)
+
+### Bug Fixes
+
+* update modal types in native stack ([886522f](https://github.com/react-navigation/react-navigation/commit/886522fe7d9e5018820f807c3b8f9238c0f6926c)) - by @satya164
+
 ## [7.6.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.6.0...@react-navigation/native-stack@7.6.1) (2025-10-28)
 
 **Note:** Version bump only for package @react-navigation/native-stack
