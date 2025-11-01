@@ -123,7 +123,7 @@ export function useNavigationCache<
       getParent: (routeName) => {
         if (routeName !== undefined) {
           throw new Error(
-            'Getting parent navigator by name is not supported from a placeholder screen.'
+            'Getting parent by route name is not supported from a placeholder screen.'
           );
         }
 
