@@ -263,18 +263,15 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
                 },
               }}
             >
-              <Lazy
-                enabled={lazy ? isFocused || isPreloaded : true}
-                render={() => (
-                  <NativeScreen
-                    route={route}
-                    navigation={navigation}
-                    options={options}
-                  >
-                    {render()}
-                  </NativeScreen>
-                )}
-              />
+              <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
+                <NativeScreen
+                  route={route}
+                  navigation={navigation}
+                  options={options}
+                >
+                  {render()}
+                </NativeScreen>
+              </Lazy>
             </BottomTabsScreen>
           );
         })}
