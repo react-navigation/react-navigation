@@ -10,9 +10,9 @@ type Props = {
    */
   visible: boolean;
   /**
-   * Function that returns the content to render.
+   * Content to render.
    */
-  render: () => React.ReactElement;
+  children: React.ReactElement;
 };
 
 /**
@@ -28,11 +28,13 @@ type Props = {
  *
  * Once rendered, the content remains rendered.
  */
-export function Lazy({ enabled, visible, render }: Props) {
+export function Lazy({ enabled, visible, children }: Props) {
   const [rendered, setRendered] = React.useState(enabled ? visible : false);
 
+  const shouldRenderInIdle = !(enabled || visible || rendered);
+
   React.useEffect(() => {
-    if (enabled || visible || rendered) {
+    if (shouldRenderInIdle === false) {
       return;
     }
 
@@ -41,16 +43,16 @@ export function Lazy({ enabled, visible, render }: Props) {
     });
 
     return () => cancelIdleCallback(id);
-  }, [enabled, rendered, visible]);
+  }, [shouldRenderInIdle]);
 
   if (visible && rendered === false) {
     setRendered(true);
 
-    return render();
+    return children;
   }
 
   if (rendered) {
-    return render();
+    return children;
   }
 
   return null;
