@@ -43,31 +43,27 @@ export type NativeBottomTabNavigationEventMap = {
 export type NativeBottomTabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   TabNavigationState<ParamList>,
   NativeBottomTabNavigationOptions,
-  NativeBottomTabNavigationEventMap
-> &
-  TabActionHelpers<ParamList>;
+  NativeBottomTabNavigationEventMap,
+  TabActionHelpers<ParamList>
+>;
 
 export type NativeBottomTabScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: NativeBottomTabNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: NativeBottomTabNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
 export type NativeBottomTabOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = NativeBottomTabScreenProps<ParamList, RouteName, NavigatorID> & {
+> = NativeBottomTabScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -354,7 +350,6 @@ export type NativeBottomTabBarProps = {
 
 export type NativeBottomTabNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
-  string | undefined,
   TabNavigationState<ParamListBase>,
   NativeBottomTabNavigationOptions,
   NativeBottomTabNavigationEventMap,

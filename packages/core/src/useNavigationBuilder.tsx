@@ -309,7 +309,6 @@ export function useNavigationBuilder<
   createRouter: RouterFactory<State, NavigationAction, RouterOptions>,
   options: DefaultNavigatorOptions<
     ParamListBase,
-    string | undefined,
     State,
     ScreenOptions,
     EventMap,
@@ -866,7 +865,6 @@ export function useNavigationBuilder<
     NavigationAction,
     EventMap
   >({
-    id: options.id,
     onAction,
     onUnhandledAction,
     getState,

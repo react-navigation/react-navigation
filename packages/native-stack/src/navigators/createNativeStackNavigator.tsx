@@ -23,7 +23,6 @@ import type {
 import { NativeStackView } from '../views/NativeStackView';
 
 function NativeStackNavigator({
-  id,
   initialRouteName,
   UNSTABLE_routeNamesChangeBehavior,
   children,
@@ -42,7 +41,6 @@ function NativeStackNavigator({
       NativeStackNavigationOptions,
       NativeStackNavigationEventMap
     >(StackRouter, {
-      id,
       initialRouteName,
       UNSTABLE_routeNamesChangeBehavior,
       children,
@@ -94,18 +92,15 @@ function NativeStackNavigator({
 
 export function createNativeStackNavigator<
   const ParamList extends ParamListBase,
-  const NavigatorID extends string | undefined = undefined,
   const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
-    NavigatorID: NavigatorID;
     State: StackNavigationState<ParamList>;
     ScreenOptions: NativeStackNavigationOptions;
     EventMap: NativeStackNavigationEventMap;
     NavigationList: {
       [RouteName in keyof ParamList]: NativeStackNavigationProp<
         ParamList,
-        RouteName,
-        NavigatorID
+        RouteName
       >;
     };
     Navigator: typeof NativeStackNavigator;

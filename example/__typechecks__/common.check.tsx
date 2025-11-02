@@ -64,8 +64,8 @@ type UpdatesTabParamList = {
 
 type HomeDrawerScreenProps<T extends keyof HomeDrawerParamList> =
   CompositeScreenProps<
-    DrawerScreenProps<HomeDrawerParamList, T, 'LeftDrawer'>,
-    RootStackScreenProps<keyof RootStackParamList>
+    DrawerScreenProps<HomeDrawerParamList, T>,
+    RootStackScreenProps<'Home'>
   >;
 
 type FeedTabParamList = {
@@ -75,8 +75,8 @@ type FeedTabParamList = {
 
 type FeedTabScreenProps<T extends keyof FeedTabParamList> =
   CompositeScreenProps<
-    BottomTabScreenProps<FeedTabParamList, T, 'BottomTabs'>,
-    HomeDrawerScreenProps<keyof HomeDrawerParamList>
+    BottomTabScreenProps<FeedTabParamList, T>,
+    HomeDrawerScreenProps<'Feed'>
   >;
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -135,7 +135,9 @@ export const PostDetailsScreen = ({
   });
 
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
-  expectTypeOf(navigation.getParent).parameter(0).toEqualTypeOf<undefined>();
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'PostDetails' | undefined>();
 };
 
 export const FeedScreen = ({
@@ -175,7 +177,7 @@ export const FeedScreen = ({
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'drawer'>();
   expectTypeOf(navigation.getParent)
     .parameter(0)
-    .toEqualTypeOf<'LeftDrawer' | undefined>();
+    .toEqualTypeOf<'Feed' | 'Home' | undefined>();
 };
 
 export const PopularScreen = ({
@@ -218,7 +220,7 @@ export const PopularScreen = ({
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
   expectTypeOf(navigation.getParent)
     .parameter(0)
-    .toEqualTypeOf<'LeftDrawer' | 'BottomTabs' | undefined>();
+    .toEqualTypeOf<'Feed' | 'Home' | 'Popular' | undefined>();
 };
 
 export const LatestScreen = ({
@@ -246,7 +248,7 @@ export const LatestScreen = ({
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
   expectTypeOf(navigation.getParent)
     .parameter(0)
-    .toEqualTypeOf<'LeftDrawer' | 'BottomTabs' | undefined>();
+    .toEqualTypeOf<'Feed' | 'Home' | 'Latest' | undefined>();
 };
 
 /**
@@ -522,21 +524,6 @@ export const ThirdScreen = ({
 
   navigation.navigate(ScreenName2);
 };
-
-/**
- * Check for navigator ID
- */
-type FourthParamList = {
-  HasParams1: { id: string };
-  HasParams2: { user: string };
-  NoParams: undefined;
-};
-
-const FourthStack = createStackNavigator<FourthParamList, 'MyID'>();
-
-expectTypeOf(FourthStack.Navigator).parameter(0).toExtend<{
-  id: 'MyID';
-}>();
 
 /**
  * Check for errors on getCurrentRoute

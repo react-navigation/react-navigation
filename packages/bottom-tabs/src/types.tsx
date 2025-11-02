@@ -59,31 +59,27 @@ export type BottomTabNavigationHelpers = NavigationHelpers<
 export type BottomTabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   TabNavigationState<ParamList>,
   BottomTabNavigationOptions,
-  BottomTabNavigationEventMap
-> &
-  TabActionHelpers<ParamList>;
+  BottomTabNavigationEventMap,
+  TabActionHelpers<ParamList>
+>;
 
 export type BottomTabScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: BottomTabNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: BottomTabNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
 export type BottomTabOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = BottomTabScreenProps<ParamList, RouteName, NavigatorID> & {
+> = BottomTabScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -443,7 +439,6 @@ export type BottomTabBarButtonProps = Omit<
 
 export type BottomTabNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
-  string | undefined,
   TabNavigationState<ParamListBase>,
   BottomTabNavigationOptions,
   BottomTabNavigationEventMap,

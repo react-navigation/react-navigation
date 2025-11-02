@@ -20,7 +20,6 @@ import type {
 import { MaterialTopTabView } from '../views/MaterialTopTabView';
 
 function MaterialTopTabNavigator({
-  id,
   initialRouteName,
   backBehavior,
   UNSTABLE_routeNamesChangeBehavior,
@@ -40,7 +39,6 @@ function MaterialTopTabNavigator({
       MaterialTopTabNavigationOptions,
       MaterialTopTabNavigationEventMap
     >(TabRouter, {
-      id,
       initialRouteName,
       backBehavior,
       UNSTABLE_routeNamesChangeBehavior,
@@ -66,18 +64,15 @@ function MaterialTopTabNavigator({
 
 export function createMaterialTopTabNavigator<
   const ParamList extends ParamListBase,
-  const NavigatorID extends string | undefined = undefined,
   const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
-    NavigatorID: NavigatorID;
     State: TabNavigationState<ParamList>;
     ScreenOptions: MaterialTopTabNavigationOptions;
     EventMap: MaterialTopTabNavigationEventMap;
     NavigationList: {
       [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
         ParamList,
-        RouteName,
-        NavigatorID
+        RouteName
       >;
     };
     Navigator: typeof MaterialTopTabNavigator;
