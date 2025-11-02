@@ -8,10 +8,13 @@ export { getFocusedRouteNameFromRoute } from './getFocusedRouteNameFromRoute';
 export { getPathFromState } from './getPathFromState';
 export { getStateFromPath } from './getStateFromPath';
 export { NavigationContainerRefContext } from './NavigationContainerRefContext';
-export { NavigationContext } from './NavigationContext';
 export { NavigationHelpersContext } from './NavigationHelpersContext';
 export { NavigationIndependentTree } from './NavigationIndependentTree';
-export { NavigationRouteContext } from './NavigationRouteContext';
+export {
+  NavigationContext,
+  NavigationProvider,
+  NavigationRouteContext,
+} from './NavigationProvider';
 export { PreventRemoveContext } from './PreventRemoveContext';
 export { PreventRemoveProvider } from './PreventRemoveProvider';
 export {

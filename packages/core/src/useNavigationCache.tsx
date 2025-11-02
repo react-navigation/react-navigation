@@ -8,7 +8,7 @@ import {
 import * as React from 'react';
 
 import { NavigationBuilderContext } from './NavigationBuilderContext';
-import { NavigationContext } from './NavigationContext';
+import { NavigationContext } from './NavigationProvider';
 import type { NavigationHelpers, NavigationProp } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 

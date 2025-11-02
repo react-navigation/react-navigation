@@ -6,7 +6,7 @@ import {
   type GetStateListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
-import { NavigationRouteContext } from './NavigationRouteContext';
+import { NavigationRouteContext } from './NavigationProvider';
 
 type Options = {
   getState: () => NavigationState;

@@ -8,8 +8,7 @@ import {
   useFrameSize,
 } from '@react-navigation/elements';
 import {
-  NavigationContext,
-  NavigationRouteContext,
+  NavigationProvider,
   type ParamListBase,
   type RouteProp,
   StackActions,
@@ -273,186 +272,182 @@ const SceneView = ({
   });
 
   return (
-    <NavigationContext.Provider value={navigation}>
-      <NavigationRouteContext.Provider value={route}>
-        <ScreenStackItem
-          key={route.key}
-          screenId={route.key}
-          activityState={isPreloaded ? 0 : 2}
-          style={StyleSheet.absoluteFill}
-          aria-hidden={!focused}
-          customAnimationOnSwipe={animationMatchesGesture}
-          fullScreenSwipeEnabled={fullScreenGestureEnabled}
-          fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
-          freezeOnBlur={freezeOnBlur}
-          gestureEnabled={
-            Platform.OS === 'android'
-              ? // This prop enables handling of system back gestures on Android
-                // Since we handle them in JS side, we disable this
-                false
-              : gestureEnabled
-          }
-          homeIndicatorHidden={autoHideHomeIndicator}
-          hideKeyboardOnSwipe={keyboardHandlingEnabled}
-          navigationBarHidden={navigationBarHidden}
-          replaceAnimation={animationTypeForReplace}
-          stackPresentation={presentation === 'card' ? 'push' : presentation}
-          stackAnimation={animation}
-          screenOrientation={orientation}
-          sheetAllowedDetents={sheetAllowedDetents}
-          sheetLargestUndimmedDetentIndex={sheetLargestUndimmedDetentIndex}
-          sheetGrabberVisible={sheetGrabberVisible}
-          sheetInitialDetentIndex={sheetInitialDetentIndex}
-          sheetCornerRadius={sheetCornerRadius}
-          sheetElevation={sheetElevation}
-          sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
-          statusBarAnimation={statusBarAnimation}
-          statusBarHidden={statusBarHidden}
-          statusBarStyle={statusBarStyle}
-          swipeDirection={gestureDirectionOverride}
-          transitionDuration={animationDuration}
-          onWillAppear={onWillAppear}
-          onWillDisappear={onWillDisappear}
-          onAppear={onAppear}
-          onDisappear={onDisappear}
-          onDismissed={onDismissed}
-          onGestureCancel={onGestureCancel}
-          onSheetDetentChanged={onSheetDetentChanged}
-          gestureResponseDistance={gestureResponseDistance}
-          nativeBackButtonDismissalEnabled={false} // on Android
-          onHeaderBackButtonClicked={onHeaderBackButtonClicked}
-          preventNativeDismiss={isRemovePrevented} // on iOS
-          scrollEdgeEffects={{
-            bottom: scrollEdgeEffects?.bottom ?? 'automatic',
-            top: scrollEdgeEffects?.top ?? 'automatic',
-            left: scrollEdgeEffects?.left ?? 'automatic',
-            right: scrollEdgeEffects?.right ?? 'automatic',
-          }}
-          onNativeDismissCancelled={onNativeDismissCancelled}
-          // Unfortunately, because of the bug that exists on Fabric, where native event drivers
-          // for Animated objects are being created after the first notifications about the header height
-          // from the native side, `onHeaderHeightChange` event does not notify
-          // `animatedHeaderHeight` about initial values on appearing screens at the moment.
-          onHeaderHeightChange={Animated.event(
-            [
-              {
-                nativeEvent: {
-                  headerHeight: rawAnimatedHeaderHeight,
-                },
-              },
-            ],
+    <NavigationProvider navigation={navigation} route={route}>
+      <ScreenStackItem
+        key={route.key}
+        screenId={route.key}
+        activityState={isPreloaded ? 0 : 2}
+        style={StyleSheet.absoluteFill}
+        aria-hidden={!focused}
+        customAnimationOnSwipe={animationMatchesGesture}
+        fullScreenSwipeEnabled={fullScreenGestureEnabled}
+        fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
+        freezeOnBlur={freezeOnBlur}
+        gestureEnabled={
+          Platform.OS === 'android'
+            ? // This prop enables handling of system back gestures on Android
+              // Since we handle them in JS side, we disable this
+              false
+            : gestureEnabled
+        }
+        homeIndicatorHidden={autoHideHomeIndicator}
+        hideKeyboardOnSwipe={keyboardHandlingEnabled}
+        navigationBarHidden={navigationBarHidden}
+        replaceAnimation={animationTypeForReplace}
+        stackPresentation={presentation === 'card' ? 'push' : presentation}
+        stackAnimation={animation}
+        screenOrientation={orientation}
+        sheetAllowedDetents={sheetAllowedDetents}
+        sheetLargestUndimmedDetentIndex={sheetLargestUndimmedDetentIndex}
+        sheetGrabberVisible={sheetGrabberVisible}
+        sheetInitialDetentIndex={sheetInitialDetentIndex}
+        sheetCornerRadius={sheetCornerRadius}
+        sheetElevation={sheetElevation}
+        sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
+        statusBarAnimation={statusBarAnimation}
+        statusBarHidden={statusBarHidden}
+        statusBarStyle={statusBarStyle}
+        swipeDirection={gestureDirectionOverride}
+        transitionDuration={animationDuration}
+        onWillAppear={onWillAppear}
+        onWillDisappear={onWillDisappear}
+        onAppear={onAppear}
+        onDisappear={onDisappear}
+        onDismissed={onDismissed}
+        onGestureCancel={onGestureCancel}
+        onSheetDetentChanged={onSheetDetentChanged}
+        gestureResponseDistance={gestureResponseDistance}
+        nativeBackButtonDismissalEnabled={false} // on Android
+        onHeaderBackButtonClicked={onHeaderBackButtonClicked}
+        preventNativeDismiss={isRemovePrevented} // on iOS
+        scrollEdgeEffects={{
+          bottom: scrollEdgeEffects?.bottom ?? 'automatic',
+          top: scrollEdgeEffects?.top ?? 'automatic',
+          left: scrollEdgeEffects?.left ?? 'automatic',
+          right: scrollEdgeEffects?.right ?? 'automatic',
+        }}
+        onNativeDismissCancelled={onNativeDismissCancelled}
+        // Unfortunately, because of the bug that exists on Fabric, where native event drivers
+        // for Animated objects are being created after the first notifications about the header height
+        // from the native side, `onHeaderHeightChange` event does not notify
+        // `animatedHeaderHeight` about initial values on appearing screens at the moment.
+        onHeaderHeightChange={Animated.event(
+          [
             {
-              useNativeDriver,
-              listener: (e) => {
-                if (hasCustomHeader) {
-                  // If we have a custom header, don't use native header height
-                  return;
-                }
-
-                if (
-                  Platform.OS === 'android' &&
-                  (options.headerBackground != null ||
-                    options.headerTransparent)
-                ) {
-                  // FIXME: On Android, we get 0 if the header is translucent
-                  // So we set a default height in that case
-                  setHeaderHeight(ANDROID_DEFAULT_HEADER_HEIGHT + topInset);
-                  return;
-                }
-
-                if (
-                  e.nativeEvent &&
-                  typeof e.nativeEvent === 'object' &&
-                  'headerHeight' in e.nativeEvent &&
-                  typeof e.nativeEvent.headerHeight === 'number'
-                ) {
-                  const headerHeight =
-                    e.nativeEvent.headerHeight + headerHeightCorrectionOffset;
-
-                  // Only debounce if header has large title or search bar
-                  // As it's the only case where the header height can change frequently
-                  const doesHeaderAnimate =
-                    Platform.OS === 'ios' &&
-                    (options.headerLargeTitle ||
-                      options.headerSearchBarOptions);
-
-                  if (doesHeaderAnimate) {
-                    setHeaderHeightDebounced(headerHeight);
-                  } else {
-                    setHeaderHeight(headerHeight);
-                  }
-                }
+              nativeEvent: {
+                headerHeight: rawAnimatedHeaderHeight,
               },
-            }
-          )}
-          contentStyle={[
-            presentation !== 'transparentModal' &&
-              presentation !== 'containedTransparentModal' && {
-                backgroundColor: colors.background,
-              },
-            contentStyle,
-          ]}
-          headerConfig={headerConfig}
-          unstable_sheetFooter={unstable_sheetFooter}
-          // When ts-expect-error is added, it affects all the props below it
-          // So we keep any props that need it at the end
-          // Otherwise invalid props may not be caught by TypeScript
-          shouldFreeze={shouldFreeze}
-        >
-          <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
-            <HeaderHeightContext.Provider
-              value={
-                headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)
+            },
+          ],
+          {
+            useNativeDriver,
+            listener: (e) => {
+              if (hasCustomHeader) {
+                // If we have a custom header, don't use native header height
+                return;
               }
-            >
-              {headerBackground != null ? (
-                /**
-                 * To show a custom header background, we render it at the top of the screen below the header
-                 * The header also needs to be positioned absolutely (with `translucent` style)
-                 */
-                <View
-                  style={[
-                    styles.background,
-                    headerTransparent ? styles.translucent : null,
-                    { height: headerHeight },
-                  ]}
-                >
-                  {headerBackground()}
-                </View>
-              ) : null}
-              {header != null && headerShown !== false ? (
-                <View
-                  onLayout={(e) => {
-                    const headerHeight = e.nativeEvent.layout.height;
 
-                    setHeaderHeight(headerHeight);
-                    rawAnimatedHeaderHeight.setValue(headerHeight);
-                  }}
-                  style={[
-                    styles.header,
-                    headerTransparent ? styles.absolute : null,
-                  ]}
-                >
-                  {header({
-                    back: headerBack,
-                    options,
-                    route,
-                    navigation,
-                  })}
-                </View>
-              ) : null}
-              <HeaderShownContext.Provider
-                value={isParentHeaderShown || headerShown !== false}
+              if (
+                Platform.OS === 'android' &&
+                (options.headerBackground != null || options.headerTransparent)
+              ) {
+                // FIXME: On Android, we get 0 if the header is translucent
+                // So we set a default height in that case
+                setHeaderHeight(ANDROID_DEFAULT_HEADER_HEIGHT + topInset);
+                return;
+              }
+
+              if (
+                e.nativeEvent &&
+                typeof e.nativeEvent === 'object' &&
+                'headerHeight' in e.nativeEvent &&
+                typeof e.nativeEvent.headerHeight === 'number'
+              ) {
+                const headerHeight =
+                  e.nativeEvent.headerHeight + headerHeightCorrectionOffset;
+
+                // Only debounce if header has large title or search bar
+                // As it's the only case where the header height can change frequently
+                const doesHeaderAnimate =
+                  Platform.OS === 'ios' &&
+                  (options.headerLargeTitle || options.headerSearchBarOptions);
+
+                if (doesHeaderAnimate) {
+                  setHeaderHeightDebounced(headerHeight);
+                } else {
+                  setHeaderHeight(headerHeight);
+                }
+              }
+            },
+          }
+        )}
+        contentStyle={[
+          presentation !== 'transparentModal' &&
+            presentation !== 'containedTransparentModal' && {
+              backgroundColor: colors.background,
+            },
+          contentStyle,
+        ]}
+        headerConfig={headerConfig}
+        unstable_sheetFooter={unstable_sheetFooter}
+        // When ts-expect-error is added, it affects all the props below it
+        // So we keep any props that need it at the end
+        // Otherwise invalid props may not be caught by TypeScript
+        shouldFreeze={shouldFreeze}
+      >
+        <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+          <HeaderHeightContext.Provider
+            value={
+              headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)
+            }
+          >
+            {headerBackground != null ? (
+              /**
+               * To show a custom header background, we render it at the top of the screen below the header
+               * The header also needs to be positioned absolutely (with `translucent` style)
+               */
+              <View
+                style={[
+                  styles.background,
+                  headerTransparent ? styles.translucent : null,
+                  { height: headerHeight },
+                ]}
               >
-                <HeaderBackContext.Provider value={headerBack}>
-                  {render()}
-                </HeaderBackContext.Provider>
-              </HeaderShownContext.Provider>
-            </HeaderHeightContext.Provider>
-          </AnimatedHeaderHeightContext.Provider>
-        </ScreenStackItem>
-      </NavigationRouteContext.Provider>
-    </NavigationContext.Provider>
+                {headerBackground()}
+              </View>
+            ) : null}
+            {header != null && headerShown !== false ? (
+              <View
+                onLayout={(e) => {
+                  const headerHeight = e.nativeEvent.layout.height;
+
+                  setHeaderHeight(headerHeight);
+                  rawAnimatedHeaderHeight.setValue(headerHeight);
+                }}
+                style={[
+                  styles.header,
+                  headerTransparent ? styles.absolute : null,
+                ]}
+              >
+                {header({
+                  back: headerBack,
+                  options,
+                  route,
+                  navigation,
+                })}
+              </View>
+            ) : null}
+            <HeaderShownContext.Provider
+              value={isParentHeaderShown || headerShown !== false}
+            >
+              <HeaderBackContext.Provider value={headerBack}>
+                {render()}
+              </HeaderBackContext.Provider>
+            </HeaderShownContext.Provider>
+          </HeaderHeightContext.Provider>
+        </AnimatedHeaderHeightContext.Provider>
+      </ScreenStackItem>
+    </NavigationProvider>
   );
 };
 

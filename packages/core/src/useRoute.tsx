@@ -1,7 +1,7 @@
 import type { ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { NavigationRouteContext } from './NavigationRouteContext';
+import { NavigationRouteContext } from './NavigationProvider';
 import type { RouteForName, RouteProp } from './types';
 
 /**
