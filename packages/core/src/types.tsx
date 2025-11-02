@@ -429,26 +429,14 @@ export type NavigationProp<
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {},
   ActionHelpers extends Record<string, (...args: any) => void> = {},
-> = WithParent<
-  RouteName,
-  NavigationHelpersCommon<ParamList, State> & {
-    /**
-     * Update the options for the route.
-     * The options object will be shallow merged with default options object.
-     *
-     * @param update Options object or a callback which takes the options from navigator config and returns a new options object.
-     */
-    setOptions(options: Partial<ScreenOptions>): void;
-  } & NavigationHelpersRoute<ParamList, RouteName> &
-    ActionHelpers &
-    EventConsumer<EventMap & EventMapCore<State>>
-> &
-  PrivateValueStore<[ParamList, RouteName, EventMap]>;
-
-type WithParent<RouteName, NavigationPropType> = Omit<
-  NavigationPropType,
-  'getParent'
-> & {
+> = Omit<NavigationHelpersCommon<ParamList, State>, 'getParent'> & {
+  /**
+   * Update the options for the route.
+   * The options object will be shallow merged with default options object.
+   *
+   * @param options Partial options object for the current screen.
+   */
+  setOptions(options: Partial<ScreenOptions>): void;
   /**
    * Returns the navigation prop of the parent screen.
    * If a route name is provided, the navigation prop from the parent screen with matching route name (including current) will be returned.
@@ -456,9 +444,21 @@ type WithParent<RouteName, NavigationPropType> = Omit<
    *
    * @param routeName Optional route name of a parent screen.
    */
-  getParent(routeName: RouteName): WithParent<RouteName, NavigationPropType>;
+  getParent(
+    routeName: RouteName
+  ): NavigationProp<
+    ParamList,
+    RouteName,
+    State,
+    ScreenOptions,
+    EventMap,
+    ActionHelpers
+  >;
   getParent(): NavigationProp<ParamListBase> | undefined;
-};
+} & NavigationHelpersRoute<ParamList, RouteName> &
+  ActionHelpers &
+  EventConsumer<EventMap & EventMapCore<State>> &
+  PrivateValueStore<[ParamList, RouteName, EventMap]>;
 
 export type RouteProp<
   ParamList extends ParamListBase,
