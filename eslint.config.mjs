@@ -31,6 +31,7 @@ export default defineConfig([
         '@react-navigation/native-stack',
         '@react-navigation/drawer',
         '@react-navigation/bottom-tabs',
+        '@react-navigation/bottom-tabs/unstable',
         '@react-navigation/material-top-tabs',
         '@react-navigation/elements',
         '@react-navigation/devtools',

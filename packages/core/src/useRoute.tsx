@@ -23,9 +23,11 @@ export function useRoute<
 >(name: RouteName): RouteForName<ParamList, RouteName>;
 export function useRoute<
   const ParamList extends {} = RootParamList,
->(): ParamList extends ParamListBase
-  ? RouteForName<ParamList, string>
-  : RouteProp<ParamListBase>;
+>(): {} extends ParamList
+  ? RouteProp<ParamListBase>
+  : ParamList extends ParamListBase
+    ? RouteForName<ParamList, string>
+    : RouteProp<ParamListBase>;
 export function useRoute(name?: string) {
   const route = React.useContext(NavigationRouteContext);
 
