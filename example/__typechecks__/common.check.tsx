@@ -7,31 +7,40 @@ import type {
 } from '@react-navigation/bottom-tabs';
 import type {
   DrawerNavigationOptions,
+  DrawerNavigationProp,
   DrawerScreenProps,
 } from '@react-navigation/drawer';
 import { Button } from '@react-navigation/elements';
 import {
+  type CompositeNavigationProp,
   type CompositeScreenProps,
+  type GenericNavigation,
   Link,
   type NavigationAction,
   type NavigationContainerRef,
   type NavigationHelpers,
+  type NavigationProp,
   type NavigatorScreenParams,
+  type ParamListBase,
   type RootParamList,
   type Route,
   type RouteForName,
   type RouteProp,
   type Theme,
   useLinkProps,
+  useNavigation,
   useRoute,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackNavigationOptions,
+  type StackNavigationProp,
   type StackOptionsArgs,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
+
+import type { StaticScreenParams } from '../src/Screens/Static';
 
 /**
  * Check for the type of the `navigation` and `route` objects with regular usage
@@ -820,3 +829,118 @@ useRoute<RootStackParamList, 'Invalid'>('Invalid');
 
 // @ts-expect-error
 useRoute('Invalid');
+
+/**
+ * Check for useNavigation return type based on the arguments
+ */
+{
+  const navigation = useNavigation();
+
+  expectTypeOf(navigation).toEqualTypeOf<GenericNavigation<RootParamList>>();
+
+  expectTypeOf(navigation.getParent()).toEqualTypeOf<
+    NavigationProp<ParamListBase> | undefined
+  >();
+}
+
+{
+  const navigation = useNavigation<typeof Stack>();
+
+  expectTypeOf(navigation).toEqualTypeOf<
+    {
+      [K in keyof RootStackParamList]: StackNavigationProp<
+        RootStackParamList,
+        K
+      >;
+    }[keyof RootStackParamList]
+  >();
+
+  expectTypeOf(navigation.getParent()).toEqualTypeOf<
+    NavigationProp<ParamListBase> | undefined
+  >();
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+  expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<
+    (keyof RootStackParamList)[]
+  >();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<StackNavigationOptions>>();
+}
+
+{
+  const navigation = useNavigation('NotFound');
+
+  expectTypeOf(navigation).toEqualTypeOf<
+    StackNavigationProp<RootParamList, 'NotFound'>
+  >();
+
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'NotFound' | undefined>();
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+  expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<
+    (keyof RootParamList)[]
+  >();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<StackNavigationOptions>>();
+}
+
+{
+  const navigation = useNavigation('Examples');
+
+  expectTypeOf(navigation).toEqualTypeOf<
+    CompositeNavigationProp<
+      DrawerNavigationProp<{ Examples: undefined }, 'Examples'>,
+      StackNavigationProp<RootParamList, 'Home'>
+    >
+  >();
+
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'Examples' | 'Home' | undefined>();
+
+  expectTypeOf(navigation.getParent('Home')).toEqualTypeOf<
+    StackNavigationProp<RootParamList, 'Home'>
+  >();
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'drawer'>();
+
+  expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<'Examples'[]>();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<DrawerNavigationOptions>>();
+}
+
+{
+  const navigation = useNavigation('Home');
+
+  expectTypeOf(navigation).toEqualTypeOf<
+    StackNavigationProp<RootParamList, 'Home'> &
+      CompositeNavigationProp<
+        StackNavigationProp<StaticScreenParams, 'Home'>,
+        StackNavigationProp<RootParamList, 'StaticScreen'>
+      >
+  >();
+
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'Home' | 'StaticScreen' | undefined>();
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+  expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<
+    (keyof RootParamList)[]
+  >();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<StackNavigationOptions>>();
+}

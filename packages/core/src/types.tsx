@@ -367,7 +367,10 @@ type NavigationHelpersCommon<
 
   /**
    * Check if the screen is focused. The method returns `true` if focused, `false` otherwise.
-   * Note that this method doesn't re-render screen when the focus changes. So don't use it in `render`.
+   * Note that this method is non-reactive.
+   * It doesn't re-render the component when the result changes.
+   * So don't use it in `render`.
+   *
    * To get notified of focus changes, use `addListener('focus', cb)` and `addListener('blur', cb)`.
    * To conditionally render content based on focus state, use the `useIsFocused` hook.
    */
@@ -381,7 +384,9 @@ type NavigationHelpersCommon<
 
   /**
    * Returns the navigator's state.
-   * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
+   * Note that this method is non-reactive.
+   * It doesn't re-render the component when the result changes.
+   * So don't use it in `render`.
    */
   getState(): State;
 } & PrivateValueStore<[ParamList, unknown, unknown]>;
@@ -839,17 +844,20 @@ type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
   ? ParamListRoute<ParamList>
   : Route<string>;
 
-export type NavigationForName<
-  Navigator,
-  RouteName extends keyof NavigationListForNavigator<Navigator>,
-> = NavigationListForNavigator<Navigator>[RouteName];
-
 export type NavigationListForNavigator<Navigator> = FlatType<
   Navigator extends TypedNavigator<infer Bag, any>
-    ? Bag['NavigationList'] &
-        NavigationListForStaticConfig<Bag['NavigationList'], Navigator>
-    : {}
+    ? Bag['NavigationList']
+    : Navigator extends PrivateValueStore<[any, infer NavigationList, any]>
+      ? NavigationList
+      : {}
 >;
+
+export type NavigationListForNested<Navigator> =
+  NavigationListForNavigator<Navigator> &
+    NavigationListForStaticConfig<
+      NavigationListForNavigator<Navigator>,
+      Navigator
+    >;
 
 type NavigationListWithComposite<
   Parent extends NavigationProp<any, any, any, any, any>,
@@ -872,13 +880,18 @@ type NavigationListForScreens<ParentList, Screens> = UnionToIntersection<
   {
     // Only check screens with static config to avoid overly-complex types
     // Otherwise TypeScript fails to load the types due to complexity
-    [K in keyof Screens]: Screens[K] extends { config: any }
-      ? ParentList extends Record<K, any>
+    [K in keyof Screens]: ParentList extends Record<K, any>
+      ? Screens[K] extends { config: any }
         ? NavigationListWithComposite<
             ParentList[K],
-            NavigationListForNavigator<Screens[K]>
+            NavigationListForNested<Screens[K]>
           >
-        : NavigationListForNavigator<Screens[K]>
+        : Screens[K] extends { screen: { config: any } }
+          ? NavigationListWithComposite<
+              ParentList[K],
+              NavigationListForNested<Screens[K]['screen']>
+            >
+          : {}
       : {};
   }[keyof Screens]
 >;
@@ -960,7 +973,7 @@ export type TypedNavigator<
   Bag['Navigator']
 > &
   (undefined extends Config ? {} : { config: Config }) &
-  PrivateValueStore<[Bag['NavigationList'], unknown, unknown]>;
+  PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
 
 type TypedNavigatorInternal<
   ParamList extends ParamListBase,

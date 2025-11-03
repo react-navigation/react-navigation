@@ -8,8 +8,7 @@ import {
   type CompositeNavigationProp,
   createStaticNavigation,
   type NavigationContainerRef,
-  type NavigationForName,
-  type NavigationListForNavigator,
+  type NavigationListForNested,
   type NavigationProp,
   type NavigatorScreenParams,
   type StaticParamList,
@@ -220,19 +219,19 @@ expectTypeOf<RootParamList>().toEqualTypeOf<{
 /**
  * Infer navigation props from navigator
  */
-expectTypeOf<NavigationForName<typeof RootStack, 'Home'>>().toEqualTypeOf<
+expectTypeOf<NavigationListForNested<typeof RootStack>['Home']>().toEqualTypeOf<
   StackNavigationProp<RootParamList, 'Home'>
 >();
 
-expectTypeOf<NavigationForName<typeof RootStack, 'Feed'>>().toEqualTypeOf<
+expectTypeOf<NavigationListForNested<typeof RootStack>['Feed']>().toEqualTypeOf<
   StackNavigationProp<RootParamList, 'Feed'>
 >();
 
-expectTypeOf<NavigationForName<typeof RootStack, 'Settings'>>().toEqualTypeOf<
-  StackNavigationProp<RootParamList, 'Settings'>
->();
+expectTypeOf<
+  NavigationListForNested<typeof RootStack>['Settings']
+>().toEqualTypeOf<StackNavigationProp<RootParamList, 'Settings'>>();
 
-expectTypeOf<NavigationForName<typeof RootStack, 'Chat'>>().toEqualTypeOf<
+expectTypeOf<NavigationListForNested<typeof RootStack>['Chat']>().toEqualTypeOf<
   CompositeNavigationProp<
     BottomTabNavigationProp<StaticParamList<typeof HomeTabs>, 'Chat'>,
     StackNavigationProp<RootParamList, 'Home'>
@@ -241,12 +240,12 @@ expectTypeOf<NavigationForName<typeof RootStack, 'Chat'>>().toEqualTypeOf<
 
 expectTypeOf<
   // @ts-expect-error
-  NavigationForName<typeof RootStack, 'Invalid'>
+  NavigationListForNested<typeof RootStack>['Invalid']
 >().toEqualTypeOf<unknown>();
 
-expectTypeOf<
-  keyof NavigationListForNavigator<typeof RootStack>
->().toEqualTypeOf<RooStackRouteName | 'Groups' | 'Chat'>();
+expectTypeOf<keyof NavigationListForNested<typeof RootStack>>().toEqualTypeOf<
+  RooStackRouteName | 'Groups' | 'Chat'
+>();
 
 /**
  * Infer screen names from config

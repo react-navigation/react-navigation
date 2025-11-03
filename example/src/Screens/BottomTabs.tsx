@@ -62,8 +62,7 @@ const linking: PathConfigMap<BottomTabParams> = {
 };
 
 const AlbumsScreen = () => {
-  const navigation =
-    useNavigation<BottomTabScreenProps<BottomTabParams>['navigation']>();
+  const navigation = useNavigation<typeof Tab>();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
   const isFocused = useIsFocused();

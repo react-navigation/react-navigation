@@ -1,8 +1,5 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import {
-  createNativeBottomTabNavigator,
-  type NativeBottomTabScreenProps,
-} from '@react-navigation/bottom-tabs/unstable';
+import { createNativeBottomTabNavigator } from '@react-navigation/bottom-tabs/unstable';
 import {
   Button,
   getHeaderTitle,
@@ -49,10 +46,7 @@ const linking: PathConfigMap<NativeBottomTabParams> = {
 };
 
 const AlbumsScreen = () => {
-  const navigation =
-    useNavigation<
-      NativeBottomTabScreenProps<NativeBottomTabParams>['navigation']
-    >();
+  const navigation = useNavigation<typeof Tab>();
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
