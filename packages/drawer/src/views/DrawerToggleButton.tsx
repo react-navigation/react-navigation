@@ -1,9 +1,5 @@
 import { HeaderButton } from '@react-navigation/elements';
-import {
-  DrawerActions,
-  type ParamListBase,
-  useNavigation,
-} from '@react-navigation/native';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import {
   type ColorValue,
   Image,
@@ -11,7 +7,6 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import type { DrawerNavigationProp } from '../types';
 import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
 
 type Props = {
@@ -28,7 +23,7 @@ export function DrawerToggleButton({
   imageSource = toggleDrawerIcon,
   ...rest
 }: Props) {
-  const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
+  const navigation = useNavigation();
 
   return (
     <HeaderButton

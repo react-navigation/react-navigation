@@ -15,30 +15,12 @@ import type {
   RouteGroupConfig,
 } from './types';
 import { useRoute } from './useRoute';
-
-/**
- * Flatten a type to remove all type alias names, unions etc.
- * This will show a plain object when hovering over the type.
- */
-type FlatType<T> = { [K in keyof T]: T[K] } & {};
-
-/**
- * keyof T doesn't work for union types. We can use distributive conditional types instead.
- * https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types
- */
-type KeysOf<T> = T extends {} ? keyof T : never;
-
-/**
- * We get a union type when using keyof, but we want an intersection instead.
- * https://stackoverflow.com/a/50375286/1665026
- */
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I
-) => void
-  ? I
-  : never;
-
-type UnknownToUndefined<T> = unknown extends T ? undefined : T;
+import type {
+  FlatType,
+  KeysOf,
+  UnionToIntersection,
+  UnknownToUndefined,
+} from './utilities';
 
 type ParamsForScreenComponent<T> = T extends {
   screen: React.ComponentType<{ route: { params: infer P } }>;

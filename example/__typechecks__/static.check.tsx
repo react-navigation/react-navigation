@@ -1,9 +1,15 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
+  type BottomTabNavigationProp,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
+import {
+  type CompositeNavigationProp,
   createStaticNavigation,
   type NavigationContainerRef,
+  type NavigationForName,
+  type NavigationListForNavigator,
   type NavigationProp,
   type NavigatorScreenParams,
   type StaticParamList,
@@ -11,7 +17,10 @@ import {
   type Theme,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createStackNavigator,
+  type StackNavigationProp,
+} from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
 
 const NativeStack = createNativeStackNavigator({
@@ -125,6 +134,43 @@ const Navigation = createStaticNavigation(RootStack);
 
 type RootParamList = StaticParamList<typeof RootStack>;
 
+type RooStackRouteName =
+  | 'Home'
+  | 'Profile'
+  | 'Feed'
+  | 'Settings'
+  | 'Login'
+  | 'Register'
+  | 'Account'
+  | 'A'
+  | 'B'
+  | 'C'
+  | 'D'
+  | 'E'
+  | 'F'
+  | 'G'
+  | 'H'
+  | 'I'
+  | 'J'
+  | 'K'
+  | 'L'
+  | 'M'
+  | 'N'
+  | 'O'
+  | 'P'
+  | 'Q'
+  | 'R'
+  | 'S'
+  | 'T'
+  | 'U'
+  | 'V'
+  | 'W'
+  | 'X'
+  | 'Y'
+  | 'Z';
+
+expectTypeOf<keyof RootParamList>().toEqualTypeOf<RooStackRouteName>();
+
 declare let navigation: NavigationProp<RootParamList>;
 
 /**
@@ -172,43 +218,42 @@ expectTypeOf<RootParamList>().toEqualTypeOf<{
 }>();
 
 /**
+ * Infer navigation props from navigator
+ */
+expectTypeOf<NavigationForName<typeof RootStack, 'Home'>>().toEqualTypeOf<
+  StackNavigationProp<RootParamList, 'Home'>
+>();
+
+expectTypeOf<NavigationForName<typeof RootStack, 'Feed'>>().toEqualTypeOf<
+  StackNavigationProp<RootParamList, 'Feed'>
+>();
+
+expectTypeOf<NavigationForName<typeof RootStack, 'Settings'>>().toEqualTypeOf<
+  StackNavigationProp<RootParamList, 'Settings'>
+>();
+
+expectTypeOf<NavigationForName<typeof RootStack, 'Chat'>>().toEqualTypeOf<
+  CompositeNavigationProp<
+    BottomTabNavigationProp<StaticParamList<typeof HomeTabs>, 'Chat'>,
+    StackNavigationProp<RootParamList, 'Home'>
+  >
+>();
+
+expectTypeOf<
+  // @ts-expect-error
+  NavigationForName<typeof RootStack, 'Invalid'>
+>().toEqualTypeOf<unknown>();
+
+expectTypeOf<
+  keyof NavigationListForNavigator<typeof RootStack>
+>().toEqualTypeOf<RooStackRouteName | 'Groups' | 'Chat'>();
+
+/**
  * Infer screen names from config
  */
-expectTypeOf(navigation.getState().routes[0].name).toEqualTypeOf<
-  | 'Home'
-  | 'Profile'
-  | 'Feed'
-  | 'Settings'
-  | 'Login'
-  | 'Register'
-  | 'Account'
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'E'
-  | 'F'
-  | 'G'
-  | 'H'
-  | 'I'
-  | 'J'
-  | 'K'
-  | 'L'
-  | 'M'
-  | 'N'
-  | 'O'
-  | 'P'
-  | 'Q'
-  | 'R'
-  | 'S'
-  | 'T'
-  | 'U'
-  | 'V'
-  | 'W'
-  | 'X'
-  | 'Y'
-  | 'Z'
->();
+expectTypeOf(
+  navigation.getState().routes[0].name
+).toEqualTypeOf<RooStackRouteName>();
 
 /**
  * Infer params from component props
