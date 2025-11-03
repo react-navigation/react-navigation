@@ -79,6 +79,11 @@ export type DrawerNavigationOptions = HeaderOptions & {
   }) => React.ReactNode;
 
   /**
+   * Display drawer icon on the left or right side.
+   */
+  drawerIconPosition?: 'left' | 'right';
+
+  /**
    * Color for the icon and label in the active item in the drawer.
    */
   drawerActiveTintColor?: ColorValue;
