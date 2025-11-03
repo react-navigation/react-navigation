@@ -1,5 +1,9 @@
 import { Button } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackScreenProps,
@@ -10,7 +14,7 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-export type MixedNativeStackParams = {
+type MixedNativeStackParams = {
   Article: { author: string };
   Albums: undefined;
 };
@@ -76,7 +80,9 @@ const AlbumsScreen = ({
 
 const Stack = createNativeStackNavigator<MixedNativeStackParams>();
 
-export function MixedNativeStack() {
+export function MixedNativeStack(
+  _: StaticScreenProps<NavigatorScreenParams<MixedNativeStackParams>>
+) {
   return (
     <Stack.Navigator>
       <Stack.Screen

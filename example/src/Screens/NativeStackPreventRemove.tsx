@@ -1,5 +1,10 @@
 import { Button } from '@react-navigation/elements';
-import { type PathConfigMap, usePreventRemove } from '@react-navigation/native';
+import {
+  type NavigatorScreenParams,
+  type PathConfigMap,
+  type StaticScreenProps,
+  usePreventRemove,
+} from '@react-navigation/native';
 import { CommonActions, useTheme } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
@@ -17,8 +22,9 @@ import {
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
+import type { PreventRemoveParams } from './StackPreventRemove';
 
-export type NativePreventRemoveParams = {
+type NativePreventRemoveParams = {
   Article: { author: string };
   Input: undefined;
 };
@@ -120,7 +126,9 @@ const InputScreen = ({
 
 const Stack = createNativeStackNavigator<NativePreventRemoveParams>();
 
-export function NativeStackPreventRemove() {
+export function NativeStackPreventRemove(
+  _: StaticScreenProps<NavigatorScreenParams<PreventRemoveParams>>
+) {
   return (
     <Stack.Navigator>
       <Stack.Screen

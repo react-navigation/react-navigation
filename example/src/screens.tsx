@@ -1,7 +1,4 @@
-import type {
-  NavigatorScreenParams,
-  PathConfigMap,
-} from '@react-navigation/native';
+import type { StaticConfig } from '@react-navigation/native';
 
 import { AuthFlow } from './Screens/AuthFlow';
 import { BottomTabs } from './Screens/BottomTabs';
@@ -62,26 +59,14 @@ export const SCREENS = {
   TabPreloadFlow,
   NativeStackPreloadFlow,
 } as const satisfies {
-  [key: string]: React.ComponentType<{}> & {
-    title: string;
-    linking: object | undefined;
-    options?: object;
-  };
-};
-
-type ExampleScreensParamList = {
-  [Key in keyof typeof SCREENS]: (typeof SCREENS)[Key]['linking'] extends PathConfigMap<
-    infer P
-  >
-    ? NavigatorScreenParams<P> | undefined
-    : undefined;
-};
-
-export type RootDrawerParamList = {
-  Examples: undefined;
-};
-
-export type RootStackParamList = ExampleScreensParamList & {
-  Home: NavigatorScreenParams<RootDrawerParamList> | undefined;
-  NotFound: undefined;
+  [key: string]:
+    | (React.ComponentType<{ route: any }> & {
+        title: string;
+        linking: object | undefined;
+        options?: object;
+      })
+    | {
+        title: string;
+        screen: { config: StaticConfig<any> };
+      };
 };

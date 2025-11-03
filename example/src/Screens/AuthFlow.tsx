@@ -1,5 +1,10 @@
 import { Button, Text } from '@react-navigation/elements';
-import { type PathConfigMap, useTheme } from '@react-navigation/native';
+import {
+  type NavigatorScreenParams,
+  type PathConfigMap,
+  type StaticScreenProps,
+  useTheme,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -7,7 +12,7 @@ import {
 import * as React from 'react';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
 
-export type AuthStackParams = {
+type AuthStackParams = {
   Home: undefined;
   Profile: undefined;
   SignIn: undefined;
@@ -149,7 +154,9 @@ type Action =
   | { type: 'SIGN_IN'; token: string }
   | { type: 'SIGN_OUT' };
 
-export function AuthFlow() {
+export function AuthFlow(
+  _: StaticScreenProps<NavigatorScreenParams<AuthStackParams>>
+) {
   const [state, dispatch] = React.useReducer(
     (prevState: State, action: Action) => {
       switch (action.type) {

@@ -5,7 +5,11 @@ import {
   Header,
   HeaderButton,
 } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackOptionsArgs,
@@ -25,7 +29,7 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type NativeHeaderCustomizationStackParams = {
+type NativeHeaderCustomizationStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
@@ -112,7 +116,11 @@ const AlbumsScreen = ({
 const Stack =
   createNativeStackNavigator<NativeHeaderCustomizationStackParams>();
 
-export function NativeStackHeaderCustomization() {
+export function NativeStackHeaderCustomization(
+  _: StaticScreenProps<
+    NavigatorScreenParams<NativeHeaderCustomizationStackParams>
+  >
+) {
   const onPress = () => {
     Alert.alert(
       'Never gonna give you up!',

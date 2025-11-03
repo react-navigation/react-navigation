@@ -5,7 +5,12 @@ import {
   Text,
   useHeaderHeight,
 } from '@react-navigation/elements';
-import { type PathConfigMap, useTheme } from '@react-navigation/native';
+import {
+  type NavigatorScreenParams,
+  type PathConfigMap,
+  type StaticScreenProps,
+  useTheme,
+} from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackHeaderItem,
@@ -205,7 +210,9 @@ const HeaderHeightView = ({
 
 const Stack = createNativeStackNavigator<NativeStackParams>();
 
-export function NativeStack() {
+export function NativeStack(
+  _: StaticScreenProps<NavigatorScreenParams<NativeStackParams>>
+) {
   const { colors } = useTheme();
 
   return (

@@ -1,5 +1,9 @@
 import { Button, Text } from '@react-navigation/elements';
-import { useTheme } from '@react-navigation/native';
+import {
+  type NavigatorScreenParams,
+  type StaticScreenProps,
+  useTheme,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -18,7 +22,7 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type TransparentStackParams = {
+type TransparentStackParams = {
   Article: { author: string };
   NewsFeed: undefined;
   Dialog: undefined;
@@ -129,7 +133,9 @@ const DialogScreen = ({
 
 const Stack = createStackNavigator<TransparentStackParams>();
 
-export function StackTransparent() {
+export function StackTransparent(
+  _: StaticScreenProps<NavigatorScreenParams<TransparentStackParams>>
+) {
   return (
     <Stack.Navigator>
       <Stack.Screen

@@ -15,6 +15,7 @@ import {
 import {
   type NavigatorScreenParams,
   type PathConfigMap,
+  type StaticScreenProps,
   useIsFocused,
   useLocale,
   useNavigation,
@@ -43,7 +44,7 @@ const getTabBarIcon =
     <MaterialCommunityIcons name={name} color={color} size={size} />
   );
 
-export type BottomTabParams = {
+type BottomTabParams = {
   TabStack: NavigatorScreenParams<NativeStackParams>;
   TabAlbums: undefined;
   TabContacts: undefined;
@@ -102,7 +103,9 @@ const Tab = createBottomTabNavigator<BottomTabParams>();
 const animations = ['none', 'fade', 'shift'] as const;
 const variants = ['material', 'uikit'] as const;
 
-export function BottomTabs() {
+export function BottomTabs(
+  _: StaticScreenProps<NavigatorScreenParams<BottomTabParams>>
+) {
   const { showActionSheetWithOptions } = useActionSheet();
   const { direction } = useLocale();
 

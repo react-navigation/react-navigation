@@ -595,14 +595,14 @@ useLinkProps<LinkParamList>({
   screen: 'PostDetails',
   params: { id: '123', section: '123' },
 });
+// @ts-expect-error
 useLinkProps<LinkParamList>({
   screen: 'PostDetails',
-  // @ts-expect-error
   params: { id: 123 },
 });
+// @ts-expect-error
 useLinkProps<LinkParamList>({
   screen: 'PostDetails',
-  // @ts-expect-error
   params: { id: '123', section: 123 },
 });
 useLinkProps<LinkParamList>({
@@ -610,9 +610,9 @@ useLinkProps<LinkParamList>({
   // @ts-expect-error
   params: { ids: '123' },
 });
+// @ts-expect-error
 useLinkProps<LinkParamList>({
   screen: 'PostDetails',
-  // @ts-expect-error
   params: {},
 });
 useLinkProps<LinkParamList>({ screen: 'Login' });
@@ -639,32 +639,20 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
 >
   PostDetails
 </Link>;
-<Link<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{ id: 123 }}
->
+// @ts-expect-error
+<Link<LinkParamList> screen="PostDetails" params={{ id: 123 }}>
   PostDetails
 </Link>;
-<Link<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{ id: '123', section: 123 }}
->
+// @ts-expect-error
+<Link<LinkParamList> screen="PostDetails" params={{ id: '123', section: 123 }}>
   PostDetails
 </Link>;
-<Link<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{ ids: '123' }}
->
+// @ts-expect-error
+<Link<LinkParamList> screen="PostDetails" params={{ ids: '123' }}>
   PostDetails
 </Link>;
-<Link<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{}}
->
+// @ts-expect-error
+<Link<LinkParamList> screen="PostDetails" params={{}}>
   PostDetails
 </Link>;
 <Link<LinkParamList> screen="Login">Albums</Link>;
@@ -695,32 +683,23 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
 >
   PostDetails
 </Button>;
-<Button<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{ id: 123 }}
->
+// @ts-expect-error
+<Button<LinkParamList> screen="PostDetails" params={{ id: 123 }}>
   PostDetails
 </Button>;
+// @ts-expect-error
 <Button<LinkParamList>
   screen="PostDetails"
-  // @ts-expect-error
   params={{ id: '123', section: 123 }}
 >
   PostDetails
 </Button>;
-<Button<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{ ids: '123' }}
->
+// @ts-expect-error
+<Button<LinkParamList> screen="PostDetails" params={{ ids: '123' }}>
   PostDetails
 </Button>;
-<Button<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{}}
->
+// @ts-expect-error
+<Button<LinkParamList> screen="PostDetails" params={{}}>
   PostDetails
 </Button>;
 <Button<LinkParamList> screen="Login">Albums</Button>;

@@ -1,9 +1,9 @@
 import { getDefaultHeaderHeight, Header } from '@react-navigation/elements';
-import { useTheme } from '@react-navigation/native';
+import { type StaticScreenProps, useTheme } from '@react-navigation/native';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export function Headers() {
+export function Headers(_: StaticScreenProps<{}>) {
   const { dark, colors } = useTheme();
   const insets = useSafeAreaInsets();
 
