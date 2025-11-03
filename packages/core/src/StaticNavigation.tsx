@@ -308,14 +308,7 @@ export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
  */
 export type StaticParamList<
   T extends {
-    readonly config: {
-      readonly screens?: Record<string, any>;
-      readonly groups?: {
-        [key: string]: {
-          screens: Record<string, any>;
-        };
-      };
-    };
+    readonly config: any;
   },
 > = FlatType<
   ParamListForScreens<T['config']['screens']> &

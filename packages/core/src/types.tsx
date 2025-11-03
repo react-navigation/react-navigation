@@ -864,7 +864,8 @@ export type TypedNavigator<
   Bag['NavigationList'],
   Bag['Navigator']
 > &
-  (undefined extends Config ? {} : { config: Config });
+  (undefined extends Config ? {} : { config: Config }) &
+  PrivateValueStore<[Bag['NavigationList'], unknown, unknown]>;
 
 type TypedNavigatorInternal<
   ParamList extends ParamListBase,

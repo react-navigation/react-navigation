@@ -4,9 +4,9 @@ import {
   type DrawerNavigationState,
   DrawerRouter,
   type DrawerRouterOptions,
-  type NavigatorTypeBagBase,
   type ParamListBase,
   type StaticConfig,
+  type StaticParamList,
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -65,22 +65,25 @@ function DrawerNavigator({
   );
 }
 
+type DrawerTypeBag<ParamList extends {}> = {
+  ParamList: ParamList;
+  State: DrawerNavigationState<ParamList>;
+  ScreenOptions: DrawerNavigationOptions;
+  EventMap: DrawerNavigationEventMap;
+  NavigationList: {
+    [RouteName in keyof ParamList]: DrawerNavigationProp<ParamList, RouteName>;
+  };
+  Navigator: typeof DrawerNavigator;
+};
+
 export function createDrawerNavigator<
   const ParamList extends ParamListBase,
-  const TypeBag extends NavigatorTypeBagBase = {
-    ParamList: ParamList;
-    State: DrawerNavigationState<ParamList>;
-    ScreenOptions: DrawerNavigationOptions;
-    EventMap: DrawerNavigationEventMap;
-    NavigationList: {
-      [RouteName in keyof ParamList]: DrawerNavigationProp<
-        ParamList,
-        RouteName
-      >;
-    };
-    Navigator: typeof DrawerNavigator;
-  },
-  const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
->(config?: Config): TypedNavigator<TypeBag, Config> {
+>(): TypedNavigator<DrawerTypeBag<ParamList>, undefined>;
+export function createDrawerNavigator<
+  const Config extends StaticConfig<DrawerTypeBag<ParamListBase>>,
+>(
+  config: Config
+): TypedNavigator<DrawerTypeBag<StaticParamList<{ config: Config }>>, Config>;
+export function createDrawerNavigator(config?: unknown) {
   return createNavigatorFactory(DrawerNavigator)(config);
 }

@@ -1,7 +1,6 @@
 import {
   createNavigatorFactory,
   type EventArg,
-  type NavigatorTypeBagBase,
   type ParamListBase,
   type StackActionHelpers,
   StackActions,
@@ -9,6 +8,7 @@ import {
   StackRouter,
   type StackRouterOptions,
   type StaticConfig,
+  type StaticParamList,
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -90,22 +90,31 @@ function NativeStackNavigator({
   );
 }
 
+type NativeStackTypeBag<ParamList extends {}> = {
+  ParamList: ParamList;
+  State: StackNavigationState<ParamList>;
+  ScreenOptions: NativeStackNavigationOptions;
+  EventMap: NativeStackNavigationEventMap;
+  NavigationList: {
+    [RouteName in keyof ParamList]: NativeStackNavigationProp<
+      ParamList,
+      RouteName
+    >;
+  };
+  Navigator: typeof NativeStackNavigator;
+};
+
 export function createNativeStackNavigator<
   const ParamList extends ParamListBase,
-  const TypeBag extends NavigatorTypeBagBase = {
-    ParamList: ParamList;
-    State: StackNavigationState<ParamList>;
-    ScreenOptions: NativeStackNavigationOptions;
-    EventMap: NativeStackNavigationEventMap;
-    NavigationList: {
-      [RouteName in keyof ParamList]: NativeStackNavigationProp<
-        ParamList,
-        RouteName
-      >;
-    };
-    Navigator: typeof NativeStackNavigator;
-  },
-  const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
->(config?: Config): TypedNavigator<TypeBag, Config> {
+>(): TypedNavigator<NativeStackTypeBag<ParamList>, undefined>;
+export function createNativeStackNavigator<
+  const Config extends StaticConfig<NativeStackTypeBag<ParamListBase>>,
+>(
+  config: Config
+): TypedNavigator<
+  NativeStackTypeBag<StaticParamList<{ config: Config }>>,
+  Config
+>;
+export function createNativeStackNavigator(config?: unknown) {
   return createNavigatorFactory(NativeStackNavigator)(config);
 }
