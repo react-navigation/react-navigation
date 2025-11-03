@@ -5,6 +5,7 @@ import {
   NavigationHelpersContext,
   type NavigatorScreenParams,
   type ParamListBase,
+  type RootParamList,
 } from '@react-navigation/core';
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 import * as React from 'react';
@@ -13,7 +14,7 @@ import { type GestureResponderEvent, Platform } from 'react-native';
 import { LinkingContext } from './LinkingContext';
 
 export type LinkProps<
-  ParamList extends ReactNavigation.RootParamList,
+  ParamList extends RootParamList,
   RouteName extends keyof ParamList = keyof ParamList,
 > =
   | ({
@@ -68,7 +69,7 @@ const getStateFromParams = (
  * @param props.href Optional absolute path to use for the href (e.g. `/feeds/hot`).
  * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
  */
-export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
+export function useLinkProps<ParamList extends RootParamList>({
   screen,
   params,
   href,

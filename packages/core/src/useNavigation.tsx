@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationContext } from './NavigationProvider';
-import type { NavigationProp } from './types';
+import type { NavigationProp, RootParamList } from './types';
 
 /**
  * Hook to access the navigation prop of the parent screen anywhere.
@@ -11,7 +11,7 @@ import type { NavigationProp } from './types';
  * @returns Navigation prop of the parent screen.
  */
 export function useNavigation<
-  T = Omit<NavigationProp<ReactNavigation.RootParamList>, 'getState'> & {
+  T = Omit<NavigationProp<RootParamList>, 'getState'> & {
     getState(): NavigationState | undefined;
   },
 >(): T {

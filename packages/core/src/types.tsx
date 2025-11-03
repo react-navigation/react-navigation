@@ -10,16 +10,53 @@ import type {
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace ReactNavigation {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface RootParamList {}
+/**
+ * Root navigator used in the app.
+ * It's used for the global types in the app.
+ * Users need to use module augmentation to add their navigator type:
+ *
+ * ```ts
+ * // Navigator created with static or dynamic API
+ * const RootStack = createStackNavigator({
+ *   // ...
+ * });
+ *
+ * type RootStackType = typeof RootStack;
+ *
+ * declare module '@react-navigation/core' {
+ *   interface RootNavigator extends RootStackType {}
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface RootNavigator {}
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface Theme {}
-  }
-}
+/**
+ * Theme object for the navigation components.
+ * Custom properties can be added using declaration merging:
+ *
+ * ```ts
+ * declare module '@react-navigation/core' {
+ *   interface Theme extends NativeTheme {
+ *     myCustomProperty: string;
+ *   }
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface Theme {}
+
+export type RootParamList =
+  RootNavigator extends TypedNavigatorInternal<
+    infer ParamList,
+    any,
+    any,
+    any,
+    any,
+    any
+  >
+    ? ParamList
+    : {};
 
 type Keyof<T extends {}> = Extract<keyof T, string>;
 
@@ -78,7 +115,7 @@ export type DefaultNavigatorOptions<
     | ((props: {
         route: RouteProp<ParamList>;
         navigation: Navigation;
-        theme: ReactNavigation.Theme;
+        theme: Theme;
       }) => ScreenOptions);
 
   /**
@@ -415,7 +452,7 @@ export type NavigationContainerProps = {
   /**
    * Theme object for the UI elements.
    */
-  theme?: ReactNavigation.Theme;
+  theme?: Theme;
   /**
    * Children elements to render.
    */
@@ -523,7 +560,7 @@ export type ScreenLayoutArgs<
   route: RouteProp<ParamList, RouteName>;
   options: ScreenOptions;
   navigation: Navigation;
-  theme: ReactNavigation.Theme;
+  theme: Theme;
   children: React.ReactElement;
 };
 
@@ -633,7 +670,7 @@ export type RouteConfigProps<
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
         navigation: Navigation;
-        theme: ReactNavigation.Theme;
+        theme: Theme;
       }) => ScreenOptions);
 
   /**
@@ -709,7 +746,7 @@ export type RouteGroupConfig<
     | ((props: {
         route: RouteProp<ParamList, keyof ParamList>;
         navigation: Navigation;
-        theme: ReactNavigation.Theme;
+        theme: Theme;
       }) => ScreenOptions);
 
   /**

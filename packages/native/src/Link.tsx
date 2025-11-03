@@ -1,4 +1,4 @@
-import { useTheme } from '@react-navigation/core';
+import { type RootParamList, useTheme } from '@react-navigation/core';
 import * as React from 'react';
 import {
   type GestureResponderEvent,
@@ -9,18 +9,15 @@ import {
 
 import { type LinkProps, useLinkProps } from './useLinkProps';
 
-type Props<ParamList extends ReactNavigation.RootParamList> =
-  LinkProps<ParamList> &
-    Omit<TextProps, 'disabled'> & {
-      target?: string;
-      onPress?: (
-        e:
-          | React.MouseEvent<HTMLAnchorElement, MouseEvent>
-          | GestureResponderEvent
-      ) => void;
-      disabled?: boolean | null;
-      children: React.ReactNode;
-    };
+type Props<ParamList extends RootParamList> = LinkProps<ParamList> &
+  Omit<TextProps, 'disabled'> & {
+    target?: string;
+    onPress?: (
+      e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
+    ) => void;
+    disabled?: boolean | null;
+    children: React.ReactNode;
+  };
 
 /**
  * Component to render link to another screen using a path.
@@ -32,7 +29,7 @@ type Props<ParamList extends ReactNavigation.RootParamList> =
  * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
  * @param props.children Child elements to render the content.
  */
-export function Link<ParamList extends ReactNavigation.RootParamList>({
+export function Link<ParamList extends RootParamList>({
   screen,
   params,
   action,

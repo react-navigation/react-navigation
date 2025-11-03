@@ -8,6 +8,7 @@ import {
   type NavigatorScreenParams,
   type StaticParamList,
   type StaticScreenProps,
+  type Theme,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -376,7 +377,7 @@ createBottomTabNavigator({
     expectTypeOf(route.name).toEqualTypeOf<string>();
     expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
     expectTypeOf(navigation.jumpTo).toExtend<() => void>();
-    expectTypeOf(theme).toEqualTypeOf<ReactNavigation.Theme>();
+    expectTypeOf(theme).toEqualTypeOf<Theme>();
 
     return {};
   },
@@ -391,7 +392,7 @@ createBottomTabNavigator({
         expectTypeOf(route.name).toEqualTypeOf<string>();
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
         expectTypeOf(navigation.jumpTo).toExtend<() => void>();
-        expectTypeOf(theme).toEqualTypeOf<ReactNavigation.Theme>();
+        expectTypeOf(theme).toEqualTypeOf<Theme>();
 
         return {};
       },

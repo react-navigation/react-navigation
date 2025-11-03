@@ -7,13 +7,6 @@ import type {
 } from '@react-navigation/core';
 import type { ColorValue as ReactNativeColorValue } from 'react-native';
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace ReactNavigation {
-    interface Theme extends NativeTheme {}
-  }
-}
-
 type ColorValue =
   | `#${string}`
   | `rgb(${string})`
@@ -59,7 +52,9 @@ interface NativeTheme {
   };
 }
 
-export type Theme = NativeTheme;
+declare module '@react-navigation/core' {
+  interface Theme extends NativeTheme {}
+}
 
 export type LocaleDirection = 'ltr' | 'rtl';
 

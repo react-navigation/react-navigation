@@ -17,9 +17,11 @@ import {
   type NavigationContainerRef,
   type NavigationHelpers,
   type NavigatorScreenParams,
+  type RootParamList,
   type Route,
   type RouteForName,
   type RouteProp,
+  type Theme,
   useLinkProps,
   useRoute,
 } from '@react-navigation/native';
@@ -395,7 +397,7 @@ const SecondStack = createStackNavigator<SecondParamList>();
     expectTypeOf(navigation.push)
       .parameter(0)
       .toEqualTypeOf<keyof SecondParamList>();
-    expectTypeOf(theme).toEqualTypeOf<ReactNavigation.Theme>();
+    expectTypeOf(theme).toEqualTypeOf<Theme>();
 
     return {};
   }}
@@ -415,7 +417,7 @@ const SecondStack = createStackNavigator<SecondParamList>();
     expectTypeOf(navigation.push)
       .parameter(0)
       .toEqualTypeOf<keyof SecondParamList>();
-    expectTypeOf(theme).toEqualTypeOf<ReactNavigation.Theme>();
+    expectTypeOf(theme).toEqualTypeOf<Theme>();
 
     return {};
   }}
@@ -567,7 +569,7 @@ expectTypeOf(navigationRefUntyped.getCurrentRoute()).toEqualTypeOf<
 /**
  * Screen and params for Link, Button, etc.
  */
-type LinkParamList = ReactNavigation.RootParamList & RootStackParamList;
+type LinkParamList = RootParamList & RootStackParamList;
 
 // @ts-expect-error
 useLinkProps<LinkParamList>({ screen: 'Albums' });
@@ -787,17 +789,13 @@ expectTypeOf<
 /**
  * Check for useRoute return type based on the arguments
  */
-expectTypeOf(useRoute()).toEqualTypeOf<
-  RouteForName<ReactNavigation.RootParamList, string>
->();
+expectTypeOf(useRoute()).toEqualTypeOf<RouteForName<RootParamList, string>>();
 
 {
   const route = useRoute();
 
   if (route.name === 'NotFound') {
-    expectTypeOf(route).toEqualTypeOf<
-      RouteProp<ReactNavigation.RootParamList, 'NotFound'>
-    >();
+    expectTypeOf(route).toEqualTypeOf<RouteProp<RootParamList, 'NotFound'>>();
   }
 
   if (route.name === 'TabChat') {
@@ -831,7 +829,7 @@ expectTypeOf(useRoute<MultiParamList, 'MyScreen'>('MyScreen')).toEqualTypeOf<
 >();
 
 expectTypeOf(useRoute('NotFound')).toEqualTypeOf<
-  RouteProp<ReactNavigation.RootParamList, 'NotFound'>
+  RouteProp<RootParamList, 'NotFound'>
 >();
 
 expectTypeOf(useRoute('TabChat')).toEqualTypeOf<

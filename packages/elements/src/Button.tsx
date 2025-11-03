@@ -1,5 +1,6 @@
 import {
   type LinkProps,
+  type RootParamList,
   useLinkProps,
   useTheme,
 } from '@react-navigation/native';
@@ -19,18 +20,18 @@ type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
   children: string | string[];
 };
 
-type ButtonLinkProps<ParamList extends ReactNavigation.RootParamList> =
-  LinkProps<ParamList> & Omit<ButtonBaseProps, 'onPress'>;
+type ButtonLinkProps<ParamList extends RootParamList> = LinkProps<ParamList> &
+  Omit<ButtonBaseProps, 'onPress'>;
 
 const BUTTON_RADIUS = 40;
 
-export function Button<ParamList extends ReactNavigation.RootParamList>(
+export function Button<ParamList extends RootParamList>(
   props: ButtonLinkProps<ParamList>
 ): React.JSX.Element;
 
 export function Button(props: ButtonBaseProps): React.JSX.Element;
 
-export function Button<ParamList extends ReactNavigation.RootParamList>(
+export function Button<ParamList extends RootParamList>(
   props: ButtonBaseProps | ButtonLinkProps<ParamList>
 ) {
   if ('screen' in props || 'action' in props) {
@@ -41,7 +42,7 @@ export function Button<ParamList extends ReactNavigation.RootParamList>(
   }
 }
 
-function ButtonLink<ParamList extends ReactNavigation.RootParamList>({
+function ButtonLink<ParamList extends RootParamList>({
   screen,
   params,
   action,

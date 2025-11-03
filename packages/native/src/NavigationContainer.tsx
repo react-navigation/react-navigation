@@ -6,6 +6,7 @@ import {
   type NavigationContainerProps,
   type NavigationContainerRef,
   type ParamListBase,
+  type RootParamList,
   ThemeProvider,
   validatePathConfig,
 } from '@react-navigation/core';
@@ -148,8 +149,8 @@ function NavigationContainerInner(
 
 export const NavigationContainer = React.forwardRef(
   NavigationContainerInner
-) as <RootParamList extends {} = ReactNavigation.RootParamList>(
-  props: Props<RootParamList> & {
-    ref?: React.Ref<NavigationContainerRef<RootParamList>>;
+) as <ParamList extends {} = RootParamList>(
+  props: Props<ParamList> & {
+    ref?: React.Ref<NavigationContainerRef<ParamList>>;
   }
 ) => React.ReactElement;

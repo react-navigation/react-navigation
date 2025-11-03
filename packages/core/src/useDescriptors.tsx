@@ -22,6 +22,7 @@ import type {
   NavigationProp,
   RouteConfig,
   RouteProp,
+  Theme,
 } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 import { useNavigationCache } from './useNavigationCache';
@@ -49,7 +50,7 @@ type ScreenLayout<ScreenOptions extends {}> = (props: {
   route: RouteProp<ParamListBase, string>;
   options: ScreenOptions;
   navigation: any;
-  theme: ReactNavigation.Theme;
+  theme: Theme;
   children: React.ReactElement;
 }) => React.ReactElement;
 
@@ -58,7 +59,7 @@ type ScreenOptionsOrCallback<ScreenOptions extends {}> =
   | ((props: {
       route: RouteProp<ParamListBase, string>;
       navigation: any;
-      theme: ReactNavigation.Theme;
+      theme: Theme;
     }) => ScreenOptions);
 
 type Options<

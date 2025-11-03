@@ -501,3 +501,9 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
     </DrawerContentScrollView>
   );
 };
+
+type RootStackType = typeof Stack;
+
+declare module '@react-navigation/core' {
+  interface RootNavigator extends RootStackType {}
+}

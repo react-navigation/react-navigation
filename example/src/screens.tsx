@@ -85,11 +85,3 @@ export type RootStackParamList = ExampleScreensParamList & {
   Home: NavigatorScreenParams<RootDrawerParamList> | undefined;
   NotFound: undefined;
 };
-
-// Make the default RootParamList the same as the RootStackParamList
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace ReactNavigation {
-    interface RootParamList extends RootStackParamList {}
-  }
-}
