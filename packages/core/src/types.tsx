@@ -844,22 +844,6 @@ export type NavigationListBase<ParamList extends ParamListBase> = {
   [RouteName in keyof ParamList]: unknown;
 };
 
-export type TypeBag<
-  ParamList extends ParamListBase,
-  State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase,
-  NavigationList extends NavigationListBase<ParamList>,
-  Navigator extends React.ComponentType<any>,
-> = {
-  ParamList: ParamList;
-  State: State;
-  ScreenOptions: ScreenOptions;
-  EventMap: EventMap;
-  NavigationList: NavigationList;
-  Navigator: Navigator;
-};
-
 export type NavigatorTypeBagBase = {
   ParamList: {};
   State: NavigationState;
@@ -867,22 +851,6 @@ export type NavigatorTypeBagBase = {
   EventMap: {};
   NavigationList: NavigationListBase<ParamListBase>;
   Navigator: React.ComponentType<any>;
-};
-
-export type NavigatorTypeBag<
-  ParamList extends ParamListBase,
-  State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase,
-  NavigationList extends NavigationListBase<ParamList>,
-  Navigator extends React.ComponentType<any>,
-> = {
-  ParamList: ParamList;
-  State: State;
-  ScreenOptions: ScreenOptions;
-  EventMap: EventMap;
-  NavigationList: NavigationList;
-  Navigator: Navigator;
 };
 
 export type TypedNavigator<
