@@ -10,6 +10,8 @@ import type {
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
+import type { FlatType, UnionToIntersection } from './utilities';
+
 /**
  * Root navigator used in the app.
  * It's used for the global types in the app.
@@ -836,6 +838,62 @@ type ParamListRoute<ParamList extends {}> = {
 type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
   ? ParamListRoute<ParamList>
   : Route<string>;
+
+export type NavigationForName<
+  Navigator,
+  RouteName extends keyof NavigationListForNavigator<Navigator>,
+> = NavigationListForNavigator<Navigator>[RouteName];
+
+export type NavigationListForNavigator<Navigator> = FlatType<
+  Navigator extends TypedNavigator<infer Bag, any>
+    ? Bag['NavigationList'] &
+        NavigationListForStaticConfig<Bag['NavigationList'], Navigator>
+    : {}
+>;
+
+type NavigationListWithComposite<
+  Parent extends NavigationProp<any, any, any, any, any>,
+  NavigatorList extends Record<string, any>,
+> = {
+  [K in keyof NavigatorList]: CompositeNavigationProp<NavigatorList[K], Parent>;
+};
+
+type NavigationListForStaticConfig<ParentList, Navigator> = Navigator extends {
+  readonly config: {
+    screens?: any;
+    groups?: any;
+  };
+}
+  ? NavigationListForScreens<ParentList, Navigator['config']['screens']> &
+      NavigationListForGroups<ParentList, Navigator['config']['groups']>
+  : {};
+
+type NavigationListForScreens<ParentList, Screens> = UnionToIntersection<
+  {
+    // Only check screens with static config to avoid overly-complex types
+    // Otherwise TypeScript fails to load the types due to complexity
+    [K in keyof Screens]: Screens[K] extends { config: any }
+      ? ParentList extends Record<K, any>
+        ? NavigationListWithComposite<
+            ParentList[K],
+            NavigationListForNavigator<Screens[K]>
+          >
+        : NavigationListForNavigator<Screens[K]>
+      : {};
+  }[keyof Screens]
+>;
+
+type NavigationListForGroups<ParentList, Groups> =
+  Groups extends Record<string, { screens: any }>
+    ? UnionToIntersection<
+        {
+          [K in keyof Groups]: NavigationListForScreens<
+            ParentList,
+            Groups[K]['screens']
+          >;
+        }[keyof Groups]
+      >
+    : {};
 
 export type NavigationContainerRef<ParamList extends {}> =
   NavigationHelpers<ParamList> &
