@@ -4,8 +4,6 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { Button, Text } from '@react-navigation/elements';
 import {
-  createComponentForStaticNavigation,
-  createPathConfigForStaticNavigation,
   type StaticParamList,
   type StaticScreenProps,
   useNavigation,
@@ -51,10 +49,19 @@ function TestScreen({
   );
 }
 
+function CounterLayout({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    count = 0;
+  }, []);
+
+  return <>{children}</>;
+}
+
 type TabsParamList = StaticParamList<typeof Tabs>;
 
 const Tabs = createBottomTabNavigator({
   backBehavior: 'fullHistory',
+  layout: (props) => <CounterLayout {...props} />,
   screens: {
     First: {
       screen: TestScreen,
@@ -80,21 +87,10 @@ const Tabs = createBottomTabNavigator({
   },
 });
 
-const FullHistoryTabsComponent = createComponentForStaticNavigation(
-  Tabs,
-  'FullHistoryTabs'
-);
-
-export function FullHistoryTabs() {
-  useEffect(() => {
-    count = 0;
-  }, []);
-
-  return <FullHistoryTabsComponent />;
-}
-
-FullHistoryTabs.title = 'Full History Tabs';
-FullHistoryTabs.linking = createPathConfigForStaticNavigation(Tabs, {});
+export const FullHistoryTabs = {
+  screen: Tabs,
+  title: 'Full History Tabs',
+};
 
 const styles = StyleSheet.create({
   container: {

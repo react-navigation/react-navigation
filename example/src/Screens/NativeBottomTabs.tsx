@@ -1,8 +1,16 @@
 import { Button, Text } from '@react-navigation/elements';
+import type {
+  NavigatorScreenParams,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import { CommonActions } from '@react-navigation/routers';
 import { StyleSheet, View } from 'react-native';
 
-export function NativeBottomTabs() {
+import type { NativeBottomTabParams } from './NativeBottomTabs.native';
+
+export function NativeBottomTabs(
+  _: StaticScreenProps<NavigatorScreenParams<NativeBottomTabParams>>
+) {
   return (
     <View style={styles.container}>
       <Text>Not supported on this platform</Text>

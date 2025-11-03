@@ -1,5 +1,9 @@
 import { Button } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
@@ -12,7 +16,7 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type MixedHeaderStackParams = {
+type MixedHeaderStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
@@ -93,7 +97,9 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<MixedHeaderStackParams>();
 
-export function MixedHeaderMode() {
+export function MixedHeaderMode(
+  _: StaticScreenProps<NavigatorScreenParams<MixedHeaderStackParams>>
+) {
   return (
     <SimpleStack.Navigator
       screenOptions={{

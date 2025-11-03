@@ -1,7 +1,10 @@
 import { Button } from '@react-navigation/elements';
 import type {
   CompositeScreenProps,
+  NavigatorScreenParams,
   PathConfigMap,
+  RootParamList,
+  StaticScreenProps,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -12,13 +15,12 @@ import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
-import type { RootStackParamList } from '../screens';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type SimpleStackParams = {
+type SimpleStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Contacts: undefined;
@@ -75,7 +77,7 @@ const ArticleScreen = ({
 
 type NewsFeedScreenProps = CompositeScreenProps<
   StackScreenProps<SimpleStackParams, 'NewsFeed'>,
-  StackScreenProps<RootStackParamList, 'SimpleStack'>
+  StackScreenProps<RootParamList, 'SimpleStack'>
 >;
 
 const NewsFeedScreen = ({ route, navigation }: NewsFeedScreenProps) => {
@@ -155,7 +157,9 @@ const AlbumsScreen = ({
 
 const Stack = createStackNavigator<SimpleStackParams>();
 
-export function SimpleStack() {
+export function SimpleStack(
+  _: StaticScreenProps<NavigatorScreenParams<SimpleStackParams>>
+) {
   return (
     <Stack.Navigator
       screenOptions={{

@@ -1,4 +1,7 @@
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -30,7 +33,7 @@ const EXAMPLE_SCREEN_NAMES = Object.keys(
   EXAMPLE_SCREENS
 ) as (keyof typeof EXAMPLE_SCREENS)[];
 
-export type TabViewStackParams = {
+type TabViewStackParams = {
   [Key in keyof typeof EXAMPLE_SCREENS]: undefined;
 } & {
   ExampleList: undefined;
@@ -73,7 +76,7 @@ const ExampleListScreen = ({
   );
 };
 
-export function TabView() {
+export function TabView(_: StaticScreenProps<{}>) {
   return (
     <TabViewStack.Navigator
       screenOptions={{ headerMode: 'screen', cardStyle: { flex: 1 } }}

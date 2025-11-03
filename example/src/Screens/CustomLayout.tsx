@@ -7,7 +7,9 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
+  type NavigatorScreenParams,
   type PathConfigMap,
+  type StaticScreenProps,
   useTheme,
 } from '@react-navigation/native';
 import {
@@ -29,7 +31,7 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type CustomLayoutParams = {
+type CustomLayoutParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
@@ -112,7 +114,9 @@ const AlbumsScreen = ({
 
 const Stack = createStackNavigator<CustomLayoutParams>();
 
-export function NavigatorLayout() {
+export function NavigatorLayout(
+  _: StaticScreenProps<NavigatorScreenParams<CustomLayoutParams>>
+) {
   const { colors } = useTheme();
 
   const insets = useSafeAreaInsets();

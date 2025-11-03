@@ -1,5 +1,9 @@
 import { Button } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -10,7 +14,7 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-export type ModalStackParams = {
+type ModalStackParams = {
   Article: { author: string };
   Albums: undefined;
 };
@@ -65,7 +69,9 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<ModalStackParams>) => {
 
 const Stack = createStackNavigator<ModalStackParams>();
 
-export function ModalStack() {
+export function ModalStack(
+  _: StaticScreenProps<NavigatorScreenParams<ModalStackParams>>
+) {
   return (
     <Stack.Navigator screenOptions={{ presentation: 'modal' }}>
       <Stack.Screen

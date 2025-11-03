@@ -13,6 +13,7 @@ import {
 import {
   type NavigatorScreenParams,
   type PathConfigMap,
+  type StaticScreenProps,
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
@@ -92,7 +93,9 @@ let i = 1;
 
 const Tab = createNativeBottomTabNavigator<NativeBottomTabParams>();
 
-export function NativeBottomTabs() {
+export function NativeBottomTabs(
+  _: StaticScreenProps<NavigatorScreenParams<NativeBottomTabParams>>
+) {
   return (
     <Tab.Navigator>
       <Tab.Screen

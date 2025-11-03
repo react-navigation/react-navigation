@@ -1,6 +1,10 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { Button } from '@react-navigation/elements';
-import { useLocale, useTheme } from '@react-navigation/native';
+import {
+  type StaticScreenProps,
+  useLocale,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
@@ -9,7 +13,7 @@ import { DrawerProgress } from '../Shared/DrawerProgress';
 
 const DRAWER_TYPES = ['front', 'back', 'slide', 'permanent'] as const;
 
-export function DrawerView() {
+export function DrawerView(_: StaticScreenProps<{}>) {
   const { showActionSheetWithOptions } = useActionSheet();
   const { colors } = useTheme();
   const { direction } = useLocale();
