@@ -29,10 +29,10 @@ const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
 
 export function NativeScreen({ route, navigation, options, children }: Props) {
   const {
-    headerShown = true,
+    header: renderCustomHeader,
+    headerShown = renderCustomHeader != null,
     headerTransparent,
     headerBackground,
-    header: renderCustomHeader,
   } = options;
 
   const isModal = false;

@@ -3,6 +3,7 @@ import {
   getLabel,
   Lazy,
   SafeAreaProviderCompat,
+  Screen as ScreenContent,
 } from '@react-navigation/elements';
 import {
   CommonActions,
@@ -27,6 +28,8 @@ import type {
   NativeBottomTabDescriptorMap,
   NativeBottomTabNavigationConfig,
   NativeBottomTabNavigationHelpers,
+  NativeBottomTabNavigationOptions,
+  NativeBottomTabNavigationProp,
 } from './types';
 
 type Props = NativeBottomTabNavigationConfig & {
@@ -257,19 +260,77 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
               }}
             >
               <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
-                <NativeScreen
+                <ScreenWithHeader
+                  isFocused={isFocused}
                   route={route}
                   navigation={navigation}
                   options={options}
                 >
                   {render()}
-                </NativeScreen>
+                </ScreenWithHeader>
               </Lazy>
             </BottomTabsScreen>
           );
         })}
       </BottomTabs>
     </SafeAreaProviderCompat>
+  );
+}
+
+function ScreenWithHeader({
+  isFocused,
+  route,
+  navigation,
+  options,
+  children,
+}: {
+  isFocused: boolean;
+  route: Route<string>;
+  navigation: NativeBottomTabNavigationProp<ParamListBase>;
+  options: NativeBottomTabNavigationOptions;
+  children: React.ReactNode;
+}) {
+  const {
+    headerTransparent,
+    header: renderCustomHeader,
+    headerShown = renderCustomHeader != null,
+  } = options;
+
+  const hasNativeHeader = headerShown && renderCustomHeader == null;
+
+  const [wasNativeHeaderShown] = React.useState(hasNativeHeader);
+
+  React.useEffect(() => {
+    if (wasNativeHeaderShown !== hasNativeHeader) {
+      throw new Error(
+        `Changing 'headerShown' or 'header' options dynamically is not supported when using native header.`
+      );
+    }
+  }, [wasNativeHeaderShown, hasNativeHeader]);
+
+  if (hasNativeHeader) {
+    return (
+      <NativeScreen route={route} navigation={navigation} options={options}>
+        {children}
+      </NativeScreen>
+    );
+  }
+
+  return (
+    <ScreenContent
+      focused={isFocused}
+      route={route}
+      navigation={navigation}
+      headerShown={headerShown}
+      headerTransparent={headerTransparent}
+      header={renderCustomHeader?.({
+        route,
+        navigation,
+        options,
+      })}
+    >
+      {children}
+    </ScreenContent>
   );
 }
 
