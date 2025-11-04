@@ -15,6 +15,7 @@ import {
   type PathConfigMap,
   useNavigation,
 } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { BlurView } from 'expo-blur';
 import { Alert, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -45,7 +46,52 @@ const linking: PathConfigMap<NativeBottomTabParams> = {
   TabContacts: 'contacts',
 };
 
-const AlbumsScreen = () => {
+const ArticleStack = createNativeStackNavigator<{ Article: undefined }>();
+
+function ArticleStackScreen() {
+  return (
+    <ArticleStack.Navigator>
+      <ArticleStack.Screen
+        name="Article"
+        component={ArticleScreen}
+        options={{
+          title: 'Article',
+          headerSearchBarOptions: {
+            placeholder: 'Search Articles',
+          },
+        }}
+      />
+    </ArticleStack.Navigator>
+  );
+}
+
+function ArticleScreen() {
+  const navigation =
+    useNavigation<
+      NativeBottomTabScreenProps<NativeBottomTabParams>['navigation']
+    >();
+
+  return (
+    <ScrollView automaticallyAdjustContentInsets>
+      <View style={styles.buttons}>
+        <Button
+          variant="filled"
+          onPress={() => {
+            navigation.navigate('TabContacts', { count: i++ });
+          }}
+        >
+          Go to Contacts
+        </Button>
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
+          Go back
+        </Button>
+      </View>
+      <Article />
+    </ScrollView>
+  );
+}
+
+function AlbumsScreen() {
   const navigation =
     useNavigation<
       NativeBottomTabScreenProps<NativeBottomTabParams>['navigation']
@@ -82,7 +128,7 @@ const AlbumsScreen = () => {
       </ScrollView>
     </>
   );
-};
+}
 
 let i = 1;
 
@@ -93,7 +139,7 @@ export function NativeBottomTabs() {
     <Tab.Navigator>
       <Tab.Screen
         name="TabStack"
-        component={Article}
+        component={ArticleStackScreen}
         options={{
           popToTopOnBlur: true,
           title: 'Article',
@@ -112,6 +158,7 @@ export function NativeBottomTabs() {
             type: 'image',
             source: iconNewspaper,
           },
+          tabBarMinimizeBehavior: 'onScrollDown',
         }}
       />
       <Tab.Screen
@@ -131,6 +178,7 @@ export function NativeBottomTabs() {
             },
           }),
           tabBarBadge: route.params?.count,
+          tabBarMinimizeBehavior: 'onScrollDown',
         })}
       />
       <Tab.Screen
@@ -159,7 +207,6 @@ export function NativeBottomTabs() {
               source: focused ? iconListMusic : iconMusic,
             }),
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.7)',
-            tabBarActiveTintColor: '#fff',
             tabBarStyle: {
               backgroundColor: 'rgba(0, 0, 0, 0.8)',
             },
