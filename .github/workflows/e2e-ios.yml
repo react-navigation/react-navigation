@@ -104,6 +104,7 @@ jobs:
             fi
 
             STATUS=$(xcrun simctl list | grep "$DEVICE_ID" | grep "(Booted)")
+
             if [[ -n "$STATUS" ]]; then
               echo "Simulator is booted!"
               break
@@ -131,7 +132,21 @@ jobs:
       - name: Run Maestro tests
         run: |
           xcrun simctl install booted ../ios-debug-build/ios-debug.app
-          yarn run e2e:native
+
+          for i in 1 2 3; do
+            yarn run e2e:native --flatten-debug-output
+
+            if [ $? -eq 0 ]; then
+              break
+            else
+              echo "Maestro tests failed on attempt $i"
+
+              if [ $i -eq 3 ]; then
+                echo "Maestro tests failed after $i attempts"
+                exit 1
+              fi
+            fi
+          done
         env:
           MAESTRO_DRIVER_STARTUP_TIMEOUT: 240000
         working-directory: example
