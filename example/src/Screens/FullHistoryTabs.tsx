@@ -1,10 +1,6 @@
-import {
-  type BottomTabNavigationProp,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, Text } from '@react-navigation/elements';
 import {
-  type StaticParamList,
   type StaticScreenProps,
   useNavigation,
   useRoute,
@@ -18,7 +14,7 @@ function TestScreen({
   route: { params },
 }: StaticScreenProps<{ count: number } | undefined>) {
   const route = useRoute();
-  const navigation = useNavigation<BottomTabNavigationProp<TabsParamList>>();
+  const navigation = useNavigation<typeof Tabs>();
 
   return (
     <View style={styles.container}>
@@ -56,8 +52,6 @@ function CounterLayout({ children }: { children: React.ReactNode }) {
 
   return <>{children}</>;
 }
-
-type TabsParamList = StaticParamList<typeof Tabs>;
 
 const Tabs = createBottomTabNavigator({
   backBehavior: 'fullHistory',

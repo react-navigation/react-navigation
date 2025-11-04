@@ -33,7 +33,7 @@ export { useTheme } from './theming/useTheme';
 export * from './types';
 export { useFocusEffect } from './useFocusEffect';
 export { useIsFocused } from './useIsFocused';
-export { useNavigation } from './useNavigation';
+export { type GenericNavigation, useNavigation } from './useNavigation';
 export { useNavigationBuilder } from './useNavigationBuilder';
 export { useNavigationContainerRef } from './useNavigationContainerRef';
 export { useNavigationIndependentTree } from './useNavigationIndependentTree';

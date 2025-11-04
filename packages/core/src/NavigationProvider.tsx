@@ -17,6 +17,10 @@ export const NavigationContext = React.createContext<
   NavigationProp<ParamListBase> | undefined
 >(undefined);
 
+export const NavigationRouteNameContext = React.createContext<
+  string | undefined
+>(undefined);
+
 type Props = {
   route: Route<string>;
   navigation: NavigationProp<ParamListBase>;
@@ -28,10 +32,12 @@ type Props = {
  */
 export const NavigationProvider = ({ route, navigation, children }: Props) => {
   return (
-    <NavigationRouteContext.Provider value={route}>
-      <NavigationContext.Provider value={navigation}>
-        {children}
-      </NavigationContext.Provider>
-    </NavigationRouteContext.Provider>
+    <NavigationContext.Provider value={navigation}>
+      <NavigationRouteContext.Provider value={route}>
+        <NavigationRouteNameContext.Provider value={route.name}>
+          {children}
+        </NavigationRouteNameContext.Provider>
+      </NavigationRouteContext.Provider>
+    </NavigationContext.Provider>
   );
 };
