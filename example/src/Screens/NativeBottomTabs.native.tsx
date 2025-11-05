@@ -56,9 +56,6 @@ function ArticleStackScreen() {
         component={ArticleScreen}
         options={{
           title: 'Article',
-          headerSearchBarOptions: {
-            placeholder: 'Search Articles',
-          },
         }}
       />
     </ArticleStack.Navigator>
@@ -178,7 +175,6 @@ export function NativeBottomTabs() {
             },
           }),
           tabBarBadge: route.params?.count,
-          tabBarMinimizeBehavior: 'onScrollDown',
         })}
       />
       <Tab.Screen
@@ -223,6 +219,10 @@ export function NativeBottomTabs() {
           tabBarIcon: {
             type: 'image',
             source: iconHeart,
+          },
+          headerShown: true,
+          headerSearchBarOptions: {
+            placeholder: 'Search Favorites',
           },
         }}
       >
