@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.7.3...@react-navigation/bottom-tabs@7.8.0) (2025-11-05)
+
+### Features
+
+* don't show native header by default in native bottom tabs ([fc81d9a](https://github.com/react-navigation/react-navigation/commit/fc81d9ac43e57e52150036d3b8f2a3140d8d25e6)) - by @
+
 ## [7.7.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.7.2...@react-navigation/bottom-tabs@7.7.3) (2025-11-01)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
