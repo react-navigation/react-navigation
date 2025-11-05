@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.8.0...@react-navigation/bottom-tabs@7.8.1) (2025-11-05)
+
+### Bug Fixes
+
+* fix showing search bar in native tab bar ([681f408](https://github.com/react-navigation/react-navigation/commit/681f4088c5312a9404cbc4358d14691631dc8f98)) - by @
+
 # [7.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.7.3...@react-navigation/bottom-tabs@7.8.0) (2025-11-05)
 
 ### Features
