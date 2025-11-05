@@ -165,6 +165,8 @@ export function NativeScreen({ route, navigation, options, children }: Props) {
     <ScreenStack style={styles.container}>
       <ScreenStackItem
         screenId={route.key}
+        // Needed to show search bar in tab bar with systemItem=search
+        stackPresentation="push"
         headerConfig={headerConfig}
         onHeaderHeightChange={onHeaderHeightChange}
       >
