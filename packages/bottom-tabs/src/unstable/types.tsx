@@ -1,3 +1,4 @@
+import { PlatformPressable } from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -10,8 +11,16 @@ import type {
   TabRouterOptions,
   Theme,
 } from '@react-navigation/native';
-import type { ColorValue, ImageSourcePropType, TextStyle } from 'react-native';
-import type { EdgeInsets } from 'react-native-safe-area-context';
+import * as React from 'react';
+import type {
+  Animated,
+  ColorValue,
+  GestureResponderEvent,
+  ImageSourcePropType,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import type {
   BottomTabsScreenBlurEffect,
   BottomTabsSystemItem,
@@ -28,16 +37,121 @@ export type Layout = { width: number; height: number };
 export type NativeBottomTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
+   *
+   * Preventing default is not supported for native bottom tabs.
    */
-  tabPress: { data: undefined; canPreventDefault: false };
+  tabPress: { data: undefined; canPreventDefault: true };
+  /**
+   * Event which fires on long press on the tab in the tab bar.
+   *
+   * Not supported with native bottom tabs.
+   */
+  tabLongPress: { data: undefined };
   /**
    * Event which fires when a transition animation starts.
    */
-  transitionStart: { data: { closing: boolean } };
+  transitionStart: { data: undefined };
   /**
    * Event which fires when a transition animation ends.
    */
-  transitionEnd: { data: { closing: boolean } };
+  transitionEnd: { data: undefined };
+};
+
+export type LabelPosition = 'beside-icon' | 'below-icon';
+
+export type Variant = 'uikit' | 'material';
+
+export type TimingKeyboardAnimationConfig = {
+  animation: 'timing';
+  config?: Omit<
+    Partial<Animated.TimingAnimationConfig>,
+    'toValue' | 'useNativeDriver'
+  >;
+};
+
+export type SpringKeyboardAnimationConfig = {
+  animation: 'spring';
+  config?: Omit<
+    Partial<Animated.SpringAnimationConfig>,
+    'toValue' | 'useNativeDriver'
+  >;
+};
+
+export type TabBarVisibilityAnimationConfig =
+  | TimingKeyboardAnimationConfig
+  | SpringKeyboardAnimationConfig;
+
+export type TabAnimationName = 'none' | 'fade' | 'shift';
+
+export type BottomTabSceneInterpolationProps = {
+  /**
+   * Values for the current screen.
+   */
+  current: {
+    /**
+     * Animated value for the current screen:
+     * - -1 if the index is lower than active tab,
+     * - 0 if they're active,
+     * - 1 if the index is higher than active tab
+     */
+    progress: Animated.Value;
+  };
+};
+
+export type BottomTabSceneInterpolatedStyle = {
+  /**
+   * Interpolated style for the view representing the scene containing screen content.
+   */
+  sceneStyle: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+};
+
+export type BottomTabSceneStyleInterpolator = (
+  props: BottomTabSceneInterpolationProps
+) => BottomTabSceneInterpolatedStyle;
+
+export type TransitionSpec =
+  | {
+      animation: 'timing';
+      config: Omit<
+        Animated.TimingAnimationConfig,
+        'toValue' | keyof Animated.AnimationConfig
+      >;
+    }
+  | {
+      animation: 'spring';
+      config: Omit<
+        Animated.SpringAnimationConfig,
+        'toValue' | keyof Animated.AnimationConfig
+      >;
+    };
+
+export type BottomTabTransitionPreset = {
+  /**
+   * Whether transition animations should be enabled when switching tabs.
+   */
+  animationEnabled?: boolean;
+
+  /**
+   * Function which specifies interpolated styles for bottom-tab scenes.
+   */
+  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
+
+  /**
+   * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
+   */
+  transitionSpec?: TransitionSpec;
+};
+
+export type BottomTabBarButtonProps = Omit<
+  React.ComponentProps<typeof PlatformPressable>,
+  'style'
+> & {
+  href?: string;
+  children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
+  onPress?: (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
+  ) => void;
 };
 
 export type NativeBottomTabNavigationProp<
@@ -118,7 +232,123 @@ type IconAndroid = IconAndroidDrawable | IconImage;
 
 export type Icon = IconIOS | IconAndroid;
 
-export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
+type CustomTabsOptions = {
+  /**
+   * How the screen should animate when switching tabs.
+   *
+   * Supported values:
+   * - 'none': don't animate the screen (default)
+   * - 'fade': cross-fade the screens.
+   * - 'shift': shift the screens slightly shift to left/right.
+   */
+  animation?: TabAnimationName;
+
+  /**
+   * Function which specifies interpolated styles for bottom-tab scenes.
+   */
+  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
+
+  /**
+   * Object which specifies the animation type (timing or spring) and their options (such as duration for timing).
+   */
+  transitionSpec?: TransitionSpec;
+
+  /**
+   * Whether the tab label should be visible. Defaults to `true`.
+   */
+  tabBarShowLabel?: boolean;
+
+  /**
+   * Whether the label is shown below the icon or beside the icon.
+   *
+   * - `below-icon`: the label is shown below the icon (typical for iPhones)
+   * - `beside-icon` the label is shown next to the icon (typical for iPad)
+   *
+   * By default, the position is chosen automatically based on device width.
+   */
+  tabBarLabelPosition?: LabelPosition;
+
+  /**
+   * Whether label font should scale to respect Text Size accessibility settings.
+   */
+  tabBarAllowFontScaling?: boolean;
+
+  /**
+   * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
+   * It's recommended to set this if you don't have a label for the tab.
+   */
+  tabBarAccessibilityLabel?: string;
+
+  /**
+   * ID to locate this tab button in tests.
+   */
+  tabBarButtonTestID?: string;
+
+  /**
+   * Style object for the tab item container.
+   */
+  tabBarItemStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * Style object for the tab icon.
+   */
+  tabBarIconStyle?: StyleProp<TextStyle>;
+
+  /**
+   * Whether the tab bar gets hidden when the keyboard is shown. Defaults to `false`.
+   */
+  tabBarHideOnKeyboard?: boolean;
+
+  /**
+   * Animation config for showing and hiding the tab bar when the keyboard is shown/hidden.
+   */
+  tabBarVisibilityAnimationConfig?: {
+    show?: TabBarVisibilityAnimationConfig;
+    hide?: TabBarVisibilityAnimationConfig;
+  };
+
+  /**
+   * Variant of the tab bar. Defaults to `uikit`.
+   */
+  tabBarVariant?: Variant;
+
+  /**
+   * Style object for the tab bar container.
+   */
+  tabBarStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+
+  /**
+   * Function which returns a React Element to use as background for the tab bar.
+   * You could render an image, a gradient, blur view etc.
+   *
+   * When using `BlurView`, make sure to set `position: 'absolute'` in `tabBarStyle` as well.
+   * You'd also need to use `useBottomTabBarHeight()` to add a bottom padding to your content.
+   */
+  tabBarBackground?: () => React.ReactNode;
+
+  /**
+   * Position of the tab bar on the screen. Defaults to `bottom`.
+   */
+  tabBarPosition?: 'bottom' | 'left' | 'right' | 'top';
+
+  /**
+   * Background color for the active tab.
+   */
+  tabBarActiveBackgroundColor?: ColorValue;
+
+  /**
+   * Background color for the inactive tabs.
+   */
+  tabBarInactiveBackgroundColor?: ColorValue;
+
+  /**
+   * Function which returns a React element to render as the tab bar button.
+   * Renders `PlatformPressable` by default.
+   */
+  tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
+};
+
+export type NativeBottomTabNavigationOptions = {
   /**
    * Title text for the screen.
    */
@@ -319,11 +549,26 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
   lazy?: boolean;
 
   /**
+   * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
+   * Defaults to `true` when `enableFreeze()` is run at the top of the application.
+   * Requires `react-native-screens` version >=3.16.0.
+   *
+   * Only supported on iOS and Android.
+   */
+  freezeOnBlur?: boolean; // TODO
+
+  /**
    * Whether any nested stack should be popped to top when navigating away from the tab.
    * Defaults to `false`.
    */
   popToTopOnBlur?: boolean;
-};
+
+  /**
+   * Style object for the component wrapping the screen content.
+   */
+  sceneStyle?: StyleProp<ViewStyle>;
+} & NativeHeaderOptions &
+  CustomTabsOptions;
 
 export type NativeBottomTabDescriptor = Descriptor<
   NativeBottomTabNavigationOptions,
@@ -345,7 +590,6 @@ export type NativeBottomTabBarProps = {
     ParamListBase,
     NativeBottomTabNavigationEventMap
   >;
-  insets: EdgeInsets;
 };
 
 export type NativeBottomTabNavigatorProps = DefaultNavigatorOptions<

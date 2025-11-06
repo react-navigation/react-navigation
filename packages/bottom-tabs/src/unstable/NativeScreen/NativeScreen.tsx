@@ -9,9 +9,10 @@ import {
   Animated,
   Platform,
   StatusBar,
+  type StyleProp,
   StyleSheet,
-  useAnimatedValue,
   View,
+  type ViewStyle,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenStack, ScreenStackItem } from 'react-native-screens';
@@ -22,12 +23,19 @@ import { AnimatedHeaderHeightContext } from './useAnimatedHeaderHeight';
 import { useHeaderConfig } from './useHeaderConfig';
 
 type Props = NativeBottomTabHeaderProps & {
+  style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
 };
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
 
-export function NativeScreen({ route, navigation, options, children }: Props) {
+export function NativeScreen({
+  route,
+  navigation,
+  options,
+  style,
+  children,
+}: Props) {
   const {
     header: renderCustomHeader,
     headerShown = renderCustomHeader != null,
@@ -90,7 +98,10 @@ export function NativeScreen({ route, navigation, options, children }: Props) {
     headerHeightCorrectionOffset = -statusBarHeight + topInset;
   }
 
-  const rawAnimatedHeaderHeight = useAnimatedValue(defaultHeaderHeight);
+  const rawAnimatedHeaderHeight = React.useState(
+    () => new Animated.Value(headerHeight)
+  )[0];
+
   const animatedHeaderHeight = React.useMemo(
     () =>
       Animated.add<number>(
@@ -169,6 +180,7 @@ export function NativeScreen({ route, navigation, options, children }: Props) {
         stackPresentation="push"
         headerConfig={headerConfig}
         onHeaderHeightChange={onHeaderHeightChange}
+        style={style}
       >
         <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
           <HeaderHeightContext.Provider
