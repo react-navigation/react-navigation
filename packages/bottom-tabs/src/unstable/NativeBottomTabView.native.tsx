@@ -216,10 +216,12 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
           const badgeBackgroundColor =
             tabBarBadgeStyle?.backgroundColor ?? colors.notification;
           const badgeTextColor =
-            typeof badgeBackgroundColor === 'string' &&
-            Color(badgeBackgroundColor)?.isLight()
-              ? 'black'
-              : 'white';
+            tabBarBadgeStyle?.color ??
+            (typeof badgeBackgroundColor === 'string'
+              ? Color(badgeBackgroundColor).isLight()
+                ? 'black'
+                : 'white'
+              : undefined);
 
           const icon =
             typeof tabBarIcon === 'function'
