@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.8.1...@react-navigation/bottom-tabs@7.8.2) (2025-11-06)
+
+### Bug Fixes
+
+* fix color from tab bar badge style not being used in native tabs ([4b2d7f7](https://github.com/react-navigation/react-navigation/commit/4b2d7f7ee667478b220c96df692ede17ffaf3954)) - by @
+
 ## [7.8.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.8.0...@react-navigation/bottom-tabs@7.8.1) (2025-11-05)
 
 ### Bug Fixes
