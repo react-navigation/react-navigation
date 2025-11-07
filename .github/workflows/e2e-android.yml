@@ -19,6 +19,10 @@ jobs:
       cancel-in-progress: true
     env:
       MAESTRO_VERSION: 2.0.8
+      MAESTRO_CLI_NO_ANALYTICS: 1
+      MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
+      JAVA_DISTRIBUTION: 'zulu'
+      JAVA_VERSION: '17'
       API_LEVEL: 34
       AVD_NAME: e2e_emulator
     steps:
@@ -52,11 +56,11 @@ jobs:
           remove-codeql: 'true'
           remove-docker-images: 'true'
 
-      - name: Setup JDK 17
-        uses: actions/setup-java@v4
+      - name: Setup JDK
+        uses: actions/setup-java@v5
         with:
-          java-version: '17'
-          distribution: 'zulu'
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
 
       - name: Build Android App
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -180,8 +184,6 @@ jobs:
           arch: x86_64
           script: bash ${{ steps.e2e-test-script.outputs.file }}
           working-directory: example
-        env:
-          MAESTRO_DRIVER_STARTUP_TIMEOUT: 240000
 
       - name: Store debug output if failed
         if: failure()

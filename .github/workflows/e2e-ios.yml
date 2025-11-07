@@ -19,6 +19,10 @@ jobs:
       cancel-in-progress: true
     env:
       MAESTRO_VERSION: 2.0.8
+      MAESTRO_CLI_NO_ANALYTICS: 1
+      MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
+      JAVA_DISTRIBUTION: 'zulu'
+      JAVA_VERSION: '17'
       SIMULATOR_NAME: iPhone 17 Pro
     steps:
       - name: Checkout
@@ -71,6 +75,12 @@ jobs:
         run: |
           brew tap facebook/fb
           brew install facebook/fb/idb-companion
+
+      - name: Setup JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
 
       - name: Install Maestro
         run: |
@@ -147,8 +157,6 @@ jobs:
               fi
             fi
           done
-        env:
-          MAESTRO_DRIVER_STARTUP_TIMEOUT: 240000
         working-directory: example
 
       - name: Store debug output if failed
