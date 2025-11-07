@@ -7,13 +7,7 @@ import {
   useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  Animated,
-  type StyleProp,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from 'react-native';
+import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 
 import {
   forNoAnimation,
@@ -40,7 +34,7 @@ export type Props = {
     route: Route<string>;
     height: number;
   }) => void;
-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function HeaderContainer({
@@ -57,7 +51,7 @@ export function HeaderContainer({
   const { buildHref } = useLinkBuilder();
 
   return (
-    <Animated.View pointerEvents="box-none" style={style}>
+    <View pointerEvents="box-none" style={style}>
       {/* We render header only on two top-most headers as
          a workaround for https://github.com/react-navigation/react-navigation/issues/12456.
          If the header is persisted, it might be placed incorrectly when navigating back. */}
@@ -183,7 +177,7 @@ export function HeaderContainer({
           </NavigationContext.Provider>
         );
       })}
-    </Animated.View>
+    </View>
   );
 }
 
