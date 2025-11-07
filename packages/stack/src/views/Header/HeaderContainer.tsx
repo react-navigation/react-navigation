@@ -54,7 +54,10 @@ export function HeaderContainer({
 
   return (
     <Animated.View style={[styles.container, style]}>
-      {scenes.slice(-3).map((scene, i, self) => {
+      {/* We render header only on two top-most headers as
+         a workaround for https://github.com/react-navigation/react-navigation/issues/12456.
+         If the header is persisted, it might be placed incorrectly when navigating back. */}
+      {scenes.slice(-2).map((scene, i, self) => {
         if ((mode === 'screen' && i !== self.length - 1) || !scene) {
           return null;
         }
