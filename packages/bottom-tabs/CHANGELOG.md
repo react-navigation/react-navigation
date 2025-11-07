@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.8.2...@react-navigation/bottom-tabs@7.8.3) (2025-11-07)
+
+### Bug Fixes
+
+* don't wrap tab switch in a transition ([9e1d019](https://github.com/react-navigation/react-navigation/commit/9e1d0197efa96f08e970643bfba32ba05f871408)) - by @
+
 ## [7.8.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.8.1...@react-navigation/bottom-tabs@7.8.2) (2025-11-06)
 
 ### Bug Fixes
