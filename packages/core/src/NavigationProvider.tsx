@@ -53,7 +53,9 @@ export function NavigationProvider({ route, navigation, children }: Props) {
       <NamedRouteContext.Provider value={route}>
         <NavigationRouteContext.Provider value={route}>
           <NavigationContext.Provider value={navigation}>
-            {children}
+            <NavigationRouteNameContext.Provider value={route.name}>
+              {children}
+            </NavigationRouteNameContext.Provider>
           </NavigationContext.Provider>
         </NavigationRouteContext.Provider>
       </NamedRouteContext.Provider>
