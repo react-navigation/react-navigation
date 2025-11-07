@@ -43,7 +43,7 @@ test('throws if not used in a screen', () => {
   const Test = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     expect(() => useRoute<{ test: { x: number } }, 'test'>('test')).toThrow(
-      "Couldn't find a route object. Is your component inside a screen in a navigator?"
+      "Couldn't find a route named 'test' in any of the parent screens. Is your component inside the correct screen?"
     );
 
     return null;
@@ -64,7 +64,7 @@ test("throws if provided route name doesn't match current route name", () => {
   const Test = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     expect(() => useRoute<{ test: { x: number } }, 'test'>('test')).toThrow(
-      "The provided route name ('test') doesn't match the current route's name ('foo'). It must be used in the 'test' screen."
+      "Couldn't find a route named 'test' in any of the parent screens. Is your component inside the correct screen?"
     );
 
     return null;
@@ -74,6 +74,168 @@ test("throws if provided route name doesn't match current route name", () => {
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={Test} initialParams={{ x: 1 }} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+});
+
+test('returns route for the current route when name matches', () => {
+  expect.assertions(2);
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return state.routes.map((route) => descriptors[route.key].render());
+  };
+
+  const Test = () => {
+    const route = useRoute<{ foo: { x: number } }, 'foo'>('foo');
+
+    expect(route.name).toBe('foo');
+    expect(route.params?.x).toBe(1);
+
+    return null;
+  };
+
+  render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={Test} initialParams={{ x: 1 }} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+});
+
+test('returns route for parent screen when nested', () => {
+  expect.assertions(3);
+
+  const ParentNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return state.routes.map((route) => descriptors[route.key].render());
+  };
+
+  const ChildNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return state.routes.map((route) => descriptors[route.key].render());
+  };
+
+  const Test = () => {
+    const parentRoute = useRoute<{ parent: { y: number } }, 'parent'>('parent');
+    const childRoute = useRoute<{ child: { z: string } }, 'child'>('child');
+
+    expect(parentRoute.name).toBe('parent');
+    expect(parentRoute.params?.y).toBe(2);
+    expect(childRoute.name).toBe('child');
+
+    return null;
+  };
+
+  const ChildScreen = () => (
+    <ChildNavigator>
+      <Screen name="child" component={Test} initialParams={{ z: 'test' }} />
+    </ChildNavigator>
+  );
+
+  render(
+    <BaseNavigationContainer>
+      <ParentNavigator>
+        <Screen
+          name="parent"
+          component={ChildScreen}
+          initialParams={{ y: 2 }}
+        />
+      </ParentNavigator>
+    </BaseNavigationContainer>
+  );
+});
+
+test('throws error for non-existent route name', () => {
+  expect.assertions(1);
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return state.routes.map((route) => descriptors[route.key].render());
+  };
+
+  const Test = () => {
+    expect(() =>
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useRoute<{ nonexistent: {} }, 'nonexistent'>('nonexistent')
+    ).toThrow(
+      "Couldn't find a route named 'nonexistent' in any of the parent screens. Is your component inside the correct screen?"
+    );
+
+    return null;
+  };
+
+  render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={Test} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+});
+
+test('throws error on accessing a child route from the parent', () => {
+  expect.assertions(1);
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return state.routes.map((route) => descriptors[route.key].render());
+  };
+
+  const Test = () => {
+    expect(() =>
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useRoute<{ foo: {} }, 'foo'>('foo')
+    ).toThrow(
+      "Couldn't find a route named 'foo' in any of the parent screens. Is your component inside the correct screen?"
+    );
+
+    return (
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+      </TestNavigator>
+    );
+  };
+
+  render(
+    <BaseNavigationContainer>
+      <Test />
+    </BaseNavigationContainer>
+  );
+});
+
+test('throws error on accessing a sibling route', () => {
+  expect.assertions(1);
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return state.routes.map((route) => descriptors[route.key].render());
+  };
+
+  const Test = () => {
+    expect(() =>
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useRoute<{ bar: {} }, 'bar'>('bar')
+    ).toThrow(
+      "Couldn't find a route named 'bar' in any of the parent screens. Is your component inside the correct screen?"
+    );
+
+    return null;
+  };
+
+  render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={Test} />
+        <Screen name="bar">{() => null}</Screen>
       </TestNavigator>
     </BaseNavigationContainer>
   );

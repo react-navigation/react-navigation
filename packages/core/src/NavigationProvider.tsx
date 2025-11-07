@@ -2,6 +2,7 @@ import type { ParamListBase, Route } from '@react-navigation/routers';
 import * as React from 'react';
 
 import type { NavigationProp } from './types';
+import { useLazyValue } from './useLazyValue';
 
 /**
  * Context which holds the route prop for a screen.
@@ -30,14 +31,34 @@ type Props = {
 /**
  * Component to provide the navigation and route contexts to its children.
  */
-export const NavigationProvider = ({ route, navigation, children }: Props) => {
-  return (
-    <NavigationContext.Provider value={navigation}>
-      <NavigationRouteContext.Provider value={route}>
-        <NavigationRouteNameContext.Provider value={route.name}>
-          {children}
-        </NavigationRouteNameContext.Provider>
-      </NavigationRouteContext.Provider>
-    </NavigationContext.Provider>
+export const NamedRouteContextListContext = React.createContext<
+  Record<string, React.Context<Route<string>>>
+>({});
+
+export function NavigationProvider({ route, navigation, children }: Props) {
+  const NamedRouteContext = useLazyValue(() => React.createContext(route));
+
+  const parents = React.use(NamedRouteContextListContext);
+
+  const NamedRouteContextList = React.useMemo(
+    () => ({
+      ...parents,
+      [route.name]: NamedRouteContext,
+    }),
+    [NamedRouteContext, parents, route.name]
   );
-};
+
+  return (
+    <NamedRouteContextListContext.Provider value={NamedRouteContextList}>
+      <NamedRouteContext.Provider value={route}>
+        <NavigationRouteContext.Provider value={route}>
+          <NavigationContext.Provider value={navigation}>
+            <NavigationRouteNameContext.Provider value={route.name}>
+              {children}
+            </NavigationRouteNameContext.Provider>
+          </NavigationContext.Provider>
+        </NavigationRouteContext.Provider>
+      </NamedRouteContext.Provider>
+    </NamedRouteContextListContext.Provider>
+  );
+}
