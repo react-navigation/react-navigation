@@ -1,7 +1,10 @@
 import type { ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { NavigationRouteContext } from './NavigationProvider';
+import {
+  NamedRouteContextListContext,
+  NavigationRouteContext,
+} from './NavigationProvider';
 import type { RootParamList, RouteForName, RouteProp } from './types';
 
 /**
@@ -28,20 +31,37 @@ export function useRoute<
   : ParamList extends ParamListBase
     ? RouteForName<ParamList, string>
     : RouteProp<ParamListBase>;
+
 export function useRoute(name?: string) {
-  const route = React.useContext(NavigationRouteContext);
+  if (name === undefined) {
+    const route = React.use(NavigationRouteContext);
 
-  if (route === undefined) {
+    if (route === undefined) {
+      throw new Error(
+        "Couldn't find a route object. Is your component inside a screen in a navigator?"
+      );
+    }
+
+    return route;
+  }
+
+  const NamedRouteContextList = React.use(NamedRouteContextListContext);
+
+  if (NamedRouteContextList === undefined) {
     throw new Error(
-      "Couldn't find a route object. Is your component inside a screen in a navigator?"
+      "Couldn't find a parent screen. Is your component inside a screen in a navigator?"
     );
   }
 
-  if (name !== undefined && route.name !== name) {
+  const NamedRouteContext = NamedRouteContextList[name];
+
+  if (NamedRouteContext === undefined) {
     throw new Error(
-      `The provided route name ('${name}') doesn't match the current route's name ('${route.name}'). It must be used in the '${name}' screen.`
+      `Couldn't find a route named '${name}' in any of the parent screens. Is your component inside the correct screen?`
     );
   }
+
+  const route = React.use(NamedRouteContext);
 
   return route;
 }
