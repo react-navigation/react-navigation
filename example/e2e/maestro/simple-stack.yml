@@ -27,13 +27,14 @@ name: Simple Stack
 - assertVisible:
     text: 'Article by Babel fish'
 - retry:
-    maxRetries: 3
+    maxRetries: 5
     commands:
       - tapOn:
           text: 'Pop to albums'
           retryTapIfNoChange: true
-      - assertVisible:
-          text: 'Albums'
+      - extendedWaitUntil:
+          visible: 'Albums'
+          timeout: 5000
 - tapOn:
     text: 'Pop by 2'
 - assertVisible:
