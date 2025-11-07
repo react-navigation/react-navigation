@@ -167,11 +167,9 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
               state.routes.findIndex((r) => r.key === route.key);
 
             if (!isFocused) {
-              React.startTransition(() => {
-                navigation.dispatch({
-                  ...CommonActions.navigate(route.name, route.params),
-                  target: state.key,
-                });
+              navigation.dispatch({
+                ...CommonActions.navigate(route.name, route.params),
+                target: state.key,
               });
             }
           }
