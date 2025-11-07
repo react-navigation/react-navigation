@@ -652,8 +652,8 @@ export class CardStack extends React.Component<Props, State> {
       }
     }
 
-    const floatingHeader = (
-      <React.Fragment key="header">
+    return (
+      <View style={styles.container}>
         {renderHeader({
           mode: 'float',
           scenes,
@@ -669,12 +669,6 @@ export class CardStack extends React.Component<Props, State> {
             ],
           ],
         })}
-      </React.Fragment>
-    );
-
-    return (
-      <View style={styles.container}>
-        {isFloatHeaderAbsolute ? null : floatingHeader}
         <ScreenContainer
           enabled={detachInactiveScreens}
           style={styles.container}
@@ -808,7 +802,6 @@ export class CardStack extends React.Component<Props, State> {
             );
           })}
         </ScreenContainer>
-        {isFloatHeaderAbsolute ? floatingHeader : null}
       </View>
     );
   }
