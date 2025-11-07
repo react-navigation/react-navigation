@@ -39,7 +39,7 @@ type Props = NativeBottomTabNavigationConfig & {
 };
 
 export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
-  const { colors, fonts } = useTheme();
+  const { dark, colors, fonts } = useTheme();
 
   const focusedRouteKey = state.routes[state.index].key;
   const previousRouteKeyRef = React.useRef(focusedRouteKey);
@@ -144,7 +144,9 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
         tabBarItemTitleFontSize={fontSize}
         tabBarItemTitleFontSizeActive={fontSize}
         tabBarItemTitleFontStyle={fontStyle}
-        tabBarBackgroundColor={currentOptions.tabBarStyle?.backgroundColor}
+        tabBarBackgroundColor={
+          currentOptions.tabBarStyle?.backgroundColor ?? colors.card
+        }
         tabBarItemActiveIndicatorColor={activeIndicatorColor}
         tabBarItemActiveIndicatorEnabled={
           currentOptions?.tabBarActiveIndicatorEnabled
@@ -188,7 +190,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
             tabBarIcon,
             tabBarBadge,
             tabBarSystemItem,
-            tabBarBlurEffect,
+            tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
             tabBarStyle,
           } = options;
 
