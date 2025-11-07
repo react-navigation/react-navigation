@@ -2,8 +2,10 @@ import * as React from 'react';
 
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
 import {
+  NamedRouteContextListContext,
   NavigationContext,
   NavigationRouteContext,
+  NavigationRouteNameContext,
 } from './NavigationProvider';
 
 /**
@@ -16,12 +18,16 @@ export function NavigationIndependentTree({
 }) {
   return (
     // We need to clear any existing contexts for nested independent container to work correctly
-    <NavigationRouteContext.Provider value={undefined}>
-      <NavigationContext.Provider value={undefined}>
-        <NavigationIndependentTreeContext.Provider value>
-          {children}
-        </NavigationIndependentTreeContext.Provider>
-      </NavigationContext.Provider>
-    </NavigationRouteContext.Provider>
+    <NamedRouteContextListContext.Provider value={undefined}>
+      <NavigationRouteContext.Provider value={undefined}>
+        <NavigationContext.Provider value={undefined}>
+          <NavigationRouteNameContext.Provider value={undefined}>
+            <NavigationIndependentTreeContext.Provider value={true}>
+              {children}
+            </NavigationIndependentTreeContext.Provider>
+          </NavigationRouteNameContext.Provider>
+        </NavigationContext.Provider>
+      </NavigationRouteContext.Provider>
+    </NamedRouteContextListContext.Provider>
   );
 }

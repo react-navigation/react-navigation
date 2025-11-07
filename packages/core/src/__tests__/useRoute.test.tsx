@@ -43,7 +43,7 @@ test('throws if not used in a screen', () => {
   const Test = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     expect(() => useRoute<{ test: { x: number } }, 'test'>('test')).toThrow(
-      "Couldn't find a route named 'test' in any of the parent screens. Is your component inside the correct screen?"
+      "Couldn't find a parent screen. Is your component inside a screen in a navigator?"
     );
 
     return null;
@@ -194,7 +194,7 @@ test('throws error on accessing a child route from the parent', () => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       useRoute<{ foo: {} }, 'foo'>('foo')
     ).toThrow(
-      "Couldn't find a route named 'foo' in any of the parent screens. Is your component inside the correct screen?"
+      "Couldn't find a parent screen. Is your component inside a screen in a navigator?"
     );
 
     return (

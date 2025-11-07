@@ -32,8 +32,8 @@ type Props = {
  * Component to provide the navigation and route contexts to its children.
  */
 export const NamedRouteContextListContext = React.createContext<
-  Record<string, React.Context<Route<string>>>
->({});
+  Record<string, React.Context<Route<string>>> | undefined
+>(undefined);
 
 export function NavigationProvider({ route, navigation, children }: Props) {
   const NamedRouteContext = useLazyValue(() => React.createContext(route));
