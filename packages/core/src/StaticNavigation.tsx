@@ -10,7 +10,6 @@ import type {
   NavigatorTypeBagBase,
   PathConfig,
   PathConfigMap,
-  RouteConfigComponent,
   RouteConfigProps,
   RouteGroupConfig,
 } from './types';
@@ -75,15 +74,48 @@ type StaticRouteConfig<
   ScreenOptions extends {},
   EventMap extends EventMapBase,
   Navigation,
-> = RouteConfigProps<
-  ParamList,
-  RouteName,
-  State,
-  ScreenOptions,
-  EventMap,
-  Navigation
-> &
-  RouteConfigComponent<ParamList, RouteName>;
+> = Omit<
+  RouteConfigProps<
+    ParamList,
+    RouteName,
+    State,
+    ScreenOptions,
+    EventMap,
+    Navigation
+  >,
+  'name'
+> & {
+  /**
+   * Callback to determine whether the screen should be rendered or not.
+   * This can be useful for conditional rendering of screens,
+   * e.g. - if you want to render a different screen for logged in users.
+   *
+   * You can use a custom hook to use custom logic to determine the return value.
+   *
+   * @example
+   * ```js
+   * if: useIsLoggedIn
+   * ```
+   */
+  if?: () => boolean;
+  /**
+   * Linking config for the screen.
+   * This can be a string to specify the path, or an object with more options.
+   *
+   * @example
+   * ```js
+   * linking: {
+   *   path: 'profile/:id',
+   *   exact: true,
+   * },
+   * ```
+   */
+  linking?: PathConfig<ParamList> | string;
+  /**
+   * Static navigation config or Component to render for the screen.
+   */
+  screen: StaticNavigation<any, any, any> | React.ComponentType<any>;
+};
 
 export type StaticConfigScreens<
   ParamList extends ParamListBase,
@@ -95,48 +127,14 @@ export type StaticConfigScreens<
   [RouteName in keyof ParamList]:
     | React.ComponentType<any>
     | StaticNavigation<any, any, any>
-    | (Omit<
-        StaticRouteConfig<
-          ParamList,
-          RouteName,
-          State,
-          ScreenOptions,
-          EventMap,
-          NavigationList[RouteName]
-        >,
-        'name' | 'component' | 'getComponent' | 'children'
-      > & {
-        /**
-         * Callback to determine whether the screen should be rendered or not.
-         * This can be useful for conditional rendering of screens,
-         * e.g. - if you want to render a different screen for logged in users.
-         *
-         * You can use a custom hook to use custom logic to determine the return value.
-         *
-         * @example
-         * ```js
-         * if: useIsLoggedIn
-         * ```
-         */
-        if?: () => boolean;
-        /**
-         * Linking config for the screen.
-         * This can be a string to specify the path, or an object with more options.
-         *
-         * @example
-         * ```js
-         * linking: {
-         *   path: 'profile/:id',
-         *   exact: true,
-         * },
-         * ```
-         */
-        linking?: PathConfig<ParamList> | string;
-        /**
-         * Static navigation config or Component to render for the screen.
-         */
-        screen: StaticNavigation<any, any, any> | React.ComponentType<any>;
-      });
+    | StaticRouteConfig<
+        ParamList,
+        RouteName,
+        State,
+        ScreenOptions,
+        EventMap,
+        NavigationList[RouteName]
+      >;
 };
 
 export type StaticConfigGroup<
