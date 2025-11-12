@@ -10,6 +10,7 @@ import { Linking, Platform } from 'react-native';
 
 import { getStateFromHref } from './getStateFromHref';
 import type { LinkingOptions } from './types';
+import type { Thenable } from './useThenable';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
@@ -143,16 +144,13 @@ export function useLinking(
       state = getStateFromURL(url);
     }
 
-    const thenable = {
+    const thenable: Thenable<ResultState | undefined> = {
       then(onfulfilled?: (state: ResultState | undefined) => void) {
         return Promise.resolve(onfulfilled ? onfulfilled(state) : state);
       },
-      catch() {
-        return thenable;
-      },
     };
 
-    return thenable as PromiseLike<ResultState | undefined>;
+    return thenable;
   }, [getStateFromURL]);
 
   React.useEffect(() => {

@@ -18,7 +18,6 @@ import {
   createStaticNavigation,
   DarkTheme,
   DefaultTheme,
-  type InitialState,
   type Theme,
   useNavigation,
   useNavigationContainerRef,
@@ -36,7 +35,6 @@ import * as React from 'react';
 import {
   Appearance,
   I18nManager,
-  Linking,
   Platform,
   ScrollView,
   Switch,
@@ -97,7 +95,6 @@ type AppState = {
   isReady: boolean;
   themeName: ThemeName;
   isRTL: boolean;
-  initialState: InitialState | undefined;
 };
 
 type AppAction =
@@ -109,7 +106,6 @@ type AppAction =
       payload: {
         themeName: ThemeName;
         isRTL: boolean;
-        navigationState: InitialState | undefined;
       };
     };
 
@@ -294,7 +290,7 @@ const Stack = createStackNavigator({
 const Navigation = createStaticNavigation(Stack);
 
 export function App() {
-  const [{ isReady, themeName, isRTL, initialState }, dispatch] = useAppState();
+  const [{ isReady, themeName, isRTL }, dispatch] = useAppState();
 
   const dimensions = useWindowDimensions();
 
@@ -339,15 +335,8 @@ export function App() {
         <SettingsContext.Provider value={settings}>
           <Navigation
             ref={navigationRef}
-            initialState={initialState}
             onReady={() => {
               SplashScreen.hideAsync();
-            }}
-            onStateChange={(state) => {
-              AsyncStorage.setItem(
-                NAVIGATION_PERSISTENCE_KEY,
-                JSON.stringify(state)
-              );
             }}
             theme={theme}
             direction={isRTL ? 'rtl' : 'ltr'}
@@ -362,6 +351,21 @@ export function App() {
               enabled: 'auto',
               config: {
                 initialRouteName: 'Home',
+              },
+            }}
+            persistor={{
+              async persist(state) {
+                await AsyncStorage.setItem(
+                  NAVIGATION_PERSISTENCE_KEY,
+                  JSON.stringify(state)
+                );
+              },
+              async restore() {
+                const value = await AsyncStorage.getItem(
+                  NAVIGATION_PERSISTENCE_KEY
+                );
+
+                return value ? JSON.parse(value) : undefined;
               },
             }}
             fallback={<Text>Loading…</Text>}
@@ -390,7 +394,6 @@ const useAppState = () => {
             isReady: true,
             themeName: action.payload.themeName,
             isRTL: action.payload.isRTL,
-            initialState: action.payload.navigationState,
           };
         case 'SET_THEME':
           return { ...state, themeName: action.payload };
@@ -404,50 +407,33 @@ const useAppState = () => {
       themeName: 'custom',
       isRTL: previousDirection === 'rtl',
       isReady: Platform.OS === 'web',
-      initialState: undefined,
     }
   );
 
   React.useEffect(() => {
     const restoreState = async () => {
       try {
-        const initialUrl =
-          Platform.OS !== 'web' ? await Linking.getInitialURL() : null;
+        const savedThemeName = await AsyncStorage.getItem(
+          THEME_PERSISTENCE_KEY
+        );
 
-        // Only restore state if there's no initial URL
-        // This avoids breaking opening with deep links
-        if (initialUrl == null) {
-          const savedState =
-            // On web, we always use browser URL
-            Platform.OS !== 'web'
-              ? await AsyncStorage.getItem(NAVIGATION_PERSISTENCE_KEY)
-              : undefined;
+        const savedDirection =
+          Platform.OS !== 'web'
+            ? await AsyncStorage.getItem(DIRECTION_PERSISTENCE_KEY)
+            : undefined;
 
-          const savedThemeName = await AsyncStorage.getItem(
-            THEME_PERSISTENCE_KEY
-          );
-
-          const savedDirection =
-            Platform.OS !== 'web'
-              ? await AsyncStorage.getItem(DIRECTION_PERSISTENCE_KEY)
-              : undefined;
-
-          dispatch({
-            type: 'RESTORE_SUCCESS',
-            payload: {
-              themeName:
-                savedThemeName === 'dark'
-                  ? 'dark'
-                  : savedThemeName === 'light'
-                    ? 'light'
-                    : 'custom',
-              isRTL: savedDirection === 'rtl',
-              navigationState: savedState ? JSON.parse(savedState) : undefined,
-            },
-          });
-        } else {
-          dispatch({ type: 'RESTORE_FAILURE' });
-        }
+        dispatch({
+          type: 'RESTORE_SUCCESS',
+          payload: {
+            themeName:
+              savedThemeName === 'dark'
+                ? 'dark'
+                : savedThemeName === 'light'
+                  ? 'light'
+                  : 'custom',
+            isRTL: savedDirection === 'rtl',
+          },
+        });
       } catch (e) {
         dispatch({ type: 'RESTORE_FAILURE' });
       }
