@@ -443,7 +443,7 @@ export type NavigationHelpers<
 
 export type NavigationContainerProps = {
   /**
-   * Initial navigation state for the child navigators.
+   * Initial state object for the navigation tree.
    */
   initialState?: InitialState;
   /**
