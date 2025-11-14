@@ -196,15 +196,16 @@ function Card({
   });
 
   const animate = useLatestCallback(
-    ({
-      closing: isClosingParam,
-      velocity,
-      wrapWithTimeout,
-    }: {
-      closing: boolean;
-      velocity?: number;
-      wrapWithTimeout?: boolean;
-    }) => {
+    (
+      {
+        closing: isClosingParam,
+        velocity,
+      }: {
+        closing: boolean;
+        velocity?: number;
+      },
+      wrapWithTimeout: boolean = false
+    ) => {
       const toValue = getAnimateToValue({
         closing: isClosingParam,
         layout,
@@ -404,7 +405,7 @@ function Card({
       didInitiallyAnimate.current = true;
 
       // Animate the card in on initial mount
-      animate({ closing, wrapWithTimeout: true });
+      animate({ closing }, true);
     } else {
       const previousOpening = previousPropsRef.current?.opening;
       const previousToValue = previousPropsRef.current
