@@ -46,7 +46,8 @@
   },
   "dependencies": {
     "@react-navigation/elements": "^2.8.1",
-    "color": "^4.2.3"
+    "color": "^4.2.3",
+    "use-latest-callback": "^0.2.4"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.0",
