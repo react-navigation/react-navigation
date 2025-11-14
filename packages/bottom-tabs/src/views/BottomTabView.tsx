@@ -152,7 +152,14 @@ export function BottomTabView(props: Props) {
             spec = spec ?? NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
 
             const toValue =
-              index === state.index ? 0 : index >= state.index ? 1 : -1;
+              index === state.index
+                ? 0
+                : index >= state.index
+                  ? 1 + EPSILON
+                  : -1 + EPSILON;
+            //
+            // const toValue =
+            //   index === state.index ? 0 : index >= state.index ? 1 : -1;
 
             return Animated[spec.animation](tabAnims[route.key], {
               ...spec.config,
