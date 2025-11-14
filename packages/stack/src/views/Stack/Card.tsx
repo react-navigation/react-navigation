@@ -246,21 +246,26 @@ function Card({
 
       if (animated) {
         onStartInteraction();
+        // Wrap in setTimeout to ensure animation starts after
+        // rending of the screen is done. This is especially important
+        // in the new architecture
+        // cf., https://github.com/react-navigation/react-navigation/issues/12401
+        setTimeout(() => {
+          animation(gesture, {
+            ...spec.config,
+            velocity,
+            toValue,
+            useNativeDriver,
+            isInteraction: false,
+          }).start(({ finished }) => {
+            onEndInteraction();
+            clearTimeout(pendingGestureCallbackRef.current);
 
-        animation(gesture, {
-          ...spec.config,
-          velocity,
-          toValue,
-          useNativeDriver,
-          isInteraction: false,
-        }).start(({ finished }) => {
-          onEndInteraction();
-          clearTimeout(pendingGestureCallbackRef.current);
-
-          if (finished) {
-            onFinish();
-          }
-        });
+            if (finished) {
+              onFinish();
+            }
+          });
+        }, 0);
       } else {
         onFinish();
       }
