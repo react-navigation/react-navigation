@@ -355,16 +355,26 @@ function Card({
     // We only want to clean up the animation on unmount
   }, []);
 
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
   React.useEffect(() => {
     if (preloaded) {
       return;
     }
 
     if (!didInitiallyAnimate.current) {
-      didInitiallyAnimate.current = true;
-
       // Animate the card in on initial mount
-      animate({ closing });
+      // Wrap in setTimeout to ensure animation starts after
+      // rending of the screen is done. This is especially important
+      // in the new architecture
+      // cf., https://github.com/react-navigation/react-navigation/issues/12401
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        didInitiallyAnimate.current = true;
+        animate({ closing });
+      }, 0);
     } else {
       const previousOpening = previousPropsRef.current?.opening;
       const previousToValue = previousPropsRef.current
