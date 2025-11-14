@@ -3953,7 +3953,7 @@ __metadata:
   resolution: "@react-navigation/bottom-tabs@workspace:packages/bottom-tabs"
   dependencies:
     "@jest/globals": "npm:^30.0.0"
-    "@react-navigation/elements": "npm:^2.8.1"
+    "@react-navigation/elements": "npm:^2.8.2"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^13.2.0"
     "@types/color": "npm:^4.2.0"
@@ -4029,7 +4029,7 @@ __metadata:
   dependencies:
     "@babel/core": "npm:^7.27.4"
     "@jest/globals": "npm:^30.0.0"
-    "@react-navigation/elements": "npm:^2.8.1"
+    "@react-navigation/elements": "npm:^2.8.2"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^13.2.0"
     "@types/color": "npm:^4.2.0"
@@ -4058,7 +4058,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/elements@npm:^2.8.1, @react-navigation/elements@workspace:packages/elements":
+"@react-navigation/elements@npm:^2.8.2, @react-navigation/elements@workspace:packages/elements":
   version: 0.0.0-use.local
   resolution: "@react-navigation/elements@workspace:packages/elements"
   dependencies:
@@ -4149,7 +4149,7 @@ __metadata:
   resolution: "@react-navigation/material-top-tabs@workspace:packages/material-top-tabs"
   dependencies:
     "@jest/globals": "npm:^30.0.0"
-    "@react-navigation/elements": "npm:^2.8.1"
+    "@react-navigation/elements": "npm:^2.8.2"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^13.2.0"
     "@types/color": "npm:^4.2.0"
@@ -4178,7 +4178,7 @@ __metadata:
   resolution: "@react-navigation/native-stack@workspace:packages/native-stack"
   dependencies:
     "@jest/globals": "npm:^30.0.0"
-    "@react-navigation/elements": "npm:^2.8.1"
+    "@react-navigation/elements": "npm:^2.8.2"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^13.2.0"
     "@types/color": "npm:^4.2.0"
@@ -4245,7 +4245,7 @@ __metadata:
   resolution: "@react-navigation/stack@workspace:packages/stack"
   dependencies:
     "@jest/globals": "npm:^30.0.0"
-    "@react-navigation/elements": "npm:^2.8.1"
+    "@react-navigation/elements": "npm:^2.8.2"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^13.2.0"
     "@types/color": "npm:^4.2.0"

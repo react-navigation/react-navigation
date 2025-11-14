@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.8.1...@react-navigation/elements@2.8.2) (2025-11-14)
+
+### Bug Fixes
+
+* measure header layout early in layout effect ([1e49bd1](https://github.com/react-navigation/react-navigation/commit/1e49bd140687be8e86727fa08ec223f8af5f8dc5)) - by @satya164
+
 ## [2.8.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.8.0...@react-navigation/elements@2.8.1) (2025-11-01)
 
 ### Bug Fixes

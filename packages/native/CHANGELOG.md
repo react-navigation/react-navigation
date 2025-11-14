@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.19...@react-navigation/native@7.1.20) (2025-11-14)
+
+**Note:** Version bump only for package @react-navigation/native
+
 ## [7.1.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.18...@react-navigation/native@7.1.19) (2025-10-27)
 
 **Note:** Version bump only for package @react-navigation/native
