@@ -61,7 +61,15 @@ export function Screen(props: Props) {
     })
   );
 
+  const headerRef = React.useRef<View>(null);
+
   const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
+
+  React.useLayoutEffect(() => {
+    headerRef.current?.measure((_x, _y, _width, height) => {
+      setHeaderHeight(height);
+    });
+  }, [route.name]);
 
   return (
     <Animated.View
@@ -74,6 +82,7 @@ export function Screen(props: Props) {
       {headerShown ? (
         <NavigationProvider navigation={navigation} route={route}>
           <View
+            ref={headerRef}
             onLayout={(e) => {
               const { height } = e.nativeEvent.layout;
 
