@@ -195,19 +195,14 @@ function Card({
     }
   });
 
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
-
   const animate = useLatestCallback(
-    (
-      {
-        closing: isClosingParam,
-        velocity,
-      }: {
-        closing: boolean;
-        velocity?: number;
-      },
-      wrapWithTimeout: boolean = false
-    ) => {
+    ({
+      closing: isClosingParam,
+      velocity,
+    }: {
+      closing: boolean;
+      velocity?: number;
+    }) => {
       const toValue = getAnimateToValue({
         closing: isClosingParam,
         layout,
@@ -251,35 +246,20 @@ function Card({
 
       if (animated) {
         onStartInteraction();
-        // Wrap in setTimeout to ensure animation starts after
-        // rending of the screen is done. This is especially important
-        // in the new architecture
-        // cf., https://github.com/react-navigation/react-navigation/issues/12401
-        const animationFn = () => {
-          animation(gesture, {
-            ...spec.config,
-            velocity,
-            toValue,
-            useNativeDriver,
-            isInteraction: false,
-          }).start(({ finished }) => {
-            onEndInteraction();
-            clearTimeout(pendingGestureCallbackRef.current);
+        animation(gesture, {
+          ...spec.config,
+          velocity,
+          toValue,
+          useNativeDriver,
+          isInteraction: false,
+        }).start(({ finished }) => {
+          onEndInteraction();
+          clearTimeout(pendingGestureCallbackRef.current);
 
-            if (finished) {
-              onFinish();
-            }
-          });
-        };
-
-        if (wrapWithTimeout) {
-          if (timeoutRef.current) {
-            clearTimeout(timeoutRef.current);
+          if (finished) {
+            onFinish();
           }
-          timeoutRef.current = setTimeout(animationFn, 0);
-        } else {
-          animationFn();
-        }
+        });
       } else {
         onFinish();
       }
@@ -401,16 +381,26 @@ function Card({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
   React.useEffect(() => {
     if (preloaded) {
       return;
     }
 
     if (!didInitiallyAnimate.current) {
-      didInitiallyAnimate.current = true;
-
       // Animate the card in on initial mount
-      animate({ closing }, true);
+      // Wrap in setTimeout to ensure animation starts after
+      // rending of the screen is done. This is especially important
+      // in the new architecture
+      // cf., https://github.com/react-navigation/react-navigation/issues/12401
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        didInitiallyAnimate.current = true;
+        animate({ closing });
+      }, 0);
     } else {
       const previousOpening = previousPropsRef.current?.opening;
       const previousToValue = previousPropsRef.current
