@@ -195,6 +195,8 @@ function Card({
     }
   });
 
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+
   const animate = useLatestCallback(
     (
       {
@@ -271,7 +273,10 @@ function Card({
         };
 
         if (wrapWithTimeout) {
-          setTimeout(animationFn, 0);
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+          }
+          timeoutRef.current = setTimeout(animationFn, 0);
         } else {
           animationFn();
         }
