@@ -199,9 +199,11 @@ function Card({
     ({
       closing: isClosingParam,
       velocity,
+      wrapWithTimeout,
     }: {
       closing: boolean;
       velocity?: number;
+      wrapWithTimeout?: boolean;
     }) => {
       const toValue = getAnimateToValue({
         closing: isClosingParam,
@@ -250,7 +252,7 @@ function Card({
         // rending of the screen is done. This is especially important
         // in the new architecture
         // cf., https://github.com/react-navigation/react-navigation/issues/12401
-        setTimeout(() => {
+        const animationFn = () => {
           animation(gesture, {
             ...spec.config,
             velocity,
@@ -265,7 +267,13 @@ function Card({
               onFinish();
             }
           });
-        }, 0);
+        };
+
+        if (wrapWithTimeout) {
+          setTimeout(animationFn, 0);
+        } else {
+          animationFn();
+        }
       } else {
         onFinish();
       }
@@ -396,7 +404,7 @@ function Card({
       didInitiallyAnimate.current = true;
 
       // Animate the card in on initial mount
-      animate({ closing });
+      animate({ closing, wrapWithTimeout: true });
     } else {
       const previousOpening = previousPropsRef.current?.opening;
       const previousToValue = previousPropsRef.current
