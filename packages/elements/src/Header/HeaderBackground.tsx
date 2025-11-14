@@ -1,7 +1,6 @@
 import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
-  Animated,
   Platform,
   type StyleProp,
   StyleSheet,
@@ -9,12 +8,12 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { getBlurBackgroundColor } from '../getBlurBackgroundColor';
-import type { HeaderOptions } from '../types';
+import { BlurEffectBackground } from '../BlurEffectBackground';
+import { type BlurEffectType } from '../getBlurBackgroundColor';
 
 type Props = Omit<ViewProps, 'style'> & {
-  blurEffect?: HeaderOptions['headerBlurEffect'];
-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  blurEffect?: BlurEffectType | 'none';
+  style?: StyleProp<ViewStyle>;
   children?: React.ReactNode;
 };
 
@@ -26,57 +25,9 @@ export function HeaderBackground({
 }: Props) {
   const { colors, dark } = useTheme();
 
-  let containerStyle, blurStyle, blurBackground, colorBackground;
-
-  if (Platform.OS === 'web' && blurEffect && blurEffect !== 'none') {
-    const blurBackgroundColor = getBlurBackgroundColor(blurEffect);
-
-    if (blurBackgroundColor) {
-      const backdropFilter = `saturate(180%) blur(30px)`;
-
-      blurStyle = {
-        // @ts-expect-error backdropFilter is web-only
-        backdropFilter,
-        webkitBackdropFilter: backdropFilter,
-      };
-
-      blurBackground = (
-        <div
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            zIndex: -1,
-            backgroundColor: blurBackgroundColor,
-          }}
-        />
-      );
-
-      const flattenedStyle = StyleSheet.flatten(style) || {};
-
-      containerStyle = [flattenedStyle, { backgroundColor: 'transparent' }];
-      colorBackground =
-        'backgroundColor' in flattenedStyle &&
-        flattenedStyle.backgroundColor !== 'transparent' ? (
-          <Animated.View
-            style={[
-              StyleSheet.absoluteFill,
-              {
-                zIndex: -1,
-                backgroundColor: flattenedStyle.backgroundColor,
-              },
-            ]}
-          />
-        ) : null;
-    }
-  } else {
-    containerStyle = style;
-  }
-
   return (
-    <Animated.View
+    <BlurEffectBackground
+      blurEffect={blurEffect}
       style={[
         styles.container,
         {
@@ -86,15 +37,12 @@ export function HeaderBackground({
         Platform.OS === 'ios' && {
           shadowColor: dark ? 'rgba(255, 255, 255, 0.45)' : 'rgba(0, 0, 0, 1)',
         },
-        blurStyle,
-        containerStyle,
+        style,
       ]}
       {...rest}
     >
-      {blurBackground}
-      {colorBackground}
       {children}
-    </Animated.View>
+    </BlurEffectBackground>
   );
 }
 
