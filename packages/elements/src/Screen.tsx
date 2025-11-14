@@ -57,7 +57,15 @@ export function Screen(props: Props) {
     getDefaultHeaderHeight(size, modal, headerStatusBarHeight)
   );
 
+  const headerRef = React.useRef<View>(null);
+
   const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
+
+  React.useLayoutEffect(() => {
+    headerRef.current?.measure((_x, _y, _width, height) => {
+      setHeaderHeight(height);
+    });
+  }, [route.name]);
 
   return (
     <Background
@@ -71,6 +79,7 @@ export function Screen(props: Props) {
         <NavigationContext.Provider value={navigation}>
           <NavigationRouteContext.Provider value={route}>
             <View
+              ref={headerRef}
               pointerEvents="box-none"
               onLayout={(e) => {
                 const { height } = e.nativeEvent.layout;
