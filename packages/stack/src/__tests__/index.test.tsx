@@ -114,6 +114,8 @@ test('fires transition events on navigation', async () => {
 
   fireEvent.press(getByText('Go to B'));
 
+  act(() => jest.advanceTimersByTime(1));
+
   expect(onTransitionStart).toHaveBeenCalledTimes(1);
   expect(onTransitionStart).toHaveBeenCalledWith(
     expect.objectContaining({ data: { closing: false } })
