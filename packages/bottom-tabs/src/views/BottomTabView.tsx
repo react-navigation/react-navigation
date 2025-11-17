@@ -68,13 +68,11 @@ const hasAnimation = (options: BottomTabNavigationOptions) => {
   return Boolean(transitionSpec);
 };
 
-const renderTabBarDefault = (props: BottomTabBarProps) => (
-  <BottomTabBar {...props} />
-);
+const TabBarDefault = (props: BottomTabBarProps) => <BottomTabBar {...props} />;
 
 export function BottomTabView(props: Props) {
   const {
-    tabBar = renderTabBarDefault,
+    tabBar: TabBar = TabBarDefault,
     state,
     navigation,
     descriptors,
@@ -204,19 +202,19 @@ export function BottomTabView(props: Props) {
   const renderTabBar = () => {
     return (
       <SafeAreaInsetsContext.Consumer>
-        {(insets) =>
-          tabBar({
-            state: state,
-            descriptors: descriptors,
-            navigation: navigation,
-            insets: {
+        {(insets) => (
+          <TabBar
+            state={state}
+            descriptors={descriptors}
+            navigation={navigation}
+            insets={{
               top: safeAreaInsets?.top ?? insets?.top ?? 0,
               right: safeAreaInsets?.right ?? insets?.right ?? 0,
               bottom: safeAreaInsets?.bottom ?? insets?.bottom ?? 0,
               left: safeAreaInsets?.left ?? insets?.left ?? 0,
-            },
-          })
-        }
+            }}
+          ></TabBar>
+        )}
       </SafeAreaInsetsContext.Consumer>
     );
   };
