@@ -1022,6 +1022,22 @@ test('handles pop to top action', () => {
         stale: false,
         type: 'stack',
         key: 'root',
+        index: 0,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [{ key: 'baz', name: 'baz' }],
+      },
+      StackActions.popToTop(),
+      options
+    )
+  ).toBeNull();
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
         index: 2,
         preloadedRoutes: [],
         routeNames: ['baz', 'bar', 'qux'],
@@ -1029,6 +1045,68 @@ test('handles pop to top action', () => {
           { key: 'baz', name: 'baz' },
           { key: 'bar', name: 'bar' },
           { key: 'qux', name: 'qux' },
+        ],
+      },
+      StackActions.popToTop(),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    preloadedRoutes: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [{ key: 'baz', name: 'baz' }],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          {
+            key: 'baz',
+            name: 'baz',
+            history: [{ type: 'params' as const, params: { fruit: 'apple' } }],
+          },
+        ],
+      },
+      StackActions.popToTop(),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    preloadedRoutes: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [{ key: 'baz', name: 'baz' }],
+  });
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+          {
+            key: 'qux',
+            name: 'qux',
+            history: [{ type: 'params', params: { count: 1 } }],
+          },
         ],
       },
       StackActions.popToTop(),

@@ -1,11 +1,11 @@
 appId: ${APP_ID}
 name: Native Stack
 ---
-- openLink:
-    link: ${APP_SCHEME}native-stack
-- extendedWaitUntil:
-    visible: 'Article by Gandalf'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: native-stack
+      TEXT: 'Article by Gandalf'
 - tapOn:
     text: 'Update params'
 - assertVisible:

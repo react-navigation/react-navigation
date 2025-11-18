@@ -1,7 +1,9 @@
 import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
+  type NavigatorScreenParams,
   type PathConfigMap,
+  type StaticScreenProps,
   useTheme,
 } from '@react-navigation/native';
 import {
@@ -134,7 +136,9 @@ const InputScreen = ({
 
 const Stack = createStackNavigator<PreventRemoveParams>();
 
-export function StackPreventRemove() {
+export function StackPreventRemove(
+  _: StaticScreenProps<NavigatorScreenParams<PreventRemoveParams>>
+) {
   return (
     <Stack.Navigator>
       <Stack.Screen name="Input" component={InputScreen} />

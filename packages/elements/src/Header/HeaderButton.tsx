@@ -57,6 +57,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     // Roundness for iPad hover effect
     borderRadius: 10,
+    borderCurve: 'continuous',
   },
   disabled: {
     opacity: 0.5,

@@ -1,8 +1,8 @@
 appId: ${APP_ID}
 name: Screen Layout
 ---
-- openLink:
-    link: ${APP_SCHEME}screen-layout
-- extendedWaitUntil:
-    visible: 'Suspense & ErrorBoundary'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: screen-layout
+      TEXT: 'Suspense & ErrorBoundary'

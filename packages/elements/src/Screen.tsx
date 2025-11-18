@@ -1,7 +1,6 @@
 import {
-  NavigationContext,
   type NavigationProp,
-  NavigationRouteContext,
+  NavigationProvider,
   type ParamListBase,
   type RouteProp,
   useTheme,
@@ -62,7 +61,15 @@ export function Screen(props: Props) {
     })
   );
 
+  const headerRef = React.useRef<View>(null);
+
   const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
+
+  React.useLayoutEffect(() => {
+    headerRef.current?.measure((_x, _y, _width, height) => {
+      setHeaderHeight(height);
+    });
+  }, [route.name]);
 
   return (
     <Animated.View
@@ -73,23 +80,19 @@ export function Screen(props: Props) {
       collapsable={false}
     >
       {headerShown ? (
-        <NavigationContext.Provider value={navigation}>
-          <NavigationRouteContext.Provider value={route}>
-            <View
-              onLayout={(e) => {
-                const { height } = e.nativeEvent.layout;
+        <NavigationProvider navigation={navigation} route={route}>
+          <View
+            ref={headerRef}
+            onLayout={(e) => {
+              const { height } = e.nativeEvent.layout;
 
-                setHeaderHeight(height);
-              }}
-              style={[
-                styles.header,
-                headerTransparent ? styles.absolute : null,
-              ]}
-            >
-              {header}
-            </View>
-          </NavigationRouteContext.Provider>
-        </NavigationContext.Provider>
+              setHeaderHeight(height);
+            }}
+            style={[styles.header, headerTransparent ? styles.absolute : null]}
+          >
+            {header}
+          </View>
+        </NavigationProvider>
       ) : null}
       <View style={styles.content}>
         <HeaderShownContext.Provider

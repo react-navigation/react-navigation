@@ -1,8 +1,8 @@
 appId: ${APP_ID}
 name: Mixed Native Stack
 ---
-- openLink:
-    link: ${APP_SCHEME}mixed-native-stack
-- extendedWaitUntil:
-    visible: 'Article by Gandalf'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: mixed-native-stack
+      TEXT: 'Article by Gandalf'

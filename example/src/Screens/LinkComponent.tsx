@@ -2,8 +2,10 @@ import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
   Link,
+  type NavigatorScreenParams,
   type PathConfigMap,
   StackActions,
+  type StaticScreenProps,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -15,7 +17,7 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-export type LinkComponentDemoParamList = {
+type LinkComponentDemoParamList = {
   Article: { author: string };
   Albums: undefined;
 };
@@ -125,7 +127,9 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<LinkComponentDemoParamList>();
 
-export function LinkComponent() {
+export function LinkComponent(
+  _: StaticScreenProps<NavigatorScreenParams<LinkComponentDemoParamList>>
+) {
   return (
     <SimpleStack.Navigator>
       <SimpleStack.Screen

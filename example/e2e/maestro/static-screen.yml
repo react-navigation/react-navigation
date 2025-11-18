@@ -1,8 +1,8 @@
 appId: ${APP_ID}
 name: Static Screen
 ---
-- openLink:
-    link: ${APP_SCHEME}static-screen
-- extendedWaitUntil:
-    visible: 'Albums'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: static-screen
+      TEXT: 'Albums'

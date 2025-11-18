@@ -2,7 +2,6 @@ import * as React from 'react';
 import {
   Dimensions,
   I18nManager,
-  InteractionManager,
   Keyboard,
   type LayoutChangeEvent,
   Platform,
@@ -111,19 +110,6 @@ export function Drawer({
     return () => hideStatusBar(false);
   }, [isOpen, hideStatusBarOnOpen, statusBarAnimation, hideStatusBar]);
 
-  const interactionHandleRef = React.useRef<number | null>(null);
-
-  const startInteraction = useLatestCallback(() => {
-    interactionHandleRef.current = InteractionManager.createInteractionHandle();
-  });
-
-  const endInteraction = useLatestCallback(() => {
-    if (interactionHandleRef.current != null) {
-      InteractionManager.clearInteractionHandle(interactionHandleRef.current);
-      interactionHandleRef.current = null;
-    }
-  });
-
   const hideKeyboard = useLatestCallback(() => {
     if (keyboardDismissMode === 'on-drag') {
       Keyboard.dismiss();
@@ -132,19 +118,16 @@ export function Drawer({
 
   const onGestureBegin = useLatestCallback(() => {
     onGestureStart?.();
-    startInteraction();
     hideKeyboard();
     hideStatusBar(true);
   });
 
   const onGestureFinish = useLatestCallback(() => {
     onGestureEnd?.();
-    endInteraction();
   });
 
   const onGestureAbort = useLatestCallback(() => {
     onGestureCancel?.();
-    endInteraction();
   });
 
   const hitSlop = React.useMemo(
@@ -256,8 +239,6 @@ export function Drawer({
             damping: 500,
             mass: 3,
             overshootClamping: true,
-            restDisplacementThreshold: 0.01,
-            restSpeedThreshold: 0.01,
             reduceMotion: ReduceMotion.Never,
           },
           (finished) => {

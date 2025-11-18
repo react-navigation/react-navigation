@@ -25,6 +25,11 @@
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
+    "./unstable": {
+      "source": "./src/unstable/index.tsx",
+      "types": "./lib/typescript/src/unstable/index.d.ts",
+      "default": "./lib/module/unstable/index.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -42,22 +47,23 @@
   },
   "dependencies": {
     "@react-navigation/elements": "^2.6.0",
-    "color": "^4.2.3"
+    "color": "^4.2.3",
+    "sf-symbols-typescript": "^2.1.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.0",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^13.2.1",
     "@types/color": "^4.2.0",
-    "@types/react": "~19.0.10",
+    "@types/react": "~19.1.10",
     "del-cli": "^6.0.0",
-    "react": "19.0.0",
-    "react-native": "0.79.3",
+    "react": "19.1.0",
+    "react-native": "0.81.4",
     "react-native-builder-bob": "^0.40.12",
-    "react-native-safe-area-context": "5.5.0",
-    "react-native-screens": "~4.11.1",
-    "react-test-renderer": "19.0.0",
-    "typescript": "^5.8.3"
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-screens": "^4.18.0",
+    "react-test-renderer": "19.1.0",
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "@react-navigation/native": "workspace:^",

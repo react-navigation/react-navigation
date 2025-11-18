@@ -1,5 +1,11 @@
 import { Button } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  CompositeScreenProps,
+  NavigatorScreenParams,
+  PathConfigMap,
+  RootParamList,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
@@ -9,13 +15,12 @@ import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
-import type { RootStackParamList } from '../screens';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type SimpleStackParams = {
+type SimpleStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Contacts: undefined;
@@ -70,12 +75,13 @@ const ArticleScreen = ({
   );
 };
 
-const NewsFeedScreen = ({
-  route,
-  navigation,
-}: StackScreenProps<SimpleStackParams, 'NewsFeed'>) => {
-  const rootNavigation =
-    navigation.getParent<StackScreenProps<RootStackParamList>['navigation']>();
+type NewsFeedScreenProps = CompositeScreenProps<
+  StackScreenProps<SimpleStackParams, 'NewsFeed'>,
+  StackScreenProps<RootParamList, 'SimpleStack'>
+>;
+
+const NewsFeedScreen = ({ route, navigation }: NewsFeedScreenProps) => {
+  const rootNavigation = navigation.getParent('SimpleStack');
 
   return (
     <ScrollView>
@@ -151,7 +157,9 @@ const AlbumsScreen = ({
 
 const Stack = createStackNavigator<SimpleStackParams>();
 
-export function SimpleStack() {
+export function SimpleStack(
+  _: StaticScreenProps<NavigatorScreenParams<SimpleStackParams>>
+) {
   return (
     <Stack.Navigator
       screenOptions={{

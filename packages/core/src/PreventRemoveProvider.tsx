@@ -3,7 +3,7 @@ import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
 import { NavigationHelpersContext } from './NavigationHelpersContext';
-import { NavigationRouteContext } from './NavigationRouteContext';
+import { NavigationRouteContext } from './NavigationProvider';
 import {
   type PreventedRoutes,
   PreventRemoveContext,

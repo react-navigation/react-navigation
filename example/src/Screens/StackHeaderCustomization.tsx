@@ -6,7 +6,11 @@ import {
   HeaderButton,
   useHeaderHeight,
 } from '@react-navigation/elements';
-import { type PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   Header as StackHeader,
@@ -29,7 +33,7 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type HeaderCustomizationStackParams = {
+type HeaderCustomizationStackParams = {
   Article: { author: string };
   NewsFeed: { date: number };
   Albums: undefined;
@@ -133,7 +137,9 @@ function CustomHeader(props: StackHeaderProps) {
   );
 }
 
-export function StackHeaderCustomization() {
+export function StackHeaderCustomization(
+  _: StaticScreenProps<NavigatorScreenParams<HeaderCustomizationStackParams>>
+) {
   const [headerTitleCentered, setHeaderTitleCentered] = React.useState(true);
 
   return (

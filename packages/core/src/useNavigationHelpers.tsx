@@ -7,9 +7,8 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { NavigationContext } from './NavigationContext';
+import { NavigationContext } from './NavigationProvider';
 import { type NavigationHelpers, PrivateValueStore } from './types';
-import { UnhandledActionContext } from './UnhandledActionContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
 // This is to make TypeScript compiler happy
@@ -17,8 +16,8 @@ import type { NavigationEventEmitter } from './useEventEmitter';
 PrivateValueStore;
 
 type Options<State extends NavigationState, Action extends NavigationAction> = {
-  id: string | undefined;
   onAction: (action: NavigationAction) => boolean;
+  onUnhandledAction: (action: NavigationAction) => void;
   getState: () => State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
@@ -31,18 +30,17 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
  */
 export function useNavigationHelpers<
   State extends NavigationState,
-  ActionHelpers extends Record<string, () => void>,
+  ActionHelpers extends Record<string, (...args: any) => void>,
   Action extends NavigationAction,
   EventMap extends Record<string, any>,
 >({
-  id: navigatorId,
   onAction,
+  onUnhandledAction,
   getState,
   emitter,
   router,
   stateRef,
 }: Options<State, Action>) {
-  const onUnhandledAction = React.useContext(UnhandledActionContext);
   const parentNavigationHelpers = React.useContext(NavigationContext);
 
   return React.useMemo(() => {
@@ -88,20 +86,6 @@ export function useNavigationHelpers<
           false
         );
       },
-      getId: () => navigatorId,
-      getParent: (id?: string) => {
-        if (id !== undefined) {
-          let current = navigationHelpers;
-
-          while (current && id !== current.getId()) {
-            current = current.getParent();
-          }
-
-          return current;
-        }
-
-        return parentNavigationHelpers;
-      },
       getState: (): State => {
         // FIXME: Workaround for when the state is read during render
         // By this time, we haven't committed the new state yet
@@ -124,7 +108,6 @@ export function useNavigationHelpers<
     getState,
     onAction,
     onUnhandledAction,
-    navigatorId,
     stateRef,
   ]);
 }

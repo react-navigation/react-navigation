@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "color": "^4.2.3",
-    "use-latest-callback": "^0.2.4",
+    "use-latest-callback": "^0.3.2",
     "use-sync-external-store": "^1.5.0"
   },
   "devDependencies": {
@@ -51,14 +51,14 @@
     "@react-native-masked-view/masked-view": "0.3.2",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^13.2.1",
-    "@types/react": "~19.0.10",
+    "@types/react": "~19.1.10",
     "@types/use-sync-external-store": "^1.5.0",
     "del-cli": "^6.0.0",
-    "react": "19.0.0",
-    "react-native": "0.79.3",
+    "react": "19.1.0",
+    "react-native": "0.81.4",
     "react-native-builder-bob": "^0.40.12",
-    "react-test-renderer": "19.0.0",
-    "typescript": "^5.8.3"
+    "react-test-renderer": "19.1.0",
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "@react-native-masked-view/masked-view": ">= 0.2.0",

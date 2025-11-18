@@ -7,26 +7,40 @@ import type {
 } from '@react-navigation/bottom-tabs';
 import type {
   DrawerNavigationOptions,
+  DrawerNavigationProp,
   DrawerScreenProps,
 } from '@react-navigation/drawer';
 import { Button } from '@react-navigation/elements';
 import {
+  type CompositeNavigationProp,
   type CompositeScreenProps,
+  type GenericNavigation,
   Link,
   type NavigationAction,
   type NavigationContainerRef,
   type NavigationHelpers,
+  type NavigationProp,
   type NavigatorScreenParams,
+  type ParamListBase,
+  type RootParamList,
   type Route,
+  type RouteForName,
+  type RouteProp,
+  type Theme,
   useLinkProps,
+  useNavigation,
+  useRoute,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackNavigationOptions,
+  type StackNavigationProp,
   type StackOptionsArgs,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
+
+import type { StaticScreenParams } from '../src/Screens/Static';
 
 /**
  * Check for the type of the `navigation` and `route` objects with regular usage
@@ -34,6 +48,7 @@ import { expectTypeOf } from 'expect-type';
 type RootStackParamList = {
   Home: NavigatorScreenParams<HomeDrawerParamList>;
   Albums: NavigatorScreenParams<AlbumTabParamList>;
+  Updates: NavigatorScreenParams<UpdatesTabParamList> | undefined;
   PostDetails: { id: string; section?: string };
   Settings: { path: string } | undefined;
   Login: undefined;
@@ -53,10 +68,15 @@ type AlbumTabParamList = {
   Artist: { id: string };
 };
 
+type UpdatesTabParamList = {
+  Notifications: { type: 'all' | 'mentions' | 'replies' };
+  Timeline: undefined;
+};
+
 type HomeDrawerScreenProps<T extends keyof HomeDrawerParamList> =
   CompositeScreenProps<
-    DrawerScreenProps<HomeDrawerParamList, T, 'LeftDrawer'>,
-    RootStackScreenProps<keyof RootStackParamList>
+    DrawerScreenProps<HomeDrawerParamList, T>,
+    RootStackScreenProps<'Home'>
   >;
 
 type FeedTabParamList = {
@@ -66,8 +86,8 @@ type FeedTabParamList = {
 
 type FeedTabScreenProps<T extends keyof FeedTabParamList> =
   CompositeScreenProps<
-    BottomTabScreenProps<FeedTabParamList, T, 'BottomTabs'>,
-    HomeDrawerScreenProps<keyof HomeDrawerParamList>
+    BottomTabScreenProps<FeedTabParamList, T>,
+    HomeDrawerScreenProps<'Feed'>
   >;
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -126,7 +146,9 @@ export const PostDetailsScreen = ({
   });
 
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
-  expectTypeOf(navigation.getParent).parameter(0).toEqualTypeOf<undefined>();
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'PostDetails' | undefined>();
 };
 
 export const FeedScreen = ({
@@ -166,7 +188,7 @@ export const FeedScreen = ({
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'drawer'>();
   expectTypeOf(navigation.getParent)
     .parameter(0)
-    .toEqualTypeOf<'LeftDrawer' | undefined>();
+    .toEqualTypeOf<'Feed' | 'Home' | undefined>();
 };
 
 export const PopularScreen = ({
@@ -209,7 +231,7 @@ export const PopularScreen = ({
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
   expectTypeOf(navigation.getParent)
     .parameter(0)
-    .toEqualTypeOf<'LeftDrawer' | 'BottomTabs' | undefined>();
+    .toEqualTypeOf<'Feed' | 'Home' | 'Popular' | undefined>();
 };
 
 export const LatestScreen = ({
@@ -237,7 +259,7 @@ export const LatestScreen = ({
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
   expectTypeOf(navigation.getParent)
     .parameter(0)
-    .toEqualTypeOf<'LeftDrawer' | 'BottomTabs' | undefined>();
+    .toEqualTypeOf<'Feed' | 'Home' | 'Latest' | undefined>();
 };
 
 /**
@@ -301,8 +323,8 @@ const SecondStack = createStackNavigator<SecondParamList>();
 
 // Error if props don't match type
 <SecondStack.Screen
-  // @ts-expect-error
   name="HasParams1"
+  // @ts-expect-error
   component={(_: StackScreenProps<SecondParamList, 'HasParams2'>) => <></>}
 />;
 
@@ -313,8 +335,8 @@ const SecondStack = createStackNavigator<SecondParamList>();
 />;
 
 <SecondStack.Screen
-  // @ts-expect-error
   name="NoParams"
+  // @ts-expect-error
   component={(_: StackScreenProps<SecondParamList, 'HasParams1'>) => <></>}
 />;
 
@@ -384,7 +406,7 @@ const SecondStack = createStackNavigator<SecondParamList>();
     expectTypeOf(navigation.push)
       .parameter(0)
       .toEqualTypeOf<keyof SecondParamList>();
-    expectTypeOf(theme).toEqualTypeOf<ReactNavigation.Theme>();
+    expectTypeOf(theme).toEqualTypeOf<Theme>();
 
     return {};
   }}
@@ -404,7 +426,7 @@ const SecondStack = createStackNavigator<SecondParamList>();
     expectTypeOf(navigation.push)
       .parameter(0)
       .toEqualTypeOf<keyof SecondParamList>();
-    expectTypeOf(theme).toEqualTypeOf<ReactNavigation.Theme>();
+    expectTypeOf(theme).toEqualTypeOf<Theme>();
 
     return {};
   }}
@@ -515,21 +537,6 @@ export const ThirdScreen = ({
 };
 
 /**
- * Check for navigator ID
- */
-type FourthParamList = {
-  HasParams1: { id: string };
-  HasParams2: { user: string };
-  NoParams: undefined;
-};
-
-const FourthStack = createStackNavigator<FourthParamList, 'MyID'>();
-
-expectTypeOf(FourthStack.Navigator).parameter(0).toExtend<{
-  id: 'MyID';
-}>();
-
-/**
  * Check for errors on getCurrentRoute
  */
 declare const navigationRef: NavigationContainerRef<RootStackParamList>;
@@ -571,7 +578,7 @@ expectTypeOf(navigationRefUntyped.getCurrentRoute()).toEqualTypeOf<
 /**
  * Screen and params for Link, Button, etc.
  */
-type LinkParamList = ReactNavigation.RootParamList & RootStackParamList;
+type LinkParamList = RootParamList & RootStackParamList;
 
 // @ts-expect-error
 useLinkProps<LinkParamList>({ screen: 'Albums' });
@@ -597,14 +604,14 @@ useLinkProps<LinkParamList>({
   screen: 'PostDetails',
   params: { id: '123', section: '123' },
 });
+// @ts-expect-error
 useLinkProps<LinkParamList>({
   screen: 'PostDetails',
-  // @ts-expect-error
   params: { id: 123 },
 });
+// @ts-expect-error
 useLinkProps<LinkParamList>({
   screen: 'PostDetails',
-  // @ts-expect-error
   params: { id: '123', section: 123 },
 });
 useLinkProps<LinkParamList>({
@@ -612,9 +619,9 @@ useLinkProps<LinkParamList>({
   // @ts-expect-error
   params: { ids: '123' },
 });
+// @ts-expect-error
 useLinkProps<LinkParamList>({
   screen: 'PostDetails',
-  // @ts-expect-error
   params: {},
 });
 useLinkProps<LinkParamList>({ screen: 'Login' });
@@ -641,35 +648,27 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
 >
   PostDetails
 </Link>;
-<Link<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{ id: 123 }}
->
+// @ts-expect-error
+<Link<LinkParamList> screen="PostDetails" params={{ id: 123 }}>
   PostDetails
 </Link>;
-<Link<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{ id: '123', section: 123 }}
->
+// @ts-expect-error
+<Link<LinkParamList> screen="PostDetails" params={{ id: '123', section: 123 }}>
   PostDetails
 </Link>;
-<Link<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{ ids: '123' }}
->
+// @ts-expect-error
+<Link<LinkParamList> screen="PostDetails" params={{ ids: '123' }}>
   PostDetails
 </Link>;
-<Link<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{}}
->
+// @ts-expect-error
+<Link<LinkParamList> screen="PostDetails" params={{}}>
   PostDetails
 </Link>;
 <Link<LinkParamList> screen="Login">Albums</Link>;
+<Link<LinkParamList> screen="Updates">Updates</Link>;
+<Link<LinkParamList> screen="Updates" params={{ screen: 'Timeline' }}>
+  Timeline
+</Link>;
 
 // @ts-expect-error
 <Button<LinkParamList> screen="Album">Albums</Button>;
@@ -693,32 +692,255 @@ useLinkProps<LinkParamList>({ screen: 'Login' });
 >
   PostDetails
 </Button>;
-<Button<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{ id: 123 }}
->
+// @ts-expect-error
+<Button<LinkParamList> screen="PostDetails" params={{ id: 123 }}>
   PostDetails
 </Button>;
+// @ts-expect-error
 <Button<LinkParamList>
   screen="PostDetails"
-  // @ts-expect-error
   params={{ id: '123', section: 123 }}
 >
   PostDetails
 </Button>;
-<Button<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{ ids: '123' }}
->
+// @ts-expect-error
+<Button<LinkParamList> screen="PostDetails" params={{ ids: '123' }}>
   PostDetails
 </Button>;
-<Button<LinkParamList>
-  screen="PostDetails"
-  // @ts-expect-error
-  params={{}}
->
+// @ts-expect-error
+<Button<LinkParamList> screen="PostDetails" params={{}}>
   PostDetails
 </Button>;
 <Button<LinkParamList> screen="Login">Albums</Button>;
+<Button<LinkParamList> screen="Updates">Updates</Button>;
+<Button<LinkParamList> screen="Updates" params={{ screen: 'Timeline' }}>
+  Timeline
+</Button>;
+
+/**
+ * Check for ParamsForRoute
+ */
+
+/* Invalid route name */
+expectTypeOf<
+  RouteForName<RootStackParamList, 'NotAKey'>['params']
+>().toBeNever();
+
+/* Undefined params */
+expectTypeOf<
+  RouteForName<RootStackParamList, 'Login'>['params']
+>().toEqualTypeOf<Readonly<RootStackParamList['Login']>>();
+
+/* Valid params */
+expectTypeOf<
+  RouteForName<RootStackParamList, 'PostDetails'>['params']
+>().toEqualTypeOf<Readonly<RootStackParamList['PostDetails']>>();
+
+/* Optional params */
+expectTypeOf<
+  RouteForName<RootStackParamList, 'Settings'>['params']
+>().toEqualTypeOf<Readonly<RootStackParamList['Settings']>>();
+
+/* Nested screen */
+expectTypeOf<
+  RouteForName<RootStackParamList, 'Artist'>['params']
+>().toEqualTypeOf<Readonly<AlbumTabParamList['Artist']>>();
+
+/* Nested screen with optional params */
+expectTypeOf<
+  RouteForName<RootStackParamList, 'Notifications'>['params']
+>().toEqualTypeOf<Readonly<UpdatesTabParamList['Notifications']>>();
+
+/* Nested screen with navigator */
+expectTypeOf<
+  RouteForName<HomeDrawerParamList, 'Feed'>['params']
+>().toEqualTypeOf<Readonly<HomeDrawerParamList['Feed']>>();
+
+/* Multiple screens with same name */
+type MultiParamList = {
+  MyScreen: { id: string };
+  A: NavigatorScreenParams<{
+    MyScreen: { user: string };
+  }>;
+  B: NavigatorScreenParams<{
+    MyScreen: { group: string };
+  }>;
+  C: { other: number };
+};
+
+expectTypeOf<
+  RouteForName<MultiParamList, 'MyScreen'>['params']
+>().toEqualTypeOf<
+  Readonly<{ id: string } | { user: string } | { group: string }>
+>();
+
+/**
+ * Check for useRoute return type based on the arguments
+ */
+expectTypeOf(useRoute()).toEqualTypeOf<RouteForName<RootParamList, string>>();
+
+{
+  const route = useRoute();
+
+  if (route.name === 'NotFound') {
+    expectTypeOf(route).toEqualTypeOf<RouteProp<RootParamList, 'NotFound'>>();
+  }
+
+  if (route.name === 'TabChat') {
+    expectTypeOf(route).toEqualTypeOf<
+      Route<'TabChat', { count: number } | undefined>
+    >();
+  }
+
+  // @ts-expect-error
+  if (route.name === 'Invalid') {
+    // error
+  }
+}
+
+expectTypeOf(
+  useRoute<RootStackParamList, 'Settings'>('Settings')
+).toEqualTypeOf<RouteProp<RootStackParamList, 'Settings'>>();
+
+expectTypeOf(useRoute<RootStackParamList, 'Artist'>('Artist')).toEqualTypeOf<
+  Route<'Artist', AlbumTabParamList['Artist']>
+>();
+
+expectTypeOf(
+  useRoute<RootStackParamList, 'Notifications'>('Notifications')
+).toEqualTypeOf<Route<'Notifications', UpdatesTabParamList['Notifications']>>();
+
+expectTypeOf(useRoute<MultiParamList, 'MyScreen'>('MyScreen')).toEqualTypeOf<
+  | Route<'MyScreen', { id: string }>
+  | Route<'MyScreen', { user: string }>
+  | Route<'MyScreen', { group: string }>
+>();
+
+expectTypeOf(useRoute('NotFound')).toEqualTypeOf<
+  RouteProp<RootParamList, 'NotFound'>
+>();
+
+expectTypeOf(useRoute('TabChat')).toEqualTypeOf<
+  Route<'TabChat', { count: number } | undefined>
+>();
+
+// @ts-expect-error
+useRoute<RootStackParamList, 'Invalid'>('Invalid');
+
+// @ts-expect-error
+useRoute('Invalid');
+
+/**
+ * Check for useNavigation return type based on the arguments
+ */
+{
+  const navigation = useNavigation();
+
+  expectTypeOf(navigation).toEqualTypeOf<GenericNavigation<RootParamList>>();
+
+  expectTypeOf(navigation.getParent()).toEqualTypeOf<
+    NavigationProp<ParamListBase> | undefined
+  >();
+}
+
+{
+  const navigation = useNavigation<typeof Stack>();
+
+  expectTypeOf(navigation).toEqualTypeOf<
+    {
+      [K in keyof RootStackParamList]: StackNavigationProp<
+        RootStackParamList,
+        K
+      >;
+    }[keyof RootStackParamList]
+  >();
+
+  expectTypeOf(navigation.getParent()).toEqualTypeOf<
+    NavigationProp<ParamListBase> | undefined
+  >();
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+  expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<
+    (keyof RootStackParamList)[]
+  >();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<StackNavigationOptions>>();
+}
+
+{
+  const navigation = useNavigation('NotFound');
+
+  expectTypeOf(navigation).toEqualTypeOf<
+    StackNavigationProp<RootParamList, 'NotFound'>
+  >();
+
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'NotFound' | undefined>();
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+  expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<
+    (keyof RootParamList)[]
+  >();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<StackNavigationOptions>>();
+}
+
+{
+  const navigation = useNavigation('Examples');
+
+  expectTypeOf(navigation).toEqualTypeOf<
+    CompositeNavigationProp<
+      DrawerNavigationProp<{ Examples: undefined }, 'Examples'>,
+      StackNavigationProp<RootParamList, 'Home'>
+    >
+  >();
+
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'Examples' | 'Home' | undefined>();
+
+  expectTypeOf(navigation.getParent('Home')).toEqualTypeOf<
+    StackNavigationProp<RootParamList, 'Home'>
+  >();
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'drawer'>();
+
+  expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<'Examples'[]>();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<DrawerNavigationOptions>>();
+}
+
+{
+  const navigation = useNavigation('Home');
+
+  expectTypeOf(navigation).toEqualTypeOf<
+    StackNavigationProp<RootParamList, 'Home'> &
+      CompositeNavigationProp<
+        StackNavigationProp<StaticScreenParams, 'Home'>,
+        StackNavigationProp<RootParamList, 'StaticScreen'>
+      >
+  >();
+
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'Home' | 'StaticScreen' | undefined>();
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+  expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<
+    (keyof RootParamList)[]
+  >();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<StackNavigationOptions>>();
+}

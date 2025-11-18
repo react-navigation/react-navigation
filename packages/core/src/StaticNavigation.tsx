@@ -10,35 +10,16 @@ import type {
   NavigatorTypeBagBase,
   PathConfig,
   PathConfigMap,
-  RouteConfigComponent,
   RouteConfigProps,
   RouteGroupConfig,
 } from './types';
 import { useRoute } from './useRoute';
-
-/**
- * Flatten a type to remove all type alias names, unions etc.
- * This will show a plain object when hovering over the type.
- */
-type FlatType<T> = { [K in keyof T]: T[K] } & {};
-
-/**
- * keyof T doesn't work for union types. We can use distributive conditional types instead.
- * https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types
- */
-type KeysOf<T> = T extends {} ? keyof T : never;
-
-/**
- * We get a union type when using keyof, but we want an intersection instead.
- * https://stackoverflow.com/a/50375286/1665026
- */
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I
-) => void
-  ? I
-  : never;
-
-type UnknownToUndefined<T> = unknown extends T ? undefined : T;
+import type {
+  FlatType,
+  KeysOf,
+  UnionToIntersection,
+  UnknownToUndefined,
+} from './utilities';
 
 type ParamsForScreenComponent<T> = T extends {
   screen: React.ComponentType<{ route: { params: infer P } }>;
@@ -93,15 +74,48 @@ type StaticRouteConfig<
   ScreenOptions extends {},
   EventMap extends EventMapBase,
   Navigation,
-> = RouteConfigProps<
-  ParamList,
-  RouteName,
-  State,
-  ScreenOptions,
-  EventMap,
-  Navigation
-> &
-  RouteConfigComponent<ParamList, RouteName>;
+> = Omit<
+  RouteConfigProps<
+    ParamList,
+    RouteName,
+    State,
+    ScreenOptions,
+    EventMap,
+    Navigation
+  >,
+  'name'
+> & {
+  /**
+   * Callback to determine whether the screen should be rendered or not.
+   * This can be useful for conditional rendering of screens,
+   * e.g. - if you want to render a different screen for logged in users.
+   *
+   * You can use a custom hook to use custom logic to determine the return value.
+   *
+   * @example
+   * ```js
+   * if: useIsLoggedIn
+   * ```
+   */
+  if?: () => boolean;
+  /**
+   * Linking config for the screen.
+   * This can be a string to specify the path, or an object with more options.
+   *
+   * @example
+   * ```js
+   * linking: {
+   *   path: 'profile/:id',
+   *   exact: true,
+   * },
+   * ```
+   */
+  linking?: PathConfig<ParamList> | string;
+  /**
+   * Static navigation config or Component to render for the screen.
+   */
+  screen: StaticNavigation<any, any, any> | React.ComponentType<any>;
+};
 
 export type StaticConfigScreens<
   ParamList extends ParamListBase,
@@ -113,48 +127,14 @@ export type StaticConfigScreens<
   [RouteName in keyof ParamList]:
     | React.ComponentType<any>
     | StaticNavigation<any, any, any>
-    | (Omit<
-        StaticRouteConfig<
-          ParamList,
-          RouteName,
-          State,
-          ScreenOptions,
-          EventMap,
-          NavigationList[RouteName]
-        >,
-        'name' | 'component' | 'getComponent' | 'children'
-      > & {
-        /**
-         * Callback to determine whether the screen should be rendered or not.
-         * This can be useful for conditional rendering of screens,
-         * e.g. - if you want to render a different screen for logged in users.
-         *
-         * You can use a custom hook to use custom logic to determine the return value.
-         *
-         * @example
-         * ```js
-         * if: useIsLoggedIn
-         * ```
-         */
-        if?: () => boolean;
-        /**
-         * Linking config for the screen.
-         * This can be a string to specify the path, or an object with more options.
-         *
-         * @example
-         * ```js
-         * linking: {
-         *   path: 'profile/:id',
-         *   exact: true,
-         * },
-         * ```
-         */
-        linking?: PathConfig<ParamList> | string;
-        /**
-         * Static navigation config or Component to render for the screen.
-         */
-        screen: StaticNavigation<any, any, any> | React.ComponentType<any>;
-      });
+    | StaticRouteConfig<
+        ParamList,
+        RouteName,
+        State,
+        ScreenOptions,
+        EventMap,
+        NavigationList[RouteName]
+      >;
 };
 
 export type StaticConfigGroup<
@@ -208,7 +188,6 @@ export type StaticConfigGroup<
 export type StaticConfig<Bag extends NavigatorTypeBagBase> =
   StaticConfigInternal<
     Bag['ParamList'],
-    Bag['NavigatorID'],
     Bag['State'],
     Bag['ScreenOptions'],
     Bag['EventMap'],
@@ -218,7 +197,6 @@ export type StaticConfig<Bag extends NavigatorTypeBagBase> =
 
 type StaticConfigInternal<
   ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
@@ -229,7 +207,6 @@ type StaticConfigInternal<
     React.ComponentProps<Navigator>,
     keyof DefaultNavigatorOptions<
       ParamListBase,
-      string | undefined,
       NavigationState,
       {},
       EventMapBase,
@@ -238,7 +215,6 @@ type StaticConfigInternal<
   > &
     DefaultNavigatorOptions<
       ParamList,
-      NavigatorID,
       State,
       ScreenOptions,
       EventMap,
@@ -312,14 +288,7 @@ export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
  */
 export type StaticParamList<
   T extends {
-    readonly config: {
-      readonly screens?: Record<string, any>;
-      readonly groups?: {
-        [key: string]: {
-          screens: Record<string, any>;
-        };
-      };
-    };
+    readonly config: any;
   },
 > = FlatType<
   ParamListForScreens<T['config']['screens']> &

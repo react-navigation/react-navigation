@@ -1,8 +1,8 @@
 appId: ${APP_ID}
 name: Master Detail
 ---
-- openLink:
-    link: ${APP_SCHEME}master-detail
-- extendedWaitUntil:
-    visible: 'Pages'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: master-detail
+      TEXT: 'Pages'

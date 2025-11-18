@@ -44,18 +44,18 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "use-latest-callback": "^0.2.4"
+    "use-latest-callback": "^0.3.2"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.0",
     "@testing-library/react-native": "^13.2.1",
     "del-cli": "^6.0.0",
-    "react": "19.0.0",
-    "react-native": "0.79.3",
+    "react": "19.1.0",
+    "react-native": "0.81.4",
     "react-native-builder-bob": "^0.40.12",
-    "react-native-pager-view": "6.8.1",
-    "react-test-renderer": "19.0.0",
-    "typescript": "^5.8.3"
+    "react-native-pager-view": "6.9.1",
+    "react-test-renderer": "19.1.0",
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
     "react": ">= 19.0.0",

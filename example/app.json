@@ -9,11 +9,16 @@
     "platforms": ["ios", "android", "web"],
     "scheme": "rne",
     "android": {
-      "package": "org.reactnavigation.playground"
+      "package": "org.reactnavigation.playground",
+      "adaptiveIcon": {
+        "backgroundColor": "#7b61c1",
+        "foregroundImage": "./assets/icon-foreground.png"
+      }
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "org.reactnavigation.playground"
+      "bundleIdentifier": "org.reactnavigation.playground",
+      "icon": "./assets/icon.icon",
     },
     "web": {
       "bundler": "metro"

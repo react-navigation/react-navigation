@@ -1,5 +1,10 @@
 import { Button, Text } from '@react-navigation/elements';
-import { type PathConfigMap, useTheme } from '@react-navigation/native';
+import {
+  type NavigatorScreenParams,
+  type PathConfigMap,
+  type StaticScreenProps,
+  useTheme,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -7,14 +12,16 @@ import {
 import * as React from 'react';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
 
-export type AuthStackParams = {
+type AuthStackParams = {
   Home: undefined;
+  Profile: undefined;
   SignIn: undefined;
   Chat: undefined;
 };
 
 const linking: PathConfigMap<AuthStackParams> = {
   Home: '',
+  Profile: 'profile',
   SignIn: 'signin',
   Chat: 'chat',
 };
@@ -97,6 +104,24 @@ const HomeScreen = ({
   );
 };
 
+const ProfileScreen = ({
+  navigation,
+}: StackScreenProps<AuthStackParams, 'Profile'>) => {
+  const { signOut } = React.useContext(AuthContext);
+
+  return (
+    <View style={styles.content}>
+      <Text style={styles.heading}>This is your profile</Text>
+      <Button onPress={signOut} style={styles.button}>
+        Sign out
+      </Button>
+      <Button onPress={() => navigation.navigate('Chat')} style={styles.button}>
+        Go to Chat
+      </Button>
+    </View>
+  );
+};
+
 const ChatScreen = () => {
   const { isSignedIn, signIn, signOut } = React.useContext(AuthContext);
 
@@ -129,7 +154,9 @@ type Action =
   | { type: 'SIGN_IN'; token: string }
   | { type: 'SIGN_OUT' };
 
-export function AuthFlow() {
+export function AuthFlow(
+  _: StaticScreenProps<NavigatorScreenParams<AuthStackParams>>
+) {
   const [state, dispatch] = React.useReducer(
     (prevState: State, action: Action) => {
       switch (action.type) {
@@ -185,18 +212,21 @@ export function AuthFlow() {
 
   return (
     <AuthContext.Provider value={authContext}>
-      <SimpleStack.Navigator>
+      <SimpleStack.Navigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
         {!isSignedIn ? (
           <SimpleStack.Screen
             name="SignIn"
             options={{
-              title: 'Sign in',
+              title: 'Welcome',
               animationTypeForReplace: state.isSignout ? 'pop' : 'push',
             }}
             component={SignInScreen}
           />
         ) : (
-          <SimpleStack.Screen name="Home" component={HomeScreen} />
+          <>
+            <SimpleStack.Screen name="Home" component={HomeScreen} />
+            <SimpleStack.Screen name="Profile" component={ProfileScreen} />
+          </>
         )}
         <SimpleStack.Screen
           navigationKey={String(isSignedIn)}

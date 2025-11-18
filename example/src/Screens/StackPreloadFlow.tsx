@@ -1,5 +1,9 @@
 import { Button, Text } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -7,7 +11,7 @@ import {
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export type PreloadStackParams = {
+type PreloadStackParams = {
   Home: undefined;
   Details: undefined;
   Profile: undefined;
@@ -90,7 +94,9 @@ const HomeScreen = ({
 
 const SimpleStack = createStackNavigator<PreloadStackParams>();
 
-export function StackPreloadFlow() {
+export function StackPreloadFlow(
+  _: StaticScreenProps<NavigatorScreenParams<PreloadStackParams>>
+) {
   return (
     <SimpleStack.Navigator>
       <SimpleStack.Screen name="Home" component={HomeScreen} />

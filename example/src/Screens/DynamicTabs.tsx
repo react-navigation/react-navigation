@@ -4,11 +4,15 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { Button, HeaderBackButton, Text } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export type DynamicBottomTabParams = {
+type DynamicBottomTabParams = {
   [key: `tab-${number}`]: undefined;
 };
 
@@ -23,7 +27,9 @@ const linking: PathConfigMap<DynamicBottomTabParams> = {
 
 const BottomTabs = createBottomTabNavigator<DynamicBottomTabParams>();
 
-export function DynamicTabs() {
+export function DynamicTabs(
+  _: StaticScreenProps<NavigatorScreenParams<DynamicBottomTabParams>>
+) {
   const [tabs, setTabs] = React.useState([0, 1]);
 
   return (

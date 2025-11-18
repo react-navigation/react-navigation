@@ -21,8 +21,10 @@ import type {
 import type {
   ScreenProps,
   ScreenStackHeaderConfigProps,
+  ScrollEdgeEffect,
   SearchBarProps,
 } from 'react-native-screens';
+import type { SFSymbol } from 'sf-symbols-typescript';
 
 export type NativeStackNavigationEventMap = {
   /**
@@ -51,31 +53,27 @@ export type NativeStackNavigationEventMap = {
 export type NativeStackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   StackNavigationState<ParamList>,
   NativeStackNavigationOptions,
-  NativeStackNavigationEventMap
-> &
-  StackActionHelpers<ParamList>;
+  NativeStackNavigationEventMap,
+  StackActionHelpers<ParamList>
+>;
 
 export type NativeStackScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: NativeStackNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: NativeStackNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
 export type NativeStackOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = NativeStackScreenProps<ParamList, RouteName, NavigatorID> & {
+> = NativeStackScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -115,7 +113,7 @@ export type NativeStackHeaderProps = {
   navigation: NativeStackNavigationProp<ParamListBase>;
 };
 
-export type NativeStackHeaderRightProps = {
+export type NativeStackHeaderItemProps = {
   /**
    * Tint color for the header.
    */
@@ -126,10 +124,10 @@ export type NativeStackHeaderRightProps = {
   canGoBack?: boolean;
 };
 
-export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {
+export type NativeStackHeaderBackProps = NativeStackHeaderItemProps & {
   /**
    * Label text for the button. Usually the title of the previous screen.
-   * By default, this is only shown on iOS.
+   * By default, this is only shown on iOS 18.
    */
   label?: string;
   /**
@@ -137,6 +135,16 @@ export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {
    */
   href?: string;
 };
+
+/**
+ * @deprecated Use `NativeStackHeaderBackProps` instead.
+ */
+export type NativeStackHeaderLeftProps = NativeStackHeaderBackProps;
+
+/**
+ * @deprecated Use `NativeStackHeaderItemProps` instead.
+ */
+export type NativeStackHeaderRightProps = NativeStackHeaderItemProps;
 
 export type NativeStackNavigationOptions = {
   /**
@@ -282,12 +290,36 @@ export type NativeStackNavigationOptions = {
   /**
    * Function which returns a React Element to display on the left side of the header.
    * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
+   * Will be overriden by `headerLeftItems` on iOS.
    */
-  headerLeft?: (props: NativeStackHeaderLeftProps) => React.ReactNode;
+  headerLeft?: (props: NativeStackHeaderBackProps) => React.ReactNode;
   /**
    * Function which returns a React Element to display on the right side of the header.
+   * Will be overriden by `headerRightItems` on iOS.
    */
-  headerRight?: (props: NativeStackHeaderRightProps) => React.ReactNode;
+  headerRight?: (props: NativeStackHeaderItemProps) => React.ReactNode;
+  /**
+   * Function which returns an array of items to display as on the left side of the header.
+   * Overrides `headerLeft`.
+   *
+   * This is an unstable API and might change in the future.
+   *
+   * @platform ios
+   */
+  unstable_headerLeftItems?: (
+    props: NativeStackHeaderItemProps
+  ) => NativeStackHeaderItem[];
+  /**
+   * Function which returns an array of items to display as on the right side of the header.
+   * Overrides `headerRight`.
+   *
+   * This is an unstable API and might change in the future.
+   *
+   * @platform ios
+   */
+  unstable_headerRightItems?: (
+    props: NativeStackHeaderItemProps
+  ) => NativeStackHeaderItem[];
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
@@ -440,9 +472,14 @@ export type NativeStackNavigationOptions = {
    */
   animationMatchesGesture?: boolean;
   /**
-   * Whether the gesture to dismiss should work on the whole screen. Using gesture to dismiss with this option results in the same
-   * transition animation as `simple_push`. This behavior can be changed by setting `animationMatchesGesture` prop. Achieving the
-   * default iOS animation isn't possible due to platform limitations. Defaults to `false`.
+   * Whether the gesture to dismiss should work on the whole screen. The behavior depends on iOS version.
+   *
+   * On iOS 18 and below:
+   * `false` by default. If enabled, swipe gesture will use `simple_push` transition animation by default. It can be changed
+   * with `animation` & `animationMatchesGesture` props, but default iOS swipe animation is not achievable.
+   *
+   * On iOS 26 and up:
+   * `true` by default to match new native behavior. You can still customize it with `animation` & `animationMatchesGesture` props.
    *
    * Doesn't affect the behavior of screens presented modally.
    *
@@ -450,11 +487,13 @@ export type NativeStackNavigationOptions = {
    */
   fullScreenGestureEnabled?: boolean;
   /**
-   * Whether the full screen dismiss gesture has shadow under view during transition. The gesture uses custom transition and thus
-   * doesn't have a shadow by default. When enabled, a custom shadow view is added during the transition which tries to mimic the
-   * default iOS shadow. Defaults to `true`.
+   * iOS 18 and below. Controls whether the full screen dismiss gesture has shadow under view during transition.
+   * The gesture uses custom transition and thus doesn't have a shadow by default. When enabled, a custom shadow view
+   * is added during the transition which tries to mimic the default iOS shadow. Defaults to `true`.
    *
    * This does not affect the behavior of transitions that don't use gestures, enabled by `fullScreenGestureEnabled` prop.
+   *
+   * @deprecated since iOS 26.
    *
    * @platform ios
    */
@@ -503,8 +542,17 @@ export type NativeStackNavigationOptions = {
    */
   animation?: ScreenProps['stackAnimation'];
   /**
-   * Changes the duration (in milliseconds) of `slide_from_bottom`, `fade_from_bottom`, `fade` and `simple_push` transitions on iOS. Defaults to `500`.
-   * The duration of `default` and `flip` transitions isn't customizable.
+   * Duration (in milliseconds) for the following transition animations on iOS:
+   * - `slide_from_bottom`
+   * - `fade_from_bottom`
+   * - `fade`
+   * - `simple_push`
+   *
+   * Defaults to `500`.
+   *
+   * The duration is not customizable for:
+   * - Screens with `default` and `flip` animations
+   * - Screens with `presentation` set to `modal`, `formSheet`, `pageSheet` (regardless of animation)
    *
    * @platform ios
    */
@@ -630,6 +678,24 @@ export type NativeStackNavigationOptions = {
    */
   freezeOnBlur?: boolean;
   /**
+   * Configures the scroll edge effect for the _content ScrollView_ (the ScrollView that is present in first descendants chain of the Screen).
+   * Depending on values set, it will blur the scrolling content below certain UI elements (Header Items, SearchBar)
+   * for the specifed edge of the ScrollView.
+   *
+   * When set in nested containers, i.e. ScreenStack inside BottomTabs, or the other way around,
+   * the ScrollView will use only the innermost one's config.
+   *
+   * @platform ios
+   *
+   * @supported iOS 26 or higher
+   */
+  scrollEdgeEffects?: {
+    bottom?: ScrollEdgeEffect;
+    left?: ScrollEdgeEffect;
+    right?: ScrollEdgeEffect;
+    top?: ScrollEdgeEffect;
+  };
+  /**
    * Footer component that can be used alongside formSheet stack presentation style.
    *
    * This option is provided, because due to implementation details it might be problematic
@@ -644,9 +710,291 @@ export type NativeStackNavigationOptions = {
   unstable_sheetFooter?: () => React.ReactNode;
 };
 
+type PlatformIconShared = {
+  type: 'image';
+  source: ImageSourcePropType;
+  /**
+   * Whether to apply tint color to the icon.
+   * Defaults to `true`.
+   *
+   * @platform ios
+   */
+  tinted?: boolean;
+};
+
+type PlatformIconIOSSfSymbol = {
+  type: 'sfSymbol';
+  name: SFSymbol;
+};
+
+type PlatformIconIOS = PlatformIconIOSSfSymbol | PlatformIconShared;
+
+type SharedHeaderItem = {
+  /**
+   * Label of the item.
+   */
+  label: string;
+  /**
+   * Style for the item label.
+   */
+  labelStyle?: {
+    fontFamily?: string;
+    fontSize?: number;
+    fontWeight?: string;
+    color?: ColorValue;
+  };
+  /**
+   * Icon for the item
+   */
+  icon?: PlatformIconIOS;
+  /**
+   * The variant of the item.
+   * "prominent" only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/style-swift.property
+   */
+  variant?: 'plain' | 'done' | 'prominent';
+  /**
+   * The tint color to apply to the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/tintcolor
+   */
+  tintColor?: ColorValue;
+  /**
+   * Whether the item is in a disabled state.
+   */
+  disabled?: boolean;
+  /**
+   * The width of the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/width
+   */
+  width?: number;
+  /**
+   * Whether the background this item may share with other items in the bar should be hidden.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/hidessharedbackground
+   */
+  hidesSharedBackground?: boolean;
+  /**
+   * Whether this item can share a background with other items.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/sharesbackground
+   */
+  sharesBackground?: boolean;
+  /**
+   * An identifier used to match items across transitions.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/identifier
+   */
+  identifier?: string;
+  /**
+   * A badge to display on a item.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitembadge
+   */
+  badge?: {
+    /**
+     * The text to display in the badge.
+     */
+    value: number | string;
+    /**
+     * Style of the badge.
+     */
+    style?: {
+      color?: ColorValue;
+      backgroundColor?: ColorValue;
+      fontFamily?: string;
+      fontSize?: number;
+      fontWeight?: string;
+    };
+  };
+  /**
+   * Accessibility label for the item.
+   */
+  accessibilityLabel?: string;
+  /**
+   * Accessibility hint for the item.
+   */
+  accessibilityHint?: string;
+};
+
+/**
+ * A button item in the header.
+ */
+export type NativeStackHeaderItemButton = SharedHeaderItem & {
+  /**
+   * Type of the item.
+   */
+  type: 'button';
+  /**
+   * Function to call when the item is pressed.
+   */
+  onPress: () => void;
+  /**
+   * Whether the item is in a selected state.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
+   */
+  selected?: boolean;
+};
+
+/**
+ * An action item in a menu.
+ */
+export type NativeStackHeaderItemMenuAction = {
+  type: 'action';
+  /**
+   * Label for the menu item.
+   */
+  label: string;
+  /**
+   * Icon for the menu item.
+   */
+  icon?: PlatformIconIOSSfSymbol;
+  /**
+   * Function to call when the menu item is pressed.
+   */
+  onPress: () => void;
+  /**
+   * The state of an action- or command-based menu item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/state
+   */
+  state?: 'on' | 'off' | 'mixed';
+  /**
+   * Whether to apply disabled style to the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/disabled
+   */
+  disabled?: boolean;
+  /**
+   * Whether to apply destructive style to the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/destructive
+   */
+  destructive?: boolean;
+  /**
+   * Whether to apply hidden style to the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/hidden
+   */
+  hidden?: boolean;
+  /**
+   * Whether to keep the menu presented after firing the element’s action.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/keepsmenupresented
+   */
+  keepsMenuPresented?: boolean;
+  /**
+   * An elaborated title that explains the purpose of the action.
+   *
+   * On iOS, the system displays this title in the discoverability heads-up display (HUD).
+   * If this is not set, the HUD displays the title property.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uiaction/discoverabilitytitle
+   */
+  discoverabilityLabel?: string;
+};
+
+/**
+ * A submenu item that contains other menu items.
+ */
+export type NativeStackHeaderItemMenuSubmenu = {
+  type: 'submenu';
+  /**
+   * Label for the submenu item.
+   */
+  label: string;
+  /**
+   * Icon for the submenu item.
+   */
+  icon?: PlatformIconIOSSfSymbol;
+  /**
+   * Array of menu items (actions or submenus).
+   */
+  items: NativeStackHeaderItemMenu['menu']['items'];
+};
+
+/**
+ * An item that shows a menu when pressed.
+ */
+export type NativeStackHeaderItemMenu = SharedHeaderItem & {
+  type: 'menu';
+  /**
+   * Whether the menu is a selection menu.
+   * Tapping an item in a selection menu will add a checkmark to the selected item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
+   */
+  changesSelectionAsPrimaryAction?: boolean;
+  /**
+   * Menu for the item.
+   */
+  menu: {
+    /**
+     * Optional title to show on top of the menu.
+     */
+    title?: string;
+    /**
+     * Array of menu items (actions or submenus).
+     */
+    items: (
+      | NativeStackHeaderItemMenuAction
+      | NativeStackHeaderItemMenuSubmenu
+    )[];
+  };
+};
+
+/**
+ * An item to add spacing between other items in the header.
+ */
+export type NativeStackHeaderItemSpacing = {
+  type: 'spacing';
+  /**
+   * The amount of spacing to add.
+   */
+  spacing: number;
+};
+
+/**
+ * A custom item to display any React Element in the header.
+ */
+export type NativeStackHeaderItemCustom = {
+  type: 'custom';
+  /**
+   * A React Element to display as the item.
+   */
+  element: React.ReactElement;
+  /**
+   * Whether the background this item may share with other items in the bar should be hidden.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/hidessharedbackground
+   */
+  hidesSharedBackground?: boolean;
+};
+
+/**
+ * An item that can be displayed in the header.
+ * It can be a button, a menu, spacing, or a custom element.
+ *
+ * On iOS 26, when showing items on the right side of the header,
+ * if the items don't fit the available space, they will be collapsed into a menu automatically.
+ * Items with `type: 'custom'` will not be included in this automatic collapsing behavior.
+ */
+export type NativeStackHeaderItem =
+  | NativeStackHeaderItemButton
+  | NativeStackHeaderItemMenu
+  | NativeStackHeaderItemSpacing
+  | NativeStackHeaderItemCustom;
+
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
-  string | undefined,
   StackNavigationState<ParamListBase>,
   NativeStackNavigationOptions,
   NativeStackNavigationEventMap,

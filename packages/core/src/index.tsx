@@ -8,10 +8,13 @@ export { getFocusedRouteNameFromRoute } from './getFocusedRouteNameFromRoute';
 export { getPathFromState } from './getPathFromState';
 export { getStateFromPath } from './getStateFromPath';
 export { NavigationContainerRefContext } from './NavigationContainerRefContext';
-export { NavigationContext } from './NavigationContext';
 export { NavigationHelpersContext } from './NavigationHelpersContext';
 export { NavigationIndependentTree } from './NavigationIndependentTree';
-export { NavigationRouteContext } from './NavigationRouteContext';
+export {
+  NavigationContext,
+  NavigationProvider,
+  NavigationRouteContext,
+} from './NavigationProvider';
 export { PreventRemoveContext } from './PreventRemoveContext';
 export { PreventRemoveProvider } from './PreventRemoveProvider';
 export {
@@ -30,7 +33,7 @@ export { useTheme } from './theming/useTheme';
 export * from './types';
 export { useFocusEffect } from './useFocusEffect';
 export { useIsFocused } from './useIsFocused';
-export { useNavigation } from './useNavigation';
+export { type GenericNavigation, useNavigation } from './useNavigation';
 export { useNavigationBuilder } from './useNavigationBuilder';
 export { useNavigationContainerRef } from './useNavigationContainerRef';
 export { useNavigationIndependentTree } from './useNavigationIndependentTree';
