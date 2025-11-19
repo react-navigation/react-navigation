@@ -1494,7 +1494,51 @@ test('replaces active screen with replace', () => {
   });
 });
 
-test("doesn't handle replace if source key isn't present", () => {
+test("handles replace if source key isn't present but target is not specified", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+          { key: 'baz', name: 'baz' },
+        ],
+        preloadedRoutes: [],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+      },
+      {
+        ...StackActions.replace('qux', { answer: 42 }),
+        source: 'magic',
+      },
+      options
+    )
+  ).toEqual({
+    index: 1,
+    key: 'root',
+    preloadedRoutes: [],
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
+      { key: 'baz', name: 'baz' },
+    ],
+    stale: false,
+    type: 'stack',
+  });
+});
+
+test("doesn't handle replace if source key isn't present when target is specified", () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
@@ -2280,6 +2324,126 @@ test('merges params on popTo to an existing screen if merge: true', () => {
       },
     ],
   });
+});
+
+test("handles popTo if source key isn't present but target is not specified", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+          { key: 'baz', name: 'baz' },
+        ],
+        preloadedRoutes: [],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+      },
+      {
+        ...StackActions.popTo('qux', { answer: 42 }),
+        source: 'magic',
+      },
+      options
+    )
+  ).toEqual({
+    index: 1,
+    key: 'root',
+    preloadedRoutes: [],
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
+    ],
+    stale: false,
+    type: 'stack',
+  });
+});
+
+test('handles popTo when source and target match a route', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+          { key: 'baz', name: 'baz' },
+        ],
+        preloadedRoutes: [],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+      },
+      {
+        ...StackActions.popTo('qux', { answer: 42 }),
+        source: 'bar',
+        target: 'root',
+      },
+      options
+    )
+  ).toEqual({
+    index: 1,
+    key: 'root',
+    preloadedRoutes: [],
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
+    ],
+    stale: false,
+    type: 'stack',
+  });
+});
+
+test("doesn't handle popTo if source key isn't present when target is specified", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar', params: { fruit: 'orange' } },
+          { key: 'baz', name: 'baz' },
+        ],
+        preloadedRoutes: [],
+        routeNames: ['foo', 'bar', 'baz', 'qux'],
+      },
+      {
+        ...StackActions.popTo('qux', { answer: 42 }),
+        source: 'magic',
+        target: 'root',
+      },
+      options
+    )
+  ).toBeNull();
 });
 
 test('adds route to preloaded list with preload', () => {
