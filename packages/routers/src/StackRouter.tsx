@@ -1,6 +1,8 @@
 import { nanoid } from 'nanoid/non-secure';
 
 import { BaseRouter } from './BaseRouter';
+import { createParamsFromAction } from './createParamsFromAction';
+import { createRouteFromAction } from './createRouteFromAction';
 import type {
   CommonNavigationAction,
   DefaultRouterOptions,
@@ -329,17 +331,7 @@ export function StackRouter(options: StackRouterOptions) {
           );
 
           if (!route) {
-            route = {
-              key: `${action.payload.name}-${nanoid()}`,
-              name: action.payload.name,
-              params:
-                routeParamList[action.payload.name] !== undefined
-                  ? {
-                      ...routeParamList[action.payload.name],
-                      ...action.payload.params,
-                    }
-                  : action.payload.params,
-            };
+            route = createRouteFromAction({ action, routeParamList });
           }
 
           return {
@@ -404,13 +396,7 @@ export function StackRouter(options: StackRouterOptions) {
                   }
                 : route.params;
           } else {
-            params =
-              routeParamList[action.payload.name] !== undefined
-                ? {
-                    ...routeParamList[action.payload.name],
-                    ...action.payload.params,
-                  }
-                : action.payload.params;
+            params = createParamsFromAction({ action, routeParamList });
           }
 
           let routes: Route<string>[];
@@ -603,17 +589,7 @@ export function StackRouter(options: StackRouterOptions) {
             );
 
             if (!route) {
-              route = {
-                key: `${action.payload.name}-${nanoid()}`,
-                name: action.payload.name,
-                params:
-                  routeParamList[action.payload.name] !== undefined
-                    ? {
-                        ...routeParamList[action.payload.name],
-                        ...action.payload.params,
-                      }
-                    : action.payload.params,
-              };
+              route = createRouteFromAction({ action, routeParamList });
             }
 
             const routes = state.routes.slice(0, currentIndex).concat(route);
@@ -643,13 +619,7 @@ export function StackRouter(options: StackRouterOptions) {
                   }
                 : route.params;
           } else {
-            params =
-              routeParamList[route.name] !== undefined
-                ? {
-                    ...routeParamList[route.name],
-                    ...action.payload.params,
-                  }
-                : action.payload.params;
+            params = createParamsFromAction({ action, routeParamList });
           }
 
           return {
@@ -703,13 +673,7 @@ export function StackRouter(options: StackRouterOptions) {
                 }
                 return {
                   ...r,
-                  params:
-                    routeParamList[action.payload.name] !== undefined
-                      ? {
-                          ...routeParamList[action.payload.name],
-                          ...action.payload.params,
-                        }
-                      : action.payload.params,
+                  params: createParamsFromAction({ action, routeParamList }),
                 };
               }),
             };
@@ -722,17 +686,7 @@ export function StackRouter(options: StackRouterOptions) {
                     r.name !== action.payload.name ||
                     id !== getId?.({ params: r.params })
                 )
-                .concat({
-                  key: `${action.payload.name}-${nanoid()}`,
-                  name: action.payload.name,
-                  params:
-                    routeParamList[action.payload.name] !== undefined
-                      ? {
-                          ...routeParamList[action.payload.name],
-                          ...action.payload.params,
-                        }
-                      : action.payload.params,
-                }),
+                .concat(createRouteFromAction({ action, routeParamList })),
             };
           }
         }

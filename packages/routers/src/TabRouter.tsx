@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid/non-secure';
 
 import { BaseRouter } from './BaseRouter';
+import { createParamsFromAction } from './createParamsFromAction';
 import type {
   CommonNavigationAction,
   DefaultRouterOptions,
@@ -395,13 +396,7 @@ export function TabRouter({
                         }
                       : route.params;
                 } else {
-                  params =
-                    routeParamList[route.name] !== undefined
-                      ? {
-                          ...routeParamList[route.name],
-                          ...action.payload.params,
-                        }
-                      : action.payload.params;
+                  params = createParamsFromAction({ action, routeParamList });
                 }
 
                 const path =
@@ -510,15 +505,7 @@ export function TabRouter({
           const key =
             currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
 
-          const params =
-            action.payload.params !== undefined ||
-            routeParamList[route.name] !== undefined
-              ? {
-                  ...routeParamList[route.name],
-                  ...action.payload.params,
-                }
-              : undefined;
-
+          const params = createParamsFromAction({ action, routeParamList });
           const newRoute =
             params !== route.params ? { ...route, key, params } : route;
 
