@@ -28,6 +28,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
+  compatibilityFlags,
   type ScreenProps,
   ScreenStack,
   ScreenStackItem,
@@ -213,12 +214,20 @@ const SceneView = ({
 
   const hasCustomHeader = header != null;
 
+  const usesNewAndroidHeaderHeightImplementation =
+    'usesNewAndroidHeaderHeightImplementation' in compatibilityFlags &&
+    compatibilityFlags['usesNewAndroidHeaderHeightImplementation'] === true;
+
   let headerHeightCorrectionOffset = 0;
 
-  if (Platform.OS === 'android' && !hasCustomHeader) {
+  if (
+    Platform.OS === 'android' &&
+    !hasCustomHeader &&
+    !usesNewAndroidHeaderHeightImplementation
+  ) {
     const statusBarHeight = StatusBar.currentHeight ?? 0;
 
-    // FIXME: On Android, the native header height is not correctly calculated
+    // On Android, the native header height is not correctly calculated
     // It includes status bar height even if statusbar is not translucent
     // And the statusbar value itself doesn't match the actual status bar height
     // So we subtract the bogus status bar height and add the actual top inset
@@ -365,9 +374,10 @@ const SceneView = ({
 
                 if (
                   Platform.OS === 'android' &&
-                  (headerBackground != null || headerTransparent)
+                  (headerBackground != null || headerTransparent) &&
+                  !usesNewAndroidHeaderHeightImplementation
                 ) {
-                  // FIXME: On Android, we get 0 if the header is translucent
+                  // On Android, we get 0 if the header is translucent
                   // So we set a default height in that case
                   setHeaderHeight(ANDROID_DEFAULT_HEADER_HEIGHT + topInset);
                   return;
