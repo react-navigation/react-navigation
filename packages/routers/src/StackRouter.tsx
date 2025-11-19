@@ -320,28 +320,39 @@ export function StackRouter(options: StackRouterOptions) {
             return null;
           }
 
-          const { name, params } = action.payload;
-
-          if (!state.routeNames.includes(name)) {
+          if (!state.routeNames.includes(action.payload.name)) {
             return null;
+          }
+
+          const getId = options.routeGetIdList[action.payload.name];
+          const id = getId?.({ params: action.payload.params });
+
+          // Re-use preloaded route if available
+          let route = state.preloadedRoutes.find(
+            (route) =>
+              route.name === action.payload.name &&
+              id === getId?.({ params: route.params })
+          );
+
+          if (!route) {
+            route = {
+              key: `${action.payload.name}-${nanoid()}`,
+              name: action.payload.name,
+              params:
+                routeParamList[action.payload.name] !== undefined
+                  ? {
+                      ...routeParamList[action.payload.name],
+                      ...action.payload.params,
+                    }
+                  : action.payload.params,
+            };
           }
 
           return {
             ...state,
-            routes: state.routes.map((route, i) =>
-              i === index
-                ? {
-                    key: `${name}-${nanoid()}`,
-                    name,
-                    params:
-                      routeParamList[name] !== undefined
-                        ? {
-                            ...routeParamList[name],
-                            ...params,
-                          }
-                        : params,
-                  }
-                : route
+            routes: state.routes.map((r, i) => (i === index ? route : r)),
+            preloadedRoutes: state.preloadedRoutes.filter(
+              (r) => r.key !== route.key
             ),
           };
         }
@@ -464,6 +475,10 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         case 'NAVIGATE_DEPRECATED': {
+          if (!state.routeNames.includes(action.payload.name)) {
+            return null;
+          }
+
           if (
             state.preloadedRoutes.find(
               (route) =>
@@ -473,9 +488,6 @@ export function StackRouter(options: StackRouterOptions) {
           ) {
             return null;
           }
-          if (!state.routeNames.includes(action.payload.name)) {
-            return null;
-          }
 
           // If the route already exists, navigate to that
           let index = -1;
@@ -483,7 +495,7 @@ export function StackRouter(options: StackRouterOptions) {
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
 
-          if (id) {
+          if (id !== undefined) {
             index = state.routes.findIndex(
               (route) =>
                 route.name === action.payload.name &&
@@ -492,12 +504,9 @@ export function StackRouter(options: StackRouterOptions) {
           } else if (state.routes[state.index].name === action.payload.name) {
             index = state.index;
           } else {
-            for (let i = state.routes.length - 1; i >= 0; i--) {
-              if (state.routes[i].name === action.payload.name) {
-                index = i;
-                break;
-              }
-            }
+            index = state.routes.findLastIndex(
+              (route) => route.name === action.payload.name
+            );
           }
 
           if (index === -1) {
@@ -596,13 +605,13 @@ export function StackRouter(options: StackRouterOptions) {
             return null;
           }
 
-          // If the route already exists, navigate to that
+          // If the route already exists, navigate to it
           let index = -1;
 
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
 
-          if (id) {
+          if (id !== undefined) {
             index = state.routes.findIndex(
               (route) =>
                 route.name === action.payload.name &&
@@ -611,36 +620,26 @@ export function StackRouter(options: StackRouterOptions) {
           } else if (state.routes[state.index].name === action.payload.name) {
             index = state.index;
           } else {
-            for (let i = state.routes.length - 1; i >= 0; i--) {
-              if (state.routes[i].name === action.payload.name) {
-                index = i;
-                break;
-              }
-            }
+            index = state.routes.findLastIndex(
+              (route) => route.name === action.payload.name
+            );
           }
 
           // If the route doesn't exist, remove the current route and add the new one
           if (index === -1) {
-            const routes = [
-              ...state.routes.slice(0, -1),
+            return router.getStateForAction(
+              state,
               {
-                key: `${action.payload.name}-${nanoid()}`,
-                name: action.payload.name,
-                params:
-                  routeParamList[action.payload.name] !== undefined
-                    ? {
-                        ...routeParamList[action.payload.name],
-                        ...action.payload.params,
-                      }
-                    : action.payload.params,
+                type: 'REPLACE',
+                payload: {
+                  name: action.payload.name,
+                  params: action.payload.params,
+                },
+                source: action.source,
+                target: action.target,
               },
-            ];
-
-            return {
-              ...state,
-              routes,
-              index: routes.length - 1,
-            };
+              options
+            );
           }
 
           const route = state.routes[index];
