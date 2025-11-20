@@ -1,4 +1,3 @@
-import { Color } from '@react-navigation/elements';
 import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -9,6 +8,8 @@ import {
   type TextProps,
   type TextStyle,
 } from 'react-native';
+
+import { Color } from './Color';
 
 type Props = TextProps & {
   /**
