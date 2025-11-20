@@ -14,21 +14,25 @@ import { Button } from '@react-navigation/elements';
 import {
   type CompositeNavigationProp,
   type CompositeScreenProps,
+  type DrawerNavigationState,
   type GenericNavigation,
   Link,
   type NavigationAction,
   type NavigationContainerRef,
   type NavigationHelpers,
   type NavigationProp,
+  type NavigationRoute,
   type NavigatorScreenParams,
   type ParamListBase,
   type RootParamList,
   type Route,
   type RouteForName,
   type RouteProp,
+  type StackNavigationState,
   type Theme,
   useLinkProps,
   useNavigation,
+  useNavigationState,
   useRoute,
 } from '@react-navigation/native';
 import {
@@ -943,4 +947,70 @@ useRoute('Invalid');
   expectTypeOf(navigation.setOptions)
     .parameter(0)
     .toEqualTypeOf<Partial<StackNavigationOptions>>();
+}
+
+/**
+ * Check for useNavigationState return type based on the arguments
+ */
+{
+  const state = useNavigationState((state) => state);
+
+  expectTypeOf(state.routeNames).toEqualTypeOf<string[]>();
+
+  /* Selecting specific properties */
+  const index = useNavigationState((state) => state.index);
+
+  expectTypeOf(index).toEqualTypeOf<number>();
+
+  const routes = useNavigationState((state) => state.routes);
+
+  expectTypeOf(routes).toEqualTypeOf<NavigationRoute<ParamListBase, string>[]>(
+    routes
+  );
+}
+
+{
+  const state = useNavigationState<
+    StackNavigationState<RootStackParamList>,
+    typeof Stack,
+    'PostDetails'
+  >('PostDetails', (state) => state);
+
+  expectTypeOf(state.type).toEqualTypeOf<'stack'>();
+
+  expectTypeOf(state.routeNames).toEqualTypeOf<(keyof RootStackParamList)[]>();
+
+  /* Invalid drawer state specified for stack */
+  useNavigationState<
+    DrawerNavigationState<RootStackParamList>,
+    typeof Stack,
+    'PostDetails'
+    // @ts-expect-error
+  >('PostDetails', (state) => state);
+}
+
+{
+  const type = useNavigationState('Examples', (state) => state.type);
+
+  expectTypeOf(type).toEqualTypeOf<'drawer'>();
+
+  const routeNames = useNavigationState(
+    'Examples',
+    (state) => state.routeNames
+  );
+
+  expectTypeOf(routeNames).toEqualTypeOf<'Examples'[]>();
+}
+
+{
+  const index = useNavigationState('NotFound', (state) => state.index);
+
+  expectTypeOf(index).toEqualTypeOf<number>();
+
+  const routeNames = useNavigationState(
+    'NotFound',
+    (state) => state.routeNames
+  );
+
+  expectTypeOf(routeNames).toEqualTypeOf<(keyof RootParamList)[]>();
 }
