@@ -30,7 +30,6 @@ import type {
   NativeStackHeaderItemMenuSubmenu,
   NativeStackNavigationOptions,
 } from '../types';
-import { processFonts } from './FontProcessor';
 
 type Props = NativeStackNavigationOptions & {
   headerTopInsetEnabled: boolean;
@@ -272,17 +271,11 @@ export function useHeaderConfigProps({
       ? 'transparent'
       : colors.card);
 
-  const [backTitleFontFamily, largeTitleFontFamily, titleFontFamily] =
-    processFonts([
-      headerBackTitleStyleFlattened.fontFamily,
-      headerLargeTitleStyleFlattened.fontFamily,
-      headerTitleStyleFlattened.fontFamily,
-    ]);
-
   const backTitleFontSize =
     'fontSize' in headerBackTitleStyleFlattened
       ? headerBackTitleStyleFlattened.fontSize
       : undefined;
+  const backTitleFontFamily = headerBackTitleStyleFlattened.fontFamily;
 
   const titleText = getHeaderTitle({ title, headerTitle }, route.name);
   const titleColor =
@@ -300,6 +293,7 @@ export function useHeaderConfigProps({
       ? headerTitleStyleFlattened.fontSize
       : undefined;
   const titleFontWeight = headerTitleStyleFlattened.fontWeight;
+  const titleFontFamily = headerTitleStyleFlattened.fontFamily;
 
   const largeTitleBackgroundColor = headerLargeStyleFlattened.backgroundColor;
   const largeTitleColor =
@@ -311,6 +305,7 @@ export function useHeaderConfigProps({
       ? headerLargeTitleStyleFlattened.fontSize
       : undefined;
   const largeTitleFontWeight = headerLargeTitleStyleFlattened.fontWeight;
+  const largeTitleFontFamily = headerLargeTitleStyleFlattened.fontFamily;
 
   const headerTitleStyleSupported: TextStyle = { color: titleColor };
 
