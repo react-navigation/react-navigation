@@ -165,11 +165,6 @@ export function useLinking(
       const state = navigation ? getStateFromURL(url) : undefined;
 
       if (navigation && state) {
-        const rootState = navigation.getRootState();
-        if (state.routes.some((r) => !rootState?.routeNames.includes(r.name))) {
-          return;
-        }
-
         const action = getActionFromStateRef.current(state, configRef.current);
 
         if (action !== undefined) {
