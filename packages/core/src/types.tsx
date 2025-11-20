@@ -10,7 +10,7 @@ import type {
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
-import type { FlatType, UnionToIntersection } from './utilities';
+import type { UnionToIntersection } from './utilities';
 
 /**
  * Root navigator used in the app.
@@ -844,13 +844,12 @@ type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
   ? ParamListRoute<ParamList>
   : Route<string>;
 
-export type NavigationListForNavigator<Navigator> = FlatType<
+export type NavigationListForNavigator<Navigator> =
   Navigator extends TypedNavigator<infer Bag, any>
     ? Bag['NavigationList']
     : Navigator extends PrivateValueStore<[any, infer NavigationList, any]>
       ? NavigationList
-      : {}
->;
+      : {};
 
 export type NavigationListForNested<Navigator> =
   NavigationListForNavigator<Navigator> &
