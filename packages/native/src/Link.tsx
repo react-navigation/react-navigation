@@ -9,7 +9,10 @@ import {
 
 import { type LinkProps, useLinkProps } from './useLinkProps';
 
-type Props<ParamList extends RootParamList> = LinkProps<ParamList> &
+type Props<
+  ParamList extends {} = RootParamList,
+  RouteName extends keyof ParamList = keyof ParamList,
+> = LinkProps<ParamList, RouteName> &
   Omit<TextProps, 'disabled'> & {
     target?: string;
     onPress?: (
@@ -29,14 +32,17 @@ type Props<ParamList extends RootParamList> = LinkProps<ParamList> &
  * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
  * @param props.children Child elements to render the content.
  */
-export function Link<ParamList extends RootParamList>({
+export function Link<
+  const ParamList extends {} = RootParamList,
+  const RouteName extends keyof ParamList = keyof ParamList,
+>({
   screen,
   params,
   action,
   href,
   style,
   ...rest
-}: Props<ParamList>) {
+}: Props<ParamList, RouteName>) {
   const { colors, fonts } = useTheme();
   // @ts-expect-error: This is already type-checked by the prop types
   const props = useLinkProps<ParamList>({ screen, params, action, href });

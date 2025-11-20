@@ -14,7 +14,7 @@ import { type GestureResponderEvent, Platform } from 'react-native';
 import { LinkingContext } from './LinkingContext';
 
 export type LinkProps<
-  ParamList extends RootParamList,
+  ParamList extends {} = RootParamList,
   RouteName extends keyof ParamList = keyof ParamList,
 > =
   | ({
@@ -69,12 +69,10 @@ const getStateFromParams = (
  * @param props.href Optional absolute path to use for the href (e.g. `/feeds/hot`).
  * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
  */
-export function useLinkProps<ParamList extends RootParamList>({
-  screen,
-  params,
-  href,
-  action,
-}: LinkProps<ParamList>) {
+export function useLinkProps<
+  const ParamList extends {} = RootParamList,
+  const RouteName extends keyof ParamList = keyof ParamList,
+>({ screen, params, href, action }: LinkProps<ParamList, RouteName>) {
   const root = React.useContext(NavigationContainerRefContext);
   const navigation = React.useContext(NavigationHelpersContext);
   const { options } = React.useContext(LinkingContext);

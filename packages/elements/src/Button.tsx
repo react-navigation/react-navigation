@@ -20,20 +20,24 @@ type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
   children: string | string[];
 };
 
-type ButtonLinkProps<ParamList extends RootParamList> = LinkProps<ParamList> &
-  Omit<ButtonBaseProps, 'onPress'>;
+type ButtonLinkProps<
+  ParamList extends {} = RootParamList,
+  RouteName extends keyof ParamList = keyof ParamList,
+> = LinkProps<ParamList, RouteName> & Omit<ButtonBaseProps, 'onPress'>;
 
 const BUTTON_RADIUS = 40;
 
-export function Button<ParamList extends RootParamList>(
-  props: ButtonLinkProps<ParamList>
-): React.JSX.Element;
+export function Button<
+  ParamList extends {} = RootParamList,
+  RouteName extends keyof ParamList = keyof ParamList,
+>(props: ButtonLinkProps<ParamList, RouteName>): React.JSX.Element;
 
 export function Button(props: ButtonBaseProps): React.JSX.Element;
 
-export function Button<ParamList extends RootParamList>(
-  props: ButtonBaseProps | ButtonLinkProps<ParamList>
-) {
+export function Button<
+  ParamList extends {} = RootParamList,
+  RouteName extends keyof ParamList = keyof ParamList,
+>(props: ButtonBaseProps | ButtonLinkProps<ParamList, RouteName>) {
   if ('screen' in props || 'action' in props) {
     // @ts-expect-error: This is already type-checked by the prop types
     return <ButtonLink {...props} />;
@@ -42,13 +46,16 @@ export function Button<ParamList extends RootParamList>(
   }
 }
 
-function ButtonLink<ParamList extends RootParamList>({
+function ButtonLink<
+  const ParamList extends {} = RootParamList,
+  const RouteName extends keyof ParamList = keyof ParamList,
+>({
   screen,
   params,
   action,
   href,
   ...rest
-}: ButtonLinkProps<ParamList>) {
+}: ButtonLinkProps<ParamList, RouteName>) {
   // @ts-expect-error: This is already type-checked by the prop types
   const props = useLinkProps({ screen, params, action, href });
 

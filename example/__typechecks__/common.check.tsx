@@ -582,143 +582,182 @@ expectTypeOf(navigationRefUntyped.getCurrentRoute()).toEqualTypeOf<
 /**
  * Screen and params for Link, Button, etc.
  */
-type LinkParamList = RootParamList & RootStackParamList;
-
 // @ts-expect-error
-useLinkProps<LinkParamList>({ screen: 'Albums' });
+useLinkProps<RootStackParamList>({ screen: 'Albums' });
 // @ts-expect-error
-useLinkProps<LinkParamList>({ screen: 'Album' });
-useLinkProps<LinkParamList>({
+useLinkProps<RootStackParamList>({ screen: 'Album' });
+useLinkProps<RootStackParamList>({
   screen: 'Albums',
   params: { screen: 'Playlist' },
 });
-useLinkProps<LinkParamList>({ screen: 'Settings' });
-useLinkProps<LinkParamList>({
+useLinkProps<RootStackParamList>({ screen: 'Settings' });
+useLinkProps<RootStackParamList>({
   screen: 'Settings',
   params: { path: '123' },
 });
 // @ts-expect-error
-useLinkProps<LinkParamList>({ screen: 'PostDetails' });
-useLinkProps<LinkParamList>({
+useLinkProps<RootStackParamList>({ screen: 'PostDetails' });
+useLinkProps<RootStackParamList>({
   screen: 'PostDetails',
   params: { id: '123' },
 });
 
-useLinkProps<LinkParamList>({
+useLinkProps<RootStackParamList>({
   screen: 'PostDetails',
   params: { id: '123', section: '123' },
 });
-// @ts-expect-error
-useLinkProps<LinkParamList>({
+useLinkProps<RootStackParamList>({
   screen: 'PostDetails',
+  // @ts-expect-error
   params: { id: 123 },
 });
-// @ts-expect-error
-useLinkProps<LinkParamList>({
+useLinkProps<RootStackParamList>({
   screen: 'PostDetails',
+  // @ts-expect-error
   params: { id: '123', section: 123 },
 });
-useLinkProps<LinkParamList>({
+useLinkProps<RootStackParamList>({
   screen: 'PostDetails',
   // @ts-expect-error
   params: { ids: '123' },
 });
-// @ts-expect-error
-useLinkProps<LinkParamList>({
+useLinkProps<RootStackParamList>({
   screen: 'PostDetails',
+  // @ts-expect-error
   params: {},
 });
-useLinkProps<LinkParamList>({ screen: 'Login' });
+useLinkProps<RootStackParamList>({ screen: 'Login' });
 
 // @ts-expect-error
-<Link<LinkParamList> screen="Album">Albums</Link>;
+<Link<RootStackParamList> screen="Album">Albums</Link>;
 // @ts-expect-error
-<Link<LinkParamList> screen="Albums">Albums</Link>;
-<Link<LinkParamList> screen="Albums" params={{ screen: 'Playlist' }}>
+<Link<RootStackParamList> screen="Albums">Albums</Link>;
+<Link<RootStackParamList> screen="Albums" params={{ screen: 'Playlist' }}>
   Albums
 </Link>;
-<Link<LinkParamList> screen="Settings">Settings</Link>;
-<Link<LinkParamList> screen="Settings" params={{ path: '123' }}>
+<Link<RootStackParamList> screen="Settings">Settings</Link>;
+<Link<RootStackParamList> screen="Settings" params={{ path: '123' }}>
   Settings
 </Link>;
 // @ts-expect-error
-<Link<LinkParamList> screen="PostDetails">PostDetails</Link>;
-<Link<LinkParamList> screen="PostDetails" params={{ id: '123' }}>
+<Link<RootStackParamList> screen="PostDetails">PostDetails</Link>;
+<Link<RootStackParamList> screen="PostDetails" params={{ id: '123' }}>
   PostDetails
 </Link>;
-<Link<LinkParamList>
+<Link<RootStackParamList>
   screen="PostDetails"
   params={{ id: '123', section: '123' }}
 >
   PostDetails
 </Link>;
 // @ts-expect-error
-<Link<LinkParamList> screen="PostDetails" params={{ id: 123 }}>
+<Link<RootStackParamList> screen="PostDetails" params={{ id: 123 }}>
+  PostDetails
+</Link>;
+<Link<RootStackParamList>
+  screen="PostDetails"
+  // @ts-expect-error
+  params={{ id: '123', section: 123 }}
+>
   PostDetails
 </Link>;
 // @ts-expect-error
-<Link<LinkParamList> screen="PostDetails" params={{ id: '123', section: 123 }}>
+<Link<RootStackParamList> screen="PostDetails" params={{ ids: '123' }}>
   PostDetails
 </Link>;
 // @ts-expect-error
-<Link<LinkParamList> screen="PostDetails" params={{ ids: '123' }}>
+<Link<RootStackParamList> screen="PostDetails" params={{}}>
   PostDetails
 </Link>;
-// @ts-expect-error
-<Link<LinkParamList> screen="PostDetails" params={{}}>
-  PostDetails
-</Link>;
-<Link<LinkParamList> screen="Login">Albums</Link>;
-<Link<LinkParamList> screen="Updates">Updates</Link>;
-<Link<LinkParamList> screen="Updates" params={{ screen: 'Timeline' }}>
+<Link<RootStackParamList> screen="Login">Albums</Link>;
+<Link<RootStackParamList> screen="Updates">Updates</Link>;
+<Link<RootStackParamList> screen="Updates" params={{ screen: 'Timeline' }}>
   Timeline
 </Link>;
 
 // @ts-expect-error
-<Button<LinkParamList> screen="Album">Albums</Button>;
+<Button<RootStackParamList> screen="Album">Albums</Button>;
 // @ts-expect-error
-<Button<LinkParamList> screen="Albums">Albums</Button>;
-<Button<LinkParamList> screen="Albums" params={{ screen: 'Playlist' }}>
+<Button<RootStackParamList> screen="Albums">Albums</Button>;
+<Button<RootStackParamList> screen="Albums" params={{ screen: 'Playlist' }}>
   Albums
 </Button>;
-<Button<LinkParamList> screen="Settings">Settings</Button>;
-<Button<LinkParamList> screen="Settings" params={{ path: '123' }}>
+<Button<RootStackParamList> screen="Settings">Settings</Button>;
+<Button<RootStackParamList> screen="Settings" params={{ path: '123' }}>
   Settings
 </Button>;
 // @ts-expect-error
-<Button<LinkParamList> screen="PostDetails">PostDetails</Button>;
-<Button<LinkParamList> screen="PostDetails" params={{ id: '123' }}>
+<Button<RootStackParamList> screen="PostDetails">PostDetails</Button>;
+<Button<RootStackParamList> screen="PostDetails" params={{ id: '123' }}>
   PostDetails
 </Button>;
-<Button<LinkParamList>
+<Button<RootStackParamList>
   screen="PostDetails"
   params={{ id: '123', section: '123' }}
 >
   PostDetails
 </Button>;
 // @ts-expect-error
-<Button<LinkParamList> screen="PostDetails" params={{ id: 123 }}>
+<Button<RootStackParamList> screen="PostDetails" params={{ id: 123 }}>
   PostDetails
 </Button>;
-// @ts-expect-error
-<Button<LinkParamList>
+<Button<RootStackParamList>
   screen="PostDetails"
+  // @ts-expect-error
   params={{ id: '123', section: 123 }}
 >
   PostDetails
 </Button>;
 // @ts-expect-error
-<Button<LinkParamList> screen="PostDetails" params={{ ids: '123' }}>
+<Button<RootStackParamList> screen="PostDetails" params={{ ids: '123' }}>
   PostDetails
 </Button>;
 // @ts-expect-error
-<Button<LinkParamList> screen="PostDetails" params={{}}>
+<Button<RootStackParamList> screen="PostDetails" params={{}}>
   PostDetails
 </Button>;
-<Button<LinkParamList> screen="Login">Albums</Button>;
-<Button<LinkParamList> screen="Updates">Updates</Button>;
-<Button<LinkParamList> screen="Updates" params={{ screen: 'Timeline' }}>
+<Button<RootStackParamList> screen="Login">Albums</Button>;
+<Button<RootStackParamList> screen="Updates">Updates</Button>;
+<Button<RootStackParamList> screen="Updates" params={{ screen: 'Timeline' }}>
   Timeline
+</Button>;
+
+// @ts-expect-error
+useLinkProps({ screen: 'SimpleStack' });
+// @ts-expect-error
+useLinkProps({ screen: 'SimpleStac' });
+useLinkProps({
+  screen: 'SimpleStack',
+  params: { screen: 'Albums' },
+});
+useLinkProps({ screen: 'Home' });
+useLinkProps({
+  screen: 'Home',
+  params: { screen: 'Examples' },
+});
+
+// @ts-expect-error
+<Link screen="SimpleStack">SimpleStack</Link>;
+// @ts-expect-error
+<Link screen="SimpleStac">SimpleStack</Link>;
+<Link screen="SimpleStack" params={{ screen: 'Albums' }}>
+  SimpleStack
+</Link>;
+<Link screen="Home">Home</Link>;
+<Link screen="Home" params={{ screen: 'Examples' }}>
+  Home
+</Link>;
+
+// @ts-expect-error
+<Button screen="SimpleStack">SimpleStack</Button>;
+// @ts-expect-error
+<Button screen="SimpleStac">SimpleStack</Button>;
+<Button screen="SimpleStack" params={{ screen: 'Albums' }}>
+  SimpleStack
+</Button>;
+<Button screen="Home">Home</Button>;
+<Button screen="Home" params={{ screen: 'Examples' }}>
+  Home
 </Button>;
 
 /**
