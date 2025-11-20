@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.5.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.5.1...@react-navigation/routers@7.5.2) (2025-11-20)
+
+### Bug Fixes
+
+* use preloaded route when replacing routes ([7998486](https://github.com/react-navigation/react-navigation/commit/79984868ce0bc9753f347f717eb6a6bb5f0a61fd)) - by @satya164
+* use state.target in popTo to pop from given route ([9752e3c](https://github.com/react-navigation/react-navigation/commit/9752e3cc6c024ab194d3814d9f1cee58cc70d70f)) - by @satya164
+
 ## [7.5.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.5.0...@react-navigation/routers@7.5.1) (2025-07-26)
 
 ### Bug Fixes

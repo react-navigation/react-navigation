@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.8.2...@react-navigation/elements@2.8.3) (2025-11-20)
+
+### Bug Fixes
+
+* change order of views so react-native-screens finds nested navigators ([#12853](https://github.com/react-navigation/react-navigation/issues/12853)) ([f452d26](https://github.com/react-navigation/react-navigation/commit/f452d2656e96fabc90032686a5d03ad235794183)) - by @satya164
+
 ## [2.8.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.8.1...@react-navigation/elements@2.8.2) (2025-11-14)
 
 ### Bug Fixes

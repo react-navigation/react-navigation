@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.20...@react-navigation/native@7.1.21) (2025-11-20)
+
+### Bug Fixes
+
+* dispatch action for deep link even if route doesn't exist ([15cae40](https://github.com/react-navigation/react-navigation/commit/15cae40fa252caffed7cb5286c46a3d6bb587e89)) - by @satya164
+
 ## [7.1.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.19...@react-navigation/native@7.1.20) (2025-11-14)
 
 **Note:** Version bump only for package @react-navigation/native
