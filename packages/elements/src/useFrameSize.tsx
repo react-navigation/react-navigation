@@ -3,6 +3,7 @@ import {
   Platform,
   type StyleProp,
   StyleSheet,
+  View,
   type ViewStyle,
 } from 'react-native';
 import {
@@ -168,17 +169,28 @@ function FrameSizeProviderInner({
 
   return (
     <>
+      <FrameContext.Provider value={context}>{children}</FrameContext.Provider>
+      {/**
+       * The frame size listener must come after the content
+       * This makes sure that any nested navigator is in the first descendant chain
+       * This heuristic is used by react-native-screens to find nested navigators
+       */}
       {Platform.OS === 'web' ? (
         <FrameSizeListenerWeb onChange={onChange} />
       ) : typeof SafeAreaListener === 'undefined' ? (
         <FrameSizeListenerNativeFallback onChange={onChange} />
       ) : (
-        <SafeAreaListener
-          onChange={({ frame }) => onChange(frame)}
-          style={StyleSheet.absoluteFill}
-        />
+        /**
+         * Passing `pointerEvents="none"` to `SafeAreaListener` doesn't work
+         * So we wrap it in a `View` and disable pointer events on it
+         */
+        <View style={StyleSheet.absoluteFill} pointerEvents="none">
+          <SafeAreaListener
+            onChange={({ frame }) => onChange(frame)}
+            style={StyleSheet.absoluteFill}
+          />
+        </View>
       )}
-      <FrameContext.Provider value={context}>{children}</FrameContext.Provider>
     </>
   );
 }
