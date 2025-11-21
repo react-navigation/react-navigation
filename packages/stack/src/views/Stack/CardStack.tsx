@@ -521,12 +521,8 @@ export class CardStack extends React.Component<Props, State> {
         const lastActiveState = state.activeStates[index];
         const activeAfterTransition = index >= self.length - activeScreensLimit;
 
-        if (
-          index < self.length - activeScreensLimit - 1 ||
-          (lastActiveState === STATE_INACTIVE && !activeAfterTransition)
-        ) {
-          // screen should be inactive because it is too deep in the stack
-          // or it was inactive before and it will still be inactive after the transition
+        if (lastActiveState === STATE_INACTIVE && !activeAfterTransition) {
+          // screen was inactive before and it will still be inactive after the transition
           activityState = STATE_INACTIVE;
         } else {
           const sceneForActivity = scenes[self.length - 1];
