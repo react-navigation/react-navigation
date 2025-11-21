@@ -137,7 +137,7 @@ export function NativeScreen({ route, navigation, options, children }: Props) {
           // As it's the only case where the header height can change frequently
           const doesHeaderAnimate =
             Platform.OS === 'ios' &&
-            (options.headerLargeTitle || options.headerSearchBarOptions);
+            (options.headerLargeTitleEnabled || options.headerSearchBarOptions);
 
           if (doesHeaderAnimate) {
             setHeaderHeightDebounced(headerHeight);

@@ -164,7 +164,8 @@ export function useHeaderConfigProps({
   headerBackVisible,
   headerShadowVisible,
   headerLargeStyle,
-  headerLargeTitle,
+  headerLargeTitle: headerLargeTitleDeprecated,
+  headerLargeTitleEnabled = headerLargeTitleDeprecated,
   headerLargeTitleShadowVisible,
   headerLargeTitleStyle,
   headerBackground,
@@ -307,7 +308,7 @@ export function useHeaderConfigProps({
     headerBackground != null ||
     headerTransparent ||
     // When using a SearchBar or large title, the header needs to be translucent for it to work on iOS
-    ((hasHeaderSearchBar || headerLargeTitle) &&
+    ((hasHeaderSearchBar || headerLargeTitleEnabled) &&
       Platform.OS === 'ios' &&
       headerTransparent !== false);
 
@@ -468,7 +469,7 @@ export function useHeaderConfigProps({
       headerShadowVisible === false ||
       headerBackground != null ||
       (headerTransparent && headerShadowVisible !== true),
-    largeTitle: headerLargeTitle,
+    largeTitle: headerLargeTitleEnabled,
     largeTitleBackgroundColor,
     largeTitleColor,
     largeTitleFontFamily,

@@ -44,7 +44,7 @@ export type NativeHeaderOptions = {
    *
    * @platform ios
    */
-  headerLargeTitle?: boolean;
+  headerLargeTitleEnabled?: boolean;
   /**
    * Whether drop shadow of header is visible when a large title is shown.
    *

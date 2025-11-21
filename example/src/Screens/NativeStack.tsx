@@ -309,7 +309,7 @@ export function NativeStack() {
 
           return {
             title: `Article by ${route.params?.author ?? 'Unknown'}`,
-            headerLargeTitle: true,
+            headerLargeTitleEnabled: true,
             headerLargeTitleShadowVisible: false,
             headerRight: ({ tintColor }) => (
               <HeaderButton

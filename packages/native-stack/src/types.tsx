@@ -242,6 +242,12 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
+  headerLargeTitleEnabled?: boolean;
+  /**
+   * Whether to enable header with large title which collapses to regular header on scroll.
+   *
+   * @deprecated Use `headerLargeTitleEnabled` instead.
+   */
   headerLargeTitle?: boolean;
   /**
    * Whether drop shadow of header is visible when a large title is shown.
