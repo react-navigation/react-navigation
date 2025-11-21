@@ -360,6 +360,9 @@ export function App() {
               // This is not a URL we can handle, so we filter it out
               filter: (url) => !url.includes('/expo-development-client/'),
               enabled: 'auto',
+              config: {
+                initialRouteName: 'Home',
+              },
             }}
             fallback={<Text>Loading…</Text>}
             documentTitle={{
