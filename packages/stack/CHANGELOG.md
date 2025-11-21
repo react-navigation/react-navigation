@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.6.6...@react-navigation/stack@7.6.7) (2025-11-21)
+
+### Bug Fixes
+
+* fix transition animation for transparent modal ([7842834](https://github.com/react-navigation/react-navigation/commit/7842834744de77b9327ce2a1570aa29bb81bd757)) - by @satya164
+* tweak determining active state to avoid blank screens ([d98552b](https://github.com/react-navigation/react-navigation/commit/d98552bced693a8ed04a5b9b4952838bc8660a65)) - by @
+
 ## [7.6.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.6.5...@react-navigation/stack@7.6.6) (2025-11-21)
 
 ### Bug Fixes
