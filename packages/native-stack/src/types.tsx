@@ -196,7 +196,7 @@ export type NativeStackNavigationOptions = {
   headerBackImageSource?: ImageSourcePropType;
   /**
    * Style of the header when a large title is shown.
-   * The large title is shown if `headerLargeTitle` is `true` and
+   * The large title is shown if `headerLargeTitleEnabled` is `true` and
    * the edge of any scrollable content reaches the matching edge of the header.
    *
    * Supported properties:
@@ -220,7 +220,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  headerLargeTitle?: boolean;
+  headerLargeTitleEnabled?: boolean;
   /**
    * Whether drop shadow of header is visible when a large title is shown.
    *

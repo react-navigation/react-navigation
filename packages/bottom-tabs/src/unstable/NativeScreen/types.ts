@@ -20,7 +20,7 @@ export type NativeHeaderOptions = {
   title?: string;
   /**
    * Style of the header when a large title is shown
-   * The large title is shown if `headerLargeTitle` is `true` and
+   * The large title is shown if `headerLargeTitleEnabled` is `true` and
    * the edge of any scrollable content reaches the matching edge of the header.
    *
    * Supported properties:
