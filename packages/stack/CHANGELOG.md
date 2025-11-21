@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.6.5...@react-navigation/stack@7.6.6) (2025-11-21)
+
+### Bug Fixes
+
+* inactive screen visible for one frame ([#11315](https://github.com/react-navigation/react-navigation/issues/11315)) ([6170ab6](https://github.com/react-navigation/react-navigation/commit/6170ab60159242919fb205c6100196af0bb9d769)) - by @WoLewicki
+
 ## [7.6.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.6.4...@react-navigation/stack@7.6.5) (2025-11-20)
 
 **Note:** Version bump only for package @react-navigation/stack
