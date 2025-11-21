@@ -32,7 +32,6 @@ name: Simple Stack
     text: 'Article by Babel fish'
 - tapOn:
     text: 'Pop to albums'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Albums'
 - tapOn:
