@@ -24,9 +24,11 @@ jobs:
           console.log('ℹ', packages.join(', '));
 
           for (const pkg of packages) {
-            fetch(
-              `https://snackager.expo.io/bundle/${pkg}?platforms=ios,android,web&version_snackager=true&bypassCache=true`
-            ).then(
+            const url = `https://snackager.eascdn.net/bundle/${pkg}?platforms=ios,android,web&version_snackager=true&bypassCache=true`;
+
+            console.log('➡', url);
+
+            fetch(url).then(
               (res) => {
                 if (res.ok) {
                   console.log('✔', pkg);
