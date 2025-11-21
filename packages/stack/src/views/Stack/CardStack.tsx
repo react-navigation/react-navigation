@@ -504,7 +504,7 @@ export class CardStack extends React.Component<Props, State> {
         } else {
           // Check at least last 2 screens before stopping
           // This will make sure that screen isn't detached when another screen is animating on top of the transparent one
-          // For example, (Opaque -> Transparent -> Opaque)
+          // e.g. opaque -> transparent -> opaque
           if (i <= props.routes.length - 2) {
             break;
           }
@@ -512,15 +512,15 @@ export class CardStack extends React.Component<Props, State> {
       }
 
       activeStates = props.routes.map((_, index, self) => {
-        // For the screens that shouldn't be active, the value is 0
-        // For those that should be active, but are not the top screen, the value is 1
-        // For those on top of the stack and with interaction enabled, the value is 2
-        // For the old implementation, it stays the same it was
+        // The activity state represents state of the screen:
+        // 0 - inactive, the screen is detached
+        // 1 - transitioning or below the top screen, the screen is mounted but interaction is disabled
+        // 2 - on top of the stack, the screen is mounted and interaction is enabled
         let isScreenActive:
           | Animated.AnimatedInterpolation<0 | 1 | 2>
           | 0
           | 1
-          | 2 = 1;
+          | 2;
 
         const lastActiveState = state.activeStates[index];
         const activeAfterTransition = index >= self.length - activeScreensLimit;
