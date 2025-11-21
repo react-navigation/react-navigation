@@ -6,3 +6,19 @@ name: Static Screen
     env:
       LINK: static-screen
       TEXT: 'Albums'
+- tapOn:
+    text: 'Show Chat'
+- assertVisible:
+    id: 'chat'
+- tapOn:
+    id: 'chat'
+- assertVisible:
+    text: 'Chat'
+- tapOn:
+    id: 'albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Hide Chat'
+- assertNotVisible:
+    id: 'chat'

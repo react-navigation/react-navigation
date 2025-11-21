@@ -23,7 +23,7 @@ let cached: number | undefined;
 
 const createPromise = () =>
   new Promise<number>((resolve) => {
-    setTimeout(() => resolve(42), 1000);
+    setTimeout(() => resolve(42), 3000);
   }).then((result) => {
     cached = result;
     return result;

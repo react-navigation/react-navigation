@@ -78,6 +78,7 @@ const HomeTabs = createBottomTabNavigator({
     Albums: {
       screen: AlbumsScreen,
       options: {
+        tabBarButtonTestID: 'albums',
         tabBarIcon: getTabBarIcon('image-album'),
       },
       linking: 'albums',
@@ -85,6 +86,7 @@ const HomeTabs = createBottomTabNavigator({
     Contacts: {
       screen: Contacts,
       options: {
+        tabBarButtonTestID: 'contacts',
         tabBarIcon: getTabBarIcon('contacts'),
       },
       linking: 'contacts',
@@ -92,6 +94,7 @@ const HomeTabs = createBottomTabNavigator({
     Chat: {
       screen: Chat,
       options: {
+        tabBarButtonTestID: 'chat',
         tabBarIcon: getTabBarIcon('message-reply'),
       },
       linking: 'chat',

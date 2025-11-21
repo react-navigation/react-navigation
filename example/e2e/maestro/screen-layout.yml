@@ -5,4 +5,33 @@ name: Screen Layout
     file: ../launch.yml
     env:
       LINK: screen-layout
-      TEXT: 'Suspense & ErrorBoundary'
+      TEXT: 'Loading…'
+- assertNotVisible:
+    text: 'Suspend'
+- extendedWaitUntil:
+    timeout: 3500
+    visible: 'Suspend'
+- tapOn:
+    text: 'Crash'
+- runFlow:
+    when:
+      visible: 'Dismiss'
+    commands:
+      - tapOn: 'Dismiss'
+- assertVisible:
+    text: 'Something went wrong'
+- assertNotVisible:
+    text: 'Crash'
+- tapOn:
+    text: 'Try again'
+- assertVisible:
+    text: 'Crash'
+- tapOn:
+    text: 'Suspend'
+- assertVisible:
+    text: 'Loading…'
+- assertNotVisible:
+    text: 'Suspend'
+- extendedWaitUntil:
+    timeout: 3500
+    visible: 'Suspend'

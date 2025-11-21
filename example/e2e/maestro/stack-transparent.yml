@@ -6,3 +6,11 @@ name: Stack Transparent
     env:
       LINK: stack-transparent
       TEXT: 'Article'
+- tapOn:
+    text: 'Show Dialog'
+- assertVisible:
+    text: 'Trivia'
+- tapOn:
+    text: 'Okay'
+- assertNotVisible:
+    text: 'Trivia'
