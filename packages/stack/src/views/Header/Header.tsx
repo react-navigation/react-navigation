@@ -4,13 +4,12 @@ import * as React from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import type { StackHeaderProps } from '../../types';
-import { debounce } from '../../utils/debounce';
 import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
+import { throttle } from '../../utils/throttle';
 import { HeaderSegment } from './HeaderSegment';
 
 export const Header = React.memo(function Header({
   back,
-  layout,
   progress,
   options,
   route,
@@ -31,7 +30,7 @@ export const Header = React.memo(function Header({
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const goBack = React.useCallback(
-    debounce(() => {
+    throttle(() => {
       if (navigation.isFocused() && navigation.canGoBack()) {
         navigation.dispatch({
           ...StackActions.pop(),
@@ -57,7 +56,6 @@ export const Header = React.memo(function Header({
       {...options}
       title={getHeaderTitle(options, route.name)}
       progress={progress}
-      layout={layout}
       modal={isModal}
       headerBackTitle={
         options.headerBackTitle !== undefined

@@ -1,16 +1,16 @@
 import React from 'react';
-import type { StyleProp, ViewStyle } from 'react-native';
+import type { ColorValue, StyleProp, ViewStyle } from 'react-native';
 import { Animated, StyleSheet } from 'react-native';
 
 interface TabBarItemLabelProps {
-  color: string;
+  color: ColorValue;
   label?: string;
-  labelStyle: StyleProp<ViewStyle>;
+  style: StyleProp<ViewStyle>;
   icon: React.ReactNode;
 }
 
 export const TabBarItemLabel = React.memo(
-  ({ color, label, labelStyle, icon }: TabBarItemLabelProps) => {
+  ({ color, label, style, icon }: TabBarItemLabelProps) => {
     if (!label) {
       return null;
     }
@@ -20,7 +20,7 @@ export const TabBarItemLabel = React.memo(
         style={[
           styles.label,
           icon ? { marginTop: 0 } : null,
-          labelStyle,
+          style,
           { color: color },
         ]}
       >
@@ -29,6 +29,8 @@ export const TabBarItemLabel = React.memo(
     );
   }
 );
+
+TabBarItemLabel.displayName = 'TabBarItemLabel';
 
 const styles = StyleSheet.create({
   label: {

@@ -1,11 +1,7 @@
-const noop: any = () => {};
-
-export let useReduxDevToolsExtension: typeof import('./useReduxDevToolsExtension').useReduxDevToolsExtension;
-
-if (process.env.NODE_ENV !== 'production') {
-  useReduxDevToolsExtension =
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    require('./useReduxDevToolsExtension').useReduxDevToolsExtension;
-} else {
-  useReduxDevToolsExtension = noop;
-}
+export const {
+  useLogger,
+  useReduxDevToolsExtension,
+}: typeof import('./index.development') =
+  process.env.NODE_ENV !== 'production'
+    ? require('./index.development')
+    : require('./index.production');

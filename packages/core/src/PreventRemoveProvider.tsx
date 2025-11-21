@@ -3,7 +3,7 @@ import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
 import { NavigationHelpersContext } from './NavigationHelpersContext';
-import { NavigationRouteContext } from './NavigationRouteContext';
+import { NavigationRouteContext } from './NavigationProvider';
 import {
   type PreventedRoutes,
   PreventRemoveContext,
@@ -48,7 +48,7 @@ const transformPreventedRoutes = (
 export function PreventRemoveProvider({ children }: Props) {
   const [parentId] = React.useState(() => nanoid());
   const [preventedRoutesMap, setPreventedRoutesMap] =
-    React.useState<PreventedRoutesMap>(new Map());
+    React.useState<PreventedRoutesMap>(() => new Map());
 
   const navigation = React.useContext(NavigationHelpersContext);
   const route = React.useContext(NavigationRouteContext);

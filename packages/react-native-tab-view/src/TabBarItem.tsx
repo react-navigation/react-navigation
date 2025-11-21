@@ -1,11 +1,12 @@
 import * as React from 'react';
 import {
   Animated,
+  type ColorValue,
   type LayoutChangeEvent,
+  Platform,
   type PressableAndroidRippleConfig,
   type StyleProp,
   StyleSheet,
-  type TextStyle,
   View,
   type ViewStyle,
 } from 'react-native';
@@ -19,21 +20,20 @@ export type Props<T extends Route> = TabDescriptor<T> & {
   position: Animated.AnimatedInterpolation<number>;
   route: T;
   navigationState: NavigationState<T>;
-  activeColor?: string;
-  inactiveColor?: string;
-  pressColor?: string;
+  activeColor?: ColorValue;
+  inactiveColor?: ColorValue;
+  pressColor?: ColorValue;
   pressOpacity?: number;
   onLayout?: (event: LayoutChangeEvent) => void;
   onPress: () => void;
   onLongPress: () => void;
   defaultTabWidth?: number;
-  labelStyle?: StyleProp<TextStyle>;
   style: StyleProp<ViewStyle>;
   android_ripple?: PressableAndroidRippleConfig;
 };
 
-const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
-const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
+const DEFAULT_ACTIVE_COLOR = 'rgba(0, 0, 0, 1)';
+const DEFAULT_INACTIVE_COLOR = 'rgba(0, 0, 0, 0.5)';
 const ICON_SIZE = 24;
 
 const getActiveOpacity = (
@@ -84,6 +84,8 @@ type TabBarItemInternalProps<T extends Route> = Omit<
   routesLength: number;
 } & TabDescriptor<T>;
 
+const ANDROID_RIPPLE_DEFAULT = { borderless: true };
+
 const TabBarItemInternal = <T extends Route>({
   accessibilityLabel,
   accessible,
@@ -107,7 +109,7 @@ const TabBarItemInternal = <T extends Route>({
   href,
   labelText,
   routesLength,
-  android_ripple = { borderless: true },
+  android_ripple = ANDROID_RIPPLE_DEFAULT,
   labelAllowFontScaling,
   route,
 }: TabBarItemInternalProps<T>) => {
@@ -176,7 +178,7 @@ const TabBarItemInternal = <T extends Route>({
           focused,
           color: focused ? activeColor : inactiveColor,
           style: labelStyle,
-          label: labelText,
+          labelText,
           allowFontScaling: labelAllowFontScaling,
           route,
         })
@@ -185,7 +187,7 @@ const TabBarItemInternal = <T extends Route>({
           color={focused ? activeColor : inactiveColor}
           icon={icon}
           label={labelText}
-          labelStyle={labelStyle}
+          style={labelStyle}
         />
       ),
     [
@@ -207,7 +209,7 @@ const TabBarItemInternal = <T extends Route>({
     ? null
     : { width: defaultTabWidth };
 
-  accessibilityLabel =
+  const ariaLabel =
     typeof accessibilityLabel !== 'undefined' ? accessibilityLabel : labelText;
 
   return (
@@ -215,9 +217,9 @@ const TabBarItemInternal = <T extends Route>({
       android_ripple={android_ripple}
       testID={testID}
       accessible={accessible}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="tab"
-      accessibilityState={{ selected: isFocused }}
+      role="tab"
+      aria-label={ariaLabel}
+      aria-selected={isFocused}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
       unstable_pressDelay={0}
@@ -227,7 +229,7 @@ const TabBarItemInternal = <T extends Route>({
       href={href}
       style={[styles.pressable, tabContainerStyle]}
     >
-      <View pointerEvents="none" style={[styles.item, tabStyle]}>
+      <View style={[styles.item, tabStyle]}>
         {icon}
         <View>
           <Animated.View style={{ opacity: inactiveOpacity }}>
@@ -240,7 +242,7 @@ const TabBarItemInternal = <T extends Route>({
           </Animated.View>
         </View>
         {customBadge != null ? (
-          <View style={styles.badge}>{customBadge()}</View>
+          <View style={styles.badge}>{customBadge({ route })}</View>
         ) : null}
       </View>
     </PlatformPressable>
@@ -285,6 +287,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 10,
     minHeight: 48,
+    pointerEvents: 'none',
   },
   badge: {
     position: 'absolute',
@@ -295,5 +298,13 @@ const styles = StyleSheet.create({
     // The label is not pressable on Windows
     // Adding backgroundColor: 'transparent' seems to fix it
     backgroundColor: 'transparent',
+    ...Platform.select({
+      // Roundness for iPad hover effect
+      ios: {
+        borderRadius: 10,
+        borderCurve: 'continuous',
+      },
+      default: null,
+    }),
   },
 });

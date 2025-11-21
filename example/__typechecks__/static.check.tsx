@@ -1,14 +1,51 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import type {
-  NavigationProp,
-  NavigatorScreenParams,
-  StaticParamList,
-  StaticScreenProps,
+import {
+  type BottomTabNavigationProp,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
+import {
+  type CompositeNavigationProp,
+  createStaticNavigation,
+  type NavigationContainerRef,
+  type NavigationListForNested,
+  type NavigationProp,
+  type NavigatorScreenParams,
+  type StaticParamList,
+  type StaticScreenProps,
+  type Theme,
 } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  createStackNavigator,
+  type StackNavigationProp,
+} from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
+
+const NativeStack = createNativeStackNavigator({
+  groups: {
+    GroupA: {
+      screenLayout: ({ navigation, children }) => {
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+        expectTypeOf(navigation.push).toExtend<() => void>();
+
+        return <>{children}</>;
+      },
+      screens: {
+        Foo: {
+          screen: () => <></>,
+          options: { presentation: 'modal' },
+        },
+      },
+    },
+  },
+});
+
+createStaticNavigation(NativeStack);
+
+expectTypeOf<StaticParamList<typeof NativeStack>>().toEqualTypeOf<{
+  Foo: undefined;
+}>();
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
@@ -37,11 +74,39 @@ const RootStack = createStackNavigator({
       },
       listeners: {
         transitionEnd: (e) => {
-          expectTypeOf(e.data).toMatchTypeOf<{ closing: boolean }>();
+          expectTypeOf(e.data).toEqualTypeOf<Readonly<{ closing: boolean }>>();
         },
       },
     },
     Settings: () => null,
+    // TypeScript has a limit of 24 items in mapped types
+    // So we add more items to make sure we don't hit the issue
+    A: () => null,
+    B: () => null,
+    C: () => null,
+    D: () => null,
+    E: () => null,
+    F: () => null,
+    G: () => null,
+    H: () => null,
+    I: () => null,
+    J: () => null,
+    K: () => null,
+    L: () => null,
+    M: () => null,
+    N: () => null,
+    O: () => null,
+    P: () => null,
+    Q: () => null,
+    R: () => null,
+    S: () => null,
+    T: () => null,
+    U: () => null,
+    V: () => null,
+    W: () => null,
+    X: () => null,
+    Y: () => null,
+    Z: () => null,
   },
   groups: {
     Guest: {
@@ -57,18 +122,137 @@ const RootStack = createStackNavigator({
       },
     },
   },
+  screenOptions: {
+    animationTypeForReplace: 'pop',
+  },
 });
 
+const Navigation = createStaticNavigation(RootStack);
+
+<Navigation />;
+
 type RootParamList = StaticParamList<typeof RootStack>;
+
+type RooStackRouteName =
+  | 'Home'
+  | 'Profile'
+  | 'Feed'
+  | 'Settings'
+  | 'Login'
+  | 'Register'
+  | 'Account'
+  | 'A'
+  | 'B'
+  | 'C'
+  | 'D'
+  | 'E'
+  | 'F'
+  | 'G'
+  | 'H'
+  | 'I'
+  | 'J'
+  | 'K'
+  | 'L'
+  | 'M'
+  | 'N'
+  | 'O'
+  | 'P'
+  | 'Q'
+  | 'R'
+  | 'S'
+  | 'T'
+  | 'U'
+  | 'V'
+  | 'W'
+  | 'X'
+  | 'Y'
+  | 'Z';
+
+expectTypeOf<keyof RootParamList>().toEqualTypeOf<RooStackRouteName>();
 
 declare let navigation: NavigationProp<RootParamList>;
 
 /**
+ * Infer param list from navigator
+ */
+expectTypeOf<RootParamList>().toEqualTypeOf<{
+  Home:
+    | NavigatorScreenParams<{
+        Groups: undefined;
+        Chat: { id: number };
+      }>
+    | undefined;
+  Profile: { user: string };
+  Feed: { sort: 'hot' | 'recent' };
+  Settings: undefined;
+  Login: undefined;
+  Register: { method: 'email' | 'social' };
+  Account: undefined;
+  A: undefined;
+  B: undefined;
+  C: undefined;
+  D: undefined;
+  E: undefined;
+  F: undefined;
+  G: undefined;
+  H: undefined;
+  I: undefined;
+  J: undefined;
+  K: undefined;
+  L: undefined;
+  M: undefined;
+  N: undefined;
+  O: undefined;
+  P: undefined;
+  Q: undefined;
+  R: undefined;
+  S: undefined;
+  T: undefined;
+  U: undefined;
+  V: undefined;
+  W: undefined;
+  X: undefined;
+  Y: undefined;
+  Z: undefined;
+}>();
+
+/**
+ * Infer navigation props from navigator
+ */
+expectTypeOf<NavigationListForNested<typeof RootStack>['Home']>().toEqualTypeOf<
+  StackNavigationProp<RootParamList, 'Home'>
+>();
+
+expectTypeOf<NavigationListForNested<typeof RootStack>['Feed']>().toEqualTypeOf<
+  StackNavigationProp<RootParamList, 'Feed'>
+>();
+
+expectTypeOf<
+  NavigationListForNested<typeof RootStack>['Settings']
+>().toEqualTypeOf<StackNavigationProp<RootParamList, 'Settings'>>();
+
+expectTypeOf<NavigationListForNested<typeof RootStack>['Chat']>().toEqualTypeOf<
+  CompositeNavigationProp<
+    BottomTabNavigationProp<StaticParamList<typeof HomeTabs>, 'Chat'>,
+    StackNavigationProp<RootParamList, 'Home'>
+  >
+>();
+
+expectTypeOf<
+  // @ts-expect-error
+  NavigationListForNested<typeof RootStack>['Invalid']
+>().toEqualTypeOf<unknown>();
+
+expectTypeOf<keyof NavigationListForNested<typeof RootStack>>().toEqualTypeOf<
+  RooStackRouteName | 'Groups' | 'Chat'
+>();
+
+/**
  * Infer screen names from config
  */
-expectTypeOf(navigation.getState().routes[0].name).toEqualTypeOf<
-  'Home' | 'Profile' | 'Feed' | 'Settings' | 'Login' | 'Register' | 'Account'
->();
+expectTypeOf(
+  navigation.getState().routes[0].name
+).toEqualTypeOf<RooStackRouteName>();
 
 /**
  * Infer params from component props
@@ -119,6 +303,7 @@ navigation.navigate('Register', { method: 'token' });
 /**
  * Infer params from nested navigator
  */
+navigation.navigate('Home'); // Navigate to screen without specifying a child screen
 navigation.navigate('Home', { screen: 'Groups' });
 navigation.navigate('Home', { screen: 'Chat', params: { id: 123 } });
 
@@ -153,6 +338,21 @@ createBottomTabNavigator({
   screens: {},
 });
 
+createBottomTabNavigator({
+  screenOptions: () => ({
+    tabBarActiveTintColor: 'tomato',
+  }),
+  screens: {},
+});
+
+createBottomTabNavigator({
+  // @ts-expect-error
+  screenOptions: () => ({
+    tabBarActiveTintColor: 42,
+  }),
+  screens: {},
+});
+
 /**
  * Infer screen  options
  */
@@ -182,6 +382,29 @@ createBottomTabNavigator({
 createBottomTabNavigator({
   screens: {
     Test: {
+      screen: () => null,
+      options: () => ({
+        tabBarActiveTintColor: 'tomato',
+      }),
+    },
+  },
+});
+
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      screen: () => null,
+      // @ts-expect-error
+      options: () => ({
+        tabBarActiveTintColor: 42,
+      }),
+    },
+  },
+});
+
+createBottomTabNavigator({
+  screens: {
+    Test: {
       screen: (_: { foo: number }) => null,
       initialParams: {
         foo: 'test',
@@ -191,13 +414,77 @@ createBottomTabNavigator({
 });
 
 /**
- * Requires `screens` to be defined
+ * Have correct type for screen options callback
+ */
+createBottomTabNavigator({
+  screenOptions: ({ route, navigation, theme }) => {
+    expectTypeOf(route.name).toEqualTypeOf<string>();
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+    expectTypeOf(navigation.jumpTo).toExtend<() => void>();
+    expectTypeOf(theme).toEqualTypeOf<Theme>();
+
+    return {};
+  },
+  screens: {},
+});
+
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      screen: () => null,
+      options: ({ route, navigation, theme }) => {
+        expectTypeOf(route.name).toEqualTypeOf<string>();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+        expectTypeOf(navigation.jumpTo).toExtend<() => void>();
+        expectTypeOf(theme).toEqualTypeOf<Theme>();
+
+        return {};
+      },
+    },
+  },
+});
+
+/**
+ * Have correct type for listeners callback
+ */
+createBottomTabNavigator({
+  screenListeners: ({ route, navigation }) => {
+    expectTypeOf(route.name).toEqualTypeOf<string>();
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+    expectTypeOf(navigation.jumpTo).toExtend<() => void>();
+
+    return {};
+  },
+  screens: {},
+});
+
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      screen: () => null,
+      listeners: ({ navigation, route }) => {
+        expectTypeOf(route.name).toEqualTypeOf<string>();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+        expectTypeOf(navigation.jumpTo).toExtend<() => void>();
+
+        return {};
+      },
+    },
+  },
+});
+
+/**
+ * Requires `screens` or `groups` to be defined
  */
 // @ts-expect-error
 createStackNavigator({});
 
 createStackNavigator({
   screens: {},
+});
+
+createStackNavigator({
+  groups: {},
 });
 
 /**
@@ -213,6 +500,7 @@ const MyTabs = createBottomTabNavigator({
   },
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MyStack = createStackNavigator({
   groups: {
     Guest: {
@@ -232,7 +520,7 @@ const MyStack = createStackNavigator({
 
 type MyParamList = StaticParamList<typeof MyStack>;
 
-expectTypeOf<MyParamList>().toMatchTypeOf<{
+expectTypeOf<MyParamList>().toEqualTypeOf<{
   Login: undefined;
   Home: undefined;
   Profile: { id: number };
@@ -242,3 +530,53 @@ expectTypeOf<MyParamList>().toMatchTypeOf<{
       }>
     | undefined;
 }>();
+
+/**
+ * Check for errors on getCurrentRoute
+ */
+declare const navigationRef: NavigationContainerRef<RootParamList>;
+const route = navigationRef.getCurrentRoute()!;
+
+switch (route.name) {
+  case 'Profile':
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        user: string;
+      }>
+    >();
+    break;
+  case 'Feed':
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        sort: 'hot' | 'recent';
+      }>
+    >();
+    break;
+  case 'Settings':
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
+    break;
+  case 'Login':
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
+    break;
+  case 'Register':
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        method: 'email' | 'social';
+      }>
+    >();
+    break;
+  case 'Account':
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
+    break;
+  // Checks for nested routes
+  case 'Groups':
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
+    break;
+  case 'Chat':
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        id: number;
+      }>
+    >();
+    break;
+}

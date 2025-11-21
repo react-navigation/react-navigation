@@ -9,21 +9,21 @@ import * as stacktraceParser from 'stacktrace-parser';
 
 import { type HermesParsedStack, parseHermesStack } from './parseHermesStack';
 
-interface StackFrame {
+export type StackFrame = {
+  lineNumber: number | null;
+  column: number | null;
+  file: string | null;
   methodName: string;
-  file: string;
-  lineNumber: number;
-  column: number;
-}
+};
 
 function convertHermesStack(stack: HermesParsedStack): StackFrame[] {
-  const frames = [];
+  const frames: StackFrame[] = [];
   for (const entry of stack.entries) {
     if (entry.type !== 'FRAME') {
       continue;
     }
     const { location, functionName } = entry;
-    if (location.type === 'NATIVE') {
+    if (location.type === 'NATIVE' || location.type === 'INTERNAL_BYTECODE') {
       continue;
     }
     frames.push({
@@ -39,21 +39,21 @@ function convertHermesStack(stack: HermesParsedStack): StackFrame[] {
   return frames;
 }
 
-export function parseErrorStack(
-  errorStack?: string | StackFrame[]
-): StackFrame[] {
+export function parseErrorStack(errorStack?: string): StackFrame[] {
   if (!errorStack) {
     return [];
   }
 
   const parsedStack = Array.isArray(errorStack)
     ? errorStack
-    : (global as any).HermesInternal
+    : (globalThis as any).HermesInternal
       ? convertHermesStack(parseHermesStack(errorStack))
-      : stacktraceParser.parse(errorStack).map((frame) => ({
-          ...frame,
-          column: frame.column != null ? frame.column - 1 : null,
-        }));
+      : stacktraceParser.parse(errorStack).map(
+          (frame): StackFrame => ({
+            ...frame,
+            column: frame.column != null ? frame.column - 1 : null,
+          })
+        );
 
-  return parsedStack as StackFrame[];
+  return parsedStack;
 }

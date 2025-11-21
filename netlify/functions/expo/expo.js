@@ -1,3 +1,5 @@
+/* global fetch, module */
+
 const handler = async () => {
   try {
     const pkg = await fetch(

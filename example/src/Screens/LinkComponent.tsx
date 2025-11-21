@@ -2,21 +2,22 @@ import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
   Link,
+  type NavigatorScreenParams,
   type PathConfigMap,
   StackActions,
+  type StaticScreenProps,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
 } from '@react-navigation/stack';
-import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-export type LinkComponentDemoParamList = {
+type LinkComponentDemoParamList = {
   Article: { author: string };
   Albums: undefined;
 };
@@ -36,19 +37,20 @@ const ArticleScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Link screen="LinkComponent" params={{ screen: 'Albums' }}>
-          Go to Albums
+          Go to albums
         </Link>
         <Link
           screen="LinkComponent"
           params={{ screen: 'Albums' }}
           action={StackActions.replace('Albums')}
         >
-          Replace with Albums
+          Replace with albums
         </Link>
 
         <Button screen="Home" variant="filled">
           Go to Home
         </Button>
+
         <Button variant="tinted" action={CommonActions.goBack()}>
           Go back
         </Button>
@@ -56,13 +58,25 @@ const ArticleScreen = ({
         <Button
           variant="tinted"
           onPress={() =>
-            navigation.setParams({
+            navigation.replaceParams({
               author:
                 route.params?.author === 'Gandalf' ? 'Babel fish' : 'Gandalf',
             })
           }
         >
-          Update params
+          Replace params
+        </Button>
+
+        <Button
+          variant="tinted"
+          onPress={() =>
+            navigation.pushParams({
+              author:
+                route.params?.author === 'Gandalf' ? 'Babel fish' : 'Gandalf',
+            })
+          }
+        >
+          Push params
         </Button>
 
         {Platform.OS === 'web' && (
@@ -113,7 +127,9 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<LinkComponentDemoParamList>();
 
-export function LinkComponent() {
+export function LinkComponent(
+  _: StaticScreenProps<NavigatorScreenParams<LinkComponentDemoParamList>>
+) {
   return (
     <SimpleStack.Navigator>
       <SimpleStack.Screen

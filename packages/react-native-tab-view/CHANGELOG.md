@@ -3,6 +3,196 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.1.1...react-native-tab-view@4.1.2) (2025-06-14)
+
+**Note:** Version bump only for package react-native-tab-view
+
+## [4.1.1](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.1.0...react-native-tab-view@4.1.1) (2025-05-30)
+
+**Note:** Version bump only for package react-native-tab-view
+
+# [4.1.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.12...react-native-tab-view@4.1.0) (2025-05-11)
+
+### Features
+
+* add `onTabSelect` prop to tab view to detect when tab has finished switching  ([#12563](https://github.com/react-navigation/react-navigation/issues/12563)) ([5fd7046](https://github.com/react-navigation/react-navigation/commit/5fd7046af7f838d560f72f9335d3a88e1aece9b2)) - by @ikevin127
+
+## [4.0.12](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.11...react-native-tab-view@4.0.12) (2025-05-04)
+
+### Bug Fixes
+
+* fix peer dep versions. closes [#12580](https://github.com/react-navigation/react-navigation/issues/12580) ([6fc3dd6](https://github.com/react-navigation/react-navigation/commit/6fc3dd677aecdcf8696fe723e17b9c028de7ad85)) - by @satya164
+
+## [4.0.11](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.10...react-native-tab-view@4.0.11) (2025-05-02)
+
+### Bug Fixes
+
+* use aria props instead of accessibilityX ([#11848](https://github.com/react-navigation/react-navigation/issues/11848)) ([347ca97](https://github.com/react-navigation/react-navigation/commit/347ca975406e84a5e7452679b1dde7b9ecca1a22)) - by @satya164
+
+## [4.0.10](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.9...react-native-tab-view@4.0.10) (2025-04-08)
+
+### Bug Fixes
+
+* add types field back to support legacy moduleResolution ([6c021d4](https://github.com/react-navigation/react-navigation/commit/6c021d442ede3a231e32486b2c391c2e850bf76e)), closes [#12534](https://github.com/react-navigation/react-navigation/issues/12534) - by @
+
+## [4.0.9](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.7...react-native-tab-view@4.0.9) (2025-04-04)
+
+### Bug Fixes
+
+* drop commonjs module to avoid dual package hazard ([f0fbcc5](https://github.com/react-navigation/react-navigation/commit/f0fbcc5515e73b454f607bd95bba40a48e852d0f)) - by @satya164
+
+## [4.0.8](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.7...react-native-tab-view@4.0.8) (2025-04-02)
+
+**Note:** Version bump only for package react-native-tab-view
+
+## [4.0.7](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.6...react-native-tab-view@4.0.7) (2025-04-01)
+
+**Note:** Version bump only for package react-native-tab-view
+
+## [4.0.6](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.5...react-native-tab-view@4.0.6) (2025-03-19)
+
+**Note:** Version bump only for package react-native-tab-view
+
+## [4.0.5](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.4...react-native-tab-view@4.0.5) (2024-11-28)
+
+**Note:** Version bump only for package react-native-tab-view
+
+## [4.0.4](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.3...react-native-tab-view@4.0.4) (2024-11-25)
+
+**Note:** Version bump only for package react-native-tab-view
+
+## [4.0.3](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.2...react-native-tab-view@4.0.3) (2024-11-22)
+
+**Note:** Version bump only for package react-native-tab-view
+
+## [4.0.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.1...react-native-tab-view@4.0.2) (2024-11-18)
+
+### Bug Fixes
+
+* fix deprecation warning for shadow styles on react-native-web ([#12253](https://github.com/react-navigation/react-navigation/issues/12253)) ([4d444f7](https://github.com/react-navigation/react-navigation/commit/4d444f77a446b622d75e6e19a3cf1c024d248a2d)), closes [#000](https://github.com/react-navigation/react-navigation/issues/000) [#000](https://github.com/react-navigation/react-navigation/issues/000) [#000](https://github.com/react-navigation/react-navigation/issues/000) - by @kubabutkiewicz
+
+## [4.0.1](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0...react-native-tab-view@4.0.1) (2024-11-07)
+
+### Bug Fixes
+
+* fix custom tab bar label and style not working for material top tabs ([1a0805b](https://github.com/react-navigation/react-navigation/commit/1a0805babe288fc78ffdaf520e238ceb294ab89d)), closes [#12236](https://github.com/react-navigation/react-navigation/issues/12236) - by @satya164
+
+# [4.0.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.13...react-native-tab-view@4.0.0) (2024-11-06)
+
+**Note:** Version bump only for package react-native-tab-view
+
+# [4.0.0-rc.13](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.12...react-native-tab-view@4.0.0-rc.13) (2024-10-31)
+
+### Code Refactoring
+
+* rename sceneContainerStyle to sceneStyle ([d1d0761](https://github.com/react-navigation/react-navigation/commit/d1d0761f0239caea1cc7b85d90de229f444f827d)) - by @satya164
+
+### Features
+
+* move options and commonOptions to TabView for react-native-tab-view ([3643926](https://github.com/react-navigation/react-navigation/commit/36439266d9d29cc643e7159458999a1adfb101d0)) - by @satya164
+
+### BREAKING CHANGES
+
+* This does the following changes:
+
+- Remove the `sceneContainerStyle` prop from Bottom Tabs & Material Top Tabs
+- Add a `sceneStyle` option to Bottom Tabs & Material Top Tabs
+- Rename `sceneContainerStyle` option to `sceneStyle` for Drawer
+
+# [4.0.0-rc.12](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.11...react-native-tab-view@4.0.0-rc.12) (2024-10-24)
+
+### Bug Fixes
+
+* use * for react-native peer dep to support pre-release versions ([07267e5](https://github.com/react-navigation/react-navigation/commit/07267e54be752f600f808ec2898e5d76a1bc1d43)) - by @satya164
+
+# [4.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.10...react-native-tab-view@4.0.0-rc.11) (2024-10-11)
+
+### Bug Fixes
+
+* spread key into JSX warning ([#12142](https://github.com/react-navigation/react-navigation/issues/12142)) ([f9031ec](https://github.com/react-navigation/react-navigation/commit/f9031ec3eeeda46db5c5a55dca0f24f0ea021547)) - by @jewhyena
+
+# [4.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.9...react-native-tab-view@4.0.0-rc.10) (2024-09-08)
+
+**Note:** Version bump only for package react-native-tab-view
+
+# [4.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.8...react-native-tab-view@4.0.0-rc.9) (2024-08-08)
+
+### Bug Fixes
+
+* use pointer cursor only on web & iOS ([ce1ce06](https://github.com/react-navigation/react-navigation/commit/ce1ce06df75991cb25f3647bcb3e52e08dfff145)) - by @satya164
+
+# [4.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.7...react-native-tab-view@4.0.0-rc.8) (2024-08-01)
+
+**Note:** Version bump only for package react-native-tab-view
+
+# [4.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.6...react-native-tab-view@4.0.0-rc.7) (2024-07-11)
+
+### Bug Fixes
+
+* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
+
+# [4.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.5...react-native-tab-view@4.0.0-rc.6) (2024-07-10)
+
+### Bug Fixes
+
+* bump use-latest-callback to fix require ([40ddae9](https://github.com/react-navigation/react-navigation/commit/40ddae95fbbf84ff47f3447eef50ed9ddb66cab8)) - by @satya164
+
+# [4.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.4...react-native-tab-view@4.0.0-rc.5) (2024-07-07)
+
+### Bug Fixes
+
+* upgrade use-latest-callback for esm compat ([187d41b](https://github.com/react-navigation/react-navigation/commit/187d41b3a139fe2a075a7809c0c4088cbd2fafdb)) - by @satya164
+
+# [4.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.3...react-native-tab-view@4.0.0-rc.4) (2024-07-04)
+
+### Bug Fixes
+
+* fix published files ([829caa0](https://github.com/react-navigation/react-navigation/commit/829caa019e125811eea5213fd380e8e1bdbe7030)) - by @
+
+# [4.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.2...react-native-tab-view@4.0.0-rc.3) (2024-07-04)
+
+**Note:** Version bump only for package react-native-tab-view
+
+# [4.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.1...react-native-tab-view@4.0.0-rc.2) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
+# [4.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-rc.0...react-native-tab-view@4.0.0-rc.1) (2024-07-01)
+
+### Bug Fixes
+
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
+# [4.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.10...react-native-tab-view@4.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* add hover effect to buttons on iPad & VisionOS ([2cb77c0](https://github.com/react-navigation/react-navigation/commit/2cb77c0ce42575275dd723555d0ec9ae7be32c66)) - by @satya164
+* center align TabBarIndicator when width is specified ([#12030](https://github.com/react-navigation/react-navigation/issues/12030)) ([7df62fc](https://github.com/react-navigation/react-navigation/commit/7df62fcd24f13bf11d4ca08c21857c8ef57cb4aa)) - by @JAE-GYU
+* update state on tab press for tab-view ([feb82e6](https://github.com/react-navigation/react-navigation/commit/feb82e62f8ed8df1fc1add00020a696c06a11e01)) - by @satya164
+
+### Features
+
+* pass route to badge function ([f040776](https://github.com/react-navigation/react-navigation/commit/f04077604b875da9171485c94ff977eb24da5ced)) - by @satya164
+
+# [4.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.9...react-native-tab-view@4.0.0-alpha.10) (2024-03-20)
+
+### Bug Fixes
+
+* fix some options not being passed to tab-view. fixes [#11904](https://github.com/react-navigation/react-navigation/issues/11904) ([8fcf215](https://github.com/react-navigation/react-navigation/commit/8fcf21520729f6a4485ffd247e4fa5ee78e20c81)) - by @satya164
+
+# [4.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.8...react-native-tab-view@4.0.0-alpha.9) (2024-03-14)
+
+### Bug Fixes
+
+* fix tab auto width on chrome & opera on android & linux ([#11440](https://github.com/react-navigation/react-navigation/issues/11440)) ([1ef7ed1](https://github.com/react-navigation/react-navigation/commit/1ef7ed1dcd4c8927109c62bd16ab4c9d55648d6e)), closes [#f00](https://github.com/react-navigation/react-navigation/issues/f00) [#00](https://github.com/react-navigation/react-navigation/issues/00) - by @souzabrs
+
+# [4.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.7...react-native-tab-view@4.0.0-alpha.8) (2024-03-10)
+
+**Note:** Version bump only for package react-native-tab-view
+
 # [4.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.0.0-alpha.6...react-native-tab-view@4.0.0-alpha.7) (2024-03-08)
 
 ### Bug Fixes

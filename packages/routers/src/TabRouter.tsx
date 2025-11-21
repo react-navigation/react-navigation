@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid/non-secure';
 
 import { BaseRouter } from './BaseRouter';
+import { createParamsFromAction } from './createParamsFromAction';
 import type {
   CommonNavigationAction,
   DefaultRouterOptions,
@@ -19,13 +20,23 @@ export type TabActionType = {
 };
 
 export type BackBehavior =
-  | 'initialRoute'
   | 'firstRoute'
-  | 'history'
+  | 'initialRoute'
   | 'order'
+  | 'history'
+  | 'fullHistory'
   | 'none';
 
 export type TabRouterOptions = DefaultRouterOptions & {
+  /**
+   * Control how going back should behave
+   * - `firstRoute` - return to the first defined route
+   * - `initialRoute` - return to the route from `initialRouteName`
+   * - `order` - return to the route defined before the focused route
+   * - `history` - return to last visited route; if the same route is visited multiple times, the older entries are dropped from the history
+   * - `fullHistory` - return to last visited route; doesn't drop duplicate entries unlike `history` - matches behavior of web pages
+   * - `none` - do not handle going back
+   */
   backBehavior?: BackBehavior;
 };
 
@@ -40,7 +51,7 @@ export type TabNavigationState<ParamList extends ParamListBase> = Omit<
   /**
    * List of previously visited route keys.
    */
-  history: { type: 'route'; key: string }[];
+  history: { type: 'route'; key: string; params?: object | undefined }[];
   /**
    * List of routes' key, which are supposed to be preloaded before navigating to.
    */
@@ -51,21 +62,26 @@ export type TabActionHelpers<ParamList extends ParamListBase> = {
   /**
    * Jump to an existing tab.
    *
-   * @param name Name of the route for the tab.
+   * @param screen Name of the route to jump to.
    * @param [params] Params object for the route.
    */
-  jumpTo<RouteName extends Extract<keyof ParamList, string>>(
-    ...args: undefined extends ParamList[RouteName]
-      ? [screen: RouteName] | [screen: RouteName, params: ParamList[RouteName]]
-      : [screen: RouteName, params: ParamList[RouteName]]
+  jumpTo<RouteName extends keyof ParamList>(
+    ...args: RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
+        ? [screen: RouteName, params?: ParamList[RouteName]]
+        : [screen: RouteName, params: ParamList[RouteName]]
+      : never
   ): void;
 };
 
 const TYPE_ROUTE = 'route' as const;
 
 export const TabActions = {
-  jumpTo(name: string, params?: object): TabActionType {
-    return { type: 'JUMP_TO', payload: { name, params } };
+  jumpTo(name: string, params?: object) {
+    return {
+      type: 'JUMP_TO',
+      payload: { name, params },
+    } as const satisfies TabActionType;
   },
 };
 
@@ -75,13 +91,22 @@ const getRouteHistory = (
   backBehavior: BackBehavior,
   initialRouteName: string | undefined
 ) => {
-  const history = [{ type: TYPE_ROUTE, key: routes[index].key }];
+  const history = [
+    {
+      type: TYPE_ROUTE,
+      key: routes[index].key,
+    },
+  ];
+
   let initialRouteIndex;
 
   switch (backBehavior) {
     case 'order':
       for (let i = index; i > 0; i--) {
-        history.unshift({ type: TYPE_ROUTE, key: routes[i - 1].key });
+        history.unshift({
+          type: TYPE_ROUTE,
+          key: routes[i - 1].key,
+        });
       }
       break;
     case 'firstRoute':
@@ -106,6 +131,7 @@ const getRouteHistory = (
       }
       break;
     case 'history':
+    case 'fullHistory':
       // The history will fill up on navigation
       break;
   }
@@ -119,14 +145,37 @@ const changeIndex = (
   backBehavior: BackBehavior,
   initialRouteName: string | undefined
 ) => {
-  let history;
+  let history = state.history;
 
-  if (backBehavior === 'history') {
-    const currentKey = state.routes[index].key;
+  if (backBehavior === 'history' || backBehavior === 'fullHistory') {
+    const currentRoute = state.routes[index];
 
-    history = state.history
-      .filter((it) => (it.type === 'route' ? it.key !== currentKey : false))
-      .concat({ type: TYPE_ROUTE, key: currentKey });
+    if (backBehavior === 'history') {
+      // Remove the existing key from the history to de-duplicate it
+      history = history.filter((it) =>
+        it.type === 'route' ? it.key !== currentRoute.key : false
+      );
+    } else if (backBehavior === 'fullHistory') {
+      const lastHistoryRouteItemIndex = history.findLastIndex(
+        (item) => item.type === 'route'
+      );
+
+      if (currentRoute.key === history[lastHistoryRouteItemIndex]?.key) {
+        // For full-history, only remove if it matches the last route
+        // Useful for drawer, if current route was in history, then drawer state changed
+        // Then we only need to move the route to the front
+        history = [
+          ...history.slice(0, lastHistoryRouteItemIndex),
+          ...history.slice(lastHistoryRouteItemIndex + 1),
+        ];
+      }
+    }
+
+    history = history.concat({
+      type: TYPE_ROUTE,
+      key: currentRoute.key,
+      params: backBehavior === 'fullHistory' ? currentRoute.params : undefined,
+    });
   } else {
     history = getRouteHistory(
       state.routes,
@@ -303,8 +352,7 @@ export function TabRouter({
     getStateForAction(state, action, { routeParamList, routeGetIdList }) {
       switch (action.type) {
         case 'JUMP_TO':
-        case 'NAVIGATE':
-        case 'NAVIGATE_DEPRECATED': {
+        case 'NAVIGATE': {
           const index = state.routes.findIndex(
             (route) => route.name === action.payload.name
           );
@@ -334,8 +382,7 @@ export function TabRouter({
                 let params;
 
                 if (
-                  (action.type === 'NAVIGATE' ||
-                    action.type === 'NAVIGATE_DEPRECATED') &&
+                  action.type === 'NAVIGATE' &&
                   action.payload.merge &&
                   currentId === nextId
                 ) {
@@ -349,13 +396,7 @@ export function TabRouter({
                         }
                       : route.params;
                 } else {
-                  params =
-                    routeParamList[route.name] !== undefined
-                      ? {
-                          ...routeParamList[route.name],
-                          ...action.payload.params,
-                        }
-                      : action.payload.params;
+                  params = createParamsFromAction({ action, routeParamList });
                 }
 
                 const path =
@@ -382,12 +423,38 @@ export function TabRouter({
         }
 
         case 'GO_BACK': {
-          if (state.history.length === 1) {
+          const focusedRoute = state.routes[state.index];
+
+          if (state.history.length === 1 && !focusedRoute.history?.length) {
             return null;
           }
 
-          const previousKey = state.history[state.history.length - 2].key;
-          const index = state.routes.findIndex(
+          const lastHistoryItem = state.history[state.history.length - 1];
+
+          if (
+            lastHistoryItem?.type === 'route' &&
+            focusedRoute.history?.length
+          ) {
+            const routes = [...state.routes];
+            const history = [...focusedRoute.history];
+            const last = history.pop();
+
+            routes[state.index] = {
+              ...focusedRoute,
+              params:
+                last?.type === 'params' ? last.params : focusedRoute.params,
+              history,
+            };
+
+            return {
+              ...state,
+              routes,
+            };
+          }
+
+          const previousHistoryItem = state.history[state.history.length - 2];
+          const previousKey = previousHistoryItem?.key;
+          const index = state.routes.findLastIndex(
             (route) => route.key === previousKey
           );
 
@@ -395,8 +462,22 @@ export function TabRouter({
             return null;
           }
 
+          let routes = state.routes;
+
+          if (
+            backBehavior === 'fullHistory' &&
+            routes[index].params !== previousHistoryItem.params
+          ) {
+            routes = [...state.routes];
+            routes[index] = {
+              ...routes[index],
+              params: previousHistoryItem.params,
+            };
+          }
+
           return {
             ...state,
+            routes,
             preloadedRouteKeys: state.preloadedRouteKeys.filter(
               (key) => key !== state.routes[index].key
             ),
@@ -409,9 +490,11 @@ export function TabRouter({
           const routeIndex = state.routes.findIndex(
             (route) => route.name === action.payload.name
           );
+
           if (routeIndex === -1) {
             return null;
           }
+
           const route = state.routes[routeIndex];
 
           const getId = routeGetIdList[route.name];
@@ -422,15 +505,7 @@ export function TabRouter({
           const key =
             currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
 
-          const params =
-            action.payload.params !== undefined ||
-            routeParamList[route.name] !== undefined
-              ? {
-                  ...routeParamList[route.name],
-                  ...action.payload.params,
-                }
-              : undefined;
-
+          const params = createParamsFromAction({ action, routeParamList });
           const newRoute =
             params !== route.params ? { ...route, key, params } : route;
 

@@ -1,23 +1,26 @@
-import {
-  NavigationContainer,
-  type ParamListBase,
-} from '@react-navigation/native';
+import { expect, jest, test } from '@jest/globals';
+import { Text } from '@react-navigation/elements';
+import { NavigationContainer } from '@react-navigation/native';
 import { fireEvent, render } from '@testing-library/react-native';
 import * as React from 'react';
-import { Button, Text, View } from 'react-native';
+import { Button, View } from 'react-native';
 
 import {
   createMaterialTopTabNavigator,
   type MaterialTopTabScreenProps,
 } from '../index';
 
+type TopTabParamList = {
+  A: undefined;
+  B: undefined;
+};
+
 jest.mock('react-native-pager-view', () => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const React = require('react');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { View } = require('react-native');
 
   return class ViewPager extends React.Component<React.PropsWithChildren<{}>> {
+    // eslint-disable-next-line @eslint-react/no-unused-class-component-members
     setPage() {}
 
     render() {
@@ -26,11 +29,11 @@ jest.mock('react-native-pager-view', () => {
   };
 });
 
-it('renders a material top tab navigator with screens', async () => {
+test('renders a material top tab navigator with screens', async () => {
   const Test = ({
     route,
     navigation,
-  }: MaterialTopTabScreenProps<ParamListBase>) => (
+  }: MaterialTopTabScreenProps<TopTabParamList>) => (
     <View>
       <Text>Screen {route.name}</Text>
       <Button onPress={() => navigation.navigate('A')} title="Go to A" />
@@ -38,7 +41,7 @@ it('renders a material top tab navigator with screens', async () => {
     </View>
   );
 
-  const Tab = createMaterialTopTabNavigator();
+  const Tab = createMaterialTopTabNavigator<TopTabParamList>();
 
   const { findByText, queryByText } = render(
     <NavigationContainer>

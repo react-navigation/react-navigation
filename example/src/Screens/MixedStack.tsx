@@ -1,17 +1,20 @@
 import { Button } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
 } from '@react-navigation/stack';
-import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-export type MixedStackParams = {
+type MixedStackParams = {
   Article: { author: string };
   Albums: undefined;
 };
@@ -40,7 +43,7 @@ const ArticleScreen = ({
           Go back
         </Button>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Push album
+          Push albums
         </Button>
       </View>
       <Article
@@ -56,7 +59,7 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<MixedStackParams>) => {
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Push album
+          Push albums
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
@@ -75,7 +78,9 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<MixedStackParams>) => {
 
 const Stack = createStackNavigator<MixedStackParams>();
 
-export function MixedStack() {
+export function MixedStack(
+  _: StaticScreenProps<NavigatorScreenParams<MixedStackParams>>
+) {
   return (
     <Stack.Navigator>
       <Stack.Screen

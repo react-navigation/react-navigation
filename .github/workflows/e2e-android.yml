@@ -1,0 +1,195 @@
+name: E2E
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  maestro-android:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      checks: read
+      contents: read
+    concurrency:
+      group: ${{ github.workflow_ref }}-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      MAESTRO_VERSION: 2.0.8
+      MAESTRO_CLI_NO_ANALYTICS: 1
+      MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
+      JAVA_DISTRIBUTION: 'zulu'
+      JAVA_VERSION: '17'
+      API_LEVEL: 34
+      AVD_NAME: e2e_emulator
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Calculate fingerprint
+        id: calculate-fingerprint
+        run: |
+          FINGERPRINT=$(npx expo-updates fingerprint:generate --platform android | jq -r '.hash')
+          echo "Fingerprint for Android: $FINGERPRINT"
+          echo "fingerprint=$FINGERPRINT" >> $GITHUB_OUTPUT
+        working-directory: example
+
+      - name: Restore debug build from cache
+        id: restore-debug-build
+        uses: actions/cache/restore@v4
+        with:
+          path: android-debug-build/
+          key: android-debug-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+
+      - name: Maximize build space
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        uses: AdityaGarg8/remove-unwanted-software@v4.1
+        with:
+          remove-dotnet: 'true'
+          remove-haskell: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+
+      - name: Setup JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Build Android App
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        run: |
+          yarn expo prebuild --platform android
+          cd android
+          ./gradlew assembleDebug -DtestBuildType=debug -Dorg.gradle.jvmargs=-Xmx4g
+        working-directory: example
+
+      - name: Prepare cache folder
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        run: |
+          mkdir android-debug-build
+          mv example/android/app/build/outputs/apk/debug/app-debug.apk android-debug-build/android-debug.apk
+
+      - name: Store debug build in cache
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: android-debug-build/
+          key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
+
+      - name: Install AVD dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y libpulse0 libgl1
+
+      - name: Install Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Restore AVD cache
+        id: restore-avd-cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ env.API_LEVEL }}
+
+      - name: Create AVD and generate snapshot for caching
+        if: steps.restore-avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.API_LEVEL }}
+          force-avd-creation: false
+          disable-animations: false
+          target: google_apis
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
+          avd-name: ${{ env.AVD_NAME }}
+          arch: x86_64
+          profile: pixel_7_pro
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Store AVD cache
+        if: steps.restore-avd-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: ${{ steps.restore-avd-cache.outputs.cache-primary-key }}
+
+      - name: Run Metro bundler in the background
+        uses: miguelteixeiraa/action-run-in-background@v1
+        with:
+          script: yarn --cwd example start
+          readiness-script: |
+            if curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=android&dev=true&minify=false" > /dev/null; then
+              echo "curl request to metro was successful."
+            else
+              echo "curl request to metro failed."
+              exit 1
+            fi
+
+      - name: Prepare test script file
+        id: e2e-test-script
+        run: |
+          # android-emulator-runner does not support multi-line scripts
+          # so we create a script file and pass its path instead
+
+          SCRIPT_FILE="$(pwd)/e2e-tests.sh"
+
+          echo "${SCRIPT}" > "${SCRIPT_FILE}"
+          echo "file=${SCRIPT_FILE}" >> "${GITHUB_OUTPUT}"
+        env:
+          SCRIPT: |
+            adb install ../android-debug-build/android-debug.apk
+
+            for i in 1 2 3; do
+              yarn run e2e:native --flatten-debug-output
+
+              if [ $? -eq 0 ]; then
+                break
+              else
+                echo "Maestro tests failed on attempt $i"
+
+                if [ $i -eq 3 ]; then
+                  echo "Maestro tests failed after $i attempts"
+                  exit 1
+                fi
+              fi
+            done
+
+      - name: Run Maestro tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ env.API_LEVEL }}
+          force-avd-creation: false
+          disable-animations: false
+          target: google_apis
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
+          avd-name: ${{ env.AVD_NAME }}
+          arch: x86_64
+          script: bash ${{ steps.e2e-test-script.outputs.file }}
+          working-directory: example
+
+      - name: Store debug output if failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-debug-output-android
+          path: example/maestro-debug-output/**/*
+          include-hidden-files: true
+          overwrite: true

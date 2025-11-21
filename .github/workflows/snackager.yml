@@ -1,0 +1,43 @@
+name: Snackager
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    if: "${{ startsWith(github.event.head_commit.message, 'chore: publish') }}"
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+
+      - name: Bundle new versions
+        env:
+          COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
+        shell: node {0}
+        run: |
+          const packages = process.env.COMMIT_MESSAGE.split('\n')
+            .filter((line) => line.trim().startsWith('-'))
+            .map((line) => line.replace(/^\s*-/, '').trim());
+
+          console.log('ℹ', packages.join(', '));
+
+          for (const pkg of packages) {
+            const url = `https://snackager.eascdn.net/bundle/${pkg}?platforms=ios,android,web&version_snackager=true&bypassCache=true`;
+
+            console.log('➡', url);
+
+            fetch(url).then(
+              (res) => {
+                if (res.ok) {
+                  console.log('✔', pkg);
+                } else {
+                  console.error('✖', pkg, res.status, res.statusText);
+                }
+              },
+              (err) => {
+                console.error('✖', pkg, err);
+              }
+            );
+          }

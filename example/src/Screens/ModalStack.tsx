@@ -1,17 +1,20 @@
 import { Button } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
 } from '@react-navigation/stack';
-import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-export type ModalStackParams = {
+type ModalStackParams = {
   Article: { author: string };
   Albums: undefined;
 };
@@ -31,7 +34,7 @@ const ArticleScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Push album
+          Push albums
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
@@ -66,7 +69,9 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<ModalStackParams>) => {
 
 const Stack = createStackNavigator<ModalStackParams>();
 
-export function ModalStack() {
+export function ModalStack(
+  _: StaticScreenProps<NavigatorScreenParams<ModalStackParams>>
+) {
   return (
     <Stack.Navigator screenOptions={{ presentation: 'modal' }}>
       <Stack.Screen

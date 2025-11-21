@@ -1,42 +1,36 @@
 import {
   createNavigatorFactory,
-  type DefaultNavigatorOptions,
   type ParamListBase,
+  type StaticConfig,
+  type StaticParamList,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
   type TabRouterOptions,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
-import * as React from 'react';
 
 import type {
-  BottomTabNavigationConfig,
   BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
+  BottomTabNavigationProp,
+  BottomTabNavigatorProps,
 } from '../types';
 import { BottomTabView } from '../views/BottomTabView';
 
-type Props = DefaultNavigatorOptions<
-  ParamListBase,
-  TabNavigationState<ParamListBase>,
-  BottomTabNavigationOptions,
-  BottomTabNavigationEventMap
-> &
-  TabRouterOptions &
-  BottomTabNavigationConfig;
-
 function BottomTabNavigator({
-  id,
   initialRouteName,
   backBehavior,
+  UNSTABLE_routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
   screenOptions,
-  sceneContainerStyle,
+  screenLayout,
+  router,
   ...rest
-}: Props) {
+}: BottomTabNavigatorProps) {
   const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       TabNavigationState<ParamListBase>,
@@ -45,13 +39,15 @@ function BottomTabNavigator({
       BottomTabNavigationOptions,
       BottomTabNavigationEventMap
     >(TabRouter, {
-      id,
       initialRouteName,
       backBehavior,
+      UNSTABLE_routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,
       screenOptions,
+      screenLayout,
+      router,
     });
 
   return (
@@ -61,15 +57,36 @@ function BottomTabNavigator({
         state={state}
         navigation={navigation}
         descriptors={descriptors}
-        sceneContainerStyle={sceneContainerStyle}
       />
     </NavigationContent>
   );
 }
 
-export const createBottomTabNavigator = createNavigatorFactory<
-  TabNavigationState<ParamListBase>,
-  BottomTabNavigationOptions,
-  BottomTabNavigationEventMap,
-  typeof BottomTabNavigator
->(BottomTabNavigator);
+type BottomTabTypeBag<ParamList extends {}> = {
+  ParamList: ParamList;
+  State: TabNavigationState<ParamList>;
+  ScreenOptions: BottomTabNavigationOptions;
+  EventMap: BottomTabNavigationEventMap;
+  NavigationList: {
+    [RouteName in keyof ParamList]: BottomTabNavigationProp<
+      ParamList,
+      RouteName
+    >;
+  };
+  Navigator: typeof BottomTabNavigator;
+};
+
+export function createBottomTabNavigator<
+  const ParamList extends ParamListBase,
+>(): TypedNavigator<BottomTabTypeBag<ParamList>, undefined>;
+export function createBottomTabNavigator<
+  const Config extends StaticConfig<BottomTabTypeBag<ParamListBase>>,
+>(
+  config: Config
+): TypedNavigator<
+  BottomTabTypeBag<StaticParamList<{ config: Config }>>,
+  Config
+>;
+export function createBottomTabNavigator(config?: unknown) {
+  return createNavigatorFactory(BottomTabNavigator)(config);
+}

@@ -1,0 +1,9 @@
+appId: ${APP_ID}
+name: Native Stack Header Customization
+---
+- stopApp
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: native-stack-header-customization
+      TEXT: 'What is Lorem Ipsum?'

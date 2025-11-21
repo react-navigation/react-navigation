@@ -1,13 +1,17 @@
-import { Button } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import { Button, Text } from '@react-navigation/elements';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
-export type LayoutsStackParams = {
+type LayoutsStackParams = {
   SuspenseDemo: undefined;
 };
 
@@ -97,7 +101,9 @@ class ErrorBoundary extends React.Component<
 
 const Stack = createStackNavigator<LayoutsStackParams>();
 
-export function ScreenLayout() {
+export function ScreenLayout(
+  _: StaticScreenProps<NavigatorScreenParams<LayoutsStackParams>>
+) {
   return (
     <Stack.Navigator>
       <Stack.Screen

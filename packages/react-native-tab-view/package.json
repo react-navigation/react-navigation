@@ -1,7 +1,7 @@
 {
   "name": "react-native-tab-view",
   "description": "Tab view component for React Native",
-  "version": "4.0.0-alpha.7",
+  "version": "4.1.2",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -23,11 +23,16 @@
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
   "homepage": "https://reactnavigation.org/docs/tab-view/",
-  "main": "lib/commonjs/index.js",
-  "react-native": "src/index.tsx",
-  "source": "src/index.tsx",
-  "module": "lib/module/index.js",
-  "types": "lib/typescript/src/index.d.ts",
+  "main": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.tsx",
+      "types": "./lib/typescript/src/index.d.ts",
+      "default": "./lib/module/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "src",
     "lib",
@@ -39,27 +44,34 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "use-latest-callback": "^0.1.9"
+    "use-latest-callback": "^0.3.2"
   },
   "devDependencies": {
-    "del-cli": "^5.1.0",
-    "react": "18.2.0",
-    "react-native": "0.73.2",
-    "react-native-builder-bob": "^0.23.2",
-    "react-native-pager-view": "6.2.3",
-    "typescript": "^5.3.3"
+    "@jest/globals": "^30.0.0",
+    "@testing-library/react-native": "^13.2.1",
+    "del-cli": "^6.0.0",
+    "react": "19.1.0",
+    "react-native": "0.81.4",
+    "react-native-builder-bob": "^0.40.12",
+    "react-native-pager-view": "6.9.1",
+    "react-test-renderer": "19.1.0",
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
-    "react": ">= 18.2.0",
-    "react-native": ">= 0.72.0",
+    "react": ">= 19.0.0",
+    "react-native": "*",
     "react-native-pager-view": ">= 6.0.0"
   },
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
       [
         "typescript",
         {

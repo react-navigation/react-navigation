@@ -3,8 +3,7 @@
   "references": [
     { "path": "../core" },
     { "path": "../routers" },
-    { "path": "../native" },
-    { "path": "../elements" },
+    { "path": "../native" }
   ],
   "compilerOptions": {
     "rootDir": ".",

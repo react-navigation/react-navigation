@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+name: Master Detail
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: master-detail
+      TEXT: 'Pages'

@@ -6,18 +6,19 @@ import type { ListenerMap } from './NavigationBuilderContext';
  * Hook which lets child navigators add action listeners.
  */
 export function useChildListeners() {
-  const { current: listeners } = React.useRef<{
+  const listeners = React.useRef<{
     [K in keyof ListenerMap]: ListenerMap[K][];
   }>({
     action: [],
     focus: [],
-  });
+  }).current;
 
   const addListener = React.useCallback(
     <T extends keyof ListenerMap>(type: T, listener: ListenerMap[T]) => {
       listeners[type].push(listener);
 
       let removed = false;
+
       return () => {
         const index = listeners[type].indexOf(listener);
 

@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+name: Static Screen
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: static-screen
+      TEXT: 'Albums'

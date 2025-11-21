@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Pressable, StyleSheet } from 'react-native';
 import Animated, {
   useAnimatedProps,
@@ -17,35 +16,34 @@ export function Overlay({
   ...rest
 }: OverlayProps) {
   const animatedStyle = useAnimatedStyle(() => {
+    const active = progress.value > PROGRESS_EPSILON;
+
     return {
       opacity: progress.value,
-      // We don't want the user to be able to press through the overlay when drawer is open
-      // We can send the overlay behind the screen to avoid it
-      zIndex: progress.value > PROGRESS_EPSILON ? 0 : -1,
+      pointerEvents: active ? 'auto' : 'none',
     };
-  });
+  }, [progress]);
 
   const animatedProps = useAnimatedProps(() => {
     const active = progress.value > PROGRESS_EPSILON;
 
     return {
-      pointerEvents: active ? 'auto' : 'none',
-      accessibilityElementsHidden: !active,
-      importantForAccessibility: active ? 'auto' : 'no-hide-descendants',
+      'aria-hidden': !active,
     } as const;
-  });
+  }, [progress]);
 
   return (
     <Animated.View
       {...rest}
-      style={[styles.overlay, animatedStyle, style]}
+      style={[StyleSheet.absoluteFill, styles.overlay, animatedStyle, style]}
       animatedProps={animatedProps}
     >
       <Pressable
         onPress={onPress}
         style={styles.pressable}
-        accessibilityRole="button"
-        accessibilityLabel={accessibilityLabel}
+        role="button"
+        aria-label={accessibilityLabel}
+        accessible
       />
     </Animated.View>
   );
@@ -53,7 +51,6 @@ export function Overlay({
 
 const styles = StyleSheet.create({
   overlay: {
-    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   pressable: {

@@ -1,10 +1,12 @@
 import type {
   HeaderBackButton,
+  HeaderBackButtonDisplayMode,
   HeaderBackButtonProps,
   HeaderOptions,
   HeaderTitleProps,
 } from '@react-navigation/elements';
 import type {
+  DefaultNavigatorOptions,
   Descriptor,
   LocaleDirection,
   NavigationHelpers,
@@ -14,10 +16,17 @@ import type {
   RouteProp,
   StackActionHelpers,
   StackNavigationState,
+  StackRouterOptions,
   Theme,
 } from '@react-navigation/native';
 import type * as React from 'react';
-import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type {
+  Animated,
+  ColorValue,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
 export type StackNavigationEventMap = {
   /**
@@ -51,31 +60,27 @@ export type StackNavigationHelpers = NavigationHelpers<
 export type StackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   StackNavigationState<ParamList>,
   StackNavigationOptions,
-  StackNavigationEventMap
-> &
-  StackActionHelpers<ParamList>;
+  StackNavigationEventMap,
+  StackActionHelpers<ParamList>
+>;
 
 export type StackScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: StackNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: StackNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
-export type StackScreenOptions<
+export type StackOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = StackScreenProps<ParamList, RouteName, NavigatorID> & {
+> = StackScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -91,6 +96,7 @@ export type StackAnimationName =
   | 'default'
   | 'fade'
   | 'fade_from_bottom'
+  | 'fade_from_right'
   | 'none'
   | 'reveal_from_bottom'
   | 'scale_from_center'
@@ -179,23 +185,31 @@ export type StackHeaderOptions = Omit<
   /**
    * Title string used by the back button on iOS.
    * Defaults to the previous screen's title, or "Back" if there's not enough space.
-   * Use `headerBackTitleVisible: false` to hide it.
+   * Use `headerBackButtonDisplayMode` to customize the behavior.
    */
   headerBackTitle?: string;
   /**
-   * Whether the back button title should be visible or not.
+   * Title string used by the back button when `headerBackTitle` doesn't fit on the screen.
+   * Use `headerBackButtonDisplayMode` to customize the behavior.
    *
-   * Defaults to `true` on iOS, `false on Android.
+   * Defaults to "Back".
    */
-  headerBackTitleVisible?: boolean;
+  headerBackTruncatedTitle?: string;
+  /**
+   * How the back button displays icon and title.
+   *
+   * Supported values:
+   * - "default" - Displays one of the following depending on the available space: previous screen's title, truncated title (e.g. 'Back') or no title (only icon).
+   * - "generic" – Displays one of the following depending on the available space: truncated title (e.g. 'Back') or no title (only icon).
+   * - "minimal" – Always displays only the icon without a title.
+   *
+   * Defaults to "default" on iOS, and "minimal" on other platforms.
+   */
+  headerBackButtonDisplayMode?: HeaderBackButtonDisplayMode;
   /**
    * Style object for the back title.
    */
   headerBackTitleStyle?: StyleProp<TextStyle>;
-  /**
-   * Title string used by the back button when `headerBackTitle` doesn't fit on the screen. `"Back"` by default.
-   */
-  headerTruncatedBackTitle?: string;
   /**
    * Function which returns a React Element to display custom image in header's back button.
    * It receives the `tintColor` in in the options object as an argument. object.
@@ -205,10 +219,6 @@ export type StackHeaderOptions = Omit<
 };
 
 export type StackHeaderProps = {
-  /**
-   * Layout of the screen.
-   */
-  layout: Layout;
   /**
    * Options for the back button.
    */
@@ -248,11 +258,11 @@ export type StackHeaderRightProps = {
   /**
    * Tint color for the header button.
    */
-  tintColor?: string;
+  tintColor?: ColorValue;
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
-  pressColor?: string;
+  pressColor?: ColorValue;
   /**
    * Opacity when the button is pressed, used when ripple is not supported.
    */
@@ -614,3 +624,13 @@ export type TransitionPreset = {
    */
   headerStyleInterpolator: StackHeaderStyleInterpolator;
 };
+
+export type StackNavigatorProps = DefaultNavigatorOptions<
+  ParamListBase,
+  StackNavigationState<ParamListBase>,
+  StackNavigationOptions,
+  StackNavigationEventMap,
+  StackNavigationProp<ParamListBase>
+> &
+  StackRouterOptions &
+  StackNavigationConfig;

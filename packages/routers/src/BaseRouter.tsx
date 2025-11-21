@@ -16,7 +16,8 @@ export const BaseRouter = {
     action: CommonNavigationAction
   ): State | PartialState<State> | null {
     switch (action.type) {
-      case 'SET_PARAMS': {
+      case 'SET_PARAMS':
+      case 'REPLACE_PARAMS': {
         const index = action.source
           ? state.routes.findIndex((r) => r.key === action.source)
           : state.index;
@@ -29,7 +30,39 @@ export const BaseRouter = {
           ...state,
           routes: state.routes.map((r, i) =>
             i === index
-              ? { ...r, params: { ...r.params, ...action.payload.params } }
+              ? {
+                  ...r,
+                  params:
+                    action.type === 'REPLACE_PARAMS'
+                      ? action.payload.params
+                      : { ...r.params, ...action.payload.params },
+                }
+              : r
+          ),
+        };
+      }
+
+      case 'PUSH_PARAMS': {
+        const index = action.source
+          ? state.routes.findIndex((r) => r.key === action.source)
+          : state.index;
+
+        if (index === -1) {
+          return null;
+        }
+
+        return {
+          ...state,
+          routes: state.routes.map((r, i) =>
+            i === index
+              ? {
+                  ...r,
+                  params: action.payload.params,
+                  history: [
+                    ...(r.history ?? []),
+                    { type: 'params', params: r.params },
+                  ],
+                }
               : r
           ),
         };
@@ -74,6 +107,6 @@ export const BaseRouter = {
   },
 
   shouldActionChangeFocus(action: CommonNavigationAction) {
-    return action.type === 'NAVIGATE' || action.type === 'NAVIGATE_DEPRECATED';
+    return action.type === 'NAVIGATE';
   },
 };

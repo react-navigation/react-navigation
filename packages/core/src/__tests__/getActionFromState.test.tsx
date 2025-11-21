@@ -1,6 +1,8 @@
+import { expect, test } from '@jest/globals';
+
 import { getActionFromState } from '../getActionFromState';
 
-it('gets navigate action from state', () => {
+test('gets navigate action from state', () => {
   const state = {
     routes: [
       {
@@ -41,13 +43,15 @@ it('gets navigate action from state', () => {
         },
         screen: 'bar',
         initial: true,
+        pop: true,
       },
+      pop: true,
     },
     type: 'NAVIGATE',
   });
 });
 
-it('gets navigate action from state for top-level screen', () => {
+test('gets navigate action from state for top-level screen', () => {
   const state = {
     routes: [
       {
@@ -68,7 +72,7 @@ it('gets navigate action from state for top-level screen', () => {
   });
 });
 
-it('gets reset action from state with 1 route with key at root', () => {
+test('gets reset action from state with 1 route with key at root', () => {
   const state = {
     routes: [
       {
@@ -125,7 +129,7 @@ it('gets reset action from state with 1 route with key at root', () => {
   });
 });
 
-it('gets reset action from state for top-level screen with 2 screens', () => {
+test('gets reset action from state for top-level screen with 2 screens', () => {
   const state = {
     routes: [
       {
@@ -158,7 +162,7 @@ it('gets reset action from state for top-level screen with 2 screens', () => {
   });
 });
 
-it('gets reset action from state for top-level screen with more than 2 screens with config', () => {
+test('gets reset action from state for top-level screen with more than 2 screens with config', () => {
   const state = {
     routes: [
       {
@@ -198,7 +202,7 @@ it('gets reset action from state for top-level screen with more than 2 screens w
   });
 });
 
-it('gets reset action from state for top-level screen with 2 screens with config', () => {
+test('gets reset action from state for top-level screen with 2 screens with config', () => {
   const state = {
     routes: [
       {
@@ -240,7 +244,7 @@ it('gets reset action from state for top-level screen with 2 screens with config
   });
 });
 
-it('gets navigate action from state for top-level screen with 2 screens with config', () => {
+test('gets navigate action from state for top-level screen with 2 screens with config', () => {
   const state = {
     routes: [
       {
@@ -272,7 +276,7 @@ it('gets navigate action from state for top-level screen with 2 screens with con
   });
 });
 
-it('gets navigate action from state for top-level screen with more than 2 screens with config with lower index', () => {
+test('gets navigate action from state for top-level screen with more than 2 screens with config with lower index', () => {
   const state = {
     index: 1,
     routes: [
@@ -306,7 +310,7 @@ it('gets navigate action from state for top-level screen with more than 2 screen
   });
 });
 
-it('gets navigate action from state with 2 screens', () => {
+test('gets navigate action from state with 2 screens', () => {
   const state = {
     routes: [
       {
@@ -337,6 +341,7 @@ it('gets navigate action from state with 2 screens', () => {
       params: {
         screen: 'bar',
         initial: true,
+        pop: true,
         params: {
           state: {
             routes: [
@@ -351,12 +356,13 @@ it('gets navigate action from state with 2 screens', () => {
           },
         },
       },
+      pop: true,
     },
     type: 'NAVIGATE',
   });
 });
 
-it('gets navigate action from state with 2 screens with lower index', () => {
+test('gets navigate action from state with 2 screens with lower index', () => {
   const state = {
     routes: [
       {
@@ -389,6 +395,7 @@ it('gets navigate action from state with 2 screens with lower index', () => {
       params: {
         screen: 'bar',
         initial: true,
+        pop: true,
         params: {
           screen: 'qux',
           initial: true,
@@ -398,12 +405,13 @@ it('gets navigate action from state with 2 screens with lower index', () => {
           path: '/foo/bar',
         },
       },
+      pop: true,
     },
     type: 'NAVIGATE',
   });
 });
 
-it('gets navigate action from state with more than 2 screens', () => {
+test('gets navigate action from state with more than 2 screens', () => {
   const state = {
     routes: [
       {
@@ -435,6 +443,7 @@ it('gets navigate action from state with more than 2 screens', () => {
       params: {
         screen: 'bar',
         initial: true,
+        pop: true,
         params: {
           state: {
             routes: [
@@ -450,12 +459,13 @@ it('gets navigate action from state with more than 2 screens', () => {
           },
         },
       },
+      pop: true,
     },
     type: 'NAVIGATE',
   });
 });
 
-it('gets navigate action from state with config', () => {
+test('gets navigate action from state with config', () => {
   const state = {
     routes: [
       {
@@ -509,13 +519,15 @@ it('gets navigate action from state with config', () => {
         },
         screen: 'bar',
         initial: true,
+        pop: true,
       },
+      pop: true,
     },
     type: 'NAVIGATE',
   });
 });
 
-it('gets navigate action from state for top-level screen with config', () => {
+test('gets navigate action from state for top-level screen with config', () => {
   const state = {
     routes: [
       {
@@ -548,7 +560,7 @@ it('gets navigate action from state for top-level screen with config', () => {
   });
 });
 
-it('gets navigate action from state with 2 screens including initial route and with config', () => {
+test('gets navigate action from state with 2 screens including initial route and with config', () => {
   const state = {
     routes: [
       {
@@ -590,20 +602,22 @@ it('gets navigate action from state with 2 screens including initial route and w
     payload: {
       name: 'foo',
       params: {
-        initial: true,
         screen: 'bar',
+        initial: true,
+        pop: true,
         params: {
           screen: 'quz',
           initial: false,
           path: '/foo/bar',
         },
       },
+      pop: true,
     },
     type: 'NAVIGATE',
   });
 });
 
-it('gets navigate action from state with 2 screens without initial route and with config', () => {
+test('gets navigate action from state with 2 screens without initial route and with config', () => {
   const state = {
     routes: [
       {
@@ -645,8 +659,9 @@ it('gets navigate action from state with 2 screens without initial route and wit
     payload: {
       name: 'foo',
       params: {
-        initial: true,
         screen: 'bar',
+        initial: true,
+        pop: true,
         params: {
           state: {
             routes: [
@@ -661,12 +676,13 @@ it('gets navigate action from state with 2 screens without initial route and wit
           },
         },
       },
+      pop: true,
     },
     type: 'NAVIGATE',
   });
 });
 
-it('gets navigate action from state with 2 screens including route with key on initial route and with config', () => {
+test('gets navigate action from state with 2 screens including route with key on initial route and with config', () => {
   const state = {
     routes: [
       {
@@ -709,8 +725,9 @@ it('gets navigate action from state with 2 screens including route with key on i
     payload: {
       name: 'foo',
       params: {
-        initial: true,
         screen: 'bar',
+        initial: true,
+        pop: true,
         params: {
           state: {
             routes: [
@@ -726,12 +743,13 @@ it('gets navigate action from state with 2 screens including route with key on i
           },
         },
       },
+      pop: true,
     },
     type: 'NAVIGATE',
   });
 });
 
-it('gets navigate action from state with 2 screens including route with key on 2nd route and with config', () => {
+test('gets navigate action from state with 2 screens including route with key on 2nd route and with config', () => {
   const state = {
     routes: [
       {
@@ -776,8 +794,9 @@ it('gets navigate action from state with 2 screens including route with key on 2
     payload: {
       name: 'foo',
       params: {
-        initial: true,
         screen: 'bar',
+        initial: true,
+        pop: true,
         params: {
           state: {
             routes: [
@@ -795,12 +814,13 @@ it('gets navigate action from state with 2 screens including route with key on 2
           },
         },
       },
+      pop: true,
     },
     type: 'NAVIGATE',
   });
 });
 
-it('gets navigate action from state with more than 2 screens and with config', () => {
+test('gets navigate action from state with more than 2 screens and with config', () => {
   const state = {
     routes: [
       {
@@ -843,8 +863,9 @@ it('gets navigate action from state with more than 2 screens and with config', (
     payload: {
       name: 'foo',
       params: {
-        initial: true,
         screen: 'bar',
+        initial: true,
+        pop: true,
         params: {
           state: {
             routes: [
@@ -860,12 +881,13 @@ it('gets navigate action from state with more than 2 screens and with config', (
           },
         },
       },
+      pop: true,
     },
     type: 'NAVIGATE',
   });
 });
 
-it('gets navigate action from state with more than 2 screens with lower index', () => {
+test('gets navigate action from state with more than 2 screens with lower index', () => {
   const state = {
     routes: [
       {
@@ -912,6 +934,7 @@ it('gets navigate action from state with more than 2 screens with lower index', 
       params: {
         screen: 'bar',
         initial: true,
+        pop: true,
         params: {
           screen: 'qux',
           initial: false,
@@ -921,16 +944,17 @@ it('gets navigate action from state with more than 2 screens with lower index', 
           },
         },
       },
+      pop: true,
     },
     type: 'NAVIGATE',
   });
 });
 
-it("doesn't return action if no routes are provided'", () => {
+test("doesn't return action if no routes are provided'", () => {
   expect(getActionFromState({ routes: [] })).toBeUndefined();
 });
 
-it('gets undefined action from state', () => {
+test('gets undefined action from state', () => {
   const state = {
     routes: [
       {
@@ -951,4 +975,100 @@ it('gets undefined action from state', () => {
 
   expect(getActionFromState(state)).toBeUndefined();
   expect(getActionFromState({ routes: [] })).toBeUndefined();
+});
+
+test('gets navigate action with pop if config has nested screens at top level', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+      },
+    ],
+  };
+
+  const config = {
+    screens: {
+      foo: {
+        screens: {
+          bar: {
+            screens: {
+              qux: {
+                initialRouteName: 'quz',
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      name: 'foo',
+      params: {},
+      pop: true,
+    },
+    type: 'NAVIGATE',
+  });
+});
+
+test('gets navigate action with pop if config has nested screens at nested level', () => {
+  const state = {
+    routes: [
+      {
+        name: 'foo',
+        state: {
+          routes: [
+            {
+              name: 'bar',
+              state: {
+                routes: [
+                  {
+                    name: 'qux',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const config = {
+    screens: {
+      foo: {
+        screens: {
+          bar: {
+            screens: {
+              qux: {
+                initialRouteName: 'quz',
+                screens: {
+                  quz: {},
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      name: 'foo',
+      params: {
+        initial: true,
+        params: {
+          initial: true,
+          pop: true,
+          screen: 'qux',
+        },
+        pop: true,
+        screen: 'bar',
+      },
+      pop: true,
+    },
+    type: 'NAVIGATE',
+  });
 });

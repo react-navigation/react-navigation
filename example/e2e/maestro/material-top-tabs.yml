@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+name: Material Top Tabs
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: material-top-tabs-screen
+      TEXT: 'Material Top Tabs'

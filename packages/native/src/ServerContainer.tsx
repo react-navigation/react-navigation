@@ -25,6 +25,7 @@ export const ServerContainer = React.forwardRef(function ServerContainer(
     );
   }, []);
 
+  // eslint-disable-next-line @eslint-react/no-unstable-context-value
   const current: { options?: object } = {};
 
   if (ref) {
@@ -41,12 +42,12 @@ export const ServerContainer = React.forwardRef(function ServerContainer(
     if (typeof ref === 'function') {
       ref(value);
     } else {
-      // @ts-expect-error: the TS types are incorrect and say that ref.current is readonly
       ref.current = value;
     }
   }
 
   return (
+    // eslint-disable-next-line @eslint-react/no-unstable-context-value
     <ServerContext.Provider value={{ location }}>
       <CurrentRenderContext.Provider value={current}>
         {children}

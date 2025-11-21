@@ -1,7 +1,7 @@
 {
   "name": "react-native-drawer-layout",
   "description": "Drawer component for React Native",
-  "version": "4.0.0-alpha.6",
+  "version": "4.1.12",
   "keywords": [
     "react-native-component",
     "react-component",
@@ -21,11 +21,16 @@
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
   "homepage": "https://reactnavigation.org/docs/drawer-layout/",
-  "main": "lib/commonjs/index.js",
-  "react-native": "src/index.tsx",
-  "source": "src/index.tsx",
-  "module": "lib/module/index.js",
-  "types": "lib/typescript/src/index.d.ts",
+  "main": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.tsx",
+      "types": "./lib/typescript/src/index.d.ts",
+      "default": "./lib/module/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "src",
     "lib",
@@ -37,27 +42,32 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "use-latest-callback": "^0.1.9"
+    "color": "^4.2.3",
+    "use-latest-callback": "^0.3.2"
   },
   "devDependencies": {
-    "del-cli": "^5.1.0",
-    "react": "18.2.0",
-    "react-native": "0.73.2",
-    "react-native-builder-bob": "^0.23.2",
-    "typescript": "^5.3.3"
+    "del-cli": "^6.0.0",
+    "react": "19.1.0",
+    "react-native": "0.81.4",
+    "react-native-builder-bob": "^0.40.12",
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
-    "react": ">= 18.2.0",
-    "react-native": ">= 0.72.0",
+    "react": ">= 19.0.0",
+    "react-native": "*",
     "react-native-gesture-handler": ">= 2.0.0",
-    "react-native-reanimated": ">= 2.0.0"
+    "react-native-reanimated": ">= 3.0.0"
   },
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
       [
         "typescript",
         {

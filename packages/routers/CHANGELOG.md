@@ -3,6 +3,144 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.4.1...@react-navigation/routers@7.5.0) (2025-07-25)
+
+### Features
+
+* preserve params for backBehavior=fullHistory ([3f854bc](https://github.com/react-navigation/react-navigation/commit/3f854bc8f450672b7c24cb4c6fea1dce0682f6aa)) - by @satya164
+
+## [7.4.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.4.0...@react-navigation/routers@7.4.1) (2025-06-14)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+# [7.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.7...@react-navigation/routers@7.4.0) (2025-05-30)
+
+### Features
+
+* add a REPLACE_PARAMS action ([9739421](https://github.com/react-navigation/react-navigation/commit/97394212d88ccfc464db850b8a95d129befa5c80)) - by @satya164
+* add backBehavior: fullHistory to TabRouter ([e95e8bb](https://github.com/react-navigation/react-navigation/commit/e95e8bbf1f096929c6d443696459bf55af70c9d6)) - by @satya164
+
+## [7.3.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.6...@react-navigation/routers@7.3.7) (2025-05-04)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+## [7.3.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.5...@react-navigation/routers@7.3.6) (2025-05-02)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+## [7.3.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.4...@react-navigation/routers@7.3.5) (2025-04-08)
+
+### Bug Fixes
+
+* add types field back to support legacy moduleResolution ([6c021d4](https://github.com/react-navigation/react-navigation/commit/6c021d442ede3a231e32486b2c391c2e850bf76e)), closes [#12534](https://github.com/react-navigation/react-navigation/issues/12534) - by @
+
+## [7.3.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.2...@react-navigation/routers@7.3.4) (2025-04-04)
+
+### Bug Fixes
+
+* drop commonjs module to avoid dual package hazard ([f0fbcc5](https://github.com/react-navigation/react-navigation/commit/f0fbcc5515e73b454f607bd95bba40a48e852d0f)) - by @satya164
+
+## [7.3.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.2...@react-navigation/routers@7.3.3) (2025-04-02)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+## [7.3.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.1...@react-navigation/routers@7.3.2) (2025-04-01)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+## [7.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.3.0...@react-navigation/routers@7.3.1) (2025-03-22)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+# [7.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.2.0...@react-navigation/routers@7.3.0) (2025-03-19)
+
+### Bug Fixes
+
+* revert types for screen & params pair ([154b90c](https://github.com/react-navigation/react-navigation/commit/154b90cd86d4231b6f1d68738f22541c18d5f9df)), closes [/github.com/react-navigation/react-navigation/commit/a528b9b407dbaeaac0caae8edcb5b3c6840144fa#diff-9c2709d8522a6b9ec9697dd54c966da28deee393cc5effe69b47fdf93a2dbc5](https://github.com//github.com/react-navigation/react-navigation/commit/a528b9b407dbaeaac0caae8edcb5b3c6840144fa/issues/diff-9c2709d8522a6b9ec9697dd54c966da28deee393cc5effe69b47fdf93a2dbc5) [#12372](https://github.com/react-navigation/react-navigation/issues/12372) - by @satya164
+
+### Features
+
+* add pop option to navigate ([af19493](https://github.com/react-navigation/react-navigation/commit/af1949312d752849bfa72a708880e43fdcfab575)) - by @satya164
+
+# [7.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.1.2...@react-navigation/routers@7.2.0) (2025-03-02)
+
+### Bug Fixes
+
+* pop for deep links to screens containing navigators ([05d2d97](https://github.com/react-navigation/react-navigation/commit/05d2d97157ac1abf17957ee402634aa651b053ba)) - by @satya164
+
+### Features
+
+* add a pop option to navigate ([492237d](https://github.com/react-navigation/react-navigation/commit/492237d4a5ac2c3a3095a9a429bb1a440260301a)) - by @satya164
+
+## [7.1.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.1.1...@react-navigation/routers@7.1.2) (2024-12-12)
+
+### Bug Fixes
+
+* nanoid vulberable version ([#12328](https://github.com/react-navigation/react-navigation/issues/12328)) ([2a745c8](https://github.com/react-navigation/react-navigation/commit/2a745c8c598f95fcec5bbf5442045478d4046663)) - by @khushilms
+
+## [7.1.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.1.0...@react-navigation/routers@7.1.1) (2024-11-28)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+# [7.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0...@react-navigation/routers@7.1.0) (2024-11-26)
+
+### Features
+
+* add merge as third param to navigate and update tests ([b8bdd01](https://github.com/react-navigation/react-navigation/commit/b8bdd019b9e9381f7ae060eb3dd291b3bac3c4b7)) - by @
+
+# [7.0.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-rc.8...@react-navigation/routers@7.0.0) (2024-11-06)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+# [7.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-rc.7...@react-navigation/routers@7.0.0-rc.8) (2024-08-07)
+
+### Bug Fixes
+
+* improve how navigate and other methods are typed ([#12093](https://github.com/react-navigation/react-navigation/issues/12093)) ([a528b9b](https://github.com/react-navigation/react-navigation/commit/a528b9b407dbaeaac0caae8edcb5b3c6840144fa)) - by @satya164
+* match push and jumpTo types to navigate ([23d9f2e](https://github.com/react-navigation/react-navigation/commit/23d9f2e2b03123cc2a5c984afc60c5276fee5c84)) - by @satya164
+
+# [7.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-rc.6...@react-navigation/routers@7.0.0-rc.7) (2024-08-01)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+# [7.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-rc.5...@react-navigation/routers@7.0.0-rc.6) (2024-07-11)
+
+### Bug Fixes
+
+* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
+
+# [7.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-rc.4...@react-navigation/routers@7.0.0-rc.5) (2024-07-07)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+# [7.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-rc.3...@react-navigation/routers@7.0.0-rc.4) (2024-07-04)
+
+### Bug Fixes
+
+* fix published files ([829caa0](https://github.com/react-navigation/react-navigation/commit/829caa019e125811eea5213fd380e8e1bdbe7030)) - by @
+
+# [7.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-rc.2...@react-navigation/routers@7.0.0-rc.3) (2024-07-04)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+# [7.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-rc.1...@react-navigation/routers@7.0.0-rc.2) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
+# [7.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-rc.0...@react-navigation/routers@7.0.0-rc.1) (2024-07-01)
+
+### Bug Fixes
+
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
+# [7.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-alpha.6...@react-navigation/routers@7.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* Invalid Property Access on non existent entry ([#11990](https://github.com/react-navigation/react-navigation/issues/11990)) ([dadd650](https://github.com/react-navigation/react-navigation/commit/dadd6505ca881032700ba37ee65c6ce69006d448)) - by @braandl
+
 # [7.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.0.0-alpha.5...@react-navigation/routers@7.0.0-alpha.6) (2024-02-23)
 
 **Note:** Version bump only for package @react-navigation/routers

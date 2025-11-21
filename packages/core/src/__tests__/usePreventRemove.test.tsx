@@ -1,10 +1,10 @@
+import { beforeEach, expect, jest, test } from '@jest/globals';
 import {
   type ParamListBase,
   StackActions,
   StackRouter,
 } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
-import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
@@ -22,11 +22,10 @@ jest.mock('nanoid/non-secure', () => {
 beforeEach(() => {
   MockRouterKey.current = 0;
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   require('nanoid/non-secure').__key = 0;
 });
 
-it("prevents removing a screen with 'usePreventRemove' hook", () => {
+test("prevents removing a screen with 'usePreventRemove' hook", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -140,7 +139,7 @@ it("prevents removing a screen with 'usePreventRemove' hook", () => {
   });
 });
 
-it("prevents removing a screen when 'usePreventRemove' hook is called multiple times", () => {
+test("prevents removing a screen when 'usePreventRemove' hook is called multiple times", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -256,7 +255,7 @@ it("prevents removing a screen when 'usePreventRemove' hook is called multiple t
   });
 });
 
-it("should have no effect when 'usePreventRemove' hook is set to false", () => {
+test("should have no effect when 'usePreventRemove' hook is set to false", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -360,7 +359,7 @@ it("should have no effect when 'usePreventRemove' hook is set to false", () => {
   expect(onPreventRemove).toHaveBeenCalledTimes(0);
 });
 
-it("prevents removing a child screen with 'usePreventRemove' hook", () => {
+test("prevents removing a child screen with 'usePreventRemove' hook", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -533,7 +532,7 @@ it("prevents removing a child screen with 'usePreventRemove' hook", () => {
   });
 });
 
-it("prevents removing a grand child screen with 'usePreventRemove' hook", () => {
+test("prevents removing a grand child screen with 'usePreventRemove' hook", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -711,7 +710,7 @@ it("prevents removing a grand child screen with 'usePreventRemove' hook", () => 
   });
 });
 
-it("prevents removing by multiple screens with 'usePreventRemove' hook", () => {
+test("prevents removing by multiple screens with 'usePreventRemove' hook", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -871,7 +870,7 @@ it("prevents removing by multiple screens with 'usePreventRemove' hook", () => {
   });
 });
 
-it("prevents removing a child screen with 'usePreventRemove' hook with 'resetRoot'", () => {
+test("prevents removing a child screen with 'usePreventRemove' hook with 'resetRoot'", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,

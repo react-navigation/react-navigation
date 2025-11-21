@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+name: Dynamic Tabs
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: dynamic-tabs
+      TEXT: 'Tab 0'

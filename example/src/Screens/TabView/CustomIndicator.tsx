@@ -1,12 +1,11 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { Text } from '@react-navigation/elements';
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
-  type NavigationState,
   SceneMap,
-  type SceneRendererProps,
   TabBar,
   type TabBarIndicatorProps,
   TabView,
@@ -20,8 +19,6 @@ type Route = {
   key: string;
   icon: React.ComponentProps<typeof Ionicons>['name'];
 };
-
-type State = NavigationState<Route>;
 
 const renderScene = SceneMap({
   article: () => <Article />,
@@ -105,20 +102,12 @@ export const CustomIndicator = () => {
     return <Ionicons name={props.route.icon} style={styles.icon} {...props} />;
   }, []);
 
-  const renderTabBar = (
-    props: SceneRendererProps & { navigationState: State }
-  ) => (
+  const renderTabBar: React.ComponentProps<
+    typeof TabView<Route>
+  >['renderTabBar'] = (props) => (
     <View style={[styles.tabbar, { paddingBottom: insets.bottom }]}>
       <TabBar
         {...props}
-        commonOptions={{
-          icon: renderIcon,
-        }}
-        options={{
-          albums: {
-            badge: renderBadge,
-          },
-        }}
         direction={direction}
         renderIndicator={renderIndicator}
         style={styles.tabbar}
@@ -133,6 +122,14 @@ export const CustomIndicator = () => {
       navigationState={{
         index,
         routes,
+      }}
+      commonOptions={{
+        icon: renderIcon,
+      }}
+      options={{
+        albums: {
+          badge: renderBadge,
+        },
       }}
       direction={direction}
       renderScene={renderScene}

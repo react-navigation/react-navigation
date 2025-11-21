@@ -1,40 +1,22 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { Button } from '@react-navigation/elements';
-import { useTheme } from '@react-navigation/native';
+import {
+  type StaticScreenProps,
+  useLocale,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Drawer, useDrawerProgress } from 'react-native-drawer-layout';
-import Animated, {
-  interpolate,
-  type SharedValue,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
+import { Drawer } from 'react-native-drawer-layout';
 
-const RealDrawer = () => {
-  const progress = useDrawerProgress() as SharedValue<number>;
+import { DrawerProgress } from '../Shared/DrawerProgress';
 
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(progress.value, [0, 1], [56, 0]),
-        },
-      ],
-    };
-  });
+const DRAWER_TYPES = ['front', 'back', 'slide', 'permanent'] as const;
 
-  return (
-    <View style={styles.realDrawerWrapper}>
-      <Animated.View style={[styles.realDrawer, animatedStyle]} />
-    </View>
-  );
-};
-
-const DRAWER_TYPES = ['front', 'back', 'slide'] as const;
-
-export function DrawerView() {
+export function DrawerView(_: StaticScreenProps<{}>) {
   const { showActionSheetWithOptions } = useActionSheet();
   const { colors } = useTheme();
+  const { direction } = useLocale();
 
   const [open, setOpen] = React.useState(false);
   const [drawerType, setDrawerType] =
@@ -48,6 +30,7 @@ export function DrawerView() {
       open={open}
       onOpen={() => setOpen(true)}
       onClose={() => setOpen(false)}
+      direction={direction}
       drawerType={drawerType}
       drawerPosition={drawerPosition}
       renderDrawerContent={() => {
@@ -61,7 +44,7 @@ export function DrawerView() {
       }}
     >
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <RealDrawer />
+        <DrawerProgress />
         <View style={styles.buttons}>
           <Button
             variant="filled"
@@ -121,23 +104,5 @@ const styles = StyleSheet.create({
   },
   buttons: {
     gap: 8,
-  },
-  realDrawerWrapper: {
-    width: 64,
-    height: 72,
-    marginBottom: 8,
-    overflow: 'hidden',
-  },
-  realDrawer: {
-    position: 'absolute',
-    top: 0,
-    start: 0,
-    end: 8,
-    bottom: 0,
-    backgroundColor: '#ebdec1',
-    borderColor: '#3e3a3a',
-    borderWidth: 4,
-    borderBottomWidth: 0,
-    borderRadius: 2,
   },
 });

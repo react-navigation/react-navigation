@@ -69,14 +69,14 @@ export type DrawerActionHelpers<ParamList extends ParamListBase> =
 
 export const DrawerActions = {
   ...TabActions,
-  openDrawer(): DrawerActionType {
-    return { type: 'OPEN_DRAWER' };
+  openDrawer() {
+    return { type: 'OPEN_DRAWER' } as const satisfies DrawerActionType;
   },
-  closeDrawer(): DrawerActionType {
-    return { type: 'CLOSE_DRAWER' };
+  closeDrawer() {
+    return { type: 'CLOSE_DRAWER' } as const satisfies DrawerActionType;
   },
-  toggleDrawer(): DrawerActionType {
-    return { type: 'TOGGLE_DRAWER' };
+  toggleDrawer() {
+    return { type: 'TOGGLE_DRAWER' } as const satisfies DrawerActionType;
   },
 };
 
@@ -221,8 +221,7 @@ export function DrawerRouter({
           return addDrawerToHistory(state);
 
         case 'JUMP_TO':
-        case 'NAVIGATE':
-        case 'NAVIGATE_DEPRECATED': {
+        case 'NAVIGATE': {
           const result = router.getStateForAction(state, action, options);
 
           if (result != null && result.index !== state.index) {

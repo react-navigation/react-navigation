@@ -3,6 +3,188 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.1.12](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.11...react-native-drawer-layout@4.1.12) (2025-07-07)
+
+### Bug Fixes
+
+* add px to drawer width on web. fixes [#12674](https://github.com/react-navigation/react-navigation/issues/12674) ([7e5ecb3](https://github.com/react-navigation/react-navigation/commit/7e5ecb39a025d0f6b94a9fe2a316b42450fde25d)) - by @
+
+## [4.1.11](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.10...react-native-drawer-layout@4.1.11) (2025-06-14)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
+## [4.1.10](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.9...react-native-drawer-layout@4.1.10) (2025-05-30)
+
+### Bug Fixes
+
+* position drawer offscreen by default on web ([833bfa6](https://github.com/react-navigation/react-navigation/commit/833bfa63004deeb0fd6e17faf6d65ea220ad1527)) - by @
+
+## [4.1.9](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.8...react-native-drawer-layout@4.1.9) (2025-05-30)
+
+### Bug Fixes
+
+* allow Overlay to be focusable in iOS with Full Keyboard Access enabled ([#12600](https://github.com/react-navigation/react-navigation/issues/12600)) ([e1a6387](https://github.com/react-navigation/react-navigation/commit/e1a6387f420631e57a6736ac0ed67a1f434d554b)) - by @ckknight
+* fix drawer tab order on web for better accessibility ([#12616](https://github.com/react-navigation/react-navigation/issues/12616)) ([ac51096](https://github.com/react-navigation/react-navigation/commit/ac51096e40d879cd8d065d4d2fc6497ecbe552bc)) - by @angelalagao
+* keep drawer anchored to left/right on web ([0d7379b](https://github.com/react-navigation/react-navigation/commit/0d7379b2f7338cb28fbba8473d7d93c2e4458f8c)) - by @satya164
+
+## [4.1.8](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.7...react-native-drawer-layout@4.1.8) (2025-05-04)
+
+### Bug Fixes
+
+* fix peer dep versions. closes [#12580](https://github.com/react-navigation/react-navigation/issues/12580) ([6fc3dd6](https://github.com/react-navigation/react-navigation/commit/6fc3dd677aecdcf8696fe723e17b9c028de7ad85)) - by @satya164
+
+## [4.1.7](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.6...react-native-drawer-layout@4.1.7) (2025-05-02)
+
+### Bug Fixes
+
+* use aria props instead of accessibilityX ([#11848](https://github.com/react-navigation/react-navigation/issues/11848)) ([347ca97](https://github.com/react-navigation/react-navigation/commit/347ca975406e84a5e7452679b1dde7b9ecca1a22)) - by @satya164
+
+## [4.1.6](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.5...react-native-drawer-layout@4.1.6) (2025-04-08)
+
+### Bug Fixes
+
+* add types field back to support legacy moduleResolution ([6c021d4](https://github.com/react-navigation/react-navigation/commit/6c021d442ede3a231e32486b2c391c2e850bf76e)), closes [#12534](https://github.com/react-navigation/react-navigation/issues/12534) - by @
+
+## [4.1.5](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.3...react-native-drawer-layout@4.1.5) (2025-04-04)
+
+### Bug Fixes
+
+* drop commonjs module to avoid dual package hazard ([f0fbcc5](https://github.com/react-navigation/react-navigation/commit/f0fbcc5515e73b454f607bd95bba40a48e852d0f)) - by @satya164
+
+## [4.1.4](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.3...react-native-drawer-layout@4.1.4) (2025-04-02)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
+## [4.1.3](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.2...react-native-drawer-layout@4.1.3) (2025-04-01)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
+## [4.1.2](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.1...react-native-drawer-layout@4.1.2) (2025-03-19)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
+## [4.1.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.0...react-native-drawer-layout@4.1.1) (2024-12-12)
+
+### Bug Fixes
+
+* fix pressables not receiving touch in drawer ([9831292](https://github.com/react-navigation/react-navigation/commit/9831292375ddf6daca1cbf82cbe904ed4d73f7db)), closes [#12324](https://github.com/react-navigation/react-navigation/issues/12324) - by @
+
+# [4.1.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.4...react-native-drawer-layout@4.1.0) (2024-12-11)
+
+### Features
+
+* provide gesture in DrawerGestureContext ([#12326](https://github.com/react-navigation/react-navigation/issues/12326)) ([fcf3f77](https://github.com/react-navigation/react-navigation/commit/fcf3f7790a7c1c53edb5deea16d022ef8d42a5e6)) - by @gaearon
+
+## [4.0.4](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.3...react-native-drawer-layout@4.0.4) (2024-12-03)
+
+### Bug Fixes
+
+* remove zIndex from overlay to avoid flicker ([f662e27](https://github.com/react-navigation/react-navigation/commit/f662e274247088b142ef3087bf560f7542d4ef29)), closes [#12137](https://github.com/react-navigation/react-navigation/issues/12137) - by @
+
+## [4.0.3](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.2...react-native-drawer-layout@4.0.3) (2024-11-28)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
+## [4.0.2](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.1...react-native-drawer-layout@4.0.2) (2024-11-22)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
+## [4.0.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0...react-native-drawer-layout@4.0.1) (2024-11-09)
+
+### Bug Fixes
+
+* **drawer:** fix gesture handler warnings to mark worklets explicitly  ([#12240](https://github.com/react-navigation/react-navigation/issues/12240)) ([13c0cc4](https://github.com/react-navigation/react-navigation/commit/13c0cc4126db6014e97ae4ff2e9d5f9af0697cfc)) - by @efstathiosntonas
+
+# [4.0.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.11...react-native-drawer-layout@4.0.0) (2024-11-06)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
+# [4.0.0-rc.11](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.10...react-native-drawer-layout@4.0.0-rc.11) (2024-10-24)
+
+### Bug Fixes
+
+* use * for react-native peer dep to support pre-release versions ([07267e5](https://github.com/react-navigation/react-navigation/commit/07267e54be752f600f808ec2898e5d76a1bc1d43)) - by @satya164
+
+# [4.0.0-rc.10](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.9...react-native-drawer-layout@4.0.0-rc.10) (2024-08-01)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
+# [4.0.0-rc.9](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.8...react-native-drawer-layout@4.0.0-rc.9) (2024-07-25)
+
+### Bug Fixes
+
+* remove transition listeners in effect cleanup ([000f7ba](https://github.com/react-navigation/react-navigation/commit/000f7ba4311364907d6efc1ed4a662c9b462e733)) - by @satya164
+
+# [4.0.0-rc.8](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.7...react-native-drawer-layout@4.0.0-rc.8) (2024-07-14)
+
+### Bug Fixes
+
+* fix drawer animation when reduceMotion enabled. closes [#1198](https://github.com/react-navigation/react-navigation/issues/1198) ([c2caf87](https://github.com/react-navigation/react-navigation/commit/c2caf87bc5df50f665442fbb0c42794cad793a3a)) - by @satya164
+
+# [4.0.0-rc.7](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.6...react-native-drawer-layout@4.0.0-rc.7) (2024-07-11)
+
+### Bug Fixes
+
+* upgrade react-native-builder-bob ([1575287](https://github.com/react-navigation/react-navigation/commit/1575287d40fadb97f33eb19c2914d8be3066b47a)) - by @
+
+# [4.0.0-rc.6](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.5...react-native-drawer-layout@4.0.0-rc.6) (2024-07-10)
+
+### Bug Fixes
+
+* bump use-latest-callback to fix require ([40ddae9](https://github.com/react-navigation/react-navigation/commit/40ddae95fbbf84ff47f3447eef50ed9ddb66cab8)) - by @satya164
+
+# [4.0.0-rc.5](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.4...react-native-drawer-layout@4.0.0-rc.5) (2024-07-07)
+
+### Bug Fixes
+
+* add missing exports entry to package.json ([ae16f52](https://github.com/react-navigation/react-navigation/commit/ae16f52adcfb58c59e5735b9caea79b1c2bfa94b)) - by @satya164
+* upgrade use-latest-callback for esm compat ([187d41b](https://github.com/react-navigation/react-navigation/commit/187d41b3a139fe2a075a7809c0c4088cbd2fafdb)) - by @satya164
+
+# [4.0.0-rc.4](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.3...react-native-drawer-layout@4.0.0-rc.4) (2024-07-04)
+
+### Bug Fixes
+
+* fix published files ([829caa0](https://github.com/react-navigation/react-navigation/commit/829caa019e125811eea5213fd380e8e1bdbe7030)) - by @
+
+# [4.0.0-rc.3](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.2...react-native-drawer-layout@4.0.0-rc.3) (2024-07-04)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
+# [4.0.0-rc.2](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.1...react-native-drawer-layout@4.0.0-rc.2) (2024-07-04)
+
+### Features
+
+* add package.json exports field ([1435cfe](https://github.com/react-navigation/react-navigation/commit/1435cfe3300767c221ebd4613479ad662d61efee)) - by @
+
+# [4.0.0-rc.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-rc.0...react-native-drawer-layout@4.0.0-rc.1) (2024-07-01)
+
+### Bug Fixes
+
+* stop using react-native field in package.json ([efc33cb](https://github.com/react-navigation/react-navigation/commit/efc33cb0c4830a84ceae034dc1278c54f1faf32d)) - by @
+
+# [4.0.0-rc.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.9...react-native-drawer-layout@4.0.0-rc.0) (2024-06-27)
+
+### Bug Fixes
+
+* fix drawer rtl on ios & android ([6fba631](https://github.com/react-navigation/react-navigation/commit/6fba631b588d83be0a731017adb46ce79ca9b2ec)) - by @satya164
+* fix drawer rtl on web ([06209b9](https://github.com/react-navigation/react-navigation/commit/06209b9f04171c18b51638593d3f0fd5028a97f8)) - by @satya164
+
+# [4.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.8...react-native-drawer-layout@4.0.0-alpha.9) (2024-03-25)
+
+### Features
+
+* migrate drawer to new RNGH API ([#11776](https://github.com/react-navigation/react-navigation/issues/11776)) ([5d7d81e](https://github.com/react-navigation/react-navigation/commit/5d7d81e633896b3a58e86d8ab9ca0a36dcad3ab6)) - by @osdnk
+
+# [4.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.7...react-native-drawer-layout@4.0.0-alpha.8) (2024-03-14)
+
+### Bug Fixes
+
+* adjust drawer width according to md3 ([a88b2ea](https://github.com/react-navigation/react-navigation/commit/a88b2ea90f56d8dafbd5e1bae6a42fd9b0c73431)) - by @satya164
+
+# [4.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.6...react-native-drawer-layout@4.0.0-alpha.7) (2024-03-10)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
 # [4.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.0.0-alpha.5...react-native-drawer-layout@4.0.0-alpha.6) (2024-03-08)
 
 ### Bug Fixes

@@ -20,7 +20,6 @@ export { DrawerStatusContext } from './utils/DrawerStatusContext';
 export { getDrawerStatusFromState } from './utils/getDrawerStatusFromState';
 export { useDrawerStatus } from './utils/useDrawerStatus';
 export {
-  DrawerGestureContext,
   DrawerProgressContext,
   useDrawerProgress,
 } from 'react-native-drawer-layout';
@@ -34,6 +33,7 @@ export type {
   DrawerNavigationEventMap,
   DrawerNavigationOptions,
   DrawerNavigationProp,
-  DrawerScreenOptions,
+  DrawerNavigatorProps,
+  DrawerOptionsArgs,
   DrawerScreenProps,
 } from './types';

@@ -1,5 +1,5 @@
-name: React Navigation 6
-description: Report an issue with React Navigation 6
+name: Bug report
+description: Report an issue with React Navigation
 labels: [bug]
 body:
   - type: markdown
@@ -70,6 +70,7 @@ body:
         - label: '@react-navigation/material-top-tabs'
         - label: '@react-navigation/stack'
         - label: '@react-navigation/native-stack'
+        - label: 'react-native-drawer-layout'
         - label: 'react-native-tab-view'
   - type: textarea
     attributes:
@@ -89,11 +90,12 @@ body:
         | @react-navigation/material-top-tabs    |
         | @react-navigation/stack                |
         | @react-navigation/native-stack         |
-        | react-native-safe-area-context         |
+        | react-native-drawer-layout             |
+        | react-native-tab-view                  |
         | react-native-screens                   |
+        | react-native-safe-area-context         |
         | react-native-gesture-handler           |
         | react-native-reanimated                |
-        | react-native-tab-view                  |
         | react-native-pager-view                |
         | react-native                           |
         | expo                                   |

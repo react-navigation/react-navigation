@@ -1,3 +1,4 @@
+import { Text } from '@react-navigation/elements';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -5,7 +6,6 @@ import {
   ScrollView,
   type ScrollViewProps,
   StyleSheet,
-  Text,
   type TextProps,
   View,
 } from 'react-native';
@@ -39,11 +39,13 @@ const Paragraph = ({
   );
 };
 
+const DEFAULT_AUTHOR = {
+  name: 'Knowledge Bot',
+};
+
 export function Article({
   date = '1st Jan 2025',
-  author = {
-    name: 'Knowledge Bot',
-  },
+  author = DEFAULT_AUTHOR,
   ...rest
 }: Props) {
   const ref = React.useRef<ScrollView>(null);
@@ -62,7 +64,7 @@ export function Article({
       <View style={styles.author}>
         <Image
           style={styles.avatar}
-          source={require('../../assets/avatar-1.png')}
+          source={require('../../assets/misc/avatar-1.png')}
         />
         <View style={styles.meta}>
           <Text style={[styles.name, { color: colors.text }]}>
@@ -86,7 +88,7 @@ export function Article({
       <Image
         style={styles.image}
         resizeMode="cover"
-        source={require('../../assets/book.jpg')}
+        source={require('../../assets/misc/book.jpg')}
       />
       <Heading>Where does it come from?</Heading>
       <Paragraph>

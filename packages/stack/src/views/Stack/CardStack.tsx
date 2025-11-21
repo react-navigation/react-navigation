@@ -1,5 +1,4 @@
 import {
-  Background,
   getDefaultHeaderHeight,
   SafeAreaProviderCompat,
 } from '@react-navigation/elements';
@@ -15,8 +14,10 @@ import {
   type LayoutChangeEvent,
   Platform,
   StyleSheet,
+  View,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
+import { Screen, ScreenContainer } from 'react-native-screens';
 
 import {
   forModalPresentationIOS,
@@ -26,6 +27,7 @@ import {
   BottomSheetAndroid,
   DefaultTransition,
   FadeFromBottomAndroid,
+  FadeFromRightAndroid,
   ModalFadeTransition,
   ModalSlideFromBottomIOS,
   ModalTransition,
@@ -39,16 +41,15 @@ import type {
   Scene,
   StackAnimationName,
   StackCardStyleInterpolator,
-  StackDescriptor,
   StackDescriptorMap,
   StackHeaderMode,
+  StackNavigationOptions,
   TransitionPreset,
 } from '../../types';
 import { findLastIndex } from '../../utils/findLastIndex';
 import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
 import { getModalRouteKeys } from '../../utils/getModalRoutesKeys';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
-import { MaybeScreen, MaybeScreenContainer } from '../Screens';
 import { CardContainer } from './CardContainer';
 
 type GestureValues = {
@@ -56,15 +57,12 @@ type GestureValues = {
 };
 
 type Props = {
-  // eslint-disable-next-line react/no-unused-prop-types
   direction: LocaleDirection;
   insets: EdgeInsets;
   state: StackNavigationState<ParamListBase>;
   descriptors: StackDescriptorMap;
-  // eslint-disable-next-line react/no-unused-prop-types
   preloadedDescriptors: StackDescriptorMap;
   routes: Route<string>[];
-  // eslint-disable-next-line react/no-unused-prop-types
   openingRouteKeys: string[];
   closingRouteKeys: string[];
   onOpenRoute: (props: { route: Route<string> }) => void;
@@ -100,6 +98,7 @@ const NAMED_TRANSITIONS_PRESETS = {
   default: DefaultTransition,
   fade: ModalFadeTransition,
   fade_from_bottom: FadeFromBottomAndroid,
+  fade_from_right: FadeFromRightAndroid,
   none: DefaultTransition,
   reveal_from_bottom: RevealFromBottomAndroid,
   scale_from_center: ScaleFromCenterAndroid,
@@ -192,7 +191,11 @@ const getHeaderHeights = (
     acc[curr.route.key] =
       typeof height === 'number'
         ? height
-        : getDefaultHeaderHeight(layout, isModal, headerStatusBarHeight);
+        : getDefaultHeaderHeight({
+            landscape: layout.width > layout.height,
+            modalPresentation: isModal,
+            topInset: headerStatusBarHeight,
+          });
 
     return acc;
   }, {});
@@ -200,24 +203,20 @@ const getHeaderHeights = (
 
 const getDistanceFromOptions = (
   layout: Layout,
-  descriptor: StackDescriptor | undefined,
+  options: StackNavigationOptions | undefined,
   isRTL: boolean
 ) => {
-  if (descriptor?.options.gestureDirection) {
-    return getDistanceForDirection(
-      layout,
-      descriptor?.options.gestureDirection,
-      isRTL
-    );
+  if (options?.gestureDirection) {
+    return getDistanceForDirection(layout, options.gestureDirection, isRTL);
   }
 
   const defaultGestureDirection =
-    descriptor?.options.presentation === 'modal'
+    options?.presentation === 'modal'
       ? ModalTransition.gestureDirection
       : DefaultTransition.gestureDirection;
 
-  const gestureDirection = descriptor?.options.animation
-    ? NAMED_TRANSITIONS_PRESETS[descriptor?.options.animation]?.gestureDirection
+  const gestureDirection = options?.animation
+    ? NAMED_TRANSITIONS_PRESETS[options?.animation]?.gestureDirection
     : defaultGestureDirection;
 
   return getDistanceForDirection(layout, gestureDirection, isRTL);
@@ -226,7 +225,7 @@ const getDistanceFromOptions = (
 const getProgressFromGesture = (
   gesture: Animated.Value,
   layout: Layout,
-  descriptor: StackDescriptor | undefined,
+  options: StackNavigationOptions | undefined,
   isRTL: boolean
 ) => {
   const distance = getDistanceFromOptions(
@@ -236,7 +235,7 @@ const getProgressFromGesture = (
       width: Math.max(1, layout.width),
       height: Math.max(1, layout.height),
     },
-    descriptor,
+    options,
     isRTL
   );
 
@@ -252,6 +251,20 @@ const getProgressFromGesture = (
     outputRange: [0, 1],
   });
 };
+
+function getDefaultAnimation(animation: StackAnimationName | undefined) {
+  // Disable screen transition animation by default on web, windows and macos to match the native behavior
+  const excludedPlatforms =
+    Platform.OS !== 'web' &&
+    Platform.OS !== 'windows' &&
+    Platform.OS !== 'macos';
+
+  return animation ?? (excludedPlatforms ? 'default' : 'none');
+}
+
+export function getAnimationEnabled(animation: StackAnimationName | undefined) {
+  return getDefaultAnimation(animation) !== 'none';
+}
 
 export class CardStack extends React.Component<Props, State> {
   static getDerivedStateFromProps(
@@ -276,11 +289,12 @@ export class CardStack extends React.Component<Props, State> {
       acc[curr.key] =
         state.gestures[curr.key] ||
         new Animated.Value(
-          (props.openingRouteKeys.includes(curr.key) && animation !== 'none') ||
+          (props.openingRouteKeys.includes(curr.key) &&
+            getAnimationEnabled(animation)) ||
           props.state.preloadedRoutes.includes(curr)
             ? getDistanceFromOptions(
                 state.layout,
-                descriptor,
+                descriptor?.options,
                 props.direction === 'rtl'
               )
             : 0
@@ -319,15 +333,19 @@ export class CardStack extends React.Component<Props, State> {
           state.descriptors[route.key] ||
           (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
 
-        const nextDescriptor =
+        const nextOptions =
           nextRoute &&
-          (props.descriptors[nextRoute?.key] ||
-            state.descriptors[nextRoute?.key]);
+          (
+            props.descriptors[nextRoute?.key] ||
+            state.descriptors[nextRoute?.key]
+          )?.options;
 
-        const previousDescriptor =
+        const previousOptions =
           previousRoute &&
-          (props.descriptors[previousRoute?.key] ||
-            state.descriptors[previousRoute?.key]);
+          (
+            props.descriptors[previousRoute?.key] ||
+            state.descriptors[previousRoute?.key]
+          )?.options;
 
         // When a screen is not the last, it should use next screen's transition config
         // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
@@ -337,25 +355,20 @@ export class CardStack extends React.Component<Props, State> {
         // but the majority of the transitions look alright
         const optionsForTransitionConfig =
           index !== self.length - 1 &&
-          nextDescriptor &&
-          nextDescriptor.options.presentation !== 'transparentModal'
-            ? nextDescriptor.options
+          nextOptions &&
+          nextOptions?.presentation !== 'transparentModal'
+            ? nextOptions
             : descriptor.options;
 
         // Assume modal if there are already modal screens in the stack
         // or current screen is a modal when no presentation is specified
         const isModal = modalRouteKeys.includes(route.key);
 
-        // Disable screen transition animation by default on web, windows and macos to match the native behavior
-        const excludedPlatforms =
-          Platform.OS !== 'web' &&
-          Platform.OS !== 'windows' &&
-          Platform.OS !== 'macos';
+        const animation = getDefaultAnimation(
+          optionsForTransitionConfig.animation
+        );
 
-        const animation =
-          optionsForTransitionConfig.animation ??
-          (excludedPlatforms ? 'default' : 'none');
-        const isAnimationEnabled = animation !== 'none';
+        const isAnimationEnabled = getAnimationEnabled(animation);
 
         const transitionPreset =
           animation !== 'default'
@@ -384,8 +397,8 @@ export class CardStack extends React.Component<Props, State> {
           (!(
             optionsForTransitionConfig.presentation === 'modal' ||
             optionsForTransitionConfig.presentation === 'transparentModal' ||
-            nextDescriptor?.options.presentation === 'modal' ||
-            nextDescriptor?.options.presentation === 'transparentModal' ||
+            nextOptions?.presentation === 'modal' ||
+            nextOptions?.presentation === 'transparentModal' ||
             getIsModalPresentation(cardStyleInterpolator)
           ) &&
           Platform.OS === 'ios' &&
@@ -415,16 +428,15 @@ export class CardStack extends React.Component<Props, State> {
             current: getProgressFromGesture(
               currentGesture,
               state.layout,
-              descriptor,
+              descriptor.options,
               isRTL
             ),
             next:
-              nextGesture &&
-              nextDescriptor?.options.presentation !== 'transparentModal'
+              nextGesture && nextOptions?.presentation !== 'transparentModal'
                 ? getProgressFromGesture(
                     nextGesture,
                     state.layout,
-                    nextDescriptor,
+                    nextOptions,
                     isRTL
                   )
                 : undefined,
@@ -432,7 +444,7 @@ export class CardStack extends React.Component<Props, State> {
               ? getProgressFromGesture(
                   previousGesture,
                   state.layout,
-                  previousDescriptor,
+                  previousOptions,
                   isRTL
                 )
               : undefined,
@@ -440,8 +452,8 @@ export class CardStack extends React.Component<Props, State> {
           __memo: [
             state.layout,
             descriptor,
-            nextDescriptor,
-            previousDescriptor,
+            nextOptions,
+            previousOptions,
             currentGesture,
             nextGesture,
             previousGesture,
@@ -653,6 +665,7 @@ export class CardStack extends React.Component<Props, State> {
       insets,
       state,
       routes,
+      openingRouteKeys,
       closingRouteKeys,
       onOpenRoute,
       onCloseRoute,
@@ -669,7 +682,8 @@ export class CardStack extends React.Component<Props, State> {
         Platform.OS === 'ios',
     } = this.props;
 
-    const { scenes, layout, gestures, headerHeights } = this.state;
+    const { scenes, layout, gestures, activeStates, headerHeights } =
+      this.state;
 
     const focusedRoute = state.routes[state.index];
     const focusedHeaderHeight = headerHeights[focusedRoute.key];
@@ -689,11 +703,10 @@ export class CardStack extends React.Component<Props, State> {
       return false;
     });
 
-    const floatingHeader = (
-      <React.Fragment key="header">
+    return (
+      <View style={styles.container}>
         {renderHeader({
           mode: 'float',
-          layout,
           scenes,
           getPreviousScene: this.getPreviousScene,
           getFocusedRoute: this.getFocusedRoute,
@@ -707,13 +720,7 @@ export class CardStack extends React.Component<Props, State> {
             ],
           ],
         })}
-      </React.Fragment>
-    );
-
-    return (
-      <Background>
-        {isFloatHeaderAbsolute ? null : floatingHeader}
-        <MaybeScreenContainer
+        <ScreenContainer
           enabled={detachInactiveScreens}
           style={styles.container}
           onLayout={this.handleLayout}
@@ -767,19 +774,19 @@ export class CardStack extends React.Component<Props, State> {
               scenes[index + 1]?.descriptor.options.detachPreviousScreen !==
               false;
 
-            const isScreenActive = isPreloaded
+            const activityState = isPreloaded
               ? STATE_INACTIVE
-              : this.state.activeStates[index];
+              : activeStates[index];
 
             return (
-              <MaybeScreen
+              <Screen
                 key={route.key}
-                style={[StyleSheet.absoluteFill]}
+                style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}
                 enabled={detachInactiveScreens}
-                active={isScreenActive}
+                activityState={activityState}
                 freezeOnBlur={freezeOnBlur}
+                shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
                 homeIndicatorHidden={autoHideHomeIndicator}
-                pointerEvents="box-none"
               >
                 <CardContainer
                   index={index}
@@ -787,6 +794,7 @@ export class CardStack extends React.Component<Props, State> {
                   modal={isModal}
                   active={index === routes.length - 1}
                   focused={focused}
+                  opening={openingRouteKeys.includes(route.key)}
                   closing={closingRouteKeys.includes(route.key)}
                   layout={layout}
                   gesture={gesture}
@@ -815,12 +823,11 @@ export class CardStack extends React.Component<Props, State> {
                   detachCurrentScreen={detachCurrentScreen}
                   preloaded={isPreloaded}
                 />
-              </MaybeScreen>
+              </Screen>
             );
           })}
-        </MaybeScreenContainer>
-        {isFloatHeaderAbsolute ? floatingHeader : null}
-      </Background>
+        </ScreenContainer>
+      </View>
     );
   }
 }

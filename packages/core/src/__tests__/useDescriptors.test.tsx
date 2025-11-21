@@ -1,3 +1,4 @@
+import { beforeEach, expect, jest, test } from '@jest/globals';
 import type {
   DefaultRouterOptions,
   NavigationState,
@@ -22,7 +23,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-it('sets options with options prop as an object', () => {
+test('sets options with options prop as an object', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
@@ -68,7 +69,7 @@ it('sets options with options prop as an object', () => {
           `);
 });
 
-it('sets options with options prop as a fuction', () => {
+test('sets options with options prop as a fuction', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
@@ -115,7 +116,7 @@ it('sets options with options prop as a fuction', () => {
           `);
 });
 
-it('sets options with screenOptions prop as an object', () => {
+test('sets options with screenOptions prop as an object', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
@@ -176,7 +177,7 @@ it('sets options with screenOptions prop as an object', () => {
   `);
 });
 
-it('sets options with screenOptions prop as a fuction', () => {
+test('sets options with screenOptions prop as a fuction', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
@@ -249,7 +250,7 @@ it('sets options with screenOptions prop as a fuction', () => {
   `);
 });
 
-it('sets initial options with setOptions', () => {
+test('sets initial options with setOptions', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
@@ -306,7 +307,7 @@ it('sets initial options with setOptions', () => {
         `);
 });
 
-it('updates options with setOptions', () => {
+test('updates options with setOptions', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
@@ -384,7 +385,7 @@ it('updates options with setOptions', () => {
       `);
 });
 
-it('renders layout defined for the screen', () => {
+test('renders layout defined for the screen', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
@@ -428,7 +429,7 @@ it('renders layout defined for the screen', () => {
 `);
 });
 
-it('renders layout defined for the group', () => {
+test('renders layout defined for the group', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
@@ -468,7 +469,7 @@ it('renders layout defined for the group', () => {
 `);
 });
 
-it('renders layout defined for the navigator', () => {
+test('renders layout defined for the navigator', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
@@ -506,7 +507,7 @@ it('renders layout defined for the navigator', () => {
 `);
 });
 
-it("returns correct value for canGoBack when it's not overridden", () => {
+test("returns correct value for canGoBack when it's not overridden", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder<
       NavigationState,
@@ -553,7 +554,7 @@ it("returns correct value for canGoBack when it's not overridden", () => {
   expect(result).toBe(false);
 });
 
-it(`returns false for canGoBack when current router doesn't handle GO_BACK`, () => {
+test(`returns false for canGoBack when current router doesn't handle GO_BACK`, () => {
   function TestRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const ChildRouter: Router<NavigationState, MockActions> = {
@@ -605,7 +606,7 @@ it(`returns false for canGoBack when current router doesn't handle GO_BACK`, () 
   expect(result).toBe(false);
 });
 
-it('returns true for canGoBack when current router handles GO_BACK', () => {
+test('returns true for canGoBack when current router handles GO_BACK', () => {
   function ParentRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const ChildRouter: Router<NavigationState, MockActions> = {
@@ -674,7 +675,7 @@ it('returns true for canGoBack when current router handles GO_BACK', () => {
   expect(result).toBe(true);
 });
 
-it('returns true for canGoBack when parent router handles GO_BACK', () => {
+test('returns true for canGoBack when parent router handles GO_BACK', () => {
   function OverrodeRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const ChildRouter: Router<NavigationState, MockActions> = {

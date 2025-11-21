@@ -1,7 +1,7 @@
 import type { NavigationState } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { NavigationContext } from './NavigationContext';
+import { NavigationContext } from './NavigationProvider';
 import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
@@ -18,7 +18,7 @@ export function useFocusEvents<State extends NavigationState>({
   emitter,
 }: Options<State>) {
   const navigation = React.useContext(NavigationContext);
-  const lastFocusedKeyRef = React.useRef<string | undefined>();
+  const lastFocusedKeyRef = React.useRef<string | undefined>(undefined);
 
   const currentFocusedKey = state.routes[state.index].key;
 

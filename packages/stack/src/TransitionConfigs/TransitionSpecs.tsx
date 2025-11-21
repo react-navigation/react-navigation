@@ -51,7 +51,7 @@ export const RevealFromBottomAndroidSpec: TransitionSpec = {
     duration: 425,
     // This is super rough approximation of the path used for the curve by android
     // See http://aosp.opersys.com/xref/android-9.0.0_r47/xref/frameworks/base/core/res/res/interpolator/fast_out_extra_slow_in.xml
-    easing: Easing.bezier(0.35, 0.45, 0, 1),
+    easing: Easing.bezier(0.20833, 0.82, 0.25, 1),
   },
 };
 
@@ -65,7 +65,35 @@ export const ScaleFromCenterAndroidSpec: TransitionSpec = {
     duration: 400,
     // This is super rough approximation of the path used for the curve by android
     // See http://aosp.opersys.com/xref/android-10.0.0_r2/xref/frameworks/base/core/res/res/interpolator/fast_out_extra_slow_in.xml
-    easing: Easing.bezier(0.35, 0.45, 0, 1),
+    easing: Easing.bezier(0.20833, 0.82, 0.25, 1),
+  },
+};
+
+/**
+ * Approximate configuration for activity open animation from Android 14.
+ * See https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-14.0.0_r51/core/res/res/anim/activity_open_enter.xml
+ */
+export const FadeInFromRightAndroidSpec: TransitionSpec = {
+  animation: 'timing',
+  config: {
+    duration: 450,
+    // This is super rough approximation of the path used for the curve by android
+    // See https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-14.0.0_r51/core/res/res/interpolator/fast_out_extra_slow_in.xml
+    easing: Easing.bezier(0.20833, 0.82, 0.25, 1),
+  },
+};
+
+/**
+ * Approximate configuration for activity close animation from Android 14.
+ * See https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-14.0.0_r51/core/res/res/anim/activity_close_exit.xml
+ */
+export const FadeOutToLeftAndroidSpec: TransitionSpec = {
+  animation: 'timing',
+  config: {
+    duration: 450,
+    // This is super rough approximation of the path used for the curve by android
+    // See https://android.googlesource.com/platform/frameworks/base/+/refs/tags/android-14.0.0_r51/core/res/res/interpolator/fast_out_extra_slow_in.xml
+    easing: Easing.bezier(0.20833, 0.82, 0.25, 1),
   },
 };
 

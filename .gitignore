@@ -12,13 +12,10 @@
 local.properties
 
 /coverage/
-/types/
 /dist/
 /lib/
 
 node_modules/
-web-build/
-web-report/
 
 xcuserdata
 generated
@@ -96,10 +93,12 @@ buck-out/
 
 # Expo
 .expo/
-web-build/
 dist/
 
 # @end expo-cli
+
+# Maestro
+maestro-debug-output/
 
 # Yarn
 .yarn-global

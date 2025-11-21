@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+name: Drawer View
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: drawer-view
+      TEXT: 'Drawer Layout'

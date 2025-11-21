@@ -5,6 +5,7 @@ import type {
 } from '@react-navigation/routers';
 import * as queryString from 'query-string';
 
+import { getPatternParts, type PatternPart } from './getPatternParts';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
@@ -16,10 +17,10 @@ type Options<ParamList extends {}> = {
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
-type StringifyConfig = Record<string, (value: any) => string>;
+type StringifyConfig = Record<string, (value: unknown) => string>;
 
 type ConfigItem = {
-  pattern?: string;
+  parts?: PatternPart[];
   stringify?: StringifyConfig;
   screens?: Record<string, ConfigItem>;
 };
@@ -35,6 +36,25 @@ const getActiveRoute = (state: State): { name: string; params?: object } => {
   }
 
   return route;
+};
+
+const cachedNormalizedConfigs = new WeakMap<
+  PathConfigMap<{}>,
+  Record<string, ConfigItem>
+>();
+
+const getNormalizedConfigs = (options?: Options<{}>) => {
+  if (!options?.screens) return {};
+
+  const cached = cachedNormalizedConfigs.get(options?.screens);
+
+  if (cached) return cached;
+
+  const normalizedConfigs = createNormalizedConfigs(options.screens);
+
+  cachedNormalizedConfigs.set(options.screens, normalizedConfigs);
+
+  return normalizedConfigs;
 };
 
 /**
@@ -72,7 +92,7 @@ export function getPathFromState<ParamList extends {}>(
 ): string {
   if (state == null) {
     throw Error(
-      "Got 'undefined' for the navigation state. You must pass a valid state object."
+      `Got '${String(state)}' for the navigation state. You must pass a valid state object.`
     );
   }
 
@@ -80,15 +100,12 @@ export function getPathFromState<ParamList extends {}>(
     validatePathConfig(options);
   }
 
-  // Create a normalized configs object which will be easier to use
-  const configs: Record<string, ConfigItem> = options?.screens
-    ? createNormalizedConfigs(options?.screens)
-    : {};
+  const configs = getNormalizedConfigs(options);
 
   let path = '/';
   let current: State | undefined = state;
 
-  const allParams: Record<string, any> = {};
+  const allParams: Record<string, string> = {};
 
   while (current) {
     let index = typeof current.index === 'number' ? current.index : 0;
@@ -96,11 +113,12 @@ export function getPathFromState<ParamList extends {}>(
       state?: State;
     };
 
-    let pattern: string | undefined;
+    let parts: PatternPart[] | undefined;
 
-    let focusedParams: Record<string, any> | undefined;
-    const focusedRoute = getActiveRoute(state);
+    let focusedParams: Record<string, string> | undefined;
     let currentOptions = configs;
+
+    const focusedRoute = getActiveRoute(state);
 
     // Keep all the route names that appeared during going deeper in config in case the pattern is resolved to undefined
     const nestedRouteNames = [];
@@ -108,21 +126,38 @@ export function getPathFromState<ParamList extends {}>(
     let hasNext = true;
 
     while (route.name in currentOptions && hasNext) {
-      pattern = currentOptions[route.name].pattern;
+      parts = currentOptions[route.name].parts;
 
       nestedRouteNames.push(route.name);
 
       if (route.params) {
-        const stringify = currentOptions[route.name]?.stringify;
+        const options = currentOptions[route.name];
 
         const currentParams = Object.fromEntries(
-          Object.entries(route.params).map(([key, value]) => [
-            key,
-            stringify?.[key] ? stringify[key](value) : String(value),
-          ])
+          Object.entries(route.params)
+            .map(([key, value]): [string, string] | null => {
+              if (value === undefined) {
+                if (options) {
+                  const optional = options.parts?.find(
+                    (part) => part.param === key
+                  )?.optional;
+
+                  if (optional) {
+                    return null;
+                  }
+                } else {
+                  return null;
+                }
+              }
+
+              const stringify = options?.stringify?.[key] ?? String;
+
+              return [key, stringify(value)];
+            })
+            .filter((entry) => entry != null)
         );
 
-        if (pattern) {
+        if (parts?.length) {
           Object.assign(allParams, currentParams);
         }
 
@@ -131,17 +166,15 @@ export function getPathFromState<ParamList extends {}>(
           // We save it here since it's been stringified already
           focusedParams = { ...currentParams };
 
-          pattern
-            ?.split('/')
-            .filter((p) => p.startsWith(':'))
+          parts
             // eslint-disable-next-line no-loop-func
-            .forEach((p) => {
-              const name = getParamName(p);
-
-              // Remove the params present in the pattern since we'll only use the rest for query string
-              if (focusedParams) {
-                // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-                delete focusedParams[name];
+            ?.forEach(({ param }) => {
+              if (param) {
+                // Remove the params present in the pattern since we'll only use the rest for query string
+                if (focusedParams) {
+                  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+                  delete focusedParams[param];
+                }
               }
             });
         }
@@ -170,49 +203,50 @@ export function getPathFromState<ParamList extends {}>(
       }
     }
 
-    if (pattern === undefined) {
-      pattern = nestedRouteNames.join('/');
-    }
-
     if (currentOptions[route.name] !== undefined) {
-      path += pattern
-        .split('/')
-        .map((p) => {
-          const name = getParamName(p);
-
+      path += parts
+        ?.map(({ segment, param, optional }) => {
           // We don't know what to show for wildcard patterns
           // Showing the route name seems ok, though whatever we show here will be incorrect
           // Since the page doesn't actually exist
-          if (p === '*') {
+          if (segment === '*') {
             return route.name;
           }
 
           // If the path has a pattern for a param, put the param in the path
-          if (p.startsWith(':')) {
-            const value = allParams[name];
+          if (param) {
+            const value = allParams[param];
 
-            if (value === undefined && p.endsWith('?')) {
+            if (value === undefined && optional) {
               // Optional params without value assigned in route.params should be ignored
               return '';
             }
 
             // Valid characters according to
             // https://datatracker.ietf.org/doc/html/rfc3986#section-3.3 (see pchar definition)
-            return String(value).replace(
-              /[^A-Za-z0-9\-._~!$&'()*+,;=:@]/g,
-              (char) => encodeURIComponent(char)
-            );
+            return Array.from(String(value))
+              .map((char) =>
+                /[^A-Za-z0-9\-._~!$&'()*+,;=:@]/g.test(char)
+                  ? encodeURIComponent(char)
+                  : char
+              )
+              .join('');
           }
 
-          return encodeURIComponent(p);
+          return encodeURIComponent(segment);
         })
         .join('/');
     } else {
       path += encodeURIComponent(route.name);
     }
 
-    if (!focusedParams) {
-      focusedParams = focusedRoute.params;
+    if (!focusedParams && focusedRoute.params) {
+      focusedParams = Object.fromEntries(
+        Object.entries(focusedRoute.params).map(([key, value]) => [
+          key,
+          String(value),
+        ])
+      );
     }
 
     if (route.state) {
@@ -235,36 +269,37 @@ export function getPathFromState<ParamList extends {}>(
     current = route.state;
   }
 
+  // Include the root path if specified
+  if (options?.path) {
+    path = `${options.path}/${path}`;
+  }
+
   // Remove multiple as well as trailing slashes
   path = path.replace(/\/+/g, '/');
   path = path.length > 1 ? path.replace(/\/$/, '') : path;
 
-  // Include the root path if specified
-  if (options?.path) {
-    path = joinPaths(options.path, path);
+  // If path doesn't start with a slash, add it
+  // This makes sure that history.pushState will update the path correctly instead of appending
+  if (!path.startsWith('/')) {
+    path = `/${path}`;
   }
 
   return path;
 }
 
-const getParamName = (pattern: string) =>
-  pattern.replace(/^:/, '').replace(/\?$/, '');
-
-const joinPaths = (...paths: string[]): string =>
-  ([] as string[])
-    .concat(...paths.map((p) => p.split('/')))
-    .filter(Boolean)
-    .join('/');
-
 const createConfigItem = (
   config: PathConfig<object> | string,
-  parentPattern?: string
+  parentParts?: PatternPart[]
 ): ConfigItem => {
   if (typeof config === 'string') {
     // If a string is specified as the value of the key(e.g. Foo: '/path'), use it as the pattern
-    const pattern = parentPattern ? joinPaths(parentPattern, config) : config;
+    const parts = getPatternParts(config);
 
-    return { pattern };
+    if (parentParts) {
+      return { parts: [...parentParts, ...parts] };
+    }
+
+    return { parts };
   }
 
   if (config.exact && config.path === undefined) {
@@ -275,18 +310,22 @@ const createConfigItem = (
 
   // If an object is specified as the value (e.g. Foo: { ... }),
   // It can have `path` property and `screens` prop which has nested configs
-  const pattern =
+  const parts =
     config.exact !== true
-      ? joinPaths(parentPattern || '', config.path || '')
-      : config.path || '';
+      ? [
+          ...(parentParts || []),
+          ...(config.path ? getPatternParts(config.path) : []),
+        ]
+      : config.path
+        ? getPatternParts(config.path)
+        : undefined;
 
   const screens = config.screens
-    ? createNormalizedConfigs(config.screens, pattern)
+    ? createNormalizedConfigs(config.screens, parts)
     : undefined;
 
   return {
-    // Normalize pattern to remove any leading, trailing slashes, duplicate slashes etc.
-    pattern: pattern?.split('/').filter(Boolean).join('/'),
+    parts,
     stringify: config.stringify,
     screens,
   };
@@ -294,11 +333,11 @@ const createConfigItem = (
 
 const createNormalizedConfigs = (
   options: PathConfigMap<object>,
-  pattern?: string
+  parts?: PatternPart[]
 ): Record<string, ConfigItem> =>
   Object.fromEntries(
     Object.entries(options).map(([name, c]) => {
-      const result = createConfigItem(c, pattern);
+      const result = createConfigItem(c, parts);
 
       return [name, result];
     })

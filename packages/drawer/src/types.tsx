@@ -1,8 +1,10 @@
 import type { HeaderOptions } from '@react-navigation/elements';
 import type {
+  DefaultNavigatorOptions,
   Descriptor,
   DrawerActionHelpers,
   DrawerNavigationState,
+  DrawerRouterOptions,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
@@ -10,16 +12,13 @@ import type {
   RouteProp,
   Theme,
 } from '@react-navigation/native';
-import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
-import type {
-  PanGestureHandler,
-  PanGestureHandlerProperties,
-} from 'react-native-gesture-handler';
+import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { PanGesture } from 'react-native-gesture-handler';
 
 export type Scene = {
   route: Route<string>;
   focused: boolean;
-  color?: string;
+  color?: ColorValue;
 };
 
 export type Layout = { width: number; height: number };
@@ -63,18 +62,18 @@ export type DrawerNavigationOptions = HeaderOptions & {
 
   /**
    * Title string of a screen displayed in the drawer
-   * or a function that given { focused: boolean, color: string } returns a React.Node
+   * or a function that given { focused: boolean, color: ColorValue } returns a React.Node
    * When undefined, scene title is used.
    */
   drawerLabel?:
     | string
-    | ((props: { color: string; focused: boolean }) => React.ReactNode);
+    | ((props: { color: ColorValue; focused: boolean }) => React.ReactNode);
 
   /**
-   * A function that given { focused: boolean, color: string } returns a React.Node to display an icon the drawer.
+   * A function that given { focused: boolean, color: ColorValue } returns a React.Node to display an icon the drawer.
    */
   drawerIcon?: (props: {
-    color: string;
+    color: ColorValue;
     size: number;
     focused: boolean;
   }) => React.ReactNode;
@@ -82,22 +81,22 @@ export type DrawerNavigationOptions = HeaderOptions & {
   /**
    * Color for the icon and label in the active item in the drawer.
    */
-  drawerActiveTintColor?: string;
+  drawerActiveTintColor?: ColorValue;
 
   /**
    * Background color for the active item in the drawer.
    */
-  drawerActiveBackgroundColor?: string;
+  drawerActiveBackgroundColor?: ColorValue;
 
   /**
    * Color for the icon and label in the inactive items in the drawer.
    */
-  drawerInactiveTintColor?: string;
+  drawerInactiveTintColor?: ColorValue;
 
   /**
    * Background color for the inactive items in the drawer.
    */
-  drawerInactiveBackgroundColor?: string;
+  drawerInactiveBackgroundColor?: ColorValue;
 
   /**
    * Whether label font should scale to respect Text Size accessibility settings.
@@ -160,7 +159,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * Color of the overlay to be displayed on top of the content view when drawer gets open.
    * The opacity is animated from `0` to `1` when the drawer opens.
    */
-  overlayColor?: string;
+  overlayStyle?: StyleProp<ViewStyle>;
 
   /**
    * Accessibility label for the overlay. This is read by the screen reader when the user taps the overlay.
@@ -171,13 +170,12 @@ export type DrawerNavigationOptions = HeaderOptions & {
   /**
    * Style object for the component wrapping the screen content.
    */
-  sceneContainerStyle?: StyleProp<ViewStyle>;
+  sceneStyle?: StyleProp<ViewStyle>;
 
   /**
-   * Props to pass to the underlying pan gesture handler.
-   * Not supported on Web.
+   * Function to modify the pan gesture handler via RNGH properties API.
    */
-  gestureHandlerProps?: PanGestureHandlerProperties;
+  configureGestureHandler?: (gesture: PanGesture) => PanGesture;
 
   /**
    * Whether you can use swipe gestures to open or close the drawer.
@@ -204,10 +202,10 @@ export type DrawerNavigationOptions = HeaderOptions & {
   keyboardDismissMode?: 'on-drag' | 'none';
 
   /**
-   * Whether this screen should be unmounted when navigating away from it.
+   * Whether any nested stack should be popped to top when navigating away from the tab.
    * Defaults to `false`.
    */
-  unmountOnBlur?: boolean;
+  popToTopOnBlur?: boolean;
 
   /**
    * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
@@ -226,10 +224,6 @@ export type DrawerContentComponentProps = {
 };
 
 export type DrawerHeaderProps = {
-  /**
-   * Layout of the screen.
-   */
-  layout: Layout;
   /**
    * Options for the current screen.
    */
@@ -280,31 +274,27 @@ export type DrawerNavigationHelpers = NavigationHelpers<
 export type DrawerNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   DrawerNavigationState<ParamList>,
   DrawerNavigationOptions,
-  DrawerNavigationEventMap
-> &
-  DrawerActionHelpers<ParamList>;
+  DrawerNavigationEventMap,
+  DrawerActionHelpers<ParamList>
+>;
 
 export type DrawerScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: DrawerNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: DrawerNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
-export type DrawerScreenOptions<
+export type DrawerOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = DrawerScreenProps<ParamList, RouteName, NavigatorID> & {
+> = DrawerScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -321,7 +311,7 @@ export type DrawerProps = {
   drawerPosition: 'left' | 'right';
   drawerStyle?: StyleProp<ViewStyle>;
   drawerType: 'front' | 'back' | 'slide' | 'permanent';
-  gestureHandlerProps?: React.ComponentProps<typeof PanGestureHandler>;
+  configureGestureHandler?: (gesture: PanGesture) => PanGesture;
   hideStatusBarOnOpen: boolean;
   keyboardDismissMode: 'none' | 'on-drag';
   onClose: () => void;
@@ -337,3 +327,13 @@ export type DrawerProps = {
   swipeVelocityThreshold: number;
   overlayAccessibilityLabel?: string;
 };
+
+export type DrawerNavigatorProps = DefaultNavigatorOptions<
+  ParamListBase,
+  DrawerNavigationState<ParamListBase>,
+  DrawerNavigationOptions,
+  DrawerNavigationEventMap,
+  DrawerNavigationProp<ParamListBase>
+> &
+  DrawerRouterOptions &
+  DrawerNavigationConfig;

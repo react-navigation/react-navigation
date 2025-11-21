@@ -1,6 +1,5 @@
 import {
   createNavigatorFactory,
-  type DefaultNavigatorOptions,
   type EventArg,
   type ParamListBase,
   type StackActionHelpers,
@@ -8,38 +7,33 @@ import {
   type StackNavigationState,
   StackRouter,
   type StackRouterOptions,
+  type StaticConfig,
+  type StaticParamList,
+  type TypedNavigator,
   useLocale,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
 
 import type {
-  StackNavigationConfig,
   StackNavigationEventMap,
   StackNavigationOptions,
+  StackNavigationProp,
+  StackNavigatorProps,
 } from '../types';
 import { StackView } from '../views/Stack/StackView';
 
-type Props = DefaultNavigatorOptions<
-  ParamListBase,
-  StackNavigationState<ParamListBase>,
-  StackNavigationOptions,
-  StackNavigationEventMap
-> &
-  StackRouterOptions &
-  StackNavigationConfig;
-
 function StackNavigator({
-  id,
   initialRouteName,
-  getStateForRouteNamesChange,
+  UNSTABLE_routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
   screenOptions,
   screenLayout,
+  router,
   ...rest
-}: Props) {
+}: StackNavigatorProps) {
   const { direction } = useLocale();
 
   const { state, describe, descriptors, navigation, NavigationContent } =
@@ -50,14 +44,14 @@ function StackNavigator({
       StackNavigationOptions,
       StackNavigationEventMap
     >(StackRouter, {
-      id,
       initialRouteName,
+      UNSTABLE_routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,
       screenOptions,
       screenLayout,
-      getStateForRouteNamesChange,
+      router,
     });
 
   React.useEffect(
@@ -100,9 +94,25 @@ function StackNavigator({
   );
 }
 
-export const createStackNavigator = createNavigatorFactory<
-  StackNavigationState<ParamListBase>,
-  StackNavigationOptions,
-  StackNavigationEventMap,
-  typeof StackNavigator
->(StackNavigator);
+type StackTypeBag<ParamList extends {}> = {
+  ParamList: ParamList;
+  State: StackNavigationState<ParamList>;
+  ScreenOptions: StackNavigationOptions;
+  EventMap: StackNavigationEventMap;
+  NavigationList: {
+    [RouteName in keyof ParamList]: StackNavigationProp<ParamList, RouteName>;
+  };
+  Navigator: typeof StackNavigator;
+};
+
+export function createStackNavigator<
+  const ParamList extends ParamListBase,
+>(): TypedNavigator<StackTypeBag<ParamList>, undefined>;
+export function createStackNavigator<
+  const Config extends StaticConfig<StackTypeBag<ParamListBase>>,
+>(
+  config: Config
+): TypedNavigator<StackTypeBag<StaticParamList<{ config: Config }>>, Config>;
+export function createStackNavigator(config?: unknown) {
+  return createNavigatorFactory(StackNavigator)(config);
+}

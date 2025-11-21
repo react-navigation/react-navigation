@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+name: Mixed Stack
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: mixed-stack
+      TEXT: 'Article by Gandalf'

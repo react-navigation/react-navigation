@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useState } from 'react';
 
 import { useNavigation } from './useNavigation';
 
@@ -9,35 +8,25 @@ import { useNavigation } from './useNavigation';
  */
 export function useIsFocused(): boolean {
   const navigation = useNavigation();
-  const [isFocused, setIsFocused] = useState(navigation.isFocused);
 
-  const valueToReturn = navigation.isFocused();
+  const subscribe = React.useCallback(
+    (callback: () => void) => {
+      const unsubscribeFocus = navigation.addListener('focus', callback);
+      const unsubscribeBlur = navigation.addListener('blur', callback);
 
-  if (isFocused !== valueToReturn) {
-    // If the value has changed since the last render, we need to update it.
-    // This could happen if we missed an update from the event listeners during re-render.
-    // React will process this update immediately, so the old subscription value won't be committed.
-    // It is still nice to avoid returning a mismatched value though, so let's override the return value.
-    // This is the same logic as in https://github.com/facebook/react/tree/master/packages/use-subscription
-    setIsFocused(valueToReturn);
-  }
+      return () => {
+        unsubscribeFocus();
+        unsubscribeBlur();
+      };
+    },
+    [navigation]
+  );
 
-  React.useEffect(() => {
-    const unsubscribeFocus = navigation.addListener('focus', () =>
-      setIsFocused(true)
-    );
+  const value = React.useSyncExternalStore(
+    subscribe,
+    navigation.isFocused,
+    navigation.isFocused
+  );
 
-    const unsubscribeBlur = navigation.addListener('blur', () =>
-      setIsFocused(false)
-    );
-
-    return () => {
-      unsubscribeFocus();
-      unsubscribeBlur();
-    };
-  }, [navigation]);
-
-  React.useDebugValue(valueToReturn);
-
-  return valueToReturn;
+  return value;
 }

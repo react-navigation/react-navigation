@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+name: Stack Preload Flow
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-preload-flow
+      TEXT: 'Home'

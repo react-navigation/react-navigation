@@ -22,43 +22,41 @@ export function SceneView<T extends Route>({
   children,
   navigationState,
   lazy,
-  layout,
   index,
   lazyPreloadDistance,
-  addEnterListener,
+  subscribe,
   style,
 }: Props<T>) {
-  const [isLoading, setIsLoading] = React.useState(
-    Math.abs(navigationState.index - index) > lazyPreloadDistance
-  );
+  const isFocused = navigationState.index === index;
+  const isLoaded =
+    isFocused || Math.abs(navigationState.index - index) <= lazyPreloadDistance;
 
-  if (
-    isLoading &&
-    Math.abs(navigationState.index - index) <= lazyPreloadDistance
-  ) {
+  const [isLoading, setIsLoading] = React.useState(!isLoaded);
+
+  if (isLoading && isLoaded) {
     // Always render the route when it becomes focused
+    // Or close to the focused route based on preload distance
     setIsLoading(false);
   }
 
   React.useEffect(() => {
-    const handleEnter = (value: number) => {
-      // If we're entering the current route, we need to load it
-      if (value === index) {
-        setIsLoading((prevState) => {
-          if (prevState) {
-            return false;
-          }
-          return prevState;
-        });
-      }
-    };
-
     let unsubscribe: (() => void) | undefined;
-    let timer: NodeJS.Timeout | undefined;
+    let timer: ReturnType<typeof setTimeout> | undefined;
 
     if (lazy && isLoading) {
       // If lazy mode is enabled, listen to when we enter screens
-      unsubscribe = addEnterListener(handleEnter);
+      unsubscribe = subscribe((event) => {
+        // If we're entering the current route, we need to load it
+        if (event.type === 'enter' && event.index === index) {
+          setIsLoading((prevState) => {
+            if (prevState) {
+              return false;
+            }
+
+            return prevState;
+          });
+        }
+      });
     } else if (isLoading) {
       // If lazy mode is not enabled, render the scene with a delay if not loaded already
       // This improves the initial startup time as the scene is no longer blocking
@@ -69,32 +67,11 @@ export function SceneView<T extends Route>({
       unsubscribe?.();
       clearTimeout(timer);
     };
-  }, [addEnterListener, index, isLoading, lazy]);
-
-  const focused = navigationState.index === index;
+  }, [subscribe, index, isLoading, lazy]);
 
   return (
-    <View
-      accessibilityElementsHidden={!focused}
-      importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
-      style={[
-        styles.route,
-        // If we don't have the layout yet, make the focused screen fill the container
-        // This avoids delay before we are able to render pages side by side
-        layout.width
-          ? { width: layout.width }
-          : focused
-            ? StyleSheet.absoluteFill
-            : null,
-        style,
-      ]}
-    >
-      {
-        // Only render the route only if it's either focused or layout is available
-        // When layout is not available, we must not render unfocused routes
-        // so that the focused route can fill the screen
-        focused || layout.width ? children({ loading: isLoading }) : null
-      }
+    <View aria-hidden={!isFocused} style={[styles.route, style]}>
+      {children({ loading: isLoading })}
     </View>
   );
 }

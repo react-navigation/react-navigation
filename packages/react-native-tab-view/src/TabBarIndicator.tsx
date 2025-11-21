@@ -2,6 +2,7 @@ import * as React from 'react';
 import {
   Animated,
   Easing,
+  Platform,
   type StyleProp,
   StyleSheet,
   type ViewStyle,
@@ -27,19 +28,36 @@ export type Props<T extends Route> = SceneRendererProps & {
   children?: React.ReactNode;
 };
 
+const useNativeDriver = Platform.OS !== 'web';
+
 const getTranslateX = (
   position: Animated.AnimatedInterpolation<number>,
   routes: Route[],
   getTabWidth: GetTabWidth,
   direction: LocaleDirection,
-  gap?: number
+  gap?: number,
+  width?: number | string
 ) => {
   const inputRange = routes.map((_, i) => i);
 
   // every index contains widths at all previous indices
   const outputRange = routes.reduce<number[]>((acc, _, i) => {
-    if (i === 0) return [0];
-    return [...acc, acc[i - 1] + getTabWidth(i - 1) + (gap ?? 0)];
+    if (typeof width === 'number') {
+      if (i === 0) return [getTabWidth(i) / 2 - width / 2];
+
+      let sumTabWidth = 0;
+      for (let j = 0; j < i; j++) {
+        sumTabWidth += getTabWidth(j);
+      }
+
+      return [
+        ...acc,
+        sumTabWidth + getTabWidth(i) / 2 + (gap ? gap * i : 0) - width / 2,
+      ];
+    } else {
+      if (i === 0) return [0];
+      return [...acc, acc[i - 1] + getTabWidth(i - 1) + (gap ?? 0)];
+    }
   }, []);
 
   const translateX = position.interpolate({
@@ -53,7 +71,6 @@ const getTranslateX = (
 
 export function TabBarIndicator<T extends Route>({
   getTabWidth,
-  layout,
   navigationState,
   position,
   width,
@@ -68,8 +85,7 @@ export function TabBarIndicator<T extends Route>({
   const opacity = useAnimatedValue(isWidthDynamic ? 0 : 1);
 
   const indicatorVisible = isWidthDynamic
-    ? layout.width &&
-      navigationState.routes
+    ? navigationState.routes
         .slice(0, navigationState.index)
         .every((_, r) => getTabWidth(r))
     : true;
@@ -88,7 +104,7 @@ export function TabBarIndicator<T extends Route>({
           toValue: 1,
           duration: 150,
           easing: Easing.in(Easing.linear),
-          useNativeDriver: true,
+          useNativeDriver,
         }).start();
       }
     };
@@ -102,14 +118,12 @@ export function TabBarIndicator<T extends Route>({
 
   const transform = [];
 
-  if (layout.width) {
-    const translateX =
-      routes.length > 1
-        ? getTranslateX(position, routes, getTabWidth, direction, gap)
-        : 0;
+  const translateX =
+    routes.length > 1
+      ? getTranslateX(position, routes, getTabWidth, direction, gap, width)
+      : 0;
 
-    transform.push({ translateX });
-  }
+  transform.push({ translateX });
 
   if (width === 'auto') {
     const inputRange = routes.map((_, i) => i);
@@ -130,13 +144,27 @@ export function TabBarIndicator<T extends Route>({
     );
   }
 
+  const styleList: StyleProp<ViewStyle> = [];
+
+  // scaleX doesn't work properly on chrome and opera for linux and android
+  if (Platform.OS === 'web' && width === 'auto') {
+    styleList.push(
+      { width: transform[1].scaleX },
+      { left: transform[0].translateX }
+    );
+  } else {
+    styleList.push(
+      { width: width === 'auto' ? 1 : width },
+      { start: `${(100 / routes.length) * navigationState.index}%` },
+      { transform }
+    );
+  }
+
   return (
     <Animated.View
       style={[
         styles.indicator,
-        { width: width === 'auto' ? 1 : width },
-        { start: `${(100 / routes.length) * navigationState.index}%` },
-        { transform },
+        styleList,
         width === 'auto' ? { opacity: opacity } : null,
         style,
       ]}
@@ -148,7 +176,7 @@ export function TabBarIndicator<T extends Route>({
 
 const styles = StyleSheet.create({
   indicator: {
-    backgroundColor: '#ffeb3b',
+    backgroundColor: 'rgb(0, 122, 255)',
     position: 'absolute',
     start: 0,
     bottom: 0,

@@ -2,13 +2,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
-import {
-  type NavigationState,
-  SceneMap,
-  type SceneRendererProps,
-  TabBar,
-  TabView,
-} from 'react-native-tab-view';
+import { SceneMap, TabBar, TabView } from 'react-native-tab-view';
 
 import { Article } from '../../Shared/Article';
 import { Chat } from '../../Shared/Chat';
@@ -18,8 +12,6 @@ type Route = {
   key: string;
   icon: React.ComponentProps<typeof Ionicons>['name'];
 };
-
-type State = NavigationState<Route>;
 
 const renderScene = SceneMap({
   chat: () => <Chat bottom />,
@@ -40,16 +32,15 @@ export const TabBarIcon = () => {
     return <Ionicons name={props.route.icon} {...props} />;
   }, []);
 
-  const renderTabBar = (
-    props: SceneRendererProps & { navigationState: State }
-  ) => (
+  const renderTabBar: React.ComponentProps<
+    typeof TabView<Route>
+  >['renderTabBar'] = (props) => (
     <TabBar
       {...props}
+      activeColor="#fff"
+      inactiveColor="rgba(255, 255, 255, 0.7)"
       direction={direction}
       indicatorStyle={styles.indicator}
-      commonOptions={{
-        icon: renderIcon,
-      }}
       style={styles.tabbar}
       contentContainerStyle={styles.tabbarContentContainer}
       gap={20}
@@ -62,6 +53,9 @@ export const TabBarIcon = () => {
       navigationState={{
         index,
         routes,
+      }}
+      commonOptions={{
+        icon: renderIcon,
       }}
       direction={direction}
       renderScene={renderScene}

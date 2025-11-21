@@ -3,6 +3,7 @@ import type {
   PlatformPressable,
 } from '@react-navigation/elements';
 import type {
+  DefaultNavigatorOptions,
   Descriptor,
   NavigationHelpers,
   NavigationProp,
@@ -10,11 +11,13 @@ import type {
   RouteProp,
   TabActionHelpers,
   TabNavigationState,
+  TabRouterOptions,
   Theme,
 } from '@react-navigation/native';
 import type * as React from 'react';
 import type {
   Animated,
+  ColorValue,
   GestureResponderEvent,
   StyleProp,
   TextStyle,
@@ -23,6 +26,8 @@ import type {
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
 export type Layout = { width: number; height: number };
+
+export type Variant = 'uikit' | 'material';
 
 export type BottomTabNavigationEventMap = {
   /**
@@ -33,6 +38,14 @@ export type BottomTabNavigationEventMap = {
    * Event which fires on long press on the tab in the tab bar.
    */
   tabLongPress: { data: undefined };
+  /**
+   * Event which fires when a transition animation starts.
+   */
+  transitionStart: { data: undefined };
+  /**
+   * Event which fires when a transition animation ends.
+   */
+  transitionEnd: { data: undefined };
 };
 
 export type LabelPosition = 'beside-icon' | 'below-icon';
@@ -46,31 +59,27 @@ export type BottomTabNavigationHelpers = NavigationHelpers<
 export type BottomTabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   TabNavigationState<ParamList>,
   BottomTabNavigationOptions,
-  BottomTabNavigationEventMap
-> &
-  TabActionHelpers<ParamList>;
+  BottomTabNavigationEventMap,
+  TabActionHelpers<ParamList>
+>;
 
 export type BottomTabScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: BottomTabNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: BottomTabNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
-export type BottomTabScreenOptions<
+export type BottomTabOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = BottomTabScreenProps<ParamList, RouteName, NavigatorID> & {
+> = BottomTabScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -104,7 +113,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
 
   /**
    * Title string of a tab displayed in the tab bar
-   * or a function that given { focused: boolean, color: string, position: 'below-icon' | 'beside-icon', children: string } returns a React.Node to display in tab bar.
+   * or a function that given { focused: boolean, color: ColorValue, position: 'below-icon' | 'beside-icon', children: string } returns a React.Node to display in tab bar.
    *
    * When undefined, scene title is used. Use `tabBarShowLabel` to hide the label.
    */
@@ -112,7 +121,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
     | string
     | ((props: {
         focused: boolean;
-        color: string;
+        color: ColorValue;
         position: LabelPosition;
         children: string;
       }) => React.ReactNode);
@@ -143,11 +152,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   tabBarAllowFontScaling?: boolean;
 
   /**
-   * A function that given { focused: boolean, color: string } returns a React.Node to display in the tab bar.
+   * A function that given { focused: boolean, color: ColorValue } returns a React.Node to display in the tab bar.
    */
   tabBarIcon?: (props: {
     focused: boolean;
-    color: string;
+    color: ColorValue;
     size: number;
   }) => React.ReactNode;
 
@@ -180,29 +189,29 @@ export type BottomTabNavigationOptions = HeaderOptions & {
 
   /**
    * Function which returns a React element to render as the tab bar button.
-   * Renders `Pressable` by default.
+   * Renders `PlatformPressable` by default.
    */
   tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
 
   /**
    * Color for the icon and label in the active tab.
    */
-  tabBarActiveTintColor?: string;
+  tabBarActiveTintColor?: ColorValue;
 
   /**
    * Color for the icon and label in the inactive tabs.
    */
-  tabBarInactiveTintColor?: string;
+  tabBarInactiveTintColor?: ColorValue;
 
   /**
    * Background color for the active tab.
    */
-  tabBarActiveBackgroundColor?: string;
+  tabBarActiveBackgroundColor?: ColorValue;
 
   /**
    * Background color for the inactive tabs.
    */
-  tabBarInactiveBackgroundColor?: string;
+  tabBarInactiveBackgroundColor?: ColorValue;
 
   /**
    * Style object for the tab item container.
@@ -221,6 +230,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
     show?: TabBarVisibilityAnimationConfig;
     hide?: TabBarVisibilityAnimationConfig;
   };
+
+  /**
+   * Variant of the tab bar. Defaults to `uikit`.
+   */
+  tabBarVariant?: Variant;
 
   /**
    * Style object for the tab bar container.
@@ -259,10 +273,10 @@ export type BottomTabNavigationOptions = HeaderOptions & {
   headerShown?: boolean;
 
   /**
-   * Whether this screen should be unmounted when navigating away from it.
+   * Whether any nested stack should be popped to top when navigating away from the tab.
    * Defaults to `false`.
    */
-  unmountOnBlur?: boolean;
+  popToTopOnBlur?: boolean;
 
   /**
    * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
@@ -272,6 +286,11 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Only supported on iOS and Android.
    */
   freezeOnBlur?: boolean;
+
+  /**
+   * Style object for the component wrapping the screen content.
+   */
+  sceneStyle?: StyleProp<ViewStyle>;
 
   /**
    * How the screen should animate when switching tabs.
@@ -382,17 +401,9 @@ export type BottomTabNavigationConfig = {
    * Defaults to `true` on Android.
    */
   detachInactiveScreens?: boolean;
-  /**
-   * Style object for the component wrapping the screen content.
-   */
-  sceneContainerStyle?: StyleProp<ViewStyle>;
 };
 
 export type BottomTabHeaderProps = {
-  /**
-   * Layout of the screen.
-   */
-  layout: Layout;
   /**
    * Options for the current screen.
    */
@@ -416,11 +427,22 @@ export type BottomTabBarProps = {
 
 export type BottomTabBarButtonProps = Omit<
   React.ComponentProps<typeof PlatformPressable>,
-  'onPress'
+  'style'
 > & {
   href?: string;
   children: React.ReactNode;
+  style?: StyleProp<ViewStyle>;
   onPress?: (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => void;
 };
+
+export type BottomTabNavigatorProps = DefaultNavigatorOptions<
+  ParamListBase,
+  TabNavigationState<ParamListBase>,
+  BottomTabNavigationOptions,
+  BottomTabNavigationEventMap,
+  BottomTabNavigationProp<ParamListBase>
+> &
+  TabRouterOptions &
+  BottomTabNavigationConfig;

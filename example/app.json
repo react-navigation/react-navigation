@@ -1,46 +1,53 @@
 {
-  "name": "ReactNavigationExample",
-  "displayName": "React Navigation Example",
   "expo": {
     "name": "React Navigation",
     "owner": "react-navigation",
     "slug": "react-navigation-example",
     "description": "Demonstrates the functionality and various capabilities of React Navigation.",
-    "privacy": "public",
     "version": "1.0.0",
     "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+    "platforms": ["ios", "android", "web"],
+    "scheme": "rne",
+    "android": {
+      "package": "org.reactnavigation.playground",
+      "adaptiveIcon": {
+        "backgroundColor": "#7b61c1",
+        "foregroundImage": "./assets/icon-foreground.png"
+      }
     },
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "org.reactnavigation.example"
+      "bundleIdentifier": "org.reactnavigation.playground",
+      "icon": "./assets/icon.icon",
+    },
+    "web": {
+      "bundler": "metro"
     },
     "updates": {
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/a7070fc4-41f3-403d-826d-292b5d868327"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
-    "scheme": "rne",
-    "android": {
-      "package": "org.reactnavigation.example"
+    "assetBundlePatterns": ["**/*"],
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     },
+    "plugins": [
+      "expo-asset",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "backgroundColor": "#7b61c1"
+        }
+      ],
+      "react-native-edge-to-edge"
+    ],
     "extra": {
+      "supportsRTL": true,
+      "forcesRTL": false,
       "eas": {
         "projectId": "a7070fc4-41f3-403d-826d-292b5d868327"
       }
-    },
-    "runtimeVersion": {
-      "policy": "sdkVersion"
     }
   }
 }

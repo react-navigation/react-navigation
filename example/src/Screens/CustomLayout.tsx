@@ -2,10 +2,14 @@ import {
   Button,
   getDefaultHeaderHeight,
   getHeaderTitle,
+  Text,
+  useFrameSize,
 } from '@react-navigation/elements';
 import {
   CommonActions,
+  type NavigatorScreenParams,
   type PathConfigMap,
+  type StaticScreenProps,
   useTheme,
 } from '@react-navigation/native';
 import {
@@ -18,20 +22,16 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type CustomLayoutParams = {
+type CustomLayoutParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
@@ -78,7 +78,7 @@ const NewsFeedScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.navigate('Albums')}>
-          Navigate to album
+          Navigate to albums
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
@@ -114,11 +114,19 @@ const AlbumsScreen = ({
 
 const Stack = createStackNavigator<CustomLayoutParams>();
 
-export function NavigatorLayout() {
+export function NavigatorLayout(
+  _: StaticScreenProps<NavigatorScreenParams<CustomLayoutParams>>
+) {
   const { colors } = useTheme();
 
-  const frame = useSafeAreaFrame();
   const insets = useSafeAreaInsets();
+  const defaultHeaderHeight = useFrameSize((size) =>
+    getDefaultHeaderHeight({
+      landscape: size.width > size.height,
+      modalPresentation: false,
+      topInset: insets.top,
+    })
+  );
 
   return (
     <Stack.Navigator
@@ -131,7 +139,7 @@ export function NavigatorLayout() {
                 backgroundColor: colors.card,
                 borderBottomColor: colors.border,
                 borderBottomWidth: StyleSheet.hairlineWidth,
-                maxHeight: getDefaultHeaderHeight(frame, false, insets.top),
+                maxHeight: defaultHeaderHeight,
               }}
               contentContainerStyle={[
                 styles.breadcrumbs,

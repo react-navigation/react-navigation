@@ -3,17 +3,10 @@ import type {
   NavigationContainerRef,
   NavigationState,
 } from '@react-navigation/core';
-import deepEqual from 'deep-equal';
+import deepEqual from 'fast-deep-equal';
 import * as React from 'react';
 
-import { parseErrorStack } from './parseErrorStack';
-
-type StackFrame = {
-  lineNumber: number | null;
-  column: number | null;
-  file: string | null;
-  methodName: string;
-};
+import { parseErrorStack, type StackFrame } from './parseErrorStack';
 
 type StackFrameResult = StackFrame & {
   collapse: boolean;
@@ -36,13 +29,13 @@ type ActionData = {
 };
 
 export function useDevToolsBase(
-  ref: React.RefObject<NavigationContainerRef<any>>,
+  ref: React.RefObject<NavigationContainerRef<any> | null>,
   callback: (result: InitData | ActionData) => void
 ) {
-  const lastStateRef = React.useRef<NavigationState | undefined>();
+  const lastStateRef = React.useRef<NavigationState | undefined>(undefined);
   const lastActionRef = React.useRef<
     { action: NavigationAction; stack: string | undefined } | undefined
-  >();
+  >(undefined);
   const callbackRef = React.useRef(callback);
   const lastResetRef = React.useRef<NavigationState | undefined>(undefined);
 
@@ -66,20 +59,41 @@ export function useDevToolsBase(
     }
 
     try {
-      const result: StackResult = await fetch(`${urlMatch[0]}symbolicate`, {
-        method: 'POST',
-        body: JSON.stringify({ stack: frames }),
-      }).then((res) => res.json());
+      const url = new URL(urlMatch[0]);
+      const result: StackResult = await fetch(
+        `${url.protocol}//${url.host}/symbolicate`,
+        {
+          method: 'POST',
+          body: JSON.stringify({ stack: frames }),
+        }
+      ).then((res) => res.json());
 
       return result.stack
         .filter((it) => !it.collapse)
         .map(
           ({ methodName, file, lineNumber, column }) =>
-            `${methodName}@${file}:${lineNumber}:${column}`
+            `at ${methodName} (${file}:${lineNumber}:${column})`
         )
         .join('\n');
     } catch (err) {
-      return stack;
+      // Symbolication can fail with other bundles such as vite
+      // Remove entries with node_modules to reduce noise
+      const lines = stack.split('\n');
+      const result: string[] = [];
+
+      for (const line of lines) {
+        if (line.trim() === 'Error') {
+          continue;
+        }
+
+        if (line.trim().startsWith('at ') && line.includes('/node_modules/')) {
+          break;
+        }
+
+        result.push(line);
+      }
+
+      return result.join('\n');
     }
   };
 

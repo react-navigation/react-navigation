@@ -1,22 +1,22 @@
 import {
-  getDefaultSidebarWidth,
   getHeaderTitle,
   Header,
   SafeAreaProviderCompat,
-  Screen,
+  Screen as ScreenContent,
 } from '@react-navigation/elements';
 import {
   DrawerActions,
   type DrawerNavigationState,
   type DrawerStatus,
   type ParamListBase,
+  StackActions,
   useLocale,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
-import { useSafeAreaFrame } from 'react-native-safe-area-context';
+import { Screen, ScreenContainer } from 'react-native-screens';
 import useLatestCallback from 'use-latest-callback';
 
 import type {
@@ -33,7 +33,6 @@ import { DrawerStatusContext } from '../utils/DrawerStatusContext';
 import { getDrawerStatusFromState } from '../utils/getDrawerStatusFromState';
 import { DrawerContent } from './DrawerContent';
 import { DrawerToggleButton } from './DrawerToggleButton';
-import { MaybeScreen, MaybeScreenContainer } from './ScreenFallback';
 
 type Props = DrawerNavigationConfig & {
   defaultStatus: DrawerStatus;
@@ -42,14 +41,18 @@ type Props = DrawerNavigationConfig & {
   descriptors: DrawerDescriptorMap;
 };
 
+const DRAWER_BORDER_RADIUS = 16;
+
+const renderDrawerContentDefault = (props: DrawerContentComponentProps) => (
+  <DrawerContent {...props} />
+);
+
 function DrawerViewBase({
   state,
   navigation,
   descriptors,
   defaultStatus,
-  drawerContent = (props: DrawerContentComponentProps) => (
-    <DrawerContent {...props} />
-  ),
+  drawerContent = renderDrawerContentDefault,
   detachInactiveScreens = Platform.OS === 'web' ||
     Platform.OS === 'android' ||
     Platform.OS === 'ios',
@@ -62,15 +65,15 @@ function DrawerViewBase({
     drawerPosition = direction === 'rtl' ? 'right' : 'left',
     drawerStatusBarAnimation,
     drawerStyle,
-    drawerType,
-    gestureHandlerProps,
+    drawerType = Platform.select({ ios: 'slide', default: 'front' }),
+    configureGestureHandler,
     keyboardDismissMode,
-    overlayColor = 'rgba(0, 0, 0, 0.5)',
     swipeEdgeWidth,
     swipeEnabled = Platform.OS !== 'web' &&
       Platform.OS !== 'windows' &&
       Platform.OS !== 'macos',
     swipeMinDistance,
+    overlayStyle,
     overlayAccessibilityLabel,
   } = descriptors[focusedRouteKey].options;
 
@@ -80,7 +83,29 @@ function DrawerViewBase({
     setLoaded([...loaded, focusedRouteKey]);
   }
 
-  const dimensions = useSafeAreaFrame();
+  const previousRouteKeyRef = React.useRef(focusedRouteKey);
+
+  React.useEffect(() => {
+    const previousRouteKey = previousRouteKeyRef.current;
+
+    if (
+      previousRouteKey !== focusedRouteKey &&
+      descriptors[previousRouteKey]?.options.popToTopOnBlur
+    ) {
+      const prevRoute = state.routes.find(
+        (route) => route.key === previousRouteKey
+      );
+
+      if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
+        navigation.dispatch({
+          ...StackActions.popToTop(),
+          target: prevRoute.state.key,
+        });
+      }
+    }
+
+    previousRouteKeyRef.current = focusedRouteKey;
+  }, [descriptors, focusedRouteKey, navigation, state.routes]);
 
   const { colors } = useTheme();
 
@@ -185,25 +210,22 @@ function DrawerViewBase({
 
   const renderSceneContent = () => {
     return (
-      <MaybeScreenContainer
+      <ScreenContainer
         enabled={detachInactiveScreens}
         hasTwoStates
         style={styles.content}
       >
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
-          const { lazy = true, unmountOnBlur } = descriptor.options;
+          const { lazy = true } = descriptor.options;
           const isFocused = state.index === index;
-
-          if (unmountOnBlur && !isFocused) {
-            return null;
-          }
+          const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
           if (
             lazy &&
             !loaded.includes(route.key) &&
             !isFocused &&
-            !state.preloadedRouteKeys.includes(route.key)
+            !isPreloaded
           ) {
             // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
             return null;
@@ -211,32 +233,38 @@ function DrawerViewBase({
 
           const {
             freezeOnBlur,
-            header = ({ layout, options }: DrawerHeaderProps) => (
+            header = ({ options }: DrawerHeaderProps) => (
               <Header
                 {...options}
-                layout={layout}
                 title={getHeaderTitle(options, route.name)}
                 headerLeft={
-                  options.headerLeft ??
-                  ((props) => <DrawerToggleButton {...props} />)
+                  drawerPosition === 'left' && options.headerLeft == null
+                    ? (props) => <DrawerToggleButton {...props} />
+                    : options.headerLeft
+                }
+                headerRight={
+                  drawerPosition === 'right' && options.headerRight == null
+                    ? (props) => <DrawerToggleButton {...props} />
+                    : options.headerRight
                 }
               />
             ),
             headerShown,
             headerStatusBarHeight,
             headerTransparent,
-            sceneContainerStyle,
+            sceneStyle,
           } = descriptor.options;
 
           return (
-            <MaybeScreen
+            <Screen
               key={route.key}
               style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
-              visible={isFocused}
+              activityState={isFocused ? 2 : 0}
               enabled={detachInactiveScreens}
               freezeOnBlur={freezeOnBlur}
+              shouldFreeze={!isFocused && !isPreloaded}
             >
-              <Screen
+              <ScreenContent
                 focused={isFocused}
                 route={descriptor.route}
                 navigation={descriptor.navigation}
@@ -244,20 +272,19 @@ function DrawerViewBase({
                 headerStatusBarHeight={headerStatusBarHeight}
                 headerTransparent={headerTransparent}
                 header={header({
-                  layout: dimensions,
                   route: descriptor.route,
                   navigation:
                     descriptor.navigation as DrawerNavigationProp<ParamListBase>,
                   options: descriptor.options,
                 })}
-                style={sceneContainerStyle}
+                style={sceneStyle}
               >
                 {descriptor.render()}
-              </Screen>
-            </MaybeScreen>
+              </ScreenContent>
+            </Screen>
           );
         })}
-      </MaybeScreenContainer>
+      </ScreenContainer>
     );
   };
 
@@ -272,8 +299,8 @@ function DrawerViewBase({
         onGestureCancel={handleGestureCancel}
         onTransitionStart={handleTransitionStart}
         onTransitionEnd={handleTransitionEnd}
-        layout={dimensions}
-        gestureHandlerProps={gestureHandlerProps}
+        direction={direction}
+        configureGestureHandler={configureGestureHandler}
         swipeEnabled={swipeEnabled}
         swipeEdgeWidth={swipeEdgeWidth}
         swipeMinDistance={swipeMinDistance}
@@ -284,23 +311,36 @@ function DrawerViewBase({
         overlayAccessibilityLabel={overlayAccessibilityLabel}
         drawerPosition={drawerPosition}
         drawerStyle={[
-          {
-            backgroundColor: colors.card,
-            width: getDefaultSidebarWidth(dimensions),
-          },
+          { backgroundColor: colors.card },
           drawerType === 'permanent' &&
-            (drawerPosition === 'left'
+            ((
+              Platform.OS === 'web'
+                ? drawerPosition === 'right'
+                : (direction === 'rtl' && drawerPosition !== 'right') ||
+                  (direction !== 'rtl' && drawerPosition === 'right')
+            )
               ? {
-                  borderEndColor: colors.border,
-                  borderEndWidth: StyleSheet.hairlineWidth,
+                  borderLeftColor: colors.border,
+                  borderLeftWidth: StyleSheet.hairlineWidth,
                 }
               : {
-                  borderStartColor: colors.border,
-                  borderStartWidth: StyleSheet.hairlineWidth,
+                  borderRightColor: colors.border,
+                  borderRightWidth: StyleSheet.hairlineWidth,
+                }),
+
+          drawerType === 'front' &&
+            (drawerPosition === 'left'
+              ? {
+                  borderTopRightRadius: DRAWER_BORDER_RADIUS,
+                  borderBottomRightRadius: DRAWER_BORDER_RADIUS,
+                }
+              : {
+                  borderTopLeftRadius: DRAWER_BORDER_RADIUS,
+                  borderBottomLeftRadius: DRAWER_BORDER_RADIUS,
                 }),
           drawerStyle,
         ]}
-        overlayStyle={{ backgroundColor: overlayColor }}
+        overlayStyle={overlayStyle}
         renderDrawerContent={renderDrawerContent}
       >
         {renderSceneContent()}

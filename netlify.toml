@@ -1,5 +1,10 @@
 [build]
   base    = "/"
-  publish = "example/web-build"
-  command = "yarn example expo export:web"
+  publish = "example/dist"
+  command = "yarn example expo export --platform web"
   environment = { YARN_VERSION = "3.2.2" }
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

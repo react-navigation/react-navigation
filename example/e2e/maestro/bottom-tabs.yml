@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+name: Bottom Tabs
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: bottom-tabs
+      TEXT: 'Article by Gandalf'

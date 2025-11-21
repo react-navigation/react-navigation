@@ -1,8 +1,14 @@
+import { expect, jest, test } from '@jest/globals';
 import {
   createNavigatorFactory,
+  type DefaultNavigatorOptions,
+  type NavigationListBase,
   type NavigatorScreenParams,
+  type ParamListBase,
+  type StackNavigationState,
   StackRouter,
   TabRouter,
+  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -19,7 +25,7 @@ window.addEventListener = () => {};
 window.removeEventListener = () => {};
 
 // We want to use the web version of useLinking
-// eslint-disable-next-line import/extensions
+// eslint-disable-next-line import-x/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
 // Since Jest is configured for React Native, the *.native.js file is imported
@@ -37,8 +43,16 @@ jest.spyOn(console, 'error').mockImplementation((...args) => {
   error(...args);
 });
 
-it('renders correct state with location', () => {
-  const createStackNavigator = createNavigatorFactory((props: any) => {
+test('renders correct state with location', () => {
+  const StackNavigator = (
+    props: DefaultNavigatorOptions<
+      ParamListBase,
+      StackNavigationState<ParamListBase>,
+      {},
+      {},
+      unknown
+    >
+  ) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
       props
@@ -51,7 +65,18 @@ it('renders correct state with location', () => {
         ))}
       </NavigationContent>
     );
-  });
+  };
+
+  function createStackNavigator<ParamList extends {}>(): TypedNavigator<{
+    ParamList: ParamList;
+    State: StackNavigationState<ParamList>;
+    ScreenOptions: {};
+    EventMap: {};
+    NavigationList: NavigationListBase<ParamList>;
+    Navigator: typeof StackNavigator;
+  }> {
+    return createNavigatorFactory(StackNavigator)();
+  }
 
   type StackAParamList = {
     Home: NavigatorScreenParams<StackBParamList>;
@@ -85,7 +110,6 @@ it('renders correct state with location', () => {
   const element = (
     <NavigationContainer<StackAParamList>
       linking={{
-        prefixes: [],
         config: {
           screens: {
             Home: {
@@ -130,7 +154,7 @@ it('renders correct state with location', () => {
   );
 });
 
-it('gets the current options', () => {
+test('gets the current options', () => {
   const createTabNavigator = createNavigatorFactory((props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       TabRouter,

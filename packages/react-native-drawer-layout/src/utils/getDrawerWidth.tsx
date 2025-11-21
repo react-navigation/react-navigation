@@ -1,49 +1,57 @@
-import {
-  Platform,
-  type StyleProp,
-  StyleSheet,
-  type ViewStyle,
-} from 'react-native';
+import { type DimensionValue, type ViewStyle } from 'react-native';
 
-const getDefaultDrawerWidth = ({
-  height,
-  width,
+const APPROX_APP_BAR_HEIGHT = 56;
+const DEFAULT_DRAWER_WIDTH = 360;
+
+/**
+ * Default drawer width is 360dp
+ * On screens smaller than 320dp, ideally the drawer would collapse to a navigation bar
+ * https://m3.material.io/components/navigation-drawer/specs
+ */
+const DRAWER_DEFAULT_WIDTH_WEB = `min(calc(100% - ${APPROX_APP_BAR_HEIGHT}px), ${DEFAULT_DRAWER_WIDTH}px)`;
+
+export function getDrawerWidthNative({
+  containerWidth,
+  customWidth,
 }: {
-  height: number;
-  width: number;
-}) => {
-  /**
-   * Default drawer width is screen width - header height
-   * with a max width of 280 on mobile and 320 on tablet
-   * https://material.io/components/navigation-drawer
-   */
-  const smallerAxisSize = Math.min(height, width);
-  const isLandscape = width > height;
-  const isTablet = smallerAxisSize >= 600;
-  const appBarHeight = Platform.OS === 'ios' ? (isLandscape ? 32 : 44) : 56;
-  const maxWidth = isTablet ? 320 : 280;
-
-  return Math.min(smallerAxisSize - appBarHeight, maxWidth);
-};
-
-export function getDrawerWidth({
-  layout,
-  drawerStyle,
-}: {
-  layout: { width: number; height: number };
-  drawerStyle?: StyleProp<ViewStyle>;
+  containerWidth: number;
+  customWidth: DimensionValue | undefined | null;
 }) {
-  const { width = getDefaultDrawerWidth(layout) } =
-    StyleSheet.flatten(drawerStyle) || {};
+  'worklet';
+
+  const defaultWidth =
+    containerWidth - APPROX_APP_BAR_HEIGHT <= 360
+      ? containerWidth - APPROX_APP_BAR_HEIGHT
+      : DEFAULT_DRAWER_WIDTH;
+
+  const width = customWidth ?? defaultWidth;
 
   if (typeof width === 'string' && width.endsWith('%')) {
     // Try to calculate width if a percentage is given
     const percentage = Number(width.replace(/%$/, ''));
 
     if (Number.isFinite(percentage)) {
-      return layout.width * (percentage / 100);
+      return containerWidth * (percentage / 100);
     }
   }
 
-  return typeof width === 'number' ? width : 0;
+  return typeof width === 'number' ? width : defaultWidth;
+}
+
+export function getDrawerWidthWeb({
+  drawerStyle,
+}: {
+  drawerStyle: ViewStyle;
+}): string {
+  const { width } = drawerStyle;
+
+  if (typeof width === 'number') {
+    return `${width}px`;
+  }
+
+  if (typeof width === 'string') {
+    return width;
+  }
+
+  return DRAWER_DEFAULT_WIDTH_WEB;
 }

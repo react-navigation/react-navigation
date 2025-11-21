@@ -1,42 +1,44 @@
-import { PlatformPressable } from '@react-navigation/elements';
+import { HeaderButton } from '@react-navigation/elements';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import {
-  DrawerActions,
-  type ParamListBase,
-  useNavigation,
-} from '@react-navigation/native';
-import * as React from 'react';
-import { Image, Platform, StyleSheet } from 'react-native';
+  type ColorValue,
+  Image,
+  type ImageSourcePropType,
+  StyleSheet,
+} from 'react-native';
 
-import type { DrawerNavigationProp } from '../types';
+import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
 
 type Props = {
   accessibilityLabel?: string;
-  pressColor?: string;
+  pressColor?: ColorValue;
   pressOpacity?: number;
-  tintColor?: string;
+  tintColor?: ColorValue;
+  imageSource?: ImageSourcePropType;
 };
 
-export function DrawerToggleButton({ tintColor, ...rest }: Props) {
-  const navigation = useNavigation<DrawerNavigationProp<ParamListBase>>();
+export function DrawerToggleButton({
+  tintColor,
+  accessibilityLabel = 'Show navigation menu',
+  imageSource = toggleDrawerIcon,
+  ...rest
+}: Props) {
+  const navigation = useNavigation();
 
   return (
-    <PlatformPressable
+    <HeaderButton
       {...rest}
-      android_ripple={{ borderless: true }}
+      accessibilityLabel={accessibilityLabel}
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
-      style={styles.touchable}
-      hitSlop={Platform.select({
-        ios: undefined,
-        default: { top: 16, right: 16, bottom: 16, left: 16 },
-      })}
     >
       <Image
-        style={[styles.icon, tintColor ? { tintColor } : null]}
         resizeMode="contain"
-        source={require('./assets/toggle-drawer-icon.png')}
+        source={imageSource}
         fadeDuration={0}
+        tintColor={tintColor}
+        style={styles.icon}
       />
-    </PlatformPressable>
+    </HeaderButton>
   );
 }
 
@@ -44,9 +46,7 @@ const styles = StyleSheet.create({
   icon: {
     height: 24,
     width: 24,
-    margin: 3,
-  },
-  touchable: {
-    marginHorizontal: 11,
+    marginVertical: 8,
+    marginHorizontal: 5,
   },
 });

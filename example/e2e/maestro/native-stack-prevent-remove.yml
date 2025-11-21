@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+name: Native Stack Prevent Remove
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: native-stack-prevent-remove
+      TEXT: 'Input'

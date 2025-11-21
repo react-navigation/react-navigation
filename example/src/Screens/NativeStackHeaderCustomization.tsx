@@ -1,11 +1,20 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Button, HeaderButton } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import {
+  Button,
+  getHeaderTitle,
+  Header,
+  HeaderButton,
+} from '@react-navigation/elements';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createNativeStackNavigator,
+  type NativeStackOptionsArgs,
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import * as React from 'react';
 import {
   Alert,
   Image,
@@ -20,7 +29,7 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type NativeHeaderCustomizationStackParams = {
+type NativeHeaderCustomizationStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
@@ -70,7 +79,7 @@ const NewsFeedScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Push Albums
+          Push albums
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
@@ -107,7 +116,11 @@ const AlbumsScreen = ({
 const Stack =
   createNativeStackNavigator<NativeHeaderCustomizationStackParams>();
 
-export function NativeStackHeaderCustomization() {
+export function NativeStackHeaderCustomization(
+  _: StaticScreenProps<
+    NavigatorScreenParams<NativeHeaderCustomizationStackParams>
+  >
+) {
   const onPress = () => {
     Alert.alert(
       'Never gonna give you up!',
@@ -120,8 +133,14 @@ export function NativeStackHeaderCustomization() {
       <Stack.Screen
         name="Article"
         component={ArticleScreen}
-        options={({ route, navigation }) => ({
-          title: `Article by ${route.params?.author ?? 'Unknown'}`,
+        options={({
+          route,
+          navigation,
+        }: NativeStackOptionsArgs<
+          NativeHeaderCustomizationStackParams,
+          'Article'
+        >) => ({
+          title: `Article byyyy ${route.params?.author ?? 'Unknown'}`,
           headerTintColor: 'white',
           headerTitle: ({ tintColor }) => (
             <HeaderButton onPress={onPress}>
@@ -153,7 +172,7 @@ export function NativeStackHeaderCustomization() {
           ),
           headerBackground: () => (
             <Image
-              source={require('../../assets/cpu.jpg')}
+              source={require('../../assets/misc/cpu.jpg')}
               resizeMode="cover"
               style={styles.headerBackground}
             />
@@ -166,10 +185,12 @@ export function NativeStackHeaderCustomization() {
         component={NewsFeedScreen}
         options={{
           title: 'Feed',
-          headerLeft: ({ tintColor }) => (
-            <HeaderButton onPress={onPress}>
-              <MaterialCommunityIcons name="spa" size={24} color={tintColor} />
-            </HeaderButton>
+          header: ({ options, route, back }) => (
+            <Header
+              {...options}
+              back={back}
+              title={getHeaderTitle(options, route.name)}
+            />
           ),
         }}
       />
@@ -210,8 +231,8 @@ const styles = StyleSheet.create({
     padding: 12,
   },
   headerBackground: {
-    height: undefined,
-    width: undefined,
+    height: 'auto',
+    width: 'auto',
     flex: 1,
   },
 });

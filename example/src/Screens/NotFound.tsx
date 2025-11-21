@@ -1,14 +1,11 @@
-import { Button } from '@react-navigation/elements';
-import type { StackScreenProps } from '@react-navigation/stack';
-import * as React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, Text } from '@react-navigation/elements';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { StyleSheet, View } from 'react-native';
 
-import type { RootStackParamList } from '../screens';
+export const NotFound = () => {
+  const route = useRoute();
+  const navigation = useNavigation();
 
-export const NotFound = ({
-  route,
-  navigation,
-}: StackScreenProps<RootStackParamList, 'NotFound'>) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>404 Not Found ({route.path})</Text>

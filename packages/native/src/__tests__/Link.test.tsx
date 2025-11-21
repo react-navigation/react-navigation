@@ -1,5 +1,6 @@
+import { expect, jest, test } from '@jest/globals';
 import { fireEvent, render } from '@testing-library/react-native';
-import * as React from 'react';
+import { Platform } from 'react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { Link } from '../Link';
@@ -7,14 +8,10 @@ import { NavigationContainer } from '../NavigationContainer';
 
 type RootParamList = { Foo: undefined; Bar: { id: string } };
 
-jest.mock('react-native/Libraries/Utilities/Platform', () => ({
-  ...jest.requireActual('react-native/Libraries/Utilities/Platform'),
-  OS: 'web',
-}));
+jest.replaceProperty(Platform, 'OS', 'web');
 
-it('renders link with href on web', () => {
+test('renders link with href on web', () => {
   const config = {
-    prefixes: ['https://example.com'],
     config: {
       screens: {
         Foo: 'foo',
@@ -51,9 +48,9 @@ it('renders link with href on web', () => {
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
-  accessibilityRole="link"
   href="/bar/42"
   onPress={[Function]}
+  role="link"
   style={
     [
       {
@@ -82,9 +79,9 @@ it('renders link with href on web', () => {
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
-  accessibilityRole="link"
   href="/foo"
   onPress={[Function]}
+  role="link"
   style={
     [
       {
@@ -103,9 +100,8 @@ it('renders link with href on web', () => {
 `);
 });
 
-it("doesn't navigate if default was prevented", () => {
+test("doesn't navigate if default was prevented", () => {
   const config = {
-    prefixes: ['https://example.com'],
     config: {
       screens: {
         Foo: 'foo',
@@ -146,9 +142,9 @@ it("doesn't navigate if default was prevented", () => {
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
-  accessibilityRole="link"
   href="/bar/42"
   onPress={[Function]}
+  role="link"
   style={
     [
       {
@@ -177,9 +173,9 @@ it("doesn't navigate if default was prevented", () => {
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
-  accessibilityRole="link"
   href="/bar/42"
   onPress={[Function]}
+  role="link"
   style={
     [
       {

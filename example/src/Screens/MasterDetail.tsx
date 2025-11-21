@@ -8,15 +8,19 @@ import {
   Header as NavigationHeader,
   HeaderBackButton,
 } from '@react-navigation/elements';
-import { type PathConfigMap, useNavigation } from '@react-navigation/native';
-import * as React from 'react';
+import {
+  type NavigatorScreenParams,
+  type PathConfigMap,
+  type StaticScreenProps,
+  useNavigation,
+} from '@react-navigation/native';
 import { useWindowDimensions } from 'react-native';
 
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type MasterDetailParams = {
+type MasterDetailParams = {
   Article: undefined;
   NewsFeed: undefined;
   Albums: undefined;
@@ -106,7 +110,9 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
 const Drawer = createDrawerNavigator<MasterDetailParams>();
 
-export function MasterDetail() {
+export function MasterDetail(
+  _: StaticScreenProps<NavigatorScreenParams<MasterDetailParams>>
+) {
   const isLargeScreen = useIsLargeScreen();
 
   return (
@@ -119,7 +125,7 @@ export function MasterDetail() {
         drawerType: isLargeScreen ? 'permanent' : 'back',
         drawerStyle: isLargeScreen ? null : { width: '100%' },
         drawerContentContainerStyle: { paddingTop: 4 },
-        overlayColor: 'transparent',
+        overlayStyle: { backgroundColor: 'transparent' },
       }}
     >
       <Drawer.Screen name="Article" component={ArticleScreen} />

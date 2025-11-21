@@ -1,12 +1,97 @@
 import type {
   Animated,
+  ColorValue,
   LayoutChangeEvent,
   StyleProp,
+  TextInputProps,
   TextStyle,
   ViewStyle,
 } from 'react-native';
 
+import type { BlurEffectType } from './getBlurBackgroundColor';
+
+export type HeaderBackButtonDisplayMode = 'default' | 'generic' | 'minimal';
+
 export type Layout = { width: number; height: number };
+
+export type HeaderSearchBarRef = {
+  focus: () => void;
+  blur: () => void;
+  setText: (text: string) => void;
+  clearText: () => void;
+  cancelSearch: () => void;
+};
+
+export type HeaderSearchBarOptions = {
+  /**
+   * Ref to imperatively update the search bar.
+   *
+   * Supported operations:
+   * - `focus` - focuses the search bar
+   * - `blur` - removes focus from the search bar
+   * - `setText` - sets the search bar's content to given value
+   * - `clearText` - removes any text present in the search bar input field
+   * - `cancelSearch` - cancel the search and close the search bar
+   */
+  ref?: React.Ref<HeaderSearchBarRef>;
+  /**
+   * The auto-capitalization behavior
+   */
+  autoCapitalize?:
+    | 'none'
+    | 'words'
+    | 'sentences'
+    | 'characters'
+    | 'systemDefault';
+  /**
+   * Automatically focuses search input on mount
+   */
+  autoFocus?: boolean;
+  /**
+   * The text to be used instead of default `Cancel` button text
+   *
+   * @platform ios
+   */
+  cancelButtonText?: string;
+  /**
+   * Sets type of the input. Defaults to `text`.
+   */
+  inputType?: 'text' | 'phone' | 'number' | 'email';
+  /**
+   * Determines how the return key should look. Defaults to `search`.
+   */
+  enterKeyHint?: TextInputProps['enterKeyHint'];
+  /**
+   * A callback that gets called when search input has lost focus
+   */
+  onBlur?: TextInputProps['onBlur'];
+  /**
+   * A callback that gets called when the text changes.
+   * It receives the current text value of the search input.
+   */
+  onChangeText?: TextInputProps['onChange'];
+  /**
+   * Callback that is called when the submit button is pressed.
+   * It receives the current text value of the search input.
+   */
+  onSubmitEditing?: TextInputProps['onSubmitEditing'];
+  /**
+   * A callback that gets called when search input is opened
+   */
+  onOpen?: () => void;
+  /**
+   * A callback that gets called when search input is closed
+   */
+  onClose?: () => void;
+  /**
+   * A callback that gets called when search input has received focus
+   */
+  onFocus?: TextInputProps['onFocus'];
+  /**
+   * Text displayed when search field is empty
+   */
+  placeholder?: string;
+};
 
 export type HeaderOptions = {
   /**
@@ -35,18 +120,40 @@ export type HeaderOptions = {
    */
   headerTitleAllowFontScaling?: boolean;
   /**
+   * Options to render a search bar.
+   */
+  headerSearchBarOptions?: HeaderSearchBarOptions;
+  /**
    * Function which returns a React Element to display on the left side of the header.
    */
-  headerLeft?: (props: {
-    tintColor?: string;
-    pressColor?: string;
-    pressOpacity?: number;
-    labelVisible?: boolean;
-  }) => React.ReactNode;
+  headerLeft?: (
+    props: HeaderBackButtonProps & {
+      /**
+       * Whether it's possible to navigate back.
+       */
+      canGoBack?: boolean;
+    }
+  ) => React.ReactNode;
   /**
-   * Whether a label is visible in the left button. Used to add extra padding.
+   * How the back button displays icon and title.
+   *
+   * Supported values:
+   * - "default" - Displays one of the following depending on the available space: previous screen's title, truncated title (e.g. 'Back') or no title (only icon).
+   * - "generic" – Displays one of the following depending on the available space: truncated title (e.g. 'Back') or no title (only icon).
+   * - "minimal" – Always displays only the icon without a title.
+   *
+   * Defaults to "default" on iOS, and "minimal" on other platforms.
    */
-  headerLeftLabelVisible?: boolean;
+  headerBackButtonDisplayMode?: HeaderBackButtonDisplayMode;
+  /**
+   * Style object for header back title. Supported properties:
+   * - fontFamily
+   * - fontSize
+   */
+  headerBackTitleStyle?: StyleProp<{
+    fontFamily?: string;
+    fontSize?: number;
+  }>;
   /**
    * Style object for the container of the `headerLeft` element`.
    */
@@ -55,9 +162,10 @@ export type HeaderOptions = {
    * Function which returns a React Element to display on the right side of the header.
    */
   headerRight?: (props: {
-    tintColor?: string;
-    pressColor?: string;
+    tintColor?: ColorValue;
+    pressColor?: ColorValue;
     pressOpacity?: number;
+    canGoBack: boolean;
   }) => React.ReactNode;
   /**
    * Style object for the container of the `headerRight` element.
@@ -66,7 +174,7 @@ export type HeaderOptions = {
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
-  headerPressColor?: string;
+  headerPressColor?: ColorValue;
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
@@ -74,7 +182,7 @@ export type HeaderOptions = {
   /**
    * Tint color for the header.
    */
-  headerTintColor?: string;
+  headerTintColor?: ColorValue;
   /**
    * Function which returns a React Element to render as the background of the header.
    * This is useful for using backgrounds such as an image, a gradient, blur effect etc.
@@ -95,6 +203,15 @@ export type HeaderOptions = {
    * This is useful if you want to render a semi-transparent header or a blurred background.
    */
   headerTransparent?: boolean;
+  /**
+   * Blur effect for the translucent header.
+   * The `headerTransparent` option needs to be set to `true` for this to work.
+   *
+   * Only supported on Web.
+   *
+   * @platform web
+   */
+  headerBlurEffect?: BlurEffectType | 'none';
   /**
    * Style object for the header. You can specify a custom background color here, for example.
    */
@@ -136,7 +253,7 @@ export type HeaderTitleProps = {
   /**
    * Tint color for the header.
    */
-  tintColor?: string;
+  tintColor?: ColorValue;
   /**
    * Callback to trigger when the size of the title element changes.
    */
@@ -171,11 +288,11 @@ export type HeaderButtonProps = {
   /**
    * Tint color for the header button.
    */
-  tintColor?: string;
+  tintColor?: ColorValue;
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
-  pressColor?: string;
+  pressColor?: ColorValue;
   /**
    * Opacity when the button is pressed, used when ripple is not supported.
    */
@@ -194,7 +311,7 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
   /**
    * Function which returns a React Element to display custom image in header's back button.
    */
-  backImage?: (props: { tintColor: string }) => React.ReactNode;
+  backImage?: (props: { tintColor: ColorValue }) => React.ReactNode;
   /**
    * Label text for the button. Usually the title of the previous screen.
    * By default, this is only shown on iOS.
@@ -205,10 +322,16 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    */
   truncatedLabel?: string;
   /**
-   * Whether the label text is visible.
-   * Defaults to `true` on iOS and `false` on Android.
+   * How the back button displays icon and title.
+   *
+   * Supported values:
+   * - "default" - Displays one of the following depending on the available space: previous screen's title, truncated title (e.g. 'Back') or no title (only icon).
+   * - "generic" – Displays one of the following depending on the available space: truncated title (e.g. 'Back') or no title (only icon).
+   * - "minimal" – Always displays only the icon without a title.
+   *
+   * Defaults to "default" on iOS, and "minimal" on other platforms.
    */
-  labelVisible?: boolean;
+  displayMode?: HeaderBackButtonDisplayMode;
   /**
    * Style object for the label.
    */
@@ -221,12 +344,4 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    * Callback to trigger when the size of the label changes.
    */
   onLabelLayout?: (e: LayoutChangeEvent) => void;
-  /**
-   * Layout of the screen.
-   */
-  screenLayout?: Layout;
-  /**
-   * Layout of the title element in the header.
-   */
-  titleLayout?: Layout;
 };

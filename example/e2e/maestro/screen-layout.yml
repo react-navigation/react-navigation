@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+name: Screen Layout
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: screen-layout
+      TEXT: 'Suspense & ErrorBoundary'

@@ -1,24 +1,24 @@
+import { expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
   type ParamListBase,
 } from '@react-navigation/core';
 import { render, type RenderAPI } from '@testing-library/react-native';
-import * as React from 'react';
 
 import { useLinking } from '../useLinking';
 
-it('throws if multiple instances of useLinking are used', () => {
+test('throws if multiple instances of useLinking are used', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
 
-  const options = { prefixes: [] };
+  const options = { enabled: true };
 
   function Sample() {
-    useLinking(ref, options, () => {});
-    useLinking(ref, options, () => {});
+    useLinking(ref, options);
+    useLinking(ref, options);
     return null;
   }
 
-  const spy = jest.spyOn(console, 'error').mockImplementation();
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
   let element: RenderAPI | undefined;
 
@@ -32,12 +32,12 @@ it('throws if multiple instances of useLinking are used', () => {
   element?.unmount();
 
   function A() {
-    useLinking(ref, options, () => {});
+    useLinking(ref, options);
     return null;
   }
 
   function B() {
-    useLinking(ref, options, () => {});
+    useLinking(ref, options);
     return null;
   }
 
@@ -56,7 +56,7 @@ it('throws if multiple instances of useLinking are used', () => {
   element?.unmount();
 
   function Sample2() {
-    useLinking(ref, options, () => {});
+    useLinking(ref, options);
     return null;
   }
 

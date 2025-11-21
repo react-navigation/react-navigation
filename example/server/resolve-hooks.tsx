@@ -1,6 +1,5 @@
 import 'mock-require-assets';
 
-import mock from 'mock-require';
 import Module from 'module';
 
 // We need to make sure that .web.xx extensions are resolved before .xx
@@ -14,18 +13,4 @@ Module._extensions = Object.fromEntries(
 
 // Set __DEV__ that expo needs
 // @ts-expect-error __DEV__ doesn't exist in the type definitions
-global.__DEV__ = process.env.NODE_ENV !== 'production';
-
-// Reanimated doesn't support SSR :(
-mock(
-  'react-native-reanimated',
-  // eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
-  require('react-native-reanimated/mock')
-);
-
-// expo-asset breaks because it imports internals :()
-mock(
-  'react-native-web/Libraries/Image/AssetRegistry',
-  // eslint-disable-next-line import/no-commonjs, @typescript-eslint/no-var-requires
-  require('react-native-web/dist/modules/AssetRegistry')
-);
+globalThis.__DEV__ = process.env.NODE_ENV !== 'production';

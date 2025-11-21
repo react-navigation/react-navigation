@@ -22,11 +22,67 @@ test('loads the article screen', async ({ page }) => {
   );
 });
 
+test('replaces and pushes params', async ({ page }) => {
+  await page.waitForURL('**/link-component/article/gandalf');
+
+  await page.getByRole('button', { name: 'Push params' }).click();
+
+  await page.waitForURL('**/link-component/article/babel-fish');
+
+  await expect(page).toHaveTitle(
+    'Article by Babel fish - React Navigation Example'
+  );
+
+  await page.getByRole('button', { name: 'Push params' }).click();
+
+  await page.waitForURL('**/link-component/article/gandalf');
+
+  await expect(page).toHaveTitle(
+    'Article by Gandalf - React Navigation Example'
+  );
+
+  await page.getByRole('link', { name: 'Go back' }).click();
+
+  await page.waitForURL('**/link-component/article/babel-fish');
+
+  await expect(page).toHaveTitle(
+    'Article by Babel fish - React Navigation Example'
+  );
+
+  await expect(
+    page.getByRole('heading', { name: 'Article by Babel fish' })
+  ).toBeVisible();
+
+  await page.getByRole('link', { name: 'Go back' }).click();
+
+  await page.waitForURL('**/link-component/article/gandalf');
+
+  await expect(page).toHaveTitle(
+    'Article by Gandalf - React Navigation Example'
+  );
+
+  await expect(
+    page.getByRole('heading', { name: 'Article by Gandalf' })
+  ).toBeVisible();
+
+  await page.getByRole('button', { name: 'Replace params' }).click();
+
+  await page.waitForURL('**/link-component/article/babel-fish');
+
+  await expect(page).toHaveTitle(
+    'Article by Babel fish - React Navigation Example'
+  );
+
+  await expect(
+    page.getByRole('heading', { name: 'Article by Babel fish' })
+  ).toBeVisible();
+});
+
 test('goes to the album screen and goes back', async ({ page }) => {
   await page.waitForURL('**/link-component/article/gandalf');
 
   const link = page.getByRole('link', {
-    name: 'Go to Albums',
+    name: 'Go to albums',
   });
 
   await expect(link).toHaveAttribute('href', '/link-component/albums');
@@ -58,7 +114,7 @@ test('replaces article with the album screen', async ({ page }) => {
   await page.waitForURL('**/link-component/article/gandalf');
 
   const link = page.getByRole('link', {
-    name: 'Replace with Albums',
+    name: 'Replace with albums',
   });
 
   await expect(link).toHaveAttribute('href', '/link-component/albums');
@@ -90,7 +146,7 @@ test('preserves hash for navigation', async ({ page }) => {
 
   await page.waitForURL('**/link-component/article/gandalf#frodo');
 
-  await page.getByRole('button', { name: 'Update params' }).click();
+  await page.getByRole('button', { name: 'Replace params' }).click();
 
   await page.waitForURL('**/link-component/article/babel-fish#frodo');
 
@@ -102,7 +158,7 @@ test('preserves hash for navigation', async ({ page }) => {
     'Article by Babel fish - React Navigation Example'
   );
 
-  await page.getByRole('link', { name: 'Replace with Albums' }).click();
+  await page.getByRole('link', { name: 'Replace with albums' }).click();
 
   await page.waitForURL('**/link-component/albums');
 });

@@ -1,11 +1,14 @@
 import { Button, Text } from '@react-navigation/elements';
-import { useTheme } from '@react-navigation/native';
+import {
+  type NavigatorScreenParams,
+  type StaticScreenProps,
+  useTheme,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
   useCardAnimation,
 } from '@react-navigation/stack';
-import * as React from 'react';
 import {
   Animated,
   Platform,
@@ -19,7 +22,7 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type TransparentStackParams = {
+type TransparentStackParams = {
   Article: { author: string };
   NewsFeed: undefined;
   Dialog: undefined;
@@ -84,7 +87,10 @@ const DialogScreen = ({
 
   return (
     <View style={styles.container}>
-      <Pressable style={styles.backdrop} onPress={navigation.goBack} />
+      <Pressable
+        style={[StyleSheet.absoluteFill, styles.backdrop]}
+        onPress={navigation.goBack}
+      />
       <Animated.View
         style={[
           styles.dialog,
@@ -127,7 +133,9 @@ const DialogScreen = ({
 
 const Stack = createStackNavigator<TransparentStackParams>();
 
-export function StackTransparent() {
+export function StackTransparent(
+  _: StaticScreenProps<NavigatorScreenParams<TransparentStackParams>>
+) {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -174,7 +182,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
   },
   backdrop: {
-    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   paragraph: {

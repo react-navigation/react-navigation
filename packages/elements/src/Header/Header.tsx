@@ -1,3 +1,4 @@
+import { useNavigation, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -6,26 +7,42 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import type { HeaderOptions, Layout } from '../types';
+import searchIcon from '../assets/search-icon.png';
+import { Color } from '../Color';
+import type { HeaderOptions } from '../types';
+import { useFrameSize } from '../useFrameSize';
 import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
+import { HeaderBackButton } from './HeaderBackButton';
 import { HeaderBackground } from './HeaderBackground';
+import { HeaderButton } from './HeaderButton';
+import { HeaderIcon } from './HeaderIcon';
+import { HeaderSearchBar } from './HeaderSearchBar';
 import { HeaderShownContext } from './HeaderShownContext';
 import { HeaderTitle } from './HeaderTitle';
 
+// Width of the screen in split layout on portrait mode on iPad Mini
+const IPAD_MINI_MEDIUM_WIDTH = 414;
+
 type Props = HeaderOptions & {
+  /**
+   * Options for the back button.
+   */
+  back?: {
+    /**
+     * Title of the previous screen.
+     */
+    title: string | undefined;
+    /**
+     * The `href` to use for the anchor tag on web
+     */
+    href: string | undefined;
+  };
   /**
    * Whether the header is in a modal
    */
   modal?: boolean;
-  /**
-   * Layout of the screen.
-   */
-  layout?: Layout;
   /**
    * Title text for the header.
    */
@@ -50,46 +67,51 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
 
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
-  const frame = useSafeAreaFrame();
+  const { colors } = useTheme();
 
+  const navigation = useNavigation();
   const isParentHeaderShown = React.useContext(HeaderShownContext);
 
-  // On models with Dynamic Island the status bar height is smaller than the safe area top inset.
-  const hasDynamicIsland = Platform.OS === 'ios' && insets.top > 50;
-  const statusBarHeight = hasDynamicIsland ? insets.top - 5 : insets.top;
+  const [searchBarVisible, setSearchBarVisible] = React.useState(false);
 
   const {
-    layout = frame,
     modal = false,
+    back,
     title,
     headerTitle: customTitle,
-    headerTitleAlign = Platform.select({
-      ios: 'center',
-      default: 'left',
-    }),
-    headerLeft,
-    headerLeftLabelVisible,
+    headerTitleAlign = Platform.OS === 'ios' ? 'center' : 'left',
+    headerLeft = back ? (props) => <HeaderBackButton {...props} /> : undefined,
+    headerSearchBarOptions,
     headerTransparent,
     headerTintColor,
     headerBackground,
+    headerBlurEffect,
     headerRight,
     headerTitleAllowFontScaling: titleAllowFontScaling,
     headerTitleStyle: titleStyle,
     headerLeftContainerStyle: leftContainerStyle,
     headerRightContainerStyle: rightContainerStyle,
     headerTitleContainerStyle: titleContainerStyle,
+    headerBackButtonDisplayMode = Platform.OS === 'ios' ? 'default' : 'minimal',
+    headerBackTitleStyle,
     headerBackgroundContainerStyle: backgroundContainerStyle,
     headerStyle: customHeaderStyle,
     headerShadowVisible,
     headerPressColor,
     headerPressOpacity,
-    headerStatusBarHeight = isParentHeaderShown ? 0 : statusBarHeight,
+    headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
   } = props;
 
-  const defaultHeight = getDefaultHeaderHeight(
-    layout,
-    modal,
-    headerStatusBarHeight
+  const isLargeIPad = useFrameSize(
+    (frame) => Platform.OS === 'ios' && frame.width >= IPAD_MINI_MEDIUM_WIDTH
+  );
+
+  const defaultHeight = useFrameSize((frame) =>
+    getDefaultHeaderHeight({
+      landscape: frame.width > frame.height,
+      modalPresentation: modal,
+      topInset: headerStatusBarHeight,
+    })
   );
 
   const {
@@ -109,6 +131,7 @@ export function Header(props: Props) {
     borderLeftColor,
     borderLeftWidth,
     borderRadius,
+    borderCurve,
     borderRightColor,
     borderRightWidth,
     borderStartColor,
@@ -121,7 +144,6 @@ export function Header(props: Props) {
     borderTopStartRadius,
     borderTopWidth,
     borderWidth,
-    // @ts-expect-error: web support for shadow
     boxShadow,
     elevation,
     shadowColor,
@@ -151,6 +173,7 @@ export function Header(props: Props) {
     borderLeftColor,
     borderLeftWidth,
     borderRadius,
+    borderCurve,
     borderRightColor,
     borderRightWidth,
     borderStartColor,
@@ -163,7 +186,6 @@ export function Header(props: Props) {
     borderTopStartRadius,
     borderTopWidth,
     borderWidth,
-    // @ts-expect-error: boxShadow is only for Web
     boxShadow,
     elevation,
     shadowColor,
@@ -186,29 +208,52 @@ export function Header(props: Props) {
     }
   }
 
-  const backgroundStyle = [
-    safeStyles,
-    headerShadowVisible === false && {
-      elevation: 0,
-      shadowOpacity: 0,
+  const backgroundStyle = {
+    ...(headerTransparent && { backgroundColor: 'transparent' }),
+    ...((headerTransparent || headerShadowVisible === false) && {
       borderBottomWidth: 0,
-    },
-  ];
+      ...Platform.select({
+        android: {
+          elevation: 0,
+        },
+        web: {
+          boxShadow: 'none',
+        },
+        default: {
+          shadowOpacity: 0,
+        },
+      }),
+    }),
+    ...safeStyles,
+  };
+
+  const iconTintColor =
+    headerTintColor ??
+    Platform.select({
+      ios: colors.primary,
+      default: colors.text,
+    });
 
   const leftButton = headerLeft
     ? headerLeft({
-        tintColor: headerTintColor,
+        tintColor: iconTintColor,
         pressColor: headerPressColor,
         pressOpacity: headerPressOpacity,
-        labelVisible: headerLeftLabelVisible,
+        displayMode: headerBackButtonDisplayMode,
+        canGoBack: Boolean(back),
+        onPress: back ? navigation.goBack : undefined,
+        label: back?.title,
+        labelStyle: headerBackTitleStyle,
+        href: back?.href,
       })
     : null;
 
   const rightButton = headerRight
     ? headerRight({
-        tintColor: headerTintColor,
+        tintColor: iconTintColor,
         pressColor: headerPressColor,
         pressOpacity: headerPressOpacity,
+        canGoBack: Boolean(back),
       })
     : null;
 
@@ -219,80 +264,137 @@ export function Header(props: Props) {
         )
       : customTitle;
 
+  const buttonMinWidth =
+    headerTitleAlign === 'center' && (leftButton || rightButton)
+      ? headerBackButtonDisplayMode !== 'minimal'
+        ? 80
+        : 32
+      : 0;
+
   return (
     <Animated.View
-      pointerEvents="box-none"
-      style={[{ height, minHeight, maxHeight, opacity, transform }]}
+      style={[
+        {
+          pointerEvents: 'box-none',
+          height,
+          minHeight,
+          maxHeight,
+          opacity,
+          transform,
+        },
+      ]}
     >
       <Animated.View
-        pointerEvents="box-none"
-        style={[StyleSheet.absoluteFill, backgroundContainerStyle]}
+        style={[
+          StyleSheet.absoluteFill,
+          { pointerEvents: 'box-none' },
+          backgroundContainerStyle,
+        ]}
       >
         {headerBackground ? (
           headerBackground({ style: backgroundStyle })
-        ) : headerTransparent ? null : (
-          <HeaderBackground style={backgroundStyle} />
+        ) : (
+          <HeaderBackground
+            blurEffect={headerBlurEffect}
+            style={[
+              {
+                // Allow touch through the header when background color is transparent
+                pointerEvents:
+                  headerTransparent &&
+                  backgroundStyle.backgroundColor &&
+                  (backgroundStyle.backgroundColor === 'transparent' ||
+                    Color(backgroundStyle.backgroundColor)?.alpha() === 0)
+                    ? 'none'
+                    : 'auto',
+              },
+              backgroundStyle,
+            ]}
+          />
         )}
       </Animated.View>
-      <View pointerEvents="none" style={{ height: headerStatusBarHeight }} />
-      <View pointerEvents="box-none" style={styles.content}>
+      <View style={{ pointerEvents: 'none', height: headerStatusBarHeight }} />
+      <View style={[styles.content, isLargeIPad ? styles.large : null]}>
         <Animated.View
-          pointerEvents="box-none"
           style={[
             styles.start,
-            headerTitleAlign === 'center' && styles.expand,
-            { marginStart: insets.left },
+            (Platform.OS === 'ios' || !searchBarVisible) &&
+              headerTitleAlign === 'center' &&
+              styles.expand,
+            {
+              minWidth: buttonMinWidth,
+              marginStart: insets.left,
+            },
             leftContainerStyle,
           ]}
         >
           {leftButton}
         </Animated.View>
-        <Animated.View
-          pointerEvents="box-none"
-          style={[
-            styles.title,
-            {
-              // Avoid the title from going offscreen or overlapping buttons
-              maxWidth:
-                headerTitleAlign === 'center'
-                  ? layout.width -
-                    ((leftButton
-                      ? headerLeftLabelVisible !== false
-                        ? 80
-                        : 32
-                      : 16) +
-                      Math.max(insets.left, insets.right)) *
-                      2
-                  : layout.width -
-                    ((leftButton ? 72 : 16) +
-                      (rightButton ? 72 : 16) +
-                      insets.left -
-                      insets.right),
-            },
-            headerTitleAlign === 'left' && leftButton
-              ? { marginStart: 4 }
-              : null,
-            titleContainerStyle,
-          ]}
-        >
-          {headerTitle({
-            children: title,
-            allowFontScaling: titleAllowFontScaling,
-            tintColor: headerTintColor,
-            style: titleStyle,
-          })}
-        </Animated.View>
-        <Animated.View
-          pointerEvents="box-none"
-          style={[
-            styles.end,
-            styles.expand,
-            { marginEnd: insets.right },
-            rightContainerStyle,
-          ]}
-        >
-          {rightButton}
-        </Animated.View>
+        {Platform.OS === 'ios' || !searchBarVisible ? (
+          <>
+            <Animated.View
+              style={[
+                styles.title,
+                headerTitleAlign === 'left' && leftButton
+                  ? { marginStart: 4 }
+                  : { marginHorizontal: 16 },
+                titleContainerStyle,
+              ]}
+            >
+              {headerTitle({
+                children: title,
+                allowFontScaling: titleAllowFontScaling,
+                tintColor: headerTintColor,
+                style: [styles.titleText, titleStyle],
+              })}
+            </Animated.View>
+            <Animated.View
+              style={[
+                styles.end,
+                styles.expand,
+                {
+                  minWidth: buttonMinWidth,
+                  marginEnd: insets.right,
+                },
+                rightContainerStyle,
+              ]}
+            >
+              {rightButton}
+              {headerSearchBarOptions ? (
+                <HeaderButton
+                  tintColor={iconTintColor}
+                  pressColor={headerPressColor}
+                  pressOpacity={headerPressOpacity}
+                  onPress={() => {
+                    setSearchBarVisible(true);
+                    headerSearchBarOptions?.onOpen?.();
+                  }}
+                >
+                  <HeaderIcon source={searchIcon} tintColor={iconTintColor} />
+                </HeaderButton>
+              ) : null}
+            </Animated.View>
+          </>
+        ) : null}
+        {Platform.OS === 'ios' || searchBarVisible ? (
+          <HeaderSearchBar
+            {...headerSearchBarOptions}
+            visible={searchBarVisible}
+            onClose={() => {
+              setSearchBarVisible(false);
+              headerSearchBarOptions?.onClose?.();
+            }}
+            tintColor={headerTintColor}
+            style={[
+              StyleSheet.absoluteFill,
+              Platform.OS === 'ios'
+                ? [
+                    { paddingTop: headerStatusBarHeight ? 0 : 4 },
+                    { backgroundColor: backgroundColor ?? colors.card },
+                  ]
+                : !leftButton && { marginStart: 8 },
+            ]}
+          />
+        ) : null}
       </View>
     </Animated.View>
   );
@@ -300,24 +402,37 @@ export function Header(props: Props) {
 
 const styles = StyleSheet.create({
   content: {
+    pointerEvents: 'box-none',
     flex: 1,
     flexDirection: 'row',
     alignItems: 'stretch',
   },
+  large: {
+    marginHorizontal: 5,
+  },
   title: {
-    marginHorizontal: 16,
+    flexShrink: 1,
     justifyContent: 'center',
+    pointerEvents: 'box-none',
+  },
+  titleText: {
+    textAlign: 'center',
   },
   start: {
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    pointerEvents: 'box-none',
   },
   end: {
-    justifyContent: 'center',
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    pointerEvents: 'box-none',
   },
   expand: {
     flexGrow: 1,
+    flexShrink: 1,
     flexBasis: 0,
   },
 });

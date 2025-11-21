@@ -178,6 +178,7 @@ export function forModalPresentationIOS({
   return {
     cardStyle: {
       overflow: 'hidden',
+      borderCurve: 'continuous',
       borderTopLeftRadius: borderRadius,
       borderTopRightRadius: borderRadius,
       // We don't need these for the animation
@@ -332,6 +333,58 @@ export function forScaleFromCenterAndroid({
     cardStyle: {
       opacity,
       transform: [{ scale }],
+    },
+  };
+}
+
+/**
+ * Standard Android-style fade from right for Android 14.
+ */
+export function forFadeFromRightAndroid({
+  current,
+  next,
+  inverted,
+  closing,
+}: StackCardInterpolationProps): StackCardInterpolatedStyle {
+  const translateFocused = multiply(
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [96, 0],
+      extrapolate: 'clamp',
+    }),
+    inverted
+  );
+
+  const translateUnfocused = next
+    ? multiply(
+        next.progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -96],
+          extrapolate: 'clamp',
+        }),
+        inverted
+      )
+    : 0;
+
+  const opacity = conditional(
+    closing,
+    current.progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    }),
+    current.progress
+  );
+
+  return {
+    cardStyle: {
+      opacity,
+      transform: [
+        // Translation for the animation of the current card
+        { translateX: translateFocused },
+        // Translation for the animation of the card on top of this
+        { translateX: translateUnfocused },
+      ],
     },
   };
 }

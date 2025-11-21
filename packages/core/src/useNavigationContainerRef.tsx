@@ -1,10 +1,10 @@
 import * as React from 'react';
 
 import { createNavigationContainerRef } from './createNavigationContainerRef';
-import type { NavigationContainerRefWithCurrent } from './types';
+import type { NavigationContainerRefWithCurrent, RootParamList } from './types';
 
 export function useNavigationContainerRef<
-  ParamList extends {} = ReactNavigation.RootParamList,
+  ParamList extends {} = RootParamList,
 >(): NavigationContainerRefWithCurrent<ParamList> {
   const navigation =
     React.useRef<NavigationContainerRefWithCurrent<ParamList> | null>(null);

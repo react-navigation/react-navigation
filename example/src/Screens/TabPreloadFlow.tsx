@@ -1,13 +1,15 @@
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Button, HeaderBackButton } from '@react-navigation/elements';
-import * as React from 'react';
+import { Button, HeaderBackButton, Text } from '@react-navigation/elements';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import type { PathConfigMap } from '../../../packages/core/src/types';
-
-export type PreloadBottomTabsParams = {
+type PreloadBottomTabsParams = {
   Home: undefined;
   Details: undefined;
 };
@@ -67,7 +69,9 @@ const HomeScreen = ({
 
 const BottomsTabs = createBottomTabNavigator<PreloadBottomTabsParams>();
 
-export function TabPreloadFlow() {
+export function TabPreloadFlow(
+  _: StaticScreenProps<NavigatorScreenParams<PreloadBottomTabsParams>>
+) {
   return (
     <BottomsTabs.Navigator
       screenOptions={({

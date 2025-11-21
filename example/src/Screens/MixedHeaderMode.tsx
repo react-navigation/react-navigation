@@ -1,11 +1,14 @@
 import { Button } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
   type StackScreenProps,
 } from '@react-navigation/stack';
-import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
@@ -13,7 +16,7 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type MixedHeaderStackParams = {
+type MixedHeaderStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
@@ -60,7 +63,7 @@ const NewsFeedScreen = ({
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
-          Navigate to album
+          Navigate to albums
         </Button>
         <Button variant="tinted" onPress={() => navigation.pop()}>
           Pop screen
@@ -94,7 +97,9 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<MixedHeaderStackParams>();
 
-export function MixedHeaderMode() {
+export function MixedHeaderMode(
+  _: StaticScreenProps<NavigatorScreenParams<MixedHeaderStackParams>>
+) {
   return (
     <SimpleStack.Navigator
       screenOptions={{

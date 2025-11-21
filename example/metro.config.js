@@ -1,77 +1,41 @@
-/* eslint-disable import/no-extraneous-dependencies */
-
 const path = require('path');
-const fs = require('fs');
-const escape = require('escape-string-regexp');
+const { withMetroConfig } = require('react-native-monorepo-config');
+// eslint-disable-next-line import-x/no-extraneous-dependencies
 const { getDefaultConfig } = require('@expo/metro-config');
-const exclusionList = require('metro-config/src/defaults/exclusionList');
 
-const root = path.resolve(__dirname, '..');
-const packages = path.resolve(root, 'packages');
+const defaultConfig = withMetroConfig(getDefaultConfig(__dirname), {
+  root: path.resolve(__dirname, '..'),
+  dirname: __dirname,
+});
 
-const defaultConfig = getDefaultConfig(__dirname);
-
-// List all packages under `packages/`
-const workspaces = fs
-  .readdirSync(packages)
-  .map((p) => path.join(packages, p))
-  .filter(
-    (p) =>
-      fs.statSync(p).isDirectory() &&
-      fs.existsSync(path.join(p, 'package.json'))
-  );
-
-// Get the list of dependencies for all packages in the monorepo
-const modules = ['@expo/vector-icons']
-  .concat(
-    ...workspaces.map((it) => {
-      const pak = JSON.parse(
-        fs.readFileSync(path.join(it, 'package.json'), 'utf8')
-      );
-
-      // We need to make sure that only one version is loaded for peerDependencies
-      // So we exclude them at the root, and alias them to the versions in example's node_modules
-      return pak.peerDependencies ? Object.keys(pak.peerDependencies) : [];
-    })
-  )
-  .sort()
-  .filter(
-    (m, i, self) =>
-      // Remove duplicates and package names of the packages in the monorepo
-      self.lastIndexOf(m) === i && !m.startsWith('@react-navigation/')
-  );
-
+/** @type {import('metro-config').MetroConfig} */
 module.exports = {
   ...defaultConfig,
-
-  projectRoot: __dirname,
-
-  // We need to watch the root of the monorepo
-  // This lets Metro find the monorepo packages automatically using haste
-  // This also lets us import modules from monorepo root
-  watchFolders: [root],
 
   resolver: {
     ...defaultConfig.resolver,
 
-    // We need to exclude the peerDependencies we've collected in packages' node_modules
-    blacklistRE: exclusionList(
-      [].concat(
-        ...workspaces.map((it) =>
-          modules.map(
-            (m) =>
-              new RegExp(`^${escape(path.join(it, 'node_modules', m))}\\/.*$`)
-          )
-        )
-      )
-    ),
+    resolveRequest: (context, realModuleName, platform) => {
+      // We mock out these native deps on web
+      // This is an additional measure to ensure they don't get added accidentally
+      const excludedModules = [
+        'react-native-gesture-handler',
+        'react-native-reanimated',
+        'react-native-page-view',
+      ];
 
-    // When we import a package from the monorepo, metro won't be able to find their deps
-    // We need to specify them in `extraNodeModules` to tell metro where to find them
-    extraNodeModules: modules.reduce((acc, name) => {
-      acc[name] = path.join(root, 'node_modules', name);
-      return acc;
-    }, {}),
+      if (platform === 'web' && excludedModules.includes(realModuleName)) {
+        throw new Error(
+          `The module '${realModuleName}' should not be imported on Web.`
+        );
+      }
+
+      return defaultConfig.resolver.resolveRequest(
+        context,
+        realModuleName,
+        platform
+      );
+    },
   },
 
   server: {

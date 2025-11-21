@@ -1,3 +1,4 @@
+import { expect, test } from '@jest/globals';
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 
 import { getPathFromState } from '../getPathFromState';
@@ -5,7 +6,7 @@ import { getStateFromPath } from '../getStateFromPath';
 
 type State = PartialState<NavigationState>;
 
-it('converts state to path string', () => {
+test('converts state to path string', () => {
   const state = {
     routes: [
       {
@@ -40,7 +41,7 @@ it('converts state to path string', () => {
   ).toBe(path);
 });
 
-it('converts state to path string with config', () => {
+test('converts state to path string with config', () => {
   const path = '/few/bar/sweet/apple/baz/jane?id=x10&valid=true';
   const config = {
     screens: {
@@ -109,7 +110,35 @@ it('converts state to path string with config', () => {
   ).toBe(path);
 });
 
-it('handles route without param', () => {
+test('prepends trailing slash to path', () => {
+  expect(
+    getPathFromState<object>({
+      routes: [
+        {
+          name: 'foo',
+          state: {
+            routes: [{ name: 'bar' }],
+          },
+        },
+      ],
+    })
+  ).toBe('/foo/bar');
+
+  expect(
+    getPathFromState<object>({
+      routes: [
+        {
+          name: 'foo',
+          state: {
+            routes: [{ name: 'bar', path: 'foo/bar' }],
+          },
+        },
+      ],
+    })
+  ).toBe('/foo/bar');
+});
+
+test('handles route without param', () => {
   const path = '/foo/bar';
   const state = {
     routes: [
@@ -128,7 +157,7 @@ it('handles route without param', () => {
   ).toBe(path);
 });
 
-it("doesn't add query param for empty params", () => {
+test("doesn't add query param for empty params", () => {
   const path = '/foo';
   const state = {
     routes: [
@@ -145,7 +174,7 @@ it("doesn't add query param for empty params", () => {
   ).toBe(path);
 });
 
-it('handles state with config with nested screens', () => {
+test('handles state with config with nested screens', () => {
   const path =
     '/foo/foe/bar/sweet/apple/baz/jane?answer=42&count=10&valid=true';
   const config = {
@@ -227,7 +256,7 @@ it('handles state with config with nested screens', () => {
   ).toBe(path);
 });
 
-it('handles state with config with nested screens and exact', () => {
+test('handles state with config with nested screens and exact', () => {
   const path = '/foe/bar/sweet/apple/baz/jane?answer=42&count=10&valid=true';
   const config = {
     screens: {
@@ -309,7 +338,7 @@ it('handles state with config with nested screens and exact', () => {
   ).toBe(path);
 });
 
-it('handles state with config with nested screens and unused configs', () => {
+test('handles state with config with nested screens and unused configs', () => {
   const path = '/foo/foe/baz/jane?answer=42&count=10&valid=true';
   const config = {
     screens: {
@@ -377,7 +406,7 @@ it('handles state with config with nested screens and unused configs', () => {
   ).toBe(path);
 });
 
-it('handles state with config with nested screens and unused configs with exact', () => {
+test('handles state with config with nested screens and unused configs with exact', () => {
   const path = '/foe/baz/jane?answer=42&count=10&valid=true';
   const config = {
     screens: {
@@ -446,7 +475,7 @@ it('handles state with config with nested screens and unused configs with exact'
   ).toBe(path);
 });
 
-it('handles nested object with stringify in it', () => {
+test('handles nested object with stringify in it', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?answer=42&count=10&valid=true';
   const config = {
     screens: {
@@ -529,7 +558,7 @@ it('handles nested object with stringify in it', () => {
   ).toBe(path);
 });
 
-it('handles nested object with stringify in it with exact', () => {
+test('handles nested object with stringify in it with exact', () => {
   const path = '/bis/jane?answer=42&count=10&valid=true';
   const config = {
     screens: {
@@ -614,7 +643,7 @@ it('handles nested object with stringify in it with exact', () => {
   ).toBe(path);
 });
 
-it('handles nested object for second route depth', () => {
+test('handles nested object for second route depth', () => {
   const path = '/foo/bar/baz';
   const config = {
     screens: {
@@ -660,7 +689,7 @@ it('handles nested object for second route depth', () => {
   ).toBe(path);
 });
 
-it('handles nested object for second route depth with exact', () => {
+test('handles nested object for second route depth with exact', () => {
   const path = '/baz';
   const config = {
     screens: {
@@ -709,7 +738,7 @@ it('handles nested object for second route depth with exact', () => {
   ).toBe(path);
 });
 
-it('handles nested object for second route depth and path and stringify in roots', () => {
+test('handles nested object for second route depth and path and stringify in roots', () => {
   const path = '/foo/dathomir/bar/42/baz';
   const config = {
     screens: {
@@ -762,7 +791,7 @@ it('handles nested object for second route depth and path and stringify in roots
   ).toBe(path);
 });
 
-it('handles nested object for second route depth and path and stringify in roots with exact', () => {
+test('handles nested object for second route depth and path and stringify in roots with exact', () => {
   const path = '/baz';
   const config = {
     screens: {
@@ -820,7 +849,7 @@ it('handles nested object for second route depth and path and stringify in roots
   ).toBe(path);
 });
 
-it('ignores empty string paths', () => {
+test('ignores empty string paths', () => {
   const path = '/bar';
   const config = {
     screens: {
@@ -854,7 +883,7 @@ it('ignores empty string paths', () => {
   ).toBe(path);
 });
 
-it('keeps query params if path is empty', () => {
+test('keeps query params if path is empty', () => {
   const path = '/?foo=42';
   const config = {
     screens: {
@@ -902,7 +931,7 @@ it('keeps query params if path is empty', () => {
   ).toEqual(path);
 });
 
-it('does not use Object.prototype properties as parsing functions', () => {
+test('does not use Object.prototype properties as parsing functions', () => {
   const path = '/?toString=42';
   const config = {
     screens: {
@@ -950,7 +979,7 @@ it('does not use Object.prototype properties as parsing functions', () => {
   ).toEqual(path);
 });
 
-it('cuts nested configs too', () => {
+test('cuts nested configs too', () => {
   const path = '/foo/baz';
   const config = {
     screens: {
@@ -997,7 +1026,7 @@ it('cuts nested configs too', () => {
   ).toBe(path);
 });
 
-it('cuts nested configs too with exact', () => {
+test('cuts nested configs too with exact', () => {
   const path = '/baz';
   const config = {
     screens: {
@@ -1045,7 +1074,7 @@ it('cuts nested configs too with exact', () => {
   ).toBe(path);
 });
 
-it('handles empty path at the end', () => {
+test('handles empty path at the end', () => {
   const path = '/foo/bar';
   const config = {
     screens: {
@@ -1086,7 +1115,7 @@ it('handles empty path at the end', () => {
   ).toBe(path);
 });
 
-it('returns "/" for empty path', () => {
+test('returns "/" for empty path', () => {
   const path = '/';
 
   const config = {
@@ -1124,7 +1153,7 @@ it('returns "/" for empty path', () => {
   ).toBe(path);
 });
 
-it('parses no path specified', () => {
+test('parses no path specified', () => {
   const path = '/bar';
   const config = {
     screens: {
@@ -1157,7 +1186,7 @@ it('parses no path specified', () => {
   ).toBe(path);
 });
 
-it('strips undefined query params', () => {
+test('strips undefined query params', () => {
   const path = '/bar/sweet/apple/foo/bis/jane?count=10&valid=true';
   const config = {
     screens: {
@@ -1239,7 +1268,7 @@ it('strips undefined query params', () => {
   ).toBe(path);
 });
 
-it('strips undefined query params with exact', () => {
+test('strips undefined query params with exact', () => {
   const path = '/bis/jane?count=10&valid=true';
   const config = {
     screens: {
@@ -1322,7 +1351,7 @@ it('strips undefined query params with exact', () => {
   ).toBe(path);
 });
 
-it('handles stripping all query params', () => {
+test('handles stripping all query params', () => {
   const path = '/bar/sweet/apple/foo/bis/jane';
   const config = {
     screens: {
@@ -1402,7 +1431,7 @@ it('handles stripping all query params', () => {
   ).toBe(path);
 });
 
-it('handles stripping all query params with exact', () => {
+test('handles stripping all query params with exact', () => {
   const path = '/bis/jane';
   const config = {
     screens: {
@@ -1484,7 +1513,7 @@ it('handles stripping all query params with exact', () => {
   ).toBe(path);
 });
 
-it('replaces undefined query params', () => {
+test('replaces undefined query params', () => {
   const path = '/bar/undefined/apple';
   const config = {
     screens: {
@@ -1510,7 +1539,34 @@ it('replaces undefined query params', () => {
   ).toBe(path);
 });
 
-it('matches wildcard patterns at root', () => {
+test("doesn't add undefined to path for optional params", () => {
+  const path = '/foo/bar';
+  const config = {
+    screens: {
+      Foo: '/foo/bar/:id?',
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: undefined },
+        path: '/foo/bar',
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+  expect(
+    getPathFromState<object>(
+      getStateFromPath<object>(path, config) as State,
+      config
+    )
+  ).toBe(path);
+});
+
+test('matches wildcard patterns at root', () => {
   const path = '/test/bar/42/whatever';
   const config = {
     screens: {
@@ -1538,7 +1594,7 @@ it('matches wildcard patterns at root', () => {
   ).toBe('/404');
 });
 
-it('matches wildcard patterns at nested level', () => {
+test('matches wildcard patterns at nested level', () => {
   const path = '/bar/42/whatever/baz/initt';
   const config = {
     screens: {
@@ -1583,7 +1639,7 @@ it('matches wildcard patterns at nested level', () => {
   ).toBe('/bar/42/404');
 });
 
-it('matches wildcard patterns at nested level with exact', () => {
+test('matches wildcard patterns at nested level with exact', () => {
   const path = '/whatever';
   const config = {
     screens: {
@@ -1631,7 +1687,7 @@ it('matches wildcard patterns at nested level with exact', () => {
   ).toBe('/404');
 });
 
-it('tries to match wildcard patterns at the end', () => {
+test('tries to match wildcard patterns at the end', () => {
   const path = '/bar/42/test';
   const config = {
     screens: {
@@ -1677,7 +1733,7 @@ it('tries to match wildcard patterns at the end', () => {
   ).toBe(path);
 });
 
-it('uses nearest parent wildcard match for unmatched paths', () => {
+test('uses nearest parent wildcard match for unmatched paths', () => {
   const path = '/bar/42/baz/test';
   const config = {
     screens: {
@@ -1715,7 +1771,7 @@ it('uses nearest parent wildcard match for unmatched paths', () => {
   ).toBe('/404');
 });
 
-it('handles path at top level', () => {
+test('handles path at top level', () => {
   const path = 'foo/fruits/apple';
   const config = {
     path: 'foo',
@@ -1744,8 +1800,113 @@ it('handles path at top level', () => {
     ],
   };
 
-  expect(getPathFromState<object>(state, config)).toEqual(path);
+  expect(getPathFromState<object>(state, config)).toBe(`/${path}`);
   expect(
     getPathFromState<object>(getStateFromPath<object>(path, config)!, config)
-  ).toEqual(path);
+  ).toBe(`/${path}`);
+});
+
+test('ignores regexp patterns when provided', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo/:id(\\d+)',
+        parse: {
+          id: Number,
+        },
+      },
+      Bar: {
+        path: 'foo/:id([a-z]+)',
+      },
+      Baz: {
+        path: 'foo/:id(\\d+)/:name([a-z]+)',
+      },
+      Qux: {
+        path: 'foo/:id(@[a-z]+)',
+        stringify: {
+          id: (id: string) => `@${id}`,
+        },
+      },
+    },
+  };
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Foo',
+            params: { id: 42 },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/42');
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Bar',
+            params: { id: 'bar' },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/bar');
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Baz',
+            params: { id: 42, name: 'bar' },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/42/bar');
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Qux',
+            params: { id: 'bar' },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/@bar');
+});
+
+test('correctly handles regex pattern with slash', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo/:id([a-z]+\\/)',
+      },
+    },
+  };
+
+  expect(
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Foo',
+            params: { id: 'bar' },
+          },
+        ],
+      },
+      config
+    )
+  ).toBe('/foo/bar');
 });

@@ -1,15 +1,17 @@
-import { Button } from '@react-navigation/elements';
+import { Button, Text } from '@react-navigation/elements';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
 } from '@react-navigation/stack';
-import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-import type { PathConfigMap } from '../../../packages/core/src/types';
-
-export type PreloadStackParams = {
+type PreloadStackParams = {
   Home: undefined;
   Details: undefined;
   Profile: undefined;
@@ -53,9 +55,6 @@ const DetailsScreen = ({
       >
         Go to Profile
       </Button>
-      <Button onPress={navigation.retain} style={styles.button}>
-        Retain
-      </Button>
     </View>
   );
 };
@@ -76,7 +75,7 @@ const ProfileScreen = ({
 const HomeScreen = ({
   navigation,
 }: StackScreenProps<PreloadStackParams, 'Home'>) => {
-  const { navigate, preload, remove } = navigation;
+  const { navigate, preload } = navigation;
 
   return (
     <View style={styles.content}>
@@ -89,16 +88,15 @@ const HomeScreen = ({
       <Button onPress={() => navigate('Details')} style={styles.button}>
         Navigate Details
       </Button>
-      <Button onPress={() => remove('Details')} style={styles.button}>
-        Remove Details preload
-      </Button>
     </View>
   );
 };
 
 const SimpleStack = createStackNavigator<PreloadStackParams>();
 
-export function StackPreloadFlow() {
+export function StackPreloadFlow(
+  _: StaticScreenProps<NavigatorScreenParams<PreloadStackParams>>
+) {
   return (
     <SimpleStack.Navigator>
       <SimpleStack.Screen name="Home" component={HomeScreen} />

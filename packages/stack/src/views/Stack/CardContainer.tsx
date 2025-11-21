@@ -18,12 +18,14 @@ import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
 import { useKeyboardManager } from '../../utils/useKeyboardManager';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import { Card } from './Card';
+import { CardA11yWrapper, type CardA11yWrapperRef } from './CardA11yWrapper';
 
 type Props = {
   interpolationIndex: number;
   index: number;
   active: boolean;
   focused: boolean;
+  opening: boolean;
   closing: boolean;
   modal: boolean;
   layout: Layout;
@@ -64,6 +66,7 @@ function CardContainerInner({
   interpolationIndex,
   index,
   active,
+  opening,
   closing,
   gesture,
   focused,
@@ -92,6 +95,8 @@ function CardContainerInner({
   safeAreaInsetTop,
   scene,
 }: Props) {
+  const wrapperRef = React.useRef<CardA11yWrapperRef>(null);
+
   const { direction } = useLocale();
 
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
@@ -148,6 +153,8 @@ function CardContainerInner({
     closing: boolean;
     gesture: boolean;
   }) => {
+    wrapperRef.current?.setInert(closing);
+
     const { route } = scene.descriptor;
 
     if (!gesture) {
@@ -170,14 +177,10 @@ function CardContainerInner({
 
   const { colors } = useTheme();
 
-  const [pointerEvents, setPointerEvents] = React.useState<'box-none' | 'none'>(
-    'box-none'
-  );
-
   React.useEffect(() => {
     const listener = scene.progress.next?.addListener?.(
       ({ value }: { value: number }) => {
-        setPointerEvents(value <= EPSILON ? 'box-none' : 'none');
+        wrapperRef.current?.setInert(value > EPSILON);
       }
     );
 
@@ -186,7 +189,7 @@ function CardContainerInner({
         scene.progress.next?.removeListener?.(listener);
       }
     };
-  }, [pointerEvents, scene.progress.next]);
+  }, [scene.progress.next]);
 
   const {
     presentation,
@@ -218,101 +221,105 @@ function CardContainerInner({
     href = buildHref(route.name, route.params);
   }
 
-  const headerBack = React.useMemo(
-    () => ({ title: backTitle, href }),
-    [backTitle, href]
-  );
+  const canGoBack = previousScene != null;
+  const headerBack = React.useMemo(() => {
+    if (canGoBack) {
+      return {
+        href,
+        title: backTitle,
+      };
+    }
+
+    return undefined;
+  }, [canGoBack, backTitle, href]);
+
+  const animated = animation !== 'none';
 
   return (
-    <Card
-      interpolationIndex={interpolationIndex}
-      gestureDirection={gestureDirection}
-      layout={layout}
-      insets={insets}
-      direction={direction}
-      gesture={gesture}
-      current={scene.progress.current}
-      next={scene.progress.next}
-      closing={closing}
-      onOpen={handleOpen}
-      onClose={handleClose}
-      overlay={cardOverlay}
-      overlayEnabled={cardOverlayEnabled}
-      shadowEnabled={cardShadowEnabled}
-      onTransition={handleTransition}
-      onGestureBegin={handleGestureBegin}
-      onGestureCanceled={handleGestureCanceled}
-      onGestureEnd={handleGestureEnd}
-      gestureEnabled={index === 0 ? false : gestureEnabled}
-      gestureResponseDistance={gestureResponseDistance}
-      gestureVelocityImpact={gestureVelocityImpact}
-      transitionSpec={transitionSpec}
-      styleInterpolator={cardStyleInterpolator}
-      accessibilityElementsHidden={!focused}
-      importantForAccessibility={focused ? 'auto' : 'no-hide-descendants'}
-      pointerEvents={active ? 'box-none' : pointerEvents}
-      pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
-      preloaded={preloaded}
-      containerStyle={
-        hasAbsoluteFloatHeader && headerMode !== 'screen'
-          ? { marginTop: headerHeight }
-          : null
-      }
-      contentStyle={[
-        {
-          backgroundColor:
-            presentation === 'transparentModal'
-              ? 'transparent'
-              : colors.background,
-        },
-        cardStyle,
-      ]}
-      style={[
-        {
-          // This is necessary to avoid unfocused larger pages increasing scroll area
-          // The issue can be seen on the web when a smaller screen is pushed over a larger one
-          overflow: active ? undefined : 'hidden',
-          display:
-            // Hide unfocused screens when animation isn't enabled
-            // This is also necessary for a11y on web
-            animation === 'none' &&
-            isNextScreenTransparent === false &&
-            detachCurrentScreen !== false &&
-            !focused
-              ? 'none'
-              : 'flex',
-        },
-        StyleSheet.absoluteFill,
-      ]}
+    <CardA11yWrapper
+      ref={wrapperRef}
+      focused={focused}
+      active={active}
+      animated={animated}
+      isNextScreenTransparent={isNextScreenTransparent}
+      detachCurrentScreen={detachCurrentScreen}
     >
-      <View style={styles.container}>
-        <ModalPresentationContext.Provider value={modal}>
-          <View style={styles.scene}>
-            <HeaderBackContext.Provider value={headerBack}>
-              <HeaderShownContext.Provider
-                value={isParentHeaderShown || headerShown !== false}
-              >
-                <HeaderHeightContext.Provider
-                  value={headerShown ? headerHeight : parentHeaderHeight ?? 0}
+      <Card
+        animated={animated}
+        interpolationIndex={interpolationIndex}
+        gestureDirection={gestureDirection}
+        layout={layout}
+        insets={insets}
+        direction={direction}
+        gesture={gesture}
+        current={scene.progress.current}
+        next={scene.progress.next}
+        opening={opening}
+        closing={closing}
+        onOpen={handleOpen}
+        onClose={handleClose}
+        overlay={cardOverlay}
+        overlayEnabled={cardOverlayEnabled}
+        shadowEnabled={cardShadowEnabled}
+        onTransition={handleTransition}
+        onGestureBegin={handleGestureBegin}
+        onGestureCanceled={handleGestureCanceled}
+        onGestureEnd={handleGestureEnd}
+        gestureEnabled={index === 0 ? false : gestureEnabled}
+        gestureResponseDistance={gestureResponseDistance}
+        gestureVelocityImpact={gestureVelocityImpact}
+        transitionSpec={transitionSpec}
+        styleInterpolator={cardStyleInterpolator}
+        pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
+        preloaded={preloaded}
+        containerStyle={
+          hasAbsoluteFloatHeader && headerMode !== 'screen'
+            ? { marginTop: headerHeight }
+            : null
+        }
+        contentStyle={[
+          {
+            backgroundColor:
+              presentation === 'transparentModal'
+                ? 'transparent'
+                : colors.background,
+          },
+          cardStyle,
+        ]}
+      >
+        <View style={styles.container}>
+          <ModalPresentationContext.Provider value={modal}>
+            {headerMode !== 'float'
+              ? renderHeader({
+                  mode: 'screen',
+                  scenes: [previousScene, scene],
+                  getPreviousScene,
+                  getFocusedRoute,
+                  onContentHeightChange: onHeaderHeightChange,
+                  style: styles.header,
+                })
+              : null}
+            <View style={styles.scene}>
+              <HeaderBackContext.Provider value={headerBack}>
+                <HeaderShownContext.Provider
+                  value={isParentHeaderShown || headerShown !== false}
                 >
-                  {scene.descriptor.render()}
-                </HeaderHeightContext.Provider>
-              </HeaderShownContext.Provider>
-            </HeaderBackContext.Provider>
-          </View>
-          {headerMode !== 'float'
-            ? renderHeader({
-                mode: 'screen',
-                layout,
-                scenes: [previousScene, scene],
-                getPreviousScene,
-                getFocusedRoute,
-                onContentHeightChange: onHeaderHeightChange,
-              })
-            : null}
-        </ModalPresentationContext.Provider>
-      </View>
-    </Card>
+                  <HeaderHeightContext.Provider
+                    value={
+                      headerShown !== false
+                        ? headerHeight
+                        : (parentHeaderHeight ?? 0)
+                    }
+                  >
+                    {scene.descriptor.render()}
+                  </HeaderHeightContext.Provider>
+                </HeaderShownContext.Provider>
+              </HeaderBackContext.Provider>
+            </View>
+          </ModalPresentationContext.Provider>
+        </View>
+      </Card>
+    </CardA11yWrapper>
   );
 }
 
@@ -321,7 +328,9 @@ export const CardContainer = React.memo(CardContainerInner);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column-reverse',
+  },
+  header: {
+    zIndex: 1,
   },
   scene: {
     flex: 1,

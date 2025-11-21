@@ -1,3 +1,3 @@
 export function useDocumentTitle() {
-  // Noop for React Native
+  // Noop for native platforms
 }

@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-type Render = (children: React.ReactNode) => JSX.Element;
+type Render = (children: React.ReactNode) => React.JSX.Element;
 
 type Props = {
   render: Render;

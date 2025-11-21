@@ -1,27 +1,37 @@
 import escapeStringRegexp from 'escape-string-regexp';
 
-export function extractPathFromURL(prefixes: string[], url: string) {
+import type { LinkingPrefix } from './types';
+
+export function extractPathFromURL(prefixes: LinkingPrefix[], url: string) {
   for (const prefix of prefixes) {
-    const protocol = prefix.match(/^[^:]+:/)?.[0] ?? '';
-    const host = prefix
-      .replace(new RegExp(`^${escapeStringRegexp(protocol)}`), '')
-      .replace(/\/+/g, '/') // Replace multiple slash (//) with single ones
-      .replace(/^\//, ''); // Remove extra leading slash
+    let prefixRegex;
 
-    const prefixRegex = new RegExp(
-      `^${escapeStringRegexp(protocol)}(/)*${host
-        .split('.')
-        .map((it) => (it === '*' ? '[^/]+' : escapeStringRegexp(it)))
-        .join('\\.')}`
-    );
+    if (prefix === '*') {
+      prefixRegex = /^(((https?:\/\/)[^/]+)|([^/]+:(\/\/)?))/;
+    } else {
+      const protocol = prefix.match(/^[^:]+:/)?.[0] ?? '';
+      const host = prefix
+        .replace(new RegExp(`^${escapeStringRegexp(protocol)}`), '')
+        .replace(/\/+/g, '/') // Replace multiple slash (//) with single ones
+        .replace(/^\//, ''); // Remove extra leading slash
 
-    const [originAndPath, searchParams] = url.split('?');
-    const normalizedURL = originAndPath
-      .replace(/\/+/g, '/')
-      .concat(searchParams ? `?${searchParams}` : '');
+      prefixRegex = new RegExp(
+        `^${escapeStringRegexp(protocol)}(/)*${host
+          .split('.')
+          .map((it) => (it === '*' ? '[^/]+' : escapeStringRegexp(it)))
+          .join('\\.')}`
+      );
+    }
 
-    if (prefixRegex.test(normalizedURL)) {
-      return normalizedURL.replace(prefixRegex, '');
+    const [originAndPath, ...searchParams] = url.split('?');
+
+    if (prefixRegex.test(originAndPath)) {
+      const result = originAndPath
+        .replace(prefixRegex, '')
+        .replace(/\/+/g, '/')
+        .concat(searchParams.length ? `?${searchParams.join('?')}` : '');
+
+      return result.startsWith('/') ? result : `/${result}`;
     }
   }
 

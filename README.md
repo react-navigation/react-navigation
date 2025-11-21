@@ -8,7 +8,15 @@ Routing and navigation for your React Native apps.
 
 Documentation can be found at [reactnavigation.org](https://reactnavigation.org/).
 
-This branch contains the code for the pre-release version of React Navigation 7. You can find the code for the latest stable version in the [6.x branch](https://github.com/react-navigation/react-navigation/tree/6.x).
+This branch contains the code for the upcoming major version of React Navigation. You can find the code for other versions in the following branches:
+
+- [7.x](https://github.com/react-navigation/react-navigation/tree/7.x) (latest stable)
+- [6.x](https://github.com/react-navigation/react-navigation/tree/6.x)
+- [5.x](https://github.com/react-navigation/react-navigation/tree/5.x)
+- [4.x](https://github.com/react-navigation/react-navigation/tree/4.x)
+- [3.x](https://github.com/react-navigation/react-navigation/tree/3.x)
+- [2.x](https://github.com/react-navigation/react-navigation/tree/2.x)
+- [1.x](https://github.com/react-navigation/react-navigation/tree/1.x)
 
 ## Package Versions
 
@@ -24,6 +32,7 @@ This branch contains the code for the pre-release version of React Navigation 7.
 | [@react-navigation/native](/packages/native)                                 |               [![badge](https://img.shields.io/npm/v/@react-navigation/native.svg)](https://www.npmjs.com/package/@react-navigation/native)               |
 | [@react-navigation/routers](/packages/routers)                               |              [![badge](https://img.shields.io/npm/v/@react-navigation/routers.svg)](https://www.npmjs.com/package/@react-navigation/routers)              |
 | [@react-navigation/stack](/packages/stack)                                   |                [![badge](https://img.shields.io/npm/v/@react-navigation/stack.svg)](https://www.npmjs.com/package/@react-navigation/stack)                |
+| [react-native-drawer-layout](/packages/react-native-drawer-layout) |        [![badge](https://img.shields.io/npm/v/react-native-drawer-layout.svg)](https://www.npmjs.com/package/react-native-drawer-layout)        |
 | [react-native-tab-view](/packages/react-native-tab-view) |        [![badge](https://img.shields.io/npm/v/react-native-tab-view.svg)](https://www.npmjs.com/package/react-native-tab-view)        |
 
 ## Contributing

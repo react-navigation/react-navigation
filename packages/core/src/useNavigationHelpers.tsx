@@ -7,20 +7,21 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { NavigationContext } from './NavigationContext';
+import { NavigationContext } from './NavigationProvider';
 import { type NavigationHelpers, PrivateValueStore } from './types';
-import { UnhandledActionContext } from './UnhandledActionContext';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
 // This is to make TypeScript compiler happy
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 PrivateValueStore;
 
 type Options<State extends NavigationState, Action extends NavigationAction> = {
-  id: string | undefined;
   onAction: (action: NavigationAction) => boolean;
+  onUnhandledAction: (action: NavigationAction) => void;
   getState: () => State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
+  stateRef: React.RefObject<State | null>;
 };
 
 /**
@@ -29,17 +30,17 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
  */
 export function useNavigationHelpers<
   State extends NavigationState,
-  ActionHelpers extends Record<string, () => void>,
+  ActionHelpers extends Record<string, (...args: any) => void>,
   Action extends NavigationAction,
   EventMap extends Record<string, any>,
 >({
-  id: navigatorId,
   onAction,
+  onUnhandledAction,
   getState,
   emitter,
   router,
+  stateRef,
 }: Options<State, Action>) {
-  const onUnhandledAction = React.useContext(UnhandledActionContext);
   const parentNavigationHelpers = React.useContext(NavigationContext);
 
   return React.useMemo(() => {
@@ -85,31 +86,28 @@ export function useNavigationHelpers<
           false
         );
       },
-      getId: () => navigatorId,
-      getParent: (id?: string) => {
-        if (id !== undefined) {
-          let current = navigationHelpers;
-
-          while (current && id !== current.getId()) {
-            current = current.getParent();
-          }
-
-          return current;
+      getState: (): State => {
+        // FIXME: Workaround for when the state is read during render
+        // By this time, we haven't committed the new state yet
+        // Without this `useSyncExternalStore` will keep reading the old state
+        // This may result in `useNavigationState` or `useIsFocused` returning wrong values
+        // Apart from `useSyncExternalStore`, `getState` should never be called during render
+        if (stateRef.current != null) {
+          return stateRef.current;
         }
 
-        return parentNavigationHelpers;
+        return getState();
       },
-      getState,
     } as NavigationHelpers<ParamListBase, EventMap> & ActionHelpers;
 
     return navigationHelpers;
   }, [
-    navigatorId,
+    router,
+    parentNavigationHelpers,
     emitter.emit,
     getState,
     onAction,
     onUnhandledAction,
-    parentNavigationHelpers,
-    router,
+    stateRef,
   ]);
 }

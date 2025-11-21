@@ -1,14 +1,12 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { PlatformPressable } from '@react-navigation/elements';
+import { Color, PlatformPressable, Text } from '@react-navigation/elements';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
-import Color from 'color';
 import * as React from 'react';
 import {
   Image,
   ScrollView,
   type ScrollViewProps,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from 'react-native';
@@ -49,7 +47,7 @@ const Author = () => {
   return (
     <View style={[styles.row, styles.attribution]}>
       <Image
-        source={require('../../assets/avatar-1.png')}
+        source={require('../../assets/misc/avatar-1.png')}
         style={styles.avatar}
       />
       <Text style={styles.author}>Joke bot</Text>
@@ -79,7 +77,7 @@ export function NewsFeed(props: Props) {
       <Card>
         <TextInput
           placeholder="What's on your mind?"
-          placeholderTextColor={Color(colors.text).alpha(0.5).rgb().string()}
+          placeholderTextColor={Color(colors.text)?.alpha(0.5).string()}
           style={styles.input}
         />
       </Card>
@@ -103,7 +101,10 @@ export function NewsFeed(props: Props) {
             zookeeper about it and he said it was bread in captivity.
           </Text>
         </View>
-        <Image source={require('../../assets/book.jpg')} style={styles.cover} />
+        <Image
+          source={require('../../assets/misc/book.jpg')}
+          style={styles.cover}
+        />
         <Footer />
       </Card>
       <Card>
@@ -161,6 +162,7 @@ const styles = StyleSheet.create({
   },
   avatar: {
     width: 32,
+    height: 'auto',
     aspectRatio: 1,
     borderRadius: 16,
   },

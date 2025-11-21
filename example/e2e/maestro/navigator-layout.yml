@@ -1,0 +1,8 @@
+appId: ${APP_ID}
+name: Navigator Layout
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: navigator-layout
+      TEXT: 'Article by Gandalf'

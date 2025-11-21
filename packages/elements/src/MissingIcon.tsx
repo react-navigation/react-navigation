@@ -1,14 +1,24 @@
-import * as React from 'react';
-import { type StyleProp, StyleSheet, Text, type TextStyle } from 'react-native';
+import {
+  type ColorValue,
+  type StyleProp,
+  StyleSheet,
+  type TextStyle,
+} from 'react-native';
+
+import { Text } from './Text';
 
 type Props = {
-  color?: string;
+  color?: ColorValue;
   size?: number;
   style?: StyleProp<TextStyle>;
 };
 
 export function MissingIcon({ color, size, style }: Props) {
-  return <Text style={[styles.icon, { color, fontSize: size }, style]}>⏷</Text>;
+  return (
+    <Text aria-hidden style={[styles.icon, { color, fontSize: size }, style]}>
+      ⏷
+    </Text>
+  );
 }
 
 const styles = StyleSheet.create({

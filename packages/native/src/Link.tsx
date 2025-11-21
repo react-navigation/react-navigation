@@ -1,4 +1,4 @@
-import { useTheme } from '@react-navigation/core';
+import { type RootParamList, useTheme } from '@react-navigation/core';
 import * as React from 'react';
 import {
   type GestureResponderEvent,
@@ -7,20 +7,20 @@ import {
   type TextProps,
 } from 'react-native';
 
-import { type Props as LinkProps, useLinkProps } from './useLinkProps';
+import { type LinkProps, useLinkProps } from './useLinkProps';
 
-type Props<ParamList extends ReactNavigation.RootParamList> =
-  LinkProps<ParamList> &
-    Omit<TextProps, 'disabled'> & {
-      target?: string;
-      onPress?: (
-        e:
-          | React.MouseEvent<HTMLAnchorElement, MouseEvent>
-          | GestureResponderEvent
-      ) => void;
-      disabled?: boolean | null;
-      children: React.ReactNode;
-    };
+type Props<
+  ParamList extends {} = RootParamList,
+  RouteName extends keyof ParamList = keyof ParamList,
+> = LinkProps<ParamList, RouteName> &
+  Omit<TextProps, 'disabled'> & {
+    target?: string;
+    onPress?: (
+      e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
+    ) => void;
+    disabled?: boolean | null;
+    children: React.ReactNode;
+  };
 
 /**
  * Component to render link to another screen using a path.
@@ -32,14 +32,17 @@ type Props<ParamList extends ReactNavigation.RootParamList> =
  * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
  * @param props.children Child elements to render the content.
  */
-export function Link<ParamList extends ReactNavigation.RootParamList>({
+export function Link<
+  const ParamList extends {} = RootParamList,
+  const RouteName extends keyof ParamList = keyof ParamList,
+>({
   screen,
   params,
   action,
   href,
   style,
   ...rest
-}: Props<ParamList>) {
+}: Props<ParamList, RouteName>) {
   const { colors, fonts } = useTheme();
   // @ts-expect-error: This is already type-checked by the prop types
   const props = useLinkProps<ParamList>({ screen, params, action, href });

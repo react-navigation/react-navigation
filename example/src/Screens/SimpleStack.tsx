@@ -1,5 +1,11 @@
 import { Button } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  CompositeScreenProps,
+  NavigatorScreenParams,
+  PathConfigMap,
+  RootParamList,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   HeaderStyleInterpolators,
@@ -11,17 +17,20 @@ import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
+import { Contacts } from '../Shared/Contacts';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type SimpleStackParams = {
+type SimpleStackParams = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
+  Contacts: undefined;
   Albums: undefined;
 };
 
 const linking: PathConfigMap<SimpleStackParams> = {
   Article: COMMON_LINKING_CONFIG.Article,
   NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+  Contacts: 'contacts',
   Albums: 'albums',
 };
 
@@ -36,12 +45,12 @@ const ArticleScreen = ({
       <View style={styles.buttons}>
         <Button
           variant="filled"
-          onPress={() => navigation.replace('NewsFeed', { date: Date.now() })}
+          onPress={() => navigation.navigate('NewsFeed', { date: Date.now() })}
         >
-          Replace with feed
+          Navigate to feed
         </Button>
         <Button variant="filled" onPress={() => navigation.popTo('Albums')}>
-          Pop to Albums
+          Pop to albums
         </Button>
         <Button
           variant="tinted"
@@ -66,15 +75,22 @@ const ArticleScreen = ({
   );
 };
 
-const NewsFeedScreen = ({
-  route,
-  navigation,
-}: StackScreenProps<SimpleStackParams, 'NewsFeed'>) => {
+type NewsFeedScreenProps = CompositeScreenProps<
+  StackScreenProps<SimpleStackParams, 'NewsFeed'>,
+  StackScreenProps<RootParamList, 'SimpleStack'>
+>;
+
+const NewsFeedScreen = ({ route, navigation }: NewsFeedScreenProps) => {
+  const rootNavigation = navigation.getParent('SimpleStack');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button variant="filled" onPress={() => navigation.navigate('Albums')}>
-          Navigate to album
+        <Button variant="filled" onPress={() => navigation.replace('Contacts')}>
+          Replace with contacts
+        </Button>
+        <Button variant="tinted" onPress={() => rootNavigation.popTo('Home')}>
+          Pop to home
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
           Go back
@@ -82,6 +98,39 @@ const NewsFeedScreen = ({
       </View>
       <NewsFeed scrollEnabled={scrollEnabled} date={route.params.date} />
     </ScrollView>
+  );
+};
+
+const ContactsScreen = ({
+  navigation,
+}: StackScreenProps<SimpleStackParams, 'Contacts'>) => {
+  const [query, setQuery] = React.useState('');
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        placeholder: 'Filter contacts',
+        onChangeText: (e) => {
+          setQuery(e.nativeEvent.text);
+        },
+      },
+    });
+  }, [navigation]);
+
+  return (
+    <Contacts
+      query={query}
+      ListHeaderComponent={
+        <View style={styles.buttons}>
+          <Button variant="filled" onPress={() => navigation.push('Albums')}>
+            Push albums
+          </Button>
+          <Button variant="tinted" onPress={() => navigation.goBack()}>
+            Go back
+          </Button>
+        </View>
+      }
+    />
   );
 };
 
@@ -108,7 +157,9 @@ const AlbumsScreen = ({
 
 const Stack = createStackNavigator<SimpleStackParams>();
 
-export function SimpleStack() {
+export function SimpleStack(
+  _: StaticScreenProps<NavigatorScreenParams<SimpleStackParams>>
+) {
   return (
     <Stack.Navigator
       screenOptions={{
@@ -122,11 +173,21 @@ export function SimpleStack() {
           title: `Article by ${route.params?.author ?? 'Unknown'}`,
         })}
         initialParams={{ author: 'Gandalf' }}
+        getId={({ params }) => params?.author}
       />
       <Stack.Screen
         name="NewsFeed"
         component={NewsFeedScreen}
         options={{ title: 'Feed' }}
+      />
+      <Stack.Screen
+        name="Contacts"
+        component={ContactsScreen}
+        options={{
+          headerSearchBarOptions: {
+            placeholder: 'Filter contacts',
+          },
+        }}
       />
       <Stack.Screen
         name="Albums"

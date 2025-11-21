@@ -1,19 +1,12 @@
 import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
 import {
-  NavigationContext,
-  NavigationRouteContext,
+  NavigationProvider,
   type ParamListBase,
   type Route,
   useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  Animated,
-  type StyleProp,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from 'react-native';
+import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 
 import {
   forNoAnimation,
@@ -22,7 +15,6 @@ import {
   forSlideUp,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import type {
-  Layout,
   Scene,
   StackHeaderMode,
   StackHeaderProps,
@@ -32,7 +24,6 @@ import { Header } from './Header';
 
 export type Props = {
   mode: StackHeaderMode;
-  layout: Layout;
   scenes: (Scene | undefined)[];
   getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
   getFocusedRoute: () => Route<string>;
@@ -40,13 +31,12 @@ export type Props = {
     route: Route<string>;
     height: number;
   }) => void;
-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function HeaderContainer({
   mode,
   scenes,
-  layout,
   getPreviousScene,
   getFocusedRoute,
   onContentHeightChange,
@@ -57,8 +47,11 @@ export function HeaderContainer({
   const { buildHref } = useLinkBuilder();
 
   return (
-    <Animated.View pointerEvents="box-none" style={style}>
-      {scenes.slice(-3).map((scene, i, self) => {
+    <View style={[styles.container, style]}>
+      {/* We render header only on two top-most headers as
+         a workaround for https://github.com/react-navigation/react-navigation/issues/12456.
+         If the header is persisted, it might be placed incorrectly when navigating back. */}
+      {scenes.slice(-2).map((scene, i, self) => {
         if ((mode === 'screen' && i !== self.length - 1) || !scene) {
           return null;
         }
@@ -125,7 +118,6 @@ export function HeaderContainer({
           nextHeaderlessScene;
 
         const props: StackHeaderProps = {
-          layout,
           back: headerBack,
           progress: scene.progress,
           options: scene.descriptor.options,
@@ -146,48 +138,49 @@ export function HeaderContainer({
         };
 
         return (
-          <NavigationContext.Provider
+          <NavigationProvider
             key={scene.descriptor.route.key}
-            value={scene.descriptor.navigation}
+            navigation={scene.descriptor.navigation}
+            route={scene.descriptor.route}
           >
-            <NavigationRouteContext.Provider value={scene.descriptor.route}>
-              <View
-                onLayout={
-                  onContentHeightChange
-                    ? (e) => {
-                        const { height } = e.nativeEvent.layout;
+            <View
+              onLayout={
+                onContentHeightChange
+                  ? (e) => {
+                      const { height } = e.nativeEvent.layout;
 
-                        onContentHeightChange({
-                          route: scene.descriptor.route,
-                          height,
-                        });
-                      }
-                    : undefined
-                }
-                pointerEvents={isFocused ? 'box-none' : 'none'}
-                accessibilityElementsHidden={!isFocused}
-                importantForAccessibility={
-                  isFocused ? 'auto' : 'no-hide-descendants'
-                }
-                style={
-                  // Avoid positioning the focused header absolutely
-                  // Otherwise accessibility tools don't seem to be able to find it
-                  (mode === 'float' && !isFocused) || headerTransparent
-                    ? styles.header
-                    : null
-                }
-              >
-                {header !== undefined ? header(props) : <Header {...props} />}
-              </View>
-            </NavigationRouteContext.Provider>
-          </NavigationContext.Provider>
+                      onContentHeightChange({
+                        route: scene.descriptor.route,
+                        height,
+                      });
+                    }
+                  : undefined
+              }
+              aria-hidden={!isFocused}
+              style={[
+                // Avoid positioning the focused header absolutely
+                // Otherwise accessibility tools don't seem to be able to find it
+                (mode === 'float' && !isFocused) || headerTransparent
+                  ? styles.header
+                  : null,
+                {
+                  pointerEvents: isFocused ? 'box-none' : 'none',
+                },
+              ]}
+            >
+              {header !== undefined ? header(props) : <Header {...props} />}
+            </View>
+          </NavigationProvider>
         );
       })}
-    </Animated.View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    pointerEvents: 'box-none',
+  },
   header: {
     position: 'absolute',
     top: 0,

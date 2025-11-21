@@ -1,21 +1,26 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, HeaderBackButton } from '@react-navigation/elements';
-import {
-  createComponentForStaticNavigation,
-  createPathConfigForStaticNavigation,
-} from '@react-navigation/native';
+import type { StaticParamList } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  type ColorValue,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
 
+export type StaticScreenParams = StaticParamList<typeof StaticStack>;
+
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: string; size: number }) => (
+  ({ color, size }: { color: ColorValue; size: number }) => (
     <MaterialCommunityIcons name={name} color={color} size={size} />
   );
 
@@ -28,6 +33,21 @@ const useIsChatShown = () => {
   const { isChatShown } = React.useContext(ChatShownContext);
 
   return isChatShown;
+};
+
+const ChatShownLayout = ({ children }: { children: React.ReactNode }) => {
+  const [isChatShown, setIsChatShown] = React.useState(false);
+
+  const context = React.useMemo(
+    () => ({ isChatShown, setIsChatShown }),
+    [isChatShown]
+  );
+
+  return (
+    <ChatShownContext.Provider value={context}>
+      {children}
+    </ChatShownContext.Provider>
+  );
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -80,7 +100,8 @@ const HomeTabs = createBottomTabNavigator({
   },
 });
 
-const RootStack = createStackNavigator({
+const StaticStack = createStackNavigator({
+  layout: (props) => <ChatShownLayout {...props} />,
   screenOptions: {
     headerShown: false,
   },
@@ -92,20 +113,10 @@ const RootStack = createStackNavigator({
   },
 });
 
-const Navigation = createComponentForStaticNavigation(RootStack, 'Root');
-
-export function StaticScreen() {
-  const [isChatShown, setIsChatShown] = React.useState(false);
-
-  return (
-    <ChatShownContext.Provider value={{ isChatShown, setIsChatShown }}>
-      <Navigation />
-    </ChatShownContext.Provider>
-  );
-}
-
-StaticScreen.title = 'Static config';
-StaticScreen.linking = createPathConfigForStaticNavigation(RootStack);
+export const StaticScreen = {
+  screen: StaticStack,
+  title: 'Static config',
+};
 
 const styles = StyleSheet.create({
   buttons: {

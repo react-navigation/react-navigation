@@ -6,19 +6,59 @@ import type {
   ParamListBase,
   PartialState,
   Route,
+  Router,
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace ReactNavigation {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface RootParamList {}
+import type { UnionToIntersection } from './utilities';
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface Theme {}
-  }
-}
+/**
+ * Root navigator used in the app.
+ * It's used for the global types in the app.
+ * Users need to use module augmentation to add their navigator type:
+ *
+ * ```ts
+ * // Navigator created with static or dynamic API
+ * const RootStack = createStackNavigator({
+ *   // ...
+ * });
+ *
+ * type RootStackType = typeof RootStack;
+ *
+ * declare module '@react-navigation/core' {
+ *   interface RootNavigator extends RootStackType {}
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface RootNavigator {}
+
+/**
+ * Theme object for the navigation components.
+ * Custom properties can be added using declaration merging:
+ *
+ * ```ts
+ * declare module '@react-navigation/core' {
+ *   interface Theme extends NativeTheme {
+ *     myCustomProperty: string;
+ *   }
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface Theme {}
+
+export type RootParamList =
+  RootNavigator extends TypedNavigatorInternal<
+    infer ParamList,
+    any,
+    any,
+    any,
+    any,
+    any
+  >
+    ? ParamList
+    : {};
 
 type Keyof<T extends {}> = Extract<keyof T, string>;
 
@@ -27,12 +67,8 @@ export type DefaultNavigatorOptions<
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
+  Navigation,
 > = DefaultRouterOptions<Keyof<ParamList>> & {
-  /**
-   * Optional ID for the navigator. Can be used with `navigation.getParent(id)` to refer to a parent.
-   */
-  id?: string;
-
   /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen`, `Group` and `React.Fragment` are supported as children.
@@ -53,7 +89,6 @@ export type DefaultNavigatorOptions<
         NavigationProp<
           ParamList,
           keyof ParamList,
-          string | undefined,
           State,
           ScreenOptions,
           EventMap
@@ -71,7 +106,7 @@ export type DefaultNavigatorOptions<
     | ScreenListeners<State, EventMap>
     | ((props: {
         route: RouteProp<ParamList>;
-        navigation: any;
+        navigation: Navigation;
       }) => ScreenListeners<State, EventMap>);
 
   /**
@@ -81,26 +116,53 @@ export type DefaultNavigatorOptions<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList>;
-        navigation: any;
-        theme: ReactNavigation.Theme;
+        navigation: Navigation;
+        theme: Theme;
       }) => ScreenOptions);
 
   /**
    * Layout for all screens under this navigator.
    */
-  screenLayout?: (props: {
-    route: RouteProp<ParamList, keyof ParamList>;
-    navigation: any;
-    theme: ReactNavigation.Theme;
-    children: React.ReactElement;
-  }) => React.ReactElement;
+  screenLayout?: (
+    props: ScreenLayoutArgs<
+      ParamList,
+      keyof ParamList,
+      ScreenOptions,
+      Navigation
+    >
+  ) => React.ReactElement;
 
   /**
-   A function returning a state, which may be set after modifying the routes name.
+   * A function returning overrides for the underlying router used by the navigator.
+   * The overrides will be shallow merged onto the original router.
+   * It receives the original router as an argument to the function.
+   *
+   * This must be a pure function and cannot reference outside dynamic variables.
    */
-  getStateForRouteNamesChange?: (
-    state: NavigationState
-  ) => PartialState<NavigationState> | undefined;
+  router?: <Action extends NavigationAction>(
+    original: Router<State, Action>
+  ) => Partial<Router<State, Action>>;
+
+  /**
+   * What should happen when the available route names change.
+   * e.g. when different screens are rendered based on a condition.
+   *
+   * - 'firstMatch': Navigate to the first route in the new list of routes (default).
+   * - 'lastUnhandled': Restore the last state that was unhandled due to conditional render.
+   *
+   * Example cases where previous state might have been unhandled:
+   * - Opened a deep link to a screen, but a login screen was shown.
+   * - Navigated to a screen containing a navigator, but a different screen was shown.
+   * - Reset the navigator to a state with different routes not matching the current list of routes.
+   *
+   * In these cases, 'lastUnhandled' will reuse the unhandled state if present.
+   * If there's no unhandled state, it will fallback to 'firstMatch' behavior.
+   *
+   * Caveats:
+   * - Direct navigation is only handled for `NAVIGATE` actions.
+   * - Unhandled state is restored only if the current state becomes invalid, i.e. it doesn't contain any currently defined screens.
+   */
+  UNSTABLE_routeNamesChangeBehavior?: 'firstMatch' | 'lastUnhandled';
 };
 
 export type EventMapBase = Record<
@@ -116,7 +178,7 @@ export type EventMapCore<State extends NavigationState> = {
 };
 
 export type EventArg<
-  EventName extends string,
+  EventName,
   CanPreventDefault extends boolean | undefined = false,
   Data = undefined,
 > = {
@@ -144,10 +206,13 @@ export type EventArg<
 export type EventListenerCallback<
   EventMap extends EventMapBase,
   EventName extends keyof EventMap,
+  EventCanPreventDefault extends
+    | boolean
+    | undefined = EventMap[EventName]['canPreventDefault'],
 > = (
   e: EventArg<
-    Extract<EventName, string>,
-    EventMap[EventName]['canPreventDefault'],
+    EventName,
+    undefined extends EventCanPreventDefault ? false : EventCanPreventDefault,
     EventMap[EventName]['data']
   >
 ) => void;
@@ -224,10 +289,13 @@ type NavigationHelpersCommon<
   ): void;
 
   /**
-   * Navigate to a route in current navigation tree.
+   * Navigate to a screen in the current or parent navigator.
+   * If we're already on the screen, update the params instead.
    *
-   * @param name Name of the route to navigate to.
+   * @param screen Name of the route to navigate to.
    * @param [params] Params object for the route.
+   * @param [options.merge] Whether to merge the params onto the route. Defaults to `false`.
+   * @param [options.pop] Whether to pop routes in a stack to go back to the matching route. Defaults to `false`.
    */
   navigate<RouteName extends keyof ParamList>(
     ...args: // This condition allows us to iterate over a union type
@@ -237,17 +305,27 @@ type NavigationHelpersCommon<
       ? // This condition checks if the params are optional,
         // which means it's either undefined or a union with undefined
         undefined extends ParamList[RouteName]
-        ?
-            | [screen: RouteName] // if the params are optional, we don't have to provide it
-            | [screen: RouteName, params: ParamList[RouteName]]
-        : [screen: RouteName, params: ParamList[RouteName]]
+        ? [
+            screen: RouteName,
+            params?: ParamList[RouteName],
+            options?: { merge?: boolean; pop?: boolean },
+          ]
+        : [
+            screen: RouteName,
+            params: ParamList[RouteName],
+            options?: { merge?: boolean; pop?: boolean },
+          ]
       : never
   ): void;
 
   /**
    * Navigate to a route in current navigation tree.
    *
-   * @param route Object with `name` for the route to navigate to, and a `params` object.
+   * @param options.name Name of the route to navigate to.
+   * @param [options.params] Params object for the route.
+   * @param [options.path] Path to associate the route with (e.g. for deep links).
+   * @param [options.merge] Whether to merge the params onto the route. Defaults to `false`.
+   * @param [options.pop] Whether to pop routes in a stack to go back to the matching route. Defaults to `false`.
    */
   navigate<RouteName extends keyof ParamList>(
     options: RouteName extends unknown
@@ -256,46 +334,7 @@ type NavigationHelpersCommon<
           params: ParamList[RouteName];
           path?: string;
           merge?: boolean;
-        }
-      : never
-  ): void;
-
-  /**
-   * Navigate to a route in current navigation tree.
-   *
-   * @deprecated Use `navigate` instead.
-   *
-   * @param name Route name of the route.
-   * @param [params] Params object for the route.
-   */
-  navigateDeprecated<RouteName extends keyof ParamList>(
-    ...args: // This condition allows us to iterate over a union type
-    // This is to avoid getting a union of all the params from `ParamList[RouteName]`,
-    // which will get our types all mixed up if a union RouteName is passed in.
-    RouteName extends unknown
-      ? // This condition checks if the params are optional,
-        // which means it's either undefined or a union with undefined
-        undefined extends ParamList[RouteName]
-        ?
-            | [screen: RouteName] // if the params are optional, we don't have to provide it
-            | [screen: RouteName, params: ParamList[RouteName]]
-        : [screen: RouteName, params: ParamList[RouteName]]
-      : never
-  ): void;
-
-  /**
-   * Navigate to a route in current navigation tree.
-   *
-   * @deprecated Use `navigate` instead.
-   *
-   * @param route Object with `name` for the route to navigate to, and a `params` object.
-   */
-  navigateDeprecated<RouteName extends keyof ParamList>(
-    options: RouteName extends unknown
-      ? {
-          name: RouteName;
-          params: ParamList[RouteName];
-          merge?: boolean;
+          pop?: boolean;
         }
       : never
   ): void;
@@ -303,15 +342,13 @@ type NavigationHelpersCommon<
   /**
    * Preloads the route in current navigation tree.
    *
-   * @param name Name of the route to navigate to.
+   * @param screen Name of the route to preload.
    * @param [params] Params object for the route.
    */
   preload<RouteName extends keyof ParamList>(
     ...args: RouteName extends unknown
       ? undefined extends ParamList[RouteName]
-        ?
-            | [screen: RouteName]
-            | [screen: RouteName, params: ParamList[RouteName]]
+        ? [screen: RouteName, params?: ParamList[RouteName]]
         : [screen: RouteName, params: ParamList[RouteName]]
       : never
   ): void;
@@ -330,7 +367,10 @@ type NavigationHelpersCommon<
 
   /**
    * Check if the screen is focused. The method returns `true` if focused, `false` otherwise.
-   * Note that this method doesn't re-render screen when the focus changes. So don't use it in `render`.
+   * Note that this method is non-reactive.
+   * It doesn't re-render the component when the result changes.
+   * So don't use it in `render`.
+   *
    * To get notified of focus changes, use `addListener('focus', cb)` and `addListener('blur', cb)`.
    * To conditionally render content based on focus state, use the `useIsFocused` hook.
    */
@@ -343,53 +383,65 @@ type NavigationHelpersCommon<
   canGoBack(): boolean;
 
   /**
-   * Returns the name of the navigator specified in the `name` prop.
-   * If no name is specified, returns `undefined`.
-   */
-  getId(): string | undefined;
-
-  /**
-   * Returns the navigation helpers from a parent navigator based on the ID.
-   * If an ID is provided, the navigation helper from the parent navigator with matching ID (including current) will be returned.
-   * If no ID is provided, the navigation helper from the immediate parent navigator will be returned.
-   *
-   * @param id Optional ID of a parent navigator.
-   */
-  getParent<T = NavigationHelpers<ParamListBase> | undefined>(id?: string): T;
-
-  /**
    * Returns the navigator's state.
-   * Note that this method doesn't re-render screen when the result changes. So don't use it in `render`.
+   * Note that this method is non-reactive.
+   * It doesn't re-render the component when the result changes.
+   * So don't use it in `render`.
    */
   getState(): State;
-  /**
-   * Schedules the given state to be used as navigation state when the list of screens defined in the navigator changes
-   * instead of automatically calculating the new state, e.g. due to conditional rendering or dynamically defining screens.
-   *
-   * @param state Navigation state object.
-   */
-  setStateForNextRouteNamesChange(state: PartialState<State> | State): void;
 } & PrivateValueStore<[ParamList, unknown, unknown]>;
+
+type NavigationHelpersRoute<
+  ParamList extends {},
+  RouteName extends keyof ParamList = Keyof<ParamList>,
+> = {
+  /**
+   * Update the param object for the route.
+   * The new params will be shallow merged with the old one.
+   *
+   * @param params Partial params object for the current route.
+   */
+  setParams(
+    params: ParamList[RouteName] extends undefined
+      ? undefined
+      : Partial<ParamList[RouteName]>
+  ): void;
+
+  /**
+   * Replace the param object for the route
+   *
+   * @param params Params object for the current route.
+   */
+  replaceParams(
+    params: ParamList[RouteName] extends undefined
+      ? undefined
+      : ParamList[RouteName]
+  ): void;
+
+  /**
+   * Push new params for the route.
+   * The params are not merged with previous params.
+   * This adds an entry to navigation history.
+   *
+   * @param params Params object for the current route.
+   */
+  pushParams(
+    params: ParamList[RouteName] extends undefined
+      ? undefined
+      : ParamList[RouteName]
+  ): void;
+};
 
 export type NavigationHelpers<
   ParamList extends ParamListBase,
   EventMap extends EventMapBase = {},
 > = NavigationHelpersCommon<ParamList> &
-  EventEmitter<EventMap> & {
-    /**
-     * Update the param object for the route.
-     * The new params will be shallow merged with the old one.
-     *
-     * @param params Params object for the current route.
-     */
-    setParams<RouteName extends keyof ParamList>(
-      params: Partial<ParamList[RouteName]>
-    ): void;
-  };
+  EventEmitter<EventMap> &
+  NavigationHelpersRoute<ParamList, keyof ParamList>;
 
 export type NavigationContainerProps = {
   /**
-   * Initial navigation state for the child navigators.
+   * Initial state object for the navigation tree.
    */
   initialState?: InitialState;
   /**
@@ -405,19 +457,9 @@ export type NavigationContainerProps = {
    */
   onUnhandledAction?: (action: Readonly<NavigationAction>) => void;
   /**
-   * Whether child navigator should handle a navigation action.
-   * The child navigator needs to be mounted before it can handle the action.
-   * Defaults to `false`.
-   *
-   * This will be removed in the next major release.
-   *
-   * @deprecated Use nested navigation API instead
-   */
-  navigationInChildEnabled?: boolean;
-  /**
    * Theme object for the UI elements.
    */
-  theme?: ReactNavigation.Theme;
+  theme?: Theme;
   /**
    * Children elements to render.
    */
@@ -427,40 +469,39 @@ export type NavigationContainerProps = {
 export type NavigationProp<
   ParamList extends {},
   RouteName extends keyof ParamList = Keyof<ParamList>,
-  NavigatorID extends string | undefined = undefined,
   State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {},
+  ActionHelpers extends Record<string, (...args: any) => void> = {},
 > = Omit<NavigationHelpersCommon<ParamList, State>, 'getParent'> & {
-  /**
-   * Returns the navigation prop from a parent navigator based on the ID.
-   * If an ID is provided, the navigation prop from the parent navigator with matching ID (including current) will be returned.
-   * If no ID is provided, the navigation prop from the immediate parent navigator will be returned.
-   *
-   * @param id Optional ID of a parent navigator.
-   */
-  getParent<T = NavigationProp<ParamListBase> | undefined>(id?: NavigatorID): T;
-
-  /**
-   * Update the param object for the route.
-   * The new params will be shallow merged with the old one.
-   *
-   * @param params Params object for the current route.
-   */
-  setParams(
-    params: ParamList[RouteName] extends undefined
-      ? undefined
-      : Partial<ParamList[RouteName]>
-  ): void;
-
   /**
    * Update the options for the route.
    * The options object will be shallow merged with default options object.
    *
-   * @param update Options object or a callback which takes the options from navigator config and returns a new options object.
+   * @param options Partial options object for the current screen.
    */
   setOptions(options: Partial<ScreenOptions>): void;
-} & EventConsumer<EventMap & EventMapCore<State>> &
+  /**
+   * Returns the navigation prop of the parent screen.
+   * If a route name is provided, the navigation prop from the parent screen with matching route name (including current) will be returned.
+   * If no route name is provided, the navigation prop from the immediate parent screen will be returned.
+   *
+   * @param routeName Optional route name of a parent screen.
+   */
+  getParent(
+    routeName: RouteName
+  ): NavigationProp<
+    ParamList,
+    RouteName,
+    State,
+    ScreenOptions,
+    EventMap,
+    ActionHelpers
+  >;
+  getParent(): NavigationProp<ParamListBase> | undefined;
+} & NavigationHelpersRoute<ParamList, RouteName> &
+  ActionHelpers &
+  EventConsumer<EventMap & EventMapCore<State>> &
   PrivateValueStore<[ParamList, RouteName, EventMap]>;
 
 export type RouteProp<
@@ -470,69 +511,75 @@ export type RouteProp<
 
 export type CompositeNavigationProp<
   A extends NavigationProp<ParamListBase, string, any, any, any>,
-  B extends NavigationHelpersCommon<ParamListBase, any>,
-> = Omit<A & B, keyof NavigationProp<any>> &
-  NavigationProp<
-    /**
-     * Param list from both navigation objects needs to be combined
-     * For example, we should be able to navigate to screens in both A and B
-     */
-    (A extends NavigationHelpersCommon<infer T> ? T : never) &
-      (B extends NavigationHelpersCommon<infer U> ? U : never),
-    /**
-     * The route name should refer to the route name specified in the first type
-     * Ideally it should work for any of them, but it's not possible to infer that way
-     */
-    A extends NavigationProp<any, infer R> ? R : string,
-    /**
-     * ID from both navigation objects needs to be combined for `getParent`
-     */
-    | (A extends NavigationProp<any, any, infer I> ? I : never)
-    | (B extends NavigationProp<any, any, infer J> ? J : never),
-    /**
-     * The type of state should refer to the state specified in the first type
-     */
-    A extends NavigationProp<any, any, any, infer S> ? S : NavigationState,
-    /**
-     * Screen options should refer to the options specified in the first type
-     */
-    A extends NavigationProp<any, any, any, any, infer O> ? O : {},
-    /**
-     * Event consumer config should refer to the config specified in the first type
-     * This allows typechecking `addListener`/`removeListener`
-     */
-    A extends NavigationProp<any, any, any, any, any, infer E> ? E : {}
-  >;
+  B extends NavigationProp<ParamListBase, string, any, any, any>,
+> = Omit<A & B, keyof NavigationProp<any, any, any, any, any>> &
+  Omit<
+    NavigationProp<
+      /**
+       * Param list from both navigation objects needs to be combined
+       * For example, we should be able to navigate to screens in both A and B
+       */
+      (A extends NavigationHelpersCommon<infer T> ? T : never) &
+        (B extends NavigationHelpersCommon<infer U> ? U : never),
+      /**
+       * The route name should refer to the route name specified in the first type
+       * Ideally it should work for any of them, but it's not possible to infer that way
+       */
+      A extends NavigationProp<any, infer R> ? R : string,
+      /**
+       * The type of state should refer to the state specified in the first type
+       */
+      A extends NavigationProp<any, any, infer S> ? S : NavigationState,
+      /**
+       * Screen options should refer to the options specified in the first type
+       */
+      A extends NavigationProp<any, any, any, infer O> ? O : {},
+      /**
+       * Event consumer config should refer to the config specified in the first type
+       * This allows typechecking `addListener`/`removeListener`
+       */
+      A extends NavigationProp<any, any, any, any, infer E> ? E : {}
+    >,
+    'getParent'
+  > & {
+    getParent: A['getParent'] & B['getParent'];
+  };
 
 export type CompositeScreenProps<
   A extends {
-    navigation: NavigationProp<
-      ParamListBase,
-      string,
-      string | undefined,
-      any,
-      any,
-      any
-    >;
+    navigation: NavigationProp<ParamListBase, string, any, any, any>;
     route: RouteProp<ParamListBase>;
   },
   B extends {
-    navigation: NavigationHelpersCommon<any, any>;
+    navigation: NavigationProp<ParamListBase, string, any, any, any>;
   },
 > = {
   navigation: CompositeNavigationProp<A['navigation'], B['navigation']>;
   route: A['route'];
 };
 
+export type ScreenLayoutArgs<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+  ScreenOptions extends {},
+  Navigation,
+> = {
+  route: RouteProp<ParamList, RouteName>;
+  options: ScreenOptions;
+  navigation: Navigation;
+  theme: Theme;
+  children: React.ReactElement;
+};
+
 export type Descriptor<
   ScreenOptions extends {},
-  Navigation extends NavigationProp<any, any, any, any, any, any>,
+  Navigation extends NavigationProp<any, any, any, any, any>,
   Route extends RouteProp<any, any>,
 > = {
   /**
    * Render the component associated with this route.
    */
-  render(): JSX.Element;
+  render(): React.JSX.Element;
 
   /**
    * Options for the route.
@@ -602,12 +649,13 @@ export type RouteConfigComponent<
       getComponent?: never;
     };
 
-export type RouteConfig<
+export type RouteConfigProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
+  Navigation,
 > = {
   /**
    * Optional key for this screen. This doesn't need to be unique.
@@ -628,8 +676,8 @@ export type RouteConfig<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: any;
-        theme: ReactNavigation.Theme;
+        navigation: Navigation;
+        theme: Theme;
       }) => ScreenOptions);
 
   /**
@@ -639,7 +687,7 @@ export type RouteConfig<
     | ScreenListeners<State, EventMap>
     | ((props: {
         route: RouteProp<ParamList, RouteName>;
-        navigation: any;
+        navigation: Navigation;
       }) => ScreenListeners<State, EventMap>);
 
   /**
@@ -647,12 +695,9 @@ export type RouteConfig<
    * Useful for wrapping the screen with custom containers.
    * e.g. for styling, error boundaries, suspense, etc.
    */
-  layout?: (props: {
-    route: RouteProp<ParamList, keyof ParamList>;
-    navigation: any;
-    theme: ReactNavigation.Theme;
-    children: React.ReactElement;
-  }) => React.ReactElement;
+  layout?: (
+    props: ScreenLayoutArgs<ParamList, RouteName, ScreenOptions, Navigation>
+  ) => React.ReactElement;
 
   /**
    * Function to return an unique ID for this screen.
@@ -670,11 +715,29 @@ export type RouteConfig<
    * Initial params object for the route.
    */
   initialParams?: Partial<ParamList[RouteName]>;
-} & RouteConfigComponent<ParamList, RouteName>;
+};
+
+export type RouteConfig<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  Navigation,
+> = RouteConfigProps<
+  ParamList,
+  RouteName,
+  State,
+  ScreenOptions,
+  EventMap,
+  Navigation
+> &
+  RouteConfigComponent<ParamList, RouteName>;
 
 export type RouteGroupConfig<
   ParamList extends ParamListBase,
   ScreenOptions extends {},
+  Navigation,
 > = {
   /**
    * Optional key for the screens in this group.
@@ -689,20 +752,26 @@ export type RouteGroupConfig<
     | ScreenOptions
     | ((props: {
         route: RouteProp<ParamList, keyof ParamList>;
-        navigation: any;
-        theme: ReactNavigation.Theme;
+        navigation: Navigation;
+        theme: Theme;
       }) => ScreenOptions);
 
   /**
    * Layout for the screens inside the group.
    * This will override the `screenLayout` of parent group or navigator.
    */
-  screenLayout?: (props: {
-    route: RouteProp<ParamList, keyof ParamList>;
-    navigation: any;
-    theme: ReactNavigation.Theme;
-    children: React.ReactElement;
-  }) => React.ReactElement;
+  screenLayout?:
+    | ((
+        props: ScreenLayoutArgs<
+          ParamList,
+          keyof ParamList,
+          ScreenOptions,
+          Navigation
+        >
+      ) => React.ReactElement)
+    | {
+        // FIXME: TypeScript doesn't seem to infer `navigation` correctly without this
+      };
 
   /**
    * Children React Elements to extract the route configuration from.
@@ -713,7 +782,13 @@ export type RouteGroupConfig<
 
 export type NavigationContainerEventMap = {
   /**
-   * Event which fires when the navigation state changes.
+   * Event that fires when the navigation container is ready to be used.
+   */
+  ready: {
+    data: undefined;
+  };
+  /**
+   * Event that fires when the navigation state changes.
    */
   state: {
     data: {
@@ -724,18 +799,18 @@ export type NavigationContainerEventMap = {
     };
   };
   /**
-   * Event which fires when current options changes.
+   * Event that fires when current options changes.
    */
   options: { data: { options: object } };
   /**
-   * Event which fires when an action is dispatched.
+   * Event that fires when an action is dispatched.
    * Only intended for debugging purposes, don't use it for app logic.
    * This event will be emitted before state changes have been applied.
    */
   __unsafe_action__: {
     data: {
       /**
-       * The action object which was dispatched.
+       * The action object that was dispatched.
        */
       action: NavigationAction;
       /**
@@ -749,6 +824,88 @@ export type NavigationContainerEventMap = {
     };
   };
 };
+
+type NotUndefined<T> = T extends undefined ? never : T;
+
+export type RouteForName<
+  ParamList extends {},
+  RouteName extends string,
+> = Extract<ParamListRoute<ParamList>, { name: RouteName }>;
+
+type ParamListRoute<ParamList extends {}> = {
+  [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
+    ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<infer T>
+      ? ParamListRoute<T> | RouteProp<ParamList, RouteName>
+      : RouteProp<ParamList, RouteName>
+    : RouteProp<ParamList, RouteName>;
+}[keyof ParamList];
+
+type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
+  ? ParamListRoute<ParamList>
+  : Route<string>;
+
+export type NavigationListForNavigator<Navigator> =
+  Navigator extends TypedNavigator<infer Bag, any>
+    ? Bag['NavigationList']
+    : Navigator extends PrivateValueStore<[any, infer NavigationList, any]>
+      ? NavigationList
+      : {};
+
+export type NavigationListForNested<Navigator> =
+  NavigationListForNavigator<Navigator> &
+    NavigationListForStaticConfig<
+      NavigationListForNavigator<Navigator>,
+      Navigator
+    >;
+
+type NavigationListWithComposite<
+  Parent extends NavigationProp<any, any, any, any, any>,
+  NavigatorList extends Record<string, any>,
+> = {
+  [K in keyof NavigatorList]: CompositeNavigationProp<NavigatorList[K], Parent>;
+};
+
+type NavigationListForStaticConfig<ParentList, Navigator> = Navigator extends {
+  readonly config: {
+    screens?: any;
+    groups?: any;
+  };
+}
+  ? NavigationListForScreens<ParentList, Navigator['config']['screens']> &
+      NavigationListForGroups<ParentList, Navigator['config']['groups']>
+  : {};
+
+type NavigationListForScreens<ParentList, Screens> = UnionToIntersection<
+  {
+    // Only check screens with static config to avoid overly-complex types
+    // Otherwise TypeScript fails to load the types due to complexity
+    [K in keyof Screens]: ParentList extends Record<K, any>
+      ? Screens[K] extends { config: any }
+        ? NavigationListWithComposite<
+            ParentList[K],
+            NavigationListForNested<Screens[K]>
+          >
+        : Screens[K] extends { screen: { config: any } }
+          ? NavigationListWithComposite<
+              ParentList[K],
+              NavigationListForNested<Screens[K]['screen']>
+            >
+          : {}
+      : {};
+  }[keyof Screens]
+>;
+
+type NavigationListForGroups<ParentList, Groups> =
+  Groups extends Record<string, { screens: any }>
+    ? UnionToIntersection<
+        {
+          [K in keyof Groups]: NavigationListForScreens<
+            ParentList,
+            Groups[K]['screens']
+          >;
+        }[keyof Groups]
+      >
+    : {};
 
 export type NavigationContainerRef<ParamList extends {}> =
   NavigationHelpers<ParamList> &
@@ -766,7 +923,7 @@ export type NavigationContainerRef<ParamList extends {}> =
       /**
        * Get the currently focused navigation route.
        */
-      getCurrentRoute(): Route<string> | undefined;
+      getCurrentRoute(): MaybeParamListRoute<ParamList> | undefined;
       /**
        * Get the currently focused route's options.
        */
@@ -790,11 +947,39 @@ export type NavigationContainerRefWithCurrent<ParamList extends {}> =
     current: NavigationContainerRef<ParamList> | null;
   };
 
+export type NavigationListBase<ParamList extends ParamListBase> = {
+  [RouteName in keyof ParamList]: unknown;
+};
+
+export type NavigatorTypeBagBase = {
+  ParamList: {};
+  State: NavigationState;
+  ScreenOptions: {};
+  EventMap: {};
+  NavigationList: NavigationListBase<ParamListBase>;
+  Navigator: React.ComponentType<any>;
+};
+
 export type TypedNavigator<
+  Bag extends NavigatorTypeBagBase,
+  Config = unknown,
+> = TypedNavigatorInternal<
+  Bag['ParamList'],
+  Bag['State'],
+  Bag['ScreenOptions'],
+  Bag['EventMap'],
+  Bag['NavigationList'],
+  Bag['Navigator']
+> &
+  (undefined extends Config ? {} : { config: Config }) &
+  PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
+
+type TypedNavigatorInternal<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
+  NavigationList extends NavigationListBase<ParamList>,
   Navigator extends React.ComponentType<any>,
 > = {
   /**
@@ -803,19 +988,34 @@ export type TypedNavigator<
   Navigator: React.ComponentType<
     Omit<
       React.ComponentProps<Navigator>,
-      keyof DefaultNavigatorOptions<any, any, any, any>
+      keyof DefaultNavigatorOptions<any, any, any, any, any>
     > &
-      DefaultNavigatorOptions<ParamList, State, ScreenOptions, EventMap>
+      DefaultNavigatorOptions<
+        ParamList,
+        State,
+        ScreenOptions,
+        EventMap,
+        NavigationList[keyof ParamList]
+      >
   >;
   /**
    * Component used for grouping multiple route configuration.
    */
-  Group: React.ComponentType<RouteGroupConfig<ParamList, ScreenOptions>>;
+  Group: React.ComponentType<
+    RouteGroupConfig<ParamList, ScreenOptions, NavigationList[keyof ParamList]>
+  >;
   /**
    * Component used for specifying route configuration.
    */
   Screen: <RouteName extends keyof ParamList>(
-    _: RouteConfig<ParamList, RouteName, State, ScreenOptions, EventMap>
+    _: RouteConfig<
+      ParamList,
+      RouteName,
+      State,
+      ScreenOptions,
+      EventMap,
+      NavigationList[RouteName]
+    >
   ) => null;
 };
 
@@ -823,7 +1023,9 @@ export type NavigatorScreenParams<ParamList extends {}> =
   | {
       screen?: never;
       params?: never;
+      merge?: never;
       initial?: never;
+      pop?: never;
       path?: string;
       state: PartialState<NavigationState> | NavigationState | undefined;
     }
@@ -832,25 +1034,29 @@ export type NavigatorScreenParams<ParamList extends {}> =
         ? {
             screen: RouteName;
             params?: ParamList[RouteName];
+            merge?: boolean;
             initial?: boolean;
             path?: string;
+            pop?: boolean;
             state?: never;
           }
         : {
             screen: RouteName;
             params: ParamList[RouteName];
+            merge?: boolean;
             initial?: boolean;
             path?: string;
+            pop?: boolean;
             state?: never;
           };
     }[keyof ParamList];
 
-export type PathConfig<ParamList extends {}> = {
+type PathConfigAlias = {
   /**
    * Path string to match against.
    * e.g. `/users/:id` will match `/users/1` and extract `id` param as `1`.
    */
-  path?: string;
+  path: string;
   /**
    * Whether the path should be consider parent paths or use the exact path.
    * By default, paths are relating to the path config on the parent screen.
@@ -869,6 +1075,9 @@ export type PathConfig<ParamList extends {}> = {
    * ```
    */
   parse?: Record<string, (value: string) => any>;
+};
+
+export type PathConfig<ParamList extends {}> = Partial<PathConfigAlias> & {
   /**
    * An object mapping the param name to a function which converts the param value to a string.
    * By default, all params are converted to strings using `String(value)`.
@@ -882,6 +1091,10 @@ export type PathConfig<ParamList extends {}> = {
    */
   stringify?: Record<string, (value: any) => string>;
   /**
+   * Additional path alias that will be matched to the same screen.
+   */
+  alias?: (string | PathConfigAlias)[];
+  /**
    * Path configuration for child screens.
    */
   screens?: PathConfigMap<ParamList>;
@@ -889,12 +1102,6 @@ export type PathConfig<ParamList extends {}> = {
    * Name of the initial route to use for the navigator when the path matches.
    */
   initialRouteName?: keyof ParamList;
-  /**
-   * A function returning a state, which may be set after modifying the routes name.
-   */
-  getStateForRouteNamesChange?: (
-    state: NavigationState
-  ) => PartialState<NavigationState> | undefined;
 };
 
 export type PathConfigMap<ParamList extends {}> = {

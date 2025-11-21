@@ -17,10 +17,22 @@ export { useAnimatedHeaderHeight } from './utils/useAnimatedHeaderHeight';
  * Types
  */
 export type {
+  NativeStackHeaderBackProps,
+  NativeStackHeaderItem,
+  NativeStackHeaderItemButton,
+  NativeStackHeaderItemCustom,
+  NativeStackHeaderItemMenu,
+  NativeStackHeaderItemMenuAction,
+  NativeStackHeaderItemMenuSubmenu,
+  NativeStackHeaderItemProps,
+  NativeStackHeaderItemSpacing,
+  NativeStackHeaderLeftProps,
   NativeStackHeaderProps,
+  NativeStackHeaderRightProps,
   NativeStackNavigationEventMap,
   NativeStackNavigationOptions,
   NativeStackNavigationProp,
-  NativeStackScreenOptions,
+  NativeStackNavigatorProps,
+  NativeStackOptionsArgs,
   NativeStackScreenProps,
 } from './types';

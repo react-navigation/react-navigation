@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/devtools",
   "description": "Developer tools for React Navigation",
-  "version": "7.0.0-alpha.13",
+  "version": "7.0.35",
   "keywords": [
     "react",
     "react-native",
@@ -17,11 +17,18 @@
     "url": "https://github.com/react-navigation/react-navigation/issues"
   },
   "homepage": "https://reactnavigation.org",
-  "main": "lib/commonjs/index.js",
-  "react-native": "src/index.tsx",
-  "source": "src/index.tsx",
-  "module": "lib/module/index.js",
-  "types": "lib/typescript/src/index.d.ts",
+  "main": "./lib/module/index.js",
+  "types": "./lib/typescript/src/index.d.ts",
+  "exports": {
+    ".": {
+      "source": "./src/index.tsx",
+      "types": "./lib/typescript/src/index.d.ts",
+      "production": "./lib/module/index.production.js",
+      "development": "./lib/module/index.development.js",
+      "default": "./lib/module/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "files": [
     "src",
     "lib",
@@ -36,29 +43,31 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "deep-equal": "^2.2.3",
-    "nanoid": "3.3.7",
-    "stacktrace-parser": "^0.1.10"
+    "fast-deep-equal": "^3.1.3",
+    "nanoid": "^3.3.11",
+    "stacktrace-parser": "^0.1.11"
   },
   "devDependencies": {
     "@react-navigation/core": "workspace:^",
-    "@testing-library/react-native": "^12.4.3",
-    "@types/deep-equal": "^1.0.4",
-    "@types/react": "~18.2.45",
-    "del-cli": "^5.1.0",
-    "react": "18.2.0",
-    "react-native-builder-bob": "^0.23.2",
-    "typescript": "^5.3.3"
+    "@types/react": "~19.1.10",
+    "del-cli": "^6.0.0",
+    "react": "19.1.0",
+    "react-native-builder-bob": "^0.40.12",
+    "typescript": "^5.9.2"
   },
   "peerDependencies": {
-    "react": ">= 18.2.0"
+    "react": ">= 19.0.0"
   },
   "react-native-builder-bob": {
     "source": "src",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
       [
         "typescript",
         {

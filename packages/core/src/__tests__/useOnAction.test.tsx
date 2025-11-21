@@ -1,3 +1,4 @@
+import { beforeEach, expect, jest, test } from '@jest/globals';
 import {
   type DefaultRouterOptions,
   type NavigationState,
@@ -28,11 +29,10 @@ jest.mock('nanoid/non-secure', () => {
 beforeEach(() => {
   MockRouterKey.current = 0;
 
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   require('nanoid/non-secure').__key = 0;
 });
 
-it("lets parent handle the action if child didn't", () => {
+test("lets parent handle the action if child didn't", () => {
   function CurrentRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const ParentRouter: Router<
@@ -109,198 +109,7 @@ it("lets parent handle the action if child didn't", () => {
   });
 });
 
-it("lets children handle the action if parent didn't with navigationInChildEnabled", () => {
-  const CurrentParentRouter = MockRouter;
-
-  function CurrentChildRouter(options: DefaultRouterOptions) {
-    const CurrentMockRouter = MockRouter(options);
-    const ChildRouter: Router<
-      NavigationState,
-      MockActions | { type: 'REVERSE' }
-    > = {
-      ...CurrentMockRouter,
-
-      shouldActionChangeFocus() {
-        return true;
-      },
-
-      getStateForAction(state, action, options) {
-        if (action.type === 'REVERSE') {
-          return {
-            ...state,
-            routes: state.routes.slice().reverse(),
-          };
-        }
-        return CurrentMockRouter.getStateForAction(state, action, options);
-      },
-    };
-    return ChildRouter;
-  }
-
-  const ChildNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(
-      CurrentChildRouter,
-      props
-    );
-
-    return descriptors[state.routes[state.index].key].render();
-  };
-
-  const ParentNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(
-      CurrentParentRouter,
-      props
-    );
-
-    return (
-      <React.Fragment>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
-    );
-  };
-
-  const TestScreen = (props: any) => {
-    React.useEffect(() => {
-      props.navigation.dispatch({ type: 'REVERSE' });
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return null;
-  };
-
-  const onStateChange = jest.fn();
-
-  const initialState = {
-    index: 1,
-    routes: [
-      {
-        key: 'baz',
-        name: 'baz',
-        state: {
-          index: 0,
-          key: '4',
-          routeNames: ['qux', 'lex'],
-          routes: [
-            { key: 'qux', name: 'qux' },
-            { key: 'lex', name: 'lex' },
-          ],
-        },
-      },
-      { key: 'bar', name: 'bar' },
-    ],
-  };
-
-  const element = (
-    <BaseNavigationContainer
-      navigationInChildEnabled
-      initialState={initialState}
-      onStateChange={onStateChange}
-    >
-      <ParentNavigator>
-        <Screen name="foo">{() => null}</Screen>
-        <Screen name="bar" component={TestScreen} />
-        <Screen name="baz">
-          {() => (
-            <ChildNavigator>
-              <Screen name="qux">{() => null}</Screen>
-              <Screen name="lex">{() => null}</Screen>
-            </ChildNavigator>
-          )}
-        </Screen>
-      </ParentNavigator>
-    </BaseNavigationContainer>
-  );
-
-  render(element).update(element);
-
-  expect(onStateChange).toHaveBeenCalledTimes(1);
-  expect(onStateChange).toHaveBeenLastCalledWith({
-    stale: false,
-    type: 'test',
-    index: 0,
-    key: '0',
-    routeNames: ['foo', 'bar', 'baz'],
-    routes: [
-      {
-        key: 'baz',
-        name: 'baz',
-        state: {
-          stale: false,
-          type: 'test',
-          index: 0,
-          key: '1',
-          routeNames: ['qux', 'lex'],
-          routes: [
-            { key: 'lex', name: 'lex' },
-            { key: 'qux', name: 'qux' },
-          ],
-        },
-      },
-      { key: 'bar', name: 'bar' },
-    ],
-  });
-});
-
-it("lets children handle the action if parent didn't with NAVIGATE_DEPRECATED", () => {
-  const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
-
-    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
-  };
-
-  const TestScreen = () => null;
-
-  const onStateChange = jest.fn();
-  const onUnhandledAction = jest.fn();
-
-  const navigation = createNavigationContainerRef<ParamListBase>();
-
-  const element = (
-    <BaseNavigationContainer
-      ref={navigation}
-      onStateChange={onStateChange}
-      onUnhandledAction={onUnhandledAction}
-    >
-      <TestNavigator>
-        <Screen name="foo" component={TestScreen} />
-        <Screen name="bar" component={TestScreen} />
-        <Screen name="baz">
-          {() => (
-            <TestNavigator>
-              <Screen name="qux" component={TestScreen} />
-              <Screen name="lex" component={TestScreen} />
-            </TestNavigator>
-          )}
-        </Screen>
-      </TestNavigator>
-    </BaseNavigationContainer>
-  );
-
-  render(element);
-
-  act(() => navigation.navigate('lex'));
-
-  expect(onStateChange).not.toHaveBeenCalled();
-  expect(onUnhandledAction).toHaveBeenCalledTimes(1);
-  expect(onUnhandledAction).toHaveBeenCalledWith(
-    expect.objectContaining({
-      type: 'NAVIGATE',
-      payload: { name: 'lex' },
-    })
-  );
-
-  expect(navigation.getCurrentRoute()?.name).toBe('foo');
-
-  act(() => navigation.navigateDeprecated('lex'));
-
-  expect(onStateChange).toHaveBeenCalledTimes(1);
-  expect(onUnhandledAction).toHaveBeenCalledTimes(1);
-
-  expect(navigation.getCurrentRoute()?.name).toBe('lex');
-});
-
-it('action goes to correct parent navigator if target is specified', () => {
+test('action goes to correct parent navigator if target is specified', () => {
   function CurrentTestRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const TestRouter: Router<
@@ -428,7 +237,7 @@ it('action goes to correct parent navigator if target is specified', () => {
   });
 });
 
-it('action goes to correct child navigator if target is specified', () => {
+test('action goes to correct child navigator if target is specified', () => {
   function CurrentTestRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const TestRouter: Router<
@@ -555,7 +364,7 @@ it('action goes to correct child navigator if target is specified', () => {
   });
 });
 
-it("action doesn't bubble if target is specified", () => {
+test("action doesn't bubble if target is specified", () => {
   const CurrentParentRouter = MockRouter;
 
   function CurrentChildRouter(options: DefaultRouterOptions) {
@@ -640,7 +449,7 @@ it("action doesn't bubble if target is specified", () => {
   expect(onStateChange).not.toHaveBeenCalled();
 });
 
-it('logs error if no navigator handled the action', () => {
+test('logs error if no navigator handled the action', () => {
   const TestRouter = MockRouter;
 
   const TestNavigator = (props: any) => {
@@ -700,18 +509,21 @@ it('logs error if no navigator handled the action', () => {
     </BaseNavigationContainer>
   );
 
-  const spy = jest.spyOn(console, 'error').mockImplementation();
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
   render(element).update(element);
 
-  expect(spy.mock.calls[0][0]).toMatch(
-    "The action 'UNKNOWN' was not handled by any navigator."
+  expect(spy).toHaveBeenCalledTimes(1);
+  expect(spy).toHaveBeenCalledWith(
+    expect.stringContaining(
+      "The action 'UNKNOWN' was not handled by any navigator."
+    )
   );
 
   spy.mockRestore();
 });
 
-it("prevents removing a screen with 'beforeRemove' event", () => {
+test("prevents removing a screen with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 
@@ -851,7 +663,7 @@ it("prevents removing a screen with 'beforeRemove' event", () => {
   });
 });
 
-it("prevents removing a child screen with 'beforeRemove' event", () => {
+test("prevents removing a child screen with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 
@@ -1019,7 +831,7 @@ it("prevents removing a child screen with 'beforeRemove' event", () => {
   });
 });
 
-it("prevents removing a grand child screen with 'beforeRemove' event", () => {
+test("prevents removing a grand child screen with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 
@@ -1220,7 +1032,7 @@ it("prevents removing a grand child screen with 'beforeRemove' event", () => {
   });
 });
 
-it("prevents removing by multiple screens with 'beforeRemove' event", () => {
+test("prevents removing by multiple screens with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 
@@ -1382,7 +1194,7 @@ it("prevents removing by multiple screens with 'beforeRemove' event", () => {
   });
 });
 
-it("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'", () => {
+test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 

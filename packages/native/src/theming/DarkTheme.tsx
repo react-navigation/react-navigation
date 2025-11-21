@@ -1,7 +1,8 @@
-import type { Theme } from '../types';
+import type { Theme } from '@react-navigation/core';
+
 import { fonts } from './fonts';
 
-export const DarkTheme: Theme = {
+export const DarkTheme = {
   dark: true,
   colors: {
     primary: 'rgb(10, 132, 255)',
@@ -12,4 +13,4 @@ export const DarkTheme: Theme = {
     notification: 'rgb(255, 69, 58)',
   },
   fonts,
-};
+} as const satisfies Theme;

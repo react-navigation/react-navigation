@@ -1,12 +1,11 @@
+import { Color, Text } from '@react-navigation/elements';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
-import Color from 'color';
 import * as React from 'react';
 import {
   Image,
   ScrollView,
   type ScrollViewProps,
   StyleSheet,
-  Text,
   TextInput,
   View,
 } from 'react-native';
@@ -42,7 +41,7 @@ export function Chat({
 
           return (
             <View
-              // eslint-disable-next-line react/no-array-index-key
+              // eslint-disable-next-line @eslint-react/no-array-index-key
               key={i}
               style={[odd ? styles.odd : styles.even, styles.inverted]}
             >
@@ -50,8 +49,8 @@ export function Chat({
                 style={styles.avatar}
                 source={
                   odd
-                    ? require('../../assets/avatar-2.png')
-                    : require('../../assets/avatar-1.png')
+                    ? require('../../assets/misc/avatar-2.png')
+                    : require('../../assets/misc/avatar-1.png')
                 }
               />
               <View
@@ -73,7 +72,7 @@ export function Chat({
           styles.input,
           { backgroundColor: colors.card, color: colors.text },
         ]}
-        placeholderTextColor={Color(colors.text).alpha(0.5).rgb().string()}
+        placeholderTextColor={Color(colors.text)?.alpha(0.5).string()}
         placeholder="Write a message"
         underlineColorAndroid="transparent"
       />

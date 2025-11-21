@@ -12,6 +12,7 @@ import type {
   Theme,
 } from '@react-navigation/native';
 import type {
+  ColorValue,
   ImageSourcePropType,
   StyleProp,
   TextStyle,
@@ -20,9 +21,10 @@ import type {
 import type {
   ScreenProps,
   ScreenStackHeaderConfigProps,
+  ScrollEdgeEffect,
   SearchBarProps,
-  SheetDetentTypes,
 } from 'react-native-screens';
+import type { SFSymbol } from 'sf-symbols-typescript';
 
 export type NativeStackNavigationEventMap = {
   /**
@@ -37,36 +39,41 @@ export type NativeStackNavigationEventMap = {
    * Event which fires when a swipe back is canceled on iOS.
    */
   gestureCancel: { data: undefined };
+  /**
+   * Event which fires when screen is in sheet presentation & it's detent changes.
+   *
+   * In payload it caries two fields:
+   *
+   * * `index` - current detent index in the `sheetAllowedDetents` array,
+   * * `stable` - on Android `false` value means that the user is dragging the sheet or it is settling; on iOS it is always `true`.
+   */
+  sheetDetentChange: { data: { index: number; stable: boolean } };
 };
 
 export type NativeStackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   StackNavigationState<ParamList>,
   NativeStackNavigationOptions,
-  NativeStackNavigationEventMap
-> &
-  StackActionHelpers<ParamList>;
+  NativeStackNavigationEventMap,
+  StackActionHelpers<ParamList>
+>;
 
 export type NativeStackScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = string,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: NativeStackNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: NativeStackNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
-export type NativeStackScreenOptions<
+export type NativeStackOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = NativeStackScreenProps<ParamList, RouteName, NavigatorID> & {
+> = NativeStackScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -106,24 +113,38 @@ export type NativeStackHeaderProps = {
   navigation: NativeStackNavigationProp<ParamListBase>;
 };
 
-export type NativeStackHeaderRightProps = {
+export type NativeStackHeaderItemProps = {
   /**
    * Tint color for the header.
    */
-  tintColor?: string;
+  tintColor?: ColorValue;
   /**
    * Whether it's possible to navigate back in stack.
    */
-  canGoBack: boolean;
+  canGoBack?: boolean;
 };
 
-export type NativeStackHeaderLeftProps = NativeStackHeaderRightProps & {
+export type NativeStackHeaderBackProps = NativeStackHeaderItemProps & {
   /**
    * Label text for the button. Usually the title of the previous screen.
-   * By default, this is only shown on iOS.
+   * By default, this is only shown on iOS 18.
    */
   label?: string;
+  /**
+   * The `href` to use for the anchor tag on web
+   */
+  href?: string;
 };
+
+/**
+ * @deprecated Use `NativeStackHeaderBackProps` instead.
+ */
+export type NativeStackHeaderLeftProps = NativeStackHeaderBackProps;
+
+/**
+ * @deprecated Use `NativeStackHeaderItemProps` instead.
+ */
+export type NativeStackHeaderRightProps = NativeStackHeaderItemProps;
 
 export type NativeStackNavigationOptions = {
   /**
@@ -143,30 +164,24 @@ export type NativeStackNavigationOptions = {
   headerBackVisible?: boolean;
   /**
    * Title string used by the back button on iOS.
-   * Defaults to the previous scene's title, or "Back" if there's not enough space.
-   * Use `headerBackTitleVisible: false` to hide it.
+   * Defaults to the previous scene's title.
+   * On iOS the text might be shortened to "Back" or arrow icon depending on the available space, following native iOS behaviour.
+   * See `headerBackButtonDisplayMode` to read about limitations and interactions with other props.
+   * Use `headerBackButtonDisplayMode: "minimal"` to hide it.
    *
-   * Only supported on iOS.
+   * Only supported on iOS and Web.
    *
-   * @platform ios
+   * @platform ios, web
    */
   headerBackTitle?: string;
-  /**
-   * Whether the back button title should be visible or not.
-   *
-   * Only supported on iOS.
-   *
-   * @platform ios
-   */
-  headerBackTitleVisible?: boolean;
   /**
    * Style object for header back title. Supported properties:
    * - fontFamily
    * - fontSize
    *
-   * Only supported on iOS.
+   * Only supported on iOS and Web.
    *
-   * @platform ios
+   * @platform ios, web
    */
   headerBackTitleStyle?: StyleProp<{
     fontFamily?: string;
@@ -181,7 +196,7 @@ export type NativeStackNavigationOptions = {
   headerBackImageSource?: ImageSourcePropType;
   /**
    * Style of the header when a large title is shown.
-   * The large title is shown if `headerLargeTitle` is `true` and
+   * The large title is shown if `headerLargeTitleEnabled` is `true` and
    * the edge of any scrollable content reaches the matching edge of the header.
    *
    * Supported properties:
@@ -192,7 +207,7 @@ export type NativeStackNavigationOptions = {
    * @platform ios
    */
   headerLargeStyle?: StyleProp<{
-    backgroundColor?: string;
+    backgroundColor?: ColorValue;
   }>;
   /**
    * Whether to enable header with large title which collapses to regular header on scroll.
@@ -205,7 +220,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  headerLargeTitle?: boolean;
+  headerLargeTitleEnabled?: boolean;
   /**
    * Whether drop shadow of header is visible when a large title is shown.
    *
@@ -229,7 +244,7 @@ export type NativeStackNavigationOptions = {
     fontFamily?: string;
     fontSize?: number;
     fontWeight?: string;
-    color?: string;
+    color?: ColorValue;
   }>;
   /**
    * Whether to show the header. The header is shown by default.
@@ -241,7 +256,7 @@ export type NativeStackNavigationOptions = {
    * - backgroundColor
    */
   headerStyle?: StyleProp<{
-    backgroundColor?: string;
+    backgroundColor?: ColorValue;
   }>;
   /**
    * Whether to hide the elevation shadow (Android) or the bottom border (iOS) on the header.
@@ -265,7 +280,7 @@ export type NativeStackNavigationOptions = {
   /**
    * Tint color for the header. Changes the color of back button and title.
    */
-  headerTintColor?: string;
+  headerTintColor?: ColorValue;
   /**
    * Function which returns a React Element to render as the background of the header.
    * This is useful for using backgrounds such as an image, a gradient, blur effect etc.
@@ -275,12 +290,36 @@ export type NativeStackNavigationOptions = {
   /**
    * Function which returns a React Element to display on the left side of the header.
    * This replaces the back button. See `headerBackVisible` to show the back button along side left element.
+   * Will be overriden by `headerLeftItems` on iOS.
    */
-  headerLeft?: (props: NativeStackHeaderLeftProps) => React.ReactNode;
+  headerLeft?: (props: NativeStackHeaderBackProps) => React.ReactNode;
   /**
    * Function which returns a React Element to display on the right side of the header.
+   * Will be overriden by `headerRightItems` on iOS.
    */
-  headerRight?: (props: NativeStackHeaderRightProps) => React.ReactNode;
+  headerRight?: (props: NativeStackHeaderItemProps) => React.ReactNode;
+  /**
+   * Function which returns an array of items to display as on the left side of the header.
+   * Overrides `headerLeft`.
+   *
+   * This is an unstable API and might change in the future.
+   *
+   * @platform ios
+   */
+  unstable_headerLeftItems?: (
+    props: NativeStackHeaderItemProps
+  ) => NativeStackHeaderItem[];
+  /**
+   * Function which returns an array of items to display as on the right side of the header.
+   * Overrides `headerRight`.
+   *
+   * This is an unstable API and might change in the future.
+   *
+   * @platform ios
+   */
+  unstable_headerRightItems?: (
+    props: NativeStackHeaderItemProps
+  ) => NativeStackHeaderItem[];
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
@@ -300,7 +339,7 @@ export type NativeStackNavigationOptions = {
         /**
          * Tint color for the header.
          */
-        tintColor?: string;
+        tintColor?: ColorValue;
       }) => React.ReactNode);
   /**
    * How to align the the header title.
@@ -318,15 +357,13 @@ export type NativeStackNavigationOptions = {
    */
   headerTitleStyle?: StyleProp<
     Pick<TextStyle, 'fontFamily' | 'fontSize' | 'fontWeight'> & {
-      color?: string;
+      color?: ColorValue;
     }
   >;
   /**
    * Options to render a native search bar.
    * You also need to specify `contentInsetAdjustmentBehavior="automatic"` in your `ScrollView`, `FlatList` etc.
    * If you don't have a `ScrollView`, specify `headerTransparent: false`.
-   *
-   * Only supported on iOS and Android.
    */
   headerSearchBarOptions?: SearchBarProps;
   /**
@@ -338,6 +375,28 @@ export type NativeStackNavigationOptions = {
    * @platform ios
    */
   headerBackButtonMenuEnabled?: boolean;
+  /**
+   * How the back button displays icon and title.
+   *
+   * Supported values:
+   * - "default" - Displays one of the following depending on the available space: previous screen's title, generic title (e.g. 'Back') or no title (only icon).
+   * - "generic" – Displays one of the following depending on the available space: generic title (e.g. 'Back') or no title (only icon).
+   * - "minimal" – Always displays only the icon without a title.
+   *
+   * The space-aware behavior is disabled when:
+   * - The iOS version is 13 or lower
+   * - Custom font family or size is set (e.g. with `headerBackTitleStyle`)
+   * - Back button menu is disabled (e.g. with `headerBackButtonMenuEnabled`)
+   *
+   * In such cases, a static title and icon are always displayed.
+   *
+   * Defaults to "default" on iOS, and "minimal" on other platforms.
+   *
+   * Only supported on iOS and Web.
+   *
+   * @platform ios, web
+   */
+  headerBackButtonDisplayMode?: ScreenStackHeaderConfigProps['backButtonDisplayMode'];
   /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
@@ -351,12 +410,6 @@ export type NativeStackNavigationOptions = {
    */
   keyboardHandlingEnabled?: boolean;
   /**
-   * Sets the navigation bar color. Defaults to initial navigation bar color.
-   *
-   * @platform android
-   */
-  navigationBarColor?: string;
-  /**
    * Sets the visibility of the navigation bar. Defaults to `false`.
    *
    * @platform android
@@ -364,43 +417,37 @@ export type NativeStackNavigationOptions = {
   navigationBarHidden?: boolean;
   /**
    * Sets the status bar animation (similar to the `StatusBar` component).
+   * On Android, setting either `fade` or `slide` will set the transition of status bar color. On iOS, this option applies to appereance animation of the status bar.
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
    *
-   * Only supported on iOS.
+   * Defaults to `fade` on iOS and `none` on Android.
    *
-   * @platform ios
+   * Only supported on Android and iOS.
+   *
+   * @platform android, ios
    */
   statusBarAnimation?: ScreenProps['statusBarAnimation'];
-  /**
-   * Sets the status bar color (similar to the `StatusBar` component). Defaults to initial status bar color.
-   *
-   * @platform android
-   */
-  statusBarBackgroundColor?: string;
   /**
    * Whether the status bar should be hidden on this screen.
    * Requires setting `View controller-based status bar appearance -> YES` in your Info.plist file.
    *
-   * Only supported on iOS.
+   * Only supported on Android and iOS.
    *
-   * @platform ios
+   * @platform android, ios
    */
   statusBarHidden?: boolean;
   /**
    * Sets the status bar color (similar to the `StatusBar` component).
    * Requires setting `View controller-based status bar appearance -> YES` (or removing the config) in your `Info.plist` file.
+   * `auto` and `inverted` are supported only on iOS. On Android, they will fallback to `light`.
    *
-   * Only supported on iOS.
+   * Defaults to `auto` on iOS and `light` on Android.
    *
-   * @platform ios
+   * Only supported on Android and iOS.
+   *
+   * @platform android, ios
    */
   statusBarStyle?: ScreenProps['statusBarStyle'];
-  /**
-   * Sets the translucency of the status bar. Defaults to `false`.
-   *
-   * @platform android
-   */
-  statusBarTranslucent?: boolean;
   /**
    * Sets the direction in which you should swipe to dismiss the screen.
    * When using `vertical` option, options `fullScreenGestureEnabled: true`, `animationMatchesGesture: true` and `animation: 'slide_from_bottom'` are set by default.
@@ -425,15 +472,32 @@ export type NativeStackNavigationOptions = {
    */
   animationMatchesGesture?: boolean;
   /**
-   * Whether the gesture to dismiss should work on the whole screen. Using gesture to dismiss with this option results in the same
-   * transition animation as `simple_push`. This behavior can be changed by setting `animationMatchesGesture` prop. Achieving the
-   * default iOS animation isn't possible due to platform limitations. Defaults to `false`.
+   * Whether the gesture to dismiss should work on the whole screen. The behavior depends on iOS version.
+   *
+   * On iOS 18 and below:
+   * `false` by default. If enabled, swipe gesture will use `simple_push` transition animation by default. It can be changed
+   * with `animation` & `animationMatchesGesture` props, but default iOS swipe animation is not achievable.
+   *
+   * On iOS 26 and up:
+   * `true` by default to match new native behavior. You can still customize it with `animation` & `animationMatchesGesture` props.
    *
    * Doesn't affect the behavior of screens presented modally.
    *
    * @platform ios
    */
   fullScreenGestureEnabled?: boolean;
+  /**
+   * iOS 18 and below. Controls whether the full screen dismiss gesture has shadow under view during transition.
+   * The gesture uses custom transition and thus doesn't have a shadow by default. When enabled, a custom shadow view
+   * is added during the transition which tries to mimic the default iOS shadow. Defaults to `true`.
+   *
+   * This does not affect the behavior of transitions that don't use gestures, enabled by `fullScreenGestureEnabled` prop.
+   *
+   * @deprecated since iOS 26.
+   *
+   * @platform ios
+   */
+  fullScreenGestureShadowEnabled?: boolean;
   /**
    * Whether you can use gestures to dismiss this screen. Defaults to `true`.
    *
@@ -464,19 +528,31 @@ export type NativeStackNavigationOptions = {
    * Supported values:
    * - "default": use the platform default animation
    * - "fade": fade screen in or out
+   * - "fade_from_bottom" – performs a fade from bottom animation
    * - "flip": flip the screen, requires presentation: "modal" (iOS only)
    * - "simple_push": use the platform default animation, but without shadow and native header transition (iOS only)
    * - "slide_from_bottom": slide in the new screen from bottom
    * - "slide_from_right": slide in the new screen from right (Android only, uses default animation on iOS)
    * - "slide_from_left": slide in the new screen from left (Android only, uses default animation on iOS)
+   * - "ios_from_right" - iOS like slide in animation. pushes in the new screen from right to left (Android only, resolves to default transition on iOS)
+   * - "ios_from_left" - iOS like slide in animation. pushes in the new screen from left to right (Android only, resolves to default transition on iOS)
    * - "none": don't animate the screen
    *
    * Only supported on iOS and Android.
    */
   animation?: ScreenProps['stackAnimation'];
   /**
-   * Changes the duration (in milliseconds) of `slide_from_bottom`, `fade_from_bottom`, `fade` and `simple_push` transitions on iOS. Defaults to `350`.
-   * The duration of `default` and `flip` transitions isn't customizable.
+   * Duration (in milliseconds) for the following transition animations on iOS:
+   * - `slide_from_bottom`
+   * - `fade_from_bottom`
+   * - `fade`
+   * - `simple_push`
+   *
+   * Defaults to `500`.
+   *
+   * The duration is not customizable for:
+   * - Screens with `default` and `flip` animations
+   * - Screens with `presentation` set to `modal`, `formSheet`, `pageSheet` (regardless of animation)
    *
    * @platform ios
    */
@@ -499,17 +575,32 @@ export type NativeStackNavigationOptions = {
   /**
    * Describes heights where a sheet can rest.
    * Works only when `presentation` is set to `formSheet`.
-   * Defaults to `large`.
    *
-   * Available values:
+   * Heights should be described as fraction (a number from `[0, 1]` interval) of screen height / maximum detent height.
+   * You can pass an array of ascending values each defining allowed sheet detent. iOS accepts any number of detents,
+   * while **Android is limited to three**.
    *
-   * - `large` - only large detent level will be allowed
-   * - `medium` - only medium detent level will be allowed
-   * - `all` - all detent levels will be allowed
+   * There is also possibility to specify `fitToContents` literal, which intents to set the sheet height
+   * to the height of its contents.
    *
-   * @platform ios
+   * Note that the array **must** be sorted in ascending order. This invariant is verified only in developement mode,
+   * where violation results in error.
+   *
+   * **Android is limited to up 3 values in the array** -- any surplus values, beside first three are ignored.
+   *
+   * Defaults to `[1.0]`.
    */
-  sheetAllowedDetents?: SheetDetentTypes;
+  sheetAllowedDetents?: number[] | 'fitToContents';
+  /**
+   * Integer value describing elevation of the sheet, impacting shadow on the top edge of the sheet.
+   *
+   * Not dynamic - changing it after the component is rendered won't have an effect.
+   *
+   * Defaults to `24`.
+   *
+   * @platform Android
+   */
+  sheetElevation?: number;
   /**
    * Whether the sheet should expand to larger detent when scrolling.
    * Works only when `presentation` is set to `formSheet`.
@@ -525,10 +616,20 @@ export type NativeStackNavigationOptions = {
    * If set to non-negative value it will try to render sheet with provided radius, else it will apply system default.
    *
    * If left unset system default is used.
-   *
-   * @platform ios
    */
   sheetCornerRadius?: number;
+  /**
+   * Index of the detent the sheet should expand to after being opened.
+   * Works only when `stackPresentation` is set to `formSheet`.
+   *
+   * If the specified index is out of bounds of `sheetAllowedDetents` array, in dev environment more error will be thrown,
+   * in production the value will be reset to default value.
+   *
+   * Additionaly there is `last` value available, when set the sheet will expand initially to last (largest) detent.
+   *
+   * Defaults to `0` - which represents first detent in the detents array.
+   */
+  sheetInitialDetentIndex?: number | 'last';
   /**
    * Boolean indicating whether the sheet shows a grabber at the top.
    * Works only when `presentation` is set to `formSheet`.
@@ -539,19 +640,19 @@ export type NativeStackNavigationOptions = {
   sheetGrabberVisible?: boolean;
   /**
    * The largest sheet detent for which a view underneath won't be dimmed.
-   * Works only when `presentation` is se tto `formSheet`.
+   * Works only when `presentation` is set to `formSheet`.
    *
-   * If this prop is set to:
+   * This prop can be set to an number, which indicates index of detent in `sheetAllowedDetents` array for which
+   * there won't be a dimming view beneath the sheet.
    *
-   * - `large` - the view underneath won't be dimmed at any detent level
-   * - `medium` - the view underneath will be dimmed only when detent level is `large`
-   * - `all` - the view underneath will be dimmed for any detent level
+   * Additionaly there are following options available:
    *
-   * Defaults to `all`.
+   * * `none` - there will be dimming view for all detents levels,
+   * * `last` - there won't be a dimming view for any detent level.
    *
-   * @platform ios
+   * Defaults to `none`, indicating that the dimming view should be always present.
    */
-  sheetLargestUndimmedDetent?: SheetDetentTypes;
+  sheetLargestUndimmedDetentIndex?: number | 'none' | 'last';
   /**
    * The display orientation to use for the screen.
    *
@@ -576,13 +677,328 @@ export type NativeStackNavigationOptions = {
    * Only supported on iOS and Android.
    */
   freezeOnBlur?: boolean;
+  /**
+   * Configures the scroll edge effect for the _content ScrollView_ (the ScrollView that is present in first descendants chain of the Screen).
+   * Depending on values set, it will blur the scrolling content below certain UI elements (Header Items, SearchBar)
+   * for the specifed edge of the ScrollView.
+   *
+   * When set in nested containers, i.e. ScreenStack inside BottomTabs, or the other way around,
+   * the ScrollView will use only the innermost one's config.
+   *
+   * @platform ios
+   *
+   * @supported iOS 26 or higher
+   */
+  scrollEdgeEffects?: {
+    bottom?: ScrollEdgeEffect;
+    left?: ScrollEdgeEffect;
+    right?: ScrollEdgeEffect;
+    top?: ScrollEdgeEffect;
+  };
+  /**
+   * Footer component that can be used alongside formSheet stack presentation style.
+   *
+   * This option is provided, because due to implementation details it might be problematic
+   * to implement such layout with JS-only code.
+   *
+   * Note that this prop is marked as unstable and might be subject of breaking changes,
+   * including removal, in particular when we find solution that will make implementing it with JS
+   * straightforward.
+   *
+   * @platform android
+   */
+  unstable_sheetFooter?: () => React.ReactNode;
 };
+
+type PlatformIconShared = {
+  type: 'image';
+  source: ImageSourcePropType;
+  /**
+   * Whether to apply tint color to the icon.
+   * Defaults to `true`.
+   *
+   * @platform ios
+   */
+  tinted?: boolean;
+};
+
+type PlatformIconIOSSfSymbol = {
+  type: 'sfSymbol';
+  name: SFSymbol;
+};
+
+type PlatformIconIOS = PlatformIconIOSSfSymbol | PlatformIconShared;
+
+type SharedHeaderItem = {
+  /**
+   * Label of the item.
+   */
+  label: string;
+  /**
+   * Style for the item label.
+   */
+  labelStyle?: {
+    fontFamily?: string;
+    fontSize?: number;
+    fontWeight?: string;
+    color?: ColorValue;
+  };
+  /**
+   * Icon for the item
+   */
+  icon?: PlatformIconIOS;
+  /**
+   * The variant of the item.
+   * "prominent" only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/style-swift.property
+   */
+  variant?: 'plain' | 'done' | 'prominent';
+  /**
+   * The tint color to apply to the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/tintcolor
+   */
+  tintColor?: ColorValue;
+  /**
+   * Whether the item is in a disabled state.
+   */
+  disabled?: boolean;
+  /**
+   * The width of the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/width
+   */
+  width?: number;
+  /**
+   * Whether the background this item may share with other items in the bar should be hidden.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/hidessharedbackground
+   */
+  hidesSharedBackground?: boolean;
+  /**
+   * Whether this item can share a background with other items.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/sharesbackground
+   */
+  sharesBackground?: boolean;
+  /**
+   * An identifier used to match items across transitions.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/identifier
+   */
+  identifier?: string;
+  /**
+   * A badge to display on a item.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitembadge
+   */
+  badge?: {
+    /**
+     * The text to display in the badge.
+     */
+    value: number | string;
+    /**
+     * Style of the badge.
+     */
+    style?: {
+      color?: ColorValue;
+      backgroundColor?: ColorValue;
+      fontFamily?: string;
+      fontSize?: number;
+      fontWeight?: string;
+    };
+  };
+  /**
+   * Accessibility label for the item.
+   */
+  accessibilityLabel?: string;
+  /**
+   * Accessibility hint for the item.
+   */
+  accessibilityHint?: string;
+};
+
+/**
+ * A button item in the header.
+ */
+export type NativeStackHeaderItemButton = SharedHeaderItem & {
+  /**
+   * Type of the item.
+   */
+  type: 'button';
+  /**
+   * Function to call when the item is pressed.
+   */
+  onPress: () => void;
+  /**
+   * Whether the item is in a selected state.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/isselected
+   */
+  selected?: boolean;
+};
+
+/**
+ * An action item in a menu.
+ */
+export type NativeStackHeaderItemMenuAction = {
+  type: 'action';
+  /**
+   * Label for the menu item.
+   */
+  label: string;
+  /**
+   * Icon for the menu item.
+   */
+  icon?: PlatformIconIOSSfSymbol;
+  /**
+   * Function to call when the menu item is pressed.
+   */
+  onPress: () => void;
+  /**
+   * The state of an action- or command-based menu item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/state
+   */
+  state?: 'on' | 'off' | 'mixed';
+  /**
+   * Whether to apply disabled style to the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/disabled
+   */
+  disabled?: boolean;
+  /**
+   * Whether to apply destructive style to the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/destructive
+   */
+  destructive?: boolean;
+  /**
+   * Whether to apply hidden style to the item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/hidden
+   */
+  hidden?: boolean;
+  /**
+   * Whether to keep the menu presented after firing the element’s action.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/keepsmenupresented
+   */
+  keepsMenuPresented?: boolean;
+  /**
+   * An elaborated title that explains the purpose of the action.
+   *
+   * On iOS, the system displays this title in the discoverability heads-up display (HUD).
+   * If this is not set, the HUD displays the title property.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uiaction/discoverabilitytitle
+   */
+  discoverabilityLabel?: string;
+};
+
+/**
+ * A submenu item that contains other menu items.
+ */
+export type NativeStackHeaderItemMenuSubmenu = {
+  type: 'submenu';
+  /**
+   * Label for the submenu item.
+   */
+  label: string;
+  /**
+   * Icon for the submenu item.
+   */
+  icon?: PlatformIconIOSSfSymbol;
+  /**
+   * Array of menu items (actions or submenus).
+   */
+  items: NativeStackHeaderItemMenu['menu']['items'];
+};
+
+/**
+ * An item that shows a menu when pressed.
+ */
+export type NativeStackHeaderItemMenu = SharedHeaderItem & {
+  type: 'menu';
+  /**
+   * Whether the menu is a selection menu.
+   * Tapping an item in a selection menu will add a checkmark to the selected item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/changesselectionasprimaryaction
+   */
+  changesSelectionAsPrimaryAction?: boolean;
+  /**
+   * Menu for the item.
+   */
+  menu: {
+    /**
+     * Optional title to show on top of the menu.
+     */
+    title?: string;
+    /**
+     * Array of menu items (actions or submenus).
+     */
+    items: (
+      | NativeStackHeaderItemMenuAction
+      | NativeStackHeaderItemMenuSubmenu
+    )[];
+  };
+};
+
+/**
+ * An item to add spacing between other items in the header.
+ */
+export type NativeStackHeaderItemSpacing = {
+  type: 'spacing';
+  /**
+   * The amount of spacing to add.
+   */
+  spacing: number;
+};
+
+/**
+ * A custom item to display any React Element in the header.
+ */
+export type NativeStackHeaderItemCustom = {
+  type: 'custom';
+  /**
+   * A React Element to display as the item.
+   */
+  element: React.ReactElement;
+  /**
+   * Whether the background this item may share with other items in the bar should be hidden.
+   * Only available from iOS 26.0 and later.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uibarbuttonitem/hidessharedbackground
+   */
+  hidesSharedBackground?: boolean;
+};
+
+/**
+ * An item that can be displayed in the header.
+ * It can be a button, a menu, spacing, or a custom element.
+ *
+ * On iOS 26, when showing items on the right side of the header,
+ * if the items don't fit the available space, they will be collapsed into a menu automatically.
+ * Items with `type: 'custom'` will not be included in this automatic collapsing behavior.
+ */
+export type NativeStackHeaderItem =
+  | NativeStackHeaderItemButton
+  | NativeStackHeaderItemMenu
+  | NativeStackHeaderItemSpacing
+  | NativeStackHeaderItemCustom;
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
   StackNavigationState<ParamListBase>,
   NativeStackNavigationOptions,
-  NativeStackNavigationEventMap
+  NativeStackNavigationEventMap,
+  NativeStackNavigationProp<ParamListBase>
 > &
   StackRouterOptions &
   NativeStackNavigationConfig;
