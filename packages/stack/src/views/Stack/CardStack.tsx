@@ -708,7 +708,6 @@ export class CardStack extends React.Component<Props, State> {
           getFocusedRoute: this.getFocusedRoute,
           onContentHeightChange: this.handleHeaderLayout,
           style: [
-            styles.floating,
             isFloatHeaderAbsolute && [
               // Without this, the header buttons won't be touchable on Android when headerTransparent: true
               { height: focusedHeaderHeight },
@@ -837,8 +836,5 @@ const styles = StyleSheet.create({
     top: 0,
     start: 0,
     end: 0,
-  },
-  floating: {
-    zIndex: 1,
   },
 });
