@@ -373,10 +373,10 @@ export class CardStack extends React.Component<Props, State> {
         const transitionPreset =
           animation !== 'default'
             ? NAMED_TRANSITIONS_PRESETS[animation]
-            : isModal || optionsForTransitionConfig.presentation === 'modal'
-              ? ModalTransition
-              : optionsForTransitionConfig.presentation === 'transparentModal'
-                ? ModalFadeTransition
+            : optionsForTransitionConfig.presentation === 'transparentModal'
+              ? ModalFadeTransition
+              : optionsForTransitionConfig.presentation === 'modal' || isModal
+                ? ModalTransition
                 : DefaultTransition;
 
         const {
@@ -516,7 +516,7 @@ export class CardStack extends React.Component<Props, State> {
         // 0 - inactive, the screen is detached
         // 1 - transitioning or below the top screen, the screen is mounted but interaction is disabled
         // 2 - on top of the stack, the screen is mounted and interaction is enabled
-        let isScreenActive:
+        let activityState:
           | Animated.AnimatedInterpolation<0 | 1 | 2>
           | 0
           | 1
@@ -531,7 +531,7 @@ export class CardStack extends React.Component<Props, State> {
         ) {
           // screen should be inactive because it is too deep in the stack
           // or it was inactive before and it will still be inactive after the transition
-          isScreenActive = STATE_INACTIVE;
+          activityState = STATE_INACTIVE;
         } else {
           const sceneForActivity = scenes[self.length - 1];
           const outputValue =
@@ -541,7 +541,7 @@ export class CardStack extends React.Component<Props, State> {
                 ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
                 : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
 
-          isScreenActive = sceneForActivity
+          activityState = sceneForActivity
             ? sceneForActivity.progress.current.interpolate({
                 inputRange: [0, 1 - EPSILON, 1],
                 outputRange: [1, 1, outputValue],
@@ -550,7 +550,7 @@ export class CardStack extends React.Component<Props, State> {
             : STATE_TRANSITIONING_OR_BELOW_TOP;
         }
 
-        return isScreenActive;
+        return activityState;
       });
     }
 
