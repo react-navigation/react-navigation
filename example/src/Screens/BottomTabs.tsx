@@ -207,6 +207,7 @@ export function BottomTabs(
             popToTopOnBlur: true,
             title: 'Article',
             headerShown: false,
+            tabBarButtonTestID: 'article',
             tabBarIcon: getTabBarIcon('file-document'),
           }}
         />
@@ -216,6 +217,7 @@ export function BottomTabs(
           initialParams={{ count: i }}
           options={({ route }) => ({
             title: 'Chat',
+            tabBarButtonTestID: 'chat',
             tabBarIcon: getTabBarIcon('message-reply'),
             tabBarBadge: route.params?.count,
           })}
@@ -225,6 +227,7 @@ export function BottomTabs(
           component={Contacts}
           options={{
             title: 'Contacts',
+            tabBarButtonTestID: 'contacts',
             tabBarIcon: getTabBarIcon('contacts'),
           }}
         />
@@ -233,6 +236,7 @@ export function BottomTabs(
           component={AlbumsScreen}
           options={{
             title: 'Albums',
+            tabBarButtonTestID: 'albums',
             headerTintColor: '#fff',
             headerTransparent: true,
             headerBackground: () => (

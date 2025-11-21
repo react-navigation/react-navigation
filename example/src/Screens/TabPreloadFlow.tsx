@@ -23,15 +23,18 @@ const DetailsScreen = ({
   navigation,
 }: BottomTabScreenProps<PreloadBottomTabsParams, 'Details'>) => {
   const [loadingCountdown, setLoadingCountdown] = useState(3);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setLoadingCountdown((loadingCountdown) => {
         if (loadingCountdown === 1) {
           clearInterval(interval);
         }
+
         return loadingCountdown - 1;
       });
     }, 1000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -55,13 +58,27 @@ const HomeScreen = ({
 }: BottomTabScreenProps<PreloadBottomTabsParams, 'Home'>) => {
   const { navigate, preload } = navigation;
 
+  const [isReady, setIsReady] = useState(false);
+
   return (
     <View style={styles.content}>
-      <Button onPress={() => preload('Details')} style={styles.button}>
-        Preload screen
+      <Text style={styles.text}>
+        {isReady ? 'Details is preloaded!' : 'Details is not preloaded yet.'}
+      </Text>
+      <Button
+        onPress={() => {
+          setTimeout(() => {
+            setIsReady(true);
+          }, 3000);
+
+          preload('Details');
+        }}
+        style={styles.button}
+      >
+        Preload Details
       </Button>
       <Button onPress={() => navigate('Details')} style={styles.button}>
-        Navigate
+        Navigate to Details
       </Button>
     </View>
   );

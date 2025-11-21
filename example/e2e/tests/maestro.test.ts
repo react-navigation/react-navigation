@@ -33,31 +33,61 @@ async function runStep(page: Page, step: any) {
 
   switch (command) {
     case 'runFlow': {
-      const flowPath = path.join(__dirname, '../maestro', step.runFlow.file);
+      if (step.runFlow.file) {
+        const flowPath = path.join(__dirname, '../maestro', step.runFlow.file);
 
-      const content = fs.readFileSync(flowPath, 'utf-8');
-      const [, flowSteps] = parseAllDocuments(content).map((doc) =>
-        doc.toJSON()
-      );
+        const content = fs.readFileSync(flowPath, 'utf-8');
+        const [, flowSteps] = parseAllDocuments(content).map((doc) =>
+          doc.toJSON()
+        );
 
-      const env = step.runFlow.env || {};
+        const env = step.runFlow.env || {};
 
-      for (const flowStep of flowSteps) {
-        let resolvedStep = flowStep;
+        for (const flowStep of flowSteps) {
+          let resolvedStep = flowStep;
 
-        // Simple variable substitution
-        for (const [key, value] of Object.entries(env)) {
-          const strValue = String(value);
+          // Simple variable substitution
+          for (const [key, value] of Object.entries(env)) {
+            const strValue = String(value);
 
-          resolvedStep = JSON.parse(
-            JSON.stringify(resolvedStep).replace(
-              new RegExp(`\\$\\{${key}\\}`, 'g'),
-              strValue
-            )
-          );
+            resolvedStep = JSON.parse(
+              JSON.stringify(resolvedStep).replace(
+                new RegExp(`\\$\\{${key}\\}`, 'g'),
+                strValue
+              )
+            );
+          }
+
+          await runStep(page, resolvedStep);
+        }
+      } else if (step.runFlow.when) {
+        const condition = step.runFlow.when;
+
+        let conditionMet = false;
+
+        if (condition.visible) {
+          const locator = query(page, condition.visible).filter({
+            visible: true,
+          });
+
+          conditionMet = await locator.isVisible();
+        } else if (condition.notVisible) {
+          const locator = query(page, condition.notVisible).filter({
+            visible: false,
+          });
+
+          conditionMet = await locator.isHidden();
         }
 
-        await runStep(page, resolvedStep);
+        if (conditionMet) {
+          for (const cmd of step.runFlow.commands) {
+            await runStep(page, cmd);
+          }
+        }
+      } else {
+        throw new Error(
+          `Invalid runFlow step: ${JSON.stringify(step.runFlow)}`
+        );
       }
 
       break;
@@ -77,10 +107,9 @@ async function runStep(page: Page, step: any) {
         });
       }
 
-      await query(page, step.tapOn)
-        .filter({ visible: true })
-        .first()
-        .click({ force: true });
+      const locator = query(page, step.tapOn);
+
+      await locator.filter({ visible: true }).first().dispatchEvent('click');
 
       break;
     }
@@ -93,14 +122,44 @@ async function runStep(page: Page, step: any) {
       break;
     }
 
-    case 'extendedWaitUntil': {
-      const element = query(page, step.extendedWaitUntil.visible)
-        .filter({ visible: true })
-        .first();
+    case 'assertNotVisible': {
+      const locator = query(page, step.assertNotVisible);
 
-      await element.waitFor({
+      if (await locator.isVisible()) {
+        await expect(locator).not.toBeInViewport();
+      } else {
+        await expect(locator).toBeHidden();
+      }
+
+      break;
+    }
+
+    case 'extendedWaitUntil': {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 0);
+      });
+
+      const locator = step.extendedWaitUntil.visible
+        ? query(page, step.extendedWaitUntil.visible)
+            .filter({ visible: true })
+            .first()
+        : query(page, step.extendedWaitUntil.notVisible).first();
+
+      const element = await locator.elementHandle();
+
+      await element?.waitForElementState('stable', {
         timeout: step.extendedWaitUntil.timeout,
       });
+
+      if (step.extendedWaitUntil.visible) {
+        await expect(locator).toBeVisible();
+      } else if (step.extendedWaitUntil.notVisible) {
+        if (await locator.isVisible()) {
+          await expect(locator).not.toBeInViewport();
+        } else {
+          await expect(locator).toBeHidden();
+        }
+      }
 
       break;
     }

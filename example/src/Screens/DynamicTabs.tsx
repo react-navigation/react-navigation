@@ -48,6 +48,7 @@ export function DynamicTabs(
           name={`tab-${i}`}
           options={{
             title: `Tab ${i}`,
+            tabBarButtonTestID: `tab-${i}`,
             tabBarIcon: ({ color, size }) => (
               <Feather name="octagon" color={color} size={size} />
             ),
