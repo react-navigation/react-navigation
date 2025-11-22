@@ -5,8 +5,8 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import type {
-  ImageSourcePropType,
+import {
+  type ImageSourcePropType,
   Platform,
   StyleSheet,
   type TextStyle,
