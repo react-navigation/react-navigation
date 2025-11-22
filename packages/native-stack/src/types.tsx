@@ -192,10 +192,28 @@ export type NativeStackNavigationOptions = {
     fontSize?: number;
   }>;
   /**
-   * Image to display in the header as the icon in the back button.
+   * Icon to display in the header as the icon in the back button.
+   *
    * Defaults to back icon image for the platform
    * - A chevron on iOS
    * - An arrow on Android
+   *
+   * @example
+   * ```js
+   * headerBackIcon: {
+   *   type: 'image',
+   *   source: require('./back-icon.png'),
+   * }
+   * ```
+   */
+  headerBackIcon?: {
+    type: 'image';
+    source: ImageSourcePropType;
+  };
+  /**
+   * Image to display in the header as the icon in the back button.
+   *
+   * @deprecated Use `headerBackIcon` instead.
    */
   headerBackImageSource?: ImageSourcePropType;
   /**

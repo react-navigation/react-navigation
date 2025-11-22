@@ -80,6 +80,7 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
         const {
           header,
           headerShown,
+          headerBackIcon,
           headerBackImageSource,
           headerLeft,
           headerTransparent,
@@ -130,10 +131,14 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
                               label={headerBackTitle ?? label}
                               tintColor={tintColor}
                               backImage={
+                                headerBackIcon !== undefined ||
                                 headerBackImageSource !== undefined
                                   ? () => (
                                       <Image
-                                        source={headerBackImageSource}
+                                        source={
+                                          headerBackIcon?.source ??
+                                          headerBackImageSource
+                                        }
                                         resizeMode="contain"
                                         tintColor={tintColor}
                                         style={styles.backImage}
