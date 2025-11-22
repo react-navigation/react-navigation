@@ -43,7 +43,15 @@ type Props = NativeStackNavigationOptions & {
 
 /**
  * Helper function to get the image source from headerBackIcon or headerBackImageSource.
- * headerBackIcon takes precedence over the deprecated headerBackImageSource.
+ *
+ * Priority:
+ * 1. If headerBackIcon is provided with type 'image', its source is used
+ * 2. If headerBackIcon is provided with type 'sfSymbol', returns undefined (falls back to system default)
+ * 3. Otherwise, headerBackImageSource is used (if provided)
+ *
+ * Note: SF Symbol support for back buttons would require updates to react-native-screens'
+ * ScreenStackHeaderBackButtonImage component. When an SF Symbol is specified, the system
+ * default back button icon is used instead.
  */
 export const getBackIconSource = (
   headerBackIcon: PlatformIconIOS | undefined,
@@ -51,7 +59,7 @@ export const getBackIconSource = (
 ): ImageSourcePropType | undefined => {
   if (headerBackIcon !== undefined) {
     // Currently only 'image' type is supported for back button
-    // SF Symbols would require updates to react-native-screens
+    // SF Symbols return undefined, which results in the default system back icon
     return headerBackIcon.type === 'image' ? headerBackIcon.source : undefined;
   }
   return headerBackImageSource;
