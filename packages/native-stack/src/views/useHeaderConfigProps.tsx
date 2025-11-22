@@ -153,6 +153,7 @@ const getMenuItem = (
 };
 
 export function useHeaderConfigProps({
+  headerBackIcon,
   headerBackImageSource,
   headerBackButtonDisplayMode,
   headerBackButtonMenuEnabled,
@@ -187,6 +188,15 @@ export function useHeaderConfigProps({
   const { colors, fonts } = useTheme();
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
+
+  // Process headerBackIcon to get the image source for the back button
+  // headerBackIcon takes precedence over deprecated headerBackImageSource
+  const backIconSource =
+    headerBackIcon !== undefined
+      ? headerBackIcon.type === 'image'
+        ? headerBackIcon.source
+        : undefined
+      : headerBackImageSource;
 
   const headerBackTitleStyleFlattened =
     StyleSheet.flatten([fonts.regular, headerBackTitleStyle]) || {};
@@ -399,8 +409,8 @@ export function useHeaderConfigProps({
           ) : null}
         </>
       )}
-      {headerBackImageSource !== undefined ? (
-        <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
+      {backIconSource !== undefined ? (
+        <ScreenStackHeaderBackButtonImage source={backIconSource} />
       ) : null}
       {Platform.OS === 'ios' && rightItems ? (
         rightItems.map((item, index) => {

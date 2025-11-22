@@ -188,6 +188,15 @@ export type NativeStackNavigationOptions = {
     fontSize?: number;
   }>;
   /**
+   * Icon to display in the header as the icon in the back button.
+   * Can be an image or an SF Symbol on iOS.
+   * Defaults to back icon image for the platform
+   * - A chevron on iOS
+   * - An arrow on Android
+   */
+  headerBackIcon?: PlatformIconIOS;
+  /**
+   * @deprecated Use `headerBackIcon` instead.
    * Image to display in the header as the icon in the back button.
    * Defaults to back icon image for the platform
    * - A chevron on iOS

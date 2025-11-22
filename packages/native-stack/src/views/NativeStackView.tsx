@@ -80,6 +80,7 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
         const {
           header,
           headerShown,
+          headerBackIcon,
           headerBackImageSource,
           headerLeft,
           headerTransparent,
@@ -124,26 +125,35 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
                             label: headerBackTitle ?? label,
                           })
                       : headerLeft === undefined && canGoBack
-                        ? ({ tintColor, label, ...rest }) => (
-                            <HeaderBackButton
-                              {...rest}
-                              label={headerBackTitle ?? label}
-                              tintColor={tintColor}
-                              backImage={
-                                headerBackImageSource !== undefined
-                                  ? () => (
-                                      <Image
-                                        source={headerBackImageSource}
-                                        resizeMode="contain"
-                                        tintColor={tintColor}
-                                        style={styles.backImage}
-                                      />
-                                    )
+                        ? ({ tintColor, label, ...rest }) => {
+                            const backIconSource =
+                              headerBackIcon !== undefined
+                                ? headerBackIcon.type === 'image'
+                                  ? headerBackIcon.source
                                   : undefined
-                              }
-                              onPress={navigation.goBack}
-                            />
-                          )
+                                : headerBackImageSource;
+
+                            return (
+                              <HeaderBackButton
+                                {...rest}
+                                label={headerBackTitle ?? label}
+                                tintColor={tintColor}
+                                backImage={
+                                  backIconSource !== undefined
+                                    ? () => (
+                                        <Image
+                                          source={backIconSource}
+                                          resizeMode="contain"
+                                          tintColor={tintColor}
+                                          style={styles.backImage}
+                                        />
+                                      )
+                                    : undefined
+                                }
+                                onPress={navigation.goBack}
+                              />
+                            );
+                          }
                         : headerLeft
                   }
                   headerTransparent={headerTransparent}
