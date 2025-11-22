@@ -27,6 +27,7 @@ import {
   View,
 } from 'react-native';
 
+import heart from '../../assets/icons/heart.png';
 import userRoundPlus from '../../assets/icons/user-round-plus.png';
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
@@ -349,6 +350,11 @@ export function NativeStack(
         options={{
           headerSearchBarOptions: {
             placeholder: 'Filter contacts',
+          },
+          // Example of using headerBackIcon with an image
+          headerBackIcon: {
+            type: 'image',
+            source: heart,
           },
         }}
       />
