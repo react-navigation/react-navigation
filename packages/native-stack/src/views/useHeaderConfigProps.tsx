@@ -5,13 +5,7 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import {
-  type ImageSourcePropType,
-  Platform,
-  StyleSheet,
-  type TextStyle,
-  View,
-} from 'react-native';
+import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   type HeaderBarButtonItem,
   type HeaderBarButtonItemMenuAction,
@@ -31,7 +25,6 @@ import type {
   NativeStackHeaderItemMenuAction,
   NativeStackHeaderItemMenuSubmenu,
   NativeStackNavigationOptions,
-  PlatformIconIOS,
 } from '../types';
 
 type Props = NativeStackNavigationOptions & {
@@ -39,30 +32,6 @@ type Props = NativeStackNavigationOptions & {
   headerHeight: number;
   headerBack: { title?: string | undefined; href: undefined } | undefined;
   route: Route<string>;
-};
-
-/**
- * Helper function to get the image source from headerBackIcon or headerBackImageSource.
- *
- * Priority:
- * 1. If headerBackIcon is provided with type 'image', its source is used
- * 2. If headerBackIcon is provided with type 'sfSymbol', returns undefined (falls back to system default)
- * 3. Otherwise, headerBackImageSource is used (if provided)
- *
- * Note: SF Symbol support for back buttons would require updates to react-native-screens'
- * ScreenStackHeaderBackButtonImage component. When an SF Symbol is specified, the system
- * default back button icon is used instead.
- */
-export const getBackIconSource = (
-  headerBackIcon: PlatformIconIOS | undefined,
-  headerBackImageSource: ImageSourcePropType | undefined
-): ImageSourcePropType | undefined => {
-  if (headerBackIcon !== undefined) {
-    // Currently only 'image' type is supported for back button
-    // SF Symbols return undefined, which results in the default system back icon
-    return headerBackIcon.type === 'image' ? headerBackIcon.source : undefined;
-  }
-  return headerBackImageSource;
 };
 
 const processBarButtonItems = (
@@ -185,7 +154,6 @@ const getMenuItem = (
 
 export function useHeaderConfigProps({
   headerBackIcon,
-  headerBackImageSource,
   headerBackButtonDisplayMode,
   headerBackButtonMenuEnabled,
   headerBackTitle,
@@ -219,11 +187,6 @@ export function useHeaderConfigProps({
   const { colors, fonts } = useTheme();
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
-
-  const backIconSource = getBackIconSource(
-    headerBackIcon,
-    headerBackImageSource
-  );
 
   const headerBackTitleStyleFlattened =
     StyleSheet.flatten([fonts.regular, headerBackTitleStyle]) || {};
@@ -436,8 +399,8 @@ export function useHeaderConfigProps({
           ) : null}
         </>
       )}
-      {backIconSource !== undefined ? (
-        <ScreenStackHeaderBackButtonImage source={backIconSource} />
+      {headerBackIcon !== undefined ? (
+        <ScreenStackHeaderBackButtonImage source={headerBackIcon.source} />
       ) : null}
       {Platform.OS === 'ios' && rightItems ? (
         rightItems.map((item, index) => {

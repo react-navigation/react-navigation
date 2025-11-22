@@ -22,7 +22,6 @@ import type {
   NativeStackNavigationHelpers,
 } from '../types';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
-import { getBackIconSource } from './useHeaderConfigProps';
 
 type Props = {
   state: StackNavigationState<ParamListBase>;
@@ -82,7 +81,6 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
           header,
           headerShown,
           headerBackIcon,
-          headerBackImageSource,
           headerLeft,
           headerTransparent,
           headerBackTitle,
@@ -126,33 +124,26 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
                             label: headerBackTitle ?? label,
                           })
                       : headerLeft === undefined && canGoBack
-                        ? ({ tintColor, label, ...rest }) => {
-                            const backIconSource = getBackIconSource(
-                              headerBackIcon,
-                              headerBackImageSource
-                            );
-
-                            return (
-                              <HeaderBackButton
-                                {...rest}
-                                label={headerBackTitle ?? label}
-                                tintColor={tintColor}
-                                backImage={
-                                  backIconSource !== undefined
-                                    ? () => (
-                                        <Image
-                                          source={backIconSource}
-                                          resizeMode="contain"
-                                          tintColor={tintColor}
-                                          style={styles.backImage}
-                                        />
-                                      )
-                                    : undefined
-                                }
-                                onPress={navigation.goBack}
-                              />
-                            );
-                          }
+                        ? ({ tintColor, label, ...rest }) => (
+                            <HeaderBackButton
+                              {...rest}
+                              label={headerBackTitle ?? label}
+                              tintColor={tintColor}
+                              backImage={
+                                headerBackIcon !== undefined
+                                  ? () => (
+                                      <Image
+                                        source={headerBackIcon.source}
+                                        resizeMode="contain"
+                                        tintColor={tintColor}
+                                        style={styles.backImage}
+                                      />
+                                    )
+                                  : undefined
+                              }
+                              onPress={navigation.goBack}
+                            />
+                          )
                         : headerLeft
                   }
                   headerTransparent={headerTransparent}
