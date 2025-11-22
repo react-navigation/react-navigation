@@ -153,7 +153,7 @@ const getMenuItem = (
 };
 
 export function useHeaderConfigProps({
-  headerBackImageSource,
+  headerBackIcon,
   headerBackButtonDisplayMode,
   headerBackButtonMenuEnabled,
   headerBackTitle,
@@ -399,8 +399,8 @@ export function useHeaderConfigProps({
           ) : null}
         </>
       )}
-      {headerBackImageSource !== undefined ? (
-        <ScreenStackHeaderBackButtonImage source={headerBackImageSource} />
+      {headerBackIcon !== undefined ? (
+        <ScreenStackHeaderBackButtonImage source={headerBackIcon.source} />
       ) : null}
       {Platform.OS === 'ios' && rightItems ? (
         rightItems.map((item, index) => {
