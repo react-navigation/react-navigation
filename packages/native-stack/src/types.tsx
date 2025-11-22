@@ -194,17 +194,11 @@ export type NativeStackNavigationOptions = {
    * - An arrow on Android
    *
    * @example
-   * ```tsx
-   * <Stack.Screen
-   *   name="Profile"
-   *   component={Profile}
-   *   options={{
-   *     headerBackIcon: {
-   *       type: 'image',
-   *       source: require('./back-icon.png'),
-   *     },
-   *   }}
-   * />
+   * ```js
+   * headerBackIcon: {
+   *   type: 'image',
+   *   source: require('./back-icon.png'),
+   * }
    * ```
    */
   headerBackIcon?: {
