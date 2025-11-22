@@ -37,7 +37,7 @@ export function DrawerView(_: StaticScreenProps<{}>) {
         return (
           <View style={styles.container}>
             <Button color="tomato" onPress={() => setOpen(false)}>
-              Close drawer
+              Close
             </Button>
           </View>
         );

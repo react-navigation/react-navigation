@@ -188,12 +188,23 @@ export type NativeStackNavigationOptions = {
     fontSize?: number;
   }>;
   /**
-   * Image to display in the header as the icon in the back button.
+   * Icon to display in the header as the icon in the back button.
    * Defaults to back icon image for the platform
    * - A chevron on iOS
    * - An arrow on Android
+   *
+   * @example
+   * ```js
+   * headerBackIcon: {
+   *   type: 'image',
+   *   source: require('./back-icon.png'),
+   * }
+   * ```
    */
-  headerBackImageSource?: ImageSourcePropType;
+  headerBackIcon?: {
+    type: 'image';
+    source: ImageSourcePropType;
+  };
   /**
    * Style of the header when a large title is shown.
    * The large title is shown if `headerLargeTitleEnabled` is `true` and

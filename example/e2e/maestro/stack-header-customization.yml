@@ -6,3 +6,23 @@ name: Stack Header Customization
     env:
       LINK: stack-header-customization
       TEXT: 'Article by Gandalf'
+- tapOn:
+    text: 'Push feed'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Push albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Navigate to article'
+- assertVisible:
+    text: 'What is Lorem Ipsum?'
+- tapOn:
+    text: 'Pop screen'
+- tapOn:
+    text: 'Albums'
+- tapOn:
+    text: 'Pop by 2'
+- assertVisible:
+    text: 'Article by Gandalf'

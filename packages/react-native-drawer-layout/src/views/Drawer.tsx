@@ -160,6 +160,7 @@ function Inert({
       aria-hidden={enabled}
       style={{
         display: 'flex',
+        flexDirection: 'column',
         flexGrow: 1,
         flexShrink: 1,
         flexBasis: 'auto',

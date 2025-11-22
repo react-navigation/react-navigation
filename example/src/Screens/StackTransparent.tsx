@@ -108,7 +108,8 @@ const DialogScreen = ({
           },
         ]}
       >
-        <Text style={styles.paragraph}>
+        <Text style={styles.title}>Trivia</Text>
+        <Text>
           Mise en place is a French term that literally means “put in place.” It
           also refers to a way cooks in professional kitchens and restaurants
           set up their work stations—first by gathering all ingredients for a
@@ -176,7 +177,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dialog: {
-    padding: 8,
+    padding: 24,
+    gap: 24,
     width: '90%',
     maxWidth: 400,
     borderRadius: 3,
@@ -184,8 +186,9 @@ const styles = StyleSheet.create({
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
-  paragraph: {
-    padding: 16,
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   close: {
     alignSelf: 'flex-end',

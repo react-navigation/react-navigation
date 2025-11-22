@@ -6,3 +6,23 @@ name: Dynamic Tabs
     env:
       LINK: dynamic-tabs
       TEXT: 'Tab 0'
+- tapOn:
+    text: 'Add a tab'
+- assertVisible:
+    id: 'tab-2'
+- tapOn:
+    text: 'Add a tab'
+- assertVisible:
+    id: 'tab-3'
+- tapOn:
+    text: 'Add a tab'
+- assertVisible:
+    id: 'tab-4'
+- tapOn:
+    text: 'Remove a tab'
+- assertNotVisible:
+    id: 'tab-4'
+- tapOn:
+    text: 'Remove a tab'
+- assertNotVisible:
+    id: 'tab-3'

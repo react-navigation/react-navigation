@@ -6,3 +6,15 @@ name: Master Detail
     env:
       LINK: master-detail
       TEXT: 'Pages'
+- tapOn:
+    text: 'Feed'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Article'
+- assertVisible:
+    text: 'Article'

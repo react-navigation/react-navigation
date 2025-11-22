@@ -6,3 +6,19 @@ name: Navigator Layout
     env:
       LINK: navigator-layout
       TEXT: 'Article by Gandalf'
+- tapOn:
+    text: 'Navigate to feed'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Navigate to albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Feed'
+- assertVisible:
+    text: 'Joke bot'
+- tapOn:
+    text: 'Article by Gandalf'
+- assertVisible:
+    text: 'What is Lorem Ipsum?'
