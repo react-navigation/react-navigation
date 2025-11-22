@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.6.4...@react-navigation/native-stack@7.7.0) (2025-11-22)
+
+### Features
+
+* add a headerBackIcon option ([8716d13](https://github.com/react-navigation/react-navigation/commit/8716d1348ed95e4b99cfbe08023eb67d0a6df72d)) - by @satya164
+
 ## [7.6.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.6.3...@react-navigation/native-stack@7.6.4) (2025-11-20)
 
 **Note:** Version bump only for package @react-navigation/native-stack
