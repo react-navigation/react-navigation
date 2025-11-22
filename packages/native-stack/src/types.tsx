@@ -192,6 +192,20 @@ export type NativeStackNavigationOptions = {
    * Defaults to back icon image for the platform
    * - A chevron on iOS
    * - An arrow on Android
+   *
+   * @example
+   * ```tsx
+   * <Stack.Screen
+   *   name="Profile"
+   *   component={Profile}
+   *   options={{
+   *     headerBackIcon: {
+   *       type: 'image',
+   *       source: require('./back-icon.png'),
+   *     },
+   *   }}
+   * />
+   * ```
    */
   headerBackIcon?: {
     type: 'image';
@@ -713,7 +727,7 @@ export type NativeStackNavigationOptions = {
   unstable_sheetFooter?: () => React.ReactNode;
 };
 
-export type PlatformIconShared = {
+type PlatformIconShared = {
   type: 'image';
   source: ImageSourcePropType;
   /**
@@ -725,12 +739,12 @@ export type PlatformIconShared = {
   tinted?: boolean;
 };
 
-export type PlatformIconIOSSfSymbol = {
+type PlatformIconIOSSfSymbol = {
   type: 'sfSymbol';
   name: SFSymbol;
 };
 
-export type PlatformIconIOS = PlatformIconIOSSfSymbol | PlatformIconShared;
+type PlatformIconIOS = PlatformIconIOSSfSymbol | PlatformIconShared;
 
 type SharedHeaderItem = {
   /**
