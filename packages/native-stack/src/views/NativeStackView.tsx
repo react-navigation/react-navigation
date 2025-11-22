@@ -22,6 +22,7 @@ import type {
   NativeStackNavigationHelpers,
 } from '../types';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
+import { getBackIconSource } from './useHeaderConfigProps';
 
 type Props = {
   state: StackNavigationState<ParamListBase>;
@@ -126,12 +127,10 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
                           })
                       : headerLeft === undefined && canGoBack
                         ? ({ tintColor, label, ...rest }) => {
-                            const backIconSource =
-                              headerBackIcon !== undefined
-                                ? headerBackIcon.type === 'image'
-                                  ? headerBackIcon.source
-                                  : undefined
-                                : headerBackImageSource;
+                            const backIconSource = getBackIconSource(
+                              headerBackIcon,
+                              headerBackImageSource
+                            );
 
                             return (
                               <HeaderBackButton

@@ -5,7 +5,13 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
+import type {
+  ImageSourcePropType,
+  Platform,
+  StyleSheet,
+  type TextStyle,
+  View,
+} from 'react-native';
 import {
   type HeaderBarButtonItem,
   type HeaderBarButtonItemMenuAction,
@@ -25,6 +31,7 @@ import type {
   NativeStackHeaderItemMenuAction,
   NativeStackHeaderItemMenuSubmenu,
   NativeStackNavigationOptions,
+  PlatformIconIOS,
 } from '../types';
 
 type Props = NativeStackNavigationOptions & {
@@ -32,6 +39,22 @@ type Props = NativeStackNavigationOptions & {
   headerHeight: number;
   headerBack: { title?: string | undefined; href: undefined } | undefined;
   route: Route<string>;
+};
+
+/**
+ * Helper function to get the image source from headerBackIcon or headerBackImageSource.
+ * headerBackIcon takes precedence over the deprecated headerBackImageSource.
+ */
+export const getBackIconSource = (
+  headerBackIcon: PlatformIconIOS | undefined,
+  headerBackImageSource: ImageSourcePropType | undefined
+): ImageSourcePropType | undefined => {
+  if (headerBackIcon !== undefined) {
+    // Currently only 'image' type is supported for back button
+    // SF Symbols would require updates to react-native-screens
+    return headerBackIcon.type === 'image' ? headerBackIcon.source : undefined;
+  }
+  return headerBackImageSource;
 };
 
 const processBarButtonItems = (
@@ -189,14 +212,10 @@ export function useHeaderConfigProps({
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
 
-  // Process headerBackIcon to get the image source for the back button
-  // headerBackIcon takes precedence over deprecated headerBackImageSource
-  const backIconSource =
-    headerBackIcon !== undefined
-      ? headerBackIcon.type === 'image'
-        ? headerBackIcon.source
-        : undefined
-      : headerBackImageSource;
+  const backIconSource = getBackIconSource(
+    headerBackIcon,
+    headerBackImageSource
+  );
 
   const headerBackTitleStyleFlattened =
     StyleSheet.flatten([fonts.regular, headerBackTitleStyle]) || {};

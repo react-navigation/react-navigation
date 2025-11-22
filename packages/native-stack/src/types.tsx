@@ -719,7 +719,7 @@ export type NativeStackNavigationOptions = {
   unstable_sheetFooter?: () => React.ReactNode;
 };
 
-type PlatformIconShared = {
+export type PlatformIconShared = {
   type: 'image';
   source: ImageSourcePropType;
   /**
@@ -731,12 +731,12 @@ type PlatformIconShared = {
   tinted?: boolean;
 };
 
-type PlatformIconIOSSfSymbol = {
+export type PlatformIconIOSSfSymbol = {
   type: 'sfSymbol';
   name: SFSymbol;
 };
 
-type PlatformIconIOS = PlatformIconIOSSfSymbol | PlatformIconShared;
+export type PlatformIconIOS = PlatformIconIOSSfSymbol | PlatformIconShared;
 
 type SharedHeaderItem = {
   /**
