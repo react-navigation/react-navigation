@@ -11,7 +11,7 @@ import type {
 } from 'react-native-screens';
 import type { SFSymbol } from 'sf-symbols-typescript';
 
-import type { NativeBottomTabHeaderProps } from '../types';
+import type { BottomTabHeaderProps } from '../../types';
 
 export type NativeHeaderOptions = {
   /**
@@ -208,7 +208,7 @@ export type NativeHeaderOptions = {
   /**
    * Function that given returns a React Element to display as a header.
    */
-  header?: (props: NativeBottomTabHeaderProps) => React.ReactNode;
+  header?: (props: BottomTabHeaderProps) => React.ReactNode;
 };
 
 export type NativeScreenHeaderItemProps = {

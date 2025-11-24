@@ -3,7 +3,6 @@ import {
   getLabel,
   Lazy,
   SafeAreaProviderCompat,
-  Screen as ScreenContent,
 } from '@react-navigation/elements';
 import {
   CommonActions,
@@ -22,23 +21,26 @@ import {
   type PlatformIcon,
 } from 'react-native-screens';
 
-import { NativeScreen } from './NativeScreen/NativeScreen';
 import type {
+  BottomTabDescriptorMap,
+  BottomTabNavigationConfig,
+  BottomTabNavigationHelpers,
   Icon,
-  NativeBottomTabDescriptorMap,
-  NativeBottomTabNavigationConfig,
-  NativeBottomTabNavigationHelpers,
-  NativeBottomTabNavigationOptions,
-  NativeBottomTabNavigationProp,
-} from './types';
+} from '../types';
+import { ScreenContent } from './ScreenContent';
 
-type Props = NativeBottomTabNavigationConfig & {
+type Props = BottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
-  navigation: NativeBottomTabNavigationHelpers;
-  descriptors: NativeBottomTabDescriptorMap;
+  navigation: BottomTabNavigationHelpers;
+  descriptors: BottomTabDescriptorMap;
 };
 
-export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
+const ICON_SIZE = Platform.select({
+  ios: 25,
+  default: 24,
+});
+
+export function BottomTabViewNative({ state, navigation, descriptors }: Props) {
   const { dark, colors, fonts } = useTheme();
 
   const focusedRouteKey = state.routes[state.index].key;
@@ -93,30 +95,16 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
     currentOptions?.tabBarActiveIndicatorColor ??
     Color(activeTintColor)?.alpha(0.1).string();
 
-  const onTransitionStart = ({
-    closing,
-    route,
-  }: {
-    closing: boolean;
-    route: Route<string>;
-  }) => {
+  const onTransitionStart = ({ route }: { route: Route<string> }) => {
     navigation.emit({
       type: 'transitionStart',
-      data: { closing },
       target: route.key,
     });
   };
 
-  const onTransitionEnd = ({
-    closing,
-    route,
-  }: {
-    closing: boolean;
-    route: Route<string>;
-  }) => {
+  const onTransitionEnd = ({ route }: { route: Route<string> }) => {
     navigation.emit({
       type: 'transitionEnd',
-      data: { closing },
       target: route.key,
     });
   };
@@ -154,10 +142,17 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
           );
 
           if (route) {
-            navigation.emit({
+            const event = navigation.emit({
               type: 'tabPress',
               target: route.key,
+              canPreventDefault: true,
             });
+
+            if (event.defaultPrevented) {
+              throw new Error(
+                "Preventing default for 'tabPress' is not supported in 'native' implementation."
+              );
+            }
 
             const isFocused =
               state.index ===
@@ -187,6 +182,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
             tabBarSystemItem,
             tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
             tabBarStyle,
+            sceneStyle,
           } = options;
 
           const {
@@ -214,26 +210,43 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
             tabBarBadgeStyle?.color ??
             (Color(badgeBackgroundColor)?.isLight() ? 'black' : 'white');
 
-          const icon =
-            typeof tabBarIcon === 'function'
-              ? getPlatformIcon(tabBarIcon({ focused: false }))
-              : tabBarIcon != null
-                ? getPlatformIcon(tabBarIcon)
-                : undefined;
+          const getIcon = (selected: boolean) => {
+            if (typeof tabBarIcon === 'function') {
+              const result = tabBarIcon({
+                focused: selected,
+                size: ICON_SIZE!,
+                color: selected ? activeTintColor : inactiveTintColor,
+              });
 
-          const selectedIcon =
-            typeof tabBarIcon === 'function'
-              ? getPlatformIcon(tabBarIcon({ focused: true }))
-              : undefined;
+              if (React.isValidElement(result)) {
+                throw new Error(
+                  `Returning a React element from 'tabBarIcon' is not supported in 'native' implementation.`
+                );
+              } else if (
+                result &&
+                typeof result === 'object' &&
+                'type' in result
+              ) {
+                return getPlatformIcon(result);
+              } else {
+                throw new Error(
+                  `The 'tabBarIcon' function must return an icon object (got ${typeof result}).`
+                );
+              }
+            } else if (tabBarIcon != null) {
+              return getPlatformIcon(tabBarIcon);
+            }
+
+            return undefined;
+          };
+
+          const icon = getIcon(false);
+          const selectedIcon = getIcon(true);
 
           return (
             <BottomTabsScreen
-              onWillDisappear={() =>
-                onTransitionStart({ closing: true, route })
-              }
-              onWillAppear={() => onTransitionStart({ closing: false, route })}
-              onDidAppear={() => onTransitionEnd({ closing: false, route })}
-              onDidDisappear={() => onTransitionEnd({ closing: true, route })}
+              onWillAppear={() => onTransitionStart({ route })}
+              onDidAppear={() => onTransitionEnd({ route })}
               key={route.key}
               tabKey={route.key}
               icon={icon}
@@ -260,77 +273,21 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
               }}
             >
               <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
-                <ScreenWithHeader
+                <ScreenContent
                   isFocused={isFocused}
                   route={route}
                   navigation={navigation}
                   options={options}
+                  style={sceneStyle}
                 >
                   {render()}
-                </ScreenWithHeader>
+                </ScreenContent>
               </Lazy>
             </BottomTabsScreen>
           );
         })}
       </BottomTabs>
     </SafeAreaProviderCompat>
-  );
-}
-
-function ScreenWithHeader({
-  isFocused,
-  route,
-  navigation,
-  options,
-  children,
-}: {
-  isFocused: boolean;
-  route: Route<string>;
-  navigation: NativeBottomTabNavigationProp<ParamListBase>;
-  options: NativeBottomTabNavigationOptions;
-  children: React.ReactNode;
-}) {
-  const {
-    headerTransparent,
-    header: renderCustomHeader,
-    headerShown = renderCustomHeader != null,
-  } = options;
-
-  const hasNativeHeader = headerShown && renderCustomHeader == null;
-
-  const [wasNativeHeaderShown] = React.useState(hasNativeHeader);
-
-  React.useEffect(() => {
-    if (wasNativeHeaderShown !== hasNativeHeader) {
-      throw new Error(
-        `Changing 'headerShown' or 'header' options dynamically is not supported when using native header.`
-      );
-    }
-  }, [wasNativeHeaderShown, hasNativeHeader]);
-
-  if (hasNativeHeader) {
-    return (
-      <NativeScreen route={route} navigation={navigation} options={options}>
-        {children}
-      </NativeScreen>
-    );
-  }
-
-  return (
-    <ScreenContent
-      focused={isFocused}
-      route={route}
-      navigation={navigation}
-      headerShown={headerShown}
-      headerTransparent={headerTransparent}
-      header={renderCustomHeader?.({
-        route,
-        navigation,
-        options,
-      })}
-    >
-      {children}
-    </ScreenContent>
   );
 }
 

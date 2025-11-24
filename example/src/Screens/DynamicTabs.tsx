@@ -34,9 +34,11 @@ export function DynamicTabs(
 
   return (
     <BottomTabs.Navigator
+      implementation="custom"
       screenOptions={({
         navigation,
       }: BottomTabScreenProps<DynamicBottomTabParams>) => ({
+        headerShown: true,
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),

@@ -1,8 +1,7 @@
 import {
-  getHeaderTitle,
-  Header,
+  Container,
+  Lazy,
   SafeAreaProviderCompat,
-  Screen as ScreenContent,
 } from '@react-navigation/elements';
 import {
   type NavigationAction,
@@ -12,7 +11,6 @@ import {
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
-import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { Screen, ScreenContainer } from 'react-native-screens';
 
 import {
@@ -22,16 +20,16 @@ import {
 import type {
   BottomTabBarProps,
   BottomTabDescriptorMap,
-  BottomTabHeaderProps,
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
   BottomTabNavigationOptions,
-  BottomTabNavigationProp,
 } from '../types';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
+import { useTabBarPosition } from '../utils/useTabBarPosition';
 import { BottomTabBar, getTabBarHeight } from './BottomTabBar';
+import { ScreenContent } from './ScreenContent';
 
 type Props = BottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
@@ -72,29 +70,17 @@ const renderTabBarDefault = (props: BottomTabBarProps) => (
   <BottomTabBar {...props} />
 );
 
-export function BottomTabView(props: Props) {
-  const {
-    tabBar = renderTabBarDefault,
-    state,
-    navigation,
-    descriptors,
-    safeAreaInsets,
-    detachInactiveScreens = Platform.OS === 'web' ||
-      Platform.OS === 'android' ||
-      Platform.OS === 'ios',
-  } = props;
-
-  const focusedRouteKey = state.routes[state.index].key;
-
-  /**
-   * List of loaded tabs, tabs will be loaded when navigated to.
-   */
-  const [loaded, setLoaded] = React.useState([focusedRouteKey]);
-
-  if (!loaded.includes(focusedRouteKey)) {
-    // Set the current tab to be loaded if it was not loaded before
-    setLoaded([...loaded, focusedRouteKey]);
-  }
+export function BottomTabViewCustom({
+  tabBar = renderTabBarDefault,
+  state,
+  navigation,
+  descriptors,
+  detachInactiveScreens = Platform.OS === 'web' ||
+    Platform.OS === 'android' ||
+    Platform.OS === 'ios',
+}: Props) {
+  const { routes } = state;
+  const focusedRouteKey = routes[state.index].key;
 
   const previousRouteKeyRef = React.useRef(focusedRouteKey);
   const tabAnims = useAnimatedHashMap(state);
@@ -187,56 +173,36 @@ export function BottomTabView(props: Props) {
     tabAnims,
   ]);
 
-  const dimensions = SafeAreaProviderCompat.initialMetrics.frame;
   const [tabBarHeight, setTabBarHeight] = React.useState(() =>
     getTabBarHeight({
       state,
       descriptors,
-      dimensions,
-      insets: {
-        ...SafeAreaProviderCompat.initialMetrics.insets,
-        ...props.safeAreaInsets,
-      },
-      style: descriptors[state.routes[state.index].key].options.tabBarStyle,
+      dimensions: SafeAreaProviderCompat.initialMetrics.frame,
+      insets: SafeAreaProviderCompat.initialMetrics.insets,
+      style: descriptors[focusedRouteKey].options.tabBarStyle,
     })
   );
-
-  const renderTabBar = () => {
-    return (
-      <SafeAreaInsetsContext.Consumer>
-        {(insets) =>
-          tabBar({
-            state: state,
-            descriptors: descriptors,
-            navigation: navigation,
-            insets: {
-              top: safeAreaInsets?.top ?? insets?.top ?? 0,
-              right: safeAreaInsets?.right ?? insets?.right ?? 0,
-              bottom: safeAreaInsets?.bottom ?? insets?.bottom ?? 0,
-              left: safeAreaInsets?.left ?? insets?.left ?? 0,
-            },
-          })
-        }
-      </SafeAreaInsetsContext.Consumer>
-    );
-  };
-
-  const { routes } = state;
-
-  // If there is no animation, we only have 2 states: visible and invisible
-  const hasTwoStates = !routes.some((route) =>
-    hasAnimation(descriptors[route.key].options)
-  );
-
-  const { tabBarPosition = 'bottom' } = descriptors[focusedRouteKey].options;
 
   const tabBarElement = (
     <BottomTabBarHeightCallbackContext.Provider
       key="tabbar"
       value={setTabBarHeight}
     >
-      {renderTabBar()}
+      {tabBar({
+        state: state,
+        descriptors: descriptors,
+        navigation: navigation,
+      })}
     </BottomTabBarHeightCallbackContext.Provider>
+  );
+
+  // If there is no animation, we only have 2 states: visible and invisible
+  const hasTwoStates = !routes.some((route) =>
+    hasAnimation(descriptors[route.key].options)
+  );
+
+  const tabBarPosition = useTabBarPosition(
+    descriptors[focusedRouteKey].options
   );
 
   return (
@@ -259,38 +225,20 @@ export function BottomTabView(props: Props) {
       >
         {routes.map((route, index) => {
           const descriptor = descriptors[route.key];
+
+          const { navigation, options, render } = descriptor;
+
           const {
             lazy = true,
             animation = 'none',
             sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
               .sceneStyleInterpolator,
-          } = descriptor.options;
+            freezeOnBlur,
+            sceneStyle: customSceneStyle,
+          } = options;
+
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
-
-          if (
-            lazy &&
-            !loaded.includes(route.key) &&
-            !isFocused &&
-            !isPreloaded
-          ) {
-            // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
-            return null;
-          }
-
-          const {
-            freezeOnBlur,
-            header = ({ options }: BottomTabHeaderProps) => (
-              <Header
-                {...options}
-                title={getHeaderTitle(options, route.name)}
-              />
-            ),
-            headerShown,
-            headerStatusBarHeight,
-            headerTransparent,
-            sceneStyle: customSceneStyle,
-          } = descriptor.options;
 
           const { sceneStyle } =
             sceneStyleInterpolator?.({
@@ -300,6 +248,55 @@ export function BottomTabView(props: Props) {
             }) ?? {};
 
           const animationEnabled = hasAnimation(descriptor.options);
+
+          const content = (
+            <Animated.View
+              pointerEvents="box-none"
+              style={[
+                styles.scene,
+                customSceneStyle,
+                animationEnabled && sceneStyle,
+              ]}
+            >
+              <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
+                {/* TODO: provide tab bar height */}
+                <ScreenContent
+                  isFocused={isFocused}
+                  route={route}
+                  navigation={navigation}
+                  options={options}
+                >
+                  <BottomTabBarHeightContext.Provider
+                    value={tabBarPosition === 'bottom' ? tabBarHeight : 0}
+                  >
+                    {render()}
+                  </BottomTabBarHeightContext.Provider>
+                </ScreenContent>
+              </Lazy>
+            </Animated.View>
+          );
+
+          if (Platform.OS === 'web') {
+            /**
+             * Don't use react-native-screens on web:
+             * - It applies display: none as fallback, which triggers `onLayout` events
+             * - We still need to hide the view when screens is not enabled
+             * - We can use `inert` to handle a11y better for unfocused screens
+             */
+            return (
+              <Container
+                key={route.key}
+                inert={!isFocused}
+                style={{
+                  ...StyleSheet.absoluteFillObject,
+                  visibility: isFocused ? 'visible' : 'hidden',
+                }}
+              >
+                {content}
+              </Container>
+            );
+          }
+
           const activityState = isFocused
             ? STATE_ON_TOP // the screen is on top after the transition
             : animationEnabled // is animation is not enabled, immediately move to inactive state
@@ -317,33 +314,19 @@ export function BottomTabView(props: Props) {
           return (
             <Screen
               key={route.key}
-              style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
+              style={[
+                StyleSheet.absoluteFill,
+                {
+                  zIndex: isFocused ? 0 : -1,
+                  pointerEvents: isFocused ? 'auto' : 'none',
+                },
+              ]}
               activityState={activityState}
               enabled={detachInactiveScreens}
               freezeOnBlur={freezeOnBlur}
               shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
             >
-              <BottomTabBarHeightContext.Provider
-                value={tabBarPosition === 'bottom' ? tabBarHeight : 0}
-              >
-                <ScreenContent
-                  focused={isFocused}
-                  route={descriptor.route}
-                  navigation={descriptor.navigation}
-                  headerShown={headerShown}
-                  headerStatusBarHeight={headerStatusBarHeight}
-                  headerTransparent={headerTransparent}
-                  header={header({
-                    route: descriptor.route,
-                    navigation:
-                      descriptor.navigation as BottomTabNavigationProp<ParamListBase>,
-                    options: descriptor.options,
-                  })}
-                  style={[customSceneStyle, animationEnabled && sceneStyle]}
-                >
-                  {descriptor.render()}
-                </ScreenContent>
-              </BottomTabBarHeightContext.Provider>
+              {content}
             </Screen>
           );
         })}
@@ -359,5 +342,8 @@ const styles = StyleSheet.create({
   screens: {
     flex: 1,
     overflow: 'hidden',
+  },
+  scene: {
+    flex: 1,
   },
 });
