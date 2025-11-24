@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.7.0...@react-navigation/native-stack@7.8.0) (2025-11-24)
+
+### Features
+
+* add pageSheet presentation to native stack ([#12503](https://github.com/react-navigation/react-navigation/issues/12503)) ([cf76b9b](https://github.com/react-navigation/react-navigation/commit/cf76b9b7542bf783a337ce0e992c24646cecf912)) - by @kligarski
+
 # [7.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.6.4...@react-navigation/native-stack@7.7.0) (2025-11-22)
 
 ### Features
