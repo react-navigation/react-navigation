@@ -516,6 +516,7 @@ export function NativeStackView({
           const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
           const isModal = modalRouteKeys.includes(route.key);
+          const isModalOnIos = isModal && Platform.OS === 'ios';
 
           const isPreloaded =
             preloadedDescriptors[route.key] !== undefined &&
@@ -524,8 +525,8 @@ export function NativeStackView({
           // On Fabric, when screen is frozen, animated and reanimated values are not updated
           // due to component being unmounted. To avoid this, we don't freeze the previous screen there
           const shouldFreeze = isFabric()
-            ? !isPreloaded && !isFocused && !isBelowFocused
-            : !isPreloaded && !isFocused;
+            ? !isPreloaded && !isFocused && !isBelowFocused && !isModalOnIos
+            : !isPreloaded && !isFocused && !isModalOnIos;
 
           return (
             <SceneView
