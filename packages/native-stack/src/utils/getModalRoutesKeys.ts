@@ -16,7 +16,8 @@ export const getModalRouteKeys = (
       presentation === 'containedModal' ||
       presentation === 'containedTransparentModal' ||
       presentation === 'fullScreenModal' ||
-      presentation === 'formSheet'
+      presentation === 'formSheet' ||
+      presentation === 'pageSheet'
     ) {
       acc.push(route.key);
     }
