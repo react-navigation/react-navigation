@@ -23,6 +23,7 @@ export { BottomTabView } from './views/BottomTabView';
  */
 export { BottomTabBarHeightCallbackContext } from './utils/BottomTabBarHeightCallbackContext';
 export { BottomTabBarHeightContext } from './utils/BottomTabBarHeightContext';
+export { useBottomTabAnimation } from './utils/useBottomTabAnimation';
 export { useBottomTabBarHeight } from './utils/useBottomTabBarHeight';
 
 /**

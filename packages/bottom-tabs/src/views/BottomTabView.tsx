@@ -28,6 +28,7 @@ import type {
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
 } from '../types';
+import { BottomTabAnimationContext } from '../utils/BottomTabAnimationContext';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
@@ -292,11 +293,11 @@ export function BottomTabView(props: Props) {
             sceneStyle: customSceneStyle,
           } = descriptor.options;
 
+          const progress = tabAnims[route.key];
+
           const { sceneStyle } =
             sceneStyleInterpolator?.({
-              current: {
-                progress: tabAnims[route.key],
-              },
+              current: { progress },
             }) ?? {};
 
           const animationEnabled = hasAnimation(descriptor.options);
@@ -341,7 +342,9 @@ export function BottomTabView(props: Props) {
                   })}
                   style={[customSceneStyle, animationEnabled && sceneStyle]}
                 >
-                  {descriptor.render()}
+                  <BottomTabAnimationContext.Provider value={{ progress }}>
+                    {descriptor.render()}
+                  </BottomTabAnimationContext.Provider>
                 </ScreenContent>
               </BottomTabBarHeightContext.Provider>
             </Screen>
