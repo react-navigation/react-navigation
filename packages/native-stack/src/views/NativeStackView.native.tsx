@@ -171,8 +171,11 @@ const SceneView = ({
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
-  // `modal` and `formSheet` presentations do not take whole screen, so should not take the inset.
-  const isModal = presentation === 'modal' || presentation === 'formSheet';
+  // `modal`, `formSheet` and `pageSheet` presentations do not take whole screen, so should not take the inset.
+  const isModal =
+    presentation === 'modal' ||
+    presentation === 'formSheet' ||
+    presentation === 'pageSheet';
 
   // Modals are fullscreen in landscape only on iPhone
   const isIPhone = Platform.OS === 'ios' && !(Platform.isPad || Platform.isTV);
