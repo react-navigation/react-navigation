@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.6.7...@react-navigation/stack@7.6.8) (2025-11-26)
+
+### Bug Fixes
+
+* fix type error with id prop. closes [#12839](https://github.com/react-navigation/react-navigation/issues/12839) ([b747bdd](https://github.com/react-navigation/react-navigation/commit/b747bdde10472033e288deb7b03449ececc068bd)) - by @
+
 ## [7.6.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.6.6...@react-navigation/stack@7.6.7) (2025-11-21)
 
 ### Bug Fixes

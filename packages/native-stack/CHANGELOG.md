@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.8.0...@react-navigation/native-stack@7.8.1) (2025-11-26)
+
+### Bug Fixes
+
+* fix type error with id prop. closes [#12839](https://github.com/react-navigation/react-navigation/issues/12839) ([b747bdd](https://github.com/react-navigation/react-navigation/commit/b747bdde10472033e288deb7b03449ececc068bd)) - by @
+* prevent freezing modal screens on iOS ([#12631](https://github.com/react-navigation/react-navigation/issues/12631)) ([7b98f2e](https://github.com/react-navigation/react-navigation/commit/7b98f2ee7f0b9858380ff3c38e4c6e4706587c6b)) - by @kligarski
+
 # [7.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.7.0...@react-navigation/native-stack@7.8.0) (2025-11-24)
 
 ### Features
