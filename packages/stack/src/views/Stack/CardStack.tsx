@@ -682,9 +682,8 @@ export class CardStack extends React.Component<Props, State> {
       this.state;
 
     const focusedRoute = state.routes[state.index];
-    const focusedHeaderHeight = headerHeights[focusedRoute.key];
 
-    const isFloatHeaderAbsolute = this.state.scenes.slice(-2).some((scene) => {
+    const isFloatHeaderAbsolute = scenes.slice(-2).some((scene) => {
       const options = scene.descriptor.options ?? {};
       const { headerMode, headerTransparent, headerShown = true } = options;
 
@@ -707,13 +706,7 @@ export class CardStack extends React.Component<Props, State> {
           getPreviousScene: this.getPreviousScene,
           getFocusedRoute: this.getFocusedRoute,
           onContentHeightChange: this.handleHeaderLayout,
-          style: [
-            isFloatHeaderAbsolute && [
-              // Without this, the header buttons won't be touchable on Android when headerTransparent: true
-              { height: focusedHeaderHeight },
-              styles.absolute,
-            ],
-          ],
+          style: [isFloatHeaderAbsolute && styles.absolute],
         })}
         <ScreenContainer
           enabled={detachInactiveScreens}
@@ -836,5 +829,6 @@ const styles = StyleSheet.create({
     top: 0,
     start: 0,
     end: 0,
+    zIndex: 1,
   },
 });
