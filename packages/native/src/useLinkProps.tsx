@@ -129,6 +129,36 @@ export function useLinkProps<
 
   const getPathFromStateHelper = options?.getPathFromState ?? getPathFromState;
 
+  if (Platform.OS === 'web') {
+    if (screen == null && action != null && options?.config != null) {
+      switch (action.type) {
+        case 'NAVIGATE':
+        case 'PUSH':
+        case 'REPLACE':
+        case 'POP_TO':
+        case 'JUMP_TO': {
+          if (
+            action.payload != null &&
+            'name' in action.payload &&
+            typeof action.payload.name === 'string' &&
+            action.payload.name in options.config.screens
+          ) {
+            screen = action.payload.name;
+
+            if (
+              'params' in action.payload &&
+              typeof action.payload.params === 'object' &&
+              action.payload.params != null
+            ) {
+              // @ts-expect-error this is fine 🔥
+              params = action.payload.params;
+            }
+          }
+        }
+      }
+    }
+  }
+
   return {
     href:
       href ??
