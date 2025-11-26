@@ -66,7 +66,7 @@ function BottomTabNavigator({
 
 export function createBottomTabNavigator<
   const ParamList extends ParamListBase,
-  const NavigatorID extends string | undefined = undefined,
+  const NavigatorID extends string | undefined = string | undefined,
   const TypeBag extends NavigatorTypeBagBase = {
     ParamList: ParamList;
     NavigatorID: NavigatorID;

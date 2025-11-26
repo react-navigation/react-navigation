@@ -481,7 +481,7 @@ export type NavigationContainerProps = {
 export type NavigationProp<
   ParamList extends {},
   RouteName extends keyof ParamList = Keyof<ParamList>,
-  NavigatorID extends string | undefined = undefined,
+  NavigatorID extends string | undefined = string | undefined,
   State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {},
