@@ -94,6 +94,7 @@ export function TabPreloadFlow(
       screenOptions={({
         navigation,
       }: BottomTabScreenProps<PreloadBottomTabsParams>) => ({
+        headerShown: true,
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),

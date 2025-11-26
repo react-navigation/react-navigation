@@ -17,7 +17,6 @@ import {
   type PathConfigMap,
   type StaticScreenProps,
   useIsFocused,
-  useLocale,
   useNavigation,
 } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
@@ -106,7 +105,6 @@ export function BottomTabs(
   _: StaticScreenProps<NavigatorScreenParams<BottomTabParams>>
 ) {
   const { showActionSheetWithOptions } = useActionSheet();
-  const { direction } = useLocale();
 
   const dimensions = useWindowDimensions();
 
@@ -122,10 +120,12 @@ export function BottomTabs(
   return (
     <>
       <Tab.Navigator
+        implementation="custom"
         backBehavior="fullHistory"
         screenOptions={({
           navigation,
         }: BottomTabScreenProps<BottomTabParams>) => ({
+          headerShown: true,
           headerLeft: (props) => (
             <HeaderBackButton {...props} onPress={navigation.goBack} />
           ),
@@ -187,11 +187,7 @@ export function BottomTabs(
               </HeaderButton>
             </View>
           ),
-          tabBarPosition: isLargeScreen
-            ? direction === 'ltr'
-              ? 'left'
-              : 'right'
-            : 'bottom',
+          tabBarControllerMode: isLargeScreen ? 'tabSidebar' : 'tabBar',
           tabBarVariant: isLargeScreen ? variant : 'uikit',
           tabBarLabelPosition:
             isLargeScreen && isCompact && variant !== 'uikit'

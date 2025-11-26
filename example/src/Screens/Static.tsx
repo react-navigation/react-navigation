@@ -1,28 +1,19 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, HeaderBackButton } from '@react-navigation/elements';
 import type { StaticParamList } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import {
-  type ColorValue,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
+import iconBookUser from '../../assets/icons/book-user.png';
+import iconListMusic from '../../assets/icons/list-music.png';
+import iconMessage from '../../assets/icons/message-circle.png';
+import iconMusic from '../../assets/icons/music.png';
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
 
 export type StaticScreenParams = StaticParamList<typeof StaticStack>;
-
-const getTabBarIcon =
-  (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: ColorValue; size: number }) => (
-    <MaterialCommunityIcons name={name} color={color} size={size} />
-  );
 
 const ChatShownContext = React.createContext({
   isChatShown: false,
@@ -68,7 +59,9 @@ const AlbumsScreen = () => {
 };
 
 const HomeTabs = createBottomTabNavigator({
+  implementation: 'custom',
   screenOptions: ({ theme, navigation }) => ({
+    headerShown: true,
     headerLeft: (props) => (
       <HeaderBackButton {...props} onPress={navigation.goBack} />
     ),
@@ -79,7 +72,10 @@ const HomeTabs = createBottomTabNavigator({
       screen: AlbumsScreen,
       options: {
         tabBarButtonTestID: 'albums',
-        tabBarIcon: getTabBarIcon('image-album'),
+        tabBarIcon: ({ focused }) => ({
+          type: 'image',
+          source: focused ? iconListMusic : iconMusic,
+        }),
       },
       linking: 'albums',
     },
@@ -87,7 +83,10 @@ const HomeTabs = createBottomTabNavigator({
       screen: Contacts,
       options: {
         tabBarButtonTestID: 'contacts',
-        tabBarIcon: getTabBarIcon('contacts'),
+        tabBarIcon: {
+          type: 'image',
+          source: iconBookUser,
+        },
       },
       linking: 'contacts',
     },
@@ -95,7 +94,10 @@ const HomeTabs = createBottomTabNavigator({
       screen: Chat,
       options: {
         tabBarButtonTestID: 'chat',
-        tabBarIcon: getTabBarIcon('message-reply'),
+        tabBarIcon: {
+          type: 'image',
+          source: iconMessage,
+        },
       },
       linking: 'chat',
       if: useIsChatShown,

@@ -56,6 +56,10 @@ function CounterLayout({ children }: { children: React.ReactNode }) {
 const Tabs = createBottomTabNavigator({
   backBehavior: 'fullHistory',
   layout: (props) => <CounterLayout {...props} />,
+  implementation: 'custom',
+  screenOptions: {
+    headerShown: true,
+  },
   screens: {
     First: {
       screen: TestScreen,
