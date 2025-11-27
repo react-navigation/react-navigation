@@ -26,7 +26,6 @@ import {
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  HeaderStyleInterpolators,
   type StackNavigationOptions,
 } from '@react-navigation/stack';
 import { createURL } from 'expo-linking';
@@ -219,9 +218,6 @@ const Drawer = createDrawerNavigator({
 });
 
 const Stack = createStackNavigator({
-  screenOptions: {
-    headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
-  },
   screens: {
     Home: {
       screen: Drawer,

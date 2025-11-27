@@ -251,7 +251,6 @@ export function BottomTabViewCustom({
 
           const content = (
             <Animated.View
-              pointerEvents="box-none"
               style={[
                 styles.scene,
                 customSceneStyle,
@@ -345,5 +344,6 @@ const styles = StyleSheet.create({
   },
   scene: {
     flex: 1,
+    pointerEvents: 'box-none',
   },
 });

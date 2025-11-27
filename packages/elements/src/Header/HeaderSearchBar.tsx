@@ -10,7 +10,7 @@ import {
   type StyleProp,
   StyleSheet,
   TextInput,
-  View,
+  type TextStyle,
   type ViewStyle,
 } from 'react-native';
 
@@ -18,11 +18,16 @@ import clearIcon from '../assets/clear-icon.png';
 import closeIcon from '../assets/close-icon.png';
 import searchIcon from '../assets/search-icon.png';
 import { Color } from '../Color';
+import {
+  AnimatedLiquidGlassContainerView,
+  isLiquidGlassSupported,
+} from '../LiquidGlassView';
 import { PlatformPressable } from '../PlatformPressable';
 import { Text } from '../Text';
 import type { HeaderSearchBarOptions, HeaderSearchBarRef } from '../types';
 import { HeaderBackButton } from './HeaderBackButton';
-import { HeaderButton } from './HeaderButton';
+import { BUTTON_SIZE, HeaderButton } from './HeaderButton';
+import { HeaderButtonBackground } from './HeaderButtonBackground';
 import { HeaderIcon } from './HeaderIcon';
 
 type Props = Omit<HeaderSearchBarOptions, 'ref'> & {
@@ -31,6 +36,7 @@ type Props = Omit<HeaderSearchBarOptions, 'ref'> & {
   tintColor?: ColorValue;
   pressColor?: ColorValue;
   pressOpacity?: number;
+  statusBarHeight: number;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
 };
 
@@ -50,13 +56,14 @@ function HeaderSearchBarInternal(
     autoFocus = true,
     autoCapitalize,
     placeholder = 'Search',
-    cancelButtonText = 'Cancel',
     enterKeyHint = 'search',
+    cancelButtonText = 'Cancel',
     onChangeText,
     onClose,
     tintColor,
     pressColor,
     pressOpacity,
+    statusBarHeight,
     style,
     ...rest
   }: Props,
@@ -65,37 +72,10 @@ function HeaderSearchBarInternal(
   const navigation = useNavigation();
   const { dark, colors, fonts } = useTheme();
   const [value, setValue] = React.useState('');
-  const [rendered, setRendered] = React.useState(visible);
-  const [visibleAnim] = React.useState(
-    () => new Animated.Value(visible ? 1 : 0)
-  );
   const [clearVisibleAnim] = React.useState(() => new Animated.Value(0));
 
-  const visibleValueRef = React.useRef(visible);
   const clearVisibleValueRef = React.useRef(false);
   const inputRef = React.useRef<TextInput>(null);
-
-  React.useEffect(() => {
-    // Avoid act warning in tests just by rendering header
-    if (visible === visibleValueRef.current) {
-      return;
-    }
-
-    Animated.timing(visibleAnim, {
-      toValue: visible ? 1 : 0,
-      duration: 100,
-      useNativeDriver,
-    }).start(({ finished }) => {
-      if (finished) {
-        setRendered(visible);
-        visibleValueRef.current = visible;
-      }
-    });
-
-    return () => {
-      visibleAnim.stopAnimation();
-    };
-  }, [visible, visibleAnim]);
 
   const hasText = value !== '';
 
@@ -137,21 +117,11 @@ function HeaderSearchBarInternal(
   }, [onChangeText, onClose]);
 
   React.useEffect(() => {
-    const cancelIfVisible = () => {
-      if (visibleValueRef.current) {
-        cancelSearch();
-
-        return true;
-      }
-
-      return false;
-    };
-
-    const unsubscribeBlur = navigation?.addListener('blur', cancelIfVisible);
+    const unsubscribeBlur = navigation?.addListener('blur', cancelSearch);
 
     const onKeyup = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        cancelIfVisible();
+        cancelSearch();
       }
     };
 
@@ -162,7 +132,10 @@ function HeaderSearchBarInternal(
     } else {
       backHandlerSubscription = BackHandler.addEventListener(
         'hardwareBackPress',
-        cancelIfVisible
+        () => {
+          cancelSearch();
+          return true;
+        }
       );
     }
 
@@ -195,39 +168,41 @@ function HeaderSearchBarInternal(
     [cancelSearch, clearText]
   );
 
-  if (!visible && !rendered) {
-    return null;
-  }
-
   const textColor = tintColor ?? colors.text;
 
   return (
-    <Animated.View
+    <AnimatedLiquidGlassContainerView
+      spacing={SPACING}
       aria-live="polite"
       aria-hidden={!visible}
       style={[
         styles.container,
-        {
-          pointerEvents: visible ? 'auto' : 'none',
-          opacity: visibleAnim,
+        Platform.OS === 'ios' && {
+          gap: SPACING,
+          margin: SPACING,
+          marginTop: statusBarHeight ? statusBarHeight + SPACING : SPACING - 2,
         },
         style,
       ]}
     >
       {Platform.OS !== 'ios' ? (
         <HeaderBackButton
+          accessibilityLabel={cancelButtonText}
           tintColor={tintColor ?? colors.text}
           pressColor={pressColor}
           pressOpacity={pressOpacity}
           onPress={cancelSearch}
+          style={styles.backButton}
         />
       ) : null}
-      <View style={styles.searchbarContainer}>
-        <HeaderIcon
-          source={searchIcon}
-          tintColor={textColor}
-          style={styles.inputSearchIcon}
-        />
+      <HeaderButtonBackground style={styles.searchbarContainer}>
+        {Platform.OS === 'ios' ? (
+          <HeaderIcon
+            source={searchIcon}
+            tintColor={textColor}
+            style={styles.inputSearchIconIos}
+          />
+        ) : null}
         <TextInput
           {...rest}
           ref={inputRef}
@@ -245,43 +220,44 @@ function HeaderSearchBarInternal(
           selectionHandleColor={colors.primary}
           selectionColor={Color(colors.primary)?.alpha(0.3).string()}
           style={[
-            fonts.regular,
+            Platform.select({
+              ios: isLiquidGlassSupported ? fonts.medium : fonts.regular,
+              default: fonts.regular,
+            }),
             styles.searchbar,
-            {
-              backgroundColor: Platform.select({
-                ios: dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                default: 'transparent',
-              }),
-              color: textColor,
-              borderBottomColor:
-                (Color(textColor)?.alpha(0.2).string() ?? dark)
-                  ? 'rgba(255, 255, 255, 0.2)'
-                  : 'rgba(0, 0, 0, 0.2)',
-            },
+            Platform.OS === 'ios' &&
+              !isLiquidGlassSupported && {
+                backgroundColor: dark
+                  ? 'rgba(255, 255, 255, 0.1)'
+                  : 'rgba(0, 0, 0, 0.1)',
+              },
+            { color: textColor },
           ]}
         />
         {Platform.OS === 'ios' ? (
           <PlatformPressable
+            accessibilityLabel="Clear"
             onPress={onClear}
             style={[
               {
                 opacity: clearVisibleAnim,
                 transform: [{ scale: clearVisibleAnim }],
               },
-              styles.clearButton,
+              styles.clearButtonIos,
             ]}
           >
             <Image
               source={clearIcon}
               resizeMode="contain"
               tintColor={textColor}
-              style={styles.clearIcon}
+              style={styles.clearIconIos}
             />
           </PlatformPressable>
         ) : null}
-      </View>
+      </HeaderButtonBackground>
       {Platform.OS !== 'ios' ? (
         <HeaderButton
+          accessibilityLabel="Clear"
           onPress={onClear}
           style={[styles.closeButton, { opacity: clearVisibleAnim }]}
         >
@@ -289,21 +265,39 @@ function HeaderSearchBarInternal(
         </HeaderButton>
       ) : null}
       {Platform.OS === 'ios' ? (
-        <PlatformPressable onPress={cancelSearch} style={styles.cancelButton}>
-          <Text
-            style={[
-              fonts.regular,
-              { color: tintColor ?? colors.primary },
-              styles.cancelText,
-            ]}
+        isLiquidGlassSupported ? (
+          <HeaderButtonBackground style={styles.closeButtonContainerIos}>
+            <HeaderButton
+              accessibilityLabel={cancelButtonText}
+              onPress={cancelSearch}
+            >
+              <HeaderIcon source={closeIcon} tintColor={textColor} />
+            </HeaderButton>
+          </HeaderButtonBackground>
+        ) : (
+          <PlatformPressable
+            accessibilityLabel={cancelButtonText}
+            onPress={cancelSearch}
+            style={styles.cancelButton}
           >
-            {cancelButtonText}
-          </Text>
-        </PlatformPressable>
+            <Text
+              style={[
+                fonts.regular,
+                { color: tintColor ?? colors.primary },
+                styles.cancelText,
+              ]}
+            >
+              {cancelButtonText}
+            </Text>
+          </PlatformPressable>
+        )
       ) : null}
-    </Animated.View>
+    </AnimatedLiquidGlassContainerView>
   );
 }
+
+const SPACING = Platform.OS === 'ios' ? 10 : 8;
+const IOS_18_TOP_OFFSET = -4;
 
 const styles = StyleSheet.create({
   container: {
@@ -311,70 +305,86 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'stretch',
   },
-  inputSearchIcon: {
+  inputSearchIconIos: {
     position: 'absolute',
     opacity: 0.5,
-    left: Platform.select({ ios: 16, default: 4 }),
-    top: Platform.select({ ios: -1, default: 17 }),
-    ...Platform.select({
-      ios: {
-        height: 18,
-        width: 18,
-      },
-      default: {},
-    }),
+    top: isLiquidGlassSupported ? 5 : IOS_18_TOP_OFFSET,
+    left: 5,
+    height: 18,
+    width: 18,
+  },
+  backButton: {
+    alignSelf: 'center',
+    marginLeft: 2,
   },
   closeButton: {
     position: 'absolute',
     opacity: 0.5,
-    right: Platform.select({ ios: 0, default: 8 }),
-    top: Platform.select({ ios: -2, default: 17 }),
+    right: SPACING,
+    height: '100%',
   },
-  clearButton: {
+  closeButtonContainerIos: {
+    alignSelf: 'center',
+  },
+  clearButtonIos: {
     position: 'absolute',
-    right: 0,
-    top: -7,
+    right: 5,
+    top: isLiquidGlassSupported ? 0 : -9,
     bottom: 0,
     justifyContent: 'center',
     padding: 8,
   },
-  clearIcon: {
+  clearIconIos: {
     height: 16,
     width: 16,
     opacity: 0.5,
   },
   cancelButton: {
     alignSelf: 'center',
-    top: -4,
   },
   cancelText: {
     fontSize: 17,
-    marginHorizontal: 12,
+    marginRight: SPACING / 2,
   },
   searchbarContainer: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    ...Platform.select<ViewStyle>({
+      ios: isLiquidGlassSupported
+        ? {}
+        : {
+            minHeight: 36,
+          },
+      default: {
+        borderRadius: 0,
+      },
+    }),
   },
-  searchbar: Platform.select({
-    ios: {
-      flex: 1,
-      fontSize: 17,
-      paddingHorizontal: 32,
-      marginLeft: 16,
-      marginTop: -1,
-      marginBottom: 4,
-      borderRadius: 8,
-      borderCurve: 'continuous',
-    },
-    default: {
-      flex: 1,
-      fontSize: 18,
-      paddingHorizontal: 36,
-      marginRight: 8,
-      marginTop: 8,
-      marginBottom: 8,
-      borderBottomWidth: 1,
-    },
-  }),
+  searchbar: {
+    backgroundColor: 'transparent',
+    ...Platform.select<TextStyle>({
+      ios: {
+        flex: 1,
+        fontSize: 17,
+        paddingHorizontal: SPACING + 30,
+        ...(!isLiquidGlassSupported
+          ? {
+              marginTop: IOS_18_TOP_OFFSET,
+              marginBottom: 5,
+              borderRadius: SPACING,
+              borderCurve: 'continuous',
+            }
+          : null),
+      },
+      default: {
+        flex: 1,
+        fontSize: 18,
+        paddingLeft: SPACING,
+        paddingRight: BUTTON_SIZE + SPACING,
+      },
+    }),
+  },
 });
 
 export const HeaderSearchBar = React.forwardRef(HeaderSearchBarInternal);

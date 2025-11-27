@@ -1,5 +1,7 @@
 import { PixelRatio, Platform } from 'react-native';
 
+import { isLiquidGlassSupported } from '../LiquidGlassView';
+
 export function getDefaultHeaderHeight({
   landscape,
   modalPresentation,
@@ -13,22 +15,35 @@ export function getDefaultHeaderHeight({
 
   // On models with Dynamic Island the status bar height is smaller than the safe area top inset.
   const hasDynamicIsland = Platform.OS === 'ios' && topInset > 50;
-  const statusBarHeight = hasDynamicIsland
-    ? topInset - (5 + 1 / PixelRatio.get())
-    : topInset;
+  const statusBarHeight = Math.max(
+    topInset - (hasDynamicIsland ? 5 + 1 / PixelRatio.get() : 0),
+    0
+  );
 
   if (Platform.OS === 'ios') {
-    if (Platform.isPad || Platform.isTV) {
-      if (modalPresentation) {
-        headerHeight = 56;
+    if (isLiquidGlassSupported) {
+      if (modalPresentation && !Platform.isPad && !Platform.isTV) {
+        headerHeight = 70;
       } else {
-        headerHeight = 50;
+        if (hasDynamicIsland) {
+          headerHeight = 60;
+        } else {
+          headerHeight = 64;
+        }
       }
     } else {
-      if (modalPresentation && !landscape) {
-        headerHeight = 56;
+      if (Platform.isPad || Platform.isTV) {
+        if (modalPresentation) {
+          headerHeight = 56;
+        } else {
+          headerHeight = 50;
+        }
       } else {
-        headerHeight = 44;
+        if (modalPresentation && !landscape) {
+          headerHeight = 56;
+        } else {
+          headerHeight = 44;
+        }
       }
     }
   } else {

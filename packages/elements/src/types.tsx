@@ -340,8 +340,4 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    * Whether label font should scale to respect Text Size accessibility settings.
    */
   allowFontScaling?: boolean;
-  /**
-   * Callback to trigger when the size of the label changes.
-   */
-  onLabelLayout?: (e: LayoutChangeEvent) => void;
 };

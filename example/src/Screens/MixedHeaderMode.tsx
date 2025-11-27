@@ -6,7 +6,6 @@ import type {
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  HeaderStyleInterpolators,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
@@ -101,11 +100,7 @@ export function MixedHeaderMode(
   _: StaticScreenProps<NavigatorScreenParams<MixedHeaderStackParams>>
 ) {
   return (
-    <SimpleStack.Navigator
-      screenOptions={{
-        headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
-      }}
-    >
+    <SimpleStack.Navigator>
       <SimpleStack.Group
         screenOptions={{
           animation: 'slide_from_right',

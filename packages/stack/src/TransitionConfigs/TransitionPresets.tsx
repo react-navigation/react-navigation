@@ -13,7 +13,7 @@ import {
   forScaleFromCenterAndroid,
   forVerticalIOS,
 } from './CardStyleInterpolators';
-import { forFade } from './HeaderStyleInterpolators';
+import { forFade, forUIKit } from './HeaderStyleInterpolators';
 import {
   BottomSheetSlideInSpec,
   BottomSheetSlideOutSpec,
@@ -38,7 +38,7 @@ export const SlideFromRightIOS: TransitionPreset = {
     close: TransitionIOSSpec,
   },
   cardStyleInterpolator: forHorizontalIOS,
-  headerStyleInterpolator: forFade,
+  headerStyleInterpolator: forUIKit,
 };
 
 /**
@@ -51,7 +51,7 @@ export const ModalSlideFromBottomIOS: TransitionPreset = {
     close: TransitionIOSSpec,
   },
   cardStyleInterpolator: forVerticalIOS,
-  headerStyleInterpolator: forFade,
+  headerStyleInterpolator: forUIKit,
 };
 
 /**
@@ -64,7 +64,7 @@ export const ModalPresentationIOS: TransitionPreset = {
     close: TransitionIOSSpec,
   },
   cardStyleInterpolator: forModalPresentationIOS,
-  headerStyleInterpolator: forFade,
+  headerStyleInterpolator: forUIKit,
 };
 
 /**

@@ -6,13 +6,17 @@ const packages = path.resolve(__dirname, '..', '..', 'packages');
 const alias = Object.fromEntries(
   fs
     .readdirSync(packages)
-    .filter((name) => !name.startsWith('.'))
-    .map((name) => [name, require(`../../packages/${name}/package.json`)])
-    .filter(([, pak]) => pak.exports['.'].source != null)
-    .map(([name, pak]) => [
-      pak.name,
-      path.resolve(packages, name, pak.exports['.'].source),
-    ])
+    .filter((dir) => !dir.startsWith('.'))
+    .map((dir) => [dir, require(`../../packages/${dir}/package.json`)])
+    .flatMap(([dir, pak]) =>
+      Object.entries(pak.exports || {})
+        .reverse()
+        .filter(([, value]) => value.source != null)
+        .map(([key, value]) => [
+          path.join(pak.name, key),
+          path.resolve(packages, dir, value.source),
+        ])
+    )
 );
 
 module.exports = {

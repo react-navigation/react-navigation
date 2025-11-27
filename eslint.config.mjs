@@ -46,7 +46,7 @@ export default defineConfig([
         {
           patterns: [
             '@react-navigation/*/*',
-            '!@react-navigation/bottom-tabs/unstable',
+            '!@react-navigation/elements/internal',
           ],
 
           paths: [
