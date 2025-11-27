@@ -280,7 +280,7 @@ const SceneView = ({
         sheetCornerRadius={sheetCornerRadius}
         sheetElevation={sheetElevation}
         sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
-        // @ts-expect-error - will be available since react=native-screens@4.19.0
+        // @ts-expect-error - will be available since react-native-screens@4.19.0
         sheetShouldOverflowTopInset={sheetShouldOverflowTopInset}
         statusBarAnimation={statusBarAnimation}
         statusBarHidden={statusBarHidden}
