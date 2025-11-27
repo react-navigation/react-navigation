@@ -1,0 +1,47 @@
+name: Verify Template
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+  push: # remove
+
+jobs:
+  verify-template:
+    runs-on: macos-latest
+
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Create Expo app from template
+        run: |
+          mkdir my-app
+          cd my-app
+          npx create-expo-app@latest --template react-navigation/template --yes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Verify types
+        working-directory: my-app
+        run: npm exec tsc
+
+      - name: Run prebuild
+        working-directory: my-app
+        run: npm exec expo prebuild --clean
+
+      - name: Build Android app
+        working-directory: my-app/android
+        run: |
+          ./gradlew assembleDebug --no-daemon --console=plain -PreactNativeArchitectures=arm64-v8a
+
+      - name: Build iOS app
+        working-directory: my-app/ios
+        run: |
+          xcodebuild -workspace myapp.xcworkspace -scheme myapp -configuration Debug -sdk iphonesimulator
