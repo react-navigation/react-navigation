@@ -14,6 +14,7 @@ import * as React from 'react';
 import { createMemoryHistory } from './createMemoryHistory';
 import { ServerContext } from './ServerContext';
 import type { LinkingOptions } from './types';
+import type { Thenable } from './useThenable';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
@@ -180,16 +181,13 @@ export function useLinking(
       }
     }
 
-    const thenable = {
-      then(onfulfilled?: (state: ResultState | undefined) => void) {
+    const thenable: Thenable<ResultState | undefined> = {
+      then(onfulfilled) {
         return Promise.resolve(onfulfilled ? onfulfilled(value) : value);
-      },
-      catch() {
-        return thenable;
       },
     };
 
-    return thenable as PromiseLike<ResultState | undefined>;
+    return thenable;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
