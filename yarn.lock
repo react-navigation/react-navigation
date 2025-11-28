@@ -4650,9 +4650,10 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-native-drawer-layout: "workspace:^"
     react-native-gesture-handler: "npm:~2.28.0"
-    react-native-reanimated: "npm:~4.1.1"
+    react-native-reanimated: "npm:4.1.3"
     react-native-safe-area-context: "npm:~5.6.0"
     react-native-screens: "npm:^4.18.0"
+    react-native-worklets: "npm:0.6.1"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
@@ -4661,7 +4662,7 @@ __metadata:
     react: ">= 19.0.0"
     react-native: "*"
     react-native-gesture-handler: ">= 2.0.0"
-    react-native-reanimated: ">= 3.0.0"
+    react-native-reanimated: ">= 4.0.0"
     react-native-safe-area-context: ">= 5.5.0"
     react-native-screens: ">= 4.0.0"
   languageName: unknown
@@ -4741,11 +4742,11 @@ __metadata:
     react-native-gesture-handler: "npm:~2.28.0"
     react-native-monorepo-config: "npm:^0.3.0"
     react-native-pager-view: "npm:6.9.1"
-    react-native-reanimated: "npm:~4.1.1"
+    react-native-reanimated: "npm:4.1.3"
     react-native-safe-area-context: "npm:~5.6.0"
     react-native-screens: "npm:^4.18.0"
     react-native-web: "npm:~0.21.0"
-    react-native-worklets: "npm:0.5.1"
+    react-native-worklets: "npm:0.6.1"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
     vite: "npm:^7.1.1"
@@ -14286,13 +14287,15 @@ __metadata:
     react: "npm:19.1.0"
     react-native: "npm:0.81.4"
     react-native-builder-bob: "npm:^0.40.12"
+    react-native-reanimated: "npm:4.1.3"
+    react-native-worklets: "npm:0.6.1"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
   peerDependencies:
     react: ">= 19.0.0"
     react-native: "*"
     react-native-gesture-handler: ">= 2.0.0"
-    react-native-reanimated: ">= 3.0.0"
+    react-native-reanimated: ">= 4.0.0"
   languageName: unknown
   linkType: soft
 
@@ -14360,9 +14363,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-reanimated@npm:~4.1.1":
-  version: 4.1.2
-  resolution: "react-native-reanimated@npm:4.1.2"
+"react-native-reanimated@npm:4.1.3":
+  version: 4.1.3
+  resolution: "react-native-reanimated@npm:4.1.3"
   dependencies:
     react-native-is-edge-to-edge: "npm:^1.2.1"
     semver: "npm:7.7.2"
@@ -14371,7 +14374,7 @@ __metadata:
     react: "*"
     react-native: "*"
     react-native-worklets: ">=0.5.0"
-  checksum: 10c0/054e4a3daa487f0d4ab152bb9cc10d2b51db351ab1b030e8044e3c9fdb0f8ae92cd19c57cbf2689aacc6d9ba2d943661e4f2de23d8f2fcdff632beaa3eb0769a
+  checksum: 10c0/936bc75bacc32c41f66765ba5e46d34ba20737bd0921f472ad27ad9e9cd76abfa3cbfe1e1db5f10b592f3e4b9b3b94970fc513ab1bfcc3fa5a9ef70c54b4a32e
   languageName: node
   linkType: hard
 
@@ -14438,9 +14441,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-worklets@npm:0.5.1":
-  version: 0.5.1
-  resolution: "react-native-worklets@npm:0.5.1"
+"react-native-worklets@npm:0.6.1":
+  version: 0.6.1
+  resolution: "react-native-worklets@npm:0.6.1"
   dependencies:
     "@babel/plugin-transform-arrow-functions": "npm:^7.0.0-0"
     "@babel/plugin-transform-class-properties": "npm:^7.0.0-0"
@@ -14457,7 +14460,7 @@ __metadata:
     "@babel/core": ^7.0.0-0
     react: "*"
     react-native: "*"
-  checksum: 10c0/9eb9e6dea9abaf889400a6618355ef59af3075f5004a4bec9e4cba6dcfd13d8b63de0d4b29d75c00a3dcf5ad422e1bdb71636c75b1a2ad1c43d8b512f198bdab
+  checksum: 10c0/bc3dcca00e287939aeb7ee7be501f15a0ac59c9351c60efafa89447d70e549e7f126705c154d92dd6e0cab924bf25f3c6ec1234a55a4daa9d3b3f26aa7871777
   languageName: node
   linkType: hard
 
