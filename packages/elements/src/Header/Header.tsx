@@ -272,7 +272,7 @@ export function Header(props: Props) {
       : 0;
 
   return (
-    <Animated.View
+    <View
       style={[
         {
           pointerEvents: 'box-none',
@@ -396,7 +396,7 @@ export function Header(props: Props) {
           />
         ) : null}
       </View>
-    </Animated.View>
+    </View>
   );
 }
 
