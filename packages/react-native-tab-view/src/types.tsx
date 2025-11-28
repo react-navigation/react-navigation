@@ -30,6 +30,7 @@ export type TabDescriptor<T extends Route> = {
     size: number;
   }) => React.ReactNode;
   badge?: (props: { route: T }) => React.ReactElement;
+  badgeStyle?: StyleProp<ViewStyle>;
   sceneStyle?: StyleProp<ViewStyle>;
 };
 
