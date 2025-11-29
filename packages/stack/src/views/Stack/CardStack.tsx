@@ -698,6 +698,10 @@ export class CardStack extends React.Component<Props, State> {
       return false;
     });
 
+    const isFloatHeaderFocused =
+      scenes.findLast((scene) => scene.route.key === focusedRoute.key)
+        ?.descriptor.options.headerMode === 'float';
+
     return (
       <View style={styles.container}>
         {renderHeader({
@@ -706,7 +710,16 @@ export class CardStack extends React.Component<Props, State> {
           getPreviousScene: this.getPreviousScene,
           getFocusedRoute: this.getFocusedRoute,
           onContentHeightChange: this.handleHeaderLayout,
-          style: [isFloatHeaderAbsolute && styles.absolute],
+          style: [
+            isFloatHeaderAbsolute && [
+              styles.absolute,
+              // The header title can't be found with maestro without this
+              // In some cases, header buttons may not be touchable as well
+              isFloatHeaderFocused && {
+                height: headerHeights[focusedRoute.key],
+              },
+            ],
+          ],
         })}
         <ScreenContainer
           enabled={detachInactiveScreens}
