@@ -8,7 +8,6 @@ import type {
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  HeaderStyleInterpolators,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
@@ -161,11 +160,7 @@ export function SimpleStack(
   _: StaticScreenProps<NavigatorScreenParams<SimpleStackParams>>
 ) {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
-      }}
-    >
+    <Stack.Navigator>
       <Stack.Screen
         name="Article"
         component={ArticleScreen}

@@ -44,6 +44,8 @@ export const HeaderButton = React.forwardRef(HeaderButtonInternal);
 
 HeaderButton.displayName = 'HeaderButton';
 
+export const BUTTON_SIZE = Platform.OS === 'ios' ? 44 : 48;
+
 const androidRipple = {
   borderless: true,
   foreground: Platform.OS === 'android' && Platform.Version >= 23,
@@ -54,9 +56,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 8,
+    justifyContent: 'center',
+    minHeight: BUTTON_SIZE,
+    minWidth: BUTTON_SIZE,
     // Roundness for iPad hover effect
-    borderRadius: 10,
+    borderRadius: Platform.OS === 'ios' ? BUTTON_SIZE / 2 : 10,
     borderCurve: 'continuous',
   },
   disabled: {

@@ -559,38 +559,26 @@ export type StackHeaderInterpolationProps = {
      * Layout of the whole screen.
      */
     screen: Layout;
-    /**
-     * Layout of the title element.
-     */
-    title?: Layout;
-    /**
-     * Layout of the back button label.
-     */
-    leftLabel?: Layout;
   };
 };
 
 export type StackHeaderInterpolatedStyle = {
   /**
-   * Interpolated style for the label of the left button (back button label).
-   */
-  leftLabelStyle?: any;
-  /**
    * Interpolated style for the left button (usually the back button).
    */
-  leftButtonStyle?: any;
+  leftButtonStyle?: Animated.WithAnimatedValue<ViewStyle>;
   /**
    * Interpolated style for the right button.
    */
-  rightButtonStyle?: any;
+  rightButtonStyle?: Animated.WithAnimatedValue<ViewStyle>;
   /**
    * Interpolated style for the header title text.
    */
-  titleStyle?: any;
+  titleStyle?: Animated.WithAnimatedValue<TextStyle>;
   /**
    * Interpolated style for the header background.
    */
-  backgroundStyle?: any;
+  backgroundStyle?: Animated.WithAnimatedValue<ViewStyle>;
 };
 
 export type StackHeaderStyleInterpolator = (

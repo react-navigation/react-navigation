@@ -23,7 +23,7 @@ export function HeaderBackground({
   children,
   ...rest
 }: Props) {
-  const { colors, dark } = useTheme();
+  const { colors } = useTheme();
 
   return (
     <BlurEffectBackground
@@ -33,9 +33,6 @@ export function HeaderBackground({
         {
           backgroundColor: colors.card,
           borderBottomColor: colors.border,
-        },
-        Platform.OS === 'ios' && {
-          shadowColor: dark ? 'rgba(255, 255, 255, 0.45)' : 'rgba(0, 0, 0, 1)',
         },
         style,
       ]}
@@ -52,14 +49,6 @@ const styles = StyleSheet.create({
     ...Platform.select({
       android: {
         elevation: 4,
-      },
-      ios: {
-        shadowOpacity: 0.3,
-        shadowRadius: 0,
-        shadowOffset: {
-          width: 0,
-          height: StyleSheet.hairlineWidth,
-        },
       },
       default: {
         borderBottomWidth: StyleSheet.hairlineWidth,

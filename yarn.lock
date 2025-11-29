@@ -1898,6 +1898,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@callstack/liquid-glass@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "@callstack/liquid-glass@npm:0.6.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/c17da674739617916d25b9823bd5eff348ad3031cfb573143c4ea49d395ada7b353d794f1eebdeff1680e87b48a447ece7c9cace77c397aa450866fe0f877907
+  languageName: node
+  linkType: hard
+
 "@commitlint/cli@npm:^19.8.1":
   version: 19.8.1
   resolution: "@commitlint/cli@npm:19.8.1"
@@ -4284,16 +4294,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-masked-view/masked-view@npm:0.3.2":
-  version: 0.3.2
-  resolution: "@react-native-masked-view/masked-view@npm:0.3.2"
-  peerDependencies:
-    react: ">=16"
-    react-native: ">=0.57"
-  checksum: 10c0/4ec84b7af2ded49dc21f17cc723a0ef341076cbe40cf758dd2daff8734bea63ba83e2fee7e63958984385314b8915b6804135997e07697abdd4141217c847fe9
-  languageName: node
-  linkType: hard
-
 "@react-native/assets-registry@npm:0.81.4":
   version: 0.81.4
   resolution: "@react-native/assets-registry@npm:0.81.4"
@@ -4672,8 +4672,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/elements@workspace:packages/elements"
   dependencies:
+    "@callstack/liquid-glass": "npm:^0.6.0"
     "@jest/globals": "npm:^30.0.0"
-    "@react-native-masked-view/masked-view": "npm:0.3.2"
     "@react-navigation/native": "workspace:^"
     "@testing-library/react-native": "npm:^13.2.1"
     "@types/react": "npm:~19.1.10"
@@ -4688,14 +4688,11 @@ __metadata:
     use-latest-callback: "npm:^0.3.2"
     use-sync-external-store: "npm:^1.5.0"
   peerDependencies:
-    "@react-native-masked-view/masked-view": ">= 0.2.0"
+    "@callstack/liquid-glass": ">= 0.6.0"
     "@react-navigation/native": "workspace:^"
     react: ">= 19.0.0"
     react-native: "*"
     react-native-safe-area-context: ">= 5.5.0"
-  peerDependenciesMeta:
-    "@react-native-masked-view/masked-view":
-      optional: true
   languageName: unknown
   linkType: soft
 
@@ -4706,12 +4703,12 @@ __metadata:
     "@babel/core": "npm:^7.28.4"
     "@babel/node": "npm:^7.28.0"
     "@babel/plugin-transform-strict-mode": "npm:^7.27.1"
+    "@callstack/liquid-glass": "npm:^0.6.0"
     "@expo/metro-runtime": "npm:~6.1.2"
     "@expo/react-native-action-sheet": "npm:^4.1.1"
     "@expo/vector-icons": "npm:^15.0.2"
     "@playwright/test": "npm:^1.53.0"
     "@react-native-async-storage/async-storage": "npm:2.2.0"
-    "@react-native-masked-view/masked-view": "npm:0.3.2"
     "@types/cheerio": "npm:^0.22.35"
     "@types/koa": "npm:^2.15.0"
     "@types/mock-require": "npm:^3.0.0"

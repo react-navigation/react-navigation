@@ -26,6 +26,11 @@
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
+    "./internal": {
+      "source": "./src/internal.tsx",
+      "types": "./lib/typescript/src/internal.d.ts",
+      "default": "./lib/module/internal.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -47,8 +52,8 @@
     "use-sync-external-store": "^1.5.0"
   },
   "devDependencies": {
+    "@callstack/liquid-glass": "^0.6.0",
     "@jest/globals": "^30.0.0",
-    "@react-native-masked-view/masked-view": "0.3.2",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^13.2.1",
     "@types/react": "~19.1.10",
@@ -61,16 +66,11 @@
     "typescript": "^5.9.2"
   },
   "peerDependencies": {
-    "@react-native-masked-view/masked-view": ">= 0.2.0",
+    "@callstack/liquid-glass": ">= 0.6.0",
     "@react-navigation/native": "workspace:^",
     "react": ">= 19.0.0",
     "react-native": "*",
     "react-native-safe-area-context": ">= 5.5.0"
-  },
-  "peerDependenciesMeta": {
-    "@react-native-masked-view/masked-view": {
-      "optional": true
-    }
   },
   "react-native-builder-bob": {
     "source": "src",

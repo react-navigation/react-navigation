@@ -2,6 +2,7 @@ import { useNavigation, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
+  Easing,
   Platform,
   StyleSheet,
   View,
@@ -11,19 +12,19 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import searchIcon from '../assets/search-icon.png';
 import { Color } from '../Color';
+import { isLiquidGlassSupported } from '../LiquidGlassView';
+import { PlatformColor } from '../PlatformColor';
 import type { HeaderOptions } from '../types';
 import { useFrameSize } from '../useFrameSize';
 import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
 import { HeaderBackButton } from './HeaderBackButton';
 import { HeaderBackground } from './HeaderBackground';
 import { HeaderButton } from './HeaderButton';
+import { HeaderButtonBackground } from './HeaderButtonBackground';
 import { HeaderIcon } from './HeaderIcon';
 import { HeaderSearchBar } from './HeaderSearchBar';
 import { HeaderShownContext } from './HeaderShownContext';
 import { HeaderTitle } from './HeaderTitle';
-
-// Width of the screen in split layout on portrait mode on iPad Mini
-const IPAD_MINI_MEDIUM_WIDTH = 414;
 
 type Props = HeaderOptions & {
   /**
@@ -65,6 +66,8 @@ const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
   });
 };
 
+const useNativeDriver = Platform.OS !== 'web';
+
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
@@ -92,7 +95,10 @@ export function Header(props: Props) {
     headerLeftContainerStyle: leftContainerStyle,
     headerRightContainerStyle: rightContainerStyle,
     headerTitleContainerStyle: titleContainerStyle,
-    headerBackButtonDisplayMode = Platform.OS === 'ios' ? 'default' : 'minimal',
+    headerBackButtonDisplayMode = Platform.OS !== 'ios' ||
+    isLiquidGlassSupported
+      ? 'minimal'
+      : 'default',
     headerBackTitleStyle,
     headerBackgroundContainerStyle: backgroundContainerStyle,
     headerStyle: customHeaderStyle,
@@ -101,10 +107,6 @@ export function Header(props: Props) {
     headerPressOpacity,
     headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
   } = props;
-
-  const isLargeIPad = useFrameSize(
-    (frame) => Platform.OS === 'ios' && frame.width >= IPAD_MINI_MEDIUM_WIDTH
-  );
 
   const defaultHeight = useFrameSize((frame) =>
     getDefaultHeaderHeight({
@@ -230,7 +232,10 @@ export function Header(props: Props) {
   const iconTintColor =
     headerTintColor ??
     Platform.select({
-      ios: colors.primary,
+      ios:
+        isLiquidGlassSupported && PlatformColor
+          ? PlatformColor('label')
+          : colors.primary,
       default: colors.text,
     });
 
@@ -271,6 +276,63 @@ export function Header(props: Props) {
         : 32
       : 0;
 
+  const [searchBarRendered, setSearchBarRendered] =
+    React.useState(searchBarVisible);
+  const searchBarVisibleRef = React.useRef(searchBarVisible);
+  const [searchBarVisibleAnim] = React.useState(
+    () => new Animated.Value(searchBarVisible ? 1 : 0)
+  );
+
+  if (searchBarVisible && !searchBarRendered) {
+    setSearchBarRendered(true);
+  }
+
+  React.useEffect(() => {
+    // Avoid act warning in tests just by rendering header
+    if (searchBarVisible === searchBarVisibleRef.current) {
+      return;
+    }
+
+    Animated.timing(searchBarVisibleAnim, {
+      toValue: searchBarVisible ? 1 : 0,
+      duration: 150,
+      useNativeDriver,
+      easing: Easing.in(Easing.linear),
+    }).start(({ finished }) => {
+      if (finished) {
+        setSearchBarRendered(searchBarVisible);
+        searchBarVisibleRef.current = searchBarVisible;
+      }
+    });
+
+    return () => {
+      searchBarVisibleAnim.stopAnimation();
+    };
+  }, [searchBarVisible, searchBarVisibleAnim]);
+
+  const headerOpacity = searchBarVisibleAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [1, 0],
+  });
+
+  const searchBarOpacity = searchBarVisibleAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [
+      // FIXME: Liquid glass views don't work properly with `opacity: 0`
+      // So we use a small value instead to workaround this issue.
+      0.1, 1,
+    ],
+  });
+
+  const statusBarSpacing = Math.max(
+    headerStatusBarHeight +
+      Platform.select({
+        ios: -7,
+        default: 0,
+      }),
+    0
+  );
+
   return (
     <Animated.View
       style={[
@@ -284,13 +346,7 @@ export function Header(props: Props) {
         },
       ]}
     >
-      <Animated.View
-        style={[
-          StyleSheet.absoluteFill,
-          { pointerEvents: 'box-none' },
-          backgroundContainerStyle,
-        ]}
-      >
+      <Animated.View style={[styles.background, backgroundContainerStyle]}>
         {headerBackground ? (
           headerBackground({ style: backgroundStyle })
         ) : (
@@ -312,9 +368,17 @@ export function Header(props: Props) {
           />
         )}
       </Animated.View>
-      <View style={{ pointerEvents: 'none', height: headerStatusBarHeight }} />
-      <View style={[styles.content, isLargeIPad ? styles.large : null]}>
-        <Animated.View
+      <Animated.View
+        style={[
+          styles.content,
+          {
+            pointerEvents: searchBarVisible ? 'none' : 'auto',
+            marginTop: statusBarSpacing,
+            opacity: headerOpacity,
+          },
+        ]}
+      >
+        <View
           style={[
             styles.start,
             (Platform.OS === 'ios' || !searchBarVisible) &&
@@ -324,81 +388,78 @@ export function Header(props: Props) {
               minWidth: buttonMinWidth,
               marginStart: insets.left,
             },
-            leftContainerStyle,
           ]}
         >
-          {leftButton}
+          <HeaderButtonBackground
+            style={[styles.buttonContainer, leftContainerStyle]}
+          >
+            {leftButton}
+          </HeaderButtonBackground>
+        </View>
+        <Animated.View
+          style={[
+            styles.title,
+            headerTitleAlign === 'left' && leftButton
+              ? { marginStart: 4 }
+              : { marginHorizontal: 16 },
+            titleContainerStyle,
+          ]}
+        >
+          {headerTitle({
+            children: title,
+            allowFontScaling: titleAllowFontScaling,
+            tintColor: headerTintColor,
+            style: [styles.titleText, titleStyle],
+          })}
         </Animated.View>
-        {Platform.OS === 'ios' || !searchBarVisible ? (
-          <>
-            <Animated.View
-              style={[
-                styles.title,
-                headerTitleAlign === 'left' && leftButton
-                  ? { marginStart: 4 }
-                  : { marginHorizontal: 16 },
-                titleContainerStyle,
-              ]}
-            >
-              {headerTitle({
-                children: title,
-                allowFontScaling: titleAllowFontScaling,
-                tintColor: headerTintColor,
-                style: [styles.titleText, titleStyle],
-              })}
-            </Animated.View>
-            <Animated.View
-              style={[
-                styles.end,
-                styles.expand,
-                {
-                  minWidth: buttonMinWidth,
-                  marginEnd: insets.right,
-                },
-                rightContainerStyle,
-              ]}
-            >
-              {rightButton}
-              {headerSearchBarOptions ? (
-                <HeaderButton
-                  tintColor={iconTintColor}
-                  pressColor={headerPressColor}
-                  pressOpacity={headerPressOpacity}
-                  onPress={() => {
-                    setSearchBarVisible(true);
-                    headerSearchBarOptions?.onOpen?.();
-                  }}
-                >
-                  <HeaderIcon source={searchIcon} tintColor={iconTintColor} />
-                </HeaderButton>
-              ) : null}
-            </Animated.View>
-          </>
-        ) : null}
-        {Platform.OS === 'ios' || searchBarVisible ? (
-          <HeaderSearchBar
-            {...headerSearchBarOptions}
-            visible={searchBarVisible}
-            onClose={() => {
-              setSearchBarVisible(false);
-              headerSearchBarOptions?.onClose?.();
-            }}
-            tintColor={headerTintColor}
-            style={[
-              StyleSheet.absoluteFill,
-              Platform.OS === 'ios'
-                ? [
-                    { paddingTop: headerStatusBarHeight ? 0 : 4 },
-                    { backgroundColor: backgroundColor ?? colors.card },
-                  ]
-                : !leftButton && { marginStart: 8 },
-            ]}
-          />
-        ) : null}
-      </View>
+        <View
+          style={[
+            styles.end,
+            styles.expand,
+            {
+              minWidth: buttonMinWidth,
+              marginEnd: insets.right,
+            },
+          ]}
+        >
+          <HeaderButtonBackground
+            style={[styles.buttonContainer, rightContainerStyle]}
+          >
+            {rightButton}
+            {headerSearchBarOptions ? (
+              <HeaderButton
+                tintColor={iconTintColor}
+                pressColor={headerPressColor}
+                pressOpacity={headerPressOpacity}
+                onPress={() => {
+                  setSearchBarVisible(true);
+                  headerSearchBarOptions?.onOpen?.();
+                }}
+              >
+                <HeaderIcon source={searchIcon} tintColor={iconTintColor} />
+              </HeaderButton>
+            ) : null}
+          </HeaderButtonBackground>
+        </View>
+      </Animated.View>
+      {searchBarRendered ? (
+        <HeaderSearchBar
+          {...headerSearchBarOptions}
+          statusBarHeight={statusBarSpacing}
+          visible={searchBarVisible}
+          onClose={() => {
+            setSearchBarVisible(false);
+            headerSearchBarOptions?.onClose?.();
+          }}
+          tintColor={headerTintColor}
+          style={[StyleSheet.absoluteFill, { opacity: searchBarOpacity }]}
+        />
+      ) : null}
     </Animated.View>
   );
 }
+
+const SPACING = Platform.OS === 'ios' ? 10 : 8;
 
 const styles = StyleSheet.create({
   content: {
@@ -407,16 +468,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'stretch',
   },
-  large: {
-    marginHorizontal: 5,
-  },
   title: {
     flexShrink: 1,
+    minWidth: 0,
     justifyContent: 'center',
     pointerEvents: 'box-none',
+    // Make sure title goes below liquid glass buttons
+    zIndex: -1,
   },
   titleText: {
     textAlign: 'center',
+  },
+  buttonContainer: {
+    pointerEvents: 'box-none',
+    gap: SPACING,
+    ...Platform.select({
+      ios: {
+        marginHorizontal: isLiquidGlassSupported ? SPACING : 0,
+      },
+      default: {
+        marginHorizontal: 2,
+      },
+    }),
   },
   start: {
     flexDirection: 'row',
@@ -434,5 +507,9 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
+  },
+  background: {
+    ...StyleSheet.absoluteFillObject,
+    pointerEvents: 'box-none',
   },
 });

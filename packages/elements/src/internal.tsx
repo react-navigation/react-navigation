@@ -1,0 +1,1 @@
+export { isLiquidGlassSupported } from './LiquidGlassView';
