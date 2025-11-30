@@ -138,9 +138,9 @@ export function Headers(_: StaticScreenProps<{}>) {
         headerStatusBarHeight={0}
       />
       <Header
-        title="Center + long back"
-        back={{ title: 'Very long title', href: undefined }}
-        headerBackButtonDisplayMode="default"
+        title="Center + minimal back"
+        back={{ title: 'Minimal', href: undefined }}
+        headerBackButtonDisplayMode="minimal"
         headerTitleAlign="center"
         headerStatusBarHeight={0}
       />

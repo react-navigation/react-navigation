@@ -239,8 +239,8 @@ const ICON_WITH_LABEL_START_SPACING = isLiquidGlassSupported
 
 const ICON_WITH_LABEL_END_SPACING = Platform.OS === 'ios' ? 9 : ICON_SPACING;
 
-// Space at the end of the button
-// end of icon, or if label is present, end of label
+const BUTTON_SPACING_START = isLiquidGlassSupported ? 5 : ICON_SPACING;
+// End of icon, or if label is present, end of label
 const BUTTON_SPACING_END =
   Platform.OS === 'ios'
     ? isLiquidGlassSupported
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     width: ICON_WIDTH,
-    marginStart: ICON_SPACING,
+    marginStart: BUTTON_SPACING_START,
     marginEnd: BUTTON_SPACING_END,
   },
   iconWithLabel:

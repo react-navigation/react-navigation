@@ -387,9 +387,7 @@ export function Header(props: Props) {
         <View
           style={[
             styles.start,
-            (Platform.OS === 'ios' || !searchBarVisible) &&
-              headerTitleAlign === 'center' &&
-              styles.expand,
+            headerTitleAlign === 'center' ? styles.expand : styles.shrink,
             {
               minWidth: buttonMinWidth,
               marginStart: insets.left,
@@ -511,6 +509,12 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
+  },
+  shrink: {
+    flexGrow: 0,
+    flexShrink: 1,
+    minWidth: 0,
+    maxWidth: '50%',
   },
   background: {
     ...StyleSheet.absoluteFillObject,
