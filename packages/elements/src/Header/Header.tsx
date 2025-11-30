@@ -17,13 +17,9 @@ import { PlatformColor } from '../PlatformColor';
 import type { HeaderOptions } from '../types';
 import { useFrameSize } from '../useFrameSize';
 import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
-import {
-  HeaderBackButton,
-  MIN_BUTTON_WIDTH_MINIMAL as MIN_BACK_BUTTON_WIDTH_MINIMAL,
-  MIN_BUTTON_WIDTH_WITH_LABEL as MIN_BACK_BUTTON_WIDTH_WITH_LABEL,
-} from './HeaderBackButton';
+import { HeaderBackButton } from './HeaderBackButton';
 import { HeaderBackground } from './HeaderBackground';
-import { BUTTON_SPACING, HeaderButton } from './HeaderButton';
+import { BUTTON_SIZE, BUTTON_SPACING, HeaderButton } from './HeaderButton';
 import { HeaderButtonBackground } from './HeaderButtonBackground';
 import { HeaderIcon } from './HeaderIcon';
 import { HeaderSearchBar } from './HeaderSearchBar';
@@ -281,9 +277,7 @@ export function Header(props: Props) {
 
   const buttonMinWidth =
     headerTitleAlign === 'center' && (leftButton || rightButton)
-      ? headerBackButtonDisplayMode !== 'minimal'
-        ? MIN_BACK_BUTTON_WIDTH_WITH_LABEL
-        : MIN_BACK_BUTTON_WIDTH_MINIMAL
+      ? BUTTON_SIZE
       : 0;
 
   const [searchBarRendered, setSearchBarRendered] =
@@ -403,9 +397,7 @@ export function Header(props: Props) {
         <Animated.View
           style={[
             styles.title,
-            headerTitleAlign === 'left' && leftButton
-              ? { marginStart: 4 }
-              : { marginHorizontal: 16 },
+            !leftButton && styles.titleStart,
             titleContainerStyle,
           ]}
         >
@@ -463,6 +455,14 @@ export function Header(props: Props) {
   );
 }
 
+const BUTTON_OFFSET = Platform.OS === 'ios' ? 10 : 4;
+const TITLE_START_OFFSET =
+  Platform.OS === 'ios'
+    ? 0
+    : // Since button container is always present,
+      // We need to account for its horizontal margin as well
+      16 - BUTTON_OFFSET * 2;
+
 const styles = StyleSheet.create({
   content: {
     pointerEvents: 'box-none',
@@ -478,20 +478,17 @@ const styles = StyleSheet.create({
     // Make sure title goes below liquid glass buttons
     zIndex: -1,
   },
+  titleStart: {
+    marginLeft: TITLE_START_OFFSET,
+  },
   titleText: {
     textAlign: 'center',
   },
   buttonContainer: {
+    flexDirection: 'row',
     pointerEvents: 'box-none',
     gap: BUTTON_SPACING,
-    ...Platform.select({
-      ios: {
-        marginHorizontal: isLiquidGlassSupported ? BUTTON_SPACING : 0,
-      },
-      default: {
-        marginHorizontal: 2,
-      },
-    }),
+    marginHorizontal: BUTTON_OFFSET,
   },
   start: {
     flexDirection: 'row',

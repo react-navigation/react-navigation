@@ -311,10 +311,7 @@ function HeaderSearchBarInternal(
 const SEARCH_ICON_SIZE = 18;
 const CLEAR_ICON_SIZE = 16;
 const CANCEL_FONT_SIZE = 17;
-const SEARCHBAR_FONT_SIZE = Platform.select({
-  ios: 17,
-  default: 18,
-});
+const SEARCHBAR_FONT_SIZE = Platform.OS === 'ios' ? 17 : 18;
 
 const SEARCHBAR_ICON_SPACING = 5;
 const SEARCHBAR_HEIGHT_IOS = isLiquidGlassSupported ? BUTTON_SIZE : 36;

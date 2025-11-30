@@ -111,6 +111,7 @@ export function Headers(_: StaticScreenProps<{}>) {
         title="Left + back + right area"
         back={{ title: 'Profile', href: undefined }}
         headerTitleAlign="left"
+        headerBackButtonDisplayMode="minimal"
         headerStatusBarHeight={0}
         headerRight={headerRight}
       />
@@ -118,6 +119,7 @@ export function Headers(_: StaticScreenProps<{}>) {
         title="Left + search"
         back={{ title: 'Profile', href: undefined }}
         headerTitleAlign="left"
+        headerBackButtonDisplayMode="minimal"
         headerStatusBarHeight={0}
         headerSearchBarOptions={{
           placeholder: 'Search for something',
@@ -131,16 +133,16 @@ export function Headers(_: StaticScreenProps<{}>) {
         headerStatusBarHeight={0}
       />
       <Header
-        title="Center + longer title"
+        title="Center + bit longer title"
         back={{ title: 'Longer', href: undefined }}
         headerTitleAlign="center"
         headerBackButtonDisplayMode="default"
         headerStatusBarHeight={0}
       />
       <Header
-        title="Center + minimal back"
-        back={{ title: 'Minimal', href: undefined }}
-        headerBackButtonDisplayMode="minimal"
+        title="Center + very very long title"
+        back={{ title: 'Very very long', href: undefined }}
+        headerBackButtonDisplayMode="default"
         headerTitleAlign="center"
         headerStatusBarHeight={0}
       />

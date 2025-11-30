@@ -55,7 +55,7 @@ export function HeaderBackButton({
         <HeaderIcon
           source={backIcon}
           tintColor={tintColor ?? colors.text}
-          style={[styles.icon, !isMinimal && styles.iconWithLabel]}
+          style={styles.icon}
         />
       );
     }
@@ -226,52 +226,29 @@ function HeaderBackLabel({
 
 // iOS uses a smaller chevron, Android uses a larger arrow
 const ICON_WIDTH = Platform.OS === 'ios' ? 13 : 24;
-const ICON_SPACING = 3;
+const ICON_SPACING_START = isLiquidGlassSupported
+  ? 13 // Standard distance of chevron from left edge in liquid glass
+  : 0; // Otherwise icon is aligned to the start of the button
 
-const ICON_WITH_LABEL_SPACING =
-  Platform.OS === 'ios'
-    ? 9 // Standard spacing on older iOS
-    : ICON_SPACING;
-
-const ICON_WITH_LABEL_START_SPACING = isLiquidGlassSupported
-  ? 14 // Align chevron same as without label
-  : ICON_WITH_LABEL_SPACING;
-
-const ICON_WITH_LABEL_END_SPACING = Platform.OS === 'ios' ? 9 : ICON_SPACING;
-
-const BUTTON_SPACING_START = isLiquidGlassSupported ? 5 : ICON_SPACING;
-// End of icon, or if label is present, end of label
-const BUTTON_SPACING_END =
-  Platform.OS === 'ios'
-    ? isLiquidGlassSupported
-      ? 9 // Smaller right spacing to visually center the chevron
-      : 14 // Without liquid glass, chevron is towards the left
-    : ICON_SPACING;
+// Standard distance between chevron and label
+const ICON_LABEL_SPACING = 9;
 
 const LABEL_FONT_SIZE = 17;
 const LABEL_LETTER_SPACING = 0.35;
-
-export const MIN_BUTTON_WIDTH_MINIMAL = ICON_WIDTH + ICON_SPACING * 2;
-export const MIN_BUTTON_WIDTH_WITH_LABEL =
-  40 + // Approximate width for "Back" text
-  ICON_WIDTH +
-  ICON_WITH_LABEL_START_SPACING +
-  ICON_WITH_LABEL_END_SPACING +
-  BUTTON_SPACING_END;
 
 const styles = StyleSheet.create({
   container: {
     borderRadius: BUTTON_SIZE / 2,
     flexShrink: 1,
     paddingHorizontal: 0,
-    minWidth: StyleSheet.hairlineWidth, // Avoid collapsing when title is long
+    minWidth: StyleSheet.hairlineWidth, // Avoid collapsing when title is long,
   },
   containerMinimal: {
     minWidth: BUTTON_SIZE,
     minHeight: BUTTON_SIZE,
     aspectRatio: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: Platform.OS === 'ios' ? 'flex-start' : 'center',
   },
   label: {
     fontSize: LABEL_FONT_SIZE,
@@ -284,18 +261,11 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
-    marginEnd: BUTTON_SPACING_END,
+    marginStart: ICON_LABEL_SPACING,
   },
   icon: {
     width: ICON_WIDTH,
-    marginStart: BUTTON_SPACING_START,
-    marginEnd: BUTTON_SPACING_END,
+    marginStart: ICON_SPACING_START,
+    marginEnd: 0,
   },
-  iconWithLabel:
-    Platform.OS === 'ios'
-      ? {
-          marginStart: ICON_WITH_LABEL_START_SPACING,
-          marginEnd: ICON_WITH_LABEL_END_SPACING,
-        }
-      : {},
 });
