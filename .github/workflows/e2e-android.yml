@@ -158,9 +158,7 @@ jobs:
             adb install ../android-debug-build/android-debug.apk
 
             for i in 1 2 3; do
-              yarn run e2e:native --flatten-debug-output
-
-              if [ $? -eq 0 ]; then
+              if yarn run e2e:native --flatten-debug-output; then
                 break
               else
                 echo "Maestro tests failed on attempt $i"

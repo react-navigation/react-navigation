@@ -144,9 +144,7 @@ jobs:
           xcrun simctl install booted ../ios-debug-build/ios-debug.app
 
           for i in 1 2 3; do
-            yarn run e2e:native --flatten-debug-output
-
-            if [ $? -eq 0 ]; then
+            if yarn run e2e:native --flatten-debug-output; then
               break
             else
               echo "Maestro tests failed on attempt $i"
