@@ -17,9 +17,13 @@ import { PlatformColor } from '../PlatformColor';
 import type { HeaderOptions } from '../types';
 import { useFrameSize } from '../useFrameSize';
 import { getDefaultHeaderHeight } from './getDefaultHeaderHeight';
-import { HeaderBackButton } from './HeaderBackButton';
+import {
+  HeaderBackButton,
+  MIN_BUTTON_WIDTH_MINIMAL as MIN_BACK_BUTTON_WIDTH_MINIMAL,
+  MIN_BUTTON_WIDTH_WITH_LABEL as MIN_BACK_BUTTON_WIDTH_WITH_LABEL,
+} from './HeaderBackButton';
 import { HeaderBackground } from './HeaderBackground';
-import { HeaderButton } from './HeaderButton';
+import { BUTTON_SPACING, HeaderButton } from './HeaderButton';
 import { HeaderButtonBackground } from './HeaderButtonBackground';
 import { HeaderIcon } from './HeaderIcon';
 import { HeaderSearchBar } from './HeaderSearchBar';
@@ -49,6 +53,12 @@ type Props = HeaderOptions & {
    */
   title: string;
 };
+
+const STATUS_BAR_OFFSET = Platform.select({
+  // The top inset on iOS is a bit less than the status bar height
+  ios: -7,
+  default: 0,
+});
 
 const warnIfHeaderStylesDefined = (styles: Record<string, any>) => {
   Object.keys(styles).forEach((styleProp) => {
@@ -272,8 +282,8 @@ export function Header(props: Props) {
   const buttonMinWidth =
     headerTitleAlign === 'center' && (leftButton || rightButton)
       ? headerBackButtonDisplayMode !== 'minimal'
-        ? 80
-        : 32
+        ? MIN_BACK_BUTTON_WIDTH_WITH_LABEL
+        : MIN_BACK_BUTTON_WIDTH_MINIMAL
       : 0;
 
   const [searchBarRendered, setSearchBarRendered] =
@@ -325,11 +335,7 @@ export function Header(props: Props) {
   });
 
   const statusBarSpacing = Math.max(
-    headerStatusBarHeight +
-      Platform.select({
-        ios: -7,
-        default: 0,
-      }),
+    headerStatusBarHeight + STATUS_BAR_OFFSET,
     0
   );
 
@@ -459,8 +465,6 @@ export function Header(props: Props) {
   );
 }
 
-const SPACING = Platform.OS === 'ios' ? 10 : 8;
-
 const styles = StyleSheet.create({
   content: {
     pointerEvents: 'box-none',
@@ -481,10 +485,10 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     pointerEvents: 'box-none',
-    gap: SPACING,
+    gap: BUTTON_SPACING,
     ...Platform.select({
       ios: {
-        marginHorizontal: isLiquidGlassSupported ? SPACING : 0,
+        marginHorizontal: isLiquidGlassSupported ? BUTTON_SPACING : 0,
       },
       default: {
         marginHorizontal: 2,

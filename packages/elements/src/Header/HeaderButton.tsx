@@ -45,6 +45,7 @@ export const HeaderButton = React.forwardRef(HeaderButtonInternal);
 HeaderButton.displayName = 'HeaderButton';
 
 export const BUTTON_SIZE = Platform.OS === 'ios' ? 44 : 48;
+export const BUTTON_SPACING = Platform.OS === 'ios' ? 10 : 8;
 
 const androidRipple = {
   borderless: true,

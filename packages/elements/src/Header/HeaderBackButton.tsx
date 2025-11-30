@@ -224,8 +224,40 @@ function HeaderBackLabel({
   );
 }
 
+// iOS uses a smaller chevron, Android uses a larger arrow
 const ICON_WIDTH = Platform.OS === 'ios' ? 13 : 24;
-const ICON_MARGIN_END = Platform.OS === 'ios' ? 11 : 3;
+const ICON_SPACING = 3;
+
+const ICON_WITH_LABEL_SPACING =
+  Platform.OS === 'ios'
+    ? 9 // Standard spacing on older iOS
+    : ICON_SPACING;
+
+const ICON_WITH_LABEL_START_SPACING = isLiquidGlassSupported
+  ? 14 // Align chevron same as without label
+  : ICON_WITH_LABEL_SPACING;
+
+const ICON_WITH_LABEL_END_SPACING = Platform.OS === 'ios' ? 9 : ICON_SPACING;
+
+// Space at the end of the button
+// end of icon, or if label is present, end of label
+const BUTTON_SPACING_END =
+  Platform.OS === 'ios'
+    ? isLiquidGlassSupported
+      ? 9 // Smaller right spacing to visually center the chevron
+      : 14 // Without liquid glass, chevron is towards the left
+    : ICON_SPACING;
+
+const LABEL_FONT_SIZE = 17;
+const LABEL_LETTER_SPACING = 0.35;
+
+export const MIN_BUTTON_WIDTH_MINIMAL = ICON_WIDTH + ICON_SPACING * 2;
+export const MIN_BUTTON_WIDTH_WITH_LABEL =
+  40 + // Approximate width for "Back" text
+  ICON_WIDTH +
+  ICON_WITH_LABEL_START_SPACING +
+  ICON_WITH_LABEL_END_SPACING +
+  BUTTON_SPACING_END;
 
 const styles = StyleSheet.create({
   container: {
@@ -242,52 +274,28 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   label: {
-    fontSize: 17,
-    // Title and back label are a bit different width due to title being bold
-    // Adjusting the letterSpacing makes them coincide better
-    letterSpacing: 0.35,
+    fontSize: LABEL_FONT_SIZE,
+    letterSpacing: LABEL_LETTER_SPACING,
   },
   labelWrapper: {
-    // These styles will make sure that the label doesn't fill the available space
-    // Otherwise it messes with the measurement of the label
+    // Make sure that the label doesn't fill the available space
     flexDirection: 'row',
     alignItems: 'flex-start',
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
-    marginEnd: 14,
+    marginEnd: BUTTON_SPACING_END,
   },
   icon: {
     width: ICON_WIDTH,
-    marginEnd: ICON_MARGIN_END,
+    marginStart: ICON_SPACING,
+    marginEnd: BUTTON_SPACING_END,
   },
   iconWithLabel:
     Platform.OS === 'ios'
       ? {
-          marginStart: isLiquidGlassSupported ? 14 : 9,
-          marginEnd: 6,
+          marginStart: ICON_WITH_LABEL_START_SPACING,
+          marginEnd: ICON_WITH_LABEL_END_SPACING,
         }
       : {},
-  iconMaskContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    // FIXME:
-    // Extend the mask so that label isn't clipped during animation
-    minWidth: '500%',
-  },
-  iconMaskFillerRect: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
-  iconMask: {
-    height: 21,
-    width: 13,
-    marginStart: -14.5,
-    marginVertical: 12,
-    alignSelf: 'center',
-  },
-  flip: {
-    transform: 'scaleX(-1)',
-  },
 });

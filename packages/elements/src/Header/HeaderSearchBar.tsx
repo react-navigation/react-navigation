@@ -26,7 +26,7 @@ import { PlatformPressable } from '../PlatformPressable';
 import { Text } from '../Text';
 import type { HeaderSearchBarOptions, HeaderSearchBarRef } from '../types';
 import { HeaderBackButton } from './HeaderBackButton';
-import { BUTTON_SIZE, HeaderButton } from './HeaderButton';
+import { BUTTON_SIZE, BUTTON_SPACING, HeaderButton } from './HeaderButton';
 import { HeaderButtonBackground } from './HeaderButtonBackground';
 import { HeaderIcon } from './HeaderIcon';
 
@@ -170,17 +170,24 @@ function HeaderSearchBarInternal(
 
   const textColor = tintColor ?? colors.text;
 
+  // When status bar height is provided, add spacing below it
+  // Otherwise, use a smaller top margin to align with the header content
+  const STATUS_BAR_TOP_ADJUSTMENT = 2;
+  const topMargin = statusBarHeight
+    ? statusBarHeight + BUTTON_SPACING
+    : BUTTON_SPACING - STATUS_BAR_TOP_ADJUSTMENT;
+
   return (
     <AnimatedLiquidGlassContainerView
-      spacing={SPACING}
+      spacing={BUTTON_SPACING}
       aria-live="polite"
       aria-hidden={!visible}
       style={[
         styles.container,
         Platform.OS === 'ios' && {
-          gap: SPACING,
-          margin: SPACING,
-          marginTop: statusBarHeight ? statusBarHeight + SPACING : SPACING - 2,
+          gap: BUTTON_SPACING,
+          margin: BUTTON_SPACING,
+          marginTop: topMargin,
         },
         style,
       ]}
@@ -200,7 +207,10 @@ function HeaderSearchBarInternal(
           <HeaderIcon
             source={searchIcon}
             tintColor={textColor}
-            style={styles.inputSearchIconIos}
+            style={[
+              styles.inputSearchIconIos,
+              !isLiquidGlassSupported && styles.inputSearchIconIosLegacy,
+            ]}
           />
         ) : null}
         <TextInput
@@ -244,6 +254,7 @@ function HeaderSearchBarInternal(
                 transform: [{ scale: clearVisibleAnim }],
               },
               styles.clearButtonIos,
+              !isLiquidGlassSupported && styles.clearButtonIosLegacy,
             ]}
           >
             <Image
@@ -296,8 +307,19 @@ function HeaderSearchBarInternal(
   );
 }
 
-const SPACING = Platform.OS === 'ios' ? 10 : 8;
-const IOS_18_TOP_OFFSET = -4;
+const SEARCH_ICON_SIZE = 18;
+const CLEAR_ICON_SIZE = 16;
+const CANCEL_FONT_SIZE = 17;
+const SEARCHBAR_FONT_SIZE = Platform.select({
+  ios: 17,
+  default: 18,
+});
+
+const SEARCHBAR_ICON_SPACING = 5;
+const SEARCHBAR_HEIGHT_IOS = isLiquidGlassSupported ? BUTTON_SIZE : 36;
+
+// The top inset on iOS is a bit less than the status bar height
+const SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS = -4;
 
 const styles = StyleSheet.create({
   container: {
@@ -308,10 +330,13 @@ const styles = StyleSheet.create({
   inputSearchIconIos: {
     position: 'absolute',
     opacity: 0.5,
-    top: isLiquidGlassSupported ? 5 : IOS_18_TOP_OFFSET,
-    left: 5,
-    height: 18,
-    width: 18,
+    top: SEARCHBAR_ICON_SPACING,
+    left: SEARCHBAR_ICON_SPACING,
+    height: SEARCH_ICON_SIZE,
+    width: SEARCH_ICON_SIZE,
+  },
+  inputSearchIconIosLegacy: {
+    top: SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS,
   },
   backButton: {
     alignSelf: 'center',
@@ -320,7 +345,7 @@ const styles = StyleSheet.create({
   closeButton: {
     position: 'absolute',
     opacity: 0.5,
-    right: SPACING,
+    right: BUTTON_SPACING,
     height: '100%',
   },
   closeButtonContainerIos: {
@@ -328,23 +353,27 @@ const styles = StyleSheet.create({
   },
   clearButtonIos: {
     position: 'absolute',
-    right: 5,
-    top: isLiquidGlassSupported ? 0 : -9,
+    right: 0,
+    top: 0,
     bottom: 0,
+    width: SEARCHBAR_HEIGHT_IOS,
     justifyContent: 'center',
-    padding: 8,
+    alignItems: 'center',
+  },
+  clearButtonIosLegacy: {
+    top: SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS - SEARCHBAR_ICON_SPACING,
   },
   clearIconIos: {
-    height: 16,
-    width: 16,
+    height: CLEAR_ICON_SIZE,
+    width: CLEAR_ICON_SIZE,
     opacity: 0.5,
   },
   cancelButton: {
     alignSelf: 'center',
   },
   cancelText: {
-    fontSize: 17,
-    marginRight: SPACING / 2,
+    fontSize: CANCEL_FONT_SIZE,
+    marginRight: BUTTON_SPACING / 2,
   },
   searchbarContainer: {
     flex: 1,
@@ -354,7 +383,7 @@ const styles = StyleSheet.create({
       ios: isLiquidGlassSupported
         ? {}
         : {
-            minHeight: 36,
+            minHeight: SEARCHBAR_HEIGHT_IOS,
           },
       default: {
         borderRadius: 0,
@@ -362,26 +391,25 @@ const styles = StyleSheet.create({
     }),
   },
   searchbar: {
+    flex: 1,
     backgroundColor: 'transparent',
+    fontSize: SEARCHBAR_FONT_SIZE,
     ...Platform.select<TextStyle>({
       ios: {
-        flex: 1,
-        fontSize: 17,
-        paddingHorizontal: SPACING + 30,
+        paddingHorizontal:
+          BUTTON_SPACING + SEARCH_ICON_SIZE + SEARCHBAR_ICON_SPACING * 2,
         ...(!isLiquidGlassSupported
           ? {
-              marginTop: IOS_18_TOP_OFFSET,
-              marginBottom: 5,
-              borderRadius: SPACING,
+              marginTop: SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS,
+              marginBottom: SEARCHBAR_ICON_SPACING,
+              borderRadius: BUTTON_SPACING,
               borderCurve: 'continuous',
             }
           : null),
       },
       default: {
-        flex: 1,
-        fontSize: 18,
-        paddingLeft: SPACING,
-        paddingRight: BUTTON_SIZE + SPACING,
+        paddingLeft: BUTTON_SPACING,
+        paddingRight: BUTTON_SIZE + BUTTON_SPACING,
       },
     }),
   },
