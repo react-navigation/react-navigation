@@ -17,6 +17,7 @@ import {
 import clearIcon from '../assets/clear-icon.png';
 import closeIcon from '../assets/close-icon.png';
 import searchIcon from '../assets/search-icon.png';
+import searchIconLegacy from '../assets/search-icon-legacy.png';
 import { Color } from '../Color';
 import {
   AnimatedLiquidGlassContainerView,
@@ -205,7 +206,7 @@ function HeaderSearchBarInternal(
       <HeaderButtonBackground style={styles.searchbarContainer}>
         {Platform.OS === 'ios' ? (
           <HeaderIcon
-            source={searchIcon}
+            source={isLiquidGlassSupported ? searchIcon : searchIconLegacy}
             tintColor={textColor}
             style={[
               styles.inputSearchIconIos,

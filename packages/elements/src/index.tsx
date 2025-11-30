@@ -1,8 +1,8 @@
 import backIcon from './assets/back-icon.png';
-import backIconMask from './assets/back-icon-mask.png';
 import clearIcon from './assets/clear-icon.png';
 import closeIcon from './assets/close-icon.png';
 import searchIcon from './assets/search-icon.png';
+import searchIconLegacy from './assets/search-icon-legacy.png';
 
 export { Badge } from './Badge';
 export { Button } from './Button';
@@ -32,8 +32,8 @@ export { useFrameSize } from './useFrameSize';
 
 export const Assets = [
   backIcon,
-  backIconMask,
   searchIcon,
+  searchIconLegacy,
   closeIcon,
   clearIcon,
 ];
