@@ -194,8 +194,10 @@ function HeaderBackLabel({
         <Animated.Text
           ref={labelRef}
           onLayout={(e) => setLabelWidth(e.nativeEvent.layout.width)}
+          aria-hidden={true}
           style={hiddenStyle}
           numberOfLines={1}
+          allowFontScaling={allowFontScaling}
         >
           {label}
         </Animated.Text>
@@ -204,8 +206,10 @@ function HeaderBackLabel({
         <Animated.Text
           ref={truncatedLabelRef}
           onLayout={(e) => setTruncatedLabelWidth(e.nativeEvent.layout.width)}
+          aria-hidden={true}
           style={hiddenStyle}
           numberOfLines={1}
+          allowFontScaling={allowFontScaling}
         >
           {truncatedLabel}
         </Animated.Text>
@@ -215,7 +219,7 @@ function HeaderBackLabel({
           accessible={false}
           style={[tintColor ? { color: tintColor } : null, commonStyle]}
           numberOfLines={1}
-          allowFontScaling={!!allowFontScaling}
+          allowFontScaling={allowFontScaling}
         >
           {finalLabelText}
         </Animated.Text>
