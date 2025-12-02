@@ -36,23 +36,38 @@ const initialMetrics =
 export function SafeAreaProviderCompat({ children, style }: Props) {
   const insets = React.useContext(SafeAreaInsetsContext);
 
-  children = (
-    <FrameSizeProvider initialFrame={initialMetrics.frame}>
-      {children}
-    </FrameSizeProvider>
-  );
-
-  if (insets) {
-    // If we already have insets, don't wrap the stack in another safe area provider
-    // This avoids an issue with updates at the cost of potentially incorrect values
-    // https://github.com/react-navigation/react-navigation/issues/174
-    return <View style={[styles.container, style]}>{children}</View>;
-  }
-
   return (
-    <SafeAreaProvider initialMetrics={initialMetrics} style={style}>
-      {children}
-    </SafeAreaProvider>
+    <FrameSizeProvider
+      initialFrame={initialMetrics.frame}
+      render={({ ref, onLayout }) => {
+        if (insets) {
+          // If we already have insets, don't wrap the stack in another safe area provider
+          // This avoids an issue with updates at the cost of potentially incorrect values
+          // https://github.com/react-navigation/react-navigation/issues/174
+          return (
+            <View
+              ref={ref}
+              onLayout={onLayout}
+              style={[styles.container, style]}
+            >
+              {children}
+            </View>
+          );
+        }
+
+        // SafeAreaProvider doesn't forward ref
+        // So we only pass onLayout to it
+        return (
+          <SafeAreaProvider
+            initialMetrics={initialMetrics}
+            style={style}
+            onLayout={onLayout}
+          >
+            {children}
+          </SafeAreaProvider>
+        );
+      }}
+    />
   );
 }
 
