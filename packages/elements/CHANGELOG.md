@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.8.4...@react-navigation/elements@2.8.5) (2025-12-02)
+
+### Bug Fixes
+
+* measure frame size without an additional view ([#12882](https://github.com/react-navigation/react-navigation/issues/12882)) ([4505dab](https://github.com/react-navigation/react-navigation/commit/4505dab47bc62ec1aef8c201a0e6bbc3687fe81c)) - by @satya164
+
 ## [2.8.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.8.3...@react-navigation/elements@2.8.4) (2025-11-26)
 
 **Note:** Version bump only for package @react-navigation/elements
