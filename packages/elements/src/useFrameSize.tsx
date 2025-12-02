@@ -1,24 +1,7 @@
 import * as React from 'react';
-import {
-  Platform,
-  type StyleProp,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from 'react-native';
-import {
-  // eslint-disable-next-line no-restricted-imports
-  useSafeAreaFrame,
-} from 'react-native-safe-area-context';
+import { type LayoutChangeEvent, Platform, View } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
-
-// Load with require to avoid error from webpack due to missing export in older versions
-// eslint-disable-next-line import-x/no-commonjs
-const SafeAreaListener = require('react-native-safe-area-context')
-  .SafeAreaListener as
-  | typeof import('react-native-safe-area-context').SafeAreaListener
-  | undefined;
 
 type Frame = {
   width: number;
@@ -61,31 +44,15 @@ export function useFrameSize<T>(
 
 type FrameSizeProviderProps = {
   initialFrame: Frame;
-  children: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
+  render: (props: {
+    ref: React.RefObject<View | null>;
+    onLayout: (event: LayoutChangeEvent) => void;
+  }) => React.ReactNode;
 };
 
 export function FrameSizeProvider({
   initialFrame,
-  children,
-}: FrameSizeProviderProps) {
-  const context = React.useContext(FrameContext);
-
-  if (context != null) {
-    // If the context is already present, don't wrap again
-    return children;
-  }
-
-  return (
-    <FrameSizeProviderInner initialFrame={initialFrame}>
-      {children}
-    </FrameSizeProviderInner>
-  );
-}
-
-function FrameSizeProviderInner({
-  initialFrame,
-  children,
+  render,
 }: FrameSizeProviderProps) {
   const frameRef = React.useRef<Frame>({
     width: initialFrame.width,
@@ -167,52 +134,37 @@ function FrameSizeProviderInner({
     listeners.current.forEach((listener) => listener());
   });
 
+  const viewRef = React.useRef<View>(null);
+
+  React.useEffect(() => {
+    if (Platform.OS === 'web') {
+      // We use ResizeObserver on web
+      return;
+    }
+
+    viewRef.current?.measure((_x, _y, width, height) => {
+      onChange({ width, height });
+    });
+  }, [onChange]);
+
+  const onLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+
+    onChange({ width, height });
+  };
+
   return (
-    <>
-      <FrameContext.Provider value={context}>{children}</FrameContext.Provider>
-      {/**
-       * The frame size listener must come after the content
-       * This makes sure that any nested navigator is in the first descendant chain
-       * This heuristic is used by react-native-screens to find nested navigators
-       */}
+    <FrameContext.Provider value={context}>
       {Platform.OS === 'web' ? (
         <FrameSizeListenerWeb onChange={onChange} />
-      ) : typeof SafeAreaListener === 'undefined' ? (
-        <FrameSizeListenerNativeFallback onChange={onChange} />
-      ) : (
-        /**
-         * Passing `pointerEvents="none"` to `SafeAreaListener` doesn't work
-         * So we wrap it in a `View` and disable pointer events on it
-         */
-        <View style={StyleSheet.absoluteFill} pointerEvents="none">
-          <SafeAreaListener
-            onChange={({ frame }) => onChange(frame)}
-            style={StyleSheet.absoluteFill}
-          />
-        </View>
-      )}
-    </>
+      ) : null}
+      {render({ ref: viewRef, onLayout })}
+    </FrameContext.Provider>
   );
 }
 
-// SafeAreaListener is available only on newer versions
-// Fallback to an effect-based shim for older versions
-function FrameSizeListenerNativeFallback({
-  onChange,
-}: {
-  onChange: (frame: Frame) => void;
-}) {
-  const frame = useSafeAreaFrame();
-
-  React.useLayoutEffect(() => {
-    onChange(frame);
-  }, [frame, onChange]);
-
-  return null;
-}
-
-// FIXME: On the Web, the safe area frame value doesn't update on resize
-// So we workaround this by measuring the frame on resize
+// FIXME: On the Web, `onLayout` doesn't fire on resize
+// So we workaround this by using ResizeObserver
 function FrameSizeListenerWeb({
   onChange,
 }: {
