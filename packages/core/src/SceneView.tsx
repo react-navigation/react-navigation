@@ -7,6 +7,7 @@ import type {
 import * as React from 'react';
 
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
+import { isArrayEqual } from './isArrayEqual';
 import {
   type FocusedRouteState,
   NavigationFocusedRouteStateContext,
@@ -68,40 +69,49 @@ export function SceneView<
     (child: NavigationState | PartialState<NavigationState> | undefined) => {
       const state = getState();
 
-      setState({
-        ...state,
-        routes: state.routes.map((r) => {
-          if (r.key !== route.key) {
-            return r;
+      const routes = state.routes.map((r) => {
+        const nextRoute =
+          r.key === route.key && r.state !== child ? { ...r, state: child } : r;
+
+        // Before updating the state, cleanup any nested screen and state
+        // This will avoid the navigator trying to handle them again
+        if (
+          nextRoute.params &&
+          (('state' in nextRoute.params &&
+            typeof nextRoute.params.state === 'object' &&
+            nextRoute.params.state !== null) ||
+            ('screen' in nextRoute.params &&
+              typeof nextRoute.params.screen === 'string'))
+        ) {
+          // @ts-expect-error: we don't have correct type for params
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { state, screen, params, initial, ...rest } = nextRoute.params;
+
+          if (Object.keys(rest).length) {
+            return { ...nextRoute, params: rest };
+          } else {
+            const {
+              // We destructure the params to omit them
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              params,
+              ...restRoute
+            } = nextRoute;
+
+            return restRoute;
           }
+        }
 
-          const nextRoute = { ...r, state: child };
-
-          // Before updating the state, cleanup any nested screen and state
-          // This will avoid the navigator trying to handle them again
-          if (
-            nextRoute.params &&
-            (('state' in nextRoute.params &&
-              typeof nextRoute.params.state === 'object' &&
-              nextRoute.params.state !== null) ||
-              ('screen' in nextRoute.params &&
-                typeof nextRoute.params.screen === 'string'))
-          ) {
-            // @ts-expect-error: we don't have correct type for params
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { state, screen, params, initial, ...rest } =
-              nextRoute.params;
-
-            if (Object.keys(rest).length) {
-              nextRoute.params = rest;
-            } else {
-              delete nextRoute.params;
-            }
-          }
-
-          return nextRoute;
-        }),
+        return nextRoute;
       });
+
+      if (isArrayEqual(state.routes, routes)) {
+        setState(state);
+      } else {
+        setState({
+          ...state,
+          routes,
+        });
+      }
     },
     [getState, route.key, setState]
   );
