@@ -3,6 +3,7 @@ import {
   type ParamListBase,
   type StaticConfig,
   type StaticParamList,
+  type StaticScreenConfig,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
@@ -89,4 +90,18 @@ export function createMaterialTopTabNavigator<
 >;
 export function createMaterialTopTabNavigator(config?: unknown) {
   return createNavigatorFactory(MaterialTopTabNavigator)(config);
+}
+
+export function createMaterialTopTabScreen<
+  const Screen extends React.ComponentType<any>,
+>(
+  config: StaticScreenConfig<
+    Screen,
+    TabNavigationState<ParamListBase>,
+    MaterialTopTabNavigationOptions,
+    MaterialTopTabNavigationEventMap,
+    MaterialTopTabNavigationProp<ParamListBase>
+  >
+) {
+  return config;
 }

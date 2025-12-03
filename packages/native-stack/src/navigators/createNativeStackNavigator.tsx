@@ -9,6 +9,7 @@ import {
   type StackRouterOptions,
   type StaticConfig,
   type StaticParamList,
+  type StaticScreenConfig,
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -117,4 +118,18 @@ export function createNativeStackNavigator<
 >;
 export function createNativeStackNavigator(config?: unknown) {
   return createNavigatorFactory(NativeStackNavigator)(config);
+}
+
+export function createNativeStackScreen<
+  const Screen extends React.ComponentType<any>,
+>(
+  config: StaticScreenConfig<
+    Screen,
+    StackNavigationState<ParamListBase>,
+    NativeStackNavigationOptions,
+    NativeStackNavigationEventMap,
+    NativeStackNavigationProp<ParamListBase>
+  >
+) {
+  return config;
 }
