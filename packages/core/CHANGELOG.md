@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.13.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.13.4...@react-navigation/core@7.13.5) (2025-12-03)
+
+### Bug Fixes
+
+* only clear params for screen which has navigator ([c20905b](https://github.com/react-navigation/react-navigation/commit/c20905b46c118a84d5b8a35a18c9af80dae920ef)) - by @
+
 ## [7.13.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.13.3...@react-navigation/core@7.13.4) (2025-12-03)
 
 ### Bug Fixes
