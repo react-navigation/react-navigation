@@ -70,8 +70,11 @@ export function SceneView<
       const state = getState();
 
       const routes = state.routes.map((r) => {
-        const nextRoute =
-          r.key === route.key && r.state !== child ? { ...r, state: child } : r;
+        if (r.key !== route.key) {
+          return r;
+        }
+
+        const nextRoute = r.state !== child ? { ...r, state: child } : r;
 
         // Before updating the state, cleanup any nested screen and state
         // This will avoid the navigator trying to handle them again
