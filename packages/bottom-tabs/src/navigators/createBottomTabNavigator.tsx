@@ -120,9 +120,7 @@ export function createBottomTabNavigator(config?: unknown) {
   return createNavigatorFactory(BottomTabNavigator)(config);
 }
 
-export function createBottomTabScreen<
-  const Screen extends React.ComponentType<any>,
->(
+export function createBottomTabScreen<const Screen>(
   config: StaticScreenConfig<
     Screen,
     TabNavigationState<ParamListBase>,

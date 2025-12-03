@@ -92,9 +92,7 @@ export function createMaterialTopTabNavigator(config?: unknown) {
   return createNavigatorFactory(MaterialTopTabNavigator)(config);
 }
 
-export function createMaterialTopTabScreen<
-  const Screen extends React.ComponentType<any>,
->(
+export function createMaterialTopTabScreen<const Screen>(
   config: StaticScreenConfig<
     Screen,
     TabNavigationState<ParamListBase>,

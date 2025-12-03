@@ -44,28 +44,16 @@ type ParamListForGroups<
   Groups extends
     | Readonly<{
         [key: string]: {
-          screens: StaticConfigScreens<
-            ParamListBase,
-            NavigationState,
-            {},
-            EventMapBase,
-            any
-          >;
+          screens: {};
         };
       }>
     | undefined,
 > = Groups extends {
   [key: string]: {
-    screens: StaticConfigScreens<
-      ParamListBase,
-      NavigationState,
-      {},
-      EventMapBase,
-      any
-    >;
+    screens: infer Screens;
   };
 }
-  ? ParamListForScreens<UnionToIntersection<Groups[keyof Groups]['screens']>>
+  ? ParamListForScreens<UnionToIntersection<Screens>>
   : {};
 
 type RouteType<Params> = Readonly<
@@ -79,7 +67,7 @@ type RouteType<Params> = Readonly<
 >;
 
 export type StaticScreenConfig<
-  Screen extends React.ComponentType<any> | StaticNavigation<any, any, any>,
+  Screen,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
@@ -88,30 +76,39 @@ export type StaticScreenConfig<
     ? undefined
     : Screen extends React.ComponentType<{ route: { params: infer P } }>
       ? P
-      : undefined,
+      : Screen extends StaticNavigation<any, any, any>
+        ? NavigatorScreenParams<StaticParamList<Screen>>
+        : undefined,
 > = {
-  /**
-   * Callback to determine whether the screen should be rendered or not.
-   */
-  if?: () => boolean;
-
-  /**
-   * Linking config for the screen.
-   */
-  linking?: PathConfig<ParamListBase> | string;
-
   /**
    * Static navigation config or Component to render for the screen.
    */
   screen: Screen;
 
   /**
-   * Optional key for this screen.
+   * Callback to determine whether the screen should be rendered or not.
+   * This can be useful for conditional rendering of screens,
+   *
+   * e.g. - if you want to render a different screen for logged in users.
+   *
+   * You can use a custom hook to use custom logic to determine the return value.
+   *
+   * @example
+   * ```js
+   * if: useIsLoggedIn
+   * ```
    */
-  navigationKey?: string;
+  if?: () => boolean;
 
   /**
    * Navigator options for this screen.
+   *
+   * @example
+   * ```js
+   * options: {
+   *  title: 'My Screen',
+   * }
+   * ```
    */
   options?:
     | ScreenOptions
@@ -123,6 +120,15 @@ export type StaticScreenConfig<
 
   /**
    * Event listeners for this screen.
+   *
+   * @example
+   * ```js
+   * listeners: {
+   *   blur: (event) => {
+   *     ...
+   *   },
+   * }
+   * ```
    */
   listeners?:
     | ScreenListeners<State, EventMap>
@@ -133,6 +139,18 @@ export type StaticScreenConfig<
 
   /**
    * Layout for this screen.
+   *
+   * @example
+   * ```js
+   * layout: ({ children, route, options, navigation, theme }) => {
+   *   return (
+   *     <MyWrapper>
+   *       {children}
+   *     </MyWrapper>
+   *   );
+   * }
+   * ```
+   *
    */
   layout?: (props: {
     route: RouteType<Params>;
@@ -144,13 +162,40 @@ export type StaticScreenConfig<
 
   /**
    * Initial params object for the route.
+   *
+   * @example
+   * ```js
+   * initialParams: {
+   *   someParam: 'someValue'
+   * }
+   * ```
    */
   initialParams?: Params extends object ? Partial<Params> : never;
 
   /**
    * Function to return an unique ID for this screen.
+   *
+   * @example
+   * ```js
+   * getId: ({ params }) => params?.userId,
+   * ```
    */
   getId?: (props: { params: Params }) => string | undefined;
+
+  /**
+   * Linking config for the screen.
+   *
+   * @example
+   * ```js
+   * linking: 'profile/:userId',
+   * ```
+   */
+  linking?: PathConfig<ParamListBase> | string;
+
+  /**
+   * Optional key for this screen.
+   */
+  navigationKey?: string;
 };
 
 type StaticConfigScreens<

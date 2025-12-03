@@ -3,6 +3,7 @@
 import {
   type BottomTabNavigationProp,
   createBottomTabNavigator,
+  createBottomTabScreen,
 } from '@react-navigation/bottom-tabs';
 import {
   type CompositeNavigationProp,
@@ -15,7 +16,10 @@ import {
   type StaticScreenProps,
   type Theme,
 } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  createNativeStackScreen,
+} from '@react-navigation/native-stack';
 import {
   createStackNavigator,
   createStackScreen,
@@ -33,10 +37,10 @@ const NativeStack = createNativeStackNavigator({
         return <>{children}</>;
       },
       screens: {
-        Foo: {
+        Foo: createNativeStackScreen({
           screen: () => <></>,
           options: { presentation: 'modal' },
-        },
+        }),
       },
     },
   },
@@ -59,7 +63,7 @@ const RootStack = createStackNavigator({
   screens: {
     Home: HomeTabs,
     Profile: (_: StaticScreenProps<{ user: string }>) => null,
-    Feed: {
+    Feed: createStackScreen({
       screen: (_: StaticScreenProps<{ sort: 'hot' | 'recent' }>) => null,
       options: {
         headerTitle: 'My Feed',
@@ -78,7 +82,7 @@ const RootStack = createStackNavigator({
           expectTypeOf(e.data).toEqualTypeOf<Readonly<{ closing: boolean }>>();
         },
       },
-    },
+    }),
     Settings: () => null,
     // TypeScript has a limit of 24 items in mapped types
     // So we add more items to make sure we don't hit the issue
@@ -359,58 +363,59 @@ createBottomTabNavigator({
  */
 createBottomTabNavigator({
   screens: {
-    Test: {
+    Test: createBottomTabScreen({
       screen: () => null,
       options: {
         tabBarActiveTintColor: 'tomato',
       },
-    },
+    }),
   },
 });
 
 createBottomTabNavigator({
   screens: {
-    Test: {
+    Test: createBottomTabScreen({
       screen: () => null,
       options: {
         // @ts-expect-error
         tabBarActiveTintColor: 42,
       },
-    },
+    }),
   },
 });
 
 createBottomTabNavigator({
   screens: {
-    Test: {
+    Test: createBottomTabScreen({
       screen: () => null,
       options: () => ({
         tabBarActiveTintColor: 'tomato',
       }),
-    },
+    }),
   },
 });
 
 createBottomTabNavigator({
   screens: {
-    Test: {
+    Test: createBottomTabScreen({
       screen: () => null,
       // @ts-expect-error
       options: () => ({
         tabBarActiveTintColor: 42,
       }),
-    },
+    }),
   },
 });
 
 createBottomTabNavigator({
   screens: {
-    Test: {
+    Test: createBottomTabScreen({
       screen: (_: { foo: number }) => null,
+      // @ts-expect-error
       initialParams: {
         foo: 'test',
       },
-    },
+    }),
   },
 });
 
@@ -739,6 +744,72 @@ createStackNavigator({
       },
       // @ts-expect-error
       initialParams: {},
+    }),
+  },
+});
+
+/**
+ * Handle screen which is a nested navigator
+ */
+createBottomTabNavigator({
+  screens: {
+    User: createBottomTabScreen({
+      screen: createStackNavigator({
+        screens: {
+          Profile: (_: StaticScreenProps<{ userId: string }>) => null,
+        },
+      }),
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.name).toEqualTypeOf<string>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          NavigatorScreenParams<{
+            Profile: {
+              userId: string;
+            };
+          }>
+        >();
+
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+
+        return {};
+      },
+      listeners: ({ route, navigation }) => {
+        expectTypeOf(route.params).toEqualTypeOf<
+          NavigatorScreenParams<{
+            Profile: {
+              userId: string;
+            };
+          }>
+        >();
+
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+
+        return {};
+      },
+      layout: ({ route, navigation, children }) => {
+        expectTypeOf(route.params).toEqualTypeOf<
+          NavigatorScreenParams<{
+            Profile: {
+              userId: string;
+            };
+          }>
+        >();
+
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).toEqualTypeOf<
+          NavigatorScreenParams<{
+            Profile: {
+              userId: string;
+            };
+          }>
+        >();
+
+        return 'static-id';
+      },
     }),
   },
 });

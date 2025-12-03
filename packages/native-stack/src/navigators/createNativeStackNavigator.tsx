@@ -120,9 +120,7 @@ export function createNativeStackNavigator(config?: unknown) {
   return createNavigatorFactory(NativeStackNavigator)(config);
 }
 
-export function createNativeStackScreen<
-  const Screen extends React.ComponentType<any>,
->(
+export function createNativeStackScreen<const Screen>(
   config: StaticScreenConfig<
     Screen,
     StackNavigationState<ParamListBase>,

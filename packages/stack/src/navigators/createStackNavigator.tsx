@@ -118,9 +118,7 @@ export function createStackNavigator(config?: unknown) {
   return createNavigatorFactory(StackNavigator)(config);
 }
 
-export function createStackScreen<
-  const Screen extends React.ComponentType<any>,
->(
+export function createStackScreen<const Screen>(
   config: StaticScreenConfig<
     Screen,
     StackNavigationState<ParamListBase>,

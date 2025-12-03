@@ -89,9 +89,7 @@ export function createDrawerNavigator(config?: unknown) {
   return createNavigatorFactory(DrawerNavigator)(config);
 }
 
-export function createDrawerScreen<
-  const Screen extends React.ComponentType<any>,
->(
+export function createDrawerScreen<const Screen>(
   config: StaticScreenConfig<
     Screen,
     DrawerNavigationState<ParamListBase>,
