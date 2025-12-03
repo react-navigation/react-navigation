@@ -9,6 +9,7 @@ import {
   type StackRouterOptions,
   type StaticConfig,
   type StaticParamList,
+  type StaticScreenConfig,
   type TypedNavigator,
   useLocale,
   useNavigationBuilder,
@@ -115,4 +116,18 @@ export function createStackNavigator<
 ): TypedNavigator<StackTypeBag<StaticParamList<{ config: Config }>>, Config>;
 export function createStackNavigator(config?: unknown) {
   return createNavigatorFactory(StackNavigator)(config);
+}
+
+export function createStackScreen<
+  const Screen extends React.ComponentType<any>,
+>(
+  config: StaticScreenConfig<
+    Screen,
+    StackNavigationState<ParamListBase>,
+    StackNavigationOptions,
+    StackNavigationEventMap,
+    StackNavigationProp<ParamListBase>
+  >
+) {
+  return config;
 }

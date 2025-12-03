@@ -1,7 +1,10 @@
 /**
  * Navigators
  */
-export { createNativeStackNavigator } from './navigators/createNativeStackNavigator';
+export {
+  createNativeStackNavigator,
+  createNativeStackScreen,
+} from './navigators/createNativeStackNavigator';
 
 /**
  * Views

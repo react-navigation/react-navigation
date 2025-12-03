@@ -7,6 +7,7 @@ import {
   type ParamListBase,
   type StaticConfig,
   type StaticParamList,
+  type StaticScreenConfig,
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -86,4 +87,18 @@ export function createDrawerNavigator<
 ): TypedNavigator<DrawerTypeBag<StaticParamList<{ config: Config }>>, Config>;
 export function createDrawerNavigator(config?: unknown) {
   return createNavigatorFactory(DrawerNavigator)(config);
+}
+
+export function createDrawerScreen<
+  const Screen extends React.ComponentType<any>,
+>(
+  config: StaticScreenConfig<
+    Screen,
+    DrawerNavigationState<ParamListBase>,
+    DrawerNavigationOptions,
+    DrawerNavigationEventMap,
+    DrawerNavigationProp<ParamListBase>
+  >
+) {
+  return config;
 }

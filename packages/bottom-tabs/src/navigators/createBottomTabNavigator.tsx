@@ -4,6 +4,7 @@ import {
   StackActions,
   type StaticConfig,
   type StaticParamList,
+  type StaticScreenConfig,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
@@ -117,4 +118,18 @@ export function createBottomTabNavigator<
 >;
 export function createBottomTabNavigator(config?: unknown) {
   return createNavigatorFactory(BottomTabNavigator)(config);
+}
+
+export function createBottomTabScreen<
+  const Screen extends React.ComponentType<any>,
+>(
+  config: StaticScreenConfig<
+    Screen,
+    TabNavigationState<ParamListBase>,
+    BottomTabNavigationOptions,
+    BottomTabNavigationEventMap,
+    BottomTabNavigationProp<ParamListBase>
+  >
+) {
+  return config;
 }

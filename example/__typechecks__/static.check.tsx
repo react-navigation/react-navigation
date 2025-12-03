@@ -18,6 +18,7 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   createStackNavigator,
+  createStackScreen,
   type StackNavigationProp,
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
@@ -580,3 +581,164 @@ switch (route.name) {
     >();
     break;
 }
+
+/**
+ * Infer types from typed screen component
+ */
+createStackNavigator({
+  screens: {
+    Profile: createStackScreen({
+      screen: (
+        _: StaticScreenProps<{ userId: string; filter?: 'recent' | 'popular' }>
+      ) => null,
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.name).toEqualTypeOf<string>();
+        expectTypeOf(route.params).toEqualTypeOf<{
+          userId: string;
+          filter?: 'recent' | 'popular';
+        }>();
+
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {
+          headerTitle: route.params.userId,
+        };
+      },
+      listeners: ({ route, navigation }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          userId: string;
+          filter?: 'recent' | 'popular';
+        }>();
+
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {};
+      },
+      layout: ({ route, navigation, children }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          userId: string;
+          filter?: 'recent' | 'popular';
+        }>();
+
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).toEqualTypeOf<{
+          userId: string;
+          filter?: 'recent' | 'popular';
+        }>();
+
+        return params.userId;
+      },
+      initialParams: {
+        filter: 'recent',
+        // @ts-expect-error
+        userId: 3,
+      },
+    }),
+  },
+});
+
+/**
+ * Handle screen component without optional params
+ */
+createStackNavigator({
+  screens: {
+    Details: createStackScreen({
+      screen: (
+        _: StaticScreenProps<{ itemId: number; info: string } | undefined>
+      ) => null,
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.name).toEqualTypeOf<string>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          | {
+              itemId: number;
+              info: string;
+            }
+          | undefined
+        >();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {};
+      },
+      listeners: ({ route, navigation }) => {
+        expectTypeOf(route.params).toEqualTypeOf<
+          | {
+              itemId: number;
+              info: string;
+            }
+          | undefined
+        >();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {};
+      },
+      layout: ({ route, navigation, children }) => {
+        expectTypeOf(route.params).toEqualTypeOf<
+          | {
+              itemId: number;
+              info: string;
+            }
+          | undefined
+        >();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).toEqualTypeOf<
+          | {
+              itemId: number;
+              info: string;
+            }
+          | undefined
+        >();
+
+        return params?.itemId.toString();
+      },
+      initialParams: {
+        itemId: 1,
+        info: 'Item 1',
+      },
+    }),
+  },
+});
+
+/**
+ * Handle screen component without typed route prop
+ */
+createStackNavigator({
+  screens: {
+    Settings: createStackScreen({
+      screen: () => null,
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.name).toEqualTypeOf<string>();
+        expectTypeOf(route.params).toEqualTypeOf<undefined>();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {};
+      },
+      listeners: ({ route, navigation }) => {
+        expectTypeOf(route.params).toEqualTypeOf<undefined>();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {};
+      },
+      layout: ({ route, navigation, children }) => {
+        expectTypeOf(route.params).toEqualTypeOf<undefined>();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).toEqualTypeOf<undefined>();
+
+        return 'static-id';
+      },
+      // @ts-expect-error
+      initialParams: {},
+    }),
+  },
+});

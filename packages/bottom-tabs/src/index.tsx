@@ -10,7 +10,10 @@ export { SceneStyleInterpolators, TransitionPresets, TransitionSpecs };
 /**
  * Navigators
  */
-export { createBottomTabNavigator } from './navigators/createBottomTabNavigator';
+export {
+  createBottomTabNavigator,
+  createBottomTabScreen,
+} from './navigators/createBottomTabNavigator';
 
 /**
  * Views

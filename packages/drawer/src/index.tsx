@@ -1,7 +1,10 @@
 /**
  * Navigators
  */
-export { createDrawerNavigator } from './navigators/createDrawerNavigator';
+export {
+  createDrawerNavigator,
+  createDrawerScreen,
+} from './navigators/createDrawerNavigator';
 
 /**
  * Views
