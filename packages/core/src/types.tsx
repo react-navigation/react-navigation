@@ -10,7 +10,7 @@ import type {
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
-import type { UnionToIntersection } from './utilities';
+import type { FlatType, UnionToIntersection } from './utilities';
 
 /**
  * Root navigator used in the app.
@@ -1051,7 +1051,15 @@ export type NavigatorScreenParams<ParamList extends {}> =
           };
     }[keyof ParamList];
 
-type PathConfigAlias = {
+type ParseConfig<Params> = {
+  [K in keyof Params]?: (value: string) => Params[K];
+};
+
+type StringifyConfig<Params> = {
+  [K in keyof Params]?: (value: Params[K]) => string;
+};
+
+type PathConfigAlias<Params> = {
   /**
    * Path string to match against.
    * e.g. `/users/:id` will match `/users/1` and extract `id` param as `1`.
@@ -1074,40 +1082,42 @@ type PathConfigAlias = {
    * }
    * ```
    */
-  parse?: Record<string, (value: string) => any>;
+  parse?: ParseConfig<Params>;
 };
 
-export type PathConfig<ParamList extends {}> = Partial<PathConfigAlias> & {
-  /**
-   * An object mapping the param name to a function which converts the param value to a string.
-   * By default, all params are converted to strings using `String(value)`.
-   *
-   * @example
-   * ```js
-   * stringify: {
-   *   date: (value) => value.toISOString()
-   * }
-   * ```
-   */
-  stringify?: Record<string, (value: any) => string>;
-  /**
-   * Additional path alias that will be matched to the same screen.
-   */
-  alias?: (string | PathConfigAlias)[];
-  /**
-   * Path configuration for child screens.
-   */
-  screens?: PathConfigMap<ParamList>;
-  /**
-   * Name of the initial route to use for the navigator when the path matches.
-   */
-  initialRouteName?: keyof ParamList;
-};
+export type PathConfig<Params> = FlatType<
+  Partial<PathConfigAlias<Params>> & {
+    /**
+     * An object mapping the param name to a function which converts the param value to a string.
+     * By default, all params are converted to strings using `String(value)`.
+     * Keys are constrained to valid param names when Params type is provided.
+     *
+     * @example
+     * ```js
+     * stringify: {
+     *   date: (value) => value.toISOString()
+     * }
+     * ```
+     */
+    stringify?: StringifyConfig<Params>;
+    /**
+     * Additional path alias that will be matched to the same screen.
+     */
+    alias?: (string | PathConfigAlias<Params>)[];
+  } & (NonNullable<Params> extends NavigatorScreenParams<infer ParamList>
+      ? {
+          /**
+           * Path configuration for child screens.
+           */
+          screens?: PathConfigMap<ParamList>;
+          /**
+           * Name of the initial route to use for the navigator when the path matches.
+           */
+          initialRouteName?: keyof ParamList;
+        }
+      : {})
+>;
 
 export type PathConfigMap<ParamList extends {}> = {
-  [RouteName in keyof ParamList]?: NonNullable<
-    ParamList[RouteName]
-  > extends NavigatorScreenParams<infer T extends {}>
-    ? string | PathConfig<T>
-    : string | Omit<PathConfig<{}>, 'screens' | 'initialRouteName'>;
+  [RouteName in keyof ParamList]?: string | PathConfig<ParamList[RouteName]>;
 };

@@ -71,7 +71,7 @@ const RootStack = createStackNavigator({
       linking: {
         path: 'feed/:sort',
         parse: {
-          sort: String,
+          sort: (value) => value as 'hot' | 'recent',
         },
       },
       initialParams: {
@@ -809,6 +809,63 @@ createBottomTabNavigator({
         >();
 
         return 'static-id';
+      },
+    }),
+  },
+});
+
+/**
+ * Linking config validates parse/stringify keys against params
+ */
+createStackNavigator({
+  screens: {
+    Profile: createStackScreen({
+      screen: (
+        _: StaticScreenProps<{
+          userId: string;
+          postId: number;
+          commentId: number;
+        }>
+      ) => null,
+      linking: {
+        path: 'profile/:userId/:postId',
+        parse: {
+          userId: String,
+          postId: Number,
+          // @ts-expect-error
+          commentId: String,
+        },
+        stringify: {
+          userId: String,
+          postId: String,
+          // @ts-expect-error
+          commentId: (value: number) => value,
+        },
+        alias: [
+          ':userId/:postId',
+          {
+            path: 'user/:userId/:postId',
+            parse: {
+              userId: String,
+              // @ts-expect-error
+              postId: String,
+            },
+          },
+        ],
+      },
+    }),
+    Details: createStackScreen({
+      screen: (_: StaticScreenProps<{ id: string }>) => null,
+      linking: 'details/:id',
+    }),
+    Item: createStackScreen({
+      screen: (_: StaticScreenProps<{ itemId: string; category: string }>) =>
+        null,
+      linking: {
+        path: 'item/:itemId/:category',
+        parse: {
+          itemId: String,
+        },
       },
     }),
   },

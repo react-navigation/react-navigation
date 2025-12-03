@@ -17,7 +17,7 @@ type Options<ParamList extends {}> = {
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
-type StringifyConfig = Record<string, (value: unknown) => string>;
+type StringifyConfig = Record<string, ((value: unknown) => string) | undefined>;
 
 type ConfigItem = {
   parts?: PatternPart[];
@@ -288,7 +288,7 @@ export function getPathFromState<ParamList extends {}>(
 }
 
 const createConfigItem = (
-  config: PathConfig<object> | string,
+  config: PathConfig<{}> | string,
   parentParts?: PatternPart[]
 ): ConfigItem => {
   if (typeof config === 'string') {
@@ -320,9 +320,10 @@ const createConfigItem = (
         ? getPatternParts(config.path)
         : undefined;
 
-  const screens = config.screens
-    ? createNormalizedConfigs(config.screens, parts)
-    : undefined;
+  const screens =
+    'screens' in config && config.screens
+      ? createNormalizedConfigs(config.screens, parts)
+      : undefined;
 
   return {
     parts,

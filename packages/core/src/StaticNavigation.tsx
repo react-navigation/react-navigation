@@ -184,13 +184,16 @@ export type StaticScreenConfig<
 
   /**
    * Linking config for the screen.
+   * This can be a string to specify the path, or an object with more options.
    *
    * @example
    * ```js
-   * linking: 'profile/:userId',
+   * linking: {
+   *   path: 'profile/:userId',
+   * },
    * ```
    */
-  linking?: PathConfig<ParamListBase> | string;
+  linking?: PathConfig<Params> | string;
 
   /**
    * Optional key for this screen.
@@ -253,7 +256,7 @@ type StaticConfigGroup<
    * },
    * ```
    */
-  linking?: LinkingForGroup<ParamList>;
+  linking?: LinkingForGroup;
   /**
    * Static navigation config or Component to render for the screen.
    */
@@ -521,8 +524,8 @@ export function createComponentForStaticNavigation(
   return NavigatorComponent;
 }
 
-type LinkingForGroup<ParamList extends ParamListBase> =
-  | Pick<PathConfig<ParamList>, 'path' | 'stringify' | 'parse'>
+type LinkingForGroup =
+  | Pick<PathConfig<any>, 'path' | 'stringify' | 'parse'>
   | string;
 
 type TreeForPathConfig = {
@@ -537,7 +540,7 @@ type TreeForPathConfig = {
     >;
     groups?: {
       [key: string]: {
-        linking?: LinkingForGroup<ParamListBase>;
+        linking?: LinkingForGroup;
         screens: StaticConfigScreens<
           ParamListBase,
           NavigationState,
@@ -577,7 +580,7 @@ export function createPathConfigForStaticNavigation(
   auto?: boolean
 ): PathConfigMap<ParamListBase> | undefined {
   let initialScreenHasPath: boolean = false;
-  let initialScreenConfig: PathConfig<ParamListBase> | undefined;
+  let initialScreenConfig: PathConfig<{}> | undefined;
 
   const createPathConfigForTree = (
     t: TreeForPathConfig,
@@ -594,7 +597,7 @@ export function createPathConfigForStaticNavigation(
         EventMapBase,
         Record<string, unknown>
       >,
-      groupLinking: LinkingForGroup<ParamListBase> | undefined,
+      groupLinking: LinkingForGroup | undefined,
       initialRouteName: string | undefined
     ) => {
       return Object.fromEntries(
@@ -613,7 +616,7 @@ export function createPathConfigForStaticNavigation(
             return 0;
           })
           .map(([key, item]) => {
-            const screenConfig: PathConfig<ParamListBase> = {};
+            const screenConfig: PathConfig<{}> = {};
             const groupPath =
               typeof groupLinking === 'string'
                 ? groupLinking
@@ -678,12 +681,13 @@ export function createPathConfigForStaticNavigation(
             }
 
             if (screens) {
+              // @ts-expect-error - we can't type this properly
               screenConfig.screens = screens;
             }
 
             if (
               auto &&
-              !screenConfig.screens &&
+              !('screens' in screenConfig && screenConfig.screens) &&
               // Skip generating path for screens that specify linking config as `undefined` or `null` explicitly
               !('linking' in item && item.linking == null)
             ) {

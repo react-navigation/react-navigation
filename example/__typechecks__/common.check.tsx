@@ -17,7 +17,9 @@ import {
   type DrawerNavigationState,
   type GenericNavigation,
   Link,
+  type LinkingOptions,
   type NavigationAction,
+  NavigationContainer,
   type NavigationContainerRef,
   type NavigationHelpers,
   type NavigationProp,
@@ -1052,4 +1054,226 @@ useRoute('Invalid');
   );
 
   expectTypeOf(routeNames).toEqualTypeOf<(keyof RootParamList)[]>();
+}
+
+/**
+ * Check for `linking` prop type validation based on ParamList
+ */
+{
+  const linking: LinkingOptions<RootStackParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        Home: {
+          screens: {
+            Feed: {
+              screens: {
+                Popular: 'popular',
+                Latest: 'latest',
+              },
+            },
+            Account: 'account',
+          },
+        },
+        PostDetails: 'post/:id',
+        Settings: 'settings',
+        Login: 'login',
+        NotFound: '*',
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<RootStackParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        PostDetails: {
+          path: 'post/:id/:section?',
+          parse: {
+            id: (value) => value,
+            section: (value) => value,
+          },
+          stringify: {
+            id: (value) => value,
+            section: (value) => value ?? '',
+          },
+        },
+        Albums: {
+          screens: {
+            Artist: {
+              path: 'artist/:id',
+              parse: {
+                id: (value) => value,
+              },
+              stringify: {
+                id: (value) => value,
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<RootStackParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        // @ts-expect-error
+        InvalidScreen: 'invalid',
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<RootStackParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        PostDetails: {
+          path: 'post/:id',
+          parse: {
+            // @ts-expect-error
+            invalidParam: (value) => value,
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<RootStackParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        PostDetails: {
+          path: 'post/:id',
+          stringify: {
+            // @ts-expect-error
+            invalidParam: (value) => String(value),
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<RootStackParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        PostDetails: {
+          path: 'post/:id',
+          parse: {
+            id: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string>();
+              return value;
+            },
+          },
+          stringify: {
+            id: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string>();
+              return value;
+            },
+            section: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string | undefined>();
+              return value ?? '';
+            },
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<RootStackParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        Home: {
+          screens: {
+            // @ts-expect-error
+            InvalidNested: 'invalid',
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<RootStackParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        PostDetails: {
+          path: 'post/:id',
+          // @ts-expect-error - PostDetails is a leaf route, not a navigator
+          screens: {},
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<RootStackParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        Home: {
+          initialRouteName: 'Feed',
+          screens: {
+            Feed: 'feed',
+            Account: 'account',
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<RootStackParamList> = {
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        Home: {
+          // @ts-expect-error
+          initialRouteName: 'InvalidRoute',
+          screens: {
+            Feed: 'feed',
+          },
+        },
+      },
+    },
+  };
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
 }
