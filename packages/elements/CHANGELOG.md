@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.8.5...@react-navigation/elements@2.9.0) (2025-12-03)
+
+### Features
+
+* allow more style properties on header ([9add31d](https://github.com/react-navigation/react-navigation/commit/9add31d638339be7801ecebada2681c89d4e5dfd)) - by @satya164
+
 ## [2.8.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.8.4...@react-navigation/elements@2.8.5) (2025-12-02)
 
 ### Bug Fixes

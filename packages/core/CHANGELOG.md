@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.13.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.13.3...@react-navigation/core@7.13.4) (2025-12-03)
+
+### Bug Fixes
+
+* always clear nested navigator params. fixes [#12876](https://github.com/react-navigation/react-navigation/issues/12876) ([#12885](https://github.com/react-navigation/react-navigation/issues/12885)) ([ac6e6a7](https://github.com/react-navigation/react-navigation/commit/ac6e6a7f9fc303f82d934805e2af0dc516673d76)) - by @satya164
+
 ## [7.13.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.13.2...@react-navigation/core@7.13.3) (2025-11-26)
 
 ### Bug Fixes
