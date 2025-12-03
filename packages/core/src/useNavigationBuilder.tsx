@@ -675,7 +675,10 @@ export function useNavigationBuilder<
         : nextState;
   }
 
-  const shouldUpdate = state !== nextState;
+  const shouldUpdate =
+    state !== nextState ||
+    typeof route?.params?.state === 'object' ||
+    typeof route?.params?.screen === 'string';
 
   useScheduleUpdate(() => {
     if (shouldUpdate) {
