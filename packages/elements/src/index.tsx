@@ -6,8 +6,6 @@ import searchIconLegacy from './assets/search-icon-legacy.png';
 
 export { Badge } from './Badge';
 export { Button } from './Button';
-export { Color } from './Color';
-export { Container, type Props as ContainerProps } from './Container';
 export { getDefaultSidebarWidth } from './getDefaultSidebarWidth';
 export { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 export { getHeaderTitle } from './Header/getHeaderTitle';
@@ -22,11 +20,7 @@ export { HeaderTitle } from './Header/HeaderTitle';
 export { useHeaderHeight } from './Header/useHeaderHeight';
 export { getLabel } from './Label/getLabel';
 export { Label } from './Label/Label';
-export { Lazy } from './Lazy';
-export { MissingIcon } from './MissingIcon';
 export { PlatformPressable } from './PlatformPressable';
-export { SafeAreaProviderCompat } from './SafeAreaProviderCompat';
-export { Screen } from './Screen';
 export { Text } from './Text';
 export { useFrameSize } from './useFrameSize';
 

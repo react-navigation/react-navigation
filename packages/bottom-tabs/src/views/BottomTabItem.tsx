@@ -1,9 +1,5 @@
-import {
-  Color,
-  getLabel,
-  Label,
-  PlatformPressable,
-} from '@react-navigation/elements';
+import { getLabel, Label, PlatformPressable } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import { type Route, useTheme } from '@react-navigation/native';
 import React from 'react';
 import {

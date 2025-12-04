@@ -4,9 +4,9 @@ import {
   HeaderBackContext,
   HeaderHeightContext,
   HeaderShownContext,
-  SafeAreaProviderCompat,
   useFrameSize,
 } from '@react-navigation/elements';
+import { SafeAreaProviderCompat } from '@react-navigation/elements/internal';
 import {
   NavigationProvider,
   type ParamListBase,

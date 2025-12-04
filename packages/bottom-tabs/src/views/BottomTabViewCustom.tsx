@@ -2,7 +2,7 @@ import {
   Container,
   Lazy,
   SafeAreaProviderCompat,
-} from '@react-navigation/elements';
+} from '@react-navigation/elements/internal';
 import {
   type NavigationAction,
   type ParamListBase,

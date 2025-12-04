@@ -1,9 +1,9 @@
+import { getLabel } from '@react-navigation/elements';
 import {
   Color,
-  getLabel,
   Lazy,
   SafeAreaProviderCompat,
-} from '@react-navigation/elements';
+} from '@react-navigation/elements/internal';
 import {
   CommonActions,
   type ParamListBase,

@@ -1,9 +1,8 @@
+import { getHeaderTitle, Header } from '@react-navigation/elements';
 import {
-  getHeaderTitle,
-  Header,
   SafeAreaProviderCompat,
   Screen as ScreenContent,
-} from '@react-navigation/elements';
+} from '@react-navigation/elements/internal';
 import {
   DrawerActions,
   type DrawerNavigationState,

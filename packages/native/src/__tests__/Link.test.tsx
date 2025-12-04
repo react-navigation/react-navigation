@@ -3,7 +3,7 @@ import {
   CommonActions,
   StackActions,
   TabActions,
-} from '@react-navigation/routers';
+} from '@react-navigation/core';
 import { fireEvent, render } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 

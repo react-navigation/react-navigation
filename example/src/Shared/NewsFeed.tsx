@@ -1,5 +1,6 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Color, PlatformPressable, Text } from '@react-navigation/elements';
+import { PlatformPressable, Text } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {

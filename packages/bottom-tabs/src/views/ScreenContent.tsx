@@ -1,4 +1,5 @@
-import { getHeaderTitle, Header, Screen } from '@react-navigation/elements';
+import { getHeaderTitle, Header } from '@react-navigation/elements';
+import { Screen } from '@react-navigation/elements/internal';
 import type { ParamListBase, Route } from '@react-navigation/native';
 import * as React from 'react';
 import { Platform, type StyleProp, type ViewStyle } from 'react-native';

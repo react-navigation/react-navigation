@@ -3,10 +3,12 @@ import {
   Header,
   HeaderBackButton,
   HeaderBackContext,
-  SafeAreaProviderCompat,
-  Screen,
   useHeaderHeight,
 } from '@react-navigation/elements';
+import {
+  SafeAreaProviderCompat,
+  Screen,
+} from '@react-navigation/elements/internal';
 import {
   type ParamListBase,
   type RouteProp,

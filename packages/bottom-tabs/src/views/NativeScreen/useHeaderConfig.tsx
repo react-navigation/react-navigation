@@ -1,4 +1,5 @@
-import { Color, getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
+import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import {
   type Route,
   type Theme,

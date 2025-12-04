@@ -1,4 +1,5 @@
-import { Badge, MissingIcon } from '@react-navigation/elements';
+import { Badge } from '@react-navigation/elements';
+import { MissingIcon } from '@react-navigation/elements/internal';
 import type { Route } from '@react-navigation/native';
 import React from 'react';
 import {

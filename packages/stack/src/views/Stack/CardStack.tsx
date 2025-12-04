@@ -1,7 +1,5 @@
-import {
-  getDefaultHeaderHeight,
-  SafeAreaProviderCompat,
-} from '@react-navigation/elements';
+import { getDefaultHeaderHeight } from '@react-navigation/elements';
+import { SafeAreaProviderCompat } from '@react-navigation/elements/internal';
 import type {
   LocaleDirection,
   ParamListBase,
