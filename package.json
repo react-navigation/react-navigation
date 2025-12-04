@@ -40,7 +40,7 @@
     "check-dependency-version-consistency": "^5.0.0",
     "commitlint": "^19.8.1",
     "eslint": "^9.29.0",
-    "eslint-config-satya164": "^5.1.5",
+    "eslint-config-satya164": "^5.1.6",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "jest": "^30.0.0",
     "npm-run-all2": "^8.0.4",
@@ -60,6 +60,7 @@
       "node_modules/(?!((jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context)/)"
     ],
     "moduleNameMapper": {
+      "@react-navigation/elements/internal": "<rootDir>/packages/elements/src/internal",
       "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src",
       "react-native-drawer-layout": "<rootDir>/packages/react-native-drawer-layout/src",
       "react-native-tab-view": "<rootDir>/packages/react-native-tab-view/src"
