@@ -1,4 +1,8 @@
-import type { NavigationState, ParamListBase } from '@react-navigation/routers';
+import type {
+  NavigationState,
+  ParamListBase,
+  Route,
+} from '@react-navigation/routers';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
@@ -16,6 +20,7 @@ import type {
 } from './types';
 import { useRoute } from './useRoute';
 import type {
+  AnyToUnknown,
   FlatType,
   KeysOf,
   UnionToIntersection,
@@ -58,11 +63,22 @@ type ParamListForGroups<
 
 type RouteType<Params> = Readonly<
   FlatType<
-    {
-      key: string;
-      name: string;
-      path?: string;
-    } & (undefined extends Params ? { params?: Params } : { params: Params })
+    Omit<Route<string, AnyToUnknown<Params>>, 'params'> &
+      Readonly<
+        undefined extends Params
+          ? {
+              /**
+               * Params for this route
+               */
+              params?: AnyToUnknown<Params>;
+            }
+          : {
+              /**
+               * Params for this route
+               */
+              params: AnyToUnknown<Params>;
+            }
+      >
   >
 >;
 
@@ -170,7 +186,7 @@ export type StaticScreenConfig<
    * }
    * ```
    */
-  initialParams?: Params extends object ? Partial<Params> : never;
+  initialParams?: AnyToUnknown<Params extends object ? Partial<Params> : never>;
 
   /**
    * Function to return an unique ID for this screen.
@@ -180,7 +196,7 @@ export type StaticScreenConfig<
    * getId: ({ params }) => params?.userId,
    * ```
    */
-  getId?: (props: { params: Params }) => string | undefined;
+  getId?: (props: { params: AnyToUnknown<Params> }) => string | undefined;
 
   /**
    * Linking config for the screen.
@@ -193,7 +209,7 @@ export type StaticScreenConfig<
    * },
    * ```
    */
-  linking?: PathConfig<Params> | string;
+  linking?: PathConfig<AnyToUnknown<Params>> | string;
 
   /**
    * Optional key for this screen.

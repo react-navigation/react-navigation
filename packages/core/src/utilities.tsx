@@ -21,3 +21,5 @@ export type UnionToIntersection<U> = (
   : never;
 
 export type UnknownToUndefined<T> = unknown extends T ? undefined : T;
+
+export type AnyToUnknown<T> = 0 extends 1 & T ? unknown : T;

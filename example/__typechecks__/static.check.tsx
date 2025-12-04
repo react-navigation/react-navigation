@@ -815,6 +815,41 @@ createBottomTabNavigator({
 });
 
 /**
+ * Params type is `unknown` when `createXScreen` isn't used
+ */
+createStackNavigator({
+  screens: {
+    Profile: {
+      screen: (_: StaticScreenProps<{ userId: string }>) => null,
+      options: ({ route }) => {
+        expectTypeOf(route.params).not.toBeAny();
+        expectTypeOf(route.params).toBeUnknown();
+
+        return {};
+      },
+      listeners: ({ route }) => {
+        expectTypeOf(route.params).not.toBeAny();
+        expectTypeOf(route.params).toBeUnknown();
+
+        return {};
+      },
+      layout: ({ route, children }) => {
+        expectTypeOf(route.params).not.toBeAny();
+        expectTypeOf(route.params).toBeUnknown();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).not.toBeAny();
+        expectTypeOf(params).toBeUnknown();
+
+        return 'static-id';
+      },
+    },
+  },
+});
+
+/**
  * Linking config validates parse/stringify keys against params
  */
 createStackNavigator({
