@@ -46,7 +46,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "^2.6.0",
+    "@react-navigation/elements": "workspace:^",
     "color": "^4.2.3",
     "react-native-drawer-layout": "workspace:^",
     "use-latest-callback": "^0.3.2"

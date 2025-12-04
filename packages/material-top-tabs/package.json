@@ -46,9 +46,9 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "^2.6.0",
+    "@react-navigation/elements": "workspace:^",
     "color": "^4.2.3",
-    "react-native-tab-view": "^4.1.2"
+    "react-native-tab-view": "workspace:^"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.0",

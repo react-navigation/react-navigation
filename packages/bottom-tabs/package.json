@@ -41,7 +41,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "^2.6.0",
+    "@react-navigation/elements": "workspace:^",
     "color": "^4.2.3",
     "sf-symbols-typescript": "^2.1.0"
   },
