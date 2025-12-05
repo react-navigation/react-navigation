@@ -20,7 +20,7 @@ const StackNavigator = (
 ) => {
   const { state, descriptors, NavigationContent } = useNavigationBuilder(
     StackRouter,
-    props
+    { ...props, meta: { name: 'test' } }
   );
 
   return (
