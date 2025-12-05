@@ -9,7 +9,8 @@ import {
   type StackRouterOptions,
   type StaticConfig,
   type StaticParamList,
-  type StaticScreenConfig,
+  type StaticScreenConfigInput,
+  type StaticScreenConfigResult,
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -120,14 +121,23 @@ export function createNativeStackNavigator(config?: unknown) {
   return createNavigatorFactory(NativeStackNavigator)(config);
 }
 
-export function createNativeStackScreen<const Screen>(
-  config: StaticScreenConfig<
+export function createNativeStackScreen<const Linking, const Screen>(
+  config: StaticScreenConfigInput<
+    Linking,
     Screen,
     StackNavigationState<ParamListBase>,
     NativeStackNavigationOptions,
     NativeStackNavigationEventMap,
     NativeStackNavigationProp<ParamListBase>
   >
-) {
+): StaticScreenConfigResult<
+  Linking,
+  Screen,
+  StackNavigationState<ParamListBase>,
+  NativeStackNavigationOptions,
+  NativeStackNavigationEventMap,
+  NativeStackNavigationProp<ParamListBase>
+> {
+  // @ts-expect-error: there is some issue with the generic inference here
   return config;
 }

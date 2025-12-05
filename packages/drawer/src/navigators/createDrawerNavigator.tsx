@@ -7,7 +7,8 @@ import {
   type ParamListBase,
   type StaticConfig,
   type StaticParamList,
-  type StaticScreenConfig,
+  type StaticScreenConfigInput,
+  type StaticScreenConfigResult,
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -89,14 +90,23 @@ export function createDrawerNavigator(config?: unknown) {
   return createNavigatorFactory(DrawerNavigator)(config);
 }
 
-export function createDrawerScreen<const Screen>(
-  config: StaticScreenConfig<
+export function createDrawerScreen<const Linking, const Screen>(
+  config: StaticScreenConfigInput<
+    Linking,
     Screen,
     DrawerNavigationState<ParamListBase>,
     DrawerNavigationOptions,
     DrawerNavigationEventMap,
     DrawerNavigationProp<ParamListBase>
   >
-) {
+): StaticScreenConfigResult<
+  Linking,
+  Screen,
+  DrawerNavigationState<ParamListBase>,
+  DrawerNavigationOptions,
+  DrawerNavigationEventMap,
+  DrawerNavigationProp<ParamListBase>
+> {
+  // @ts-expect-error: there is some issue with the generic inference here
   return config;
 }
