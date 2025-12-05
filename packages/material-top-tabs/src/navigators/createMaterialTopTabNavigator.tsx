@@ -3,7 +3,8 @@ import {
   type ParamListBase,
   type StaticConfig,
   type StaticParamList,
-  type StaticScreenConfig,
+  type StaticScreenConfigInput,
+  type StaticScreenConfigResult,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
@@ -92,14 +93,23 @@ export function createMaterialTopTabNavigator(config?: unknown) {
   return createNavigatorFactory(MaterialTopTabNavigator)(config);
 }
 
-export function createMaterialTopTabScreen<const Screen>(
-  config: StaticScreenConfig<
+export function createMaterialTopTabScreen<const Linking, const Screen>(
+  config: StaticScreenConfigInput<
+    Linking,
     Screen,
     TabNavigationState<ParamListBase>,
     MaterialTopTabNavigationOptions,
     MaterialTopTabNavigationEventMap,
     MaterialTopTabNavigationProp<ParamListBase>
   >
-) {
+): StaticScreenConfigResult<
+  Linking,
+  Screen,
+  TabNavigationState<ParamListBase>,
+  MaterialTopTabNavigationOptions,
+  MaterialTopTabNavigationEventMap,
+  MaterialTopTabNavigationProp<ParamListBase>
+> {
+  // @ts-expect-error: there is some issue with the generic inference here
   return config;
 }

@@ -23,3 +23,80 @@ export type UnionToIntersection<U> = (
 export type UnknownToUndefined<T> = unknown extends T ? undefined : T;
 
 export type AnyToUnknown<T> = 0 extends 1 & T ? unknown : T;
+
+/**
+ * Check if a function type has arguments.
+ */
+export type HasArguments<T extends (...args: any[]) => any> =
+  Parameters<T> extends []
+    ? false
+    : Parameters<T> extends [undefined?]
+      ? false
+      : true;
+
+/**
+ * Strip regex pattern from a path param.
+ * e.g. `userId([a-z]+)` -> `userId`
+ */
+export type StripRegex<Param extends string> =
+  Param extends `${infer Name}(${string})` ? Name : Param;
+
+/**
+ * Extract path params from a path string.
+ * e.g. `/foo/:userId/:postId` -> `{ userId: string; postId: string }`
+ * Supports optional params with `?` suffix.
+ */
+export type ExtractParamStrings<Path extends string> =
+  Path extends `${string}:${infer Param}?/${infer Rest}`
+    ? { [K in StripRegex<Param>]?: string } & ExtractParamStrings<Rest>
+    : Path extends `${string}:${infer Param}/${infer Rest}`
+      ? { [K in StripRegex<Param>]: string } & ExtractParamStrings<Rest>
+      : Path extends `${string}:${infer Param}?`
+        ? { [K in StripRegex<Param>]?: string }
+        : Path extends `${string}:${infer Param}`
+          ? { [K in StripRegex<Param>]: string }
+          : {};
+
+/**
+ * Extract the parsed params type from base params and parse functions.
+ * Applies the return type of parse functions to the corresponding params.
+ */
+export type ExtractParamsType<Params, Parse> = {
+  [K in keyof Params]: K extends keyof Parse
+    ? Parse[K] extends (value: string) => infer R
+      ? R
+      : Params[K]
+    : Params[K];
+};
+
+/**
+ * Infer the path string from a linking config.
+ */
+export type InferPath<T> = T extends { path: infer P extends string }
+  ? P
+  : never;
+
+/**
+ * Infer the parse functions from a linking config.
+ */
+export type InferParse<T> = T extends { parse: infer P } ? P : {};
+
+/**
+ * Infer the params type from a screen component or nested navigator.
+ */
+export type InferScreenParams<T> =
+  T extends React.ComponentType<{ route: { params: infer P } }>
+    ? P
+    : T extends { config: { screens: infer Screens } }
+      ? import('./types').NavigatorScreenParams<{
+          [K in keyof Screens]: Screens[K] extends React.ComponentType<{
+            route: { params: infer P };
+          }>
+            ? P
+            : Screens[K] extends { screen: infer S }
+              ? S extends React.ComponentType<{ route: { params: infer P } }>
+                ? P
+                : undefined
+              : undefined;
+        }>
+      : undefined;

@@ -4,7 +4,8 @@ import {
   StackActions,
   type StaticConfig,
   type StaticParamList,
-  type StaticScreenConfig,
+  type StaticScreenConfigInput,
+  type StaticScreenConfigResult,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
@@ -120,14 +121,23 @@ export function createBottomTabNavigator(config?: unknown) {
   return createNavigatorFactory(BottomTabNavigator)(config);
 }
 
-export function createBottomTabScreen<const Screen>(
-  config: StaticScreenConfig<
+export function createBottomTabScreen<const Linking, const Screen>(
+  config: StaticScreenConfigInput<
+    Linking,
     Screen,
     TabNavigationState<ParamListBase>,
     BottomTabNavigationOptions,
     BottomTabNavigationEventMap,
     BottomTabNavigationProp<ParamListBase>
   >
-) {
+): StaticScreenConfigResult<
+  Linking,
+  Screen,
+  TabNavigationState<ParamListBase>,
+  BottomTabNavigationOptions,
+  BottomTabNavigationEventMap,
+  BottomTabNavigationProp<ParamListBase>
+> {
+  // @ts-expect-error: there is some issue with the generic inference here
   return config;
 }

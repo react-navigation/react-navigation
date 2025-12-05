@@ -9,7 +9,8 @@ import {
   type StackRouterOptions,
   type StaticConfig,
   type StaticParamList,
-  type StaticScreenConfig,
+  type StaticScreenConfigInput,
+  type StaticScreenConfigResult,
   type TypedNavigator,
   useLocale,
   useNavigationBuilder,
@@ -118,14 +119,23 @@ export function createStackNavigator(config?: unknown) {
   return createNavigatorFactory(StackNavigator)(config);
 }
 
-export function createStackScreen<const Screen>(
-  config: StaticScreenConfig<
+export function createStackScreen<const Linking, const Screen>(
+  config: StaticScreenConfigInput<
+    Linking,
     Screen,
     StackNavigationState<ParamListBase>,
     StackNavigationOptions,
     StackNavigationEventMap,
     StackNavigationProp<ParamListBase>
   >
-) {
+): StaticScreenConfigResult<
+  Linking,
+  Screen,
+  StackNavigationState<ParamListBase>,
+  StackNavigationOptions,
+  StackNavigationEventMap,
+  StackNavigationProp<ParamListBase>
+> {
+  // @ts-expect-error: there is some issue with the generic inference here
   return config;
 }

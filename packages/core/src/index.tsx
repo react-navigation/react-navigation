@@ -23,7 +23,8 @@ export {
   type StaticConfig,
   type StaticNavigation,
   type StaticParamList,
-  type StaticScreenConfig,
+  type StaticScreenConfigInput,
+  type StaticScreenConfigResult,
   type StaticScreenProps,
 } from './StaticNavigation';
 export { ThemeContext } from './theming/ThemeContext';
