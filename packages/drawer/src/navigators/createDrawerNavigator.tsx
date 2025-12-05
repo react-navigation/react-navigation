@@ -51,6 +51,9 @@ function DrawerNavigator({
       screenOptions,
       screenLayout,
       router,
+      meta: {
+        name: '@react-navigation/drawer',
+      },
     });
 
   return (

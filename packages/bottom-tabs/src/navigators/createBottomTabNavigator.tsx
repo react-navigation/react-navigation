@@ -51,6 +51,9 @@ function BottomTabNavigator({
       screenOptions,
       screenLayout,
       router,
+      meta: {
+        name: '@react-navigation/bottom-tabs',
+      },
     });
 
   const focusedRouteKey = state.routes[state.index].key;

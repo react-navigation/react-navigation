@@ -22,6 +22,7 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
   stateRef: React.RefObject<State | null>;
+  meta: object;
 };
 
 /**
@@ -40,7 +41,10 @@ export function useNavigationHelpers<
   emitter,
   router,
   stateRef,
+  meta,
 }: Options<State, Action>) {
+  const [initialMeta] = React.useState(meta);
+
   const parentNavigationHelpers = React.useContext(NavigationContext);
 
   return React.useMemo(() => {
@@ -98,6 +102,7 @@ export function useNavigationHelpers<
 
         return getState();
       },
+      '~meta': initialMeta,
     } as NavigationHelpers<ParamListBase, EventMap> & ActionHelpers;
 
     return navigationHelpers;
@@ -105,6 +110,7 @@ export function useNavigationHelpers<
     router,
     parentNavigationHelpers,
     emitter.emit,
+    initialMeta,
     getState,
     onAction,
     onUnhandledAction,

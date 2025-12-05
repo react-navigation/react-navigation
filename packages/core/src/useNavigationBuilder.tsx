@@ -314,7 +314,14 @@ export function useNavigationBuilder<
     EventMap,
     any
   > &
-    RouterOptions
+    RouterOptions & {
+      /**
+       * Metadata for the navigator.
+       * This will be available on the navigation object.
+       * The object must be static and not change between renders.
+       */
+      meta: object;
+    }
 ) {
   const navigatorKey = useRegisterNavigator();
 
@@ -329,6 +336,7 @@ export function useNavigationBuilder<
     screenLayout,
     screenListeners,
     router: routerOverrides,
+    meta,
     ...rest
   } = options;
 
@@ -874,6 +882,7 @@ export function useNavigationBuilder<
     emitter,
     router,
     stateRef,
+    meta,
   });
 
   useFocusedListenersChildrenAdapter({
