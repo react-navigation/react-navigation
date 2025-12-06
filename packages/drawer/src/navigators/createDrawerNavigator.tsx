@@ -8,7 +8,9 @@ import {
   type StaticConfig,
   type StaticParamList,
   type StaticScreenConfigInput,
+  type StaticScreenConfigLinking,
   type StaticScreenConfigResult,
+  type StaticScreenConfigScreen,
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -90,7 +92,10 @@ export function createDrawerNavigator(config?: unknown) {
   return createNavigatorFactory(DrawerNavigator)(config);
 }
 
-export function createDrawerScreen<const Linking, const Screen>(
+export function createDrawerScreen<
+  const Linking extends StaticScreenConfigLinking,
+  const Screen extends StaticScreenConfigScreen,
+>(
   config: StaticScreenConfigInput<
     Linking,
     Screen,

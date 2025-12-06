@@ -10,7 +10,9 @@ import {
   type StaticConfig,
   type StaticParamList,
   type StaticScreenConfigInput,
+  type StaticScreenConfigLinking,
   type StaticScreenConfigResult,
+  type StaticScreenConfigScreen,
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -121,7 +123,10 @@ export function createNativeStackNavigator(config?: unknown) {
   return createNavigatorFactory(NativeStackNavigator)(config);
 }
 
-export function createNativeStackScreen<const Linking, const Screen>(
+export function createNativeStackScreen<
+  const Linking extends StaticScreenConfigLinking,
+  const Screen extends StaticScreenConfigScreen,
+>(
   config: StaticScreenConfigInput<
     Linking,
     Screen,

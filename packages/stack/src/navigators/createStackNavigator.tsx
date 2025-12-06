@@ -10,7 +10,9 @@ import {
   type StaticConfig,
   type StaticParamList,
   type StaticScreenConfigInput,
+  type StaticScreenConfigLinking,
   type StaticScreenConfigResult,
+  type StaticScreenConfigScreen,
   type TypedNavigator,
   useLocale,
   useNavigationBuilder,
@@ -119,7 +121,10 @@ export function createStackNavigator(config?: unknown) {
   return createNavigatorFactory(StackNavigator)(config);
 }
 
-export function createStackScreen<const Linking, const Screen>(
+export function createStackScreen<
+  const Linking extends StaticScreenConfigLinking,
+  const Screen extends StaticScreenConfigScreen,
+>(
   config: StaticScreenConfigInput<
     Linking,
     Screen,

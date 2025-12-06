@@ -34,28 +34,37 @@ export type HasArguments<T extends (...args: any[]) => any> =
       ? false
       : true;
 
+export type ValidPathPattern = `:${string}` | `${string}/:${string}`;
+
 /**
  * Strip regex pattern from a path param.
  * e.g. `userId([a-z]+)` -> `userId`
  */
-export type StripRegex<Param extends string> =
-  Param extends `${infer Name}(${string})` ? Name : Param;
+type StripRegex<Param extends string> = Param extends `${infer Name}(${string})`
+  ? Name
+  : Param;
+
+/**
+ * Extract a single path param from a segment.
+ * e.g. `:userId` -> `{ userId: string }`, `:id?` -> `{ id?: string }`
+ */
+type ExtractSegmentParam<Segment extends string> =
+  Segment extends `:${infer Param}?`
+    ? { [K in StripRegex<Param>]?: string }
+    : Segment extends `:${infer Param}`
+      ? { [K in StripRegex<Param>]: string }
+      : {};
 
 /**
  * Extract path params from a path string.
  * e.g. `/foo/:userId/:postId` -> `{ userId: string; postId: string }`
  * Supports optional params with `?` suffix.
+ * Params must start with `:` at the beginning of a segment (after `/`).
  */
 export type ExtractParamStrings<Path extends string> =
-  Path extends `${string}:${infer Param}?/${infer Rest}`
-    ? { [K in StripRegex<Param>]?: string } & ExtractParamStrings<Rest>
-    : Path extends `${string}:${infer Param}/${infer Rest}`
-      ? { [K in StripRegex<Param>]: string } & ExtractParamStrings<Rest>
-      : Path extends `${string}:${infer Param}?`
-        ? { [K in StripRegex<Param>]?: string }
-        : Path extends `${string}:${infer Param}`
-          ? { [K in StripRegex<Param>]: string }
-          : {};
+  Path extends `${infer Segment}/${infer Rest}`
+    ? ExtractSegmentParam<Segment> & ExtractParamStrings<Rest>
+    : ExtractSegmentParam<Path>;
 
 /**
  * Extract the parsed params type from base params and parse functions.

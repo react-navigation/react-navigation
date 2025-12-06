@@ -4,7 +4,9 @@ import {
   type StaticConfig,
   type StaticParamList,
   type StaticScreenConfigInput,
+  type StaticScreenConfigLinking,
   type StaticScreenConfigResult,
+  type StaticScreenConfigScreen,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
@@ -93,7 +95,10 @@ export function createMaterialTopTabNavigator(config?: unknown) {
   return createNavigatorFactory(MaterialTopTabNavigator)(config);
 }
 
-export function createMaterialTopTabScreen<const Linking, const Screen>(
+export function createMaterialTopTabScreen<
+  const Linking extends StaticScreenConfigLinking,
+  const Screen extends StaticScreenConfigScreen,
+>(
   config: StaticScreenConfigInput<
     Linking,
     Screen,

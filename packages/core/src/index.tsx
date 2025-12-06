@@ -24,7 +24,9 @@ export {
   type StaticNavigation,
   type StaticParamList,
   type StaticScreenConfigInput,
+  type StaticScreenConfigLinking,
   type StaticScreenConfigResult,
+  type StaticScreenConfigScreen,
   type StaticScreenProps,
 } from './StaticNavigation';
 export { ThemeContext } from './theming/ThemeContext';

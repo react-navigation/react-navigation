@@ -29,6 +29,7 @@ import type {
   InferPath,
   KeysOf,
   UnionToIntersection,
+  ValidPathPattern,
 } from './utilities';
 
 type ParamsForScreenComponent<T> = T extends (...args: any[]) => any
@@ -73,7 +74,7 @@ type ParamsForConfig<Linking, Screen> = undefined extends Linking
   ? ParamsForScreen<Screen>
   : // Only infer params from linking if it's a pattern (i.e., contains ':')
     // This avoids inferring non-literals like 'string'
-    Linking extends `${string}:${string}` | { path: `${string}:${string}` }
+    Linking extends ValidPathPattern | { path: ValidPathPattern }
     ? Screen extends StaticNavigation<any, any, any>
       ? FlatType<ParamsForLinking<Linking>> & ParamsForScreen<Screen>
       : // Don't combine if `undefined`, otherwise it'll result in `never`
@@ -133,8 +134,14 @@ type RouteType<Params> = Readonly<
   >
 >;
 
+export type StaticScreenConfigLinking = string | { path: string } | undefined;
+
+export type StaticScreenConfigScreen =
+  | React.ComponentType<any>
+  | StaticNavigation<any, any, any>;
+
 export type StaticScreenConfigResult<
-  Linking,
+  Linking extends StaticScreenConfigLinking,
   Screen,
   State extends NavigationState,
   ScreenOptions extends {},
@@ -270,8 +277,8 @@ export type StaticScreenConfigResult<
 };
 
 export type StaticScreenConfigInput<
-  Linking,
-  Screen,
+  Linking extends StaticScreenConfigLinking,
+  Screen extends StaticScreenConfigScreen,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,

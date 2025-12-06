@@ -1245,3 +1245,146 @@ createStackNavigator({
       | undefined;
   }>();
 }
+
+/**
+ * Only infers params for valid path patterns
+ */
+createStackScreen({
+  screen: () => null,
+  linking: 'static/path',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'end:',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'middle:end',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: ':start',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      start: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: '/:start',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      start: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: '/:start?',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      start?: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'middle/:part/end',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      part: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'end/:finish',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      finish: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'static/:optional?/path',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      optional?: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: ':first/:second?/static/:third?/path',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      first: string;
+      second?: string;
+      third?: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'static/path/:withRegex([0-9]+)',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      withRegex: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'static/:optionalRegex([a-z]+)?/path',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      optionalRegex?: string;
+    }>();
+
+    return {};
+  },
+});

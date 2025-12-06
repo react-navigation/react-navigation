@@ -5,7 +5,9 @@ import {
   type StaticConfig,
   type StaticParamList,
   type StaticScreenConfigInput,
+  type StaticScreenConfigLinking,
   type StaticScreenConfigResult,
+  type StaticScreenConfigScreen,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
@@ -121,7 +123,10 @@ export function createBottomTabNavigator(config?: unknown) {
   return createNavigatorFactory(BottomTabNavigator)(config);
 }
 
-export function createBottomTabScreen<const Linking, const Screen>(
+export function createBottomTabScreen<
+  const Linking extends StaticScreenConfigLinking,
+  const Screen extends StaticScreenConfigScreen,
+>(
   config: StaticScreenConfigInput<
     Linking,
     Screen,
