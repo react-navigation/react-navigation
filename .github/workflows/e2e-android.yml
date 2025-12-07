@@ -24,10 +24,8 @@ jobs:
       JAVA_DISTRIBUTION: 'zulu'
       JAVA_VERSION: '17'
       API_LEVEL: 34
-      EMULATOR_PROFILE: pixel_2
+      EMULATOR_PROFILE: pixel_5
       EMULATOR_RAM_SIZE: '4096M'
-      EMULATOR_DISK_SIZE: '10G'
-      EMULATOR_OPTIONS: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
       AVD_NAME: e2e_emulator
     steps:
       - name: Checkout
@@ -110,7 +108,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ env.API_LEVEL }}-${{ env.EMULATOR_PROFILE }}-${{ env.EMULATOR_RAM_SIZE }}-${{ env.EMULATOR_DISK_SIZE }}
+          key: avd-${{ env.API_LEVEL }}-${{ env.EMULATOR_PROFILE }}-${{ env.EMULATOR_RAM_SIZE }}
 
       - name: Create AVD and generate snapshot for caching
         if: steps.restore-avd-cache.outputs.cache-hit != 'true'
@@ -119,12 +117,11 @@ jobs:
           api-level: ${{ env.API_LEVEL }}
           profile: ${{ env.EMULATOR_PROFILE }}
           ram-size: ${{ env.EMULATOR_RAM_SIZE }}
-          disk-size: ${{ env.EMULATOR_DISK_SIZE }}
-          emulator-options: ${{ env.EMULATOR_OPTIONS }}
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
           avd-name: ${{ env.AVD_NAME }}
           disable-animations: false
           force-avd-creation: false
-          target: default
+          target: google_apis
           arch: x86_64
           script: echo "Generated AVD snapshot for caching."
 
@@ -182,12 +179,11 @@ jobs:
           api-level: ${{ env.API_LEVEL }}
           profile: ${{ env.EMULATOR_PROFILE }}
           ram-size: ${{ env.EMULATOR_RAM_SIZE }}
-          disk-size: ${{ env.EMULATOR_DISK_SIZE }}
-          emulator-options: ${{ env.EMULATOR_OPTIONS }}
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
           avd-name: ${{ env.AVD_NAME }}
           disable-animations: false
           force-avd-creation: false
-          target: default
+          target: google_apis
           arch: x86_64
           script: bash ${{ steps.e2e-test-script.outputs.file }}
           working-directory: example
