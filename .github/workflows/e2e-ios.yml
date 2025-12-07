@@ -157,8 +157,8 @@ jobs:
           done
         working-directory: example
 
-      - name: Store debug output if failed
-        if: failure()
+      - name: Store debug output
+        if: failure() || cancelled()
         uses: actions/upload-artifact@v4
         with:
           name: maestro-debug-output-ios
