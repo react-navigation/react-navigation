@@ -18,7 +18,7 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      MAESTRO_VERSION: 2.0.8
+      MAESTRO_VERSION: 2.0.10
       MAESTRO_CLI_NO_ANALYTICS: 1
       MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
       JAVA_DISTRIBUTION: 'zulu'
