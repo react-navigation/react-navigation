@@ -113,9 +113,10 @@ export function SceneView<
         return nextRoute;
       });
 
-      if (isArrayEqual(state.routes, routes)) {
-        setState(state);
-      } else {
+      // Make sure not to update state if routes haven't changed
+      // Otherwise this will result in params cleanup as well
+      // We only want to cleanup params when state changes - after they are used
+      if (!isArrayEqual(state.routes, routes)) {
         setState({
           ...state,
           routes,
