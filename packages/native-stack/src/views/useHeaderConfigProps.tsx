@@ -454,9 +454,8 @@ export function useHeaderConfigProps({
     backTitleVisible: isBackButtonDisplayModeAvailable
       ? undefined
       : headerBackButtonDisplayMode !== 'minimal',
-    backButtonDisplayMode: isBackButtonDisplayModeAvailable
-      ? headerBackButtonDisplayMode
-      : undefined,
+    backButtonDisplayMode: headerBackButtonDisplayMode,
+    backButtonUseModernImplementation: true,
     backTitleFontFamily,
     backTitleFontSize,
     blurEffect: headerBlurEffect,
