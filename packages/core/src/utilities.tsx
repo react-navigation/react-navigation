@@ -11,6 +11,11 @@ export type FlatType<T> = { [K in keyof T]: T[K] } & {};
 export type KeysOf<T> = T extends {} ? keyof T : never;
 
 /**
+ * Extract string keys from an object type.
+ */
+export type KeyOf<T extends {}> = Extract<keyof T, string>;
+
+/**
  * We get a union type when using keyof, but we want an intersection instead.
  * https://stackoverflow.com/a/50375286/1665026
  */
@@ -21,6 +26,12 @@ export type UnionToIntersection<U> = (
   : never;
 
 export type UnknownToUndefined<T> = unknown extends T ? undefined : T;
+
+/**
+ * Exclude undefined from a type.
+ * Similar to NonNullable but only excludes undefined, not null.
+ */
+export type NotUndefined<T> = T extends undefined ? never : T;
 
 export type AnyToUnknown<T> = 0 extends 1 & T ? unknown : T;
 
