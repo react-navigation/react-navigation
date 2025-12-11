@@ -396,13 +396,15 @@ type NavigationHelpersCommon<
 
 type ParamType<
   ParamList extends {},
-  RouteName extends keyof ParamList,
+  RouteName extends keyof ParamList | unknown,
   IsPartial extends boolean = false,
-> = ParamList[RouteName] extends undefined
-  ? undefined
-  : IsPartial extends true
-    ? Partial<ParamList[RouteName]>
-    : ParamList[RouteName];
+> = RouteName extends keyof ParamList
+  ? ParamList[RouteName] extends undefined
+    ? undefined
+    : IsPartial extends true
+      ? Partial<ParamList[RouteName]>
+      : ParamList[RouteName]
+  : unknown;
 
 type NavigationHelpersRoute<
   ParamList extends {},
@@ -834,9 +836,14 @@ export type NavigationContainerEventMap = {
  */
 export type GenericNavigation<
   ParamList extends {},
+  RouteName extends keyof ParamList | unknown = unknown,
   State extends NavigationState | undefined = NavigationState | undefined,
 > = Omit<
-  NavigationProp<ParamList>,
+  NavigationProp<
+    ParamList,
+    RouteName extends unknown ? keyof ParamList : RouteName,
+    NotUndefined<State>
+  >,
   'getState' | 'setParams' | 'replaceParams' | 'pushParams' | 'setOptions'
 > & {
   /**
@@ -853,20 +860,14 @@ export type GenericNavigation<
    *
    * @param params Partial params object for the current route.
    */
-  setParams(
-    // We don't know which route to set params for
-    params: unknown
-  ): void;
+  setParams(params: ParamType<ParamList, RouteName, true>): void;
 
   /**
    * Replace the param object for the route
    *
    * @param params Params object for the current route.
    */
-  replaceParams(
-    // We don't know which route to replace params for
-    params: unknown
-  ): void;
+  replaceParams(params: ParamType<ParamList, RouteName>): void;
 
   /**
    * Push new params for the route.
@@ -875,10 +876,7 @@ export type GenericNavigation<
    *
    * @param params Params object for the current route.
    */
-  pushParams(
-    // We don't know which route to push params for
-    params: unknown
-  ): void;
+  pushParams(params: ParamType<ParamList, RouteName>): void;
 
   /**
    * Update the options for the route.
@@ -926,6 +924,7 @@ type GenericNavigationList<
         : {
             [Key in RouteName]: GenericNavigation<
               ParamList,
+              RouteName,
               NavigationState<ParamList>
             >;
           });
