@@ -1070,6 +1070,16 @@ useNavigation('Invalid');
   expectTypeOf(routeNames).toEqualTypeOf<(keyof RootParamList)[]>();
 }
 
+{
+  const index = useNavigationState('TabChat', (state) => state.index);
+
+  expectTypeOf(index).toEqualTypeOf<number>();
+
+  const routeNames = useNavigationState('TabChat', (state) => state.routeNames);
+
+  expectTypeOf(routeNames).toEqualTypeOf<string[]>();
+}
+
 /**
  * Check for `linking` prop type validation based on ParamList
  */

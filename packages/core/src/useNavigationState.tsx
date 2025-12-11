@@ -21,7 +21,10 @@ type NavigationStateForNested<
 > = NavigationListForNested<Navigator>[RouteName] extends {
   getState: () => infer State;
 }
-  ? State
+  ? // State can be `undefined` in generic navigation prop
+    // But since we throw error if not in a screen,
+    // We don't need to account for that here
+    NonNullable<State>
   : never;
 
 /**
