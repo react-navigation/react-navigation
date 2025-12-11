@@ -43,7 +43,7 @@ const getTabBarIcon =
     <MaterialCommunityIcons name={name} color={color} size={size} />
   );
 
-type BottomTabParams = {
+export type BottomTabParams = {
   TabStack: NavigatorScreenParams<NativeStackParams>;
   TabAlbums: undefined;
   TabContacts: undefined;

@@ -46,6 +46,7 @@ import {
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
 
+import type { BottomTabParams } from '../src/Screens/BottomTabs';
 import type { StaticScreenParams } from '../src/Screens/Static';
 
 /**
@@ -878,6 +879,10 @@ useRoute('Invalid');
 /**
  * Check for useNavigation return type based on the arguments
  */
+
+// @ts-expect-error
+useNavigation('Invalid');
+
 {
   const navigation = useNavigation();
 
@@ -988,6 +993,15 @@ useRoute('Invalid');
   expectTypeOf(navigation.setOptions)
     .parameter(0)
     .toEqualTypeOf<Partial<StackNavigationOptions>>();
+}
+
+/**
+ * Routes from dynamic dynamic navigator should return generic navigation
+ */
+{
+  const navigation = useNavigation('TabChat');
+
+  expectTypeOf(navigation).toEqualTypeOf<GenericNavigation<BottomTabParams>>();
 }
 
 /**
