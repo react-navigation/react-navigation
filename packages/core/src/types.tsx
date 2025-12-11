@@ -910,20 +910,26 @@ type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
   ? ParamListRoute<ParamList>
   : Route<string>;
 
-type GenericNavigationList<ParamList extends {}> = UnionToIntersection<
+type GenericNavigationList<
+  ParamList extends {},
+  ExcludedRouteNames,
+> = UnionToIntersection<
   {
     [RouteName in keyof ParamList]: (NavigatorScreenParams<{}> extends ParamList[RouteName]
       ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<
           infer T
         >
-        ? GenericNavigationList<T>
+        ? GenericNavigationList<T, ExcludedRouteNames>
         : {}
-      : {}) & {
-      [Key in RouteName]: GenericNavigation<
-        ParamList,
-        NavigationState<ParamList>
-      >;
-    };
+      : {}) &
+      (RouteName extends ExcludedRouteNames
+        ? {}
+        : {
+            [Key in RouteName]: GenericNavigation<
+              ParamList,
+              NavigationState<ParamList>
+            >;
+          });
   }[keyof ParamList]
 >;
 
@@ -936,16 +942,19 @@ export type NavigationListForNavigator<Navigator> =
 
 export type NavigationListForNested<Navigator> = FlatType<
   NavigationListForNestedInternal<Navigator> &
-    Omit<
-      Navigator extends TypedNavigator<infer Bag, any>
-        ? GenericNavigationList<Bag['ParamList']>
-        : Navigator extends PrivateValueStore<[infer ParamList, any, any]>
-          ? ParamList extends {}
-            ? GenericNavigationList<ParamList>
-            : {}
-          : {},
-      keyof NavigationListForNestedInternal<Navigator>
-    >
+    (Navigator extends TypedNavigator<infer Bag, any>
+      ? GenericNavigationList<
+          Bag['ParamList'],
+          keyof NavigationListForNestedInternal<Navigator>
+        >
+      : Navigator extends PrivateValueStore<[infer ParamList, any, any]>
+        ? ParamList extends {}
+          ? GenericNavigationList<
+              ParamList,
+              keyof NavigationListForNestedInternal<Navigator>
+            >
+          : {}
+        : {})
 >;
 
 type NavigationListForNestedInternal<Navigator> =
