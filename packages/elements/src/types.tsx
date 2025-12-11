@@ -69,7 +69,7 @@ export type HeaderSearchBarOptions = {
    * A callback that gets called when the text changes.
    * It receives the current text value of the search input.
    */
-  onChangeText?: TextInputProps['onChange'];
+  onChange?: TextInputProps['onChange'];
   /**
    * Callback that is called when the submit button is pressed.
    * It receives the current text value of the search input.

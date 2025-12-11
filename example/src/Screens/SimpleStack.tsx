@@ -109,7 +109,7 @@ const ContactsScreen = ({
     navigation.setOptions({
       headerSearchBarOptions: {
         placeholder: 'Filter contacts',
-        onChangeText: (e) => {
+        onChange: (e) => {
           setQuery(e.nativeEvent.text);
         },
       },

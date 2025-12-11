@@ -59,7 +59,7 @@ function HeaderSearchBarInternal(
     placeholder = 'Search',
     enterKeyHint = 'search',
     cancelButtonText = 'Cancel',
-    onChangeText,
+    onChange,
     onClose,
     tintColor,
     pressColor,
@@ -106,16 +106,16 @@ function HeaderSearchBarInternal(
     clearText();
     // FIXME: figure out how to create a SyntheticEvent
     // @ts-expect-error: we don't have the native event here
-    onChangeText?.({ nativeEvent: { text: '' } });
-  }, [clearText, onChangeText]);
+    onChange?.({ nativeEvent: { text: '' } });
+  }, [clearText, onChange]);
 
   const cancelSearch = React.useCallback(() => {
     // FIXME: figure out how to create a SyntheticEvent
     // @ts-expect-error: we don't have the native event here
-    onChangeText?.({ nativeEvent: { text: '' } });
+    onChange?.({ nativeEvent: { text: '' } });
     onClose();
     setValue('');
-  }, [onChangeText, onClose]);
+  }, [onChange, onClose]);
 
   React.useEffect(() => {
     const unsubscribeBlur = navigation?.addListener('blur', cancelSearch);
@@ -217,7 +217,7 @@ function HeaderSearchBarInternal(
         <TextInput
           {...rest}
           ref={inputRef}
-          onChange={onChangeText}
+          onChange={onChange}
           onChangeText={setValue}
           autoFocus={autoFocus}
           autoCapitalize={

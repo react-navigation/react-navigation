@@ -426,7 +426,10 @@ export function useHeaderConfigProps({
       ) : null}
       {hasHeaderSearchBar ? (
         <ScreenStackHeaderSearchBarView>
-          <SearchBar {...headerSearchBarOptions} />
+          <SearchBar
+            {...headerSearchBarOptions}
+            onChangeText={headerSearchBarOptions.onChange}
+          />
         </ScreenStackHeaderSearchBarView>
       ) : null}
     </>
