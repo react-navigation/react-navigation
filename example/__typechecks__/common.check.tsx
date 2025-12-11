@@ -24,6 +24,7 @@ import {
   type NavigationHelpers,
   type NavigationProp,
   type NavigationRoute,
+  type NavigationState,
   type NavigatorScreenParams,
   type ParamListBase,
   type RootParamList,
@@ -1001,7 +1002,15 @@ useNavigation('Invalid');
 {
   const navigation = useNavigation('TabChat');
 
-  expectTypeOf(navigation).toEqualTypeOf<GenericNavigation<BottomTabParams>>();
+  expectTypeOf(navigation).toEqualTypeOf<
+    GenericNavigation<BottomTabParams, NavigationState<BottomTabParams>>
+  >();
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<string>();
+
+  expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<
+    (keyof BottomTabParams)[]
+  >();
 }
 
 /**
@@ -1077,7 +1086,7 @@ useNavigation('Invalid');
 
   const routeNames = useNavigationState('TabChat', (state) => state.routeNames);
 
-  expectTypeOf(routeNames).toEqualTypeOf<string[]>();
+  expectTypeOf(routeNames).toEqualTypeOf<(keyof BottomTabParams)[]>();
 }
 
 /**

@@ -831,7 +831,10 @@ export type NavigationContainerEventMap = {
  * The hook can be used in `NavigationContainer` directly, not inside of a navigator.
  * So navigator specific methods won't be available.
  */
-export type GenericNavigation<ParamList extends {}> = Omit<
+export type GenericNavigation<
+  ParamList extends {},
+  State extends NavigationState | undefined = NavigationState | undefined,
+> = Omit<
   NavigationProp<ParamList>,
   'getState' | 'setParams' | 'replaceParams' | 'pushParams' | 'setOptions'
 > & {
@@ -841,7 +844,7 @@ export type GenericNavigation<ParamList extends {}> = Omit<
    * This may return `undefined` if used outside of a navigator,
    * as the navigator may not have rendered yet
    */
-  getState(): NavigationState | undefined;
+  getState(): State;
 
   /**
    * Update the param object for the route.
@@ -916,7 +919,10 @@ type GenericNavigationList<ParamList extends {}> = UnionToIntersection<
         ? GenericNavigationList<T>
         : {}
       : {}) & {
-      [Key in RouteName]: GenericNavigation<ParamList>;
+      [Key in RouteName]: GenericNavigation<
+        ParamList,
+        NavigationState<ParamList>
+      >;
     };
   }[keyof ParamList]
 >;
