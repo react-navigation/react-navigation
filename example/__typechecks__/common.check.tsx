@@ -1052,11 +1052,7 @@ useNavigation('Invalid');
   const navigation = useNavigation('TabChat');
 
   expectTypeOf(navigation).toEqualTypeOf<
-    GenericNavigation<
-      BottomTabParams,
-      'TabChat',
-      NavigationState<BottomTabParams>
-    >
+    NavigationProp<BottomTabParams, 'TabChat'>
   >();
 
   expectTypeOf(navigation.setParams)

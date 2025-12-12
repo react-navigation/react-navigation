@@ -834,16 +834,8 @@ export type NavigationContainerEventMap = {
  * The hook can be used in `NavigationContainer` directly, not inside of a navigator.
  * So navigator specific methods won't be available.
  */
-export type GenericNavigation<
-  ParamList extends {},
-  RouteName extends keyof ParamList | unknown = unknown,
-  State extends NavigationState | undefined = NavigationState | undefined,
-> = Omit<
-  NavigationProp<
-    ParamList,
-    RouteName extends unknown ? keyof ParamList : RouteName,
-    NotUndefined<State>
-  >,
+export type GenericNavigation<ParamList extends {}> = Omit<
+  NavigationProp<ParamList>,
   'getState' | 'setParams' | 'replaceParams' | 'pushParams' | 'setOptions'
 > & {
   /**
@@ -852,7 +844,7 @@ export type GenericNavigation<
    * This may return `undefined` if used outside of a navigator,
    * as the navigator may not have rendered yet
    */
-  getState(): State;
+  getState(): NavigationState | undefined;
 
   /**
    * Update the param object for the route.
@@ -860,14 +852,20 @@ export type GenericNavigation<
    *
    * @param params Partial params object for the current route.
    */
-  setParams(params: ParamType<ParamList, RouteName, true>): void;
+  setParams(
+    // We don't know which route to set params for
+    params: unknown
+  ): void;
 
   /**
    * Replace the param object for the route
    *
    * @param params Params object for the current route.
    */
-  replaceParams(params: ParamType<ParamList, RouteName>): void;
+  replaceParams(
+    // We don't know which route to replace params for
+    params: unknown
+  ): void;
 
   /**
    * Push new params for the route.
@@ -876,7 +874,10 @@ export type GenericNavigation<
    *
    * @param params Params object for the current route.
    */
-  pushParams(params: ParamType<ParamList, RouteName>): void;
+  pushParams(
+    // We don't know which route to push params for
+    params: unknown
+  ): void;
 
   /**
    * Update the options for the route.
@@ -907,7 +908,7 @@ type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
   ? ParamListRoute<ParamList>
   : Route<string>;
 
-type GenericNavigationList<
+type BasicNavigationList<
   ParamList extends {},
   ExcludedRouteNames,
 > = UnionToIntersection<
@@ -916,17 +917,13 @@ type GenericNavigationList<
       ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<
           infer T
         >
-        ? GenericNavigationList<T, ExcludedRouteNames>
+        ? BasicNavigationList<T, ExcludedRouteNames>
         : {}
       : {}) &
       (RouteName extends ExcludedRouteNames
         ? {}
         : {
-            [Key in RouteName]: GenericNavigation<
-              ParamList,
-              RouteName,
-              NavigationState<ParamList>
-            >;
+            [Key in RouteName]: NavigationProp<ParamList, RouteName>;
           });
   }[keyof ParamList]
 >;
@@ -941,13 +938,13 @@ export type NavigationListForNavigator<Navigator> =
 export type NavigationListForNested<Navigator> = FlatType<
   NavigationListForNestedInternal<Navigator> &
     (Navigator extends TypedNavigator<infer Bag, any>
-      ? GenericNavigationList<
+      ? BasicNavigationList<
           Bag['ParamList'],
           keyof NavigationListForNestedInternal<Navigator>
         >
       : Navigator extends PrivateValueStore<[infer ParamList, any, any]>
         ? ParamList extends {}
-          ? GenericNavigationList<
+          ? BasicNavigationList<
               ParamList,
               keyof NavigationListForNestedInternal<Navigator>
             >
