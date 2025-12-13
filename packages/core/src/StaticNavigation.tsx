@@ -85,7 +85,7 @@ type ParamsForConfig<Linking, Screen> = undefined extends Linking
     : ParamsForScreen<Screen>;
 
 type ParamListForScreens<Screens> = {
-  [Key in KeysOf<Screens>]: Screens[Key] extends StaticScreenConfigResult<
+  [Key in KeysOf<Screens>]: Screens[Key] extends StaticScreenConfig<
     infer Linking,
     infer Screen,
     any,
@@ -140,20 +140,14 @@ export type StaticScreenConfigScreen =
   | React.ComponentType<any>
   | StaticNavigation<any, any, any>;
 
-export type StaticScreenConfigResult<
+export type StaticScreenConfig<
   Linking extends StaticScreenConfigLinking,
   Screen,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
   Navigation,
-  Params = Screen extends React.ComponentType<{}>
-    ? undefined
-    : Screen extends React.ComponentType<{ route: { params: infer P } }>
-      ? P
-      : Screen extends StaticNavigation<any, any, any>
-        ? NavigatorScreenParams<StaticParamList<Screen>>
-        : undefined,
+  Params = ParamsForConfig<Linking, Screen>,
 > = {
   /**
    * Static navigation config or Component to render for the screen.
@@ -276,23 +270,6 @@ export type StaticScreenConfigResult<
   navigationKey?: string;
 };
 
-export type StaticScreenConfigInput<
-  Linking extends StaticScreenConfigLinking,
-  Screen extends StaticScreenConfigScreen,
-  State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase,
-  Navigation,
-> = StaticScreenConfigResult<
-  Linking,
-  Screen,
-  State,
-  ScreenOptions,
-  EventMap,
-  Navigation,
-  ParamsForConfig<Linking, Screen>
->;
-
 type StaticConfigScreens<
   ParamList extends ParamListBase,
   State extends NavigationState,
@@ -303,7 +280,7 @@ type StaticConfigScreens<
   [RouteName in keyof ParamList]:
     | React.ComponentType<any>
     | StaticNavigation<any, any, any>
-    | StaticScreenConfigResult<
+    | StaticScreenConfig<
         | {
             path: string;
             parse?: Record<string, (value: string) => any>;

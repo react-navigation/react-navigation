@@ -7,9 +7,8 @@ import {
   type ParamListBase,
   type StaticConfig,
   type StaticParamList,
-  type StaticScreenConfigInput,
+  type StaticScreenConfig,
   type StaticScreenConfigLinking,
-  type StaticScreenConfigResult,
   type StaticScreenConfigScreen,
   type TypedNavigator,
   useNavigationBuilder,
@@ -96,7 +95,7 @@ export function createDrawerScreen<
   const Linking extends StaticScreenConfigLinking,
   const Screen extends StaticScreenConfigScreen,
 >(
-  config: StaticScreenConfigInput<
+  config: StaticScreenConfig<
     Linking,
     Screen,
     DrawerNavigationState<ParamListBase>,
@@ -104,14 +103,6 @@ export function createDrawerScreen<
     DrawerNavigationEventMap,
     DrawerNavigationProp<ParamListBase>
   >
-): StaticScreenConfigResult<
-  Linking,
-  Screen,
-  DrawerNavigationState<ParamListBase>,
-  DrawerNavigationOptions,
-  DrawerNavigationEventMap,
-  DrawerNavigationProp<ParamListBase>
-> {
-  // @ts-expect-error: there is some issue with the generic inference here
+) {
   return config;
 }

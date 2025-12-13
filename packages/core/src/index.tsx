@@ -23,9 +23,8 @@ export {
   type StaticConfig,
   type StaticNavigation,
   type StaticParamList,
-  type StaticScreenConfigInput,
+  type StaticScreenConfig,
   type StaticScreenConfigLinking,
-  type StaticScreenConfigResult,
   type StaticScreenConfigScreen,
   type StaticScreenProps,
 } from './StaticNavigation';
