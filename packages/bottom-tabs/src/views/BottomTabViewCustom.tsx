@@ -24,6 +24,7 @@ import type {
   BottomTabNavigationHelpers,
   BottomTabNavigationOptions,
 } from '../types';
+import { BottomTabAnimationContext } from '../utils/BottomTabAnimationContext';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
@@ -240,11 +241,11 @@ export function BottomTabViewCustom({
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
+          const progress = tabAnims[route.key];
+
           const { sceneStyle } =
             sceneStyleInterpolator?.({
-              current: {
-                progress: tabAnims[route.key],
-              },
+              current: { progress },
             }) ?? {};
 
           const animationEnabled = hasAnimation(descriptor.options);
@@ -268,7 +269,9 @@ export function BottomTabViewCustom({
                   <BottomTabBarHeightContext.Provider
                     value={tabBarPosition === 'bottom' ? tabBarHeight : 0}
                   >
-                    {render()}
+                    <BottomTabAnimationContext.Provider value={{ progress }}>
+                      {render()}
+                    </BottomTabAnimationContext.Provider>
                   </BottomTabBarHeightContext.Provider>
                 </ScreenContent>
               </Lazy>
