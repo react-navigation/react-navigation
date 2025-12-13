@@ -134,7 +134,53 @@ type RouteType<Params> = Readonly<
   >
 >;
 
-export type StaticScreenConfigLinking = string | { path: string } | undefined;
+type StaticScreenConfigLinkingAlias = {
+  /**
+   * Path string to match against.
+   * e.g. `/users/:id` will match `/users/1` and extract `id` param as `1`.
+   */
+  path: string;
+  /**
+   * Whether the path should be consider parent paths or use the exact path.
+   * By default, paths are relating to the path config on the parent screen.
+   * If `exact` is set to `true`, the parent path configuration is not used.
+   */
+  exact?: boolean;
+  /**
+   * An object mapping the param name to a function which parses the param value.
+   *
+   * @example
+   * ```js
+   * parse: {
+   *   id: Number,
+   *   date: (value) => new Date(value)
+   * }
+   * ```
+   */
+  parse?: Record<string, (value: string) => unknown>;
+  /**
+   * An object mapping the param name to a function which converts the param value to a string.
+   * By default, all params are converted to strings using `String(value)`.
+   *
+   * @example
+   * ```js
+   * stringify: {
+   *   date: (value) => value.toISOString()
+   * }
+   * ```
+   */
+  stringify?: Record<string, (value: unknown) => string>;
+};
+
+export type StaticScreenConfigLinking =
+  | string
+  | (StaticScreenConfigLinkingAlias & {
+      /**
+       * Additional path alias that will be matched to the same screen.
+       */
+      alias?: (string | StaticScreenConfigLinkingAlias)[];
+    })
+  | undefined;
 
 export type StaticScreenConfigScreen =
   | React.ComponentType<any>
@@ -259,6 +305,9 @@ export type StaticScreenConfig<
    * ```js
    * linking: {
    *   path: 'profile/:userId',
+   *   parse: {
+   *     userId: Number,
+   *   },
    * },
    * ```
    */
