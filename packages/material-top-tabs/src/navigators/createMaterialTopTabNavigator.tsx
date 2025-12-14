@@ -25,7 +25,7 @@ import { MaterialTopTabView } from '../views/MaterialTopTabView';
 function MaterialTopTabNavigator({
   initialRouteName,
   backBehavior,
-  UNSTABLE_routeNamesChangeBehavior,
+  routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
@@ -44,7 +44,7 @@ function MaterialTopTabNavigator({
     >(TabRouter, {
       initialRouteName,
       backBehavior,
-      UNSTABLE_routeNamesChangeBehavior,
+      routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,

@@ -27,7 +27,7 @@ import { BottomTabView } from '../views/BottomTabViewCommon';
 function BottomTabNavigator({
   initialRouteName,
   backBehavior,
-  UNSTABLE_routeNamesChangeBehavior,
+  routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
@@ -46,7 +46,7 @@ function BottomTabNavigator({
     >(TabRouter, {
       initialRouteName,
       backBehavior,
-      UNSTABLE_routeNamesChangeBehavior,
+      routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,

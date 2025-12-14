@@ -517,7 +517,7 @@ export function useNavigationBuilder<
       );
 
       if (
-        options.UNSTABLE_routeNamesChangeBehavior === 'lastUnhandled' &&
+        options.routeNamesChangeBehavior === 'lastUnhandled' &&
         doesStateHaveOnlyInvalidRoutes(stateBeforeInitialization)
       ) {
         return [stateBeforeInitialization, hydratedState, true];
@@ -550,7 +550,7 @@ export function useNavigationBuilder<
   // It's possible that they were absent due to conditional render
   // Store this state so we can reuse it if the routes change later
   if (
-    options.UNSTABLE_routeNamesChangeBehavior === 'lastUnhandled' &&
+    options.routeNamesChangeBehavior === 'lastUnhandled' &&
     stateBeforeInitialization &&
     unhandledState !== stateBeforeInitialization
   ) {
@@ -618,7 +618,7 @@ export function useNavigationBuilder<
       route.params !== previousParams
     ) {
       if (
-        options.UNSTABLE_routeNamesChangeBehavior === 'lastUnhandled' &&
+        options.routeNamesChangeBehavior === 'lastUnhandled' &&
         doesStateHaveOnlyInvalidRoutes(route.params.state)
       ) {
         if (route.params.state !== unhandledState) {
@@ -634,7 +634,7 @@ export function useNavigationBuilder<
         route.params !== previousParams)
     ) {
       if (
-        options.UNSTABLE_routeNamesChangeBehavior === 'lastUnhandled' &&
+        options.routeNamesChangeBehavior === 'lastUnhandled' &&
         !routeNames.includes(route.params.screen)
       ) {
         const state = getStateFromParams(route.params);
@@ -830,7 +830,7 @@ export function useNavigationBuilder<
 
   const onUnhandledAction = useLatestCallback((action: NavigationAction) => {
     if (
-      options.UNSTABLE_routeNamesChangeBehavior === 'lastUnhandled' &&
+      options.routeNamesChangeBehavior === 'lastUnhandled' &&
       action.type === 'NAVIGATE' &&
       action.payload != null &&
       'name' in action.payload &&

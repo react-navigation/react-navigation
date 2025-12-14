@@ -27,7 +27,7 @@ import { NativeStackView } from '../views/NativeStackView';
 
 function NativeStackNavigator({
   initialRouteName,
-  UNSTABLE_routeNamesChangeBehavior,
+  routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
@@ -45,7 +45,7 @@ function NativeStackNavigator({
       NativeStackNavigationEventMap
     >(StackRouter, {
       initialRouteName,
-      UNSTABLE_routeNamesChangeBehavior,
+      routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,

@@ -212,7 +212,7 @@ export function AuthFlow(
 
   return (
     <AuthContext.Provider value={authContext}>
-      <SimpleStack.Navigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+      <SimpleStack.Navigator routeNamesChangeBehavior="lastUnhandled">
         {!isSignedIn ? (
           <SimpleStack.Screen
             name="SignIn"

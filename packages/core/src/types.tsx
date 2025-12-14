@@ -165,7 +165,7 @@ export type DefaultNavigatorOptions<
    * - Direct navigation is only handled for `NAVIGATE` actions.
    * - Unhandled state is restored only if the current state becomes invalid, i.e. it doesn't contain any currently defined screens.
    */
-  UNSTABLE_routeNamesChangeBehavior?: 'firstMatch' | 'lastUnhandled';
+  routeNamesChangeBehavior?: 'firstMatch' | 'lastUnhandled';
 };
 
 export type EventMapBase = Record<

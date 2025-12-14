@@ -28,7 +28,7 @@ import { StackView } from '../views/Stack/StackView';
 
 function StackNavigator({
   initialRouteName,
-  UNSTABLE_routeNamesChangeBehavior,
+  routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
@@ -48,7 +48,7 @@ function StackNavigator({
       StackNavigationEventMap
     >(StackRouter, {
       initialRouteName,
-      UNSTABLE_routeNamesChangeBehavior,
+      routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,
