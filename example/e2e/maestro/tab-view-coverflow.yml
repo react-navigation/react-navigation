@@ -1,0 +1,52 @@
+appId: ${APP_ID}
+name: Tab View - Coverflow
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: tab-view/coverflow
+      TEXT: 'Homogenic'
+- assertVisible:
+    text: 'Homogenic'
+- swipe:
+    direction: LEFT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'Number of the Beast'
+    timeout: 1500
+- swipe:
+    direction: LEFT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: "It's Blitz"
+    timeout: 1500
+- swipe:
+    direction: RIGHT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'Number of the Beast'
+    timeout: 1500
+- swipe:
+    direction: RIGHT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'Homogenic'
+    timeout: 1500
+- swipe:
+    direction: RIGHT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'Bat Out of Hell'
+    timeout: 1500
+- swipe:
+    direction: LEFT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'Homogenic'
+    timeout: 1500
