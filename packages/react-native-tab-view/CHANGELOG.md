@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.1](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.2.0...react-native-tab-view@4.2.1) (2025-12-15)
+
+### Bug Fixes
+
+* react-native-tab-view glitching on initial load ([#12627](https://github.com/react-navigation/react-navigation/issues/12627)) ([a4a8427](https://github.com/react-navigation/react-navigation/commit/a4a8427b4bd019138c6bc7f6f6214fbf5436a873)) - by @adamgrzybowski
+
 # [4.2.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.1.3...react-native-tab-view@4.2.0) (2025-10-22)
 
 ### Features
