@@ -4749,7 +4749,7 @@ __metadata:
     react-native-edge-to-edge: "npm:^1.6.1"
     react-native-gesture-handler: "npm:~2.28.0"
     react-native-monorepo-config: "npm:^0.3.0"
-    react-native-pager-view: "npm:6.9.1"
+    react-native-pager-view: "npm:^7.1.0-alpha.4"
     react-native-reanimated: "npm:4.1.3"
     react-native-safe-area-context: "npm:~5.6.0"
     react-native-screens: "npm:^4.18.0"
@@ -4778,7 +4778,7 @@ __metadata:
     react: "npm:19.1.0"
     react-native: "npm:0.81.4"
     react-native-builder-bob: "npm:^0.40.12"
-    react-native-pager-view: "npm:6.9.1"
+    react-native-pager-view: "npm:^7.1.0-alpha.4"
     react-native-safe-area-context: "npm:~5.6.0"
     react-native-tab-view: "workspace:^"
     react-test-renderer: "npm:19.1.0"
@@ -4787,7 +4787,7 @@ __metadata:
     "@react-navigation/native": "workspace:^"
     react: ">= 19.0.0"
     react-native: "*"
-    react-native-pager-view: ">= 6.0.0"
+    react-native-pager-view: ">= 6.0.0 || ^7.1.0-alpha.4"
     react-native-safe-area-context: ">= 5.5.0"
   languageName: unknown
   linkType: soft
@@ -14362,13 +14362,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-pager-view@npm:6.9.1":
-  version: 6.9.1
-  resolution: "react-native-pager-view@npm:6.9.1"
+"react-native-pager-view@npm:^7.1.0-alpha.4":
+  version: 7.1.0-alpha.4
+  resolution: "react-native-pager-view@npm:7.1.0-alpha.4"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/c5229d230734ad9dad0b1e296168f0eebc5cff1b4b63201266ee7d5ecadc2e9c584b426b4ef146718c2e581dfcf63914174133b3ed1657294ccd437c22dbbc05
+  checksum: 10c0/41fd0a98a0d9ad4a50723760b045caf85e42bea3b943dc37a8c9bcc15be93fb713a2e67e37023d592cd3306030b2913cddf0947415b1072f041bb16e5dc7ee0a
   languageName: node
   linkType: hard
 
@@ -14420,14 +14420,14 @@ __metadata:
     react: "npm:19.1.0"
     react-native: "npm:0.81.4"
     react-native-builder-bob: "npm:^0.40.12"
-    react-native-pager-view: "npm:6.9.1"
+    react-native-pager-view: "npm:^7.1.0-alpha.4"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
   peerDependencies:
     react: ">= 19.0.0"
     react-native: "*"
-    react-native-pager-view: ">= 6.0.0"
+    react-native-pager-view: ">= 6.0.0 || ^7.1.0-alpha.4"
   languageName: unknown
   linkType: soft
 
