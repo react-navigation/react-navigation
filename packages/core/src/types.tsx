@@ -513,8 +513,8 @@ export type RouteProp<
 > = Route<Extract<RouteName, string>, ParamList[RouteName]>;
 
 export type CompositeNavigationProp<
-  A extends NavigationProp<ParamListBase, string, any, any, any>,
-  B extends NavigationProp<ParamListBase, string, any, any, any>,
+  A extends NavigationProp<ParamListBase, any, any, any, any>,
+  B extends NavigationProp<ParamListBase, any, any, any, any>,
 > = Omit<A & B, keyof NavigationProp<any, any, any, any, any>> &
   Omit<
     NavigationProp<
@@ -908,22 +908,38 @@ type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
   ? ParamListRoute<ParamList>
   : Route<string>;
 
+type BasicNavigationComposite<
+  Navigation extends NavigationProp<any, any, any, any, any>,
+  Parent,
+> =
+  Parent extends NavigationProp<any, any, any, any, any>
+    ? CompositeNavigationProp<Navigation, Parent>
+    : Navigation;
+
 type BasicNavigationList<
   ParamList extends {},
   ExcludedRouteNames,
+  Parent extends NavigationProp<any, any, any, any, any> | undefined,
 > = UnionToIntersection<
   {
     [RouteName in keyof ParamList]: (NavigatorScreenParams<{}> extends ParamList[RouteName]
       ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<
           infer T
         >
-        ? BasicNavigationList<T, ExcludedRouteNames>
+        ? BasicNavigationList<
+            T,
+            ExcludedRouteNames,
+            NavigationProp<ParamList, RouteName>
+          >
         : {}
       : {}) &
       (RouteName extends ExcludedRouteNames
         ? {}
         : {
-            [Key in RouteName]: NavigationProp<ParamList, RouteName>;
+            [Key in RouteName]: BasicNavigationComposite<
+              NavigationProp<ParamList, RouteName>,
+              Parent
+            >;
           });
   }[keyof ParamList]
 >;
@@ -940,13 +956,15 @@ export type NavigationListForNested<Navigator> = FlatType<
     (Navigator extends TypedNavigator<infer Bag, any>
       ? BasicNavigationList<
           Bag['ParamList'],
-          keyof NavigationListForNestedInternal<Navigator>
+          keyof NavigationListForNestedInternal<Navigator>,
+          undefined
         >
       : Navigator extends PrivateValueStore<[infer ParamList, any, any]>
         ? ParamList extends {}
           ? BasicNavigationList<
               ParamList,
-              keyof NavigationListForNestedInternal<Navigator>
+              keyof NavigationListForNestedInternal<Navigator>,
+              undefined
             >
           : {}
         : {})

@@ -1052,7 +1052,10 @@ useNavigation('Invalid');
   const navigation = useNavigation('TabChat');
 
   expectTypeOf(navigation).toEqualTypeOf<
-    NavigationProp<BottomTabParamList, 'TabChat'>
+    CompositeNavigationProp<
+      NavigationProp<BottomTabParamList, 'TabChat'>,
+      NavigationProp<RootParamList, 'BottomTabs'>
+    >
   >();
 
   expectTypeOf(navigation.setParams)
@@ -1072,6 +1075,10 @@ useNavigation('Invalid');
   expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<
     (keyof BottomTabParamList)[]
   >();
+
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'TabChat' | 'BottomTabs' | undefined>();
 }
 
 /**
