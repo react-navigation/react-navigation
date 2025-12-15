@@ -56,6 +56,7 @@ export function Albums(props: Partial<ScrollViewProps>) {
           <View
             // eslint-disable-next-line @eslint-react/no-array-index-key
             key={i}
+            testID={`album-${i}`}
             style={[
               styles.item,
               Platform.OS !== 'web' && {

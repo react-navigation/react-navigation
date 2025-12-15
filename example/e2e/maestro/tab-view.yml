@@ -1,8 +1,0 @@
-appId: ${APP_ID}
-name: Tab View
----
-- runFlow:
-    file: ../launch.yml
-    env:
-      LINK: tab-view
-      TEXT: 'TabView Examples'
