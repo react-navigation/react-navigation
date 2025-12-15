@@ -1,0 +1,37 @@
+appId: ${APP_ID}
+name: Drawer View - Front Right
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: drawer-view?type=front&position=right
+      TEXT: 'Open drawer'
+- assertVisible:
+    text: 'Change type (front)'
+- assertVisible:
+    text: 'Change position (right)'
+- swipe:
+    direction: LEFT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'Close'
+    timeout: 1000
+- tapOn:
+    text: 'Close'
+- extendedWaitUntil:
+    visible:
+      text: 'Open drawer'
+    timeout: 1000
+- tapOn:
+    text: 'Open drawer'
+- extendedWaitUntil:
+    visible:
+      text: 'Close'
+    timeout: 1000
+- tapOn:
+    text: 'Close'
+- extendedWaitUntil:
+    visible:
+      text: 'Open drawer'
+    timeout: 1000

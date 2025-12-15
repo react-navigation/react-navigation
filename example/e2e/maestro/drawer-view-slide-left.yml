@@ -1,0 +1,37 @@
+appId: ${APP_ID}
+name: Drawer View - Slide Left
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: drawer-view?type=slide&position=left
+      TEXT: 'Open drawer'
+- assertVisible:
+    text: 'Change type (slide)'
+- assertVisible:
+    text: 'Change position (left)'
+- swipe:
+    direction: RIGHT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'Close'
+    timeout: 1000
+- tapOn:
+    text: 'Close'
+- extendedWaitUntil:
+    visible:
+      text: 'Open drawer'
+    timeout: 1000
+- tapOn:
+    text: 'Open drawer'
+- extendedWaitUntil:
+    visible:
+      text: 'Close'
+    timeout: 1000
+- tapOn:
+    text: 'Close'
+- extendedWaitUntil:
+    visible:
+      text: 'Open drawer'
+    timeout: 1000
