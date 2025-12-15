@@ -12,23 +12,25 @@ import type {
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-type DynamicBottomTabParams = {
+type DynamicBottomTabParamList = {
   [key: `tab-${number}`]: undefined;
 };
 
-const linking: PathConfigMap<DynamicBottomTabParams> = {
-  'tab-0': 'tab/0',
-  'tab-1': 'tab/1',
-  'tab-2': 'tab/2',
-  'tab-3': 'tab/3',
-  'tab-4': 'tab/4',
-  'tab-5': 'tab/5',
-};
+const linking = {
+  screens: {
+    'tab-0': 'tab/0',
+    'tab-1': 'tab/1',
+    'tab-2': 'tab/2',
+    'tab-3': 'tab/3',
+    'tab-4': 'tab/4',
+    'tab-5': 'tab/5',
+  },
+} satisfies { screens: PathConfigMap<DynamicBottomTabParamList> };
 
-const BottomTabs = createBottomTabNavigator<DynamicBottomTabParams>();
+const BottomTabs = createBottomTabNavigator<DynamicBottomTabParamList>();
 
 export function DynamicTabs(
-  _: StaticScreenProps<NavigatorScreenParams<DynamicBottomTabParams>>
+  _: StaticScreenProps<NavigatorScreenParams<DynamicBottomTabParamList>>
 ) {
   const [tabs, setTabs] = React.useState([0, 1]);
 
@@ -37,7 +39,7 @@ export function DynamicTabs(
       implementation="custom"
       screenOptions={({
         navigation,
-      }: BottomTabScreenProps<DynamicBottomTabParams>) => ({
+      }: BottomTabScreenProps<DynamicBottomTabParamList>) => ({
         headerShown: true,
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />

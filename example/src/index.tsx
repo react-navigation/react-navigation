@@ -267,7 +267,7 @@ const Stack = createStackNavigator({
             },
             linking: {
               path,
-              screens: item.linking,
+              ...item.linking,
             },
           },
         ];

@@ -47,8 +47,8 @@ import {
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
 
-import type { BottomTabParams } from '../src/Screens/BottomTabs';
-import type { StaticScreenParams } from '../src/Screens/Static';
+import type { BottomTabParamList } from '../src/Screens/BottomTabs';
+import type { StaticScreenParamList } from '../src/Screens/Static';
 
 /**
  * Check for the type of the `navigation` and `route` objects with regular usage
@@ -1007,7 +1007,7 @@ useNavigation('Invalid');
   expectTypeOf(navigation).toEqualTypeOf<
     StackNavigationProp<RootParamList, 'Home'> &
       CompositeNavigationProp<
-        StackNavigationProp<StaticScreenParams, 'Home'>,
+        StackNavigationProp<StaticScreenParamList, 'Home'>,
         StackNavigationProp<RootParamList, 'StaticScreen'>
       >
   >();
@@ -1052,25 +1052,25 @@ useNavigation('Invalid');
   const navigation = useNavigation('TabChat');
 
   expectTypeOf(navigation).toEqualTypeOf<
-    NavigationProp<BottomTabParams, 'TabChat'>
+    NavigationProp<BottomTabParamList, 'TabChat'>
   >();
 
   expectTypeOf(navigation.setParams)
     .parameter(0)
-    .toEqualTypeOf<Partial<BottomTabParams['TabChat']>>();
+    .toEqualTypeOf<Partial<BottomTabParamList['TabChat']>>();
 
   expectTypeOf(navigation.replaceParams)
     .parameter(0)
-    .toEqualTypeOf<BottomTabParams['TabChat']>();
+    .toEqualTypeOf<BottomTabParamList['TabChat']>();
 
   expectTypeOf(navigation.pushParams)
     .parameter(0)
-    .toEqualTypeOf<BottomTabParams['TabChat']>();
+    .toEqualTypeOf<BottomTabParamList['TabChat']>();
 
   expectTypeOf(navigation.getState().type).toEqualTypeOf<string>();
 
   expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<
-    (keyof BottomTabParams)[]
+    (keyof BottomTabParamList)[]
   >();
 }
 
@@ -1147,7 +1147,7 @@ useNavigation('Invalid');
 
   const routeNames = useNavigationState('TabChat', (state) => state.routeNames);
 
-  expectTypeOf(routeNames).toEqualTypeOf<(keyof BottomTabParams)[]>();
+  expectTypeOf(routeNames).toEqualTypeOf<(keyof BottomTabParamList)[]>();
 }
 
 /**

@@ -1,7 +1,7 @@
 import { Button } from '@react-navigation/elements';
 import type {
   NavigatorScreenParams,
-  PathConfigMap,
+  PathConfig,
   StaticScreenProps,
 } from '@react-navigation/native';
 import {
@@ -15,24 +15,26 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type MixedHeaderStackParams = {
+type MixedHeaderStackParamList = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
 };
 
-const linking: PathConfigMap<MixedHeaderStackParams> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Albums: 'albums',
+  },
+} satisfies PathConfig<NavigatorScreenParams<MixedHeaderStackParamList>>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<MixedHeaderStackParams, 'Article'>) => {
+}: StackScreenProps<MixedHeaderStackParamList, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -57,7 +59,7 @@ const ArticleScreen = ({
 const NewsFeedScreen = ({
   route,
   navigation,
-}: StackScreenProps<MixedHeaderStackParams, 'NewsFeed'>) => {
+}: StackScreenProps<MixedHeaderStackParamList, 'NewsFeed'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -75,7 +77,7 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: StackScreenProps<MixedHeaderStackParams, 'Albums'>) => {
+}: StackScreenProps<MixedHeaderStackParamList, 'Albums'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -94,10 +96,10 @@ const AlbumsScreen = ({
   );
 };
 
-const SimpleStack = createStackNavigator<MixedHeaderStackParams>();
+const SimpleStack = createStackNavigator<MixedHeaderStackParamList>();
 
 export function MixedHeaderMode(
-  _: StaticScreenProps<NavigatorScreenParams<MixedHeaderStackParams>>
+  _: StaticScreenProps<NavigatorScreenParams<MixedHeaderStackParamList>>
 ) {
   return (
     <SimpleStack.Navigator>

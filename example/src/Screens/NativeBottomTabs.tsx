@@ -9,7 +9,7 @@ import {
 } from '@react-navigation/elements';
 import {
   type NavigatorScreenParams,
-  type PathConfigMap,
+  type PathConfig,
   type StaticScreenProps,
   useIsFocused,
   useNavigation,
@@ -28,23 +28,25 @@ import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
-import { NativeStack, type NativeStackParams } from './NativeStack';
+import { NativeStack, type NativeStackParamList } from './NativeStack';
 
-export type NativeBottomTabParams = {
-  TabStack: NavigatorScreenParams<NativeStackParams>;
+export type NativeBottomTabParamList = {
+  TabStack: NavigatorScreenParams<NativeStackParamList>;
   TabAlbums: undefined;
   TabContacts: { count: number };
   TabFavorites: undefined;
 };
 
-const linking: PathConfigMap<NativeBottomTabParams> = {
-  TabStack: {
-    path: 'stack',
-    screens: NativeStack.linking,
+const linking = {
+  screens: {
+    TabStack: {
+      path: 'stack',
+      screens: NativeStack.linking.screens,
+    },
+    TabAlbums: 'albums',
+    TabContacts: 'contacts',
   },
-  TabAlbums: 'albums',
-  TabContacts: 'contacts',
-};
+} satisfies PathConfig<NavigatorScreenParams<NativeBottomTabParamList>>;
 
 const ArticleStack = createNativeStackNavigator<{ Article: undefined }>();
 
@@ -125,10 +127,10 @@ function AlbumsScreen() {
 
 let i = 1;
 
-const Tab = createBottomTabNavigator<NativeBottomTabParams>();
+const Tab = createBottomTabNavigator<NativeBottomTabParamList>();
 
 export function NativeBottomTabs(
-  _: StaticScreenProps<NavigatorScreenParams<NativeBottomTabParams>>
+  _: StaticScreenProps<NavigatorScreenParams<NativeBottomTabParamList>>
 ) {
   return (
     <Tab.Navigator>
