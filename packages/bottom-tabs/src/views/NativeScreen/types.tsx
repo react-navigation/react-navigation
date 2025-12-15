@@ -248,6 +248,12 @@ export type NativeScreenHeaderItemMenuAction = {
    */
   label: string;
   /**
+   * The subtitle displayed alongside the menu element’s label.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/subtitle
+   */
+  subtitle?: string;
+  /**
    * Icon for the menu item.
    */
   icon?: IconIOSSfSymbol;
@@ -310,6 +316,30 @@ export type NativeScreenHeaderItemMenuSubmenu = {
    */
   icon?: IconIOSSfSymbol;
   /**
+   * Whether the menu is displayed inline.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/displayinline
+   */
+  displayInline?: boolean;
+  /**
+   * Whether the menu is displayed as a palette.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/displayaspalette
+   */
+  displayAsPalette?: boolean;
+  /**
+   * Whether to apply destructive style to the menu item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/destructive
+   */
+  destructive?: boolean;
+  /**
+   * Whether the menu and its submenus allow a single menu item to be in the “on” state.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/singleselection
+   */
+  singleSelection?: boolean;
+  /**
    * Array of menu items (actions or submenus).
    */
   items: NativeScreenHeaderItemMenu['menu']['items'];
@@ -335,6 +365,18 @@ export type NativeScreenHeaderItemMenu = SharedHeaderItem & {
      * Optional title to show on top of the menu.
      */
     title?: string;
+    /**
+     * Whether the menu and its submenus allow a single menu item to be in the “on” state.
+     *
+     * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/singleselection
+     */
+    singleSelection?: boolean;
+    /**
+     * Whether the menu is displayed as a palette.
+     *
+     * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/displayaspalette
+     */
+    displayAsPalette?: boolean;
     /**
      * Array of menu items (actions or submenus).
      */
