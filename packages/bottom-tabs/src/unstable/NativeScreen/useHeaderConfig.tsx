@@ -178,7 +178,7 @@ export function useHeaderConfig({
   unstable_headerRightItems: headerRightItems,
 }: Props): ScreenStackHeaderConfigProps {
   const { direction } = useLocale();
-  const { colors, fonts } = useTheme();
+  const { colors, fonts, dark } = useTheme();
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
 
@@ -419,5 +419,6 @@ export function useHeaderConfig({
     children,
     headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
     headerRightBarButtonItems: processBarButtonItems(rightItems, colors, fonts),
+    experimental_userInterfaceStyle: dark ? 'dark' : 'light',
   } as const;
 }
