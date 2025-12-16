@@ -317,6 +317,24 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
   tabBarMinimizeBehavior?: TabBarMinimizeBehavior;
 
   /**
+   * Function which returns a React element to display as an accessory view.
+   *
+   * Accepts a `placement` parameter which can be one of the following values:
+   * - `regular` - at bottom of the screen, above the tab bar if tab bar is at the bottom
+   * - `inline` - inline with the collapsed bottom tab bar (e.g. when minimized based on `tabBarMinimizeBehavior`)
+   *
+   * Note: the content is rendered twice for both placements, but only one is visible at a time based on the tab bar state.
+   * Any shared state should be stored outside of the component to keep both versions in sync.
+   *
+   * Available starting from iOS 26.
+   *
+   * @platform ios
+   */
+  bottomAccessory?: (options: {
+    placement: 'regular' | 'inline';
+  }) => React.ReactNode;
+
+  /**
    * Whether this screens should render the first time it's accessed. Defaults to `true`.
    * Set it to `false` if you want to render the screen on initial render.
    */

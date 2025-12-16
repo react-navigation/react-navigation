@@ -126,9 +126,16 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
     });
   };
 
+  const bottomAccessory = currentOptions.bottomAccessory;
+
   return (
     <SafeAreaProviderCompat>
       <BottomTabs
+        bottomAccessory={
+          bottomAccessory
+            ? (environment) => bottomAccessory({ placement: environment })
+            : undefined
+        }
         tabBarItemLabelVisibilityMode={
           currentOptions?.tabBarLabelVisibilityMode
         }

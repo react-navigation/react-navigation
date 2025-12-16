@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   createNativeBottomTabNavigator,
@@ -8,6 +9,7 @@ import {
   getHeaderTitle,
   Header,
   HeaderButton,
+  Text,
   useHeaderHeight,
 } from '@react-navigation/elements';
 import {
@@ -17,9 +19,17 @@ import {
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { BlurView } from 'expo-blur';
-import { Alert, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import album10 from '../../assets/album-art-10.jpg';
 import iconBookUser from '../../assets/icons/book-user.png';
 import iconHeart from '../../assets/icons/heart.png';
 import iconListMusic from '../../assets/icons/list-music.png';
@@ -127,6 +137,33 @@ function AlbumsScreen() {
   );
 }
 
+function MiniPlayer({ placement }: { placement: 'inline' | 'regular' }) {
+  return (
+    <View style={styles.miniPlayer}>
+      <View style={styles.miniPlayerCoverContainer}>
+        <Image source={album10} style={styles.miniPlayerCover} />
+      </View>
+      {placement === 'inline' ? (
+        <View style={styles.miniPlayerButtons}>
+          <Ionicons name="play-back" size={32} />
+          <Ionicons name="play" size={32} />
+          <Ionicons name="play-forward" size={32} />
+        </View>
+      ) : (
+        <>
+          <Text numberOfLines={1} style={styles.miniPlayerAlbumTitle}>
+            Sgt Pepper's Lonely Hearts Club Band
+          </Text>
+          <View style={styles.miniPlayerButtons}>
+            <Ionicons name="play" size={32} />
+            <Ionicons name="play-forward" size={32} />
+          </View>
+        </>
+      )}
+    </View>
+  );
+}
+
 let i = 1;
 
 const Tab = createNativeBottomTabNavigator<NativeBottomTabParams>();
@@ -206,6 +243,10 @@ export function NativeBottomTabs() {
             tabBarStyle: {
               backgroundColor: 'rgba(0, 0, 0, 0.8)',
             },
+            tabBarMinimizeBehavior: 'onScrollDown',
+            bottomAccessory: ({ placement }) => (
+              <MiniPlayer placement={placement} />
+            ),
           };
         }}
       />
@@ -247,5 +288,30 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 12,
     margin: 12,
+  },
+  miniPlayer: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+  },
+  miniPlayerCoverContainer: {
+    margin: 5,
+  },
+  miniPlayerCover: {
+    height: '100%',
+    aspectRatio: 1,
+    borderRadius: '50%',
+  },
+  miniPlayerAlbumTitle: {
+    flexShrink: 1,
+    alignSelf: 'center',
+    marginStart: 10,
+    fontWeight: 'bold',
+  },
+  miniPlayerButtons: {
+    flexDirection: 'row',
+    gap: 15,
+    justifyContent: 'center',
+    marginHorizontal: 15,
   },
 });
