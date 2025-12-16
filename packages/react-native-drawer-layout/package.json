@@ -54,6 +54,7 @@
     "react": "19.1.0",
     "react-native": "0.81.5",
     "react-native-builder-bob": "^0.40.17",
+    "react-native-reanimated": "^3.19.4",
     "typescript": "^5.9.2"
   },
   "peerDependencies": {

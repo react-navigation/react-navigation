@@ -59,6 +59,7 @@
     "react-native-builder-bob": "^0.40.17",
     "react-native-monorepo-config": "^0.3.1",
     "react-test-renderer": "19.1.0",
+    "serve": "^14.2.5",
     "typescript": "^5.9.2",
     "yaml": "^2.8.0"
   }
