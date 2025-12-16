@@ -271,6 +271,7 @@ export function BottomTabViewNative({ state, navigation, descriptors }: Props) {
                   normal: tabItemAppearance,
                 },
               }}
+              experimental_userInterfaceStyle={dark ? 'dark' : 'light'}
             >
               <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
                 <ScreenContent
