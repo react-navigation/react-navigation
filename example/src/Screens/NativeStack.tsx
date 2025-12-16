@@ -314,8 +314,6 @@ export function NativeStack(
 
           return {
             title: `Article by ${route.params?.author ?? 'Unknown'}`,
-            // Large titles needs headerTransparent to work on iOS
-            headerTransparent: Platform.OS === 'ios',
             headerLargeTitleEnabled: true,
             headerLargeTitleShadowVisible: false,
             headerRight: ({ tintColor }) => (

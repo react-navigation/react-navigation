@@ -250,7 +250,10 @@ export function useHeaderConfigProps({
 
   const headerBackgroundColor =
     headerStyleFlattened.backgroundColor ??
-    (headerBackground != null || headerTransparent
+    (headerBackground != null ||
+    headerTransparent ||
+    // The title becomes invisible if background color is set with large title on iOS 26
+    (Platform.OS === 'ios' && headerLargeTitleEnabled)
       ? 'transparent'
       : colors.card);
 

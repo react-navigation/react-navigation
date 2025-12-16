@@ -143,7 +143,6 @@ const ArticleStack = createNativeStackNavigator({
       options: {
         title: 'Article',
         headerLargeTitleEnabled: true,
-        headerTransparent: true,
       },
     }),
   },
