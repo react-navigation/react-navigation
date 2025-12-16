@@ -334,8 +334,6 @@ type BottomTabNativeOptions = {
    *
    * Works with backgroundColor's alpha < 1.
    *
-   * Only supported on iOS 18 and lower.
-   *
    * The following values are currently supported:
    *
    * - `none` - disables blur effect
@@ -347,14 +345,14 @@ type BottomTabNativeOptions = {
    * Complete list of possible blur effect styles is available in the official UIKit documentation:
    * @see {@link https://developer.apple.com/documentation/uikit/uiblureffect/style|UIBlurEffect.Style}
    *
+   * Only supported on iOS 18 and lower.
+   *
    * @platform ios
    */
   tabBarBlurEffect?: BottomTabsScreenBlurEffect;
 
   /**
    * Minimize behavior for the tab bar.
-   *
-   * Available starting from iOS 26.
    *
    * The following values are currently supported:
    *
@@ -369,6 +367,8 @@ type BottomTabNativeOptions = {
    *
    * The supported values correspond to the official UIKit documentation:
    * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/minimizebehavior|UITabBarController.MinimizeBehavior}
+   *
+   * Available starting from iOS 26.
    *
    * @platform ios
    */
@@ -391,6 +391,26 @@ type BottomTabNativeOptions = {
    * @platform android
    */
   tabBarActiveIndicatorEnabled?: boolean;
+
+  /**
+   * Function which returns a React element to display as an accessory view.
+   *
+   * Accepts a `type` parameter which can be one of the following values:
+   * - `regular` - at bottom of the screen, above the tab bar if tab bar is at the bottom
+   * - `inline` - inline with the collapsed bottom tab bar (e.g. when minimized based on `tabBarMinimizeBehavior`)
+   *
+   * Note: the content is rendered twice for both types, but only one is visible at a time based on the tab bar state.
+   * Any shared state should be stored outside of the component to keep both versions in sync.
+   *
+   * Available starting from iOS 26.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform ios
+   */
+  tabBarBottomAccessory?: (options: {
+    type: 'regular' | 'inline';
+  }) => React.ReactNode;
 };
 
 export type BottomTabNavigationOptions = {
