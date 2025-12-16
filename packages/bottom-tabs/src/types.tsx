@@ -408,7 +408,7 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  tabBarBottomAccessory?: (options: {
+  bottomAccessory?: (options: {
     type: 'regular' | 'inline';
   }) => React.ReactNode;
 };

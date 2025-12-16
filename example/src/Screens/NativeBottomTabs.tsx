@@ -246,7 +246,7 @@ export function NativeBottomTabs(
               borderTopColor: 'transparent',
             },
             tabBarMinimizeBehavior: 'onScrollDown',
-            tabBarBottomAccessory: ({ type }) => <MiniPlayer type={type} />,
+            bottomAccessory: ({ type }) => <MiniPlayer type={type} />,
           };
         }}
       />
