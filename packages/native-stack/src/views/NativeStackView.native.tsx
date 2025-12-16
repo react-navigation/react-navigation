@@ -20,7 +20,6 @@ import * as React from 'react';
 import {
   Animated,
   Platform,
-  StatusBar,
   StyleSheet,
   useAnimatedValue,
   View,
@@ -187,28 +186,6 @@ const SceneView = ({
 
   const hasCustomHeader = header != null;
 
-  let headerHeightCorrectionOffset = 0;
-
-  if (Platform.OS === 'android' && !hasCustomHeader) {
-    const statusBarHeight = StatusBar.currentHeight ?? 0;
-
-    // FIXME: On Android, the native header height is not correctly calculated
-    // It includes status bar height even if statusbar is not translucent
-    // And the statusbar value itself doesn't match the actual status bar height
-    // So we subtract the bogus status bar height and add the actual top inset
-    headerHeightCorrectionOffset = -statusBarHeight + topInset;
-  }
-
-  const rawAnimatedHeaderHeight = useAnimatedValue(defaultHeaderHeight);
-  const animatedHeaderHeight = React.useMemo(
-    () =>
-      Animated.add<number>(
-        rawAnimatedHeaderHeight,
-        headerHeightCorrectionOffset
-      ),
-    [headerHeightCorrectionOffset, rawAnimatedHeaderHeight]
-  );
-
   const headerTopInsetEnabled = topInset !== 0;
 
   const canGoBack = previousDescriptor != null || parentHeaderBack != null;
@@ -228,6 +205,8 @@ const SceneView = ({
   }, [canGoBack, backTitle]);
 
   const isRemovePrevented = preventedRoutes[route.key]?.preventRemove;
+
+  const animatedHeaderHeight = useAnimatedValue(defaultHeaderHeight);
 
   const headerConfig = useHeaderConfigProps({
     ...options,
@@ -310,7 +289,7 @@ const SceneView = ({
           [
             {
               nativeEvent: {
-                headerHeight: rawAnimatedHeaderHeight,
+                headerHeight: animatedHeaderHeight,
               },
             },
           ],
@@ -323,23 +302,12 @@ const SceneView = ({
               }
 
               if (
-                Platform.OS === 'android' &&
-                (options.headerBackground != null || options.headerTransparent)
-              ) {
-                // FIXME: On Android, we get 0 if the header is translucent
-                // So we set a default height in that case
-                setHeaderHeight(ANDROID_DEFAULT_HEADER_HEIGHT + topInset);
-                return;
-              }
-
-              if (
                 e.nativeEvent &&
                 typeof e.nativeEvent === 'object' &&
                 'headerHeight' in e.nativeEvent &&
                 typeof e.nativeEvent.headerHeight === 'number'
               ) {
-                const headerHeight =
-                  e.nativeEvent.headerHeight + headerHeightCorrectionOffset;
+                const headerHeight = e.nativeEvent.headerHeight;
 
                 // Only debounce if header has large title or search bar
                 // As it's the only case where the header height can change frequently
@@ -398,7 +366,7 @@ const SceneView = ({
                   const headerHeight = e.nativeEvent.layout.height;
 
                   setHeaderHeight(headerHeight);
-                  rawAnimatedHeaderHeight.setValue(headerHeight);
+                  animatedHeaderHeight.setValue(headerHeight);
                 }}
                 style={[
                   styles.header,

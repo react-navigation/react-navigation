@@ -91,7 +91,7 @@ const ArticleScreen = ({
           scrollEnabled={scrollEnabled}
         />
       </ScrollView>
-      <HeaderHeightView />
+      <HeaderHeightView hasOffset={Platform.OS === 'ios'} />
     </View>
   );
 };
@@ -116,7 +116,7 @@ const NewsFeedScreen = ({
         </View>
         <NewsFeed scrollEnabled={scrollEnabled} date={route.params.date} />
       </ScrollView>
-      <HeaderHeightView />
+      <HeaderHeightView hasOffset={false} />
     </View>
   );
 };
@@ -182,11 +182,7 @@ const AlbumsScreen = ({
   );
 };
 
-const HeaderHeightView = ({
-  hasOffset = Platform.OS === 'ios',
-}: {
-  hasOffset?: boolean;
-}) => {
+const HeaderHeightView = ({ hasOffset }: { hasOffset: boolean }) => {
   const { colors } = useTheme();
 
   const animatedHeaderHeight = useAnimatedHeaderHeight();
@@ -318,6 +314,7 @@ export function NativeStack(
 
           return {
             title: `Article by ${route.params?.author ?? 'Unknown'}`,
+            headerTransparent: true,
             headerLargeTitleEnabled: true,
             headerLargeTitleShadowVisible: false,
             headerRight: ({ tintColor }) => (
