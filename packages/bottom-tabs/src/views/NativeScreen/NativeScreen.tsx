@@ -10,7 +10,6 @@ import {
   Platform,
   type StyleProp,
   StyleSheet,
-  useAnimatedValue,
   View,
   type ViewStyle,
 } from 'react-native';
@@ -87,7 +86,9 @@ export function NativeScreen({
   const hasCustomHeader = renderCustomHeader != null;
   const headerTopInsetEnabled = topInset !== 0;
 
-  const animatedHeaderHeight = useAnimatedValue(defaultHeaderHeight);
+  const [animatedHeaderHeight] = React.useState(
+    () => new Animated.Value(headerHeight)
+  );
 
   const onHeaderHeightChange = Animated.event(
     [
