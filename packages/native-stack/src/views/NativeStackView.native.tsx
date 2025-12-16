@@ -319,7 +319,17 @@ const SceneView = ({
                 if (doesHeaderAnimate) {
                   setHeaderHeightDebounced(headerHeight);
                 } else {
-                  setHeaderHeight(headerHeight);
+                  if (Platform.OS === 'android') {
+                    // FIXME: On Android, header height only sometimes includes status bar height
+                    // So we add it here if it's not already included
+                    if (headerHeight <= ANDROID_DEFAULT_HEADER_HEIGHT) {
+                      setHeaderHeight(headerHeight + insets.top);
+                    } else {
+                      setHeaderHeight(headerHeight);
+                    }
+                  } else {
+                    setHeaderHeight(headerHeight);
+                  }
                 }
               }
             },
