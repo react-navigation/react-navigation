@@ -42,4 +42,3 @@ export type {
   BottomTabOptionsArgs,
   BottomTabScreenProps,
 } from './types';
-export type { NativeScreenHeaderItemProps } from './views/NativeScreen/types';

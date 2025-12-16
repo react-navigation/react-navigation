@@ -1,4 +1,7 @@
-import type { PlatformPressable } from '@react-navigation/elements';
+import type {
+  HeaderOptions,
+  PlatformPressable,
+} from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -29,8 +32,6 @@ import type {
   TabBarMinimizeBehavior,
 } from 'react-native-screens';
 import type { SFSymbol } from 'sf-symbols-typescript';
-
-import type { NativeHeaderOptions } from './views/NativeScreen/types';
 
 export type Variant = 'uikit' | 'material';
 
@@ -569,7 +570,19 @@ export type BottomTabNavigationOptions = {
    * Style object for the component wrapping the screen content.
    */
   sceneStyle?: StyleProp<ViewStyle>;
-} & NativeHeaderOptions &
+
+  /**
+   * Function that returns a React Element to display as a header.
+   */
+  header?: (props: BottomTabHeaderProps) => React.ReactNode;
+
+  /**
+   * Whether to show the header.
+   *
+   * Defaults to `false` unless a header is provided.
+   */
+  headerShown?: boolean;
+} & HeaderOptions &
   BottomTabNativeOptions &
   BottomTabCustomOptions;
 
