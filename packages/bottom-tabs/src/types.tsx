@@ -1,4 +1,5 @@
 import type { PlatformPressable } from '@react-navigation/elements';
+import type { NativeHeaderOptions } from '@react-navigation/elements/internal';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -29,8 +30,6 @@ import type {
   TabBarMinimizeBehavior,
 } from 'react-native-screens';
 import type { SFSymbol } from 'sf-symbols-typescript';
-
-import type { NativeHeaderOptions } from './views/NativeScreen/types';
 
 export type Variant = 'uikit' | 'material';
 
@@ -668,21 +667,6 @@ export type BottomTabNavigationConfig = {
    * Only supported with `custom` implementation.
    */
   detachInactiveScreens?: boolean;
-};
-
-export type BottomTabHeaderProps = {
-  /**
-   * Options for the current screen.
-   */
-  options: BottomTabNavigationOptions;
-  /**
-   * Route object for the current screen.
-   */
-  route: RouteProp<ParamListBase>;
-  /**
-   * Navigation prop for the header.
-   */
-  navigation: BottomTabNavigationProp<ParamListBase>;
 };
 
 export type BottomTabBarProps = {

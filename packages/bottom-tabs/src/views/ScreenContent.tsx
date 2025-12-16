@@ -1,14 +1,19 @@
 import { getHeaderTitle, Header } from '@react-navigation/elements';
-import { Screen } from '@react-navigation/elements/internal';
+import { NativeScreen, Screen } from '@react-navigation/elements/internal';
 import type { ParamListBase, Route } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform, type StyleProp, type ViewStyle } from 'react-native';
+import {
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  type ViewStyle,
+} from 'react-native';
+import { ScreenStack } from 'react-native-screens';
 
 import type {
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
 } from '../types';
-import { NativeScreen } from './NativeScreen/NativeScreen';
 
 export function ScreenContent({
   isFocused,
@@ -46,14 +51,16 @@ export function ScreenContent({
 
   if (hasNativeHeader) {
     return (
-      <NativeScreen
-        route={route}
-        navigation={navigation}
-        options={options}
-        style={style}
-      >
-        {children}
-      </NativeScreen>
+      <ScreenStack style={styles.container}>
+        <NativeScreen
+          route={route}
+          navigation={navigation}
+          options={options}
+          style={style}
+        >
+          {children}
+        </NativeScreen>
+      </ScreenStack>
     );
   }
 
@@ -81,3 +88,9 @@ export function ScreenContent({
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

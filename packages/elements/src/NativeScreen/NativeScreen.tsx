@@ -14,14 +14,14 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScreenStack, ScreenStackItem } from 'react-native-screens';
+import { ScreenStackItem } from 'react-native-screens';
 
-import type { BottomTabHeaderProps } from '../../types';
 import { debounce } from './debounce';
+import type { NativeHeaderProps } from './types';
 import { AnimatedHeaderHeightContext } from './useAnimatedHeaderHeight';
 import { useHeaderConfig } from './useHeaderConfig';
 
-type Props = BottomTabHeaderProps & {
+type Props = NativeHeaderProps & {
   style?: StyleProp<ViewStyle>;
   children: React.ReactNode;
 };
@@ -123,7 +123,17 @@ export function NativeScreen({
           if (doesHeaderAnimate) {
             setHeaderHeightDebounced(headerHeight);
           } else {
-            setHeaderHeight(headerHeight);
+            if (Platform.OS === 'android') {
+              // FIXME: On Android, header height only sometimes includes status bar height
+              // So we add it here if it's not already included
+              if (headerHeight <= ANDROID_DEFAULT_HEADER_HEIGHT) {
+                setHeaderHeight(headerHeight + insets.top);
+              } else {
+                setHeaderHeight(headerHeight);
+              }
+            } else {
+              setHeaderHeight(headerHeight);
+            }
           }
         }
       },
@@ -139,70 +149,65 @@ export function NativeScreen({
   });
 
   return (
-    <ScreenStack style={styles.container}>
-      <ScreenStackItem
-        screenId={route.key}
-        // Needed to show search bar in tab bar with systemItem=search
-        stackPresentation="push"
-        headerConfig={headerConfig}
-        onHeaderHeightChange={onHeaderHeightChange}
-        style={style}
-      >
-        <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
-          <HeaderHeightContext.Provider
-            value={headerShown ? headerHeight : (parentHeaderHeight ?? 0)}
-          >
-            {headerBackground != null ? (
-              /**
-               * To show a custom header background, we render it at the top of the screen below the header
-               * The header also needs to be positioned absolutely (with `translucent` style)
-               */
-              <View
-                style={[
-                  styles.background,
-                  headerTransparent ? styles.translucent : null,
-                  { height: headerHeight },
-                ]}
-              >
-                {headerBackground()}
-              </View>
-            ) : null}
-            {hasCustomHeader && headerShown ? (
-              <View
-                onLayout={(e) => {
-                  const headerHeight = e.nativeEvent.layout.height;
-
-                  setHeaderHeight(headerHeight);
-                  animatedHeaderHeight.setValue(headerHeight);
-                }}
-                style={[
-                  styles.header,
-                  headerTransparent ? styles.absolute : null,
-                ]}
-              >
-                {renderCustomHeader?.({
-                  route,
-                  navigation,
-                  options,
-                })}
-              </View>
-            ) : null}
-            <HeaderShownContext.Provider
-              value={isParentHeaderShown || headerShown}
+    <ScreenStackItem
+      screenId={route.key}
+      // Needed to show search bar in tab bar with systemItem=search
+      stackPresentation="push"
+      headerConfig={headerConfig}
+      onHeaderHeightChange={onHeaderHeightChange}
+      style={style}
+    >
+      <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+        <HeaderHeightContext.Provider
+          value={headerShown ? headerHeight : (parentHeaderHeight ?? 0)}
+        >
+          {headerBackground != null ? (
+            /**
+             * To show a custom header background, we render it at the top of the screen below the header
+             * The header also needs to be positioned absolutely (with `translucent` style)
+             */
+            <View
+              style={[
+                styles.background,
+                headerTransparent ? styles.translucent : null,
+                { height: headerHeight },
+              ]}
             >
-              {children}
-            </HeaderShownContext.Provider>
-          </HeaderHeightContext.Provider>
-        </AnimatedHeaderHeightContext.Provider>
-      </ScreenStackItem>
-    </ScreenStack>
+              {headerBackground()}
+            </View>
+          ) : null}
+          {hasCustomHeader && headerShown ? (
+            <View
+              onLayout={(e) => {
+                const headerHeight = e.nativeEvent.layout.height;
+
+                setHeaderHeight(headerHeight);
+                animatedHeaderHeight.setValue(headerHeight);
+              }}
+              style={[
+                styles.header,
+                headerTransparent ? styles.absolute : null,
+              ]}
+            >
+              {renderCustomHeader?.({
+                route,
+                navigation,
+                options,
+              })}
+            </View>
+          ) : null}
+          <HeaderShownContext.Provider
+            value={isParentHeaderShown || headerShown}
+          >
+            {children}
+          </HeaderShownContext.Provider>
+        </HeaderHeightContext.Provider>
+      </AnimatedHeaderHeightContext.Provider>
+    </ScreenStackItem>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   header: {
     zIndex: 1,
   },

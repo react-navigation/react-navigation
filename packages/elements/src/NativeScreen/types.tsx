@@ -1,3 +1,8 @@
+import type {
+  NavigationProp,
+  ParamListBase,
+  RouteProp,
+} from '@react-navigation/native';
 import * as React from 'react';
 import type {
   ColorValue,
@@ -10,8 +15,6 @@ import type {
   SearchBarProps,
 } from 'react-native-screens';
 import type { SFSymbol } from 'sf-symbols-typescript';
-
-import type { BottomTabHeaderProps } from '../../types';
 
 export type NativeHeaderOptions = {
   /**
@@ -208,7 +211,7 @@ export type NativeHeaderOptions = {
   /**
    * Function that given returns a React Element to display as a header.
    */
-  header?: (props: BottomTabHeaderProps) => React.ReactNode;
+  header?: (props: any) => React.ReactNode;
 };
 
 export type NativeScreenHeaderItemProps = {
@@ -280,7 +283,7 @@ export type NativeScreenHeaderItemMenuAction = {
    */
   hidden?: boolean;
   /**
-   * Whether to keep the menu presented after firing the element’s action.
+   * Whether to keep the menu presented after firing the element's action.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/keepsmenupresented
    */
@@ -514,4 +517,19 @@ type SharedHeaderItem = {
    * Accessibility hint for the item.
    */
   accessibilityHint?: string;
+};
+
+export type NativeHeaderProps = {
+  /**
+   * Options for the current screen.
+   */
+  options: NativeHeaderOptions;
+  /**
+   * Route object for the current screen.
+   */
+  route: RouteProp<ParamListBase>;
+  /**
+   * Navigation prop for the header.
+   */
+  navigation: NavigationProp<ParamListBase>;
 };
