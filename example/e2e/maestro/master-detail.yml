@@ -1,7 +1,20 @@
 appId: ${APP_ID}
 name: Master Detail
 ---
-- openLink:
-    link: exp://127.0.0.1:8081/--/master-detail
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: master-detail
+      TEXT: 'Pages'
+- tapOn:
+    text: 'Feed'
 - assertVisible:
-    text: 'Pages'
+    text: 'Feed'
+- tapOn:
+    text: 'Albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Article'
+- assertVisible:
+    text: 'Article'

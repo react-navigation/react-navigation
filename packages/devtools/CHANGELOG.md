@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.0.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.34...@react-navigation/devtools@7.0.35) (2025-07-25)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.33...@react-navigation/devtools@7.0.34) (2025-06-21)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.32...@react-navigation/devtools@7.0.33) (2025-06-19)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.32](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.31...@react-navigation/devtools@7.0.32) (2025-06-18)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.31](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.30...@react-navigation/devtools@7.0.31) (2025-06-14)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.30](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.29...@react-navigation/devtools@7.0.30) (2025-05-30)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.28...@react-navigation/devtools@7.0.29) (2025-05-11)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.27...@react-navigation/devtools@7.0.28) (2025-05-04)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.26...@react-navigation/devtools@7.0.27) (2025-05-02)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.25...@react-navigation/devtools@7.0.26) (2025-04-08)
+
+### Bug Fixes
+
+* add types field back to support legacy moduleResolution ([6c021d4](https://github.com/react-navigation/react-navigation/commit/6c021d442ede3a231e32486b2c391c2e850bf76e)), closes [#12534](https://github.com/react-navigation/react-navigation/issues/12534) - by @
+
+## [7.0.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.24...@react-navigation/devtools@7.0.25) (2025-04-04)
+
+### Bug Fixes
+
+* drop commonjs module to avoid dual package hazard ([f0fbcc5](https://github.com/react-navigation/react-navigation/commit/f0fbcc5515e73b454f607bd95bba40a48e852d0f)) - by @satya164
+
+## [7.0.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.23...@react-navigation/devtools@7.0.24) (2025-04-03)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.22...@react-navigation/devtools@7.0.23) (2025-04-02)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.21...@react-navigation/devtools@7.0.22) (2025-04-02)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.20...@react-navigation/devtools@7.0.21) (2025-04-01)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.19...@react-navigation/devtools@7.0.20) (2025-03-25)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.18...@react-navigation/devtools@7.0.19) (2025-03-22)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.17...@react-navigation/devtools@7.0.18) (2025-03-19)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.16...@react-navigation/devtools@7.0.17) (2025-03-19)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
+## [7.0.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.15...@react-navigation/devtools@7.0.16) (2025-03-02)
+
+**Note:** Version bump only for package @react-navigation/devtools
+
 ## [7.0.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.14...@react-navigation/devtools@7.0.15) (2024-12-12)
 
 ### Bug Fixes

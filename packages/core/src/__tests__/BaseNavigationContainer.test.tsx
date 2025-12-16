@@ -36,6 +36,7 @@ test('throws when getState is accessed without a container', () => {
   const Test = () => {
     const { getState } = React.useContext(NavigationStateContext);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     getState;
 
     return null;
@@ -54,6 +55,7 @@ test('throws when setState is accessed without a container', () => {
   const Test = () => {
     const { setState } = React.useContext(NavigationStateContext);
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     setState;
 
     return null;
@@ -330,6 +332,77 @@ test('handles getRootState', () => {
     stale: false,
     type: 'test',
   });
+});
+
+test('emits ready event when the container is ready with synchronous content', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    return (
+      <React.Fragment>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const listener = jest.fn();
+
+  ref.addListener('ready', () => {
+    listener(ref.isReady(), ref.getCurrentRoute()?.name);
+  });
+
+  expect(listener).not.toHaveBeenCalled();
+
+  render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(listener).toHaveBeenCalledTimes(1);
+  expect(listener).toHaveBeenCalledWith(true, 'foo');
+});
+
+test('emits ready event when the container is ready with asynchronous content', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    return (
+      <React.Fragment>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </React.Fragment>
+    );
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const listener = jest.fn();
+
+  ref.addListener('ready', () => {
+    listener(ref.isReady(), ref.getCurrentRoute()?.name);
+  });
+
+  const wrapper = render(
+    <BaseNavigationContainer ref={ref}>{null}</BaseNavigationContainer>
+  );
+
+  expect(listener).not.toHaveBeenCalled();
+
+  await Promise.resolve();
+
+  wrapper.update(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(listener).toHaveBeenCalledTimes(1);
+  expect(listener).toHaveBeenCalledWith(true, 'foo');
 });
 
 test('emits state events when the state changes', () => {

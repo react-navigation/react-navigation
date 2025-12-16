@@ -1,7 +1,10 @@
 /**
  * Navigators
  */
-export { createMaterialTopTabNavigator } from './navigators/createMaterialTopTabNavigator';
+export {
+  createMaterialTopTabNavigator,
+  createMaterialTopTabScreen,
+} from './navigators/createMaterialTopTabNavigator';
 
 /**
  * Views

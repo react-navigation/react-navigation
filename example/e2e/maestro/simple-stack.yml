@@ -1,42 +1,36 @@
 appId: ${APP_ID}
 name: Simple Stack
 ---
-- openLink:
-    link: exp://127.0.0.1:8081/--/simple-stack
-- assertVisible:
-    text: 'Article by Gandalf'
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: simple-stack
+      TEXT: 'Article by Gandalf'
 - tapOn:
     text: 'Update params'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Article by Babel fish'
 - tapOn:
     text: 'Navigate to feed'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Feed'
 - tapOn:
     text: 'Replace with contacts'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Contacts'
 - tapOn:
     text: 'Push albums'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Albums'
 - tapOn:
     text: 'Push article'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Article by Babel fish'
 - tapOn:
     text: 'Pop to albums'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Albums'
 - tapOn:
     text: 'Pop by 2'
-    retryTapIfNoChange: false
 - assertVisible:
     text: 'Contacts'

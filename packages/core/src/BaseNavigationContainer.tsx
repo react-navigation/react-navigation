@@ -13,7 +13,6 @@ import useLatestCallback from 'use-latest-callback';
 import { checkDuplicateRouteNames } from './checkDuplicateRouteNames';
 import { checkSerializable } from './checkSerializable';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
-import { DeprecatedNavigationInChildContext } from './DeprecatedNavigationInChildContext';
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
 import { findFocusedRoute } from './findFocusedRoute';
 import { NavigationBuilderContext } from './NavigationBuilderContext';
@@ -88,7 +87,6 @@ export const BaseNavigationContainer = React.forwardRef(
       onStateChange,
       onReady,
       onUnhandledAction,
-      navigationInChildEnabled = false,
       theme,
       children,
     }: NavigationContainerProps,
@@ -110,7 +108,7 @@ export const BaseNavigationContainer = React.forwardRef(
 
     const isFirstMountRef = React.useRef<boolean>(true);
 
-    const navigatorKeyRef = React.useRef<string | undefined>();
+    const navigatorKeyRef = React.useRef<string | undefined>(undefined);
 
     const getKey = React.useCallback(() => navigatorKeyRef.current, []);
 
@@ -238,7 +236,7 @@ export const BaseNavigationContainer = React.forwardRef(
       }
     );
 
-    const lastEmittedOptionsRef = React.useRef<object | undefined>();
+    const lastEmittedOptionsRef = React.useRef<object | undefined>(undefined);
 
     const onOptionsChange = useLatestCallback((options: object) => {
       if (lastEmittedOptionsRef.current === options) {
@@ -253,7 +251,7 @@ export const BaseNavigationContainer = React.forwardRef(
       });
     });
 
-    const stackRef = React.useRef<string | undefined>();
+    const stackRef = React.useRef<string | undefined>(undefined);
 
     const builderContext = React.useMemo(
       () => ({
@@ -315,8 +313,9 @@ export const BaseNavigationContainer = React.forwardRef(
       if (!onReadyCalledRef.current && isReady()) {
         onReadyCalledRef.current = true;
         onReadyRef.current?.();
+        emitter.emit({ type: 'ready' });
       }
-    }, [state, isReady]);
+    }, [state, isReady, emitter]);
 
     React.useEffect(() => {
       const hydratedState = getRootState();
@@ -410,12 +409,14 @@ export const BaseNavigationContainer = React.forwardRef(
         } was not handled by any navigator.`;
 
         switch (action.type) {
+          case 'PRELOAD':
           case 'NAVIGATE':
           case 'PUSH':
           case 'REPLACE':
+          case 'POP_TO':
           case 'JUMP_TO':
             if (payload?.name) {
-              message += `\n\nDo you have a screen named '${payload.name}'?\n\nIf you're trying to navigate to a screen in a nested navigator, see https://reactnavigation.org/docs/nesting-navigators#navigating-to-a-screen-in-a-nested-navigator.\n\nIf you're using conditional rendering, navigation will happen automatically and you shouldn't navigate manually.`;
+              message += `\n\nDo you have a screen named '${payload.name}'?\n\nIf you're trying to navigate to a screen in a nested navigator, see https://reactnavigation.org/docs/nesting-navigators#navigating-to-a-screen-in-a-nested-navigator.\n\nIf you're using conditional rendering, navigation will happen automatically and you shouldn't navigate manually, see.`;
             } else {
               message += `\n\nYou need to pass the name of the screen to navigate to.\n\nSee https://reactnavigation.org/docs/navigation-actions for usage.`;
             }
@@ -447,13 +448,9 @@ export const BaseNavigationContainer = React.forwardRef(
               <UnhandledActionContext.Provider
                 value={onUnhandledAction ?? defaultOnUnhandledAction}
               >
-                <DeprecatedNavigationInChildContext.Provider
-                  value={navigationInChildEnabled}
-                >
-                  <EnsureSingleNavigator>
-                    <ThemeProvider value={theme}>{children}</ThemeProvider>
-                  </EnsureSingleNavigator>
-                </DeprecatedNavigationInChildContext.Provider>
+                <EnsureSingleNavigator>
+                  <ThemeProvider value={theme}>{children}</ThemeProvider>
+                </EnsureSingleNavigator>
               </UnhandledActionContext.Provider>
             </NavigationStateContext.Provider>
           </NavigationBuilderContext.Provider>

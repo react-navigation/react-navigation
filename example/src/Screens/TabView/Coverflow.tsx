@@ -1,5 +1,5 @@
 /* eslint-disable import-x/no-commonjs */
-import { Text } from '@react-navigation/elements';
+import { Text, useFrameSize } from '@react-navigation/elements';
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -10,7 +10,11 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import { type SceneRendererProps, TabView } from 'react-native-tab-view';
+import {
+  type SceneRendererProps,
+  ScrollViewAdapter,
+  TabView,
+} from 'react-native-tab-view';
 
 type Route = {
   key: string;
@@ -23,20 +27,20 @@ type Props = SceneRendererProps & {
 };
 
 const ALBUMS: { [key: string]: ImageRequireSource } = {
-  'Abbey Road': require('../../../assets/album-art-01.jpg'),
-  'Bat Out of Hell': require('../../../assets/album-art-02.jpg'),
-  'Homogenic': require('../../../assets/album-art-03.jpg'),
-  'Number of the Beast': require('../../../assets/album-art-04.jpg'),
-  "It's Blitz": require('../../../assets/album-art-05.jpg'),
-  'The Man-Machine': require('../../../assets/album-art-06.jpg'),
-  'The Score': require('../../../assets/album-art-07.jpg'),
-  'Lost Horizons': require('../../../assets/album-art-08.jpg'),
+  'Abbey Road': require('../../../assets/album-art/01.jpg'),
+  'Bat Out of Hell': require('../../../assets/album-art/02.jpg'),
+  Homogenic: require('../../../assets/album-art/03.jpg'),
+  'Number of the Beast': require('../../../assets/album-art/04.jpg'),
+  "It's Blitz": require('../../../assets/album-art/05.jpg'),
+  'The Man-Machine': require('../../../assets/album-art/06.jpg'),
+  'The Score': require('../../../assets/album-art/07.jpg'),
+  'Lost Horizons': require('../../../assets/album-art/08.jpg'),
 };
 
-const Scene = ({ route, position, layout, index, length }: Props) => {
-  const coverflowStyle: any = React.useMemo(() => {
-    const { width } = layout;
+const Scene = ({ route, position, index, length }: Props) => {
+  const width = useFrameSize((frame) => frame.width);
 
+  const coverflowStyle: any = React.useMemo(() => {
     const inputRange = Array.from({ length }, (_, i) => i);
     const translateOutputRange = inputRange.map((i) => {
       return (width / 2) * (index - i) * -1;
@@ -76,7 +80,7 @@ const Scene = ({ route, position, layout, index, length }: Props) => {
       transform: [{ translateX }, { scale }],
       opacity,
     };
-  }, [index, layout, length, position]);
+  }, [index, length, position, width]);
 
   return (
     <Animated.View style={[styles.page, coverflowStyle]}>
@@ -100,7 +104,6 @@ export function Coverflow() {
         sceneStyle: styles.scene,
       }}
       style={styles.container}
-      offscreenPageLimit={3}
       navigationState={{
         index,
         routes,
@@ -115,6 +118,7 @@ export function Coverflow() {
           length={routes.length}
         />
       )}
+      renderAdapter={(props) => <ScrollViewAdapter {...props} />}
     />
   );
 }

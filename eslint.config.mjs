@@ -1,0 +1,106 @@
+import { defineConfig, globalIgnores } from 'eslint/config';
+import { jest, react, recommended } from 'eslint-config-satya164';
+import sort from 'eslint-plugin-simple-import-sort';
+
+export default defineConfig([
+  recommended,
+  react,
+  jest,
+
+  globalIgnores([
+    '**/node_modules/',
+    '**/coverage/',
+    '**/dist/',
+    '**/lib/',
+    '**/.expo/',
+    '**/.yarn/',
+    '**/.vscode/',
+  ]),
+
+  {
+    plugins: {
+      'simple-import-sort': sort,
+    },
+
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            '@react-navigation/*/*',
+            '!@react-navigation/elements/internal',
+          ],
+
+          paths: [
+            {
+              name: 'color',
+              message:
+                'Import `Color` from `@react-navigation/elements` instead.',
+            },
+            {
+              name: 'react-native',
+              importNames: ['Text'],
+              message:
+                'Import `Text` from `@react-navigation/elements` instead.',
+            },
+            {
+              name: 'react-native-safe-area-context',
+              importNames: ['useSafeAreaFrame'],
+              message:
+                'Import `useFrameSize` from `@react-navigation/elements` instead.',
+            },
+            {
+              name: '@react-navigation/core',
+              message: 'Import from `@react-navigation/native` instead.',
+            },
+          ],
+        },
+      ],
+
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/ban-types': 'off',
+      '@typescript-eslint/no-empty-object-type': 'off',
+      '@typescript-eslint/no-require-imports': 'off',
+
+      'import-x/no-default-export': 'error',
+
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+
+      'react-hooks/exhaustive-deps': [
+        'error',
+        {
+          additionalHooks:
+            '(useIsomorphicLayoutEffect|useAnimatedStyle|useAnimatedProps)',
+        },
+      ],
+    },
+  },
+  {
+    files: ['packages/{native,devtools}/src/**'],
+
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: ['@react-navigation/*/*'],
+          paths: [],
+        },
+      ],
+    },
+  },
+  {
+    files: ['scripts/*.js', 'netlify/functions/**/*.js'],
+
+    rules: {
+      'import-x/no-commonjs': 'off',
+    },
+  },
+  {
+    files: ['**/*.config.{ts,mts,js,cjs,mjs}', '**/.*rc.{ts,mts,js,cjs,mjs}'],
+
+    rules: {
+      'import-x/no-default-export': 'off',
+    },
+  },
+]);

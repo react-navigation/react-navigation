@@ -10,6 +10,9 @@ pre-commit:
     test:
       glob: "*.{json,js,ts,tsx}"
       run: yarn test
+    dependencies:
+      glob: "{package.json,yarn.lock}"
+      run: yarn check-dependency-version-consistency .
 commit-msg:
   parallel: true
   commands:

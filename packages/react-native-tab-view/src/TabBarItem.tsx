@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   Animated,
+  type ColorValue,
   type LayoutChangeEvent,
   Platform,
   type PressableAndroidRippleConfig,
@@ -19,9 +20,9 @@ export type Props<T extends Route> = TabDescriptor<T> & {
   position: Animated.AnimatedInterpolation<number>;
   route: T;
   navigationState: NavigationState<T>;
-  activeColor?: string;
-  inactiveColor?: string;
-  pressColor?: string;
+  activeColor?: ColorValue;
+  inactiveColor?: ColorValue;
+  pressColor?: ColorValue;
   pressOpacity?: number;
   onLayout?: (event: LayoutChangeEvent) => void;
   onPress: () => void;
@@ -31,8 +32,8 @@ export type Props<T extends Route> = TabDescriptor<T> & {
   android_ripple?: PressableAndroidRippleConfig;
 };
 
-const DEFAULT_ACTIVE_COLOR = 'rgba(255, 255, 255, 1)';
-const DEFAULT_INACTIVE_COLOR = 'rgba(255, 255, 255, 0.7)';
+const DEFAULT_ACTIVE_COLOR = 'rgba(0, 0, 0, 1)';
+const DEFAULT_INACTIVE_COLOR = 'rgba(0, 0, 0, 0.5)';
 const ICON_SIZE = 24;
 
 const getActiveOpacity = (
@@ -208,7 +209,7 @@ const TabBarItemInternal = <T extends Route>({
     ? null
     : { width: defaultTabWidth };
 
-  accessibilityLabel =
+  const ariaLabel =
     typeof accessibilityLabel !== 'undefined' ? accessibilityLabel : labelText;
 
   return (
@@ -216,9 +217,9 @@ const TabBarItemInternal = <T extends Route>({
       android_ripple={android_ripple}
       testID={testID}
       accessible={accessible}
-      accessibilityLabel={accessibilityLabel}
-      accessibilityRole="tab"
-      accessibilityState={{ selected: isFocused }}
+      role="tab"
+      aria-label={ariaLabel}
+      aria-selected={isFocused}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
       unstable_pressDelay={0}
@@ -228,7 +229,7 @@ const TabBarItemInternal = <T extends Route>({
       href={href}
       style={[styles.pressable, tabContainerStyle]}
     >
-      <View pointerEvents="none" style={[styles.item, tabStyle]}>
+      <View style={[styles.item, tabStyle]}>
         {icon}
         <View>
           <Animated.View style={{ opacity: inactiveOpacity }}>
@@ -286,6 +287,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 10,
     minHeight: 48,
+    pointerEvents: 'none',
   },
   badge: {
     position: 'absolute',
@@ -298,7 +300,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     ...Platform.select({
       // Roundness for iPad hover effect
-      ios: { borderRadius: 10 },
+      ios: {
+        borderRadius: 10,
+        borderCurve: 'continuous',
+      },
       default: null,
     }),
   },

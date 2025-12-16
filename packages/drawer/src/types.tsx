@@ -12,13 +12,13 @@ import type {
   RouteProp,
   Theme,
 } from '@react-navigation/native';
-import type { StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type { PanGesture } from 'react-native-gesture-handler';
 
 export type Scene = {
   route: Route<string>;
   focused: boolean;
-  color?: string;
+  color?: ColorValue;
 };
 
 export type Layout = { width: number; height: number };
@@ -62,18 +62,18 @@ export type DrawerNavigationOptions = HeaderOptions & {
 
   /**
    * Title string of a screen displayed in the drawer
-   * or a function that given { focused: boolean, color: string } returns a React.Node
+   * or a function that given { focused: boolean, color: ColorValue } returns a React.Node
    * When undefined, scene title is used.
    */
   drawerLabel?:
     | string
-    | ((props: { color: string; focused: boolean }) => React.ReactNode);
+    | ((props: { color: ColorValue; focused: boolean }) => React.ReactNode);
 
   /**
-   * A function that given { focused: boolean, color: string } returns a React.Node to display an icon the drawer.
+   * A function that given { focused: boolean, color: ColorValue } returns a React.Node to display an icon the drawer.
    */
   drawerIcon?: (props: {
-    color: string;
+    color: ColorValue;
     size: number;
     focused: boolean;
   }) => React.ReactNode;
@@ -81,22 +81,22 @@ export type DrawerNavigationOptions = HeaderOptions & {
   /**
    * Color for the icon and label in the active item in the drawer.
    */
-  drawerActiveTintColor?: string;
+  drawerActiveTintColor?: ColorValue;
 
   /**
    * Background color for the active item in the drawer.
    */
-  drawerActiveBackgroundColor?: string;
+  drawerActiveBackgroundColor?: ColorValue;
 
   /**
    * Color for the icon and label in the inactive items in the drawer.
    */
-  drawerInactiveTintColor?: string;
+  drawerInactiveTintColor?: ColorValue;
 
   /**
    * Background color for the inactive items in the drawer.
    */
-  drawerInactiveBackgroundColor?: string;
+  drawerInactiveBackgroundColor?: ColorValue;
 
   /**
    * Whether label font should scale to respect Text Size accessibility settings.
@@ -159,7 +159,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * Color of the overlay to be displayed on top of the content view when drawer gets open.
    * The opacity is animated from `0` to `1` when the drawer opens.
    */
-  overlayColor?: string;
+  overlayStyle?: StyleProp<ViewStyle>;
 
   /**
    * Accessibility label for the overlay. This is read by the screen reader when the user taps the overlay.
@@ -225,10 +225,6 @@ export type DrawerContentComponentProps = {
 
 export type DrawerHeaderProps = {
   /**
-   * Layout of the screen.
-   */
-  layout: Layout;
-  /**
    * Options for the current screen.
    */
   options: DrawerNavigationOptions;
@@ -278,31 +274,27 @@ export type DrawerNavigationHelpers = NavigationHelpers<
 export type DrawerNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   DrawerNavigationState<ParamList>,
   DrawerNavigationOptions,
-  DrawerNavigationEventMap
-> &
-  DrawerActionHelpers<ParamList>;
+  DrawerNavigationEventMap,
+  DrawerActionHelpers<ParamList>
+>;
 
 export type DrawerScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: DrawerNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: DrawerNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
 export type DrawerOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = DrawerScreenProps<ParamList, RouteName, NavigatorID> & {
+> = DrawerScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -338,7 +330,6 @@ export type DrawerProps = {
 
 export type DrawerNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
-  string | undefined,
   DrawerNavigationState<ParamListBase>,
   DrawerNavigationOptions,
   DrawerNavigationEventMap,

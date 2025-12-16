@@ -37,6 +37,8 @@ export const TabBarIcon = () => {
   >['renderTabBar'] = (props) => (
     <TabBar
       {...props}
+      activeColor="#fff"
+      inactiveColor="rgba(255, 255, 255, 0.7)"
       direction={direction}
       indicatorStyle={styles.indicator}
       style={styles.tabbar}
@@ -46,7 +48,7 @@ export const TabBarIcon = () => {
   );
 
   return (
-    <TabView<Route>
+    <TabView
       lazy
       navigationState={{
         index,

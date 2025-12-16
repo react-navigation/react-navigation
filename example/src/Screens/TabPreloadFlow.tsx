@@ -1,33 +1,42 @@
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, HeaderBackButton, Text } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfig,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export type PreloadBottomTabsParams = {
+type PreloadBottomTabsParamList = {
   Home: undefined;
   Details: undefined;
 };
 
-const linking: PathConfigMap<PreloadBottomTabsParams> = {
-  Home: '',
-  Details: 'details',
-};
+const linking = {
+  screens: {
+    Home: '',
+    Details: 'details',
+  },
+} satisfies PathConfig<NavigatorScreenParams<PreloadBottomTabsParamList>>;
 
 const DetailsScreen = ({
   navigation,
-}: BottomTabScreenProps<PreloadBottomTabsParams, 'Details'>) => {
+}: BottomTabScreenProps<PreloadBottomTabsParamList, 'Details'>) => {
   const [loadingCountdown, setLoadingCountdown] = useState(3);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setLoadingCountdown((loadingCountdown) => {
         if (loadingCountdown === 1) {
           clearInterval(interval);
         }
+
         return loadingCountdown - 1;
       });
     }, 1000);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -48,29 +57,46 @@ const DetailsScreen = ({
 
 const HomeScreen = ({
   navigation,
-}: BottomTabScreenProps<PreloadBottomTabsParams, 'Home'>) => {
+}: BottomTabScreenProps<PreloadBottomTabsParamList, 'Home'>) => {
   const { navigate, preload } = navigation;
+
+  const [isReady, setIsReady] = useState(false);
 
   return (
     <View style={styles.content}>
-      <Button onPress={() => preload('Details')} style={styles.button}>
-        Preload screen
+      <Text style={styles.text}>
+        {isReady ? 'Details is preloaded!' : 'Details is not preloaded yet.'}
+      </Text>
+      <Button
+        onPress={() => {
+          setTimeout(() => {
+            setIsReady(true);
+          }, 3000);
+
+          preload('Details');
+        }}
+        style={styles.button}
+      >
+        Preload Details
       </Button>
       <Button onPress={() => navigate('Details')} style={styles.button}>
-        Navigate
+        Navigate to Details
       </Button>
     </View>
   );
 };
 
-const BottomsTabs = createBottomTabNavigator<PreloadBottomTabsParams>();
+const BottomsTabs = createBottomTabNavigator<PreloadBottomTabsParamList>();
 
-export function TabPreloadFlow() {
+export function TabPreloadFlow(
+  _: StaticScreenProps<NavigatorScreenParams<PreloadBottomTabsParamList>>
+) {
   return (
     <BottomsTabs.Navigator
       screenOptions={({
         navigation,
-      }: BottomTabScreenProps<PreloadBottomTabsParams>) => ({
+      }: BottomTabScreenProps<PreloadBottomTabsParamList>) => ({
+        headerShown: true,
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),

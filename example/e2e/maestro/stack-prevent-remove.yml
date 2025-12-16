@@ -1,7 +1,8 @@
 appId: ${APP_ID}
 name: Stack Prevent Remove
 ---
-- openLink:
-    link: exp://127.0.0.1:8081/--/stack-prevent-remove
-- assertVisible:
-    text: 'Input'
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-prevent-remove
+      TEXT: 'Input'

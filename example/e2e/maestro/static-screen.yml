@@ -1,7 +1,24 @@
 appId: ${APP_ID}
 name: Static Screen
 ---
-- openLink:
-    link: exp://127.0.0.1:8081/--/static-screen
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: static-screen
+      TEXT: 'Albums'
+- tapOn:
+    text: 'Show Chat'
+- assertVisible:
+    id: 'chat'
+- tapOn:
+    id: 'chat'
+- assertVisible:
+    text: 'Chat'
+- tapOn:
+    id: 'albums'
 - assertVisible:
     text: 'Albums'
+- tapOn:
+    text: 'Hide Chat'
+- assertNotVisible:
+    id: 'chat'

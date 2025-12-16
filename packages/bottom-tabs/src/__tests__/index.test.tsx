@@ -1,4 +1,4 @@
-import { expect, jest, test } from '@jest/globals';
+import { afterEach, expect, jest, test } from '@jest/globals';
 import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
@@ -10,6 +10,7 @@ import {
   Keyboard,
   type KeyboardEventListener,
   type KeyboardEventName,
+  Platform,
   View,
 } from 'react-native';
 
@@ -22,6 +23,10 @@ type BottomTabParamList = {
 
 jest.useFakeTimers();
 
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
 test('renders a bottom tab navigator with screens', async () => {
   const Test = ({ route }: BottomTabScreenProps<BottomTabParamList>) => (
     <View>
@@ -33,7 +38,7 @@ test('renders a bottom tab navigator with screens', async () => {
 
   const { queryByText, getAllByRole, getByRole } = render(
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator implementation="custom">
         <Tab.Screen name="A" component={Test} />
         <Tab.Screen name="B" component={Test} />
       </Tab.Navigator>
@@ -59,7 +64,7 @@ test('handles screens preloading', async () => {
 
   const { queryByText } = render(
     <NavigationContainer ref={navigation}>
-      <Tab.Navigator>
+      <Tab.Navigator implementation="custom">
         <Tab.Screen name="A">{() => null}</Tab.Screen>
         <Tab.Screen name="B">{() => <Text>Screen B</Text>}</Tab.Screen>
       </Tab.Navigator>
@@ -103,6 +108,7 @@ test('tab bar cannot be tapped when hidden', async () => {
   const { queryByText, getByRole } = render(
     <NavigationContainer>
       <Tab.Navigator
+        implementation="custom"
         screenOptions={{
           tabBarHideOnKeyboard: true,
         }}
@@ -137,4 +143,36 @@ test('tab bar cannot be tapped when hidden', async () => {
   expect(queryByText('Screen B')).not.toBeNull();
 
   spy.mockRestore();
+});
+
+test('tab bars render appropriate hrefs on web', () => {
+  jest.replaceProperty(Platform, 'OS', 'web');
+
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
+
+  const { getByText } = render(
+    <NavigationContainer
+      linking={{
+        config: {
+          path: 'root',
+          screens: {
+            A: 'first',
+            B: 'second',
+          },
+        },
+        getInitialURL: () => null,
+      }}
+    >
+      <Tab.Navigator
+        implementation="custom"
+        screenOptions={{ tabBarButton: ({ href }) => <Text>{href}</Text> }}
+      >
+        <Tab.Screen name="A">{() => null}</Tab.Screen>
+        <Tab.Screen name="B">{() => null}</Tab.Screen>
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(getByText('/root/first')).not.toBeNull();
+  expect(getByText('/root/second')).not.toBeNull();
 });

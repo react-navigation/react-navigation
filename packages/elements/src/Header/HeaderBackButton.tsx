@@ -1,21 +1,25 @@
-import { useLocale, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
-  Image,
+  type ColorValue,
   Platform,
   type StyleProp,
   StyleSheet,
+  // eslint-disable-next-line no-restricted-imports
+  type Text,
   type TextStyle,
   View,
 } from 'react-native';
 
 import backIcon from '../assets/back-icon.png';
-import backIconMask from '../assets/back-icon-mask.png';
-import { MaskedView } from '../MaskedView';
-import type { HeaderBackButtonProps } from '../types';
-import { HeaderButton } from './HeaderButton';
-import { HeaderIcon, ICON_MARGIN } from './HeaderIcon';
+import { isLiquidGlassSupported } from '../LiquidGlassView';
+import type {
+  HeaderBackButtonDisplayMode,
+  HeaderBackButtonProps,
+} from '../types';
+import { BUTTON_SIZE, HeaderButton } from './HeaderButton';
+import { HeaderIcon } from './HeaderIcon';
 
 export function HeaderBackButton({
   disabled,
@@ -23,27 +27,25 @@ export function HeaderBackButton({
   backImage,
   label,
   labelStyle,
-  displayMode = Platform.OS === 'ios' ? 'default' : 'minimal',
-  onLabelLayout,
+  displayMode = 'minimal',
   onPress,
   pressColor,
   pressOpacity,
-  screenLayout,
   tintColor,
-  titleLayout,
   truncatedLabel = 'Back',
   accessibilityLabel = label && label !== 'Back' ? `${label}, back` : 'Go back',
   testID,
   style,
   href,
 }: HeaderBackButtonProps) {
-  const { colors, fonts } = useTheme();
-  const { direction } = useLocale();
+  const [measuredMinimal, setMeasuredMinimal] = React.useReducer(
+    () => true,
+    false
+  );
 
-  const [labelWidth, setLabelWidth] = React.useState<number | null>(null);
-  const [truncatedLabelWidth, setTruncatedLabelWidth] = React.useState<
-    number | null
-  >(null);
+  const { colors } = useTheme();
+
+  const isMinimal = displayMode === 'minimal' || measuredMinimal;
 
   const renderBackImage = () => {
     if (backImage) {
@@ -52,116 +54,11 @@ export function HeaderBackButton({
       return (
         <HeaderIcon
           source={backIcon}
-          tintColor={tintColor}
-          style={[
-            styles.icon,
-            displayMode !== 'minimal' && styles.iconWithLabel,
-          ]}
+          tintColor={tintColor ?? colors.text}
+          style={styles.icon}
         />
       );
     }
-  };
-
-  const renderLabel = () => {
-    if (displayMode === 'minimal') {
-      return null;
-    }
-
-    const availableSpace =
-      titleLayout && screenLayout
-        ? (screenLayout.width - titleLayout.width) / 2 -
-          (ICON_WIDTH + ICON_MARGIN)
-        : null;
-
-    const potentialLabelText =
-      displayMode === 'default' ? label : truncatedLabel;
-    const finalLabelText =
-      availableSpace && labelWidth && truncatedLabelWidth
-        ? availableSpace > labelWidth
-          ? potentialLabelText
-          : availableSpace > truncatedLabelWidth
-            ? truncatedLabel
-            : null
-        : potentialLabelText;
-
-    const commonStyle: Animated.WithAnimatedValue<StyleProp<TextStyle>> = [
-      fonts.regular,
-      styles.label,
-      labelStyle,
-    ];
-
-    const hiddenStyle: Animated.WithAnimatedValue<StyleProp<TextStyle>> = [
-      commonStyle,
-      {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        opacity: 0,
-      },
-    ];
-
-    const labelElement = (
-      <View style={styles.labelWrapper}>
-        {label && displayMode === 'default' ? (
-          <Animated.Text
-            style={hiddenStyle}
-            numberOfLines={1}
-            onLayout={(e) => setLabelWidth(e.nativeEvent.layout.width)}
-          >
-            {label}
-          </Animated.Text>
-        ) : null}
-        {truncatedLabel ? (
-          <Animated.Text
-            style={hiddenStyle}
-            numberOfLines={1}
-            onLayout={(e) => setTruncatedLabelWidth(e.nativeEvent.layout.width)}
-          >
-            {truncatedLabel}
-          </Animated.Text>
-        ) : null}
-        {finalLabelText ? (
-          <Animated.Text
-            accessible={false}
-            onLayout={onLabelLayout}
-            style={[tintColor ? { color: tintColor } : null, commonStyle]}
-            numberOfLines={1}
-            allowFontScaling={!!allowFontScaling}
-          >
-            {finalLabelText}
-          </Animated.Text>
-        ) : null}
-      </View>
-    );
-
-    if (backImage || Platform.OS !== 'ios') {
-      // When a custom backimage is specified, we can't mask the label
-      // Otherwise there might be weird effect due to our mask not being the same as the image
-      return labelElement;
-    }
-
-    return (
-      <MaskedView
-        maskElement={
-          <View
-            style={[
-              styles.iconMaskContainer,
-              // Extend the mask to the center of the screen so that label isn't clipped during animation
-              screenLayout ? { minWidth: screenLayout.width / 2 - 27 } : null,
-            ]}
-          >
-            <Image
-              source={backIconMask}
-              resizeMode="contain"
-              style={[styles.iconMask, direction === 'rtl' && styles.flip]}
-            />
-            <View style={styles.iconMaskFillerRect} />
-          </View>
-        }
-      >
-        {labelElement}
-      </MaskedView>
-    );
   };
 
   const handlePress = () => {
@@ -179,71 +76,200 @@ export function HeaderBackButton({
       onPress={handlePress}
       pressColor={pressColor}
       pressOpacity={pressOpacity}
-      style={[styles.container, style]}
+      style={[styles.container, isMinimal && styles.containerMinimal, style]}
     >
       <React.Fragment>
         {renderBackImage()}
-        {renderLabel()}
+        {!isMinimal ? (
+          <HeaderBackLabel
+            allowFontScaling={allowFontScaling}
+            displayMode={displayMode}
+            label={label}
+            labelStyle={labelStyle}
+            tintColor={tintColor}
+            truncatedLabel={truncatedLabel}
+            onMeasureMinimal={setMeasuredMinimal}
+          />
+        ) : null}
       </React.Fragment>
     </HeaderButton>
   );
 }
 
+function HeaderBackLabel({
+  allowFontScaling,
+  displayMode,
+  label,
+  labelStyle,
+  tintColor,
+  truncatedLabel,
+  onMeasureMinimal,
+}: {
+  allowFontScaling?: boolean;
+  displayMode: HeaderBackButtonDisplayMode;
+  label: string | undefined;
+  labelStyle?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
+  tintColor?: ColorValue;
+  truncatedLabel: string | undefined;
+  onMeasureMinimal: () => void;
+}) {
+  const { fonts } = useTheme();
+
+  const [wrapperWidth, setWrapperWidth] = React.useState<number | null>(null);
+  const [labelWidth, setLabelWidth] = React.useState<number | null>(null);
+  const [truncatedLabelWidth, setTruncatedLabelWidth] = React.useState<
+    number | null
+  >(null);
+
+  const wrapperRef = React.useRef<View | null>(null);
+  const labelRef = React.useRef<Text | null>(null);
+  const truncatedLabelRef = React.useRef<Text | null>(null);
+
+  React.useLayoutEffect(() => {
+    wrapperRef.current?.measure((_x, _y, width) => {
+      setWrapperWidth(width);
+    });
+
+    labelRef.current?.measure((_x, _y, width) => {
+      setLabelWidth(width);
+    });
+
+    truncatedLabelRef.current?.measure((_x, _y, width) => {
+      setTruncatedLabelWidth(width);
+    });
+  }, []);
+
+  const availableSpace = wrapperWidth;
+
+  const potentialLabelText = displayMode === 'default' ? label : truncatedLabel;
+  const hasMeasured =
+    availableSpace !== null && labelWidth !== null && truncatedLabel
+      ? truncatedLabelWidth !== null
+      : true;
+
+  const finalLabelText =
+    availableSpace && labelWidth
+      ? availableSpace >= labelWidth
+        ? potentialLabelText
+        : truncatedLabelWidth
+          ? availableSpace >= truncatedLabelWidth
+            ? truncatedLabel
+            : null
+          : null
+      : potentialLabelText;
+
+  const isMinimal = hasMeasured && finalLabelText === null;
+
+  React.useLayoutEffect(() => {
+    if (isMinimal) {
+      onMeasureMinimal();
+    }
+  }, [isMinimal, onMeasureMinimal]);
+
+  const commonStyle: Animated.WithAnimatedValue<StyleProp<TextStyle>> = [
+    fonts.regular,
+    styles.label,
+    labelStyle,
+  ];
+
+  const hiddenStyle: Animated.WithAnimatedValue<StyleProp<TextStyle>> = [
+    commonStyle,
+    {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      opacity: 0,
+    },
+  ];
+
+  return (
+    <View
+      ref={wrapperRef}
+      onLayout={(e) => {
+        setWrapperWidth(e.nativeEvent.layout.width);
+      }}
+      style={styles.labelWrapper}
+    >
+      {label && displayMode === 'default' ? (
+        <Animated.Text
+          ref={labelRef}
+          onLayout={(e) => setLabelWidth(e.nativeEvent.layout.width)}
+          aria-hidden={true}
+          style={hiddenStyle}
+          numberOfLines={1}
+          allowFontScaling={allowFontScaling}
+        >
+          {label}
+        </Animated.Text>
+      ) : null}
+      {truncatedLabel ? (
+        <Animated.Text
+          ref={truncatedLabelRef}
+          onLayout={(e) => setTruncatedLabelWidth(e.nativeEvent.layout.width)}
+          aria-hidden={true}
+          style={hiddenStyle}
+          numberOfLines={1}
+          allowFontScaling={allowFontScaling}
+        >
+          {truncatedLabel}
+        </Animated.Text>
+      ) : null}
+      {finalLabelText ? (
+        <Animated.Text
+          accessible={false}
+          style={[tintColor ? { color: tintColor } : null, commonStyle]}
+          numberOfLines={1}
+          allowFontScaling={allowFontScaling}
+        >
+          {finalLabelText}
+        </Animated.Text>
+      ) : null}
+    </View>
+  );
+}
+
+// iOS uses a smaller chevron, Android uses a larger arrow
 const ICON_WIDTH = Platform.OS === 'ios' ? 13 : 24;
-const ICON_MARGIN_END = Platform.OS === 'ios' ? 22 : 3;
+const ICON_SPACING_START = isLiquidGlassSupported
+  ? 13 // Standard distance of chevron from left edge in liquid glass
+  : 0; // Otherwise icon is aligned to the start of the button
+
+// Standard distance between chevron and label
+const ICON_LABEL_SPACING = 9;
+
+const LABEL_FONT_SIZE = 17;
+const LABEL_LETTER_SPACING = 0.35;
 
 const styles = StyleSheet.create({
   container: {
+    borderRadius: BUTTON_SIZE / 2,
+    flexShrink: 1,
     paddingHorizontal: 0,
-    minWidth: StyleSheet.hairlineWidth, // Avoid collapsing when title is long
-    ...Platform.select({
-      ios: null,
-      default: {
-        marginVertical: 3,
-        marginHorizontal: 11,
-      },
-    }),
+    minWidth: StyleSheet.hairlineWidth, // Avoid collapsing when title is long,
+  },
+  containerMinimal: {
+    minWidth: BUTTON_SIZE,
+    minHeight: BUTTON_SIZE,
+    aspectRatio: 1,
+    alignItems: 'center',
+    justifyContent: Platform.OS === 'ios' ? 'flex-start' : 'center',
   },
   label: {
-    fontSize: 17,
-    // Title and back label are a bit different width due to title being bold
-    // Adjusting the letterSpacing makes them coincide better
-    letterSpacing: 0.35,
+    fontSize: LABEL_FONT_SIZE,
+    letterSpacing: LABEL_LETTER_SPACING,
   },
   labelWrapper: {
-    // These styles will make sure that the label doesn't fill the available space
-    // Otherwise it messes with the measurement of the label
+    // Make sure that the label doesn't fill the available space
     flexDirection: 'row',
     alignItems: 'flex-start',
-    marginEnd: ICON_MARGIN,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 0,
+    marginStart: ICON_LABEL_SPACING,
   },
   icon: {
     width: ICON_WIDTH,
-    marginEnd: ICON_MARGIN_END,
-  },
-  iconWithLabel:
-    Platform.OS === 'ios'
-      ? {
-          marginEnd: 6,
-        }
-      : {},
-  iconMaskContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  iconMaskFillerRect: {
-    flex: 1,
-    backgroundColor: '#000',
-  },
-  iconMask: {
-    height: 21,
-    width: 13,
-    marginStart: -14.5,
-    marginVertical: 12,
-    alignSelf: 'center',
-  },
-  flip: {
-    transform: 'scaleX(-1)',
+    marginStart: ICON_SPACING_START,
+    marginEnd: 0,
   },
 });

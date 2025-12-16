@@ -1,8 +1,10 @@
 import { PlatformPressable, Text } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import { type Route, useTheme } from '@react-navigation/native';
-import Color from 'color';
 import * as React from 'react';
 import {
+  type ColorValue,
+  Platform,
   type StyleProp,
   StyleSheet,
   type TextStyle,
@@ -24,14 +26,14 @@ type Props = {
    */
   label:
     | string
-    | ((props: { focused: boolean; color: string }) => React.ReactNode);
+    | ((props: { focused: boolean; color: ColorValue }) => React.ReactNode);
   /**
    * Icon to display for the `DrawerItem`.
    */
   icon?: (props: {
     focused: boolean;
     size: number;
-    color: string;
+    color: ColorValue;
   }) => React.ReactNode;
   /**
    * Whether to highlight the drawer item as active.
@@ -44,26 +46,26 @@ type Props = {
   /**
    * Color for the icon and label when the item is active.
    */
-  activeTintColor?: string;
+  activeTintColor?: ColorValue;
   /**
    * Color for the icon and label when the item is inactive.
    */
-  inactiveTintColor?: string;
+  inactiveTintColor?: ColorValue;
   /**
    * Background color for item when its active.
    */
-  activeBackgroundColor?: string;
+  activeBackgroundColor?: ColorValue;
   /**
    * Background color for item when its inactive.
    */
-  inactiveBackgroundColor?: string;
+  inactiveBackgroundColor?: ColorValue;
   /**
    * Color of the touchable effect on press.
    * Only supported on Android.
    *
    * @platform android
    */
-  pressColor?: string;
+  pressColor?: ColorValue;
   /**
    * Opacity of the touchable effect on press.
    * Only supported on iOS.
@@ -107,12 +109,9 @@ export function DrawerItem(props: Props) {
     labelStyle,
     focused = false,
     allowFontScaling,
-    // eslint-disable-next-line @eslint-react/no-unstable-default-props
     activeTintColor = colors.primary,
-    // eslint-disable-next-line @eslint-react/no-unstable-default-props
-    inactiveTintColor = Color(colors.text).alpha(0.68).rgb().string(),
-    // eslint-disable-next-line @eslint-react/no-unstable-default-props
-    activeBackgroundColor = Color(activeTintColor).alpha(0.12).rgb().string(),
+    inactiveTintColor,
+    activeBackgroundColor,
     inactiveBackgroundColor = 'transparent',
     style,
     onPress,
@@ -124,9 +123,15 @@ export function DrawerItem(props: Props) {
   } = props;
 
   const { borderRadius = 56 } = StyleSheet.flatten(style || {});
-  const color = focused ? activeTintColor : inactiveTintColor;
-  const backgroundColor = focused
-    ? activeBackgroundColor
+  const color: ColorValue = focused
+    ? activeTintColor
+    : (inactiveTintColor ??
+      Color(colors.text)?.alpha(0.68).string() ??
+      'rgba(0, 0, 0, 0.68)');
+  const backgroundColor: ColorValue = focused
+    ? (activeBackgroundColor ??
+      Color(activeTintColor)?.alpha(0.12).string() ??
+      'rgba(0, 0, 0, 0.06)')
     : inactiveBackgroundColor;
 
   const iconNode = icon ? icon({ size: 24, focused, color }) : null;
@@ -140,13 +145,14 @@ export function DrawerItem(props: Props) {
       <PlatformPressable
         testID={testID}
         onPress={onPress}
-        accessibilityLabel={accessibilityLabel}
-        accessibilityRole="button"
-        accessibilityState={{ selected: focused }}
+        role="button"
+        aria-label={accessibilityLabel}
+        aria-selected={focused}
         pressColor={pressColor}
         pressOpacity={pressOpacity}
-        hoverEffect={{ color }}
+        hoverEffect={typeof color === 'string' ? { color } : undefined}
         href={href}
+        style={{ borderRadius }}
       >
         <View style={[styles.wrapper, { borderRadius }]}>
           {iconNode}
@@ -171,7 +177,17 @@ export function DrawerItem(props: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    overflow: 'hidden',
+    borderCurve: 'continuous',
+    ...Platform.select({
+      android: {
+        // Hide overflow to clip ripple effect
+        overflow: 'hidden',
+      },
+      default: {
+        // Don't hide overflow on web
+        // Otherwise the outline gets clipped
+      },
+    }),
   },
   wrapper: {
     flexDirection: 'row',
@@ -179,6 +195,7 @@ const styles = StyleSheet.create({
     paddingVertical: 11,
     paddingStart: 16,
     paddingEnd: 24,
+    borderCurve: 'continuous',
   },
   label: {
     marginEnd: 12,

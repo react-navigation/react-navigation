@@ -1,5 +1,9 @@
 import { Button, Text } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfig,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -7,19 +11,21 @@ import {
 import * as React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-export type LayoutsStackParams = {
+type LayoutsStackParamList = {
   SuspenseDemo: undefined;
 };
 
-const linking: PathConfigMap<LayoutsStackParams> = {
-  SuspenseDemo: 'suspense',
-};
+const linking = {
+  screens: {
+    SuspenseDemo: 'suspense',
+  },
+} satisfies PathConfig<NavigatorScreenParams<LayoutsStackParamList>>;
 
 let cached: number | undefined;
 
 const createPromise = () =>
   new Promise<number>((resolve) => {
-    setTimeout(() => resolve(42), 1000);
+    setTimeout(() => resolve(42), 3000);
   }).then((result) => {
     cached = result;
     return result;
@@ -27,7 +33,7 @@ const createPromise = () =>
 
 const SuspenseDemoScreen = ({
   navigation,
-}: StackScreenProps<LayoutsStackParams, 'SuspenseDemo'>) => {
+}: StackScreenProps<LayoutsStackParamList, 'SuspenseDemo'>) => {
   const [promise, setPromise] = React.useState(createPromise);
   const [error, setError] = React.useState<Error | null>(null);
 
@@ -95,9 +101,11 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-const Stack = createStackNavigator<LayoutsStackParams>();
+const Stack = createStackNavigator<LayoutsStackParamList>();
 
-export function ScreenLayout() {
+export function ScreenLayout(
+  _: StaticScreenProps<NavigatorScreenParams<LayoutsStackParamList>>
+) {
   return (
     <Stack.Navigator>
       <Stack.Screen

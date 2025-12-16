@@ -10,6 +10,7 @@ import {
   type RouterConfigOptions,
   type RouterFactory,
 } from '@react-navigation/routers';
+import deepEqual from 'fast-deep-equal';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 import useLatestCallback from 'use-latest-callback';
@@ -19,7 +20,7 @@ import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
-import { NavigationRouteContext } from './NavigationRouteContext';
+import { NavigationRouteContext } from './NavigationProvider';
 import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
 import { Screen } from './Screen';
@@ -31,6 +32,7 @@ import {
   PrivateValueStore,
   type RouteConfig,
 } from './types';
+import { UnhandledActionContext } from './UnhandledActionContext';
 import { useChildListeners } from './useChildListeners';
 import { useComponent } from './useComponent';
 import { useCurrentRender } from './useCurrentRender';
@@ -38,10 +40,10 @@ import { type ScreenConfigWithParent, useDescriptors } from './useDescriptors';
 import { useEventEmitter } from './useEventEmitter';
 import { useFocusedListenersChildrenAdapter } from './useFocusedListenersChildrenAdapter';
 import { useFocusEvents } from './useFocusEvents';
-import { useIsomorphicLayoutEffect } from './useIsomorphicLayoutEffect';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
 import { useLazyValue } from './useLazyValue';
 import { useNavigationHelpers } from './useNavigationHelpers';
+import { NavigationStateListenerProvider } from './useNavigationState';
 import { useOnAction } from './useOnAction';
 import { useOnGetState } from './useOnGetState';
 import { useOnRouteFocus } from './useOnRouteFocus';
@@ -49,6 +51,7 @@ import { useRegisterNavigator } from './useRegisterNavigator';
 import { useScheduleUpdate } from './useScheduleUpdate';
 
 // This is to make TypeScript compiler happy
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 PrivateValueStore;
 
 type NavigatorRoute = {
@@ -56,7 +59,27 @@ type NavigatorRoute = {
   params?: NavigatorScreenParams<ParamListBase>;
 };
 
-const isValidKey = (key: unknown) =>
+const isScreen = (
+  child: React.ReactElement<unknown>
+): child is React.ReactElement<{
+  name?: unknown;
+  navigationKey?: unknown;
+}> => {
+  return child.type === Screen;
+};
+
+const isGroup = (
+  child: React.ReactElement<unknown>
+): child is React.ReactElement<{
+  navigationKey?: unknown;
+  screenOptions?: unknown;
+  screenLayout?: unknown;
+  children?: unknown;
+}> => {
+  return child.type === React.Fragment || child.type === Group;
+};
+
+const isValidKey = (key: unknown): key is string | undefined =>
   key === undefined || (typeof key === 'string' && key !== '');
 
 /**
@@ -82,11 +105,27 @@ const getRouteConfigsFromChildren = <
     ScreenConfigWithParent<State, ScreenOptions, EventMap>[]
   >((acc, child) => {
     if (React.isValidElement(child)) {
-      if (child.type === Screen) {
+      if (isScreen(child)) {
         // We can only extract the config from `Screen` elements
         // If something else was rendered, it's probably a bug
 
-        if (!isValidKey(child.props.navigationKey)) {
+        if (typeof child.props !== 'object' || child.props === null) {
+          throw new Error(`Got an invalid element for screen.`);
+        }
+
+        if (typeof child.props.name !== 'string' || child.props.name === '') {
+          throw new Error(
+            `Got an invalid name (${JSON.stringify(
+              child.props.name
+            )}) for the screen. It must be a non-empty string.`
+          );
+        }
+
+        if (
+          child.props.navigationKey !== undefined &&
+          (typeof child.props.navigationKey !== 'string' ||
+            child.props.navigationKey === '')
+        ) {
           throw new Error(
             `Got an invalid 'navigationKey' prop (${JSON.stringify(
               child.props.navigationKey
@@ -113,7 +152,7 @@ const getRouteConfigsFromChildren = <
         return acc;
       }
 
-      if (child.type === React.Fragment || child.type === Group) {
+      if (isGroup(child)) {
         if (!isValidKey(child.props.navigationKey)) {
           throw new Error(
             `Got an invalid 'navigationKey' prop (${JSON.stringify(
@@ -126,8 +165,10 @@ const getRouteConfigsFromChildren = <
         // This is handy to conditionally define a group of screens
         acc.push(
           ...getRouteConfigsFromChildren<State, ScreenOptions, EventMap>(
-            child.props.children,
+            child.props.children as React.ReactNode,
             child.props.navigationKey,
+            // FIXME
+            // @ts-expect-error: add validation
             child.type !== Group
               ? groupOptions
               : groupOptions != null
@@ -138,6 +179,7 @@ const getRouteConfigsFromChildren = <
               : groupLayout
           )
         );
+
         return acc;
       }
     }
@@ -165,14 +207,6 @@ const getRouteConfigsFromChildren = <
   if (process.env.NODE_ENV !== 'production') {
     configs.forEach((config) => {
       const { name, children, component, getComponent } = config.props;
-
-      if (typeof name !== 'string' || !name) {
-        throw new Error(
-          `Got an invalid name (${JSON.stringify(
-            name
-          )}) for the screen. It must be a non-empty string.`
-        );
-      }
 
       if (
         children != null ||
@@ -240,6 +274,24 @@ const getRouteConfigsFromChildren = <
   return configs;
 };
 
+const getStateFromParams = (params: NavigatorRoute['params']) => {
+  if (params?.state != null) {
+    return params.state;
+  } else if (typeof params?.screen === 'string' && params?.initial !== false) {
+    return {
+      routes: [
+        {
+          name: params.screen,
+          params: params.params,
+          path: params.path,
+        },
+      ],
+    };
+  }
+
+  return undefined;
+};
+
 /**
  * Hook for building navigators.
  *
@@ -254,10 +306,9 @@ export function useNavigationBuilder<
   ScreenOptions extends {},
   EventMap extends Record<string, any>,
 >(
-  createRouter: RouterFactory<State, any, RouterOptions>,
+  createRouter: RouterFactory<State, NavigationAction, RouterOptions>,
   options: DefaultNavigatorOptions<
     ParamListBase,
-    string | undefined,
     State,
     ScreenOptions,
     EventMap,
@@ -277,6 +328,7 @@ export function useNavigationBuilder<
     screenOptions,
     screenLayout,
     screenListeners,
+    router: routerOverrides,
     ...rest
   } = options;
 
@@ -298,7 +350,18 @@ export function useNavigationBuilder<
       );
     }
 
-    return createRouter(rest as unknown as RouterOptions);
+    const original = createRouter(rest as unknown as RouterOptions);
+
+    if (routerOverrides != null) {
+      const overrides = routerOverrides(original);
+
+      return {
+        ...original,
+        ...overrides,
+      };
+    }
+
+    return original;
   });
 
   const screens = routeConfigs.reduce<
@@ -358,6 +421,12 @@ export function useNavigationBuilder<
     [isStateValid]
   );
 
+  const doesStateHaveOnlyInvalidRoutes = React.useCallback(
+    (state: NavigationState | PartialState<NavigationState>) =>
+      state.routes.every((r) => !routeNames.includes(r.name)),
+    [routeNames]
+  );
+
   const {
     state: currentState,
     getState: getCurrentState,
@@ -382,7 +451,15 @@ export function useNavigationBuilder<
     }
   );
 
-  const [initializedState, isFirstStateInitialization] = React.useMemo(() => {
+  const [
+    stateBeforeInitialization,
+    initializedState,
+    isFirstStateInitialization,
+  ] = React.useMemo((): [
+    PartialState<State> | undefined,
+    State | undefined,
+    boolean,
+  ] => {
     const initialRouteParamList = routeNames.reduce<
       Record<string, object | undefined>
     >((acc, curr) => {
@@ -418,6 +495,7 @@ export function useNavigationBuilder<
       )
     ) {
       return [
+        undefined,
         router.getInitialState({
           routeNames,
           routeParamList: initialRouteParamList,
@@ -426,37 +504,26 @@ export function useNavigationBuilder<
         true,
       ];
     } else {
-      let stateFromParams;
+      const stateFromParams = getStateFromParams(route?.params);
+      const stateBeforeInitialization = (stateFromParams ??
+        currentState) as PartialState<State>;
+      const hydratedState = router.getRehydratedState(
+        stateBeforeInitialization,
+        {
+          routeNames,
+          routeParamList: initialRouteParamList,
+          routeGetIdList,
+        }
+      );
 
-      if (route?.params?.state != null) {
-        stateFromParams = route.params.state;
-      } else if (
-        typeof route?.params?.screen === 'string' &&
-        route?.params?.initial !== false
+      if (
+        options.routeNamesChangeBehavior === 'lastUnhandled' &&
+        doesStateHaveOnlyInvalidRoutes(stateBeforeInitialization)
       ) {
-        stateFromParams = {
-          index: 0,
-          routes: [
-            {
-              name: route.params.screen,
-              params: route.params.params,
-              path: route.params.path,
-            },
-          ],
-        };
+        return [stateBeforeInitialization, hydratedState, true];
       }
 
-      return [
-        router.getRehydratedState(
-          (stateFromParams ?? currentState) as PartialState<State>,
-          {
-            routeNames,
-            routeParamList: initialRouteParamList,
-            routeGetIdList,
-          }
-        ),
-        false,
-      ];
+      return [undefined, hydratedState, false];
     }
     // We explicitly don't include routeNames, route.params etc. in the dep list
     // below. We want to avoid forcing a new state to be calculated in those cases
@@ -474,6 +541,22 @@ export function useNavigationBuilder<
 
   const previousRouteKeyList = previousRouteKeyListRef.current;
 
+  const [unhandledState, setUnhandledState] = React.useState<
+    NavigationState | PartialState<NavigationState> | undefined
+  >(stateBeforeInitialization);
+
+  // An unhandled state is state that didn't have any valid routes
+  // So it was unhandled, i.e. not used for initializing the state
+  // It's possible that they were absent due to conditional render
+  // Store this state so we can reuse it if the routes change later
+  if (
+    options.routeNamesChangeBehavior === 'lastUnhandled' &&
+    stateBeforeInitialization &&
+    unhandledState !== stateBeforeInitialization
+  ) {
+    setUnhandledState(stateBeforeInitialization);
+  }
+
   let state =
     // If the state isn't initialized, or stale, use the state we initialized instead
     // The state won't update until there's a change needed in the state we have initialized locally
@@ -483,31 +566,39 @@ export function useNavigationBuilder<
       : (initializedState as State);
 
   let nextState: State = state;
+  let shouldClearUnhandledState = false;
 
+  // Previously unhandled state is now valid again
+  // And current state no longer has any valid routes
+  // We should reuse the unhandled state instead of re-calculating the state
   if (
+    unhandledState?.routes.every((r) => routeNames.includes(r.name)) &&
+    state?.routes.every((r) => !routeNames.includes(r.name))
+  ) {
+    shouldClearUnhandledState = true;
+    nextState = router.getRehydratedState(
+      unhandledState as PartialState<State>,
+      {
+        routeNames,
+        routeParamList,
+        routeGetIdList,
+      }
+    );
+  } else if (
     !isArrayEqual(state.routeNames, routeNames) ||
     !isRecordEqual(routeKeyList, previousRouteKeyList)
   ) {
-    const navigatorStateForNextRouteNamesChange =
-      options.UNSTABLE_getStateForRouteNamesChange?.(state);
     // When the list of route names change, the router should handle it to remove invalid routes
-    nextState = navigatorStateForNextRouteNamesChange
-      ? // @ts-expect-error this is ok
-        router.getRehydratedState(navigatorStateForNextRouteNamesChange, {
-          routeNames,
-          routeParamList,
-          routeGetIdList,
-        })
-      : router.getStateForRouteNamesChange(state, {
-          routeNames,
-          routeParamList,
-          routeGetIdList,
-          routeKeyChanges: Object.keys(routeKeyList).filter(
-            (name) =>
-              name in previousRouteKeyList &&
-              routeKeyList[name] !== previousRouteKeyList[name]
-          ),
-        });
+    nextState = router.getStateForRouteNamesChange(state, {
+      routeNames,
+      routeParamList,
+      routeGetIdList,
+      routeKeyChanges: Object.keys(routeKeyList).filter(
+        (name) =>
+          name in previousRouteKeyList &&
+          routeKeyList[name] !== previousRouteKeyList[name]
+      ),
+    });
   }
 
   const previousNestedParamsRef = React.useRef(route?.params);
@@ -526,19 +617,41 @@ export function useNavigationBuilder<
       route.params.state != null &&
       route.params !== previousParams
     ) {
-      // If the route was updated with new state, we should reset to it
-      action = CommonActions.reset(route.params.state);
+      if (
+        options.routeNamesChangeBehavior === 'lastUnhandled' &&
+        doesStateHaveOnlyInvalidRoutes(route.params.state)
+      ) {
+        if (route.params.state !== unhandledState) {
+          setUnhandledState(route.params.state);
+        }
+      } else {
+        // If the route was updated with new state, we should reset to it
+        action = CommonActions.reset(route.params.state);
+      }
     } else if (
       typeof route.params.screen === 'string' &&
       ((route.params.initial === false && isFirstStateInitialization) ||
         route.params !== previousParams)
     ) {
-      // If the route was updated with new screen name and/or params, we should navigate there
-      action = CommonActions.navigate({
-        name: route.params.screen,
-        params: route.params.params,
-        path: route.params.path,
-      });
+      if (
+        options.routeNamesChangeBehavior === 'lastUnhandled' &&
+        !routeNames.includes(route.params.screen)
+      ) {
+        const state = getStateFromParams(route.params);
+
+        if (state != null && !deepEqual(state, unhandledState)) {
+          setUnhandledState(state);
+        }
+      } else {
+        // If the route was updated with new screen name and/or params, we should navigate there
+        action = CommonActions.navigate({
+          name: route.params.screen,
+          params: route.params.params,
+          path: route.params.path,
+          merge: route.params.merge,
+          pop: route.params.pop,
+        });
+      }
     }
 
     // The update should be limited to current navigator only, so we call the router manually
@@ -560,12 +673,19 @@ export function useNavigationBuilder<
         : nextState;
   }
 
-  const shouldUpdate = state !== nextState;
+  const shouldUpdate =
+    state !== nextState ||
+    typeof route?.params?.state === 'object' ||
+    typeof route?.params?.screen === 'string';
 
   useScheduleUpdate(() => {
     if (shouldUpdate) {
       // If the state needs to be updated, we'll schedule an update
       setState(nextState);
+
+      if (shouldClearUnhandledState) {
+        setUnhandledState(undefined);
+      }
     }
   });
 
@@ -607,7 +727,7 @@ export function useNavigationBuilder<
 
   stateRef.current = state;
 
-  useIsomorphicLayoutEffect(() => {
+  React.useLayoutEffect(() => {
     stateRef.current = null;
   });
 
@@ -706,14 +826,50 @@ export function useNavigationBuilder<
     setState,
   });
 
+  const onUnhandledActionParent = React.useContext(UnhandledActionContext);
+
+  const onUnhandledAction = useLatestCallback((action: NavigationAction) => {
+    if (
+      options.routeNamesChangeBehavior === 'lastUnhandled' &&
+      action.type === 'NAVIGATE' &&
+      action.payload != null &&
+      'name' in action.payload &&
+      typeof action.payload.name === 'string' &&
+      !routeNames.includes(action.payload.name)
+    ) {
+      const state = {
+        routes: [
+          {
+            name: action.payload.name,
+            params:
+              'params' in action.payload &&
+              typeof action.payload.params === 'object' &&
+              action.payload.params !== null
+                ? action.payload.params
+                : undefined,
+            path:
+              'path' in action.payload &&
+              typeof action.payload.path === 'string'
+                ? action.payload.path
+                : undefined,
+          },
+        ],
+      };
+
+      setUnhandledState(state);
+    }
+
+    onUnhandledActionParent?.(action);
+  });
+
   const navigation = useNavigationHelpers<
     State,
     ActionHelpers,
     NavigationAction,
     EventMap
   >({
-    id: options.id,
     onAction,
+    onUnhandledAction,
     getState,
     emitter,
     router,
@@ -771,7 +927,9 @@ export function useNavigationBuilder<
 
     return (
       <NavigationHelpersContext.Provider value={navigation}>
-        <PreventRemoveProvider>{element}</PreventRemoveProvider>
+        <NavigationStateListenerProvider state={state}>
+          <PreventRemoveProvider>{element}</PreventRemoveProvider>
+        </NavigationStateListenerProvider>
       </NavigationHelpersContext.Provider>
     );
   });

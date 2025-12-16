@@ -3,6 +3,117 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.21...@react-navigation/native-stack@7.3.22) (2025-07-25)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.20...@react-navigation/native-stack@7.3.21) (2025-06-24)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.19...@react-navigation/native-stack@7.3.20) (2025-06-22)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.18...@react-navigation/native-stack@7.3.19) (2025-06-21)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.17...@react-navigation/native-stack@7.3.18) (2025-06-19)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.16...@react-navigation/native-stack@7.3.17) (2025-06-18)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.15...@react-navigation/native-stack@7.3.16) (2025-06-14)
+
+### Bug Fixes
+
+* don't use native header height if custom header is specified ([eaf1100](https://github.com/react-navigation/react-navigation/commit/eaf1100ac7d99cb93ba11a999549dd0752809a78)), closes [#12545](https://github.com/react-navigation/react-navigation/issues/12545) - by @
+
+## [7.3.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.14...@react-navigation/native-stack@7.3.15) (2025-06-14)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.13...@react-navigation/native-stack@7.3.14) (2025-05-30)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.12...@react-navigation/native-stack@7.3.13) (2025-05-11)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.11...@react-navigation/native-stack@7.3.12) (2025-05-04)
+
+### Bug Fixes
+
+* fix peer dep versions. closes [#12580](https://github.com/react-navigation/react-navigation/issues/12580) ([6fc3dd6](https://github.com/react-navigation/react-navigation/commit/6fc3dd677aecdcf8696fe723e17b9c028de7ad85)) - by @satya164
+
+## [7.3.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.10...@react-navigation/native-stack@7.3.11) (2025-05-02)
+
+### Bug Fixes
+
+* **native-stack:** align headerBackTitle with iOS behavior  ([#12543](https://github.com/react-navigation/react-navigation/issues/12543)) ([38a2a32](https://github.com/react-navigation/react-navigation/commit/38a2a320b0a4b5514152f8e31d7ef480cae94d67)) - by @maciekstosio
+* use aria props instead of accessibilityX ([#11848](https://github.com/react-navigation/react-navigation/issues/11848)) ([347ca97](https://github.com/react-navigation/react-navigation/commit/347ca975406e84a5e7452679b1dde7b9ecca1a22)) - by @satya164
+
+## [7.3.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.9...@react-navigation/native-stack@7.3.10) (2025-04-08)
+
+### Bug Fixes
+
+* add types field back to support legacy moduleResolution ([6c021d4](https://github.com/react-navigation/react-navigation/commit/6c021d442ede3a231e32486b2c391c2e850bf76e)), closes [#12534](https://github.com/react-navigation/react-navigation/issues/12534) - by @
+
+## [7.3.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.8...@react-navigation/native-stack@7.3.9) (2025-04-04)
+
+### Bug Fixes
+
+* drop commonjs module to avoid dual package hazard ([f0fbcc5](https://github.com/react-navigation/react-navigation/commit/f0fbcc5515e73b454f607bd95bba40a48e852d0f)) - by @satya164
+
+## [7.3.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.7...@react-navigation/native-stack@7.3.8) (2025-04-03)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.6...@react-navigation/native-stack@7.3.7) (2025-04-02)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.5...@react-navigation/native-stack@7.3.6) (2025-04-02)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.4...@react-navigation/native-stack@7.3.5) (2025-04-02)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.3...@react-navigation/native-stack@7.3.4) (2025-04-01)
+
+### Bug Fixes
+
+* jumping back button in native stack ([#12500](https://github.com/react-navigation/react-navigation/issues/12500)) ([785c0cd](https://github.com/react-navigation/react-navigation/commit/785c0cda7be4cd49e76b45475cf60d5ceb4767db)), closes [/github.com/software-mansion/react-native-screens/pull/2105#discussion_r1565222738](https://github.com//github.com/software-mansion/react-native-screens/pull/2105/issues/discussion_r1565222738) [624077022#624077022](https://github.com/624077022/issues/624077022) - by @maciekstosio
+
+## [7.3.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.2...@react-navigation/native-stack@7.3.3) (2025-03-25)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.1...@react-navigation/native-stack@7.3.2) (2025-03-22)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+## [7.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.0...@react-navigation/native-stack@7.3.1) (2025-03-19)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [7.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.2.1...@react-navigation/native-stack@7.3.0) (2025-03-19)
+
+### Features
+
+* add an option to override router in navigators ([5f201ee](https://github.com/react-navigation/react-navigation/commit/5f201ee435f887e655457c3aa1a81cbeb392ba05)) - by @
+
+## [7.2.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.2.0...@react-navigation/native-stack@7.2.1) (2025-03-02)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
 # [7.2.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.1.14...@react-navigation/native-stack@7.2.0) (2024-12-12)
 
 ### Bug Fixes

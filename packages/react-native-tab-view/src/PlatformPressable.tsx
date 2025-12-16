@@ -1,16 +1,20 @@
 import * as React from 'react';
 import {
+  type ColorValue,
   type GestureResponderEvent,
   Platform,
   Pressable,
   type PressableProps,
 } from 'react-native';
 
-export type Props = PressableProps & {
-  children: React.ReactNode;
-  pressColor?: string;
-  pressOpacity?: number;
+export type Props = Omit<PressableProps, 'onPress'> & {
   href?: string;
+  pressColor?: ColorValue;
+  pressOpacity?: number;
+  onPress?: (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
+  ) => void;
+  children: React.ReactNode;
 };
 
 const ANDROID_VERSION_LOLLIPOP = 21;
@@ -29,19 +33,31 @@ export function PlatformPressable({
   onPress,
   ...rest
 }: Props) {
-  const handlePress = (e: GestureResponderEvent) => {
+  const handlePress = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
+  ) => {
     if (Platform.OS === 'web' && rest.href !== null) {
-      // @ts-expect-error: these properties exist on web, but not in React Native
-      const hasModifierKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey; // ignore clicks with modifier keys
-      // @ts-expect-error: these properties exist on web, but not in React Native
-      const isLeftClick = e.button === null || e.button === 0; // only handle left clicks
-      const isSelfTarget = [undefined, null, '', 'self'].includes(
-        // @ts-expect-error: these properties exist on web, but not in React Native
-        e.currentTarget?.target
-      ); // let browser handle "target=_blank" etc.
+      // ignore clicks with modifier keys
+      const hasModifierKey =
+        ('metaKey' in e && e.metaKey) ||
+        ('altKey' in e && e.altKey) ||
+        ('ctrlKey' in e && e.ctrlKey) ||
+        ('shiftKey' in e && e.shiftKey);
+
+      // only handle left clicks
+      const isLeftClick =
+        'button' in e ? e.button == null || e.button === 0 : true;
+
+      // let browser handle "target=_blank" etc.
+      const isSelfTarget =
+        e.currentTarget && 'target' in e.currentTarget
+          ? [undefined, null, '', 'self'].includes(e.currentTarget.target)
+          : true;
 
       if (!hasModifierKey && isLeftClick && isSelfTarget) {
         e.preventDefault();
+        // call `onPress` only when browser default is prevented
+        // this prevents app from handling the click when a link is being opened
         onPress?.(e);
       }
     } else {
@@ -52,20 +68,21 @@ export function PlatformPressable({
   return (
     <Pressable
       android_ripple={
-        ANDROID_SUPPORTS_RIPPLE
+        ANDROID_SUPPORTS_RIPPLE && !disabled
           ? { color: pressColor, ...android_ripple }
           : undefined
       }
       style={({ pressed }) => [
         {
           cursor:
-            Platform.OS === 'web' || Platform.OS === 'ios'
+            (Platform.OS === 'web' || Platform.OS === 'ios') && !disabled
               ? // Pointer cursor on web
                 // Hover effect on iPad and visionOS
                 'pointer'
               : 'auto',
-          opacity: pressed && !ANDROID_SUPPORTS_RIPPLE ? pressOpacity : 1,
-        },
+          opacity:
+            !ANDROID_SUPPORTS_RIPPLE && pressed && !disabled ? pressOpacity : 1,
+        } as const,
         typeof style === 'function' ? style({ pressed }) : style,
       ]}
       onPress={disabled ? undefined : handlePress}

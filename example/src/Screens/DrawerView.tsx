@@ -1,25 +1,65 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import { Button } from '@react-navigation/elements';
-import { useLocale, useTheme } from '@react-navigation/native';
+import {
+  type PathConfig,
+  type StaticScreenProps,
+  useLocale,
+  useNavigation,
+  useRoute,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
 
 import { DrawerProgress } from '../Shared/DrawerProgress';
 
-const DRAWER_TYPES = ['front', 'back', 'slide'] as const;
+const DRAWER_TYPES = ['front', 'back', 'slide', 'permanent'] as const;
 
-export function DrawerView() {
+type Params =
+  | {
+      type: (typeof DRAWER_TYPES)[number];
+      position: 'left' | 'right';
+    }
+  | undefined;
+
+const linking = {
+  path: 'drawer-view',
+  parse: {
+    type: (type: string) => {
+      if (
+        type === 'front' ||
+        type === 'back' ||
+        type === 'slide' ||
+        type === 'permanent'
+      ) {
+        return type;
+      }
+
+      return 'front';
+    },
+    position: (position: string) => {
+      if (position === 'left' || position === 'right') {
+        return position;
+      }
+
+      return 'left';
+    },
+  },
+} satisfies PathConfig<Params>;
+
+export function DrawerView(_: StaticScreenProps<Params>) {
   const { showActionSheetWithOptions } = useActionSheet();
   const { colors } = useTheme();
   const { direction } = useLocale();
 
+  const navigation = useNavigation('DrawerView');
+  const route = useRoute('DrawerView');
+
+  const { type: drawerType = 'front', position: drawerPosition = 'left' } =
+    route.params ?? {};
+
   const [open, setOpen] = React.useState(false);
-  const [drawerType, setDrawerType] =
-    React.useState<(typeof DRAWER_TYPES)[number]>('front');
-  const [drawerPosition, setDrawerPosition] = React.useState<'left' | 'right'>(
-    'left'
-  );
 
   return (
     <Drawer
@@ -33,7 +73,7 @@ export function DrawerView() {
         return (
           <View style={styles.container}>
             <Button color="tomato" onPress={() => setOpen(false)}>
-              Close drawer
+              Close
             </Button>
           </View>
         );
@@ -50,9 +90,9 @@ export function DrawerView() {
           </Button>
           <Button
             onPress={() =>
-              setDrawerPosition((prevPosition) =>
-                prevPosition === 'left' ? 'right' : 'left'
-              )
+              navigation.setParams({
+                position: drawerPosition === 'left' ? 'right' : 'left',
+              })
             }
           >
             Change position ({drawerPosition})
@@ -71,7 +111,9 @@ export function DrawerView() {
                 },
                 (index) => {
                   if (index != null) {
-                    setDrawerType(DRAWER_TYPES[index]);
+                    navigation.setParams({
+                      type: DRAWER_TYPES[index],
+                    });
                   }
                 }
               )
@@ -86,7 +128,7 @@ export function DrawerView() {
 }
 
 DrawerView.title = 'Drawer Layout';
-DrawerView.linking = {};
+DrawerView.linking = linking;
 DrawerView.options = {
   headerShown: true,
 };

@@ -1,5 +1,9 @@
 import { Button } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfig,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -10,22 +14,24 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-export type MixedStackParams = {
+type MixedStackParamList = {
   Article: { author: string };
   Albums: undefined;
 };
 
-const linking: PathConfigMap<MixedStackParams> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    Albums: 'albums',
+  },
+} satisfies PathConfig<NavigatorScreenParams<MixedStackParamList>>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<MixedStackParams, 'Article'>) => {
+}: StackScreenProps<MixedStackParamList, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -50,7 +56,9 @@ const ArticleScreen = ({
   );
 };
 
-const AlbumsScreen = ({ navigation }: StackScreenProps<MixedStackParams>) => {
+const AlbumsScreen = ({
+  navigation,
+}: StackScreenProps<MixedStackParamList>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -72,9 +80,11 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<MixedStackParams>) => {
   );
 };
 
-const Stack = createStackNavigator<MixedStackParams>();
+const Stack = createStackNavigator<MixedStackParamList>();
 
-export function MixedStack() {
+export function MixedStack(
+  _: StaticScreenProps<NavigatorScreenParams<MixedStackParamList>>
+) {
   return (
     <Stack.Navigator>
       <Stack.Screen

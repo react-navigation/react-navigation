@@ -17,7 +17,7 @@ type Options<ParamList extends {}> = {
 
 type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
-type StringifyConfig = Record<string, (value: unknown) => string>;
+type StringifyConfig = Record<string, ((value: unknown) => string) | undefined>;
 
 type ConfigItem = {
   parts?: PatternPart[];
@@ -131,13 +131,30 @@ export function getPathFromState<ParamList extends {}>(
       nestedRouteNames.push(route.name);
 
       if (route.params) {
-        const stringify = currentOptions[route.name]?.stringify;
+        const options = currentOptions[route.name];
 
         const currentParams = Object.fromEntries(
-          Object.entries(route.params).map(([key, value]) => [
-            key,
-            stringify?.[key] ? stringify[key](value) : String(value),
-          ])
+          Object.entries(route.params)
+            .map(([key, value]): [string, string] | null => {
+              if (value === undefined) {
+                if (options) {
+                  const optional = options.parts?.find(
+                    (part) => part.param === key
+                  )?.optional;
+
+                  if (optional) {
+                    return null;
+                  }
+                } else {
+                  return null;
+                }
+              }
+
+              const stringify = options?.stringify?.[key] ?? String;
+
+              return [key, stringify(value)];
+            })
+            .filter((entry) => entry != null)
         );
 
         if (parts?.length) {
@@ -207,10 +224,13 @@ export function getPathFromState<ParamList extends {}>(
 
             // Valid characters according to
             // https://datatracker.ietf.org/doc/html/rfc3986#section-3.3 (see pchar definition)
-            return String(value).replace(
-              /[^A-Za-z0-9\-._~!$&'()*+,;=:@]/g,
-              (char) => encodeURIComponent(char)
-            );
+            return Array.from(String(value))
+              .map((char) =>
+                /[^A-Za-z0-9\-._~!$&'()*+,;=:@]/g.test(char)
+                  ? encodeURIComponent(char)
+                  : char
+              )
+              .join('');
           }
 
           return encodeURIComponent(segment);
@@ -268,7 +288,7 @@ export function getPathFromState<ParamList extends {}>(
 }
 
 const createConfigItem = (
-  config: PathConfig<object> | string,
+  config: PathConfig<{}> | string,
   parentParts?: PatternPart[]
 ): ConfigItem => {
   if (typeof config === 'string') {
@@ -300,9 +320,10 @@ const createConfigItem = (
         ? getPatternParts(config.path)
         : undefined;
 
-  const screens = config.screens
-    ? createNormalizedConfigs(config.screens, parts)
-    : undefined;
+  const screens =
+    'screens' in config && config.screens
+      ? createNormalizedConfigs(config.screens, parts)
+      : undefined;
 
   return {
     parts,

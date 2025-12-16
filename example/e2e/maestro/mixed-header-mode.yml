@@ -1,7 +1,24 @@
 appId: ${APP_ID}
 name: Mixed Header Mode
 ---
-- openLink:
-    link: exp://127.0.0.1:8081/--/mixed-header-mode
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: mixed-header-mode
+      TEXT: 'Article by Gandalf'
+- tapOn:
+    text: 'Push feed'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Navigate to albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Pop screen'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Pop screen'
 - assertVisible:
     text: 'Article by Gandalf'

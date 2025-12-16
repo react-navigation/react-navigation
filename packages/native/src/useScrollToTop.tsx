@@ -19,7 +19,8 @@ type ScrollableView =
 type ScrollableWrapper =
   | { getScrollResponder(): React.ReactNode | ScrollView }
   | { getNode(): ScrollableView }
-  | ScrollableView;
+  | ScrollableView
+  | null;
 
 function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
   if (ref.current == null) {
@@ -61,7 +62,9 @@ export function useScrollToTop(ref: React.RefObject<ScrollableWrapper>) {
 
   React.useEffect(() => {
     const tabNavigations: NavigationProp<ParamListBase>[] = [];
-    let currentNavigation = navigation;
+    let currentNavigation: NavigationProp<ParamListBase> | undefined =
+      navigation;
+
     // If the screen is nested inside multiple tab navigators, we should scroll to top for any of them
     // So we need to find all the parent tab navigators and add the listeners there
     while (currentNavigation) {

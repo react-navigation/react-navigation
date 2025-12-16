@@ -65,9 +65,34 @@ export function getActionFromState(
   let config: ConfigItem | undefined = normalizedConfig?.screens?.[route?.name];
   let params = { ...route.params } as NavigatorScreenParams<ParamListBase>;
 
-  const payload = route
+  const payload:
+    | {
+        name: string;
+        params: NavigatorScreenParams<ParamListBase>;
+        path?: string;
+        pop?: boolean;
+      }
+    | undefined = route
     ? { name: route.name, path: route.path, params }
     : undefined;
+
+  // If the screen contains a navigator, pop other screens to navigate to it
+  // This avoid pushing multiple instances of navigators onto a stack
+  //
+  // For example:
+  // - RootStack
+  //   - BottomTabs
+  //   - SomeScreen
+  //
+  // In this case, if deep linking to `BottomTabs`, we should pop `SomeScreen`
+  // Otherwise, we'll end up with 2 instances of `BottomTabs` in the stack
+  //
+  // There are 2 ways we can detect if a screen contains a navigator:
+  // - The route contains nested state in `route.state`
+  // - Nested screens are defined in the config
+  if (payload && config?.screens && Object.keys(config.screens).length) {
+    payload.pop = true;
+  }
 
   while (current) {
     if (current.routes.length === 0) {
@@ -108,6 +133,7 @@ export function getActionFromState(
 
     if (route.state) {
       params.params = { ...route.params };
+      params.pop = true;
       params = params.params as NavigatorScreenParams<ParamListBase>;
     } else {
       params.path = route.path;
@@ -116,6 +142,14 @@ export function getActionFromState(
 
     current = route.state;
     config = config?.screens?.[route.name];
+
+    if (config?.screens && Object.keys(config.screens).length) {
+      params.pop = true;
+    }
+  }
+
+  if (payload?.params.screen || payload?.params.state) {
+    payload.pop = true;
   }
 
   if (!payload) {
@@ -133,9 +167,10 @@ export function getActionFromState(
 const createNormalizedConfigItem = (config: PathConfig<object> | string) =>
   typeof config === 'object' && config != null
     ? {
-        initialRouteName: config.initialRouteName,
+        initialRouteName:
+          'initialRouteName' in config ? config.initialRouteName : undefined,
         screens:
-          config.screens != null
+          'screens' in config && config.screens != null
             ? createNormalizedConfigs(config.screens)
             : undefined,
       }
@@ -143,6 +178,7 @@ const createNormalizedConfigItem = (config: PathConfig<object> | string) =>
 
 const createNormalizedConfigs = (options: PathConfigMap<object>) =>
   Object.entries(options).reduce<Record<string, ConfigItem>>((acc, [k, v]) => {
+    // @ts-expect-error -we can't properly type this
     acc[k] = createNormalizedConfigItem(v);
     return acc;
   }, {});

@@ -1,8 +1,9 @@
 import { getLabel, Label, PlatformPressable } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import { type Route, useTheme } from '@react-navigation/native';
-import Color from 'color';
 import React from 'react';
 import {
+  type ColorValue,
   type GestureResponderEvent,
   Platform,
   type StyleProp,
@@ -11,13 +12,14 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
+import type { TabBarItemLabelVisibilityMode } from 'react-native-screens';
 
 import type {
   BottomTabBarButtonProps,
   BottomTabDescriptor,
   LabelPosition,
 } from '../types';
-import { TabBarIcon } from './TabBarIcon';
+import { TabBarIcon, type TabBarIconProps } from './TabBarIcon';
 
 type Props = {
   /**
@@ -43,18 +45,14 @@ type Props = {
     | string
     | ((props: {
         focused: boolean;
-        color: string;
+        color: ColorValue;
         position: LabelPosition;
         children: string;
       }) => React.ReactNode);
   /**
    * Icon to display for the tab.
    */
-  icon: (props: {
-    focused: boolean;
-    size: number;
-    color: string;
-  }) => React.ReactNode;
+  icon: TabBarIconProps['icon'] | undefined;
   /**
    * Text to show in a badge on the tab icon.
    */
@@ -107,23 +105,27 @@ type Props = {
   /**
    * Color for the icon and label when the item is active.
    */
-  activeTintColor?: string;
+  activeTintColor?: ColorValue;
   /**
    * Color for the icon and label when the item is inactive.
    */
-  inactiveTintColor?: string;
+  inactiveTintColor?: ColorValue;
   /**
    * Background color for item when its active.
    */
-  activeBackgroundColor?: string;
+  activeBackgroundColor?: ColorValue;
   /**
    * Background color for item when its inactive.
    */
-  inactiveBackgroundColor?: string;
+  inactiveBackgroundColor?: ColorValue;
   /**
-   * Whether to show the label text for the tab.
+   * Color of tab bar item's ripple effect.
    */
-  showLabel?: boolean;
+  rippleColor?: ColorValue;
+  /**
+   * Label visibility mode for the tab bar item.
+   */
+  labelVisibilityMode?: TabBarItemLabelVisibilityMode;
   /**
    * Whether to allow scaling the font for the label for accessibility purposes.
    * Defaults to `false` on iOS 13+ where it uses `largeContentTitle`.
@@ -172,7 +174,8 @@ export function BottomTabItem({
   inactiveTintColor: customInactiveTintColor,
   activeBackgroundColor: customActiveBackgroundColor,
   inactiveBackgroundColor = 'transparent',
-  showLabel = true,
+  rippleColor,
+  labelVisibilityMode,
   // On iOS 13+, we use `largeContentTitle` for accessibility
   // So we don't need the font to scale up
   // https://developer.apple.com/documentation/uikit/uiview/3183939-largecontenttitle
@@ -183,25 +186,25 @@ export function BottomTabItem({
 }: Props) {
   const { colors, fonts } = useTheme();
 
-  const activeTintColor =
+  const activeTintColor: ColorValue =
     customActiveTintColor ??
     (variant === 'uikit' && sidebar && horizontal
-      ? Color(colors.primary).isDark()
+      ? Color(colors.primary)?.isDark()
         ? 'white'
-        : Color(colors.primary).darken(0.71).string()
+        : (Color(colors.primary)?.darken(0.71).string() ?? colors.primary)
       : colors.primary);
 
-  const inactiveTintColor =
+  const inactiveTintColor: ColorValue =
     customInactiveTintColor === undefined
       ? variant === 'material'
-        ? Color(colors.text).alpha(0.68).rgb().string()
-        : Color(colors.text).mix(Color(colors.card), 0.5).hex()
+        ? (Color(colors.text)?.alpha(0.68).string() ?? 'rgba(0, 0, 0, 0.68)')
+        : (Color(colors.text)?.alpha(0.5).string() ?? 'rgba(0, 0, 0, 0.5)')
       : customInactiveTintColor;
 
-  const activeBackgroundColor =
+  const activeBackgroundColor: ColorValue =
     customActiveBackgroundColor ??
     (variant === 'material'
-      ? Color(activeTintColor).alpha(0.12).rgb().string()
+      ? (Color(activeTintColor)?.alpha(0.12).string() ?? 'rgba(0, 0, 0, 0.06)')
       : sidebar && horizontal
         ? colors.primary
         : 'transparent');
@@ -232,7 +235,7 @@ export function BottomTabItem({
   }
 
   const renderLabel = ({ focused }: { focused: boolean }) => {
-    if (showLabel === false) {
+    if (labelVisibilityMode === 'unlabeled') {
       return null;
     }
 
@@ -296,7 +299,7 @@ export function BottomTabItem({
         inactiveOpacity={inactiveOpacity}
         activeTintColor={activeTintColor}
         inactiveTintColor={iconInactiveTintColor}
-        renderIcon={icon}
+        icon={icon}
         style={iconStyle}
       />
     );
@@ -334,17 +337,17 @@ export function BottomTabItem({
         onPress,
         onLongPress,
         testID,
-        accessibilityLabel,
+        'aria-label': accessibilityLabel,
         accessibilityLargeContentTitle: labelString,
         accessibilityShowsLargeContentViewer: true,
-        // FIXME: accessibilityRole: 'tab' doesn't seem to work as expected on iOS
-        accessibilityRole: Platform.select({ ios: 'button', default: 'tab' }),
-        accessibilityState: { selected: focused },
-        // @ts-expect-error: keep for compatibility with older React Native versions
-        accessibilityStates: focused ? ['selected'] : [],
+        // FIXME: role: 'tab' doesn't seem to work as expected on iOS
+        role: Platform.select({ ios: 'button', default: 'tab' }),
+        'aria-selected': focused,
         android_ripple: { borderless: true },
+        pressColor: rippleColor,
         hoverEffect:
-          variant === 'material' || (sidebar && horizontal)
+          (variant === 'material' || (sidebar && horizontal)) &&
+          typeof colors.text === 'string'
             ? { color: colors.text }
             : undefined,
         pressOpacity: 1,
@@ -381,6 +384,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // Roundness for iPad hover effect
     borderRadius: 10,
+    borderCurve: 'continuous',
   },
   tabVerticalUiKit: {
     justifyContent: 'flex-start',

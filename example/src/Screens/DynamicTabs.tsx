@@ -4,33 +4,43 @@ import {
   createBottomTabNavigator,
 } from '@react-navigation/bottom-tabs';
 import { Button, HeaderBackButton, Text } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfigMap,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export type DynamicBottomTabParams = {
+type DynamicBottomTabParamList = {
   [key: `tab-${number}`]: undefined;
 };
 
-const linking: PathConfigMap<DynamicBottomTabParams> = {
-  'tab-0': 'tab/0',
-  'tab-1': 'tab/1',
-  'tab-2': 'tab/2',
-  'tab-3': 'tab/3',
-  'tab-4': 'tab/4',
-  'tab-5': 'tab/5',
-};
+const linking = {
+  screens: {
+    'tab-0': 'tab/0',
+    'tab-1': 'tab/1',
+    'tab-2': 'tab/2',
+    'tab-3': 'tab/3',
+    'tab-4': 'tab/4',
+    'tab-5': 'tab/5',
+  },
+} satisfies { screens: PathConfigMap<DynamicBottomTabParamList> };
 
-const BottomTabs = createBottomTabNavigator<DynamicBottomTabParams>();
+const BottomTabs = createBottomTabNavigator<DynamicBottomTabParamList>();
 
-export function DynamicTabs() {
+export function DynamicTabs(
+  _: StaticScreenProps<NavigatorScreenParams<DynamicBottomTabParamList>>
+) {
   const [tabs, setTabs] = React.useState([0, 1]);
 
   return (
     <BottomTabs.Navigator
+      implementation="custom"
       screenOptions={({
         navigation,
-      }: BottomTabScreenProps<DynamicBottomTabParams>) => ({
+      }: BottomTabScreenProps<DynamicBottomTabParamList>) => ({
+        headerShown: true,
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />
         ),
@@ -42,6 +52,7 @@ export function DynamicTabs() {
           name={`tab-${i}`}
           options={{
             title: `Tab ${i}`,
+            tabBarButtonTestID: `tab-${i}`,
             tabBarIcon: ({ color, size }) => (
               <Feather name="octagon" color={color} size={size} />
             ),

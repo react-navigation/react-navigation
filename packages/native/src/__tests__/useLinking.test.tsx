@@ -10,11 +10,11 @@ import { useLinking } from '../useLinking';
 test('throws if multiple instances of useLinking are used', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
 
-  const options = { prefixes: [] };
+  const options = { enabled: true };
 
   function Sample() {
-    useLinking(ref, options, () => {});
-    useLinking(ref, options, () => {});
+    useLinking(ref, options);
+    useLinking(ref, options);
     return null;
   }
 
@@ -32,12 +32,12 @@ test('throws if multiple instances of useLinking are used', () => {
   element?.unmount();
 
   function A() {
-    useLinking(ref, options, () => {});
+    useLinking(ref, options);
     return null;
   }
 
   function B() {
-    useLinking(ref, options, () => {});
+    useLinking(ref, options);
     return null;
   }
 
@@ -56,7 +56,7 @@ test('throws if multiple instances of useLinking are used', () => {
   element?.unmount();
 
   function Sample2() {
-    useLinking(ref, options, () => {});
+    useLinking(ref, options);
     return null;
   }
 

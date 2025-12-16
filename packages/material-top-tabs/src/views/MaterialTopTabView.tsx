@@ -57,7 +57,7 @@ export function MaterialTopTabView({
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
   return (
-    <TabView<Route<string>>
+    <TabView
       {...rest}
       onIndexChange={(index) => {
         const route = state.routes[index];

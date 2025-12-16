@@ -1,7 +1,24 @@
 appId: ${APP_ID}
 name: Bottom Tabs
 ---
-- openLink:
-    link: exp://127.0.0.1:8081/--/bottom-tabs
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: bottom-tabs
+      TEXT: 'Article by Gandalf'
+- tapOn:
+    id: 'albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Go to Chat'
+- assertVisible:
+    text: 'Chat'
+- tapOn:
+    id: 'contacts'
+- assertVisible:
+    text: 'Contacts'
+- tapOn:
+    id: 'article'
 - assertVisible:
     text: 'Article by Gandalf'

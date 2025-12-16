@@ -3,10 +3,13 @@ import {
   getDefaultHeaderHeight,
   getHeaderTitle,
   Text,
+  useFrameSize,
 } from '@react-navigation/elements';
 import {
   CommonActions,
-  type PathConfigMap,
+  type NavigatorScreenParams,
+  type PathConfig,
+  type StaticScreenProps,
   useTheme,
 } from '@react-navigation/native';
 import {
@@ -21,34 +24,33 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type CustomLayoutParams = {
+type CustomLayoutParamList = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
 };
 
-const linking: PathConfigMap<CustomLayoutParams> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Albums: 'albums',
+  },
+} satisfies PathConfig<NavigatorScreenParams<CustomLayoutParamList>>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<CustomLayoutParams, 'Article'>) => {
+}: StackScreenProps<CustomLayoutParamList, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -73,7 +75,7 @@ const ArticleScreen = ({
 const NewsFeedScreen = ({
   route,
   navigation,
-}: StackScreenProps<CustomLayoutParams, 'NewsFeed'>) => {
+}: StackScreenProps<CustomLayoutParamList, 'NewsFeed'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -91,7 +93,7 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: StackScreenProps<CustomLayoutParams, 'Albums'>) => {
+}: StackScreenProps<CustomLayoutParamList, 'Albums'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -112,13 +114,21 @@ const AlbumsScreen = ({
   );
 };
 
-const Stack = createStackNavigator<CustomLayoutParams>();
+const Stack = createStackNavigator<CustomLayoutParamList>();
 
-export function NavigatorLayout() {
+export function NavigatorLayout(
+  _: StaticScreenProps<NavigatorScreenParams<CustomLayoutParamList>>
+) {
   const { colors } = useTheme();
 
-  const frame = useSafeAreaFrame();
   const insets = useSafeAreaInsets();
+  const defaultHeaderHeight = useFrameSize((size) =>
+    getDefaultHeaderHeight({
+      landscape: size.width > size.height,
+      modalPresentation: false,
+      topInset: insets.top,
+    })
+  );
 
   return (
     <Stack.Navigator
@@ -131,7 +141,7 @@ export function NavigatorLayout() {
                 backgroundColor: colors.card,
                 borderBottomColor: colors.border,
                 borderBottomWidth: StyleSheet.hairlineWidth,
-                maxHeight: getDefaultHeaderHeight(frame, false, insets.top),
+                maxHeight: defaultHeaderHeight,
               }}
               contentContainerStyle={[
                 styles.breadcrumbs,

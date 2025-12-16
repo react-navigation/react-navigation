@@ -47,7 +47,6 @@ test('renders correct state with location', () => {
   const StackNavigator = (
     props: DefaultNavigatorOptions<
       ParamListBase,
-      string | undefined,
       StackNavigationState<ParamListBase>,
       {},
       {},
@@ -70,7 +69,6 @@ test('renders correct state with location', () => {
 
   function createStackNavigator<ParamList extends {}>(): TypedNavigator<{
     ParamList: ParamList;
-    NavigatorID: string | undefined;
     State: StackNavigationState<ParamList>;
     ScreenOptions: {};
     EventMap: {};
@@ -112,7 +110,6 @@ test('renders correct state with location', () => {
   const element = (
     <NavigationContainer<StackAParamList>
       linking={{
-        prefixes: [],
         config: {
           screens: {
             Home: {

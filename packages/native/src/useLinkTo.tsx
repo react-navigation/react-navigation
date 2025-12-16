@@ -5,6 +5,7 @@ import { useLinkBuilder } from './useLinkBuilder';
 
 /**
  * Helper to navigate to a screen using a href based on the linking options.
+ *
  * @returns function that receives the href to navigate to.
  */
 export function useLinkTo() {

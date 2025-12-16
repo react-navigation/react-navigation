@@ -36,8 +36,6 @@ export const ScrollableTabBar = () => {
     <TabBar
       {...props}
       scrollEnabled
-      indicatorStyle={styles.indicator}
-      style={styles.tabbar}
       contentContainerStyle={styles.tabbarContentContainer}
       tabStyle={styles.tab}
       gap={20}
@@ -46,7 +44,7 @@ export const ScrollableTabBar = () => {
   );
 
   return (
-    <TabView<Route>
+    <TabView
       lazy
       navigationState={{
         index,
@@ -63,23 +61,13 @@ export const ScrollableTabBar = () => {
 ScrollableTabBar.options = {
   title: 'Scrollable tab bar',
   headerShadowVisible: false,
-  headerTintColor: '#fff',
-  headerStyle: {
-    backgroundColor: '#3f51b5',
-  },
 };
 
 const styles = StyleSheet.create({
-  tabbar: {
-    backgroundColor: '#3f51b5',
-  },
   tabbarContentContainer: {
     paddingHorizontal: 10,
   },
   tab: {
     width: 120,
-  },
-  indicator: {
-    backgroundColor: '#ffeb3b',
   },
 });

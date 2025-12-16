@@ -2,9 +2,10 @@ import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
 import { deepFreeze } from './deepFreeze';
+import { useLazyValue } from './useLazyValue';
 
 const createStore = <T,>(getInitialState: () => T) => {
-  const listeners: (() => void)[] = [];
+  const listeners = new Set<() => void>();
 
   let initialized = false;
   let state: T;
@@ -33,14 +34,10 @@ const createStore = <T,>(getInitialState: () => T) => {
   };
 
   const subscribe = (callback: () => void) => {
-    listeners.push(callback);
+    listeners.add(callback);
 
     return () => {
-      const index = listeners.indexOf(callback);
-
-      if (index > -1) {
-        listeners.splice(index, 1);
-      }
+      listeners.delete(callback);
     };
   };
 
@@ -64,15 +61,31 @@ const createStore = <T,>(getInitialState: () => T) => {
 };
 
 export function useSyncState<T>(getInitialState: () => T) {
-  const store = React.useRef(createStore(getInitialState)).current;
+  const store = useLazyValue(() => createStore(getInitialState));
 
-  const state = React.useSyncExternalStore(
-    store.subscribe,
-    store.getState,
-    store.getState
+  // Use a reducer with `store.getState` to always have the latest state
+  const [state, rerender] = React.useReducer(
+    (_) => store.getState(),
+    undefined,
+    () => store.getState()
   );
 
-  React.useDebugValue(state);
+  // Instead of subscribing with `useSyncExternalStore`,
+  // we add custom subscription logic in an effect.
+  // This means React isn't forced to re-render immediately
+  // and state updates work with `useTransition`.
+  // The disadvantage is that it can potentially cause tearing.
+  // However, since we subscribe to the store only once,
+  // and pass this value down, it should not happen in practice.
+  React.useEffect(() => {
+    const unsubscribe = store.subscribe(() => rerender());
+
+    // We need to rerender again after the effect runs
+    // So we handle store changes after render and before the effect
+    rerender();
+
+    return unsubscribe;
+  }, [store]);
 
   const pendingUpdatesRef = React.useRef<(() => void)[]>([]);
 
@@ -94,6 +107,8 @@ export function useSyncState<T>(getInitialState: () => T) {
       });
     }
   });
+
+  React.useEffect(flushUpdates);
 
   return {
     state,

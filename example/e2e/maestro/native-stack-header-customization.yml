@@ -1,7 +1,29 @@
 appId: ${APP_ID}
 name: Native Stack Header Customization
 ---
-- openLink:
-    link: exp://127.0.0.1:8081/--/native-stack-header-customization
+- stopApp
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: native-stack-header-customization
+      TEXT: 'What is Lorem Ipsum?'
+- tapOn:
+    text: 'Push feed'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Push albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Navigate to article'
+- assertVisible:
+    text: 'What is Lorem Ipsum?'
+- tapOn:
+    text: 'Pop screen'
+- tapOn:
+    text: 'Albums'
+- tapOn:
+    text: 'Pop by 2'
 - assertVisible:
     text: 'What is Lorem Ipsum?'

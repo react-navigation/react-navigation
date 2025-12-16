@@ -1,12 +1,11 @@
 import {
   getDefaultSidebarWidth,
   getLabel,
-  MissingIcon,
+  useFrameSize,
 } from '@react-navigation/elements';
 import {
   CommonActions,
-  NavigationContext,
-  NavigationRouteContext,
+  NavigationProvider,
   type ParamListBase,
   type TabNavigationState,
   useLinkBuilder,
@@ -25,12 +24,13 @@ import {
 } from 'react-native';
 import {
   type EdgeInsets,
-  useSafeAreaFrame,
+  useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 
 import type { BottomTabBarProps, BottomTabDescriptorMap } from '../types';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
 import { useIsKeyboardShown } from '../utils/useIsKeyboardShown';
+import { useTabBarPosition } from '../utils/useTabBarPosition';
 import { BottomTabItem } from './BottomTabItem';
 
 type Props = BottomTabBarProps & {
@@ -48,14 +48,15 @@ const useNativeDriver = Platform.OS !== 'web';
 type Options = {
   state: TabNavigationState<ParamListBase>;
   descriptors: BottomTabDescriptorMap;
-  dimensions: { height: number; width: number };
 };
 
 const shouldUseHorizontalLabels = ({
   state,
   descriptors,
   dimensions,
-}: Options) => {
+}: Options & {
+  dimensions: { height: number; width: number };
+}) => {
   const { tabBarLabelPosition } =
     descriptors[state.routes[state.index].key].options;
 
@@ -91,7 +92,11 @@ const shouldUseHorizontalLabels = ({
   }
 };
 
-const isCompact = ({ state, descriptors, dimensions }: Options): boolean => {
+const isCompact = ({
+  state,
+  descriptors,
+  dimensions,
+}: Options & { dimensions: { height: number; width: number } }): boolean => {
   const { tabBarPosition, tabBarVariant } =
     descriptors[state.routes[state.index].key].options;
 
@@ -130,6 +135,7 @@ export const getTabBarHeight = ({
   style,
 }: Options & {
   insets: EdgeInsets;
+  dimensions: { height: number; width: number };
   style: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
 }) => {
   const { tabBarPosition } = descriptors[state.routes[state.index].key].options;
@@ -153,13 +159,7 @@ export const getTabBarHeight = ({
   return TABBAR_HEIGHT_UIKIT + inset;
 };
 
-export function BottomTabBar({
-  state,
-  navigation,
-  descriptors,
-  insets,
-  style,
-}: Props) {
+export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
   const { colors } = useTheme();
   const { direction } = useLocale();
   const { buildHref } = useLinkBuilder();
@@ -169,9 +169,8 @@ export function BottomTabBar({
   const focusedOptions = focusedDescriptor.options;
 
   const {
-    tabBarPosition = 'bottom',
-    tabBarShowLabel,
     tabBarLabelPosition,
+    tabBarLabelVisibilityMode,
     tabBarHideOnKeyboard = false,
     tabBarVisibilityAnimationConfig,
     tabBarVariant = 'uikit',
@@ -182,6 +181,8 @@ export function BottomTabBar({
     tabBarActiveBackgroundColor,
     tabBarInactiveBackgroundColor,
   } = focusedOptions;
+
+  const tabBarPosition = useTabBarPosition(focusedOptions);
 
   if (
     tabBarVariant === 'material' &&
@@ -203,7 +204,15 @@ export function BottomTabBar({
     );
   }
 
-  const dimensions = useSafeAreaFrame();
+  // TODO: test if insets are needed on Web
+  // FIXME: this seems to return `undefined` on Web
+  const insets = useSafeAreaInsets() ?? {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+  };
+
   const isKeyboardShown = useIsKeyboardShown();
 
   const onHeightChange = React.useContext(BottomTabBarHeightCallbackContext);
@@ -283,24 +292,35 @@ export function BottomTabBar({
 
   const { routes } = state;
 
-  const tabBarHeight = getTabBarHeight({
-    state,
-    descriptors,
-    insets,
-    dimensions,
-    style: [tabBarStyle, style],
-  });
+  const tabBarHeight = useFrameSize((dimensions) =>
+    getTabBarHeight({
+      state,
+      descriptors,
+      insets,
+      dimensions,
+      style: [tabBarStyle, style],
+    })
+  );
 
-  const hasHorizontalLabels = shouldUseHorizontalLabels({
-    state,
-    descriptors,
-    dimensions,
-  });
+  const hasHorizontalLabels = useFrameSize((dimensions) =>
+    shouldUseHorizontalLabels({
+      state,
+      descriptors,
+      dimensions,
+    })
+  );
 
-  const compact = isCompact({ state, descriptors, dimensions });
+  const compact = useFrameSize((dimensions) =>
+    isCompact({ state, descriptors, dimensions })
+  );
+
   const sidebar = tabBarPosition === 'left' || tabBarPosition === 'right';
   const spacing =
     tabBarVariant === 'material' ? SPACING_MATERIAL : SPACING_UIKIT;
+
+  const minSidebarWidth = useFrameSize((size) =>
+    sidebar && hasHorizontalLabels ? getDefaultSidebarWidth(size) : 0
+  );
 
   const tabBarBackgroundElement = tabBarBackground?.();
 
@@ -344,9 +364,7 @@ export function BottomTabBar({
                 spacing + (tabBarPosition === 'left' ? insets.left : 0),
               paddingEnd:
                 spacing + (tabBarPosition === 'right' ? insets.right : 0),
-              minWidth: hasHorizontalLabels
-                ? getDefaultSidebarWidth(dimensions)
-                : 0,
+              minWidth: minSidebarWidth,
             }
           : [
               {
@@ -374,16 +392,18 @@ export function BottomTabBar({
                 paddingHorizontal: Math.max(insets.left, insets.right),
               },
             ],
+        {
+          pointerEvents: isTabBarHidden ? 'none' : 'auto',
+        },
         tabBarStyle,
       ]}
-      pointerEvents={isTabBarHidden ? 'none' : 'auto'}
       onLayout={sidebar ? undefined : handleLayout}
     >
-      <View pointerEvents="none" style={StyleSheet.absoluteFill}>
+      <View style={[StyleSheet.absoluteFill, { pointerEvents: 'none' }]}>
         {tabBarBackgroundElement}
       </View>
       <View
-        accessibilityRole="tablist"
+        role="tablist"
         style={sidebar ? styles.sideContent : styles.bottomContent}
       >
         {routes.map((route, index) => {
@@ -428,57 +448,52 @@ export function BottomTabBar({
                 : undefined;
 
           return (
-            <NavigationContext.Provider
+            <NavigationProvider
               key={route.key}
-              value={descriptors[route.key].navigation}
+              navigation={descriptors[route.key].navigation}
+              route={route}
             >
-              <NavigationRouteContext.Provider value={route}>
-                <BottomTabItem
-                  href={buildHref(route.name, route.params)}
-                  route={route}
-                  descriptor={descriptors[route.key]}
-                  focused={focused}
-                  horizontal={hasHorizontalLabels}
-                  compact={compact}
-                  sidebar={sidebar}
-                  variant={tabBarVariant}
-                  onPress={onPress}
-                  onLongPress={onLongPress}
-                  accessibilityLabel={accessibilityLabel}
-                  testID={options.tabBarButtonTestID}
-                  allowFontScaling={options.tabBarAllowFontScaling}
-                  activeTintColor={tabBarActiveTintColor}
-                  inactiveTintColor={tabBarInactiveTintColor}
-                  activeBackgroundColor={tabBarActiveBackgroundColor}
-                  inactiveBackgroundColor={tabBarInactiveBackgroundColor}
-                  button={options.tabBarButton}
-                  icon={
-                    options.tabBarIcon ??
-                    (({ color, size }) => (
-                      <MissingIcon color={color} size={size} />
-                    ))
-                  }
-                  badge={options.tabBarBadge}
-                  badgeStyle={options.tabBarBadgeStyle}
-                  label={label}
-                  showLabel={tabBarShowLabel}
-                  labelStyle={options.tabBarLabelStyle}
-                  iconStyle={options.tabBarIconStyle}
-                  style={[
-                    sidebar
-                      ? {
-                          marginVertical: hasHorizontalLabels
-                            ? tabBarVariant === 'material'
-                              ? 0
-                              : 1
-                            : spacing / 2,
-                        }
-                      : styles.bottomItem,
-                    options.tabBarItemStyle,
-                  ]}
-                />
-              </NavigationRouteContext.Provider>
-            </NavigationContext.Provider>
+              <BottomTabItem
+                href={buildHref(route.name, route.params)}
+                route={route}
+                descriptor={descriptors[route.key]}
+                focused={focused}
+                horizontal={hasHorizontalLabels}
+                compact={compact}
+                sidebar={sidebar}
+                variant={tabBarVariant}
+                onPress={onPress}
+                onLongPress={onLongPress}
+                accessibilityLabel={accessibilityLabel}
+                testID={options.tabBarButtonTestID}
+                allowFontScaling={options.tabBarAllowFontScaling}
+                activeTintColor={tabBarActiveTintColor}
+                inactiveTintColor={tabBarInactiveTintColor}
+                activeBackgroundColor={tabBarActiveBackgroundColor}
+                inactiveBackgroundColor={tabBarInactiveBackgroundColor}
+                rippleColor={options.tabBarRippleColor}
+                button={options.tabBarButton}
+                icon={options.tabBarIcon}
+                badge={options.tabBarBadge}
+                badgeStyle={options.tabBarBadgeStyle}
+                label={label}
+                labelVisibilityMode={tabBarLabelVisibilityMode}
+                labelStyle={options.tabBarLabelStyle}
+                iconStyle={options.tabBarIconStyle}
+                style={[
+                  sidebar
+                    ? {
+                        marginVertical: hasHorizontalLabels
+                          ? tabBarVariant === 'material'
+                            ? 0
+                            : 1
+                          : spacing / 2,
+                      }
+                    : styles.bottomItem,
+                  options.tabBarItemStyle,
+                ]}
+              />
+            </NavigationProvider>
           );
         })}
       </View>

@@ -23,10 +23,13 @@ export const deepFreeze = <T,>(object: T): Readonly<T> => {
 
   // Freeze properties before freezing self
   for (const key in object) {
-    if (Object.getOwnPropertyDescriptor(object, key)?.configurable) {
-      const value = object[key];
+    // Don't freeze objects in params since they are passed by the user
+    if (key !== 'params') {
+      if (Object.getOwnPropertyDescriptor(object, key)?.configurable) {
+        const value = object[key];
 
-      deepFreeze(value);
+        deepFreeze(value);
+      }
     }
   }
 

@@ -1,7 +1,32 @@
 appId: ${APP_ID}
 name: Link Component
 ---
-- openLink:
-    link: exp://127.0.0.1:8081/--/link-component
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: link-component
+      TEXT: 'Article by Gandalf'
+- tapOn:
+    text: 'Go to albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Go to Article'
+- assertVisible:
+    text: 'Article by Babel'
+- tapOn:
+    text: 'Replace params'
 - assertVisible:
     text: 'Article by Gandalf'
+- tapOn:
+    text: 'Push params'
+- assertVisible:
+    text: 'Article by Babel fish'
+- tapOn:
+    text: 'Go back'
+- assertVisible:
+    text: 'Article by Gandalf'
+- tapOn:
+    text: 'Replace with albums'
+- assertVisible:
+    text: 'Albums'

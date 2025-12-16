@@ -12,8 +12,7 @@ import {
   type AddListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
-import { NavigationContext } from './NavigationContext';
-import { NavigationRouteContext } from './NavigationRouteContext';
+import { NavigationProvider } from './NavigationProvider';
 import { SceneView } from './SceneView';
 import { ThemeContext } from './theming/ThemeContext';
 import type {
@@ -23,6 +22,7 @@ import type {
   NavigationProp,
   RouteConfig,
   RouteProp,
+  Theme,
 } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 import { useNavigationCache } from './useNavigationCache';
@@ -35,7 +35,7 @@ export type ScreenConfigWithParent<
 > = {
   keys: (string | undefined)[];
   options: (ScreenOptionsOrCallback<ScreenOptions> | undefined)[] | undefined;
-  layout: ScreenLayout | undefined;
+  layout: ScreenLayout<ScreenOptions> | undefined;
   props: RouteConfig<
     ParamListBase,
     string,
@@ -46,10 +46,11 @@ export type ScreenConfigWithParent<
   >;
 };
 
-type ScreenLayout = (props: {
+type ScreenLayout<ScreenOptions extends {}> = (props: {
   route: RouteProp<ParamListBase, string>;
+  options: ScreenOptions;
   navigation: any;
-  theme: ReactNavigation.Theme;
+  theme: Theme;
   children: React.ReactElement;
 }) => React.ReactElement;
 
@@ -58,7 +59,7 @@ type ScreenOptionsOrCallback<ScreenOptions extends {}> =
   | ((props: {
       route: RouteProp<ParamListBase, string>;
       navigation: any;
-      theme: ReactNavigation.Theme;
+      theme: Theme;
     }) => ScreenOptions);
 
 type Options<
@@ -73,7 +74,7 @@ type Options<
   >;
   navigation: NavigationHelpers<ParamListBase>;
   screenOptions: ScreenOptionsOrCallback<ScreenOptions> | undefined;
-  screenLayout: ScreenLayout | undefined;
+  screenLayout: ScreenLayout<ScreenOptions> | undefined;
   onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
@@ -94,7 +95,7 @@ type Options<
  */
 export function useDescriptors<
   State extends NavigationState,
-  ActionHelpers extends Record<string, () => void>,
+  ActionHelpers extends Record<string, (...args: any) => void>,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
 >({
@@ -172,7 +173,6 @@ export function useDescriptors<
     navigation: NavigationProp<
       ParamListBase,
       string,
-      string | undefined,
       State,
       ScreenOptions,
       EventMap
@@ -211,7 +211,6 @@ export function useDescriptors<
     navigation: NavigationProp<
       ParamListBase,
       string,
-      string | undefined,
       State,
       ScreenOptions,
       EventMap
@@ -258,6 +257,7 @@ export function useDescriptors<
       element = layout({
         route,
         navigation,
+        options: customOptions,
         // @ts-expect-error: in practice `theme` will be defined
         theme,
         children: element,
@@ -266,11 +266,9 @@ export function useDescriptors<
 
     return (
       <NavigationBuilderContext.Provider key={route.key} value={context}>
-        <NavigationContext.Provider value={navigation}>
-          <NavigationRouteContext.Provider value={route}>
-            {element}
-          </NavigationRouteContext.Provider>
-        </NavigationContext.Provider>
+        <NavigationProvider navigation={navigation} route={route}>
+          {element}
+        </NavigationProvider>
       </NavigationBuilderContext.Provider>
     );
   };
@@ -283,12 +281,11 @@ export function useDescriptors<
         NavigationProp<
           ParamListBase,
           string,
-          string | undefined,
           State,
           ScreenOptions,
-          EventMap
-        > &
-          ActionHelpers,
+          EventMap,
+          ActionHelpers
+        >,
         RouteProp<ParamListBase>
       >
     >
@@ -304,7 +301,6 @@ export function useDescriptors<
 
     acc[route.key] = {
       route,
-      // @ts-expect-error: it's missing action helpers, fix later
       navigation,
       render() {
         return element;

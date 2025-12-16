@@ -4,9 +4,12 @@ import {
   type DrawerNavigationState,
   DrawerRouter,
   type DrawerRouterOptions,
-  type NavigatorTypeBagBase,
   type ParamListBase,
   type StaticConfig,
+  type StaticParamList,
+  type StaticScreenConfig,
+  type StaticScreenConfigLinking,
+  type StaticScreenConfigScreen,
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -20,16 +23,16 @@ import type {
 import { DrawerView } from '../views/DrawerView';
 
 function DrawerNavigator({
-  id,
   initialRouteName,
   defaultStatus = 'closed',
   backBehavior,
+  routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
   screenOptions,
   screenLayout,
-  UNSTABLE_getStateForRouteNamesChange,
+  router,
   ...rest
 }: DrawerNavigatorProps) {
   const { state, descriptors, navigation, NavigationContent } =
@@ -40,16 +43,16 @@ function DrawerNavigator({
       DrawerNavigationOptions,
       DrawerNavigationEventMap
     >(DrawerRouter, {
-      id,
       initialRouteName,
       defaultStatus,
       backBehavior,
+      routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,
       screenOptions,
       screenLayout,
-      UNSTABLE_getStateForRouteNamesChange,
+      router,
     });
 
   return (
@@ -65,25 +68,41 @@ function DrawerNavigator({
   );
 }
 
+type DrawerTypeBag<ParamList extends {}> = {
+  ParamList: ParamList;
+  State: DrawerNavigationState<ParamList>;
+  ScreenOptions: DrawerNavigationOptions;
+  EventMap: DrawerNavigationEventMap;
+  NavigationList: {
+    [RouteName in keyof ParamList]: DrawerNavigationProp<ParamList, RouteName>;
+  };
+  Navigator: typeof DrawerNavigator;
+};
+
 export function createDrawerNavigator<
   const ParamList extends ParamListBase,
-  const NavigatorID extends string | undefined = undefined,
-  const TypeBag extends NavigatorTypeBagBase = {
-    ParamList: ParamList;
-    NavigatorID: NavigatorID;
-    State: DrawerNavigationState<ParamList>;
-    ScreenOptions: DrawerNavigationOptions;
-    EventMap: DrawerNavigationEventMap;
-    NavigationList: {
-      [RouteName in keyof ParamList]: DrawerNavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
-    };
-    Navigator: typeof DrawerNavigator;
-  },
-  const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
->(config?: Config): TypedNavigator<TypeBag, Config> {
+>(): TypedNavigator<DrawerTypeBag<ParamList>, undefined>;
+export function createDrawerNavigator<
+  const Config extends StaticConfig<DrawerTypeBag<ParamListBase>>,
+>(
+  config: Config
+): TypedNavigator<DrawerTypeBag<StaticParamList<{ config: Config }>>, Config>;
+export function createDrawerNavigator(config?: unknown) {
   return createNavigatorFactory(DrawerNavigator)(config);
+}
+
+export function createDrawerScreen<
+  const Linking extends StaticScreenConfigLinking,
+  const Screen extends StaticScreenConfigScreen,
+>(
+  config: StaticScreenConfig<
+    Linking,
+    Screen,
+    DrawerNavigationState<ParamListBase>,
+    DrawerNavigationOptions,
+    DrawerNavigationEventMap,
+    DrawerNavigationProp<ParamListBase>
+  >
+) {
+  return config;
 }

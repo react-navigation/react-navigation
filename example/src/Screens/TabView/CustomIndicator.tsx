@@ -118,7 +118,7 @@ export const CustomIndicator = () => {
   );
 
   return (
-    <TabView<Route>
+    <TabView
       navigationState={{
         index,
         routes,

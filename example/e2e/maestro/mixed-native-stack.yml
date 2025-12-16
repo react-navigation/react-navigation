@@ -1,7 +1,32 @@
 appId: ${APP_ID}
 name: Mixed Native Stack
 ---
-- openLink:
-    link: exp://127.0.0.1:8081/--/mixed-native-stack
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: mixed-native-stack
+      TEXT: 'Article by Gandalf'
+- tapOn:
+    text: 'Push article'
+- assertVisible:
+    text: 'Article by Dalek'
+- tapOn:
+    text: 'Push albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Push article'
+- assertVisible:
+    text: 'Article by The Doctor'
+- tapOn:
+    text: 'Go back'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Go back'
+- assertVisible:
+    text: 'Article by Dalek'
+- tapOn:
+    text: 'Go back'
 - assertVisible:
     text: 'Article by Gandalf'

@@ -1,5 +1,10 @@
 import { Button, Text } from '@react-navigation/elements';
-import { type PathConfigMap, useTheme } from '@react-navigation/native';
+import {
+  type NavigatorScreenParams,
+  type PathConfig,
+  type StaticScreenProps,
+  useTheme,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -7,17 +12,21 @@ import {
 import * as React from 'react';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
 
-export type AuthStackParams = {
+type AuthStackParamList = {
   Home: undefined;
+  Profile: undefined;
   SignIn: undefined;
   Chat: undefined;
 };
 
-const linking: PathConfigMap<AuthStackParams> = {
-  Home: '',
-  SignIn: 'signin',
-  Chat: 'chat',
-};
+const linking = {
+  screens: {
+    Home: '',
+    Profile: 'profile',
+    SignIn: 'signin',
+    Chat: 'chat',
+  },
+} satisfies PathConfig<NavigatorScreenParams<AuthStackParamList>>;
 
 const AUTH_CONTEXT_ERROR =
   'Authentication context not found. Have your wrapped your components with AuthContext.Consumer?';
@@ -48,7 +57,7 @@ const SplashScreen = () => {
 
 const SignInScreen = ({
   navigation,
-}: StackScreenProps<AuthStackParams, 'SignIn'>) => {
+}: StackScreenProps<AuthStackParamList, 'SignIn'>) => {
   const { signIn } = React.useContext(AuthContext);
   const { colors } = useTheme();
 
@@ -81,12 +90,30 @@ const SignInScreen = ({
 
 const HomeScreen = ({
   navigation,
-}: StackScreenProps<AuthStackParams, 'Home'>) => {
+}: StackScreenProps<AuthStackParamList, 'Home'>) => {
   const { signOut } = React.useContext(AuthContext);
 
   return (
     <View style={styles.content}>
       <Text style={styles.heading}>Signed in successfully 🎉</Text>
+      <Button onPress={signOut} style={styles.button}>
+        Sign out
+      </Button>
+      <Button onPress={() => navigation.navigate('Chat')} style={styles.button}>
+        Go to Chat
+      </Button>
+    </View>
+  );
+};
+
+const ProfileScreen = ({
+  navigation,
+}: StackScreenProps<AuthStackParamList, 'Profile'>) => {
+  const { signOut } = React.useContext(AuthContext);
+
+  return (
+    <View style={styles.content}>
+      <Text style={styles.heading}>This is your profile</Text>
       <Button onPress={signOut} style={styles.button}>
         Sign out
       </Button>
@@ -116,7 +143,7 @@ const ChatScreen = () => {
   );
 };
 
-const SimpleStack = createStackNavigator<AuthStackParams>();
+const SimpleStack = createStackNavigator<AuthStackParamList>();
 
 type State = {
   isLoading: boolean;
@@ -129,9 +156,11 @@ type Action =
   | { type: 'SIGN_IN'; token: string }
   | { type: 'SIGN_OUT' };
 
-export function AuthFlow() {
-  const [state, dispatch] = React.useReducer<React.Reducer<State, Action>>(
-    (prevState, action) => {
+export function AuthFlow(
+  _: StaticScreenProps<NavigatorScreenParams<AuthStackParamList>>
+) {
+  const [state, dispatch] = React.useReducer(
+    (prevState: State, action: Action) => {
       switch (action.type) {
         case 'RESTORE_TOKEN':
           return {
@@ -185,18 +214,21 @@ export function AuthFlow() {
 
   return (
     <AuthContext.Provider value={authContext}>
-      <SimpleStack.Navigator>
+      <SimpleStack.Navigator routeNamesChangeBehavior="lastUnhandled">
         {!isSignedIn ? (
           <SimpleStack.Screen
             name="SignIn"
             options={{
-              title: 'Sign in',
+              title: 'Welcome',
               animationTypeForReplace: state.isSignout ? 'pop' : 'push',
             }}
             component={SignInScreen}
           />
         ) : (
-          <SimpleStack.Screen name="Home" component={HomeScreen} />
+          <>
+            <SimpleStack.Screen name="Home" component={HomeScreen} />
+            <SimpleStack.Screen name="Profile" component={ProfileScreen} />
+          </>
         )}
         <SimpleStack.Screen
           navigationKey={String(isSignedIn)}

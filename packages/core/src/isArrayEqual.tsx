@@ -11,5 +11,5 @@ export function isArrayEqual(a: any[], b: any[]) {
     return false;
   }
 
-  return a.every((it, index) => it === b[index]);
+  return a.every((it, index) => Object.is(it, b[index]));
 }

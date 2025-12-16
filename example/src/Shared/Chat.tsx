@@ -1,6 +1,6 @@
 import { Text } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
-import Color from 'color';
 import * as React from 'react';
 import {
   Image,
@@ -50,8 +50,8 @@ export function Chat({
                 style={styles.avatar}
                 source={
                   odd
-                    ? require('../../assets/avatar-2.png')
-                    : require('../../assets/avatar-1.png')
+                    ? require('../../assets/misc/avatar-2.png')
+                    : require('../../assets/misc/avatar-1.png')
                 }
               />
               <View
@@ -73,7 +73,7 @@ export function Chat({
           styles.input,
           { backgroundColor: colors.card, color: colors.text },
         ]}
-        placeholderTextColor={Color(colors.text).alpha(0.5).rgb().string()}
+        placeholderTextColor={Color(colors.text)?.alpha(0.5).string()}
         placeholder="Write a message"
         underlineColorAndroid="transparent"
       />

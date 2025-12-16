@@ -5,6 +5,7 @@ import {
   NavigationHelpersContext,
   type NavigatorScreenParams,
   type ParamListBase,
+  type RootParamList,
 } from '@react-navigation/core';
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 import * as React from 'react';
@@ -13,17 +14,17 @@ import { type GestureResponderEvent, Platform } from 'react-native';
 import { LinkingContext } from './LinkingContext';
 
 export type LinkProps<
-  ParamList extends ReactNavigation.RootParamList,
+  ParamList extends {} = RootParamList,
   RouteName extends keyof ParamList = keyof ParamList,
 > =
   | ({
       href?: string;
       action?: NavigationAction;
-    } & {
-      [Screen in keyof ParamList]: undefined extends ParamList[Screen]
-        ? { screen: Screen; params?: ParamList[Screen] }
-        : { screen: Screen; params: ParamList[Screen] };
-    }[RouteName])
+    } & (RouteName extends unknown
+      ? undefined extends ParamList[RouteName]
+        ? { screen: RouteName; params?: ParamList[RouteName] }
+        : { screen: RouteName; params: ParamList[RouteName] }
+      : never))
   | {
       href?: string;
       action: NavigationAction;
@@ -68,12 +69,10 @@ const getStateFromParams = (
  * @param props.href Optional absolute path to use for the href (e.g. `/feeds/hot`).
  * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
  */
-export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
-  screen,
-  params,
-  href,
-  action,
-}: LinkProps<ParamList>) {
+export function useLinkProps<
+  const ParamList extends {} = RootParamList,
+  const RouteName extends keyof ParamList = keyof ParamList,
+>({ screen, params, href, action }: LinkProps<ParamList, RouteName>) {
   const root = React.useContext(NavigationContainerRefContext);
   const navigation = React.useContext(NavigationHelpersContext);
   const { options } = React.useContext(LinkingContext);
@@ -81,22 +80,33 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
   const onPress = (
     e?: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => {
-    // @ts-expect-error: these properties exist on web, but not in React Native
-    const hasModifierKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey; // ignore clicks with modifier keys
-    // @ts-expect-error: these properties exist on web, but not in React Native
-    const isLeftClick = e.button == null || e.button === 0; // only handle left clicks
-    const isSelfTarget = [undefined, null, '', 'self'].includes(
-      // @ts-expect-error: these properties exist on web, but not in React Native
-      e.currentTarget?.target
-    ); // let browser handle "target=_blank" etc.
-
     let shouldHandle = false;
 
     if (Platform.OS !== 'web' || !e) {
+      e?.preventDefault?.();
       shouldHandle = true;
-    } else if (!hasModifierKey && isLeftClick && isSelfTarget) {
-      e.preventDefault();
-      shouldHandle = true;
+    } else {
+      // ignore clicks with modifier keys
+      const hasModifierKey =
+        ('metaKey' in e && e.metaKey) ||
+        ('altKey' in e && e.altKey) ||
+        ('ctrlKey' in e && e.ctrlKey) ||
+        ('shiftKey' in e && e.shiftKey);
+
+      // only handle left clicks
+      const isLeftClick =
+        'button' in e ? e.button == null || e.button === 0 : true;
+
+      // let browser handle "target=_blank" etc.
+      const isSelfTarget =
+        e.currentTarget && 'target' in e.currentTarget
+          ? [undefined, null, '', 'self'].includes(e.currentTarget.target)
+          : true;
+
+      if (!hasModifierKey && isLeftClick && isSelfTarget) {
+        e.preventDefault?.();
+        shouldHandle = true;
+      }
     }
 
     if (shouldHandle) {
@@ -119,6 +129,36 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
 
   const getPathFromStateHelper = options?.getPathFromState ?? getPathFromState;
 
+  if (Platform.OS === 'web') {
+    if (screen == null && action != null && options?.config != null) {
+      switch (action.type) {
+        case 'NAVIGATE':
+        case 'PUSH':
+        case 'REPLACE':
+        case 'POP_TO':
+        case 'JUMP_TO': {
+          if (
+            action.payload != null &&
+            'name' in action.payload &&
+            typeof action.payload.name === 'string' &&
+            action.payload.name in options.config.screens
+          ) {
+            screen = action.payload.name;
+
+            if (
+              'params' in action.payload &&
+              typeof action.payload.params === 'object' &&
+              action.payload.params != null
+            ) {
+              // @ts-expect-error this is fine 🔥
+              params = action.payload.params;
+            }
+          }
+        }
+      }
+    }
+  }
+
   return {
     href:
       href ??
@@ -139,7 +179,7 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
             options?.config
           )
         : undefined),
-    accessibilityRole: 'link' as const,
+    role: 'link' as const,
     onPress,
   };
 }

@@ -1,6 +1,7 @@
 import { useTheme } from '@react-navigation/native';
 import {
   Animated,
+  type ColorValue,
   Platform,
   type StyleProp,
   StyleSheet,
@@ -9,7 +10,7 @@ import {
 } from 'react-native';
 
 type Props = Omit<TextProps, 'style'> & {
-  tintColor?: string;
+  tintColor?: ColorValue;
   children?: string;
   style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
 };
@@ -19,7 +20,7 @@ export function HeaderTitle({ tintColor, style, ...rest }: Props) {
 
   return (
     <Animated.Text
-      accessibilityRole="header"
+      role="heading"
       aria-level="1"
       numberOfLines={1}
       {...rest}

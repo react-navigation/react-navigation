@@ -1,15 +1,14 @@
 import * as React from 'react';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, View, type ViewStyle } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
 import type { DrawerProps } from '../types';
 import { DrawerProgressContext } from '../utils/DrawerProgressContext';
-import { getDrawerWidth } from '../utils/getDrawerWidth';
+import { getDrawerWidthWeb } from '../utils/getDrawerWidth';
 import { useFakeSharedValue } from '../utils/useFakeSharedValue';
 import { Overlay } from './Overlay';
 
 export function Drawer({
-  layout: customLayout,
   direction = 'ltr',
   drawerPosition = direction === 'rtl' ? 'right' : 'left',
   drawerStyle,
@@ -24,15 +23,15 @@ export function Drawer({
   children,
   style,
 }: DrawerProps) {
-  const windowDimensions = useWindowDimensions();
-
-  const layout = customLayout ?? windowDimensions;
-  const drawerWidth = getDrawerWidth({ layout, drawerStyle });
+  const flattenedDrawerStyle = StyleSheet.flatten(drawerStyle) || {};
+  const drawerWidth = getDrawerWidthWeb({
+    drawerStyle: flattenedDrawerStyle,
+  });
 
   const progress = useFakeSharedValue(open ? 1 : 0);
 
   React.useEffect(() => {
-    progress.value = open ? 1 : 0;
+    progress.set(open ? 1 : 0);
   }, [open, progress]);
 
   const drawerRef = React.useRef<View>(null);
@@ -60,111 +59,122 @@ export function Drawer({
   const isOpen = drawerType === 'permanent' ? true : open;
   const isRight = drawerPosition === 'right';
 
-  let translateX = 0;
-
-  // The drawer stays in place at open position when `drawerType` is `back`
-  if (open || drawerType === 'back') {
-    if (direction === 'rtl') {
-      translateX = drawerPosition === 'left' ? drawerWidth - layout.width : 0;
-    } else {
-      translateX = drawerPosition === 'left' ? 0 : layout.width - drawerWidth;
-    }
-  } else {
-    if (direction === 'rtl') {
-      translateX = drawerPosition === 'left' ? -layout.width : drawerWidth;
-    } else {
-      translateX = drawerPosition === 'left' ? -drawerWidth : layout.width;
-    }
-  }
+  const drawerTranslateX =
+    // The drawer stays in place at open position when `drawerType` is `back`
+    open || drawerType === 'back'
+      ? drawerPosition === 'left'
+        ? '100%'
+        : '-100%'
+      : 0;
 
   const drawerAnimatedStyle =
     drawerType !== 'permanent'
       ? {
           transition: 'transform 0.3s',
-          transform: [{ translateX }],
+          transform: `translateX(${drawerTranslateX})`,
         }
       : null;
+
+  const contentTranslateX = open
+    ? // The screen content stays in place when `drawerType` is `front`
+      drawerType === 'front'
+      ? 0
+      : `calc(${drawerWidth} * ${drawerPosition === 'left' ? 1 : -1})`
+    : 0;
 
   const contentAnimatedStyle =
     drawerType !== 'permanent'
       ? {
           transition: 'transform 0.3s',
-          transform: [
-            {
-              translateX: open
-                ? // The screen content stays in place when `drawerType` is `front`
-                  drawerType === 'front'
-                  ? 0
-                  : drawerWidth * (drawerPosition === 'left' ? 1 : -1)
-                : 0,
-            },
-          ],
+          transform: `translateX(${contentTranslateX})`,
         }
       : null;
 
-  return (
-    <View style={[styles.container, style]}>
-      <DrawerProgressContext.Provider value={progress}>
-        <View
-          style={[
-            styles.main,
-            {
-              flexDirection:
-                drawerType === 'permanent'
-                  ? (isRight && direction === 'ltr') ||
-                    (!isRight && direction === 'rtl')
-                    ? 'row'
-                    : 'row-reverse'
-                  : 'row',
-            },
-          ]}
-        >
-          <View style={[styles.content, contentAnimatedStyle]}>
-            <View
-              accessibilityElementsHidden={isOpen && drawerType !== 'permanent'}
-              importantForAccessibility={
-                isOpen && drawerType !== 'permanent'
-                  ? 'no-hide-descendants'
-                  : 'auto'
-              }
-              style={styles.content}
-            >
-              {children}
-            </View>
-            {drawerType !== 'permanent' ? (
-              <Overlay
-                open={open}
-                progress={progress}
-                onPress={() => onClose()}
-                style={overlayStyle}
-                accessibilityLabel={overlayAccessibilityLabel}
-              />
-            ) : null}
-          </View>
-          <View
-            ref={drawerRef}
-            style={[
-              styles.drawer,
-              {
-                width: drawerWidth,
-                position: drawerType === 'permanent' ? 'relative' : 'absolute',
-                zIndex: drawerType === 'back' ? -1 : 0,
-              },
-              drawerAnimatedStyle,
-              drawerStyle,
-            ]}
-          >
-            {renderDrawerContent()}
-          </View>
-        </View>
-      </DrawerProgressContext.Provider>
+  const drawerElement = (
+    <View
+      key="drawer"
+      ref={drawerRef}
+      style={[
+        styles.drawer,
+        {
+          position: drawerType === 'permanent' ? 'relative' : 'absolute',
+          zIndex: drawerType === 'back' ? -1 : 1,
+        },
+        // FIXME: width contains `px` on web
+        { width: drawerWidth } as ViewStyle,
+        // @ts-expect-error offset contains `calc` for web
+        drawerType !== 'permanent'
+          ? // Position drawer off-screen by default in closed state
+            // And add a translation only when drawer is open
+            // So changing position in closed state won't trigger a visible transition
+            drawerPosition === 'right'
+            ? { right: `calc(${drawerWidth} * -1)` }
+            : { left: `calc(${drawerWidth} * -1)` }
+          : null,
+        drawerAnimatedStyle,
+        drawerStyle,
+      ]}
+    >
+      <Inert enabled={drawerType !== 'permanent' && !isOpen}>
+        {renderDrawerContent()}
+      </Inert>
     </View>
+  );
+
+  const mainContent = (
+    <View key="content" style={[styles.content, contentAnimatedStyle]}>
+      <Inert enabled={drawerType !== 'permanent' && isOpen}>{children}</Inert>
+      {drawerType !== 'permanent' ? (
+        <Overlay
+          open={open}
+          progress={progress}
+          onPress={() => onClose()}
+          style={overlayStyle}
+          accessibilityLabel={overlayAccessibilityLabel}
+        />
+      ) : null}
+    </View>
+  );
+
+  return (
+    <DrawerProgressContext.Provider value={progress}>
+      <View style={[styles.container, style]}>
+        {!isRight && drawerElement}
+        {mainContent}
+        {isRight && drawerElement}
+      </View>
+    </DrawerProgressContext.Provider>
+  );
+}
+
+function Inert({
+  enabled,
+  children,
+}: {
+  enabled: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <div
+      inert={enabled}
+      aria-hidden={enabled}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexGrow: 1,
+        flexShrink: 1,
+        flexBasis: 'auto',
+      }}
+    >
+      {children}
+    </div>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'row',
   },
   drawer: {
     top: 0,
@@ -173,9 +183,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   content: {
-    flex: 1,
-  },
-  main: {
     flex: 1,
   },
 });

@@ -1,4 +1,5 @@
 import { Text } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import {
   type ParamListBase,
   type TabNavigationState,
@@ -6,8 +7,7 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import Color from 'color';
-import { StyleSheet } from 'react-native';
+import { type ColorValue, StyleSheet } from 'react-native';
 import {
   type Route,
   TabBar,
@@ -21,15 +21,17 @@ type MaterialLabelProps = Parameters<
   NonNullable<TabDescriptor<Route>['label']>
 >[0];
 
-const renderLabelDefault = ({
+const MaterialLabel = ({
   color,
   labelText,
   style,
   allowFontScaling,
 }: MaterialLabelProps) => {
+  const { fonts } = useTheme();
+
   return (
     <Text
-      style={[{ color }, styles.label, style]}
+      style={[{ color }, fonts.medium, styles.label, style]}
       allowFontScaling={allowFontScaling}
     >
       {labelText}
@@ -37,22 +39,28 @@ const renderLabelDefault = ({
   );
 };
 
+const renderLabelDefault = (props: MaterialLabelProps) => (
+  <MaterialLabel {...props} />
+);
+
 export function MaterialTopTabBar({
   state,
   navigation,
   descriptors,
   ...rest
 }: MaterialTopTabBarProps) {
-  const { colors } = useTheme();
+  const { colors, dark } = useTheme();
   const { direction } = useLocale();
   const { buildHref } = useLinkBuilder();
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
-  const activeColor = focusedOptions.tabBarActiveTintColor ?? colors.text;
-  const inactiveColor =
+  const activeColor: ColorValue =
+    focusedOptions.tabBarActiveTintColor ?? colors.text;
+  const inactiveColor: ColorValue =
     focusedOptions.tabBarInactiveTintColor ??
-    Color(activeColor).alpha(0.5).rgb().string();
+    Color(activeColor)?.alpha(0.5).string() ??
+    (dark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)');
 
   const tabBarOptions = Object.fromEntries(
     state.routes.map((route) => {

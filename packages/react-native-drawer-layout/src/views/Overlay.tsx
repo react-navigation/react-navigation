@@ -13,18 +13,18 @@ export function Overlay({
     <View
       {...rest}
       style={[
+        StyleSheet.absoluteFill,
         styles.overlay,
         { opacity: open ? 1 : 0, pointerEvents: open ? 'auto' : 'none' },
         style,
       ]}
-      accessibilityElementsHidden={!open}
-      importantForAccessibility={open ? 'auto' : 'no-hide-descendants'}
+      aria-hidden={!open}
     >
       <Pressable
         onPress={onPress}
         style={[styles.pressable, { pointerEvents: open ? 'auto' : 'none' }]}
-        accessibilityRole="button"
-        accessibilityLabel={accessibilityLabel}
+        role="button"
+        aria-label={accessibilityLabel}
       />
     </View>
   );
@@ -32,7 +32,6 @@ export function Overlay({
 
 const styles = StyleSheet.create({
   overlay: {
-    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     // Disable touch highlight on mobile Safari.
     // WebkitTapHighlightColor must be used outside of StyleSheet.create because react-native-web will omit the property.

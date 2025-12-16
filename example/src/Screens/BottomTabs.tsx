@@ -6,6 +6,7 @@ import {
   useBottomTabBarHeight,
 } from '@react-navigation/bottom-tabs';
 import {
+  Button,
   HeaderBackButton,
   HeaderButton,
   PlatformPressable,
@@ -13,13 +14,15 @@ import {
 } from '@react-navigation/elements';
 import {
   type NavigatorScreenParams,
-  type PathConfigMap,
+  type PathConfig,
+  type StaticScreenProps,
   useIsFocused,
-  useLocale,
+  useNavigation,
 } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
 import {
+  type ColorValue,
   Image,
   Platform,
   ScrollView,
@@ -27,37 +30,40 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { SystemBars } from 'react-native-edge-to-edge';
 
+import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
-import { NativeStack, type NativeStackParams } from './NativeStack';
+import { NativeStack, type NativeStackParamList } from './NativeStack';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: string; size: number }) => (
+  ({ color, size }: { color: ColorValue; size: number }) => (
     <MaterialCommunityIcons name={name} color={color} size={size} />
   );
 
-export type BottomTabParams = {
-  TabStack: NavigatorScreenParams<NativeStackParams>;
+export type BottomTabParamList = {
+  TabStack: NavigatorScreenParams<NativeStackParamList>;
   TabAlbums: undefined;
   TabContacts: undefined;
-  TabChat: undefined;
+  TabChat: { count: number } | undefined;
 };
 
-const linking: PathConfigMap<BottomTabParams> = {
-  TabStack: {
-    path: 'stack',
-    screens: NativeStack.linking,
+const linking = {
+  screens: {
+    TabStack: {
+      path: 'stack',
+      screens: NativeStack.linking.screens,
+    },
+    TabAlbums: 'albums',
+    TabContacts: 'contacts',
+    TabChat: 'chat',
   },
-  TabAlbums: 'albums',
-  TabContacts: 'contacts',
-  TabChat: 'chat',
-};
+} satisfies PathConfig<NavigatorScreenParams<BottomTabParamList>>;
 
 const AlbumsScreen = () => {
+  const navigation = useNavigation<typeof Tab>();
   const headerHeight = useHeaderHeight();
   const tabBarHeight = useBottomTabBarHeight();
   const isFocused = useIsFocused();
@@ -71,20 +77,36 @@ const AlbumsScreen = () => {
           paddingBottom: tabBarHeight,
         }}
       >
+        <View style={styles.buttons}>
+          <Button
+            variant="filled"
+            onPress={() => {
+              navigation.navigate('TabChat', { count: i++ });
+            }}
+          >
+            Go to Chat
+          </Button>
+          <Button variant="tinted" onPress={() => navigation.goBack()}>
+            Go back
+          </Button>
+        </View>
         <Albums scrollEnabled={false} />
       </ScrollView>
     </>
   );
 };
 
-const Tab = createBottomTabNavigator<BottomTabParams>();
+let i = 1;
+
+const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 const animations = ['none', 'fade', 'shift'] as const;
 const variants = ['material', 'uikit'] as const;
 
-export function BottomTabs() {
+export function BottomTabs(
+  _: StaticScreenProps<NavigatorScreenParams<BottomTabParamList>>
+) {
   const { showActionSheetWithOptions } = useActionSheet();
-  const { direction } = useLocale();
 
   const dimensions = useWindowDimensions();
 
@@ -100,14 +122,17 @@ export function BottomTabs() {
   return (
     <>
       <Tab.Navigator
+        implementation="custom"
+        backBehavior="fullHistory"
         screenOptions={({
           navigation,
-        }: BottomTabScreenProps<BottomTabParams>) => ({
+        }: BottomTabScreenProps<BottomTabParamList>) => ({
+          headerShown: true,
           headerLeft: (props) => (
             <HeaderBackButton {...props} onPress={navigation.goBack} />
           ),
           headerRight: ({ tintColor }) => (
-            <View style={styles.buttons}>
+            <View style={styles.headerRight}>
               <HeaderButton
                 onPress={() => {
                   showActionSheetWithOptions(
@@ -164,11 +189,7 @@ export function BottomTabs() {
               </HeaderButton>
             </View>
           ),
-          tabBarPosition: isLargeScreen
-            ? direction === 'ltr'
-              ? 'left'
-              : 'right'
-            : 'bottom',
+          tabBarControllerMode: isLargeScreen ? 'tabSidebar' : 'tabBar',
           tabBarVariant: isLargeScreen ? variant : 'uikit',
           tabBarLabelPosition:
             isLargeScreen && isCompact && variant !== 'uikit'
@@ -184,23 +205,27 @@ export function BottomTabs() {
             popToTopOnBlur: true,
             title: 'Article',
             headerShown: false,
+            tabBarButtonTestID: 'article',
             tabBarIcon: getTabBarIcon('file-document'),
           }}
         />
         <Tab.Screen
           name="TabChat"
           component={Chat}
-          options={{
+          initialParams={{ count: i }}
+          options={({ route }) => ({
             title: 'Chat',
+            tabBarButtonTestID: 'chat',
             tabBarIcon: getTabBarIcon('message-reply'),
-            tabBarBadge: 2,
-          }}
+            tabBarBadge: route.params?.count,
+          })}
         />
         <Tab.Screen
           name="TabContacts"
           component={Contacts}
           options={{
             title: 'Contacts',
+            tabBarButtonTestID: 'contacts',
             tabBarIcon: getTabBarIcon('contacts'),
           }}
         />
@@ -209,6 +234,7 @@ export function BottomTabs() {
           component={AlbumsScreen}
           options={{
             title: 'Albums',
+            tabBarButtonTestID: 'albums',
             headerTintColor: '#fff',
             headerTransparent: true,
             headerBackground: () => (
@@ -229,26 +255,30 @@ export function BottomTabs() {
               <>
                 {isLargeScreen && (
                   <Image
-                    source={require('../../assets/album-art-03.jpg')}
+                    source={require('../../assets/album-art/03.jpg')}
                     resizeMode="cover"
-                    style={{
-                      ...StyleSheet.absoluteFillObject,
-                      // Override default size of the image
-                      height: 'auto',
-                      width: 'auto',
-                    }}
+                    style={[
+                      StyleSheet.absoluteFill,
+                      {
+                        // Override default size of the image
+                        height: 'auto',
+                        width: 'auto',
+                      },
+                    ]}
                   />
                 )}
                 <BlurView
                   tint="dark"
                   intensity={100}
-                  style={{
-                    ...StyleSheet.absoluteFillObject,
-                    end: isLargeScreen
-                      ? // Offset for right border of the sidebar
-                        -StyleSheet.hairlineWidth
-                      : 0,
-                  }}
+                  style={[
+                    StyleSheet.absoluteFill,
+                    {
+                      end: isLargeScreen
+                        ? // Offset for right border of the sidebar
+                          -StyleSheet.hairlineWidth
+                        : 0,
+                    },
+                  ]}
                 />
               </>
             ),
@@ -280,10 +310,16 @@ BottomTabs.title = 'Bottom Tabs';
 BottomTabs.linking = linking;
 
 const styles = StyleSheet.create({
-  buttons: {
+  headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 16,
     marginEnd: 16,
+  },
+  buttons: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    margin: 12,
   },
 });

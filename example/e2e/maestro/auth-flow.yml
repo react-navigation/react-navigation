@@ -1,7 +1,42 @@
 appId: ${APP_ID}
 name: Auth Flow
 ---
-- openLink:
-    link: exp://127.0.0.1:8081/--/auth-flow
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: auth-flow
+      TEXT: 'Welcome'
+- tapOn:
+    text: 'Sign in'
+- assertVisible:
+    text: 'Home'
+- tapOn:
+    text: 'Go to Chat'
+- assertVisible:
+    text: 'Chat'
+- tapOn:
+    text: 'Sign out'
 - assertVisible:
     text: 'Sign in'
+- openLink:
+    link: ${APP_SCHEME}auth-flow/profile
+- assertVisible:
+    text: 'Welcome'
+- tapOn:
+    text: 'Sign in'
+- assertVisible:
+    text: 'This is your profile'
+- tapOn:
+    text: 'Go to Chat'
+- assertVisible:
+    text: 'Chat'
+- tapOn:
+    text: 'Sign out'
+- assertVisible:
+    text: 'Sign in'
+- openLink:
+    link: ${APP_SCHEME}auth-flow
+- tapOn:
+    text: 'Sign in'
+- assertVisible:
+    text: 'Home'

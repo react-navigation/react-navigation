@@ -6,7 +6,10 @@ import * as TransitionSpecs from './TransitionConfigs/TransitionSpecs';
 /**
  * Navigators
  */
-export { createStackNavigator } from './navigators/createStackNavigator';
+export {
+  createStackNavigator,
+  createStackScreen,
+} from './navigators/createStackNavigator';
 
 /**
  * Views
@@ -42,7 +45,9 @@ export type {
   StackCardStyleInterpolator,
   StackHeaderInterpolatedStyle,
   StackHeaderInterpolationProps,
+  StackHeaderLeftProps,
   StackHeaderProps,
+  StackHeaderRightProps,
   StackHeaderStyleInterpolator,
   StackNavigationEventMap,
   StackNavigationOptions,

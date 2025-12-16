@@ -4,13 +4,14 @@ import type {
   NavigationContainerEventMap,
   NavigationContainerRef,
   NavigationContainerRefWithCurrent,
+  RootParamList,
 } from './types';
 
 export const NOT_INITIALIZED_ERROR =
   "The 'navigation' object hasn't been initialized yet. This might happen if you don't have a navigator mounted, or if the navigator hasn't finished mounting. See https://reactnavigation.org/docs/navigating-without-navigation-prop#handling-initialization for more details.";
 
 export function createNavigationContainerRef<
-  ParamList extends {} = ReactNavigation.RootParamList,
+  ParamList extends {} = RootParamList,
 >(): NavigationContainerRefWithCurrent<ParamList> {
   const methods = [
     ...Object.keys(CommonActions),

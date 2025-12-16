@@ -16,8 +16,11 @@ export function Overlay({
   ...rest
 }: OverlayProps) {
   const animatedStyle = useAnimatedStyle(() => {
+    const active = progress.value > PROGRESS_EPSILON;
+
     return {
       opacity: progress.value,
+      pointerEvents: active ? 'auto' : 'none',
     };
   }, [progress]);
 
@@ -25,23 +28,22 @@ export function Overlay({
     const active = progress.value > PROGRESS_EPSILON;
 
     return {
-      pointerEvents: active ? 'auto' : 'none',
-      accessibilityElementsHidden: !active,
-      importantForAccessibility: active ? 'auto' : 'no-hide-descendants',
+      'aria-hidden': !active,
     } as const;
   }, [progress]);
 
   return (
     <Animated.View
       {...rest}
-      style={[styles.overlay, animatedStyle, style]}
+      style={[StyleSheet.absoluteFill, styles.overlay, animatedStyle, style]}
       animatedProps={animatedProps}
     >
       <Pressable
         onPress={onPress}
         style={styles.pressable}
-        accessibilityRole="button"
-        accessibilityLabel={accessibilityLabel}
+        role="button"
+        aria-label={accessibilityLabel}
+        accessible
       />
     </Animated.View>
   );
@@ -49,7 +51,6 @@ export function Overlay({
 
 const styles = StyleSheet.create({
   overlay: {
-    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   pressable: {

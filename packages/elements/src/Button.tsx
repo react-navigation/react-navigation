@@ -1,12 +1,13 @@
 import {
   type LinkProps,
+  type RootParamList,
   useLinkProps,
   useTheme,
 } from '@react-navigation/native';
-import Color from 'color';
 import * as React from 'react';
-import { Platform, StyleSheet } from 'react-native';
+import { type ColorValue, Platform, StyleSheet } from 'react-native';
 
+import { Color } from './Color';
 import {
   PlatformPressable,
   type Props as PlatformPressableProps,
@@ -15,24 +16,28 @@ import { Text } from './Text';
 
 type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
   variant?: 'plain' | 'tinted' | 'filled';
-  color?: string;
+  color?: ColorValue;
   children: string | string[];
 };
 
-type ButtonLinkProps<ParamList extends ReactNavigation.RootParamList> =
-  LinkProps<ParamList> & Omit<ButtonBaseProps, 'onPress'>;
+type ButtonLinkProps<
+  ParamList extends {} = RootParamList,
+  RouteName extends keyof ParamList = keyof ParamList,
+> = LinkProps<ParamList, RouteName> & Omit<ButtonBaseProps, 'onPress'>;
 
 const BUTTON_RADIUS = 40;
 
-export function Button<ParamList extends ReactNavigation.RootParamList>(
-  props: ButtonLinkProps<ParamList>
-): React.JSX.Element;
+export function Button<
+  ParamList extends {} = RootParamList,
+  RouteName extends keyof ParamList = keyof ParamList,
+>(props: ButtonLinkProps<ParamList, RouteName>): React.JSX.Element;
 
 export function Button(props: ButtonBaseProps): React.JSX.Element;
 
-export function Button<ParamList extends ReactNavigation.RootParamList>(
-  props: ButtonBaseProps | ButtonLinkProps<ParamList>
-) {
+export function Button<
+  ParamList extends {} = RootParamList,
+  RouteName extends keyof ParamList = keyof ParamList,
+>(props: ButtonBaseProps | ButtonLinkProps<ParamList, RouteName>) {
   if ('screen' in props || 'action' in props) {
     // @ts-expect-error: This is already type-checked by the prop types
     return <ButtonLink {...props} />;
@@ -41,13 +46,16 @@ export function Button<ParamList extends ReactNavigation.RootParamList>(
   }
 }
 
-function ButtonLink<ParamList extends ReactNavigation.RootParamList>({
+function ButtonLink<
+  const ParamList extends {} = RootParamList,
+  const RouteName extends keyof ParamList = keyof ParamList,
+>({
   screen,
   params,
   action,
   href,
   ...rest
-}: ButtonLinkProps<ParamList>) {
+}: ButtonLinkProps<ParamList, RouteName>) {
   // @ts-expect-error: This is already type-checked by the prop types
   const props = useLinkProps({ screen, params, action, href });
 
@@ -62,12 +70,12 @@ function ButtonBase({
   children,
   ...rest
 }: ButtonBaseProps) {
-  const { colors, fonts } = useTheme();
+  const { dark, colors, fonts } = useTheme();
 
   const color = customColor ?? colors.primary;
 
-  let backgroundColor;
-  let textColor;
+  let backgroundColor: ColorValue;
+  let textColor: ColorValue;
 
   switch (variant) {
     case 'plain':
@@ -75,14 +83,16 @@ function ButtonBase({
       textColor = color;
       break;
     case 'tinted':
-      backgroundColor = Color(color).fade(0.85).string();
+      backgroundColor =
+        Color(color)?.fade(0.85).string() ??
+        (dark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.06)');
       textColor = color;
       break;
     case 'filled':
       backgroundColor = color;
-      textColor = Color(color).isDark()
+      textColor = Color(color)?.isDark()
         ? 'white'
-        : Color(color).darken(0.71).string();
+        : (Color(color)?.darken(0.71).string() ?? '#fff');
       break;
   }
 
@@ -91,11 +101,13 @@ function ButtonBase({
       {...rest}
       android_ripple={{
         radius: BUTTON_RADIUS,
-        color: Color(textColor).fade(0.85).string(),
+        color: Color(textColor)?.fade(0.85).string() ?? 'rgba(0, 0, 0, 0.1)',
         ...android_ripple,
       }}
       pressOpacity={Platform.OS === 'ios' ? undefined : 1}
-      hoverEffect={{ color: textColor }}
+      hoverEffect={
+        typeof textColor === 'string' ? { color: textColor } : undefined
+      }
       style={[{ backgroundColor }, styles.button, style]}
     >
       <Text style={[{ color: textColor }, fonts.regular, styles.text]}>
@@ -110,6 +122,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 10,
     borderRadius: BUTTON_RADIUS,
+    borderCurve: 'continuous',
   },
   text: {
     fontSize: 14,

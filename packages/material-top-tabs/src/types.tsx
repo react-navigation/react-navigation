@@ -14,16 +14,13 @@ import type {
 import type React from 'react';
 import type {
   Animated,
+  ColorValue,
   PressableAndroidRippleConfig,
   StyleProp,
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import type {
-  SceneRendererProps,
-  TabBar,
-  TabViewProps,
-} from 'react-native-tab-view';
+import type { TabBar, TabBarProps, TabViewProps } from 'react-native-tab-view';
 
 export type MaterialTopTabNavigationEventMap = {
   /**
@@ -53,31 +50,27 @@ export type MaterialTopTabNavigationHelpers = NavigationHelpers<
 export type MaterialTopTabNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   TabNavigationState<ParamList>,
   MaterialTopTabNavigationOptions,
-  MaterialTopTabNavigationEventMap
-> &
-  TabActionHelpers<ParamList>;
+  MaterialTopTabNavigationEventMap,
+  TabActionHelpers<ParamList>
+>;
 
 export type MaterialTopTabScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: MaterialTopTabNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: MaterialTopTabNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
 export type MaterialTopTabOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = MaterialTopTabScreenProps<ParamList, RouteName, NavigatorID> & {
+> = MaterialTopTabScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -89,7 +82,7 @@ export type MaterialTopTabNavigationOptions = {
 
   /**
    * Title string of a tab displayed in the tab bar
-   * or a function that given { focused: boolean, color: string } returns a React.Node, to display in tab bar.
+   * or a function that given { focused: boolean, color: ColorValue } returns a React.Node, to display in tab bar.
    *
    * When undefined, scene title is used. Use `tabBarShowLabel` to hide the label.
    */
@@ -97,7 +90,7 @@ export type MaterialTopTabNavigationOptions = {
     | string
     | ((props: {
         focused: boolean;
-        color: string;
+        color: ColorValue;
         children: string;
       }) => React.ReactNode);
 
@@ -118,11 +111,11 @@ export type MaterialTopTabNavigationOptions = {
   tabBarShowLabel?: boolean;
 
   /**
-   * A function that given { focused: boolean, color: string } returns a React.Node to display in the tab bar.
+   * A function that given { focused: boolean, color: ColorValue } returns a React.Node to display in the tab bar.
    */
   tabBarIcon?: (props: {
     focused: boolean;
-    color: string;
+    color: ColorValue;
   }) => React.ReactElement;
 
   /**
@@ -165,17 +158,17 @@ export type MaterialTopTabNavigationOptions = {
   /**
    * Color for the icon and label in the active tab.
    */
-  tabBarActiveTintColor?: string;
+  tabBarActiveTintColor?: ColorValue;
 
   /**
    * Color for the icon and label in the inactive tabs.
    */
-  tabBarInactiveTintColor?: string;
+  tabBarInactiveTintColor?: ColorValue;
 
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
-  tabBarPressColor?: string;
+  tabBarPressColor?: ColorValue;
 
   /**
    * Opacity for pressed tab (iOS and Android < 5.0 only).
@@ -294,6 +287,7 @@ export type MaterialTopTabNavigationConfig = Omit<
   | 'renderScene'
   | 'renderTabBar'
   | 'renderLazyPlaceholder'
+  | 'renderAdapter'
   | 'swipeEnabled'
   | 'animationEnabled'
   | 'lazy'
@@ -304,9 +298,16 @@ export type MaterialTopTabNavigationConfig = Omit<
    * Function that returns a React element to display as the tab bar.
    */
   tabBar?: (props: MaterialTopTabBarProps) => React.ReactNode;
+  /**
+   * Function that returns a React element to override the underlying adapter.
+   */
+  adapter?: TabViewProps<Route<string>>['renderAdapter'];
 };
 
-export type MaterialTopTabBarProps = SceneRendererProps & {
+export type MaterialTopTabBarProps = Pick<
+  TabBarProps<Route<string>>,
+  'position' | 'subscribe' | 'jumpTo'
+> & {
   state: TabNavigationState<ParamListBase>;
   navigation: NavigationHelpers<
     ParamListBase,
@@ -321,7 +322,6 @@ export type MaterialTopTabAnimationContext = {
 
 export type MaterialTopTabNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
-  string | undefined,
   TabNavigationState<ParamListBase>,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap,

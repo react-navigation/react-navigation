@@ -1,8 +1,12 @@
 import {
   createNavigatorFactory,
-  type NavigatorTypeBagBase,
   type ParamListBase,
+  StackActions,
   type StaticConfig,
+  type StaticParamList,
+  type StaticScreenConfig,
+  type StaticScreenConfigLinking,
+  type StaticScreenConfigScreen,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
@@ -10,6 +14,7 @@ import {
   type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
+import * as React from 'react';
 
 import type {
   BottomTabNavigationEventMap,
@@ -17,21 +22,21 @@ import type {
   BottomTabNavigationProp,
   BottomTabNavigatorProps,
 } from '../types';
-import { BottomTabView } from '../views/BottomTabView';
+import { BottomTabView } from '../views/BottomTabViewCommon';
 
 function BottomTabNavigator({
-  id,
   initialRouteName,
   backBehavior,
+  routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
   screenOptions,
   screenLayout,
-  UNSTABLE_getStateForRouteNamesChange,
+  router,
   ...rest
 }: BottomTabNavigatorProps) {
-  const { state, descriptors, navigation, NavigationContent } =
+  const { state, navigation, descriptors, NavigationContent } =
     useNavigationBuilder<
       TabNavigationState<ParamListBase>,
       TabRouterOptions,
@@ -39,16 +44,42 @@ function BottomTabNavigator({
       BottomTabNavigationOptions,
       BottomTabNavigationEventMap
     >(TabRouter, {
-      id,
       initialRouteName,
       backBehavior,
+      routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,
       screenOptions,
       screenLayout,
-      UNSTABLE_getStateForRouteNamesChange,
+      router,
     });
+
+  const focusedRouteKey = state.routes[state.index].key;
+  const previousRouteKeyRef = React.useRef(focusedRouteKey);
+
+  React.useEffect(() => {
+    const previousRouteKey = previousRouteKeyRef.current;
+
+    if (
+      previousRouteKey !== focusedRouteKey &&
+      descriptors[previousRouteKey]?.options.popToTopOnBlur
+    ) {
+      const prevRoute = state.routes.find(
+        (route) => route.key === previousRouteKey
+      );
+
+      if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
+        const popToTopAction = {
+          ...StackActions.popToTop(),
+          target: prevRoute.state.key,
+        };
+        navigation.dispatch(popToTopAction);
+      }
+    }
+
+    previousRouteKeyRef.current = focusedRouteKey;
+  }, [descriptors, focusedRouteKey, navigation, state.index, state.routes]);
 
   return (
     <NavigationContent>
@@ -62,25 +93,47 @@ function BottomTabNavigator({
   );
 }
 
+type BottomTabTypeBag<ParamList extends {}> = {
+  ParamList: ParamList;
+  State: TabNavigationState<ParamList>;
+  ScreenOptions: BottomTabNavigationOptions;
+  EventMap: BottomTabNavigationEventMap;
+  NavigationList: {
+    [RouteName in keyof ParamList]: BottomTabNavigationProp<
+      ParamList,
+      RouteName
+    >;
+  };
+  Navigator: typeof BottomTabNavigator;
+};
+
 export function createBottomTabNavigator<
   const ParamList extends ParamListBase,
-  const NavigatorID extends string | undefined = undefined,
-  const TypeBag extends NavigatorTypeBagBase = {
-    ParamList: ParamList;
-    NavigatorID: NavigatorID;
-    State: TabNavigationState<ParamList>;
-    ScreenOptions: BottomTabNavigationOptions;
-    EventMap: BottomTabNavigationEventMap;
-    NavigationList: {
-      [RouteName in keyof ParamList]: BottomTabNavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
-    };
-    Navigator: typeof BottomTabNavigator;
-  },
-  const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
->(config?: Config): TypedNavigator<TypeBag, Config> {
+>(): TypedNavigator<BottomTabTypeBag<ParamList>, undefined>;
+export function createBottomTabNavigator<
+  const Config extends StaticConfig<BottomTabTypeBag<ParamListBase>>,
+>(
+  config: Config
+): TypedNavigator<
+  BottomTabTypeBag<StaticParamList<{ config: Config }>>,
+  Config
+>;
+export function createBottomTabNavigator(config?: unknown) {
   return createNavigatorFactory(BottomTabNavigator)(config);
+}
+
+export function createBottomTabScreen<
+  const Linking extends StaticScreenConfigLinking,
+  const Screen extends StaticScreenConfigScreen,
+>(
+  config: StaticScreenConfig<
+    Linking,
+    Screen,
+    TabNavigationState<ParamListBase>,
+    BottomTabNavigationOptions,
+    BottomTabNavigationEventMap,
+    BottomTabNavigationProp<ParamListBase>
+  >
+) {
+  return config;
 }

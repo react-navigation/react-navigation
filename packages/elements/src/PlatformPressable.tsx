@@ -2,6 +2,7 @@ import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
+  type ColorValue,
   Easing,
   type GestureResponderEvent,
   Platform,
@@ -17,12 +18,15 @@ type HoverEffectProps = {
   activeOpacity?: number;
 };
 
-export type Props = Omit<PressableProps, 'style'> & {
-  pressColor?: string;
+export type Props = Omit<PressableProps, 'style' | 'onPress'> & {
+  href?: string;
+  pressColor?: ColorValue;
   pressOpacity?: number;
   hoverEffect?: HoverEffectProps;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-  href?: string;
+  onPress?: (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
+  ) => void;
   children: React.ReactNode;
 };
 
@@ -37,19 +41,22 @@ const useNativeDriver = Platform.OS !== 'web';
 /**
  * PlatformPressable provides an abstraction on top of Pressable to handle platform differences.
  */
-export function PlatformPressable({
-  disabled,
-  onPress,
-  onPressIn,
-  onPressOut,
-  android_ripple,
-  pressColor,
-  pressOpacity = 0.3,
-  hoverEffect,
-  style,
-  children,
-  ...rest
-}: Props) {
+function PlatformPressableInternal(
+  {
+    disabled,
+    onPress,
+    onPressIn,
+    onPressOut,
+    android_ripple,
+    pressColor,
+    pressOpacity = 0.3,
+    hoverEffect,
+    style,
+    children,
+    ...rest
+  }: Props,
+  ref: React.Ref<React.ComponentRef<typeof AnimatedPressable>>
+) {
   const { dark } = useTheme();
   const [opacity] = React.useState(() => new Animated.Value(1));
 
@@ -66,18 +73,31 @@ export function PlatformPressable({
     }).start();
   };
 
-  const handlePress = (e: GestureResponderEvent) => {
-    if (Platform.OS === 'web' && rest.href != null) {
-      // @ts-expect-error: these properties exist on web, but not in React Native
-      const hasModifierKey = e.metaKey || e.altKey || e.ctrlKey || e.shiftKey; // ignore clicks with modifier keys
-      // @ts-expect-error: these properties exist on web, but not in React Native
-      const isLeftClick = e.button == null || e.button === 0; // only handle left clicks
-      const isSelfTarget = [undefined, null, '', 'self'].includes(
-        // @ts-expect-error: these properties exist on web, but not in React Native
-        e.currentTarget?.target
-      ); // let browser handle "target=_blank" etc.
+  const handlePress = (
+    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
+  ) => {
+    if (Platform.OS === 'web' && rest.href !== null) {
+      // ignore clicks with modifier keys
+      const hasModifierKey =
+        ('metaKey' in e && e.metaKey) ||
+        ('altKey' in e && e.altKey) ||
+        ('ctrlKey' in e && e.ctrlKey) ||
+        ('shiftKey' in e && e.shiftKey);
+
+      // only handle left clicks
+      const isLeftClick =
+        'button' in e ? e.button == null || e.button === 0 : true;
+
+      // let browser handle "target=_blank" etc.
+      const isSelfTarget =
+        e.currentTarget && 'target' in e.currentTarget
+          ? [undefined, null, '', 'self'].includes(e.currentTarget.target)
+          : true;
+
       if (!hasModifierKey && isLeftClick && isSelfTarget) {
         e.preventDefault();
+        // call `onPress` only when browser default is prevented
+        // this prevents app from handling the click when a link is being opened
         onPress?.(e);
       }
     } else {
@@ -97,15 +117,14 @@ export function PlatformPressable({
 
   return (
     <AnimatedPressable
+      ref={ref}
       accessible
-      accessibilityRole={
-        Platform.OS === 'web' && rest.href != null ? 'link' : 'button'
-      }
+      role={Platform.OS === 'web' && rest.href != null ? 'link' : 'button'}
       onPress={disabled ? undefined : handlePress}
-      onPressIn={handlePressIn}
-      onPressOut={handlePressOut}
+      onPressIn={disabled ? undefined : handlePressIn}
+      onPressOut={disabled ? undefined : handlePressOut}
       android_ripple={
-        ANDROID_SUPPORTS_RIPPLE
+        ANDROID_SUPPORTS_RIPPLE && !disabled
           ? {
               color:
                 pressColor !== undefined
@@ -120,22 +139,26 @@ export function PlatformPressable({
       style={[
         {
           cursor:
-            Platform.OS === 'web' || Platform.OS === 'ios'
+            (Platform.OS === 'web' || Platform.OS === 'ios') && !disabled
               ? // Pointer cursor on web
                 // Hover effect on iPad and visionOS
                 'pointer'
               : 'auto',
-          opacity: !ANDROID_SUPPORTS_RIPPLE ? opacity : 1,
+          opacity: !ANDROID_SUPPORTS_RIPPLE && !disabled ? opacity : 1,
         },
         style,
       ]}
       {...rest}
     >
-      <HoverEffect {...hoverEffect} />
+      {!disabled ? <HoverEffect {...hoverEffect} /> : null}
       {children}
     </AnimatedPressable>
   );
 }
+
+export const PlatformPressable = React.forwardRef(PlatformPressableInternal);
+
+PlatformPressable.displayName = 'PlatformPressable';
 
 const css = String.raw;
 
@@ -152,6 +175,7 @@ const CSS_TEXT = css`
     background-color: var(--overlay-color);
     opacity: 0;
     transition: opacity 0.15s;
+    pointer-events: none;
   }
 
   a:hover > .${CLASS_NAME}, button:hover > .${CLASS_NAME} {
@@ -174,11 +198,7 @@ const HoverEffect = ({
 
   return (
     <>
-      <style
-        // @ts-expect-error: href and precedence are only available on React 19
-        href={CLASS_NAME}
-        precedence="elements"
-      >
+      <style href={CLASS_NAME} precedence="elements">
         {CSS_TEXT}
       </style>
       <div

@@ -3,6 +3,131 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [2.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.5.2...@react-navigation/elements@2.6.0) (2025-07-25)
+
+### Features
+
+* preserve params for backBehavior=fullHistory ([3f854bc](https://github.com/react-navigation/react-navigation/commit/3f854bc8f450672b7c24cb4c6fea1dce0682f6aa)) - by @satya164
+
+## [2.5.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.5.1...@react-navigation/elements@2.5.2) (2025-06-24)
+
+### Bug Fixes
+
+* load SafeAreaListener with require to avoid webpack error ([4094a75](https://github.com/react-navigation/react-navigation/commit/4094a75bab1aaec407411528e59cbd9466b99267)), closes [#12654](https://github.com/react-navigation/react-navigation/issues/12654) - by @
+
+## [2.5.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.5.0...@react-navigation/elements@2.5.1) (2025-06-22)
+
+### Bug Fixes
+
+* throttle frame size instead of debounce ([d016bd7](https://github.com/react-navigation/react-navigation/commit/d016bd7bdfbd6fd73cee4c2bcf890574237239f4)) - by @
+
+# [2.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.4.6...@react-navigation/elements@2.5.0) (2025-06-21)
+
+### Features
+
+* use the new SafeAreaListener to listen to frame changes ([d9e295e](https://github.com/react-navigation/react-navigation/commit/d9e295eef251393b5280d661957e7d2c31a36ae1)) - by @satya164
+
+## [2.4.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.4.5...@react-navigation/elements@2.4.6) (2025-06-19)
+
+### Bug Fixes
+
+* use use-sync-external-store for selector for frame size ([51ad10c](https://github.com/react-navigation/react-navigation/commit/51ad10c7ecbc5c24b9e916927296f66799e73261)) - by @
+
+## [2.4.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.4.4...@react-navigation/elements@2.4.5) (2025-06-18)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.4.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.4.3...@react-navigation/elements@2.4.4) (2025-06-14)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.4.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.4.2...@react-navigation/elements@2.4.3) (2025-05-30)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.4.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.4.1...@react-navigation/elements@2.4.2) (2025-05-11)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.4.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.4.0...@react-navigation/elements@2.4.1) (2025-05-04)
+
+### Bug Fixes
+
+* fix peer dep versions. closes [#12580](https://github.com/react-navigation/react-navigation/issues/12580) ([6fc3dd6](https://github.com/react-navigation/react-navigation/commit/6fc3dd677aecdcf8696fe723e17b9c028de7ad85)) - by @satya164
+
+# [2.4.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.3.8...@react-navigation/elements@2.4.0) (2025-05-02)
+
+### Bug Fixes
+
+* use aria props instead of accessibilityX ([#11848](https://github.com/react-navigation/react-navigation/issues/11848)) ([347ca97](https://github.com/react-navigation/react-navigation/commit/347ca975406e84a5e7452679b1dde7b9ecca1a22)) - by @satya164
+
+### Features
+
+* **elements:** add forwardRef to HeaderButton and PlatformPressable components ([#12554](https://github.com/react-navigation/react-navigation/issues/12554)) ([04a82f1](https://github.com/react-navigation/react-navigation/commit/04a82f1a34ebc265c2dac3ebae94170efc3d837a)) - by @erickreutz
+
+## [2.3.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.3.7...@react-navigation/elements@2.3.8) (2025-04-08)
+
+### Bug Fixes
+
+* add types field back to support legacy moduleResolution ([6c021d4](https://github.com/react-navigation/react-navigation/commit/6c021d442ede3a231e32486b2c391c2e850bf76e)), closes [#12534](https://github.com/react-navigation/react-navigation/issues/12534) - by @
+
+## [2.3.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.3.6...@react-navigation/elements@2.3.7) (2025-04-04)
+
+### Bug Fixes
+
+* drop commonjs module to avoid dual package hazard ([f0fbcc5](https://github.com/react-navigation/react-navigation/commit/f0fbcc5515e73b454f607bd95bba40a48e852d0f)) - by @satya164
+
+## [2.3.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.3.5...@react-navigation/elements@2.3.6) (2025-04-03)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.3.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.3.4...@react-navigation/elements@2.3.5) (2025-04-02)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.3.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.3.3...@react-navigation/elements@2.3.4) (2025-04-02)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.3.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.3.2...@react-navigation/elements@2.3.3) (2025-04-02)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.3.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.3.1...@react-navigation/elements@2.3.2) (2025-04-01)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.3.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.3.0...@react-navigation/elements@2.3.1) (2025-03-25)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [2.3.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.2.8...@react-navigation/elements@2.3.0) (2025-03-22)
+
+### Bug Fixes
+
+* header search not taking remaining space when title is centered on Android ([#12461](https://github.com/react-navigation/react-navigation/issues/12461)) ([f06df9f](https://github.com/react-navigation/react-navigation/commit/f06df9f9af929f1629166554a69dadcda749fd00)) - by @ferretwithaberet
+
+### Features
+
+* add enterKeyHint option for search bar ([#12464](https://github.com/react-navigation/react-navigation/issues/12464)) ([96d25ce](https://github.com/react-navigation/react-navigation/commit/96d25cec3d51170e2183863e1085740a061d7797)) - by @ferretwithaberet
+* add onOpen handler ([#12463](https://github.com/react-navigation/react-navigation/issues/12463)) ([e7e6562](https://github.com/react-navigation/react-navigation/commit/e7e65622ec6c9662fa39fe1989ae1f2788c2d4c6)) - by @ferretwithaberet
+* add typing for onSubmitEditing ([#12462](https://github.com/react-navigation/react-navigation/issues/12462)) ([80278f4](https://github.com/react-navigation/react-navigation/commit/80278f4b3ac8ea08388f29e38a50ace04a7759c6)) - by @ferretwithaberet
+
+## [2.2.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.2.7...@react-navigation/elements@2.2.8) (2025-03-19)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.2.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.2.6...@react-navigation/elements@2.2.7) (2025-03-19)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+## [2.2.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.2.5...@react-navigation/elements@2.2.6) (2025-03-02)
+
+### Bug Fixes
+
+* add top spacing to search bar when there's no top inset. fixes [#12405](https://github.com/react-navigation/react-navigation/issues/12405) ([36e630d](https://github.com/react-navigation/react-navigation/commit/36e630dd4299113f6147f983f06bda4c4ee41a71)) - by @satya164
+* inherit header color for searchbar. fixes [#12405](https://github.com/react-navigation/react-navigation/issues/12405) ([ddcc07a](https://github.com/react-navigation/react-navigation/commit/ddcc07a9809f3bac70d05578d8af9fa32a0f3e2f)) - by @satya164
+
 ## [2.2.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.2.4...@react-navigation/elements@2.2.5) (2024-12-12)
 
 **Note:** Version bump only for package @react-navigation/elements

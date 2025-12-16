@@ -1,7 +1,25 @@
 appId: ${APP_ID}
 name: Tab Preload Flow
 ---
-- openLink:
-    link: exp://127.0.0.1:8081/--/tab-preload-flow
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: tab-preload-flow
+      TEXT: 'Home'
 - assertVisible:
-    text: 'Home'
+    text: 'Details is not preloaded yet.'
+- tapOn:
+    text: 'Preload Details'
+- extendedWaitUntil:
+    timeout: 3000
+    visible: 'Details is preloaded!'
+- tapOn:
+    text: 'Navigate to Details'
+- assertVisible:
+    text: 'Loaded!'
+- tapOn:
+    text: 'Back to home'
+- tapOn:
+    text: 'Navigate to Details'
+- assertVisible:
+    text: 'Loaded!'

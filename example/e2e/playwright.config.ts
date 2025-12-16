@@ -1,7 +1,7 @@
 import { defineConfig } from '@playwright/test';
 import path from 'path';
 
-const PORT = process.env.CI ? 3579 : 19006;
+const PORT = 5173;
 
 export default defineConfig({
   testDir: path.join(__dirname, 'tests'),
@@ -20,22 +20,20 @@ export default defineConfig({
     },
   ],
   use: {
-    baseURL: `http://127.0.0.1:${PORT}`,
+    baseURL: `http://localhost:${PORT}`,
     trace: 'on-first-retry',
   },
   webServer: [
     {
       cwd: path.join(__dirname, '..'),
-      command: process.env.CI
-        ? `yarn serve --no-port-switching --single --listen ${PORT} dist`
-        : `yarn start --web --port ${PORT}`,
-      url: `http://127.0.0.1:${PORT}`,
+      command: `yarn web --port ${PORT}`,
+      url: `http://localhost:${PORT}`,
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
     },
     {
       command: 'yarn server',
-      url: 'http://127.0.0.1:3275',
+      url: 'http://localhost:3275',
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
     },

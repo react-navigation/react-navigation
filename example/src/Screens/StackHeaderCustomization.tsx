@@ -6,7 +6,11 @@ import {
   HeaderButton,
   useHeaderHeight,
 } from '@react-navigation/elements';
-import { type PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfig,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   Header as StackHeader,
@@ -29,24 +33,28 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type HeaderCustomizationStackParams = {
+type HeaderCustomizationStackParamList = {
   Article: { author: string };
   NewsFeed: { date: number };
   Albums: undefined;
 };
 
-const linking: PathConfigMap<HeaderCustomizationStackParams> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Albums: 'albums',
+  },
+} satisfies PathConfig<
+  NavigatorScreenParams<HeaderCustomizationStackParamList>
+>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<HeaderCustomizationStackParams, 'Article'>) => {
+}: StackScreenProps<HeaderCustomizationStackParamList, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -71,7 +79,7 @@ const ArticleScreen = ({
 const NewsFeedScreen = ({
   route,
   navigation,
-}: StackScreenProps<HeaderCustomizationStackParams, 'NewsFeed'>) => {
+}: StackScreenProps<HeaderCustomizationStackParamList, 'NewsFeed'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -89,7 +97,7 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: StackScreenProps<HeaderCustomizationStackParams>) => {
+}: StackScreenProps<HeaderCustomizationStackParamList>) => {
   const headerHeight = useHeaderHeight();
 
   return (
@@ -112,7 +120,7 @@ const AlbumsScreen = ({
   );
 };
 
-const Stack = createStackNavigator<HeaderCustomizationStackParams>();
+const Stack = createStackNavigator<HeaderCustomizationStackParamList>();
 
 function CustomHeader(props: StackHeaderProps) {
   const { current, next } = props.progress;
@@ -133,7 +141,9 @@ function CustomHeader(props: StackHeaderProps) {
   );
 }
 
-export function StackHeaderCustomization() {
+export function StackHeaderCustomization(
+  _: StaticScreenProps<NavigatorScreenParams<HeaderCustomizationStackParamList>>
+) {
   const [headerTitleCentered, setHeaderTitleCentered] = React.useState(true);
 
   return (

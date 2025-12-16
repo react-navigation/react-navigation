@@ -20,7 +20,13 @@ import type {
   Theme,
 } from '@react-navigation/native';
 import type * as React from 'react';
-import type { Animated, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type {
+  Animated,
+  ColorValue,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 
 export type StackNavigationEventMap = {
   /**
@@ -54,31 +60,27 @@ export type StackNavigationHelpers = NavigationHelpers<
 export type StackNavigationProp<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = NavigationProp<
   ParamList,
   RouteName,
-  NavigatorID,
   StackNavigationState<ParamList>,
   StackNavigationOptions,
-  StackNavigationEventMap
-> &
-  StackActionHelpers<ParamList>;
+  StackNavigationEventMap,
+  StackActionHelpers<ParamList>
+>;
 
 export type StackScreenProps<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
 > = {
-  navigation: StackNavigationProp<ParamList, RouteName, NavigatorID>;
+  navigation: StackNavigationProp<ParamList, RouteName>;
   route: RouteProp<ParamList, RouteName>;
 };
 
 export type StackOptionsArgs<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList = keyof ParamList,
-  NavigatorID extends string | undefined = undefined,
-> = StackScreenProps<ParamList, RouteName, NavigatorID> & {
+> = StackScreenProps<ParamList, RouteName> & {
   theme: Theme;
 };
 
@@ -218,10 +220,6 @@ export type StackHeaderOptions = Omit<
 
 export type StackHeaderProps = {
   /**
-   * Layout of the screen.
-   */
-  layout: Layout;
-  /**
    * Options for the back button.
    */
   back?: {
@@ -260,11 +258,11 @@ export type StackHeaderRightProps = {
   /**
    * Tint color for the header button.
    */
-  tintColor?: string;
+  tintColor?: ColorValue;
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
-  pressColor?: string;
+  pressColor?: ColorValue;
   /**
    * Opacity when the button is pressed, used when ripple is not supported.
    */
@@ -561,38 +559,26 @@ export type StackHeaderInterpolationProps = {
      * Layout of the whole screen.
      */
     screen: Layout;
-    /**
-     * Layout of the title element.
-     */
-    title?: Layout;
-    /**
-     * Layout of the back button label.
-     */
-    leftLabel?: Layout;
   };
 };
 
 export type StackHeaderInterpolatedStyle = {
   /**
-   * Interpolated style for the label of the left button (back button label).
-   */
-  leftLabelStyle?: any;
-  /**
    * Interpolated style for the left button (usually the back button).
    */
-  leftButtonStyle?: any;
+  leftButtonStyle?: Animated.WithAnimatedValue<ViewStyle>;
   /**
    * Interpolated style for the right button.
    */
-  rightButtonStyle?: any;
+  rightButtonStyle?: Animated.WithAnimatedValue<ViewStyle>;
   /**
    * Interpolated style for the header title text.
    */
-  titleStyle?: any;
+  titleStyle?: Animated.WithAnimatedValue<TextStyle>;
   /**
    * Interpolated style for the header background.
    */
-  backgroundStyle?: any;
+  backgroundStyle?: Animated.WithAnimatedValue<ViewStyle>;
 };
 
 export type StackHeaderStyleInterpolator = (
@@ -629,7 +615,6 @@ export type TransitionPreset = {
 
 export type StackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
-  string | undefined,
   StackNavigationState<ParamListBase>,
   StackNavigationOptions,
   StackNavigationEventMap,

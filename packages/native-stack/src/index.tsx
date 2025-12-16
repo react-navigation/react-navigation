@@ -1,7 +1,10 @@
 /**
  * Navigators
  */
-export { createNativeStackNavigator } from './navigators/createNativeStackNavigator';
+export {
+  createNativeStackNavigator,
+  createNativeStackScreen,
+} from './navigators/createNativeStackNavigator';
 
 /**
  * Views
@@ -17,6 +20,15 @@ export { useAnimatedHeaderHeight } from './utils/useAnimatedHeaderHeight';
  * Types
  */
 export type {
+  NativeStackHeaderBackProps,
+  NativeStackHeaderItem,
+  NativeStackHeaderItemButton,
+  NativeStackHeaderItemCustom,
+  NativeStackHeaderItemMenu,
+  NativeStackHeaderItemMenuAction,
+  NativeStackHeaderItemMenuSubmenu,
+  NativeStackHeaderItemProps,
+  NativeStackHeaderItemSpacing,
   NativeStackHeaderLeftProps,
   NativeStackHeaderProps,
   NativeStackHeaderRightProps,

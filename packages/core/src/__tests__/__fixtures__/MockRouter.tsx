@@ -59,6 +59,14 @@ export function MockRouter(options: DefaultRouterOptions) {
             }) as Route<string>
         );
 
+      if (routes.length === 0) {
+        routes.push({
+          name: routeNames[0],
+          key: `${routeNames[0]}-${MockRouterKey.current++}`,
+          params: routeParamList[routeNames[0]],
+        });
+      }
+
       const previousIndex = state.index;
       const index = Math.min(
         Math.max(
@@ -120,8 +128,7 @@ export function MockRouter(options: DefaultRouterOptions) {
         case 'NOOP':
           return state;
 
-        case 'NAVIGATE':
-        case 'NAVIGATE_DEPRECATED': {
+        case 'NAVIGATE': {
           if (!state.routeNames.includes(action.payload.name)) {
             return null;
           }
@@ -189,9 +196,7 @@ export function MockRouter(options: DefaultRouterOptions) {
     },
 
     shouldActionChangeFocus(action: CommonNavigationAction) {
-      return (
-        action.type === 'NAVIGATE' || action.type === 'NAVIGATE_DEPRECATED'
-      );
+      return action.type === 'NAVIGATE';
     },
   };
 
