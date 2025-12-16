@@ -135,13 +135,13 @@ function AlbumsScreen() {
   );
 }
 
-function MiniPlayer({ type }: { type: 'inline' | 'regular' }) {
+function MiniPlayer({ placement }: { placement: 'inline' | 'regular' }) {
   return (
     <View style={styles.miniPlayer}>
       <View style={styles.miniPlayerCoverContainer}>
         <Image source={album10} style={styles.miniPlayerCover} />
       </View>
-      {type === 'inline' ? (
+      {placement === 'inline' ? (
         <View style={styles.miniPlayerButtons}>
           <Ionicons name="play-back" size={32} />
           <Ionicons name="play" size={32} />
@@ -246,7 +246,9 @@ export function NativeBottomTabs(
               borderTopColor: 'transparent',
             },
             tabBarMinimizeBehavior: 'onScrollDown',
-            bottomAccessory: ({ type }) => <MiniPlayer type={type} />,
+            bottomAccessory: ({ placement }) => (
+              <MiniPlayer placement={placement} />
+            ),
           };
         }}
       />

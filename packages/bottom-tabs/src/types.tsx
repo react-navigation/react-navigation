@@ -395,11 +395,11 @@ type BottomTabNativeOptions = {
   /**
    * Function which returns a React element to display as an accessory view.
    *
-   * Accepts a `type` parameter which can be one of the following values:
+   * Accepts a `placement` parameter which can be one of the following values:
    * - `regular` - at bottom of the screen, above the tab bar if tab bar is at the bottom
    * - `inline` - inline with the collapsed bottom tab bar (e.g. when minimized based on `tabBarMinimizeBehavior`)
    *
-   * Note: the content is rendered twice for both types, but only one is visible at a time based on the tab bar state.
+   * Note: the content is rendered twice for both placements, but only one is visible at a time based on the tab bar state.
    * Any shared state should be stored outside of the component to keep both versions in sync.
    *
    * Available starting from iOS 26.
@@ -409,7 +409,7 @@ type BottomTabNativeOptions = {
    * @platform ios
    */
   bottomAccessory?: (options: {
-    type: 'regular' | 'inline';
+    placement: 'regular' | 'inline';
   }) => React.ReactNode;
 };
 

@@ -116,7 +116,7 @@ export function BottomTabViewNative({ state, navigation, descriptors }: Props) {
       <BottomTabs
         bottomAccessory={
           bottomAccessory
-            ? (environment) => bottomAccessory({ type: environment })
+            ? (environment) => bottomAccessory({ placement: environment })
             : undefined
         }
         tabBarItemLabelVisibilityMode={
