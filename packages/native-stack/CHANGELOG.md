@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.8.6...@react-navigation/native-stack@7.9.0) (2025-12-17)
+
+### Bug Fixes
+
+* disable header height workarounds when new `react-native-screens` implementation is used ([#12852](https://github.com/react-navigation/react-navigation/issues/12852)) ([0e5aaff](https://github.com/react-navigation/react-navigation/commit/0e5aaffd84943b804ace5f22b8ddea6dc5631abb)) - by @kligarski
+* don't use native header height if we have custom header ([0467f9a](https://github.com/react-navigation/react-navigation/commit/0467f9ad829e4494fdb9d585c758c9535ef9b099)) - by @satya164
+* fix invisible text when header large title is enabled ([72ee2ef](https://github.com/react-navigation/react-navigation/commit/72ee2ef9e54289b85d39c5b5fa0204693e3b1f7a)) - by @satya164
+
+### Features
+
+* add sheetShouldOverflowTopInset prop ([#12871](https://github.com/react-navigation/react-navigation/issues/12871)) ([ea190e9](https://github.com/react-navigation/react-navigation/commit/ea190e979a93336acf46aa796f2c88bd5bdb3fda)) - by @t0maboro
+* align header item types with react-native-screens ([#12895](https://github.com/react-navigation/react-navigation/issues/12895)) ([7131e4b](https://github.com/react-navigation/react-navigation/commit/7131e4be0db6420588c1f4a4c726d3ee216ebdee)) - by @
+* override user interface style for native navigation to match theme ([#12840](https://github.com/react-navigation/react-navigation/issues/12840)) ([eb0150e](https://github.com/react-navigation/react-navigation/commit/eb0150e282e7589a6212522219b61ef69dc978eb)) - by @kligarski
+
 ## [7.8.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.8.5...@react-navigation/native-stack@7.8.6) (2025-12-08)
 
 **Note:** Version bump only for package @react-navigation/native-stack

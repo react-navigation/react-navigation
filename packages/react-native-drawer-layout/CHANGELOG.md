@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.0...react-native-drawer-layout@4.2.1) (2025-12-17)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
 # [4.2.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.13...react-native-drawer-layout@4.2.0) (2025-10-22)
 
 ### Features

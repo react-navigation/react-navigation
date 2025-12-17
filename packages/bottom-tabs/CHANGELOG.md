@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.8.12...@react-navigation/bottom-tabs@7.9.0) (2025-12-17)
+
+### Bug Fixes
+
+* disable header height workarounds when new `react-native-screens` implementation is used ([#12852](https://github.com/react-navigation/react-navigation/issues/12852)) ([0e5aaff](https://github.com/react-navigation/react-navigation/commit/0e5aaffd84943b804ace5f22b8ddea6dc5631abb)) - by @kligarski
+
+### Features
+
+* add new menu options to native bottom tabs ([4e39c69](https://github.com/react-navigation/react-navigation/commit/4e39c69a51594888d9d48cf4a6f0740a18659d49)) - by @
+* add support for bottom accessory to native tabs ([d051301](https://github.com/react-navigation/react-navigation/commit/d0513017cc86983e86bf9498f7817c3181aebce8)) - by @satya164
+* expose icon type for native bottom tabs ([#12892](https://github.com/react-navigation/react-navigation/issues/12892)) ([5a0cb12](https://github.com/react-navigation/react-navigation/commit/5a0cb122d2ac79ab85121352cd7be45db00b0deb)) - by @
+* override user interface style for native navigation to match theme ([#12840](https://github.com/react-navigation/react-navigation/issues/12840)) ([eb0150e](https://github.com/react-navigation/react-navigation/commit/eb0150e282e7589a6212522219b61ef69dc978eb)) - by @kligarski
+
 ## [7.8.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.8.11...@react-navigation/bottom-tabs@7.8.12) (2025-12-08)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
