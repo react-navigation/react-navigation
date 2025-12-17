@@ -120,7 +120,7 @@ type IconIOS = IconIOSSfSymbol | IconImage;
 
 type IconAndroid = IconAndroidDrawable | IconImage;
 
-export type Icon = IconIOS | IconAndroid;
+export type NativeBottomTabIcon = IconIOS | IconAndroid;
 
 export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
   /**
@@ -182,7 +182,9 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    *
    * Overrides the icon provided by `tabBarSystemItem` on iOS.
    */
-  tabBarIcon?: Icon | ((props: { focused: boolean }) => Icon);
+  tabBarIcon?:
+    | NativeBottomTabIcon
+    | ((props: { focused: boolean }) => NativeBottomTabIcon);
 
   /**
    * Text to show in a badge on the tab icon.

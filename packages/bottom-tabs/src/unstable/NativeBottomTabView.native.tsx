@@ -24,8 +24,8 @@ import {
 
 import { NativeScreen } from './NativeScreen/NativeScreen';
 import type {
-  Icon,
   NativeBottomTabDescriptorMap,
+  NativeBottomTabIcon,
   NativeBottomTabNavigationConfig,
   NativeBottomTabNavigationHelpers,
   NativeBottomTabNavigationOptions,
@@ -351,7 +351,7 @@ function ScreenWithHeader({
   );
 }
 
-function getPlatformIcon(icon: Icon): PlatformIcon {
+function getPlatformIcon(icon: NativeBottomTabIcon): PlatformIcon {
   return {
     ios:
       icon?.type === 'sfSymbol'
