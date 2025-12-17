@@ -35,11 +35,11 @@ export type {
   BottomTabBarButtonProps,
   BottomTabBarProps,
   BottomTabHeaderProps,
+  BottomTabIcon,
   BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
   BottomTabNavigatorProps,
   BottomTabOptionsArgs,
   BottomTabScreenProps,
-  Icon,
 } from './types';
