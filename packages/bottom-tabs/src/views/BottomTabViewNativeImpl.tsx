@@ -23,9 +23,9 @@ import {
 
 import type {
   BottomTabDescriptorMap,
+  BottomTabIcon,
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
-  Icon,
 } from '../types';
 import { ScreenContent } from './ScreenContent';
 
@@ -109,9 +109,16 @@ export function BottomTabViewNative({ state, navigation, descriptors }: Props) {
     });
   };
 
+  const bottomAccessory = currentOptions.bottomAccessory;
+
   return (
     <SafeAreaProviderCompat>
       <BottomTabs
+        bottomAccessory={
+          bottomAccessory
+            ? (environment) => bottomAccessory({ placement: environment })
+            : undefined
+        }
         tabBarItemLabelVisibilityMode={
           currentOptions?.tabBarLabelVisibilityMode
         }
@@ -271,6 +278,7 @@ export function BottomTabViewNative({ state, navigation, descriptors }: Props) {
                   normal: tabItemAppearance,
                 },
               }}
+              experimental_userInterfaceStyle={dark ? 'dark' : 'light'}
             >
               <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
                 <ScreenContent
@@ -291,7 +299,7 @@ export function BottomTabViewNative({ state, navigation, descriptors }: Props) {
   );
 }
 
-function getPlatformIcon(icon: Icon): PlatformIcon {
+function getPlatformIcon(icon: BottomTabIcon): PlatformIcon {
   return {
     ios:
       icon?.type === 'sfSymbol'

@@ -3,25 +3,27 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, HeaderBackButton, Text } from '@react-navigation/elements';
 import type {
   NavigatorScreenParams,
-  PathConfigMap,
+  PathConfig,
   StaticScreenProps,
 } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-type PreloadBottomTabsParams = {
+type PreloadBottomTabsParamList = {
   Home: undefined;
   Details: undefined;
 };
 
-const linking: PathConfigMap<PreloadBottomTabsParams> = {
-  Home: '',
-  Details: 'details',
-};
+const linking = {
+  screens: {
+    Home: '',
+    Details: 'details',
+  },
+} satisfies PathConfig<NavigatorScreenParams<PreloadBottomTabsParamList>>;
 
 const DetailsScreen = ({
   navigation,
-}: BottomTabScreenProps<PreloadBottomTabsParams, 'Details'>) => {
+}: BottomTabScreenProps<PreloadBottomTabsParamList, 'Details'>) => {
   const [loadingCountdown, setLoadingCountdown] = useState(3);
 
   useEffect(() => {
@@ -55,7 +57,7 @@ const DetailsScreen = ({
 
 const HomeScreen = ({
   navigation,
-}: BottomTabScreenProps<PreloadBottomTabsParams, 'Home'>) => {
+}: BottomTabScreenProps<PreloadBottomTabsParamList, 'Home'>) => {
   const { navigate, preload } = navigation;
 
   const [isReady, setIsReady] = useState(false);
@@ -84,16 +86,16 @@ const HomeScreen = ({
   );
 };
 
-const BottomsTabs = createBottomTabNavigator<PreloadBottomTabsParams>();
+const BottomsTabs = createBottomTabNavigator<PreloadBottomTabsParamList>();
 
 export function TabPreloadFlow(
-  _: StaticScreenProps<NavigatorScreenParams<PreloadBottomTabsParams>>
+  _: StaticScreenProps<NavigatorScreenParams<PreloadBottomTabsParamList>>
 ) {
   return (
     <BottomsTabs.Navigator
       screenOptions={({
         navigation,
-      }: BottomTabScreenProps<PreloadBottomTabsParams>) => ({
+      }: BottomTabScreenProps<PreloadBottomTabsParamList>) => ({
         headerShown: true,
         headerLeft: (props) => (
           <HeaderBackButton {...props} onPress={navigation.goBack} />

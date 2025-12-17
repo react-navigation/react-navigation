@@ -1,7 +1,7 @@
 import { Button } from '@react-navigation/elements';
 import {
   type NavigatorScreenParams,
-  type PathConfigMap,
+  type PathConfig,
   type StaticScreenProps,
   usePreventRemove,
 } from '@react-navigation/native';
@@ -22,24 +22,26 @@ import {
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
-import type { PreventRemoveParams } from './StackPreventRemove';
+import type { PreventRemoveParamList } from './StackPreventRemove';
 
-type NativePreventRemoveParams = {
+type NativePreventRemoveParamList = {
   Article: { author: string };
   Input: undefined;
 };
 
-const linking: PathConfigMap<NativePreventRemoveParams> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  Input: 'input',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    Input: 'input',
+  },
+} satisfies PathConfig<NavigatorScreenParams<NativePreventRemoveParamList>>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: NativeStackScreenProps<NativePreventRemoveParams, 'Article'>) => {
+}: NativeStackScreenProps<NativePreventRemoveParamList, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -60,7 +62,7 @@ const ArticleScreen = ({
 
 const InputScreen = ({
   navigation,
-}: NativeStackScreenProps<NativePreventRemoveParams, 'Input'>) => {
+}: NativeStackScreenProps<NativePreventRemoveParamList, 'Input'>) => {
   const [text, setText] = React.useState('');
   const { colors } = useTheme();
 
@@ -124,10 +126,10 @@ const InputScreen = ({
   );
 };
 
-const Stack = createNativeStackNavigator<NativePreventRemoveParams>();
+const Stack = createNativeStackNavigator<NativePreventRemoveParamList>();
 
 export function NativeStackPreventRemove(
-  _: StaticScreenProps<NavigatorScreenParams<PreventRemoveParams>>
+  _: StaticScreenProps<NavigatorScreenParams<PreventRemoveParamList>>
 ) {
   return (
     <Stack.Navigator>

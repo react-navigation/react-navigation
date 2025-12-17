@@ -185,7 +185,7 @@ export function useHeaderConfigProps({
   unstable_headerRightItems: headerRightItems,
 }: Props): ScreenStackHeaderConfigProps {
   const { direction } = useLocale();
-  const { colors, fonts } = useTheme();
+  const { colors, fonts, dark } = useTheme();
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
 
@@ -250,7 +250,10 @@ export function useHeaderConfigProps({
 
   const headerBackgroundColor =
     headerStyleFlattened.backgroundColor ??
-    (headerBackground != null || headerTransparent
+    (headerBackground != null ||
+    headerTransparent ||
+    // The title becomes invisible if background color is set with large title on iOS 26
+    (Platform.OS === 'ios' && headerLargeTitleEnabled)
       ? 'transparent'
       : colors.card);
 
@@ -474,5 +477,6 @@ export function useHeaderConfigProps({
     children,
     headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
     headerRightBarButtonItems: processBarButtonItems(rightItems, colors, fonts),
+    experimental_userInterfaceStyle: dark ? 'dark' : 'light',
   } as const;
 }

@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/elements';
 import {
   type NavigatorScreenParams,
-  type PathConfigMap,
+  type PathConfig,
   type StaticScreenProps,
   useTheme,
 } from '@react-navigation/native';
@@ -34,26 +34,28 @@ import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type NativeStackParams = {
+export type NativeStackParamList = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Contacts: undefined;
   Albums: undefined;
 };
 
-const linking: PathConfigMap<NativeStackParams> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-  Contacts: 'contacts',
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Contacts: 'contacts',
+    Albums: 'albums',
+  },
+} satisfies PathConfig<NavigatorScreenParams<NativeStackParamList>>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: NativeStackScreenProps<NativeStackParams, 'Article'>) => {
+}: NativeStackScreenProps<NativeStackParamList, 'Article'>) => {
   return (
     <View style={styles.container}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
@@ -89,7 +91,7 @@ const ArticleScreen = ({
           scrollEnabled={scrollEnabled}
         />
       </ScrollView>
-      <HeaderHeightView />
+      <HeaderHeightView hasOffset={Platform.OS === 'ios'} />
     </View>
   );
 };
@@ -97,7 +99,7 @@ const ArticleScreen = ({
 const NewsFeedScreen = ({
   route,
   navigation,
-}: NativeStackScreenProps<NativeStackParams, 'NewsFeed'>) => {
+}: NativeStackScreenProps<NativeStackParamList, 'NewsFeed'>) => {
   return (
     <View style={styles.container}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
@@ -114,14 +116,14 @@ const NewsFeedScreen = ({
         </View>
         <NewsFeed scrollEnabled={scrollEnabled} date={route.params.date} />
       </ScrollView>
-      <HeaderHeightView />
+      <HeaderHeightView hasOffset={false} />
     </View>
   );
 };
 
 const ContactsScreen = ({
   navigation,
-}: NativeStackScreenProps<NativeStackParams, 'Contacts'>) => {
+}: NativeStackScreenProps<NativeStackParamList, 'Contacts'>) => {
   const [query, setQuery] = React.useState('');
 
   React.useLayoutEffect(() => {
@@ -156,7 +158,7 @@ const ContactsScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: NativeStackScreenProps<NativeStackParams, 'Albums'>) => {
+}: NativeStackScreenProps<NativeStackParamList, 'Albums'>) => {
   const headerHeight = useHeaderHeight();
 
   return (
@@ -180,11 +182,7 @@ const AlbumsScreen = ({
   );
 };
 
-const HeaderHeightView = ({
-  hasOffset = Platform.OS === 'ios',
-}: {
-  hasOffset?: boolean;
-}) => {
+const HeaderHeightView = ({ hasOffset }: { hasOffset: boolean }) => {
   const { colors } = useTheme();
 
   const animatedHeaderHeight = useAnimatedHeaderHeight();
@@ -208,10 +206,10 @@ const HeaderHeightView = ({
   );
 };
 
-const Stack = createNativeStackNavigator<NativeStackParams>();
+const Stack = createNativeStackNavigator<NativeStackParamList>();
 
 export function NativeStack(
-  _: StaticScreenProps<NavigatorScreenParams<NativeStackParams>>
+  _: StaticScreenProps<NavigatorScreenParams<NativeStackParamList>>
 ) {
   const { colors } = useTheme();
 

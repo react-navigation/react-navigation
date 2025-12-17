@@ -1,0 +1,55 @@
+appId: ${APP_ID}
+name: Tab View - Scrollable Tab Bar
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: tab-view/scrollable-tab-bar
+      TEXT: 'Contacts'
+- assertVisible:
+    text: 'Marissa Castillo'
+- tapOn:
+    text: 'Article'
+- extendedWaitUntil:
+    visible:
+      text: 'What is Lorem Ipsum?'
+    timeout: 1500
+- tapOn:
+    text: 'Albums'
+- extendedWaitUntil:
+    visible:
+      id: 'album-0'
+    timeout: 1500
+- tapOn:
+    text: 'Chat'
+- extendedWaitUntil:
+    visible:
+      text: 'make me a sandwich'
+    timeout: 1500
+- tapOn:
+    text: 'Contacts'
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 1500
+- swipe:
+    direction: LEFT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      id: 'album-0'
+    timeout: 1500
+- swipe:
+    direction: LEFT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      text: 'make me a sandwich'
+    timeout: 1500
+- swipe:
+    direction: RIGHT
+    duration: 300
+- extendedWaitUntil:
+    visible:
+      id: 'album-0'
+    timeout: 1500

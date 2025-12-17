@@ -190,6 +190,36 @@ async function runStep(page: Page, step: any) {
       break;
     }
 
+    case 'swipe': {
+      const direction = step.swipe.direction;
+      const duration = step.swipe.duration || 300;
+
+      const viewport = page.viewportSize();
+
+      if (!viewport) {
+        throw new Error('Viewport size is not available');
+      }
+
+      // Start from center of viewport and swipe across a portion of the screen
+      const centerY = viewport.height / 2;
+      const startX =
+        direction === 'LEFT' ? viewport.width * 0.8 : viewport.width * 0.2;
+      const endX =
+        direction === 'LEFT' ? viewport.width * 0.2 : viewport.width * 0.8;
+
+      await page.mouse.move(startX, centerY);
+      await page.mouse.down();
+      await page.mouse.move(endX, centerY, {
+        // A swipe gesture emits many small mouse move events
+        steps: Math.max(10, Math.floor(duration / 20)),
+      });
+      await page.mouse.up();
+
+      await page.waitForTimeout(duration);
+
+      break;
+    }
+
     default: {
       throw new Error(`Unknown command: ${JSON.stringify(step)}`);
     }
