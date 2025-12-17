@@ -13,6 +13,7 @@ export { NativeBottomTabView } from './NativeBottomTabView';
  */
 export type {
   NativeBottomTabBarProps,
+  NativeBottomTabIcon,
   NativeBottomTabNavigationEventMap,
   NativeBottomTabNavigationOptions,
   NativeBottomTabNavigationProp,
