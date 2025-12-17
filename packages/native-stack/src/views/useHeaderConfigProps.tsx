@@ -93,10 +93,14 @@ const processBarButtonItems = (
         };
 
         if (processedItem.type === 'menu' && item.type === 'menu') {
+          const { multiselectable, layout } = item.menu;
+
           processedItem = {
             ...processedItem,
             menu: {
               ...processedItem.menu,
+              singleSelection: !multiselectable,
+              displayAsPalette: layout === 'palette',
               items: item.menu.items.map(getMenuItem),
             },
           };
@@ -137,19 +141,25 @@ const processBarButtonItems = (
 const getMenuItem = (
   item: NativeStackHeaderItemMenuAction | NativeStackHeaderItemMenuSubmenu
 ): HeaderBarButtonItemMenuAction | HeaderBarButtonItemSubmenu => {
-  const { label, ...rest } = item;
+  if (item.type === 'submenu') {
+    const { label, inline, layout, items, multiselectable, ...rest } = item;
 
-  if (rest.type === 'submenu') {
     return {
       ...rest,
       title: label,
-      items: rest.items.map(getMenuItem),
+      displayAsPalette: layout === 'palette',
+      displayInline: inline,
+      singleSelection: !multiselectable,
+      items: items.map(getMenuItem),
     };
   }
+
+  const { label, description, ...rest } = item;
 
   return {
     ...rest,
     title: label,
+    subtitle: description,
   };
 };
 
