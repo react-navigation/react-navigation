@@ -225,6 +225,65 @@ const SceneView = ({
     headerBack,
   });
 
+  const onHeaderHeightChange = hasCustomHeader
+    ? // If we have a custom header, don't use native header height
+      undefined
+    : // On Fabric, there's a bug where native event drivers for Animated objects
+      // are created after the first notifications about the header height
+      // from the native side, `onHeaderHeightChange` event does not notify
+      // `animatedHeaderHeight` about initial values on appearing screens at the moment.
+      Animated.event(
+        [
+          {
+            nativeEvent: {
+              headerHeight: animatedHeaderHeight,
+            },
+          },
+        ],
+        {
+          useNativeDriver,
+          listener: (e) => {
+            if (
+              e.nativeEvent &&
+              typeof e.nativeEvent === 'object' &&
+              'headerHeight' in e.nativeEvent &&
+              typeof e.nativeEvent.headerHeight === 'number'
+            ) {
+              const headerHeight = e.nativeEvent.headerHeight;
+
+              // Only debounce if header has large title or search bar
+              // As it's the only case where the header height can change frequently
+              const doesHeaderAnimate =
+                Platform.OS === 'ios' &&
+                (options.headerLargeTitleEnabled ||
+                  options.headerSearchBarOptions);
+
+              if (doesHeaderAnimate) {
+                setHeaderHeightDebounced(headerHeight);
+              } else {
+                if (
+                  Platform.OS === 'android' &&
+                  headerHeight !== 0 &&
+                  headerHeight <= ANDROID_DEFAULT_HEADER_HEIGHT
+                ) {
+                  // FIXME: On Android, events may get delivered out-of-order
+                  // https://github.com/facebook/react-native/issues/54636
+                  // We seem to get header height without status bar height first,
+                  // and then the correct height with status bar height included
+                  // But due to out-of-order delivery, we may get the correct height first
+                  // and then the one without status bar height
+                  // This is hack to include status bar height if it's not already included
+                  // It only works because header height doesn't change dynamically on Android
+                  setHeaderHeight(headerHeight + insets.top);
+                } else {
+                  setHeaderHeight(headerHeight);
+                }
+              }
+            }
+          },
+        }
+      );
+
   return (
     <NavigationProvider navigation={navigation} route={route}>
       <ScreenStackItem
@@ -281,60 +340,7 @@ const SceneView = ({
           right: scrollEdgeEffects?.right ?? 'automatic',
         }}
         onNativeDismissCancelled={onNativeDismissCancelled}
-        // Unfortunately, because of the bug that exists on Fabric, where native event drivers
-        // for Animated objects are being created after the first notifications about the header height
-        // from the native side, `onHeaderHeightChange` event does not notify
-        // `animatedHeaderHeight` about initial values on appearing screens at the moment.
-        onHeaderHeightChange={Animated.event(
-          [
-            {
-              nativeEvent: {
-                headerHeight: animatedHeaderHeight,
-              },
-            },
-          ],
-          {
-            useNativeDriver,
-            listener: (e) => {
-              if (hasCustomHeader) {
-                // If we have a custom header, don't use native header height
-                return;
-              }
-
-              if (
-                e.nativeEvent &&
-                typeof e.nativeEvent === 'object' &&
-                'headerHeight' in e.nativeEvent &&
-                typeof e.nativeEvent.headerHeight === 'number'
-              ) {
-                const headerHeight = e.nativeEvent.headerHeight;
-
-                // Only debounce if header has large title or search bar
-                // As it's the only case where the header height can change frequently
-                const doesHeaderAnimate =
-                  Platform.OS === 'ios' &&
-                  (options.headerLargeTitleEnabled ||
-                    options.headerSearchBarOptions);
-
-                if (doesHeaderAnimate) {
-                  setHeaderHeightDebounced(headerHeight);
-                } else {
-                  if (Platform.OS === 'android') {
-                    // FIXME: On Android, header height only sometimes includes status bar height
-                    // So we add it here if it's not already included
-                    if (headerHeight <= ANDROID_DEFAULT_HEADER_HEIGHT) {
-                      setHeaderHeight(headerHeight + insets.top);
-                    } else {
-                      setHeaderHeight(headerHeight);
-                    }
-                  } else {
-                    setHeaderHeight(headerHeight);
-                  }
-                }
-              }
-            },
-          }
-        )}
+        onHeaderHeightChange={onHeaderHeightChange}
         contentStyle={[
           presentation !== 'transparentModal' &&
             presentation !== 'containedTransparentModal' && {
@@ -375,8 +381,8 @@ const SceneView = ({
                 onLayout={(e) => {
                   const headerHeight = e.nativeEvent.layout.height;
 
-                  setHeaderHeight(headerHeight);
                   animatedHeaderHeight.setValue(headerHeight);
+                  setHeaderHeight(headerHeight);
                 }}
                 style={[
                   styles.header,
