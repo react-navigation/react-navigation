@@ -24,6 +24,7 @@ import {
   type NavigationHelpers,
   type NavigationProp,
   type NavigationRoute,
+  type NavigationState,
   type NavigatorScreenParams,
   type ParamListBase,
   type RootParamList,
@@ -46,7 +47,8 @@ import {
 } from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
 
-import type { StaticScreenParams } from '../src/Screens/Static';
+import type { BottomTabParamList } from '../src/Screens/BottomTabs';
+import type { StaticScreenParamList } from '../src/Screens/Static';
 
 /**
  * Check for the type of the `navigation` and `route` objects with regular usage
@@ -878,6 +880,10 @@ useRoute('Invalid');
 /**
  * Check for useNavigation return type based on the arguments
  */
+
+// @ts-expect-error
+useNavigation('Invalid');
+
 {
   const navigation = useNavigation();
 
@@ -886,6 +892,16 @@ useRoute('Invalid');
   expectTypeOf(navigation.getParent()).toEqualTypeOf<
     NavigationProp<ParamListBase> | undefined
   >();
+
+  expectTypeOf(navigation.getState()).toEqualTypeOf<
+    NavigationState | undefined
+  >();
+
+  expectTypeOf(navigation.setParams).parameter(0).toEqualTypeOf<unknown>();
+
+  expectTypeOf(navigation.replaceParams).parameter(0).toEqualTypeOf<unknown>();
+
+  expectTypeOf(navigation.pushParams).parameter(0).toEqualTypeOf<unknown>();
 }
 
 {
@@ -910,6 +926,15 @@ useRoute('Invalid');
     (keyof RootStackParamList)[]
   >();
 
+  // @ts-expect-error
+  expectTypeOf(navigation.setParams).parameter(0).toBeNever();
+
+  // @ts-expect-error
+  expectTypeOf(navigation.replaceParams).parameter(0).toBeNever();
+
+  // @ts-expect-error
+  expectTypeOf(navigation.pushParams).parameter(0).toBeNever();
+
   expectTypeOf(navigation.setOptions)
     .parameter(0)
     .toEqualTypeOf<Partial<StackNavigationOptions>>();
@@ -931,6 +956,12 @@ useRoute('Invalid');
   expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<
     (keyof RootParamList)[]
   >();
+
+  expectTypeOf(navigation.setParams).parameter(0).toBeUndefined();
+
+  expectTypeOf(navigation.replaceParams).parameter(0).toBeUndefined();
+
+  expectTypeOf(navigation.pushParams).parameter(0).toBeUndefined();
 
   expectTypeOf(navigation.setOptions)
     .parameter(0)
@@ -959,6 +990,12 @@ useRoute('Invalid');
 
   expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<'Examples'[]>();
 
+  expectTypeOf(navigation.setParams).parameter(0).toBeUndefined();
+
+  expectTypeOf(navigation.replaceParams).parameter(0).toBeUndefined();
+
+  expectTypeOf(navigation.pushParams).parameter(0).toBeUndefined();
+
   expectTypeOf(navigation.setOptions)
     .parameter(0)
     .toEqualTypeOf<Partial<DrawerNavigationOptions>>();
@@ -970,7 +1007,7 @@ useRoute('Invalid');
   expectTypeOf(navigation).toEqualTypeOf<
     StackNavigationProp<RootParamList, 'Home'> &
       CompositeNavigationProp<
-        StackNavigationProp<StaticScreenParams, 'Home'>,
+        StackNavigationProp<StaticScreenParamList, 'Home'>,
         StackNavigationProp<RootParamList, 'StaticScreen'>
       >
   >();
@@ -985,9 +1022,63 @@ useRoute('Invalid');
     (keyof RootParamList)[]
   >();
 
+  expectTypeOf(navigation.setParams)
+    .parameter(0)
+    .toEqualTypeOf<
+      Partial<NavigatorScreenParams<{ Examples: undefined }> | undefined>
+    >();
+
+  expectTypeOf(navigation.replaceParams)
+    .parameter(0)
+    .toEqualTypeOf<
+      NavigatorScreenParams<{ Examples: undefined }> | undefined
+    >();
+
+  expectTypeOf(navigation.pushParams)
+    .parameter(0)
+    .toEqualTypeOf<
+      NavigatorScreenParams<{ Examples: undefined }> | undefined
+    >();
+
   expectTypeOf(navigation.setOptions)
     .parameter(0)
     .toEqualTypeOf<Partial<StackNavigationOptions>>();
+}
+
+/**
+ * Routes from dynamic dynamic navigator should return generic navigation
+ */
+{
+  const navigation = useNavigation('TabChat');
+
+  expectTypeOf(navigation).toEqualTypeOf<
+    CompositeNavigationProp<
+      NavigationProp<BottomTabParamList, 'TabChat'>,
+      NavigationProp<RootParamList, 'BottomTabs'>
+    >
+  >();
+
+  expectTypeOf(navigation.setParams)
+    .parameter(0)
+    .toEqualTypeOf<Partial<BottomTabParamList['TabChat']>>();
+
+  expectTypeOf(navigation.replaceParams)
+    .parameter(0)
+    .toEqualTypeOf<BottomTabParamList['TabChat']>();
+
+  expectTypeOf(navigation.pushParams)
+    .parameter(0)
+    .toEqualTypeOf<BottomTabParamList['TabChat']>();
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<string>();
+
+  expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<
+    (keyof BottomTabParamList)[]
+  >();
+
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<'TabChat' | 'BottomTabs' | undefined>();
 }
 
 /**
@@ -1054,6 +1145,16 @@ useRoute('Invalid');
   );
 
   expectTypeOf(routeNames).toEqualTypeOf<(keyof RootParamList)[]>();
+}
+
+{
+  const index = useNavigationState('TabChat', (state) => state.index);
+
+  expectTypeOf(index).toEqualTypeOf<number>();
+
+  const routeNames = useNavigationState('TabChat', (state) => state.routeNames);
+
+  expectTypeOf(routeNames).toEqualTypeOf<(keyof BottomTabParamList)[]>();
 }
 
 /**

@@ -13,7 +13,7 @@ import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
 
-export type StaticScreenParams = StaticParamList<typeof StaticStack>;
+export type StaticScreenParamList = StaticParamList<typeof StaticStack>;
 
 const ChatShownContext = React.createContext({
   isChatShown: false,

@@ -1770,7 +1770,7 @@ test('restores previously discarded state when route names change after initial 
       initialState={initialState}
       onStateChange={onStateChange}
     >
-      <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+      <TestNavigator routeNamesChangeBehavior="lastUnhandled">
         <Screen name="foo" component={TestScreen} />
         <Screen name="bar" component={TestScreen} />
         <Screen name="baz" component={TestScreen} />
@@ -1782,7 +1782,7 @@ test('restores previously discarded state when route names change after initial 
 
   root.update(
     <BaseNavigationContainer onStateChange={onStateChange}>
-      <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+      <TestNavigator routeNamesChangeBehavior="lastUnhandled">
         <Screen name="bar" component={TestScreen} />
         <Screen name="baz" component={TestScreen} />
         <Screen name="qux" component={TestScreen} />
@@ -1830,7 +1830,7 @@ test('restores previously discarded state when route names change after navigati
       ref={navigation}
       onStateChange={onStateChange}
     >
-      <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+      <TestNavigator routeNamesChangeBehavior="lastUnhandled">
         <Screen name="foo" component={TestScreen} />
         <Screen name="bar" component={TestScreen} />
         <Screen name="baz" component={TestScreen} />
@@ -1860,7 +1860,7 @@ test('restores previously discarded state when route names change after navigati
 
   root.update(
     <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
-      <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+      <TestNavigator routeNamesChangeBehavior="lastUnhandled">
         <Screen name="bar" component={TestScreen} />
         <Screen name="baz" component={TestScreen} />
         <Screen name="qux" component={TestScreen} />
@@ -1924,7 +1924,7 @@ test('restores previously discarded state when route names change after navigati
       <TestNavigator>
         <Screen name="test">
           {() => (
-            <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+            <TestNavigator routeNamesChangeBehavior="lastUnhandled">
               <Screen name="foo" component={TestScreen} />
               <Screen name="bar" component={TestScreen} />
               <Screen name="baz" component={TestScreen} />
@@ -1984,7 +1984,7 @@ test('restores previously discarded state when route names change after navigati
       <TestNavigator>
         <Screen name="test">
           {() => (
-            <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+            <TestNavigator routeNamesChangeBehavior="lastUnhandled">
               <Screen name="bar" component={TestScreen} />
               <Screen name="baz" component={TestScreen} />
               <Screen name="qux" component={TestScreen} />
@@ -2065,7 +2065,7 @@ test('restores previously discarded state when route names change after navigati
       <TestNavigator>
         <Screen name="test">
           {() => (
-            <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+            <TestNavigator routeNamesChangeBehavior="lastUnhandled">
               <Screen name="foo" component={TestScreen} />
               <Screen name="bar" component={TestScreen} />
               <Screen name="baz" component={TestScreen} />
@@ -2109,7 +2109,7 @@ test('restores previously discarded state when route names change after navigati
       <TestNavigator>
         <Screen name="test">
           {() => (
-            <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+            <TestNavigator routeNamesChangeBehavior="lastUnhandled">
               <Screen name="bar" component={TestScreen} />
               <Screen name="baz" component={TestScreen} />
               <Screen name="qux" component={TestScreen} />

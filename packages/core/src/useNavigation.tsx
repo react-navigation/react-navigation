@@ -1,4 +1,3 @@
-import type { NavigationState } from '@react-navigation/routers';
 import * as React from 'react';
 
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
@@ -7,75 +6,12 @@ import {
   NavigationRouteNameContext,
 } from './NavigationProvider';
 import type {
+  GenericNavigation,
   NavigationListForNavigator,
   NavigationListForNested,
-  NavigationProp,
   RootNavigator,
   RootParamList,
 } from './types';
-
-/**
- * Use a stripped down NavigationProp if no screen is specified.
- *
- * The hook can be used in `NavigationContainer` directly, not inside of a navigator.
- * So navigator specific methods won't be available.
- */
-export type GenericNavigation<ParamList extends {}> = Omit<
-  NavigationProp<ParamList>,
-  'getState' | 'setParams' | 'replaceParams' | 'pushParams' | 'setOptions'
-> & {
-  /**
-   * Returns the navigator's state.
-   *
-   * This may return `undefined` if used outside of a navigator,
-   * as the navigator may not have rendered yet
-   */
-  getState(): NavigationState | undefined;
-
-  /**
-   * Update the param object for the route.
-   * The new params will be shallow merged with the old one.
-   *
-   * @param params Partial params object for the current route.
-   */
-  setParams(
-    // We don't know which route to set params for
-    params: unknown
-  ): void;
-
-  /**
-   * Replace the param object for the route
-   *
-   * @param params Params object for the current route.
-   */
-  replaceParams(
-    // We don't know which route to replace params for
-    params: unknown
-  ): void;
-
-  /**
-   * Push new params for the route.
-   * The params are not merged with previous params.
-   * This adds an entry to navigation history.
-   *
-   * @param params Params object for the current route.
-   */
-  pushParams(
-    // We don't know which route to push params for
-    params: unknown
-  ): void;
-
-  /**
-   * Update the options for the route.
-   * The options object will be shallow merged with default options object.
-   *
-   * @param options Partial options object for the current screen.
-   */
-  setOptions(
-    // We don't know which navigator to set options for
-    options: unknown
-  ): void;
-};
 
 /**
  * Hook to access the navigation prop of the parent screen anywhere.

@@ -111,3 +111,6 @@ maestro-debug-output/
 
 # Local Netlify folder
 .netlify
+
+# AI
+.claude

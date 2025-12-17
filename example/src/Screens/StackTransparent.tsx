@@ -22,16 +22,18 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type TransparentStackParams = {
+type TransparentStackParamList = {
   Article: { author: string };
   NewsFeed: undefined;
   Dialog: undefined;
 };
 
 const linking = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-  Dialog: 'dialog',
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Dialog: 'dialog',
+  },
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -39,7 +41,7 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<TransparentStackParams, 'Article'>) => {
+}: StackScreenProps<TransparentStackParamList, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -63,7 +65,7 @@ const ArticleScreen = ({
 
 const NewsFeedScreen = ({
   navigation,
-}: StackScreenProps<TransparentStackParams, 'NewsFeed'>) => {
+}: StackScreenProps<TransparentStackParamList, 'NewsFeed'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -81,7 +83,7 @@ const NewsFeedScreen = ({
 
 const DialogScreen = ({
   navigation,
-}: StackScreenProps<TransparentStackParams>) => {
+}: StackScreenProps<TransparentStackParamList>) => {
   const { colors } = useTheme();
   const { current } = useCardAnimation();
 
@@ -132,10 +134,10 @@ const DialogScreen = ({
   );
 };
 
-const Stack = createStackNavigator<TransparentStackParams>();
+const Stack = createStackNavigator<TransparentStackParamList>();
 
 export function StackTransparent(
-  _: StaticScreenProps<NavigatorScreenParams<TransparentStackParams>>
+  _: StaticScreenProps<NavigatorScreenParams<TransparentStackParamList>>
 ) {
   return (
     <Stack.Navigator>

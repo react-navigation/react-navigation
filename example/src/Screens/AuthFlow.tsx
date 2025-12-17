@@ -1,7 +1,7 @@
 import { Button, Text } from '@react-navigation/elements';
 import {
   type NavigatorScreenParams,
-  type PathConfigMap,
+  type PathConfig,
   type StaticScreenProps,
   useTheme,
 } from '@react-navigation/native';
@@ -12,19 +12,21 @@ import {
 import * as React from 'react';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
 
-type AuthStackParams = {
+type AuthStackParamList = {
   Home: undefined;
   Profile: undefined;
   SignIn: undefined;
   Chat: undefined;
 };
 
-const linking: PathConfigMap<AuthStackParams> = {
-  Home: '',
-  Profile: 'profile',
-  SignIn: 'signin',
-  Chat: 'chat',
-};
+const linking = {
+  screens: {
+    Home: '',
+    Profile: 'profile',
+    SignIn: 'signin',
+    Chat: 'chat',
+  },
+} satisfies PathConfig<NavigatorScreenParams<AuthStackParamList>>;
 
 const AUTH_CONTEXT_ERROR =
   'Authentication context not found. Have your wrapped your components with AuthContext.Consumer?';
@@ -55,7 +57,7 @@ const SplashScreen = () => {
 
 const SignInScreen = ({
   navigation,
-}: StackScreenProps<AuthStackParams, 'SignIn'>) => {
+}: StackScreenProps<AuthStackParamList, 'SignIn'>) => {
   const { signIn } = React.useContext(AuthContext);
   const { colors } = useTheme();
 
@@ -88,7 +90,7 @@ const SignInScreen = ({
 
 const HomeScreen = ({
   navigation,
-}: StackScreenProps<AuthStackParams, 'Home'>) => {
+}: StackScreenProps<AuthStackParamList, 'Home'>) => {
   const { signOut } = React.useContext(AuthContext);
 
   return (
@@ -106,7 +108,7 @@ const HomeScreen = ({
 
 const ProfileScreen = ({
   navigation,
-}: StackScreenProps<AuthStackParams, 'Profile'>) => {
+}: StackScreenProps<AuthStackParamList, 'Profile'>) => {
   const { signOut } = React.useContext(AuthContext);
 
   return (
@@ -141,7 +143,7 @@ const ChatScreen = () => {
   );
 };
 
-const SimpleStack = createStackNavigator<AuthStackParams>();
+const SimpleStack = createStackNavigator<AuthStackParamList>();
 
 type State = {
   isLoading: boolean;
@@ -155,7 +157,7 @@ type Action =
   | { type: 'SIGN_OUT' };
 
 export function AuthFlow(
-  _: StaticScreenProps<NavigatorScreenParams<AuthStackParams>>
+  _: StaticScreenProps<NavigatorScreenParams<AuthStackParamList>>
 ) {
   const [state, dispatch] = React.useReducer(
     (prevState: State, action: Action) => {
@@ -212,7 +214,7 @@ export function AuthFlow(
 
   return (
     <AuthContext.Provider value={authContext}>
-      <SimpleStack.Navigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+      <SimpleStack.Navigator routeNamesChangeBehavior="lastUnhandled">
         {!isSignedIn ? (
           <SimpleStack.Screen
             name="SignIn"

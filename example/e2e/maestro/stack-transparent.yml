@@ -14,3 +14,15 @@ name: Stack Transparent
     text: 'Okay'
 - assertNotVisible:
     text: 'Trivia'
+- tapOn:
+    text: 'Push NewsFeed'
+- assertVisible:
+    text: 'NewsFeed'
+- tapOn:
+    text: 'Show Dialog'
+- assertVisible:
+    text: 'Trivia'
+- tapOn:
+    text: 'Okay'
+- assertNotVisible:
+    text: 'Trivia'

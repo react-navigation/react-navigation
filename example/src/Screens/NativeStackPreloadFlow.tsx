@@ -1,7 +1,7 @@
 import { Button, Text } from '@react-navigation/elements';
 import type {
   NavigatorScreenParams,
-  PathConfigMap,
+  PathConfig,
   StaticScreenProps,
 } from '@react-navigation/native';
 import {
@@ -11,21 +11,23 @@ import {
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-type PreloadNativeStackParams = {
+type PreloadNativeStackParamList = {
   Home: undefined;
   Details: undefined;
   Profile: undefined;
 };
 
-const linking: PathConfigMap<PreloadNativeStackParams> = {
-  Home: '',
-  Details: 'details',
-  Profile: 'profile',
-};
+const linking = {
+  screens: {
+    Home: '',
+    Details: 'details',
+    Profile: 'profile',
+  },
+} satisfies PathConfig<NavigatorScreenParams<PreloadNativeStackParamList>>;
 
 const DetailsScreen = ({
   navigation,
-}: NativeStackScreenProps<PreloadNativeStackParams, 'Details'>) => {
+}: NativeStackScreenProps<PreloadNativeStackParamList, 'Details'>) => {
   const [loadingCountdown, setLoadingCountdown] = useState(3);
   useEffect(() => {
     const interval = setInterval(() => {
@@ -61,7 +63,7 @@ const DetailsScreen = ({
 
 const ProfileScreen = ({
   navigation,
-}: NativeStackScreenProps<PreloadNativeStackParams, 'Profile'>) => {
+}: NativeStackScreenProps<PreloadNativeStackParamList, 'Profile'>) => {
   return (
     <View style={styles.content}>
       <Text style={styles.text}>Profile</Text>
@@ -74,7 +76,7 @@ const ProfileScreen = ({
 
 const HomeScreen = ({
   navigation,
-}: NativeStackScreenProps<PreloadNativeStackParams, 'Home'>) => {
+}: NativeStackScreenProps<PreloadNativeStackParamList, 'Home'>) => {
   const { navigate, preload } = navigation;
 
   return (
@@ -92,10 +94,10 @@ const HomeScreen = ({
   );
 };
 
-const NativeStack = createNativeStackNavigator<PreloadNativeStackParams>();
+const NativeStack = createNativeStackNavigator<PreloadNativeStackParamList>();
 
 export function NativeStackPreloadFlow(
-  _: StaticScreenProps<NavigatorScreenParams<PreloadNativeStackParams>>
+  _: StaticScreenProps<NavigatorScreenParams<PreloadNativeStackParamList>>
 ) {
   return (
     <NativeStack.Navigator>

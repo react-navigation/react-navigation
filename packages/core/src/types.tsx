@@ -10,7 +10,12 @@ import type {
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
-import type { FlatType, UnionToIntersection } from './utilities';
+import type {
+  FlatType,
+  KeyOf,
+  NotUndefined,
+  UnionToIntersection,
+} from './utilities';
 
 /**
  * Root navigator used in the app.
@@ -60,15 +65,13 @@ export type RootParamList =
     ? ParamList
     : {};
 
-type Keyof<T extends {}> = Extract<keyof T, string>;
-
 export type DefaultNavigatorOptions<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
   Navigation,
-> = DefaultRouterOptions<Keyof<ParamList>> & {
+> = DefaultRouterOptions<KeyOf<ParamList>> & {
   /**
    * Children React Elements to extract the route configuration from.
    * Only `Screen`, `Group` and `React.Fragment` are supported as children.
@@ -162,7 +165,7 @@ export type DefaultNavigatorOptions<
    * - Direct navigation is only handled for `NAVIGATE` actions.
    * - Unhandled state is restored only if the current state becomes invalid, i.e. it doesn't contain any currently defined screens.
    */
-  UNSTABLE_routeNamesChangeBehavior?: 'firstMatch' | 'lastUnhandled';
+  routeNamesChangeBehavior?: 'firstMatch' | 'lastUnhandled';
 };
 
 export type EventMapBase = Record<
@@ -224,11 +227,11 @@ export type EventConsumer<EventMap extends EventMapBase> = {
    * @param type Type of the event (e.g. `focus`, `blur`)
    * @param callback Callback listener which is executed upon receiving the event.
    */
-  addListener<EventName extends Keyof<EventMap>>(
+  addListener<EventName extends KeyOf<EventMap>>(
     type: EventName,
     callback: EventListenerCallback<EventMap, EventName>
   ): () => void;
-  removeListener<EventName extends Keyof<EventMap>>(
+  removeListener<EventName extends KeyOf<EventMap>>(
     type: EventName,
     callback: EventListenerCallback<EventMap, EventName>
   ): void;
@@ -243,7 +246,7 @@ export type EventEmitter<EventMap extends EventMapBase> = {
    * @param [options.target] Key of the target route which should receive the event.
    * If not specified, all routes receive the event.
    */
-  emit<EventName extends Keyof<EventMap>>(
+  emit<EventName extends KeyOf<EventMap>>(
     options: {
       type: EventName;
       target?: string;
@@ -391,9 +394,21 @@ type NavigationHelpersCommon<
   getState(): State;
 } & PrivateValueStore<[ParamList, unknown, unknown]>;
 
+type ParamType<
+  ParamList extends {},
+  RouteName extends keyof ParamList | unknown,
+  IsPartial extends boolean = false,
+> = RouteName extends keyof ParamList
+  ? ParamList[RouteName] extends undefined
+    ? undefined
+    : IsPartial extends true
+      ? Partial<ParamList[RouteName]>
+      : ParamList[RouteName]
+  : unknown;
+
 type NavigationHelpersRoute<
   ParamList extends {},
-  RouteName extends keyof ParamList = Keyof<ParamList>,
+  RouteName extends keyof ParamList = KeyOf<ParamList>,
 > = {
   /**
    * Update the param object for the route.
@@ -401,22 +416,14 @@ type NavigationHelpersRoute<
    *
    * @param params Partial params object for the current route.
    */
-  setParams(
-    params: ParamList[RouteName] extends undefined
-      ? undefined
-      : Partial<ParamList[RouteName]>
-  ): void;
+  setParams(params: ParamType<ParamList, RouteName, true>): void;
 
   /**
    * Replace the param object for the route
    *
    * @param params Params object for the current route.
    */
-  replaceParams(
-    params: ParamList[RouteName] extends undefined
-      ? undefined
-      : ParamList[RouteName]
-  ): void;
+  replaceParams(params: ParamType<ParamList, RouteName>): void;
 
   /**
    * Push new params for the route.
@@ -425,11 +432,7 @@ type NavigationHelpersRoute<
    *
    * @param params Params object for the current route.
    */
-  pushParams(
-    params: ParamList[RouteName] extends undefined
-      ? undefined
-      : ParamList[RouteName]
-  ): void;
+  pushParams(params: ParamType<ParamList, RouteName>): void;
 };
 
 export type NavigationHelpers<
@@ -468,7 +471,7 @@ export type NavigationContainerProps = {
 
 export type NavigationProp<
   ParamList extends {},
-  RouteName extends keyof ParamList = Keyof<ParamList>,
+  RouteName extends keyof ParamList = KeyOf<ParamList>,
   State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {},
@@ -506,12 +509,12 @@ export type NavigationProp<
 
 export type RouteProp<
   ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = Keyof<ParamList>,
+  RouteName extends keyof ParamList = KeyOf<ParamList>,
 > = Route<Extract<RouteName, string>, ParamList[RouteName]>;
 
 export type CompositeNavigationProp<
-  A extends NavigationProp<ParamListBase, string, any, any, any>,
-  B extends NavigationProp<ParamListBase, string, any, any, any>,
+  A extends NavigationProp<ParamListBase, any, any, any, any>,
+  B extends NavigationProp<ParamListBase, any, any, any, any>,
 > = Omit<A & B, keyof NavigationProp<any, any, any, any, any>> &
   Omit<
     NavigationProp<
@@ -825,7 +828,68 @@ export type NavigationContainerEventMap = {
   };
 };
 
-type NotUndefined<T> = T extends undefined ? never : T;
+/**
+ * A stripped down NavigationProp if the navigator is not known.
+ *
+ * The hook can be used in `NavigationContainer` directly, not inside of a navigator.
+ * So navigator specific methods won't be available.
+ */
+export type GenericNavigation<ParamList extends {}> = Omit<
+  NavigationProp<ParamList>,
+  'getState' | 'setParams' | 'replaceParams' | 'pushParams' | 'setOptions'
+> & {
+  /**
+   * Returns the navigator's state.
+   *
+   * This may return `undefined` if used outside of a navigator,
+   * as the navigator may not have rendered yet
+   */
+  getState(): NavigationState | undefined;
+
+  /**
+   * Update the param object for the route.
+   * The new params will be shallow merged with the old one.
+   *
+   * @param params Partial params object for the current route.
+   */
+  setParams(
+    // We don't know which route to set params for
+    params: unknown
+  ): void;
+
+  /**
+   * Replace the param object for the route
+   *
+   * @param params Params object for the current route.
+   */
+  replaceParams(
+    // We don't know which route to replace params for
+    params: unknown
+  ): void;
+
+  /**
+   * Push new params for the route.
+   * The params are not merged with previous params.
+   * This adds an entry to navigation history.
+   *
+   * @param params Params object for the current route.
+   */
+  pushParams(
+    // We don't know which route to push params for
+    params: unknown
+  ): void;
+
+  /**
+   * Update the options for the route.
+   * The options object will be shallow merged with default options object.
+   *
+   * @param options Partial options object for the current screen.
+   */
+  setOptions(
+    // We don't know which navigator to set options for
+    options: unknown
+  ): void;
+};
 
 export type RouteForName<
   ParamList extends {},
@@ -844,6 +908,42 @@ type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
   ? ParamListRoute<ParamList>
   : Route<string>;
 
+type BasicNavigationComposite<
+  Navigation extends NavigationProp<any, any, any, any, any>,
+  Parent,
+> =
+  Parent extends NavigationProp<any, any, any, any, any>
+    ? CompositeNavigationProp<Navigation, Parent>
+    : Navigation;
+
+type BasicNavigationList<
+  ParamList extends {},
+  ExcludedRouteNames,
+  Parent extends NavigationProp<any, any, any, any, any> | undefined,
+> = UnionToIntersection<
+  {
+    [RouteName in keyof ParamList]: (NavigatorScreenParams<{}> extends ParamList[RouteName]
+      ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<
+          infer T
+        >
+        ? BasicNavigationList<
+            T,
+            ExcludedRouteNames,
+            NavigationProp<ParamList, RouteName>
+          >
+        : {}
+      : {}) &
+      (RouteName extends ExcludedRouteNames
+        ? {}
+        : {
+            [Key in RouteName]: BasicNavigationComposite<
+              NavigationProp<ParamList, RouteName>,
+              Parent
+            >;
+          });
+  }[keyof ParamList]
+>;
+
 export type NavigationListForNavigator<Navigator> =
   Navigator extends TypedNavigator<infer Bag, any>
     ? Bag['NavigationList']
@@ -851,7 +951,26 @@ export type NavigationListForNavigator<Navigator> =
       ? NavigationList
       : {};
 
-export type NavigationListForNested<Navigator> =
+export type NavigationListForNested<Navigator> = FlatType<
+  NavigationListForNestedInternal<Navigator> &
+    (Navigator extends TypedNavigator<infer Bag, any>
+      ? BasicNavigationList<
+          Bag['ParamList'],
+          keyof NavigationListForNestedInternal<Navigator>,
+          undefined
+        >
+      : Navigator extends PrivateValueStore<[infer ParamList, any, any]>
+        ? ParamList extends {}
+          ? BasicNavigationList<
+              ParamList,
+              keyof NavigationListForNestedInternal<Navigator>,
+              undefined
+            >
+          : {}
+        : {})
+>;
+
+type NavigationListForNestedInternal<Navigator> =
   NavigationListForNavigator<Navigator> &
     NavigationListForStaticConfig<
       NavigationListForNavigator<Navigator>,

@@ -43,4 +43,3 @@ export type {
   BottomTabScreenProps,
   Icon,
 } from './types';
-export type { NativeScreenHeaderItemProps } from './views/NativeScreen/types';

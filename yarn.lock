@@ -4575,7 +4575,7 @@ __metadata:
     react-native: "npm:0.81.4"
     react-native-builder-bob: "npm:^0.40.12"
     react-native-safe-area-context: "npm:~5.6.0"
-    react-native-screens: "npm:^4.18.0"
+    react-native-screens: "npm:^4.19.0"
     react-test-renderer: "npm:19.1.0"
     sf-symbols-typescript: "npm:^2.1.0"
     typescript: "npm:^5.9.2"
@@ -4584,7 +4584,7 @@ __metadata:
     react: ">= 19.0.0"
     react-native: "*"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.0.0"
+    react-native-screens: ">= 4.19.0"
   languageName: unknown
   linkType: soft
 
@@ -4652,7 +4652,7 @@ __metadata:
     react-native-gesture-handler: "npm:~2.28.0"
     react-native-reanimated: "npm:4.1.3"
     react-native-safe-area-context: "npm:~5.6.0"
-    react-native-screens: "npm:^4.18.0"
+    react-native-screens: "npm:^4.19.0"
     react-native-worklets: "npm:0.6.1"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
@@ -4664,7 +4664,7 @@ __metadata:
     react-native-gesture-handler: ">= 2.0.0"
     react-native-reanimated: ">= 4.0.0"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.0.0"
+    react-native-screens: ">= 4.19.0"
   languageName: unknown
   linkType: soft
 
@@ -4683,7 +4683,7 @@ __metadata:
     react: "npm:19.1.0"
     react-native: "npm:0.81.4"
     react-native-builder-bob: "npm:^0.40.12"
-    react-native-screens: "npm:^4.18.0"
+    react-native-screens: "npm:^4.19.0"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
@@ -4694,7 +4694,7 @@ __metadata:
     react: ">= 19.0.0"
     react-native: "*"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.0.0"
+    react-native-screens: ">= 4.19.0"
   languageName: unknown
   linkType: soft
 
@@ -4749,10 +4749,10 @@ __metadata:
     react-native-edge-to-edge: "npm:^1.6.1"
     react-native-gesture-handler: "npm:~2.28.0"
     react-native-monorepo-config: "npm:^0.3.0"
-    react-native-pager-view: "npm:6.9.1"
+    react-native-pager-view: "npm:^7.1.0-alpha.4"
     react-native-reanimated: "npm:4.1.3"
     react-native-safe-area-context: "npm:~5.6.0"
-    react-native-screens: "npm:^4.18.0"
+    react-native-screens: "npm:^4.19.0"
     react-native-tab-view: "workspace:^"
     react-native-web: "npm:~0.21.0"
     react-native-worklets: "npm:0.6.1"
@@ -4778,7 +4778,7 @@ __metadata:
     react: "npm:19.1.0"
     react-native: "npm:0.81.4"
     react-native-builder-bob: "npm:^0.40.12"
-    react-native-pager-view: "npm:6.9.1"
+    react-native-pager-view: "npm:^7.1.0-alpha.4"
     react-native-safe-area-context: "npm:~5.6.0"
     react-native-tab-view: "workspace:^"
     react-test-renderer: "npm:19.1.0"
@@ -4787,7 +4787,7 @@ __metadata:
     "@react-navigation/native": "workspace:^"
     react: ">= 19.0.0"
     react-native: "*"
-    react-native-pager-view: ">= 6.0.0"
+    react-native-pager-view: ">= 6.0.0 || ^7.1.0-alpha.4"
     react-native-safe-area-context: ">= 5.5.0"
   languageName: unknown
   linkType: soft
@@ -4805,7 +4805,7 @@ __metadata:
     react: "npm:19.1.0"
     react-native: "npm:0.81.4"
     react-native-builder-bob: "npm:^0.40.12"
-    react-native-screens: "npm:^4.18.0"
+    react-native-screens: "npm:^4.19.0"
     react-test-renderer: "npm:19.1.0"
     sf-symbols-typescript: "npm:^2.1.0"
     typescript: "npm:^5.9.2"
@@ -4815,7 +4815,7 @@ __metadata:
     react: ">= 19.0.0"
     react-native: "*"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.0.0"
+    react-native-screens: ">= 4.19.0"
   languageName: unknown
   linkType: soft
 
@@ -4874,7 +4874,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-native-gesture-handler: "npm:~2.28.0"
     react-native-safe-area-context: "npm:~5.6.0"
-    react-native-screens: "npm:^4.18.0"
+    react-native-screens: "npm:^4.19.0"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
@@ -4884,7 +4884,7 @@ __metadata:
     react-native: "*"
     react-native-gesture-handler: ">= 2.0.0"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.0.0"
+    react-native-screens: ">= 4.19.0"
   languageName: unknown
   linkType: soft
 
@@ -14362,13 +14362,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-pager-view@npm:6.9.1":
-  version: 6.9.1
-  resolution: "react-native-pager-view@npm:6.9.1"
+"react-native-pager-view@npm:^7.1.0-alpha.4":
+  version: 7.1.0-alpha.4
+  resolution: "react-native-pager-view@npm:7.1.0-alpha.4"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/c5229d230734ad9dad0b1e296168f0eebc5cff1b4b63201266ee7d5ecadc2e9c584b426b4ef146718c2e581dfcf63914174133b3ed1657294ccd437c22dbbc05
+  checksum: 10c0/41fd0a98a0d9ad4a50723760b045caf85e42bea3b943dc37a8c9bcc15be93fb713a2e67e37023d592cd3306030b2913cddf0947415b1072f041bb16e5dc7ee0a
   languageName: node
   linkType: hard
 
@@ -14397,16 +14397,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^4.18.0":
-  version: 4.18.0
-  resolution: "react-native-screens@npm:4.18.0"
+"react-native-screens@npm:^4.19.0":
+  version: 4.19.0
+  resolution: "react-native-screens@npm:4.19.0"
   dependencies:
     react-freeze: "npm:^1.0.0"
     warn-once: "npm:^0.1.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/a35d4b82b9ab5ef13913c54ab6751a5cad5430de3e6cd66335cd3bf4dac92cd9d0c5b8b9a021e151724a9a6f6ca7864e2653c9930af7a9379e5a37b45bce6a0c
+  checksum: 10c0/e66328c8782ad4af352c418e5a4ae0cd5011d5010a9fad23e9740353d8076027c197d344b7465c5d529d862954dc80d9d0db444846e59cc1bee46a5459817562
   languageName: node
   linkType: hard
 
@@ -14420,14 +14420,14 @@ __metadata:
     react: "npm:19.1.0"
     react-native: "npm:0.81.4"
     react-native-builder-bob: "npm:^0.40.12"
-    react-native-pager-view: "npm:6.9.1"
+    react-native-pager-view: "npm:^7.1.0-alpha.4"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
   peerDependencies:
     react: ">= 19.0.0"
     react-native: "*"
-    react-native-pager-view: ">= 6.0.0"
+    react-native-pager-view: ">= 6.0.0 || ^7.1.0-alpha.4"
   languageName: unknown
   linkType: soft
 

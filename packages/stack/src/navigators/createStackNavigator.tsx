@@ -9,9 +9,8 @@ import {
   type StackRouterOptions,
   type StaticConfig,
   type StaticParamList,
-  type StaticScreenConfigInput,
+  type StaticScreenConfig,
   type StaticScreenConfigLinking,
-  type StaticScreenConfigResult,
   type StaticScreenConfigScreen,
   type TypedNavigator,
   useLocale,
@@ -29,7 +28,7 @@ import { StackView } from '../views/Stack/StackView';
 
 function StackNavigator({
   initialRouteName,
-  UNSTABLE_routeNamesChangeBehavior,
+  routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
@@ -49,7 +48,7 @@ function StackNavigator({
       StackNavigationEventMap
     >(StackRouter, {
       initialRouteName,
-      UNSTABLE_routeNamesChangeBehavior,
+      routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,
@@ -125,7 +124,7 @@ export function createStackScreen<
   const Linking extends StaticScreenConfigLinking,
   const Screen extends StaticScreenConfigScreen,
 >(
-  config: StaticScreenConfigInput<
+  config: StaticScreenConfig<
     Linking,
     Screen,
     StackNavigationState<ParamListBase>,
@@ -133,14 +132,6 @@ export function createStackScreen<
     StackNavigationEventMap,
     StackNavigationProp<ParamListBase>
   >
-): StaticScreenConfigResult<
-  Linking,
-  Screen,
-  StackNavigationState<ParamListBase>,
-  StackNavigationOptions,
-  StackNavigationEventMap,
-  StackNavigationProp<ParamListBase>
-> {
-  // @ts-expect-error: there is some issue with the generic inference here
+) {
   return config;
 }
