@@ -23,9 +23,9 @@ import {
 
 import type {
   BottomTabDescriptorMap,
+  BottomTabIcon,
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
-  BottomTabIcon,
 } from '../types';
 import { ScreenContent } from './ScreenContent';
 
