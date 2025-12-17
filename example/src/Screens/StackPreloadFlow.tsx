@@ -1,37 +1,45 @@
 import { Button, Text } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfig,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
 } from '@react-navigation/stack';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-export type PreloadStackParams = {
+type PreloadStackParamList = {
   Home: undefined;
   Details: undefined;
-  Profile: undefined;
 };
 
-const linking: PathConfigMap<PreloadStackParams> = {
-  Home: '',
-  Details: 'details',
-  Profile: 'profile',
-};
+const linking = {
+  screens: {
+    Home: '',
+    Details: 'details',
+  },
+} satisfies PathConfig<NavigatorScreenParams<PreloadStackParamList>>;
 
 const DetailsScreen = ({
   navigation,
-}: StackScreenProps<PreloadStackParams, 'Details'>) => {
+}: StackScreenProps<PreloadStackParamList, 'Details'>) => {
   const [loadingCountdown, setLoadingCountdown] = useState(3);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setLoadingCountdown((loadingCountdown) => {
         if (loadingCountdown === 1) {
           clearInterval(interval);
         }
+
         return loadingCountdown - 1;
       });
     }, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -45,57 +53,58 @@ const DetailsScreen = ({
       <Button onPress={navigation.goBack} style={styles.button}>
         Back to home
       </Button>
-      <Button
-        onPress={() => navigation.navigate('Profile')}
-        style={styles.button}
-      >
-        Go to Profile
-      </Button>
-    </View>
-  );
-};
-
-const ProfileScreen = ({
-  navigation,
-}: StackScreenProps<PreloadStackParams, 'Profile'>) => {
-  return (
-    <View style={styles.content}>
-      <Text style={styles.text}>Profile</Text>
-      <Button onPress={navigation.goBack} style={styles.button}>
-        Back to home
-      </Button>
     </View>
   );
 };
 
 const HomeScreen = ({
   navigation,
-}: StackScreenProps<PreloadStackParams, 'Home'>) => {
+}: StackScreenProps<PreloadStackParamList, 'Home'>) => {
   const { navigate, preload } = navigation;
+
+  const [isReady, setIsReady] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
+
+  useEffect(() => {
+    navigation.addListener('blur', () => {
+      clearTimeout(timerRef.current);
+      setIsReady(false);
+    });
+  }, [navigation]);
 
   return (
     <View style={styles.content}>
-      <Button onPress={() => preload('Details')} style={styles.button}>
+      <Text style={styles.text}>
+        {isReady ? 'Details is preloaded!' : 'Details is not preloaded yet.'}
+      </Text>
+      <Button
+        onPress={() => {
+          timerRef.current = setTimeout(() => {
+            setIsReady(true);
+          }, 3000);
+
+          preload('Details');
+        }}
+        style={styles.button}
+      >
         Preload Details
       </Button>
-      <Button onPress={() => preload('Profile')} style={styles.button}>
-        Preload Profile
-      </Button>
       <Button onPress={() => navigate('Details')} style={styles.button}>
-        Navigate Details
+        Navigate to Details
       </Button>
     </View>
   );
 };
 
-const SimpleStack = createStackNavigator<PreloadStackParams>();
+const SimpleStack = createStackNavigator<PreloadStackParamList>();
 
-export function StackPreloadFlow() {
+export function StackPreloadFlow(
+  _: StaticScreenProps<NavigatorScreenParams<PreloadStackParamList>>
+) {
   return (
     <SimpleStack.Navigator>
       <SimpleStack.Screen name="Home" component={HomeScreen} />
       <SimpleStack.Screen name="Details" component={DetailsScreen} />
-      <SimpleStack.Screen name="Profile" component={ProfileScreen} />
     </SimpleStack.Navigator>
   );
 }

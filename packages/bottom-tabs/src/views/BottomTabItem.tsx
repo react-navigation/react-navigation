@@ -1,9 +1,5 @@
-import {
-  Color,
-  getLabel,
-  Label,
-  PlatformPressable,
-} from '@react-navigation/elements';
+import { getLabel, Label, PlatformPressable } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import { type Route, useTheme } from '@react-navigation/native';
 import React from 'react';
 import {
@@ -16,13 +12,14 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
+import type { TabBarItemLabelVisibilityMode } from 'react-native-screens';
 
 import type {
   BottomTabBarButtonProps,
   BottomTabDescriptor,
   LabelPosition,
 } from '../types';
-import { TabBarIcon } from './TabBarIcon';
+import { TabBarIcon, type TabBarIconProps } from './TabBarIcon';
 
 type Props = {
   /**
@@ -55,11 +52,7 @@ type Props = {
   /**
    * Icon to display for the tab.
    */
-  icon: (props: {
-    focused: boolean;
-    size: number;
-    color: ColorValue;
-  }) => React.ReactNode;
+  icon: TabBarIconProps['icon'] | undefined;
   /**
    * Text to show in a badge on the tab icon.
    */
@@ -135,9 +128,13 @@ type Props = {
    */
   inactiveBackgroundColor?: ColorValue;
   /**
-   * Whether to show the label text for the tab.
+   * Color of tab bar item's ripple effect.
    */
-  showLabel?: boolean;
+  rippleColor?: ColorValue;
+  /**
+   * Label visibility mode for the tab bar item.
+   */
+  labelVisibilityMode?: TabBarItemLabelVisibilityMode;
   /**
    * Whether to allow scaling the font for the label for accessibility purposes.
    * Defaults to `false` on iOS 13+ where it uses `largeContentTitle`.
@@ -187,7 +184,8 @@ export function BottomTabItem({
   inactiveTintColor: customInactiveTintColor,
   activeBackgroundColor: customActiveBackgroundColor,
   inactiveBackgroundColor = 'transparent',
-  showLabel = true,
+  rippleColor,
+  labelVisibilityMode,
   // On iOS 13+, we use `largeContentTitle` for accessibility
   // So we don't need the font to scale up
   // https://developer.apple.com/documentation/uikit/uiview/3183939-largecontenttitle
@@ -247,7 +245,7 @@ export function BottomTabItem({
   }
 
   const renderLabel = ({ focused }: { focused: boolean }) => {
-    if (showLabel === false) {
+    if (labelVisibilityMode === 'unlabeled') {
       return null;
     }
 
@@ -311,7 +309,7 @@ export function BottomTabItem({
         inactiveOpacity={inactiveOpacity}
         activeTintColor={activeTintColor}
         inactiveTintColor={iconInactiveTintColor}
-        renderIcon={icon}
+        icon={icon}
         style={iconStyle}
       />
     );
@@ -357,6 +355,7 @@ export function BottomTabItem({
         role: Platform.select({ ios: 'none', default: 'tab' }),
         'aria-selected': focused,
         android_ripple: { borderless: true },
+        pressColor: rippleColor,
         hoverEffect:
           (variant === 'material' || (sidebar && horizontal)) &&
           typeof colors.text === 'string'
@@ -396,6 +395,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     // Roundness for iPad hover effect
     borderRadius: 10,
+    borderCurve: 'continuous',
   },
   tabVerticalUiKit: {
     justifyContent: 'flex-start',

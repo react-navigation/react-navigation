@@ -1,7 +1,5 @@
-import {
-  HeaderShownContext,
-  SafeAreaProviderCompat,
-} from '@react-navigation/elements';
+import { HeaderShownContext } from '@react-navigation/elements';
+import { SafeAreaProviderCompat } from '@react-navigation/elements/internal';
 import {
   CommonActions,
   type LocaleDirection,

@@ -64,35 +64,42 @@ export type PartialState<State extends NavigationState> = Partial<
 
 export type Route<
   RouteName extends string,
-  Params extends object | undefined = object | undefined,
-> = Readonly<{
-  /**
-   * Unique key for the route.
-   */
-  key: string;
-  /**
-   * User-provided name for the route.
-   */
-  name: RouteName;
-  /**
-   * Path associated with the route.
-   * Usually present when the screen was opened from a deep link.
-   */
-  path?: string;
-}> &
-  (undefined extends Params
-    ? Readonly<{
-        /**
-         * Params for this route
-         */
-        params?: Readonly<Params>;
-      }>
-    : Readonly<{
-        /**
-         * Params for this route
-         */
-        params: Readonly<Params>;
-      }>);
+  Params extends unknown | object | undefined = object | undefined,
+> = Readonly<
+  {
+    /**
+     * Unique key for the route.
+     */
+    key: string;
+    /**
+     * User-provided name for the route.
+     */
+    name: RouteName;
+    /**
+     * Path associated with the route.
+     * Usually present when the screen was opened from a deep link.
+     */
+    path?: string;
+    /**
+     * History of param changes for this route.
+     */
+    history?: { type: 'params'; params: object }[];
+  } & Readonly<
+    undefined extends Params
+      ? {
+          /**
+           * Params for this route
+           */
+          params?: Readonly<Params>;
+        }
+      : {
+          /**
+           * Params for this route
+           */
+          params: Readonly<Params>;
+        }
+  >
+>;
 
 export type ParamListBase = Record<string, object | undefined>;
 

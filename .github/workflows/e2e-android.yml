@@ -18,7 +18,15 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
+      MAESTRO_VERSION: 2.0.10
+      MAESTRO_CLI_NO_ANALYTICS: 1
+      MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
+      JAVA_DISTRIBUTION: 'zulu'
+      JAVA_VERSION: '17'
       API_LEVEL: 34
+      EMULATOR_PROFILE: pixel_5
+      EMULATOR_RAM_SIZE: '4096M'
+      AVD_NAME: e2e_emulator
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,11 +58,11 @@ jobs:
           remove-codeql: 'true'
           remove-docker-images: 'true'
 
-      - name: Setup JDK 17
-        uses: actions/setup-java@v4
+      - name: Setup JDK
+        uses: actions/setup-java@v5
         with:
-          java-version: '17'
-          distribution: 'zulu'
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
 
       - name: Build Android App
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -80,14 +88,12 @@ jobs:
       - name: Install AVD dependencies
         run: |
           sudo apt update
-          sudo apt-get install -y libpulse0 libgl1
+          sudo apt-get install -y libpulse0 libgl1 libxkbfile1
 
       - name: Install Maestro
         run: |
           curl -fsSL "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
-        env:
-          MAESTRO_VERSION: 1.41.0
 
       - name: Enable KVM
         run: |
@@ -102,18 +108,20 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ env.API_LEVEL }}
+          key: avd-${{ env.API_LEVEL }}-${{ env.EMULATOR_PROFILE }}-${{ env.EMULATOR_RAM_SIZE }}
 
       - name: Create AVD and generate snapshot for caching
         if: steps.restore-avd-cache.outputs.cache-hit != 'true'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ env.API_LEVEL }}
-          force-avd-creation: false
-          disable-animations: false
-          target: google_apis
+          profile: ${{ env.EMULATOR_PROFILE }}
+          ram-size: ${{ env.EMULATOR_RAM_SIZE }}
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
-          avd-name: e2e_emulator
+          avd-name: ${{ env.AVD_NAME }}
+          disable-animations: false
+          force-avd-creation: false
+          target: google_apis
           arch: x86_64
           script: echo "Generated AVD snapshot for caching."
 
@@ -138,25 +146,50 @@ jobs:
               exit 1
             fi
 
+      - name: Prepare test script file
+        id: e2e-test-script
+        run: |
+          # android-emulator-runner does not support multi-line scripts
+          # so we create a script file and pass its path instead
+
+          SCRIPT_FILE="$(pwd)/e2e-tests.sh"
+
+          echo "${SCRIPT}" > "${SCRIPT_FILE}"
+          echo "file=${SCRIPT_FILE}" >> "${GITHUB_OUTPUT}"
+        env:
+          SCRIPT: |
+            adb install ../android-debug-build/android-debug.apk
+
+            for i in 1 2 3; do
+              if yarn run e2e:native --flatten-debug-output; then
+                break
+              else
+                echo "Maestro tests failed on attempt $i"
+
+                if [ $i -eq 3 ]; then
+                  echo "Maestro tests failed after $i attempts"
+                  exit 1
+                fi
+              fi
+            done
+
       - name: Run Maestro tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: ${{ env.API_LEVEL }}
-          force-avd-creation: false
-          disable-animations: false
-          target: google_apis
+          profile: ${{ env.EMULATOR_PROFILE }}
+          ram-size: ${{ env.EMULATOR_RAM_SIZE }}
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none
-          avd-name: e2e_emulator
+          avd-name: ${{ env.AVD_NAME }}
+          disable-animations: false
+          force-avd-creation: false
+          target: google_apis
           arch: x86_64
-          script: |
-            adb install ../android-debug-build/android-debug.apk
-            yarn run e2e:native
+          script: bash ${{ steps.e2e-test-script.outputs.file }}
           working-directory: example
-        env:
-          MAESTRO_DRIVER_STARTUP_TIMEOUT: 120000
 
-      - name: Store debug output if failed
-        if: failure()
+      - name: Store debug output
+        if: failure() || cancelled()
         uses: actions/upload-artifact@v4
         with:
           name: maestro-debug-output-android

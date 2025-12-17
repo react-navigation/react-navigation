@@ -1,11 +1,11 @@
 appId: ${APP_ID}
 name: Simple Stack
 ---
-- openLink:
-    link: ${APP_SCHEME}simple-stack
-- extendedWaitUntil:
-    visible: 'Article by Gandalf'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: simple-stack
+      TEXT: 'Article by Gandalf'
 - tapOn:
     text: 'Update params'
 - assertVisible:

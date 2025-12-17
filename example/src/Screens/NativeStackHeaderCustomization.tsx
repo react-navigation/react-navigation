@@ -5,7 +5,11 @@ import {
   Header,
   HeaderButton,
 } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfig,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   type NativeStackOptionsArgs,
@@ -25,24 +29,31 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type NativeHeaderCustomizationStackParams = {
+type NativeHeaderCustomizationStackParamList = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
 };
 
-const linking: PathConfigMap<NativeHeaderCustomizationStackParams> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Albums: 'albums',
+  },
+} satisfies PathConfig<
+  NavigatorScreenParams<NativeHeaderCustomizationStackParamList>
+>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: NativeStackScreenProps<NativeHeaderCustomizationStackParams, 'Article'>) => {
+}: NativeStackScreenProps<
+  NativeHeaderCustomizationStackParamList,
+  'Article'
+>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -68,7 +79,7 @@ const NewsFeedScreen = ({
   route,
   navigation,
 }: NativeStackScreenProps<
-  NativeHeaderCustomizationStackParams,
+  NativeHeaderCustomizationStackParamList,
   'NewsFeed'
 >) => {
   return (
@@ -88,7 +99,10 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: NativeStackScreenProps<NativeHeaderCustomizationStackParams, 'Albums'>) => {
+}: NativeStackScreenProps<
+  NativeHeaderCustomizationStackParamList,
+  'Albums'
+>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -110,9 +124,13 @@ const AlbumsScreen = ({
 };
 
 const Stack =
-  createNativeStackNavigator<NativeHeaderCustomizationStackParams>();
+  createNativeStackNavigator<NativeHeaderCustomizationStackParamList>();
 
-export function NativeStackHeaderCustomization() {
+export function NativeStackHeaderCustomization(
+  _: StaticScreenProps<
+    NavigatorScreenParams<NativeHeaderCustomizationStackParamList>
+  >
+) {
   const onPress = () => {
     Alert.alert(
       'Never gonna give you up!',
@@ -129,7 +147,7 @@ export function NativeStackHeaderCustomization() {
           route,
           navigation,
         }: NativeStackOptionsArgs<
-          NativeHeaderCustomizationStackParams,
+          NativeHeaderCustomizationStackParamList,
           'Article'
         >) => ({
           title: `Article byyyy ${route.params?.author ?? 'Unknown'}`,
@@ -164,7 +182,7 @@ export function NativeStackHeaderCustomization() {
           ),
           headerBackground: () => (
             <Image
-              source={require('../../assets/cpu.jpg')}
+              source={require('../../assets/misc/cpu.jpg')}
               resizeMode="cover"
               style={styles.headerBackground}
             />

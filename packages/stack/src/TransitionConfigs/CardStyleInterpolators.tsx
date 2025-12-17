@@ -178,6 +178,7 @@ export function forModalPresentationIOS({
   return {
     cardStyle: {
       overflow: 'hidden',
+      borderCurve: 'continuous',
       borderTopLeftRadius: borderRadius,
       borderTopRightRadius: borderRadius,
       // We don't need these for the animation

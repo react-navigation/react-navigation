@@ -1,16 +1,11 @@
-import {
-  type BottomTabNavigationProp,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, Text } from '@react-navigation/elements';
 import {
-  createComponentForStaticNavigation,
-  createPathConfigForStaticNavigation,
-  type StaticParamList,
   type StaticScreenProps,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
+import { useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 let count = 0;
@@ -19,7 +14,7 @@ function TestScreen({
   route: { params },
 }: StaticScreenProps<{ count: number } | undefined>) {
   const route = useRoute();
-  const navigation = useNavigation<BottomTabNavigationProp<TabsParamList>>();
+  const navigation = useNavigation<typeof Tabs>();
 
   return (
     <View style={styles.container}>
@@ -50,28 +45,48 @@ function TestScreen({
   );
 }
 
-type TabsParamList = StaticParamList<typeof Tabs>;
+function CounterLayout({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    count = 0;
+  }, []);
+
+  return <>{children}</>;
+}
 
 const Tabs = createBottomTabNavigator({
   backBehavior: 'fullHistory',
+  layout: (props) => <CounterLayout {...props} />,
+  implementation: 'custom',
+  screenOptions: {
+    headerShown: true,
+  },
   screens: {
     First: {
       screen: TestScreen,
-      linking: 'first/:count?',
+      linking: {
+        path: 'first/:count?',
+        parse: { count: Number },
+      },
       options: {
         tabBarButtonTestID: 'first-tab',
       },
     },
     Second: {
       screen: TestScreen,
-      linking: 'second/:count?',
+      linking: {
+        path: 'second/:count?',
+        parse: { count: Number },
+      },
       options: {
         tabBarButtonTestID: 'second-tab',
       },
     },
     Third: {
       screen: TestScreen,
-      linking: 'third/:count?',
+      linking: {
+        path: 'third/:count?',
+        parse: { count: Number },
+      },
       options: {
         tabBarButtonTestID: 'third-tab',
       },
@@ -79,17 +94,10 @@ const Tabs = createBottomTabNavigator({
   },
 });
 
-const FullHistoryTabsComponent = createComponentForStaticNavigation(
-  Tabs,
-  'FullHistoryTabs'
-);
-
-export function FullHistoryTabs() {
-  return <FullHistoryTabsComponent />;
-}
-
-FullHistoryTabs.title = 'Full History Tabs';
-FullHistoryTabs.linking = createPathConfigForStaticNavigation(Tabs, {});
+export const FullHistoryTabs = {
+  screen: Tabs,
+  title: 'Full History Tabs',
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,8 +1,32 @@
 appId: ${APP_ID}
 name: Mixed Stack
 ---
-- openLink:
-    link: ${APP_SCHEME}mixed-stack
-- extendedWaitUntil:
-    visible: 'Article by Gandalf'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: mixed-stack
+      TEXT: 'Article by Gandalf'
+- tapOn:
+    text: 'Push article'
+- assertVisible:
+    text: 'Article by Dalek'
+- tapOn:
+    text: 'Push albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Push article'
+- assertVisible:
+    text: 'Article by The Doctor'
+- tapOn:
+    text: 'Go back'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Go back'
+- assertVisible:
+    text: 'Article by Dalek'
+- tapOn:
+    text: 'Go back'
+- assertVisible:
+    text: 'Article by Gandalf'

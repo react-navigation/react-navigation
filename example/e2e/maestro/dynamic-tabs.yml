@@ -1,8 +1,28 @@
 appId: ${APP_ID}
 name: Dynamic Tabs
 ---
-- openLink:
-    link: ${APP_SCHEME}dynamic-tabs
-- extendedWaitUntil:
-    visible: 'Tab 0'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: dynamic-tabs
+      TEXT: 'Tab 0'
+- tapOn:
+    text: 'Add a tab'
+- assertVisible:
+    id: 'tab-2'
+- tapOn:
+    text: 'Add a tab'
+- assertVisible:
+    id: 'tab-3'
+- tapOn:
+    text: 'Add a tab'
+- assertVisible:
+    id: 'tab-4'
+- tapOn:
+    text: 'Remove a tab'
+- assertNotVisible:
+    id: 'tab-4'
+- tapOn:
+    text: 'Remove a tab'
+- assertNotVisible:
+    id: 'tab-3'

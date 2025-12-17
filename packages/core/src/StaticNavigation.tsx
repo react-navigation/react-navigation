@@ -1,4 +1,8 @@
-import type { NavigationState, ParamListBase } from '@react-navigation/routers';
+import type {
+  NavigationState,
+  ParamListBase,
+  Route,
+} from '@react-navigation/routers';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
@@ -9,100 +13,313 @@ import type {
   NavigatorScreenParams,
   NavigatorTypeBagBase,
   PathConfig,
-  RouteConfigComponent,
-  RouteConfigProps,
+  PathConfigMap,
   RouteGroupConfig,
+  ScreenListeners,
+  Theme,
 } from './types';
 import { useRoute } from './useRoute';
+import type {
+  AnyToUnknown,
+  ExtractParamStrings,
+  ExtractParamsType,
+  FlatType,
+  HasArguments,
+  InferParse,
+  InferPath,
+  KeysOf,
+  UnionToIntersection,
+  ValidPathPattern,
+} from './utilities';
 
-/**
- * Flatten a type to remove all type alias names, unions etc.
- * This will show a plain object when hovering over the type.
- */
-type FlatType<T> = { [K in keyof T]: T[K] } & {};
-
-/**
- * keyof T doesn't work for union types. We can use distributive conditional types instead.
- * https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types
- */
-type KeysOf<T> = T extends {} ? keyof T : never;
-
-/**
- * We get a union type when using keyof, but we want an intersection instead.
- * https://stackoverflow.com/a/50375286/1665026
- */
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I
-) => void
-  ? I
-  : never;
-
-type UnknownToUndefined<T> = unknown extends T ? undefined : T;
-
-type ParamsForScreenComponent<T> = T extends {
-  screen: React.ComponentType<{ route: { params: infer P } }>;
-}
-  ? P
-  : T extends React.ComponentType<{ route: { params: infer P } }>
-    ? P
+type ParamsForScreenComponent<T> = T extends (...args: any[]) => any
+  ? HasArguments<T> extends true
+    ? T extends React.ComponentType<{ route: { params: infer Params } }>
+      ? Params
+      : undefined
+    : undefined
+  : T extends React.ComponentType<{ route: { params: infer Params } }>
+    ? Params
     : undefined;
 
-type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
-  ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
-  : T extends StaticNavigation<any, any, any>
-    ? NavigatorScreenParams<StaticParamList<T>> | undefined
-    : UnknownToUndefined<ParamsForScreenComponent<T>>;
+type ParamsForScreen<T> =
+  // Nested navigator in screen property
+  T extends { screen: StaticNavigation<any, any, any> }
+    ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
+    : // Direct nested navigator
+      T extends StaticNavigation<any, any, any>
+      ? NavigatorScreenParams<StaticParamList<T>> | undefined
+      : T extends {
+            screen: React.ComponentType<any>;
+          }
+        ? ParamsForScreenComponent<T['screen']>
+        : ParamsForScreenComponent<T>;
+
+type ParamsForLinking<Linking> = Linking extends { path: string }
+  ? ExtractParamsType<
+      ExtractParamStrings<InferPath<Linking>>,
+      InferParse<Linking>
+    >
+  : Linking extends string
+    ? ExtractParamsType<ExtractParamStrings<Linking>, undefined>
+    : undefined;
+
+/**
+ * Inferred params type based on both linking config and screen.
+ * - When linking is undefined: infers params from screen
+ * - When screen is a nested navigator: merges path params with navigator screen params
+ * - Otherwise: merges path params with screen component params
+ */
+type ParamsForConfig<Linking, Screen> = undefined extends Linking
+  ? ParamsForScreen<Screen>
+  : // Only infer params from linking if it's a pattern (i.e., contains ':')
+    // This avoids inferring non-literals like 'string'
+    Linking extends ValidPathPattern | { path: ValidPathPattern }
+    ? Screen extends StaticNavigation<any, any, any>
+      ? FlatType<ParamsForLinking<Linking>> & ParamsForScreen<Screen>
+      : // Don't combine if `undefined`, otherwise it'll result in `never`
+        undefined extends ParamsForScreen<Screen>
+        ? // Only flatten when not a navigator to keep it legible
+          FlatType<ParamsForLinking<Linking>>
+        : FlatType<ParamsForLinking<Linking> & ParamsForScreen<Screen>>
+    : ParamsForScreen<Screen>;
 
 type ParamListForScreens<Screens> = {
-  [Key in KeysOf<Screens>]: ParamsForScreen<Screens[Key]>;
+  [Key in KeysOf<Screens>]: Screens[Key] extends StaticScreenConfig<
+    infer Linking,
+    infer Screen,
+    any,
+    any,
+    any,
+    any
+  >
+    ? ParamsForConfig<Linking, Screen>
+    : ParamsForScreen<Screens[Key]>;
 };
 
 type ParamListForGroups<
   Groups extends
     | Readonly<{
         [key: string]: {
-          screens: StaticConfigScreens<
-            ParamListBase,
-            NavigationState,
-            {},
-            EventMapBase,
-            any
-          >;
+          screens: {};
         };
       }>
     | undefined,
 > = Groups extends {
   [key: string]: {
-    screens: StaticConfigScreens<
-      ParamListBase,
-      NavigationState,
-      {},
-      EventMapBase,
-      any
-    >;
+    screens: infer Screens;
   };
 }
-  ? ParamListForScreens<UnionToIntersection<Groups[keyof Groups]['screens']>>
+  ? ParamListForScreens<UnionToIntersection<Screens>>
   : {};
 
-type StaticRouteConfig<
-  ParamList extends ParamListBase,
-  RouteName extends keyof ParamList,
+type RouteType<Params> = Readonly<
+  FlatType<
+    Omit<Route<string, AnyToUnknown<Params>>, 'params'> &
+      Readonly<
+        undefined extends Params
+          ? {
+              /**
+               * Params for this route
+               */
+              params?: AnyToUnknown<Params>;
+            }
+          : {
+              /**
+               * Params for this route
+               */
+              params: AnyToUnknown<Params>;
+            }
+      >
+  >
+>;
+
+type StaticScreenConfigLinkingAlias = {
+  /**
+   * Path string to match against.
+   * e.g. `/users/:id` will match `/users/1` and extract `id` param as `1`.
+   */
+  path: string;
+  /**
+   * Whether the path should be consider parent paths or use the exact path.
+   * By default, paths are relating to the path config on the parent screen.
+   * If `exact` is set to `true`, the parent path configuration is not used.
+   */
+  exact?: boolean;
+  /**
+   * An object mapping the param name to a function which parses the param value.
+   *
+   * @example
+   * ```js
+   * parse: {
+   *   id: Number,
+   *   date: (value) => new Date(value)
+   * }
+   * ```
+   */
+  parse?: Record<string, (value: string) => unknown>;
+  /**
+   * An object mapping the param name to a function which converts the param value to a string.
+   * By default, all params are converted to strings using `String(value)`.
+   *
+   * @example
+   * ```js
+   * stringify: {
+   *   date: (value) => value.toISOString()
+   * }
+   * ```
+   */
+  stringify?: Record<string, (value: unknown) => string>;
+};
+
+export type StaticScreenConfigLinking =
+  | string
+  | (StaticScreenConfigLinkingAlias & {
+      /**
+       * Additional path alias that will be matched to the same screen.
+       */
+      alias?: (string | StaticScreenConfigLinkingAlias)[];
+    })
+  | undefined;
+
+export type StaticScreenConfigScreen =
+  | React.ComponentType<any>
+  | StaticNavigation<any, any, any>;
+
+export type StaticScreenConfig<
+  Linking extends StaticScreenConfigLinking,
+  Screen,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
   Navigation,
-> = RouteConfigProps<
-  ParamList,
-  RouteName,
-  State,
-  ScreenOptions,
-  EventMap,
-  Navigation
-> &
-  RouteConfigComponent<ParamList, RouteName>;
+  Params = ParamsForConfig<Linking, Screen>,
+> = {
+  /**
+   * Static navigation config or Component to render for the screen.
+   */
+  screen: Screen;
 
-export type StaticConfigScreens<
+  /**
+   * Callback to determine whether the screen should be rendered or not.
+   * This can be useful for conditional rendering of screens,
+   *
+   * e.g. - if you want to render a different screen for logged in users.
+   *
+   * You can use a custom hook to use custom logic to determine the return value.
+   *
+   * @example
+   * ```js
+   * if: useIsLoggedIn
+   * ```
+   */
+  if?: () => boolean;
+
+  /**
+   * Navigator options for this screen.
+   *
+   * @example
+   * ```js
+   * options: {
+   *  title: 'My Screen',
+   * }
+   * ```
+   */
+  options?:
+    | ScreenOptions
+    | ((props: {
+        route: RouteType<Params>;
+        navigation: Navigation;
+        theme: Theme;
+      }) => ScreenOptions);
+
+  /**
+   * Event listeners for this screen.
+   *
+   * @example
+   * ```js
+   * listeners: {
+   *   blur: (event) => {
+   *     ...
+   *   },
+   * }
+   * ```
+   */
+  listeners?:
+    | ScreenListeners<State, EventMap>
+    | ((props: {
+        route: RouteType<Params>;
+        navigation: Navigation;
+      }) => ScreenListeners<State, EventMap>);
+
+  /**
+   * Layout for this screen.
+   *
+   * @example
+   * ```js
+   * layout: ({ children, route, options, navigation, theme }) => {
+   *   return (
+   *     <MyWrapper>
+   *       {children}
+   *     </MyWrapper>
+   *   );
+   * }
+   * ```
+   *
+   */
+  layout?: (props: {
+    route: RouteType<Params>;
+    options: ScreenOptions;
+    navigation: Navigation;
+    theme: Theme;
+    children: React.ReactElement;
+  }) => React.ReactElement;
+
+  /**
+   * Initial params object for the route.
+   *
+   * @example
+   * ```js
+   * initialParams: {
+   *   someParam: 'someValue'
+   * }
+   * ```
+   */
+  initialParams?: AnyToUnknown<Params extends object ? Partial<Params> : never>;
+
+  /**
+   * Function to return an unique ID for this screen.
+   *
+   * @example
+   * ```js
+   * getId: ({ params }) => params?.userId,
+   * ```
+   */
+  getId?: (props: { params: AnyToUnknown<Params> }) => string | undefined;
+
+  /**
+   * Linking config for the screen.
+   * This can be a string to specify the path, or an object with more options.
+   *
+   * @example
+   * ```js
+   * linking: {
+   *   path: 'profile/:userId',
+   *   parse: {
+   *     userId: Number,
+   *   },
+   * },
+   * ```
+   */
+  linking?: Linking;
+
+  /**
+   * Optional key for this screen.
+   */
+  navigationKey?: string;
+};
+
+type StaticConfigScreens<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
@@ -112,51 +329,23 @@ export type StaticConfigScreens<
   [RouteName in keyof ParamList]:
     | React.ComponentType<any>
     | StaticNavigation<any, any, any>
-    | (Omit<
-        StaticRouteConfig<
-          ParamList,
-          RouteName,
-          State,
-          ScreenOptions,
-          EventMap,
-          NavigationList[RouteName]
-        >,
-        'name' | 'component' | 'getComponent' | 'children'
-      > & {
-        /**
-         * Callback to determine whether the screen should be rendered or not.
-         * This can be useful for conditional rendering of screens,
-         * e.g. - if you want to render a different screen for logged in users.
-         *
-         * You can use a custom hook to use custom logic to determine the return value.
-         *
-         * @example
-         * ```js
-         * if: useIsLoggedIn
-         * ```
-         */
-        if?: () => boolean;
-        /**
-         * Linking config for the screen.
-         * This can be a string to specify the path, or an object with more options.
-         *
-         * @example
-         * ```js
-         * linking: {
-         *   path: 'profile/:id',
-         *   exact: true,
-         * },
-         * ```
-         */
-        linking?: PathConfig<ParamList> | string;
-        /**
-         * Static navigation config or Component to render for the screen.
-         */
-        screen: StaticNavigation<any, any, any> | React.ComponentType<any>;
-      });
+    | StaticScreenConfig<
+        | {
+            path: string;
+            parse?: Record<string, (value: string) => any>;
+          }
+        | string
+        | undefined,
+        StaticNavigation<any, any, any> | React.ComponentType<any>,
+        State,
+        ScreenOptions,
+        EventMap,
+        NavigationList[RouteName],
+        any
+      >;
 };
 
-export type StaticConfigGroup<
+type StaticConfigGroup<
   ParamList extends ParamListBase,
   State extends NavigationState,
   ScreenOptions extends {},
@@ -172,6 +361,27 @@ export type StaticConfigGroup<
    */
   if?: () => boolean;
   /**
+   * Linking config for the screens in the group.
+   * This can be a string to specify the path, or an object following properties:
+   * - `path`
+   * - `stringify`
+   * - `parse`
+   *
+   * The path specified will be prepended to the paths of the screens in the group.
+   * The `parse` and `stringify` properties will be merged.
+   *
+   * @example
+   * ```js
+   * linking: {
+   *   path: 'users/:id',
+   *   parse: {
+   *     id: (id) => parseInt(id, 10),
+   *   }
+   * },
+   * ```
+   */
+  linking?: LinkingForGroup;
+  /**
    * Static navigation config or Component to render for the screen.
    */
   screens: StaticConfigScreens<
@@ -186,7 +396,6 @@ export type StaticConfigGroup<
 export type StaticConfig<Bag extends NavigatorTypeBagBase> =
   StaticConfigInternal<
     Bag['ParamList'],
-    Bag['NavigatorID'],
     Bag['State'],
     Bag['ScreenOptions'],
     Bag['EventMap'],
@@ -196,7 +405,6 @@ export type StaticConfig<Bag extends NavigatorTypeBagBase> =
 
 type StaticConfigInternal<
   ParamList extends ParamListBase,
-  NavigatorID extends string | undefined,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
@@ -207,7 +415,6 @@ type StaticConfigInternal<
     React.ComponentProps<Navigator>,
     keyof DefaultNavigatorOptions<
       ParamListBase,
-      string | undefined,
       NavigationState,
       {},
       EventMapBase,
@@ -216,7 +423,6 @@ type StaticConfigInternal<
   > &
     DefaultNavigatorOptions<
       ParamList,
-      NavigatorID,
       State,
       ScreenOptions,
       EventMap,
@@ -290,14 +496,7 @@ export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
  */
 export type StaticParamList<
   T extends {
-    readonly config: {
-      readonly screens?: Record<string, any>;
-      readonly groups?: {
-        [key: string]: {
-          screens: Record<string, any>;
-        };
-      };
-    };
+    readonly config: any;
   },
 > = FlatType<
   ParamListForScreens<T['config']['screens']> &
@@ -449,6 +648,10 @@ export function createComponentForStaticNavigation(
   return NavigatorComponent;
 }
 
+type LinkingForGroup =
+  | Pick<PathConfig<any>, 'path' | 'stringify' | 'parse'>
+  | string;
+
 type TreeForPathConfig = {
   config: {
     initialRouteName?: string;
@@ -461,6 +664,7 @@ type TreeForPathConfig = {
     >;
     groups?: {
       [key: string]: {
+        linking?: LinkingForGroup;
         screens: StaticConfigScreens<
           ParamListBase,
           NavigationState,
@@ -498,9 +702,9 @@ export function createPathConfigForStaticNavigation(
     initialRouteName?: string;
   },
   auto?: boolean
-) {
+): PathConfigMap<ParamListBase> | undefined {
   let initialScreenHasPath: boolean = false;
-  let initialScreenConfig: PathConfig<ParamListBase> | undefined;
+  let initialScreenConfig: PathConfig<{}> | undefined;
 
   const createPathConfigForTree = (
     t: TreeForPathConfig,
@@ -517,6 +721,7 @@ export function createPathConfigForStaticNavigation(
         EventMapBase,
         Record<string, unknown>
       >,
+      groupLinking: LinkingForGroup | undefined,
       initialRouteName: string | undefined
     ) => {
       return Object.fromEntries(
@@ -535,7 +740,17 @@ export function createPathConfigForStaticNavigation(
             return 0;
           })
           .map(([key, item]) => {
-            const screenConfig: PathConfig<ParamListBase> = {};
+            const screenConfig: PathConfig<{}> = {};
+            const groupPath =
+              typeof groupLinking === 'string'
+                ? groupLinking
+                : groupLinking?.path;
+
+            const normalizePath = (path: string) => {
+              return `${groupPath ?? ''}/${path}`
+                .replace(/^\//, '') // Remove extra leading slash
+                .replace(/\/$/, ''); // Remove extra trailing slash
+            };
 
             if ('linking' in item) {
               if (typeof item.linking === 'string') {
@@ -543,12 +758,26 @@ export function createPathConfigForStaticNavigation(
               } else {
                 Object.assign(screenConfig, item.linking);
               }
+            }
 
-              if (typeof screenConfig.path === 'string') {
-                screenConfig.path = screenConfig.path
-                  .replace(/^\//, '') // Remove extra leading slash
-                  .replace(/\/$/, ''); // Remove extra trailing slash
+            if (typeof groupLinking !== 'string') {
+              if (groupLinking?.parse != null) {
+                screenConfig.parse = {
+                  ...groupLinking.parse,
+                  ...screenConfig.parse,
+                };
               }
+
+              if (groupLinking?.stringify != null) {
+                screenConfig.stringify = {
+                  ...groupLinking.stringify,
+                  ...screenConfig.stringify,
+                };
+              }
+            }
+
+            if (typeof screenConfig.path === 'string') {
+              screenConfig.path = normalizePath(screenConfig.path);
             }
 
             let screens;
@@ -576,12 +805,13 @@ export function createPathConfigForStaticNavigation(
             }
 
             if (screens) {
+              // @ts-expect-error - we can't type this properly
               screenConfig.screens = screens;
             }
 
             if (
               auto &&
-              !screenConfig.screens &&
+              !('screens' in screenConfig && screenConfig.screens) &&
               // Skip generating path for screens that specify linking config as `undefined` or `null` explicitly
               !('linking' in item && item.linking == null)
             ) {
@@ -596,14 +826,20 @@ export function createPathConfigForStaticNavigation(
                   }
                 }
               } else {
-                if (!skipInitialDetection && initialScreenConfig == null) {
+                if (
+                  !groupPath &&
+                  !skipInitialDetection &&
+                  initialScreenConfig == null
+                ) {
                   initialScreenConfig = screenConfig;
                 }
 
-                screenConfig.path = key
-                  .replace(/([A-Z]+)/g, '-$1')
-                  .replace(/^-/, '')
-                  .toLowerCase();
+                screenConfig.path = normalizePath(
+                  key
+                    .replace(/([A-Z]+)/g, '-$1')
+                    .replace(/^-/, '')
+                    .toLowerCase()
+                );
               }
             }
 
@@ -623,6 +859,7 @@ export function createPathConfigForStaticNavigation(
           screens,
           createPathConfigForScreens(
             t.config.screens,
+            undefined,
             o?.initialRouteName ?? t.config.initialRouteName
           )
         );
@@ -634,6 +871,7 @@ export function createPathConfigForStaticNavigation(
             screens,
             createPathConfigForScreens(
               group.screens,
+              group.linking,
               o?.initialRouteName ?? t.config.initialRouteName
             )
           );

@@ -1,7 +1,7 @@
 import * as React from 'react';
 
-export const ThemeContext = React.createContext<
-  ReactNavigation.Theme | undefined
->(undefined);
+import type { Theme } from '../types';
+
+export const ThemeContext = React.createContext<Theme | undefined>(undefined);
 
 ThemeContext.displayName = 'ThemeContext';

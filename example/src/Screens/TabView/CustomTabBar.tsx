@@ -99,6 +99,7 @@ export const CustomTabBar = () => {
           return (
             <Pressable
               key={route.key}
+              testID={route.key}
               onPress={() => props.jumpTo(route.key)}
               style={[styles.tab]}
             >

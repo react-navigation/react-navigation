@@ -1,6 +1,8 @@
 import { nanoid } from 'nanoid/non-secure';
 
 import { BaseRouter } from './BaseRouter';
+import { createParamsFromAction } from './createParamsFromAction';
+import { createRouteFromAction } from './createRouteFromAction';
 import type {
   CommonNavigationAction,
   DefaultRouterOptions,
@@ -305,37 +307,40 @@ export function StackRouter(options: StackRouterOptions) {
 
       switch (action.type) {
         case 'REPLACE': {
-          const index =
+          const currentIndex =
             action.target === state.key && action.source
               ? state.routes.findIndex((r) => r.key === action.source)
               : state.index;
 
-          if (index === -1) {
+          if (currentIndex === -1) {
             return null;
           }
 
-          const { name, params } = action.payload;
-
-          if (!state.routeNames.includes(name)) {
+          if (!state.routeNames.includes(action.payload.name)) {
             return null;
+          }
+
+          const getId = options.routeGetIdList[action.payload.name];
+          const id = getId?.({ params: action.payload.params });
+
+          // Re-use preloaded route if available
+          let route = state.preloadedRoutes.find(
+            (route) =>
+              route.name === action.payload.name &&
+              id === getId?.({ params: route.params })
+          );
+
+          if (!route) {
+            route = createRouteFromAction({ action, routeParamList });
           }
 
           return {
             ...state,
-            routes: state.routes.map((route, i) =>
-              i === index
-                ? {
-                    key: `${name}-${nanoid()}`,
-                    name,
-                    params:
-                      routeParamList[name] !== undefined
-                        ? {
-                            ...routeParamList[name],
-                            ...params,
-                          }
-                        : params,
-                  }
-                : route
+            routes: state.routes.map((r, i) =>
+              i === currentIndex ? route : r
+            ),
+            preloadedRoutes: state.preloadedRoutes.filter(
+              (r) => r.key !== route.key
             ),
           };
         }
@@ -391,13 +396,7 @@ export function StackRouter(options: StackRouterOptions) {
                   }
                 : route.params;
           } else {
-            params =
-              routeParamList[action.payload.name] !== undefined
-                ? {
-                    ...routeParamList[action.payload.name],
-                    ...action.payload.params,
-                  }
-                : action.payload.params;
+            params = createParamsFromAction({ action, routeParamList });
           }
 
           let routes: Route<string>[];
@@ -458,16 +457,59 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         case 'POP': {
-          const index =
+          let currentIndex =
             action.target === state.key && action.source
               ? state.routes.findIndex((r) => r.key === action.source)
               : state.index;
 
-          if (index > 0) {
-            const count = Math.max(index - action.payload.count + 1, 1);
-            const routes = state.routes
-              .slice(0, count)
-              .concat(state.routes.slice(index + 1));
+          let route = state.routes[currentIndex];
+
+          /**
+           * When popping entries,
+           * - Pop entries from route.history
+           * - Pop routes from state.routes
+           *
+           * Repeat until:
+           * - We have popped the amount of items in count
+           * - There are no more items to pop
+           */
+          if (route.history?.length || currentIndex > 0) {
+            let count = action.payload.count;
+            let routes = state.routes;
+
+            while (count > 0 && (route.history?.length || currentIndex > 0)) {
+              if (route.history?.length) {
+                routes = [...routes];
+
+                const end = Math.min(count, route.history.length);
+                const last = route.history.at(-end);
+                const history = route.history.slice(0, -end);
+                const removed = route.history.length - history.length;
+
+                count = count - removed;
+
+                routes[currentIndex] = {
+                  ...route,
+                  params: last?.type === 'params' ? last.params : route.params,
+                  history,
+                };
+              }
+
+              if (currentIndex > 0 && count > 0) {
+                const length = routes.length;
+                const end = Math.max(currentIndex - count + 1, 1);
+
+                routes = routes
+                  .slice(0, end)
+                  .concat(routes.slice(currentIndex + 1));
+
+                const removed = length - routes.length;
+
+                count = count - removed;
+                currentIndex = routes.length - 1;
+                route = routes[currentIndex];
+              }
+            }
 
             return {
               ...state,
@@ -479,37 +521,57 @@ export function StackRouter(options: StackRouterOptions) {
           return null;
         }
 
-        case 'POP_TO_TOP':
-          return router.getStateForAction(
-            state,
-            {
-              type: 'POP',
-              payload: { count: state.routes.length - 1 },
-            },
-            options
-          );
+        case 'POP_TO_TOP': {
+          let route = state.routes[0];
+
+          if (state.index > 0 || route.history?.length) {
+            if (route.history?.length) {
+              route = {
+                ...route,
+                history: undefined,
+              };
+            }
+
+            return {
+              ...state,
+              index: 0,
+              routes: [route],
+            };
+          }
+
+          return null;
+        }
 
         case 'POP_TO': {
+          const currentIndex =
+            action.target === state.key && action.source
+              ? state.routes.findLastIndex((r) => r.key === action.source)
+              : state.index;
+
+          if (currentIndex === -1) {
+            return null;
+          }
+
           if (!state.routeNames.includes(action.payload.name)) {
             return null;
           }
 
-          // If the route already exists, navigate to that
+          // If the route already exists, navigate to it
           let index = -1;
 
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
 
-          if (id) {
+          if (id !== undefined) {
             index = state.routes.findIndex(
               (route) =>
                 route.name === action.payload.name &&
                 id === getId?.({ params: route.params })
             );
-          } else if (state.routes[state.index].name === action.payload.name) {
-            index = state.index;
+          } else if (state.routes[currentIndex].name === action.payload.name) {
+            index = currentIndex;
           } else {
-            for (let i = state.routes.length - 1; i >= 0; i--) {
+            for (let i = currentIndex; i >= 0; i--) {
               if (state.routes[i].name === action.payload.name) {
                 index = i;
                 break;
@@ -519,25 +581,26 @@ export function StackRouter(options: StackRouterOptions) {
 
           // If the route doesn't exist, remove the current route and add the new one
           if (index === -1) {
-            const routes = [
-              ...state.routes.slice(0, -1),
-              {
-                key: `${action.payload.name}-${nanoid()}`,
-                name: action.payload.name,
-                params:
-                  routeParamList[action.payload.name] !== undefined
-                    ? {
-                        ...routeParamList[action.payload.name],
-                        ...action.payload.params,
-                      }
-                    : action.payload.params,
-              },
-            ];
+            // Re-use preloaded route if available
+            let route = state.preloadedRoutes.find(
+              (route) =>
+                route.name === action.payload.name &&
+                id === getId?.({ params: route.params })
+            );
+
+            if (!route) {
+              route = createRouteFromAction({ action, routeParamList });
+            }
+
+            const routes = state.routes.slice(0, currentIndex).concat(route);
 
             return {
               ...state,
-              routes,
               index: routes.length - 1,
+              routes,
+              preloadedRoutes: state.preloadedRoutes.filter(
+                (r) => r.key !== route.key
+              ),
             };
           }
 
@@ -556,13 +619,7 @@ export function StackRouter(options: StackRouterOptions) {
                   }
                 : route.params;
           } else {
-            params =
-              routeParamList[route.name] !== undefined
-                ? {
-                    ...routeParamList[route.name],
-                    ...action.payload.params,
-                  }
-                : action.payload.params;
+            params = createParamsFromAction({ action, routeParamList });
           }
 
           return {
@@ -578,7 +635,7 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         case 'GO_BACK':
-          if (state.index > 0) {
+          if (state.index > 0 || state.routes[state.index].history?.length) {
             return router.getStateForAction(
               state,
               {
@@ -616,13 +673,7 @@ export function StackRouter(options: StackRouterOptions) {
                 }
                 return {
                   ...r,
-                  params:
-                    routeParamList[action.payload.name] !== undefined
-                      ? {
-                          ...routeParamList[action.payload.name],
-                          ...action.payload.params,
-                        }
-                      : action.payload.params,
+                  params: createParamsFromAction({ action, routeParamList }),
                 };
               }),
             };
@@ -635,17 +686,7 @@ export function StackRouter(options: StackRouterOptions) {
                     r.name !== action.payload.name ||
                     id !== getId?.({ params: r.params })
                 )
-                .concat({
-                  key: `${action.payload.name}-${nanoid()}`,
-                  name: action.payload.name,
-                  params:
-                    routeParamList[action.payload.name] !== undefined
-                      ? {
-                          ...routeParamList[action.payload.name],
-                          ...action.payload.params,
-                        }
-                      : action.payload.params,
-                }),
+                .concat(createRouteFromAction({ action, routeParamList })),
             };
           }
         }

@@ -27,23 +27,25 @@
   "engines": {
     "node": "^22.12.0"
   },
-  "packageManager": "yarn@4.9.1",
+  "packageManager": "yarn@4.10.3",
   "devDependencies": {
+    "@babel/core": "^7.28.4",
     "@commitlint/config-conventional": "^19.8.1",
     "@evilmartians/lefthook": "^1.11.13",
     "@lerna-lite/cli": "^4.4.1",
     "@lerna-lite/publish": "^4.4.1",
     "@lerna-lite/run": "^4.4.1",
-    "@react-native/babel-preset": "^0.79.3",
+    "@react-native/babel-preset": "0.81.1",
+    "@types/babel__core": "^7",
     "check-dependency-version-consistency": "^5.0.0",
     "commitlint": "^19.8.1",
     "eslint": "^9.29.0",
-    "eslint-config-satya164": "^5.1.5",
+    "eslint-config-satya164": "^5.1.6",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "jest": "^30.0.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.5.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "resolutions": {
     "pretty-format": "^29.7.0"
@@ -55,9 +57,10 @@
       "<rootDir>/jest/setup.js"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?@react-native|react-native|react-native-reanimated|react-native-gesture-handler|react-native-safe-area-context)/)"
+      "node_modules/(?!((jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context)/)"
     ],
     "moduleNameMapper": {
+      "@react-navigation/elements/internal": "<rootDir>/packages/elements/src/internal",
       "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src",
       "react-native-drawer-layout": "<rootDir>/packages/react-native-drawer-layout/src",
       "react-native-tab-view": "<rootDir>/packages/react-native-tab-view/src"

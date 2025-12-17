@@ -1,5 +1,9 @@
 import { Button, Text } from '@react-navigation/elements';
-import { useTheme } from '@react-navigation/native';
+import {
+  type NavigatorScreenParams,
+  type StaticScreenProps,
+  useTheme,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   type StackScreenProps,
@@ -18,16 +22,18 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type TransparentStackParams = {
+type TransparentStackParamList = {
   Article: { author: string };
   NewsFeed: undefined;
   Dialog: undefined;
 };
 
 const linking = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-  Dialog: 'dialog',
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Dialog: 'dialog',
+  },
 };
 
 const scrollEnabled = Platform.select({ web: true, default: false });
@@ -35,7 +41,7 @@ const scrollEnabled = Platform.select({ web: true, default: false });
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<TransparentStackParams, 'Article'>) => {
+}: StackScreenProps<TransparentStackParamList, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -59,7 +65,7 @@ const ArticleScreen = ({
 
 const NewsFeedScreen = ({
   navigation,
-}: StackScreenProps<TransparentStackParams, 'NewsFeed'>) => {
+}: StackScreenProps<TransparentStackParamList, 'NewsFeed'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -77,7 +83,7 @@ const NewsFeedScreen = ({
 
 const DialogScreen = ({
   navigation,
-}: StackScreenProps<TransparentStackParams>) => {
+}: StackScreenProps<TransparentStackParamList>) => {
   const { colors } = useTheme();
   const { current } = useCardAnimation();
 
@@ -104,7 +110,8 @@ const DialogScreen = ({
           },
         ]}
       >
-        <Text style={styles.paragraph}>
+        <Text style={styles.title}>Trivia</Text>
+        <Text>
           Mise en place is a French term that literally means “put in place.” It
           also refers to a way cooks in professional kitchens and restaurants
           set up their work stations—first by gathering all ingredients for a
@@ -127,9 +134,11 @@ const DialogScreen = ({
   );
 };
 
-const Stack = createStackNavigator<TransparentStackParams>();
+const Stack = createStackNavigator<TransparentStackParamList>();
 
-export function StackTransparent() {
+export function StackTransparent(
+  _: StaticScreenProps<NavigatorScreenParams<TransparentStackParamList>>
+) {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -170,7 +179,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   dialog: {
-    padding: 8,
+    padding: 24,
+    gap: 24,
     width: '90%',
     maxWidth: 400,
     borderRadius: 3,
@@ -178,8 +188,9 @@ const styles = StyleSheet.create({
   backdrop: {
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
-  paragraph: {
-    padding: 16,
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   close: {
     alignSelf: 'flex-end',

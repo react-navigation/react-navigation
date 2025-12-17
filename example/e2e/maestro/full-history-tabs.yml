@@ -1,11 +1,11 @@
 appId: ${APP_ID}
 name: Full History Tabs
 ---
-- openLink:
-    link: ${APP_SCHEME}full-history-tabs
-- extendedWaitUntil:
-    visible: 'Tab First (-)'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: full-history-tabs
+      TEXT: 'Tab First (-)'
 - tapOn:
     text: 'Navigate to Second'
 - assertVisible:

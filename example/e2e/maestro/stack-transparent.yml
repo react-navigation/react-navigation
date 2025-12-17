@@ -1,8 +1,28 @@
 appId: ${APP_ID}
 name: Stack Transparent
 ---
-- openLink:
-    link: ${APP_SCHEME}stack-transparent
-- extendedWaitUntil:
-    visible: 'Article'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-transparent
+      TEXT: 'Article'
+- tapOn:
+    text: 'Show Dialog'
+- assertVisible:
+    text: 'Trivia'
+- tapOn:
+    text: 'Okay'
+- assertNotVisible:
+    text: 'Trivia'
+- tapOn:
+    text: 'Push NewsFeed'
+- assertVisible:
+    text: 'NewsFeed'
+- tapOn:
+    text: 'Show Dialog'
+- assertVisible:
+    text: 'Trivia'
+- tapOn:
+    text: 'Okay'
+- assertNotVisible:
+    text: 'Trivia'

@@ -1,7 +1,10 @@
+import { Badge } from '@react-navigation/elements';
+import { MissingIcon } from '@react-navigation/elements/internal';
 import type { Route } from '@react-navigation/native';
 import React from 'react';
 import {
   type ColorValue,
+  Image,
   type StyleProp,
   StyleSheet,
   type TextStyle,
@@ -9,9 +12,9 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { Badge } from './Badge';
+import type { BottomTabIcon } from '../types';
 
-type Props = {
+export type TabBarIconProps = {
   route: Route<string>;
   variant: 'uikit' | 'material';
   size: 'compact' | 'regular';
@@ -21,11 +24,13 @@ type Props = {
   inactiveOpacity: number;
   activeTintColor: ColorValue;
   inactiveTintColor: ColorValue;
-  renderIcon: (props: {
-    focused: boolean;
-    color: ColorValue;
-    size: number;
-  }) => React.ReactNode;
+  icon:
+    | BottomTabIcon
+    | ((props: {
+        focused: boolean;
+        color: ColorValue;
+        size: number;
+      }) => BottomTabIcon | React.ReactNode);
   allowFontScaling?: boolean;
   style: StyleProp<ViewStyle>;
 };
@@ -52,10 +57,10 @@ export function TabBarIcon({
   inactiveOpacity,
   activeTintColor,
   inactiveTintColor,
-  renderIcon,
+  icon,
   allowFontScaling,
   style,
-}: Props) {
+}: TabBarIconProps) {
   const iconSize =
     variant === 'material'
       ? ICON_SIZE_MATERIAL
@@ -90,6 +95,7 @@ export function TabBarIcon({
           focused: true,
           size: iconSize,
           color: activeTintColor,
+          icon,
         })}
       </View>
       <View style={[styles.icon, { opacity: inactiveOpacity }]}>
@@ -97,6 +103,7 @@ export function TabBarIcon({
           focused: false,
           size: iconSize,
           color: inactiveTintColor,
+          icon,
         })}
       </View>
       <Badge
@@ -109,6 +116,50 @@ export function TabBarIcon({
       </Badge>
     </View>
   );
+}
+
+function renderIcon({
+  focused,
+  size,
+  color,
+  icon,
+}: {
+  focused: boolean;
+  size: number;
+  color: ColorValue;
+  icon: TabBarIconProps['icon'];
+}) {
+  const iconValue =
+    typeof icon === 'function' ? icon({ focused, size, color }) : icon;
+
+  if (React.isValidElement(iconValue)) {
+    return iconValue;
+  }
+
+  if (
+    typeof iconValue === 'object' &&
+    iconValue != null &&
+    'type' in iconValue
+  ) {
+    if (iconValue?.type === 'image') {
+      return (
+        <Image
+          source={iconValue.source}
+          style={{
+            width: size,
+            height: size,
+            tintColor: iconValue.tinted === false ? undefined : color,
+          }}
+        />
+      );
+    } else {
+      throw new Error(
+        `Icon type '${iconValue.type}' is not supported in 'custom' implementation.`
+      );
+    }
+  }
+
+  return <MissingIcon color={color} size={size} />;
 }
 
 const styles = StyleSheet.create({

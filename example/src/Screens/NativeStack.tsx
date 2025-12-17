@@ -1,39 +1,61 @@
-import { Button, Text, useHeaderHeight } from '@react-navigation/elements';
-import { type PathConfigMap, useTheme } from '@react-navigation/native';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import {
+  Button,
+  HeaderButton,
+  Text,
+  useHeaderHeight,
+} from '@react-navigation/elements';
+import {
+  type NavigatorScreenParams,
+  type PathConfig,
+  type StaticScreenProps,
+  useTheme,
+} from '@react-navigation/native';
 import {
   createNativeStackNavigator,
+  type NativeStackHeaderItem,
   type NativeStackScreenProps,
   useAnimatedHeaderHeight,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
-import { Animated, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Alert,
+  Animated,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 
+import userRoundPlus from '../../assets/icons/user-round-plus.png';
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type NativeStackParams = {
+export type NativeStackParamList = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Contacts: undefined;
   Albums: undefined;
 };
 
-const linking: PathConfigMap<NativeStackParams> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-  Contacts: 'contacts',
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Contacts: 'contacts',
+    Albums: 'albums',
+  },
+} satisfies PathConfig<NavigatorScreenParams<NativeStackParamList>>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: NativeStackScreenProps<NativeStackParams, 'Article'>) => {
+}: NativeStackScreenProps<NativeStackParamList, 'Article'>) => {
   return (
     <View style={styles.container}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
@@ -69,7 +91,7 @@ const ArticleScreen = ({
           scrollEnabled={scrollEnabled}
         />
       </ScrollView>
-      <HeaderHeightView />
+      <HeaderHeightView hasOffset={Platform.OS === 'ios'} />
     </View>
   );
 };
@@ -77,7 +99,7 @@ const ArticleScreen = ({
 const NewsFeedScreen = ({
   route,
   navigation,
-}: NativeStackScreenProps<NativeStackParams, 'NewsFeed'>) => {
+}: NativeStackScreenProps<NativeStackParamList, 'NewsFeed'>) => {
   return (
     <View style={styles.container}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
@@ -94,14 +116,14 @@ const NewsFeedScreen = ({
         </View>
         <NewsFeed scrollEnabled={scrollEnabled} date={route.params.date} />
       </ScrollView>
-      <HeaderHeightView />
+      <HeaderHeightView hasOffset={false} />
     </View>
   );
 };
 
 const ContactsScreen = ({
   navigation,
-}: NativeStackScreenProps<NativeStackParams, 'Contacts'>) => {
+}: NativeStackScreenProps<NativeStackParamList, 'Contacts'>) => {
   const [query, setQuery] = React.useState('');
 
   React.useLayoutEffect(() => {
@@ -109,7 +131,7 @@ const ContactsScreen = ({
       headerSearchBarOptions: {
         placeholder: 'Filter contacts',
         placement: 'inline',
-        onChangeText: (e) => {
+        onChange: (e) => {
           setQuery(e.nativeEvent.text);
         },
       },
@@ -136,7 +158,7 @@ const ContactsScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: NativeStackScreenProps<NativeStackParams, 'Albums'>) => {
+}: NativeStackScreenProps<NativeStackParamList, 'Albums'>) => {
   const headerHeight = useHeaderHeight();
 
   return (
@@ -160,11 +182,7 @@ const AlbumsScreen = ({
   );
 };
 
-const HeaderHeightView = ({
-  hasOffset = Platform.OS === 'ios',
-}: {
-  hasOffset?: boolean;
-}) => {
+const HeaderHeightView = ({ hasOffset }: { hasOffset: boolean }) => {
   const { colors } = useTheme();
 
   const animatedHeaderHeight = useAnimatedHeaderHeight();
@@ -188,9 +206,11 @@ const HeaderHeightView = ({
   );
 };
 
-const Stack = createNativeStackNavigator<NativeStackParams>();
+const Stack = createNativeStackNavigator<NativeStackParamList>();
 
-export function NativeStack() {
+export function NativeStack(
+  _: StaticScreenProps<NavigatorScreenParams<NativeStackParamList>>
+) {
   const { colors } = useTheme();
 
   return (
@@ -198,11 +218,119 @@ export function NativeStack() {
       <Stack.Screen
         name="Article"
         component={ArticleScreen}
-        options={({ route }) => ({
-          title: `Article by ${route.params?.author ?? 'Unknown'}`,
-          headerLargeTitle: true,
-          headerLargeTitleShadowVisible: false,
-        })}
+        options={({ route, navigation }) => {
+          const leftItems: NativeStackHeaderItem[] = [
+            {
+              type: 'button',
+              label: 'Back',
+              onPress: () => navigation.goBack(),
+            },
+          ];
+
+          const rightItems: NativeStackHeaderItem[] = [
+            {
+              type: 'button',
+              label: 'Follow',
+              icon: {
+                type: 'image',
+                source: userRoundPlus,
+              },
+              onPress: () => Alert.alert('Follow button pressed'),
+            },
+            {
+              type: 'button',
+              label: 'Favorite',
+              icon: {
+                type: 'sfSymbol',
+                name: 'heart',
+              },
+              onPress: () => Alert.alert('Favorite button pressed'),
+            },
+            {
+              type: 'menu',
+              label: 'Options',
+              icon: {
+                type: 'sfSymbol',
+                name: 'ellipsis',
+              },
+              badge: {
+                value: 3,
+              },
+              menu: {
+                title: 'Article options',
+                items: [
+                  {
+                    type: 'action',
+                    label: 'Share',
+                    onPress: () => Alert.alert('Share pressed'),
+                  },
+                  {
+                    type: 'action',
+                    label: 'Delete',
+                    destructive: true,
+                    onPress: () => Alert.alert('Delete pressed'),
+                  },
+                  {
+                    type: 'action',
+                    label: 'Report',
+                    destructive: true,
+                    onPress: () => Alert.alert('Report pressed'),
+                  },
+                  {
+                    type: 'submenu',
+                    label: 'View history',
+                    items: [
+                      {
+                        type: 'action',
+                        label: 'Version 1.0',
+                        icon: {
+                          type: 'sfSymbol',
+                          name: 'checkmark',
+                        },
+                        onPress: () => Alert.alert('View version 1.0'),
+                      },
+                      {
+                        type: 'action',
+                        label: 'Version 0.9',
+                        onPress: () => Alert.alert('View version 0.9'),
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+            {
+              type: 'custom',
+              element: (
+                <HeaderButton onPress={() => Alert.alert('Info pressed')}>
+                  <MaterialCommunityIcons
+                    name="information-outline"
+                    size={28}
+                  />
+                </HeaderButton>
+              ),
+            },
+          ];
+
+          return {
+            title: `Article by ${route.params?.author ?? 'Unknown'}`,
+            headerLargeTitleEnabled: true,
+            headerLargeTitleShadowVisible: false,
+            headerRight: ({ tintColor }) => (
+              <HeaderButton
+                onPress={() => Alert.alert('Favorite button pressed')}
+              >
+                <MaterialCommunityIcons
+                  name="heart"
+                  size={24}
+                  color={tintColor}
+                />
+              </HeaderButton>
+            ),
+            unstable_headerLeftItems: () => leftItems,
+            unstable_headerRightItems: () => rightItems,
+          };
+        }}
         initialParams={{ author: 'Gandalf' }}
       />
       <Stack.Screen

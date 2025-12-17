@@ -1,4 +1,5 @@
-import type { Theme } from '../types';
+import type { Theme } from '@react-navigation/core';
+
 import { fonts } from './fonts';
 
 export const DefaultTheme = {
@@ -8,7 +9,7 @@ export const DefaultTheme = {
     background: 'rgb(242, 242, 242)',
     card: 'rgb(255, 255, 255)',
     text: 'rgb(28, 28, 30)',
-    border: 'rgb(216, 216, 216)',
+    border: 'rgb(178, 178, 178)',
     notification: 'rgb(255, 59, 48)',
   },
   fonts,

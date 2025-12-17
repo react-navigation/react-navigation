@@ -1,7 +1,5 @@
-import {
-  getDefaultHeaderHeight,
-  SafeAreaProviderCompat,
-} from '@react-navigation/elements';
+import { getDefaultHeaderHeight } from '@react-navigation/elements';
+import { SafeAreaProviderCompat } from '@react-navigation/elements/internal';
 import type {
   LocaleDirection,
   ParamListBase,
@@ -90,6 +88,7 @@ type State = {
   scenes: Scene[];
   gestures: GestureValues;
   layout: Layout;
+  activeStates: (0 | 1 | Animated.AnimatedInterpolation<0 | 1>)[];
   headerHeights: Record<string, number>;
 };
 
@@ -372,10 +371,10 @@ export class CardStack extends React.Component<Props, State> {
         const transitionPreset =
           animation !== 'default'
             ? NAMED_TRANSITIONS_PRESETS[animation]
-            : isModal || optionsForTransitionConfig.presentation === 'modal'
-              ? ModalTransition
-              : optionsForTransitionConfig.presentation === 'transparentModal'
-                ? ModalFadeTransition
+            : optionsForTransitionConfig.presentation === 'transparentModal'
+              ? ModalFadeTransition
+              : optionsForTransitionConfig.presentation === 'modal' || isModal
+                ? ModalTransition
                 : DefaultTransition;
 
         const {
@@ -473,11 +472,88 @@ export class CardStack extends React.Component<Props, State> {
       }
     );
 
+    let activeStates = state.activeStates;
+
+    if (props.routes.length !== state.routes.length) {
+      let activeScreensLimit = 1;
+
+      for (let i = props.routes.length - 1; i >= 0; i--) {
+        const { options } = scenes[i].descriptor;
+
+        const {
+          // By default, we don't want to detach the previous screen of the active one for modals
+          detachPreviousScreen = options.presentation === 'transparentModal'
+            ? false
+            : getIsModalPresentation(options.cardStyleInterpolator)
+              ? i !==
+                findLastIndex(scenes, (scene) => {
+                  const { cardStyleInterpolator } = scene.descriptor.options;
+
+                  return (
+                    cardStyleInterpolator === forModalPresentationIOS ||
+                    cardStyleInterpolator?.name === 'forModalPresentationIOS'
+                  );
+                })
+              : true,
+        } = options;
+
+        if (detachPreviousScreen === false) {
+          activeScreensLimit++;
+        } else {
+          // Check at least last 2 screens before stopping
+          // This will make sure that screen isn't detached when another screen is animating on top of the transparent one
+          // e.g. opaque -> transparent -> opaque
+          if (i <= props.routes.length - 2) {
+            break;
+          }
+        }
+      }
+
+      activeStates = props.routes.map((_, index, self) => {
+        // The activity state represents state of the screen:
+        // 0 - inactive, the screen is detached
+        // 1 - transitioning or below the top screen, the screen is mounted but interaction is disabled
+        // 2 - on top of the stack, the screen is mounted and interaction is enabled
+        let activityState:
+          | Animated.AnimatedInterpolation<0 | 1 | 2>
+          | 0
+          | 1
+          | 2;
+
+        const lastActiveState = state.activeStates[index];
+        const activeAfterTransition = index >= self.length - activeScreensLimit;
+
+        if (lastActiveState === STATE_INACTIVE && !activeAfterTransition) {
+          // screen was inactive before and it will still be inactive after the transition
+          activityState = STATE_INACTIVE;
+        } else {
+          const sceneForActivity = scenes[self.length - 1];
+          const outputValue =
+            index === self.length - 1
+              ? STATE_ON_TOP // the screen is on top after the transition
+              : activeAfterTransition
+                ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
+                : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
+
+          activityState = sceneForActivity
+            ? sceneForActivity.progress.current.interpolate({
+                inputRange: [0, 1 - EPSILON, 1],
+                outputRange: [1, 1, outputValue],
+                extrapolate: 'clamp',
+              })
+            : STATE_TRANSITIONING_OR_BELOW_TOP;
+        }
+
+        return activityState;
+      });
+    }
+
     return {
       routes: props.routes,
       scenes,
       gestures,
       descriptors: props.descriptors,
+      activeStates,
       headerHeights: getHeaderHeights(
         scenes,
         props.insets,
@@ -498,6 +574,7 @@ export class CardStack extends React.Component<Props, State> {
       gestures: {},
       layout: SafeAreaProviderCompat.initialMetrics.frame,
       descriptors: this.props.descriptors,
+      activeStates: [],
       // Used when card's header is null and mode is float to make transition
       // between screens with headers and those without headers smooth.
       // This is not a great heuristic here. We don't know synchronously
@@ -599,12 +676,12 @@ export class CardStack extends React.Component<Props, State> {
         Platform.OS === 'ios',
     } = this.props;
 
-    const { scenes, layout, gestures, headerHeights } = this.state;
+    const { scenes, layout, gestures, activeStates, headerHeights } =
+      this.state;
 
     const focusedRoute = state.routes[state.index];
-    const focusedHeaderHeight = headerHeights[focusedRoute.key];
 
-    const isFloatHeaderAbsolute = this.state.scenes.slice(-2).some((scene) => {
+    const isFloatHeaderAbsolute = scenes.slice(-2).some((scene) => {
       const options = scene.descriptor.options ?? {};
       const { headerMode, headerTransparent, headerShown = true } = options;
 
@@ -619,41 +696,12 @@ export class CardStack extends React.Component<Props, State> {
       return false;
     });
 
-    let activeScreensLimit = 1;
+    const isFloatHeaderFocused =
+      scenes.findLast((scene) => scene.route.key === focusedRoute.key)
+        ?.descriptor.options.headerMode === 'float';
 
-    for (let i = scenes.length - 1; i >= 0; i--) {
-      const { options } = scenes[i].descriptor;
-      const {
-        // By default, we don't want to detach the previous screen of the active one for modals
-        detachPreviousScreen = options.presentation === 'transparentModal'
-          ? false
-          : getIsModalPresentation(options.cardStyleInterpolator)
-            ? i !==
-              findLastIndex(scenes, (scene) => {
-                const { cardStyleInterpolator } = scene.descriptor.options;
-
-                return (
-                  cardStyleInterpolator === forModalPresentationIOS ||
-                  cardStyleInterpolator?.name === 'forModalPresentationIOS'
-                );
-              })
-            : true,
-      } = options;
-
-      if (detachPreviousScreen === false) {
-        activeScreensLimit++;
-      } else {
-        // Check at least last 2 screens before stopping
-        // This will make sure that screen isn't detached when another screen is animating on top of the transparent one
-        // For example, (Opaque -> Transparent -> Opaque)
-        if (i <= scenes.length - 2) {
-          break;
-        }
-      }
-    }
-
-    const floatingHeader = (
-      <React.Fragment key="header">
+    return (
+      <View style={styles.container}>
         {renderHeader({
           mode: 'float',
           scenes,
@@ -661,20 +709,16 @@ export class CardStack extends React.Component<Props, State> {
           getFocusedRoute: this.getFocusedRoute,
           onContentHeightChange: this.handleHeaderLayout,
           style: [
-            styles.floating,
             isFloatHeaderAbsolute && [
-              // Without this, the header buttons won't be touchable on Android when headerTransparent: true
-              { height: focusedHeaderHeight },
               styles.absolute,
+              // The header title can't be found with maestro without this
+              // In some cases, header buttons may not be touchable as well
+              isFloatHeaderFocused && {
+                height: headerHeights[focusedRoute.key],
+              },
             ],
           ],
         })}
-      </React.Fragment>
-    );
-
-    return (
-      <View style={styles.container}>
-        {isFloatHeaderAbsolute ? null : floatingHeader}
         <ScreenContainer
           enabled={detachInactiveScreens}
           style={styles.container}
@@ -696,36 +740,6 @@ export class CardStack extends React.Component<Props, State> {
               index >= routes.length
             ) {
               return null;
-            }
-
-            // For the screens that shouldn't be active, the value is 0
-            // For those that should be active, but are not the top screen, the value is 1
-            // For those on top of the stack and with interaction enabled, the value is 2
-            // For the old implementation, it stays the same it was
-            let activityState:
-              | Animated.AnimatedInterpolation<0 | 1 | 2>
-              | 0
-              | 1
-              | 2 = 1;
-
-            if (index < routes.length - activeScreensLimit - 1 || isPreloaded) {
-              // screen should be inactive because it is too deep in the stack
-              activityState = STATE_INACTIVE;
-            } else {
-              const sceneForActivity = scenes[routes.length - 1];
-              const outputValue =
-                index === routes.length - 1
-                  ? STATE_ON_TOP // the screen is on top after the transition
-                  : index >= routes.length - activeScreensLimit
-                    ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
-                    : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
-              activityState = sceneForActivity
-                ? sceneForActivity.progress.current.interpolate({
-                    inputRange: [0, 1 - EPSILON, 1],
-                    outputRange: [1, 1, outputValue],
-                    extrapolate: 'clamp',
-                  })
-                : STATE_TRANSITIONING_OR_BELOW_TOP;
             }
 
             const {
@@ -758,6 +772,10 @@ export class CardStack extends React.Component<Props, State> {
             const detachCurrentScreen =
               scenes[index + 1]?.descriptor.options.detachPreviousScreen !==
               false;
+
+            const activityState = isPreloaded
+              ? STATE_INACTIVE
+              : activeStates[index];
 
             return (
               <Screen
@@ -808,7 +826,6 @@ export class CardStack extends React.Component<Props, State> {
             );
           })}
         </ScreenContainer>
-        {isFloatHeaderAbsolute ? floatingHeader : null}
       </View>
     );
   }
@@ -823,8 +840,6 @@ const styles = StyleSheet.create({
     top: 0,
     start: 0,
     end: 0,
-  },
-  floating: {
     zIndex: 1,
   },
 });

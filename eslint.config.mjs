@@ -22,28 +22,14 @@ export default defineConfig([
       'simple-import-sort': sort,
     },
 
-    settings: {
-      'import-x/core-modules': [
-        '@react-navigation/core',
-        '@react-navigation/native',
-        '@react-navigation/routers',
-        '@react-navigation/stack',
-        '@react-navigation/native-stack',
-        '@react-navigation/drawer',
-        '@react-navigation/bottom-tabs',
-        '@react-navigation/material-top-tabs',
-        '@react-navigation/elements',
-        '@react-navigation/devtools',
-        'react-native-drawer-layout',
-        'react-native-tab-view',
-      ],
-    },
-
     rules: {
       'no-restricted-imports': [
         'error',
         {
-          patterns: ['@react-navigation/*/*'],
+          patterns: [
+            '@react-navigation/*/*',
+            '!@react-navigation/elements/internal',
+          ],
 
           paths: [
             {

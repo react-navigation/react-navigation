@@ -8,24 +8,31 @@ import {
   Header as NavigationHeader,
   HeaderBackButton,
 } from '@react-navigation/elements';
-import { type PathConfigMap, useNavigation } from '@react-navigation/native';
+import {
+  type NavigatorScreenParams,
+  type PathConfig,
+  type StaticScreenProps,
+  useNavigation,
+} from '@react-navigation/native';
 import { useWindowDimensions } from 'react-native';
 
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type MasterDetailParams = {
+type MasterDetailParamList = {
   Article: undefined;
   NewsFeed: undefined;
   Albums: undefined;
 };
 
-const linking: PathConfigMap<MasterDetailParams> = {
-  Article: 'article',
-  NewsFeed: 'feed',
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: 'article',
+    NewsFeed: 'feed',
+    Albums: 'albums',
+  },
+} satisfies PathConfig<NavigatorScreenParams<MasterDetailParamList>>;
 
 const useIsLargeScreen = () => {
   const dimensions = useWindowDimensions();
@@ -56,7 +63,7 @@ const Header = ({
 
 const ArticleScreen = ({
   navigation,
-}: DrawerScreenProps<MasterDetailParams, 'Article'>) => {
+}: DrawerScreenProps<MasterDetailParamList, 'Article'>) => {
   return (
     <>
       <Header title="Article" onGoBack={() => navigation.toggleDrawer()} />
@@ -67,7 +74,7 @@ const ArticleScreen = ({
 
 const NewsFeedScreen = ({
   navigation,
-}: DrawerScreenProps<MasterDetailParams, 'NewsFeed'>) => {
+}: DrawerScreenProps<MasterDetailParamList, 'NewsFeed'>) => {
   return (
     <>
       <Header title="Feed" onGoBack={() => navigation.toggleDrawer()} />
@@ -78,7 +85,7 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: DrawerScreenProps<MasterDetailParams, 'Albums'>) => {
+}: DrawerScreenProps<MasterDetailParamList, 'Albums'>) => {
   return (
     <>
       <Header title="Albums" onGoBack={() => navigation.toggleDrawer()} />
@@ -103,9 +110,11 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   );
 };
 
-const Drawer = createDrawerNavigator<MasterDetailParams>();
+const Drawer = createDrawerNavigator<MasterDetailParamList>();
 
-export function MasterDetail() {
+export function MasterDetail(
+  _: StaticScreenProps<NavigatorScreenParams<MasterDetailParamList>>
+) {
   const isLargeScreen = useIsLargeScreen();
 
   return (

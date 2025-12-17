@@ -1,7 +1,6 @@
 import type {
   InitialState,
   NavigationState,
-  ParamListBase,
   PartialState,
 } from '@react-navigation/routers';
 import escape from 'escape-string-regexp';
@@ -20,7 +19,7 @@ type Options<ParamList extends {}> = {
   screens: PathConfigMap<ParamList>;
 };
 
-type ParseConfig = Record<string, (value: string) => unknown>;
+type ParseConfig = Record<string, ((value: string) => unknown) | undefined>;
 
 type RouteConfig = {
   screen: string;
@@ -213,7 +212,7 @@ function getInitialRoutes(options?: Options<{}>) {
 
 function getSortedNormalizedConfigs(
   initialRoutes: InitialRouteConfig[],
-  screens: Record<string, string | PathConfig<ParamListBase>> = {}
+  screens: Record<string, string | PathConfig<{}>> = {}
 ) {
   // Create a normalized configs array which will be easier to use
   return ([] as RouteConfig[])
@@ -418,7 +417,7 @@ const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
 
 const createNormalizedConfigs = (
   screen: string,
-  routeConfig: Record<string, string | PathConfig<ParamListBase>>,
+  routeConfig: Record<string, string | PathConfig<{}>>,
   initials: InitialRouteConfig[],
   paths: { screen: string; path: string }[],
   parentScreens: string[],
@@ -500,9 +499,12 @@ const createNormalizedConfigs = (
       );
     }
 
-    if (config.screens) {
+    if ('screens' in config && config.screens) {
       // property `initialRouteName` without `screens` has no purpose
-      if (config.initialRouteName) {
+      if (
+        'initialRouteName' in config &&
+        typeof config.initialRouteName === 'string'
+      ) {
         initials.push({
           initialRouteName: config.initialRouteName,
           parentScreens,
@@ -512,7 +514,7 @@ const createNormalizedConfigs = (
       Object.keys(config.screens).forEach((nestedConfig) => {
         const result = createNormalizedConfigs(
           nestedConfig,
-          config.screens as Record<string, string | PathConfig<ParamListBase>>,
+          config.screens as Record<string, string | PathConfig<{}>>,
           initials,
           [...paths],
           [...parentScreens],
@@ -709,10 +711,7 @@ const createNestedStateObject = (
   return state;
 };
 
-const parseQueryParams = (
-  path: string,
-  parseConfig?: Record<string, (value: string) => unknown>
-) => {
+const parseQueryParams = (path: string, parseConfig?: ParseConfig) => {
   const query = path.split('?')[1];
   const params: Record<string, unknown> = queryString.parse(query);
 
@@ -720,6 +719,7 @@ const parseQueryParams = (
     Object.keys(params).forEach((name) => {
       if (
         Object.hasOwnProperty.call(parseConfig, name) &&
+        parseConfig[name] &&
         typeof params[name] === 'string'
       ) {
         params[name] = parseConfig[name](params[name]);

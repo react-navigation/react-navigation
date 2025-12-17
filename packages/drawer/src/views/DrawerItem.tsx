@@ -1,4 +1,5 @@
-import { Color, PlatformPressable, Text } from '@react-navigation/elements';
+import { PlatformPressable, Text } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import { type Route, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -175,22 +176,26 @@ export function DrawerItem(props: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: Platform.select({
-    android: {
-      // Hide overflow to clip ripple effect
-      overflow: 'hidden',
-    },
-    default: {
-      // Don't hide overflow on web
-      // Otherwise the outline gets clipped
-    },
-  }),
+  container: {
+    borderCurve: 'continuous',
+    ...Platform.select({
+      android: {
+        // Hide overflow to clip ripple effect
+        overflow: 'hidden',
+      },
+      default: {
+        // Don't hide overflow on web
+        // Otherwise the outline gets clipped
+      },
+    }),
+  },
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 11,
     paddingStart: 16,
     paddingEnd: 24,
+    borderCurve: 'continuous',
   },
   label: {
     marginEnd: 12,

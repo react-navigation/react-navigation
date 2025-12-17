@@ -12,30 +12,30 @@ import {
 
 /* eslint-disable import-x/no-commonjs */
 const COVERS = [
-  require('../../assets/album-art-01.jpg'),
-  require('../../assets/album-art-02.jpg'),
-  require('../../assets/album-art-03.jpg'),
-  require('../../assets/album-art-04.jpg'),
-  require('../../assets/album-art-05.jpg'),
-  require('../../assets/album-art-06.jpg'),
-  require('../../assets/album-art-07.jpg'),
-  require('../../assets/album-art-08.jpg'),
-  require('../../assets/album-art-09.jpg'),
-  require('../../assets/album-art-10.jpg'),
-  require('../../assets/album-art-11.jpg'),
-  require('../../assets/album-art-12.jpg'),
-  require('../../assets/album-art-13.jpg'),
-  require('../../assets/album-art-14.jpg'),
-  require('../../assets/album-art-15.jpg'),
-  require('../../assets/album-art-16.jpg'),
-  require('../../assets/album-art-17.jpg'),
-  require('../../assets/album-art-18.jpg'),
-  require('../../assets/album-art-19.jpg'),
-  require('../../assets/album-art-20.jpg'),
-  require('../../assets/album-art-21.jpg'),
-  require('../../assets/album-art-22.jpg'),
-  require('../../assets/album-art-23.jpg'),
-  require('../../assets/album-art-24.jpg'),
+  require('../../assets/album-art/01.jpg'),
+  require('../../assets/album-art/02.jpg'),
+  require('../../assets/album-art/03.jpg'),
+  require('../../assets/album-art/04.jpg'),
+  require('../../assets/album-art/05.jpg'),
+  require('../../assets/album-art/06.jpg'),
+  require('../../assets/album-art/07.jpg'),
+  require('../../assets/album-art/08.jpg'),
+  require('../../assets/album-art/09.jpg'),
+  require('../../assets/album-art/10.jpg'),
+  require('../../assets/album-art/11.jpg'),
+  require('../../assets/album-art/12.jpg'),
+  require('../../assets/album-art/13.jpg'),
+  require('../../assets/album-art/14.jpg'),
+  require('../../assets/album-art/15.jpg'),
+  require('../../assets/album-art/16.jpg'),
+  require('../../assets/album-art/17.jpg'),
+  require('../../assets/album-art/18.jpg'),
+  require('../../assets/album-art/19.jpg'),
+  require('../../assets/album-art/20.jpg'),
+  require('../../assets/album-art/21.jpg'),
+  require('../../assets/album-art/22.jpg'),
+  require('../../assets/album-art/23.jpg'),
+  require('../../assets/album-art/24.jpg'),
 ];
 /* eslint-enable import-x/no-commonjs */
 
@@ -56,6 +56,7 @@ export function Albums(props: Partial<ScrollViewProps>) {
           <View
             // eslint-disable-next-line @eslint-react/no-array-index-key
             key={i}
+            testID={`album-${i}`}
             style={[
               styles.item,
               Platform.OS !== 'web' && {

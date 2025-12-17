@@ -1,4 +1,5 @@
-import { Color, Text } from '@react-navigation/elements';
+import { Text } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -49,8 +50,8 @@ export function Chat({
                 style={styles.avatar}
                 source={
                   odd
-                    ? require('../../assets/avatar-2.png')
-                    : require('../../assets/avatar-1.png')
+                    ? require('../../assets/misc/avatar-2.png')
+                    : require('../../assets/misc/avatar-1.png')
                 }
               />
               <View

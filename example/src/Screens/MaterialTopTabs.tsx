@@ -1,27 +1,34 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  NavigatorScreenParams,
+  PathConfig,
+  StaticScreenProps,
+} from '@react-navigation/native';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
 
-export type MaterialTopTabParams = {
+type MaterialTopTabParamList = {
   Albums: undefined;
   Contacts: undefined;
   Chat: undefined;
 };
 
-const linking: PathConfigMap<MaterialTopTabParams> = {
-  Albums: 'albums',
-  Contacts: 'contacts',
-  Chat: 'chat',
-};
+const linking = {
+  screens: {
+    Albums: 'albums',
+    Contacts: 'contacts',
+    Chat: 'chat',
+  },
+} satisfies PathConfig<NavigatorScreenParams<MaterialTopTabParamList>>;
 
-const MaterialTopTabs = createMaterialTopTabNavigator<MaterialTopTabParams>();
+const MaterialTopTabs =
+  createMaterialTopTabNavigator<MaterialTopTabParamList>();
 
 const ChatScreen = () => <Chat bottom />;
 
-export function MaterialTopTabsScreen() {
+export function MaterialTopTabsScreen(_: StaticScreenProps<{}>) {
   return (
     <MaterialTopTabs.Navigator>
       <MaterialTopTabs.Screen

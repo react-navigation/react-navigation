@@ -2,8 +2,10 @@ import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
   Link,
-  type PathConfigMap,
+  type NavigatorScreenParams,
+  type PathConfig,
   StackActions,
+  type StaticScreenProps,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
@@ -15,15 +17,17 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-export type LinkComponentDemoParamList = {
+type LinkComponentDemoParamList = {
   Article: { author: string };
   Albums: undefined;
 };
 
-const linking: PathConfigMap<LinkComponentDemoParamList> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    Albums: 'albums',
+  },
+} satisfies PathConfig<NavigatorScreenParams<LinkComponentDemoParamList>>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
@@ -48,6 +52,7 @@ const ArticleScreen = ({
         <Button screen="Home" variant="filled">
           Go to Home
         </Button>
+
         <Button variant="tinted" action={CommonActions.goBack()}>
           Go back
         </Button>
@@ -61,7 +66,19 @@ const ArticleScreen = ({
             })
           }
         >
-          Update params
+          Replace params
+        </Button>
+
+        <Button
+          variant="tinted"
+          onPress={() =>
+            navigation.pushParams({
+              author:
+                route.params?.author === 'Gandalf' ? 'Babel fish' : 'Gandalf',
+            })
+          }
+        >
+          Push params
         </Button>
 
         {Platform.OS === 'web' && (
@@ -112,7 +129,9 @@ const AlbumsScreen = ({
 
 const SimpleStack = createStackNavigator<LinkComponentDemoParamList>();
 
-export function LinkComponent() {
+export function LinkComponent(
+  _: StaticScreenProps<NavigatorScreenParams<LinkComponentDemoParamList>>
+) {
   return (
     <SimpleStack.Navigator>
       <SimpleStack.Screen

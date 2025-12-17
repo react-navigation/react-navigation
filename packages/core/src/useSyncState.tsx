@@ -87,12 +87,6 @@ export function useSyncState<T>(getInitialState: () => T) {
     return unsubscribe;
   }, [store]);
 
-  if (state !== store.getState()) {
-    // If the state has changed since the last render, we need to update it.
-    // This could happen if we missed an update from the event listeners during re-render.
-    rerender();
-  }
-
   const pendingUpdatesRef = React.useRef<(() => void)[]>([]);
 
   const scheduleUpdate = useLatestCallback((callback: () => void) => {

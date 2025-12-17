@@ -1,0 +1,11 @@
+appId: ${APP_ID}
+---
+- stopApp
+- retry:
+    maxRetries: 3
+    commands:
+      - openLink:
+          link: ${APP_SCHEME}${LINK}
+      - extendedWaitUntil:
+          visible: ${TEXT}
+          timeout: 60000

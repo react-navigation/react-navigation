@@ -1,8 +1,24 @@
 appId: ${APP_ID}
 name: Mixed Header Mode
 ---
-- openLink:
-    link: ${APP_SCHEME}mixed-header-mode
-- extendedWaitUntil:
-    visible: 'Article by Gandalf'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: mixed-header-mode
+      TEXT: 'Article by Gandalf'
+- tapOn:
+    text: 'Push feed'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Navigate to albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Pop screen'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Pop screen'
+- assertVisible:
+    text: 'Article by Gandalf'

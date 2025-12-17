@@ -1304,3 +1304,324 @@ test("doesn't skip initial screen detection if parent has empty path", () => {
 }
 `);
 });
+
+test('adds group linking with string path', () => {
+  const Root = createTestNavigator({
+    groups: {
+      User: {
+        linking: 'users',
+        screens: {
+          Profile: {
+            screen: TestScreen,
+            linking: 'profile',
+          },
+          Settings: {
+            screen: TestScreen,
+            linking: 'settings/:tab',
+          },
+        },
+      },
+      Admin: {
+        linking: 'admin',
+        screens: {
+          Dashboard: {
+            screen: TestScreen,
+            linking: 'dashboard',
+          },
+          Reports: {
+            screen: TestScreen,
+            linking: 'reports',
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  expect(screens).toMatchInlineSnapshot(`
+{
+  "Dashboard": {
+    "path": "admin/dashboard",
+  },
+  "Profile": {
+    "path": "users/profile",
+  },
+  "Reports": {
+    "path": "admin/reports",
+  },
+  "Settings": {
+    "path": "users/settings/:tab",
+  },
+}
+`);
+});
+
+test('adds group linking with object configuration', () => {
+  const Root = createTestNavigator({
+    groups: {
+      User: {
+        linking: {
+          path: 'users/:userId',
+          parse: {
+            userId: (id: string) => parseInt(id, 10),
+          },
+          stringify: {
+            userId: (id: number) => id.toString(),
+          },
+        },
+        screens: {
+          Profile: {
+            screen: TestScreen,
+            linking: 'profile',
+          },
+          Settings: {
+            screen: TestScreen,
+            linking: {
+              path: 'settings/:tab',
+              parse: {
+                tab: (tab: string) => tab.toLowerCase(),
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  expect(screens).toMatchInlineSnapshot(`
+{
+  "Profile": {
+    "parse": {
+      "userId": [Function],
+    },
+    "path": "users/:userId/profile",
+    "stringify": {
+      "userId": [Function],
+    },
+  },
+  "Settings": {
+    "parse": {
+      "tab": [Function],
+      "userId": [Function],
+    },
+    "path": "users/:userId/settings/:tab",
+    "stringify": {
+      "userId": [Function],
+    },
+  },
+}
+`);
+});
+
+test('handles group linking with nested navigators', () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+      Feed: {
+        screen: TestScreen,
+        linking: 'feed',
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    groups: {
+      Main: {
+        linking: 'app',
+        screens: {
+          Tabs: {
+            screen: Nested,
+            linking: 'tabs',
+          },
+          Profile: {
+            screen: TestScreen,
+            linking: 'profile',
+          },
+        },
+      },
+      Auth: {
+        linking: 'auth',
+        screens: {
+          Login: {
+            screen: TestScreen,
+            linking: 'login',
+          },
+          Register: {
+            screen: TestScreen,
+            linking: 'register',
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  expect(screens).toMatchInlineSnapshot(`
+{
+  "Login": {
+    "path": "auth/login",
+  },
+  "Profile": {
+    "path": "app/profile",
+  },
+  "Register": {
+    "path": "auth/register",
+  },
+  "Tabs": {
+    "path": "app/tabs",
+    "screens": {
+      "Feed": {
+        "path": "feed",
+      },
+    },
+  },
+}
+`);
+});
+
+test('handles group linking with auto path generation', () => {
+  const Root = createTestNavigator({
+    groups: {
+      User: {
+        linking: 'users',
+        screens: {
+          Profile: TestScreen,
+          Settings: {
+            screen: TestScreen,
+            linking: 'custom-settings',
+          },
+        },
+      },
+      Admin: {
+        linking: 'admin',
+        screens: {
+          Dashboard: TestScreen,
+          UserManagement: TestScreen,
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  expect(screens).toMatchInlineSnapshot(`
+{
+  "Dashboard": {
+    "path": "admin/dashboard",
+  },
+  "Profile": {
+    "path": "users/profile",
+  },
+  "Settings": {
+    "path": "users/custom-settings",
+  },
+  "UserManagement": {
+    "path": "admin/user-management",
+  },
+}
+`);
+});
+
+test('handles group linking with empty path prefix', () => {
+  const Root = createTestNavigator({
+    groups: {
+      Root: {
+        linking: '',
+        screens: {
+          Home: {
+            screen: TestScreen,
+            linking: 'home',
+          },
+          About: {
+            screen: TestScreen,
+            linking: 'about',
+          },
+        },
+      },
+      User: {
+        linking: 'user',
+        screens: {
+          Profile: {
+            screen: TestScreen,
+            linking: '',
+          },
+          Settings: {
+            screen: TestScreen,
+            linking: 'settings',
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  expect(screens).toMatchInlineSnapshot(`
+{
+  "About": {
+    "path": "about",
+  },
+  "Home": {
+    "path": "home",
+  },
+  "Profile": {
+    "path": "user",
+  },
+  "Settings": {
+    "path": "user/settings",
+  },
+}
+`);
+});
+
+test('merges parse and stringify options from group and screen linking', () => {
+  const Root = createTestNavigator({
+    groups: {
+      User: {
+        linking: {
+          path: 'users/:userId',
+          parse: {
+            userId: (id: string) => parseInt(id, 10),
+            sharedParam: (val: string) => val.toUpperCase(),
+          },
+          stringify: {
+            userId: (id: number) => id.toString(),
+            sharedParam: (val: string) => val.toLowerCase(),
+          },
+        },
+        screens: {
+          Profile: {
+            screen: TestScreen,
+            linking: {
+              path: 'profile/:tab',
+              parse: {
+                tab: (tab: string) => tab.toLowerCase(),
+                sharedParam: (val: string) => val + '_override',
+              },
+              stringify: {
+                tab: (tab: string) => tab.toUpperCase(),
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  const Profile =
+    typeof screens?.Profile === 'object' ? screens?.Profile : null;
+
+  expect(Profile?.parse).toHaveProperty('userId');
+  expect(Profile?.parse).toHaveProperty('tab');
+  expect(Profile?.parse).toHaveProperty('sharedParam');
+  expect(Profile?.stringify).toHaveProperty('userId');
+  expect(Profile?.stringify).toHaveProperty('tab');
+  expect(Profile?.stringify).toHaveProperty('sharedParam');
+  expect(Profile?.path).toBe('users/:userId/profile/:tab');
+});

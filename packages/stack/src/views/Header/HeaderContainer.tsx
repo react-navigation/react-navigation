@@ -1,19 +1,12 @@
 import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
 import {
-  NavigationContext,
-  NavigationRouteContext,
+  NavigationProvider,
   type ParamListBase,
   type Route,
   useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  Animated,
-  type StyleProp,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from 'react-native';
+import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 
 import {
   forNoAnimation,
@@ -38,7 +31,7 @@ export type Props = {
     route: Route<string>;
     height: number;
   }) => void;
-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function HeaderContainer({
@@ -54,8 +47,11 @@ export function HeaderContainer({
   const { buildHref } = useLinkBuilder();
 
   return (
-    <Animated.View style={[styles.container, style]}>
-      {scenes.slice(-3).map((scene, i, self) => {
+    <View style={[styles.container, style]}>
+      {/* We render header only on two top-most headers as
+         a workaround for https://github.com/react-navigation/react-navigation/issues/12456.
+         If the header is persisted, it might be placed incorrectly when navigating back. */}
+      {scenes.slice(-2).map((scene, i, self) => {
         if ((mode === 'screen' && i !== self.length - 1) || !scene) {
           return null;
         }
@@ -142,43 +138,42 @@ export function HeaderContainer({
         };
 
         return (
-          <NavigationContext.Provider
+          <NavigationProvider
             key={scene.descriptor.route.key}
-            value={scene.descriptor.navigation}
+            navigation={scene.descriptor.navigation}
+            route={scene.descriptor.route}
           >
-            <NavigationRouteContext.Provider value={scene.descriptor.route}>
-              <View
-                onLayout={
-                  onContentHeightChange
-                    ? (e) => {
-                        const { height } = e.nativeEvent.layout;
+            <View
+              onLayout={
+                onContentHeightChange
+                  ? (e) => {
+                      const { height } = e.nativeEvent.layout;
 
-                        onContentHeightChange({
-                          route: scene.descriptor.route,
-                          height,
-                        });
-                      }
-                    : undefined
-                }
-                aria-hidden={!isFocused}
-                style={[
-                  // Avoid positioning the focused header absolutely
-                  // Otherwise accessibility tools don't seem to be able to find it
-                  (mode === 'float' && !isFocused) || headerTransparent
-                    ? styles.header
-                    : null,
-                  {
-                    pointerEvents: isFocused ? 'box-none' : 'none',
-                  },
-                ]}
-              >
-                {header !== undefined ? header(props) : <Header {...props} />}
-              </View>
-            </NavigationRouteContext.Provider>
-          </NavigationContext.Provider>
+                      onContentHeightChange({
+                        route: scene.descriptor.route,
+                        height,
+                      });
+                    }
+                  : undefined
+              }
+              aria-hidden={!isFocused}
+              style={[
+                // Avoid positioning the focused header absolutely
+                // Otherwise accessibility tools don't seem to be able to find it
+                (mode === 'float' && !isFocused) || headerTransparent
+                  ? styles.header
+                  : null,
+                {
+                  pointerEvents: isFocused ? 'box-none' : 'none',
+                },
+              ]}
+            >
+              {header !== undefined ? header(props) : <Header {...props} />}
+            </View>
+          </NavigationProvider>
         );
       })}
-    </Animated.View>
+    </View>
   );
 }
 

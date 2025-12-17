@@ -1,8 +1,24 @@
 appId: ${APP_ID}
 name: Navigator Layout
 ---
-- openLink:
-    link: ${APP_SCHEME}navigator-layout
-- extendedWaitUntil:
-    visible: 'Article by Gandalf'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: navigator-layout
+      TEXT: 'Article by Gandalf'
+- tapOn:
+    text: 'Navigate to feed'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Navigate to albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Feed'
+- assertVisible:
+    text: 'Joke bot'
+- tapOn:
+    text: 'Article by Gandalf'
+- assertVisible:
+    text: 'What is Lorem Ipsum?'

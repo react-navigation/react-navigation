@@ -1,8 +1,20 @@
 appId: ${APP_ID}
 name: Master Detail
 ---
-- openLink:
-    link: ${APP_SCHEME}master-detail
-- extendedWaitUntil:
-    visible: 'Pages'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: master-detail
+      TEXT: 'Pages'
+- tapOn:
+    text: 'Feed'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Article'
+- assertVisible:
+    text: 'Article'

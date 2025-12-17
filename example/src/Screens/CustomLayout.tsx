@@ -7,7 +7,9 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
-  type PathConfigMap,
+  type NavigatorScreenParams,
+  type PathConfig,
+  type StaticScreenProps,
   useTheme,
 } from '@react-navigation/native';
 import {
@@ -29,24 +31,26 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type CustomLayoutParams = {
+type CustomLayoutParamList = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
 };
 
-const linking: PathConfigMap<CustomLayoutParams> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Albums: 'albums',
+  },
+} satisfies PathConfig<NavigatorScreenParams<CustomLayoutParamList>>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<CustomLayoutParams, 'Article'>) => {
+}: StackScreenProps<CustomLayoutParamList, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -71,7 +75,7 @@ const ArticleScreen = ({
 const NewsFeedScreen = ({
   route,
   navigation,
-}: StackScreenProps<CustomLayoutParams, 'NewsFeed'>) => {
+}: StackScreenProps<CustomLayoutParamList, 'NewsFeed'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -89,7 +93,7 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: StackScreenProps<CustomLayoutParams, 'Albums'>) => {
+}: StackScreenProps<CustomLayoutParamList, 'Albums'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -110,9 +114,11 @@ const AlbumsScreen = ({
   );
 };
 
-const Stack = createStackNavigator<CustomLayoutParams>();
+const Stack = createStackNavigator<CustomLayoutParamList>();
 
-export function NavigatorLayout() {
+export function NavigatorLayout(
+  _: StaticScreenProps<NavigatorScreenParams<CustomLayoutParamList>>
+) {
   const { colors } = useTheme();
 
   const insets = useSafeAreaInsets();

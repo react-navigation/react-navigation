@@ -1,8 +1,24 @@
 appId: ${APP_ID}
 name: Bottom Tabs
 ---
-- openLink:
-    link: ${APP_SCHEME}bottom-tabs
-- extendedWaitUntil:
-    visible: 'Article by Gandalf'
-    timeout: 60000
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: bottom-tabs
+      TEXT: 'Article by Gandalf'
+- tapOn:
+    id: 'albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Go to Chat'
+- assertVisible:
+    text: 'Chat'
+- tapOn:
+    id: 'contacts'
+- assertVisible:
+    text: 'Contacts'
+- tapOn:
+    id: 'article'
+- assertVisible:
+    text: 'Article by Gandalf'

@@ -167,9 +167,10 @@ export function getActionFromState(
 const createNormalizedConfigItem = (config: PathConfig<object> | string) =>
   typeof config === 'object' && config != null
     ? {
-        initialRouteName: config.initialRouteName,
+        initialRouteName:
+          'initialRouteName' in config ? config.initialRouteName : undefined,
         screens:
-          config.screens != null
+          'screens' in config && config.screens != null
             ? createNormalizedConfigs(config.screens)
             : undefined,
       }
@@ -177,6 +178,7 @@ const createNormalizedConfigItem = (config: PathConfig<object> | string) =>
 
 const createNormalizedConfigs = (options: PathConfigMap<object>) =>
   Object.entries(options).reduce<Record<string, ConfigItem>>((acc, [k, v]) => {
+    // @ts-expect-error -we can't properly type this
     acc[k] = createNormalizedConfigItem(v);
     return acc;
   }, {});

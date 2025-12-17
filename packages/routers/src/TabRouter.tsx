@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid/non-secure';
 
 import { BaseRouter } from './BaseRouter';
+import { createParamsFromAction } from './createParamsFromAction';
 import type {
   CommonNavigationAction,
   DefaultRouterOptions,
@@ -395,13 +396,7 @@ export function TabRouter({
                         }
                       : route.params;
                 } else {
-                  params =
-                    routeParamList[route.name] !== undefined
-                      ? {
-                          ...routeParamList[route.name],
-                          ...action.payload.params,
-                        }
-                      : action.payload.params;
+                  params = createParamsFromAction({ action, routeParamList });
                 }
 
                 const path =
@@ -427,42 +422,34 @@ export function TabRouter({
           };
         }
 
-        case 'SET_PARAMS':
-        case 'REPLACE_PARAMS': {
-          const nextState = BaseRouter.getStateForAction(state, action);
+        case 'GO_BACK': {
+          const focusedRoute = state.routes[state.index];
 
-          if (nextState !== null) {
-            const index = nextState.index;
-
-            if (index != null) {
-              const focusedRoute = nextState.routes[index];
-              const historyItemIndex = state.history.findLastIndex(
-                (item) => item.key === focusedRoute.key
-              );
-
-              let updatedHistory = state.history;
-
-              if (historyItemIndex !== -1) {
-                updatedHistory = [...state.history];
-                updatedHistory[historyItemIndex] = {
-                  ...updatedHistory[historyItemIndex],
-                  params: focusedRoute.params,
-                };
-              }
-
-              return {
-                ...nextState,
-                history: updatedHistory,
-              };
-            }
+          if (state.history.length === 1 && !focusedRoute.history?.length) {
+            return null;
           }
 
-          return nextState;
-        }
+          const lastHistoryItem = state.history[state.history.length - 1];
 
-        case 'GO_BACK': {
-          if (state.history.length === 1) {
-            return null;
+          if (
+            lastHistoryItem?.type === 'route' &&
+            focusedRoute.history?.length
+          ) {
+            const routes = [...state.routes];
+            const history = [...focusedRoute.history];
+            const last = history.pop();
+
+            routes[state.index] = {
+              ...focusedRoute,
+              params:
+                last?.type === 'params' ? last.params : focusedRoute.params,
+              history,
+            };
+
+            return {
+              ...state,
+              routes,
+            };
           }
 
           const previousHistoryItem = state.history[state.history.length - 2];
@@ -518,15 +505,7 @@ export function TabRouter({
           const key =
             currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
 
-          const params =
-            action.payload.params !== undefined ||
-            routeParamList[route.name] !== undefined
-              ? {
-                  ...routeParamList[route.name],
-                  ...action.payload.params,
-                }
-              : undefined;
-
+          const params = createParamsFromAction({ action, routeParamList });
           const newRoute =
             params !== route.params ? { ...route, key, params } : route;
 

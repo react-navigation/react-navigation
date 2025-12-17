@@ -10,13 +10,16 @@ export { SceneStyleInterpolators, TransitionPresets, TransitionSpecs };
 /**
  * Navigators
  */
-export { createBottomTabNavigator } from './navigators/createBottomTabNavigator';
+export {
+  createBottomTabNavigator,
+  createBottomTabScreen,
+} from './navigators/createBottomTabNavigator';
 
 /**
  * Views
  */
 export { BottomTabBar } from './views/BottomTabBar';
-export { BottomTabView } from './views/BottomTabView';
+export { BottomTabView } from './views/BottomTabViewCommon';
 
 /**
  * Utilities
@@ -32,6 +35,7 @@ export type {
   BottomTabBarButtonProps,
   BottomTabBarProps,
   BottomTabHeaderProps,
+  BottomTabIcon,
   BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
   BottomTabNavigationProp,

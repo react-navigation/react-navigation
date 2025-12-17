@@ -38,7 +38,7 @@ test('renders a bottom tab navigator with screens', async () => {
 
   const { queryByText, getAllByRole, getByRole } = render(
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator implementation="custom">
         <Tab.Screen name="A" component={Test} />
         <Tab.Screen name="B" component={Test} />
       </Tab.Navigator>
@@ -70,7 +70,7 @@ test('handles screens preloading', async () => {
 
   const { queryByText } = render(
     <NavigationContainer ref={navigation}>
-      <Tab.Navigator>
+      <Tab.Navigator implementation="custom">
         <Tab.Screen name="A">{() => null}</Tab.Screen>
         <Tab.Screen name="B">{() => <Text>Screen B</Text>}</Tab.Screen>
       </Tab.Navigator>
@@ -114,6 +114,7 @@ test('tab bar cannot be tapped when hidden', async () => {
   const { queryByText, getByRole } = render(
     <NavigationContainer>
       <Tab.Navigator
+        implementation="custom"
         screenOptions={{
           tabBarHideOnKeyboard: true,
         }}
@@ -175,6 +176,7 @@ test('tab bars render appropriate hrefs on web', () => {
       }}
     >
       <Tab.Navigator
+        implementation="custom"
         screenOptions={{ tabBarButton: ({ href }) => <Text>{href}</Text> }}
       >
         <Tab.Screen name="A">{() => null}</Tab.Screen>

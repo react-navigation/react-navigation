@@ -1,32 +1,46 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {
+  type BottomTabNavigationProp,
+  createBottomTabNavigator,
+  createBottomTabScreen,
+} from '@react-navigation/bottom-tabs';
+import {
+  type CompositeNavigationProp,
   createStaticNavigation,
   type NavigationContainerRef,
+  type NavigationListForNested,
   type NavigationProp,
   type NavigatorScreenParams,
   type StaticParamList,
   type StaticScreenProps,
+  type Theme,
 } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createStackNavigator } from '@react-navigation/stack';
+import {
+  createNativeStackNavigator,
+  createNativeStackScreen,
+} from '@react-navigation/native-stack';
+import {
+  createStackNavigator,
+  createStackScreen,
+  type StackNavigationProp,
+} from '@react-navigation/stack';
 import { expectTypeOf } from 'expect-type';
 
 const NativeStack = createNativeStackNavigator({
   groups: {
     GroupA: {
       screenLayout: ({ navigation, children }) => {
-        expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
-        expectTypeOf(navigation.push).toMatchTypeOf<() => void>();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+        expectTypeOf(navigation.push).toExtend<() => void>();
 
         return <>{children}</>;
       },
       screens: {
-        Foo: {
+        Foo: createNativeStackScreen({
           screen: () => <></>,
           options: { presentation: 'modal' },
-        },
+        }),
       },
     },
   },
@@ -34,7 +48,7 @@ const NativeStack = createNativeStackNavigator({
 
 createStaticNavigation(NativeStack);
 
-expectTypeOf<StaticParamList<typeof NativeStack>>().toMatchTypeOf<{
+expectTypeOf<StaticParamList<typeof NativeStack>>().toEqualTypeOf<{
   Foo: undefined;
 }>();
 
@@ -49,7 +63,7 @@ const RootStack = createStackNavigator({
   screens: {
     Home: HomeTabs,
     Profile: (_: StaticScreenProps<{ user: string }>) => null,
-    Feed: {
+    Feed: createStackScreen({
       screen: (_: StaticScreenProps<{ sort: 'hot' | 'recent' }>) => null,
       options: {
         headerTitle: 'My Feed',
@@ -57,7 +71,7 @@ const RootStack = createStackNavigator({
       linking: {
         path: 'feed/:sort',
         parse: {
-          sort: String,
+          sort: (value) => value as 'hot' | 'recent',
         },
       },
       initialParams: {
@@ -65,10 +79,10 @@ const RootStack = createStackNavigator({
       },
       listeners: {
         transitionEnd: (e) => {
-          expectTypeOf(e.data).toMatchTypeOf<{ closing: boolean }>();
+          expectTypeOf(e.data).toEqualTypeOf<Readonly<{ closing: boolean }>>();
         },
       },
-    },
+    }),
     Settings: () => null,
     // TypeScript has a limit of 24 items in mapped types
     // So we add more items to make sure we don't hit the issue
@@ -124,12 +138,49 @@ const Navigation = createStaticNavigation(RootStack);
 
 type RootParamList = StaticParamList<typeof RootStack>;
 
+type RooStackRouteName =
+  | 'Home'
+  | 'Profile'
+  | 'Feed'
+  | 'Settings'
+  | 'Login'
+  | 'Register'
+  | 'Account'
+  | 'A'
+  | 'B'
+  | 'C'
+  | 'D'
+  | 'E'
+  | 'F'
+  | 'G'
+  | 'H'
+  | 'I'
+  | 'J'
+  | 'K'
+  | 'L'
+  | 'M'
+  | 'N'
+  | 'O'
+  | 'P'
+  | 'Q'
+  | 'R'
+  | 'S'
+  | 'T'
+  | 'U'
+  | 'V'
+  | 'W'
+  | 'X'
+  | 'Y'
+  | 'Z';
+
+expectTypeOf<keyof RootParamList>().toEqualTypeOf<RooStackRouteName>();
+
 declare let navigation: NavigationProp<RootParamList>;
 
 /**
  * Infer param list from navigator
  */
-expectTypeOf<RootParamList>().toMatchTypeOf<{
+expectTypeOf<RootParamList>().toEqualTypeOf<{
   Home:
     | NavigatorScreenParams<{
         Groups: undefined;
@@ -171,43 +222,42 @@ expectTypeOf<RootParamList>().toMatchTypeOf<{
 }>();
 
 /**
+ * Infer navigation props from navigator
+ */
+expectTypeOf<NavigationListForNested<typeof RootStack>['Home']>().toEqualTypeOf<
+  StackNavigationProp<RootParamList, 'Home'>
+>();
+
+expectTypeOf<NavigationListForNested<typeof RootStack>['Feed']>().toEqualTypeOf<
+  StackNavigationProp<RootParamList, 'Feed'>
+>();
+
+expectTypeOf<
+  NavigationListForNested<typeof RootStack>['Settings']
+>().toEqualTypeOf<StackNavigationProp<RootParamList, 'Settings'>>();
+
+expectTypeOf<NavigationListForNested<typeof RootStack>['Chat']>().toEqualTypeOf<
+  CompositeNavigationProp<
+    BottomTabNavigationProp<StaticParamList<typeof HomeTabs>, 'Chat'>,
+    StackNavigationProp<RootParamList, 'Home'>
+  >
+>();
+
+expectTypeOf<
+  // @ts-expect-error
+  NavigationListForNested<typeof RootStack>['Invalid']
+>().toEqualTypeOf<unknown>();
+
+expectTypeOf<keyof NavigationListForNested<typeof RootStack>>().toEqualTypeOf<
+  RooStackRouteName | 'Groups' | 'Chat'
+>();
+
+/**
  * Infer screen names from config
  */
-expectTypeOf(navigation.getState().routes[0].name).toEqualTypeOf<
-  | 'Home'
-  | 'Profile'
-  | 'Feed'
-  | 'Settings'
-  | 'Login'
-  | 'Register'
-  | 'Account'
-  | 'A'
-  | 'B'
-  | 'C'
-  | 'D'
-  | 'E'
-  | 'F'
-  | 'G'
-  | 'H'
-  | 'I'
-  | 'J'
-  | 'K'
-  | 'L'
-  | 'M'
-  | 'N'
-  | 'O'
-  | 'P'
-  | 'Q'
-  | 'R'
-  | 'S'
-  | 'T'
-  | 'U'
-  | 'V'
-  | 'W'
-  | 'X'
-  | 'Y'
-  | 'Z'
->();
+expectTypeOf(
+  navigation.getState().routes[0].name
+).toEqualTypeOf<RooStackRouteName>();
 
 /**
  * Infer params from component props
@@ -313,58 +363,59 @@ createBottomTabNavigator({
  */
 createBottomTabNavigator({
   screens: {
-    Test: {
+    Test: createBottomTabScreen({
       screen: () => null,
       options: {
         tabBarActiveTintColor: 'tomato',
       },
-    },
+    }),
   },
 });
 
 createBottomTabNavigator({
   screens: {
-    Test: {
+    Test: createBottomTabScreen({
       screen: () => null,
       options: {
         // @ts-expect-error
         tabBarActiveTintColor: 42,
       },
-    },
+    }),
   },
 });
 
 createBottomTabNavigator({
   screens: {
-    Test: {
+    Test: createBottomTabScreen({
       screen: () => null,
       options: () => ({
         tabBarActiveTintColor: 'tomato',
       }),
-    },
+    }),
   },
 });
 
 createBottomTabNavigator({
   screens: {
-    Test: {
+    Test: createBottomTabScreen({
       screen: () => null,
       // @ts-expect-error
       options: () => ({
         tabBarActiveTintColor: 42,
       }),
-    },
+    }),
   },
 });
 
 createBottomTabNavigator({
   screens: {
-    Test: {
-      screen: (_: { foo: number }) => null,
+    Test: createBottomTabScreen({
+      screen: (_: StaticScreenProps<{ foo: number }>) => null,
       initialParams: {
+        // @ts-expect-error
         foo: 'test',
       },
-    },
+    }),
   },
 });
 
@@ -373,10 +424,10 @@ createBottomTabNavigator({
  */
 createBottomTabNavigator({
   screenOptions: ({ route, navigation, theme }) => {
-    expectTypeOf(route.name).toMatchTypeOf<string>();
-    expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
-    expectTypeOf(navigation.jumpTo).toMatchTypeOf<() => void>();
-    expectTypeOf(theme).toMatchTypeOf<ReactNavigation.Theme>();
+    expectTypeOf(route.name).toEqualTypeOf<string>();
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+    expectTypeOf(navigation.jumpTo).toExtend<() => void>();
+    expectTypeOf(theme).toEqualTypeOf<Theme>();
 
     return {};
   },
@@ -388,10 +439,10 @@ createBottomTabNavigator({
     Test: {
       screen: () => null,
       options: ({ route, navigation, theme }) => {
-        expectTypeOf(route.name).toMatchTypeOf<string>();
-        expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
-        expectTypeOf(navigation.jumpTo).toMatchTypeOf<() => void>();
-        expectTypeOf(theme).toMatchTypeOf<ReactNavigation.Theme>();
+        expectTypeOf(route.name).toEqualTypeOf<string>();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+        expectTypeOf(navigation.jumpTo).toExtend<() => void>();
+        expectTypeOf(theme).toEqualTypeOf<Theme>();
 
         return {};
       },
@@ -404,9 +455,9 @@ createBottomTabNavigator({
  */
 createBottomTabNavigator({
   screenListeners: ({ route, navigation }) => {
-    expectTypeOf(route.name).toMatchTypeOf<string>();
-    expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
-    expectTypeOf(navigation.jumpTo).toMatchTypeOf<() => void>();
+    expectTypeOf(route.name).toEqualTypeOf<string>();
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+    expectTypeOf(navigation.jumpTo).toExtend<() => void>();
 
     return {};
   },
@@ -418,9 +469,9 @@ createBottomTabNavigator({
     Test: {
       screen: () => null,
       listeners: ({ navigation, route }) => {
-        expectTypeOf(route.name).toMatchTypeOf<string>();
-        expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
-        expectTypeOf(navigation.jumpTo).toMatchTypeOf<() => void>();
+        expectTypeOf(route.name).toEqualTypeOf<string>();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+        expectTypeOf(navigation.jumpTo).toExtend<() => void>();
 
         return {};
       },
@@ -475,7 +526,7 @@ const MyStack = createStackNavigator({
 
 type MyParamList = StaticParamList<typeof MyStack>;
 
-expectTypeOf<MyParamList>().toMatchTypeOf<{
+expectTypeOf<MyParamList>().toEqualTypeOf<{
   Login: undefined;
   Home: undefined;
   Profile: { id: number };
@@ -494,36 +545,846 @@ const route = navigationRef.getCurrentRoute()!;
 
 switch (route.name) {
   case 'Profile':
-    expectTypeOf(route.params).toMatchTypeOf<{
-      user: string;
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        user: string;
+      }>
+    >();
     break;
   case 'Feed':
-    expectTypeOf(route.params).toMatchTypeOf<{
-      sort: 'hot' | 'recent';
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        sort: 'hot' | 'recent';
+      }>
+    >();
     break;
   case 'Settings':
-    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
     break;
   case 'Login':
-    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
     break;
   case 'Register':
-    expectTypeOf(route.params).toMatchTypeOf<{
-      method: 'email' | 'social';
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        method: 'email' | 'social';
+      }>
+    >();
     break;
   case 'Account':
-    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
     break;
   // Checks for nested routes
   case 'Groups':
-    expectTypeOf(route.params).toMatchTypeOf<undefined>();
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
     break;
   case 'Chat':
-    expectTypeOf(route.params).toMatchTypeOf<{
-      id: number;
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        id: number;
+      }>
+    >();
     break;
 }
+
+/**
+ * Infer types from typed screen component
+ */
+createStackNavigator({
+  screens: {
+    Profile: createStackScreen({
+      screen: (
+        _: StaticScreenProps<{ userId: string; filter?: 'recent' | 'popular' }>
+      ) => null,
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.name).toEqualTypeOf<string>();
+        expectTypeOf(route.params).toEqualTypeOf<{
+          userId: string;
+          filter?: 'recent' | 'popular';
+        }>();
+
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {
+          headerTitle: route.params.userId,
+        };
+      },
+      listeners: ({ route, navigation }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          userId: string;
+          filter?: 'recent' | 'popular';
+        }>();
+
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {};
+      },
+      layout: ({ route, navigation, children }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          userId: string;
+          filter?: 'recent' | 'popular';
+        }>();
+
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).toEqualTypeOf<{
+          userId: string;
+          filter?: 'recent' | 'popular';
+        }>();
+
+        return params.userId;
+      },
+      initialParams: {
+        filter: 'recent',
+        // @ts-expect-error
+        userId: 3,
+      },
+    }),
+  },
+});
+
+/**
+ * Handle screen component without optional params
+ */
+createStackNavigator({
+  screens: {
+    Details: createStackScreen({
+      screen: (
+        _: StaticScreenProps<{ itemId: number; info: string } | undefined>
+      ) => null,
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.name).toEqualTypeOf<string>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          | {
+              itemId: number;
+              info: string;
+            }
+          | undefined
+        >();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {};
+      },
+      listeners: ({ route, navigation }) => {
+        expectTypeOf(route.params).toEqualTypeOf<
+          | {
+              itemId: number;
+              info: string;
+            }
+          | undefined
+        >();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {};
+      },
+      layout: ({ route, navigation, children }) => {
+        expectTypeOf(route.params).toEqualTypeOf<
+          | {
+              itemId: number;
+              info: string;
+            }
+          | undefined
+        >();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).toEqualTypeOf<
+          | {
+              itemId: number;
+              info: string;
+            }
+          | undefined
+        >();
+
+        return params?.itemId.toString();
+      },
+      initialParams: {
+        itemId: 1,
+        info: 'Item 1',
+      },
+    }),
+  },
+});
+
+/**
+ * Handle screen component without typed route prop
+ */
+createStackNavigator({
+  screens: {
+    Settings: createStackScreen({
+      screen: () => null,
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.name).toEqualTypeOf<string>();
+        expectTypeOf(route.params).toEqualTypeOf<undefined>();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {};
+      },
+      listeners: ({ route, navigation }) => {
+        expectTypeOf(route.params).toEqualTypeOf<undefined>();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {};
+      },
+      layout: ({ route, navigation, children }) => {
+        expectTypeOf(route.params).toEqualTypeOf<undefined>();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).toEqualTypeOf<undefined>();
+
+        return 'static-id';
+      },
+    }),
+  },
+});
+
+/**
+ * Handle screen which is a nested navigator
+ */
+createBottomTabNavigator({
+  screens: {
+    User: createBottomTabScreen({
+      screen: createStackNavigator({
+        screens: {
+          Profile: (_: StaticScreenProps<{ userId: string }>) => null,
+        },
+      }),
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.name).toEqualTypeOf<string>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          | NavigatorScreenParams<{
+              Profile: {
+                userId: string;
+              };
+            }>
+          | undefined
+        >();
+
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+
+        return {};
+      },
+      listeners: ({ route, navigation }) => {
+        expectTypeOf(route.params).toEqualTypeOf<
+          | NavigatorScreenParams<{
+              Profile: {
+                userId: string;
+              };
+            }>
+          | undefined
+        >();
+
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+
+        return {};
+      },
+      layout: ({ route, navigation, children }) => {
+        expectTypeOf(route.params).toEqualTypeOf<
+          | NavigatorScreenParams<{
+              Profile: {
+                userId: string;
+              };
+            }>
+          | undefined
+        >();
+
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).toEqualTypeOf<
+          | NavigatorScreenParams<{
+              Profile: {
+                userId: string;
+              };
+            }>
+          | undefined
+        >();
+
+        return 'static-id';
+      },
+    }),
+  },
+});
+
+/**
+ * Params type is `unknown` when `createXScreen` isn't used
+ */
+createStackNavigator({
+  screens: {
+    Profile: {
+      screen: (_: StaticScreenProps<{ userId: string }>) => null,
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.params).not.toBeAny();
+        expectTypeOf(route.params).toBeUnknown();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {};
+      },
+      listeners: ({ route, navigation }) => {
+        expectTypeOf(route.params).not.toBeAny();
+        expectTypeOf(route.params).toBeUnknown();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return {};
+      },
+      layout: ({ route, navigation, children }) => {
+        expectTypeOf(route.params).not.toBeAny();
+        expectTypeOf(route.params).toBeUnknown();
+        expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).not.toBeAny();
+        expectTypeOf(params).toBeUnknown();
+
+        return 'static-id';
+      },
+    },
+  },
+});
+
+/**
+ * Linking config validates parse/stringify keys against params
+ */
+createStackNavigator({
+  screens: {
+    Profile: createStackScreen({
+      screen: (
+        _: StaticScreenProps<{
+          userId: string;
+          postId: number;
+          commentId: number;
+        }>
+      ) => null,
+      linking: {
+        path: 'profile/:userId/:postId',
+        parse: {
+          userId: String,
+          postId: Number,
+        },
+        stringify: {
+          userId: String,
+          postId: String,
+        },
+        alias: [
+          ':userId/:postId',
+          {
+            path: 'user/:userId/:postId',
+            parse: {
+              userId: String,
+              postId: Number,
+            },
+          },
+        ],
+      },
+    }),
+    Details: createStackScreen({
+      screen: (_: StaticScreenProps<{ id: string }>) => null,
+      linking: 'details/:id',
+    }),
+    Item: createStackScreen({
+      screen: (_: StaticScreenProps<{ itemId: string; category: string }>) =>
+        null,
+      linking: {
+        path: 'item/:itemId/:category',
+        parse: {
+          itemId: String,
+        },
+      },
+    }),
+  },
+});
+
+/**
+ * Type tests for param inference from linking config
+ */
+{
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const TestNavigator = createStackNavigator({
+    screens: {
+      /**
+       * Infer from path and parse
+       */
+      UserProfile: createStackScreen({
+        screen: (_: StaticScreenProps<{ userId: number; postId: string }>) =>
+          null,
+        linking: {
+          path: 'user/:userId/:postId',
+          parse: {
+            userId: (value: string) => Number(value),
+          },
+        },
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<{
+            userId: number;
+            postId: string;
+          }>();
+
+          return {};
+        },
+      }),
+      /**
+       * Infer from screen props only
+       */
+      Settings: createStackScreen({
+        screen: (_: StaticScreenProps<{ name: string; age: number }>) => null,
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<{
+            name: string;
+            age: number;
+          }>();
+
+          return {};
+        },
+      }),
+      /**
+       * Infer from screen props and path without params
+       */
+      UserDashboard: createStackScreen({
+        screen: (
+          _: StaticScreenProps<{
+            userId: string;
+            section: 'posts' | 'comments';
+          }>
+        ) => null,
+        linking: {
+          path: 'user/dashboard',
+        },
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<{
+            userId: string;
+            section: 'posts' | 'comments';
+          }>();
+
+          return {};
+        },
+      }),
+      /**
+       * Infer from path with empty params
+       */
+      UserSettings: createStackScreen({
+        screen: (_: StaticScreenProps<{}>) => null,
+        linking: {
+          path: 'settings/:userId',
+        },
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<{
+            userId: string;
+          }>();
+
+          return {};
+        },
+      }),
+      /**
+       * Infer from path with no props
+       */
+      Help: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'help/:topic',
+        },
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<{
+            topic: string;
+          }>();
+
+          return {};
+        },
+      }),
+      /**
+       * Handle optional param in path
+       */
+      UserList: createStackScreen({
+        screen: (_: StaticScreenProps<{ userId?: number; filter: string }>) =>
+          null,
+        linking: {
+          path: 'users/:userId?/:filter',
+          parse: {
+            userId: (value: string) => Number(value),
+          },
+        },
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<{
+            userId?: number;
+            filter: string;
+          }>();
+
+          return {};
+        },
+      }),
+      /**
+       * Handle regex in path
+       */
+      Item: createStackScreen({
+        screen: (_: StaticScreenProps<{ category: string }>) => null,
+        linking: {
+          path: 'item/:id([0-9]+)/:slug([a-z-]+)/:category',
+        },
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<{
+            id: string;
+            slug: string;
+            category: string;
+          }>();
+
+          return {};
+        },
+      }),
+      /**
+       * Merge params from path and screen props
+       */
+      ItemDetails: createStackScreen({
+        screen: (_: StaticScreenProps<{ itemId: string }>) => null,
+        linking: {
+          path: 'item/:itemId/:infoType',
+          parse: {
+            infoType: (value: string) =>
+              value === 'full' ? 'full' : 'summary',
+          },
+        },
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<{
+            itemId: string;
+            infoType: 'summary' | 'full';
+          }>();
+
+          return {};
+        },
+      }),
+      /**
+       * Merge params from path and screen props with optionality
+       */
+      ItemPrice: createStackScreen({
+        screen: (
+          _: StaticScreenProps<{ itemId: string; currency?: 'USD' | 'EUR' }>
+        ) => null,
+        linking: {
+          path: 'item/:itemId/:currency?',
+          parse: {
+            currency: (value: string) => (value === 'USD' ? 'USD' : 'EUR'),
+          },
+        },
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<{
+            itemId: string;
+            currency?: 'USD' | 'EUR';
+          }>();
+
+          return {};
+        },
+      }),
+      /**
+       * Handle string in pattern
+       */
+      Details: createStackScreen({
+        screen: (_: StaticScreenProps<{ detailId: string }>) => null,
+        linking: 'details/:detailId',
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<{
+            detailId: string;
+          }>();
+
+          return {};
+        },
+      }),
+      /**
+       * Handle component and path without params
+       */
+      About: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'about',
+        },
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<undefined>();
+
+          return {};
+        },
+      }),
+      /**
+       * Nested navigator with params inferred from children
+       */
+      Dashboard: createStackScreen({
+        screen: createBottomTabNavigator({
+          screens: {
+            Overview: (_: StaticScreenProps<{ period: string }>) => null,
+            Stats: createBottomTabScreen({
+              screen: (_: StaticScreenProps<{ chartType: 'bar' | 'line' }>) =>
+                null,
+            }),
+          },
+        }),
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<
+            | NavigatorScreenParams<{
+                Overview: {
+                  period: string;
+                };
+                Stats: {
+                  chartType: 'bar' | 'line';
+                };
+              }>
+            | undefined
+          >();
+
+          return {};
+        },
+      }),
+      /**
+       * Merge params from nested navigator and path
+       */
+      Feed: createStackScreen({
+        screen: createBottomTabNavigator({
+          screens: {
+            Overview: (_: StaticScreenProps<{ period: string }>) => null,
+            Stats: createBottomTabScreen({
+              screen: (_: StaticScreenProps<{ chartType: 'bar' | 'line' }>) =>
+                null,
+            }),
+          },
+        }),
+        linking: {
+          path: 'feed/:section?',
+        },
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<
+            { section?: string } & (
+              | NavigatorScreenParams<{
+                  Overview: {
+                    period: string;
+                  };
+                  Stats: {
+                    chartType: 'bar' | 'line';
+                  };
+                }>
+              | undefined
+            )
+          >();
+
+          return {};
+        },
+      }),
+    },
+  });
+
+  type TestParamList = StaticParamList<typeof TestNavigator>;
+
+  expectTypeOf<TestParamList>().toEqualTypeOf<{
+    Feed: {
+      section?: string | undefined;
+    } & (
+      | NavigatorScreenParams<{
+          Overview: {
+            period: string;
+          };
+          Stats: {
+            chartType: 'bar' | 'line';
+          };
+        }>
+      | undefined
+    );
+    Settings: {
+      name: string;
+      age: number;
+    };
+    UserProfile: {
+      userId: number;
+      postId: string;
+    };
+    UserDashboard: {
+      userId: string;
+      section: 'posts' | 'comments';
+    };
+    UserSettings: {
+      userId: string;
+    };
+    Help: {
+      topic: string;
+    };
+    UserList: {
+      userId?: number;
+      filter: string;
+    };
+    Item: {
+      id: string;
+      slug: string;
+      category: string;
+    };
+    ItemDetails: {
+      itemId: string;
+      infoType: 'full' | 'summary';
+    };
+    ItemPrice: {
+      itemId: string;
+      currency?: 'USD' | 'EUR';
+    };
+    Details: {
+      detailId: string;
+    };
+    About: undefined;
+    Dashboard:
+      | NavigatorScreenParams<{
+          Overview: {
+            period: string;
+          };
+          Stats: {
+            chartType: 'bar' | 'line';
+          };
+        }>
+      | undefined;
+  }>();
+}
+
+/**
+ * Only infers params for valid path patterns
+ */
+createStackScreen({
+  screen: () => null,
+  linking: 'static/path',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'end:',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'middle:end',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<undefined>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: ':start',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      start: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: '/:start',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      start: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: '/:start?',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      start?: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'middle/:part/end',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      part: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'end/:finish',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      finish: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'static/:optional?/path',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      optional?: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: ':first/:second?/static/:third?/path',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      first: string;
+      second?: string;
+      third?: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'static/path/:withRegex([0-9]+)',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      withRegex: string;
+    }>();
+
+    return {};
+  },
+});
+
+createStackScreen({
+  screen: () => null,
+  linking: 'static/:optionalRegex([a-z]+)?/path',
+  options: ({ route }) => {
+    expectTypeOf(route.params).toEqualTypeOf<{
+      optionalRegex?: string;
+    }>();
+
+    return {};
+  },
+});

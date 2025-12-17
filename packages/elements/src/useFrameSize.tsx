@@ -1,11 +1,5 @@
 import * as React from 'react';
-import {
-  Platform,
-  type StyleProp,
-  StyleSheet,
-  type ViewStyle,
-} from 'react-native';
-import { SafeAreaListener } from 'react-native-safe-area-context';
+import { type LayoutChangeEvent, Platform, View } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 
@@ -50,31 +44,15 @@ export function useFrameSize<T>(
 
 type FrameSizeProviderProps = {
   initialFrame: Frame;
-  children: React.ReactNode;
-  style?: StyleProp<ViewStyle>;
+  render: (props: {
+    ref: React.RefObject<View | null>;
+    onLayout: (event: LayoutChangeEvent) => void;
+  }) => React.ReactNode;
 };
 
 export function FrameSizeProvider({
   initialFrame,
-  children,
-}: FrameSizeProviderProps) {
-  const context = React.useContext(FrameContext);
-
-  if (context != null) {
-    // If the context is already present, don't wrap again
-    return children;
-  }
-
-  return (
-    <FrameSizeProviderInner initialFrame={initialFrame}>
-      {children}
-    </FrameSizeProviderInner>
-  );
-}
-
-function FrameSizeProviderInner({
-  initialFrame,
-  children,
+  render,
 }: FrameSizeProviderProps) {
   const frameRef = React.useRef<Frame>({
     width: initialFrame.width,
@@ -156,23 +134,37 @@ function FrameSizeProviderInner({
     listeners.forEach((listener) => listener());
   });
 
+  const viewRef = React.useRef<View>(null);
+
+  React.useEffect(() => {
+    if (Platform.OS === 'web') {
+      // We use ResizeObserver on web
+      return;
+    }
+
+    viewRef.current?.measure((_x, _y, width, height) => {
+      onChange({ width, height });
+    });
+  }, [onChange]);
+
+  const onLayout = (event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout;
+
+    onChange({ width, height });
+  };
+
   return (
-    <>
+    <FrameContext.Provider value={context}>
       {Platform.OS === 'web' ? (
         <FrameSizeListenerWeb onChange={onChange} />
-      ) : (
-        <SafeAreaListener
-          onChange={({ frame }) => onChange(frame)}
-          style={StyleSheet.absoluteFill}
-        />
-      )}
-      <FrameContext.Provider value={context}>{children}</FrameContext.Provider>
-    </>
+      ) : null}
+      {render({ ref: viewRef, onLayout })}
+    </FrameContext.Provider>
   );
 }
 
-// FIXME: On the Web, the safe area frame value doesn't update on resize
-// So we workaround this by measuring the frame on resize
+// FIXME: On the Web, `onLayout` doesn't fire on resize
+// So we workaround this by using ResizeObserver
 function FrameSizeListenerWeb({
   onChange,
 }: {

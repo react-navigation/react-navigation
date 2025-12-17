@@ -37,7 +37,12 @@ export type HeaderSearchBarOptions = {
   /**
    * The auto-capitalization behavior
    */
-  autoCapitalize?: 'none' | 'words' | 'sentences' | 'characters';
+  autoCapitalize?:
+    | 'none'
+    | 'words'
+    | 'sentences'
+    | 'characters'
+    | 'systemDefault';
   /**
    * Automatically focuses search input on mount
    */
@@ -64,7 +69,7 @@ export type HeaderSearchBarOptions = {
    * A callback that gets called when the text changes.
    * It receives the current text value of the search input.
    */
-  onChangeText?: TextInputProps['onChange'];
+  onChange?: TextInputProps['onChange'];
   /**
    * Callback that is called when the submit button is pressed.
    * It receives the current text value of the search input.
@@ -335,8 +340,4 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    * Whether label font should scale to respect Text Size accessibility settings.
    */
   allowFontScaling?: boolean;
-  /**
-   * Callback to trigger when the size of the label changes.
-   */
-  onLabelLayout?: (e: LayoutChangeEvent) => void;
 };

@@ -1,40 +1,46 @@
 import { Button } from '@react-navigation/elements';
-import type { PathConfigMap } from '@react-navigation/native';
+import type {
+  CompositeScreenProps,
+  NavigatorScreenParams,
+  PathConfig,
+  RootParamList,
+  StaticScreenProps,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
-  HeaderStyleInterpolators,
   type StackScreenProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
-import type { RootStackParamList } from '../screens';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type SimpleStackParams = {
+type SimpleStackParamList = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Contacts: undefined;
   Albums: undefined;
 };
 
-const linking: PathConfigMap<SimpleStackParams> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-  Contacts: 'contacts',
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Contacts: 'contacts',
+    Albums: 'albums',
+  },
+} satisfies PathConfig<NavigatorScreenParams<SimpleStackParamList>>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<SimpleStackParams, 'Article'>) => {
+}: StackScreenProps<SimpleStackParamList, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -70,12 +76,13 @@ const ArticleScreen = ({
   );
 };
 
-const NewsFeedScreen = ({
-  route,
-  navigation,
-}: StackScreenProps<SimpleStackParams, 'NewsFeed'>) => {
-  const rootNavigation =
-    navigation.getParent<StackScreenProps<RootStackParamList>['navigation']>();
+type NewsFeedScreenProps = CompositeScreenProps<
+  StackScreenProps<SimpleStackParamList, 'NewsFeed'>,
+  StackScreenProps<RootParamList, 'SimpleStack'>
+>;
+
+const NewsFeedScreen = ({ route, navigation }: NewsFeedScreenProps) => {
+  const rootNavigation = navigation.getParent('SimpleStack');
 
   return (
     <ScrollView>
@@ -97,14 +104,14 @@ const NewsFeedScreen = ({
 
 const ContactsScreen = ({
   navigation,
-}: StackScreenProps<SimpleStackParams, 'Contacts'>) => {
+}: StackScreenProps<SimpleStackParamList, 'Contacts'>) => {
   const [query, setQuery] = React.useState('');
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerSearchBarOptions: {
         placeholder: 'Filter contacts',
-        onChangeText: (e) => {
+        onChange: (e) => {
           setQuery(e.nativeEvent.text);
         },
       },
@@ -130,7 +137,7 @@ const ContactsScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: StackScreenProps<SimpleStackParams, 'Albums'>) => {
+}: StackScreenProps<SimpleStackParamList, 'Albums'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -149,15 +156,13 @@ const AlbumsScreen = ({
   );
 };
 
-const Stack = createStackNavigator<SimpleStackParams>();
+const Stack = createStackNavigator<SimpleStackParamList>();
 
-export function SimpleStack() {
+export function SimpleStack(
+  _: StaticScreenProps<NavigatorScreenParams<SimpleStackParamList>>
+) {
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
-      }}
-    >
+    <Stack.Navigator>
       <Stack.Screen
         name="Article"
         component={ArticleScreen}

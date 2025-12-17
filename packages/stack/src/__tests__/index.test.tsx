@@ -1,3 +1,5 @@
+import 'react-native-gesture-handler/jestSetup';
+
 import { expect, jest, test } from '@jest/globals';
 import { Text } from '@react-navigation/elements';
 import {
@@ -113,6 +115,8 @@ test('fires transition events on navigation', async () => {
   expect(onTransitionEnd).not.toHaveBeenCalled();
 
   fireEvent.press(getByText('Go to B'));
+
+  act(() => jest.advanceTimersByTime(1));
 
   expect(onTransitionStart).toHaveBeenCalledTimes(1);
   expect(onTransitionStart).toHaveBeenCalledWith(
