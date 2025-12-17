@@ -12,7 +12,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import type { Icon } from '../types';
+import type { BottomTabIcon } from '../types';
 
 export type TabBarIconProps = {
   route: Route<string>;
@@ -25,12 +25,12 @@ export type TabBarIconProps = {
   activeTintColor: ColorValue;
   inactiveTintColor: ColorValue;
   icon:
-    | Icon
+    | BottomTabIcon
     | ((props: {
         focused: boolean;
         color: ColorValue;
         size: number;
-      }) => Icon | React.ReactNode);
+      }) => BottomTabIcon | React.ReactNode);
   allowFontScaling?: boolean;
   style: StyleProp<ViewStyle>;
 };

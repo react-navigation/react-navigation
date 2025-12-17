@@ -164,7 +164,7 @@ type IconIOS = IconIOSSfSymbol | IconImage;
 
 type IconAndroid = IconAndroidDrawable | IconImage;
 
-export type Icon = IconIOS | IconAndroid;
+export type BottomTabIcon = IconIOS | IconAndroid;
 
 type BottomTabCustomOptions = {
   /**
@@ -468,12 +468,12 @@ export type BottomTabNavigationOptions = {
    * A React element is only supported with `custom` implementation.
    */
   tabBarIcon?:
-    | Icon
+    | BottomTabIcon
     | ((props: {
         focused: boolean;
         color: ColorValue;
         size: number;
-      }) => Icon | React.ReactNode);
+      }) => BottomTabIcon | React.ReactNode);
 
   /**
    * Text to show in a badge on the tab icon.

@@ -25,7 +25,7 @@ import type {
   BottomTabDescriptorMap,
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
-  Icon,
+  BottomTabIcon,
 } from '../types';
 import { ScreenContent } from './ScreenContent';
 
@@ -299,7 +299,7 @@ export function BottomTabViewNative({ state, navigation, descriptors }: Props) {
   );
 }
 
-function getPlatformIcon(icon: Icon): PlatformIcon {
+function getPlatformIcon(icon: BottomTabIcon): PlatformIcon {
   return {
     ios:
       icon?.type === 'sfSymbol'
