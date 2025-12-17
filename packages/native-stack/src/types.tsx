@@ -880,11 +880,9 @@ export type NativeStackHeaderItemMenuAction = {
    */
   label: string;
   /**
-   * The subtitle displayed alongside the menu element’s label.
-   *
-   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/subtitle
+   * The secondary text displayed alongside the label of the menu item.
    */
-  subtitle?: string;
+  description?: string;
   /**
    * Icon for the menu item.
    */
@@ -948,17 +946,25 @@ export type NativeStackHeaderItemMenuSubmenu = {
    */
   icon?: PlatformIconIOSSfSymbol;
   /**
-   * Whether the menu is displayed inline.
+   * Whether the menu is displayed inline with the parent menu.
+   * By default, submenus are displayed after expanding the parent menu item.
+   * Inline menus are displayed as part of the parent menu as a section.
+   *
+   * Defaults to `false`.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/displayinline
    */
-  displayInline?: boolean;
+  inline?: boolean;
   /**
-   * Whether the menu is displayed as a palette.
+   * How the submenu items are displayed.
+   * - `default`: menu items are displayed normally.
+   * - `palette`: menu items are displayed in a horizontal row.
+   *
+   * Defaults to `default`.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/displayaspalette
    */
-  displayAsPalette?: boolean;
+  layout?: 'default' | 'palette';
   /**
    * Whether to apply destructive style to the menu item.
    *
@@ -966,11 +972,13 @@ export type NativeStackHeaderItemMenuSubmenu = {
    */
   destructive?: boolean;
   /**
-   * Whether the menu and its submenus allow a single menu item to be in the “on” state.
+   * Whether multiple items in the submenu can be selected, i.e. in "on" state.
+   *
+   * Defaults to `false`.
    *
    * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/singleselection
    */
-  singleSelection?: boolean;
+  multiselectable?: boolean;
   /**
    * Array of menu items (actions or submenus).
    */
@@ -998,17 +1006,23 @@ export type NativeStackHeaderItemMenu = SharedHeaderItem & {
      */
     title?: string;
     /**
-     * Whether the menu and its submenus allow a single menu item to be in the “on” state.
+     * Whether multiple items in the submenu can be selected, i.e. in "on" state.
+     *
+     * Defaults to `false`.
      *
      * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/singleselection
      */
-    singleSelection?: boolean;
+    multiselectable?: boolean;
     /**
-     * Whether the menu is displayed as a palette.
+     * How the submenu items are displayed.
+     * - `default`: menu items are displayed normally.
+     * - `palette`: menu items are displayed in a horizontal row.
+     *
+     * Defaults to `default`.
      *
      * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/displayaspalette
      */
-    displayAsPalette?: boolean;
+    layout?: 'default' | 'palette';
     /**
      * Array of menu items (actions or submenus).
      */

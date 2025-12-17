@@ -298,7 +298,7 @@ export function NativeStack(
                   },
                   {
                     label: 'Inline submenu',
-                    displayInline: true,
+                    inline: true,
                     destructive: true,
                     icon: { type: 'sfSymbol', name: 'star' },
                     type: 'submenu',
@@ -307,7 +307,7 @@ export function NativeStack(
                         label: 'Sub Action 1',
                         state: 'mixed',
                         type: 'action',
-                        subtitle: 'With subtitle',
+                        description: 'With description',
                         onPress: () => Alert.alert('Sub Action 1 pressed'),
                         destructive: true,
                         keepsMenuPresented: true,
@@ -322,8 +322,8 @@ export function NativeStack(
                   },
                   {
                     label: 'Palette',
-                    displayInline: true,
-                    displayAsPalette: true,
+                    inline: true,
+                    layout: 'palette',
                     destructive: true,
                     type: 'submenu',
                     items: [
