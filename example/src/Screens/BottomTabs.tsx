@@ -14,7 +14,7 @@ import {
 } from '@react-navigation/elements';
 import {
   type NavigatorScreenParams,
-  type PathConfigMap,
+  type PathConfig,
   type StaticScreenProps,
   useIsFocused,
   useNavigation,
@@ -35,7 +35,7 @@ import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
-import { NativeStack, type NativeStackParams } from './NativeStack';
+import { NativeStack, type NativeStackParamList } from './NativeStack';
 
 const getTabBarIcon =
   (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
@@ -43,22 +43,24 @@ const getTabBarIcon =
     <MaterialCommunityIcons name={name} color={color} size={size} />
   );
 
-type BottomTabParams = {
-  TabStack: NavigatorScreenParams<NativeStackParams>;
+export type BottomTabParamList = {
+  TabStack: NavigatorScreenParams<NativeStackParamList>;
   TabAlbums: undefined;
   TabContacts: undefined;
   TabChat: { count: number } | undefined;
 };
 
-const linking: PathConfigMap<BottomTabParams> = {
-  TabStack: {
-    path: 'stack',
-    screens: NativeStack.linking,
+const linking = {
+  screens: {
+    TabStack: {
+      path: 'stack',
+      screens: NativeStack.linking.screens,
+    },
+    TabAlbums: 'albums',
+    TabContacts: 'contacts',
+    TabChat: 'chat',
   },
-  TabAlbums: 'albums',
-  TabContacts: 'contacts',
-  TabChat: 'chat',
-};
+} satisfies PathConfig<NavigatorScreenParams<BottomTabParamList>>;
 
 const AlbumsScreen = () => {
   const navigation = useNavigation<typeof Tab>();
@@ -96,13 +98,13 @@ const AlbumsScreen = () => {
 
 let i = 1;
 
-const Tab = createBottomTabNavigator<BottomTabParams>();
+const Tab = createBottomTabNavigator<BottomTabParamList>();
 
 const animations = ['none', 'fade', 'shift'] as const;
 const variants = ['material', 'uikit'] as const;
 
 export function BottomTabs(
-  _: StaticScreenProps<NavigatorScreenParams<BottomTabParams>>
+  _: StaticScreenProps<NavigatorScreenParams<BottomTabParamList>>
 ) {
   const { showActionSheetWithOptions } = useActionSheet();
 
@@ -124,7 +126,7 @@ export function BottomTabs(
         backBehavior="fullHistory"
         screenOptions={({
           navigation,
-        }: BottomTabScreenProps<BottomTabParams>) => ({
+        }: BottomTabScreenProps<BottomTabParamList>) => ({
           headerShown: true,
           headerLeft: (props) => (
             <HeaderBackButton {...props} onPress={navigation.goBack} />

@@ -3,7 +3,7 @@ import {
   CommonActions,
   Link,
   type NavigatorScreenParams,
-  type PathConfigMap,
+  type PathConfig,
   StackActions,
   type StaticScreenProps,
 } from '@react-navigation/native';
@@ -22,10 +22,12 @@ type LinkComponentDemoParamList = {
   Albums: undefined;
 };
 
-const linking: PathConfigMap<LinkComponentDemoParamList> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    Albums: 'albums',
+  },
+} satisfies PathConfig<NavigatorScreenParams<LinkComponentDemoParamList>>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 

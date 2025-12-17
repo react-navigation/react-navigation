@@ -1,5 +1,6 @@
 import type {
-  PathConfigMap,
+  NavigatorScreenParams,
+  PathConfig,
   StaticScreenProps,
 } from '@react-navigation/native';
 import {
@@ -33,31 +34,33 @@ const EXAMPLE_SCREEN_NAMES = Object.keys(
   EXAMPLE_SCREENS
 ) as (keyof typeof EXAMPLE_SCREENS)[];
 
-type TabViewStackParams = {
+type TabViewStackParamList = {
   [Key in keyof typeof EXAMPLE_SCREENS]: undefined;
 } & {
   ExampleList: undefined;
 };
 
-const linking: PathConfigMap<TabViewStackParams> = {
-  ExampleList: '',
-  ...EXAMPLE_SCREEN_NAMES.reduce(
-    (acc, name) => ({
-      ...acc,
-      [name]: name
-        .replace(/([A-Z]+)/g, '-$1')
-        .replace(/^-/, '')
-        .toLowerCase(),
-    }),
-    {}
-  ),
-};
+const linking = {
+  screens: {
+    ExampleList: '',
+    ...EXAMPLE_SCREEN_NAMES.reduce(
+      (acc, name) => ({
+        ...acc,
+        [name]: name
+          .replace(/([A-Z]+)/g, '-$1')
+          .replace(/^-/, '')
+          .toLowerCase(),
+      }),
+      {}
+    ),
+  },
+} satisfies PathConfig<NavigatorScreenParams<TabViewStackParamList>>;
 
-const TabViewStack = createStackNavigator<TabViewStackParams>();
+const TabViewStack = createStackNavigator<TabViewStackParamList>();
 
 const ExampleListScreen = ({
   navigation,
-}: StackScreenProps<TabViewStackParams, 'ExampleList'>) => {
+}: StackScreenProps<TabViewStackParamList, 'ExampleList'>) => {
   return (
     <ScrollView>
       {EXAMPLE_SCREEN_NAMES.map((name) => (

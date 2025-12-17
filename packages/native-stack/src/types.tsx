@@ -378,7 +378,9 @@ export type NativeStackNavigationOptions = {
    * You also need to specify `contentInsetAdjustmentBehavior="automatic"` in your `ScrollView`, `FlatList` etc.
    * If you don't have a `ScrollView`, specify `headerTransparent: false`.
    */
-  headerSearchBarOptions?: SearchBarProps;
+  headerSearchBarOptions?: Omit<SearchBarProps, 'onChangeText'> & {
+    onChange?: SearchBarProps['onChangeText'];
+  };
   /**
    * Boolean indicating whether to show the menu on longPress of iOS >= 14 back button. Defaults to `true`.
    * Requires `react-native-screens` version >=3.3.0.
@@ -878,6 +880,10 @@ export type NativeStackHeaderItemMenuAction = {
    */
   label: string;
   /**
+   * The secondary text displayed alongside the label of the menu item.
+   */
+  description?: string;
+  /**
    * Icon for the menu item.
    */
   icon?: PlatformIconIOSSfSymbol;
@@ -940,6 +946,40 @@ export type NativeStackHeaderItemMenuSubmenu = {
    */
   icon?: PlatformIconIOSSfSymbol;
   /**
+   * Whether the menu is displayed inline with the parent menu.
+   * By default, submenus are displayed after expanding the parent menu item.
+   * Inline menus are displayed as part of the parent menu as a section.
+   *
+   * Defaults to `false`.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/displayinline
+   */
+  inline?: boolean;
+  /**
+   * How the submenu items are displayed.
+   * - `default`: menu items are displayed normally.
+   * - `palette`: menu items are displayed in a horizontal row.
+   *
+   * Defaults to `default`.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/displayaspalette
+   */
+  layout?: 'default' | 'palette';
+  /**
+   * Whether to apply destructive style to the menu item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/destructive
+   */
+  destructive?: boolean;
+  /**
+   * Whether multiple items in the submenu can be selected, i.e. in "on" state.
+   *
+   * Defaults to `false`.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/singleselection
+   */
+  multiselectable?: boolean;
+  /**
    * Array of menu items (actions or submenus).
    */
   items: NativeStackHeaderItemMenu['menu']['items'];
@@ -965,6 +1005,24 @@ export type NativeStackHeaderItemMenu = SharedHeaderItem & {
      * Optional title to show on top of the menu.
      */
     title?: string;
+    /**
+     * Whether multiple items in the submenu can be selected, i.e. in "on" state.
+     *
+     * Defaults to `false`.
+     *
+     * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/singleselection
+     */
+    multiselectable?: boolean;
+    /**
+     * How the submenu items are displayed.
+     * - `default`: menu items are displayed normally.
+     * - `palette`: menu items are displayed in a horizontal row.
+     *
+     * Defaults to `default`.
+     *
+     * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/displayaspalette
+     */
+    layout?: 'default' | 'palette';
     /**
      * Array of menu items (actions or submenus).
      */

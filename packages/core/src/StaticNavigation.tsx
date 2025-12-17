@@ -85,7 +85,7 @@ type ParamsForConfig<Linking, Screen> = undefined extends Linking
     : ParamsForScreen<Screen>;
 
 type ParamListForScreens<Screens> = {
-  [Key in KeysOf<Screens>]: Screens[Key] extends StaticScreenConfigResult<
+  [Key in KeysOf<Screens>]: Screens[Key] extends StaticScreenConfig<
     infer Linking,
     infer Screen,
     any,
@@ -134,26 +134,66 @@ type RouteType<Params> = Readonly<
   >
 >;
 
-export type StaticScreenConfigLinking = string | { path: string } | undefined;
+type StaticScreenConfigLinkingAlias = {
+  /**
+   * Path string to match against.
+   * e.g. `/users/:id` will match `/users/1` and extract `id` param as `1`.
+   */
+  path: string;
+  /**
+   * Whether the path should be consider parent paths or use the exact path.
+   * By default, paths are relating to the path config on the parent screen.
+   * If `exact` is set to `true`, the parent path configuration is not used.
+   */
+  exact?: boolean;
+  /**
+   * An object mapping the param name to a function which parses the param value.
+   *
+   * @example
+   * ```js
+   * parse: {
+   *   id: Number,
+   *   date: (value) => new Date(value)
+   * }
+   * ```
+   */
+  parse?: Record<string, (value: string) => unknown>;
+  /**
+   * An object mapping the param name to a function which converts the param value to a string.
+   * By default, all params are converted to strings using `String(value)`.
+   *
+   * @example
+   * ```js
+   * stringify: {
+   *   date: (value) => value.toISOString()
+   * }
+   * ```
+   */
+  stringify?: Record<string, (value: unknown) => string>;
+};
+
+export type StaticScreenConfigLinking =
+  | string
+  | (StaticScreenConfigLinkingAlias & {
+      /**
+       * Additional path alias that will be matched to the same screen.
+       */
+      alias?: (string | StaticScreenConfigLinkingAlias)[];
+    })
+  | undefined;
 
 export type StaticScreenConfigScreen =
   | React.ComponentType<any>
   | StaticNavigation<any, any, any>;
 
-export type StaticScreenConfigResult<
+export type StaticScreenConfig<
   Linking extends StaticScreenConfigLinking,
   Screen,
   State extends NavigationState,
   ScreenOptions extends {},
   EventMap extends EventMapBase,
   Navigation,
-  Params = Screen extends React.ComponentType<{}>
-    ? undefined
-    : Screen extends React.ComponentType<{ route: { params: infer P } }>
-      ? P
-      : Screen extends StaticNavigation<any, any, any>
-        ? NavigatorScreenParams<StaticParamList<Screen>>
-        : undefined,
+  Params = ParamsForConfig<Linking, Screen>,
 > = {
   /**
    * Static navigation config or Component to render for the screen.
@@ -265,6 +305,9 @@ export type StaticScreenConfigResult<
    * ```js
    * linking: {
    *   path: 'profile/:userId',
+   *   parse: {
+   *     userId: Number,
+   *   },
    * },
    * ```
    */
@@ -276,23 +319,6 @@ export type StaticScreenConfigResult<
   navigationKey?: string;
 };
 
-export type StaticScreenConfigInput<
-  Linking extends StaticScreenConfigLinking,
-  Screen extends StaticScreenConfigScreen,
-  State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase,
-  Navigation,
-> = StaticScreenConfigResult<
-  Linking,
-  Screen,
-  State,
-  ScreenOptions,
-  EventMap,
-  Navigation,
-  ParamsForConfig<Linking, Screen>
->;
-
 type StaticConfigScreens<
   ParamList extends ParamListBase,
   State extends NavigationState,
@@ -303,7 +329,7 @@ type StaticConfigScreens<
   [RouteName in keyof ParamList]:
     | React.ComponentType<any>
     | StaticNavigation<any, any, any>
-    | StaticScreenConfigResult<
+    | StaticScreenConfig<
         | {
             path: string;
             parse?: Record<string, (value: string) => any>;

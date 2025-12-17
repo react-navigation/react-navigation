@@ -93,7 +93,7 @@ export function PanResponderAdapter({
     onTabSelectRef.current = onTabSelect;
   });
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const offset = -navigationStateRef.current.index * layout.width;
 
     panX.setValue(offset);

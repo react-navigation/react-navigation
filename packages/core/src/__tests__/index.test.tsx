@@ -1254,6 +1254,106 @@ test('navigates to nested child in a navigator with initial: false', () => {
   });
 });
 
+test('resets to nested child in a navigator', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestComponent = ({ route }: any): any =>
+    `[${route.name}, ${JSON.stringify(route.params)}]`;
+
+  const onStateChange = jest.fn();
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const element = render(
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="foo-a" component={TestComponent} />
+              <Screen name="foo-b" component={TestComponent} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="bar">
+          {() => (
+            <TestNavigator initialRouteName="bar-a">
+              <Screen
+                name="bar-a"
+                component={TestComponent}
+                initialParams={{ lol: 'why' }}
+              />
+              <Screen
+                name="bar-b"
+                component={TestComponent}
+                initialParams={{ some: 'stuff' }}
+              />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`"[foo-a, undefined]"`);
+
+  act(() =>
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'bar',
+          params: {
+            screen: 'bar-b',
+            params: { test: 42 },
+          },
+        },
+      ],
+    })
+  );
+
+  expect(element).toMatchInlineSnapshot(
+    `"[bar-b, {"some":"stuff","test":42}]"`
+  );
+
+  act(() =>
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'bar',
+          params: {
+            screen: 'bar-a',
+            params: { whoa: 'test' },
+          },
+        },
+      ],
+    })
+  );
+
+  expect(element).toMatchInlineSnapshot(
+    `"[bar-a, {"lol":"why","whoa":"test"}]"`
+  );
+
+  act(() =>
+    navigation.reset({
+      index: 0,
+      routes: [
+        {
+          name: 'bar',
+          params: { screen: 'bar-a' },
+        },
+      ],
+    })
+  );
+
+  expect(element).toMatchInlineSnapshot(`"[bar-a, {"lol":"why"}]"`);
+});
+
 test('resets state of a nested child in a navigator', () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
@@ -1670,7 +1770,7 @@ test('restores previously discarded state when route names change after initial 
       initialState={initialState}
       onStateChange={onStateChange}
     >
-      <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+      <TestNavigator routeNamesChangeBehavior="lastUnhandled">
         <Screen name="foo" component={TestScreen} />
         <Screen name="bar" component={TestScreen} />
         <Screen name="baz" component={TestScreen} />
@@ -1682,7 +1782,7 @@ test('restores previously discarded state when route names change after initial 
 
   root.update(
     <BaseNavigationContainer onStateChange={onStateChange}>
-      <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+      <TestNavigator routeNamesChangeBehavior="lastUnhandled">
         <Screen name="bar" component={TestScreen} />
         <Screen name="baz" component={TestScreen} />
         <Screen name="qux" component={TestScreen} />
@@ -1730,7 +1830,7 @@ test('restores previously discarded state when route names change after navigati
       ref={navigation}
       onStateChange={onStateChange}
     >
-      <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+      <TestNavigator routeNamesChangeBehavior="lastUnhandled">
         <Screen name="foo" component={TestScreen} />
         <Screen name="bar" component={TestScreen} />
         <Screen name="baz" component={TestScreen} />
@@ -1760,7 +1860,7 @@ test('restores previously discarded state when route names change after navigati
 
   root.update(
     <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
-      <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+      <TestNavigator routeNamesChangeBehavior="lastUnhandled">
         <Screen name="bar" component={TestScreen} />
         <Screen name="baz" component={TestScreen} />
         <Screen name="qux" component={TestScreen} />
@@ -1824,7 +1924,7 @@ test('restores previously discarded state when route names change after navigati
       <TestNavigator>
         <Screen name="test">
           {() => (
-            <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+            <TestNavigator routeNamesChangeBehavior="lastUnhandled">
               <Screen name="foo" component={TestScreen} />
               <Screen name="bar" component={TestScreen} />
               <Screen name="baz" component={TestScreen} />
@@ -1884,7 +1984,7 @@ test('restores previously discarded state when route names change after navigati
       <TestNavigator>
         <Screen name="test">
           {() => (
-            <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+            <TestNavigator routeNamesChangeBehavior="lastUnhandled">
               <Screen name="bar" component={TestScreen} />
               <Screen name="baz" component={TestScreen} />
               <Screen name="qux" component={TestScreen} />
@@ -1965,7 +2065,7 @@ test('restores previously discarded state when route names change after navigati
       <TestNavigator>
         <Screen name="test">
           {() => (
-            <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+            <TestNavigator routeNamesChangeBehavior="lastUnhandled">
               <Screen name="foo" component={TestScreen} />
               <Screen name="bar" component={TestScreen} />
               <Screen name="baz" component={TestScreen} />
@@ -2009,7 +2109,7 @@ test('restores previously discarded state when route names change after navigati
       <TestNavigator>
         <Screen name="test">
           {() => (
-            <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+            <TestNavigator routeNamesChangeBehavior="lastUnhandled">
               <Screen name="bar" component={TestScreen} />
               <Screen name="baz" component={TestScreen} />
               <Screen name="qux" component={TestScreen} />

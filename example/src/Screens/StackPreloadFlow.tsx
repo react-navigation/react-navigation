@@ -1,7 +1,7 @@
 import { Button, Text } from '@react-navigation/elements';
 import type {
   NavigatorScreenParams,
-  PathConfigMap,
+  PathConfig,
   StaticScreenProps,
 } from '@react-navigation/native';
 import {
@@ -11,19 +11,21 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-type PreloadStackParams = {
+type PreloadStackParamList = {
   Home: undefined;
   Details: undefined;
 };
 
-const linking: PathConfigMap<PreloadStackParams> = {
-  Home: '',
-  Details: 'details',
-};
+const linking = {
+  screens: {
+    Home: '',
+    Details: 'details',
+  },
+} satisfies PathConfig<NavigatorScreenParams<PreloadStackParamList>>;
 
 const DetailsScreen = ({
   navigation,
-}: StackScreenProps<PreloadStackParams, 'Details'>) => {
+}: StackScreenProps<PreloadStackParamList, 'Details'>) => {
   const [loadingCountdown, setLoadingCountdown] = useState(3);
 
   useEffect(() => {
@@ -57,7 +59,7 @@ const DetailsScreen = ({
 
 const HomeScreen = ({
   navigation,
-}: StackScreenProps<PreloadStackParams, 'Home'>) => {
+}: StackScreenProps<PreloadStackParamList, 'Home'>) => {
   const { navigate, preload } = navigation;
 
   const [isReady, setIsReady] = useState(false);
@@ -94,10 +96,10 @@ const HomeScreen = ({
   );
 };
 
-const SimpleStack = createStackNavigator<PreloadStackParams>();
+const SimpleStack = createStackNavigator<PreloadStackParamList>();
 
 export function StackPreloadFlow(
-  _: StaticScreenProps<NavigatorScreenParams<PreloadStackParams>>
+  _: StaticScreenProps<NavigatorScreenParams<PreloadStackParamList>>
 ) {
   return (
     <SimpleStack.Navigator>

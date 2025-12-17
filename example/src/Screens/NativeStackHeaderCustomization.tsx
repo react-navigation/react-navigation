@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/elements';
 import type {
   NavigatorScreenParams,
-  PathConfigMap,
+  PathConfig,
   StaticScreenProps,
 } from '@react-navigation/native';
 import {
@@ -29,24 +29,31 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type NativeHeaderCustomizationStackParams = {
+type NativeHeaderCustomizationStackParamList = {
   Article: { author: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
 };
 
-const linking: PathConfigMap<NativeHeaderCustomizationStackParams> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Albums: 'albums',
+  },
+} satisfies PathConfig<
+  NavigatorScreenParams<NativeHeaderCustomizationStackParamList>
+>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: NativeStackScreenProps<NativeHeaderCustomizationStackParams, 'Article'>) => {
+}: NativeStackScreenProps<
+  NativeHeaderCustomizationStackParamList,
+  'Article'
+>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -72,7 +79,7 @@ const NewsFeedScreen = ({
   route,
   navigation,
 }: NativeStackScreenProps<
-  NativeHeaderCustomizationStackParams,
+  NativeHeaderCustomizationStackParamList,
   'NewsFeed'
 >) => {
   return (
@@ -92,7 +99,10 @@ const NewsFeedScreen = ({
 
 const AlbumsScreen = ({
   navigation,
-}: NativeStackScreenProps<NativeHeaderCustomizationStackParams, 'Albums'>) => {
+}: NativeStackScreenProps<
+  NativeHeaderCustomizationStackParamList,
+  'Albums'
+>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -114,11 +124,11 @@ const AlbumsScreen = ({
 };
 
 const Stack =
-  createNativeStackNavigator<NativeHeaderCustomizationStackParams>();
+  createNativeStackNavigator<NativeHeaderCustomizationStackParamList>();
 
 export function NativeStackHeaderCustomization(
   _: StaticScreenProps<
-    NavigatorScreenParams<NativeHeaderCustomizationStackParams>
+    NavigatorScreenParams<NativeHeaderCustomizationStackParamList>
   >
 ) {
   const onPress = () => {
@@ -137,7 +147,7 @@ export function NativeStackHeaderCustomization(
           route,
           navigation,
         }: NativeStackOptionsArgs<
-          NativeHeaderCustomizationStackParams,
+          NativeHeaderCustomizationStackParamList,
           'Article'
         >) => ({
           title: `Article byyyy ${route.params?.author ?? 'Unknown'}`,

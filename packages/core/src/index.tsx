@@ -23,9 +23,8 @@ export {
   type StaticConfig,
   type StaticNavigation,
   type StaticParamList,
-  type StaticScreenConfigInput,
+  type StaticScreenConfig,
   type StaticScreenConfigLinking,
-  type StaticScreenConfigResult,
   type StaticScreenConfigScreen,
   type StaticScreenProps,
 } from './StaticNavigation';
@@ -35,7 +34,7 @@ export { useTheme } from './theming/useTheme';
 export * from './types';
 export { useFocusEffect } from './useFocusEffect';
 export { useIsFocused } from './useIsFocused';
-export { type GenericNavigation, useNavigation } from './useNavigation';
+export { useNavigation } from './useNavigation';
 export { useNavigationBuilder } from './useNavigationBuilder';
 export { useNavigationContainerRef } from './useNavigationContainerRef';
 export { useNavigationIndependentTree } from './useNavigationIndependentTree';

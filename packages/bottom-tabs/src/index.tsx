@@ -36,6 +36,7 @@ export type {
   BottomTabBarButtonProps,
   BottomTabBarProps,
   BottomTabHeaderProps,
+  BottomTabIcon,
   BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
@@ -43,4 +44,3 @@ export type {
   BottomTabOptionsArgs,
   BottomTabScreenProps,
 } from './types';
-export type { NativeScreenHeaderItemProps } from './views/NativeScreen/types';

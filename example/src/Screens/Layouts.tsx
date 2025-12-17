@@ -1,7 +1,7 @@
 import { Button, Text } from '@react-navigation/elements';
 import type {
   NavigatorScreenParams,
-  PathConfigMap,
+  PathConfig,
   StaticScreenProps,
 } from '@react-navigation/native';
 import {
@@ -11,13 +11,15 @@ import {
 import * as React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-type LayoutsStackParams = {
+type LayoutsStackParamList = {
   SuspenseDemo: undefined;
 };
 
-const linking: PathConfigMap<LayoutsStackParams> = {
-  SuspenseDemo: 'suspense',
-};
+const linking = {
+  screens: {
+    SuspenseDemo: 'suspense',
+  },
+} satisfies PathConfig<NavigatorScreenParams<LayoutsStackParamList>>;
 
 let cached: number | undefined;
 
@@ -31,7 +33,7 @@ const createPromise = () =>
 
 const SuspenseDemoScreen = ({
   navigation,
-}: StackScreenProps<LayoutsStackParams, 'SuspenseDemo'>) => {
+}: StackScreenProps<LayoutsStackParamList, 'SuspenseDemo'>) => {
   const [promise, setPromise] = React.useState(createPromise);
   const [error, setError] = React.useState<Error | null>(null);
 
@@ -99,10 +101,10 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-const Stack = createStackNavigator<LayoutsStackParams>();
+const Stack = createStackNavigator<LayoutsStackParamList>();
 
 export function ScreenLayout(
-  _: StaticScreenProps<NavigatorScreenParams<LayoutsStackParams>>
+  _: StaticScreenProps<NavigatorScreenParams<LayoutsStackParamList>>
 ) {
   return (
     <Stack.Navigator>

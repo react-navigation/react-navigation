@@ -3,9 +3,8 @@ import {
   type ParamListBase,
   type StaticConfig,
   type StaticParamList,
-  type StaticScreenConfigInput,
+  type StaticScreenConfig,
   type StaticScreenConfigLinking,
-  type StaticScreenConfigResult,
   type StaticScreenConfigScreen,
   type TabActionHelpers,
   type TabNavigationState,
@@ -26,7 +25,7 @@ import { MaterialTopTabView } from '../views/MaterialTopTabView';
 function MaterialTopTabNavigator({
   initialRouteName,
   backBehavior,
-  UNSTABLE_routeNamesChangeBehavior,
+  routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
@@ -45,7 +44,7 @@ function MaterialTopTabNavigator({
     >(TabRouter, {
       initialRouteName,
       backBehavior,
-      UNSTABLE_routeNamesChangeBehavior,
+      routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,
@@ -99,7 +98,7 @@ export function createMaterialTopTabScreen<
   const Linking extends StaticScreenConfigLinking,
   const Screen extends StaticScreenConfigScreen,
 >(
-  config: StaticScreenConfigInput<
+  config: StaticScreenConfig<
     Linking,
     Screen,
     TabNavigationState<ParamListBase>,
@@ -107,14 +106,6 @@ export function createMaterialTopTabScreen<
     MaterialTopTabNavigationEventMap,
     MaterialTopTabNavigationProp<ParamListBase>
   >
-): StaticScreenConfigResult<
-  Linking,
-  Screen,
-  TabNavigationState<ParamListBase>,
-  MaterialTopTabNavigationOptions,
-  MaterialTopTabNavigationEventMap,
-  MaterialTopTabNavigationProp<ParamListBase>
-> {
-  // @ts-expect-error: there is some issue with the generic inference here
+) {
   return config;
 }

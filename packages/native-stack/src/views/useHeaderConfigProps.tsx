@@ -93,10 +93,14 @@ const processBarButtonItems = (
         };
 
         if (processedItem.type === 'menu' && item.type === 'menu') {
+          const { multiselectable, layout } = item.menu;
+
           processedItem = {
             ...processedItem,
             menu: {
               ...processedItem.menu,
+              singleSelection: !multiselectable,
+              displayAsPalette: layout === 'palette',
               items: item.menu.items.map(getMenuItem),
             },
           };
@@ -137,19 +141,25 @@ const processBarButtonItems = (
 const getMenuItem = (
   item: NativeStackHeaderItemMenuAction | NativeStackHeaderItemMenuSubmenu
 ): HeaderBarButtonItemMenuAction | HeaderBarButtonItemSubmenu => {
-  const { label, ...rest } = item;
+  if (item.type === 'submenu') {
+    const { label, inline, layout, items, multiselectable, ...rest } = item;
 
-  if (rest.type === 'submenu') {
     return {
       ...rest,
       title: label,
-      items: rest.items.map(getMenuItem),
+      displayAsPalette: layout === 'palette',
+      displayInline: inline,
+      singleSelection: !multiselectable,
+      items: items.map(getMenuItem),
     };
   }
+
+  const { label, description, ...rest } = item;
 
   return {
     ...rest,
     title: label,
+    subtitle: description,
   };
 };
 
@@ -185,7 +195,7 @@ export function useHeaderConfigProps({
   unstable_headerRightItems: headerRightItems,
 }: Props): ScreenStackHeaderConfigProps {
   const { direction } = useLocale();
-  const { colors, fonts } = useTheme();
+  const { colors, fonts, dark } = useTheme();
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
 
@@ -250,7 +260,10 @@ export function useHeaderConfigProps({
 
   const headerBackgroundColor =
     headerStyleFlattened.backgroundColor ??
-    (headerBackground != null || headerTransparent
+    (headerBackground != null ||
+    headerTransparent ||
+    // The title becomes invisible if background color is set with large title on iOS 26
+    (Platform.OS === 'ios' && headerLargeTitleEnabled)
       ? 'transparent'
       : colors.card);
 
@@ -426,7 +439,10 @@ export function useHeaderConfigProps({
       ) : null}
       {hasHeaderSearchBar ? (
         <ScreenStackHeaderSearchBarView>
-          <SearchBar {...headerSearchBarOptions} />
+          <SearchBar
+            {...headerSearchBarOptions}
+            onChangeText={headerSearchBarOptions.onChange}
+          />
         </ScreenStackHeaderSearchBarView>
       ) : null}
     </>
@@ -471,5 +487,6 @@ export function useHeaderConfigProps({
     children,
     headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
     headerRightBarButtonItems: processBarButtonItems(rightItems, colors, fonts),
+    experimental_userInterfaceStyle: dark ? 'dark' : 'light',
   } as const;
 }

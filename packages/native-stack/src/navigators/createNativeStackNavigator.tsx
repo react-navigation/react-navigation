@@ -9,9 +9,8 @@ import {
   type StackRouterOptions,
   type StaticConfig,
   type StaticParamList,
-  type StaticScreenConfigInput,
+  type StaticScreenConfig,
   type StaticScreenConfigLinking,
-  type StaticScreenConfigResult,
   type StaticScreenConfigScreen,
   type TypedNavigator,
   useNavigationBuilder,
@@ -28,7 +27,7 @@ import { NativeStackView } from '../views/NativeStackView';
 
 function NativeStackNavigator({
   initialRouteName,
-  UNSTABLE_routeNamesChangeBehavior,
+  routeNamesChangeBehavior,
   children,
   layout,
   screenListeners,
@@ -46,7 +45,7 @@ function NativeStackNavigator({
       NativeStackNavigationEventMap
     >(StackRouter, {
       initialRouteName,
-      UNSTABLE_routeNamesChangeBehavior,
+      routeNamesChangeBehavior,
       children,
       layout,
       screenListeners,
@@ -127,7 +126,7 @@ export function createNativeStackScreen<
   const Linking extends StaticScreenConfigLinking,
   const Screen extends StaticScreenConfigScreen,
 >(
-  config: StaticScreenConfigInput<
+  config: StaticScreenConfig<
     Linking,
     Screen,
     StackNavigationState<ParamListBase>,
@@ -135,14 +134,6 @@ export function createNativeStackScreen<
     NativeStackNavigationEventMap,
     NativeStackNavigationProp<ParamListBase>
   >
-): StaticScreenConfigResult<
-  Linking,
-  Screen,
-  StackNavigationState<ParamListBase>,
-  NativeStackNavigationOptions,
-  NativeStackNavigationEventMap,
-  NativeStackNavigationProp<ParamListBase>
-> {
-  // @ts-expect-error: there is some issue with the generic inference here
+) {
   return config;
 }

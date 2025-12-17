@@ -1,7 +1,7 @@
 import { Button } from '@react-navigation/elements';
 import type {
   NavigatorScreenParams,
-  PathConfigMap,
+  PathConfig,
   StaticScreenProps,
 } from '@react-navigation/native';
 import {
@@ -14,22 +14,24 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-type ModalStackParams = {
+type ModalStackParamList = {
   Article: { author: string };
   Albums: undefined;
 };
 
-const linking: PathConfigMap<ModalStackParams> = {
-  Article: COMMON_LINKING_CONFIG.Article,
-  Albums: 'albums',
-};
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    Albums: 'albums',
+  },
+} satisfies PathConfig<NavigatorScreenParams<ModalStackParamList>>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = ({
   navigation,
   route,
-}: StackScreenProps<ModalStackParams, 'Article'>) => {
+}: StackScreenProps<ModalStackParamList, 'Article'>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -48,7 +50,9 @@ const ArticleScreen = ({
   );
 };
 
-const AlbumsScreen = ({ navigation }: StackScreenProps<ModalStackParams>) => {
+const AlbumsScreen = ({
+  navigation,
+}: StackScreenProps<ModalStackParamList>) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -67,10 +71,10 @@ const AlbumsScreen = ({ navigation }: StackScreenProps<ModalStackParams>) => {
   );
 };
 
-const Stack = createStackNavigator<ModalStackParams>();
+const Stack = createStackNavigator<ModalStackParamList>();
 
 export function ModalStack(
-  _: StaticScreenProps<NavigatorScreenParams<ModalStackParams>>
+  _: StaticScreenProps<NavigatorScreenParams<ModalStackParamList>>
 ) {
   return (
     <Stack.Navigator screenOptions={{ presentation: 'modal' }}>

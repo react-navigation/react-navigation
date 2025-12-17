@@ -1,4 +1,7 @@
-import type { PlatformPressable } from '@react-navigation/elements';
+import type {
+  HeaderOptions,
+  PlatformPressable,
+} from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -29,8 +32,6 @@ import type {
   TabBarMinimizeBehavior,
 } from 'react-native-screens';
 import type { SFSymbol } from 'sf-symbols-typescript';
-
-import type { NativeHeaderOptions } from './views/NativeScreen/types';
 
 export type Variant = 'uikit' | 'material';
 
@@ -163,7 +164,7 @@ type IconIOS = IconIOSSfSymbol | IconImage;
 
 type IconAndroid = IconAndroidDrawable | IconImage;
 
-export type Icon = IconIOS | IconAndroid;
+export type BottomTabIcon = IconIOS | IconAndroid;
 
 type BottomTabCustomOptions = {
   /**
@@ -334,8 +335,6 @@ type BottomTabNativeOptions = {
    *
    * Works with backgroundColor's alpha < 1.
    *
-   * Only supported on iOS 18 and lower.
-   *
    * The following values are currently supported:
    *
    * - `none` - disables blur effect
@@ -347,14 +346,14 @@ type BottomTabNativeOptions = {
    * Complete list of possible blur effect styles is available in the official UIKit documentation:
    * @see {@link https://developer.apple.com/documentation/uikit/uiblureffect/style|UIBlurEffect.Style}
    *
+   * Only supported on iOS 18 and lower.
+   *
    * @platform ios
    */
   tabBarBlurEffect?: BottomTabsScreenBlurEffect;
 
   /**
    * Minimize behavior for the tab bar.
-   *
-   * Available starting from iOS 26.
    *
    * The following values are currently supported:
    *
@@ -369,6 +368,8 @@ type BottomTabNativeOptions = {
    *
    * The supported values correspond to the official UIKit documentation:
    * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/minimizebehavior|UITabBarController.MinimizeBehavior}
+   *
+   * Available starting from iOS 26.
    *
    * @platform ios
    */
@@ -391,6 +392,26 @@ type BottomTabNativeOptions = {
    * @platform android
    */
   tabBarActiveIndicatorEnabled?: boolean;
+
+  /**
+   * Function which returns a React element to display as an accessory view.
+   *
+   * Accepts a `placement` parameter which can be one of the following values:
+   * - `regular` - at bottom of the screen, above the tab bar if tab bar is at the bottom
+   * - `inline` - inline with the collapsed bottom tab bar (e.g. when minimized based on `tabBarMinimizeBehavior`)
+   *
+   * Note: the content is rendered twice for both placements, but only one is visible at a time based on the tab bar state.
+   * Any shared state should be stored outside of the component to keep both versions in sync.
+   *
+   * Available starting from iOS 26.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform ios
+   */
+  bottomAccessory?: (options: {
+    placement: 'regular' | 'inline';
+  }) => React.ReactNode;
 };
 
 export type BottomTabNavigationOptions = {
@@ -447,12 +468,12 @@ export type BottomTabNavigationOptions = {
    * A React element is only supported with `custom` implementation.
    */
   tabBarIcon?:
-    | Icon
+    | BottomTabIcon
     | ((props: {
         focused: boolean;
         color: ColorValue;
         size: number;
-      }) => Icon | React.ReactNode);
+      }) => BottomTabIcon | React.ReactNode);
 
   /**
    * Text to show in a badge on the tab icon.
@@ -549,7 +570,19 @@ export type BottomTabNavigationOptions = {
    * Style object for the component wrapping the screen content.
    */
   sceneStyle?: StyleProp<ViewStyle>;
-} & NativeHeaderOptions &
+
+  /**
+   * Function that returns a React Element to display as a header.
+   */
+  header?: (props: BottomTabHeaderProps) => React.ReactNode;
+
+  /**
+   * Whether to show the header.
+   *
+   * Defaults to `false` unless a header is provided.
+   */
+  headerShown?: boolean;
+} & HeaderOptions &
   BottomTabNativeOptions &
   BottomTabCustomOptions;
 
