@@ -1,5 +1,5 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
+  BottomTabBar,
   createBottomTabNavigator,
   createBottomTabScreen,
 } from '@react-navigation/bottom-tabs';
@@ -7,7 +7,6 @@ import {
   Button,
   getHeaderTitle,
   Header,
-  HeaderButton,
   useHeaderHeight,
 } from '@react-navigation/elements';
 import {
@@ -15,16 +14,11 @@ import {
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
-import {
-  createNativeStackNavigator,
-  createNativeStackScreen,
-} from '@react-navigation/native-stack';
 import { BlurView } from 'expo-blur';
-import { Alert, Platform, ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import iconBookUser from '../../assets/icons/book-user.png';
-import iconHeart from '../../assets/icons/heart.png';
 import iconListMusic from '../../assets/icons/list-music.png';
 import iconMusic from '../../assets/icons/music.png';
 import iconNewspaper from '../../assets/icons/newspaper.png';
@@ -33,13 +27,13 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
 import { MiniPlayer } from '../Shared/MiniPlayer';
-import { NativeStack } from './NativeStack';
 
 function ArticleScreen() {
-  const navigation = useNavigation('Article');
+  const insets = useSafeAreaInsets();
+  const navigation = useNavigation('TabArticle');
 
   return (
-    <ScrollView automaticallyAdjustContentInsets>
+    <ScrollView contentContainerStyle={{ paddingTop: insets.top }}>
       <View style={styles.buttons}>
         <Button
           variant="filled"
@@ -59,11 +53,13 @@ function ArticleScreen() {
 }
 
 function ContactsScreen(_: StaticScreenProps<{ count: number }>) {
-  return <Contacts />;
+  const insets = useSafeAreaInsets();
+
+  return <Contacts contentContainerStyle={{ paddingTop: insets.top }} />;
 }
 
 function AlbumsScreen() {
-  const navigation = useNavigation<typeof NativeBottomTabsNavigator>();
+  const navigation = useNavigation<typeof NativeBottomTabsCustomNavigator>();
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
@@ -100,60 +96,23 @@ function AlbumsScreen() {
   );
 }
 
-const ArticleStack = createNativeStackNavigator({
+let i = 1;
+
+const NativeBottomTabsCustomNavigator = createBottomTabNavigator({
+  tabBar: (props) => <BottomTabBar {...props} />,
+  screenOptions: {
+    tabBarPosition: 'left',
+  },
   screens: {
-    Article: createNativeStackScreen({
+    TabArticle: createBottomTabScreen({
       screen: ArticleScreen,
       options: {
         title: 'Article',
-        headerLargeTitleEnabled: true,
-      },
-    }),
-  },
-});
-
-const FavoritesStack = createNativeStackNavigator({
-  screens: {
-    Favorites: createNativeStackScreen({
-      screen: () => null,
-      options: {
-        title: 'Favorites',
-        headerSearchBarOptions: {
-          placeholder: 'Search Favorites',
-        },
-      },
-    }),
-  },
-});
-
-let i = 1;
-
-const NativeBottomTabsNavigator = createBottomTabNavigator({
-  screens: {
-    TabStack: createBottomTabScreen({
-      screen: ArticleStack,
-      options: {
-        popToTopOnBlur: true,
-        title: 'Article',
-        headerRight: ({ tintColor }) => (
-          <HeaderButton onPress={() => Alert.alert('Favorite button pressed')}>
-            <MaterialCommunityIcons
-              name="heart-outline"
-              size={24}
-              color={tintColor}
-            />
-          </HeaderButton>
-        ),
+        tabBarButtonTestID: 'article',
         tabBarIcon: {
           type: 'image',
           source: iconNewspaper,
         },
-        tabBarMinimizeBehavior: 'onScrollDown',
-        tabBarControllerMode: 'tabSidebar',
-      },
-      linking: {
-        path: 'stack',
-        screens: NativeStack.linking.screens,
       },
     }),
     TabContacts: createBottomTabScreen({
@@ -161,16 +120,11 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
       initialParams: { count: i },
       options: ({ route }) => ({
         title: 'Contacts',
-        tabBarIcon: Platform.select({
-          ios: {
-            type: 'sfSymbol',
-            name: 'person.2',
-          },
-          default: {
-            type: 'image',
-            source: iconBookUser,
-          },
-        }),
+        tabBarButtonTestID: 'contacts',
+        tabBarIcon: {
+          type: 'image',
+          source: iconBookUser,
+        },
         tabBarBadge: route.params?.count,
       }),
       linking: 'contacts',
@@ -180,6 +134,7 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
       options: () => {
         return {
           title: 'Albums',
+          tabBarButtonTestID: 'albums',
           header: ({ options, route }) => (
             <Header {...options} title={getHeaderTitle(options, route.name)} />
           ),
@@ -201,7 +156,7 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
             backgroundColor: 'rgba(0, 0, 0, 0.8)',
             borderTopColor: 'transparent',
           },
-          tabBarMinimizeBehavior: 'onScrollDown',
+          tabBarPosition: 'bottom',
           bottomAccessory: ({ placement }) => (
             <MiniPlayer placement={placement} />
           ),
@@ -209,24 +164,12 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
       },
       linking: 'albums',
     }),
-    TabFavorites: createBottomTabScreen({
-      screen: FavoritesStack,
-      options: {
-        title: 'Favorites',
-        tabBarSystemItem: 'search',
-        tabBarLabel: 'Favorites',
-        tabBarIcon: {
-          type: 'image',
-          source: iconHeart,
-        },
-      },
-    }),
   },
 });
 
-export const NativeBottomTabs = {
-  screen: NativeBottomTabsNavigator,
-  title: 'Native Bottom Tabs',
+export const NativeBottomTabsCustom = {
+  screen: NativeBottomTabsCustomNavigator,
+  title: 'Native Bottom Tabs - Custom Tab Bar',
 };
 
 const styles = StyleSheet.create({

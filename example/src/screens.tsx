@@ -16,6 +16,7 @@ import { MixedNativeStack } from './Screens/MixedNativeStack';
 import { MixedStack } from './Screens/MixedStack';
 import { ModalStack } from './Screens/ModalStack';
 import { NativeBottomTabs } from './Screens/NativeBottomTabs';
+import { NativeBottomTabsCustom } from './Screens/NativeBottomTabsCustom';
 import { NativeStack } from './Screens/NativeStack';
 import { NativeStackHeaderCustomization } from './Screens/NativeStackHeaderCustomization';
 import { NativeStackPreloadFlow } from './Screens/NativeStackPreloadFlow';
@@ -42,6 +43,7 @@ export const SCREENS = {
   Headers,
   BottomTabs,
   NativeBottomTabs,
+  NativeBottomTabsCustom,
   MaterialTopTabsScreen,
   DynamicTabs,
   FullHistoryTabs,

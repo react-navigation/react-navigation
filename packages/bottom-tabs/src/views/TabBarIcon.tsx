@@ -154,7 +154,7 @@ function renderIcon({
       );
     } else {
       throw new Error(
-        `Icon type '${iconValue.type}' is not supported in 'custom' implementation.`
+        `Icon type '${iconValue.type}' is only supported with native tab bar.`
       );
     }
   }

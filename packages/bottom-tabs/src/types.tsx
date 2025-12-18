@@ -290,7 +290,7 @@ type BottomTabCustomOptions = {
   /**
    * Position of the tab bar on the screen. Defaults to `bottom`.
    *
-   * Only supported with `custom` implementation.
+   * Only supported with `custom` implementation or if custom tab bar is provided.
    */
   tabBarPosition?: 'bottom' | 'left' | 'right' | 'top';
 

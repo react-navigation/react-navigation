@@ -27,6 +27,7 @@ import type {
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
 } from '../types';
+import { useTabBarPosition } from '../utils/useTabBarPosition';
 import { ScreenContent } from './ScreenContent';
 
 type Props = BottomTabNavigationConfig & {
@@ -40,7 +41,12 @@ const ICON_SIZE = Platform.select({
   default: 24,
 });
 
-export function BottomTabViewNative({ state, navigation, descriptors }: Props) {
+export function BottomTabViewNative({
+  state,
+  navigation,
+  descriptors,
+  tabBar,
+}: Props) {
   const { dark, colors, fonts } = useTheme();
 
   const focusedRouteKey = state.routes[state.index].key;
@@ -109,11 +115,33 @@ export function BottomTabViewNative({ state, navigation, descriptors }: Props) {
     });
   };
 
+  const tabBarPosition = useTabBarPosition(currentOptions);
+
+  const hasCustomTabBar = tabBar != null;
+  const tabBarElement = tabBar
+    ? tabBar({
+        state,
+        descriptors,
+        navigation,
+      })
+    : null;
+
   const bottomAccessory = currentOptions.bottomAccessory;
 
   return (
-    <SafeAreaProviderCompat>
+    <SafeAreaProviderCompat
+      style={{
+        flexDirection:
+          tabBarPosition === 'left' || tabBarPosition === 'right'
+            ? 'row'
+            : 'column',
+      }}
+    >
+      {tabBarPosition === 'top' || tabBarPosition === 'left'
+        ? tabBarElement
+        : null}
       <BottomTabs
+        tabBarHidden={hasCustomTabBar}
         bottomAccessory={
           bottomAccessory
             ? (environment) => bottomAccessory({ placement: environment })
@@ -157,7 +185,7 @@ export function BottomTabViewNative({ state, navigation, descriptors }: Props) {
 
             if (event.defaultPrevented) {
               throw new Error(
-                "Preventing default for 'tabPress' is not supported in 'native' implementation."
+                "Preventing default for 'tabPress' is not supported with native tab bar."
               );
             }
 
@@ -227,7 +255,7 @@ export function BottomTabViewNative({ state, navigation, descriptors }: Props) {
 
               if (React.isValidElement(result)) {
                 throw new Error(
-                  `Returning a React element from 'tabBarIcon' is not supported in 'native' implementation.`
+                  `Returning a React element from 'tabBarIcon' is not supported with native tab bar.`
                 );
               } else if (
                 result &&
@@ -295,6 +323,9 @@ export function BottomTabViewNative({ state, navigation, descriptors }: Props) {
           );
         })}
       </BottomTabs>
+      {tabBarPosition === 'bottom' || tabBarPosition === 'right'
+        ? tabBarElement
+        : null}
     </SafeAreaProviderCompat>
   );
 }
