@@ -174,9 +174,12 @@ function HeaderSearchBarInternal(
   // When status bar height is provided, add spacing below it
   // Otherwise, use a smaller top margin to align with the header content
   const STATUS_BAR_TOP_ADJUSTMENT = 2;
-  const topMargin = statusBarHeight
-    ? statusBarHeight + BUTTON_SPACING
-    : BUTTON_SPACING - STATUS_BAR_TOP_ADJUSTMENT;
+  const topMargin = Platform.select({
+    ios: statusBarHeight
+      ? statusBarHeight + BUTTON_SPACING
+      : BUTTON_SPACING - STATUS_BAR_TOP_ADJUSTMENT,
+    default: statusBarHeight,
+  });
 
   return (
     <AnimatedLiquidGlassContainerView
@@ -188,6 +191,8 @@ function HeaderSearchBarInternal(
         Platform.OS === 'ios' && {
           gap: BUTTON_SPACING,
           margin: BUTTON_SPACING,
+        },
+        {
           marginTop: topMargin,
         },
         style,
@@ -338,7 +343,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignSelf: 'center',
-    marginLeft: 2,
+    marginLeft: BUTTON_SPACING / 2,
   },
   closeButton: {
     position: 'absolute',
