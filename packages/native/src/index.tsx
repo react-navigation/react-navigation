@@ -1,4 +1,5 @@
 export { createStaticNavigation } from './createStaticNavigation';
+export { isFullScreen, useIsFullScreen } from './IsFullScreen';
 export { Link } from './Link';
 export { LinkingContext } from './LinkingContext';
 export { LocaleDirContext } from './LocaleDirContext';

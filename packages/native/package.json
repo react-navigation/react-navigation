@@ -82,5 +82,10 @@
         }
       ]
     ]
+  },
+  "codegenConfig": {
+    "name": "IsFullScreenSpec",
+    "type": "modules",
+    "jsSrcsDir": "src/is-full-screen/src"
   }
 }
