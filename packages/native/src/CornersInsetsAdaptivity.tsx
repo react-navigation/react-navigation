@@ -1,25 +1,17 @@
+import type { Insets } from 'react-native';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 
-import {
-  NativeReactNavigation,
-  zeroInsets,
-} from './native-module/NativeReactNavigation';
-import type { SafeAreaInsets } from './native-module/NativeReactNavigationImpl';
+import { NativeReactNavigation } from './native-module/NativeReactNavigation';
 
 function getHorizontalSafeAreaFromNative() {
-  return (
-    NativeReactNavigation?.cornersInsetsForHorizontalAdaptivity?.() ??
-    zeroInsets
-  );
+  return NativeReactNavigation?.cornersInsetsForHorizontalAdaptivity?.() ?? {};
 }
 
 function getVerticalSafeAreaFromNative() {
-  return (
-    NativeReactNavigation?.cornersInsetsForVerticalAdaptivity?.() ?? zeroInsets
-  );
+  return NativeReactNavigation?.cornersInsetsForVerticalAdaptivity?.() ?? {};
 }
 
-function areSafeAreaInsetsEqual(a: SafeAreaInsets, b: SafeAreaInsets): boolean {
+function areSafeAreaInsetsEqual(a: Insets, b: Insets): boolean {
   return (
     a.top === b.top &&
     a.right === b.right &&
@@ -37,7 +29,7 @@ function subscribeToCornersInsetsChanges(listener: () => void) {
   );
 }
 
-function useCornersInsets(getSnapshot: () => SafeAreaInsets) {
+function useCornersInsets(getSnapshot: () => Insets) {
   return useSyncExternalStoreWithSelector(
     subscribeToCornersInsetsChanges,
     getSnapshot,
