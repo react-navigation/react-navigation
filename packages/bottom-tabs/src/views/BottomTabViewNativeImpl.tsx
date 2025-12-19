@@ -292,6 +292,9 @@ export function BottomTabViewNative({
               systemItem={tabBarSystemItem}
               isFocused={isFocused}
               title={tabTitle}
+              // FIXME: if this is not provided, ScrollView on lazy tabs glitches on iOS 18
+              // For now we provide an empty object before adding proper support
+              scrollEdgeAppearance={{}}
               standardAppearance={{
                 tabBarBackgroundColor,
                 tabBarShadowColor,
