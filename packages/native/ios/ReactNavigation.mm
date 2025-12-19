@@ -1,8 +1,8 @@
-#import "IsFullScreen.h"
+#import "ReactNavigation.h"
 
 #import <UIKit/UIKit.h>
 
-@implementation IsFullScreen
+@implementation ReactNavigation
 - (NSNumber *)isFullScreen
 {
       NSSet<UIScene *> *connectedScenes = [UIApplication sharedApplication].connectedScenes;
@@ -23,12 +23,12 @@
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:
     (const facebook::react::ObjCTurboModule::InitParams &)params
 {
-    return std::make_shared<facebook::react::NativeIsFullScreenSpecJSI>(params);
+    return std::make_shared<facebook::react::NativeReactNavigationSpecJSI>(params);
 }
 
 + (NSString *)moduleName
 {
-  return @"IsFullScreen";
+  return @"ReactNavigation";
 }
 
 @end

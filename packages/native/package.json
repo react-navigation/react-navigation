@@ -84,8 +84,8 @@
     ]
   },
   "codegenConfig": {
-    "name": "IsFullScreenSpec",
+    "name": "ReactNavigationSpec",
     "type": "modules",
-    "jsSrcsDir": "src/is-full-screen/src"
+    "jsSrcsDir": "src/native-module"
   }
 }

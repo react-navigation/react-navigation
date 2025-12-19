@@ -4,5 +4,5 @@ export interface Spec extends TurboModule {
   isFullScreen(): boolean;
 }
 
-export const IsFullScreen =
-  TurboModuleRegistry.getEnforcing<Spec>('IsFullScreen');
+export const NativeReactNavigation =
+  TurboModuleRegistry.get<Spec>('ReactNavigation');

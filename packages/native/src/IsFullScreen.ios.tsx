@@ -1,9 +1,9 @@
 import { useWindowDimensions } from 'react-native';
 
-import { IsFullScreen as IsFullScreenModule } from './is-full-screen/src/NativeIsFullScreen';
+import { NativeReactNavigation } from './native-module/NativeReactNavigation';
 
 export function isFullScreen() {
-  return IsFullScreenModule.isFullScreen();
+  return NativeReactNavigation?.isFullScreen() ?? true;
 }
 
 export function useIsFullScreen() {
