@@ -1,7 +1,13 @@
+import { useWindowDimensions } from 'react-native';
+
+import { NativeReactNavigation } from './native-module/NativeReactNavigation';
+
 export function isFullScreen() {
-  return true;
+  return NativeReactNavigation?.isFullScreen() ?? true;
 }
 
 export function useIsFullScreen() {
-  return true;
+  // Ensure re-render on dimension changes
+  useWindowDimensions();
+  return isFullScreen();
 }
