@@ -23,9 +23,9 @@ ReactNavigationSafeAreaObserverView *safeAreaObserverView;
 
 - (instancetype)initWithModule:(ReactNavigation *)module
 {
-  
+
   self = [super initWithFrame:CGRectZero];
-  
+
   if (self != nil) {
     _module = module;
     self.userInteractionEnabled = NO;
@@ -33,18 +33,18 @@ ReactNavigationSafeAreaObserverView *safeAreaObserverView;
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth |
     UIViewAutoresizingFlexibleHeight;
   }
-  
+
   return self;
 }
 
 - (void)didMoveToWindow
 {
   [super didMoveToWindow];
-  
+
   if (self.window != nil) {
     self.frame = self.window.bounds;
   }
-  
+
   [self notifySafeAreaChanged];
 }
 
@@ -59,8 +59,8 @@ ReactNavigationSafeAreaObserverView *safeAreaObserverView;
   if (_module == nil) {
     return;
   }
-  
-  [_module emitOnSafeAreaLayoutChanged:nil];
+
+  [_module emitOnCornersInsetsChanged:nil];
 }
 
 @end
@@ -69,29 +69,29 @@ ReactNavigationSafeAreaObserverView *safeAreaObserverView;
 static UIWindow *ReactNavigationGetPreferredWindow(void)
 {
   NSSet<UIScene *> *connectedScenes = [UIApplication sharedApplication].connectedScenes;
-  
+
   for (UIScene *scene in connectedScenes) {
     if (scene.activationState != UISceneActivationStateForegroundActive) {
       continue;
     }
-    
+
     if (![scene isKindOfClass:[UIWindowScene class]]) {
       continue;
     }
-    
+
     UIWindowScene *windowScene = (UIWindowScene *)scene;
-    
+
     for (UIWindow *window in windowScene.windows) {
       if (window.isHidden) {
         continue;
       }
-      
+
       if (window.isKeyWindow) {
         return window;
       }
     }
   }
-  
+
   return nil;
 }
 #endif
@@ -109,23 +109,23 @@ static NSDictionary *ReactNavigationDictionaryFromInsets(UIEdgeInsets insets)
 #if (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 260000) || \
 (defined(__TV_OS_VERSION_MAX_ALLOWED) && __TV_OS_VERSION_MAX_ALLOWED >= 260000)
 static NSDictionary *
-ReactNavigationSafeAreaLayoutForAxis(UIWindow *window,
+ReactNavigationcornersInsetsForAxis(UIWindow *window,
                                      UIViewLayoutRegionAdaptivityAxis axis)
 {
   if (window == nil) {
     return ReactNavigationDictionaryFromInsets(UIEdgeInsetsZero);
   }
-  
+
   UIEdgeInsets insets = window.safeAreaInsets;
-  
+
   if (@available(iOS 26.0, tvOS 26.0, *)) {
     UIViewLayoutRegion *region =
     [UIViewLayoutRegion safeAreaLayoutRegionWithCornerAdaptation:axis];
-    
+
     insets = [window edgeInsetsForLayoutRegion:region];
   }
-  
-  
+
+
   return ReactNavigationDictionaryFromInsets(insets);
 }
 #endif
@@ -140,8 +140,8 @@ ReactNavigationSafeAreaLayoutForAxis(UIWindow *window,
     });
     return;
   }
-  
-  
+
+
   if (self.safeAreaObserverView == nil) {
     self.safeAreaObserverView =
     [[ReactNavigationSafeAreaObserverView alloc] initWithModule:self];
@@ -151,14 +151,14 @@ ReactNavigationSafeAreaLayoutForAxis(UIWindow *window,
 @end
 
 @implementation ReactNavigation
-- (NSDictionary *)safeAreaLayoutForVerticalAdaptivity
+- (NSDictionary *)cornersInsetsForVerticalAdaptivity
 {
 #if (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 260000) || \
 (defined(__TV_OS_VERSION_MAX_ALLOWED) && __TV_OS_VERSION_MAX_ALLOWED >= 260000)
   if (@available(iOS 26.0, tvOS 26.0, *)) {
     UIWindow *window = ReactNavigationGetPreferredWindow();
     [self installSafeAreaObserverIfNeededForWindow:window];
-    return ReactNavigationSafeAreaLayoutForAxis(
+    return ReactNavigationcornersInsetsForAxis(
                                                 window,
                                                 UIViewLayoutRegionAdaptivityAxisVertical);
   }
@@ -166,20 +166,20 @@ ReactNavigationSafeAreaLayoutForAxis(UIWindow *window,
   return ReactNavigationDictionaryFromInsets(UIEdgeInsets());
 }
 
-- (NSDictionary *)safeAreaLayoutForHorizontalAdaptivity
+- (NSDictionary *)cornersInsetsForHorizontalAdaptivity
 {
 #if (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 260000) || \
 (defined(__TV_OS_VERSION_MAX_ALLOWED) && __TV_OS_VERSION_MAX_ALLOWED >= 260000)
   if (@available(iOS 26.0, tvOS 26.0, *)) {
     UIWindow *window = ReactNavigationGetPreferredWindow();
     [self installSafeAreaObserverIfNeededForWindow:window];
-    return ReactNavigationSafeAreaLayoutForAxis(
+    return ReactNavigationcornersInsetsForAxis(
                                                 window,
                                                 UIViewLayoutRegionAdaptivityAxisHorizontal);
   }
 #endif
   return ReactNavigationDictionaryFromInsets(UIEdgeInsets());
-  
+
 }
 
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:

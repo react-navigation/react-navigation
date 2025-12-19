@@ -8,14 +8,14 @@ import type { SafeAreaInsets } from './native-module/NativeReactNavigationImpl';
 
 function getHorizontalSafeAreaFromNative() {
   return (
-    NativeReactNavigation?.safeAreaLayoutForHorizontalAdaptivity?.() ??
+    NativeReactNavigation?.cornersInsetsForHorizontalAdaptivity?.() ??
     zeroInsets
   );
 }
 
 function getVerticalSafeAreaFromNative() {
   return (
-    NativeReactNavigation?.safeAreaLayoutForVerticalAdaptivity?.() ?? zeroInsets
+    NativeReactNavigation?.cornersInsetsForVerticalAdaptivity?.() ?? zeroInsets
   );
 }
 
@@ -28,18 +28,18 @@ function areSafeAreaInsetsEqual(a: SafeAreaInsets, b: SafeAreaInsets): boolean {
   );
 }
 
-function subscribeToSafeAreaLayoutChanges(listener: () => void) {
+function subscribeToCornersInsetsChanges(listener: () => void) {
   return (
-    NativeReactNavigation?.onSafeAreaLayoutChanged?.(() => {
+    NativeReactNavigation?.onCornersInsetsChanged?.(() => {
       console.log('Safe area layout changed from native');
       listener();
     }).remove ?? (() => {})
   );
 }
 
-function useSafeAreaLayout(getSnapshot: () => SafeAreaInsets) {
+function useCornersInsets(getSnapshot: () => SafeAreaInsets) {
   return useSyncExternalStoreWithSelector(
-    subscribeToSafeAreaLayoutChanges,
+    subscribeToCornersInsetsChanges,
     getSnapshot,
     getSnapshot,
     (s) => s,
@@ -47,10 +47,10 @@ function useSafeAreaLayout(getSnapshot: () => SafeAreaInsets) {
   );
 }
 
-export function useSafeAreaLayoutForHorizontalAdaptivity() {
-  return useSafeAreaLayout(getHorizontalSafeAreaFromNative);
+export function useCornersInsetsForHorizontalAdaptivity() {
+  return useCornersInsets(getHorizontalSafeAreaFromNative);
 }
 
-export function useSafeAreaLayoutForVerticalAdaptivity() {
-  return useSafeAreaLayout(getVerticalSafeAreaFromNative);
+export function useCornersInsetsForVerticalAdaptivity() {
+  return useCornersInsets(getVerticalSafeAreaFromNative);
 }

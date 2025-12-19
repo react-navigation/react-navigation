@@ -1,12 +1,12 @@
+export {
+  useCornersInsetsForHorizontalAdaptivity,
+  useCornersInsetsForVerticalAdaptivity,
+} from './CornersInsetsAdaptivity';
 export { createStaticNavigation } from './createStaticNavigation';
 export { Link } from './Link';
 export { LinkingContext } from './LinkingContext';
 export { LocaleDirContext } from './LocaleDirContext';
 export { NavigationContainer } from './NavigationContainer';
-export {
-  useSafeAreaLayoutForHorizontalAdaptivity,
-  useSafeAreaLayoutForVerticalAdaptivity,
-} from './SafeAreaAdaptivity';
 export { ServerContainer } from './ServerContainer';
 export { DarkTheme } from './theming/DarkTheme';
 export { DefaultTheme } from './theming/DefaultTheme';

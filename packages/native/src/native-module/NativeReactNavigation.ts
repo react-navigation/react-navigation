@@ -8,6 +8,6 @@ export const zeroInsets: SafeAreaInsets = {
 };
 
 export const NativeReactNavigation: Partial<Spec> = {
-  safeAreaLayoutForVerticalAdaptivity: () => zeroInsets,
-  safeAreaLayoutForHorizontalAdaptivity: () => zeroInsets,
+  cornersInsetsForVerticalAdaptivity: () => zeroInsets,
+  cornersInsetsForHorizontalAdaptivity: () => zeroInsets,
 };

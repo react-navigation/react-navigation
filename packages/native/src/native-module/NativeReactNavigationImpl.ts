@@ -11,9 +11,9 @@ export type SafeAreaInsets = {
 };
 
 export interface Spec extends TurboModule {
-  safeAreaLayoutForVerticalAdaptivity(): SafeAreaInsets;
-  safeAreaLayoutForHorizontalAdaptivity(): SafeAreaInsets;
-  readonly onSafeAreaLayoutChanged: EventEmitter<EmptyMessage>;
+  cornersInsetsForVerticalAdaptivity(): SafeAreaInsets;
+  cornersInsetsForHorizontalAdaptivity(): SafeAreaInsets;
+  readonly onCornersInsetsChanged: EventEmitter<EmptyMessage>;
 }
 
 export const NativeReactNavigation =
