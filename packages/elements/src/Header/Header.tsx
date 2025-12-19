@@ -417,7 +417,10 @@ export function Header(props: Props) {
                 // Account for corner insets.
                 // We only apply the difference between both sides
                 // as the smaller inset will already be included in the safe area inset
-                Math.max(cornersInsets.left - cornersInsets.right, 0),
+                Math.max(
+                  (cornersInsets.left ?? 0) - (cornersInsets.right ?? 0),
+                  0
+                ),
             },
           ]}
         >
@@ -452,7 +455,10 @@ export function Header(props: Props) {
                 // Account for corner insets.
                 // We only apply the difference between both sides
                 // as the smaller inset will already be included in the safe area inset
-                Math.max(cornersInsets.right - cornersInsets.left, 0),
+                Math.max(
+                  (cornersInsets.right ?? 0) - (cornersInsets.left ?? 0),
+                  0
+                ),
             },
           ]}
         >
