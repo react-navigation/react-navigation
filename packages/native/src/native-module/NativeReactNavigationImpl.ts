@@ -3,7 +3,7 @@ import type { EventEmitter } from 'react-native/Libraries/Types/CodegenTypes';
 
 export type EmptyMessage = {};
 
-export type SafeAreaInsets = {
+export type CornersInsets = {
   top: number;
   right: number;
   bottom: number;
@@ -11,8 +11,8 @@ export type SafeAreaInsets = {
 };
 
 export interface Spec extends TurboModule {
-  cornersInsetsForVerticalAdaptivity(): SafeAreaInsets;
-  cornersInsetsForHorizontalAdaptivity(): SafeAreaInsets;
+  cornersInsetsForVerticalAdaptivity(): CornersInsets;
+  cornersInsetsForHorizontalAdaptivity(): CornersInsets;
   readonly onCornersInsetsChanged: EventEmitter<EmptyMessage>;
 }
 
