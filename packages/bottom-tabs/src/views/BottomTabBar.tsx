@@ -204,15 +204,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
     );
   }
 
-  // TODO: test if insets are needed on Web
-  // FIXME: this seems to return `undefined` on Web
-  const insets = useSafeAreaInsets() ?? {
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  };
-
+  const insets = useSafeAreaInsets();
   const isKeyboardShown = useIsKeyboardShown();
 
   const onHeightChange = React.useContext(BottomTabBarHeightCallbackContext);

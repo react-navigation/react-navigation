@@ -71,7 +71,7 @@ if (Platform.OS === 'web') {
   if (typeof document !== 'undefined' && document.documentElement) {
     document
       .getElementById('root')
-      ?.setAttribute('style', 'height: 100vh; overflow: auto;');
+      ?.setAttribute('style', 'height: 100svh; overflow: auto;');
   }
 
   if (
