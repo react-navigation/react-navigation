@@ -114,6 +114,9 @@
       "components": {
         "ReactNavigationSFSymbolView": {
           "className": "ReactNavigationSFSymbolView"
+        },
+        "ReactNavigationCornerInsetView": {
+          "className": "ReactNavigationCornerInsetView"
         }
       }
     }

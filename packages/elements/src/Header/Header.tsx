@@ -1,4 +1,4 @@
-import { useNavigation, useTheme } from '@react-navigation/native';
+import { CornerInset, useNavigation, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -402,6 +402,11 @@ export function Header(props: Props) {
           },
         ]}
       >
+        <CornerInset
+          direction="horizontal"
+          edge="left"
+          style={{ backgroundColor: 'red' }}
+        />
         <View
           style={[
             styles.start,
