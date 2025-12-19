@@ -1,4 +1,7 @@
-import { useLocale } from '@react-navigation/native';
+import {
+  useCornersInsetsForVerticalAdaptivity,
+  useLocale,
+} from '@react-navigation/native';
 import * as React from 'react';
 import { ScrollView, type ScrollViewProps, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,6 +21,7 @@ function DrawerContentScrollViewInner(
   const drawerPosition = React.useContext(DrawerPositionContext);
   const insets = useSafeAreaInsets();
   const { direction } = useLocale();
+  const cornersInsets = useCornersInsetsForVerticalAdaptivity();
 
   const isRight =
     direction === 'rtl'
@@ -30,7 +34,7 @@ function DrawerContentScrollViewInner(
       ref={ref}
       contentContainerStyle={[
         {
-          paddingTop: SPACING + insets.top,
+          paddingTop: cornersInsets.top,
           paddingBottom: SPACING + insets.bottom,
           paddingStart: SPACING + (!isRight ? insets.left : 0),
           paddingEnd: SPACING + (isRight ? insets.right : 0),

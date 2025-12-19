@@ -1,4 +1,8 @@
-import { useNavigation, useTheme } from '@react-navigation/native';
+import {
+  useCornersInsetsForHorizontalAdaptivity,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -76,6 +80,8 @@ const useNativeDriver = Platform.OS !== 'web';
 
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
+  const cornersInsets = useCornersInsetsForHorizontalAdaptivity();
+
   const { colors } = useTheme();
 
   const navigation = useNavigation();
@@ -406,7 +412,12 @@ export function Header(props: Props) {
             headerTitleAlign === 'center' ? styles.expand : styles.shrink,
             {
               minWidth: buttonMinWidth,
-              marginStart: insets.left,
+              marginStart:
+                insets.left +
+                // Account for corner insets.
+                // We only apply the difference between both sides
+                // as the smaller inset will already be included in the safe area inset
+                Math.max(cornersInsets.left - cornersInsets.right, 0),
             },
           ]}
         >
@@ -436,7 +447,12 @@ export function Header(props: Props) {
             styles.expand,
             {
               minWidth: buttonMinWidth,
-              marginEnd: insets.right,
+              marginEnd:
+                insets.right +
+                // Account for corner insets.
+                // We only apply the difference between both sides
+                // as the smaller inset will already be included in the safe area inset
+                Math.max(cornersInsets.right - cornersInsets.left, 0),
             },
           ]}
         >
