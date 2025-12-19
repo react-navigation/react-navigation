@@ -233,7 +233,6 @@ export function BottomTabViewCustom({
             animation = 'none',
             sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
               .sceneStyleInterpolator,
-            freezeOnBlur,
             sceneStyle: customSceneStyle,
           } = options;
 
@@ -322,7 +321,6 @@ export function BottomTabViewCustom({
               ]}
               activityState={activityState}
               enabled={detachInactiveScreens}
-              freezeOnBlur={freezeOnBlur}
               shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
             >
               {content}

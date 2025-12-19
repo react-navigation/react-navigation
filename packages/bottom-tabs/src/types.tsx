@@ -552,15 +552,6 @@ export type BottomTabNavigationOptions = {
   lazy?: boolean;
 
   /**
-   * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
-   * Defaults to `true` when `enableFreeze()` is run at the top of the application.
-   * Requires `react-native-screens` version >=3.16.0.
-   *
-   * Only supported on iOS and Android.
-   */
-  freezeOnBlur?: boolean; // TODO
-
-  /**
    * Whether any nested stack should be popped to top when navigating away from the tab.
    * Defaults to `false`.
    */
