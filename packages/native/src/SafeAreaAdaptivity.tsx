@@ -1,14 +1,10 @@
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 
-import { NativeReactNavigation } from './native-module/NativeReactNavigation';
+import {
+  NativeReactNavigation,
+  zeroInsets,
+} from './native-module/NativeReactNavigation';
 import type { SafeAreaInsets } from './native-module/NativeReactNavigationImpl';
-
-const zeroInsets: SafeAreaInsets = {
-  top: 0,
-  right: 0,
-  bottom: 0,
-  left: 0,
-};
 
 function getHorizontalSafeAreaFromNative() {
   return (
@@ -33,10 +29,12 @@ function areSafeAreaInsetsEqual(a: SafeAreaInsets, b: SafeAreaInsets): boolean {
 }
 
 function subscribeToSafeAreaLayoutChanges(listener: () => void) {
-  return NativeReactNavigation?.onSafeAreaLayoutChanged?.(() => {
-    console.log('Safe area layout changed from native');
-    listener();
-  }).remove;
+  return (
+    NativeReactNavigation?.onSafeAreaLayoutChanged?.(() => {
+      console.log('Safe area layout changed from native');
+      listener();
+    }).remove ?? (() => {})
+  );
 }
 
 function useSafeAreaLayout(getSnapshot: () => SafeAreaInsets) {
