@@ -60,7 +60,7 @@ ReactNavigationSafeAreaObserverView *safeAreaObserverView;
     return;
   }
   
-  [_module emitOnSafeAreaLayoutChanged:[NSDictionary new]];
+  [_module emitOnSafeAreaLayoutChanged:nil];
 }
 
 @end
