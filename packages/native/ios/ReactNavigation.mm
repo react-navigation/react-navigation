@@ -2,11 +2,71 @@
 
 #import <UIKit/UIKit.h>
 
+@class ReactNavigationSafeAreaObserverView;
+
+@interface ReactNavigation ()
+
+@property (nonatomic, strong)
+    ReactNavigationSafeAreaObserverView *safeAreaObserverView;
+
+@end
+
+@interface ReactNavigationSafeAreaObserverView : UIView
+
+- (instancetype)initWithModule:(ReactNavigation *)module;
+
+@end
+
+@implementation ReactNavigationSafeAreaObserverView {
+  __weak ReactNavigation *_module;
+}
+
+- (instancetype)initWithModule:(ReactNavigation *)module
+{
+  
+    self = [super initWithFrame:CGRectZero];
+
+    if (self != nil) {
+        _module = module;
+        self.userInteractionEnabled = NO;
+        self.hidden = YES;
+        self.autoresizingMask = UIViewAutoresizingFlexibleWidth |
+                                UIViewAutoresizingFlexibleHeight;
+    }
+
+    return self;
+}
+
+- (void)didMoveToWindow
+{
+    [super didMoveToWindow];
+
+    if (self.window != nil) {
+        self.frame = self.window.bounds;
+    }
+
+    [self notifySafeAreaChanged];
+}
+
+- (void)safeAreaInsetsDidChange
+{
+    [super safeAreaInsetsDidChange];
+    [self notifySafeAreaChanged];
+}
+
+- (void)notifySafeAreaChanged
+{
+    if (_module == nil) {
+        return;
+    }
+
+    [_module emitOnSafeAreaLayoutChanged:[NSDictionary new]];
+}
+
+@end
+
 static UIWindow *ReactNavigationGetPreferredWindow(void)
 {
-    UIWindow *fallbackWindow = nil;
-
-
     NSSet<UIScene *> *connectedScenes = [UIApplication sharedApplication].connectedScenes;
 
     for (UIScene *scene in connectedScenes) {
@@ -45,10 +105,9 @@ static NSDictionary *ReactNavigationDictionaryFromInsets(UIEdgeInsets insets)
 }
 
 static NSDictionary *
-ReactNavigationSafeAreaLayoutForAxis(UIViewLayoutRegionAdaptivityAxis axis)
+ReactNavigationSafeAreaLayoutForAxis(UIWindow *window,
+                                     UIViewLayoutRegionAdaptivityAxis axis)
 {
-    UIWindow *window = ReactNavigationGetPreferredWindow();
-
     if (window == nil) {
         return ReactNavigationDictionaryFromInsets(UIEdgeInsetsZero);
     }
@@ -59,37 +118,48 @@ ReactNavigationSafeAreaLayoutForAxis(UIViewLayoutRegionAdaptivityAxis axis)
         UIViewLayoutRegion *region =
             [UIViewLayoutRegion safeAreaLayoutRegionWithCornerAdaptation:axis];
 
-        if (region != nil &&
-            [window respondsToSelector:@selector(edgeInsetsForLayoutRegion:)]) {
-            insets = [window edgeInsetsForLayoutRegion:region];
-        }
+        insets = [window edgeInsetsForLayoutRegion:region];
     }
 
     return ReactNavigationDictionaryFromInsets(insets);
 }
 
-@implementation ReactNavigation
-- (NSNumber *)isFullScreen
-{
-    UIWindow *window = ReactNavigationGetPreferredWindow();
-    UIWindowScene *windowScene = window.windowScene;
+@implementation ReactNavigation (SafeAreaObserver)
 
-    if (windowScene != nil) {
-        return @([windowScene isFullScreen]);
+- (void)installSafeAreaObserverIfNeededForWindow:(UIWindow *)window
+{
+    if (![NSThread isMainThread]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self installSafeAreaObserverIfNeededForWindow:window];
+        });
+        return;
     }
 
-    return @(YES);
+
+    if (self.safeAreaObserverView == nil) {
+        self.safeAreaObserverView =
+            [[ReactNavigationSafeAreaObserverView alloc] initWithModule:self];
+    }
 }
 
+@end
+
+@implementation ReactNavigation
 - (NSDictionary *)safeAreaLayoutForVerticalAdaptivity
 {
+    UIWindow *window = ReactNavigationGetPreferredWindow();
+    [self installSafeAreaObserverIfNeededForWindow:window];
     return ReactNavigationSafeAreaLayoutForAxis(
+        window,
         UIViewLayoutRegionAdaptivityAxisVertical);
 }
 
 - (NSDictionary *)safeAreaLayoutForHorizontalAdaptivity
 {
+    UIWindow *window = ReactNavigationGetPreferredWindow();
+    [self installSafeAreaObserverIfNeededForWindow:window];
     return ReactNavigationSafeAreaLayoutForAxis(
+        window,
         UIViewLayoutRegionAdaptivityAxisHorizontal);
 }
 

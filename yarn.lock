@@ -4839,6 +4839,7 @@ __metadata:
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
+    use-sync-external-store: "npm:^1.5.0"
   peerDependencies:
     react: ">= 19.0.0"
     react-native: "*"

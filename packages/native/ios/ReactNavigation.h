@@ -1,5 +1,5 @@
 #import <ReactNavigationSpec/ReactNavigationSpec.h>
 
-@interface ReactNavigation : NSObject <NativeReactNavigationImplSpec>
+@interface ReactNavigation : NativeReactNavigationImplSpecBase <NativeReactNavigationImplSpec>
 
 @end
