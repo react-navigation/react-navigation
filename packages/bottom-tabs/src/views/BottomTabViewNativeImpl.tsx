@@ -13,7 +13,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform, PlatformColor } from 'react-native';
+import { Animated, Platform, PlatformColor } from 'react-native';
 import {
   BottomTabs,
   BottomTabsScreen,
@@ -27,6 +27,7 @@ import type {
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
 } from '../types';
+import { BottomTabAnimationContext } from '../utils/BottomTabAnimationContext';
 import { useTabBarPosition } from '../utils/useTabBarPosition';
 import { ScreenContent } from './ScreenContent';
 
@@ -321,7 +322,9 @@ export function BottomTabViewNative({
                   options={options}
                   style={sceneStyle}
                 >
-                  {render()}
+                  <AnimatedScreenContent isFocused={isFocused}>
+                    {render()}
+                  </AnimatedScreenContent>
                 </ScreenContent>
               </Lazy>
             </BottomTabsScreen>
@@ -332,6 +335,39 @@ export function BottomTabViewNative({
         ? tabBarElement
         : null}
     </SafeAreaProviderCompat>
+  );
+}
+
+function AnimatedScreenContent({
+  isFocused,
+  children,
+}: {
+  isFocused: boolean;
+  children: React.ReactNode;
+}) {
+  const [progress] = React.useState(
+    () => new Animated.Value(isFocused ? 1 : 0)
+  );
+
+  React.useLayoutEffect(() => {
+    /**
+     * We don't have animation progress from native,
+     * So we expose a static value (0 or 1) based on focus state.
+     * Otherwise code using the `useTabAnimation` hook will crash
+     */
+    progress.setValue(isFocused ? 1 : 0);
+  }, [isFocused, progress]);
+
+  const interpolationProps = React.useMemo(() => {
+    return {
+      current: { progress },
+    };
+  }, [progress]);
+
+  return (
+    <BottomTabAnimationContext.Provider value={interpolationProps}>
+      {children}
+    </BottomTabAnimationContext.Provider>
   );
 }
 
