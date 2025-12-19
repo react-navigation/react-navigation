@@ -3,15 +3,15 @@ import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-s
 
 import { NativeReactNavigation } from './native-module/NativeReactNavigation';
 
-function getHorizontalSafeAreaFromNative() {
+function getHorizontalCornersInsetsFromNative() {
   return NativeReactNavigation?.cornersInsetsForHorizontalAdaptivity?.() ?? {};
 }
 
-function getVerticalSafeAreaFromNative() {
+function getVerticalCornersInsetsFromNative() {
   return NativeReactNavigation?.cornersInsetsForVerticalAdaptivity?.() ?? {};
 }
 
-function areSafeAreaInsetsEqual(a: Insets, b: Insets): boolean {
+function areInsetsEqual(a: Insets, b: Insets): boolean {
   return (
     a.top === b.top &&
     a.right === b.right &&
@@ -35,14 +35,14 @@ function useCornersInsets(getSnapshot: () => Insets) {
     getSnapshot,
     getSnapshot,
     (s) => s,
-    areSafeAreaInsetsEqual
+    areInsetsEqual
   );
 }
 
 export function useCornersInsetsForHorizontalAdaptivity() {
-  return useCornersInsets(getHorizontalSafeAreaFromNative);
+  return useCornersInsets(getHorizontalCornersInsetsFromNative);
 }
 
 export function useCornersInsetsForVerticalAdaptivity() {
-  return useCornersInsets(getVerticalSafeAreaFromNative);
+  return useCornersInsets(getVerticalCornersInsetsFromNative);
 }
