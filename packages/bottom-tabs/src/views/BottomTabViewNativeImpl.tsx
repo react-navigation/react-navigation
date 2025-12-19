@@ -28,6 +28,7 @@ import type {
   BottomTabNavigationHelpers,
 } from '../types';
 import { BottomTabAnimationContext } from '../utils/BottomTabAnimationContext';
+import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
 import { useTabBarPosition } from '../utils/useTabBarPosition';
 import { ScreenContent } from './ScreenContent';
 
@@ -323,7 +324,9 @@ export function BottomTabViewNative({
                   style={sceneStyle}
                 >
                   <AnimatedScreenContent isFocused={isFocused}>
-                    {render()}
+                    <BottomTabBarHeightContext.Provider value={0}>
+                      {render()}
+                    </BottomTabBarHeightContext.Provider>
                   </AnimatedScreenContent>
                 </ScreenContent>
               </Lazy>

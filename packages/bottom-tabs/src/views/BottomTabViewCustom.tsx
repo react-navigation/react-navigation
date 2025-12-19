@@ -257,7 +257,6 @@ export function BottomTabViewCustom({
               style={customSceneStyle}
             >
               <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
-                {/* TODO: provide tab bar height */}
                 <ScreenContent
                   isFocused={isFocused}
                   route={route}
