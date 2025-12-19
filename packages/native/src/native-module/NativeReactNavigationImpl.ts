@@ -1,4 +1,7 @@
 import { type TurboModule, TurboModuleRegistry } from 'react-native';
+import type { EventEmitter } from 'react-native/Libraries/Types/CodegenTypes';
+
+export type EmptyMessage = {};
 
 export type SafeAreaInsets = {
   top: number;
@@ -8,9 +11,9 @@ export type SafeAreaInsets = {
 };
 
 export interface Spec extends TurboModule {
-  isFullScreen(): boolean;
   safeAreaLayoutForVerticalAdaptivity(): SafeAreaInsets;
   safeAreaLayoutForHorizontalAdaptivity(): SafeAreaInsets;
+  readonly onSafeAreaLayoutChanged: EventEmitter<EmptyMessage>;
 }
 
 export const NativeReactNavigation =
