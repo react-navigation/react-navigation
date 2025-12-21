@@ -344,7 +344,6 @@ export function App() {
               // When using Dev Client, launching app from the server has an internal URL
               // This is not a URL we can handle, so we filter it out
               filter: (url) => !url.includes('/expo-development-client/'),
-              enabled: 'auto',
               config: {
                 initialRouteName: 'Home',
               },
