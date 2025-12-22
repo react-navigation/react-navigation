@@ -60,7 +60,7 @@ ReactNavigationSafeAreaObserverView *safeAreaObserverView;
     return;
   }
 
-  [_module emitOnCornersInsetsChanged:nil];
+  [_module emitOnCornerInsetsChanged:nil];
 }
 
 @end
@@ -109,8 +109,8 @@ static NSDictionary *ReactNavigationDictionaryFromInsets(UIEdgeInsets insets)
 #if (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 260000) || \
 (defined(__TV_OS_VERSION_MAX_ALLOWED) && __TV_OS_VERSION_MAX_ALLOWED >= 260000)
 static NSDictionary *
-ReactNavigationcornersInsetsForAxis(UIWindow *window,
-                                     UIViewLayoutRegionAdaptivityAxis axis)
+ReactNavigationCornerInsetsForAxis(UIWindow *window,
+                                   UIViewLayoutRegionAdaptivityAxis axis)
 {
   if (window == nil) {
     return ReactNavigationDictionaryFromInsets(UIEdgeInsetsZero);
@@ -127,6 +127,16 @@ ReactNavigationcornersInsetsForAxis(UIWindow *window,
 
 
   return ReactNavigationDictionaryFromInsets(insets);
+}
+
+static UIViewLayoutRegionAdaptivityAxis
+ReactNavigationAxisFromDirection(NSString *direction)
+{
+  if ([[direction lowercaseString] isEqualToString:@"vertical"]) {
+    return UIViewLayoutRegionAdaptivityAxisVertical;
+  }
+
+  return UIViewLayoutRegionAdaptivityAxisHorizontal;
 }
 #endif
 
@@ -151,35 +161,20 @@ ReactNavigationcornersInsetsForAxis(UIWindow *window,
 @end
 
 @implementation ReactNavigation
-- (NSDictionary *)cornersInsetsForVerticalAdaptivity
+- (NSDictionary *)cornerInsetsForAdaptivity:(NSString *)direction
 {
 #if (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 260000) || \
 (defined(__TV_OS_VERSION_MAX_ALLOWED) && __TV_OS_VERSION_MAX_ALLOWED >= 260000)
   if (@available(iOS 26.0, tvOS 26.0, *)) {
     UIWindow *window = ReactNavigationGetPreferredWindow();
     [self installSafeAreaObserverIfNeededForWindow:window];
-    return ReactNavigationcornersInsetsForAxis(
-                                                window,
-                                                UIViewLayoutRegionAdaptivityAxisVertical);
+    UIViewLayoutRegionAdaptivityAxis axis =
+    ReactNavigationAxisFromDirection(direction);
+
+    return ReactNavigationCornerInsetsForAxis(window, axis);
   }
 #endif
   return ReactNavigationDictionaryFromInsets(UIEdgeInsets());
-}
-
-- (NSDictionary *)cornersInsetsForHorizontalAdaptivity
-{
-#if (defined(__IPHONE_OS_VERSION_MAX_ALLOWED) && __IPHONE_OS_VERSION_MAX_ALLOWED >= 260000) || \
-(defined(__TV_OS_VERSION_MAX_ALLOWED) && __TV_OS_VERSION_MAX_ALLOWED >= 260000)
-  if (@available(iOS 26.0, tvOS 26.0, *)) {
-    UIWindow *window = ReactNavigationGetPreferredWindow();
-    [self installSafeAreaObserverIfNeededForWindow:window];
-    return ReactNavigationcornersInsetsForAxis(
-                                                window,
-                                                UIViewLayoutRegionAdaptivityAxisHorizontal);
-  }
-#endif
-  return ReactNavigationDictionaryFromInsets(UIEdgeInsets());
-
 }
 
 - (std::shared_ptr<facebook::react::TurboModule>)getTurboModule:

@@ -1,6 +1,6 @@
 export {
-  useCornersInsetsForHorizontalAdaptivity,
-  useCornersInsetsForVerticalAdaptivity,
+  type CornerInsetsDirection,
+  useCornerInsets,
 } from './CornersInsetsAdaptivity';
 export { createStaticNavigation } from './createStaticNavigation';
 export { Link } from './Link';

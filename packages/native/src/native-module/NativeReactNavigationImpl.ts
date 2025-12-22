@@ -10,10 +10,11 @@ export type CornersInsets = {
   left: number;
 };
 
+type CornerInsetsDirection = 'vertical' | 'horizontal';
+
 export interface Spec extends TurboModule {
-  cornersInsetsForVerticalAdaptivity(): CornersInsets;
-  cornersInsetsForHorizontalAdaptivity(): CornersInsets;
-  readonly onCornersInsetsChanged: EventEmitter<EmptyMessage>;
+  cornerInsetsForAdaptivity(direction: CornerInsetsDirection): CornersInsets;
+  readonly onCornerInsetsChanged: EventEmitter<EmptyMessage>;
 }
 
 export const NativeReactNavigation =
