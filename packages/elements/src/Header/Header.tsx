@@ -1,5 +1,5 @@
 import {
-  useCornersInsetsForHorizontalAdaptivity,
+  useCornerInsets,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -80,7 +80,7 @@ const useNativeDriver = Platform.OS !== 'web';
 
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
-  const cornersInsets = useCornersInsetsForHorizontalAdaptivity();
+  const cornersInsets = useCornerInsets('horizontal');
 
   const { colors } = useTheme();
 
