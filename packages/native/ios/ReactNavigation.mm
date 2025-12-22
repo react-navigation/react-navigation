@@ -23,9 +23,9 @@ ReactNavigationSafeAreaObserverView *safeAreaObserverView;
 
 - (instancetype)initWithModule:(ReactNavigation *)module
 {
-
+  
   self = [super initWithFrame:CGRectZero];
-
+  
   if (self != nil) {
     _module = module;
     self.userInteractionEnabled = NO;
@@ -33,18 +33,18 @@ ReactNavigationSafeAreaObserverView *safeAreaObserverView;
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth |
     UIViewAutoresizingFlexibleHeight;
   }
-
+  
   return self;
 }
 
 - (void)didMoveToWindow
 {
   [super didMoveToWindow];
-
+  
   if (self.window != nil) {
     self.frame = self.window.bounds;
   }
-
+  
   [self notifySafeAreaChanged];
 }
 
@@ -59,8 +59,8 @@ ReactNavigationSafeAreaObserverView *safeAreaObserverView;
   if (_module == nil) {
     return;
   }
-
-  [_module emitOnCornerInsetsChanged:nil];
+  
+  [_module emitOnCornerInsetsChanged:@{}];
 }
 
 @end
@@ -69,29 +69,29 @@ ReactNavigationSafeAreaObserverView *safeAreaObserverView;
 static UIWindow *ReactNavigationGetPreferredWindow(void)
 {
   NSSet<UIScene *> *connectedScenes = [UIApplication sharedApplication].connectedScenes;
-
+  
   for (UIScene *scene in connectedScenes) {
     if (scene.activationState != UISceneActivationStateForegroundActive) {
       continue;
     }
-
+    
     if (![scene isKindOfClass:[UIWindowScene class]]) {
       continue;
     }
-
+    
     UIWindowScene *windowScene = (UIWindowScene *)scene;
-
+    
     for (UIWindow *window in windowScene.windows) {
       if (window.isHidden) {
         continue;
       }
-
+      
       if (window.isKeyWindow) {
         return window;
       }
     }
   }
-
+  
   return nil;
 }
 #endif
@@ -111,31 +111,33 @@ static NSDictionary *ReactNavigationDictionaryFromInsets(UIEdgeInsets insets)
 static NSDictionary *
 ReactNavigationCornerInsetsForAxis(UIWindow *window,
                                    UIViewLayoutRegionAdaptivityAxis axis)
+API_AVAILABLE(ios(26.0), tvos(26.0))
 {
   if (window == nil) {
     return ReactNavigationDictionaryFromInsets(UIEdgeInsetsZero);
   }
-
+  
   UIEdgeInsets insets = window.safeAreaInsets;
-
+  
   if (@available(iOS 26.0, tvOS 26.0, *)) {
     UIViewLayoutRegion *region =
     [UIViewLayoutRegion safeAreaLayoutRegionWithCornerAdaptation:axis];
-
+    
     insets = [window edgeInsetsForLayoutRegion:region];
   }
-
-
+  
+  
   return ReactNavigationDictionaryFromInsets(insets);
 }
 
 static UIViewLayoutRegionAdaptivityAxis
 ReactNavigationAxisFromDirection(NSString *direction)
+API_AVAILABLE(ios(26.0), tvos(26.0))
 {
   if ([[direction lowercaseString] isEqualToString:@"vertical"]) {
     return UIViewLayoutRegionAdaptivityAxisVertical;
   }
-
+  
   return UIViewLayoutRegionAdaptivityAxisHorizontal;
 }
 #endif
@@ -150,8 +152,8 @@ ReactNavigationAxisFromDirection(NSString *direction)
     });
     return;
   }
-
-
+  
+  
   if (self.safeAreaObserverView == nil) {
     self.safeAreaObserverView =
     [[ReactNavigationSafeAreaObserverView alloc] initWithModule:self];
@@ -170,7 +172,7 @@ ReactNavigationAxisFromDirection(NSString *direction)
     [self installSafeAreaObserverIfNeededForWindow:window];
     UIViewLayoutRegionAdaptivityAxis axis =
     ReactNavigationAxisFromDirection(direction);
-
+    
     return ReactNavigationCornerInsetsForAxis(window, axis);
   }
 #endif
