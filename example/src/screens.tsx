@@ -5,6 +5,7 @@ import { BottomTabs } from './Screens/BottomTabs';
 import { NavigatorLayout } from './Screens/CustomLayout';
 import { DrawerView } from './Screens/DrawerView';
 import { DynamicTabs } from './Screens/DynamicTabs';
+import { FormSheet } from './Screens/FormSheet';
 import { FullHistoryTabs } from './Screens/FullHistoryTabs';
 import { Headers } from './Screens/Headers';
 import { ScreenLayout } from './Screens/Layouts';
@@ -60,6 +61,7 @@ export const SCREENS = {
   StackPreloadFlow,
   TabPreloadFlow,
   NativeStackPreloadFlow,
+  FormSheet,
 } as const satisfies {
   [key: string]:
     | (React.ComponentType<{ route: any }> & {
