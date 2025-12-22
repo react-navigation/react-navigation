@@ -3,15 +3,13 @@ import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-s
 
 import { NativeReactNavigation } from './native-module/NativeReactNavigation';
 
-function getHorizontalSafeAreaFromNative() {
-  return NativeReactNavigation?.cornersInsetsForHorizontalAdaptivity?.() ?? {};
+export type CornerInsetsDirection = 'vertical' | 'horizontal';
+
+function getCornerInsetsFromNative(direction: CornerInsetsDirection) {
+  return NativeReactNavigation?.cornerInsetsForAdaptivity?.(direction) ?? {};
 }
 
-function getVerticalSafeAreaFromNative() {
-  return NativeReactNavigation?.cornersInsetsForVerticalAdaptivity?.() ?? {};
-}
-
-function areSafeAreaInsetsEqual(a: Insets, b: Insets): boolean {
+function areInsetsEqual(a: Insets, b: Insets): boolean {
   return (
     a.top === b.top &&
     a.right === b.right &&
@@ -20,29 +18,26 @@ function areSafeAreaInsetsEqual(a: Insets, b: Insets): boolean {
   );
 }
 
-function subscribeToCornersInsetsChanges(listener: () => void) {
+function subscribeToCornerInsetsChanges(listener: () => void) {
   return (
-    NativeReactNavigation?.onCornersInsetsChanged?.(() => {
-      console.log('Safe area layout changed from native');
+    NativeReactNavigation?.onCornerInsetsChanged?.(() => {
       listener();
     }).remove ?? (() => {})
   );
 }
 
-function useCornersInsets(getSnapshot: () => Insets) {
+function useCornerInsetsWithSnapshot(getSnapshot: () => Insets) {
   return useSyncExternalStoreWithSelector(
-    subscribeToCornersInsetsChanges,
+    subscribeToCornerInsetsChanges,
     getSnapshot,
     getSnapshot,
     (s) => s,
-    areSafeAreaInsetsEqual
+    areInsetsEqual
   );
 }
 
-export function useCornersInsetsForHorizontalAdaptivity() {
-  return useCornersInsets(getHorizontalSafeAreaFromNative);
-}
-
-export function useCornersInsetsForVerticalAdaptivity() {
-  return useCornersInsets(getVerticalSafeAreaFromNative);
+export function useCornerInsets(direction: CornerInsetsDirection) {
+  return useCornerInsetsWithSnapshot(() =>
+    getCornerInsetsFromNative(direction)
+  );
 }

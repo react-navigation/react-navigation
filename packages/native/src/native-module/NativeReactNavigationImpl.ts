@@ -3,17 +3,18 @@ import type { EventEmitter } from 'react-native/Libraries/Types/CodegenTypes';
 
 export type EmptyMessage = {};
 
-export type SafeAreaInsets = {
+export type CornersInsets = {
   top: number;
   right: number;
   bottom: number;
   left: number;
 };
 
+type CornerInsetsDirection = 'vertical' | 'horizontal';
+
 export interface Spec extends TurboModule {
-  cornersInsetsForVerticalAdaptivity(): SafeAreaInsets;
-  cornersInsetsForHorizontalAdaptivity(): SafeAreaInsets;
-  readonly onCornersInsetsChanged: EventEmitter<EmptyMessage>;
+  cornerInsetsForAdaptivity(direction: CornerInsetsDirection): CornersInsets;
+  readonly onCornerInsetsChanged: EventEmitter<EmptyMessage>;
 }
 
 export const NativeReactNavigation =
