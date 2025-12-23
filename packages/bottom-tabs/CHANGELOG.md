@@ -3,6 +3,76 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.4.3...@react-navigation/bottom-tabs@8.0.0-alpha.0) (2025-12-19)
+
+### Bug Fixes
+
+* add missing options ([f20b834](https://github.com/react-navigation/react-navigation/commit/f20b834eb47eb45799b9f7dd0368e5a4e5e59d72)) - by @satya164
+* add missing UNSTABLE_routeNamesChangeBehavior to native bottom tabs ([782b6d4](https://github.com/react-navigation/react-navigation/commit/782b6d4bb43ab69c1d67447e9aa0bcfe46780056)) - by @satya164
+* add more checks on how path param is parsed ([f05681d](https://github.com/react-navigation/react-navigation/commit/f05681d226663a582e23bf66e0bfa83145627af3)) - by @satya164
+* disable prevent default for native tabs ([ea14dc1](https://github.com/react-navigation/react-navigation/commit/ea14dc1594d7558b3765e996ca19cb279dd416f9)) - by @satya164
+* don't wrap tab switch in a transition ([c6031e8](https://github.com/react-navigation/react-navigation/commit/c6031e83bf8ca1ea5bc9ae81a9358d61b56d8840)) - by @satya164
+* expose 0 tab bar height for native ([6010f47](https://github.com/react-navigation/react-navigation/commit/6010f47a44c2e3cd996d0efe9e679ef12ddd8fc9)) - by @satya164
+* fix color from tab bar badge style not being used in native tabs ([89a6815](https://github.com/react-navigation/react-navigation/commit/89a6815ff00c791883f6f9de6570a31fd7984c04)) - by @satya164
+* fix native tab bar color in dark theme ([4568ec6](https://github.com/react-navigation/react-navigation/commit/4568ec61decebf42f63e3d3b710d21b33d698846)) - by @satya164
+* fix showing search bar in native tab bar ([2fef8d8](https://github.com/react-navigation/react-navigation/commit/2fef8d80899091f2442d1c059fccab713f709c23)) - by @satya164
+* fix useTabAnimation for native implementation ([2a8cea7](https://github.com/react-navigation/react-navigation/commit/2a8cea7b3248763493d2a854329568a6f5f0b299)) - by @satya164
+* replace `pointerEvents` props with styles ([#12693](https://github.com/react-navigation/react-navigation/issues/12693)) ([987aed6](https://github.com/react-navigation/react-navigation/commit/987aed623ad7eaf120d3af76ca2e05b2a3c7f103)), closes [#12441](https://github.com/react-navigation/react-navigation/issues/12441) - by @hassankhan
+* tweak fallback colors ([defccac](https://github.com/react-navigation/react-navigation/commit/defccac0661f415bc755b007346c10cd7f631a1f)) - by @satya164
+* workaround scrollview glitch for lazy tabs on iOS 18 ([80208c2](https://github.com/react-navigation/react-navigation/commit/80208c218d3dd8d2bd333df0c81dce9f888468df)) - by @satya164
+
+### Code Refactoring
+
+* drop deprecated APIs and fallbacks for older versions of packages ([cf60189](https://github.com/react-navigation/react-navigation/commit/cf601898adf7ad18b3e4b298a82e04bfb170f01b)) - by @satya164
+* drop various layout arguments in public APIs ([514cc06](https://github.com/react-navigation/react-navigation/commit/514cc0602f08544562e8a99c18ae555043851b36)) - by @satya164
+* get parent navigation by route name with getParent ([#12822](https://github.com/react-navigation/react-navigation/issues/12822)) ([2877968](https://github.com/react-navigation/react-navigation/commit/2877968680e14a8d4698c4762996fff6c086f793)) - by @satya164
+* make react-native-screens required ([92093f9](https://github.com/react-navigation/react-navigation/commit/92093f9be7c53856657c588d52777529d300b650)) - by @satya164
+
+### Features
+
+* add `useBottomTabAnimation` ([#12866](https://github.com/react-navigation/react-navigation/issues/12866)) ([444db5c](https://github.com/react-navigation/react-navigation/commit/444db5cc1854fb194d7c1a60d4d62ed09f3c0cf8)) - by @filipengberg
+* add ability to render native buttons in header on iOS ([#12657](https://github.com/react-navigation/react-navigation/issues/12657)) ([118e27d](https://github.com/react-navigation/react-navigation/commit/118e27d17f7c878ae13c930e2ffd4088c1ccfede)) - by @johankasperi
+* add staticXScreen type to improve defining screens ([#12886](https://github.com/react-navigation/react-navigation/issues/12886)) ([7a5ebbd](https://github.com/react-navigation/react-navigation/commit/7a5ebbd91e7f8ad2ae3d810f45a2d27567dbae68)) - by @satya164
+* add support for bottom accessory to native tabs ([6384fad](https://github.com/react-navigation/react-navigation/commit/6384fadfd69b0b3f29ba5d7e7512fae7359f32f5)) - by @satya164
+* add support for custom tab bar with native implementation ([c376e76](https://github.com/react-navigation/react-navigation/commit/c376e76121b5662cf97c994e3fbcf27cc23b9fe9)) - by @satya164
+* add support for scrollEdgeEffects ([a354070](https://github.com/react-navigation/react-navigation/commit/a35407040f53aeb6054e5f17633a7526409c844f)) - by @satya164
+* add unstable native bottom tabs integration ([#12791](https://github.com/react-navigation/react-navigation/issues/12791)) ([0cb67c7](https://github.com/react-navigation/react-navigation/commit/0cb67c7e57cfe1a83f21661de658253779506b45)) - by @osdnk
+* combine native and custom bottom tab implementations ([#12867](https://github.com/react-navigation/react-navigation/issues/12867)) ([aa38b39](https://github.com/react-navigation/react-navigation/commit/aa38b394c9d6070523f26d3e782872704a9d93b0)) - by @satya164
+* don't show native header by default in native bottom tabs ([c49f40f](https://github.com/react-navigation/react-navigation/commit/c49f40fb5032395b62032f20d00b55f2958735b5)) - by @satya164
+* expose icon type for bottom tabs ([#12892](https://github.com/react-navigation/react-navigation/issues/12892)) ([0311989](https://github.com/react-navigation/react-navigation/commit/03119892eb4bd99c8ab190b84abdd9c90ec86c05)) - by @luke-h1
+* infer params type based on linking and screen ([#12888](https://github.com/react-navigation/react-navigation/issues/12888)) ([84069bf](https://github.com/react-navigation/react-navigation/commit/84069bf11254ab60adc3e4490a96c87c9b1343f7)) - by @satya164
+* move Badge to elements and expose it in public API ([#12796](https://github.com/react-navigation/react-navigation/issues/12796)) ([987e318](https://github.com/react-navigation/react-navigation/commit/987e318d50695cf13b3b1967bab852fb2e1da132)) - by @Trancever
+* override user interface style for native navigation to match theme ([#12840](https://github.com/react-navigation/react-navigation/issues/12840)) ([253c605](https://github.com/react-navigation/react-navigation/commit/253c60529e13e9a92abf4b32524e045024fa97a8)) - by @kligarski
+* remove UNSTABLE prefix from routeNamesChangeBehavior ([eda56ea](https://github.com/react-navigation/react-navigation/commit/eda56ea6840df32114d62ff9c77c066f240022a4)) - by @satya164
+* restore unhandled state after route names change ([#12812](https://github.com/react-navigation/react-navigation/issues/12812)) ([52e8a45](https://github.com/react-navigation/react-navigation/commit/52e8a45d8e8b068a616f8a7df6357ad6198f0622)) - by @satya164
+* rework header design to resemble latest iOS ([#12873](https://github.com/react-navigation/react-navigation/issues/12873)) ([260b604](https://github.com/react-navigation/react-navigation/commit/260b604ba4b96c35826b2a326a9137363b8de0fd)) - by @satya164
+* support ColorValue instead of string for colors in theme ([#12711](https://github.com/react-navigation/react-navigation/issues/12711)) ([cfe746b](https://github.com/react-navigation/react-navigation/commit/cfe746be6d671da7f4fe785d5bd6142fc8152e14)) - by @satya164
+* use continuous rounded corners ([199c002](https://github.com/react-navigation/react-navigation/commit/199c0028de121b7d9e462f4a1158f4c1ce420d6d)) - by @satya164
+
+### BREAKING CHANGES
+
+* Navigators don't accept an ID anymore, and `getParent`
+accepts only route names. Any code using navigator IDs needs to be
+refactored.
+* layout args are dropped to improve performance during window resize
+if consumers need layout, it's recommended to measure directly
+* Not having react native screens installed will now fail the build
+* the minimum required version for `react-native-web` is now `~0.21.0`
+
+**Motivation**
+
+By replacing usages of `pointerEvents` to use styles instead of props,
+we won't get an annoying warning in the logs.
+
+The underlying issue in React Native Web which prevented children of a
+`pointer-events: box-none` element from receiving pointer events is
+resolved by https://github.com/necolas/react-native-web/pull/2789.
+
+A follow-up fix to React Native Testing Library was also required, PR
+here
+https://github.com/callstack/react-native-testing-library/pull/1799.
+* This bumps the minimum required versions of various peer deps
+
 ## [7.4.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.4.2...@react-navigation/bottom-tabs@7.4.3) (2025-07-25)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
