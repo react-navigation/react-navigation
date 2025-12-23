@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.6.0...@react-navigation/elements@3.0.0-alpha.0) (2025-12-19)
+
+### Bug Fixes
+
+* adjust header spacing on Android ([c3bf563](https://github.com/react-navigation/react-navigation/commit/c3bf5635ab61321aaab6ef41d4e3fbe527f0f60f)) - by @satya164
+* avoid back label getting clipped if it's too small ([e9f72b2](https://github.com/react-navigation/react-navigation/commit/e9f72b2f88bfe8b61fa3d0af7f6d09b75395a2b5)) - by @satya164
+* change order of views so react-native-screens finds nested navigators ([#12853](https://github.com/react-navigation/react-navigation/issues/12853)) ([b068c1a](https://github.com/react-navigation/react-navigation/commit/b068c1a1c075f85d54ff4e297ae1df312d3fc0f9)) - by @satya164
+* don't extends RootParamList in Link to allow overrides ([d928289](https://github.com/react-navigation/react-navigation/commit/d9282892dbfe9c1ac2d3616adea0d2ed55176434)) - by @satya164
+* fix font scaling and back title ([1b88142](https://github.com/react-navigation/react-navigation/commit/1b88142ee91bc6a9e80c37c9fed3ec5b221a97a1)) - by @satya164
+* fix landscape header height to match native ([ad041a0](https://github.com/react-navigation/react-navigation/commit/ad041a0cf9cf0c961b665da4e9acd162a0fa09f6)) - by @satya164
+* fix misaligned header search bar on android ([9778b67](https://github.com/react-navigation/react-navigation/commit/9778b67bb5a15af75dbb94f44dba15a09bb44558)) - by @satya164
+* fix title shifting when searchbar is shown on ios ([a087e8a](https://github.com/react-navigation/react-navigation/commit/a087e8a8f94a034d1f369fcfe840e4d3b5896939)) - by @satya164
+* handle disabled in PlatformPressable ([49431c0](https://github.com/react-navigation/react-navigation/commit/49431c0a6a001906b4f629516be29c1a0fb61b00)) - by @satya164
+* measure frame size without an additional view ([#12882](https://github.com/react-navigation/react-navigation/issues/12882)) ([4c12529](https://github.com/react-navigation/react-navigation/commit/4c12529ba817c43c6e58decbd0c371f98033af2b)) - by @satya164
+* measure header layout early in layout effect ([4428241](https://github.com/react-navigation/react-navigation/commit/4428241a9bd259e121b8bad9eb3add15a597b3ce)) - by @satya164
+* remove overflow: hidden from background so shadow isn't hidden ([f1aa2dc](https://github.com/react-navigation/react-navigation/commit/f1aa2dc2cfe2e0a1e44d0111f1abd3a120d1c9ba)) - by @satya164
+* replace `pointerEvents` props with styles ([#12693](https://github.com/react-navigation/react-navigation/issues/12693)) ([987aed6](https://github.com/react-navigation/react-navigation/commit/987aed623ad7eaf120d3af76ca2e05b2a3c7f103)), closes [#12441](https://github.com/react-navigation/react-navigation/issues/12441) - by @hassankhan
+* tweak fallback colors ([defccac](https://github.com/react-navigation/react-navigation/commit/defccac0661f415bc755b007346c10cd7f631a1f)) - by @satya164
+* tweak header styling ([2c2a20e](https://github.com/react-navigation/react-navigation/commit/2c2a20e3730cc394bd42d86aac24c38aac57f3ff)) - by @satya164
+* tweak lazy rendering logic ([67152b9](https://github.com/react-navigation/react-navigation/commit/67152b9b1ec36863fb16574a32e1e690866a417a)) - by @satya164
+* update back & search icons for latest iOS ([56c009d](https://github.com/react-navigation/react-navigation/commit/56c009d1d1c975cd42de15dade30e1b6355a67b6)) - by @satya164
+
+### Code Refactoring
+
+* drop Background component ([ec43b4e](https://github.com/react-navigation/react-navigation/commit/ec43b4e5c0e12bebaf7225b1af6a8aeb58f69c28)) - by @satya164
+* drop deprecated APIs and fallbacks for older versions of packages ([cf60189](https://github.com/react-navigation/react-navigation/commit/cf601898adf7ad18b3e4b298a82e04bfb170f01b)) - by @satya164
+* drop various layout arguments in public APIs ([514cc06](https://github.com/react-navigation/react-navigation/commit/514cc0602f08544562e8a99c18ae555043851b36)) - by @satya164
+* improve API for getDefaultHeaderHeight ([548a2dd](https://github.com/react-navigation/react-navigation/commit/548a2dd4c437f654f26c90225ee79cc816d368e2)) - by @satya164
+* make react-native-screens required ([92093f9](https://github.com/react-navigation/react-navigation/commit/92093f9be7c53856657c588d52777529d300b650)) - by @satya164
+* rename onChangeText to onChange for header ([3c08e52](https://github.com/react-navigation/react-navigation/commit/3c08e52598a951bdea8195f5e07c49ca79a7becf)) - by @satya164
+* rework how root types are specified ([7d63782](https://github.com/react-navigation/react-navigation/commit/7d63782b7ed90e5c1504325c51d1245e90817506)) - by @satya164
+
+### Features
+
+* add a container component as view alternative ([fcaf060](https://github.com/react-navigation/react-navigation/commit/fcaf060e309718331e22379021546be1927e50ea)) - by @satya164
+* add unstable native bottom tabs integration ([#12791](https://github.com/react-navigation/react-navigation/issues/12791)) ([0cb67c7](https://github.com/react-navigation/react-navigation/commit/0cb67c7e57cfe1a83f21661de658253779506b45)) - by @osdnk
+* allow more style properties on header ([998640f](https://github.com/react-navigation/react-navigation/commit/998640fa8216ed5503c6cce012556bc3ac90d49a)) - by @satya164
+* cancel search on back button press to match native ([8ee9c5f](https://github.com/react-navigation/react-navigation/commit/8ee9c5ff25e041f1222ba2be19160e69a7bec4a7)) - by @satya164
+* move Badge to elements and expose it in public API ([#12796](https://github.com/react-navigation/react-navigation/issues/12796)) ([987e318](https://github.com/react-navigation/react-navigation/commit/987e318d50695cf13b3b1967bab852fb2e1da132)) - by @Trancever
+* rework header design to resemble latest iOS ([#12873](https://github.com/react-navigation/react-navigation/issues/12873)) ([260b604](https://github.com/react-navigation/react-navigation/commit/260b604ba4b96c35826b2a326a9137363b8de0fd)) - by @satya164
+* support ColorValue instead of string for colors in theme ([#12711](https://github.com/react-navigation/react-navigation/issues/12711)) ([cfe746b](https://github.com/react-navigation/react-navigation/commit/cfe746be6d671da7f4fe785d5bd6142fc8152e14)) - by @satya164
+* support headerBlurEffect on web in native-stack ([88df82c](https://github.com/react-navigation/react-navigation/commit/88df82c797578d28dd6b8e3d1f89edb14523b4d8)) - by @satya164
+* use continuous rounded corners ([199c002](https://github.com/react-navigation/react-navigation/commit/199c0028de121b7d9e462f4a1158f4c1ce420d6d)) - by @satya164
+
+### BREAKING CHANGES
+
+* Users will need to update their code to use `onChange`.
+* The types previously specified with `RootParamList`
+using global augmentation will stop working.
+* it now accepts an object with 3 properties:
+- `landscape`
+- `modalPresentation`
+- `topInset`
+* layout args are dropped to improve performance during window resize
+if consumers need layout, it's recommended to measure directly
+* Not having react native screens installed will now fail the build
+* Background color can instead be applied by using it from `useTheme`
+* the minimum required version for `react-native-web` is now `~0.21.0`
+
+**Motivation**
+
+By replacing usages of `pointerEvents` to use styles instead of props,
+we won't get an annoying warning in the logs.
+
+The underlying issue in React Native Web which prevented children of a
+`pointer-events: box-none` element from receiving pointer events is
+resolved by https://github.com/necolas/react-native-web/pull/2789.
+
+A follow-up fix to React Native Testing Library was also required, PR
+here
+https://github.com/callstack/react-native-testing-library/pull/1799.
+* This bumps the minimum required versions of various peer deps
+
 # [2.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.5.2...@react-navigation/elements@2.6.0) (2025-07-25)
 
 ### Features

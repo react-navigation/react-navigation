@@ -10,7 +10,13 @@ import {
   type TabNavigationState,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, Platform, StyleSheet } from 'react-native';
+import {
+  Animated,
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  type ViewStyle,
+} from 'react-native';
 import { Screen, ScreenContainer } from 'react-native-screens';
 
 import {
@@ -23,7 +29,9 @@ import type {
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
   BottomTabNavigationOptions,
+  BottomTabSceneStyleInterpolator,
 } from '../types';
+import { BottomTabAnimationContext } from '../utils/BottomTabAnimationContext';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
@@ -233,32 +241,22 @@ export function BottomTabViewCustom({
             animation = 'none',
             sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
               .sceneStyleInterpolator,
-            freezeOnBlur,
             sceneStyle: customSceneStyle,
           } = options;
 
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
-          const { sceneStyle } =
-            sceneStyleInterpolator?.({
-              current: {
-                progress: tabAnims[route.key],
-              },
-            }) ?? {};
-
           const animationEnabled = hasAnimation(descriptor.options);
 
           const content = (
-            <Animated.View
-              style={[
-                styles.scene,
-                customSceneStyle,
-                animationEnabled && sceneStyle,
-              ]}
+            <AnimatedScreenContent
+              progress={tabAnims[route.key]}
+              animationEnabled={animationEnabled}
+              sceneStyleInterpolator={sceneStyleInterpolator}
+              style={customSceneStyle}
             >
               <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
-                {/* TODO: provide tab bar height */}
                 <ScreenContent
                   isFocused={isFocused}
                   route={route}
@@ -272,7 +270,7 @@ export function BottomTabViewCustom({
                   </BottomTabBarHeightContext.Provider>
                 </ScreenContent>
               </Lazy>
-            </Animated.View>
+            </AnimatedScreenContent>
           );
 
           if (Platform.OS === 'web') {
@@ -322,7 +320,6 @@ export function BottomTabViewCustom({
               ]}
               activityState={activityState}
               enabled={detachInactiveScreens}
-              freezeOnBlur={freezeOnBlur}
               shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
             >
               {content}
@@ -334,6 +331,38 @@ export function BottomTabViewCustom({
         ? tabBarElement
         : null}
     </SafeAreaProviderCompat>
+  );
+}
+
+function AnimatedScreenContent({
+  progress,
+  animationEnabled,
+  sceneStyleInterpolator,
+  children,
+  style,
+}: {
+  progress: Animated.Value;
+  animationEnabled: boolean;
+  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
+  children: React.ReactNode;
+  style: StyleProp<ViewStyle>;
+}) {
+  const interpolationProps = React.useMemo(() => {
+    return {
+      current: { progress },
+    };
+  }, [progress]);
+
+  const { sceneStyle } = sceneStyleInterpolator?.(interpolationProps) ?? {};
+
+  return (
+    <Animated.View
+      style={[styles.scene, style, animationEnabled && sceneStyle]}
+    >
+      <BottomTabAnimationContext.Provider value={interpolationProps}>
+        {children}
+      </BottomTabAnimationContext.Provider>
+    </Animated.View>
   );
 }
 

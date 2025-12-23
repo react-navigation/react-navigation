@@ -2,6 +2,8 @@ import type {
   getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
+  InitialState,
+  NavigationState,
   PathConfigMap,
   Route,
 } from '@react-navigation/core';
@@ -206,6 +208,20 @@ export type DocumentTitleOptions = {
     options: Record<string, any> | undefined,
     route: Route<string> | undefined
   ) => string;
+};
+
+export type Persistor = {
+  /**
+   * Callback to persist the navigation state.
+   */
+  persist(state: NavigationState | undefined): void;
+  /**
+   * Callback to restore the navigation state.
+   * Should return the restored state or a Promise which resolves to the restored state.
+   *
+   * If a Promise is returned, providing a `fallback` component is recommended.
+   */
+  restore(): PromiseLike<InitialState | undefined> | InitialState | undefined;
 };
 
 export type ServerContainerRef = {
