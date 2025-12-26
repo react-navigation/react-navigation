@@ -28,6 +28,12 @@ import {
 import { expectTypeOf } from 'expect-type';
 
 const NativeStack = createNativeStackNavigator({
+  layout: ({ navigation, children }) => {
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+    expectTypeOf(navigation.push).toExtend<() => void>();
+
+    return <>{children}</>;
+  },
   groups: {
     GroupA: {
       screenLayout: ({ navigation, children }) => {
