@@ -84,7 +84,7 @@ export type DefaultNavigatorOptions<
    */
   layout?: (props: {
     state: State;
-    navigation: NavigationHelpers<ParamList>;
+    navigation: Navigation;
     descriptors: Record<
       string,
       Descriptor<
