@@ -1,4 +1,2 @@
-export {
-  type CornerAdaptivityDirection,
-  ReactNavigationCornerAdaptivityView as CornerAdaptivityView,
-} from './ReactNavigationCornerAdaptivityViewNativeComponent';
+export type { CornerAdaptivityDirection } from './ReactNavigationCornerAdaptivityViewNativeComponent';
+export { default as CornerAdaptivityView } from './ReactNavigationCornerAdaptivityViewNativeComponent';

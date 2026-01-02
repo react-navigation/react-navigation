@@ -128,12 +128,21 @@ static UIEdgeInsets ReactNavigationCornerInsetsForAxis(
 {
 #if REACT_NAV_HAS_ADAPTIVITY
   if (@available(iOS 26.0, tvOS 26.0, *)) {
-    UIWindow *window = self.window;
-    if (window == nil) {
-      window = ReactNavigationGetPreferredWindow();
-    }
+//    UIWindow *window = self.window;
+//    if (window == nil) {
+//      window = ReactNavigationGetPreferredWindow();
+//    }
+//    
+
+    // Why don't you work??
+    UIViewLayoutRegion *region =
+    [UIViewLayoutRegion safeAreaLayoutRegionWithCornerAdaptation:_axis];
+   
+    UIEdgeInsets nextInsets = [self edgeInsetsForLayoutRegion:region];
+  
     
-    UIEdgeInsets nextInsets = ReactNavigationCornerInsetsForAxis(window, _axis);
+    // TODO: this is wrong
+//    UIEdgeInsets nextInsets = ReactNavigationCornerInsetsForAxis(window, _axis);
     if (!UIEdgeInsetsEqualToEdgeInsets(nextInsets, _currentCornerInsets)) {
       _currentCornerInsets = nextInsets;
       [self updateShadowState];
@@ -142,10 +151,10 @@ static UIEdgeInsets ReactNavigationCornerInsetsForAxis(
   }
 #endif
   
-  if (!UIEdgeInsetsEqualToEdgeInsets(_currentCornerInsets, UIEdgeInsetsZero)) {
-    _currentCornerInsets = UIEdgeInsetsZero;
-    [self updateShadowState];
-  }
+//  if (!UIEdgeInsetsEqualToEdgeInsets(_currentCornerInsets, UIEdgeInsetsZero)) {
+//    _currentCornerInsets = UIEdgeInsetsZero;
+//    [self updateShadowState];
+//  }
 }
 
 - (void)updateShadowState
