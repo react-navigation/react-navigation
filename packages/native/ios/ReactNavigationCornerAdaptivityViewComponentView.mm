@@ -133,6 +133,12 @@ static UIEdgeInsets ReactNavigationCornerInsetsForAxis(
       window = ReactNavigationGetPreferredWindow();
     }
     
+//    
+//    UIViewLayoutRegion *region =
+//    [UIViewLayoutRegion safeAreaLayoutRegionWithCornerAdaptation:_axis];
+//    
+//    UIEdgeInsets nextInsets = [self edgeInsetsForLayoutRegion:region];
+    // TODO: this is wrong
     UIEdgeInsets nextInsets = ReactNavigationCornerInsetsForAxis(window, _axis);
     if (!UIEdgeInsetsEqualToEdgeInsets(nextInsets, _currentCornerInsets)) {
       _currentCornerInsets = nextInsets;
