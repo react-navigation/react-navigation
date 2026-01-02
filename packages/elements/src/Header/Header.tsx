@@ -80,7 +80,6 @@ const useNativeDriver = Platform.OS !== 'web';
 
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
-
   const { colors } = useTheme();
 
   const navigation = useNavigation();
@@ -395,7 +394,7 @@ export function Header(props: Props) {
           />
         )}
       </Animated.View>
-      <CornerAdaptivityView direction="horizontal" style={{ flex: 1 }}>
+      <CornerAdaptivityView direction="horizontal" style={styles.container}>
         <Animated.View
           style={[
             styles.content,
@@ -545,5 +544,8 @@ const styles = StyleSheet.create({
   background: {
     ...StyleSheet.absoluteFillObject,
     pointerEvents: 'box-none',
+  },
+  container: {
+    flex: 1,
   },
 });
