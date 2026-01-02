@@ -1,11 +1,11 @@
-export {
-  type CornerInsetsDirection,
-  useCornerInsets,
-} from './CornersInsetsAdaptivity';
 export { createStaticNavigation } from './createStaticNavigation';
 export { Link } from './Link';
 export { LinkingContext } from './LinkingContext';
 export { LocaleDirContext } from './LocaleDirContext';
+export {
+  type CornerAdaptivityDirection,
+  CornerAdaptivityView,
+} from './native-module/CornerAdaptivityView';
 export { NavigationContainer } from './NavigationContainer';
 export { ServerContainer } from './ServerContainer';
 export { DarkTheme } from './theming/DarkTheme';
