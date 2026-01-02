@@ -1,1 +1,0 @@
-export { NativeReactNavigation } from './NativeReactNavigationImpl';
