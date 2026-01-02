@@ -27,6 +27,7 @@ import type {
 import type {
   BottomTabsScreenBlurEffect,
   BottomTabsSystemItem,
+  ScrollEdgeEffect,
   TabBarControllerMode,
   TabBarItemLabelVisibilityMode,
   TabBarMinimizeBehavior,
@@ -412,6 +413,38 @@ type BottomTabNativeOptions = {
   bottomAccessory?: (options: {
     placement: 'regular' | 'inline';
   }) => React.ReactNode;
+
+  /**
+   * Configures the scroll edge effect for the _content ScrollView_ (the ScrollView that is present in first descendants chain of the Screen).
+   * Depending on values set, it will blur the scrolling content below certain UI elements (header items, search bar)
+   * for the specified edge of the ScrollView.
+   *
+   * When set in nested containers, i.e. Native Stack inside Native Bottom Tabs, or the other way around,
+   * the ScrollView will use only the innermost one's config.
+   *
+   * **Note:** Using both `headerBlurEffect` and `scrollEdgeEffects` (>= iOS 26) simultaneously may cause overlapping effects.
+   *
+   * Edge effects can be configured for each edge separately. The following values are currently supported:
+   *
+   * - `automatic` - the automatic scroll edge effect style,
+   * - `hard` - a scroll edge effect with a hard cutoff and dividing line,
+   * - `soft` - a soft-edged scroll edge effect,
+   * - `hidden` - no scroll edge effect.
+   *
+   * Defaults to `automatic` for each edge.
+   *
+   * Available starting from iOS 26.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform ios
+   */
+  scrollEdgeEffects?: {
+    bottom?: ScrollEdgeEffect;
+    left?: ScrollEdgeEffect;
+    right?: ScrollEdgeEffect;
+    top?: ScrollEdgeEffect;
+  };
 };
 
 export type BottomTabNavigationOptions = {
@@ -550,15 +583,6 @@ export type BottomTabNavigationOptions = {
    * Set it to `false` if you want to render the screen on initial render.
    */
   lazy?: boolean;
-
-  /**
-   * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
-   * Defaults to `true` when `enableFreeze()` is run at the top of the application.
-   * Requires `react-native-screens` version >=3.16.0.
-   *
-   * Only supported on iOS and Android.
-   */
-  freezeOnBlur?: boolean; // TODO
 
   /**
    * Whether any nested stack should be popped to top when navigating away from the tab.
