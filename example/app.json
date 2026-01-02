@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "React Navigation",
+    "name": "React Navigation Example",
     "owner": "react-navigation",
     "slug": "react-navigation-example",
     "description": "Demonstrates the functionality and various capabilities of React Navigation.",

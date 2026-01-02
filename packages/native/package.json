@@ -46,7 +46,8 @@
     "escape-string-regexp": "^4.0.0",
     "fast-deep-equal": "^3.1.3",
     "nanoid": "^3.3.11",
-    "use-latest-callback": "^0.3.2"
+    "use-latest-callback": "^0.3.2",
+    "use-sync-external-store": "^1.5.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.0",
@@ -82,5 +83,15 @@
         }
       ]
     ]
+  },
+  "codegenConfig": {
+    "name": "ReactNavigationSpec",
+    "type": "all",
+    "jsSrcsDir": "src/native-module",
+    "ios": {
+      "componentProvider": {
+        "ReactNavigationCornerAdaptivityView": "ReactNavigationCornerAdaptivityViewNativeComponent"
+      }
+    }
   }
 }

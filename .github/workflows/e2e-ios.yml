@@ -55,14 +55,14 @@ jobs:
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
         run: |
           yarn expo prebuild --platform ios
-          xcodebuild ONLY_ACTIVE_ARCH=YES -workspace ios/ReactNavigation.xcworkspace -UseNewBuildSystem=YES -scheme ReactNavigation -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -quiet
+          xcodebuild ONLY_ACTIVE_ARCH=YES -workspace ios/ReactNavigationExample.xcworkspace -UseNewBuildSystem=YES -scheme ReactNavigationExample -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -quiet
         working-directory: example
 
       - name: Prepare cache folder
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
         run: |
           mkdir ios-debug-build
-          mv example/ios/build/Build/Products/Debug-iphonesimulator/ReactNavigation.app ios-debug-build/ios-debug.app
+          mv example/ios/build/Build/Products/Debug-iphonesimulator/ReactNavigationExample.app ios-debug-build/ios-debug.app
 
       - name: Store debug build in cache
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
