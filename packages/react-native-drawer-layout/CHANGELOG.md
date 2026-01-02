@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.12...react-native-drawer-layout@5.0.0-alpha.0) (2025-12-19)
+
+### Bug Fixes
+
+* add inert to drawer on web for proper a11y ([5eb5491](https://github.com/react-navigation/react-navigation/commit/5eb54912c1cc97c7162d30a7b87a51c34672d561)) - by @satya164
+* fix flex direction when wrapping with Inert ([f69f4cc](https://github.com/react-navigation/react-navigation/commit/f69f4ccaf54a72937116750a7ac35c9e408b9ef3)) - by @satya164
+* fix incorrect aria-hidden on drawer ([e471b13](https://github.com/react-navigation/react-navigation/commit/e471b13999ee8314a08a5c4ec6e0d68df6b9eeda)) - by @satya164
+* replace `pointerEvents` props with styles ([#12693](https://github.com/react-navigation/react-navigation/issues/12693)) ([987aed6](https://github.com/react-navigation/react-navigation/commit/987aed623ad7eaf120d3af76ca2e05b2a3c7f103)), closes [#12441](https://github.com/react-navigation/react-navigation/issues/12441) - by @hassankhan
+
+### Code Refactoring
+
+* drop deprecated APIs and fallbacks for older versions of packages ([cf60189](https://github.com/react-navigation/react-navigation/commit/cf601898adf7ad18b3e4b298a82e04bfb170f01b)) - by @satya164
+* drop deprecated navigation bar and status bar APIs from native stack ([143a967](https://github.com/react-navigation/react-navigation/commit/143a967e6cc5766251200d1f246a2e83a230f624)) - by @satya164
+* drop InteractionManager usage ([95c0f18](https://github.com/react-navigation/react-navigation/commit/95c0f186258ee55092503b7e6e0e08962ef6887d)), closes [#12785](https://github.com/react-navigation/react-navigation/issues/12785) - by @satya164
+
+### Features
+
+* add ability to render native buttons in header on iOS ([#12657](https://github.com/react-navigation/react-navigation/issues/12657)) ([118e27d](https://github.com/react-navigation/react-navigation/commit/118e27d17f7c878ae13c930e2ffd4088c1ccfede)) - by @johankasperi
+
+### BREAKING CHANGES
+
+* Consumers will now need to add listeners for
+`transitionStart`, `transitionEnd` etc. to defer code to run after transitions.
+
+`InteractionManager` has been deprecated in latest React Native
+versions: https://github.com/facebook/react-native/commit/a8a4ab10d0ee6004524f0e694e9d5a41836ad5c4
+* the minimum required version for `react-native-web` is now `~0.21.0`
+
+**Motivation**
+
+By replacing usages of `pointerEvents` to use styles instead of props,
+we won't get an annoying warning in the logs.
+
+The underlying issue in React Native Web which prevented children of a
+`pointer-events: box-none` element from receiving pointer events is
+resolved by https://github.com/necolas/react-native-web/pull/2789.
+
+A follow-up fix to React Native Testing Library was also required, PR
+here
+https://github.com/callstack/react-native-testing-library/pull/1799.
+* On Android, users should now use react-native-edge-to-edge
+* This bumps the minimum required versions of various peer deps
+
 ## [4.1.12](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.11...react-native-drawer-layout@4.1.12) (2025-07-07)
 
 ### Bug Fixes
