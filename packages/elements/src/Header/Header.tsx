@@ -1,5 +1,5 @@
 import {
-  useCornerInsets,
+  CornerAdaptivityView,
   useNavigation,
   useTheme,
 } from '@react-navigation/native';
@@ -80,7 +80,6 @@ const useNativeDriver = Platform.OS !== 'web';
 
 export function Header(props: Props) {
   const insets = useSafeAreaInsets();
-  const cornersInsets = useCornerInsets('horizontal');
 
   const { colors } = useTheme();
 
@@ -396,92 +395,78 @@ export function Header(props: Props) {
           />
         )}
       </Animated.View>
-      <Animated.View
-        style={[
-          styles.content,
-          {
-            pointerEvents: searchBarVisible ? 'none' : 'auto',
-            marginTop: statusBarSpacing,
-            opacity: headerOpacity,
-          },
-        ]}
-      >
-        <View
-          style={[
-            styles.start,
-            headerTitleAlign === 'center' ? styles.expand : styles.shrink,
-            {
-              minWidth: buttonMinWidth,
-              marginStart:
-                insets.left +
-                // Account for corner insets.
-                // We only apply the difference between both sides
-                // as the smaller inset will already be included in the safe area inset
-                Math.max(
-                  (cornersInsets.left ?? 0) - (cornersInsets.right ?? 0),
-                  0
-                ),
-            },
-          ]}
-        >
-          <HeaderButtonBackground
-            style={[styles.buttonContainer, leftContainerStyle]}
-          >
-            {leftButton}
-          </HeaderButtonBackground>
-        </View>
+      <CornerAdaptivityView direction="horizontal" style={{ flex: 1 }}>
         <Animated.View
           style={[
-            styles.title,
-            !leftButton && styles.titleStart,
-            titleContainerStyle,
-          ]}
-        >
-          {headerTitle({
-            children: title,
-            allowFontScaling: titleAllowFontScaling,
-            tintColor: headerTintColor,
-            style: [styles.titleText, titleStyle],
-          })}
-        </Animated.View>
-        <View
-          style={[
-            styles.end,
-            styles.expand,
+            styles.content,
             {
-              minWidth: buttonMinWidth,
-              marginEnd:
-                insets.right +
-                // Account for corner insets.
-                // We only apply the difference between both sides
-                // as the smaller inset will already be included in the safe area inset
-                Math.max(
-                  (cornersInsets.right ?? 0) - (cornersInsets.left ?? 0),
-                  0
-                ),
+              pointerEvents: searchBarVisible ? 'none' : 'auto',
+              marginTop: statusBarSpacing,
+              opacity: headerOpacity,
             },
           ]}
         >
-          <HeaderButtonBackground
-            style={[styles.buttonContainer, rightContainerStyle]}
+          <View
+            style={[
+              styles.start,
+              headerTitleAlign === 'center' ? styles.expand : styles.shrink,
+              {
+                minWidth: buttonMinWidth,
+                marginStart: insets.left,
+              },
+            ]}
           >
-            {rightButton}
-            {headerSearchBarOptions ? (
-              <HeaderButton
-                tintColor={iconTintColor}
-                pressColor={headerPressColor}
-                pressOpacity={headerPressOpacity}
-                onPress={() => {
-                  setSearchBarVisible(true);
-                  headerSearchBarOptions?.onOpen?.();
-                }}
-              >
-                <HeaderIcon source={searchIcon} tintColor={iconTintColor} />
-              </HeaderButton>
-            ) : null}
-          </HeaderButtonBackground>
-        </View>
-      </Animated.View>
+            <HeaderButtonBackground
+              style={[styles.buttonContainer, leftContainerStyle]}
+            >
+              {leftButton}
+            </HeaderButtonBackground>
+          </View>
+          <Animated.View
+            style={[
+              styles.title,
+              !leftButton && styles.titleStart,
+              titleContainerStyle,
+            ]}
+          >
+            {headerTitle({
+              children: title,
+              allowFontScaling: titleAllowFontScaling,
+              tintColor: headerTintColor,
+              style: [styles.titleText, titleStyle],
+            })}
+          </Animated.View>
+          <View
+            style={[
+              styles.end,
+              styles.expand,
+              {
+                minWidth: buttonMinWidth,
+                marginEnd: insets.right,
+              },
+            ]}
+          >
+            <HeaderButtonBackground
+              style={[styles.buttonContainer, rightContainerStyle]}
+            >
+              {rightButton}
+              {headerSearchBarOptions ? (
+                <HeaderButton
+                  tintColor={iconTintColor}
+                  pressColor={headerPressColor}
+                  pressOpacity={headerPressOpacity}
+                  onPress={() => {
+                    setSearchBarVisible(true);
+                    headerSearchBarOptions?.onOpen?.();
+                  }}
+                >
+                  <HeaderIcon source={searchIcon} tintColor={iconTintColor} />
+                </HeaderButton>
+              ) : null}
+            </HeaderButtonBackground>
+          </View>
+        </Animated.View>
+      </CornerAdaptivityView>
       {searchBarRendered ? (
         <HeaderSearchBar
           {...headerSearchBarOptions}

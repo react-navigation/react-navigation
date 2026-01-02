@@ -1,4 +1,4 @@
-import { useCornerInsets, useLocale } from '@react-navigation/native';
+import { CornerAdaptivityView, useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { ScrollView, type ScrollViewProps, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -18,7 +18,6 @@ function DrawerContentScrollViewInner(
   const drawerPosition = React.useContext(DrawerPositionContext);
   const insets = useSafeAreaInsets();
   const { direction } = useLocale();
-  const cornersInsets = useCornerInsets('vertical');
 
   const isRight =
     direction === 'rtl'
@@ -26,22 +25,23 @@ function DrawerContentScrollViewInner(
       : drawerPosition === 'right';
 
   return (
-    <ScrollView
-      {...rest}
-      ref={ref}
-      contentContainerStyle={[
-        {
-          paddingTop: cornersInsets.top,
-          paddingBottom: SPACING + insets.bottom,
-          paddingStart: SPACING + (!isRight ? insets.left : 0),
-          paddingEnd: SPACING + (isRight ? insets.right : 0),
-        },
-        contentContainerStyle,
-      ]}
-      style={[styles.container, style]}
-    >
-      {children}
-    </ScrollView>
+    <CornerAdaptivityView direction="vertical" style={styles.container}>
+      <ScrollView
+        {...rest}
+        ref={ref}
+        contentContainerStyle={[
+          {
+            paddingBottom: SPACING + insets.bottom,
+            paddingStart: SPACING + (!isRight ? insets.left : 0),
+            paddingEnd: SPACING + (isRight ? insets.right : 0),
+          },
+          contentContainerStyle,
+        ]}
+        style={[styles.container, style]}
+      >
+        {children}
+      </ScrollView>
+    </CornerAdaptivityView>
   );
 }
 
