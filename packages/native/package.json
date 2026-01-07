@@ -87,10 +87,10 @@
   "codegenConfig": {
     "name": "ReactNavigationSpec",
     "type": "all",
-    "jsSrcsDir": "src/native-module",
+    "jsSrcsDir": "src/native",
     "ios": {
       "componentProvider": {
-        "ReactNavigationCornerAdaptivityView": "ReactNavigationCornerAdaptivityViewNativeComponent"
+        "ReactNavigationCornerInsetView": "ReactNavigationCornerInsetView"
       }
     }
   }
