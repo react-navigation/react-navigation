@@ -1,4 +1,8 @@
-import { useNavigation, useTheme } from '@react-navigation/native';
+import {
+  CornerAdaptivityView,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -390,76 +394,78 @@ export function Header(props: Props) {
           />
         )}
       </Animated.View>
-      <Animated.View
-        style={[
-          styles.content,
-          {
-            pointerEvents: searchBarVisible ? 'none' : 'auto',
-            marginTop: statusBarSpacing,
-            opacity: headerOpacity,
-          },
-        ]}
-      >
-        <View
-          style={[
-            styles.start,
-            headerTitleAlign === 'center' ? styles.expand : styles.shrink,
-            {
-              minWidth: buttonMinWidth,
-              marginStart: insets.left,
-            },
-          ]}
-        >
-          <HeaderButtonBackground
-            style={[styles.buttonContainer, leftContainerStyle]}
-          >
-            {leftButton}
-          </HeaderButtonBackground>
-        </View>
+      <CornerAdaptivityView direction="horizontal" style={styles.container}>
         <Animated.View
           style={[
-            styles.title,
-            !leftButton && styles.titleStart,
-            titleContainerStyle,
-          ]}
-        >
-          {headerTitle({
-            children: title,
-            allowFontScaling: titleAllowFontScaling,
-            tintColor: headerTintColor,
-            style: [styles.titleText, titleStyle],
-          })}
-        </Animated.View>
-        <View
-          style={[
-            styles.end,
-            styles.expand,
+            styles.content,
             {
-              minWidth: buttonMinWidth,
-              marginEnd: insets.right,
+              pointerEvents: searchBarVisible ? 'none' : 'auto',
+              marginTop: statusBarSpacing,
+              opacity: headerOpacity,
             },
           ]}
         >
-          <HeaderButtonBackground
-            style={[styles.buttonContainer, rightContainerStyle]}
+          <View
+            style={[
+              styles.start,
+              headerTitleAlign === 'center' ? styles.expand : styles.shrink,
+              {
+                minWidth: buttonMinWidth,
+                marginStart: insets.left,
+              },
+            ]}
           >
-            {rightButton}
-            {headerSearchBarOptions ? (
-              <HeaderButton
-                tintColor={iconTintColor}
-                pressColor={headerPressColor}
-                pressOpacity={headerPressOpacity}
-                onPress={() => {
-                  setSearchBarVisible(true);
-                  headerSearchBarOptions?.onOpen?.();
-                }}
-              >
-                <HeaderIcon source={searchIcon} tintColor={iconTintColor} />
-              </HeaderButton>
-            ) : null}
-          </HeaderButtonBackground>
-        </View>
-      </Animated.View>
+            <HeaderButtonBackground
+              style={[styles.buttonContainer, leftContainerStyle]}
+            >
+              {leftButton}
+            </HeaderButtonBackground>
+          </View>
+          <Animated.View
+            style={[
+              styles.title,
+              !leftButton && styles.titleStart,
+              titleContainerStyle,
+            ]}
+          >
+            {headerTitle({
+              children: title,
+              allowFontScaling: titleAllowFontScaling,
+              tintColor: headerTintColor,
+              style: [styles.titleText, titleStyle],
+            })}
+          </Animated.View>
+          <View
+            style={[
+              styles.end,
+              styles.expand,
+              {
+                minWidth: buttonMinWidth,
+                marginEnd: insets.right,
+              },
+            ]}
+          >
+            <HeaderButtonBackground
+              style={[styles.buttonContainer, rightContainerStyle]}
+            >
+              {rightButton}
+              {headerSearchBarOptions ? (
+                <HeaderButton
+                  tintColor={iconTintColor}
+                  pressColor={headerPressColor}
+                  pressOpacity={headerPressOpacity}
+                  onPress={() => {
+                    setSearchBarVisible(true);
+                    headerSearchBarOptions?.onOpen?.();
+                  }}
+                >
+                  <HeaderIcon source={searchIcon} tintColor={iconTintColor} />
+                </HeaderButton>
+              ) : null}
+            </HeaderButtonBackground>
+          </View>
+        </Animated.View>
+      </CornerAdaptivityView>
       {searchBarRendered ? (
         <HeaderSearchBar
           {...headerSearchBarOptions}
@@ -538,5 +544,8 @@ const styles = StyleSheet.create({
   background: {
     ...StyleSheet.absoluteFillObject,
     pointerEvents: 'box-none',
+  },
+  container: {
+    flex: 1,
   },
 });
