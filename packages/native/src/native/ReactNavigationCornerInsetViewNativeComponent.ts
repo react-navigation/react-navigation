@@ -8,6 +8,7 @@ import {
 
 export interface NativeProps extends ViewProps {
   direction?: CodegenTypes.WithDefault<'vertical' | 'horizontal', 'vertical'>;
+  edge?: CodegenTypes.WithDefault<'top' | 'right' | 'bottom' | 'left', 'top'>;
 }
 
 export default codegenNativeComponent<NativeProps>(

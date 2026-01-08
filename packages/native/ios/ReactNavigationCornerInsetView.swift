@@ -5,8 +5,16 @@ import UIKit
   case horizontal
 }
 
+@objc public enum CornerInsetsEdge: Int {
+  case top
+  case right
+  case bottom
+  case left
+}
+
 @objc public class ReactNavigationCornerInsetViewImplProps: NSObject {
   @objc public var direction: CornerInsetsDirection = .vertical
+  @objc public var edge: CornerInsetsEdge = .top
 }
 
 @objc public protocol ReactNavigationCornerInsetViewImplDelegate: AnyObject {
@@ -22,7 +30,7 @@ import UIKit
   @objc public func updateProps(_ props: ReactNavigationCornerInsetViewImplProps, oldProps: ReactNavigationCornerInsetViewImplProps) {
     self.props = props
 
-    if props.direction != oldProps.direction {
+    if props.direction != oldProps.direction || props.edge != oldProps.edge {
       setNeedsLayout()
     }
   }
@@ -50,14 +58,18 @@ import UIKit
 
   private func calculateCornerInset() -> CGFloat {
     if #available(iOS 26.0, *) {
-      switch props.direction {
-      case .vertical:
-        let cornerMargins = self.edgeInsets(for: .margins(cornerAdaptation: .vertical))
+      let cornerMargins = self.edgeInsets(for: .margins(
+        cornerAdaptation: props.direction == .horizontal ? .horizontal : .vertical
+      ))
 
+      switch props.edge {
+      case .top:
         return cornerMargins.top
-      case .horizontal:
-        let cornerMargins = self.edgeInsets(for: .margins(cornerAdaptation: .horizontal))
-
+      case .right:
+        return cornerMargins.right
+      case .bottom:
+        return cornerMargins.bottom
+      case .left:
         return cornerMargins.left
       }
     }

@@ -64,6 +64,14 @@ static ReactNavigationCornerInsetViewImplProps *convertProps(const Props::Shared
         ? CornerInsetsDirectionHorizontal
         : CornerInsetsDirectionVertical;
 
+    swiftProps.edge = viewProps.edge == ReactNavigationCornerInsetViewEdge::Left
+        ? CornerInsetsEdgeLeft
+        : viewProps.edge == ReactNavigationCornerInsetViewEdge::Right
+            ? CornerInsetsEdgeRight
+            : viewProps.edge == ReactNavigationCornerInsetViewEdge::Bottom
+                ? CornerInsetsEdgeBottom
+                : CornerInsetsEdgeTop;
+
     return swiftProps;
 }
 

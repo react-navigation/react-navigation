@@ -22,7 +22,8 @@ void ReactNavigationCornerInsetViewShadowNode::adjustLayoutWithState() {
 
   Float cornerInset = stateData.cornerInset;
 
-  Dimension dimension = props.direction == ReactNavigationCornerInsetViewDirection::Horizontal
+  Dimension dimension = props.edge == ReactNavigationCornerInsetViewEdge::Left ||
+                        props.edge == ReactNavigationCornerInsetViewEdge::Right
       ? Dimension::Width
       : Dimension::Height;
 

@@ -26,7 +26,11 @@ function DrawerContentScrollViewInner(
 
   return (
     <>
-      <CornerInset direction="vertical" style={{ backgroundColor: 'red' }} />
+      <CornerInset
+        direction="vertical"
+        edge="top"
+        style={{ backgroundColor: 'red' }}
+      />
       <ScrollView
         {...rest}
         ref={ref}
