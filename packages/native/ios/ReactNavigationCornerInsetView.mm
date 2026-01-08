@@ -1,6 +1,5 @@
 #import "ReactNavigationCornerInsetView.h"
 
-#import <React/RCTComponentViewProtocol.h>
 #import <React/RCTConversions.h>
 
 #if __has_include("ReactNavigation/ReactNavigation-Swift.h")
@@ -9,18 +8,16 @@
 #import "ReactNavigation-Swift.h"
 #endif
 
-#import <react/renderer/components/ReactNavigationSpec/EventEmitters.h>
-#import <react/renderer/components/ReactNavigationSpec/Props.h>
-#import <react/renderer/components/ReactNavigationSpec/RCTComponentViewHelpers.h>
-#import <react/renderer/core/State.h>
 #import "ReactNavigationCornerInsetViewComponentDescriptor.h"
 #import "ReactNavigationCornerInsetViewShadowNode.h"
+
+#import <react/renderer/components/ReactNavigationSpec/Props.h>
 
 #import "RCTFabricComponentsPlugins.h"
 
 using namespace facebook::react;
 
-@interface ReactNavigationCornerInsetView () <RCTReactNavigationCornerInsetViewViewProtocol, ReactNavigationCornerInsetViewImplDelegate>
+@interface ReactNavigationCornerInsetView () <ReactNavigationCornerInsetViewImplDelegate>
 
 @end
 
@@ -61,16 +58,16 @@ static ReactNavigationCornerInsetViewImplProps *convertProps(const Props::Shared
     ReactNavigationCornerInsetViewImplProps *swiftProps = [[ReactNavigationCornerInsetViewImplProps alloc] init];
 
     swiftProps.direction = viewProps.direction == ReactNavigationCornerInsetViewDirection::Horizontal
-        ? CornerInsetsDirectionHorizontal
-        : CornerInsetsDirectionVertical;
+        ? CornerInsetDirectionHorizontal
+        : CornerInsetDirectionVertical;
 
     swiftProps.edge = viewProps.edge == ReactNavigationCornerInsetViewEdge::Left
-        ? CornerInsetsEdgeLeft
+        ? CornerInsetEdgeLeft
         : viewProps.edge == ReactNavigationCornerInsetViewEdge::Right
-            ? CornerInsetsEdgeRight
+            ? CornerInsetEdgeRight
             : viewProps.edge == ReactNavigationCornerInsetViewEdge::Bottom
-                ? CornerInsetsEdgeBottom
-                : CornerInsetsEdgeTop;
+                ? CornerInsetEdgeBottom
+                : CornerInsetEdgeTop;
 
     return swiftProps;
 }
@@ -101,11 +98,6 @@ static ReactNavigationCornerInsetViewImplProps *convertProps(const Props::Shared
     // TODO: Once we update React Native 0.82+, make this synchronous
     // Otherwise we don't have the insets on first render
     _state->updateState(ReactNavigationCornerInsetViewState(cornerInset));
-}
-
-Class<RCTComponentViewProtocol> ReactNavigationCornerInsetViewCls(void)
-{
-    return ReactNavigationCornerInsetView.class;
 }
 
 @end

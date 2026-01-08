@@ -1,23 +1,23 @@
 import UIKit
 
-@objc public enum CornerInsetsDirection: Int {
+@objc public enum CornerInsetDirection: Int {
   case vertical
   case horizontal
 }
 
-@objc public enum CornerInsetsEdge: Int {
+@objc public enum CornerInsetEdge: Int {
   case top
   case right
   case bottom
   case left
 }
 
-@objc public class ReactNavigationCornerInsetViewImplProps: NSObject {
-  @objc public var direction: CornerInsetsDirection = .vertical
-  @objc public var edge: CornerInsetsEdge = .top
+@objcMembers public class ReactNavigationCornerInsetViewImplProps: NSObject {
+  public var direction: CornerInsetDirection = .vertical
+  public var edge: CornerInsetEdge = .top
 }
 
-@objc public protocol ReactNavigationCornerInsetViewImplDelegate: AnyObject {
+@objc public protocol ReactNavigationCornerInsetViewImplDelegate: NSObjectProtocol {
   func cornerInsetDidChange(_ cornerInset: CGFloat)
 }
 
@@ -37,20 +37,20 @@ import UIKit
 
   public override func safeAreaInsetsDidChange() {
     super.safeAreaInsetsDidChange()
-    updateCornerInsets()
+    updateCornerInset()
   }
 
   public override func layoutMarginsDidChange() {
     super.layoutMarginsDidChange()
-    updateCornerInsets()
+    updateCornerInset()
   }
 
   public override func layoutSubviews() {
     super.layoutSubviews()
-    updateCornerInsets()
+    updateCornerInset()
   }
 
-  private func updateCornerInsets() {
+  private func updateCornerInset() {
     let cornerInset = calculateCornerInset()
 
     delegate?.cornerInsetDidChange(cornerInset)
