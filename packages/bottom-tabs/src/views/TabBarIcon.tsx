@@ -1,6 +1,6 @@
 import { Badge } from '@react-navigation/elements';
 import { MissingIcon } from '@react-navigation/elements/internal';
-import type { Route } from '@react-navigation/native';
+import { type Route, SFSymbol } from '@react-navigation/native';
 import React from 'react';
 import {
   type ColorValue,
@@ -141,21 +141,24 @@ function renderIcon({
     iconValue != null &&
     'type' in iconValue
   ) {
-    if (iconValue?.type === 'image') {
-      return (
-        <Image
-          source={iconValue.source}
-          style={{
-            width: size,
-            height: size,
-            tintColor: iconValue.tinted === false ? undefined : color,
-          }}
-        />
-      );
-    } else {
-      throw new Error(
-        `Icon type '${iconValue.type}' is only supported with native tab bar.`
-      );
+    switch (iconValue.type) {
+      case 'image':
+        return (
+          <Image
+            source={iconValue.source}
+            style={{
+              width: size,
+              height: size,
+              tintColor: iconValue.tinted === false ? undefined : color,
+            }}
+          />
+        );
+      case 'sfSymbol':
+        return <SFSymbol name={iconValue.name} size={size} color={color} />;
+      default:
+        throw new Error(
+          `Icon type '${iconValue.type}' is only supported with native tab bar.`
+        );
     }
   }
 

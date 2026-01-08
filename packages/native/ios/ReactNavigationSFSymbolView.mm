@@ -8,10 +8,7 @@
 
 #import <React/RCTConversions.h>
 #import <react/renderer/components/ReactNavigationSpec/ComponentDescriptors.h>
-#import <react/renderer/components/ReactNavigationSpec/EventEmitters.h>
 #import <react/renderer/components/ReactNavigationSpec/Props.h>
-#import <react/renderer/components/ReactNavigationSpec/RCTComponentViewHelpers.h>
-#import <react/renderer/core/State.h>
 
 #import "RCTFabricComponentsPlugins.h"
 
