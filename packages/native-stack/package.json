@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@react-navigation/elements": "workspace:^",
-    "sf-symbols-typescript": "^2.1.0",
+    "sf-symbols-typescript": "^2.2.0",
     "warn-once": "^0.1.1"
   },
   "devDependencies": {

@@ -31,6 +31,9 @@
   "files": [
     "src",
     "lib",
+    "ios",
+    "android",
+    "ReactNavigation.podspec",
     "!**/__tests__"
   ],
   "sideEffects": false,
@@ -46,6 +49,7 @@
     "escape-string-regexp": "^4.0.0",
     "fast-deep-equal": "^3.1.3",
     "nanoid": "^3.3.11",
+    "sf-symbols-typescript": "^2.2.0",
     "use-latest-callback": "^0.3.2"
   },
   "devDependencies": {
@@ -82,5 +86,15 @@
         }
       ]
     ]
+  },
+  "codegenConfig": {
+    "name": "ReactNavigationSpec",
+    "type": "all",
+    "jsSrcsDir": "src/native",
+    "ios": {
+      "componentProvider": {
+        "ReactNavigationSFSymbolView": "ReactNavigationSFSymbolView"
+      }
+    }
   }
 }
