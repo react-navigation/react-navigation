@@ -78,18 +78,6 @@ static ReactNavigationCornerInsetViewImplProps *convertProps(const Props::Shared
     _state = std::static_pointer_cast<ReactNavigationCornerInsetViewShadowNode::ConcreteState const>(state);
 }
 
-- (void)finalizeUpdates:(RNComponentViewUpdateMask)updateMask
-{
-    [super finalizeUpdates:updateMask];
-    [self updateStateIfNeeded];
-}
-
-- (void)updateStateIfNeeded
-{
-    [_view setNeedsLayout];
-    [_view layoutIfNeeded];
-}
-
 - (void)cornerInsetDidChange:(CGFloat)cornerInset
 {
     if (_currentCornerInset == cornerInset) {
@@ -102,19 +90,9 @@ static ReactNavigationCornerInsetViewImplProps *convertProps(const Props::Shared
         return;
     }
 
-    _state->updateState([=](ReactNavigationCornerInsetViewShadowNode::ConcreteState::Data const &oldData)
-        -> ReactNavigationCornerInsetViewShadowNode::ConcreteState::SharedData {
-            auto newData = oldData;
-            newData.cornerInset = static_cast<Float>(cornerInset);
-            return std::make_shared<ReactNavigationCornerInsetViewShadowNode::ConcreteState::Data const>(newData);
-        });
-}
-
-- (void)prepareForRecycle
-{
-    [super prepareForRecycle];
-    _state.reset();
-    _currentCornerInset = 0;
+    // TODO: Once we update React Native 0.82+, make this synchronous
+    // Otherwise we don't have the insets on first render
+    _state->updateState(ReactNavigationCornerInsetViewState(cornerInset));
 }
 
 Class<RCTComponentViewProtocol> ReactNavigationCornerInsetViewCls(void)

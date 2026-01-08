@@ -17,34 +17,14 @@ import UIKit
   @objc public weak var delegate: ReactNavigationCornerInsetViewImplDelegate?
 
   private var props: ReactNavigationCornerInsetViewImplProps = ReactNavigationCornerInsetViewImplProps()
-  private var currentCornerInset: CGFloat = 0
   private var windowObservation: NSObjectProtocol?
 
   @objc public func updateProps(_ props: ReactNavigationCornerInsetViewImplProps, oldProps: ReactNavigationCornerInsetViewImplProps) {
     self.props = props
 
     if props.direction != oldProps.direction {
-      currentCornerInset = 0
       setNeedsLayout()
     }
-  }
-
-  public override func didMoveToWindow() {
-    super.didMoveToWindow()
-
-    windowObservation = nil
-
-    if let windowScene = window?.windowScene {
-      windowObservation = NotificationCenter.default.addObserver(
-        forName: UIScene.willEnterForegroundNotification,
-        object: windowScene,
-        queue: .main
-      ) { [weak self] _ in
-        self?.updateCornerInsets()
-      }
-    }
-
-    updateCornerInsets()
   }
 
   public override func safeAreaInsetsDidChange() {
@@ -65,10 +45,7 @@ import UIKit
   private func updateCornerInsets() {
     let cornerInset = calculateCornerInset()
 
-    if cornerInset != currentCornerInset {
-      currentCornerInset = cornerInset
-      delegate?.cornerInsetDidChange(cornerInset)
-    }
+    delegate?.cornerInsetDidChange(cornerInset)
   }
 
   private func calculateCornerInset() -> CGFloat {
@@ -86,11 +63,5 @@ import UIKit
     }
 
     return 0
-  }
-
-  deinit {
-    if let observation = windowObservation {
-      NotificationCenter.default.removeObserver(observation)
-    }
   }
 }

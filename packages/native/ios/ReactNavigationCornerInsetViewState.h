@@ -10,6 +10,7 @@ class JSI_EXPORT ReactNavigationCornerInsetViewState final {
   using Shared = std::shared_ptr<const ReactNavigationCornerInsetViewState>;
 
   ReactNavigationCornerInsetViewState() = default;
+  ReactNavigationCornerInsetViewState(Float value): cornerInset(value) {}
 
   Float cornerInset{0};
 };
