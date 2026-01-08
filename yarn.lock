@@ -4577,7 +4577,7 @@ __metadata:
     react-native-safe-area-context: "npm:~5.6.0"
     react-native-screens: "npm:^4.19.0"
     react-test-renderer: "npm:19.1.0"
-    sf-symbols-typescript: "npm:^2.1.0"
+    sf-symbols-typescript: "npm:^2.2.0"
     typescript: "npm:^5.9.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
@@ -4807,7 +4807,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-native-screens: "npm:^4.19.0"
     react-test-renderer: "npm:19.1.0"
-    sf-symbols-typescript: "npm:^2.1.0"
+    sf-symbols-typescript: "npm:^2.2.0"
     typescript: "npm:^5.9.2"
     warn-once: "npm:^0.1.1"
   peerDependencies:
@@ -4837,6 +4837,7 @@ __metadata:
     react-native: "npm:0.81.4"
     react-native-builder-bob: "npm:^0.40.12"
     react-test-renderer: "npm:19.1.0"
+    sf-symbols-typescript: "npm:^2.2.0"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
   peerDependencies:
@@ -15194,10 +15195,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sf-symbols-typescript@npm:^2.1.0":
-  version: 2.1.0
-  resolution: "sf-symbols-typescript@npm:2.1.0"
-  checksum: 10c0/b6e2482c2b3ba785aa00770013e343a2175475b9cb7c8703c30a2ec1da8b41acd982db2d953877afb35af32a3dfba337d0b29e703c399cd2138c3cf68685c9c2
+"sf-symbols-typescript@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "sf-symbols-typescript@npm:2.2.0"
+  checksum: 10c0/3f3bbf33aaad19e619d6f169899b39e9fe9c5fd21f0d6d511100e36887606ad349109ddc6ff82933f2b8cbf437dd7105c2ae6b0059b291dc47f143b30c2074cc
   languageName: node
   linkType: hard
 
