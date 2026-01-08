@@ -153,12 +153,24 @@ function renderIcon({
             }}
           />
         );
+      case 'drawableResource':
+        return (
+          <Image
+            source={{ uri: iconValue.name }}
+            style={{
+              width: size,
+              height: size,
+              tintColor: iconValue.tinted === false ? undefined : color,
+            }}
+          />
+        );
       case 'sfSymbol':
         return <SFSymbol name={iconValue.name} size={size} color={color} />;
-      default:
-        throw new Error(
-          `Icon type '${iconValue.type}' is only supported with native tab bar.`
-        );
+      default: {
+        const _exhaustiveCheck: never = iconValue;
+
+        return _exhaustiveCheck;
+      }
     }
   }
 

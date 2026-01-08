@@ -159,6 +159,15 @@ type IconAndroidDrawable = {
    * @platform android
    */
   name: string;
+  /**
+   * Whether to apply tint color to the icon.
+   * Only supported with custom implementation.
+   *
+   * Defaults to `true`.
+   *
+   * @platform android
+   */
+  tinted?: boolean;
 };
 
 type IconIOS = IconIOSSfSymbol | IconImage;
