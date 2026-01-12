@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.1.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.26...@react-navigation/native@7.1.27) (2026-01-12)
+
+### Bug Fixes
+
+* split useLinkBuilder to minimize re-renders ([bf60946](https://github.com/react-navigation/react-navigation/commit/bf609461b3f00a3306fe9a99a6fa3b23eed26e7f)), closes [#12903](https://github.com/react-navigation/react-navigation/issues/12903) - by @satya164
+
 ## [7.1.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.25...@react-navigation/native@7.1.26) (2025-12-17)
 
 **Note:** Version bump only for package @react-navigation/native
