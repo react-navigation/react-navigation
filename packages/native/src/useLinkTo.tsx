@@ -1,7 +1,7 @@
 import { NavigationContainerRefContext } from '@react-navigation/core';
 import * as React from 'react';
 
-import { useLinkBuilder } from './useLinkBuilder';
+import { useBuildAction } from './useLinkBuilder';
 
 /**
  * Helper to navigate to a screen using a href based on the linking options.
@@ -10,7 +10,7 @@ import { useLinkBuilder } from './useLinkBuilder';
  */
 export function useLinkTo() {
   const navigation = React.useContext(NavigationContainerRefContext);
-  const { buildAction } = useLinkBuilder();
+  const buildAction = useBuildAction();
 
   const linkTo = React.useCallback(
     (href: string) => {
