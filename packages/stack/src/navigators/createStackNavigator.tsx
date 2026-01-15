@@ -55,6 +55,9 @@ function StackNavigator({
       screenOptions,
       screenLayout,
       router,
+      meta: {
+        name: '@react-navigation/stack',
+      },
     });
 
   React.useEffect(
