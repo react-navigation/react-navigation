@@ -13,11 +13,11 @@ import type {
 import type { ColorValue, ImageSourcePropType, TextStyle } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type {
-  BottomTabsScreenBlurEffect,
-  BottomTabsSystemItem,
   TabBarControllerMode,
   TabBarItemLabelVisibilityMode,
   TabBarMinimizeBehavior,
+  TabsScreenBlurEffect,
+  TabsSystemItem,
 } from 'react-native-screens';
 import type { SFSymbol } from 'sf-symbols-typescript';
 
@@ -138,7 +138,7 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    *
    * @platform ios
    */
-  tabBarSystemItem?: BottomTabsSystemItem;
+  tabBarSystemItem?: TabsSystemItem;
 
   /**
    * Title string of the tab displayed in the tab bar
@@ -273,7 +273,7 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    *
    * @platform ios
    */
-  tabBarBlurEffect?: BottomTabsScreenBlurEffect;
+  tabBarBlurEffect?: TabsScreenBlurEffect;
 
   /**
    * Display mode for the tab bar.
