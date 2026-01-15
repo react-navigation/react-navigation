@@ -124,17 +124,6 @@ export type HeaderOptions = {
    */
   headerSearchBarOptions?: HeaderSearchBarOptions;
   /**
-   * Function which returns a React Element to display on the left side of the header.
-   */
-  headerLeft?: (
-    props: HeaderBackButtonProps & {
-      /**
-       * Whether it's possible to navigate back.
-       */
-      canGoBack?: boolean;
-    }
-  ) => React.ReactNode;
-  /**
    * How the back button displays icon and title.
    *
    * Supported values:
@@ -155,6 +144,26 @@ export type HeaderOptions = {
     fontSize?: number;
   }>;
   /**
+   * Function which returns a React Element to display on the left side of the header.
+   */
+  headerLeft?: (
+    props: HeaderBackButtonProps & {
+      /**
+       * Whether it's possible to navigate back.
+       */
+      canGoBack?: boolean;
+    }
+  ) => React.ReactNode;
+  /**
+   * Whether the liquid glass background is visible for the item.
+   *
+   * Only supported on iOS 26.0 and later.
+   * Older versions of iOS and other platforms never show the background.
+   *
+   * Defaults to `true`.
+   */
+  headerLeftBackgroundVisible?: boolean;
+  /**
    * Style object for the container of the `headerLeft` element`.
    */
   headerLeftContainerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
@@ -167,6 +176,15 @@ export type HeaderOptions = {
     pressOpacity?: number;
     canGoBack: boolean;
   }) => React.ReactNode;
+  /**
+   * Whether the liquid glass background is visible for the item.
+   *
+   * Only supported on iOS 26.0 and later.
+   * Older versions of iOS and other platforms never show the background.
+   *
+   * Defaults to `true`.
+   */
+  headerRightBackgroundVisible?: boolean;
   /**
    * Style object for the container of the `headerRight` element.
    */

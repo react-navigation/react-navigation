@@ -307,10 +307,28 @@ export type NativeStackNavigationOptions = {
    */
   headerLeft?: (props: NativeStackHeaderBackProps) => React.ReactNode;
   /**
+   * Whether the liquid glass background is visible for the item.
+   *
+   * Only supported on iOS 26.0 and later.
+   * Older versions of iOS and other platforms never show the background.
+   *
+   * Defaults to `true`.
+   */
+  headerLeftBackgroundVisible?: boolean;
+  /**
    * Function which returns a React Element to display on the right side of the header.
    * Will be overriden by `headerRightItems` on iOS.
    */
   headerRight?: (props: NativeStackHeaderItemProps) => React.ReactNode;
+  /**
+   * Whether the liquid glass background is visible for the item.
+   *
+   * Only supported on iOS 26.0 and later.
+   * Older versions of iOS and other platforms never show the background.
+   *
+   * Defaults to `true`.
+   */
+  headerRightBackgroundVisible?: boolean;
   /**
    * Function which returns an array of items to display as on the left side of the header.
    * Overrides `headerLeft`.
