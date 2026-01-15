@@ -21,6 +21,7 @@ import { NativeStack } from './Screens/NativeStack';
 import { NativeStackHeaderCustomization } from './Screens/NativeStackHeaderCustomization';
 import { NativeStackPreloadFlow } from './Screens/NativeStackPreloadFlow';
 import { NativeStackPreventRemove } from './Screens/NativeStackPreventRemove';
+import { SFSymbols } from './Screens/SFSymbols';
 import { SimpleStack } from './Screens/SimpleStack';
 import { StackHeaderCustomization } from './Screens/StackHeaderCustomization';
 import { StackPreloadFlow } from './Screens/StackPreloadFlow';
@@ -60,6 +61,7 @@ export const SCREENS = {
   StackPreloadFlow,
   TabPreloadFlow,
   NativeStackPreloadFlow,
+  SFSymbols,
 } as const satisfies {
   [key: string]:
     | (React.ComponentType<{ route: any }> & {
