@@ -1,7 +1,7 @@
 /* eslint-disable import-x/extensions */
 
-import ReactNavigationSFSymbolView from './ReactNavigationSFSymbolViewNativeComponent';
 import type { SFSymbolProps } from './SFSymbol.tsx';
+import SFSymbolViewNativeComponent from './SFSymbolViewNativeComponent';
 
 export function SFSymbol({
   name,
@@ -9,7 +9,7 @@ export function SFSymbol({
   color = 'black',
 }: SFSymbolProps): React.ReactElement {
   return (
-    <ReactNavigationSFSymbolView
+    <SFSymbolViewNativeComponent
       name={name}
       size={size}
       color={color}

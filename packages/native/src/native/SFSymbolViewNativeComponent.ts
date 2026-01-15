@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 
 export interface NativeProps extends ViewProps {
-  name?: string;
-  size?: CodegenTypes.Float;
-  color?: ColorValue;
+  name: string;
+  size: CodegenTypes.Float;
+  color: ColorValue;
 }
 
 export default codegenNativeComponent<NativeProps>(

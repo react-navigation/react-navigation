@@ -3,7 +3,7 @@ import UIKit
 @objcMembers public class ReactNavigationSFSymbolViewImplProps: NSObject {
   public var name: String?
   public var size: CGFloat = 24
-  public var color: UIColor?
+  public var color: UIColor = .black
 }
 
 @objc public class ReactNavigationSFSymbolViewImpl: UIView {
@@ -34,11 +34,13 @@ import UIKit
 
   @objc public func updateProps(_ props: ReactNavigationSFSymbolViewImplProps, oldProps: ReactNavigationSFSymbolViewImplProps) {
     if props.name != oldProps.name || props.size != oldProps.size {
-      let configuration = UIImage.SymbolConfiguration(pointSize: props.size, weight: .regular)
-      let image = UIImage(systemName: props.name!, withConfiguration: configuration)
+      if let name = props.name {
+        let configuration = UIImage.SymbolConfiguration(pointSize: props.size, weight: .regular)
+        let image = UIImage(systemName: name, withConfiguration: configuration)
 
-      imageView.image = image?.withRenderingMode(.alwaysTemplate)
-      imageView.tintColor = props.color
+        imageView.image = image?.withRenderingMode(.alwaysTemplate)
+        imageView.tintColor = props.color
+      }
     }
 
     if props.color != oldProps.color {
