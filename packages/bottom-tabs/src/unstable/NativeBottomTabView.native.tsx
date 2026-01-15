@@ -16,10 +16,9 @@ import Color from 'color';
 import * as React from 'react';
 import { type ColorValue, Platform, PlatformColor } from 'react-native';
 import {
-  BottomTabs,
-  BottomTabsScreen,
-  type BottomTabsScreenItemStateAppearance,
   type PlatformIcon,
+  Tabs,
+  type TabsScreenItemStateAppearance,
 } from 'react-native-screens';
 
 import { NativeScreen } from './NativeScreen/NativeScreen';
@@ -130,7 +129,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
 
   return (
     <SafeAreaProviderCompat>
-      <BottomTabs
+      <Tabs.Host
         bottomAccessory={
           bottomAccessory
             ? (environment) => bottomAccessory({ placement: environment })
@@ -213,7 +212,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
               ? tabBarLabel
               : getLabel({ label: tabBarLabel, title }, route.name);
 
-          const tabItemAppearance: BottomTabsScreenItemStateAppearance = {
+          const tabItemAppearance: TabsScreenItemStateAppearance = {
             tabBarItemTitleFontFamily: fontFamily,
             tabBarItemTitleFontSize: fontSize,
             tabBarItemTitleFontWeight: fontWeight,
@@ -243,7 +242,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
               : undefined;
 
           return (
-            <BottomTabsScreen
+            <Tabs.Screen
               onWillDisappear={() =>
                 onTransitionStart({ closing: true, route })
               }
@@ -286,10 +285,10 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
                   {render()}
                 </ScreenWithHeader>
               </Lazy>
-            </BottomTabsScreen>
+            </Tabs.Screen>
           );
         })}
-      </BottomTabs>
+      </Tabs.Host>
     </SafeAreaProviderCompat>
   );
 }
