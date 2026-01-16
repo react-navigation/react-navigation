@@ -52,9 +52,6 @@ function NativeStackNavigator({
       screenOptions,
       screenLayout,
       router,
-      meta: {
-        name: '@react-navigation/native-stack',
-      },
     });
 
   React.useEffect(

@@ -51,9 +51,6 @@ function MaterialTopTabNavigator({
       screenOptions,
       screenLayout,
       router,
-      meta: {
-        name: '@react-navigation/material-top-tabs',
-      },
     });
 
   return (

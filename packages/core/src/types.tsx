@@ -392,13 +392,6 @@ type NavigationHelpersCommon<
    * So don't use it in `render`.
    */
   getState(): State;
-
-  /**
-   * Metadata of the navigator that this navigation object belongs to.
-   * The format of the object depends on the navigator.
-   * This is subject to change without a major version bump.
-   */
-  readonly '~meta': object;
 } & PrivateValueStore<[ParamList, unknown, unknown]>;
 
 type ParamType<
@@ -491,7 +484,6 @@ export type NavigationProp<
    * @param options Partial options object for the current screen.
    */
   setOptions(options: Partial<ScreenOptions>): void;
-
   /**
    * Returns the navigation prop of the parent screen.
    * If a route name is provided, the navigation prop from the parent screen with matching route name (including current) will be returned.

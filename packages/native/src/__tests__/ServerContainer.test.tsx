@@ -55,7 +55,7 @@ test('renders correct state with location', () => {
   ) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
-      { ...props, meta: { name: 'test' } }
+      props
     );
 
     return (
