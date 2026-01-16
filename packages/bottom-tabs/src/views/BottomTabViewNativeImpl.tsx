@@ -16,10 +16,9 @@ import {
 import * as React from 'react';
 import { Animated, Platform, PlatformColor } from 'react-native';
 import {
-  BottomTabs,
-  BottomTabsScreen,
-  type BottomTabsScreenItemStateAppearance,
   type PlatformIcon,
+  Tabs,
+  type TabsScreenItemStateAppearance,
 } from 'react-native-screens';
 
 import type {
@@ -147,7 +146,7 @@ export function BottomTabViewNative({
       {tabBarPosition === 'top' || tabBarPosition === 'left'
         ? tabBarElement
         : null}
-      <BottomTabs
+      <Tabs.Host
         tabBarHidden={hasCustomTabBar}
         bottomAccessory={
           bottomAccessory
@@ -240,7 +239,7 @@ export function BottomTabViewNative({
               ? tabBarLabel
               : getLabel({ label: tabBarLabel, title }, route.name);
 
-          const tabItemAppearance: BottomTabsScreenItemStateAppearance = {
+          const tabItemAppearance: TabsScreenItemStateAppearance = {
             tabBarItemTitleFontFamily: fontFamily,
             tabBarItemTitleFontSize: fontSize,
             tabBarItemTitleFontWeight: fontWeight,
@@ -287,7 +286,7 @@ export function BottomTabViewNative({
           const selectedIcon = getIcon(true);
 
           return (
-            <BottomTabsScreen
+            <Tabs.Screen
               onWillAppear={() => onTransitionStart({ route })}
               onDidAppear={() => onTransitionEnd({ route })}
               key={route.key}
@@ -343,10 +342,10 @@ export function BottomTabViewNative({
                   </AnimatedScreenContent>
                 </ScreenContent>
               </Lazy>
-            </BottomTabsScreen>
+            </Tabs.Screen>
           );
         })}
-      </BottomTabs>
+      </Tabs.Host>
       {tabBarPosition === 'bottom' || tabBarPosition === 'right'
         ? tabBarElement
         : null}

@@ -25,12 +25,12 @@ import type {
   ViewStyle,
 } from 'react-native';
 import type {
-  BottomTabsScreenBlurEffect,
-  BottomTabsSystemItem,
   ScrollEdgeEffect,
   TabBarControllerMode,
   TabBarItemLabelVisibilityMode,
   TabBarMinimizeBehavior,
+  TabsScreenBlurEffect,
+  TabsSystemItem,
 } from 'react-native-screens';
 import type { SFSymbol } from 'sf-symbols-typescript';
 
@@ -338,7 +338,7 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  tabBarSystemItem?: BottomTabsSystemItem;
+  tabBarSystemItem?: TabsSystemItem;
 
   /**
    * Blur effect applied to the tab bar when tab screen is selected.
@@ -360,7 +360,7 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  tabBarBlurEffect?: BottomTabsScreenBlurEffect;
+  tabBarBlurEffect?: TabsScreenBlurEffect;
 
   /**
    * Minimize behavior for the tab bar.
