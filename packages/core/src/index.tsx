@@ -11,6 +11,7 @@ export { NavigationContainerRefContext } from './NavigationContainerRefContext';
 export { NavigationContext } from './NavigationContext';
 export { NavigationHelpersContext } from './NavigationHelpersContext';
 export { NavigationIndependentTree } from './NavigationIndependentTree';
+export { NavigationMetaContext } from './NavigationMetaContext';
 export { NavigationRouteContext } from './NavigationRouteContext';
 export { PreventRemoveContext } from './PreventRemoveContext';
 export { PreventRemoveProvider } from './PreventRemoveProvider';

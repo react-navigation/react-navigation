@@ -17,7 +17,6 @@ import {
   type PathConfigMap,
   useNavigation,
 } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { BlurView } from 'expo-blur';
 import {
   Alert,
@@ -36,7 +35,6 @@ import iconListMusic from '../../assets/icons/list-music.png';
 import iconMusic from '../../assets/icons/music.png';
 import iconNewspaper from '../../assets/icons/newspaper.png';
 import { Albums } from '../Shared/Albums';
-import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
 import { NativeStack, type NativeStackParams } from './NativeStack';
 
@@ -55,48 +53,6 @@ const linking: PathConfigMap<NativeBottomTabParams> = {
   TabAlbums: 'albums',
   TabContacts: 'contacts',
 };
-
-const ArticleStack = createNativeStackNavigator<{ Article: undefined }>();
-
-function ArticleStackScreen() {
-  return (
-    <ArticleStack.Navigator>
-      <ArticleStack.Screen
-        name="Article"
-        component={ArticleScreen}
-        options={{
-          title: 'Article',
-        }}
-      />
-    </ArticleStack.Navigator>
-  );
-}
-
-function ArticleScreen() {
-  const navigation =
-    useNavigation<
-      NativeBottomTabScreenProps<NativeBottomTabParams>['navigation']
-    >();
-
-  return (
-    <ScrollView automaticallyAdjustContentInsets>
-      <View style={styles.buttons}>
-        <Button
-          variant="filled"
-          onPress={() => {
-            navigation.navigate('TabContacts', { count: i++ });
-          }}
-        >
-          Go to Contacts
-        </Button>
-        <Button variant="tinted" onPress={() => navigation.goBack()}>
-          Go back
-        </Button>
-      </View>
-      <Article />
-    </ScrollView>
-  );
-}
 
 function AlbumsScreen() {
   const navigation =
@@ -173,7 +129,7 @@ export function NativeBottomTabs() {
     <Tab.Navigator>
       <Tab.Screen
         name="TabStack"
-        component={ArticleStackScreen}
+        component={NativeStack}
         options={{
           popToTopOnBlur: true,
           title: 'Article',

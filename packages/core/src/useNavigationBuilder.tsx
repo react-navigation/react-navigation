@@ -20,6 +20,7 @@ import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
+import { NavigationMetaContext } from './NavigationMetaContext';
 import { NavigationRouteContext } from './NavigationRouteContext';
 import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
@@ -929,11 +930,13 @@ export function useNavigationBuilder<
         : children;
 
     return (
-      <NavigationHelpersContext.Provider value={navigation}>
-        <NavigationStateListenerProvider state={state}>
-          <PreventRemoveProvider>{element}</PreventRemoveProvider>
-        </NavigationStateListenerProvider>
-      </NavigationHelpersContext.Provider>
+      <NavigationMetaContext.Provider value={undefined}>
+        <NavigationHelpersContext.Provider value={navigation}>
+          <NavigationStateListenerProvider state={state}>
+            <PreventRemoveProvider>{element}</PreventRemoveProvider>
+          </NavigationStateListenerProvider>
+        </NavigationHelpersContext.Provider>
+      </NavigationMetaContext.Provider>
     );
   });
 

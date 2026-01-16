@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
+  NavigationMetaContext,
   type ParamListBase,
   type Route,
   StackActions,
@@ -36,6 +37,10 @@ type Props = NativeBottomTabNavigationConfig & {
   state: TabNavigationState<ParamListBase>;
   navigation: NativeBottomTabNavigationHelpers;
   descriptors: NativeBottomTabDescriptorMap;
+};
+
+const meta = {
+  type: 'native-tabs',
 };
 
 export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
@@ -274,6 +279,12 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
                   normal: tabItemAppearance,
                 },
               }}
+              specialEffects={{
+                repeatedTabSelection: {
+                  popToRoot: true,
+                  scrollToTop: true,
+                },
+              }}
               experimental_userInterfaceStyle={dark ? 'dark' : 'light'}
             >
               <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
@@ -283,7 +294,9 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
                   navigation={navigation}
                   options={options}
                 >
-                  {render()}
+                  <NavigationMetaContext.Provider value={meta}>
+                    {render()}
+                  </NavigationMetaContext.Provider>
                 </ScreenWithHeader>
               </Lazy>
             </BottomTabsScreen>
