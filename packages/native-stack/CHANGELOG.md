@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.10.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.9.1...@react-navigation/native-stack@7.10.0) (2026-01-16)
+
+### Features
+
+* handle popToRoot natively in native tabs ([3abad17](https://github.com/react-navigation/react-navigation/commit/3abad174376658906b2c5f0b6a47944433684fe8)) - by @satya164
+
 ## [7.9.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.9.0...@react-navigation/native-stack@7.9.1) (2026-01-12)
 
 **Note:** Version bump only for package @react-navigation/native-stack

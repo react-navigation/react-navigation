@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.14.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.13.7...@react-navigation/core@7.14.0) (2026-01-16)
+
+### Features
+
+* handle popToRoot natively in native tabs ([3abad17](https://github.com/react-navigation/react-navigation/commit/3abad174376658906b2c5f0b6a47944433684fe8)) - by @satya164
+
 ## [7.13.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.13.6...@react-navigation/core@7.13.7) (2025-12-17)
 
 **Note:** Version bump only for package @react-navigation/core
