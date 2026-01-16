@@ -30,33 +30,9 @@ import iconMusic from '../../assets/icons/music.png';
 import iconNewspaper from '../../assets/icons/newspaper.png';
 import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
-import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
 import { MiniPlayer } from '../Shared/MiniPlayer';
 import { NativeStack } from './NativeStack';
-
-function ArticleScreen() {
-  const navigation = useNavigation('Article');
-
-  return (
-    <ScrollView automaticallyAdjustContentInsets>
-      <View style={styles.buttons}>
-        <Button
-          variant="filled"
-          onPress={() => {
-            navigation.navigate('TabContacts', { count: i++ });
-          }}
-        >
-          Go to Contacts
-        </Button>
-        <Button variant="tinted" onPress={() => navigation.goBack()}>
-          Go back
-        </Button>
-      </View>
-      <Article />
-    </ScrollView>
-  );
-}
 
 function ContactsScreen(_: StaticScreenProps<{ count: number }>) {
   return <Contacts />;
@@ -100,18 +76,6 @@ function AlbumsScreen() {
   );
 }
 
-const ArticleStack = createNativeStackNavigator({
-  screens: {
-    Article: createNativeStackScreen({
-      screen: ArticleScreen,
-      options: {
-        title: 'Article',
-        headerLargeTitleEnabled: true,
-      },
-    }),
-  },
-});
-
 const FavoritesStack = createNativeStackNavigator({
   screens: {
     Favorites: createNativeStackScreen({
@@ -131,7 +95,7 @@ let i = 1;
 const NativeBottomTabsNavigator = createBottomTabNavigator({
   screens: {
     TabStack: createBottomTabScreen({
-      screen: ArticleStack,
+      screen: NativeStack,
       options: {
         popToTopOnBlur: true,
         title: 'Article',

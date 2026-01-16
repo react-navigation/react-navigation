@@ -10,6 +10,7 @@ export { getStateFromPath } from './getStateFromPath';
 export { NavigationContainerRefContext } from './NavigationContainerRefContext';
 export { NavigationHelpersContext } from './NavigationHelpersContext';
 export { NavigationIndependentTree } from './NavigationIndependentTree';
+export { NavigationMetaContext } from './NavigationMetaContext';
 export {
   NavigationContext,
   NavigationProvider,

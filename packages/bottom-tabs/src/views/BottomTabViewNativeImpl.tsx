@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/elements/internal';
 import {
   CommonActions,
+  NavigationMetaContext,
   type ParamListBase,
   type Route,
   StackActions,
@@ -42,6 +43,10 @@ const ICON_SIZE = Platform.select({
   ios: 25,
   default: 24,
 });
+
+const meta = {
+  type: 'native-tabs',
+};
 
 export function BottomTabViewNative({
   state,
@@ -313,6 +318,12 @@ export function BottomTabViewNative({
                   normal: tabItemAppearance,
                 },
               }}
+              specialEffects={{
+                repeatedTabSelection: {
+                  popToRoot: true,
+                  scrollToTop: true,
+                },
+              }}
               experimental_userInterfaceStyle={dark ? 'dark' : 'light'}
             >
               <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
@@ -325,7 +336,9 @@ export function BottomTabViewNative({
                 >
                   <AnimatedScreenContent isFocused={isFocused}>
                     <BottomTabBarHeightContext.Provider value={0}>
-                      {render()}
+                      <NavigationMetaContext.Provider value={meta}>
+                        {render()}
+                      </NavigationMetaContext.Provider>
                     </BottomTabBarHeightContext.Provider>
                   </AnimatedScreenContent>
                 </ScreenContent>
@@ -340,7 +353,6 @@ export function BottomTabViewNative({
     </SafeAreaProviderCompat>
   );
 }
-
 function AnimatedScreenContent({
   isFocused,
   children,
