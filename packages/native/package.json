@@ -30,6 +30,7 @@
   },
   "files": [
     "src",
+    "assets",
     "lib",
     "ios",
     "android",
@@ -91,6 +92,11 @@
     "name": "ReactNavigationSpec",
     "type": "all",
     "jsSrcsDir": "src/native",
+    "android": {
+      "componentProvider": {
+        "ReactNavigationMaterialSymbolView": "ReactNavigationMaterialSymbolView"
+      }
+    },
     "ios": {
       "componentProvider": {
         "ReactNavigationSFSymbolView": "ReactNavigationSFSymbolView"

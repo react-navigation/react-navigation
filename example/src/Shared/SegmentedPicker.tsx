@@ -1,22 +1,30 @@
 import { Text } from '@react-navigation/elements';
 import { useTheme } from '@react-navigation/native';
-import { Pressable, StyleSheet, View } from 'react-native';
+import {
+  Pressable,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 
 type Props<T extends string> = {
   choices: { label: string; value: T }[];
   value: T;
   onValueChange: (value: T) => void;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function SegmentedPicker<T extends string>({
   choices,
   value,
   onValueChange,
+  style,
 }: Props<T>) {
-  const { dark } = useTheme();
+  const { dark, fonts } = useTheme();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {choices.map((option) => (
         <Pressable
           key={option.value}
@@ -29,7 +37,7 @@ export function SegmentedPicker<T extends string>({
             ],
           ]}
         >
-          <Text>{option.label}</Text>
+          <Text style={fonts.medium}>{option.label}</Text>
         </Pressable>
       ))}
     </View>
