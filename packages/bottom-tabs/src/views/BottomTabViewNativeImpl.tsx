@@ -6,6 +6,7 @@ import {
 } from '@react-navigation/elements/internal';
 import {
   CommonActions,
+  MaterialSymbol,
   NavigationMetaContext,
   type ParamListBase,
   type Route,
@@ -415,23 +416,52 @@ function AnimatedScreenContent({
 }
 
 function getPlatformIcon(icon: BottomTabIcon): PlatformIcon {
-  return {
-    ios:
-      icon?.type === 'sfSymbol'
-        ? icon
-        : icon?.type === 'image' && icon.tinted !== false
-          ? {
-              type: 'templateSource',
-              templateSource: icon.source,
-            }
-          : undefined,
-    android: icon?.type === 'drawableResource' ? icon : undefined,
-    shared:
-      icon?.type === 'image'
-        ? {
-            type: 'imageSource',
-            imageSource: icon.source,
-          }
-        : undefined,
-  } as const;
+  switch (icon.type) {
+    case 'sfSymbol':
+      return {
+        ios: icon,
+        android: undefined,
+        shared: undefined,
+      };
+    case 'materialSymbol':
+      return {
+        ios: undefined,
+        android: {
+          type: 'imageSource',
+          imageSource: MaterialSymbol.getImageSource({
+            name: icon.name,
+          }),
+        },
+        shared: undefined,
+      };
+    case 'image':
+      return {
+        ios:
+          icon.tinted === false
+            ? {
+                type: 'imageSource',
+                imageSource: icon.source,
+              }
+            : {
+                type: 'templateSource',
+                templateSource: icon.source,
+              },
+        android: undefined,
+        shared: {
+          type: 'imageSource',
+          imageSource: icon.source,
+        },
+      };
+    case 'drawableResource':
+      return {
+        ios: undefined,
+        android: icon,
+        shared: undefined,
+      };
+    default: {
+      const _exhaustiveCheck: never = icon;
+
+      return _exhaustiveCheck;
+    }
+  }
 }

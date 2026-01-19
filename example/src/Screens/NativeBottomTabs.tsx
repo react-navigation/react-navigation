@@ -130,6 +130,10 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
             type: 'sfSymbol',
             name: 'person.2',
           },
+          android: {
+            type: 'materialSymbol',
+            name: 'people',
+          },
           default: {
             type: 'image',
             source: iconBookUser,

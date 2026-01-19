@@ -5,6 +5,7 @@ import type {
 import type {
   DefaultNavigatorOptions,
   Descriptor,
+  MaterialSymbolProps,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
@@ -145,6 +146,19 @@ type IconIOSSfSymbol = {
   name: SFSymbol;
 };
 
+type IconMaterialSymbol = {
+  /**
+   * - `materialSymbol` - Use a Material Symbol as the icon on Android.
+   */
+  type: 'materialSymbol';
+  /**
+   * Name of the Material Symbol to use as the icon.
+   *
+   * @platform android
+   */
+  name: MaterialSymbolProps['name'];
+};
+
 type IconAndroidDrawable = {
   /**
    * - `drawableResource` - Use a drawable resource as the icon on Android.
@@ -169,7 +183,7 @@ type IconAndroidDrawable = {
 
 type IconIOS = IconIOSSfSymbol | IconImage;
 
-type IconAndroid = IconAndroidDrawable | IconImage;
+type IconAndroid = IconMaterialSymbol | IconAndroidDrawable | IconImage;
 
 export type BottomTabIcon = IconIOS | IconAndroid;
 

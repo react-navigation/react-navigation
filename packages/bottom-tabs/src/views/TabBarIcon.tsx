@@ -1,6 +1,6 @@
 import { Badge } from '@react-navigation/elements';
 import { MissingIcon } from '@react-navigation/elements/internal';
-import { type Route, SFSymbol } from '@react-navigation/native';
+import { MaterialSymbol, type Route, SFSymbol } from '@react-navigation/native';
 import React from 'react';
 import {
   type ColorValue,
@@ -166,6 +166,10 @@ function renderIcon({
         );
       case 'sfSymbol':
         return <SFSymbol name={iconValue.name} size={size} color={color} />;
+      case 'materialSymbol':
+        return (
+          <MaterialSymbol name={iconValue.name} size={size} color={color} />
+        );
       default: {
         const _exhaustiveCheck: never = iconValue;
 

@@ -121,10 +121,20 @@ const NativeBottomTabsCustomNavigator = createBottomTabNavigator({
       options: ({ route }) => ({
         title: 'Contacts',
         tabBarButtonTestID: 'contacts',
-        tabBarIcon: {
-          type: 'image',
-          source: iconBookUser,
-        },
+        tabBarIcon: Platform.select({
+          ios: {
+            type: 'sfSymbol',
+            name: 'person.2',
+          },
+          android: {
+            type: 'materialSymbol',
+            name: 'people',
+          },
+          default: {
+            type: 'image',
+            source: iconBookUser,
+          },
+        }),
         tabBarBadge: route.params?.count,
       }),
       linking: 'contacts',
