@@ -14,18 +14,12 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-import java.util.concurrent.Callable
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executors
-import java.util.concurrent.Future
 import kotlin.math.roundToInt
 
 class MaterialSymbolModule(reactContext: ReactApplicationContext) :
   NativeMaterialSymbolModuleSpec(reactContext) {
 
   companion object {
-    private val executor = Executors.newCachedThreadPool()
-    private val futures = ConcurrentHashMap<String, Future<String>>()
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
   }
 
@@ -57,55 +51,37 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
       return cacheFile.toUri().toString()
     }
 
-    val future = futures.computeIfAbsent(cacheKey) {
-      executor.submit(
-        Callable {
-          try {
-            scope.launch {
-              cacheDir.parentFile?.listFiles { it.isDirectory && it.name != hash }
-                ?.forEach { it.deleteRecursively() }
-            }
-
-            cacheDir.mkdirs()
-
-            val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-              typeface = MaterialSymbolTypeface.get(reactApplicationContext, variant)
-              textSize = scaledSize.toFloat()
-              textAlign = Paint.Align.CENTER
-
-              this.color = resolvedColor
-            }
-
-            val fontMetrics = paint.fontMetrics
-            val bitmap = Bitmap.createBitmap(scaledSize, scaledSize, Bitmap.Config.ARGB_8888)
-
-            try {
-              val canvas = Canvas(bitmap)
-              val y =
-                (scaledSize - (fontMetrics.descent - fontMetrics.ascent)) / 2f - fontMetrics.ascent
-
-              canvas.drawText(name, scaledSize / 2f, y, paint)
-
-              FileOutputStream(cacheFile).use {
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
-              }
-            } finally {
-              bitmap.recycle()
-            }
-
-            return@Callable cacheFile.toUri().toString()
-          } catch (e: Exception) {
-            futures.remove(cacheKey)
-
-            throw e
-          }
-        })
+    scope.launch {
+      cacheDir.parentFile?.listFiles { it.isDirectory && it.name != hash }
+        ?.forEach { it.deleteRecursively() }
     }
+
+    cacheDir.mkdirs()
+
+    val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+      typeface = MaterialSymbolTypeface.get(reactApplicationContext, variant)
+      textSize = scaledSize.toFloat()
+      textAlign = Paint.Align.CENTER
+
+      this.color = resolvedColor
+    }
+
+    val fontMetrics = paint.fontMetrics
+    val bitmap = Bitmap.createBitmap(scaledSize, scaledSize, Bitmap.Config.ARGB_8888)
 
     try {
-      return future.get()
-    } catch (e: Exception) {
-      throw (e.cause as? Exception) ?: e
+      val canvas = Canvas(bitmap)
+      val y = (scaledSize - (fontMetrics.descent - fontMetrics.ascent)) / 2f - fontMetrics.ascent
+
+      canvas.drawText(name, scaledSize / 2f, y, paint)
+
+      FileOutputStream(cacheFile).use {
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+      }
+    } finally {
+      bitmap.recycle()
     }
+
+    return cacheFile.toUri().toString()
   }
 }

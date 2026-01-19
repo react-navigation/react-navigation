@@ -93,13 +93,17 @@
     "type": "all",
     "jsSrcsDir": "src/native",
     "android": {
-      "componentProvider": {
-        "ReactNavigationMaterialSymbolView": "ReactNavigationMaterialSymbolView"
+      "components": {
+        "ReactNavigationMaterialSymbolView": {
+          "className": "ReactNavigationMaterialSymbolView"
+        }
       }
     },
     "ios": {
-      "componentProvider": {
-        "ReactNavigationSFSymbolView": "ReactNavigationSFSymbolView"
+      "components": {
+        "ReactNavigationSFSymbolView": {
+          "className": "ReactNavigationSFSymbolView"
+        }
       }
     }
   }
