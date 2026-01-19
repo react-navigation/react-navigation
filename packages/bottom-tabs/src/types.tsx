@@ -25,10 +25,7 @@ import type {
   ViewStyle,
 } from 'react-native';
 import type {
-  ScrollEdgeEffect,
-  TabBarControllerMode,
   TabBarItemLabelVisibilityMode,
-  TabBarMinimizeBehavior,
   TabsScreenBlurEffect,
   TabsSystemItem,
 } from 'react-native-screens';
@@ -327,6 +324,8 @@ type BottomTabCustomOptions = {
   tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
 };
 
+type ScrollEdgeEffect = 'auto' | 'hard' | 'soft' | 'hidden';
+
 type BottomTabNativeOptions = {
   /**
    * Uses iOS built-in tab bar items with standard iOS styling and localized titles.
@@ -368,7 +367,7 @@ type BottomTabNativeOptions = {
    * The following values are currently supported:
    *
    * - `auto` - resolves to the system default minimize behavior
-   * - `never` - the tab bar does not minimize
+   * - `none` - the tab bar does not minimize
    * - `onScrollDown` - the tab bar minimizes when scrolling down and
    *   expands when scrolling back up
    * - `onScrollUp` - the tab bar minimizes when scrolling up and expands
@@ -383,7 +382,7 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  tabBarMinimizeBehavior?: TabBarMinimizeBehavior;
+  tabBarMinimizeBehavior?: 'auto' | 'none' | 'onScrollDown' | 'onScrollUp';
 
   /**
    * Background color of the active indicator.
@@ -435,7 +434,7 @@ type BottomTabNativeOptions = {
    *
    * Edge effects can be configured for each edge separately. The following values are currently supported:
    *
-   * - `automatic` - the automatic scroll edge effect style,
+   * - `auto` - the automatic scroll edge effect style,
    * - `hard` - a scroll edge effect with a hard cutoff and dividing line,
    * - `soft` - a soft-edged scroll edge effect,
    * - `hidden` - no scroll edge effect.
@@ -567,7 +566,7 @@ export type BottomTabNavigationOptions = {
    * Supported on iOS 18 and above with `native` implementation.
    * Not supported on tvOS.
    */
-  tabBarControllerMode?: TabBarControllerMode;
+  tabBarControllerMode?: 'auto' | 'tabBar' | 'tabSidebar';
 
   /**
    * Style object for the tab bar container.

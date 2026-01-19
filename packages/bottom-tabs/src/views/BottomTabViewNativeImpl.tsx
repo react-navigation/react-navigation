@@ -132,6 +132,18 @@ export function BottomTabViewNative({
       })
     : null;
 
+  const tabBarControllerMode =
+    currentOptions.tabBarControllerMode === 'auto'
+      ? 'automatic'
+      : currentOptions.tabBarControllerMode;
+
+  const tabBarMinimizeBehavior =
+    currentOptions.tabBarMinimizeBehavior === 'auto'
+      ? 'automatic'
+      : currentOptions.tabBarMinimizeBehavior === 'none'
+        ? 'never'
+        : currentOptions.tabBarMinimizeBehavior;
+
   const bottomAccessory = currentOptions.bottomAccessory;
 
   return (
@@ -156,8 +168,8 @@ export function BottomTabViewNative({
         tabBarItemLabelVisibilityMode={
           currentOptions?.tabBarLabelVisibilityMode
         }
-        tabBarControllerMode={currentOptions?.tabBarControllerMode}
-        tabBarMinimizeBehavior={currentOptions?.tabBarMinimizeBehavior}
+        tabBarControllerMode={tabBarControllerMode}
+        tabBarMinimizeBehavior={tabBarMinimizeBehavior}
         tabBarTintColor={activeTintColor}
         tabBarItemIconColor={inactiveTintColor}
         tabBarItemIconColorActive={activeTintColor}
@@ -299,7 +311,24 @@ export function BottomTabViewNative({
               systemItem={tabBarSystemItem}
               isFocused={isFocused}
               title={tabTitle}
-              scrollEdgeEffects={scrollEdgeEffects}
+              scrollEdgeEffects={{
+                top:
+                  scrollEdgeEffects?.top === 'auto'
+                    ? 'automatic'
+                    : scrollEdgeEffects?.top,
+                bottom:
+                  scrollEdgeEffects?.bottom === 'auto'
+                    ? 'automatic'
+                    : scrollEdgeEffects?.bottom,
+                left:
+                  scrollEdgeEffects?.left === 'auto'
+                    ? 'automatic'
+                    : scrollEdgeEffects?.left,
+                right:
+                  scrollEdgeEffects?.right === 'auto'
+                    ? 'automatic'
+                    : scrollEdgeEffects?.right,
+              }}
               // FIXME: if this is not provided, ScrollView on lazy tabs glitches on iOS 18
               // For now we provide an empty object before adding proper support
               scrollEdgeAppearance={{}}
