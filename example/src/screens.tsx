@@ -10,6 +10,7 @@ import { Headers } from './Screens/Headers';
 import { ScreenLayout } from './Screens/Layouts';
 import { LinkComponent } from './Screens/LinkComponent';
 import { MasterDetail } from './Screens/MasterDetail';
+import { MaterialSymbols } from './Screens/MaterialSymbols';
 import { MaterialTopTabsScreen } from './Screens/MaterialTopTabs';
 import { MixedHeaderMode } from './Screens/MixedHeaderMode';
 import { MixedNativeStack } from './Screens/MixedNativeStack';
@@ -62,6 +63,7 @@ export const SCREENS = {
   TabPreloadFlow,
   NativeStackPreloadFlow,
   SFSymbols,
+  MaterialSymbols,
 } as const satisfies {
   [key: string]:
     | (React.ComponentType<{ route: any }> & {
