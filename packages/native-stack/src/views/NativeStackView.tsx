@@ -11,7 +11,6 @@ import {
 } from '@react-navigation/elements/internal';
 import {
   type ParamListBase,
-  type RouteProp,
   type StackNavigationState,
   useLinkBuilder,
 } from '@react-navigation/native';
@@ -19,7 +18,6 @@ import * as React from 'react';
 import { Animated, Image, StyleSheet, View } from 'react-native';
 
 import type {
-  NativeStackDescriptor,
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
 } from '../types';
@@ -27,13 +25,8 @@ import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 
 type Props = {
   state: StackNavigationState<ParamListBase>;
-  // This is used for the native implementation of the stack.
   navigation: NativeStackNavigationHelpers;
   descriptors: NativeStackDescriptorMap;
-  describe: (
-    route: RouteProp<ParamListBase>,
-    placeholder: boolean
-  ) => NativeStackDescriptor;
 };
 
 const TRANSPARENT_PRESENTATIONS = [
@@ -41,15 +34,9 @@ const TRANSPARENT_PRESENTATIONS = [
   'containedTransparentModal',
 ];
 
-export function NativeStackView({ state, descriptors, describe }: Props) {
+export function NativeStackView({ state, descriptors }: Props) {
   const parentHeaderBack = React.useContext(HeaderBackContext);
   const { buildHref } = useLinkBuilder();
-
-  const preloadedDescriptors =
-    state.preloadedRoutes.reduce<NativeStackDescriptorMap>((acc, route) => {
-      acc[route.key] = acc[route.key] || describe(route, true);
-      return acc;
-    }, {});
 
   return (
     <SafeAreaProviderCompat>
@@ -61,8 +48,7 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
           ? descriptors[previousKey]
           : undefined;
         const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
-        const { options, navigation, render } =
-          descriptors[route.key] ?? preloadedDescriptors[route.key];
+        const { options, navigation, render } = descriptors[route.key];
 
         const headerBack = previousDescriptor
           ? {
@@ -93,9 +79,9 @@ export function NativeStackView({ state, descriptors, describe }: Props) {
 
         const nextPresentation = nextDescriptor?.options.presentation;
 
-        const isPreloaded =
-          preloadedDescriptors[route.key] !== undefined &&
-          descriptors[route.key] === undefined;
+        const isPreloaded = state.preloadedRoutes.some(
+          (r) => r.key === route.key
+        );
 
         return (
           <Screen

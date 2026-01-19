@@ -59,7 +59,6 @@ type Props = {
   insets: EdgeInsets;
   state: StackNavigationState<ParamListBase>;
   descriptors: StackDescriptorMap;
-  preloadedDescriptors: StackDescriptorMap;
   routes: Route<string>[];
   openingRouteKeys: string[];
   closingRouteKeys: string[];
@@ -280,8 +279,7 @@ export class CardStack extends React.Component<Props, State> {
       ...props.routes,
       ...props.state.preloadedRoutes,
     ].reduce<GestureValues>((acc, curr) => {
-      const descriptor =
-        props.descriptors[curr.key] || props.preloadedDescriptors[curr.key];
+      const descriptor = props.descriptors[curr.key];
       const { animation } = descriptor?.options || {};
 
       acc[curr.key] =
@@ -303,10 +301,7 @@ export class CardStack extends React.Component<Props, State> {
 
     const modalRouteKeys = getModalRouteKeys(
       [...props.routes, ...props.state.preloadedRoutes],
-      {
-        ...props.descriptors,
-        ...props.preloadedDescriptors,
-      }
+      props.descriptors
     );
 
     const scenes = [...props.routes, ...props.state.preloadedRoutes].map(
@@ -325,9 +320,7 @@ export class CardStack extends React.Component<Props, State> {
         const nextGesture = nextRoute ? gestures[nextRoute.key] : undefined;
 
         const descriptor =
-          (isPreloaded ? props.preloadedDescriptors : props.descriptors)[
-            route.key
-          ] ||
+          props.descriptors[route.key] ||
           state.descriptors[route.key] ||
           (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
 

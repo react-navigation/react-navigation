@@ -37,7 +37,7 @@ function NativeStackNavigator({
   router,
   ...rest
 }: NativeStackNavigatorProps) {
-  const { state, describe, descriptors, navigation, NavigationContent } =
+  const { state, descriptors, navigation, NavigationContent } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
       StackRouterOptions,
@@ -94,7 +94,6 @@ function NativeStackNavigator({
         state={state}
         navigation={navigation}
         descriptors={descriptors}
-        describe={describe}
       />
     </NavigationContent>
   );

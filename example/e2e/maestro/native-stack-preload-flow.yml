@@ -1,0 +1,28 @@
+appId: ${APP_ID}
+name: Native Stack Preload Flow
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: native-stack-preload-flow
+      TEXT: 'Home'
+- assertVisible:
+    text: 'Details is not preloaded yet.'
+- tapOn:
+    text: 'Preload Details'
+- extendedWaitUntil:
+    timeout: 3000
+    visible: 'Details is preloaded!'
+- tapOn:
+    text: 'Navigate to Details'
+- assertVisible:
+    text: 'Loaded!'
+- tapOn:
+    text: 'Back to home'
+- tapOn:
+    text: 'Navigate to Details'
+- assertVisible:
+    text: 'Loading...'
+- extendedWaitUntil:
+    timeout: 3000
+    visible: 'Loaded!'

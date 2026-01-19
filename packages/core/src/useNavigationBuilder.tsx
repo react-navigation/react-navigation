@@ -887,13 +887,15 @@ export function useNavigationBuilder<
     getStateListeners: keyedListeners.getState,
   });
 
-  const { describe, descriptors } = useDescriptors<
+  const descriptors = useDescriptors<
     State,
     ActionHelpers,
     ScreenOptions,
     EventMap
   >({
-    state,
+    routes: router.getRoutesFromState
+      ? router.getRoutesFromState(state)
+      : state.routes,
     screens,
     navigation,
     screenOptions,
@@ -940,7 +942,6 @@ export function useNavigationBuilder<
   return {
     state,
     navigation,
-    describe,
     descriptors,
     NavigationContent,
   };
