@@ -66,7 +66,7 @@ const HomeScreen = ({
   const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
-    navigation.addListener('blur', () => {
+    return navigation.addListener('blur', () => {
       clearTimeout(timerRef.current);
       setIsReady(false);
     });

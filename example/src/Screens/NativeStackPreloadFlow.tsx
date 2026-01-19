@@ -8,20 +8,18 @@ import {
   createNativeStackNavigator,
   type NativeStackScreenProps,
 } from '@react-navigation/native-stack';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 type PreloadNativeStackParamList = {
   Home: undefined;
   Details: undefined;
-  Profile: undefined;
 };
 
 const linking = {
   screens: {
     Home: '',
     Details: 'details',
-    Profile: 'profile',
   },
 } satisfies PathConfig<NavigatorScreenParams<PreloadNativeStackParamList>>;
 
@@ -29,15 +27,19 @@ const DetailsScreen = ({
   navigation,
 }: NativeStackScreenProps<PreloadNativeStackParamList, 'Details'>) => {
   const [loadingCountdown, setLoadingCountdown] = useState(3);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setLoadingCountdown((loadingCountdown) => {
         if (loadingCountdown === 1) {
           clearInterval(interval);
         }
+
         return loadingCountdown - 1;
       });
     }, 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -51,25 +53,6 @@ const DetailsScreen = ({
       <Button onPress={navigation.goBack} style={styles.button}>
         Back to home
       </Button>
-      <Button
-        onPress={() => navigation.navigate('Profile')}
-        style={styles.button}
-      >
-        Go to Profile
-      </Button>
-    </View>
-  );
-};
-
-const ProfileScreen = ({
-  navigation,
-}: NativeStackScreenProps<PreloadNativeStackParamList, 'Profile'>) => {
-  return (
-    <View style={styles.content}>
-      <Text style={styles.text}>Profile</Text>
-      <Button onPress={navigation.goBack} style={styles.button}>
-        Back to home
-      </Button>
     </View>
   );
 };
@@ -79,16 +62,35 @@ const HomeScreen = ({
 }: NativeStackScreenProps<PreloadNativeStackParamList, 'Home'>) => {
   const { navigate, preload } = navigation;
 
+  const [isReady, setIsReady] = useState(false);
+  const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
+
+  useEffect(() => {
+    return navigation.addListener('blur', () => {
+      clearTimeout(timerRef.current);
+      setIsReady(false);
+    });
+  }, [navigation]);
+
   return (
     <View style={styles.content}>
-      <Button onPress={() => preload('Details')} style={styles.button}>
+      <Text style={styles.text}>
+        {isReady ? 'Details is preloaded!' : 'Details is not preloaded yet.'}
+      </Text>
+      <Button
+        onPress={() => {
+          timerRef.current = setTimeout(() => {
+            setIsReady(true);
+          }, 3000);
+
+          preload('Details');
+        }}
+        style={styles.button}
+      >
         Preload Details
       </Button>
-      <Button onPress={() => preload('Profile')} style={styles.button}>
-        Preload Profile
-      </Button>
       <Button onPress={() => navigate('Details')} style={styles.button}>
-        Navigate Details
+        Navigate to Details
       </Button>
     </View>
   );
@@ -103,7 +105,6 @@ export function NativeStackPreloadFlow(
     <NativeStack.Navigator>
       <NativeStack.Screen name="Home" component={HomeScreen} />
       <NativeStack.Screen name="Details" component={DetailsScreen} />
-      <NativeStack.Screen name="Profile" component={ProfileScreen} />
     </NativeStack.Navigator>
   );
 }

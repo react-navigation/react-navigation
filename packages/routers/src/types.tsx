@@ -229,6 +229,17 @@ export type Router<
   shouldActionChangeFocus(action: NavigationAction): boolean;
 
   /**
+   * Get the list of routes from the navigation state.
+   *
+   * By default, `state.routes` is used.
+   * But in some cases (like `preloadedRoutes` in stack),
+   * the actual list of routes may be different.
+   *
+   * @param state Navigation state to get the routes from.
+   */
+  getRoutesFromState?(state: State): Route<string>[];
+
+  /**
    * Action creators for the router.
    */
   actionCreators?: ActionCreators<Action>;

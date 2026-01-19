@@ -5,7 +5,6 @@ import {
   type LocaleDirection,
   type ParamListBase,
   type Route,
-  type RouteProp,
   StackActions,
   type StackNavigationState,
 } from '@react-navigation/native';
@@ -14,7 +13,6 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import type {
-  StackDescriptor,
   StackDescriptorMap,
   StackNavigationConfig,
   StackNavigationHelpers,
@@ -32,10 +30,6 @@ type Props = StackNavigationConfig & {
   state: StackNavigationState<ParamListBase>;
   navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
-  describe: (
-    route: RouteProp<ParamListBase>,
-    placeholder: boolean
-  ) => StackDescriptor;
 };
 
 type State = {
@@ -70,16 +64,17 @@ export class StackView extends React.Component<Props, State> {
     props: Readonly<Props>,
     state: Readonly<State>
   ) {
+    const allRoutes = [...props.state.routes, ...props.state.preloadedRoutes];
+
     // If there was no change in routes, we don't need to compute anything
     if (
-      (props.state.routes === state.previousRoutes ||
-        isArrayEqual(
-          props.state.routes.map((r) => r.key),
-          state.previousRoutes.map((r) => r.key)
-        )) &&
+      isArrayEqual(
+        allRoutes.map((r) => r.key),
+        state.previousRoutes.map((r) => r.key)
+      ) &&
       state.routes.length
     ) {
-      let routes = state.routes;
+      let routes = props.state.routes;
       let previousRoutes = state.previousRoutes;
       let descriptors = props.descriptors;
       let previousDescriptors = state.previousDescriptors;
@@ -95,9 +90,9 @@ export class StackView extends React.Component<Props, State> {
         previousDescriptors = props.descriptors;
       }
 
-      if (props.state.routes !== state.previousRoutes) {
+      if (!isArrayEqual(allRoutes, state.previousRoutes)) {
         // if any route objects have changed, we should update them
-        const map = props.state.routes.reduce<Record<string, Route<string>>>(
+        const map = allRoutes.reduce<Record<string, Route<string>>>(
           (acc, route) => {
             acc[route.key] = route;
             return acc;
@@ -105,8 +100,8 @@ export class StackView extends React.Component<Props, State> {
           {}
         );
 
-        routes = state.routes.map((route) => map[route.key] || route);
-        previousRoutes = props.state.routes;
+        routes = props.state.routes.map((route) => map[route.key] || route);
+        previousRoutes = allRoutes;
       }
 
       return {
@@ -262,7 +257,7 @@ export class StackView extends React.Component<Props, State> {
       );
     }
 
-    const descriptors = routes.reduce<StackDescriptorMap>((acc, route) => {
+    const descriptors = allRoutes.reduce<StackDescriptorMap>((acc, route) => {
       acc[route.key] =
         props.descriptors[route.key] || state.descriptors[route.key];
 
@@ -271,7 +266,7 @@ export class StackView extends React.Component<Props, State> {
 
     return {
       routes,
-      previousRoutes: props.state.routes,
+      previousRoutes: [...props.state.routes, ...props.state.preloadedRoutes],
       previousDescriptors: props.descriptors,
       openingRouteKeys,
       closingRouteKeys,
@@ -428,12 +423,6 @@ export class StackView extends React.Component<Props, State> {
     const { routes, descriptors, openingRouteKeys, closingRouteKeys } =
       this.state;
 
-    const preloadedDescriptors =
-      state.preloadedRoutes.reduce<StackDescriptorMap>((acc, route) => {
-        acc[route.key] = acc[route.key] || this.props.describe(route, true);
-        return acc;
-      }, {});
-
     return (
       <GestureHandlerWrapper style={styles.container}>
         <SafeAreaProviderCompat>
@@ -461,7 +450,6 @@ export class StackView extends React.Component<Props, State> {
                         onGestureStart={this.handleGestureStart}
                         onGestureEnd={this.handleGestureEnd}
                         onGestureCancel={this.handleGestureCancel}
-                        preloadedDescriptors={preloadedDescriptors}
                         {...rest}
                       />
                     )}

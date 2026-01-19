@@ -155,20 +155,32 @@ test('handles screens preloading', async () => {
 
   const navigation = createNavigationContainerRef<StackParamList>();
 
+  const TestScreen = () => {
+    const isFocused = useIsFocused();
+
+    return <Text>Screen B ({isFocused ? 'focused' : 'unfocused'})</Text>;
+  };
+
   const { queryByText } = render(
     <NavigationContainer ref={navigation}>
       <Stack.Navigator>
         <Stack.Screen name="A">{() => null}</Stack.Screen>
-        <Stack.Screen name="B">{() => <Text>Screen B</Text>}</Stack.Screen>
+        <Stack.Screen name="B" component={TestScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 
   expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
+
   act(() => navigation.preload('B'));
+
   expect(
-    queryByText('Screen B', { includeHiddenElements: true })
+    queryByText('Screen B (unfocused)', { includeHiddenElements: true })
   ).not.toBeNull();
+
+  act(() => navigation.navigate('B'));
+
+  expect(queryByText('Screen B (focused)')).not.toBeNull();
 });
 
 test('runs focus effect on focus change on preloaded route', () => {
@@ -268,6 +280,46 @@ test('renders correct focus state with preloading', () => {
   act(() => navigation.current.navigate('A'));
 
   expect(queryByText('focused', { includeHiddenElements: true })).toBeNull();
+});
+
+test('handles preloading screens with nested navigators', () => {
+  const Stack = createStackNavigator<StackParamList>();
+  const NestedStack = createStackNavigator<NestedStackParamList>();
+
+  const TestScreen = () => {
+    const isFocused = useIsFocused();
+
+    return <Text>Screen C ({isFocused ? 'focused' : 'unfocused'})</Text>;
+  };
+
+  const NestedNavigator = () => (
+    <NestedStack.Navigator>
+      <NestedStack.Screen name="C" component={TestScreen} />
+    </NestedStack.Navigator>
+  );
+
+  const navigation = createNavigationContainerRef<StackParamList>();
+
+  const { queryByText } = render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="A">{() => null}</Stack.Screen>
+        <Stack.Screen name="B" component={NestedNavigator} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(queryByText('Screen C', { includeHiddenElements: true })).toBeNull();
+
+  act(() => navigation.preload('B'));
+
+  expect(
+    queryByText('Screen C (unfocused)', { includeHiddenElements: true })
+  ).not.toBeNull();
+
+  act(() => navigation.navigate('B'));
+
+  expect(queryByText('Screen C (focused)')).not.toBeNull();
 });
 
 test('renders back button in the nested stack', async () => {
