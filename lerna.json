@@ -1,9 +1,6 @@
 {
   "$schema": "node_modules/@lerna-lite/cli/schemas/lerna-schema.json",
-  "packages": [
-    "packages/*",
-    "example"
-  ],
+  "packages": ["packages/*", "example"],
   "npmClient": "yarn",
   "useWorkspaces": true,
   "version": "independent",
@@ -11,6 +8,7 @@
     "publish": {
       "graphType": "all",
       "syncWorkspaceLock": true,
+      "private": false,
       "allowBranch": "main",
       "allowPeerDependenciesUpdate": true,
       "conventionalCommits": true,

@@ -1,7 +1,6 @@
 {
   "name": "@react-navigation/example",
   "description": "Demo app to showcase various functionality of React Navigation",
-  "version": "6.0.0-alpha.0",
   "private": true,
   "main": "./App.tsx",
   "scripts": {
