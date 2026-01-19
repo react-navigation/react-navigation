@@ -1,5 +1,6 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
+  type BottomTabIcon,
   createBottomTabNavigator,
   createBottomTabScreen,
 } from '@react-navigation/bottom-tabs';
@@ -125,14 +126,14 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
       initialParams: { count: i },
       options: ({ route }) => ({
         title: 'Contacts',
-        tabBarIcon: Platform.select({
+        tabBarIcon: Platform.select<BottomTabIcon>({
           ios: {
             type: 'sfSymbol',
             name: 'person.2',
           },
           android: {
             type: 'materialSymbol',
-            name: 'people',
+            name: 'contacts',
           },
           default: {
             type: 'image',
