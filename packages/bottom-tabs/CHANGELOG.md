@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.1...@react-navigation/bottom-tabs@8.0.0-alpha.2) (2026-01-19)
+
+### Features
+
+* support materialSymbol icon in bottom tabs ([370c5d3](https://github.com/react-navigation/react-navigation/commit/370c5d3eb4baf2326017046fc238605d9f427d26)) - by @satya164
+
 # [8.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.0...@react-navigation/bottom-tabs@8.0.0-alpha.1) (2026-01-19)
 
 ### Features
