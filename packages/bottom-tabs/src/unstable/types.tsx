@@ -13,9 +13,7 @@ import type {
 import type { ColorValue, ImageSourcePropType, TextStyle } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import type {
-  TabBarControllerMode,
   TabBarItemLabelVisibilityMode,
-  TabBarMinimizeBehavior,
   TabsScreenBlurEffect,
   TabsSystemItem,
 } from 'react-native-screens';
@@ -293,7 +291,7 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    *
    * @platform ios
    */
-  tabBarControllerMode?: TabBarControllerMode;
+  tabBarControllerMode?: 'auto' | 'tabBar' | 'tabSidebar';
 
   /**
    * Minimize behavior for the tab bar.
@@ -316,7 +314,7 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    *
    * @platform ios
    */
-  tabBarMinimizeBehavior?: TabBarMinimizeBehavior;
+  tabBarMinimizeBehavior?: 'auto' | 'never' | 'onScrollDown' | 'onScrollUp';
 
   /**
    * Function which returns a React element to display as an accessory view.

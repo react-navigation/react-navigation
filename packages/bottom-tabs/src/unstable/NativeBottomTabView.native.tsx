@@ -130,6 +130,16 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
     });
   };
 
+  const tabBarControllerMode =
+    currentOptions.tabBarControllerMode === 'auto'
+      ? 'automatic'
+      : currentOptions.tabBarControllerMode;
+
+  const tabBarMinimizeBehavior =
+    currentOptions.tabBarMinimizeBehavior === 'auto'
+      ? 'automatic'
+      : currentOptions.tabBarMinimizeBehavior;
+
   const bottomAccessory = currentOptions.bottomAccessory;
 
   return (
@@ -143,8 +153,8 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
         tabBarItemLabelVisibilityMode={
           currentOptions?.tabBarLabelVisibilityMode
         }
-        tabBarControllerMode={currentOptions?.tabBarControllerMode}
-        tabBarMinimizeBehavior={currentOptions?.tabBarMinimizeBehavior}
+        tabBarControllerMode={tabBarControllerMode}
+        tabBarMinimizeBehavior={tabBarMinimizeBehavior}
         tabBarTintColor={activeTintColor}
         tabBarItemIconColor={inactiveTintColor}
         tabBarItemIconColorActive={activeTintColor}
