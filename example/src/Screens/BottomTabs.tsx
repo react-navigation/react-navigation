@@ -31,17 +31,15 @@ import {
   View,
 } from 'react-native';
 
+import iconBookUser from '../../assets/icons/book-user.png';
+import iconListMusic from '../../assets/icons/list-music.png';
+import iconMusic from '../../assets/icons/music.png';
+import iconNewspaper from '../../assets/icons/newspaper.png';
 import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
 import { NativeStack, type NativeStackParamList } from './NativeStack';
-
-const getTabBarIcon =
-  (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: ColorValue; size: number }) => (
-    <MaterialCommunityIcons name={name} color={color} size={size} />
-  );
 
 export type BottomTabParamList = {
   TabStack: NavigatorScreenParams<NativeStackParamList>;
@@ -206,7 +204,10 @@ export function BottomTabs(
             title: 'Article',
             headerShown: false,
             tabBarButtonTestID: 'article',
-            tabBarIcon: getTabBarIcon('file-document'),
+            tabBarIcon: {
+              type: 'image',
+              source: iconNewspaper,
+            },
           }}
         />
         <Tab.Screen
@@ -216,7 +217,19 @@ export function BottomTabs(
           options={({ route }) => ({
             title: 'Chat',
             tabBarButtonTestID: 'chat',
-            tabBarIcon: getTabBarIcon('message-reply'),
+            tabBarIcon: ({
+              color,
+              size,
+            }: {
+              color: ColorValue;
+              size: number;
+            }) => (
+              <MaterialCommunityIcons
+                name="message-reply"
+                color={color}
+                size={size}
+              />
+            ),
             tabBarBadge: route.params?.count,
           })}
         />
@@ -226,7 +239,20 @@ export function BottomTabs(
           options={{
             title: 'Contacts',
             tabBarButtonTestID: 'contacts',
-            tabBarIcon: getTabBarIcon('contacts'),
+            tabBarIcon: Platform.select({
+              ios: {
+                type: 'sfSymbol',
+                name: 'person.2',
+              },
+              android: {
+                type: 'materialSymbol',
+                name: 'people',
+              },
+              default: {
+                type: 'image',
+                source: iconBookUser,
+              },
+            }),
           }}
         />
         <Tab.Screen
@@ -244,7 +270,10 @@ export function BottomTabs(
                 style={StyleSheet.absoluteFill}
               />
             ),
-            tabBarIcon: getTabBarIcon('image-album'),
+            tabBarIcon: ({ focused }) => ({
+              type: 'image',
+              source: focused ? iconListMusic : iconMusic,
+            }),
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
             tabBarActiveTintColor: '#fff',
             tabBarStyle: [
