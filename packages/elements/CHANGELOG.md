@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.0...@react-navigation/elements@3.0.0-alpha.1) (2026-01-19)
+
+### Features
+
+* add options to hide left and right item backgrounds ([57969cd](https://github.com/react-navigation/react-navigation/commit/57969cd3cc1eaa437edf9d40c5ee5587182851d9)) - by @satya164
+
 # [3.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.6.0...@react-navigation/elements@3.0.0-alpha.0) (2025-12-19)
 
 ### Bug Fixes

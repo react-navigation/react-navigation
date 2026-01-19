@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.0...@react-navigation/material-top-tabs@8.0.0-alpha.1) (2026-01-19)
+
+### Features
+
+* add a ~meta property to navigation object ([#12931](https://github.com/react-navigation/react-navigation/issues/12931)) ([e570c72](https://github.com/react-navigation/react-navigation/commit/e570c72f119cd6506c6106e7eb1ebb9ad5d47a62)) - by @satya164
+
 # [8.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.3.3...@react-navigation/material-top-tabs@8.0.0-alpha.0) (2025-12-19)
 
 ### Bug Fixes

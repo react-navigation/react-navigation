@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.0...@react-navigation/native@8.0.0-alpha.1) (2026-01-19)
+
+### Bug Fixes
+
+* split useLinkBuilder to minimize re-renders ([4aae756](https://github.com/react-navigation/react-navigation/commit/4aae7563d9fb7d823416255c43b586258b34fe0e)), closes [#12903](https://github.com/react-navigation/react-navigation/issues/12903) - by @satya164
+
+### Features
+
+* add a ~meta property to navigation object ([#12931](https://github.com/react-navigation/react-navigation/issues/12931)) ([e570c72](https://github.com/react-navigation/react-navigation/commit/e570c72f119cd6506c6106e7eb1ebb9ad5d47a62)) - by @satya164
+* add a SFSymbol component ([#12917](https://github.com/react-navigation/react-navigation/issues/12917)) ([b00a37d](https://github.com/react-navigation/react-navigation/commit/b00a37d5d8c3cf36729b724bc22384b023001082)) - by @satya164
+* add support for material symbols ([#12926](https://github.com/react-navigation/react-navigation/issues/12926)) ([6ac58fc](https://github.com/react-navigation/react-navigation/commit/6ac58fcde756cf9a547a1604a6b7fa80efef4ad9)) - by @satya164
+* default linking to auto for static config ([6a175f9](https://github.com/react-navigation/react-navigation/commit/6a175f974121c7b9714fd9aa6875715cf6435da6)) - by @satya164
+* support sfSymbol icon in custom tabs ([2fe9f97](https://github.com/react-navigation/react-navigation/commit/2fe9f9741f1ba3c460bdca9e5d2e8568d374e75a)) - by @satya164
+
 # [8.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.15...@react-navigation/native@8.0.0-alpha.0) (2025-12-19)
 
 ### Bug Fixes

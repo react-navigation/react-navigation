@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.0...@react-navigation/core@8.0.0-alpha.1) (2026-01-19)
+
+### Features
+
+* add a ~meta property to navigation object ([#12931](https://github.com/react-navigation/react-navigation/issues/12931)) ([e570c72](https://github.com/react-navigation/react-navigation/commit/e570c72f119cd6506c6106e7eb1ebb9ad5d47a62)) - by @satya164
+* handle popToRoot natively in native tabs ([da45221](https://github.com/react-navigation/react-navigation/commit/da452217c7ea96a9b82dbdab92c78aca7b25e2dc)) - by @satya164
+
 # [8.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.12.2...@react-navigation/core@8.0.0-alpha.0) (2025-12-19)
 
 ### Bug Fixes

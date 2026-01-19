@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.0...@react-navigation/bottom-tabs@8.0.0-alpha.1) (2026-01-19)
+
+### Features
+
+* add a ~meta property to navigation object ([#12931](https://github.com/react-navigation/react-navigation/issues/12931)) ([e570c72](https://github.com/react-navigation/react-navigation/commit/e570c72f119cd6506c6106e7eb1ebb9ad5d47a62)) - by @satya164
+* add a SFSymbol component ([#12917](https://github.com/react-navigation/react-navigation/issues/12917)) ([b00a37d](https://github.com/react-navigation/react-navigation/commit/b00a37d5d8c3cf36729b724bc22384b023001082)) - by @satya164
+* handle popToRoot natively in native tabs ([da45221](https://github.com/react-navigation/react-navigation/commit/da452217c7ea96a9b82dbdab92c78aca7b25e2dc)) - by @satya164
+* support drawableResource icon in custom tabs ([816e4a9](https://github.com/react-navigation/react-navigation/commit/816e4a9b9e9e440d22ebc7e6060d0abffa90bbdd)) - by @satya164
+* support sfSymbol icon in custom tabs ([2fe9f97](https://github.com/react-navigation/react-navigation/commit/2fe9f9741f1ba3c460bdca9e5d2e8568d374e75a)) - by @satya164
+
 # [8.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.4.3...@react-navigation/bottom-tabs@8.0.0-alpha.0) (2025-12-19)
 
 ### Bug Fixes
