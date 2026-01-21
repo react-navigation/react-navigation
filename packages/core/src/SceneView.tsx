@@ -80,6 +80,7 @@ export function SceneView<
         // This will avoid the navigator trying to handle them again
         if (
           nextRoute.params &&
+          typeof nextRoute.params === 'object' &&
           (('state' in nextRoute.params &&
             typeof nextRoute.params.state === 'object' &&
             nextRoute.params.state !== null) ||
