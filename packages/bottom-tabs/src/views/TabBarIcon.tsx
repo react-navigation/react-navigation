@@ -153,7 +153,7 @@ function renderIcon({
             }}
           />
         );
-      case 'drawableResource':
+      case 'resource':
         return (
           <Image
             source={{ uri: iconValue.name }}

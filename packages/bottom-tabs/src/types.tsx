@@ -133,7 +133,7 @@ type IconImage = {
   tinted?: boolean;
 };
 
-type IconIOSSfSymbol = {
+type IconSfSymbol = {
   /**
    * - `sfSymbol` - Use an SF Symbol as the icon on iOS.
    */
@@ -159,15 +159,13 @@ type IconMaterialSymbol = {
   name: MaterialSymbolProps['name'];
 };
 
-type IconAndroidDrawable = {
+type IconResource = {
   /**
-   * - `drawableResource` - Use a drawable resource as the icon on Android.
+   * - `resource` - Use a resource from drawables on Android and xcassets asset catalog on iOS as the icon.
    */
-  type: 'drawableResource';
+  type: 'resource';
   /**
-   * Name of the drawable resource to use as the icon.
-   *
-   * @platform android
+   * Name of the drawable resource or xcasset to use as the icon.
    */
   name: string;
   /**
@@ -175,15 +173,13 @@ type IconAndroidDrawable = {
    * Only supported with custom implementation.
    *
    * Defaults to `true`.
-   *
-   * @platform android
    */
   tinted?: boolean;
 };
 
-type IconIOS = IconIOSSfSymbol | IconImage;
+type IconIOS = IconSfSymbol | IconImage;
 
-type IconAndroid = IconMaterialSymbol | IconAndroidDrawable | IconImage;
+type IconAndroid = IconMaterialSymbol | IconResource | IconImage;
 
 export type BottomTabIcon = IconIOS | IconAndroid;
 

@@ -456,10 +456,14 @@ function getPlatformIcon(icon: BottomTabIcon): PlatformIcon {
           imageSource: icon.source,
         },
       };
-    case 'drawableResource':
+    case 'resource':
       return {
+        // TODO: support xcasset once new version of react-native-screens is released
         ios: undefined,
-        android: icon,
+        android: {
+          type: 'drawableResource',
+          name: icon.name,
+        },
         shared: undefined,
       };
     default: {
