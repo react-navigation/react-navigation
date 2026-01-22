@@ -1,6 +1,11 @@
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
-import { SceneMap, ScrollViewAdapter, TabView } from 'react-native-tab-view';
+import {
+  CSSAdapter,
+  SceneMap,
+  ScrollViewAdapter,
+  TabView,
+} from 'react-native-tab-view';
 
 import { Albums } from '../../Shared/Albums';
 import { Article } from '../../Shared/Article';
@@ -29,7 +34,7 @@ export function ScrollAdapter() {
       }}
       direction={direction}
       renderScene={renderScene}
-      renderAdapter={(props) => <ScrollViewAdapter {...props} />}
+      renderAdapter={(props) => <CSSAdapter {...props} />}
       onIndexChange={onIndexChange}
     />
   );

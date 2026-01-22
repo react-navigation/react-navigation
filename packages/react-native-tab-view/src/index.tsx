@@ -1,3 +1,4 @@
+export { CSSAdapter, type CSSAdapterProps } from './CSSAdapter';
 export {
   PagerViewAdapter,
   type PagerViewAdapterProps,
