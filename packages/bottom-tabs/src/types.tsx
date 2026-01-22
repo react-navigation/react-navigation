@@ -236,21 +236,6 @@ type BottomTabCustomOptions = {
   tabBarAllowFontScaling?: boolean;
 
   /**
-   * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
-   * It's recommended to set this if you don't have a label for the tab.
-   *
-   * Only supported with `custom` implementation.
-   */
-  tabBarAccessibilityLabel?: string;
-
-  /**
-   * ID to locate this tab button in tests.
-   *
-   * Only supported with `custom` implementation.
-   */
-  tabBarButtonTestID?: string;
-
-  /**
    * Style object for the tab item container.
    *
    * Only supported with `custom` implementation.
@@ -581,6 +566,17 @@ export type BottomTabNavigationOptions = {
    * Not supported on tvOS.
    */
   tabBarControllerMode?: 'auto' | 'tabBar' | 'tabSidebar';
+
+  /**
+   * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
+   * It's recommended to set this if you don't have a label for the tab.
+   */
+  tabBarAccessibilityLabel?: string;
+
+  /**
+   * ID to locate this tab button in tests.
+   */
+  tabBarButtonTestID?: string;
 
   /**
    * Style object for the tab bar container.

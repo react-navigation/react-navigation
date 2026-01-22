@@ -236,6 +236,8 @@ export function BottomTabViewNative({
             tabBarSystemItem,
             tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
             tabBarStyle,
+            tabBarAccessibilityLabel,
+            tabBarButtonTestID,
             sceneStyle,
             scrollEdgeEffects,
           } = options;
@@ -308,6 +310,8 @@ export function BottomTabViewNative({
               selectedIcon={selectedIcon?.ios ?? selectedIcon?.shared}
               tabBarItemBadgeBackgroundColor={badgeBackgroundColor}
               tabBarItemBadgeTextColor={badgeTextColor}
+              tabBarItemAccessibilityLabel={tabBarAccessibilityLabel}
+              tabBarItemTestID={tabBarButtonTestID}
               badgeValue={tabBarBadge?.toString()}
               systemItem={tabBarSystemItem}
               isFocused={isFocused}
