@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.2...@react-navigation/bottom-tabs@8.0.0-alpha.3) (2026-01-22)
+
+### Features
+
+* add support for testId and accessibilityLabel to native tabs ([78d4bf1](https://github.com/react-navigation/react-navigation/commit/78d4bf1a8f77ce6d00b471125c6fecdea53078d7)) - by @satya164
+* add support for xcasset for icons in bottom tabs ([34604bb](https://github.com/react-navigation/react-navigation/commit/34604bb17c100995c25b3282fba6f990f2f41422)) - by @satya164
+
 # [8.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.1...@react-navigation/bottom-tabs@8.0.0-alpha.2) (2026-01-19)
 
 ### Features
