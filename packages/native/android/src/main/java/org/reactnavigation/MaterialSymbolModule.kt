@@ -20,6 +20,8 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
   NativeMaterialSymbolModuleSpec(reactContext) {
 
   companion object {
+    const val NAME = NativeMaterialSymbolModuleSpec.NAME
+
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
   }
 

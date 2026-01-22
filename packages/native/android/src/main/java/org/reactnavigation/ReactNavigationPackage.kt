@@ -1,6 +1,5 @@
 package org.reactnavigation
 
-import com.facebook.fbreact.specs.NativeMaterialSymbolModuleSpec
 import com.facebook.react.BaseReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
@@ -15,23 +14,21 @@ class ReactNavigationPackage : BaseReactPackage() {
 
   override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
     return when (name) {
-      NativeMaterialSymbolModuleSpec.NAME -> MaterialSymbolModule(reactContext)
+      MaterialSymbolModule.NAME -> MaterialSymbolModule(reactContext)
       else -> null
     }
   }
 
-  override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
-    return ReactModuleInfoProvider {
-      mapOf(
-        NativeMaterialSymbolModuleSpec.NAME to ReactModuleInfo(
-          NativeMaterialSymbolModuleSpec.NAME,
-          MaterialSymbolModule::class.java.name,
-          false, // canOverrideExistingModule
-          false, // needsEagerInit
-          false, // isCxxModule
-          true // isTurboModule
-        )
+  override fun getReactModuleInfoProvider() = ReactModuleInfoProvider {
+    mapOf(
+      MaterialSymbolModule.NAME to ReactModuleInfo(
+        name = MaterialSymbolModule.NAME,
+        className = MaterialSymbolModule.NAME,
+        canOverrideExistingModule = false,
+        needsEagerInit = false,
+        isCxxModule = false,
+        isTurboModule = true
       )
-    }
+    )
   }
 }
