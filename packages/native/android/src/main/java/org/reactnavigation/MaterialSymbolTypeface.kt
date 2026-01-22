@@ -6,14 +6,18 @@ import android.graphics.Typeface
 object MaterialSymbolTypeface {
   private val typefaces = mutableMapOf<String, Typeface>()
 
-  fun get(context: Context, variant: String?): Typeface {
-    return typefaces.getOrPut(variant ?: "outlined") {
-      val suffix = when (variant) {
-        "rounded" -> "Rounded"
-        "sharp" -> "Sharp"
-        else -> "Outlined"
-      }
+  fun get(context: Context, variant: String?, weight: Int?): Typeface {
+    val resolvedVariant = when (variant) {
+      "rounded" -> "Rounded"
+      "sharp" -> "Sharp"
+      else -> "Outlined"
+    }
 
+    val resolvedWeight = weight ?: 400
+
+    val suffix = "${resolvedVariant}_$resolvedWeight"
+
+    return typefaces.getOrPut(suffix) {
       val path = "fonts/MaterialSymbols${suffix}.ttf"
 
       try {

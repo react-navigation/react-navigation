@@ -2,9 +2,7 @@
 // Do not edit manually
 
 export const MATERIAL_SYMBOL_FONT_HASHES = {
-  outlined: 'ec67dff9',
-  rounded: 'undefined',
-  sharp: 'undefined',
+  'outlined-400': 'ec67dff9',
 } as const;
 
 export type MaterialSymbolName =

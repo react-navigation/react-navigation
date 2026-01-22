@@ -4,13 +4,13 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
-import android.widget.TextView
 
 class MaterialSymbolView @JvmOverloads constructor(
   context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : TextView(context, attrs, defStyleAttr) {
+) : androidx.appcompat.widget.AppCompatTextView(context, attrs, defStyleAttr) {
 
   private var variant: String? = null
+  private var weight: Int? = null
 
   override fun onDraw(canvas: Canvas) {
     val text = text?.toString() ?: return
@@ -35,8 +35,20 @@ class MaterialSymbolView @JvmOverloads constructor(
     }
 
     this.variant = variant
+    updateTypeface()
+  }
 
-    setTypeface(MaterialSymbolTypeface.get(context, variant))
+  fun setWeight(weight: Int) {
+    if (this.weight == weight) {
+      return
+    }
+
+    this.weight = weight
+    updateTypeface()
+  }
+
+  private fun updateTypeface() {
+    setTypeface(MaterialSymbolTypeface.get(context, variant, weight))
     invalidate()
   }
 

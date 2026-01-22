@@ -3,6 +3,7 @@ package org.reactnavigation
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
+import androidx.core.graphics.createBitmap
 import androidx.core.net.toUri
 import com.facebook.fbreact.specs.NativeMaterialSymbolModuleSpec
 import com.facebook.react.bridge.ColorPropConverter
@@ -26,7 +27,7 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
   }
 
   override fun getImageSource(
-    name: String, variant: String, size: Double, color: ReadableMap, hash: String
+    name: String, variant: String, size: Double, weight: Double, color: ReadableMap, hash: String
   ): String {
     val colorValue = color.getDynamic("value").let {
       when (it.type) {
@@ -43,7 +44,7 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     val scaledSize = (size * density).roundToInt().coerceAtLeast(1)
 
     val cacheDir = File(
-      reactApplicationContext.cacheDir, "react_navigation/material_symbols/$variant/$hash"
+      reactApplicationContext.cacheDir, "react_navigation/material_symbols/$variant-$weight/$hash"
     )
 
     val cacheKey = "${name.hashCode()}_${scaledSize}_$resolvedColor"
@@ -61,7 +62,7 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     cacheDir.mkdirs()
 
     val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-      typeface = MaterialSymbolTypeface.get(reactApplicationContext, variant)
+      typeface = MaterialSymbolTypeface.get(reactApplicationContext, variant, weight.toInt())
       textSize = scaledSize.toFloat()
       textAlign = Paint.Align.CENTER
 
@@ -69,7 +70,7 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     }
 
     val fontMetrics = paint.fontMetrics
-    val bitmap = Bitmap.createBitmap(scaledSize, scaledSize, Bitmap.Config.ARGB_8888)
+    val bitmap = createBitmap(scaledSize, scaledSize)
 
     try {
       val canvas = Canvas(bitmap)

@@ -10,6 +10,10 @@ import {
 export interface NativeProps extends ViewProps {
   name: string;
   variant: string;
+  weight?: CodegenTypes.WithDefault<
+    100 | 200 | 300 | 400 | 500 | 600 | 700,
+    400
+  >;
   size: CodegenTypes.Float;
   color: ColorValue;
 }
