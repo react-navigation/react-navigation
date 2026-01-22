@@ -15,7 +15,7 @@ import {
   useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, Image, StyleSheet, View } from 'react-native';
+import { Animated, Image, Platform, StyleSheet, View } from 'react-native';
 
 import type {
   NativeStackDescriptorMap,
@@ -83,9 +83,8 @@ export function NativeStackView({ state, descriptors }: Props) {
           (r) => r.key === route.key
         );
 
-        return (
+        const element = (
           <Screen
-            key={route.key}
             focused={isFocused}
             route={route}
             navigation={navigation}
@@ -164,10 +163,76 @@ export function NativeStackView({ state, descriptors }: Props) {
             </HeaderBackContext.Provider>
           </Screen>
         );
+
+        const isModal = presentation != null && presentation !== 'card';
+        const isNextModal =
+          nextPresentation != null && nextPresentation !== 'card';
+
+        if (!isModal || Platform.OS !== 'web') {
+          return <React.Fragment key={route.key}>{element}</React.Fragment>;
+        }
+
+        // Keep the dialog open if focused or if there's another modal on top
+        const isDialogOpen = (isFocused || isNextModal) && !isPreloaded;
+
+        return (
+          <Dialog key={route.key} open={isDialogOpen}>
+            {element}
+          </Dialog>
+        );
       })}
     </SafeAreaProviderCompat>
   );
 }
+
+const Dialog = ({
+  open,
+  children,
+}: {
+  open: boolean;
+  children: React.ReactNode;
+}) => {
+  const dialogRef = React.useRef<HTMLDialogElement>(null);
+
+  React.useEffect(() => {
+    const dialog = dialogRef.current;
+
+    if (!dialog) {
+      return;
+    }
+
+    if (open) {
+      if (!dialog.open) {
+        dialog.showModal();
+      }
+    } else {
+      if (dialog.open) {
+        dialog.close();
+      }
+    }
+  }, [open]);
+
+  return (
+    <dialog
+      ref={dialogRef}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        maxWidth: '100%',
+        maxHeight: '100%',
+        margin: 0,
+        padding: 0,
+        border: 'none',
+        background: 'transparent',
+      }}
+    >
+      {children}
+    </dialog>
+  );
+};
 
 const AnimatedHeaderHeightProvider = ({
   children,
