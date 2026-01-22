@@ -16,12 +16,13 @@ const imageSourceCache = new Map<string, ImageSourcePropType>();
 
 export function MaterialSymbol({
   name,
-  variant = 'outlined',
   size = 24,
   color = 'black',
   style,
   ...rest
 }: MaterialSymbolProps): React.ReactElement {
+  const variant = 'outlined';
+
   return (
     <MaterialSymbolViewNativeComponent
       name={name}
@@ -42,10 +43,11 @@ export function MaterialSymbol({
 
 MaterialSymbol.getImageSource = ({
   name,
-  variant = 'outlined',
   size = 24,
   color = 'black',
 }: MaterialSymbolOptions): ImageSourcePropType => {
+  const variant = 'outlined';
+
   const hash = MATERIAL_SYMBOL_FONT_HASHES[variant];
   const processedColor = processColor(color);
 
@@ -53,7 +55,9 @@ MaterialSymbol.getImageSource = ({
     throw new Error(`Invalid color value: ${String(color)}`);
   }
 
-  const cacheKey = `${name}:${variant}:${size}:${JSON.stringify(processedColor)}:${hash}`;
+  const scale = PixelRatio.get();
+
+  const cacheKey = `${name}:${variant}:${size}:${scale}:${JSON.stringify(processedColor)}:${hash}`;
   const cached = imageSourceCache.get(cacheKey);
 
   if (cached !== undefined) {
@@ -70,7 +74,7 @@ MaterialSymbol.getImageSource = ({
 
   const source: ImageSourcePropType = {
     uri,
-    scale: PixelRatio.get(),
+    scale,
     width: size,
     height: size,
   };

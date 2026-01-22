@@ -7,14 +7,7 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  FlatList,
-  Image,
-  Platform,
-  StyleSheet,
-  Switch,
-  View,
-} from 'react-native';
+import { FlatList, Image, Platform, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { MATERIAL_SYMBOL_NAMES } from '../material-symbol-names';
@@ -29,16 +22,12 @@ const ROW_HEIGHT =
   ICON_SIZE +
   (ICON_PADDING_VERTICAL + ICON_NAME_MARGIN_TOP + ICON_NAME_FONT_SIZE) * 2;
 
-const VARIANTS = ['outlined', 'rounded', 'sharp'] as const;
-type Variant = (typeof VARIANTS)[number];
-
 export function MaterialSymbols(_: StaticScreenProps<{}>) {
   const navigation = useNavigation('MaterialSymbols');
-  const { colors, fonts } = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
   const [query, setQuery] = React.useState('');
-  const [variant, setVariant] = React.useState<Variant>('outlined');
   const [image, setImage] = React.useState(false);
 
   React.useEffect(() => {
@@ -97,21 +86,17 @@ export function MaterialSymbols(_: StaticScreenProps<{}>) {
           ]}
         >
           <SegmentedPicker
-            choices={VARIANTS.map((v) => ({
-              label: v.charAt(0).toUpperCase() + v.slice(1),
-              value: v,
-            }))}
-            value={variant}
-            onValueChange={setVariant}
+            choices={[
+              { label: 'Font', value: 'font' },
+              { label: 'Image', value: 'image' },
+            ]}
+            value={image ? 'image' : 'font'}
+            onValueChange={(value) => setImage(value === 'image')}
           />
-          <View style={styles.switch}>
-            <Text style={fonts.medium}>Image</Text>
-            <Switch value={image} onValueChange={setImage} />
-          </View>
         </View>
       }
       renderItem={({ item }) => (
-        <MaterialSymbolRow items={item} variant={variant} image={image} />
+        <MaterialSymbolRow items={item} image={image} />
       )}
       keyExtractor={(item) => item[0]}
       contentContainerStyle={{
@@ -134,11 +119,9 @@ export function MaterialSymbols(_: StaticScreenProps<{}>) {
 
 const MaterialSymbolRow = React.memo(function MaterialSymbolRow({
   items,
-  variant,
   image,
 }: {
   items: MaterialSymbolProps['name'][];
-  variant: Variant;
   image: boolean;
 }) {
   const { colors } = useTheme();
@@ -151,18 +134,12 @@ const MaterialSymbolRow = React.memo(function MaterialSymbolRow({
             <Image
               source={MaterialSymbol.getImageSource({
                 name: item,
-                variant,
                 size: ICON_SIZE,
                 color: colors.text,
               })}
             />
           ) : (
-            <MaterialSymbol
-              name={item}
-              variant={variant}
-              size={ICON_SIZE}
-              color={colors.text}
-            />
+            <MaterialSymbol name={item} size={ICON_SIZE} color={colors.text} />
           )}
           <Text
             style={[styles.iconName, { color: colors.text }]}
@@ -192,11 +169,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 8,
     borderBottomWidth: StyleSheet.hairlineWidth,
-  },
-  switch: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
   },
   row: {
     flexDirection: 'row',

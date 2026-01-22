@@ -5,7 +5,7 @@ import { URL } from 'node:url';
 const root = new URL('..', import.meta.url);
 const assets = new URL('packages/native/assets/fonts/', root);
 
-const VARIANTS = ['Outlined', 'Rounded', 'Sharp'];
+const VARIANTS = ['Outlined'];
 
 process.stdout.write('Updating Material Symbols...\n');
 
