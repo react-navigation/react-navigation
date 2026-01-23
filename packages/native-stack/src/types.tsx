@@ -756,7 +756,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform android
    */
-  sheetDefaultResizeAnimationEnabled?: boolean;
+  sheetResizeAnimationEnabled?: boolean;
   /**
    * The display orientation to use for the screen.
    *
