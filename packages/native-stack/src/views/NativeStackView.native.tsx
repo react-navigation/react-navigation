@@ -128,6 +128,7 @@ const SceneView = ({
     sheetExpandsWhenScrolledToEdge = true,
     sheetInitialDetentIndex = 0,
     sheetShouldOverflowTopInset = false,
+    sheetDefaultResizeAnimationEnabled = true,
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
@@ -391,6 +392,10 @@ const SceneView = ({
           sheetElevation={sheetElevation}
           sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
           sheetShouldOverflowTopInset={sheetShouldOverflowTopInset}
+          // @ts-expect-error - API available since react-native-screens@4.20.0
+          sheetDefaultResizeAnimationEnabled={
+            sheetDefaultResizeAnimationEnabled
+          }
           statusBarAnimation={statusBarAnimation}
           statusBarHidden={statusBarHidden}
           statusBarStyle={statusBarStyle}
