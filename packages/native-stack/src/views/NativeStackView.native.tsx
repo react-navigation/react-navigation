@@ -392,7 +392,6 @@ const SceneView = ({
           sheetElevation={sheetElevation}
           sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
           sheetShouldOverflowTopInset={sheetShouldOverflowTopInset}
-          // @ts-expect-error - API available since react-native-screens@4.20.0
           sheetDefaultResizeAnimationEnabled={
             sheetDefaultResizeAnimationEnabled
           }
