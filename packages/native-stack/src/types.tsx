@@ -741,6 +741,23 @@ export type NativeStackNavigationOptions = {
    */
   sheetShouldOverflowTopInset?: boolean;
   /**
+   * Whether the default native animation should be used when the sheet's with
+   * `fitToContents` content size changes.
+   *
+   * When set to `true`, the sheet uses internal logic to synchronize size updates and
+   * translation animations during entry, exit, or content updates. This ensures a smooth
+   * transition for standard, static content mounting/unmounting.
+   *
+   * When set to `false`, the internal animation and translation logic is ignored. This
+   * allows the sheet to adjust its size dynamically based on the current dimensions of
+   * the content provided by the developer, allowing implementing custom resizing animations.
+   *
+   * Defaults to `true`.
+   *
+   * @platform android
+   */
+  sheetResizeAnimationEnabled?: boolean;
+  /**
    * The display orientation to use for the screen.
    *
    * Supported values:
