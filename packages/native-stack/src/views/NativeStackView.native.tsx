@@ -116,6 +116,8 @@ const SceneView = ({
     sheetElevation = 24,
     sheetExpandsWhenScrolledToEdge = true,
     sheetInitialDetentIndex = 0,
+    sheetShouldOverflowTopInset = false,
+    sheetResizeAnimationEnabled = true,
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
@@ -316,6 +318,8 @@ const SceneView = ({
         sheetCornerRadius={sheetCornerRadius}
         sheetElevation={sheetElevation}
         sheetExpandsWhenScrolledToEdge={sheetExpandsWhenScrolledToEdge}
+        sheetShouldOverflowTopInset={sheetShouldOverflowTopInset}
+        sheetDefaultResizeAnimationEnabled={sheetResizeAnimationEnabled}
         statusBarAnimation={statusBarAnimation}
         statusBarHidden={statusBarHidden}
         statusBarStyle={statusBarStyle}
