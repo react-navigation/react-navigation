@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.11.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.10.1...@react-navigation/native-stack@7.11.0) (2026-01-26)
+
+### Features
+
+* add sheetResizeAnimationEnabled prop ([#12942](https://github.com/react-navigation/react-navigation/issues/12942)) ([415d8a3](https://github.com/react-navigation/react-navigation/commit/415d8a35cafe4bb10152526c81f103ac450537ec)) - by @t0maboro
+
 ## [7.10.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.10.0...@react-navigation/native-stack@7.10.1) (2026-01-19)
 
 **Note:** Version bump only for package @react-navigation/native-stack
