@@ -722,7 +722,7 @@ export type NativeStackNavigationOptions = {
    * * `last` - there won't be a dimming view for any detent level.
    *
    * @remark
-   * When showing the keyboard for small detent, the system will temporarily resize the sheet above the
+   * (iOS only) When showing the keyboard for small detent, the system will temporarily resize the sheet above the
    * defined detent, always showing dimming background, even if the user hasn't expanded it manually
    * over the sheetLargestUndimmedDetentIndex value.
    *
