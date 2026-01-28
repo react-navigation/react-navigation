@@ -721,6 +721,11 @@ export type NativeStackNavigationOptions = {
    * * `none` - there will be dimming view for all detents levels,
    * * `last` - there won't be a dimming view for any detent level.
    *
+   * @remark
+   * When showing the keyboard for small detent, the system will temporarily resize the sheet above the
+   * defined detent, always showing dimming background, even if the user hasn't expanded it manually
+   * over the sheetLargestUndimmedDetentIndex value.
+   *
    * Defaults to `none`, indicating that the dimming view should be always present.
    */
   sheetLargestUndimmedDetentIndex?: number | 'none' | 'last';
