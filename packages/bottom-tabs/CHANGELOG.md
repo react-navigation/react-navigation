@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.3...@react-navigation/bottom-tabs@8.0.0-alpha.4) (2026-01-29)
+
+### Features
+
+* add support for variant and weight to material symbol ([1dcd6a5](https://github.com/react-navigation/react-navigation/commit/1dcd6a557181e72224594fd912b49902db5ff532)) - by @satya164
+
 # [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.2...@react-navigation/bottom-tabs@8.0.0-alpha.3) (2026-01-22)
 
 ### Features

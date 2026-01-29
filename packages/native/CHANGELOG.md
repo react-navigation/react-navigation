@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.3...@react-navigation/native@8.0.0-alpha.4) (2026-01-29)
+
+### Features
+
+* add more customization options for SFSymbols ([c73751d](https://github.com/react-navigation/react-navigation/commit/c73751d7b29c618eeeebba869b2214ffe269350b)) - by @satya164
+* add support for specifying material fonts ([#12947](https://github.com/react-navigation/react-navigation/issues/12947)) ([524065f](https://github.com/react-navigation/react-navigation/commit/524065ffa937fe88f82d04d432168eb1822e782c)) - by @satya164
+* add support for variant and weight to material symbol ([1dcd6a5](https://github.com/react-navigation/react-navigation/commit/1dcd6a557181e72224594fd912b49902db5ff532)) - by @satya164
+
 # [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.2...@react-navigation/native@8.0.0-alpha.3) (2026-01-22)
 
 **Note:** Version bump only for package @react-navigation/native

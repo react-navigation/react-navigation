@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.3...@react-navigation/native-stack@8.0.0-alpha.4) (2026-01-29)
+
+### Features
+
+* add missing options for formSheet ([2fb7f55](https://github.com/react-navigation/react-navigation/commit/2fb7f55a9f82a27453b8d43d7f127b5e3bc59993)) - by @satya164
+
 # [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.2...@react-navigation/native-stack@8.0.0-alpha.3) (2026-01-22)
 
 **Note:** Version bump only for package @react-navigation/native-stack
