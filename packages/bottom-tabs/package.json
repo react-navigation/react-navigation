@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/bottom-tabs",
   "description": "Bottom tab navigator following iOS design guidelines",
-  "version": "8.0.0-alpha.4",
+  "version": "8.0.0-alpha.5",
   "keywords": [
     "react-native-component",
     "react-component",
