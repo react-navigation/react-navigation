@@ -724,7 +724,7 @@ export type NativeStackNavigationOptions = {
    * @remark
    * On iOS, the native implementation might resize the the sheet w/o explicitly changing the detent level, e.g. in case of keyboard appearance.
    * In case after such resize the sheet exceeds height for which in regular scenario a dimming view would be applied - it will be applied,
-   * even in the detent has not effectively been changed.
+   * even if the detent has not effectively been changed.
    *
    * Defaults to `none`, indicating that the dimming view should be always present.
    */
