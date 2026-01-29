@@ -139,7 +139,7 @@ const MaterialSymbolRow = React.memo(function MaterialSymbolRow({
               })}
             />
           ) : (
-            <MaterialSymbol name={item} size={ICON_SIZE} color={colors.text} />
+            <MaterialSymbol name={item} size={ICON_SIZE} />
           )}
           <Text
             style={[styles.iconName, { color: colors.text }]}

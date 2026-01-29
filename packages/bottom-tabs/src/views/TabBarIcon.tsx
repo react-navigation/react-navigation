@@ -168,7 +168,13 @@ function renderIcon({
         return <SFSymbol name={iconValue.name} size={size} color={color} />;
       case 'materialSymbol':
         return (
-          <MaterialSymbol name={iconValue.name} size={size} color={color} />
+          <MaterialSymbol
+            name={iconValue.name}
+            variant={iconValue.variant}
+            weight={iconValue.weight}
+            size={size}
+            color={color}
+          />
         );
       default: {
         const _exhaustiveCheck: never = iconValue;

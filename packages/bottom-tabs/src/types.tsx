@@ -140,8 +140,6 @@ type IconSfSymbol = {
   type: 'sfSymbol';
   /**
    * Name of the SF Symbol to use as the icon.
-   *
-   * @platform ios
    */
   name: SFSymbol;
 };
@@ -151,13 +149,7 @@ type IconMaterialSymbol = {
    * - `materialSymbol` - Use a Material Symbol as the icon on Android.
    */
   type: 'materialSymbol';
-  /**
-   * Name of the Material Symbol to use as the icon.
-   *
-   * @platform android
-   */
-  name: MaterialSymbolProps['name'];
-};
+} & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight'>;
 
 type IconResource = {
   /**

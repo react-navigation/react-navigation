@@ -1,6 +1,6 @@
 import type { ColorValue } from 'react-native';
 
-import type { FontWeight } from './constants';
+import type { FONT_WEIGHTS } from './constants';
 import type { MaterialSymbolName } from './MaterialSymbolData';
 
 export type MaterialSymbolOptions = {
@@ -8,6 +8,68 @@ export type MaterialSymbolOptions = {
    * The name of the Material Symbol to display.
    */
   name: MaterialSymbolName;
+  /**
+   * The variant of the symbol.
+   *
+   * Can be customized using `react-navigation` key in `package.json`:
+   *
+   * ```json
+   * "react-navigation": {
+   *   "material-symbol": {
+   *     "fonts": [
+   *       {
+   *         "variant": "rounded",
+   *         "weight": 300,
+   *       },
+   *     ]
+   *   }
+   * }
+   * ```
+   *
+   * Automatically set if a single variant is available.
+   *
+   * @default 'outlined'
+   */
+  variant?: 'outlined' | 'rounded' | 'sharp';
+  /**
+   * The weight of the symbol.
+   *
+   * Can be customized using `react-navigation` key in `package.json`:
+   *
+   * ```json
+   * "react-navigation": {
+   *   "material-symbol": {
+   *     "fonts": [
+   *       {
+   *         "variant": "rounded",
+   *         "weight": 300,
+   *       },
+   *     ]
+   *   }
+   * }
+   * ```
+   *
+   * Only numeric weights are supported in the configuration.
+   *
+   * Automatically set if a single weight is available.
+   *
+   * @default 400
+   */
+  weight?:
+    | 'thin'
+    | 'ultralight'
+    | 'light'
+    | 'regular'
+    | 'medium'
+    | 'semibold'
+    | 'bold'
+    | 100
+    | 200
+    | 300
+    | 400
+    | 500
+    | 600
+    | 700;
   /**
    * The size of the symbol.
    *
@@ -116,7 +178,9 @@ export type SFSymbolOptions = {
    *
    * @default 'regular'
    */
-  weight?: FontWeight;
+  weight?:
+    | keyof typeof FONT_WEIGHTS
+    | (typeof FONT_WEIGHTS)[keyof typeof FONT_WEIGHTS];
   /**
    * The scale of the symbol relative to the font size.
    *

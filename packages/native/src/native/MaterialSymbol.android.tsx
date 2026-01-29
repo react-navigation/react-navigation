@@ -1,10 +1,12 @@
 import {
   type ImageSourcePropType,
   PixelRatio,
+  PlatformColor,
   processColor,
   type ViewProps,
 } from 'react-native';
 
+import { FONT_WEIGHTS } from './constants';
 import MaterialSymbolViewNativeComponent from './MaterialSymbolViewNativeComponent';
 import NativeMaterialSymbolModule from './NativeMaterialSymbolModule';
 import type { MaterialSymbolOptions } from './types';
@@ -13,16 +15,20 @@ export type MaterialSymbolProps = MaterialSymbolOptions & ViewProps;
 
 const imageSourceCache = new Map<string, ImageSourcePropType>();
 
+const DEFAULT_COLOR = PlatformColor('?attr/colorForeground');
+
 export function MaterialSymbol({
   name,
+  weight,
   size = 24,
-  color = 'black',
+  color = DEFAULT_COLOR,
   style,
   ...rest
 }: MaterialSymbolProps): React.ReactElement {
   return (
     <MaterialSymbolViewNativeComponent
       name={name}
+      weight={typeof weight === 'string' ? FONT_WEIGHTS[weight] : (weight ?? 0)}
       size={size}
       color={color}
       style={[
@@ -39,12 +45,11 @@ export function MaterialSymbol({
 
 MaterialSymbol.getImageSource = ({
   name,
+  variant,
+  weight,
   size = 24,
   color = 'black',
 }: MaterialSymbolOptions): ImageSourcePropType => {
-  const variant = undefined;
-  const weight = undefined;
-
   const processedColor = processColor(color);
 
   if (processedColor == null) {
@@ -63,7 +68,7 @@ MaterialSymbol.getImageSource = ({
   const uri = NativeMaterialSymbolModule.getImageSource(
     name,
     variant,
-    weight,
+    typeof weight === 'string' ? FONT_WEIGHTS[weight] : weight,
     size,
     { value: processedColor }
   );

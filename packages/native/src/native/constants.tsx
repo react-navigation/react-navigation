@@ -9,7 +9,3 @@ export const FONT_WEIGHTS = {
   extrabold: 800,
   black: 900,
 } as const;
-
-export type FontWeight =
-  | keyof typeof FONT_WEIGHTS
-  | (typeof FONT_WEIGHTS)[keyof typeof FONT_WEIGHTS];
