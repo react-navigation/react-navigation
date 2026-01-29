@@ -5,7 +5,6 @@ import {
   type ViewProps,
 } from 'react-native';
 
-import { MATERIAL_SYMBOL_FONT_HASHES } from './MaterialSymbolData';
 import MaterialSymbolViewNativeComponent from './MaterialSymbolViewNativeComponent';
 import NativeMaterialSymbolModule from './NativeMaterialSymbolModule';
 import type { MaterialSymbolOptions } from './types';
@@ -21,14 +20,9 @@ export function MaterialSymbol({
   style,
   ...rest
 }: MaterialSymbolProps): React.ReactElement {
-  const variant = 'outlined';
-  const weight = 400;
-
   return (
     <MaterialSymbolViewNativeComponent
       name={name}
-      variant={variant}
-      weight={weight}
       size={size}
       color={color}
       style={[
@@ -48,10 +42,9 @@ MaterialSymbol.getImageSource = ({
   size = 24,
   color = 'black',
 }: MaterialSymbolOptions): ImageSourcePropType => {
-  const variant = 'outlined';
-  const weight = 400;
+  const variant = undefined;
+  const weight = undefined;
 
-  const hash = MATERIAL_SYMBOL_FONT_HASHES[`${variant}-${weight}`];
   const processedColor = processColor(color);
 
   if (processedColor == null) {
@@ -60,7 +53,7 @@ MaterialSymbol.getImageSource = ({
 
   const scale = PixelRatio.get();
 
-  const cacheKey = `${name}:${variant}:${weight}:${size}:${scale}:${JSON.stringify(processedColor)}:${hash}`;
+  const cacheKey = `${name}:${variant}:${weight}:${size}:${scale}:${JSON.stringify(processedColor)}`;
   const cached = imageSourceCache.get(cacheKey);
 
   if (cached !== undefined) {
@@ -70,10 +63,9 @@ MaterialSymbol.getImageSource = ({
   const uri = NativeMaterialSymbolModule.getImageSource(
     name,
     variant,
-    size,
     weight,
-    { value: processedColor },
-    hash
+    size,
+    { value: processedColor }
   );
 
   const source: ImageSourcePropType = {

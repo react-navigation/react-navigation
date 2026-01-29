@@ -1,3 +1,5 @@
+import groovy.json.JsonSlurper
+
 buildscript {
   ext.ReactNavigation = [
     kotlinVersion: "2.0.21",
@@ -58,15 +60,87 @@ android {
   }
 }
 
-task copyAssets(type: Copy) {
-  from "../assets/fonts"
-  include "*.ttf"
-  into "${buildDir}/intermediates/react-navigation/fonts"
+tasks.register('copyMaterialFonts', Copy) {
+  def packageJsonFile = file(rootDir.path + "/../package.json")
+  def fontsConfig = null
+
+  if (packageJsonFile.exists()) {
+    def packageJson = new JsonSlurper().parse(packageJsonFile)
+
+    fontsConfig = packageJson["react-navigation"]?.get("material-symbols")?.get("fonts")
+  }
+
+  fontsConfig = fontsConfig != null ? fontsConfig : [[variant: "outlined", weights: [400]]]
+
+  def assetsFontsDir = file("../assets/fonts")
+  def availableFonts = assetsFontsDir.listFiles()
+    ?.findAll { it.name.startsWith("MaterialSymbols") && it.name.endsWith(".ttf") }
+    ?.collect { it.name.replaceFirst(/^MaterialSymbols/, '').replaceFirst(/\.ttf$/, '') } ?: []
+
+  def validVariants = availableFonts.collect { it.split('_')[0].toLowerCase() }.unique().sort()
+  def validWeights = availableFonts.collect { it.split('_')[1] as int }.unique().sort()
+
+  def errors = [] as Set
+
+  fontsConfig.each { font ->
+    if (font.variant && !validVariants.contains(font.variant.toLowerCase())) {
+      errors << "Invalid font variant: ${font.variant}"
+    }
+
+    font.weights.each { weight ->
+      if (!validWeights.contains(weight)) {
+        errors << "Invalid font weight: ${weight}"
+      }
+    }
+  }
+
+  if (errors) {
+    throw new GradleException(
+      errors.join("\n") + "\n\nAvailable variants: ${validVariants.join(", ")}.\nAvailable weights: ${validWeights.join(", ")}."
+    )
+  }
+
+  def fontFiles = fontsConfig.collectMany { font ->
+    def variant = font.variant?.capitalize() ?: ""
+
+    font.weights.collect { weight -> "MaterialSymbols${variant}_${weight}.ttf" }
+  }
+
+  if (fontFiles) {
+    from(assetsFontsDir) { include fontFiles }
+  }
+
+  into layout.buildDirectory.dir("intermediates/react-navigation/fonts")
+
+  doFirst {
+    if (destinationDir.exists()) {
+      def extraFiles = destinationDir.listFiles()?.findAll { file -> !fontFiles.contains(file.name) }
+
+      extraFiles?.each { file -> file.delete() }
+    }
+  }
+
+  doLast {
+    def digest = java.security.MessageDigest.getInstance("MD5")
+
+    fontFiles.sort().each { name ->
+      def fontFile = new File(assetsFontsDir, name)
+
+      if (fontFile.exists()) {
+        digest.update(fontFile.bytes)
+      }
+    }
+
+    def hash = digest.digest().encodeHex().toString().take(8)
+    def hashFile = new File(destinationDir, "MaterialSymbols.hash")
+
+    hashFile.text = hash
+  }
 }
 
-android.sourceSets.main.assets.srcDirs += file("${buildDir}/intermediates/react-navigation")
+android.sourceSets.main.assets.srcDirs += layout.buildDirectory.dir("intermediates/react-navigation")
 
-preBuild.dependsOn(copyAssets)
+preBuild.dependsOn(copyMaterialFonts)
 
 dependencies {
   implementation "com.facebook.react:react-android"

@@ -12,6 +12,10 @@ class MaterialSymbolView @JvmOverloads constructor(
   private var variant: String? = null
   private var weight: Int? = null
 
+  init {
+    updateTypeface()
+  }
+
   override fun onDraw(canvas: Canvas) {
     val text = text?.toString() ?: return
 
@@ -30,25 +34,29 @@ class MaterialSymbolView @JvmOverloads constructor(
   }
 
   fun setVariant(variant: String) {
-    if (this.variant == variant) {
+    val resolvedVariant = variant.ifEmpty { null }
+
+    if (this.variant == resolvedVariant) {
       return
     }
 
-    this.variant = variant
+    this.variant = resolvedVariant
     updateTypeface()
   }
 
   fun setWeight(weight: Int) {
-    if (this.weight == weight) {
+    val resolvedWeight = weight.takeIf { it != 0 }
+
+    if (this.weight == resolvedWeight) {
       return
     }
 
-    this.weight = weight
+    this.weight = resolvedWeight
     updateTypeface()
   }
 
   private fun updateTypeface() {
-    setTypeface(MaterialSymbolTypeface.get(context, variant, weight))
+    setTypeface(MaterialSymbolTypeface.get(context, variant, weight).typeface)
     invalidate()
   }
 

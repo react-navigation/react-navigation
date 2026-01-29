@@ -5,13 +5,12 @@ import { type TurboModule, TurboModuleRegistry } from 'react-native';
 export interface Spec extends TurboModule {
   getImageSource(
     name: string,
-    variant: string,
+    variant: string | undefined,
+    weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | undefined,
     size: number,
-    weight: 100 | 200 | 300 | 400 | 500 | 600 | 700,
     // Codegen requires using `Object` instead of `object
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
-    color: Object,
-    hash: string
+    color: Object
   ): string;
 }
 

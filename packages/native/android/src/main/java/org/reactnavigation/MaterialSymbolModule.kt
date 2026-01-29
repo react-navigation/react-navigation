@@ -26,8 +26,13 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
   }
 
+  private val fontHash: String by lazy {
+    reactApplicationContext.assets.open("fonts/MaterialSymbols.hash").bufferedReader().readText()
+      .trim()
+  }
+
   override fun getImageSource(
-    name: String, variant: String, size: Double, weight: Double, color: ReadableMap, hash: String
+    name: String, variant: String?, weight: Double?, size: Double, color: ReadableMap
   ): String {
     val colorValue = color.getDynamic("value").let {
       when (it.type) {
@@ -43,8 +48,13 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     val density = reactApplicationContext.resources.displayMetrics.density
     val scaledSize = (size * density).roundToInt().coerceAtLeast(1)
 
+    val (resolvedTypeface, typefaceSuffix) = MaterialSymbolTypeface.get(
+      reactApplicationContext, variant, weight?.toInt()
+    )
+
     val cacheDir = File(
-      reactApplicationContext.cacheDir, "react_navigation/material_symbols/$variant-$weight/$hash"
+      reactApplicationContext.cacheDir,
+      "react_navigation/material_symbols/$typefaceSuffix/$fontHash"
     )
 
     val cacheKey = "${name.hashCode()}_${scaledSize}_$resolvedColor"
@@ -55,14 +65,14 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     }
 
     scope.launch {
-      cacheDir.parentFile?.listFiles { it.isDirectory && it.name != hash }
+      cacheDir.parentFile?.listFiles { it.isDirectory && it.name != fontHash }
         ?.forEach { it.deleteRecursively() }
     }
 
     cacheDir.mkdirs()
 
     val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-      typeface = MaterialSymbolTypeface.get(reactApplicationContext, variant, weight.toInt())
+      typeface = resolvedTypeface
       textSize = scaledSize.toFloat()
       textAlign = Paint.Align.CENTER
 
