@@ -31,32 +31,38 @@ class MaterialSymbolView @JvmOverloads constructor(
 
   fun setName(name: String) {
     text = name
+
+    invalidate()
   }
 
   fun setVariant(variant: String) {
-    val resolvedVariant = variant.ifEmpty { null }
-
-    if (this.variant == resolvedVariant) {
+    if (this.variant == variant) {
       return
     }
 
-    this.variant = resolvedVariant
+    this.variant = variant
+
     updateTypeface()
   }
 
   fun setWeight(weight: Int) {
-    val resolvedWeight = weight.takeIf { it != 0 }
-
-    if (this.weight == resolvedWeight) {
+    if (this.weight == weight) {
       return
     }
 
-    this.weight = resolvedWeight
+    this.weight = weight
+
     updateTypeface()
   }
 
   private fun updateTypeface() {
-    setTypeface(MaterialSymbolTypeface.get(context, variant, weight).typeface)
+    setTypeface(
+      MaterialSymbolTypeface.get(
+        context,
+        variant?.ifEmpty { null },
+        weight.takeIf { it != 0 }).typeface
+    )
+
     invalidate()
   }
 
