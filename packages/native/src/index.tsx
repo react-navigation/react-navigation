@@ -7,6 +7,15 @@ export {
   type MaterialSymbolProps,
 } from './native/MaterialSymbol';
 export { SFSymbol, type SFSymbolProps } from './native/SFSymbol';
+export type {
+  SFSymbolAnimation,
+  SFSymbolAnimationConfig,
+  SFSymbolAnimationEffect,
+  SFSymbolMode,
+  SFSymbolOptions,
+  SFSymbolScale,
+  SFSymbolWeight,
+} from './native/types';
 export { NavigationContainer } from './NavigationContainer';
 export { ServerContainer } from './ServerContainer';
 export { DarkTheme } from './theming/DarkTheme';

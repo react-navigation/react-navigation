@@ -45,6 +45,27 @@ static ReactNavigationSFSymbolViewImplProps *convertProps(const Props::Shared &p
     swiftProps.name = RCTNSStringFromString(viewProps.name);
     swiftProps.size = viewProps.size;
     swiftProps.color = RCTUIColorFromSharedColor(viewProps.color);
+    swiftProps.weight = viewProps.weight;
+    swiftProps.scale = RCTNSStringFromString(viewProps.scale);
+    swiftProps.mode = RCTNSStringFromString(viewProps.mode);
+    swiftProps.animation = RCTNSStringFromString(viewProps.animation);
+    swiftProps.animationRepeating = viewProps.animationRepeating;
+    swiftProps.animationRepeatCount = viewProps.animationRepeatCount;
+    swiftProps.animationSpeed = viewProps.animationSpeed;
+    swiftProps.animationWholeSymbol = viewProps.animationWholeSymbol;
+    swiftProps.animationDirection = RCTNSStringFromString(viewProps.animationDirection);
+    swiftProps.animationReversing = viewProps.animationReversing;
+    swiftProps.animationCumulative = viewProps.animationCumulative;
+
+    if (viewProps.colorPrimary) {
+        swiftProps.colorPrimary = RCTUIColorFromSharedColor(viewProps.colorPrimary);
+    }
+    if (viewProps.colorSecondary) {
+        swiftProps.colorSecondary = RCTUIColorFromSharedColor(viewProps.colorSecondary);
+    }
+    if (viewProps.colorTertiary) {
+        swiftProps.colorTertiary = RCTUIColorFromSharedColor(viewProps.colorTertiary);
+    }
 
     return swiftProps;
 }
