@@ -10,7 +10,21 @@ import {
 export interface NativeProps extends ViewProps {
   name: string;
   size: CodegenTypes.Float;
-  color: ColorValue;
+  color?: ColorValue;
+  weight: CodegenTypes.Int32;
+  scale: string;
+  mode: string;
+  colorPrimary?: ColorValue;
+  colorSecondary?: ColorValue;
+  colorTertiary?: ColorValue;
+  animation: string;
+  animationRepeating: boolean;
+  animationRepeatCount: CodegenTypes.Int32;
+  animationSpeed: CodegenTypes.Float;
+  animationWholeSymbol: boolean;
+  animationDirection: string;
+  animationReversing: boolean;
+  animationCumulative: boolean;
 }
 
 export default codegenNativeComponent<NativeProps>(

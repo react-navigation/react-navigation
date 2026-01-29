@@ -8,14 +8,14 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-type Props<T extends string> = {
+type Props<T extends string | number> = {
   choices: { label: string; value: T }[];
   value: T;
   onValueChange: (value: T) => void;
   style?: StyleProp<ViewStyle>;
 };
 
-export function SegmentedPicker<T extends string>({
+export function SegmentedPicker<T extends string | number>({
   choices,
   value,
   onValueChange,
