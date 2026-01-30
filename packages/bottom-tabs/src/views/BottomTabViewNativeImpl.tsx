@@ -434,6 +434,9 @@ function getPlatformIcon(icon: BottomTabIcon): PlatformIcon {
           type: 'imageSource',
           imageSource: MaterialSymbol.getImageSource({
             name: icon.name,
+            variant: icon.variant,
+            weight: icon.weight,
+            size: ICON_SIZE,
           }),
         },
         shared: undefined,
