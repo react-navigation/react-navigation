@@ -647,6 +647,45 @@ createStackNavigator({
 });
 
 /**
+ * Verify screen component receives both route and navigation props.
+ * This tests that ParamsForScreenComponent correctly infers params
+ * from components using StaticScreenProps (which includes navigation).
+ */
+createStackNavigator({
+  screens: {
+    UserProfile: createStackScreen({
+      screen: ({
+        route,
+        navigation,
+      }: StaticScreenProps<{ userId: string; isAdmin?: boolean }>) => {
+        // Verify route.params has correct type
+        expectTypeOf(route.params).toEqualTypeOf<{
+          userId: string;
+          isAdmin?: boolean;
+        }>();
+
+        // Verify navigation is available with expected methods
+        expectTypeOf(navigation.goBack).toBeFunction();
+        expectTypeOf(navigation.isFocused).toBeFunction();
+
+        return null;
+      },
+      options: ({ route }) => {
+        // Verify params are also correctly inferred in options callback
+        expectTypeOf(route.params).toEqualTypeOf<{
+          userId: string;
+          isAdmin?: boolean;
+        }>();
+
+        return {
+          title: route.params.userId,
+        };
+      },
+    }),
+  },
+});
+
+/**
  * Handle screen component without optional params
  */
 createStackNavigator({
