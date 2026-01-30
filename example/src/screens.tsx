@@ -66,7 +66,7 @@ export const SCREENS = {
   MaterialSymbols,
 } as const satisfies {
   [key: string]:
-    | (React.ComponentType<{ route: any }> & {
+    | (React.ComponentType<{ route: any; navigation: any }> & {
         title: string;
         linking: object | undefined;
         options?: object;

@@ -10,6 +10,7 @@ import type {
   DefaultNavigatorOptions,
   EventMapBase,
   NavigationListBase,
+  NavigationProp,
   NavigatorScreenParams,
   NavigatorTypeBagBase,
   PathConfig,
@@ -18,6 +19,7 @@ import type {
   ScreenListeners,
   Theme,
 } from './types';
+import { useNavigation } from './useNavigation';
 import { useRoute } from './useRoute';
 import type {
   AnyToUnknown,
@@ -34,12 +36,16 @@ import type {
 
 type ParamsForScreenComponent<T> = T extends (...args: any[]) => any
   ? HasArguments<T> extends true
-    ? T extends React.ComponentType<{ route: { params: infer Params } }>
-      ? Params
+    ? T extends React.ComponentType<infer Props>
+      ? Props extends { route: { params: infer Params } }
+        ? Params
+        : undefined
       : undefined
     : undefined
-  : T extends React.ComponentType<{ route: { params: infer Params } }>
-    ? Params
+  : T extends React.ComponentType<infer Props>
+    ? Props extends { route: { params: infer Params } }
+      ? Params
+      : undefined
     : undefined;
 
 type ParamsForScreen<T> =
@@ -484,11 +490,17 @@ type StaticConfigInternal<
 /**
  * Props for a screen component which is rendered by a static navigator.
  * Takes the route params as a generic argument.
+ *
+ * Includes both `navigation` and `route` props for parity with the dynamic API.
  */
-export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
+export type StaticScreenProps<
+  T extends Record<string, unknown> | undefined,
+  N = NavigationProp<ParamListBase>,
+> = {
   route: {
     params: T;
   };
+  navigation: N;
 };
 
 /**
@@ -512,8 +524,9 @@ export type StaticNavigation<NavigatorProps, GroupProps, ScreenProps> = {
 
 const MemoizedScreen = React.memo(
   <T extends React.ComponentType<any>>({ component }: { component: T }) => {
+    const navigation = useNavigation();
     const route = useRoute();
-    const children = React.createElement(component, { route });
+    const children = React.createElement(component, { navigation, route });
 
     return children;
   }

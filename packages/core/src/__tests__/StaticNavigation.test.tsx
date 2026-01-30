@@ -60,6 +60,15 @@ const TestScreen = ({ route }: any) => {
   );
 };
 
+const TestScreenWithNavigation = ({ route, navigation }: any) => {
+  return (
+    <>
+      Screen:{route.name}
+      {navigation ? '(has navigation)' : '(no navigation)'}
+    </>
+  );
+};
+
 test('renders the specified nested navigator configuration', () => {
   const Nested = createTestNavigator({
     screens: {
@@ -1624,4 +1633,38 @@ test('merges parse and stringify options from group and screen linking', () => {
   expect(Profile?.stringify).toHaveProperty('tab');
   expect(Profile?.stringify).toHaveProperty('sharedParam');
   expect(Profile?.path).toBe('users/:userId/profile/:tab');
+});
+
+test('passes navigation prop to screen components for parity with dynamic API', () => {
+  const Root = createTestNavigator({
+    screens: {
+      Home: TestScreenWithNavigation,
+      Settings: {
+        screen: TestScreenWithNavigation,
+      },
+    },
+  });
+
+  const Component = createComponentForStaticNavigation(Root, 'RootNavigator');
+
+  const element = render(
+    <BaseNavigationContainer>
+      <Component />
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`
+    <main>
+      <div>
+        Screen:
+        Home
+        (has navigation)
+      </div>
+      <div>
+        Screen:
+        Settings
+        (has navigation)
+      </div>
+    </main>
+  `);
 });
