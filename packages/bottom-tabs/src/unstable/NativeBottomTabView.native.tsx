@@ -213,6 +213,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
             tabBarSystemItem,
             tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
             tabBarStyle,
+            overrideScrollViewContentInsetAdjustmentBehavior,
           } = options;
 
           const {
@@ -294,6 +295,9 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
                   scrollToTop: true,
                 },
               }}
+              overrideScrollViewContentInsetAdjustmentBehavior={
+                overrideScrollViewContentInsetAdjustmentBehavior
+              }
               experimental_userInterfaceStyle={dark ? 'dark' : 'light'}
             >
               <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
