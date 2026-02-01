@@ -31,7 +31,12 @@ import { type Thenable, useThenable } from './useThenable';
 declare global {
   var REACT_NAVIGATION_DEVTOOLS: WeakMap<
     NavigationContainerRef<any>,
-    { readonly linking: LinkingOptions<any> }
+    {
+      readonly linking: LinkingOptions<any>;
+      readonly listeners: Set<
+        (data: { type: 'deeplink'; url: string }) => void
+      >;
+    }
   >;
 }
 
@@ -150,9 +155,15 @@ function NavigationContainerInner(
   // This will be used by the devtools
   React.useEffect(() => {
     if (refContainer.current) {
+      const previous = REACT_NAVIGATION_DEVTOOLS.get(refContainer.current);
+      const listeners = previous?.listeners ?? new Set();
+
       REACT_NAVIGATION_DEVTOOLS.set(refContainer.current, {
         get linking() {
           return linkingConfig.options;
+        },
+        get listeners() {
+          return listeners;
         },
       });
     }

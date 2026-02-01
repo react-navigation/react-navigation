@@ -38,9 +38,16 @@ type EventData = {
   };
 };
 
+type DeepLinkData = {
+  type: 'deeplink';
+  url: string;
+};
+
+type ResultData = InitData | ActionData | EventData | DeepLinkData;
+
 export function useDevToolsBase(
   ref: React.RefObject<NavigationContainerRef<any> | null>,
-  callback: (result: InitData | ActionData | EventData) => void
+  callback: (result: ResultData) => void
 ) {
   const lastStateRef = React.useRef<NavigationState | undefined>(undefined);
   const lastActionRef = React.useRef<
@@ -109,7 +116,7 @@ export function useDevToolsBase(
 
   const pendingPromiseRef = React.useRef<Promise<void>>(Promise.resolve());
 
-  const send = React.useCallback((data: ActionData) => {
+  const send = React.useCallback((data: ResultData) => {
     // We need to make sure that our callbacks executed in the same order
     // So we add check if the last promise is settled before sending the next one
     pendingPromiseRef.current = pendingPromiseRef.current
@@ -118,7 +125,7 @@ export function useDevToolsBase(
       })
       .then(async () => {
         // eslint-disable-next-line promise/always-return
-        if (data.stack) {
+        if ('stack' in data && data.stack) {
           let stack: string | undefined;
 
           try {
@@ -135,10 +142,14 @@ export function useDevToolsBase(
   }, []);
 
   React.useEffect(() => {
-    let timer: any;
+    let cleaned = false;
+
+    let timer: NodeJS.Timeout;
+    let navigation: NavigationContainerRef<any> | undefined;
     let unsubscribeAction: (() => void) | undefined;
     let unsubscribeState: (() => void) | undefined;
     let unsubscribeEvent: (() => void) | undefined;
+    let unsubscribeDeepLink: (() => void) | undefined;
 
     const initialize = async () => {
       if (!ref.current) {
@@ -148,16 +159,25 @@ export function useDevToolsBase(
             if (ref.current) {
               resolve();
               clearTimeout(timer);
+
               const state = ref.current.getRootState();
 
               lastStateRef.current = state;
-              callbackRef.current({ type: 'init', state });
+              send({ type: 'init', state });
             }
           }, 100);
         });
       }
 
-      const navigation = ref.current!;
+      if (cleaned) {
+        return;
+      }
+
+      if (!ref.current) {
+        return;
+      }
+
+      navigation = ref.current;
 
       unsubscribeAction = navigation.addListener('__unsafe_action__', (e) => {
         const action = e.data.action;
@@ -176,7 +196,7 @@ export function useDevToolsBase(
       });
 
       unsubscribeEvent = navigation.addListener('__unsafe_event__', (e) => {
-        callbackRef.current({
+        send({
           type: 'event',
           event: e.data,
         });
@@ -192,7 +212,7 @@ export function useDevToolsBase(
           return;
         }
 
-        const state = navigation.getRootState();
+        const state = navigation?.getRootState();
         const lastState = lastStateRef.current;
         const lastChange = lastActionRef.current;
 
@@ -211,14 +231,29 @@ export function useDevToolsBase(
           stack: lastChange?.stack,
         });
       });
+
+      // This is set in NavigationContainer
+      // Using @ts-expect-error results in error in IDE, so using `any` for now
+      const listeners = (globalThis as any).REACT_NAVIGATION_DEVTOOLS?.get(
+        navigation
+      )?.listeners;
+
+      listeners?.add(send);
+
+      unsubscribeDeepLink = () => {
+        listeners?.delete(send);
+      };
     };
 
     initialize();
 
     return () => {
+      cleaned = true;
+
       unsubscribeAction?.();
       unsubscribeEvent?.();
       unsubscribeState?.();
+      unsubscribeDeepLink?.();
       clearTimeout(timer);
     };
   }, [ref, send]);

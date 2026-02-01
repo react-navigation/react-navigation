@@ -38,7 +38,9 @@ export function useLogger(
   useDevToolsBase(ref, (result) => {
     const log = [[`${result.type} `, 'color: gray; font-weight: lighter']];
 
-    if (result.type === 'event') {
+    if (result.type === 'deeplink') {
+      log.push([`${result.url} `, `color: ${valueColor}; font-weight: bold`]);
+    } else if (result.type === 'event') {
       // Ignore high-frequency events to reduce noise in the logs
       const IGNORED_EVENTS = [
         'focus',

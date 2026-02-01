@@ -165,6 +165,12 @@ export function useLinking(
       if (navigation && state) {
         const action = getActionFromStateRef.current(state, configRef.current);
 
+        REACT_NAVIGATION_DEVTOOLS.get(navigation)?.listeners.forEach(
+          (listener) => {
+            listener({ type: 'deeplink', url });
+          }
+        );
+
         if (action !== undefined) {
           try {
             navigation.dispatch(action);
