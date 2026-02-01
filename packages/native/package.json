@@ -30,12 +30,23 @@
   },
   "files": [
     "src",
-    "assets",
     "lib",
-    "ios",
+    "assets",
     "android",
-    "ReactNavigation.podspec",
-    "!**/__tests__"
+    "ios",
+    "cpp",
+    "*.podspec",
+    "react-native.config.js",
+    "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
   ],
   "sideEffects": false,
   "publishConfig": {
