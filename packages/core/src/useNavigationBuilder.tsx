@@ -797,7 +797,12 @@ export function useNavigationBuilder<
 
     listeners.forEach((listener) => listener?.(e));
 
-    onEmitEvent(e);
+    onEmitEvent({
+      type: e.type,
+      data: e.data,
+      target: e.target,
+      defaultPrevented: e.defaultPrevented,
+    });
   });
 
   useFocusEvents({ state, emitter });

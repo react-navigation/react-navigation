@@ -28,9 +28,19 @@ type ActionData = {
   stack: string | undefined;
 };
 
+type EventData = {
+  type: 'event';
+  event: {
+    type: string;
+    defaultPrevented: boolean | undefined;
+    target: string | undefined;
+    data: unknown;
+  };
+};
+
 export function useDevToolsBase(
   ref: React.RefObject<NavigationContainerRef<any> | null>,
-  callback: (result: InitData | ActionData) => void
+  callback: (result: InitData | ActionData | EventData) => void
 ) {
   const lastStateRef = React.useRef<NavigationState | undefined>(undefined);
   const lastActionRef = React.useRef<
@@ -128,6 +138,7 @@ export function useDevToolsBase(
     let timer: any;
     let unsubscribeAction: (() => void) | undefined;
     let unsubscribeState: (() => void) | undefined;
+    let unsubscribeEvent: (() => void) | undefined;
 
     const initialize = async () => {
       if (!ref.current) {
@@ -162,6 +173,13 @@ export function useDevToolsBase(
         } else {
           lastActionRef.current = e.data;
         }
+      });
+
+      unsubscribeEvent = navigation.addListener('__unsafe_event__', (e) => {
+        callbackRef.current({
+          type: 'event',
+          event: e.data,
+        });
       });
 
       unsubscribeState = navigation.addListener('state', (e) => {
@@ -199,6 +217,7 @@ export function useDevToolsBase(
 
     return () => {
       unsubscribeAction?.();
+      unsubscribeEvent?.();
       unsubscribeState?.();
       clearTimeout(timer);
     };

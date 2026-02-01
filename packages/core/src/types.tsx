@@ -835,7 +835,24 @@ export type NavigationContainerEventMap = {
    * This event will be emitted after all listeners have been called.
    */
   __unsafe_event__: {
-    data: EventArg<string, boolean, object | undefined>;
+    data: {
+      /**
+       * The type of the event that was emitted.
+       */
+      type: string;
+      /**
+       * The data object passed when emitting the event.
+       */
+      data: unknown;
+      /**
+       * The key of the target route which received the event.
+       */
+      target: string | undefined;
+      /**
+       * Whether `event.preventDefault()` was called on this event.
+       */
+      defaultPrevented: boolean | undefined;
+    };
   };
 };
 

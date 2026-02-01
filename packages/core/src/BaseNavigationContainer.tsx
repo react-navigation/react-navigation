@@ -21,7 +21,6 @@ import { NavigationIndependentTreeContext } from './NavigationIndependentTreeCon
 import { NavigationStateContext } from './NavigationStateContext';
 import { ThemeProvider } from './theming/ThemeProvider';
 import type {
-  EventArg,
   NavigationContainerEventMap,
   NavigationContainerProps,
   NavigationContainerRef,
@@ -238,7 +237,12 @@ export const BaseNavigationContainer = React.forwardRef(
     );
 
     const onEmitEvent = useLatestCallback(
-      (event: EventArg<string, boolean, object | undefined>) => {
+      (event: {
+        type: string;
+        defaultPrevented: boolean | undefined;
+        target: string | undefined;
+        data: unknown;
+      }) => {
         emitter.emit({
           type: '__unsafe_event__',
           data: event,
