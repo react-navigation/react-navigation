@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@8.0.0-alpha.2...@react-navigation/devtools@8.0.0-alpha.3) (2026-02-01)
+
+### Features
+
+* log events in logger devtools ([8ad920b](https://github.com/react-navigation/react-navigation/commit/8ad920b200af5f20310bfab23198619ecb39d357)) - by @
+* show deep links in dev tools ([3b56546](https://github.com/react-navigation/react-navigation/commit/3b565466adcd0beebc5ae6dcefb821879d602e39)) - by @
+
 # [8.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@8.0.0-alpha.1...@react-navigation/devtools@8.0.0-alpha.2) (2026-01-19)
 
 **Note:** Version bump only for package @react-navigation/devtools

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.5...@react-navigation/bottom-tabs@8.0.0-alpha.6) (2026-02-01)
+
+### Bug Fixes
+
+* handle variant and weight for material symbol in native tabs ([effd42f](https://github.com/react-navigation/react-navigation/commit/effd42f1ad5ef2c837e5abab3060eaaee30b0337)) - by @satya164
+
+### Features
+
+* add support for disabling overrideScrollViewContentInsetAdjustmentBehavior ([6f06cca](https://github.com/react-navigation/react-navigation/commit/6f06cca24b3767f812ddd54aa94b833c20748382)) - by @
+
 # [8.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.4...@react-navigation/bottom-tabs@8.0.0-alpha.5) (2026-01-29)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.5...@react-navigation/native@8.0.0-alpha.6) (2026-02-01)
+
+### Features
+
+* show deep links in dev tools ([3b56546](https://github.com/react-navigation/react-navigation/commit/3b565466adcd0beebc5ae6dcefb821879d602e39)) - by @
+
 # [8.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.4...@react-navigation/native@8.0.0-alpha.5) (2026-01-29)
 
 ### Bug Fixes

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.2...@react-navigation/core@8.0.0-alpha.3) (2026-02-01)
+
+### Features
+
+* add an __unsafe_event__ event to container ref ([86ea025](https://github.com/react-navigation/react-navigation/commit/86ea025179a878d537a4ad7c6c4cf20e4ba57cd9)) - by @
+* log events in logger devtools ([8ad920b](https://github.com/react-navigation/react-navigation/commit/8ad920b200af5f20310bfab23198619ecb39d357)) - by @
+
 # [8.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.1...@react-navigation/core@8.0.0-alpha.2) (2026-01-19)
 
 **Note:** Version bump only for package @react-navigation/core
