@@ -19,6 +19,7 @@ import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
+import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationMetaContext } from './NavigationMetaContext';
 import { NavigationRouteContext } from './NavigationProvider';
@@ -742,6 +743,8 @@ export function useNavigationBuilder<
     );
   });
 
+  const { onEmitEvent } = React.useContext(NavigationBuilderContext);
+
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
     const routeNames = [];
 
@@ -793,6 +796,8 @@ export function useNavigationBuilder<
       .filter((cb, i, self) => cb && self.lastIndexOf(cb) === i);
 
     listeners.forEach((listener) => listener?.(e));
+
+    onEmitEvent(e);
   });
 
   useFocusEvents({ state, emitter });

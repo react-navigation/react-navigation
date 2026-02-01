@@ -189,6 +189,9 @@ export type EventArg<
    * Type of the event (e.g. `focus`, `blur`)
    */
   readonly type: EventName;
+  /**
+   * Key of the route which received the event.
+   */
   readonly target?: string;
 } & (CanPreventDefault extends true
   ? {
@@ -825,6 +828,14 @@ export type NavigationContainerEventMap = {
        */
       stack: string | undefined;
     };
+  };
+  /**
+   * Event that fires when an event is emitted.
+   * Only intended for debugging purposes, don't use it for app logic.
+   * This event will be emitted after all listeners have been called.
+   */
+  __unsafe_event__: {
+    data: EventArg<string, boolean, object | undefined>;
   };
 };
 

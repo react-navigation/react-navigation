@@ -5,7 +5,7 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import type { NavigationHelpers } from './types';
+import type { EventArg, NavigationHelpers } from './types';
 
 export type ListenerMap = {
   action: ChildActionListener;
@@ -60,12 +60,14 @@ export const NavigationBuilderContext = React.createContext<{
   addKeyedListener?: AddKeyedListener;
   onRouteFocus?: (key: string) => void;
   onDispatchAction: (action: NavigationAction, noop: boolean) => void;
+  onEmitEvent: (event: EventArg<string, boolean, object | undefined>) => void;
   onOptionsChange: (options: object) => void;
   scheduleUpdate: (callback: () => void) => void;
   flushUpdates: () => void;
   stackRef?: React.MutableRefObject<string | undefined>;
 }>({
   onDispatchAction: () => undefined,
+  onEmitEvent: () => undefined,
   onOptionsChange: () => undefined,
   scheduleUpdate: () => {
     throw new Error("Couldn't find a context for scheduling updates.");
