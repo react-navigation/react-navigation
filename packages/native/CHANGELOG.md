@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.6...@react-navigation/native@8.0.0-alpha.7) (2026-02-01)
+
+### Bug Fixes
+
+* don't ship build artifacts with npm package ([7af792a](https://github.com/react-navigation/react-navigation/commit/7af792afbfab6b4461cd9f9a8503341db4f2a071)) - by @
+
 # [8.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.5...@react-navigation/native@8.0.0-alpha.6) (2026-02-01)
 
 ### Features
