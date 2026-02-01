@@ -440,6 +440,27 @@ type BottomTabNativeOptions = {
     right?: ScrollEdgeEffect;
     top?: ScrollEdgeEffect;
   };
+
+  /**
+   * Specifies whether `contentInsetAdjustmentBehavior` of the `ScrollView`
+   * in the screen is automatically adjusted.
+   *
+   * `react-native`'s `ScrollView`s has `contentInsetAdjustmentBehavior` set to `never` by default.
+   * To provide a better UX, it is overridden to `automatic` - so it respects the tab bar.
+   * Otherwise, content can get hidden behind the tab bar as it's translucent on iOS 26+.
+   *
+   * Note that this only affects the `ScrollView` in first descendant chain of the screen,
+   * i.e., first view of each nested view is checked until a `ScrollView` is found.
+   *
+   * To disable this behavior for specific screens, set this option to `false`.
+   *
+   * Only supported with `native` implementation.
+   *
+   * Defaults to `true`.
+   *
+   * @platform ios
+   */
+  overrideScrollViewContentInsetAdjustmentBehavior?: boolean;
 };
 
 export type BottomTabNavigationOptions = {

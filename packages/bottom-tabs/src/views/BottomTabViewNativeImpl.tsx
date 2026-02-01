@@ -240,6 +240,7 @@ export function BottomTabViewNative({
             tabBarButtonTestID,
             sceneStyle,
             scrollEdgeEffects,
+            overrideScrollViewContentInsetAdjustmentBehavior,
           } = options;
 
           const {
@@ -357,6 +358,9 @@ export function BottomTabViewNative({
                   scrollToTop: true,
                 },
               }}
+              overrideScrollViewContentInsetAdjustmentBehavior={
+                overrideScrollViewContentInsetAdjustmentBehavior
+              }
               experimental_userInterfaceStyle={dark ? 'dark' : 'light'}
             >
               <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
