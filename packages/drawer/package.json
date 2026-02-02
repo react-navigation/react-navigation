@@ -63,7 +63,7 @@
     "react-native-gesture-handler": "~2.30.0",
     "react-native-reanimated": "~4.2.1",
     "react-native-safe-area-context": "~5.6.2",
-    "react-native-screens": "^4.23.0",
+    "react-native-screens": "^4.24.0-nightly-20260208-652ce079c",
     "react-native-worklets": "0.7.2",
     "react-test-renderer": "19.2.0",
     "typescript": "^5.9.2"
