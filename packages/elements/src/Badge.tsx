@@ -73,7 +73,7 @@ export function Badge({
   // @ts-expect-error: backgroundColor definitely exists
   const { backgroundColor = colors.notification, ...restStyle } =
     StyleSheet.flatten(style) || {};
-  const textColor = Color(backgroundColor)?.isLight() ? 'black' : 'white';
+  const textColor = Color.foreground(backgroundColor);
 
   const borderRadius = size / 2;
   const fontSize = Math.floor((size * 3) / 4);

@@ -265,8 +265,7 @@ export function BottomTabViewNative({
           const badgeBackgroundColor =
             tabBarBadgeStyle?.backgroundColor ?? colors.notification;
           const badgeTextColor =
-            tabBarBadgeStyle?.color ??
-            (Color(badgeBackgroundColor)?.isLight() ? 'black' : 'white');
+            tabBarBadgeStyle?.color ?? Color.foreground(badgeBackgroundColor);
 
           const getIcon = (selected: boolean) => {
             if (typeof tabBarIcon === 'function') {

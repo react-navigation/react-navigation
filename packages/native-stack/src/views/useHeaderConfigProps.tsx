@@ -109,9 +109,7 @@ const processBarButtonItems = (
         if (badge) {
           const badgeBackgroundColor =
             badge.style?.backgroundColor ?? colors.notification;
-          const badgeTextColor = Color(badgeBackgroundColor)?.isLight()
-            ? 'black'
-            : 'white';
+          const badgeTextColor = Color.foreground(badgeBackgroundColor);
 
           processedItem = {
             ...processedItem,

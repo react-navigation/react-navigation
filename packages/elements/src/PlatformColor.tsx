@@ -6,3 +6,7 @@
 export const PlatformColor:
   | typeof import('react-native').PlatformColor
   | undefined = undefined;
+
+export const DynamicColorIOS:
+  | typeof import('react-native').DynamicColorIOS
+  | undefined = undefined;

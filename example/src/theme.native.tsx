@@ -20,7 +20,7 @@ export const PlatformTheme: Theme = {
       card: PlatformColor('@android:color/system_background_light'),
       text: PlatformColor('@android:color/system_on_surface_light'),
       border: PlatformColor('@android:color/system_outline_variant_light'),
-      notification: PlatformColor('@android:color/holo_red_light'),
+      notification: PlatformColor('@android:color/system_error_light'),
     }),
     default: () => DefaultTheme.colors,
   })(),
