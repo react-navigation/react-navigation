@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.6.16...@react-navigation/stack@7.7.0) (2026-02-02)
+
+### Features
+
+* add support for xcasset for icons in native tabs ([5904082](https://github.com/react-navigation/react-navigation/commit/5904082ab3f09787ea8a3581837057d7fd0033d0)) - by @
+
 ## [7.6.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.6.15...@react-navigation/stack@7.6.16) (2026-01-19)
 
 **Note:** Version bump only for package @react-navigation/stack
