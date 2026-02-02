@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.7...@react-navigation/stack@8.0.0-alpha.8) (2026-02-02)
+
+### Bug Fixes
+
+* support xcasset for native tabs ([a66e17a](https://github.com/react-navigation/react-navigation/commit/a66e17ac727f09abd25ec32dcc0cd2676aae782c)) - by @
+
 # [8.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.6...@react-navigation/stack@8.0.0-alpha.7) (2026-02-01)
 
 **Note:** Version bump only for package @react-navigation/stack
