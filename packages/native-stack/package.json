@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/native-stack",
   "description": "Native stack navigator using react-native-screens",
-  "version": "7.11.0",
+  "version": "7.11.1",
   "keywords": [
     "react-native-component",
     "react-component",

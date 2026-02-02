@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.11.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.10.1...@react-navigation/bottom-tabs@7.11.0) (2026-02-02)
+
+### Features
+
+* add support for disabling overrideScrollViewContentInsetAdjustmentBehavior ([ccd9544](https://github.com/react-navigation/react-navigation/commit/ccd95443c161a27755c8d8c38f554b445ebd8191)) - by @
+
 ## [7.10.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.10.0...@react-navigation/bottom-tabs@7.10.1) (2026-01-19)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
