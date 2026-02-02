@@ -4285,7 +4285,7 @@ __metadata:
     react-native: "npm:0.83.1"
     react-native-builder-bob: "npm:^0.40.12"
     react-native-safe-area-context: "npm:~5.6.2"
-    react-native-screens: "npm:^4.21.0"
+    react-native-screens: "npm:^4.22.0-nightly-20260202-82ce103b5"
     react-test-renderer: "npm:19.2.0"
     sf-symbols-typescript: "npm:^2.2.0"
     typescript: "npm:^5.9.2"
@@ -4362,7 +4362,7 @@ __metadata:
     react-native-gesture-handler: "npm:~2.30.0"
     react-native-reanimated: "npm:~4.2.1"
     react-native-safe-area-context: "npm:~5.6.2"
-    react-native-screens: "npm:^4.21.0"
+    react-native-screens: "npm:^4.22.0-nightly-20260202-82ce103b5"
     react-native-worklets: "npm:0.7.2"
     react-test-renderer: "npm:19.2.0"
     typescript: "npm:^5.9.2"
@@ -4393,7 +4393,7 @@ __metadata:
     react: "npm:19.2.0"
     react-native: "npm:0.83.1"
     react-native-builder-bob: "npm:^0.40.12"
-    react-native-screens: "npm:^4.21.0"
+    react-native-screens: "npm:^4.22.0-nightly-20260202-82ce103b5"
     react-test-renderer: "npm:19.2.0"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
@@ -4462,7 +4462,7 @@ __metadata:
     react-native-pager-view: "npm:^8.0.0"
     react-native-reanimated: "npm:~4.2.1"
     react-native-safe-area-context: "npm:~5.6.2"
-    react-native-screens: "npm:^4.21.0"
+    react-native-screens: "npm:^4.22.0-nightly-20260202-82ce103b5"
     react-native-tab-view: "workspace:^"
     react-native-web: "npm:~0.21.0"
     react-native-worklets: "npm:0.7.2"
@@ -4515,7 +4515,7 @@ __metadata:
     react: "npm:19.2.0"
     react-native: "npm:0.83.1"
     react-native-builder-bob: "npm:^0.40.12"
-    react-native-screens: "npm:^4.21.0"
+    react-native-screens: "npm:^4.22.0-nightly-20260202-82ce103b5"
     react-test-renderer: "npm:19.2.0"
     sf-symbols-typescript: "npm:^2.2.0"
     typescript: "npm:^5.9.2"
@@ -4585,7 +4585,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-native-gesture-handler: "npm:~2.30.0"
     react-native-safe-area-context: "npm:~5.6.2"
-    react-native-screens: "npm:^4.21.0"
+    react-native-screens: "npm:^4.22.0-nightly-20260202-82ce103b5"
     react-test-renderer: "npm:19.2.0"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
@@ -14086,16 +14086,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^4.21.0":
-  version: 4.21.0
-  resolution: "react-native-screens@npm:4.21.0"
+"react-native-screens@npm:^4.22.0-nightly-20260202-82ce103b5":
+  version: 4.22.0-nightly-20260202-82ce103b5
+  resolution: "react-native-screens@npm:4.22.0-nightly-20260202-82ce103b5"
   dependencies:
     react-freeze: "npm:^1.0.0"
     warn-once: "npm:^0.1.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 10c0/59d44ddd3bb732c454f0a2dd574450d08ac7e7679ff57d5a8862ac09f69fdb8441dc688596ddbd3fba1b09d4341f34a67dca9bd4c3de9cd137aebb9115a5bb73
+  checksum: 10c0/da5b2e815e5ba01cda912ffd126e90a4090d08bf2275072334456e151095f6ba8e5e8e14e3e19d48e7542dbaeacdab61207c48361998fbada7ddc3a415a1f70d
   languageName: node
   linkType: hard
 

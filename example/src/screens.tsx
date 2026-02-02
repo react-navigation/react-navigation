@@ -20,6 +20,7 @@ import { NativeBottomTabs } from './Screens/NativeBottomTabs';
 import { NativeBottomTabsCustom } from './Screens/NativeBottomTabsCustom';
 import { NativeStack } from './Screens/NativeStack';
 import { NativeStackHeaderCustomization } from './Screens/NativeStackHeaderCustomization';
+import { NativeStackNext } from './Screens/NativeStackNext';
 import { NativeStackPreloadFlow } from './Screens/NativeStackPreloadFlow';
 import { NativeStackPreventRemove } from './Screens/NativeStackPreventRemove';
 import { SFSymbols } from './Screens/SFSymbols';
@@ -34,6 +35,7 @@ import { TabView } from './Screens/TabView';
 
 export const SCREENS = {
   NativeStack,
+  NativeStackNext,
   SimpleStack,
   ModalStack,
   MixedStack,
