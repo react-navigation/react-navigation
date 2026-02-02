@@ -162,14 +162,20 @@ export function useLinking(
       const navigation = ref.current;
       const state = navigation ? getStateFromURL(url) : undefined;
 
-      if (navigation && state) {
-        const action = getActionFromStateRef.current(state, configRef.current);
-
+      if (navigation) {
         REACT_NAVIGATION_DEVTOOLS.get(navigation)?.listeners.forEach(
           (listener) => {
-            listener({ type: 'deeplink', url });
+            listener({
+              type: 'link',
+              url,
+              state,
+            });
           }
         );
+      }
+
+      if (navigation && state) {
+        const action = getActionFromStateRef.current(state, configRef.current);
 
         if (action !== undefined) {
           try {

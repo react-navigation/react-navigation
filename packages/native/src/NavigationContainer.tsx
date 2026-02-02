@@ -6,7 +6,9 @@ import {
   type InitialState,
   type NavigationContainerProps,
   type NavigationContainerRef,
+  type NavigationState,
   type ParamListBase,
+  type PartialState,
   type RootParamList,
   ThemeProvider,
   validatePathConfig,
@@ -34,7 +36,11 @@ declare global {
     {
       readonly linking: LinkingOptions<any>;
       readonly listeners: Set<
-        (data: { type: 'deeplink'; url: string }) => void
+        (data: {
+          type: 'link';
+          url: string;
+          state: PartialState<NavigationState> | undefined;
+        }) => void
       >;
     }
   >;

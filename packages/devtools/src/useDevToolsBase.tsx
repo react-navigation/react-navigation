@@ -2,6 +2,7 @@ import type {
   NavigationAction,
   NavigationContainerRef,
   NavigationState,
+  PartialState,
 } from '@react-navigation/core';
 import deepEqual from 'fast-deep-equal';
 import * as React from 'react';
@@ -39,8 +40,9 @@ type EventData = {
 };
 
 type DeepLinkData = {
-  type: 'deeplink';
+  type: 'link';
   url: string;
+  state: PartialState<NavigationState> | undefined;
 };
 
 type ResultData = InitData | ActionData | EventData | DeepLinkData;
