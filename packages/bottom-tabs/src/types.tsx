@@ -169,11 +169,11 @@ type IconResource = {
   tinted?: boolean;
 };
 
-type IconIOS = IconSfSymbol | IconImage;
-
-type IconAndroid = IconMaterialSymbol | IconResource | IconImage;
-
-export type BottomTabIcon = IconIOS | IconAndroid;
+export type BottomTabIcon =
+  | IconSfSymbol
+  | IconMaterialSymbol
+  | IconResource
+  | IconImage;
 
 type BottomTabCustomOptions = {
   /**
