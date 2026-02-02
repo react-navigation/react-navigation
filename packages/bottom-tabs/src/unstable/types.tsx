@@ -101,24 +101,18 @@ type IconIOSSfSymbol = {
   name: SFSymbol;
 };
 
-type IconAndroidDrawable = {
+type IconResource = {
   /**
-   * - `drawableResource` - Use a drawable resource as the icon on Android.
+   * - `resource` - Use a resource from drawables on Android and xcassets asset catalog on iOS as the icon.
    */
-  type: 'drawableResource';
+  type: 'resource';
   /**
-   * Name of the drawable resource to use as the icon.
-   *
-   * @platform android
+   * Name of the drawable resource or xcasset to use as the icon.
    */
   name: string;
 };
 
-type IconIOS = IconIOSSfSymbol | IconImage;
-
-type IconAndroid = IconAndroidDrawable | IconImage;
-
-export type NativeBottomTabIcon = IconIOS | IconAndroid;
+export type NativeBottomTabIcon = IconIOSSfSymbol | IconResource | IconImage;
 
 export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
   /**

@@ -378,23 +378,47 @@ function ScreenWithHeader({
 }
 
 function getPlatformIcon(icon: NativeBottomTabIcon): PlatformIcon {
-  return {
-    ios:
-      icon?.type === 'sfSymbol'
-        ? icon
-        : icon?.type === 'image' && icon.tinted !== false
-          ? {
-              type: 'templateSource',
-              templateSource: icon.source,
-            }
-          : undefined,
-    android: icon?.type === 'drawableResource' ? icon : undefined,
-    shared:
-      icon?.type === 'image'
-        ? {
-            type: 'imageSource',
-            imageSource: icon.source,
-          }
-        : undefined,
-  } as const;
+  switch (icon.type) {
+    case 'sfSymbol':
+      return {
+        ios: icon,
+        android: undefined,
+        shared: undefined,
+      };
+    case 'image':
+      return {
+        ios:
+          icon.tinted === false
+            ? {
+                type: 'imageSource',
+                imageSource: icon.source,
+              }
+            : {
+                type: 'templateSource',
+                templateSource: icon.source,
+              },
+        android: undefined,
+        shared: {
+          type: 'imageSource',
+          imageSource: icon.source,
+        },
+      };
+    case 'resource':
+      return {
+        ios: {
+          type: 'xcasset',
+          name: icon.name,
+        },
+        android: {
+          type: 'drawableResource',
+          name: icon.name,
+        },
+        shared: undefined,
+      };
+    default: {
+      const _exhaustiveCheck: never = icon;
+
+      return _exhaustiveCheck;
+    }
+  }
 }
