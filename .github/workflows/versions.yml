@@ -9,7 +9,7 @@ jobs:
   check-versions:
     runs-on: ubuntu-latest
     steps:
-      - uses: react-navigation/check-versions-action@v1.1.0
+      - uses: react-navigation/check-versions-action@v1.2.1
         if: contains(github.event.issue.labels.*.name, 'version-4') != true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -26,3 +26,6 @@ jobs:
             @react-navigation/stack
             react-native-drawer-layout
             react-native-tab-view
+          tags: |
+            latest
+            next
