@@ -20,7 +20,7 @@ export function Color(value: ColorValue): ColorType | undefined {
   return undefined;
 }
 
-Color.foreground = function (color: ColorValue): ColorValue {
+Color.foreground = (color: ColorValue): ColorValue => {
   const value = color as unknown;
 
   if (typeof value === 'object' && value != null) {
