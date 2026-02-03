@@ -531,7 +531,7 @@ const useAppState = () => {
       document.documentElement.style.colorScheme = colorScheme;
     } else {
       if (state.themeName === 'material') {
-        Appearance.setColorScheme(null);
+        Appearance.setColorScheme('unspecified');
         return;
       } else {
         Appearance.setColorScheme(colorScheme);
