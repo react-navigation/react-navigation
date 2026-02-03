@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.7.0...@react-navigation/stack@7.7.1) (2026-02-03)
+
+### Bug Fixes
+
+* fix broken animation during replace ([#12950](https://github.com/react-navigation/react-navigation/issues/12950)) ([b092485](https://github.com/react-navigation/react-navigation/commit/b092485b433f98f9e9a6dfa6a81f9e9a955ef5ed)) - by @satya164
+* fix replace animation on fast transitions ([1dbe581](https://github.com/react-navigation/react-navigation/commit/1dbe581bd5ba48fc6a93905647b0c942f8b060c7)) - by @satya164
+
 # [7.7.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.6.16...@react-navigation/stack@7.7.0) (2026-02-02)
 
 ### Features
