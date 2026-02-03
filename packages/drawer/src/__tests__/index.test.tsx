@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler/jestSetup';
 
-import { expect, test } from '@jest/globals';
+import { expect, jest, test } from '@jest/globals';
 import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
@@ -18,6 +18,10 @@ type DrawerParamList = {
   A: undefined;
   B: undefined;
 };
+
+jest.mock('react-native-worklets', () =>
+  require('react-native-worklets/src/mock')
+);
 
 test('renders a drawer navigator with screens', async () => {
   const Test = ({ route, navigation }: DrawerScreenProps<DrawerParamList>) => (
