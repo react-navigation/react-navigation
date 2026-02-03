@@ -368,20 +368,35 @@ export class StackView extends React.Component<Props, State> {
         });
       });
     } else {
-      this.setState((state) => ({
-        routes: state.replacingRouteKeys.length
-          ? state.routes.filter(
-              (r) => !state.replacingRouteKeys.includes(r.key)
-            )
-          : state.routes,
-        openingRouteKeys: state.openingRouteKeys.filter(
-          (key) => key !== route.key
-        ),
-        closingRouteKeys: state.closingRouteKeys.filter(
-          (key) => key !== route.key
-        ),
-        replacingRouteKeys: [],
-      }));
+      this.setState((state) => {
+        const routeIndex = state.routes.findIndex((r) => r.key === route.key);
+
+        // Remove replacing routes that were before the route that just opened
+        // Those were replaced by this or earlier routes and should be cleaned up
+        const replacingRoutesToRemove = new Set(
+          state.routes
+            .slice(0, routeIndex)
+            .filter((r) => state.replacingRouteKeys.includes(r.key))
+            .map((r) => r.key)
+        );
+
+        const newRoutes = state.routes.filter(
+          (r) => !replacingRoutesToRemove.has(r.key)
+        );
+
+        return {
+          routes: newRoutes,
+          openingRouteKeys: state.openingRouteKeys.filter(
+            (key) => key !== route.key
+          ),
+          closingRouteKeys: state.closingRouteKeys.filter(
+            (key) => key !== route.key
+          ),
+          replacingRouteKeys: state.replacingRouteKeys.filter(
+            (key) => !replacingRoutesToRemove.has(key)
+          ),
+        };
+      });
     }
   };
 
