@@ -485,8 +485,13 @@ export class StackView extends React.Component<Props, State> {
       ...rest
     } = this.props;
 
-    const { routes, descriptors, openingRouteKeys, closingRouteKeys } =
-      this.state;
+    const {
+      routes,
+      descriptors,
+      openingRouteKeys,
+      closingRouteKeys,
+      replacingRouteKeys,
+    } = this.state;
 
     return (
       <GestureHandlerWrapper style={styles.container}>
@@ -505,6 +510,7 @@ export class StackView extends React.Component<Props, State> {
                         routes={routes}
                         openingRouteKeys={openingRouteKeys}
                         closingRouteKeys={closingRouteKeys}
+                        replacingRouteKeys={replacingRouteKeys}
                         onOpenRoute={this.handleOpenRoute}
                         onCloseRoute={this.handleCloseRoute}
                         onTransitionStart={this.handleTransitionStart}
