@@ -57,7 +57,7 @@ type Props = {
   }) => void;
   isParentHeaderShown: boolean;
   isNextScreenTransparent: boolean;
-  detachCurrentScreen: boolean;
+  children: React.ReactNode;
 };
 
 const EPSILON = 0.1;
@@ -78,7 +78,6 @@ function CardContainerInner({
   onHeaderHeightChange,
   isParentHeaderShown,
   isNextScreenTransparent,
-  detachCurrentScreen,
   layout,
   onCloseRoute,
   onOpenRoute,
@@ -94,6 +93,7 @@ function CardContainerInner({
   safeAreaInsetRight,
   safeAreaInsetTop,
   scene,
+  children,
 }: Props) {
   const wrapperRef = React.useRef<CardA11yWrapperRef>(null);
 
@@ -242,7 +242,6 @@ function CardContainerInner({
       active={active}
       animated={animated}
       isNextScreenTransparent={isNextScreenTransparent}
-      detachCurrentScreen={detachCurrentScreen}
     >
       <Card
         animated={animated}
@@ -311,7 +310,7 @@ function CardContainerInner({
                         : (parentHeaderHeight ?? 0)
                     }
                   >
-                    {scene.descriptor.render()}
+                    {children}
                   </HeaderHeightContext.Provider>
                 </HeaderShownContext.Provider>
               </HeaderBackContext.Provider>

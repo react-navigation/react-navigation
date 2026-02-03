@@ -348,9 +348,6 @@ export type StackNavigationOptions = StackHeaderOptions &
      * You can also specify `{ backgroundColor: 'transparent' }` to make the previous screen visible underneath.
      * This is useful to implement things like modal dialogs.
      *
-     * You should also specify `detachPreviousScreen: false` in options when using a transparent background
-     * so that the previous screen isn't detached and stays below the current screen.
-     *
      * You might also need to change the animation of the screen using `cardStyleInterpolator`
      * so that the previous screen isn't transformed or invisible.
      */
@@ -366,7 +363,6 @@ export type StackNavigationOptions = StackHeaderOptions &
      * - `transparentModal`: Similar to `modal`. This changes following things:
      *   - Sets `headerMode` to `screen` for the screen unless specified otherwise.
      *   - Sets background color of the screen to transparent, so previous screen is visible
-     *   - Adjusts the `detachPreviousScreen` option so that the previous screen stays rendered.
      *   - Prevents the previous screen from animating from its last position.
      *   - Changes the screen animation to a vertical slide animation.
      *
@@ -409,41 +405,13 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     gestureVelocityImpact?: number;
     /**
-     * Whether to detach the previous screen from the view hierarchy to save memory.
-     * Set it to `false` if you need the previous screen to be seen through the active screen.
-     * Only applicable if `detachInactiveScreens` isn't set to `false`.
-     * Defaults to `false` for the last screen for modals, otherwise `true`.
-     */
-    detachPreviousScreen?: boolean;
-    /**
      * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen from this screen.
      * Defaults to `true`.
      */
     keyboardHandlingEnabled?: boolean;
-    /**
-     * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
-     * Defaults to `true` when `enableFreeze()` is run at the top of the application.
-     * Requires `react-native-screens` version >=3.16.0.
-     *
-     * Only supported on iOS and Android.
-     */
-    freezeOnBlur?: boolean;
-    /**
-     * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
-     *
-     * @platform ios
-     */
-    autoHideHomeIndicator?: boolean;
   };
 
 export type StackNavigationConfig = {
-  /**
-   * Whether inactive screens should be detached from the view hierarchy to save memory.
-   * This will have no effect if you disable `react-native-screens`.
-   *
-   * Defaults to `true`.
-   */
-  detachInactiveScreens?: boolean;
 };
 
 export type TransitionSpec =
