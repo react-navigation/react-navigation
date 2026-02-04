@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.8...@react-navigation/elements@3.0.0-alpha.9) (2026-02-04)
+
+### Bug Fixes
+
+* follow material guidelines for bottom tabs if possible ([dd59231](https://github.com/react-navigation/react-navigation/commit/dd59231eebfa2eb79b167db7883941530d32b76b)) - by @satya164
+* improve handling for PlatformColor ([e141378](https://github.com/react-navigation/react-navigation/commit/e14137884d6b011d1bf79b3c2fde076738ac4406)) - by @satya164
+
+### Features
+
+* support materialSymbol & sfSymbol for header back icon ([60e7af2](https://github.com/react-navigation/react-navigation/commit/60e7af226597f7ea12f86aec0357aed52eb8e004)) - by @satya164
+
 # [3.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.7...@react-navigation/elements@3.0.0-alpha.8) (2026-02-02)
 
 ### Bug Fixes

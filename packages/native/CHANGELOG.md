@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.8...@react-navigation/native@8.0.0-alpha.9) (2026-02-04)
+
+### Bug Fixes
+
+* add a workaround for false positive with multiple linking error ([be38f7c](https://github.com/react-navigation/react-navigation/commit/be38f7cfa4ccf955cefcf87e047f05d1ad8f31d6)) - by @satya164
+
+### Features
+
+* export MaterialLightTheme and MaterialDarkTheme ([bc0ec11](https://github.com/react-navigation/react-navigation/commit/bc0ec1156128aa876313b4889cd7293307ed065b)) - by @satya164
+
 # [8.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.7...@react-navigation/native@8.0.0-alpha.8) (2026-02-02)
 
 **Note:** Version bump only for package @react-navigation/native

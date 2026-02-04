@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.8...@react-navigation/stack@8.0.0-alpha.9) (2026-02-04)
+
+### Bug Fixes
+
+* fix broken animation during replace ([#12950](https://github.com/react-navigation/react-navigation/issues/12950)) ([0a7e22f](https://github.com/react-navigation/react-navigation/commit/0a7e22f0eda5393b52f946c800d0404f9e846030)) - by @satya164
+* fix replace animation on fast transitions ([a61273e](https://github.com/react-navigation/react-navigation/commit/a61273efaf6bbfc8693ca2f894b95647a32749b6)) - by @satya164
+
+### Features
+
+* support materialSymbol & sfSymbol for header back icon ([60e7af2](https://github.com/react-navigation/react-navigation/commit/60e7af226597f7ea12f86aec0357aed52eb8e004)) - by @satya164
+
 # [8.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.7...@react-navigation/stack@8.0.0-alpha.8) (2026-02-02)
 
 ### Bug Fixes
