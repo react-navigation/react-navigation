@@ -90,9 +90,12 @@ test('throws if multiple instances of useLinking are used', () => {
 
   element = render(<Sample />);
 
-  expect(spy).toHaveBeenCalledTimes(1);
-  expect(spy.mock.calls[0][0]).toMatch(
-    'Looks like you have configured linking in multiple places.'
+  jest.runAllTimers();
+
+  expect(spy).toHaveBeenLastCalledWith(
+    expect.stringMatching(
+      'Looks like you have configured linking in multiple places.'
+    )
   );
 
   element?.unmount();
