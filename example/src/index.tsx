@@ -18,6 +18,8 @@ import {
   createStaticNavigation,
   DarkTheme,
   DefaultTheme,
+  MaterialDarkTheme,
+  MaterialLightTheme,
   type Theme,
   useNavigation,
   useNavigationContainerRef,
@@ -37,6 +39,7 @@ import {
   Platform,
   ScrollView,
   Switch,
+  useColorScheme,
   useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -88,7 +91,7 @@ if (Platform.OS === 'web') {
   }
 }
 
-type ThemeName = 'light' | 'dark' | 'custom';
+type ThemeName = 'light' | 'dark' | 'material' | 'custom';
 
 type AppState = {
   isReady: boolean;
@@ -150,11 +153,16 @@ function Examples() {
         <Divider />
         <ListItem title="Theme">
           <SegmentedPicker
-            choices={[
-              { label: 'Custom', value: 'custom' },
-              { label: 'Light', value: 'light' },
-              { label: 'Dark', value: 'dark' },
-            ]}
+            choices={(
+              [
+                { label: 'Custom', value: 'custom' },
+                { label: 'Material', value: 'material' },
+                { label: 'Light', value: 'light' },
+                { label: 'Dark', value: 'dark' },
+              ] as const
+            ).filter((choice) =>
+              Platform.OS !== 'android' ? choice.value !== 'material' : true
+            )}
             value={themeName}
             onValueChange={(value) => {
               dispatch({
@@ -289,6 +297,7 @@ export function App() {
   const [{ isReady, themeName, isRTL }, dispatch] = useAppState();
 
   const dimensions = useWindowDimensions();
+  const colorScheme = useColorScheme();
 
   const navigationRef = useNavigationContainerRef();
 
@@ -315,7 +324,11 @@ export function App() {
       ? DarkTheme
       : themeName === 'light'
         ? DefaultTheme
-        : PlatformTheme;
+        : Platform.OS === 'android' && themeName === 'material'
+          ? colorScheme === 'dark'
+            ? MaterialDarkTheme
+            : MaterialLightTheme
+          : PlatformTheme;
 
   return (
     <Providers>

@@ -18,7 +18,7 @@ import { I18nManager, Platform } from 'react-native';
 
 import { LinkingContext } from './LinkingContext';
 import { LocaleDirContext } from './LocaleDirContext';
-import { DefaultTheme } from './theming/DefaultTheme';
+import { LightTheme } from './theming/LightTheme';
 import type {
   DocumentTitleOptions,
   LinkingOptions,
@@ -114,7 +114,7 @@ const RESTORE_STATE_ERROR =
 function NavigationContainerInner(
   {
     direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
-    theme = DefaultTheme,
+    theme = LightTheme,
     linking,
     persistor,
     fallback = null,

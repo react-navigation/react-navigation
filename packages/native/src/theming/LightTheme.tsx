@@ -2,7 +2,7 @@ import type { Theme } from '@react-navigation/core';
 
 import { fonts } from './fonts';
 
-export const DefaultTheme = {
+export const LightTheme = {
   dark: false,
   colors: {
     primary: 'rgb(0, 122, 255)',

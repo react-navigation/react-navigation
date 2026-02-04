@@ -13,14 +13,12 @@ export const PlatformTheme: Theme = {
       notification: PlatformColor('systemRed'),
     },
     android: {
-      primary: PlatformColor('@android:color/system_primary_light'),
-      background: PlatformColor(
-        '@android:color/system_surface_container_light'
-      ),
-      card: PlatformColor('@android:color/system_background_light'),
-      text: PlatformColor('@android:color/system_on_surface_light'),
-      border: PlatformColor('@android:color/system_outline_variant_light'),
-      notification: PlatformColor('@android:color/system_error_light'),
+      primary: PlatformColor('@android:color/system_accent2_600'),
+      background: PlatformColor('@android:color/system_neutral2_50'),
+      card: PlatformColor('@android:color/system_neutral2_10'),
+      text: PlatformColor('@android:color/system_neutral2_900'),
+      border: PlatformColor('@android:color/system_neutral2_300'),
+      notification: PlatformColor('@android:color/system_error_600'),
     },
     default: DefaultTheme.colors,
   }),
