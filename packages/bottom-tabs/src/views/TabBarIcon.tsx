@@ -43,8 +43,8 @@ const ICON_SIZE_WIDE = 31;
 const ICON_SIZE_WIDE_COMPACT = 23;
 const ICON_SIZE_TALL = 28;
 const ICON_SIZE_TALL_COMPACT = 20;
-const ICON_SIZE_ROUND = 25;
-const ICON_SIZE_ROUND_COMPACT = 18;
+const ICON_SIZE_SQUARE = 23;
+const ICON_SIZE_SQUARE_COMPACT = 17;
 const ICON_SIZE_MATERIAL = 24;
 
 export function TabBarIcon({
@@ -65,8 +65,8 @@ export function TabBarIcon({
     variant === 'material'
       ? ICON_SIZE_MATERIAL
       : size === 'compact'
-        ? ICON_SIZE_ROUND_COMPACT
-        : ICON_SIZE_ROUND;
+        ? ICON_SIZE_SQUARE_COMPACT
+        : ICON_SIZE_SQUARE;
 
   // We render the icon twice at the same position on top of each other:
   // active and inactive one, so we can fade between them.

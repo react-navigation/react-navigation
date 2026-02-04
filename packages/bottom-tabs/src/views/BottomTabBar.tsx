@@ -343,7 +343,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
               : { borderTopWidth: StyleSheet.hairlineWidth },
         {
           backgroundColor:
-            tabBarBackgroundElement != null ? 'transparent' : colors.card,
+            tabBarBackgroundElement != null ? 'transparent' : colors.background,
           borderColor: colors.border,
         },
         sidebar

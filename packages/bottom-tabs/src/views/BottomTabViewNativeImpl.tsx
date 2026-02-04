@@ -15,7 +15,12 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, Platform, PlatformColor } from 'react-native';
+import {
+  Animated,
+  type ColorValue,
+  Platform,
+  PlatformColor,
+} from 'react-native';
 import {
   type PlatformIcon,
   Tabs,
@@ -97,16 +102,62 @@ export function BottomTabViewNative({
     fontStyle,
   } = currentOptions.tabBarLabelStyle || {};
 
-  const activeTintColor =
-    currentOptions.tabBarActiveTintColor ?? colors.primary;
+  const backgroundColor =
+    currentOptions.tabBarStyle?.backgroundColor ?? colors.background;
 
-  const inactiveTintColor =
-    currentOptions.tabBarInactiveTintColor ??
+  let activeIndicatorColor = currentOptions?.tabBarActiveIndicatorColor;
+  let activeTintColor = currentOptions.tabBarActiveTintColor;
+  let inactiveTintColor = currentOptions.tabBarInactiveTintColor;
+
+  // Derive colors based on Material Design guidelines
+  // https://m3.material.io/components/navigation-bar/specs
+  if (Platform.OS === 'android') {
+    switch (getAndroidColorName(backgroundColor)) {
+      case 'system_surface_container_light':
+      case 'system_surface_container_high_light':
+      case 'system_surface_container_highest_light':
+      case 'system_surface_container_low_light':
+      case 'system_surface_container_lowest_light':
+        inactiveTintColor =
+          inactiveTintColor ??
+          PlatformColor('@android:color/system_on_surface_variant_light');
+        activeTintColor =
+          activeTintColor ??
+          PlatformColor('@android:color/system_on_secondary_container_light');
+        activeIndicatorColor =
+          activeIndicatorColor ??
+          PlatformColor('@android:color/system_secondary_container_light');
+        break;
+      case 'system_surface_container_dark':
+      case 'system_surface_container_high_dark':
+      case 'system_surface_container_highest_dark':
+      case 'system_surface_container_low_dark':
+      case 'system_surface_container_lowest_dark':
+        inactiveTintColor =
+          inactiveTintColor ??
+          PlatformColor('@android:color/system_on_surface_variant_dark');
+        activeTintColor =
+          activeTintColor ??
+          PlatformColor('@android:color/system_on_secondary_container_dark');
+        activeIndicatorColor =
+          activeIndicatorColor ??
+          PlatformColor('@android:color/system_secondary_container_dark');
+        break;
+    }
+  }
+
+  inactiveTintColor =
+    inactiveTintColor ??
     Platform.select({ ios: PlatformColor('label'), default: colors.text });
 
-  const activeIndicatorColor =
-    currentOptions?.tabBarActiveIndicatorColor ??
-    Color(activeTintColor)?.alpha(0.1).string();
+  activeTintColor = activeTintColor ?? colors.primary;
+
+  activeIndicatorColor =
+    activeIndicatorColor ??
+    Platform.select({
+      android: Color(activeTintColor)?.alpha(0.075).string(),
+      default: undefined,
+    });
 
   const onTransitionStart = ({ route }: { route: Route<string> }) => {
     navigation.emit({
@@ -181,9 +232,7 @@ export function BottomTabViewNative({
         tabBarItemTitleFontSize={fontSize}
         tabBarItemTitleFontSizeActive={fontSize}
         tabBarItemTitleFontStyle={fontStyle}
-        tabBarBackgroundColor={
-          currentOptions.tabBarStyle?.backgroundColor ?? colors.card
-        }
+        tabBarBackgroundColor={backgroundColor}
         tabBarItemActiveIndicatorColor={activeIndicatorColor}
         tabBarItemActiveIndicatorEnabled={
           currentOptions?.tabBarActiveIndicatorEnabled
@@ -389,6 +438,7 @@ export function BottomTabViewNative({
     </SafeAreaProviderCompat>
   );
 }
+
 function AnimatedScreenContent({
   isFocused,
   children,
@@ -480,4 +530,20 @@ function getPlatformIcon(icon: BottomTabIcon): PlatformIcon {
       return _exhaustiveCheck;
     }
   }
+}
+
+function getAndroidColorName(color: ColorValue) {
+  const value = color as unknown;
+
+  if (
+    typeof value === 'object' &&
+    value != null &&
+    'resource_paths' in value &&
+    Array.isArray(value.resource_paths) &&
+    typeof value.resource_paths[0] === 'string'
+  ) {
+    return value.resource_paths[0].replace('@android:color/', '');
+  }
+
+  return null;
 }

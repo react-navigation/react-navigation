@@ -25,6 +25,7 @@ Color.foreground = (color: ColorValue): ColorValue => {
 
   if (typeof value === 'object' && value != null) {
     // Special case for Android platform colors
+    // Available colors: https://developer.android.com/reference/android/R.color
     if (
       Platform.OS === 'android' &&
       PlatformColor &&
