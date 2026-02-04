@@ -158,7 +158,7 @@ export function StackHeaderCustomization(
           headerStyle: { backgroundColor: '#ff005d' },
           headerBackButtonDisplayMode: 'minimal',
           headerTitleAlign: headerTitleCentered ? 'center' : 'left',
-          headerBackImage: ({ tintColor }) => (
+          headerBackIcon: ({ tintColor }) => (
             <MaterialCommunityIcons
               name="arrow-left-circle-outline"
               color={tintColor}

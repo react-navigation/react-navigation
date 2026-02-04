@@ -40,7 +40,7 @@ export function HeaderSegment(props: Props) {
       ? (props: HeaderBackButtonProps) => <HeaderBackButton {...props} />
       : undefined,
     headerRight: right,
-    headerBackImage,
+    headerBackIcon,
     headerBackTitle,
     headerBackButtonDisplayMode,
     headerBackTruncatedTitle,
@@ -93,7 +93,7 @@ export function HeaderSegment(props: Props) {
         left({
           ...props,
           href: backHref,
-          backImage: headerBackImage,
+          backIcon: headerBackIcon,
           accessibilityLabel: headerBackAccessibilityLabel,
           testID: headerBackTestID,
           allowFontScaling: headerBackAllowFontScaling,

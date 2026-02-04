@@ -1,6 +1,12 @@
 import type {
+  MaterialSymbolProps,
+  SFSymbolProps,
+} from '@react-navigation/native';
+import * as React from 'react';
+import type {
   Animated,
   ColorValue,
+  ImageSourcePropType,
   LayoutChangeEvent,
   StyleProp,
   TextInputProps,
@@ -325,11 +331,36 @@ export type HeaderButtonProps = {
   children: React.ReactNode;
 };
 
+export type HeaderBackIcon =
+  | {
+      type: 'image';
+      source: ImageSourcePropType;
+    }
+  | {
+      type: 'sfSymbol';
+      name: SFSymbolProps['name'];
+    }
+  | ({
+      type: 'materialSymbol';
+    } & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight'>);
+
 export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
   /**
-   * Function which returns a React Element to display custom image in header's back button.
+   * Icon to display for the back button.
+   *
+   * Supported types:
+   * - image: custom image source
+   * - sfSymbol: SF Symbol icon (iOS only)
+   * - materialSymbol: material symbol icon (Android only)
+   * - React Node: function that returns a React Element
+   *
+   * Defaults to back icon image for the platform
+   * - A chevron on iOS
+   * - An arrow on Android
    */
-  backImage?: (props: { tintColor: ColorValue }) => React.ReactNode;
+  backIcon?:
+    | HeaderBackIcon
+    | ((props: { tintColor: ColorValue }) => React.ReactNode);
   /**
    * Label text for the button. Usually the title of the previous screen.
    * By default, this is only shown on iOS.

@@ -1,3 +1,4 @@
+import type { HeaderBackIcon } from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -11,6 +12,7 @@ import type {
   StackRouterOptions,
   Theme,
 } from '@react-navigation/native';
+import * as React from 'react';
 import type {
   ColorValue,
   ImageSourcePropType,
@@ -188,7 +190,13 @@ export type NativeStackNavigationOptions = {
     fontSize?: number;
   }>;
   /**
-   * Icon to display in the header as the icon in the back button.
+   * Icon to display in the header in the back button.
+   *
+   * Supported types:
+   * - image: custom image source
+   * - sfSymbol: SF Symbol icon (iOS only - when using custom header)
+   * - materialSymbol: material symbol icon (Android only)
+   *
    * Defaults to back icon image for the platform
    * - A chevron on iOS
    * - An arrow on Android
@@ -201,10 +209,7 @@ export type NativeStackNavigationOptions = {
    * }
    * ```
    */
-  headerBackIcon?: {
-    type: 'image';
-    source: ImageSourcePropType;
-  };
+  headerBackIcon?: HeaderBackIcon;
   /**
    * Style of the header when a large title is shown.
    * The large title is shown if `headerLargeTitleEnabled` is `true` and

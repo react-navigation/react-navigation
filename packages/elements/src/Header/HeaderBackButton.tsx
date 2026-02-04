@@ -1,4 +1,4 @@
-import { useTheme } from '@react-navigation/native';
+import { MaterialSymbol, SFSymbol, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -12,7 +12,7 @@ import {
   View,
 } from 'react-native';
 
-import backIcon from '../assets/back-icon.png';
+import backIconImage from '../assets/back-icon.png';
 import { isLiquidGlassSupported } from '../LiquidGlassView';
 import type {
   HeaderBackButtonDisplayMode,
@@ -24,7 +24,7 @@ import { HeaderIcon } from './HeaderIcon';
 export function HeaderBackButton({
   disabled,
   allowFontScaling,
-  backImage,
+  backIcon,
   label,
   labelStyle,
   displayMode = 'minimal',
@@ -48,13 +48,43 @@ export function HeaderBackButton({
   const isMinimal = displayMode === 'minimal' || measuredMinimal;
 
   const renderBackImage = () => {
-    if (backImage) {
-      return backImage({ tintColor: tintColor ?? colors.text });
+    const color = tintColor ?? colors.text;
+
+    if (backIcon) {
+      if (typeof backIcon === 'function') {
+        return backIcon({ tintColor: color });
+      }
+
+      switch (backIcon.type) {
+        case 'sfSymbol':
+          return (
+            <SFSymbol name={backIcon.name} color={color} style={styles.icon} />
+          );
+        case 'materialSymbol':
+          return (
+            <MaterialSymbol
+              name={backIcon.name}
+              variant={backIcon.variant}
+              weight={backIcon.weight}
+              color={color}
+              size={ICON_WIDTH}
+              style={styles.icon}
+            />
+          );
+        case 'image':
+          return (
+            <HeaderIcon
+              source={backIcon.source}
+              tintColor={color}
+              style={styles.icon}
+            />
+          );
+      }
     } else {
       return (
         <HeaderIcon
-          source={backIcon}
-          tintColor={tintColor ?? colors.text}
+          source={backIconImage}
+          tintColor={color}
           style={styles.icon}
         />
       );

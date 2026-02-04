@@ -15,7 +15,7 @@ import {
   useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Animated, Image, StyleSheet, View } from 'react-native';
+import { Animated, StyleSheet, View } from 'react-native';
 
 import type {
   NativeStackDescriptorMap,
@@ -117,18 +117,7 @@ export function NativeStackView({ state, descriptors }: Props) {
                               {...rest}
                               label={headerBackTitle ?? label}
                               tintColor={tintColor}
-                              backImage={
-                                headerBackIcon !== undefined
-                                  ? () => (
-                                      <Image
-                                        source={headerBackIcon.source}
-                                        resizeMode="contain"
-                                        tintColor={tintColor}
-                                        style={styles.backImage}
-                                      />
-                                    )
-                                  : undefined
-                              }
+                              backIcon={headerBackIcon}
                               onPress={navigation.goBack}
                             />
                           )
@@ -193,10 +182,5 @@ const AnimatedHeaderHeightProvider = ({
 const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
-  },
-  backImage: {
-    height: 24,
-    width: 24,
-    margin: 3,
   },
 });

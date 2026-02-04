@@ -1,6 +1,7 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
 import { Color } from '@react-navigation/elements/internal';
 import {
+  MaterialSymbol,
   type Route,
   type Theme,
   useLocale,
@@ -416,7 +417,20 @@ export function useHeaderConfigProps({
         </>
       )}
       {headerBackIcon !== undefined ? (
-        <ScreenStackHeaderBackButtonImage source={headerBackIcon.source} />
+        <ScreenStackHeaderBackButtonImage
+          source={
+            headerBackIcon.type === 'image'
+              ? headerBackIcon.source
+              : headerBackIcon.type === 'materialSymbol'
+                ? MaterialSymbol.getImageSource({
+                    name: headerBackIcon.name,
+                    variant: headerBackIcon.variant,
+                    weight: headerBackIcon.weight,
+                    color: tintColor,
+                  })
+                : undefined
+          }
+        />
       ) : null}
       {Platform.OS === 'ios' && rightItems ? (
         rightItems.map((item, index) => {
