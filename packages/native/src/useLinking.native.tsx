@@ -58,28 +58,39 @@ export function useLinking(
       return undefined;
     }
 
-    if (enabled !== false && linkingHandlers.size) {
-      console.error(
-        [
-          'Looks like you have configured linking in multiple places. This is likely an error since deep links should only be handled in one place to avoid conflicts. Make sure that:',
-          "- You don't have multiple NavigationContainers in the app each with 'linking' enabled",
-          '- Only a single instance of the root component is rendered',
-          Platform.OS === 'android'
-            ? "- You have set 'android:launchMode=singleTask' in the '<activity />' section of the 'AndroidManifest.xml' file to avoid launching multiple instances"
-            : '',
-        ]
-          .join('\n')
-          .trim()
-      );
-    }
-
     const handler = Symbol();
 
     if (enabled !== false) {
       linkingHandlers.add(handler);
     }
 
+    // In some cases, the effect cleanup may get called out of order
+    // This may result in multiple linking handlers being registered
+    // For example, when changing the wallpaper on Android
+    // Showing the error in a delay avoids false positives
+    const timer = setTimeout(() => {
+      if (
+        enabled !== false &&
+        linkingHandlers.size &&
+        !(linkingHandlers.size === 1 && linkingHandlers.has(handler))
+      ) {
+        console.error(
+          [
+            'Looks like you have configured linking in multiple places. This is likely an error since deep links should only be handled in one place to avoid conflicts. Make sure that:',
+            "- You don't have multiple NavigationContainers in the app each with 'linking' enabled",
+            '- Only a single instance of the root component is rendered',
+            Platform.OS === 'android'
+              ? "- You have set 'android:launchMode=singleTask' in the '<activity />' section of the 'AndroidManifest.xml' file to avoid launching multiple instances"
+              : '',
+          ]
+            .join('\n')
+            .trim()
+        );
+      }
+    }, 1000);
+
     return () => {
+      clearTimeout(timer);
       linkingHandlers.delete(handler);
     };
   }, [enabled, independent]);

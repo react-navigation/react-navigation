@@ -438,7 +438,9 @@ const useAppState = () => {
                 ? 'dark'
                 : savedThemeName === 'light'
                   ? 'light'
-                  : 'custom',
+                  : savedThemeName === 'material'
+                    ? 'material'
+                    : 'custom',
             isRTL: savedDirection === 'rtl',
           },
         });
