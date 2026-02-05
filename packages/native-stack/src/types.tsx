@@ -1,4 +1,4 @@
-import type { HeaderBackIcon } from '@react-navigation/elements';
+import type { HeaderIcon } from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -209,7 +209,7 @@ export type NativeStackNavigationOptions = {
    * }
    * ```
    */
-  headerBackIcon?: HeaderBackIcon;
+  headerBackIcon?: HeaderIcon;
   /**
    * Style of the header when a large title is shown.
    * The large title is shown if `headerLargeTitleEnabled` is `true` and

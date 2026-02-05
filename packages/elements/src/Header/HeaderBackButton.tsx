@@ -1,4 +1,4 @@
-import { MaterialSymbol, SFSymbol, useTheme } from '@react-navigation/native';
+import { useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -17,6 +17,7 @@ import { isLiquidGlassSupported } from '../LiquidGlassView';
 import type {
   HeaderBackButtonDisplayMode,
   HeaderBackButtonProps,
+  HeaderIcon as HeaderIconType,
 } from '../types';
 import { BUTTON_SIZE, HeaderButton } from './HeaderButton';
 import { HeaderIcon } from './HeaderIcon';
@@ -50,45 +51,28 @@ export function HeaderBackButton({
   const renderBackImage = () => {
     const color = tintColor ?? colors.text;
 
-    if (backIcon) {
-      if (typeof backIcon === 'function') {
-        return backIcon({ tintColor: color });
-      }
-
-      switch (backIcon.type) {
-        case 'sfSymbol':
-          return (
-            <SFSymbol name={backIcon.name} color={color} style={styles.icon} />
-          );
-        case 'materialSymbol':
-          return (
-            <MaterialSymbol
-              name={backIcon.name}
-              variant={backIcon.variant}
-              weight={backIcon.weight}
-              color={color}
-              size={ICON_WIDTH}
-              style={styles.icon}
-            />
-          );
-        case 'image':
-          return (
-            <HeaderIcon
-              source={backIcon.source}
-              tintColor={color}
-              style={styles.icon}
-            />
-          );
-      }
-    } else {
-      return (
-        <HeaderIcon
-          source={backIconImage}
-          tintColor={color}
-          style={styles.icon}
-        />
-      );
+    if (typeof backIcon === 'function') {
+      return backIcon({ tintColor: color });
     }
+
+    const icon =
+      backIcon ??
+      Platform.select<HeaderIconType>({
+        ios: {
+          type: 'sfSymbol',
+          name: 'chevron.left',
+        },
+        android: {
+          type: 'materialSymbol',
+          name: 'arrow_back',
+        },
+        default: {
+          type: 'image',
+          source: backIconImage,
+        },
+      });
+
+    return <HeaderIcon icon={icon} color={color} style={styles.icon} />;
   };
 
   const handlePress = () => {
@@ -261,8 +245,8 @@ function HeaderBackLabel({
 // iOS uses a smaller chevron, Android uses a larger arrow
 const ICON_WIDTH = Platform.OS === 'ios' ? 13 : 24;
 const ICON_SPACING_START = isLiquidGlassSupported
-  ? 13 // Standard distance of chevron from left edge in liquid glass
-  : 0; // Otherwise icon is aligned to the start of the button
+  ? 15 // Standard distance of chevron from left edge in liquid glass
+  : 2; // Otherwise icon is aligned to the start of the button
 
 // Standard distance between chevron and label
 const ICON_LABEL_SPACING = 9;
