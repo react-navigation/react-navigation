@@ -331,7 +331,7 @@ export type HeaderButtonProps = {
   children: React.ReactNode;
 };
 
-export type HeaderBackIcon =
+export type HeaderIcon =
   | {
       type: 'image';
       source: ImageSourcePropType;
@@ -359,7 +359,7 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    * - An arrow on Android
    */
   backIcon?:
-    | HeaderBackIcon
+    | HeaderIcon
     | ((props: { tintColor: ColorValue }) => React.ReactNode);
   /**
    * Label text for the button. Usually the title of the previous screen.
