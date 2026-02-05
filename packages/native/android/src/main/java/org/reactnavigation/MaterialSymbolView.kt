@@ -13,6 +13,7 @@ class MaterialSymbolView @JvmOverloads constructor(
   private var weight: Int? = null
 
   init {
+    setColor(null)
     updateTypeface()
   }
 
@@ -29,13 +30,13 @@ class MaterialSymbolView @JvmOverloads constructor(
     canvas.drawText(text, x, y, paint)
   }
 
-  fun setName(name: String) {
+  fun setName(name: String?) {
     text = name
 
     invalidate()
   }
 
-  fun setVariant(variant: String) {
+  fun setVariant(variant: String?) {
     if (this.variant == variant) {
       return
     }
@@ -45,7 +46,7 @@ class MaterialSymbolView @JvmOverloads constructor(
     updateTypeface()
   }
 
-  fun setWeight(weight: Int) {
+  fun setWeight(weight: Int?) {
     if (this.weight == weight) {
       return
     }
@@ -66,8 +67,26 @@ class MaterialSymbolView @JvmOverloads constructor(
     invalidate()
   }
 
-  fun setColor(color: Int) {
-    setTextColor(color)
+  fun setColor(color: Int?) {
+    if (color == null) {
+      val typedValue = android.util.TypedValue()
+
+      context.theme.resolveAttribute(
+        android.R.attr.colorForeground, typedValue, true
+      )
+
+      val resolvedColor = if (typedValue.resourceId != 0) {
+        context.getColor(typedValue.resourceId)
+      } else {
+        typedValue.data
+      }
+
+      setTextColor(resolvedColor)
+    } else {
+      setTextColor(color)
+    }
+
+    invalidate()
   }
 
   fun setSize(size: Float) {
