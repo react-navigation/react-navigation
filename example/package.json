@@ -74,5 +74,23 @@
     "vite": "^7.1.1",
     "vite-plugin-commonjs": "^0.10.4",
     "yaml": "^2.8.0"
+  },
+  "react-navigation": {
+    "material-symbols": {
+      "fonts": [
+        {
+          "variant": "sharp",
+          "weights": [100, 200, 300, 400, 500, 600, 700]
+        },
+        {
+          "variant": "outlined",
+          "weights": [100, 200, 300, 400, 500, 600, 700]
+        },
+        {
+          "variant": "rounded",
+          "weights": [100, 200, 300, 400, 500, 600, 700]
+        }
+      ]
+    }
   }
 }
