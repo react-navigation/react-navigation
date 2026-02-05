@@ -233,7 +233,7 @@ export type StackHeaderOptions = Omit<
    */
   headerBackIcon?:
     | HeaderIcon
-    | ((props: { tintColor: ColorValue }) => React.ReactNode);
+    | ((props: { tintColor: ColorValue | undefined }) => React.ReactNode);
 };
 
 export type StackHeaderProps = {

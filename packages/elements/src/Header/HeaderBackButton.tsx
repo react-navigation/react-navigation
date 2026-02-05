@@ -25,7 +25,7 @@ import { HeaderIcon } from './HeaderIcon';
 export function HeaderBackButton({
   disabled,
   allowFontScaling,
-  backIcon,
+  icon,
   label,
   labelStyle,
   displayMode = 'minimal',
@@ -51,12 +51,12 @@ export function HeaderBackButton({
   const renderBackImage = () => {
     const color = tintColor ?? colors.text;
 
-    if (typeof backIcon === 'function') {
-      return backIcon({ tintColor: color });
+    if (typeof icon === 'function') {
+      return icon({ tintColor: color });
     }
 
-    const icon =
-      backIcon ??
+    const backIcon =
+      icon ??
       Platform.select<HeaderIconType>({
         ios: {
           type: 'sfSymbol',
@@ -72,7 +72,7 @@ export function HeaderBackButton({
         },
       });
 
-    return <HeaderIcon icon={icon} color={color} style={styles.icon} />;
+    return <HeaderIcon icon={backIcon} color={color} style={styles.icon} />;
   };
 
   const handlePress = () => {

@@ -93,7 +93,7 @@ export function HeaderSegment(props: Props) {
         left({
           ...props,
           href: backHref,
-          backIcon: headerBackIcon,
+          icon: headerBackIcon,
           accessibilityLabel: headerBackAccessibilityLabel,
           testID: headerBackTestID,
           allowFontScaling: headerBackAllowFontScaling,

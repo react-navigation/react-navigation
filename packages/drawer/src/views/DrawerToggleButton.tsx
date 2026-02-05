@@ -5,12 +5,15 @@ import {
   SFSymbol,
   useNavigation,
 } from '@react-navigation/native';
+import * as React from 'react';
 import { type ColorValue, Image, Platform, StyleSheet } from 'react-native';
 
 import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
 
 type Props = {
-  icon?: HeaderIcon;
+  icon?:
+    | HeaderIcon
+    | ((props: { tintColor: ColorValue | undefined }) => React.ReactNode);
   accessibilityLabel?: string;
   pressColor?: ColorValue;
   pressOpacity?: number;
@@ -48,7 +51,9 @@ export function DrawerToggleButton({
       accessibilityLabel={accessibilityLabel}
       onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
     >
-      {drawerIcon.type === 'sfSymbol' ? (
+      {typeof drawerIcon === 'function' ? (
+        drawerIcon({ tintColor })
+      ) : drawerIcon.type === 'sfSymbol' ? (
         <SFSymbol
           name={drawerIcon.name}
           size={ICON_SIZE}
