@@ -165,6 +165,8 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
             type: 'image',
             source: focused ? iconListMusic : iconMusic,
           }),
+          tabBarActiveTintColor:
+            Platform.OS !== 'ios' ? 'rgba(255, 255, 255, 0.9)' : undefined,
           tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.7)',
           tabBarStyle: {
             backgroundColor: 'rgba(0, 0, 0, 0.8)',
