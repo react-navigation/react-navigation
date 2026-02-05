@@ -9,7 +9,7 @@
     "ios": "expo run:ios",
     "web": "vite",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
-    "e2e:native": "maestro test --debug-output maestro-debug-output -e APP_ID=org.reactnavigation.playground -e APP_SCHEME=rne:// e2e/maestro",
+    "e2e:native": "node ../scripts/maestro.ts",
     "e2e:web": "npx playwright test --config=e2e/playwright.config.ts"
   },
   "dependencies": {
@@ -80,15 +80,39 @@
       "fonts": [
         {
           "variant": "sharp",
-          "weights": [100, 200, 300, 400, 500, 600, 700]
+          "weights": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700
+          ]
         },
         {
           "variant": "outlined",
-          "weights": [100, 200, 300, 400, 500, 600, 700]
+          "weights": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700
+          ]
         },
         {
           "variant": "rounded",
-          "weights": [100, 200, 300, 400, 500, 600, 700]
+          "weights": [
+            100,
+            200,
+            300,
+            400,
+            500,
+            600,
+            700
+          ]
         }
       ]
     }
