@@ -18,7 +18,7 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      MAESTRO_VERSION: 2.0.10
+      MAESTRO_VERSION: 2.1.0
       MAESTRO_CLI_NO_ANALYTICS: 1
       MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
       JAVA_DISTRIBUTION: 'zulu'
@@ -171,19 +171,7 @@ jobs:
         env:
           SCRIPT: |
             adb install ../android-debug-build/android-debug.apk
-
-            for i in 1 2 3; do
-              if yarn run e2e:native --flatten-debug-output; then
-                break
-              else
-                echo "Maestro tests failed on attempt $i"
-
-                if [ $i -eq 3 ]; then
-                  echo "Maestro tests failed after $i attempts"
-                  exit 1
-                fi
-              fi
-            done
+            yarn run e2e:native --platform android
 
       - name: Run Maestro tests
         uses: reactivecircus/android-emulator-runner@v2

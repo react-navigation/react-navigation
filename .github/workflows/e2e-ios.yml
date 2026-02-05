@@ -18,7 +18,7 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      MAESTRO_VERSION: 2.0.10
+      MAESTRO_VERSION: 2.1.0
       MAESTRO_CLI_NO_ANALYTICS: 1
       MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
       JAVA_DISTRIBUTION: 'zulu'
@@ -188,19 +188,7 @@ jobs:
       - name: Run Maestro tests
         run: |
           xcrun simctl install booted ../ios-debug-build/ios-debug.app
-
-          for i in 1 2 3; do
-            if yarn run e2e:native --flatten-debug-output; then
-              break
-            else
-              echo "Maestro tests failed on attempt $i"
-
-              if [ $i -eq 3 ]; then
-                echo "Maestro tests failed after $i attempts"
-                exit 1
-              fi
-            fi
-          done
+          yarn run e2e:native --platform ios
         working-directory: example
 
       - name: Store debug output
