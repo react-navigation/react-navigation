@@ -464,7 +464,12 @@ const useAppState = () => {
     if (Platform.OS === 'web') {
       document.documentElement.style.colorScheme = colorScheme;
     } else {
-      Appearance.setColorScheme(colorScheme);
+      if (state.themeName === 'material') {
+        Appearance.setColorScheme(null);
+        return;
+      } else {
+        Appearance.setColorScheme(colorScheme);
+      }
     }
   }, [state.isReady, state.themeName]);
 
