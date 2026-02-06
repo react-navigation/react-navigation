@@ -9465,18 +9465,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-status-bar@npm:~3.0.9":
-  version: 3.0.9
-  resolution: "expo-status-bar@npm:3.0.9"
-  dependencies:
-    react-native-is-edge-to-edge: "npm:^1.2.1"
-  peerDependencies:
-    react: "*"
-    react-native: "*"
-  checksum: 10c0/b35ed996a3da45a657075447bbf687dad4e7d5321129182e58737ea0fa4aeb8bb145bbe20967abd6823587a738e4c6fd62c41d18d8c11094ff926e2079c02fc2
-  languageName: node
-  linkType: hard
-
 "expo-structured-headers@npm:~5.0.0":
   version: 5.0.0
   resolution: "expo-structured-headers@npm:5.0.0"
@@ -15525,7 +15513,6 @@ __metadata:
     eslint: "npm:^9.29.0"
     eslint-config-satya164: "npm:^5.1.6"
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
-    expo-status-bar: "npm:~3.0.9"
     jest: "npm:^30.0.0"
     npm-run-all2: "npm:^8.0.4"
     prettier: "npm:^3.5.3"
