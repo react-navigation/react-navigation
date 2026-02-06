@@ -17,6 +17,7 @@ import { NativeBottomTabs } from './Screens/NativeBottomTabs';
 import { NativeBottomTabsCustomTabBar } from './Screens/NativeBottomTabsCustomTabBar';
 import { NativeStack } from './Screens/NativeStack';
 import { NativeStackCardModal } from './Screens/NativeStackCardModal';
+import { NativeStackFormSheet } from './Screens/NativeStackFormSheet';
 import { NativeStackHeaderCustomization } from './Screens/NativeStackHeaderCustomization';
 import { NativeStackPreloadFlow } from './Screens/NativeStackPreloadFlow';
 import { NativeStackPreventRemove } from './Screens/NativeStackPreventRemove';
@@ -35,6 +36,7 @@ import { StaticConfig as StaticConfigScreen } from './Screens/StaticConfig';
 export const SCREENS = {
   NativeStack,
   NativeStackCardModal,
+  NativeStackFormSheet,
   NativeStackHeaderCustomization,
   NativeStackPreloadFlow,
   NativeStackPreventRemove,
