@@ -230,9 +230,10 @@ function Examples() {
         }, []).map((item) => {
           return (
             <ListGroupItem key={item.group} title={item.group}>
-              {item.items.map((it) => {
+              {item.items.map((it, i) => {
                 return (
                   <React.Fragment key={it.name}>
+                    {i > 0 ? <Divider /> : null}
                     <ListItem
                       title={it.title}
                       testID={it.name}
@@ -241,7 +242,6 @@ function Examples() {
                         navigation.navigate(it.name);
                       }}
                     />
-                    <Divider />
                   </React.Fragment>
                 );
               })}
