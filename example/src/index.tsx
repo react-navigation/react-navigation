@@ -29,10 +29,10 @@ import {
   createStackNavigator,
   type StackNavigationOptions,
 } from '@react-navigation/stack';
+import { reloadAppAsync } from 'expo';
 import { createURL } from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { reloadAsync } from 'expo-updates';
 import * as React from 'react';
 import {
   Appearance,
@@ -143,11 +143,11 @@ function Examples() {
                 payload: value,
               })
             }
-            disabled={
-              // Set expo.extra.forcesRTL: true in app.json to enable RTL in Expo Go
-              Platform.OS !== 'web'
-            }
             trackColor={{ true: theme.colors.primary }}
+            style={{
+              // FIXME: On iOS, switch doesn't center vertically
+              marginVertical: 12,
+            }}
           />
         </ListItem>
         <Divider />
@@ -491,7 +491,7 @@ const useAppState = () => {
       I18nManager.forceRTL(state.isRTL);
 
       if (Platform.OS !== 'web') {
-        reloadAsync();
+        reloadAppAsync();
       }
     }
   }, [state.isRTL, state.isReady]);
