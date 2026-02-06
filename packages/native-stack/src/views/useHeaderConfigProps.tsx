@@ -1,6 +1,7 @@
 import { getHeaderTitle, HeaderTitle } from '@react-navigation/elements';
 import { Color } from '@react-navigation/elements/internal';
 import {
+  MaterialSymbol,
   type Route,
   type Theme,
   useLocale,
@@ -93,10 +94,14 @@ const processBarButtonItems = (
         };
 
         if (processedItem.type === 'menu' && item.type === 'menu') {
+          const { multiselectable, layout } = item.menu;
+
           processedItem = {
             ...processedItem,
             menu: {
               ...processedItem.menu,
+              singleSelection: !multiselectable,
+              displayAsPalette: layout === 'palette',
               items: item.menu.items.map(getMenuItem),
             },
           };
@@ -105,9 +110,7 @@ const processBarButtonItems = (
         if (badge) {
           const badgeBackgroundColor =
             badge.style?.backgroundColor ?? colors.notification;
-          const badgeTextColor = Color(badgeBackgroundColor)?.isLight()
-            ? 'black'
-            : 'white';
+          const badgeTextColor = Color.foreground(badgeBackgroundColor);
 
           processedItem = {
             ...processedItem,
@@ -137,19 +140,25 @@ const processBarButtonItems = (
 const getMenuItem = (
   item: NativeStackHeaderItemMenuAction | NativeStackHeaderItemMenuSubmenu
 ): HeaderBarButtonItemMenuAction | HeaderBarButtonItemSubmenu => {
-  const { label, ...rest } = item;
+  if (item.type === 'submenu') {
+    const { label, inline, layout, items, multiselectable, ...rest } = item;
 
-  if (rest.type === 'submenu') {
     return {
       ...rest,
       title: label,
-      items: rest.items.map(getMenuItem),
+      displayAsPalette: layout === 'palette',
+      displayInline: inline,
+      singleSelection: !multiselectable,
+      items: items.map(getMenuItem),
     };
   }
+
+  const { label, description, ...rest } = item;
 
   return {
     ...rest,
     title: label,
+    subtitle: description,
   };
 };
 
@@ -167,7 +176,9 @@ export function useHeaderConfigProps({
   headerLargeTitleStyle,
   headerBackground,
   headerLeft,
+  headerLeftBackgroundVisible,
   headerRight,
+  headerRightBackgroundVisible,
   headerShown,
   headerStyle,
   headerBlurEffect,
@@ -185,7 +196,7 @@ export function useHeaderConfigProps({
   unstable_headerRightItems: headerRightItems,
 }: Props): ScreenStackHeaderConfigProps {
   const { direction } = useLocale();
-  const { colors, fonts } = useTheme();
+  const { colors, fonts, dark } = useTheme();
   const tintColor =
     headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
 
@@ -250,7 +261,10 @@ export function useHeaderConfigProps({
 
   const headerBackgroundColor =
     headerStyleFlattened.backgroundColor ??
-    (headerBackground != null || headerTransparent
+    (headerBackground != null ||
+    headerTransparent ||
+    // The title becomes invisible if background color is set with large title on iOS 26
+    (Platform.OS === 'ios' && headerLargeTitleEnabled)
       ? 'transparent'
       : colors.card);
 
@@ -348,7 +362,9 @@ export function useHeaderConfigProps({
               return null;
             })
           ) : headerLeftElement != null ? (
-            <ScreenStackHeaderLeftView>
+            <ScreenStackHeaderLeftView
+              hidesSharedBackground={headerLeftBackgroundVisible === false}
+            >
               {headerLeftElement}
             </ScreenStackHeaderLeftView>
           ) : null}
@@ -401,7 +417,20 @@ export function useHeaderConfigProps({
         </>
       )}
       {headerBackIcon !== undefined ? (
-        <ScreenStackHeaderBackButtonImage source={headerBackIcon.source} />
+        <ScreenStackHeaderBackButtonImage
+          source={
+            headerBackIcon.type === 'image'
+              ? headerBackIcon.source
+              : headerBackIcon.type === 'materialSymbol'
+                ? MaterialSymbol.getImageSource({
+                    name: headerBackIcon.name,
+                    variant: headerBackIcon.variant,
+                    weight: headerBackIcon.weight,
+                    color: tintColor,
+                  })
+                : undefined
+          }
+        />
       ) : null}
       {Platform.OS === 'ios' && rightItems ? (
         rightItems.map((item, index) => {
@@ -420,7 +449,9 @@ export function useHeaderConfigProps({
           return null;
         })
       ) : headerRightElement != null ? (
-        <ScreenStackHeaderRightView>
+        <ScreenStackHeaderRightView
+          hidesSharedBackground={headerRightBackgroundVisible === false}
+        >
           {headerRightElement}
         </ScreenStackHeaderRightView>
       ) : null}
@@ -474,5 +505,6 @@ export function useHeaderConfigProps({
     children,
     headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
     headerRightBarButtonItems: processBarButtonItems(rightItems, colors, fonts),
+    experimental_userInterfaceStyle: dark ? 'dark' : 'light',
   } as const;
 }

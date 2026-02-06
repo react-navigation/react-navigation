@@ -208,15 +208,12 @@ test('gets navigation in preloaded screen', () => {
   expect.assertions(4);
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, describe } = useNavigationBuilder(
-      StackRouter,
-      props
-    );
+    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
 
     return (
       <>
         {state.routes.map((route) => descriptors[route.key].render())}
-        {state.preloadedRoutes?.map((route) => describe(route, true).render())}
+        {state.preloadedRoutes?.map((route) => descriptors[route.key].render())}
       </>
     );
   };

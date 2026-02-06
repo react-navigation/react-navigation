@@ -90,9 +90,7 @@ function ButtonBase({
       break;
     case 'filled':
       backgroundColor = color;
-      textColor = Color(color)?.isDark()
-        ? 'white'
-        : (Color(color)?.darken(0.71).string() ?? '#fff');
+      textColor = Color.foreground(backgroundColor);
       break;
   }
 

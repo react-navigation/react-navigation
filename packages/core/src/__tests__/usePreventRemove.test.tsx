@@ -947,16 +947,19 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
     type: 'stack',
   });
 
-  act(() =>
-    ref.current?.resetRoot({
+  act(() => {
+    const state = {
       index: 0,
       key: 'stack-2',
       routeNames: ['foo', 'bar', 'baz'],
       routes: [{ key: 'foo-3', name: 'foo' }],
+      preloadedRoutes: [],
       stale: false,
       type: 'stack',
-    })
-  );
+    };
+
+    ref.current?.resetRoot(state);
+  });
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
 

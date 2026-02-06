@@ -45,7 +45,7 @@ app.use(async (ctx) => {
     ${css}
     <title>${ref.current?.getCurrentOptions()?.title}</title>
     <body style="min-height: 100%">
-    <div id="root" style="display: flex; min-height: 100vh">
+    <div id="root" style="display: flex; min-height: 100svh">
     ${html}
     </div>
 `;

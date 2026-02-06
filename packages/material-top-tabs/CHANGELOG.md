@@ -3,6 +3,91 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.9...@react-navigation/material-top-tabs@8.0.0-alpha.10) (2026-02-05)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.8...@react-navigation/material-top-tabs@8.0.0-alpha.9) (2026-02-04)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.7...@react-navigation/material-top-tabs@8.0.0-alpha.8) (2026-02-02)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.6...@react-navigation/material-top-tabs@8.0.0-alpha.7) (2026-02-01)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.5...@react-navigation/material-top-tabs@8.0.0-alpha.6) (2026-02-01)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.4...@react-navigation/material-top-tabs@8.0.0-alpha.5) (2026-01-29)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.3...@react-navigation/material-top-tabs@8.0.0-alpha.4) (2026-01-29)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.2...@react-navigation/material-top-tabs@8.0.0-alpha.3) (2026-01-22)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.1...@react-navigation/material-top-tabs@8.0.0-alpha.2) (2026-01-19)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.0...@react-navigation/material-top-tabs@8.0.0-alpha.1) (2026-01-19)
+
+### Features
+
+* add a ~meta property to navigation object ([#12931](https://github.com/react-navigation/react-navigation/issues/12931)) ([e570c72](https://github.com/react-navigation/react-navigation/commit/e570c72f119cd6506c6106e7eb1ebb9ad5d47a62)) - by @satya164
+
+# [8.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.3.3...@react-navigation/material-top-tabs@8.0.0-alpha.0) (2025-12-19)
+
+### Bug Fixes
+
+* add more checks on how path param is parsed ([f05681d](https://github.com/react-navigation/react-navigation/commit/f05681d226663a582e23bf66e0bfa83145627af3)) - by @satya164
+* replace `pointerEvents` props with styles ([#12693](https://github.com/react-navigation/react-navigation/issues/12693)) ([987aed6](https://github.com/react-navigation/react-navigation/commit/987aed623ad7eaf120d3af76ca2e05b2a3c7f103)), closes [#12441](https://github.com/react-navigation/react-navigation/issues/12441) - by @hassankhan
+
+### Code Refactoring
+
+* drop deprecated APIs and fallbacks for older versions of packages ([cf60189](https://github.com/react-navigation/react-navigation/commit/cf601898adf7ad18b3e4b298a82e04bfb170f01b)) - by @satya164
+* get parent navigation by route name with getParent ([#12822](https://github.com/react-navigation/react-navigation/issues/12822)) ([2877968](https://github.com/react-navigation/react-navigation/commit/2877968680e14a8d4698c4762996fff6c086f793)) - by @satya164
+
+### Features
+
+* add scroll adapter to tab view and expose renderAdapter prop ([3579022](https://github.com/react-navigation/react-navigation/commit/35790223f488e3eda728b18931b8b5d8da5db13b)) - by @satya164
+* add staticXScreen type to improve defining screens ([#12886](https://github.com/react-navigation/react-navigation/issues/12886)) ([7a5ebbd](https://github.com/react-navigation/react-navigation/commit/7a5ebbd91e7f8ad2ae3d810f45a2d27567dbae68)) - by @satya164
+* infer params type based on linking and screen ([#12888](https://github.com/react-navigation/react-navigation/issues/12888)) ([84069bf](https://github.com/react-navigation/react-navigation/commit/84069bf11254ab60adc3e4490a96c87c9b1343f7)) - by @satya164
+* remove UNSTABLE prefix from routeNamesChangeBehavior ([eda56ea](https://github.com/react-navigation/react-navigation/commit/eda56ea6840df32114d62ff9c77c066f240022a4)) - by @satya164
+* restore unhandled state after route names change ([#12812](https://github.com/react-navigation/react-navigation/issues/12812)) ([52e8a45](https://github.com/react-navigation/react-navigation/commit/52e8a45d8e8b068a616f8a7df6357ad6198f0622)) - by @satya164
+* support ColorValue instead of string for colors in theme ([#12711](https://github.com/react-navigation/react-navigation/issues/12711)) ([cfe746b](https://github.com/react-navigation/react-navigation/commit/cfe746be6d671da7f4fe785d5bd6142fc8152e14)) - by @satya164
+* update default tab view colors to match react navigation ([90897a9](https://github.com/react-navigation/react-navigation/commit/90897a9431899c603a1fa309b5339651de32cfb7)) - by @satya164
+
+### BREAKING CHANGES
+
+* Navigators don't accept an ID anymore, and `getParent`
+accepts only route names. Any code using navigator IDs needs to be
+refactored.
+* the minimum required version for `react-native-web` is now `~0.21.0`
+
+**Motivation**
+
+By replacing usages of `pointerEvents` to use styles instead of props,
+we won't get an annoying warning in the logs.
+
+The underlying issue in React Native Web which prevented children of a
+`pointer-events: box-none` element from receiving pointer events is
+resolved by https://github.com/necolas/react-native-web/pull/2789.
+
+A follow-up fix to React Native Testing Library was also required, PR
+here
+https://github.com/callstack/react-native-testing-library/pull/1799.
+* This bumps the minimum required versions of various peer deps
+
 ## [7.3.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.3.2...@react-navigation/material-top-tabs@7.3.3) (2025-07-25)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

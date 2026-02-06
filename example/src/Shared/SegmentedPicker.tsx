@@ -1,35 +1,53 @@
 import { Text } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import { useTheme } from '@react-navigation/native';
-import { Pressable, StyleSheet, View } from 'react-native';
+import {
+  Pressable,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 
-type Props<T extends string> = {
+type Props<T extends string | number> = {
   choices: { label: string; value: T }[];
   value: T;
   onValueChange: (value: T) => void;
+  style?: StyleProp<ViewStyle>;
 };
 
-export function SegmentedPicker<T extends string>({
+export function SegmentedPicker<T extends string | number>({
   choices,
   value,
   onValueChange,
+  style,
 }: Props<T>) {
-  const { dark } = useTheme();
+  const { colors, fonts } = useTheme();
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {choices.map((option) => (
         <Pressable
           key={option.value}
           onPress={() => onValueChange(option.value)}
           style={[
             styles.segment,
-            option.value === value && [
-              styles.active,
-              { backgroundColor: dark ? 'rgba(255, 255, 255, 0.15)' : '#fff' },
-            ],
+            option.value === value && { backgroundColor: colors.primary },
           ]}
         >
-          <Text>{option.label}</Text>
+          <Text
+            style={[
+              fonts.medium,
+              {
+                color:
+                  option.value === value
+                    ? Color.foreground(colors.primary)
+                    : colors.text,
+              },
+            ]}
+          >
+            {option.label}
+          </Text>
         </Pressable>
       ))}
     </View>
@@ -41,11 +59,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   segment: {
-    borderRadius: 5,
+    borderRadius: 20,
     paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  active: {
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.15)',
+    paddingHorizontal: 12,
   },
 });

@@ -3,6 +3,126 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.9...@react-navigation/native@8.0.0-alpha.10) (2026-02-05)
+
+### Bug Fixes
+
+* default to outlined if multiple material symbols are used ([d68e95c](https://github.com/react-navigation/react-navigation/commit/d68e95cb9eeab45910316ed89648e0f553f077d4)) - by @satya164
+* fix material symbol not implementing the native interface ([8d81498](https://github.com/react-navigation/react-navigation/commit/8d814986505f5bcd275d2888f3082c3f63fbc627)) - by @satya164
+
+# [8.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.8...@react-navigation/native@8.0.0-alpha.9) (2026-02-04)
+
+### Bug Fixes
+
+* add a workaround for false positive with multiple linking error ([be38f7c](https://github.com/react-navigation/react-navigation/commit/be38f7cfa4ccf955cefcf87e047f05d1ad8f31d6)) - by @satya164
+
+### Features
+
+* export MaterialLightTheme and MaterialDarkTheme ([bc0ec11](https://github.com/react-navigation/react-navigation/commit/bc0ec1156128aa876313b4889cd7293307ed065b)) - by @satya164
+
+# [8.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.7...@react-navigation/native@8.0.0-alpha.8) (2026-02-02)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [8.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.6...@react-navigation/native@8.0.0-alpha.7) (2026-02-01)
+
+### Bug Fixes
+
+* don't ship build artifacts with npm package ([7af792a](https://github.com/react-navigation/react-navigation/commit/7af792afbfab6b4461cd9f9a8503341db4f2a071)) - by @
+
+# [8.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.5...@react-navigation/native@8.0.0-alpha.6) (2026-02-01)
+
+### Features
+
+* show deep links in dev tools ([3b56546](https://github.com/react-navigation/react-navigation/commit/3b565466adcd0beebc5ae6dcefb821879d602e39)) - by @
+
+# [8.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.4...@react-navigation/native@8.0.0-alpha.5) (2026-01-29)
+
+### Bug Fixes
+
+* fix material symbol not getting updated when name changes ([ea86b5c](https://github.com/react-navigation/react-navigation/commit/ea86b5cbae85f06c6475b620706ebe563932926b)) - by @
+
+# [8.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.3...@react-navigation/native@8.0.0-alpha.4) (2026-01-29)
+
+### Features
+
+* add more customization options for SFSymbols ([c73751d](https://github.com/react-navigation/react-navigation/commit/c73751d7b29c618eeeebba869b2214ffe269350b)) - by @satya164
+* add support for specifying material fonts ([#12947](https://github.com/react-navigation/react-navigation/issues/12947)) ([524065f](https://github.com/react-navigation/react-navigation/commit/524065ffa937fe88f82d04d432168eb1822e782c)) - by @satya164
+* add support for variant and weight to material symbol ([1dcd6a5](https://github.com/react-navigation/react-navigation/commit/1dcd6a557181e72224594fd912b49902db5ff532)) - by @satya164
+
+# [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.2...@react-navigation/native@8.0.0-alpha.3) (2026-01-22)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [8.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.1...@react-navigation/native@8.0.0-alpha.2) (2026-01-19)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [8.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.0...@react-navigation/native@8.0.0-alpha.1) (2026-01-19)
+
+### Bug Fixes
+
+* split useLinkBuilder to minimize re-renders ([4aae756](https://github.com/react-navigation/react-navigation/commit/4aae7563d9fb7d823416255c43b586258b34fe0e)), closes [#12903](https://github.com/react-navigation/react-navigation/issues/12903) - by @satya164
+
+### Features
+
+* add a ~meta property to navigation object ([#12931](https://github.com/react-navigation/react-navigation/issues/12931)) ([e570c72](https://github.com/react-navigation/react-navigation/commit/e570c72f119cd6506c6106e7eb1ebb9ad5d47a62)) - by @satya164
+* add a SFSymbol component ([#12917](https://github.com/react-navigation/react-navigation/issues/12917)) ([b00a37d](https://github.com/react-navigation/react-navigation/commit/b00a37d5d8c3cf36729b724bc22384b023001082)) - by @satya164
+* add support for material symbols ([#12926](https://github.com/react-navigation/react-navigation/issues/12926)) ([6ac58fc](https://github.com/react-navigation/react-navigation/commit/6ac58fcde756cf9a547a1604a6b7fa80efef4ad9)) - by @satya164
+* default linking to auto for static config ([6a175f9](https://github.com/react-navigation/react-navigation/commit/6a175f974121c7b9714fd9aa6875715cf6435da6)) - by @satya164
+* support sfSymbol icon in custom tabs ([2fe9f97](https://github.com/react-navigation/react-navigation/commit/2fe9f9741f1ba3c460bdca9e5d2e8568d374e75a)) - by @satya164
+
+# [8.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.15...@react-navigation/native@8.0.0-alpha.0) (2025-12-19)
+
+### Bug Fixes
+
+* dispatch action for deep link even if route doesn't exist ([6f1adf7](https://github.com/react-navigation/react-navigation/commit/6f1adf7cfe25f8ed80606f39494cc8fd58f598c7)) - by @satya164
+* don't extends RootParamList in Link to allow overrides ([d928289](https://github.com/react-navigation/react-navigation/commit/d9282892dbfe9c1ac2d3616adea0d2ed55176434)) - by @satya164
+* export useRoutePath to match docs - fixes [#12776](https://github.com/react-navigation/react-navigation/issues/12776) ([#12777](https://github.com/react-navigation/react-navigation/issues/12777)) ([1c31f4f](https://github.com/react-navigation/react-navigation/commit/1c31f4f5225dbf878dd9a28b715b19f8c1e990ef)) - by @kevindice
+* normalize parsed path to always include leading slash ([184e513](https://github.com/react-navigation/react-navigation/commit/184e513b7bbf403954857df014ca5e358dea91a8)) - by @satya164
+* remove unused onUnhandledLinking ([57949c5](https://github.com/react-navigation/react-navigation/commit/57949c510fe9586a421be91546ede17bce2f33e7)) - by @satya164
+* replace `pointerEvents` props with styles ([#12693](https://github.com/react-navigation/react-navigation/issues/12693)) ([987aed6](https://github.com/react-navigation/react-navigation/commit/987aed623ad7eaf120d3af76ca2e05b2a3c7f103)), closes [#12441](https://github.com/react-navigation/react-navigation/issues/12441) - by @hassankhan
+
+### Code Refactoring
+
+* drop deprecated APIs and fallbacks for older versions of packages ([cf60189](https://github.com/react-navigation/react-navigation/commit/cf601898adf7ad18b3e4b298a82e04bfb170f01b)) - by @satya164
+* get parent navigation by route name with getParent ([#12822](https://github.com/react-navigation/react-navigation/issues/12822)) ([2877968](https://github.com/react-navigation/react-navigation/commit/2877968680e14a8d4698c4762996fff6c086f793)) - by @satya164
+* rework how root types are specified ([7d63782](https://github.com/react-navigation/react-navigation/commit/7d63782b7ed90e5c1504325c51d1245e90817506)) - by @satya164
+
+### Features
+
+* add a persitor prop to persist and restore state ([#12842](https://github.com/react-navigation/react-navigation/issues/12842)) ([597a3c6](https://github.com/react-navigation/react-navigation/commit/597a3c66d4dde72da80b4674cfee9bd3c896c87c)) - by @satya164
+* default linking prefixes to [*] ([31c7dbc](https://github.com/react-navigation/react-navigation/commit/31c7dbcec281d82bac9556a404692ee95299459f)) - by @satya164
+* detect href to use if only action is specified on link ([a1d19c5](https://github.com/react-navigation/react-navigation/commit/a1d19c5ca89bbfe7102e432c6edaa37d0a149d99)) - by @satya164
+* implement route.history & PUSH_PARAMS ([#12751](https://github.com/react-navigation/react-navigation/issues/12751)) ([be3dee3](https://github.com/react-navigation/react-navigation/commit/be3dee3676cd797a33f7283a9d24b773484ed5d7)) - by @satya164
+* rework header design to resemble latest iOS ([#12873](https://github.com/react-navigation/react-navigation/issues/12873)) ([260b604](https://github.com/react-navigation/react-navigation/commit/260b604ba4b96c35826b2a326a9137363b8de0fd)) - by @satya164
+* support ColorValue instead of string for colors in theme ([#12711](https://github.com/react-navigation/react-navigation/issues/12711)) ([cfe746b](https://github.com/react-navigation/react-navigation/commit/cfe746be6d671da7f4fe785d5bd6142fc8152e14)) - by @satya164
+* support hrefs with prefixes in useLinkBuilder ([3437dda](https://github.com/react-navigation/react-navigation/commit/3437dda3d028ef0ea9e6b52fd865680383fa4e20)) - by @satya164
+* support wildcard prefix for linking ([865dbbd](https://github.com/react-navigation/react-navigation/commit/865dbbdb1b20417e407da68cb6b091bc11c03593)) - by @satya164
+
+### BREAKING CHANGES
+
+* The types previously specified with `RootParamList`
+using global augmentation will stop working.
+* Navigators don't accept an ID anymore, and `getParent`
+accepts only route names. Any code using navigator IDs needs to be
+refactored.
+* the minimum required version for `react-native-web` is now `~0.21.0`
+
+**Motivation**
+
+By replacing usages of `pointerEvents` to use styles instead of props,
+we won't get an annoying warning in the logs.
+
+The underlying issue in React Native Web which prevented children of a
+`pointer-events: box-none` element from receiving pointer events is
+resolved by https://github.com/necolas/react-native-web/pull/2789.
+
+A follow-up fix to React Native Testing Library was also required, PR
+here
+https://github.com/callstack/react-native-testing-library/pull/1799.
+* This bumps the minimum required versions of various peer deps
+
 ## [7.1.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.1.14...@react-navigation/native@7.1.15) (2025-07-25)
 
 **Note:** Version bump only for package @react-navigation/native

@@ -1,7 +1,32 @@
-import type { NavigationContainerRef } from '@react-navigation/core';
+import type {
+  NavigationContainerRef,
+  NavigationState,
+  PartialState,
+} from '@react-navigation/core';
 import * as React from 'react';
 
 import { useDevToolsBase } from './useDevToolsBase';
+
+function findRouteNameByKey(
+  state: NavigationState | PartialState<NavigationState>,
+  key: string
+): string | undefined {
+  for (const route of state.routes) {
+    if (route.key === key) {
+      return route.name;
+    }
+
+    if (route.state) {
+      const name = findRouteNameByKey(route.state, key);
+
+      if (name) {
+        return name;
+      }
+    }
+  }
+
+  return undefined;
+}
 
 export function useLogger(
   ref: React.RefObject<NavigationContainerRef<any> | null>
@@ -13,7 +38,39 @@ export function useLogger(
   useDevToolsBase(ref, (result) => {
     const log = [[`${result.type} `, 'color: gray; font-weight: lighter']];
 
-    if (result.type === 'action') {
+    if (result.type === 'link') {
+      log.push([`${result.url} `, `color: ${valueColor}; font-weight: bold`]);
+    } else if (result.type === 'event') {
+      // Ignore high-frequency events to reduce noise in the logs
+      const IGNORED_EVENTS = [
+        'focus',
+        'blur',
+        'state',
+        'beforeRemove',
+        'transitionStart',
+        'transitionEnd',
+      ];
+
+      if (IGNORED_EVENTS.includes(result.event.type)) {
+        return;
+      }
+
+      log.push([
+        `${result.event.type} `,
+        `color: ${actionColor}; font-weight: bold`,
+      ]);
+
+      if (result.event.target) {
+        const state = ref.current?.getRootState();
+        const name = state
+          ? findRouteNameByKey(state, result.event.target)
+          : undefined;
+
+        if (name) {
+          log.push([`(${name}) `, `color: ${valueColor}; font-weight: normal`]);
+        }
+      }
+    } else if (result.type === 'action') {
       log.push([
         `${result.action.type} `,
         `color: ${actionColor}; font-weight: bold`,

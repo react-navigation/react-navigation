@@ -189,9 +189,7 @@ export function BottomTabItem({
   const activeTintColor: ColorValue =
     customActiveTintColor ??
     (variant === 'uikit' && sidebar && horizontal
-      ? Color(colors.primary)?.isDark()
-        ? 'white'
-        : (Color(colors.primary)?.darken(0.71).string() ?? colors.primary)
+      ? Color.foreground(colors.primary)
       : colors.primary);
 
   const inactiveTintColor: ColorValue =

@@ -1,9 +1,3 @@
-import backIcon from './assets/back-icon.png';
-import clearIcon from './assets/clear-icon.png';
-import closeIcon from './assets/close-icon.png';
-import searchIcon from './assets/search-icon.png';
-import searchIconLegacy from './assets/search-icon-legacy.png';
-
 export { Badge } from './Badge';
 export { Button } from './Button';
 export { getDefaultSidebarWidth } from './getDefaultSidebarWidth';
@@ -22,14 +16,5 @@ export { getLabel } from './Label/getLabel';
 export { Label } from './Label/Label';
 export { PlatformPressable } from './PlatformPressable';
 export { Text } from './Text';
-export { useFrameSize } from './useFrameSize';
-
-export const Assets = [
-  backIcon,
-  searchIcon,
-  searchIconLegacy,
-  closeIcon,
-  clearIcon,
-];
-
 export * from './types';
+export { useFrameSize } from './useFrameSize';

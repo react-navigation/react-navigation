@@ -17,7 +17,7 @@ type Options<
   ScreenOptions extends {},
   EventMap extends Record<string, any>,
 > = {
-  state: State;
+  routes: State['routes'];
   getState: () => State;
   navigation: NavigationHelpers<ParamListBase> &
     Partial<NavigationProp<ParamListBase, string, any, any, any>>;
@@ -65,7 +65,7 @@ export function useNavigationCache<
   EventMap extends Record<string, any>,
   ActionHelpers extends Record<string, (...args: any) => void>,
 >({
-  state,
+  routes,
   getState,
   navigation,
   setOptions,
@@ -74,67 +74,6 @@ export function useNavigationCache<
 }: Options<State, ScreenOptions, EventMap>) {
   const parentNavigationHelpers = React.useContext(NavigationContext);
   const { stackRef } = React.useContext(NavigationBuilderContext);
-
-  const base = React.useMemo((): NavigationItem<
-    State,
-    ScreenOptions,
-    EventMap,
-    ActionHelpers
-  > &
-    ActionHelpers => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { emit, ...rest } = navigation;
-
-    const actions = {
-      ...router.actionCreators,
-      ...CommonActions,
-    };
-
-    const dispatch = () => {
-      throw new Error(
-        'Actions cannot be dispatched from a placeholder screen.'
-      );
-    };
-
-    const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
-      (acc, name) => {
-        acc[name] = dispatch;
-
-        return acc;
-      },
-      {}
-    ) as ActionHelpers;
-
-    // @ts-expect-error: type of getParent does not match
-    return {
-      ...rest,
-      ...helpers,
-      addListener: () => {
-        // Event listeners are not supported for placeholder screens
-
-        return () => {
-          // Empty function
-        };
-      },
-      removeListener: () => {
-        // Event listeners are not supported for placeholder screens
-      },
-      dispatch,
-      getParent: (routeName) => {
-        if (routeName !== undefined) {
-          throw new Error(
-            'Getting parent by route name is not supported from a placeholder screen.'
-          );
-        }
-
-        return parentNavigationHelpers;
-      },
-      setOptions: () => {
-        throw new Error('Options cannot be set from a placeholder screen.');
-      },
-      isFocused: () => false,
-    };
-  }, [parentNavigationHelpers, navigation, router.actionCreators]);
 
   // Cache object which holds navigation objects for each screen
   // We use `React.useMemo` instead of `React.useRef` coz we want to invalidate it when deps change
@@ -149,10 +88,10 @@ export function useNavigationCache<
       >,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [base, getState, parentNavigationHelpers, navigation, setOptions, emitter]
+    [getState, parentNavigationHelpers, navigation, setOptions, emitter]
   );
 
-  cache.current = state.routes.reduce<
+  cache.current = routes.reduce<
     NavigationCache<State, ScreenOptions, EventMap, ActionHelpers>
   >((acc, route) => {
     const previous = cache.current[route.key];
@@ -213,8 +152,11 @@ export function useNavigationCache<
         {}
       );
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { emit, ...rest } = navigation;
+
       acc[route.key] = {
-        ...base,
+        ...rest,
         ...helpers,
         // FIXME: too much work to fix the types for now
         ...(emitter.create(route.key) as any),
@@ -239,7 +181,7 @@ export function useNavigationCache<
           }));
         },
         isFocused: () => {
-          const state = base.getState();
+          const state = rest.getState();
 
           if (state.routes[state.index].key !== route.key) {
             return false;
@@ -255,8 +197,5 @@ export function useNavigationCache<
     return acc;
   }, {});
 
-  return {
-    base,
-    navigations: cache.current,
-  };
+  return cache.current;
 }

@@ -17,11 +17,9 @@ type MinimalState = {
 };
 
 /**
- * Helpers to build href or action based on the linking options.
- *
- * @returns `buildHref` to build an `href` for screen and `buildAction` to build an action from an `href`.
+ * Helper to build a href for a screen based on the linking options.
  */
-export function useLinkBuilder() {
+export function useBuildHref() {
   const navigation = React.useContext(NavigationHelpersContext);
   const route = React.useContext(NavigationRouteContext);
 
@@ -30,8 +28,6 @@ export function useLinkBuilder() {
   const focusedRouteState = useStateForPath();
 
   const getPathFromStateHelper = options?.getPathFromState ?? getPathFromState;
-  const getActionFromStateHelper =
-    options?.getActionFromState ?? getActionFromState;
 
   const buildHref = React.useCallback(
     (name: string, params?: object) => {
@@ -100,6 +96,18 @@ export function useLinkBuilder() {
     ]
   );
 
+  return buildHref;
+}
+
+/**
+ * Helper to build a navigation action from a href based on the linking options.
+ */
+export function useBuildAction() {
+  const { options } = React.useContext(LinkingContext);
+
+  const getActionFromStateHelper =
+    options?.getActionFromState ?? getActionFromState;
+
   const buildAction = React.useCallback(
     (href: string) => {
       const state = getStateFromHref(href, options);
@@ -116,6 +124,18 @@ export function useLinkBuilder() {
     },
     [options, getActionFromStateHelper]
   );
+
+  return buildAction;
+}
+
+/**
+ * Helpers to build href or action based on the linking options.
+ *
+ * @returns `buildHref` to build an `href` for screen and `buildAction` to build an action from an `href`.
+ */
+export function useLinkBuilder() {
+  const buildHref = useBuildHref();
+  const buildAction = useBuildAction();
 
   return {
     buildHref,

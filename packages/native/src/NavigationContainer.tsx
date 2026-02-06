@@ -3,33 +3,46 @@ import {
   getActionFromState,
   getPathFromState,
   getStateFromPath,
+  type InitialState,
   type NavigationContainerProps,
   type NavigationContainerRef,
+  type NavigationState,
   type ParamListBase,
+  type PartialState,
   type RootParamList,
   ThemeProvider,
   validatePathConfig,
 } from '@react-navigation/core';
 import * as React from 'react';
-import { I18nManager } from 'react-native';
+import { I18nManager, Platform } from 'react-native';
 
 import { LinkingContext } from './LinkingContext';
 import { LocaleDirContext } from './LocaleDirContext';
-import { DefaultTheme } from './theming/DefaultTheme';
+import { LightTheme } from './theming/LightTheme';
 import type {
   DocumentTitleOptions,
   LinkingOptions,
   LocaleDirection,
+  Persistor,
 } from './types';
 import { useBackButton } from './useBackButton';
 import { useDocumentTitle } from './useDocumentTitle';
 import { useLinking } from './useLinking';
-import { useThenable } from './useThenable';
+import { type Thenable, useThenable } from './useThenable';
 
 declare global {
   var REACT_NAVIGATION_DEVTOOLS: WeakMap<
     NavigationContainerRef<any>,
-    { readonly linking: LinkingOptions<any> }
+    {
+      readonly linking: LinkingOptions<any>;
+      readonly listeners: Set<
+        (data: {
+          type: 'link';
+          url: string;
+          state: PartialState<NavigationState> | undefined;
+        }) => void
+      >;
+    }
   >;
 }
 
@@ -39,7 +52,9 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
   /**
    * Initial state object for the navigation tree.
    *
-   * If this is provided, deep link or URLs won't be handled on the initial render.
+   * If this is provided:
+   * - Deep link or URLs won't be handled on the initial render.
+   * - Persisted state won't be restored.
    */
   initialState?: NavigationContainerProps['initialState'];
   /**
@@ -54,11 +69,36 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
    */
   linking?: LinkingOptions<ParamList>;
   /**
-   * Fallback element to render until initial state is resolved from deep linking.
+   * Persistor object to persist and restore navigation state.
+   *
+   * State is not restored if a deep link is handled on the initial render
+   * Not supported on web when linking is enabled.
+   *
+   * Example:
+   *
+   * ```ts
+   * const persistor = {
+   *   async persist(state) {
+   *     await AsyncStorage.setItem('state-key-v1', JSON.stringify(state));
+   *   },
+   *   async restore() {
+   *     const state = await AsyncStorage.getItem('state-key-v1');
+   *
+   *     return state ? JSON.parse(state) : undefined;
+   *   },
+   * };
+   *
+   * <NavigationContainer persistor={persistor}>...</NavigationContainer>
+   * ```
+   */
+  persistor?: Persistor;
+  /**
+   * Fallback element to render until initial state is resolved.
+   * Used when deep link or persisted state is being restored asynchronously.
    *
    * Defaults to `null`.
    */
-  fallback?: React.ReactNode;
+  fallback?: React.ReactElement | null;
   /**
    * Options to configure the document title on Web.
    *
@@ -68,13 +108,18 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
   documentTitle?: DocumentTitleOptions;
 };
 
+const RESTORE_STATE_ERROR =
+  'Failed to restore navigation state. The state will be initialized based on the navigation tree.';
+
 function NavigationContainerInner(
   {
     direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
-    theme = DefaultTheme,
+    theme = LightTheme,
     linking,
+    persistor,
     fallback = null,
     documentTitle,
+    onStateChange,
     ...rest
   }: Props<ParamListBase>,
   ref?: React.Ref<NavigationContainerRef<ParamListBase> | null>
@@ -116,24 +161,87 @@ function NavigationContainerInner(
   // This will be used by the devtools
   React.useEffect(() => {
     if (refContainer.current) {
+      const previous = REACT_NAVIGATION_DEVTOOLS.get(refContainer.current);
+      const listeners = previous?.listeners ?? new Set();
+
       REACT_NAVIGATION_DEVTOOLS.set(refContainer.current, {
         get linking() {
           return linkingConfig.options;
+        },
+        get listeners() {
+          return listeners;
         },
       });
     }
   });
 
-  const [isResolved, initialState] = useThenable(getInitialState);
+  const [isLinkStateResolved, initialStateFromLink] = useThenable(() => {
+    if (rest.initialState != null || !linkingConfig.options.enabled) {
+      return undefined;
+    }
+
+    return getInitialState();
+  });
+
+  const isPersistenceSupported =
+    Platform.OS === 'web' ? !linkingConfig.options.enabled : true;
+
+  const [isPersistedStateResolved, initialStateFromPersisted] = useThenable(
+    () => {
+      if (
+        isPersistenceSupported === false ||
+        rest.initialState != null ||
+        persistor == null
+      ) {
+        return undefined;
+      }
+
+      let restoredState;
+
+      try {
+        restoredState = persistor.restore();
+      } catch (e) {
+        console.error(RESTORE_STATE_ERROR, e);
+
+        return undefined;
+      }
+
+      if (restoredState == null) {
+        return undefined;
+      }
+
+      if ('then' in restoredState) {
+        return restoredState.then(
+          (state) => state,
+          (error) => {
+            console.error(RESTORE_STATE_ERROR, error);
+
+            return undefined;
+          }
+        );
+      }
+
+      const thenable: Thenable<InitialState | undefined> = {
+        then(onfulfilled) {
+          return Promise.resolve(
+            onfulfilled ? onfulfilled(restoredState) : restoredState
+          );
+        },
+      };
+
+      return thenable;
+    }
+  );
 
   // FIXME
   // @ts-expect-error not sure why this is not working
   React.useImperativeHandle(ref, () => refContainer.current);
 
-  const isLinkingReady =
-    rest.initialState != null || !linkingConfig.options.enabled || isResolved;
+  const isStateReady =
+    rest.initialState != null ||
+    (isLinkStateResolved && isPersistedStateResolved);
 
-  if (!isLinkingReady) {
+  if (!isStateReady) {
     return (
       <LocaleDirContext.Provider value={direction}>
         <ThemeProvider value={theme}>{fallback}</ThemeProvider>
@@ -148,8 +256,14 @@ function NavigationContainerInner(
           {...rest}
           theme={theme}
           initialState={
-            rest.initialState == null ? initialState : rest.initialState
+            rest.initialState ??
+            initialStateFromLink ??
+            initialStateFromPersisted
           }
+          onStateChange={(state) => {
+            onStateChange?.(state);
+            persistor?.persist(state);
+          }}
           ref={refContainer}
         />
       </LinkingContext.Provider>
@@ -159,6 +273,7 @@ function NavigationContainerInner(
 
 /**
  * Container component that manages the navigation state.
+ *
  * This should be rendered at the root wrapping the whole app.
  */
 export const NavigationContainer = React.forwardRef(

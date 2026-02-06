@@ -7,6 +7,8 @@ import { render, type RenderAPI } from '@testing-library/react-native';
 
 import { useLinking } from '../useLinking';
 
+jest.useFakeTimers();
+
 test('throws if multiple instances of useLinking are used', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
 
@@ -24,9 +26,12 @@ test('throws if multiple instances of useLinking are used', () => {
 
   element = render(<Sample />);
 
-  expect(spy).toHaveBeenCalledTimes(1);
-  expect(spy.mock.calls[0][0]).toMatch(
-    'Looks like you have configured linking in multiple places.'
+  jest.runAllTimers();
+
+  expect(spy).toHaveBeenLastCalledWith(
+    expect.stringMatching(
+      'Looks like you have configured linking in multiple places.'
+    )
   );
 
   element?.unmount();

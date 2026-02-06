@@ -1,0 +1,24 @@
+appId: ${APP_ID}
+name: Stack - Float + Screen Header
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-float-screen-header
+      TEXT: 'Article by Gandalf'
+- tapOn:
+    text: 'Push feed'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Navigate to albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Pop screen'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Pop screen'
+- assertVisible:
+    text: 'Article by Gandalf'

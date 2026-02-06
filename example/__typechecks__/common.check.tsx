@@ -48,7 +48,7 @@ import {
 import { expectTypeOf } from 'expect-type';
 
 import type { BottomTabParamList } from '../src/Screens/BottomTabs';
-import type { StaticScreenParamList } from '../src/Screens/Static';
+import type { StaticScreenParamList } from '../src/Screens/StaticConfig';
 
 /**
  * Check for the type of the `navigation` and `route` objects with regular usage
@@ -727,11 +727,11 @@ useLinkProps<RootStackParamList>({ screen: 'Login' });
 </Button>;
 
 // @ts-expect-error
-useLinkProps({ screen: 'SimpleStack' });
+useLinkProps({ screen: 'StackBasic' });
 // @ts-expect-error
-useLinkProps({ screen: 'SimpleStac' });
+useLinkProps({ screen: 'StackBasi' });
 useLinkProps({
-  screen: 'SimpleStack',
+  screen: 'StackBasic',
   params: { screen: 'Albums' },
 });
 useLinkProps({ screen: 'Home' });
@@ -741,11 +741,11 @@ useLinkProps({
 });
 
 // @ts-expect-error
-<Link screen="SimpleStack">SimpleStack</Link>;
+<Link screen="StackBasic">StackBasic</Link>;
 // @ts-expect-error
-<Link screen="SimpleStac">SimpleStack</Link>;
-<Link screen="SimpleStack" params={{ screen: 'Albums' }}>
-  SimpleStack
+<Link screen="StackBasi">StackBasic</Link>;
+<Link screen="StackBasic" params={{ screen: 'Albums' }}>
+  StackBasic
 </Link>;
 <Link screen="Home">Home</Link>;
 <Link screen="Home" params={{ screen: 'Examples' }}>
@@ -753,11 +753,11 @@ useLinkProps({
 </Link>;
 
 // @ts-expect-error
-<Button screen="SimpleStack">SimpleStack</Button>;
+<Button screen="StackBasic">StackBasic</Button>;
 // @ts-expect-error
-<Button screen="SimpleStac">SimpleStack</Button>;
-<Button screen="SimpleStack" params={{ screen: 'Albums' }}>
-  SimpleStack
+<Button screen="StackBasi">StackBasic</Button>;
+<Button screen="StackBasic" params={{ screen: 'Albums' }}>
+  StackBasic
 </Button>;
 <Button screen="Home">Home</Button>;
 <Button screen="Home" params={{ screen: 'Examples' }}>
@@ -1008,13 +1008,13 @@ useNavigation('Invalid');
     StackNavigationProp<RootParamList, 'Home'> &
       CompositeNavigationProp<
         StackNavigationProp<StaticScreenParamList, 'Home'>,
-        StackNavigationProp<RootParamList, 'StaticScreen'>
+        StackNavigationProp<RootParamList, 'StaticConfigScreen'>
       >
   >();
 
   expectTypeOf(navigation.getParent)
     .parameter(0)
-    .toEqualTypeOf<'Home' | 'StaticScreen' | undefined>();
+    .toEqualTypeOf<'Home' | 'StaticConfigScreen' | undefined>();
 
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
 

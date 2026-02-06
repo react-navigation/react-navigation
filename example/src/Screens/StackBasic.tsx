@@ -1,0 +1,208 @@
+import { Button } from '@react-navigation/elements';
+import type {
+  CompositeScreenProps,
+  NavigatorScreenParams,
+  PathConfig,
+  RootParamList,
+  StaticScreenProps,
+} from '@react-navigation/native';
+import {
+  createStackNavigator,
+  type StackScreenProps,
+} from '@react-navigation/stack';
+import * as React from 'react';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
+
+import { COMMON_LINKING_CONFIG } from '../constants';
+import { Albums } from '../Shared/Albums';
+import { Article } from '../Shared/Article';
+import { Contacts } from '../Shared/Contacts';
+import { NewsFeed } from '../Shared/NewsFeed';
+
+type SimpleStackParamList = {
+  Article: { author: string } | undefined;
+  NewsFeed: { date: number };
+  Contacts: undefined;
+  Albums: undefined;
+};
+
+const linking = {
+  screens: {
+    Article: COMMON_LINKING_CONFIG.Article,
+    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
+    Contacts: 'contacts',
+    Albums: 'albums',
+  },
+} satisfies PathConfig<NavigatorScreenParams<SimpleStackParamList>>;
+
+const scrollEnabled = Platform.select({ web: true, default: false });
+
+const ArticleScreen = ({
+  navigation,
+  route,
+}: StackScreenProps<SimpleStackParamList, 'Article'>) => {
+  return (
+    <ScrollView>
+      <View style={styles.buttons}>
+        <Button
+          variant="filled"
+          onPress={() => navigation.navigate('NewsFeed', { date: Date.now() })}
+        >
+          Navigate to feed
+        </Button>
+        <Button variant="filled" onPress={() => navigation.popTo('Albums')}>
+          Pop to albums
+        </Button>
+        <Button
+          variant="tinted"
+          onPress={() =>
+            navigation.setParams({
+              author:
+                route.params?.author === 'Gandalf' ? 'Babel fish' : 'Gandalf',
+            })
+          }
+        >
+          Update params
+        </Button>
+        <Button variant="tinted" onPress={() => navigation.pop()}>
+          Pop screen
+        </Button>
+      </View>
+      <Article
+        author={{ name: route.params?.author ?? 'Unknown' }}
+        scrollEnabled={scrollEnabled}
+      />
+    </ScrollView>
+  );
+};
+
+type NewsFeedScreenProps = CompositeScreenProps<
+  StackScreenProps<SimpleStackParamList, 'NewsFeed'>,
+  StackScreenProps<RootParamList, 'StackBasic'>
+>;
+
+const NewsFeedScreen = ({ route, navigation }: NewsFeedScreenProps) => {
+  const rootNavigation = navigation.getParent('StackBasic');
+
+  return (
+    <ScrollView>
+      <View style={styles.buttons}>
+        <Button variant="filled" onPress={() => navigation.replace('Contacts')}>
+          Replace with contacts
+        </Button>
+        <Button variant="tinted" onPress={() => rootNavigation.popTo('Home')}>
+          Pop to home
+        </Button>
+        <Button variant="tinted" onPress={() => navigation.goBack()}>
+          Go back
+        </Button>
+      </View>
+      <NewsFeed scrollEnabled={scrollEnabled} date={route.params.date} />
+    </ScrollView>
+  );
+};
+
+const ContactsScreen = ({
+  navigation,
+}: StackScreenProps<SimpleStackParamList, 'Contacts'>) => {
+  const [query, setQuery] = React.useState('');
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        placeholder: 'Filter contacts',
+        onChange: (e) => {
+          setQuery(e.nativeEvent.text);
+        },
+      },
+    });
+  }, [navigation]);
+
+  return (
+    <Contacts
+      query={query}
+      ListHeaderComponent={
+        <View style={styles.buttons}>
+          <Button variant="filled" onPress={() => navigation.push('Albums')}>
+            Push albums
+          </Button>
+          <Button variant="tinted" onPress={() => navigation.goBack()}>
+            Go back
+          </Button>
+        </View>
+      }
+    />
+  );
+};
+
+const AlbumsScreen = ({
+  navigation,
+}: StackScreenProps<SimpleStackParamList, 'Albums'>) => {
+  return (
+    <ScrollView>
+      <View style={styles.buttons}>
+        <Button
+          variant="filled"
+          onPress={() => navigation.push('Article', { author: 'Babel fish' })}
+        >
+          Push article
+        </Button>
+        <Button variant="tinted" onPress={() => navigation.pop(2)}>
+          Pop by 2
+        </Button>
+      </View>
+      <Albums scrollEnabled={scrollEnabled} />
+    </ScrollView>
+  );
+};
+
+const StackNavigator = createStackNavigator<SimpleStackParamList>();
+
+export function StackBasic(
+  _: StaticScreenProps<NavigatorScreenParams<SimpleStackParamList>>
+) {
+  return (
+    <StackNavigator.Navigator>
+      <StackNavigator.Screen
+        name="Article"
+        component={ArticleScreen}
+        options={({ route }) => ({
+          title: `Article by ${route.params?.author ?? 'Unknown'}`,
+        })}
+        initialParams={{ author: 'Gandalf' }}
+        getId={({ params }) => params?.author}
+      />
+      <StackNavigator.Screen
+        name="NewsFeed"
+        component={NewsFeedScreen}
+        options={{ title: 'Feed' }}
+      />
+      <StackNavigator.Screen
+        name="Contacts"
+        component={ContactsScreen}
+        options={{
+          headerSearchBarOptions: {
+            placeholder: 'Filter contacts',
+          },
+        }}
+      />
+      <StackNavigator.Screen
+        name="Albums"
+        component={AlbumsScreen}
+        options={{ title: 'Albums' }}
+      />
+    </StackNavigator.Navigator>
+  );
+}
+
+StackBasic.title = 'Stack - Basic';
+StackBasic.linking = linking;
+
+const styles = StyleSheet.create({
+  buttons: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    margin: 12,
+  },
+});

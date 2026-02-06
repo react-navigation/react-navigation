@@ -60,12 +60,19 @@ export const NavigationBuilderContext = React.createContext<{
   addKeyedListener?: AddKeyedListener;
   onRouteFocus?: (key: string) => void;
   onDispatchAction: (action: NavigationAction, noop: boolean) => void;
+  onEmitEvent: (event: {
+    type: string;
+    defaultPrevented: boolean | undefined;
+    target: string | undefined;
+    data: unknown;
+  }) => void;
   onOptionsChange: (options: object) => void;
   scheduleUpdate: (callback: () => void) => void;
   flushUpdates: () => void;
   stackRef?: React.MutableRefObject<string | undefined>;
 }>({
   onDispatchAction: () => undefined,
+  onEmitEvent: () => undefined,
   onOptionsChange: () => undefined,
   scheduleUpdate: () => {
     throw new Error("Couldn't find a context for scheduling updates.");

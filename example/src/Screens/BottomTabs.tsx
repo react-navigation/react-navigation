@@ -1,6 +1,7 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
+  type BottomTabIcon,
   type BottomTabScreenProps,
   createBottomTabNavigator,
   useBottomTabBarHeight,
@@ -20,6 +21,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
+import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import {
   type ColorValue,
@@ -31,17 +33,14 @@ import {
   View,
 } from 'react-native';
 
-import { SystemBars } from '../edge-to-edge';
+import iconBookUser from '../../assets/icons/book-user.png';
+import iconListMusic from '../../assets/icons/list-music.png';
+import iconMusic from '../../assets/icons/music.png';
+import iconNewspaper from '../../assets/icons/newspaper.png';
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
 import { NativeStack, type NativeStackParamList } from './NativeStack';
-
-const getTabBarIcon =
-  (name: React.ComponentProps<typeof MaterialCommunityIcons>['name']) =>
-  ({ color, size }: { color: ColorValue; size: number }) => (
-    <MaterialCommunityIcons name={name} color={color} size={size} />
-  );
 
 export type BottomTabParamList = {
   TabStack: NavigatorScreenParams<NativeStackParamList>;
@@ -70,7 +69,7 @@ const AlbumsScreen = () => {
 
   return (
     <>
-      {isFocused && Platform.OS === 'android' && <SystemBars style="light" />}
+      {isFocused && Platform.OS === 'android' && <StatusBar style="light" />}
       <ScrollView
         contentContainerStyle={{
           paddingTop: headerHeight,
@@ -206,7 +205,10 @@ export function BottomTabs(
             title: 'Article',
             headerShown: false,
             tabBarButtonTestID: 'article',
-            tabBarIcon: getTabBarIcon('file-document'),
+            tabBarIcon: {
+              type: 'image',
+              source: iconNewspaper,
+            },
           }}
         />
         <Tab.Screen
@@ -216,7 +218,19 @@ export function BottomTabs(
           options={({ route }) => ({
             title: 'Chat',
             tabBarButtonTestID: 'chat',
-            tabBarIcon: getTabBarIcon('message-reply'),
+            tabBarIcon: ({
+              color,
+              size,
+            }: {
+              color: ColorValue;
+              size: number;
+            }) => (
+              <MaterialCommunityIcons
+                name="message-reply"
+                color={color}
+                size={size}
+              />
+            ),
             tabBarBadge: route.params?.count,
           })}
         />
@@ -226,7 +240,20 @@ export function BottomTabs(
           options={{
             title: 'Contacts',
             tabBarButtonTestID: 'contacts',
-            tabBarIcon: getTabBarIcon('contacts'),
+            tabBarIcon: Platform.select<BottomTabIcon>({
+              ios: {
+                type: 'sfSymbol',
+                name: 'person.2',
+              },
+              android: {
+                type: 'materialSymbol',
+                name: 'contacts',
+              },
+              default: {
+                type: 'image',
+                source: iconBookUser,
+              },
+            }),
           }}
         />
         <Tab.Screen
@@ -244,7 +271,10 @@ export function BottomTabs(
                 style={StyleSheet.absoluteFill}
               />
             ),
-            tabBarIcon: getTabBarIcon('image-album'),
+            tabBarIcon: ({ focused }) => ({
+              type: 'image',
+              source: focused ? iconListMusic : iconMusic,
+            }),
             tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.5)',
             tabBarActiveTintColor: '#fff',
             tabBarStyle: [
@@ -306,7 +336,7 @@ export function BottomTabs(
   );
 }
 
-BottomTabs.title = 'Bottom Tabs';
+BottomTabs.title = 'Bottom Tabs - Basic';
 BottomTabs.linking = linking;
 
 const styles = StyleSheet.create({

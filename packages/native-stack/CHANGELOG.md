@@ -3,6 +3,140 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.9...@react-navigation/native-stack@8.0.0-alpha.10) (2026-02-05)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [8.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.8...@react-navigation/native-stack@8.0.0-alpha.9) (2026-02-04)
+
+### Bug Fixes
+
+* improve handling for PlatformColor ([e141378](https://github.com/react-navigation/react-navigation/commit/e14137884d6b011d1bf79b3c2fde076738ac4406)) - by @satya164
+
+### Features
+
+* support materialSymbol & sfSymbol for header back icon ([60e7af2](https://github.com/react-navigation/react-navigation/commit/60e7af226597f7ea12f86aec0357aed52eb8e004)) - by @satya164
+
+# [8.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.7...@react-navigation/native-stack@8.0.0-alpha.8) (2026-02-02)
+
+### Bug Fixes
+
+* support xcasset for native tabs ([a66e17a](https://github.com/react-navigation/react-navigation/commit/a66e17ac727f09abd25ec32dcc0cd2676aae782c)) - by @
+
+# [8.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.6...@react-navigation/native-stack@8.0.0-alpha.7) (2026-02-01)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [8.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.5...@react-navigation/native-stack@8.0.0-alpha.6) (2026-02-01)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [8.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.4...@react-navigation/native-stack@8.0.0-alpha.5) (2026-01-29)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [8.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.3...@react-navigation/native-stack@8.0.0-alpha.4) (2026-01-29)
+
+### Features
+
+* add missing options for formSheet ([2fb7f55](https://github.com/react-navigation/react-navigation/commit/2fb7f55a9f82a27453b8d43d7f127b5e3bc59993)) - by @satya164
+
+# [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.2...@react-navigation/native-stack@8.0.0-alpha.3) (2026-01-22)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [8.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.1...@react-navigation/native-stack@8.0.0-alpha.2) (2026-01-19)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
+# [8.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.0...@react-navigation/native-stack@8.0.0-alpha.1) (2026-01-19)
+
+### Features
+
+* add a ~meta property to navigation object ([#12931](https://github.com/react-navigation/react-navigation/issues/12931)) ([e570c72](https://github.com/react-navigation/react-navigation/commit/e570c72f119cd6506c6106e7eb1ebb9ad5d47a62)) - by @satya164
+* add a SFSymbol component ([#12917](https://github.com/react-navigation/react-navigation/issues/12917)) ([b00a37d](https://github.com/react-navigation/react-navigation/commit/b00a37d5d8c3cf36729b724bc22384b023001082)) - by @satya164
+* add options to hide left and right item backgrounds ([57969cd](https://github.com/react-navigation/react-navigation/commit/57969cd3cc1eaa437edf9d40c5ee5587182851d9)) - by @satya164
+* handle popToRoot natively in native tabs ([da45221](https://github.com/react-navigation/react-navigation/commit/da452217c7ea96a9b82dbdab92c78aca7b25e2dc)) - by @satya164
+
+# [8.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.22...@react-navigation/native-stack@8.0.0-alpha.0) (2025-12-19)
+
+### Bug Fixes
+
+* add more checks on how path param is parsed ([f05681d](https://github.com/react-navigation/react-navigation/commit/f05681d226663a582e23bf66e0bfa83145627af3)) - by @satya164
+* add workaround for incorrect header height on Android ([344ec8a](https://github.com/react-navigation/react-navigation/commit/344ec8a4f64c00abad7fa794b0e055b13623ed32)) - by @satya164
+* don't override headerRight with headerRightItems on Android ([9517a1a](https://github.com/react-navigation/react-navigation/commit/9517a1ade770c00efc4d13cc9e82b3ef50be0d4e)) - by @satya164
+* don't use native header height if we have custom header ([a744c50](https://github.com/react-navigation/react-navigation/commit/a744c50606ad50c339c5ffd7a615c03577d150d7)) - by @satya164
+* fix invisible text when header large title is enabled ([fb0100e](https://github.com/react-navigation/react-navigation/commit/fb0100ed529d6c1c56bd3ed4de244f33ef3936db)) - by @satya164
+* prevent freezing modal screens on iOS ([#12631](https://github.com/react-navigation/react-navigation/issues/12631)) ([0e649af](https://github.com/react-navigation/react-navigation/commit/0e649afb2e4531ec26f79e5eb0d0b825267cd6e0)) - by @kligarski
+* replace `pointerEvents` props with styles ([#12693](https://github.com/react-navigation/react-navigation/issues/12693)) ([987aed6](https://github.com/react-navigation/react-navigation/commit/987aed623ad7eaf120d3af76ca2e05b2a3c7f103)), closes [#12441](https://github.com/react-navigation/react-navigation/issues/12441) - by @hassankhan
+* update modal types in native stack ([ecefb96](https://github.com/react-navigation/react-navigation/commit/ecefb968db5d33e3ed33e4fa31840b290c1a44c1)) - by @satya164
+
+### Code Refactoring
+
+* drop deprecated APIs and fallbacks for older versions of packages ([cf60189](https://github.com/react-navigation/react-navigation/commit/cf601898adf7ad18b3e4b298a82e04bfb170f01b)) - by @satya164
+* drop deprecated navigation bar and status bar APIs from native stack ([143a967](https://github.com/react-navigation/react-navigation/commit/143a967e6cc5766251200d1f246a2e83a230f624)) - by @satya164
+* get parent navigation by route name with getParent ([#12822](https://github.com/react-navigation/react-navigation/issues/12822)) ([2877968](https://github.com/react-navigation/react-navigation/commit/2877968680e14a8d4698c4762996fff6c086f793)) - by @satya164
+* improve API for getDefaultHeaderHeight ([548a2dd](https://github.com/react-navigation/react-navigation/commit/548a2dd4c437f654f26c90225ee79cc816d368e2)) - by @satya164
+* rename onChangeText to onChange for header ([3c08e52](https://github.com/react-navigation/react-navigation/commit/3c08e52598a951bdea8195f5e07c49ca79a7becf)) - by @satya164
+* replace `headerBackImageSource` with `headerBackIcon` option ([#12860](https://github.com/react-navigation/react-navigation/issues/12860)) ([f2b8231](https://github.com/react-navigation/react-navigation/commit/f2b82311ae4bd75c846c943e1e3cc5d13f76998a)), closes [#12859](https://github.com/react-navigation/react-navigation/issues/12859) - by @Copilot
+
+### Features
+
+* add ability to render native buttons in header on iOS ([#12657](https://github.com/react-navigation/react-navigation/issues/12657)) ([118e27d](https://github.com/react-navigation/react-navigation/commit/118e27d17f7c878ae13c930e2ffd4088c1ccfede)) - by @johankasperi
+* add pageSheet presentation to native stack ([#12503](https://github.com/react-navigation/react-navigation/issues/12503)) ([f1886e0](https://github.com/react-navigation/react-navigation/commit/f1886e03040e1a621cb8377576e0eaae9d13bd9d)) - by @kligarski
+* add staticXScreen type to improve defining screens ([#12886](https://github.com/react-navigation/react-navigation/issues/12886)) ([7a5ebbd](https://github.com/react-navigation/react-navigation/commit/7a5ebbd91e7f8ad2ae3d810f45a2d27567dbae68)) - by @satya164
+* align header item types with react-native-screens ([#12895](https://github.com/react-navigation/react-navigation/issues/12895)) ([1f931d0](https://github.com/react-navigation/react-navigation/commit/1f931d0cf0d06d631e26f7ee0e6995f244cc1189)) - by @Ubax
+* export scrollEdgeEffects prop from react-native-screens ([#12797](https://github.com/react-navigation/react-navigation/issues/12797)) ([0e294da](https://github.com/react-navigation/react-navigation/commit/0e294da8ce1a6ef0dd79560f2d26cbf9f76aacc4)) - by @kmichalikk
+* improve API for icons in header buttons ([ea1c3a1](https://github.com/react-navigation/react-navigation/commit/ea1c3a17a6ecef80e8f62c19c5ced6e56838c08d)) - by @satya164
+* infer params type based on linking and screen ([#12888](https://github.com/react-navigation/react-navigation/issues/12888)) ([84069bf](https://github.com/react-navigation/react-navigation/commit/84069bf11254ab60adc3e4490a96c87c9b1343f7)) - by @satya164
+* override user interface style for native navigation to match theme ([#12840](https://github.com/react-navigation/react-navigation/issues/12840)) ([253c605](https://github.com/react-navigation/react-navigation/commit/253c60529e13e9a92abf4b32524e045024fa97a8)) - by @kligarski
+* remove UNSTABLE prefix from routeNamesChangeBehavior ([eda56ea](https://github.com/react-navigation/react-navigation/commit/eda56ea6840df32114d62ff9c77c066f240022a4)) - by @satya164
+* restore unhandled state after route names change ([#12812](https://github.com/react-navigation/react-navigation/issues/12812)) ([52e8a45](https://github.com/react-navigation/react-navigation/commit/52e8a45d8e8b068a616f8a7df6357ad6198f0622)) - by @satya164
+* support ColorValue instead of string for colors in theme ([#12711](https://github.com/react-navigation/react-navigation/issues/12711)) ([cfe746b](https://github.com/react-navigation/react-navigation/commit/cfe746be6d671da7f4fe785d5bd6142fc8152e14)) - by @satya164
+
+### BREAKING CHANGES
+
+* Users will need to update their code to use `onChange`.
+* Users will need to change their code using `headerBackImageSource`:
+
+Before:
+
+```js
+headerBackImageSource: require('./icon.png')
+```
+
+After:
+
+```js
+headerBackIcon: {
+  type: 'image',
+  source: require('./icon.png')
+}
+```
+* Navigators don't accept an ID anymore, and `getParent`
+accepts only route names. Any code using navigator IDs needs to be
+refactored.
+* it now accepts an object with 3 properties:
+- `landscape`
+- `modalPresentation`
+- `topInset`
+* the minimum required version for `react-native-web` is now `~0.21.0`
+
+**Motivation**
+
+By replacing usages of `pointerEvents` to use styles instead of props,
+we won't get an annoying warning in the logs.
+
+The underlying issue in React Native Web which prevented children of a
+`pointer-events: box-none` element from receiving pointer events is
+resolved by https://github.com/necolas/react-native-web/pull/2789.
+
+A follow-up fix to React Native Testing Library was also required, PR
+here
+https://github.com/callstack/react-native-testing-library/pull/1799.
+* On Android, users should now use react-native-edge-to-edge
+* This bumps the minimum required versions of various peer deps
+
 ## [7.3.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.3.21...@react-navigation/native-stack@7.3.22) (2025-07-25)
 
 **Note:** Version bump only for package @react-navigation/native-stack

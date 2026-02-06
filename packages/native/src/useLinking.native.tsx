@@ -10,6 +10,7 @@ import { Linking, Platform } from 'react-native';
 
 import { getStateFromHref } from './getStateFromHref';
 import type { LinkingOptions } from './types';
+import type { Thenable } from './useThenable';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
@@ -57,28 +58,39 @@ export function useLinking(
       return undefined;
     }
 
-    if (enabled !== false && linkingHandlers.size) {
-      console.error(
-        [
-          'Looks like you have configured linking in multiple places. This is likely an error since deep links should only be handled in one place to avoid conflicts. Make sure that:',
-          "- You don't have multiple NavigationContainers in the app each with 'linking' enabled",
-          '- Only a single instance of the root component is rendered',
-          Platform.OS === 'android'
-            ? "- You have set 'android:launchMode=singleTask' in the '<activity />' section of the 'AndroidManifest.xml' file to avoid launching multiple instances"
-            : '',
-        ]
-          .join('\n')
-          .trim()
-      );
-    }
-
     const handler = Symbol();
 
     if (enabled !== false) {
       linkingHandlers.add(handler);
     }
 
+    // In some cases, the effect cleanup may get called out of order
+    // This may result in multiple linking handlers being registered
+    // For example, when changing the wallpaper on Android
+    // Showing the error in a delay avoids false positives
+    const timer = setTimeout(() => {
+      if (
+        enabled !== false &&
+        linkingHandlers.size &&
+        !(linkingHandlers.size === 1 && linkingHandlers.has(handler))
+      ) {
+        console.error(
+          [
+            'Looks like you have configured linking in multiple places. This is likely an error since deep links should only be handled in one place to avoid conflicts. Make sure that:',
+            "- You don't have multiple NavigationContainers in the app each with 'linking' enabled",
+            '- Only a single instance of the root component is rendered',
+            Platform.OS === 'android'
+              ? "- You have set 'android:launchMode=singleTask' in the '<activity />' section of the 'AndroidManifest.xml' file to avoid launching multiple instances"
+              : '',
+          ]
+            .join('\n')
+            .trim()
+        );
+      }
+    }, 1000);
+
     return () => {
+      clearTimeout(timer);
       linkingHandlers.delete(handler);
     };
   }, [enabled, independent]);
@@ -143,16 +155,13 @@ export function useLinking(
       state = getStateFromURL(url);
     }
 
-    const thenable = {
+    const thenable: Thenable<ResultState | undefined> = {
       then(onfulfilled?: (state: ResultState | undefined) => void) {
         return Promise.resolve(onfulfilled ? onfulfilled(state) : state);
       },
-      catch() {
-        return thenable;
-      },
     };
 
-    return thenable as PromiseLike<ResultState | undefined>;
+    return thenable;
   }, [getStateFromURL]);
 
   React.useEffect(() => {
@@ -163,6 +172,18 @@ export function useLinking(
 
       const navigation = ref.current;
       const state = navigation ? getStateFromURL(url) : undefined;
+
+      if (navigation) {
+        REACT_NAVIGATION_DEVTOOLS.get(navigation)?.listeners.forEach(
+          (listener) => {
+            listener({
+              type: 'link',
+              url,
+              state,
+            });
+          }
+        );
+      }
 
       if (navigation && state) {
         const action = getActionFromStateRef.current(state, configRef.current);

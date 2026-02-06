@@ -26,6 +26,7 @@ export { BottomTabView } from './views/BottomTabViewCommon';
  */
 export { BottomTabBarHeightCallbackContext } from './utils/BottomTabBarHeightCallbackContext';
 export { BottomTabBarHeightContext } from './utils/BottomTabBarHeightContext';
+export { useBottomTabAnimation } from './utils/useBottomTabAnimation';
 export { useBottomTabBarHeight } from './utils/useBottomTabBarHeight';
 
 /**
@@ -35,6 +36,7 @@ export type {
   BottomTabBarButtonProps,
   BottomTabBarProps,
   BottomTabHeaderProps,
+  BottomTabIcon,
   BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
   BottomTabNavigationProp,
@@ -42,4 +44,3 @@ export type {
   BottomTabOptionsArgs,
   BottomTabScreenProps,
 } from './types';
-export type { NativeScreenHeaderItemProps } from './views/NativeScreen/types';

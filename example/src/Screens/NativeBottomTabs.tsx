@@ -1,5 +1,9 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  type BottomTabIcon,
+  createBottomTabNavigator,
+  createBottomTabScreen,
+} from '@react-navigation/bottom-tabs';
 import {
   Button,
   getHeaderTitle,
@@ -8,14 +12,16 @@ import {
   useHeaderHeight,
 } from '@react-navigation/elements';
 import {
-  type NavigatorScreenParams,
-  type PathConfig,
   type StaticScreenProps,
   useIsFocused,
   useNavigation,
 } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  createNativeStackScreen,
+} from '@react-navigation/native-stack';
 import { BlurView } from 'expo-blur';
+import { StatusBar } from 'expo-status-bar';
 import { Alert, Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -24,78 +30,24 @@ import iconHeart from '../../assets/icons/heart.png';
 import iconListMusic from '../../assets/icons/list-music.png';
 import iconMusic from '../../assets/icons/music.png';
 import iconNewspaper from '../../assets/icons/newspaper.png';
-import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
-import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
-import { NativeStack, type NativeStackParamList } from './NativeStack';
+import { MiniPlayer } from '../Shared/MiniPlayer';
+import { NativeStack } from './NativeStack';
 
-export type NativeBottomTabParamList = {
-  TabStack: NavigatorScreenParams<NativeStackParamList>;
-  TabAlbums: undefined;
-  TabContacts: { count: number };
-  TabFavorites: undefined;
-};
-
-const linking = {
-  screens: {
-    TabStack: {
-      path: 'stack',
-      screens: NativeStack.linking.screens,
-    },
-    TabAlbums: 'albums',
-    TabContacts: 'contacts',
-  },
-} satisfies PathConfig<NavigatorScreenParams<NativeBottomTabParamList>>;
-
-const ArticleStack = createNativeStackNavigator<{ Article: undefined }>();
-
-function ArticleStackScreen() {
-  return (
-    <ArticleStack.Navigator>
-      <ArticleStack.Screen
-        name="Article"
-        component={ArticleScreen}
-        options={{
-          title: 'Article',
-        }}
-      />
-    </ArticleStack.Navigator>
-  );
-}
-
-function ArticleScreen() {
-  const navigation = useNavigation<typeof Tab>();
-
-  return (
-    <ScrollView automaticallyAdjustContentInsets>
-      <View style={styles.buttons}>
-        <Button
-          variant="filled"
-          onPress={() => {
-            navigation.navigate('TabContacts', { count: i++ });
-          }}
-        >
-          Go to Contacts
-        </Button>
-        <Button variant="tinted" onPress={() => navigation.goBack()}>
-          Go back
-        </Button>
-      </View>
-      <Article />
-    </ScrollView>
-  );
+function ContactsScreen(_: StaticScreenProps<{ count: number }>) {
+  return <Contacts />;
 }
 
 function AlbumsScreen() {
-  const navigation = useNavigation<typeof Tab>();
+  const navigation = useNavigation<typeof NativeBottomTabsNavigator>();
   const headerHeight = useHeaderHeight();
   const insets = useSafeAreaInsets();
   const isFocused = useIsFocused();
 
   return (
     <>
-      {isFocused && <SystemBars style="light" />}
+      {isFocused && <StatusBar style="light" />}
       <ScrollView
         automaticallyAdjustContentInsets
         contentContainerStyle={{
@@ -125,117 +77,128 @@ function AlbumsScreen() {
   );
 }
 
+const FavoritesStack = createNativeStackNavigator({
+  screens: {
+    Favorites: createNativeStackScreen({
+      screen: () => null,
+      options: {
+        title: 'Favorites',
+        headerSearchBarOptions: {
+          placeholder: 'Search Favorites',
+        },
+      },
+    }),
+  },
+});
+
 let i = 1;
 
-const Tab = createBottomTabNavigator<NativeBottomTabParamList>();
-
-export function NativeBottomTabs(
-  _: StaticScreenProps<NavigatorScreenParams<NativeBottomTabParamList>>
-) {
-  return (
-    <Tab.Navigator>
-      <Tab.Screen
-        name="TabStack"
-        component={ArticleStackScreen}
-        options={{
-          popToTopOnBlur: true,
-          title: 'Article',
-          headerRight: ({ tintColor }) => (
-            <HeaderButton
-              onPress={() => Alert.alert('Favorite button pressed')}
-            >
-              <MaterialCommunityIcons
-                name="heart-outline"
-                size={24}
-                color={tintColor}
-              />
-            </HeaderButton>
-          ),
-          tabBarIcon: {
+const NativeBottomTabsNavigator = createBottomTabNavigator({
+  screens: {
+    TabStack: createBottomTabScreen({
+      screen: NativeStack,
+      options: {
+        popToTopOnBlur: true,
+        title: 'Article',
+        headerRight: ({ tintColor }) => (
+          <HeaderButton onPress={() => Alert.alert('Favorite button pressed')}>
+            <MaterialCommunityIcons
+              name="heart-outline"
+              size={24}
+              color={tintColor}
+            />
+          </HeaderButton>
+        ),
+        tabBarIcon: {
+          type: 'image',
+          source: iconNewspaper,
+        },
+        tabBarMinimizeBehavior: 'onScrollDown',
+        tabBarControllerMode: 'tabSidebar',
+      },
+      linking: {
+        path: 'stack',
+        screens: NativeStack.linking.screens,
+      },
+    }),
+    TabContacts: createBottomTabScreen({
+      screen: ContactsScreen,
+      initialParams: { count: i },
+      options: ({ route }) => ({
+        title: 'Contacts',
+        tabBarIcon: Platform.select<BottomTabIcon>({
+          ios: {
+            type: 'sfSymbol',
+            name: 'person.2',
+          },
+          android: {
+            type: 'materialSymbol',
+            name: 'contacts',
+          },
+          default: {
             type: 'image',
-            source: iconNewspaper,
+            source: iconBookUser,
+          },
+        }),
+        tabBarBadge: route.params?.count,
+      }),
+      linking: 'contacts',
+    }),
+    TabAlbums: createBottomTabScreen({
+      screen: AlbumsScreen,
+      options: () => {
+        return {
+          title: 'Albums',
+          header: ({ options, route }) => (
+            <Header {...options} title={getHeaderTitle(options, route.name)} />
+          ),
+          headerTintColor: '#fff',
+          headerTransparent: true,
+          headerBackground: () => (
+            <BlurView
+              tint="dark"
+              intensity={100}
+              style={StyleSheet.absoluteFill}
+            />
+          ),
+          tabBarIcon: ({ focused }) => ({
+            type: 'image',
+            source: focused ? iconListMusic : iconMusic,
+          }),
+          tabBarActiveTintColor:
+            Platform.OS !== 'ios' ? 'rgba(255, 255, 255, 0.9)' : undefined,
+          tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.7)',
+          tabBarStyle: {
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            borderTopColor: 'transparent',
           },
           tabBarMinimizeBehavior: 'onScrollDown',
-          tabBarControllerMode: 'tabSidebar',
-        }}
-      />
-      <Tab.Screen
-        name="TabContacts"
-        component={Contacts}
-        initialParams={{ count: i }}
-        options={({ route }) => ({
-          title: 'Contacts',
-          tabBarIcon: Platform.select({
-            ios: {
-              type: 'sfSymbol',
-              name: 'person.2',
-            },
-            default: {
-              type: 'image',
-              source: iconBookUser,
-            },
-          }),
-          tabBarBadge: route.params?.count,
-        })}
-      />
-      <Tab.Screen
-        name="TabAlbums"
-        component={AlbumsScreen}
-        options={() => {
-          return {
-            title: 'Albums',
-            header: ({ options, route }) => (
-              <Header
-                {...options}
-                title={getHeaderTitle(options, route.name)}
-              />
-            ),
-            headerTintColor: '#fff',
-            headerTransparent: true,
-            headerBackground: () => (
-              <BlurView
-                tint="dark"
-                intensity={100}
-                style={StyleSheet.absoluteFill}
-              />
-            ),
-            tabBarIcon: ({ focused }) => ({
-              type: 'image',
-              source: focused ? iconListMusic : iconMusic,
-            }),
-            tabBarInactiveTintColor: 'rgba(255, 255, 255, 0.7)',
-            tabBarStyle: {
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              borderTopColor: 'transparent',
-            },
-          };
-        }}
-      />
+          bottomAccessory: ({ placement }) => (
+            <MiniPlayer placement={placement} />
+          ),
+        };
+      },
+      linking: 'albums',
+    }),
+    TabFavorites: createBottomTabScreen({
+      screen: FavoritesStack,
+      options: {
+        title: 'Favorites',
+        tabBarSystemItem: 'search',
+        tabBarLabel: 'Favorites',
+        tabBarIcon: {
+          type: 'image',
+          source: iconHeart,
+        },
+      },
+    }),
+  },
+});
 
-      <Tab.Screen
-        name="TabFavorites"
-        options={{
-          title: 'Favorites',
-          tabBarSystemItem: 'search',
-          tabBarLabel: 'Favorites',
-          tabBarIcon: {
-            type: 'image',
-            source: iconHeart,
-          },
-          headerShown: true,
-          headerSearchBarOptions: {
-            placeholder: 'Search Favorites',
-          },
-        }}
-      >
-        {() => null}
-      </Tab.Screen>
-    </Tab.Navigator>
-  );
-}
-
-NativeBottomTabs.title = 'Native Bottom Tabs';
-NativeBottomTabs.linking = linking;
+export const NativeBottomTabs = {
+  screen: NativeBottomTabsNavigator,
+  title: 'Native Bottom Tabs - Basic',
+};
 
 const styles = StyleSheet.create({
   headerRight: {

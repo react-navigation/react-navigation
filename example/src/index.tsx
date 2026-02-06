@@ -18,7 +18,8 @@ import {
   createStaticNavigation,
   DarkTheme,
   DefaultTheme,
-  type InitialState,
+  MaterialDarkTheme,
+  MaterialLightTheme,
   type Theme,
   useNavigation,
   useNavigationContainerRef,
@@ -28,26 +29,27 @@ import {
   createStackNavigator,
   type StackNavigationOptions,
 } from '@react-navigation/stack';
+import { reloadAppAsync } from 'expo';
 import { createURL } from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
-import { reloadAsync } from 'expo-updates';
+import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import {
   Appearance,
   I18nManager,
-  Linking,
   Platform,
   ScrollView,
   Switch,
+  useColorScheme,
   useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { SystemBars } from './edge-to-edge';
 import { SCREENS } from './screens';
 import { NotFound } from './Screens/NotFound';
 import { Divider } from './Shared/Divider';
 import { ErrorBoundary } from './Shared/ErrorBoundary';
+import { ListGroupItem } from './Shared/ListGroupItem';
 import { ListItem } from './Shared/LIstItem';
 import { SegmentedPicker } from './Shared/SegmentedPicker';
 import { PlatformTheme } from './theme';
@@ -73,7 +75,7 @@ if (Platform.OS === 'web') {
   if (typeof document !== 'undefined' && document.documentElement) {
     document
       .getElementById('root')
-      ?.setAttribute('style', 'height: 100vh; overflow: auto;');
+      ?.setAttribute('style', 'height: 100svh; overflow: auto;');
   }
 
   if (
@@ -90,13 +92,12 @@ if (Platform.OS === 'web') {
   }
 }
 
-type ThemeName = 'light' | 'dark' | 'custom';
+type ThemeName = 'light' | 'dark' | 'material' | 'custom';
 
 type AppState = {
   isReady: boolean;
   themeName: ThemeName;
   isRTL: boolean;
-  initialState: InitialState | undefined;
 };
 
 type AppAction =
@@ -108,7 +109,6 @@ type AppAction =
       payload: {
         themeName: ThemeName;
         isRTL: boolean;
-        navigationState: InitialState | undefined;
       };
     };
 
@@ -130,57 +130,124 @@ function Examples() {
   const { themeName, isRTL, dispatch } = settings;
 
   const theme = useTheme();
-  const navigation = useNavigation();
+
+  const [filter, setFilter] = React.useState('');
+
+  const navigation = useNavigation('Examples');
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        placeholder: 'Filter screens',
+        onChange: (e) => {
+          setFilter(e.nativeEvent.text);
+        },
+      },
+    });
+  }, [filter, navigation]);
 
   return (
     <ScrollView style={{ backgroundColor: theme.colors.background }}>
       <SafeAreaView edges={['right', 'bottom', 'left']}>
-        <ListItem title="Right to left">
-          <Switch
-            value={isRTL}
-            onValueChange={(value) =>
-              dispatch({
-                type: 'SET_RTL',
-                payload: value,
-              })
-            }
-            disabled={
-              // Set expo.extra.forcesRTL: true in app.json to enable RTL in Expo Go
-              Platform.OS !== 'web'
-            }
-            trackColor={{ true: theme.colors.primary }}
-          />
-        </ListItem>
-        <Divider />
-        <ListItem title="Theme">
-          <SegmentedPicker
-            choices={[
-              { label: 'Custom', value: 'custom' },
-              { label: 'Light', value: 'light' },
-              { label: 'Dark', value: 'dark' },
-            ]}
-            value={themeName}
-            onValueChange={(value) => {
-              dispatch({
-                type: 'SET_THEME',
-                payload: value,
-              });
-            }}
-          />
-        </ListItem>
-        <Divider />
-        {SCREEN_NAMES.map((name) => (
-          <React.Fragment key={name}>
-            <ListItem
-              title={SCREENS[name].title}
-              onPress={() => {
-                // @ts-expect-error TS has a limit of 24 items https://github.com/microsoft/TypeScript/issues/40803
-                navigation.navigate(name);
-              }}
-            />
+        {!filter.length ? (
+          <ListGroupItem title="Settings">
+            <ListItem title="Right to left">
+              <Switch
+                value={isRTL}
+                onValueChange={(value) =>
+                  dispatch({
+                    type: 'SET_RTL',
+                    payload: value,
+                  })
+                }
+                trackColor={{ true: theme.colors.primary }}
+                style={{
+                  // FIXME: On iOS, switch doesn't center vertically
+                  marginVertical: 12,
+                }}
+              />
+            </ListItem>
             <Divider />
-          </React.Fragment>
-        ))}
+            <ListItem title="Theme">
+              <SegmentedPicker
+                choices={(
+                  [
+                    { label: 'Custom', value: 'custom' },
+                    { label: 'Material', value: 'material' },
+                    { label: 'Light', value: 'light' },
+                    { label: 'Dark', value: 'dark' },
+                  ] as const
+                ).filter((choice) =>
+                  Platform.OS !== 'android' ? choice.value !== 'material' : true
+                )}
+                value={themeName}
+                onValueChange={(value) => {
+                  dispatch({
+                    type: 'SET_THEME',
+                    payload: value,
+                  });
+                }}
+              />
+            </ListItem>
+          </ListGroupItem>
+        ) : null}
+        {SCREEN_NAMES.reduce<
+          {
+            group: string;
+            items: { name: keyof typeof SCREENS; title: string }[];
+          }[]
+        >((acc, name) => {
+          const screen = SCREENS[name];
+          const [group, title] = screen.title.includes(' - ')
+            ? screen.title.split(' - ')
+            : ['Misc', screen.title];
+
+          const term = filter.toLowerCase();
+
+          if (
+            filter.length > 0 &&
+            !group.toLowerCase().includes(term) &&
+            !screen.title.toLowerCase().includes(term) &&
+            !name.toLowerCase().includes(term)
+          ) {
+            return acc;
+          }
+
+          const index = acc.findIndex(
+            (item) => 'group' in item && item.group === group
+          );
+
+          if (index !== -1 && 'group' in acc[index]) {
+            acc[index].items.push({ name, title });
+          } else {
+            acc.push({
+              group,
+              items: [{ name, title }],
+            });
+          }
+
+          return acc;
+        }, []).map((item) => {
+          return (
+            <ListGroupItem key={item.group} title={item.group}>
+              {item.items.map((it) => {
+                return (
+                  <React.Fragment key={it.name}>
+                    <ListItem
+                      title={it.title}
+                      testID={it.name}
+                      onPress={() => {
+                        // @ts-expect-error TS has a limit of 24 items https://github.com/microsoft/TypeScript/issues/40803
+                        navigation.navigate(it.name);
+                      }}
+                    />
+                    <Divider />
+                  </React.Fragment>
+                );
+              })}
+            </ListGroupItem>
+          );
+        })}
       </SafeAreaView>
     </ScrollView>
   );
@@ -263,6 +330,9 @@ const Stack = createStackNavigator({
             options: {
               headerShown: false,
               title: item.title,
+              headerTitle: item.title.includes(' - ')
+                ? item.title.split(' - ')[1]
+                : item.title,
               ...('options' in item ? item.options : null),
             },
             linking: {
@@ -290,9 +360,10 @@ const Stack = createStackNavigator({
 const Navigation = createStaticNavigation(Stack);
 
 export function App() {
-  const [{ isReady, themeName, isRTL, initialState }, dispatch] = useAppState();
+  const [{ isReady, themeName, isRTL }, dispatch] = useAppState();
 
   const dimensions = useWindowDimensions();
+  const colorScheme = useColorScheme();
 
   const navigationRef = useNavigationContainerRef();
 
@@ -319,11 +390,15 @@ export function App() {
       ? DarkTheme
       : themeName === 'light'
         ? DefaultTheme
-        : PlatformTheme;
+        : Platform.OS === 'android' && themeName === 'material'
+          ? colorScheme === 'dark'
+            ? MaterialDarkTheme
+            : MaterialLightTheme
+          : PlatformTheme;
 
   return (
     <Providers>
-      <SystemBars style="auto" />
+      <StatusBar style="auto" />
       {Platform.OS === 'web' ? (
         <style>
           {`:root { ${Object.entries(WEB_COLORS)
@@ -335,15 +410,8 @@ export function App() {
         <SettingsContext.Provider value={settings}>
           <Navigation
             ref={navigationRef}
-            initialState={initialState}
             onReady={() => {
               SplashScreen.hideAsync();
-            }}
-            onStateChange={(state) => {
-              AsyncStorage.setItem(
-                NAVIGATION_PERSISTENCE_KEY,
-                JSON.stringify(state)
-              );
             }}
             theme={theme}
             direction={isRTL ? 'rtl' : 'ltr'}
@@ -355,9 +423,23 @@ export function App() {
               // When using Dev Client, launching app from the server has an internal URL
               // This is not a URL we can handle, so we filter it out
               filter: (url) => !url.includes('/expo-development-client/'),
-              enabled: 'auto',
               config: {
                 initialRouteName: 'Home',
+              },
+            }}
+            persistor={{
+              async persist(state) {
+                await AsyncStorage.setItem(
+                  NAVIGATION_PERSISTENCE_KEY,
+                  JSON.stringify(state)
+                );
+              },
+              async restore() {
+                const value = await AsyncStorage.getItem(
+                  NAVIGATION_PERSISTENCE_KEY
+                );
+
+                return value ? JSON.parse(value) : undefined;
               },
             }}
             fallback={<Text>Loading…</Text>}
@@ -386,7 +468,6 @@ const useAppState = () => {
             isReady: true,
             themeName: action.payload.themeName,
             isRTL: action.payload.isRTL,
-            initialState: action.payload.navigationState,
           };
         case 'SET_THEME':
           return { ...state, themeName: action.payload };
@@ -400,50 +481,35 @@ const useAppState = () => {
       themeName: 'custom',
       isRTL: previousDirection === 'rtl',
       isReady: Platform.OS === 'web',
-      initialState: undefined,
     }
   );
 
   React.useEffect(() => {
     const restoreState = async () => {
       try {
-        const initialUrl =
-          Platform.OS !== 'web' ? await Linking.getInitialURL() : null;
+        const savedThemeName = await AsyncStorage.getItem(
+          THEME_PERSISTENCE_KEY
+        );
 
-        // Only restore state if there's no initial URL
-        // This avoids breaking opening with deep links
-        if (initialUrl == null) {
-          const savedState =
-            // On web, we always use browser URL
-            Platform.OS !== 'web'
-              ? await AsyncStorage.getItem(NAVIGATION_PERSISTENCE_KEY)
-              : undefined;
+        const savedDirection =
+          Platform.OS !== 'web'
+            ? await AsyncStorage.getItem(DIRECTION_PERSISTENCE_KEY)
+            : undefined;
 
-          const savedThemeName = await AsyncStorage.getItem(
-            THEME_PERSISTENCE_KEY
-          );
-
-          const savedDirection =
-            Platform.OS !== 'web'
-              ? await AsyncStorage.getItem(DIRECTION_PERSISTENCE_KEY)
-              : undefined;
-
-          dispatch({
-            type: 'RESTORE_SUCCESS',
-            payload: {
-              themeName:
-                savedThemeName === 'dark'
-                  ? 'dark'
-                  : savedThemeName === 'light'
-                    ? 'light'
+        dispatch({
+          type: 'RESTORE_SUCCESS',
+          payload: {
+            themeName:
+              savedThemeName === 'dark'
+                ? 'dark'
+                : savedThemeName === 'light'
+                  ? 'light'
+                  : savedThemeName === 'material'
+                    ? 'material'
                     : 'custom',
-              isRTL: savedDirection === 'rtl',
-              navigationState: savedState ? JSON.parse(savedState) : undefined,
-            },
-          });
-        } else {
-          dispatch({ type: 'RESTORE_FAILURE' });
-        }
+            isRTL: savedDirection === 'rtl',
+          },
+        });
       } catch (e) {
         dispatch({ type: 'RESTORE_FAILURE' });
       }
@@ -464,7 +530,12 @@ const useAppState = () => {
     if (Platform.OS === 'web') {
       document.documentElement.style.colorScheme = colorScheme;
     } else {
-      Appearance.setColorScheme(colorScheme);
+      if (state.themeName === 'material') {
+        Appearance.setColorScheme(null);
+        return;
+      } else {
+        Appearance.setColorScheme(colorScheme);
+      }
     }
   }, [state.isReady, state.themeName]);
 
@@ -486,7 +557,7 @@ const useAppState = () => {
       I18nManager.forceRTL(state.isRTL);
 
       if (Platform.OS !== 'web') {
-        reloadAsync();
+        reloadAppAsync();
       }
     }
   }, [state.isRTL, state.isReady]);

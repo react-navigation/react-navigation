@@ -696,6 +696,10 @@ export function StackRouter(options: StackRouterOptions) {
       }
     },
 
+    getRoutesFromState(state) {
+      return [...state.routes, ...state.preloadedRoutes];
+    },
+
     actionCreators: StackActions,
   };
 

@@ -12,11 +12,12 @@ import {
   View,
 } from 'react-native';
 
-import backIcon from '../assets/back-icon.png';
+import backIconImage from '../assets/back-icon.png';
 import { isLiquidGlassSupported } from '../LiquidGlassView';
 import type {
   HeaderBackButtonDisplayMode,
   HeaderBackButtonProps,
+  HeaderIcon as HeaderIconType,
 } from '../types';
 import { BUTTON_SIZE, HeaderButton } from './HeaderButton';
 import { HeaderIcon } from './HeaderIcon';
@@ -24,7 +25,7 @@ import { HeaderIcon } from './HeaderIcon';
 export function HeaderBackButton({
   disabled,
   allowFontScaling,
-  backImage,
+  icon,
   label,
   labelStyle,
   displayMode = 'minimal',
@@ -48,17 +49,30 @@ export function HeaderBackButton({
   const isMinimal = displayMode === 'minimal' || measuredMinimal;
 
   const renderBackImage = () => {
-    if (backImage) {
-      return backImage({ tintColor: tintColor ?? colors.text });
-    } else {
-      return (
-        <HeaderIcon
-          source={backIcon}
-          tintColor={tintColor ?? colors.text}
-          style={styles.icon}
-        />
-      );
+    const color = tintColor ?? colors.text;
+
+    if (typeof icon === 'function') {
+      return icon({ tintColor: color });
     }
+
+    const backIcon =
+      icon ??
+      Platform.select<HeaderIconType>({
+        ios: {
+          type: 'sfSymbol',
+          name: 'chevron.left',
+        },
+        android: {
+          type: 'materialSymbol',
+          name: 'arrow_back',
+        },
+        default: {
+          type: 'image',
+          source: backIconImage,
+        },
+      });
+
+    return <HeaderIcon icon={backIcon} color={color} style={styles.icon} />;
   };
 
   const handlePress = () => {
@@ -231,8 +245,8 @@ function HeaderBackLabel({
 // iOS uses a smaller chevron, Android uses a larger arrow
 const ICON_WIDTH = Platform.OS === 'ios' ? 13 : 24;
 const ICON_SPACING_START = isLiquidGlassSupported
-  ? 13 // Standard distance of chevron from left edge in liquid glass
-  : 0; // Otherwise icon is aligned to the start of the button
+  ? 15 // Standard distance of chevron from left edge in liquid glass
+  : 2; // Otherwise icon is aligned to the start of the button
 
 // Standard distance between chevron and label
 const ICON_LABEL_SPACING = 9;

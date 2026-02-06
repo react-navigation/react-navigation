@@ -1,12 +1,16 @@
 {
   "expo": {
-    "name": "React Navigation",
+    "name": "React Navigation Example",
     "owner": "react-navigation",
     "slug": "react-navigation-example",
     "description": "Demonstrates the functionality and various capabilities of React Navigation.",
     "version": "1.0.0",
     "icon": "./assets/icon.png",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "scheme": "rne",
     "android": {
       "package": "org.reactnavigation.playground",
@@ -19,6 +23,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "org.reactnavigation.playground",
       "icon": "./assets/icon.icon",
+      "appleTeamId": "QMUB6G7U9C"
     },
     "web": {
       "bundler": "metro"
@@ -27,7 +32,9 @@
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/a7070fc4-41f3-403d-826d-292b5d868327"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "runtimeVersion": {
       "policy": "sdkVersion"
     },
@@ -39,8 +46,7 @@
           "image": "./assets/splash.png",
           "backgroundColor": "#7b61c1"
         }
-      ],
-      "react-native-edge-to-edge"
+      ]
     ],
     "extra": {
       "supportsRTL": true,

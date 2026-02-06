@@ -3,6 +3,129 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.9...@react-navigation/stack@8.0.0-alpha.10) (2026-02-05)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [8.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.8...@react-navigation/stack@8.0.0-alpha.9) (2026-02-04)
+
+### Bug Fixes
+
+* fix broken animation during replace ([#12950](https://github.com/react-navigation/react-navigation/issues/12950)) ([0a7e22f](https://github.com/react-navigation/react-navigation/commit/0a7e22f0eda5393b52f946c800d0404f9e846030)) - by @satya164
+* fix replace animation on fast transitions ([a61273e](https://github.com/react-navigation/react-navigation/commit/a61273efaf6bbfc8693ca2f894b95647a32749b6)) - by @satya164
+
+### Features
+
+* support materialSymbol & sfSymbol for header back icon ([60e7af2](https://github.com/react-navigation/react-navigation/commit/60e7af226597f7ea12f86aec0357aed52eb8e004)) - by @satya164
+
+# [8.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.7...@react-navigation/stack@8.0.0-alpha.8) (2026-02-02)
+
+### Bug Fixes
+
+* support xcasset for native tabs ([a66e17a](https://github.com/react-navigation/react-navigation/commit/a66e17ac727f09abd25ec32dcc0cd2676aae782c)) - by @
+
+# [8.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.6...@react-navigation/stack@8.0.0-alpha.7) (2026-02-01)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [8.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.5...@react-navigation/stack@8.0.0-alpha.6) (2026-02-01)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [8.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.4...@react-navigation/stack@8.0.0-alpha.5) (2026-01-29)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [8.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.3...@react-navigation/stack@8.0.0-alpha.4) (2026-01-29)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.2...@react-navigation/stack@8.0.0-alpha.3) (2026-01-22)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [8.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.1...@react-navigation/stack@8.0.0-alpha.2) (2026-01-19)
+
+**Note:** Version bump only for package @react-navigation/stack
+
+# [8.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.0...@react-navigation/stack@8.0.0-alpha.1) (2026-01-19)
+
+### Features
+
+* add a ~meta property to navigation object ([#12931](https://github.com/react-navigation/react-navigation/issues/12931)) ([e570c72](https://github.com/react-navigation/react-navigation/commit/e570c72f119cd6506c6106e7eb1ebb9ad5d47a62)) - by @satya164
+
+# [8.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.4.3...@react-navigation/stack@8.0.0-alpha.0) (2025-12-19)
+
+### Bug Fixes
+
+* add missing collapsable={false} ([5aa784d](https://github.com/react-navigation/react-navigation/commit/5aa784defa0f342f5080a880cfd346d9982654ba)) - by @satya164
+* add more checks on how path param is parsed ([f05681d](https://github.com/react-navigation/react-navigation/commit/f05681d226663a582e23bf66e0bfa83145627af3)) - by @satya164
+* fix detecting animation enabled ([3107502](https://github.com/react-navigation/react-navigation/commit/31075027f09ecc26a4e413cb5746e1a07692c287)) - by @satya164
+* fix gltchy header animation in stack with mixed header mode ([6c21ddd](https://github.com/react-navigation/react-navigation/commit/6c21dddebb29094561cffe5b6a3e01515de56b8f)) - by @satya164
+* fix title not being accessible for headerTransparent ([6e12844](https://github.com/react-navigation/react-navigation/commit/6e12844982883c74781f04b5eefab24b95d22563)) - by @satya164
+* fix transition animation for transparent modal ([a86c8fa](https://github.com/react-navigation/react-navigation/commit/a86c8faab60f56d37c834e27c8a39552c140867b)) - by @satya164
+* fix unresponsive header on web for mixed screen and float headers ([a04ed54](https://github.com/react-navigation/react-navigation/commit/a04ed5446c1d3b7857aa91e35d7854ce656fa6a2)) - by @satya164
+* heavy renders overlap with the animation on transition in stack ([#12846](https://github.com/react-navigation/react-navigation/issues/12846)) ([822e2bc](https://github.com/react-navigation/react-navigation/commit/822e2bc3a1224fb89aeb3afe890f841aa97fd7ea)) - by @osdnk
+* inactive screen visible for one frame ([#11315](https://github.com/react-navigation/react-navigation/issues/11315)) ([d8fe859](https://github.com/react-navigation/react-navigation/commit/d8fe859985a36128134a73374341fcbb38e58483)) - by @WoLewicki
+* remove overflow: hidden from background so shadow isn't hidden ([f1aa2dc](https://github.com/react-navigation/react-navigation/commit/f1aa2dc2cfe2e0a1e44d0111f1abd3a120d1c9ba)) - by @satya164
+* replace `pointerEvents` props with styles ([#12693](https://github.com/react-navigation/react-navigation/issues/12693)) ([987aed6](https://github.com/react-navigation/react-navigation/commit/987aed623ad7eaf120d3af76ca2e05b2a3c7f103)), closes [#12441](https://github.com/react-navigation/react-navigation/issues/12441) - by @hassankhan
+* resolve header jumping on iOS with Fabric ([#12833](https://github.com/react-navigation/react-navigation/issues/12833)) ([8f675cd](https://github.com/react-navigation/react-navigation/commit/8f675cd25867ec30b4d1efd006c93db5e94a7ea4)), closes [#12456](https://github.com/react-navigation/react-navigation/issues/12456) - by @osdnk
+* tweak determining active state to avoid blank screens ([3ff296a](https://github.com/react-navigation/react-navigation/commit/3ff296ae75738847d1b688f46bb73e43cb72f7d3)) - by @satya164
+* use Object.is for equality checks ([0e1d7ba](https://github.com/react-navigation/react-navigation/commit/0e1d7ba91ae96672ac8bc655f789ce0736757390)) - by @satya164
+
+### Code Refactoring
+
+* drop deprecated APIs and fallbacks for older versions of packages ([cf60189](https://github.com/react-navigation/react-navigation/commit/cf601898adf7ad18b3e4b298a82e04bfb170f01b)) - by @satya164
+* drop InteractionManager usage ([95c0f18](https://github.com/react-navigation/react-navigation/commit/95c0f186258ee55092503b7e6e0e08962ef6887d)), closes [#12785](https://github.com/react-navigation/react-navigation/issues/12785) - by @satya164
+* drop various layout arguments in public APIs ([514cc06](https://github.com/react-navigation/react-navigation/commit/514cc0602f08544562e8a99c18ae555043851b36)) - by @satya164
+* get parent navigation by route name with getParent ([#12822](https://github.com/react-navigation/react-navigation/issues/12822)) ([2877968](https://github.com/react-navigation/react-navigation/commit/2877968680e14a8d4698c4762996fff6c086f793)) - by @satya164
+* improve API for getDefaultHeaderHeight ([548a2dd](https://github.com/react-navigation/react-navigation/commit/548a2dd4c437f654f26c90225ee79cc816d368e2)) - by @satya164
+* make react-native-screens required ([92093f9](https://github.com/react-navigation/react-navigation/commit/92093f9be7c53856657c588d52777529d300b650)) - by @satya164
+
+### Features
+
+* add ability to render native buttons in header on iOS ([#12657](https://github.com/react-navigation/react-navigation/issues/12657)) ([118e27d](https://github.com/react-navigation/react-navigation/commit/118e27d17f7c878ae13c930e2ffd4088c1ccfede)) - by @johankasperi
+* add staticXScreen type to improve defining screens ([#12886](https://github.com/react-navigation/react-navigation/issues/12886)) ([7a5ebbd](https://github.com/react-navigation/react-navigation/commit/7a5ebbd91e7f8ad2ae3d810f45a2d27567dbae68)) - by @satya164
+* infer params type based on linking and screen ([#12888](https://github.com/react-navigation/react-navigation/issues/12888)) ([84069bf](https://github.com/react-navigation/react-navigation/commit/84069bf11254ab60adc3e4490a96c87c9b1343f7)) - by @satya164
+* remove UNSTABLE prefix from routeNamesChangeBehavior ([eda56ea](https://github.com/react-navigation/react-navigation/commit/eda56ea6840df32114d62ff9c77c066f240022a4)) - by @satya164
+* restore unhandled state after route names change ([#12812](https://github.com/react-navigation/react-navigation/issues/12812)) ([52e8a45](https://github.com/react-navigation/react-navigation/commit/52e8a45d8e8b068a616f8a7df6357ad6198f0622)) - by @satya164
+* rework header design to resemble latest iOS ([#12873](https://github.com/react-navigation/react-navigation/issues/12873)) ([260b604](https://github.com/react-navigation/react-navigation/commit/260b604ba4b96c35826b2a326a9137363b8de0fd)) - by @satya164
+* support ColorValue instead of string for colors in theme ([#12711](https://github.com/react-navigation/react-navigation/issues/12711)) ([cfe746b](https://github.com/react-navigation/react-navigation/commit/cfe746be6d671da7f4fe785d5bd6142fc8152e14)) - by @satya164
+* use continuous rounded corners ([199c002](https://github.com/react-navigation/react-navigation/commit/199c0028de121b7d9e462f4a1158f4c1ce420d6d)) - by @satya164
+
+### BREAKING CHANGES
+
+* Navigators don't accept an ID anymore, and `getParent`
+accepts only route names. Any code using navigator IDs needs to be
+refactored.
+* Consumers will now need to add listeners for
+`transitionStart`, `transitionEnd` etc. to defer code to run after transitions.
+
+`InteractionManager` has been deprecated in latest React Native
+versions: https://github.com/facebook/react-native/commit/a8a4ab10d0ee6004524f0e694e9d5a41836ad5c4
+* it now accepts an object with 3 properties:
+- `landscape`
+- `modalPresentation`
+- `topInset`
+* layout args are dropped to improve performance during window resize
+if consumers need layout, it's recommended to measure directly
+* Not having react native screens installed will now fail the build
+* the minimum required version for `react-native-web` is now `~0.21.0`
+
+**Motivation**
+
+By replacing usages of `pointerEvents` to use styles instead of props,
+we won't get an annoying warning in the logs.
+
+The underlying issue in React Native Web which prevented children of a
+`pointer-events: box-none` element from receiving pointer events is
+resolved by https://github.com/necolas/react-native-web/pull/2789.
+
+A follow-up fix to React Native Testing Library was also required, PR
+here
+https://github.com/callstack/react-native-testing-library/pull/1799.
+* This bumps the minimum required versions of various peer deps
+
 ## [7.4.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.4.2...@react-navigation/stack@7.4.3) (2025-07-25)
 
 **Note:** Version bump only for package @react-navigation/stack

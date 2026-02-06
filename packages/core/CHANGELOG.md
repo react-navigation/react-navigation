@@ -3,6 +3,115 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.2...@react-navigation/core@8.0.0-alpha.3) (2026-02-01)
+
+### Features
+
+* add an __unsafe_event__ event to container ref ([86ea025](https://github.com/react-navigation/react-navigation/commit/86ea025179a878d537a4ad7c6c4cf20e4ba57cd9)) - by @
+* log events in logger devtools ([8ad920b](https://github.com/react-navigation/react-navigation/commit/8ad920b200af5f20310bfab23198619ecb39d357)) - by @
+
+# [8.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.1...@react-navigation/core@8.0.0-alpha.2) (2026-01-19)
+
+**Note:** Version bump only for package @react-navigation/core
+
+# [8.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.0...@react-navigation/core@8.0.0-alpha.1) (2026-01-19)
+
+### Features
+
+* add a ~meta property to navigation object ([#12931](https://github.com/react-navigation/react-navigation/issues/12931)) ([e570c72](https://github.com/react-navigation/react-navigation/commit/e570c72f119cd6506c6106e7eb1ebb9ad5d47a62)) - by @satya164
+* handle popToRoot natively in native tabs ([da45221](https://github.com/react-navigation/react-navigation/commit/da452217c7ea96a9b82dbdab92c78aca7b25e2dc)) - by @satya164
+
+# [8.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.12.2...@react-navigation/core@8.0.0-alpha.0) (2025-12-19)
+
+### Bug Fixes
+
+* accept more properties in static linking config ([e54859d](https://github.com/react-navigation/react-navigation/commit/e54859d66d7e0e21188fedb7d26e26c34681e000)) - by @satya164
+* add more checks on how path param is parsed ([f05681d](https://github.com/react-navigation/react-navigation/commit/f05681d226663a582e23bf66e0bfa83145627af3)) - by @satya164
+* adjust useNavigationState type for dynamic navigators ([fe13455](https://github.com/react-navigation/react-navigation/commit/fe13455f255f6dadf1c373ece1cea4e3703727ab)) - by @satya164
+* always clear nested navigator params. fixes [#12876](https://github.com/react-navigation/react-navigation/issues/12876) ([#12885](https://github.com/react-navigation/react-navigation/issues/12885)) ([9cf8a5f](https://github.com/react-navigation/react-navigation/commit/9cf8a5f3a5c34912bd6031588a4088720fe2be2a)) - by @satya164
+* crash when path contains emoji ([#12679](https://github.com/react-navigation/react-navigation/issues/12679)) ([a422b17](https://github.com/react-navigation/react-navigation/commit/a422b1742fdbdca262a268862ffb007bd06963f1)) - by @bernhardoj
+* don't clear params unnecessarily ([94a70aa](https://github.com/react-navigation/react-navigation/commit/94a70aa15e758d4e751b5df577910b591de689a3)) - by @satya164
+* handle params type for generic navigation ([a134fc5](https://github.com/react-navigation/react-navigation/commit/a134fc590c6a3417ee2f2c6d5d080ee7ec8d129d)) - by @satya164
+* handle screens in dynamic config in useNavigation ([e0d7313](https://github.com/react-navigation/react-navigation/commit/e0d73132f79a6f811cb4187772ca232efb22dd9c)) - by @satya164
+* improve error message in useTheme ([81ff522](https://github.com/react-navigation/react-navigation/commit/81ff522195b9ec14836893cc044e1e0de96ab698)) - by @satya164
+* improve getting route type from param list ([ee6d389](https://github.com/react-navigation/react-navigation/commit/ee6d38982a1df33c2a7da17874d215e3dc621b64)) - by @satya164
+* include parent type for basic navigation ([3877d1e](https://github.com/react-navigation/react-navigation/commit/3877d1eb521c6566fe03ec309d0591eb1c0e519c)) - by @satya164
+* make sure route type is not any ([3d8ab9e](https://github.com/react-navigation/react-navigation/commit/3d8ab9ec1c414283c22b9c193812cfca46ce6967)) - by @satya164
+* only clear params for screen which has navigator ([96b8df7](https://github.com/react-navigation/react-navigation/commit/96b8df7343ac180557858605e1f0b449a6d35f30)) - by @satya164
+* remove production check in useRouteCache ([#12686](https://github.com/react-navigation/react-navigation/issues/12686)) ([b794c84](https://github.com/react-navigation/react-navigation/commit/b794c84a41c47fb0182540f650cb776fb9495354)) - by @Ubax
+* replace `pointerEvents` props with styles ([#12693](https://github.com/react-navigation/react-navigation/issues/12693)) ([987aed6](https://github.com/react-navigation/react-navigation/commit/987aed623ad7eaf120d3af76ca2e05b2a3c7f103)), closes [#12441](https://github.com/react-navigation/react-navigation/issues/12441) - by @hassankhan
+* reset contexts in independent tree ([80a096a](https://github.com/react-navigation/react-navigation/commit/80a096a6f4a4756d83d0a3048c1a6395feb920fa)) - by @satya164
+* return basic route type in useRoute if param list is empty ([f702c74](https://github.com/react-navigation/react-navigation/commit/f702c74544e90ebad8d3425b226b240d4061c601)) - by @satya164
+* return proper state type for generic navigation if possible ([f93dd67](https://github.com/react-navigation/react-navigation/commit/f93dd676f2875a5e3ab8a8f48d3ff85858c68374)) - by @satya164
+* use Object.is for equality checks ([0e1d7ba](https://github.com/react-navigation/react-navigation/commit/0e1d7ba91ae96672ac8bc655f789ce0736757390)) - by @satya164
+
+### Code Refactoring
+
+* drop deprecated APIs and fallbacks for older versions of packages ([cf60189](https://github.com/react-navigation/react-navigation/commit/cf601898adf7ad18b3e4b298a82e04bfb170f01b)) - by @satya164
+* get parent navigation by route name with getParent ([#12822](https://github.com/react-navigation/react-navigation/issues/12822)) ([2877968](https://github.com/react-navigation/react-navigation/commit/2877968680e14a8d4698c4762996fff6c086f793)) - by @satya164
+* rework how root types are specified ([7d63782](https://github.com/react-navigation/react-navigation/commit/7d63782b7ed90e5c1504325c51d1245e90817506)) - by @satya164
+
+### Features
+
+* accept name argument for useNavigation ([#12826](https://github.com/react-navigation/react-navigation/issues/12826)) ([101e32d](https://github.com/react-navigation/react-navigation/commit/101e32d3ec02a0e9d4b2b74aeb2905156288883c)) - by @satya164
+* accept name argument for useRoute ([#12820](https://github.com/react-navigation/react-navigation/issues/12820)) ([1afef60](https://github.com/react-navigation/react-navigation/commit/1afef6053d4686acf5e3dd94ad4f413ceab1952f)) - by @satya164
+* accept route name in useNavigationState ([#12854](https://github.com/react-navigation/react-navigation/issues/12854)) ([5818777](https://github.com/react-navigation/react-navigation/commit/5818777bf5a4373bdb301b942ba2603195e62235)) - by @satya164
+* add a utility type to get navigation prop for a screen ([#12823](https://github.com/react-navigation/react-navigation/issues/12823)) ([52fdd2c](https://github.com/react-navigation/react-navigation/commit/52fdd2c655e7c5584d8e588b58b3eb6692922ad8)) - by @satya164
+* add staticXScreen type to improve defining screens ([#12886](https://github.com/react-navigation/react-navigation/issues/12886)) ([7a5ebbd](https://github.com/react-navigation/react-navigation/commit/7a5ebbd91e7f8ad2ae3d810f45a2d27567dbae68)) - by @satya164
+* add support for linking config in group in static config ([2ee1889](https://github.com/react-navigation/react-navigation/commit/2ee1889d9e0e194e8096a4542ca6fa5fc57c88b1)) - by @satya164
+* add utility type to get params type for a route ([#12780](https://github.com/react-navigation/react-navigation/issues/12780)) ([4ab988f](https://github.com/react-navigation/react-navigation/commit/4ab988fbe89801fab4015dbfdc10b1e4cd1842ed)) - by @osdnk
+* get parent route based on name with useRoute ([#12832](https://github.com/react-navigation/react-navigation/issues/12832)) ([22ddeb4](https://github.com/react-navigation/react-navigation/commit/22ddeb4c020a856196a243e0ba34f074e0ccd26a)) - by @osdnk
+* implement route.history & PUSH_PARAMS ([#12751](https://github.com/react-navigation/react-navigation/issues/12751)) ([be3dee3](https://github.com/react-navigation/react-navigation/commit/be3dee3676cd797a33f7283a9d24b773484ed5d7)) - by @satya164
+* infer params type based on linking and screen ([#12888](https://github.com/react-navigation/react-navigation/issues/12888)) ([84069bf](https://github.com/react-navigation/react-navigation/commit/84069bf11254ab60adc3e4490a96c87c9b1343f7)) - by @satya164
+* remove UNSTABLE prefix from routeNamesChangeBehavior ([eda56ea](https://github.com/react-navigation/react-navigation/commit/eda56ea6840df32114d62ff9c77c066f240022a4)) - by @satya164
+* restore unhandled state after route names change ([#12812](https://github.com/react-navigation/react-navigation/issues/12812)) ([52e8a45](https://github.com/react-navigation/react-navigation/commit/52e8a45d8e8b068a616f8a7df6357ad6198f0622)) - by @satya164
+* typecheck parse and stringify in linking for static config ([ad48163](https://github.com/react-navigation/react-navigation/commit/ad48163f331b3cb488af777d5b3e042c051b4bae)) - by @satya164
+
+### BREAKING CHANGES
+
+* `useNavigation` no longer accepts a generic to override
+the returned type since it's not type-safe. User can do `const
+navigation = useNavigation() as SomeType` to make it explicit.
+
+https://github.com/user-attachments/assets/bc3397bd-67b3-4341-b514-58fdaf33772a
+
+**Test plan**
+
+- [x] Add unit tests
+- [x] Add type tests
+* The types previously specified with `RootParamList`
+using global augmentation will stop working.
+* Navigators don't accept an ID anymore, and `getParent`
+accepts only route names. Any code using navigator IDs needs to be
+refactored.
+* `useRoute` no longer accepts a generic to override the
+returned type since it's not type-safe. User can do `const route =
+useRoute() as SomeType` to make it explicit.
+
+https://github.com/user-attachments/assets/512ab42e-af24-452e-8ef1-99276a3ba17c
+
+NOTE: This doesn't check parent routes. It's being worked on in
+https://github.com/react-navigation/react-navigation/pull/12790
+
+**Test plan**
+
+- Added unit tests and type tests
+* the minimum required version for `react-native-web` is now `~0.21.0`
+
+**Motivation**
+
+By replacing usages of `pointerEvents` to use styles instead of props,
+we won't get an annoying warning in the logs.
+
+The underlying issue in React Native Web which prevented children of a
+`pointer-events: box-none` element from receiving pointer events is
+resolved by https://github.com/necolas/react-native-web/pull/2789.
+
+A follow-up fix to React Native Testing Library was also required, PR
+here
+https://github.com/callstack/react-native-testing-library/pull/1799.
+* This bumps the minimum required versions of various peer deps
+
 ## [7.12.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.12.1...@react-navigation/core@7.12.2) (2025-07-25)
 
 ### Bug Fixes

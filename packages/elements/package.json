@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/elements",
   "description": "UI Components for React Navigation",
-  "version": "2.6.0",
+  "version": "3.0.0-alpha.10",
   "keywords": [
     "react-native",
     "react-navigation",
@@ -62,7 +62,7 @@
     "react": "19.1.0",
     "react-native": "0.81.4",
     "react-native-builder-bob": "^0.40.12",
-    "react-native-screens": "^4.18.0",
+    "react-native-screens": "^4.21.0",
     "react-test-renderer": "19.1.0",
     "typescript": "^5.9.2"
   },
@@ -72,7 +72,7 @@
     "react": ">= 19.0.0",
     "react-native": "*",
     "react-native-safe-area-context": ">= 5.5.0",
-    "react-native-screens": ">= 4.0.0"
+    "react-native-screens": ">= 4.19.0"
   },
   "react-native-builder-bob": {
     "source": "src",

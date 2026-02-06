@@ -90,12 +90,14 @@ export function Header(props: Props) {
     headerTitle: customTitle,
     headerTitleAlign = Platform.OS === 'ios' ? 'center' : 'left',
     headerLeft = back ? (props) => <HeaderBackButton {...props} /> : undefined,
+    headerLeftBackgroundVisible,
     headerSearchBarOptions,
     headerTransparent,
     headerTintColor,
     headerBackground,
     headerBlurEffect,
     headerRight,
+    headerRightBackgroundVisible,
     headerTitleAllowFontScaling: titleAllowFontScaling,
     headerTitleStyle: titleStyle,
     headerLeftContainerStyle: leftContainerStyle,
@@ -411,6 +413,7 @@ export function Header(props: Props) {
           ]}
         >
           <HeaderButtonBackground
+            plain={headerLeftBackgroundVisible === false}
             style={[styles.buttonContainer, leftContainerStyle]}
           >
             {leftButton}
@@ -441,6 +444,7 @@ export function Header(props: Props) {
           ]}
         >
           <HeaderButtonBackground
+            plain={headerRightBackgroundVisible === false}
             style={[styles.buttonContainer, rightContainerStyle]}
           >
             {rightButton}
@@ -454,7 +458,23 @@ export function Header(props: Props) {
                   headerSearchBarOptions?.onOpen?.();
                 }}
               >
-                <HeaderIcon source={searchIcon} tintColor={iconTintColor} />
+                <HeaderIcon
+                  icon={Platform.select({
+                    android: {
+                      type: 'materialSymbol',
+                      name: 'search',
+                    },
+                    ios: {
+                      type: 'sfSymbol',
+                      name: 'magnifyingglass',
+                    },
+                    default: {
+                      type: 'image',
+                      source: searchIcon,
+                    },
+                  })}
+                  color={iconTintColor}
+                />
               </HeaderButton>
             ) : null}
           </HeaderButtonBackground>

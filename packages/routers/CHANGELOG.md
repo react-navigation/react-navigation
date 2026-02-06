@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.0...@react-navigation/routers@8.0.0-alpha.1) (2026-01-19)
+
+**Note:** Version bump only for package @react-navigation/routers
+
+# [8.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.5.0...@react-navigation/routers@8.0.0-alpha.0) (2025-12-19)
+
+### Bug Fixes
+
+* handle route history with POP_TO_TOP ([f3e4d4b](https://github.com/react-navigation/react-navigation/commit/f3e4d4b7e5bca096e710c0939da03c2409c602ee)) - by @satya164
+* make sure route type is not any ([3d8ab9e](https://github.com/react-navigation/react-navigation/commit/3d8ab9ec1c414283c22b9c193812cfca46ce6967)) - by @satya164
+* update params in history if params changed ([9dfa57b](https://github.com/react-navigation/react-navigation/commit/9dfa57be7fe87426b178da500faec03b6a0a233d)) - by @satya164
+* use preloaded route when replacing routes ([5343e29](https://github.com/react-navigation/react-navigation/commit/5343e29ff6ec1bc69019ddf6cd9d5e898255e025)) - by @satya164
+* use state.target in popTo to pop from given route ([2522e6a](https://github.com/react-navigation/react-navigation/commit/2522e6a7fe47c1276975cd08b81c89a889acb06d)) - by @satya164
+
+### Code Refactoring
+
+* drop deprecated APIs and fallbacks for older versions of packages ([cf60189](https://github.com/react-navigation/react-navigation/commit/cf601898adf7ad18b3e4b298a82e04bfb170f01b)) - by @satya164
+
+### Features
+
+* accept name argument for useRoute ([#12820](https://github.com/react-navigation/react-navigation/issues/12820)) ([1afef60](https://github.com/react-navigation/react-navigation/commit/1afef6053d4686acf5e3dd94ad4f413ceab1952f)) - by @satya164
+* implement route.history & PUSH_PARAMS ([#12751](https://github.com/react-navigation/react-navigation/issues/12751)) ([be3dee3](https://github.com/react-navigation/react-navigation/commit/be3dee3676cd797a33f7283a9d24b773484ed5d7)) - by @satya164
+
+### BREAKING CHANGES
+
+* `useRoute` no longer accepts a generic to override the
+returned type since it's not type-safe. User can do `const route =
+useRoute() as SomeType` to make it explicit.
+
+https://github.com/user-attachments/assets/512ab42e-af24-452e-8ef1-99276a3ba17c
+
+NOTE: This doesn't check parent routes. It's being worked on in
+https://github.com/react-navigation/react-navigation/pull/12790
+
+**Test plan**
+
+- Added unit tests and type tests
+* This bumps the minimum required versions of various peer deps
+
 # [7.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.4.1...@react-navigation/routers@7.5.0) (2025-07-25)
 
 ### Features

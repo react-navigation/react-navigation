@@ -5,7 +5,6 @@ import {
   type LocaleDirection,
   type ParamListBase,
   type Route,
-  type RouteProp,
   StackActions,
   type StackNavigationState,
 } from '@react-navigation/native';
@@ -14,7 +13,6 @@ import { StyleSheet, View } from 'react-native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 
 import type {
-  StackDescriptor,
   StackDescriptorMap,
   StackNavigationConfig,
   StackNavigationHelpers,
@@ -32,10 +30,6 @@ type Props = StackNavigationConfig & {
   state: StackNavigationState<ParamListBase>;
   navigation: StackNavigationHelpers;
   descriptors: StackDescriptorMap;
-  describe: (
-    route: RouteProp<ParamListBase>,
-    placeholder: boolean
-  ) => StackDescriptor;
 };
 
 type State = {
@@ -70,22 +64,51 @@ export class StackView extends React.Component<Props, State> {
     props: Readonly<Props>,
     state: Readonly<State>
   ) {
+    const allRoutes = [...props.state.routes, ...props.state.preloadedRoutes];
+
     // If there was no change in routes, we don't need to compute anything
     if (
-      (props.state.routes === state.previousRoutes ||
-        isArrayEqual(
-          props.state.routes.map((r) => r.key),
-          state.previousRoutes.map((r) => r.key)
-        )) &&
+      isArrayEqual(
+        allRoutes.map((r) => r.key),
+        state.previousRoutes.map((r) => r.key)
+      ) &&
       state.routes.length
     ) {
-      let routes = state.routes;
+      // If there were any routes being closed or replaced,
+      // We need to make sure they are preserved in the new state from props.state
+      // So first we get all such routes from the previous state (that included the animating routes)
+      // Then we add them back to the new state if they don't already exist
+
+      const closingRoutes = state.routes.filter(
+        (r) =>
+          state.closingRouteKeys.includes(r.key) &&
+          !props.state.routes.some((pr) => pr.key === r.key)
+      );
+
+      const replacingRoutes = state.routes.filter(
+        (r) =>
+          state.replacingRouteKeys.includes(r.key) &&
+          !props.state.routes.some((pr) => pr.key === r.key)
+      );
+
+      let routes: Route<string>[] = props.state.routes.slice();
+
+      // Replacing routes go before the focused route (they're being covered)
+      if (replacingRoutes.length) {
+        routes.splice(routes.length - 1, 0, ...replacingRoutes);
+      }
+
+      // Closing routes go at the end (they're animating out on top)
+      if (closingRoutes.length) {
+        routes.push(...closingRoutes);
+      }
+
       let previousRoutes = state.previousRoutes;
       let descriptors = props.descriptors;
       let previousDescriptors = state.previousDescriptors;
 
       if (props.descriptors !== state.previousDescriptors) {
-        descriptors = state.routes.reduce<StackDescriptorMap>((acc, route) => {
+        descriptors = routes.reduce<StackDescriptorMap>((acc, route) => {
           acc[route.key] =
             props.descriptors[route.key] || state.descriptors[route.key];
 
@@ -95,9 +118,9 @@ export class StackView extends React.Component<Props, State> {
         previousDescriptors = props.descriptors;
       }
 
-      if (props.state.routes !== state.previousRoutes) {
+      if (!isArrayEqual(allRoutes, state.previousRoutes)) {
         // if any route objects have changed, we should update them
-        const map = props.state.routes.reduce<Record<string, Route<string>>>(
+        const map = allRoutes.reduce<Record<string, Route<string>>>(
           (acc, route) => {
             acc[route.key] = route;
             return acc;
@@ -105,8 +128,8 @@ export class StackView extends React.Component<Props, State> {
           {}
         );
 
-        routes = state.routes.map((route) => map[route.key] || route);
-        previousRoutes = props.state.routes;
+        routes = routes.map((route) => map[route.key] || route);
+        previousRoutes = allRoutes;
       }
 
       return {
@@ -238,6 +261,18 @@ export class StackView extends React.Component<Props, State> {
               // After the push animation is completed, routes being replaced will be removed completely
               routes = routes.slice();
               routes.splice(routes.length - 1, 0, previousFocusedRoute);
+
+              // Preserve any other routes still being replaced from previous transitions
+              const previousReplacingRoutes = state.routes.filter(
+                (r) =>
+                  replacingRouteKeys.includes(r.key) &&
+                  !routes.some((existing) => existing.key === r.key)
+              );
+
+              if (previousReplacingRoutes.length) {
+                // Insert before the route we just added (previousFocusedRoute)
+                routes.splice(routes.length - 2, 0, ...previousReplacingRoutes);
+              }
             }
           }
         }
@@ -262,7 +297,7 @@ export class StackView extends React.Component<Props, State> {
       );
     }
 
-    const descriptors = routes.reduce<StackDescriptorMap>((acc, route) => {
+    const descriptors = allRoutes.reduce<StackDescriptorMap>((acc, route) => {
       acc[route.key] =
         props.descriptors[route.key] || state.descriptors[route.key];
 
@@ -271,7 +306,7 @@ export class StackView extends React.Component<Props, State> {
 
     return {
       routes,
-      previousRoutes: props.state.routes,
+      previousRoutes: [...props.state.routes, ...props.state.preloadedRoutes],
       previousDescriptors: props.descriptors,
       openingRouteKeys,
       closingRouteKeys,
@@ -333,20 +368,35 @@ export class StackView extends React.Component<Props, State> {
         });
       });
     } else {
-      this.setState((state) => ({
-        routes: state.replacingRouteKeys.length
-          ? state.routes.filter(
-              (r) => !state.replacingRouteKeys.includes(r.key)
-            )
-          : state.routes,
-        openingRouteKeys: state.openingRouteKeys.filter(
-          (key) => key !== route.key
-        ),
-        closingRouteKeys: state.closingRouteKeys.filter(
-          (key) => key !== route.key
-        ),
-        replacingRouteKeys: [],
-      }));
+      this.setState((state) => {
+        const routeIndex = state.routes.findIndex((r) => r.key === route.key);
+
+        // Remove replacing routes that were before the route that just opened
+        // Those were replaced by this or earlier routes and should be cleaned up
+        const replacingRoutesToRemove = new Set(
+          state.routes
+            .slice(0, routeIndex)
+            .filter((r) => state.replacingRouteKeys.includes(r.key))
+            .map((r) => r.key)
+        );
+
+        const newRoutes = state.routes.filter(
+          (r) => !replacingRoutesToRemove.has(r.key)
+        );
+
+        return {
+          routes: newRoutes,
+          openingRouteKeys: state.openingRouteKeys.filter(
+            (key) => key !== route.key
+          ),
+          closingRouteKeys: state.closingRouteKeys.filter(
+            (key) => key !== route.key
+          ),
+          replacingRouteKeys: state.replacingRouteKeys.filter(
+            (key) => !replacingRoutesToRemove.has(key)
+          ),
+        };
+      });
     }
   };
 
@@ -428,12 +478,6 @@ export class StackView extends React.Component<Props, State> {
     const { routes, descriptors, openingRouteKeys, closingRouteKeys } =
       this.state;
 
-    const preloadedDescriptors =
-      state.preloadedRoutes.reduce<StackDescriptorMap>((acc, route) => {
-        acc[route.key] = acc[route.key] || this.props.describe(route, true);
-        return acc;
-      }, {});
-
     return (
       <GestureHandlerWrapper style={styles.container}>
         <SafeAreaProviderCompat>
@@ -461,7 +505,6 @@ export class StackView extends React.Component<Props, State> {
                         onGestureStart={this.handleGestureStart}
                         onGestureEnd={this.handleGestureEnd}
                         onGestureCancel={this.handleGestureCancel}
-                        preloadedDescriptors={preloadedDescriptors}
                         {...rest}
                       />
                     )}

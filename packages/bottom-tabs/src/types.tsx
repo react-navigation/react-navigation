@@ -1,7 +1,11 @@
-import type { PlatformPressable } from '@react-navigation/elements';
+import type {
+  HeaderOptions,
+  PlatformPressable,
+} from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
+  MaterialSymbolProps,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
@@ -22,15 +26,11 @@ import type {
   ViewStyle,
 } from 'react-native';
 import type {
-  BottomTabsScreenBlurEffect,
-  BottomTabsSystemItem,
-  TabBarControllerMode,
   TabBarItemLabelVisibilityMode,
-  TabBarMinimizeBehavior,
+  TabsScreenBlurEffect,
+  TabsSystemItem,
 } from 'react-native-screens';
 import type { SFSymbol } from 'sf-symbols-typescript';
-
-import type { NativeHeaderOptions } from './views/NativeScreen/types';
 
 export type Variant = 'uikit' | 'material';
 
@@ -133,37 +133,47 @@ type IconImage = {
   tinted?: boolean;
 };
 
-type IconIOSSfSymbol = {
+type IconSfSymbol = {
   /**
    * - `sfSymbol` - Use an SF Symbol as the icon on iOS.
    */
   type: 'sfSymbol';
   /**
    * Name of the SF Symbol to use as the icon.
-   *
-   * @platform ios
    */
   name: SFSymbol;
 };
 
-type IconAndroidDrawable = {
+type IconMaterialSymbol = {
   /**
-   * - `drawableResource` - Use a drawable resource as the icon on Android.
+   * - `materialSymbol` - Use a Material Symbol as the icon on Android.
    */
-  type: 'drawableResource';
+  type: 'materialSymbol';
+} & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight'>;
+
+type IconResource = {
   /**
-   * Name of the drawable resource to use as the icon.
-   *
-   * @platform android
+   * - `resource` - Use a resource from drawables on Android and xcassets asset catalog on iOS as the icon.
+   */
+  type: 'resource';
+  /**
+   * Name of the drawable resource or xcasset to use as the icon.
    */
   name: string;
+  /**
+   * Whether to apply tint color to the icon.
+   * Only supported with custom implementation.
+   *
+   * Defaults to `true`.
+   */
+  tinted?: boolean;
 };
 
-type IconIOS = IconIOSSfSymbol | IconImage;
-
-type IconAndroid = IconAndroidDrawable | IconImage;
-
-export type Icon = IconIOS | IconAndroid;
+export type BottomTabIcon =
+  | IconSfSymbol
+  | IconMaterialSymbol
+  | IconResource
+  | IconImage;
 
 type BottomTabCustomOptions = {
   /**
@@ -212,21 +222,6 @@ type BottomTabCustomOptions = {
    * Only supported with `custom` implementation.
    */
   tabBarAllowFontScaling?: boolean;
-
-  /**
-   * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
-   * It's recommended to set this if you don't have a label for the tab.
-   *
-   * Only supported with `custom` implementation.
-   */
-  tabBarAccessibilityLabel?: string;
-
-  /**
-   * ID to locate this tab button in tests.
-   *
-   * Only supported with `custom` implementation.
-   */
-  tabBarButtonTestID?: string;
 
   /**
    * Style object for the tab item container.
@@ -289,7 +284,7 @@ type BottomTabCustomOptions = {
   /**
    * Position of the tab bar on the screen. Defaults to `bottom`.
    *
-   * Only supported with `custom` implementation.
+   * Only supported with `custom` implementation or if custom tab bar is provided.
    */
   tabBarPosition?: 'bottom' | 'left' | 'right' | 'top';
 
@@ -316,6 +311,8 @@ type BottomTabCustomOptions = {
   tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
 };
 
+type ScrollEdgeEffect = 'auto' | 'hard' | 'soft' | 'hidden';
+
 type BottomTabNativeOptions = {
   /**
    * Uses iOS built-in tab bar items with standard iOS styling and localized titles.
@@ -327,14 +324,12 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  tabBarSystemItem?: BottomTabsSystemItem;
+  tabBarSystemItem?: TabsSystemItem;
 
   /**
    * Blur effect applied to the tab bar when tab screen is selected.
    *
    * Works with backgroundColor's alpha < 1.
-   *
-   * Only supported on iOS 18 and lower.
    *
    * The following values are currently supported:
    *
@@ -347,19 +342,19 @@ type BottomTabNativeOptions = {
    * Complete list of possible blur effect styles is available in the official UIKit documentation:
    * @see {@link https://developer.apple.com/documentation/uikit/uiblureffect/style|UIBlurEffect.Style}
    *
+   * Only supported on iOS 18 and lower.
+   *
    * @platform ios
    */
-  tabBarBlurEffect?: BottomTabsScreenBlurEffect;
+  tabBarBlurEffect?: TabsScreenBlurEffect;
 
   /**
    * Minimize behavior for the tab bar.
    *
-   * Available starting from iOS 26.
-   *
    * The following values are currently supported:
    *
    * - `auto` - resolves to the system default minimize behavior
-   * - `never` - the tab bar does not minimize
+   * - `none` - the tab bar does not minimize
    * - `onScrollDown` - the tab bar minimizes when scrolling down and
    *   expands when scrolling back up
    * - `onScrollUp` - the tab bar minimizes when scrolling up and expands
@@ -370,9 +365,11 @@ type BottomTabNativeOptions = {
    * The supported values correspond to the official UIKit documentation:
    * @see {@link https://developer.apple.com/documentation/uikit/uitabbarcontroller/minimizebehavior|UITabBarController.MinimizeBehavior}
    *
+   * Available starting from iOS 26.
+   *
    * @platform ios
    */
-  tabBarMinimizeBehavior?: TabBarMinimizeBehavior;
+  tabBarMinimizeBehavior?: 'auto' | 'none' | 'onScrollDown' | 'onScrollUp';
 
   /**
    * Background color of the active indicator.
@@ -391,6 +388,79 @@ type BottomTabNativeOptions = {
    * @platform android
    */
   tabBarActiveIndicatorEnabled?: boolean;
+
+  /**
+   * Function which returns a React element to display as an accessory view.
+   *
+   * Accepts a `placement` parameter which can be one of the following values:
+   * - `regular` - at bottom of the screen, above the tab bar if tab bar is at the bottom
+   * - `inline` - inline with the collapsed bottom tab bar (e.g. when minimized based on `tabBarMinimizeBehavior`)
+   *
+   * Note: the content is rendered twice for both placements, but only one is visible at a time based on the tab bar state.
+   * Any shared state should be stored outside of the component to keep both versions in sync.
+   *
+   * Available starting from iOS 26.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform ios
+   */
+  bottomAccessory?: (options: {
+    placement: 'regular' | 'inline';
+  }) => React.ReactNode;
+
+  /**
+   * Configures the scroll edge effect for the _content ScrollView_ (the ScrollView that is present in first descendants chain of the Screen).
+   * Depending on values set, it will blur the scrolling content below certain UI elements (header items, search bar)
+   * for the specified edge of the ScrollView.
+   *
+   * When set in nested containers, i.e. Native Stack inside Native Bottom Tabs, or the other way around,
+   * the ScrollView will use only the innermost one's config.
+   *
+   * **Note:** Using both `headerBlurEffect` and `scrollEdgeEffects` (>= iOS 26) simultaneously may cause overlapping effects.
+   *
+   * Edge effects can be configured for each edge separately. The following values are currently supported:
+   *
+   * - `auto` - the automatic scroll edge effect style,
+   * - `hard` - a scroll edge effect with a hard cutoff and dividing line,
+   * - `soft` - a soft-edged scroll edge effect,
+   * - `hidden` - no scroll edge effect.
+   *
+   * Defaults to `automatic` for each edge.
+   *
+   * Available starting from iOS 26.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform ios
+   */
+  scrollEdgeEffects?: {
+    bottom?: ScrollEdgeEffect;
+    left?: ScrollEdgeEffect;
+    right?: ScrollEdgeEffect;
+    top?: ScrollEdgeEffect;
+  };
+
+  /**
+   * Specifies whether `contentInsetAdjustmentBehavior` of the `ScrollView`
+   * in the screen is automatically adjusted.
+   *
+   * `react-native`'s `ScrollView`s has `contentInsetAdjustmentBehavior` set to `never` by default.
+   * To provide a better UX, it is overridden to `automatic` - so it respects the tab bar.
+   * Otherwise, content can get hidden behind the tab bar as it's translucent on iOS 26+.
+   *
+   * Note that this only affects the `ScrollView` in first descendant chain of the screen,
+   * i.e., first view of each nested view is checked until a `ScrollView` is found.
+   *
+   * To disable this behavior for specific screens, set this option to `false`.
+   *
+   * Only supported with `native` implementation.
+   *
+   * Defaults to `true`.
+   *
+   * @platform ios
+   */
+  overrideScrollViewContentInsetAdjustmentBehavior?: boolean;
 };
 
 export type BottomTabNavigationOptions = {
@@ -447,12 +517,12 @@ export type BottomTabNavigationOptions = {
    * A React element is only supported with `custom` implementation.
    */
   tabBarIcon?:
-    | Icon
+    | BottomTabIcon
     | ((props: {
         focused: boolean;
         color: ColorValue;
         size: number;
-      }) => Icon | React.ReactNode);
+      }) => BottomTabIcon | React.ReactNode);
 
   /**
    * Text to show in a badge on the tab icon.
@@ -504,7 +574,18 @@ export type BottomTabNavigationOptions = {
    * Supported on iOS 18 and above with `native` implementation.
    * Not supported on tvOS.
    */
-  tabBarControllerMode?: TabBarControllerMode;
+  tabBarControllerMode?: 'auto' | 'tabBar' | 'tabSidebar';
+
+  /**
+   * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
+   * It's recommended to set this if you don't have a label for the tab.
+   */
+  tabBarAccessibilityLabel?: string;
+
+  /**
+   * ID to locate this tab button in tests.
+   */
+  tabBarButtonTestID?: string;
 
   /**
    * Style object for the tab bar container.
@@ -531,15 +612,6 @@ export type BottomTabNavigationOptions = {
   lazy?: boolean;
 
   /**
-   * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
-   * Defaults to `true` when `enableFreeze()` is run at the top of the application.
-   * Requires `react-native-screens` version >=3.16.0.
-   *
-   * Only supported on iOS and Android.
-   */
-  freezeOnBlur?: boolean; // TODO
-
-  /**
    * Whether any nested stack should be popped to top when navigating away from the tab.
    * Defaults to `false`.
    */
@@ -549,7 +621,19 @@ export type BottomTabNavigationOptions = {
    * Style object for the component wrapping the screen content.
    */
   sceneStyle?: StyleProp<ViewStyle>;
-} & NativeHeaderOptions &
+
+  /**
+   * Function that returns a React Element to display as a header.
+   */
+  header?: (props: BottomTabHeaderProps) => React.ReactNode;
+
+  /**
+   * Whether to show the header.
+   *
+   * Defaults to `false` unless a header is provided.
+   */
+  headerShown?: boolean;
+} & HeaderOptions &
   BottomTabNativeOptions &
   BottomTabCustomOptions;
 

@@ -19,7 +19,9 @@ import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
+import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
+import { NavigationMetaContext } from './NavigationMetaContext';
 import { NavigationRouteContext } from './NavigationProvider';
 import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
@@ -741,6 +743,8 @@ export function useNavigationBuilder<
     );
   });
 
+  const { onEmitEvent } = React.useContext(NavigationBuilderContext);
+
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
     const routeNames = [];
 
@@ -792,6 +796,13 @@ export function useNavigationBuilder<
       .filter((cb, i, self) => cb && self.lastIndexOf(cb) === i);
 
     listeners.forEach((listener) => listener?.(e));
+
+    onEmitEvent({
+      type: e.type,
+      data: e.data,
+      target: e.target,
+      defaultPrevented: e.defaultPrevented,
+    });
   });
 
   useFocusEvents({ state, emitter });
@@ -886,13 +897,15 @@ export function useNavigationBuilder<
     getStateListeners: keyedListeners.getState,
   });
 
-  const { describe, descriptors } = useDescriptors<
+  const descriptors = useDescriptors<
     State,
     ActionHelpers,
     ScreenOptions,
     EventMap
   >({
-    state,
+    routes: router.getRoutesFromState
+      ? router.getRoutesFromState(state)
+      : state.routes,
     screens,
     navigation,
     screenOptions,
@@ -926,18 +939,19 @@ export function useNavigationBuilder<
         : children;
 
     return (
-      <NavigationHelpersContext.Provider value={navigation}>
-        <NavigationStateListenerProvider state={state}>
-          <PreventRemoveProvider>{element}</PreventRemoveProvider>
-        </NavigationStateListenerProvider>
-      </NavigationHelpersContext.Provider>
+      <NavigationMetaContext.Provider value={undefined}>
+        <NavigationHelpersContext.Provider value={navigation}>
+          <NavigationStateListenerProvider state={state}>
+            <PreventRemoveProvider>{element}</PreventRemoveProvider>
+          </NavigationStateListenerProvider>
+        </NavigationHelpersContext.Provider>
+      </NavigationMetaContext.Provider>
     );
   });
 
   return {
     state,
     navigation,
-    describe,
     descriptors,
     NavigationContent,
   };

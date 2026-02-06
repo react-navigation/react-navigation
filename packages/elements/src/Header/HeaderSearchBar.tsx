@@ -1,10 +1,9 @@
-import { useNavigation, useTheme } from '@react-navigation/native';
+import { SFSymbol, useNavigation, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
   BackHandler,
   type ColorValue,
-  Image,
   type NativeEventSubscription,
   Platform,
   type StyleProp,
@@ -14,10 +13,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import clearIcon from '../assets/clear-icon.png';
 import closeIcon from '../assets/close-icon.png';
-import searchIcon from '../assets/search-icon.png';
-import searchIconLegacy from '../assets/search-icon-legacy.png';
 import { Color } from '../Color';
 import {
   AnimatedLiquidGlassContainerView,
@@ -174,9 +170,12 @@ function HeaderSearchBarInternal(
   // When status bar height is provided, add spacing below it
   // Otherwise, use a smaller top margin to align with the header content
   const STATUS_BAR_TOP_ADJUSTMENT = 2;
-  const topMargin = statusBarHeight
-    ? statusBarHeight + BUTTON_SPACING
-    : BUTTON_SPACING - STATUS_BAR_TOP_ADJUSTMENT;
+  const topMargin = Platform.select({
+    ios: statusBarHeight
+      ? statusBarHeight + BUTTON_SPACING
+      : BUTTON_SPACING - STATUS_BAR_TOP_ADJUSTMENT,
+    default: statusBarHeight,
+  });
 
   return (
     <AnimatedLiquidGlassContainerView
@@ -188,6 +187,8 @@ function HeaderSearchBarInternal(
         Platform.OS === 'ios' && {
           gap: BUTTON_SPACING,
           margin: BUTTON_SPACING,
+        },
+        {
           marginTop: topMargin,
         },
         style,
@@ -205,9 +206,10 @@ function HeaderSearchBarInternal(
       ) : null}
       <HeaderButtonBackground style={styles.searchbarContainer}>
         {Platform.OS === 'ios' ? (
-          <HeaderIcon
-            source={isLiquidGlassSupported ? searchIcon : searchIconLegacy}
-            tintColor={textColor}
+          <SFSymbol
+            name="magnifyingglass"
+            size={SEARCH_ICON_SIZE}
+            color={textColor}
             style={[
               styles.inputSearchIconIos,
               !isLiquidGlassSupported && styles.inputSearchIconIosLegacy,
@@ -258,10 +260,10 @@ function HeaderSearchBarInternal(
               !isLiquidGlassSupported && styles.clearButtonIosLegacy,
             ]}
           >
-            <Image
-              source={clearIcon}
-              resizeMode="contain"
-              tintColor={textColor}
+            <SFSymbol
+              name="xmark.circle.fill"
+              size={CLEAR_ICON_SIZE}
+              color={textColor}
               style={styles.clearIconIos}
             />
           </PlatformPressable>
@@ -273,7 +275,19 @@ function HeaderSearchBarInternal(
           onPress={onClear}
           style={[styles.closeButton, { opacity: clearVisibleAnim }]}
         >
-          <HeaderIcon source={closeIcon} tintColor={textColor} />
+          <HeaderIcon
+            icon={Platform.select({
+              android: {
+                type: 'materialSymbol',
+                name: 'close',
+              },
+              default: {
+                type: 'image',
+                source: closeIcon,
+              },
+            })}
+            color={textColor}
+          />
         </HeaderButton>
       ) : null}
       {Platform.OS === 'ios' ? (
@@ -283,7 +297,7 @@ function HeaderSearchBarInternal(
               accessibilityLabel={cancelButtonText}
               onPress={cancelSearch}
             >
-              <HeaderIcon source={closeIcon} tintColor={textColor} />
+              <SFSymbol name="xmark" color={textColor} />
             </HeaderButton>
           </HeaderButtonBackground>
         ) : (
@@ -327,18 +341,18 @@ const styles = StyleSheet.create({
   },
   inputSearchIconIos: {
     position: 'absolute',
-    opacity: 0.5,
-    top: SEARCHBAR_ICON_SPACING,
-    left: SEARCHBAR_ICON_SPACING,
+    top: '50%',
+    left: BUTTON_SPACING + SEARCHBAR_ICON_SPACING / 2,
+    marginTop: -SEARCH_ICON_SIZE / 2,
     height: SEARCH_ICON_SIZE,
     width: SEARCH_ICON_SIZE,
   },
   inputSearchIconIosLegacy: {
-    top: SEARCHBAR_LEGACY_VERTICAL_OFFSET_IOS,
+    top: SEARCHBAR_ICON_SPACING,
   },
   backButton: {
     alignSelf: 'center',
-    marginLeft: 2,
+    marginLeft: BUTTON_SPACING / 2,
   },
   closeButton: {
     position: 'absolute',

@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.0...react-native-tab-view@5.0.0-alpha.1) (2026-01-22)
+
+**Note:** Version bump only for package react-native-tab-view
+
+# [5.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.1.2...react-native-tab-view@5.0.0-alpha.0) (2025-12-19)
+
+### Bug Fixes
+
+* add fallback for PagerViewAdapter on web ([4a02c42](https://github.com/react-navigation/react-navigation/commit/4a02c42b3cfa2df1e57eed8f8c60119be8e42efb)) - by @satya164
+* explictly check for focus state for lazy loading in tab-view ([553bb61](https://github.com/react-navigation/react-navigation/commit/553bb614ae010a8ea115106615b1b3f39e9a0041)) - by @satya164
+* fix indicator overflowing the tabview ([9e31560](https://github.com/react-navigation/react-navigation/commit/9e31560c865575d6afb3dbd535c1fd5146e65fa3)) - by @satya164
+* handle disabled in PlatformPressable ([49431c0](https://github.com/react-navigation/react-navigation/commit/49431c0a6a001906b4f629516be29c1a0fb61b00)) - by @satya164
+* react-native-tab-view glitching on initial load ([#12627](https://github.com/react-navigation/react-navigation/issues/12627)) ([e1689eb](https://github.com/react-navigation/react-navigation/commit/e1689eb22efba87594ce93772db03051e6a624bb)) - by @adamgrzybowski
+* replace `pointerEvents` props with styles ([#12693](https://github.com/react-navigation/react-navigation/issues/12693)) ([987aed6](https://github.com/react-navigation/react-navigation/commit/987aed623ad7eaf120d3af76ca2e05b2a3c7f103)), closes [#12441](https://github.com/react-navigation/react-navigation/issues/12441) - by @hassankhan
+
+### Code Refactoring
+
+* drop deprecated APIs and fallbacks for older versions of packages ([cf60189](https://github.com/react-navigation/react-navigation/commit/cf601898adf7ad18b3e4b298a82e04bfb170f01b)) - by @satya164
+* drop InteractionManager usage ([95c0f18](https://github.com/react-navigation/react-navigation/commit/95c0f186258ee55092503b7e6e0e08962ef6887d)), closes [#12785](https://github.com/react-navigation/react-navigation/issues/12785) - by @satya164
+* drop layout props for tab view components ([aea05d2](https://github.com/react-navigation/react-navigation/commit/aea05d2ca9a1367d82d85a7ebc97c870cbe06592)) - by @satya164
+
+### Features
+
+* add scroll adapter to tab view and expose renderAdapter prop ([3579022](https://github.com/react-navigation/react-navigation/commit/35790223f488e3eda728b18931b8b5d8da5db13b)) - by @satya164
+* add scroll pager to tab view and expose pager prop ([a497c8a](https://github.com/react-navigation/react-navigation/commit/a497c8aa870a3963eae59305fbd3747e892e5306)) - by @satya164
+* support ColorValue instead of string for colors in theme ([#12711](https://github.com/react-navigation/react-navigation/issues/12711)) ([cfe746b](https://github.com/react-navigation/react-navigation/commit/cfe746be6d671da7f4fe785d5bd6142fc8152e14)) - by @satya164
+* update default tab view colors to match react navigation ([90897a9](https://github.com/react-navigation/react-navigation/commit/90897a9431899c603a1fa309b5339651de32cfb7)) - by @satya164
+* use continuous rounded corners ([199c002](https://github.com/react-navigation/react-navigation/commit/199c0028de121b7d9e462f4a1158f4c1ce420d6d)) - by @satya164
+
+### BREAKING CHANGES
+
+* Consumers will now need to add listeners for
+`transitionStart`, `transitionEnd` etc. to defer code to run after transitions.
+
+`InteractionManager` has been deprecated in latest React Native
+versions: https://github.com/facebook/react-native/commit/a8a4ab10d0ee6004524f0e694e9d5a41836ad5c4
+* layout args are dropped to improve performance during window resize
+if consumers need layout, it's recommended to measure directly
+* the minimum required version for `react-native-web` is now `~0.21.0`
+
+**Motivation**
+
+By replacing usages of `pointerEvents` to use styles instead of props,
+we won't get an annoying warning in the logs.
+
+The underlying issue in React Native Web which prevented children of a
+`pointer-events: box-none` element from receiving pointer events is
+resolved by https://github.com/necolas/react-native-web/pull/2789.
+
+A follow-up fix to React Native Testing Library was also required, PR
+here
+https://github.com/callstack/react-native-testing-library/pull/1799.
+* This bumps the minimum required versions of various peer deps
+
 ## [4.1.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.1.1...react-native-tab-view@4.1.2) (2025-06-14)
 
 **Note:** Version bump only for package react-native-tab-view

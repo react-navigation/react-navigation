@@ -1,1 +1,1 @@
-export { PlatformColor } from 'react-native';
+export { DynamicColorIOS, PlatformColor } from 'react-native';

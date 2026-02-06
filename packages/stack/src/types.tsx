@@ -1,7 +1,7 @@
 import type {
-  HeaderBackButton,
   HeaderBackButtonDisplayMode,
   HeaderBackButtonProps,
+  HeaderIcon,
   HeaderOptions,
   HeaderTitleProps,
 } from '@react-navigation/elements';
@@ -211,11 +211,29 @@ export type StackHeaderOptions = Omit<
    */
   headerBackTitleStyle?: StyleProp<TextStyle>;
   /**
-   * Function which returns a React Element to display custom image in header's back button.
-   * It receives the `tintColor` in in the options object as an argument. object.
-   * Defaults to Image component with a the default back icon image for the platform (a chevron on iOS and an arrow on Android).
+   * Icon to display in the header in the back button.
+   *
+   * Supported types:
+   * - image: custom image source
+   * - sfSymbol: SF Symbol icon (iOS only)
+   * - materialSymbol: material symbol icon (Android only)
+   * - React Node: function that returns a React Element
+   *
+   * Defaults to back icon image for the platform
+   * - A chevron on iOS
+   * - An arrow on Android
+   *
+   * @example
+   * ```js
+   * headerBackIcon: {
+   *   type: 'image',
+   *   source: require('./back-icon.png'),
+   * }
+   * ```
    */
-  headerBackImage?: React.ComponentProps<typeof HeaderBackButton>['backImage'];
+  headerBackIcon?:
+    | HeaderIcon
+    | ((props: { tintColor: ColorValue | undefined }) => React.ReactNode);
 };
 
 export type StackHeaderProps = {

@@ -1,5 +1,5 @@
 appId: ${APP_ID}
-name: Stack Header Customization
+name: Stack - Header Customization
 ---
 - runFlow:
     file: ../launch.yml

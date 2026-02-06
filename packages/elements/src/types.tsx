@@ -1,6 +1,12 @@
 import type {
+  MaterialSymbolProps,
+  SFSymbolProps,
+} from '@react-navigation/native';
+import * as React from 'react';
+import type {
   Animated,
   ColorValue,
+  ImageSourcePropType,
   LayoutChangeEvent,
   StyleProp,
   TextInputProps,
@@ -124,17 +130,6 @@ export type HeaderOptions = {
    */
   headerSearchBarOptions?: HeaderSearchBarOptions;
   /**
-   * Function which returns a React Element to display on the left side of the header.
-   */
-  headerLeft?: (
-    props: HeaderBackButtonProps & {
-      /**
-       * Whether it's possible to navigate back.
-       */
-      canGoBack?: boolean;
-    }
-  ) => React.ReactNode;
-  /**
    * How the back button displays icon and title.
    *
    * Supported values:
@@ -155,6 +150,26 @@ export type HeaderOptions = {
     fontSize?: number;
   }>;
   /**
+   * Function which returns a React Element to display on the left side of the header.
+   */
+  headerLeft?: (
+    props: HeaderBackButtonProps & {
+      /**
+       * Whether it's possible to navigate back.
+       */
+      canGoBack?: boolean;
+    }
+  ) => React.ReactNode;
+  /**
+   * Whether the liquid glass background is visible for the item.
+   *
+   * Only supported on iOS 26.0 and later.
+   * Older versions of iOS and other platforms never show the background.
+   *
+   * Defaults to `true`.
+   */
+  headerLeftBackgroundVisible?: boolean;
+  /**
    * Style object for the container of the `headerLeft` element`.
    */
   headerLeftContainerStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
@@ -167,6 +182,15 @@ export type HeaderOptions = {
     pressOpacity?: number;
     canGoBack: boolean;
   }) => React.ReactNode;
+  /**
+   * Whether the liquid glass background is visible for the item.
+   *
+   * Only supported on iOS 26.0 and later.
+   * Older versions of iOS and other platforms never show the background.
+   *
+   * Defaults to `true`.
+   */
+  headerRightBackgroundVisible?: boolean;
   /**
    * Style object for the container of the `headerRight` element.
    */
@@ -307,11 +331,36 @@ export type HeaderButtonProps = {
   children: React.ReactNode;
 };
 
+export type HeaderIcon =
+  | {
+      type: 'image';
+      source: ImageSourcePropType;
+    }
+  | {
+      type: 'sfSymbol';
+      name: SFSymbolProps['name'];
+    }
+  | ({
+      type: 'materialSymbol';
+    } & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight'>);
+
 export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
   /**
-   * Function which returns a React Element to display custom image in header's back button.
+   * Icon to display for the back button.
+   *
+   * Supported types:
+   * - image: custom image source
+   * - sfSymbol: SF Symbol icon (iOS only)
+   * - materialSymbol: material symbol icon (Android only)
+   * - React Node: function that returns a React Element
+   *
+   * Defaults to back icon image for the platform
+   * - A chevron on iOS
+   * - An arrow on Android
    */
-  backImage?: (props: { tintColor: ColorValue }) => React.ReactNode;
+  icon?:
+    | HeaderIcon
+    | ((props: { tintColor: ColorValue | undefined }) => React.ReactNode);
   /**
    * Label text for the button. Usually the title of the previous screen.
    * By default, this is only shown on iOS.

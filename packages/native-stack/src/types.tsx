@@ -1,3 +1,4 @@
+import type { HeaderIcon } from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -11,6 +12,7 @@ import type {
   StackRouterOptions,
   Theme,
 } from '@react-navigation/native';
+import * as React from 'react';
 import type {
   ColorValue,
   ImageSourcePropType,
@@ -188,7 +190,13 @@ export type NativeStackNavigationOptions = {
     fontSize?: number;
   }>;
   /**
-   * Icon to display in the header as the icon in the back button.
+   * Icon to display in the header in the back button.
+   *
+   * Supported types:
+   * - image: custom image source
+   * - sfSymbol: SF Symbol icon (iOS only - when using custom header)
+   * - materialSymbol: material symbol icon (Android only)
+   *
    * Defaults to back icon image for the platform
    * - A chevron on iOS
    * - An arrow on Android
@@ -201,10 +209,7 @@ export type NativeStackNavigationOptions = {
    * }
    * ```
    */
-  headerBackIcon?: {
-    type: 'image';
-    source: ImageSourcePropType;
-  };
+  headerBackIcon?: HeaderIcon;
   /**
    * Style of the header when a large title is shown.
    * The large title is shown if `headerLargeTitleEnabled` is `true` and
@@ -307,10 +312,28 @@ export type NativeStackNavigationOptions = {
    */
   headerLeft?: (props: NativeStackHeaderBackProps) => React.ReactNode;
   /**
+   * Whether the liquid glass background is visible for the item.
+   *
+   * Only supported on iOS 26.0 and later.
+   * Older versions of iOS and other platforms never show the background.
+   *
+   * Defaults to `true`.
+   */
+  headerLeftBackgroundVisible?: boolean;
+  /**
    * Function which returns a React Element to display on the right side of the header.
    * Will be overriden by `headerRightItems` on iOS.
    */
   headerRight?: (props: NativeStackHeaderItemProps) => React.ReactNode;
+  /**
+   * Whether the liquid glass background is visible for the item.
+   *
+   * Only supported on iOS 26.0 and later.
+   * Older versions of iOS and other platforms never show the background.
+   *
+   * Defaults to `true`.
+   */
+  headerRightBackgroundVisible?: boolean;
   /**
    * Function which returns an array of items to display as on the left side of the header.
    * Overrides `headerLeft`.
@@ -666,9 +689,47 @@ export type NativeStackNavigationOptions = {
    * * `none` - there will be dimming view for all detents levels,
    * * `last` - there won't be a dimming view for any detent level.
    *
+   * @remark
+   * On iOS, the native implementation might resize the the sheet w/o explicitly changing the detent level, e.g. in case of keyboard appearance.
+   * In case after such resize the sheet exceeds height for which in regular scenario a dimming view would be applied - it will be applied,
+   * even if the detent has not effectively been changed.
+   *
    * Defaults to `none`, indicating that the dimming view should be always present.
    */
   sheetLargestUndimmedDetentIndex?: number | 'none' | 'last';
+  /**
+   * Whether the sheet content should be rendered behind the Status Bar or display cutouts.
+   *
+   * When set to `true`, the sheet will extend to the physical edges of the stack,
+   * allowing content to be visible behind the status bar or display cutouts.
+   * Detent ratios in sheetAllowedDetents will be measured relative to the full stack height.
+   *
+   * When set to `false`, the sheet's layout will be constrained by the inset from the top
+   * and the detent ratios will then be measured relative to the adjusted height (excluding the top inset).
+   * This means that sheetAllowedDetents will result in different sheet heights depending on this prop.
+   *
+   * Defaults to `false`.
+   *
+   * @platform android
+   */
+  sheetShouldOverflowTopInset?: boolean;
+  /**
+   * Whether the default native animation should be used when the sheet's with
+   * `fitToContents` content size changes.
+   *
+   * When set to `true`, the sheet uses internal logic to synchronize size updates and
+   * translation animations during entry, exit, or content updates. This ensures a smooth
+   * transition for standard, static content mounting/unmounting.
+   *
+   * When set to `false`, the internal animation and translation logic is ignored. This
+   * allows the sheet to adjust its size dynamically based on the current dimensions of
+   * the content provided by the developer, allowing implementing custom resizing animations.
+   *
+   * Defaults to `true`.
+   *
+   * @platform android
+   */
+  sheetResizeAnimationEnabled?: boolean;
   /**
    * The display orientation to use for the screen.
    *
@@ -880,6 +941,10 @@ export type NativeStackHeaderItemMenuAction = {
    */
   label: string;
   /**
+   * The secondary text displayed alongside the label of the menu item.
+   */
+  description?: string;
+  /**
    * Icon for the menu item.
    */
   icon?: PlatformIconIOSSfSymbol;
@@ -942,6 +1007,40 @@ export type NativeStackHeaderItemMenuSubmenu = {
    */
   icon?: PlatformIconIOSSfSymbol;
   /**
+   * Whether the menu is displayed inline with the parent menu.
+   * By default, submenus are displayed after expanding the parent menu item.
+   * Inline menus are displayed as part of the parent menu as a section.
+   *
+   * Defaults to `false`.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/displayinline
+   */
+  inline?: boolean;
+  /**
+   * How the submenu items are displayed.
+   * - `default`: menu items are displayed normally.
+   * - `palette`: menu items are displayed in a horizontal row.
+   *
+   * Defaults to `default`.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/displayaspalette
+   */
+  layout?: 'default' | 'palette';
+  /**
+   * Whether to apply destructive style to the menu item.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenuelement/attributes/destructive
+   */
+  destructive?: boolean;
+  /**
+   * Whether multiple items in the submenu can be selected, i.e. in "on" state.
+   *
+   * Defaults to `false`.
+   *
+   * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/singleselection
+   */
+  multiselectable?: boolean;
+  /**
    * Array of menu items (actions or submenus).
    */
   items: NativeStackHeaderItemMenu['menu']['items'];
@@ -967,6 +1066,24 @@ export type NativeStackHeaderItemMenu = SharedHeaderItem & {
      * Optional title to show on top of the menu.
      */
     title?: string;
+    /**
+     * Whether multiple items in the submenu can be selected, i.e. in "on" state.
+     *
+     * Defaults to `false`.
+     *
+     * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/singleselection
+     */
+    multiselectable?: boolean;
+    /**
+     * How the submenu items are displayed.
+     * - `default`: menu items are displayed normally.
+     * - `palette`: menu items are displayed in a horizontal row.
+     *
+     * Defaults to `default`.
+     *
+     * Read more: https://developer.apple.com/documentation/uikit/uimenu/options-swift.struct/displayaspalette
+     */
+    layout?: 'default' | 'palette';
     /**
      * Array of menu items (actions or submenus).
      */

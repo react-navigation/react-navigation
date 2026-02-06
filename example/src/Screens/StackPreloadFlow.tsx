@@ -66,7 +66,7 @@ const HomeScreen = ({
   const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   useEffect(() => {
-    navigation.addListener('blur', () => {
+    return navigation.addListener('blur', () => {
       clearTimeout(timerRef.current);
       setIsReady(false);
     });
@@ -109,7 +109,7 @@ export function StackPreloadFlow(
   );
 }
 
-StackPreloadFlow.title = 'Preloading flow for Stack';
+StackPreloadFlow.title = 'Stack - Preload Flow';
 StackPreloadFlow.linking = linking;
 
 const styles = StyleSheet.create({
