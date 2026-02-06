@@ -47,7 +47,8 @@
           "backgroundColor": "#7b61c1"
         }
       ],
-      "react-native-edge-to-edge"
+      "react-native-edge-to-edge",
+      "@rnrepo/expo-config-plugin"
     ],
     "extra": {
       "supportsRTL": true,

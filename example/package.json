@@ -26,6 +26,7 @@
     "@react-navigation/native": "workspace:^",
     "@react-navigation/native-stack": "workspace:^",
     "@react-navigation/stack": "workspace:^",
+    "@rnrepo/expo-config-plugin": "^0.2.2-beta.0",
     "color": "^4.2.3",
     "expo": "^54.0.12",
     "expo-asset": "~12.0.9",
