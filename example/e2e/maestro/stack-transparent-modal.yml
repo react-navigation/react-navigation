@@ -1,0 +1,28 @@
+appId: ${APP_ID}
+name: Stack - Transparent Modal
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-transparent-modal
+      TEXT: 'Article'
+- tapOn:
+    text: 'Show Dialog'
+- assertVisible:
+    text: 'Trivia'
+- tapOn:
+    text: 'Okay'
+- assertNotVisible:
+    text: 'Trivia'
+- tapOn:
+    text: 'Push NewsFeed'
+- assertVisible:
+    text: 'NewsFeed'
+- tapOn:
+    text: 'Show Dialog'
+- assertVisible:
+    text: 'Trivia'
+- tapOn:
+    text: 'Okay'
+- assertNotVisible:
+    text: 'Trivia'

@@ -336,7 +336,7 @@ export function BottomTabs(
   );
 }
 
-BottomTabs.title = 'Bottom Tabs';
+BottomTabs.title = 'Bottom Tabs - Basic';
 BottomTabs.linking = linking;
 
 const styles = StyleSheet.create({

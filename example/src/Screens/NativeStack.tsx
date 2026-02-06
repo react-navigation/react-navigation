@@ -450,7 +450,7 @@ export function NativeStack(
   );
 }
 
-NativeStack.title = 'Native Stack';
+NativeStack.title = 'Native Stack - Basic';
 NativeStack.linking = linking;
 NativeStack.options = {
   gestureEnabled: false,

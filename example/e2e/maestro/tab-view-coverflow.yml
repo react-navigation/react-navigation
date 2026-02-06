@@ -4,7 +4,7 @@ name: Tab View - Coverflow
 - runFlow:
     file: ../launch.yml
     env:
-      LINK: tab-view/coverflow
+      LINK: libraries-tab-view/coverflow
       TEXT: 'Homogenic'
 - assertVisible:
     text: 'Homogenic'

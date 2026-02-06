@@ -1,0 +1,24 @@
+appId: ${APP_ID}
+name: Stack - Modal
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-modal
+      TEXT: 'Article by Gandalf'
+- tapOn:
+    text: 'Push albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Push article'
+- assertVisible:
+    text: 'Article by Babel fish'
+- tapOn:
+    text: 'Go back'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Go back'
+- assertVisible:
+    text: 'Article by Gandalf'

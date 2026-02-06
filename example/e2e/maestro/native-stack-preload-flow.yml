@@ -1,5 +1,5 @@
 appId: ${APP_ID}
-name: Native Stack Preload Flow
+name: Native Stack - Preload Flow
 ---
 - runFlow:
     file: ../launch.yml

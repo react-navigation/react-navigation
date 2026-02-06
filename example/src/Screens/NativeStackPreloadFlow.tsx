@@ -109,7 +109,7 @@ export function NativeStackPreloadFlow(
   );
 }
 
-NativeStackPreloadFlow.title = 'Preloading flow for Native Stack';
+NativeStackPreloadFlow.title = 'Native Stack - Preload Flow';
 NativeStackPreloadFlow.linking = linking;
 
 const styles = StyleSheet.create({

@@ -28,7 +28,7 @@ const MaterialTopTabs =
 
 const ChatScreen = () => <Chat bottom />;
 
-export function MaterialTopTabsScreen(_: StaticScreenProps<{}>) {
+export function MaterialTopTabsBasic(_: StaticScreenProps<{}>) {
   return (
     <MaterialTopTabs.Navigator>
       <MaterialTopTabs.Screen
@@ -50,9 +50,9 @@ export function MaterialTopTabsScreen(_: StaticScreenProps<{}>) {
   );
 }
 
-MaterialTopTabsScreen.title = 'Material Top Tabs';
-MaterialTopTabsScreen.linking = linking;
-MaterialTopTabsScreen.options = {
+MaterialTopTabsBasic.title = 'Material Top Tabs - Basic';
+MaterialTopTabsBasic.linking = linking;
+MaterialTopTabsBasic.options = {
   headerShown: true,
   cardStyle: { flex: 1 },
 };
