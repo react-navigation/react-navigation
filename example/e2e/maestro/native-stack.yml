@@ -1,5 +1,5 @@
 appId: ${APP_ID}
-name: Native Stack
+name: Native Stack - Basic
 ---
 - runFlow:
     file: ../launch.yml

@@ -145,7 +145,7 @@ export function NativeStackPreventRemove(
   );
 }
 
-NativeStackPreventRemove.title = 'Prevent removing screen in Native Stack';
+NativeStackPreventRemove.title = 'Native Stack - Prevent Remove';
 NativeStackPreventRemove.linking = linking;
 
 const styles = StyleSheet.create({

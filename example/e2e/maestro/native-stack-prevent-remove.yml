@@ -1,5 +1,5 @@
 appId: ${APP_ID}
-name: Native Stack Prevent Remove
+name: Native Stack - Prevent Remove
 ---
 - runFlow:
     file: ../launch.yml

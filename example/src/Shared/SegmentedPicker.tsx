@@ -1,4 +1,5 @@
 import { Text } from '@react-navigation/elements';
+import { Color } from '@react-navigation/elements/internal';
 import { useTheme } from '@react-navigation/native';
 import {
   Pressable,
@@ -21,7 +22,7 @@ export function SegmentedPicker<T extends string | number>({
   onValueChange,
   style,
 }: Props<T>) {
-  const { dark, fonts } = useTheme();
+  const { colors, fonts } = useTheme();
 
   return (
     <View style={[styles.container, style]}>
@@ -31,13 +32,22 @@ export function SegmentedPicker<T extends string | number>({
           onPress={() => onValueChange(option.value)}
           style={[
             styles.segment,
-            option.value === value && [
-              styles.active,
-              { backgroundColor: dark ? 'rgba(255, 255, 255, 0.15)' : '#fff' },
-            ],
+            option.value === value && { backgroundColor: colors.primary },
           ]}
         >
-          <Text style={fonts.medium}>{option.label}</Text>
+          <Text
+            style={[
+              fonts.medium,
+              {
+                color:
+                  option.value === value
+                    ? Color.foreground(colors.primary)
+                    : colors.text,
+              },
+            ]}
+          >
+            {option.label}
+          </Text>
         </Pressable>
       ))}
     </View>
@@ -49,11 +59,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   segment: {
-    borderRadius: 5,
+    borderRadius: 20,
     paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  active: {
-    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.15)',
+    paddingHorizontal: 12,
   },
 });

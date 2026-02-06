@@ -43,9 +43,7 @@ test('go back to the proper history entry after popping nested stack', async ({
   // After click, we have [not-found, home] on history stack
   await buttonGoToHome.click();
 
-  const button = page.getByRole('button', {
-    name: 'Simple Stack',
-  });
+  const button = page.getByTestId('StackBasic').filter({ visible: true });
 
   // Open nested stack
   await button.click();

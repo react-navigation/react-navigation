@@ -197,7 +197,7 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
 
 export const NativeBottomTabs = {
   screen: NativeBottomTabsNavigator,
-  title: 'Native Bottom Tabs',
+  title: 'Native Bottom Tabs - Basic',
 };
 
 const styles = StyleSheet.create({
