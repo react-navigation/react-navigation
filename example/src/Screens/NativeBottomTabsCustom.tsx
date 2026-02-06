@@ -16,6 +16,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
+import { StatusBar } from 'expo-status-bar';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -23,7 +24,6 @@ import iconBookUser from '../../assets/icons/book-user.png';
 import iconListMusic from '../../assets/icons/list-music.png';
 import iconMusic from '../../assets/icons/music.png';
 import iconNewspaper from '../../assets/icons/newspaper.png';
-import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
@@ -67,7 +67,7 @@ function AlbumsScreen() {
 
   return (
     <>
-      {isFocused && <SystemBars style="light" />}
+      {isFocused && <StatusBar style="light" />}
       <ScrollView
         automaticallyAdjustContentInsets
         contentContainerStyle={{

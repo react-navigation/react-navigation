@@ -31,6 +31,7 @@ import {
 } from '@react-navigation/stack';
 import { createURL } from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import { reloadAsync } from 'expo-updates';
 import * as React from 'react';
 import {
@@ -44,7 +45,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { SystemBars } from './edge-to-edge';
 import { SCREENS } from './screens';
 import { NotFound } from './Screens/NotFound';
 import { Divider } from './Shared/Divider';
@@ -332,7 +332,7 @@ export function App() {
 
   return (
     <Providers>
-      <SystemBars style="auto" />
+      <StatusBar style="auto" />
       {Platform.OS === 'web' ? (
         <style>
           {`:root { ${Object.entries(WEB_COLORS)

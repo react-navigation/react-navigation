@@ -21,6 +21,7 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
+import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import {
   type ColorValue,
@@ -36,7 +37,6 @@ import iconBookUser from '../../assets/icons/book-user.png';
 import iconListMusic from '../../assets/icons/list-music.png';
 import iconMusic from '../../assets/icons/music.png';
 import iconNewspaper from '../../assets/icons/newspaper.png';
-import { SystemBars } from '../edge-to-edge';
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
@@ -69,7 +69,7 @@ const AlbumsScreen = () => {
 
   return (
     <>
-      {isFocused && Platform.OS === 'android' && <SystemBars style="light" />}
+      {isFocused && Platform.OS === 'android' && <StatusBar style="light" />}
       <ScrollView
         contentContainerStyle={{
           paddingTop: headerHeight,
