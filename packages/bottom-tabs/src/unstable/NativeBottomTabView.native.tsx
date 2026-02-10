@@ -84,6 +84,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
     }),
     fontSize,
     fontStyle,
+    color: fontColor,
   } = currentOptions.tabBarLabelStyle || {};
 
   const activeTintColor =
@@ -158,7 +159,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
         tabBarTintColor={activeTintColor}
         tabBarItemIconColor={inactiveTintColor}
         tabBarItemIconColorActive={activeTintColor}
-        tabBarItemTitleFontColor={inactiveTintColor}
+        tabBarItemTitleFontColor={inactiveTintColor ?? fontColor}
         tabBarItemTitleFontColorActive={activeTintColor}
         tabBarItemTitleFontFamily={fontFamily}
         tabBarItemTitleFontWeight={fontWeight}
@@ -228,13 +229,6 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
               ? tabBarLabel
               : getLabel({ label: tabBarLabel, title }, route.name);
 
-          const tabItemAppearance: TabsScreenItemStateAppearance = {
-            tabBarItemTitleFontFamily: fontFamily,
-            tabBarItemTitleFontSize: fontSize,
-            tabBarItemTitleFontWeight: fontWeight,
-            tabBarItemTitleFontStyle: fontStyle,
-          };
-
           const badgeBackgroundColor =
             tabBarBadgeStyle?.backgroundColor ?? colors.notification;
           const badgeTextColor =
@@ -244,6 +238,16 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
                 ? 'black'
                 : 'white'
               : undefined);
+
+          const tabItemAppearance: TabsScreenItemStateAppearance = {
+            tabBarItemTitleFontFamily: fontFamily,
+            tabBarItemTitleFontSize: fontSize,
+            tabBarItemTitleFontWeight: fontWeight,
+            tabBarItemTitleFontStyle: fontStyle,
+            tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
+            tabBarItemIconColor: inactiveTintColor,
+            tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
+          };
 
           const icon =
             typeof tabBarIcon === 'function'
