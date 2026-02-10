@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.10...@react-navigation/bottom-tabs@8.0.0-alpha.11) (2026-02-10)
+
+### Features
+
+* support badge background color and tab label color on iOS ([3cd13d4](https://github.com/react-navigation/react-navigation/commit/3cd13d4e965337786c6279df8253dd8d8283f133)) - by @satya164
+
 # [8.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.9...@react-navigation/bottom-tabs@8.0.0-alpha.10) (2026-02-05)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.0...react-native-drawer-layout@5.0.0-alpha.1) (2026-02-10)
+
+### Bug Fixes
+
+* respect drawerType='back' in animated zIndex for drawer ([#12953](https://github.com/react-navigation/react-navigation/issues/12953)) ([48d9119](https://github.com/react-navigation/react-navigation/commit/48d91197d7ba1e1169b3d215507892883297a1a7)) - by @BarakXYZ
+
 # [5.0.0-alpha.0](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.1.12...react-native-drawer-layout@5.0.0-alpha.0) (2025-12-19)
 
 ### Bug Fixes

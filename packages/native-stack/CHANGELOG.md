@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.10...@react-navigation/native-stack@8.0.0-alpha.11) (2026-02-10)
+
+### Bug Fixes
+
+* use material back icon by default on android ([6c4ce52](https://github.com/react-navigation/react-navigation/commit/6c4ce521f44a961312d2eab4deed9fcc757fbc98)) - by @satya164
+
 # [8.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.9...@react-navigation/native-stack@8.0.0-alpha.10) (2026-02-05)
 
 **Note:** Version bump only for package @react-navigation/native-stack
