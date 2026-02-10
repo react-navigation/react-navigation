@@ -350,8 +350,17 @@ export function Drawer({
     return {
       // FIXME: Reanimated skips committing to the shadow tree if no layout props are animated
       // This results in pressables not getting their correct position and can't be pressed
-      // So we animate the zIndex to force the commit - it doesn't affect the drawer visually
-      zIndex: translateX.value === 0 ? 0 : 1,
+      // So we animate the zIndex to force the commit
+      // For 'back' type: always keep drawer behind content (-1 when open, 0 when closed/animating)
+      // For other types: 0 when open, 1 when closed/animating
+      zIndex:
+        drawerType === 'back'
+          ? translateX.get() === 0
+            ? -1
+            : 0
+          : translateX.get() === 0
+            ? 0
+            : 1,
       transform:
         drawerType === 'permanent'
           ? // Reanimated needs the property to be present, but it results in Browser bug
@@ -458,7 +467,6 @@ export function Drawer({
                     width: drawerWidth,
                     position:
                       drawerType === 'permanent' ? 'relative' : 'absolute',
-                    zIndex: drawerType === 'back' ? -1 : 0,
                   },
                   drawerAnimatedStyle,
                   drawerStyle,
