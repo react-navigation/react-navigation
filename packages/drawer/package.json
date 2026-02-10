@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/drawer",
   "description": "Integration for the drawer component from react-native-drawer-layout",
-  "version": "7.8.0",
+  "version": "7.8.1",
   "keywords": [
     "react-native-component",
     "react-component",
