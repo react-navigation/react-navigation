@@ -542,7 +542,6 @@ export function Drawer({
                   {
                     position:
                       drawerType === 'permanent' ? 'relative' : 'absolute',
-                    zIndex: drawerType === 'back' ? -1 : 0,
                   },
                   drawerAnimatedStyle,
                   drawerStyle,
