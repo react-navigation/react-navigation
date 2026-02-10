@@ -1,5 +1,5 @@
 appId: ${APP_ID}
-name: Bottom Tabs
+name: Bottom Tabs - Basic
 ---
 - runFlow:
     file: ../launch.yml

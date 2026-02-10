@@ -331,7 +331,7 @@ export type HeaderButtonProps = {
   children: React.ReactNode;
 };
 
-export type HeaderBackIcon =
+export type HeaderIcon =
   | {
       type: 'image';
       source: ImageSourcePropType;
@@ -358,9 +358,9 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    * - A chevron on iOS
    * - An arrow on Android
    */
-  backIcon?:
-    | HeaderBackIcon
-    | ((props: { tintColor: ColorValue }) => React.ReactNode);
+  icon?:
+    | HeaderIcon
+    | ((props: { tintColor: ColorValue | undefined }) => React.ReactNode);
   /**
    * Label text for the button. Usually the title of the previous screen.
    * By default, this is only shown on iOS.

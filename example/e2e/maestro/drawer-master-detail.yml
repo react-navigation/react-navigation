@@ -1,0 +1,20 @@
+appId: ${APP_ID}
+name: Drawer - Master Detail
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: drawer-master-detail
+      TEXT: 'Pages'
+- tapOn:
+    text: 'Feed'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Article'
+- assertVisible:
+    text: 'Article'

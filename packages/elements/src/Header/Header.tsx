@@ -458,7 +458,23 @@ export function Header(props: Props) {
                   headerSearchBarOptions?.onOpen?.();
                 }}
               >
-                <HeaderIcon source={searchIcon} tintColor={iconTintColor} />
+                <HeaderIcon
+                  icon={Platform.select({
+                    android: {
+                      type: 'materialSymbol',
+                      name: 'search',
+                    },
+                    ios: {
+                      type: 'sfSymbol',
+                      name: 'magnifyingglass',
+                    },
+                    default: {
+                      type: 'image',
+                      source: searchIcon,
+                    },
+                  })}
+                  color={iconTintColor}
+                />
               </HeaderButton>
             ) : null}
           </HeaderButtonBackground>

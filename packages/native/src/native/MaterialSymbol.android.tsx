@@ -1,7 +1,6 @@
 import {
   type ImageSourcePropType,
   PixelRatio,
-  PlatformColor,
   processColor,
   type ViewProps,
 } from 'react-native';
@@ -15,13 +14,11 @@ export type MaterialSymbolProps = MaterialSymbolOptions & ViewProps;
 
 const imageSourceCache = new Map<string, ImageSourcePropType>();
 
-const DEFAULT_COLOR = PlatformColor('?attr/colorForeground');
-
 export function MaterialSymbol({
   name,
   weight,
   size = 24,
-  color = DEFAULT_COLOR,
+  color,
   style,
   ...rest
 }: MaterialSymbolProps): React.ReactElement {

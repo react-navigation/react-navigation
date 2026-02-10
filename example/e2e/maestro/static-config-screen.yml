@@ -1,0 +1,24 @@
+appId: ${APP_ID}
+name: Static config
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: static-config-screen
+      TEXT: 'Albums'
+- tapOn:
+    text: 'Show Chat'
+- assertVisible:
+    id: 'chat'
+- tapOn:
+    id: 'chat'
+- assertVisible:
+    text: 'Chat'
+- tapOn:
+    id: 'albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Hide Chat'
+- assertNotVisible:
+    id: 'chat'

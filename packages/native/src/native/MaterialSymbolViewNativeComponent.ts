@@ -15,7 +15,7 @@ export interface NativeProps extends ViewProps {
     0
   >;
   size: CodegenTypes.Float;
-  color: ColorValue;
+  color?: ColorValue;
 }
 
 export default codegenNativeComponent<NativeProps>(

@@ -1,5 +1,5 @@
 appId: ${APP_ID}
-name: Native Stack Header Customization
+name: Native Stack - Header Customization
 ---
 - stopApp
 - runFlow:

@@ -502,7 +502,7 @@ export type BottomTabNavigationOptions = {
    */
   tabBarLabelStyle?: Pick<
     TextStyle,
-    'fontFamily' | 'fontSize' | 'fontWeight' | 'fontStyle'
+    'fontFamily' | 'fontSize' | 'fontWeight' | 'fontStyle' | 'color'
   >;
 
   /**

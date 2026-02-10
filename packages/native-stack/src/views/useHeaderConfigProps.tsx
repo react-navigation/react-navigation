@@ -7,6 +7,7 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
+import { useMemo } from 'react';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
   type HeaderBarButtonItem,
@@ -35,6 +36,8 @@ type Props = NativeStackNavigationOptions & {
   headerBack: { title?: string | undefined; href: undefined } | undefined;
   route: Route<string>;
 };
+
+const ICON_SIZE = 24;
 
 const processBarButtonItems = (
   items: NativeStackHeaderItem[] | undefined,
@@ -341,6 +344,37 @@ export function useHeaderConfigProps({
     rightItems = [...rightItems].reverse();
   }
 
+  const backImageSource = useMemo(() => {
+    if (headerBackIcon == null && Platform.OS === 'android') {
+      try {
+        // Use Material Symbol as default back icon on Android
+        // So it's consistent with other material icons
+        // Based on the available variant and weight
+        return MaterialSymbol.getImageSource({
+          name: 'arrow_back',
+          color: tintColor,
+          size: ICON_SIZE,
+        });
+      } catch (e) {
+        // Fallback to default if symbol is not available
+        // This can happen if no font, or multiple fonts are available
+        // Or in tests where native module is not available
+      }
+    } else if (headerBackIcon?.type === 'image') {
+      return headerBackIcon.source;
+    } else if (headerBackIcon?.type === 'materialSymbol') {
+      return MaterialSymbol.getImageSource({
+        name: headerBackIcon.name,
+        variant: headerBackIcon.variant,
+        weight: headerBackIcon.weight,
+        color: tintColor,
+        size: ICON_SIZE,
+      });
+    }
+
+    return undefined;
+  }, [headerBackIcon, tintColor]);
+
   const children = (
     <>
       {Platform.OS === 'ios' ? (
@@ -416,21 +450,8 @@ export function useHeaderConfigProps({
           ) : null}
         </>
       )}
-      {headerBackIcon !== undefined ? (
-        <ScreenStackHeaderBackButtonImage
-          source={
-            headerBackIcon.type === 'image'
-              ? headerBackIcon.source
-              : headerBackIcon.type === 'materialSymbol'
-                ? MaterialSymbol.getImageSource({
-                    name: headerBackIcon.name,
-                    variant: headerBackIcon.variant,
-                    weight: headerBackIcon.weight,
-                    color: tintColor,
-                  })
-                : undefined
-          }
-        />
+      {backImageSource != null ? (
+        <ScreenStackHeaderBackButtonImage source={backImageSource} />
       ) : null}
       {Platform.OS === 'ios' && rightItems ? (
         rightItems.map((item, index) => {

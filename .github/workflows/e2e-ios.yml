@@ -18,7 +18,7 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      MAESTRO_VERSION: 2.0.10
+      MAESTRO_VERSION: 2.1.0
       MAESTRO_CLI_NO_ANALYTICS: 1
       MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
       JAVA_DISTRIBUTION: 'zulu'
@@ -51,12 +51,63 @@ jobs:
         with:
           xcode-version: '26'
 
+      - name: Cache CocoaPods
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        uses: actions/cache@v4
+        with:
+          path: |
+            example/ios/Pods
+            ~/.cocoapods
+            ~/Library/Caches/CocoaPods
+          key: ios-pods-${{ runner.os }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+          restore-keys: |
+            ios-pods-${{ runner.os }}-
+
+      - name: Cache DerivedData
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        uses: actions/cache@v4
+        with:
+          path: example/ios/build
+          key: ios-deriveddata-${{ runner.os }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+          restore-keys: |
+            ios-deriveddata-${{ runner.os }}-
+
+      - name: Cache ccache
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ios-ccache-${{ runner.os }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+          restore-keys: |
+            ios-ccache-${{ runner.os }}-
+
+      - name: Install macOS dependencies
+        run: |
+          brew tap facebook/fb
+          brew install facebook/fb/idb-companion ccache
+
+      - name: Create ccache wrappers
+        run: |
+          mkdir -p "$RUNNER_TEMP/ccache"
+          cat > "$RUNNER_TEMP/ccache/ccache-clang" <<'EOF'
+          #!/bin/sh
+          exec ccache clang "$@"
+          EOF
+          cat > "$RUNNER_TEMP/ccache/ccache-clang++" <<'EOF'
+          #!/bin/sh
+          exec ccache clang++ "$@"
+          EOF
+          chmod +x "$RUNNER_TEMP/ccache/ccache-clang" "$RUNNER_TEMP/ccache/ccache-clang++"
+
       - name: Build iOS App
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
         run: |
           yarn expo prebuild --platform ios
           xcodebuild ONLY_ACTIVE_ARCH=YES -workspace ios/ReactNavigationExample.xcworkspace -UseNewBuildSystem=YES -scheme ReactNavigationExample -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -quiet
         working-directory: example
+        env:
+          CC: ${{ runner.temp }}/ccache/ccache-clang
+          CXX: ${{ runner.temp }}/ccache/ccache-clang++
 
       - name: Prepare cache folder
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -70,11 +121,6 @@ jobs:
         with:
           path: ios-debug-build/
           key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
-
-      - name: Install macOS dependencies
-        run: |
-          brew tap facebook/fb
-          brew install facebook/fb/idb-companion
 
       - name: Setup JDK
         uses: actions/setup-java@v5
@@ -142,19 +188,7 @@ jobs:
       - name: Run Maestro tests
         run: |
           xcrun simctl install booted ../ios-debug-build/ios-debug.app
-
-          for i in 1 2 3; do
-            if yarn run e2e:native --flatten-debug-output; then
-              break
-            else
-              echo "Maestro tests failed on attempt $i"
-
-              if [ $i -eq 3 ]; then
-                echo "Maestro tests failed after $i attempts"
-                exit 1
-              fi
-            fi
-          done
+          yarn run e2e:native --platform ios
         working-directory: example
 
       - name: Store debug output

@@ -109,7 +109,7 @@ export function StackPreloadFlow(
   );
 }
 
-StackPreloadFlow.title = 'Preloading flow for Stack';
+StackPreloadFlow.title = 'Stack - Preload Flow';
 StackPreloadFlow.linking = linking;
 
 const styles = StyleSheet.create({

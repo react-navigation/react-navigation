@@ -221,7 +221,7 @@ export function StackHeaderCustomization(
   );
 }
 
-StackHeaderCustomization.title = 'Header Customization in Stack';
+StackHeaderCustomization.title = 'Stack - Header Customization';
 StackHeaderCustomization.linking = linking;
 
 const styles = StyleSheet.create({

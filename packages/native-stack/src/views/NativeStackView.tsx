@@ -117,7 +117,7 @@ export function NativeStackView({ state, descriptors }: Props) {
                               {...rest}
                               label={headerBackTitle ?? label}
                               tintColor={tintColor}
-                              backIcon={headerBackIcon}
+                              icon={headerBackIcon}
                               onPress={navigation.goBack}
                             />
                           )

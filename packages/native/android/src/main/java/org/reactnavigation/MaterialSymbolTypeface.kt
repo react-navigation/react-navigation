@@ -46,9 +46,26 @@ object MaterialSymbolTypeface {
     }
 
     if (fonts.size > 1) {
-      throw RuntimeException(
-        "Multiple MaterialSymbols fonts found in assets: ${fonts.joinToString()}. " + "Please specify a variant and weight explicitly."
-      )
+      val outlinedFonts = fonts.filter { it.startsWith("MaterialSymbolsOutlined") }
+      val outlinedFont = when {
+        outlinedFonts.isEmpty() -> null
+        outlinedFonts.size == 1 -> outlinedFonts[0]
+        else -> outlinedFonts.firstOrNull {
+          it.removePrefix("MaterialSymbols").removeSuffix(".ttf") == "Outlined_400"
+        }
+      }
+
+      if (outlinedFont == null) {
+        throw RuntimeException(
+          "Multiple MaterialSymbols fonts found in assets: ${fonts.joinToString()}. " + "Please specify a variant and weight explicitly."
+        )
+      }
+
+      val outlinedSuffix = outlinedFont.removePrefix("MaterialSymbols").removeSuffix(".ttf")
+
+      defaultSuffix = outlinedSuffix
+
+      return outlinedSuffix
     }
 
     val suffix = fonts[0].removePrefix("MaterialSymbols").removeSuffix(".ttf")

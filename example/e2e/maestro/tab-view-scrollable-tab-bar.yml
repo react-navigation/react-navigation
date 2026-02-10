@@ -4,7 +4,7 @@ name: Tab View - Scrollable Tab Bar
 - runFlow:
     file: ../launch.yml
     env:
-      LINK: tab-view/scrollable-tab-bar
+      LINK: libraries-tab-view/scrollable-tab-bar
       TEXT: 'Contacts'
 - assertVisible:
     text: 'Marissa Castillo'

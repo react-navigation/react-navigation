@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.9...@react-navigation/native@8.0.0-alpha.10) (2026-02-05)
+
+### Bug Fixes
+
+* default to outlined if multiple material symbols are used ([d68e95c](https://github.com/react-navigation/react-navigation/commit/d68e95cb9eeab45910316ed89648e0f553f077d4)) - by @satya164
+* fix material symbol not implementing the native interface ([8d81498](https://github.com/react-navigation/react-navigation/commit/8d814986505f5bcd275d2888f3082c3f63fbc627)) - by @satya164
+
 # [8.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.8...@react-navigation/native@8.0.0-alpha.9) (2026-02-04)
 
 ### Bug Fixes

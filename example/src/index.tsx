@@ -29,9 +29,10 @@ import {
   createStackNavigator,
   type StackNavigationOptions,
 } from '@react-navigation/stack';
+import { reloadAppAsync } from 'expo';
 import { createURL } from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
-import { reloadAsync } from 'expo-updates';
+import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import {
   Appearance,
@@ -44,11 +45,11 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { SystemBars } from './edge-to-edge';
 import { SCREENS } from './screens';
 import { NotFound } from './Screens/NotFound';
 import { Divider } from './Shared/Divider';
 import { ErrorBoundary } from './Shared/ErrorBoundary';
+import { ListGroupItem } from './Shared/ListGroupItem';
 import { ListItem } from './Shared/LIstItem';
 import { SegmentedPicker } from './Shared/SegmentedPicker';
 import { PlatformTheme } from './theme';
@@ -129,62 +130,124 @@ function Examples() {
   const { themeName, isRTL, dispatch } = settings;
 
   const theme = useTheme();
-  const navigation = useNavigation();
+
+  const [filter, setFilter] = React.useState('');
+
+  const navigation = useNavigation('Examples');
+
+  React.useEffect(() => {
+    navigation.setOptions({
+      headerSearchBarOptions: {
+        placeholder: 'Filter screens',
+        onChange: (e) => {
+          setFilter(e.nativeEvent.text);
+        },
+      },
+    });
+  }, [filter, navigation]);
 
   return (
     <ScrollView style={{ backgroundColor: theme.colors.background }}>
       <SafeAreaView edges={['right', 'bottom', 'left']}>
-        <ListItem title="Right to left">
-          <Switch
-            value={isRTL}
-            onValueChange={(value) =>
-              dispatch({
-                type: 'SET_RTL',
-                payload: value,
-              })
-            }
-            disabled={
-              // Set expo.extra.forcesRTL: true in app.json to enable RTL in Expo Go
-              Platform.OS !== 'web'
-            }
-            trackColor={{ true: theme.colors.primary }}
-          />
-        </ListItem>
-        <Divider />
-        <ListItem title="Theme">
-          <SegmentedPicker
-            choices={(
-              [
-                { label: 'Custom', value: 'custom' },
-                { label: 'Material', value: 'material' },
-                { label: 'Light', value: 'light' },
-                { label: 'Dark', value: 'dark' },
-              ] as const
-            ).filter((choice) =>
-              Platform.OS !== 'android' ? choice.value !== 'material' : true
-            )}
-            value={themeName}
-            onValueChange={(value) => {
-              dispatch({
-                type: 'SET_THEME',
-                payload: value,
-              });
-            }}
-          />
-        </ListItem>
-        <Divider />
-        {SCREEN_NAMES.map((name) => (
-          <React.Fragment key={name}>
-            <ListItem
-              title={SCREENS[name].title}
-              onPress={() => {
-                // @ts-expect-error TS has a limit of 24 items https://github.com/microsoft/TypeScript/issues/40803
-                navigation.navigate(name);
-              }}
-            />
+        {!filter.length ? (
+          <ListGroupItem title="Settings">
+            <ListItem title="Right to left">
+              <Switch
+                value={isRTL}
+                onValueChange={(value) =>
+                  dispatch({
+                    type: 'SET_RTL',
+                    payload: value,
+                  })
+                }
+                trackColor={{ true: theme.colors.primary }}
+                style={{
+                  // FIXME: On iOS, switch doesn't center vertically
+                  marginVertical: 12,
+                }}
+              />
+            </ListItem>
             <Divider />
-          </React.Fragment>
-        ))}
+            <ListItem title="Theme">
+              <SegmentedPicker
+                choices={(
+                  [
+                    { label: 'Custom', value: 'custom' },
+                    { label: 'Material', value: 'material' },
+                    { label: 'Light', value: 'light' },
+                    { label: 'Dark', value: 'dark' },
+                  ] as const
+                ).filter((choice) =>
+                  Platform.OS !== 'android' ? choice.value !== 'material' : true
+                )}
+                value={themeName}
+                onValueChange={(value) => {
+                  dispatch({
+                    type: 'SET_THEME',
+                    payload: value,
+                  });
+                }}
+              />
+            </ListItem>
+          </ListGroupItem>
+        ) : null}
+        {SCREEN_NAMES.reduce<
+          {
+            group: string;
+            items: { name: keyof typeof SCREENS; title: string }[];
+          }[]
+        >((acc, name) => {
+          const screen = SCREENS[name];
+          const [group, title] = screen.title.includes(' - ')
+            ? screen.title.split(' - ')
+            : ['Misc', screen.title];
+
+          const term = filter.toLowerCase();
+
+          if (
+            filter.length > 0 &&
+            !group.toLowerCase().includes(term) &&
+            !screen.title.toLowerCase().includes(term) &&
+            !name.toLowerCase().includes(term)
+          ) {
+            return acc;
+          }
+
+          const index = acc.findIndex(
+            (item) => 'group' in item && item.group === group
+          );
+
+          if (index !== -1 && 'group' in acc[index]) {
+            acc[index].items.push({ name, title });
+          } else {
+            acc.push({
+              group,
+              items: [{ name, title }],
+            });
+          }
+
+          return acc;
+        }, []).map((item) => {
+          return (
+            <ListGroupItem key={item.group} title={item.group}>
+              {item.items.map((it, i) => {
+                return (
+                  <React.Fragment key={it.name}>
+                    {i > 0 ? <Divider /> : null}
+                    <ListItem
+                      title={it.title}
+                      testID={it.name}
+                      onPress={() => {
+                        // @ts-expect-error TS has a limit of 24 items https://github.com/microsoft/TypeScript/issues/40803
+                        navigation.navigate(it.name);
+                      }}
+                    />
+                  </React.Fragment>
+                );
+              })}
+            </ListGroupItem>
+          );
+        })}
       </SafeAreaView>
     </ScrollView>
   );
@@ -267,6 +330,9 @@ const Stack = createStackNavigator({
             options: {
               headerShown: false,
               title: item.title,
+              headerTitle: item.title.includes(' - ')
+                ? item.title.split(' - ')[1]
+                : item.title,
               ...('options' in item ? item.options : null),
             },
             linking: {
@@ -332,7 +398,7 @@ export function App() {
 
   return (
     <Providers>
-      <SystemBars style="auto" />
+      <StatusBar style="auto" />
       {Platform.OS === 'web' ? (
         <style>
           {`:root { ${Object.entries(WEB_COLORS)
@@ -464,7 +530,12 @@ const useAppState = () => {
     if (Platform.OS === 'web') {
       document.documentElement.style.colorScheme = colorScheme;
     } else {
-      Appearance.setColorScheme(colorScheme);
+      if (state.themeName === 'material') {
+        Appearance.setColorScheme(null);
+        return;
+      } else {
+        Appearance.setColorScheme(colorScheme);
+      }
     }
   }, [state.isReady, state.themeName]);
 
@@ -486,7 +557,7 @@ const useAppState = () => {
       I18nManager.forceRTL(state.isRTL);
 
       if (Platform.OS !== 'web') {
-        reloadAsync();
+        reloadAppAsync();
       }
     }
   }, [state.isRTL, state.isReady]);

@@ -46,8 +46,7 @@
           "image": "./assets/splash.png",
           "backgroundColor": "#7b61c1"
         }
-      ],
-      "react-native-edge-to-edge"
+      ]
     ],
     "extra": {
       "supportsRTL": true,

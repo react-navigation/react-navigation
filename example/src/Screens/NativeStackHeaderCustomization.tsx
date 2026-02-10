@@ -227,7 +227,7 @@ export function NativeStackHeaderCustomization(
   );
 }
 
-NativeStackHeaderCustomization.title = 'Header Customization in Native Stack';
+NativeStackHeaderCustomization.title = 'Native Stack - Header Customization';
 NativeStackHeaderCustomization.linking = linking;
 NativeStackHeaderCustomization.options = {
   gestureEnabled: false,

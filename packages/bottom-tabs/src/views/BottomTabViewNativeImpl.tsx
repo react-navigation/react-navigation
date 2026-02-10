@@ -100,6 +100,7 @@ export function BottomTabViewNative({
     }),
     fontSize,
     fontStyle,
+    color: fontColor,
   } = currentOptions.tabBarLabelStyle || {};
 
   const backgroundColor =
@@ -225,7 +226,7 @@ export function BottomTabViewNative({
         tabBarTintColor={activeTintColor}
         tabBarItemIconColor={inactiveTintColor}
         tabBarItemIconColorActive={activeTintColor}
-        tabBarItemTitleFontColor={inactiveTintColor}
+        tabBarItemTitleFontColor={inactiveTintColor ?? fontColor}
         tabBarItemTitleFontColorActive={activeTintColor}
         tabBarItemTitleFontFamily={fontFamily}
         tabBarItemTitleFontWeight={fontWeight}
@@ -304,17 +305,20 @@ export function BottomTabViewNative({
               ? tabBarLabel
               : getLabel({ label: tabBarLabel, title }, route.name);
 
+          const badgeBackgroundColor =
+            tabBarBadgeStyle?.backgroundColor ?? colors.notification;
+          const badgeTextColor =
+            tabBarBadgeStyle?.color ?? Color.foreground(badgeBackgroundColor);
+
           const tabItemAppearance: TabsScreenItemStateAppearance = {
             tabBarItemTitleFontFamily: fontFamily,
             tabBarItemTitleFontSize: fontSize,
             tabBarItemTitleFontWeight: fontWeight,
             tabBarItemTitleFontStyle: fontStyle,
+            tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
+            tabBarItemIconColor: inactiveTintColor,
+            tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
           };
-
-          const badgeBackgroundColor =
-            tabBarBadgeStyle?.backgroundColor ?? colors.notification;
-          const badgeTextColor =
-            tabBarBadgeStyle?.color ?? Color.foreground(badgeBackgroundColor);
 
           const getIcon = (selected: boolean) => {
             if (typeof tabBarIcon === 'function') {

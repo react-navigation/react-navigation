@@ -149,7 +149,7 @@ export function StackPreventRemove(
   );
 }
 
-StackPreventRemove.title = 'Prevent removing screen in Stack';
+StackPreventRemove.title = 'Stack - Prevent Remove';
 StackPreventRemove.linking = linking;
 
 const styles = StyleSheet.create({

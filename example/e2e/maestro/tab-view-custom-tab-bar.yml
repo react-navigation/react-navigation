@@ -4,7 +4,7 @@ name: Tab View - Custom Tab Bar
 - runFlow:
     file: ../launch.yml
     env:
-      LINK: tab-view/custom-tab-bar
+      LINK: libraries-tab-view/custom-tab-bar
       TEXT: 'Custom tab bar'
 - assertVisible:
     text: 'Marissa Castillo'
