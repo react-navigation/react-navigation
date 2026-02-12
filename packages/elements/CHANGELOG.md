@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.10...@react-navigation/elements@3.0.0-alpha.11) (2026-02-12)
+
+### Features
+
+* use inert on the web for more navigators ([#12964](https://github.com/react-navigation/react-navigation/issues/12964)) ([70f5a89](https://github.com/react-navigation/react-navigation/commit/70f5a89e00229d262c389bd8a90811a211e09ac3)) - by @satya164
+
 # [3.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.9...@react-navigation/elements@3.0.0-alpha.10) (2026-02-05)
 
 **Note:** Version bump only for package @react-navigation/elements

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.10...@react-navigation/native@8.0.0-alpha.11) (2026-02-12)
+
+### Bug Fixes
+
+* tweak theme colors to match iOS defaults ([311b962](https://github.com/react-navigation/react-navigation/commit/311b9622d2efdf7e5f816925d44504f562239e51)) - by @satya164
+
 # [8.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.9...@react-navigation/native@8.0.0-alpha.10) (2026-02-05)
 
 ### Bug Fixes

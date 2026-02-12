@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.1...@react-navigation/routers@8.0.0-alpha.2) (2026-02-12)
+
+### Features
+
+* change behavior for `getId` in stacks ([#12962](https://github.com/react-navigation/react-navigation/issues/12962)) ([6e80126](https://github.com/react-navigation/react-navigation/commit/6e801269b29be15ac09c5892e3cc19feb2682ab6)) - by @satya164
+
 # [8.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.0...@react-navigation/routers@8.0.0-alpha.1) (2026-01-19)
 
 **Note:** Version bump only for package @react-navigation/routers

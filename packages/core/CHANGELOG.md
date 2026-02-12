@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.3...@react-navigation/core@8.0.0-alpha.4) (2026-02-12)
+
+### Features
+
+* accept props for component for static config ([38c2241](https://github.com/react-navigation/react-navigation/commit/38c22417443c06aa6bfeef2b2efdbc2b450e90fc)) - by @satya164
+* support inferring types from wrapper component for static config ([a87e846](https://github.com/react-navigation/react-navigation/commit/a87e84630e9c3dd9649064bfb80f38864009a104)) - by @satya164
+
 # [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.2...@react-navigation/core@8.0.0-alpha.3) (2026-02-01)
 
 ### Features

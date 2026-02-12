@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.1...react-native-tab-view@5.0.0-alpha.2) (2026-02-12)
+
+### Features
+
+* use inert on the web for more navigators ([#12964](https://github.com/react-navigation/react-navigation/issues/12964)) ([70f5a89](https://github.com/react-navigation/react-navigation/commit/70f5a89e00229d262c389bd8a90811a211e09ac3)) - by @satya164
+
 # [5.0.0-alpha.1](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.0...react-native-tab-view@5.0.0-alpha.1) (2026-01-22)
 
 **Note:** Version bump only for package react-native-tab-view

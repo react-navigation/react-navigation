@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.11...@react-navigation/native-stack@8.0.0-alpha.12) (2026-02-12)
+
+### Features
+
+* use inert on the web for more navigators ([#12964](https://github.com/react-navigation/react-navigation/issues/12964)) ([70f5a89](https://github.com/react-navigation/react-navigation/commit/70f5a89e00229d262c389bd8a90811a211e09ac3)) - by @satya164
+
 # [8.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.10...@react-navigation/native-stack@8.0.0-alpha.11) (2026-02-10)
 
 ### Bug Fixes
