@@ -831,7 +831,15 @@ export type NativeStackNavigationOptions = {
 };
 
 type PlatformIconShared = {
+  /**
+   * - `image` - Use a local image as the icon.
+   */
   type: 'image';
+  /**
+   * Image source to use as the icon.
+   * - Local image: `require('./path/to/image.png')`
+   * - Drawable resource or xcasset: `{ uri: 'image_name' }`
+   */
   source: ImageSourcePropType;
   /**
    * Whether to apply tint color to the icon.
@@ -843,7 +851,13 @@ type PlatformIconShared = {
 };
 
 type PlatformIconIOSSfSymbol = {
+  /**
+   * - `sfSymbol` - Use an SF Symbol as the icon on iOS.
+   */
   type: 'sfSymbol';
+  /**
+   * Name of the SF Symbol to use as the icon.
+   */
   name: SFSymbol;
 };
 

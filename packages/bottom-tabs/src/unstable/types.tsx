@@ -76,11 +76,14 @@ type IconImage = {
   type: 'image';
   /**
    * Image source to use as the icon.
-   * e.g., `require('./path/to/image.png')`
+   * - Local image: `require('./path/to/image.png')`
+   * - Drawable resource or xcasset: `{ uri: 'image_name' }`
    */
   source: ImageSourcePropType;
   /**
-   * Whether to apply tint color to the icon.
+   * Whether to apply tint color to the image.
+   * Disabling will keep the image's original colors.
+   *
    * Defaults to `true`.
    *
    * @platform ios
@@ -101,18 +104,7 @@ type IconIOSSfSymbol = {
   name: SFSymbol;
 };
 
-type IconResource = {
-  /**
-   * - `resource` - Use a resource from drawables on Android and xcassets asset catalog on iOS as the icon.
-   */
-  type: 'resource';
-  /**
-   * Name of the drawable resource or xcasset to use as the icon.
-   */
-  name: string;
-};
-
-export type NativeBottomTabIcon = IconIOSSfSymbol | IconResource | IconImage;
+export type NativeBottomTabIcon = IconIOSSfSymbol | IconImage;
 
 export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
   /**
