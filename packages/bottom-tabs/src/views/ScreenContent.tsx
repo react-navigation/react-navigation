@@ -2,7 +2,6 @@ import { getHeaderTitle, Header } from '@react-navigation/elements';
 import { Screen } from '@react-navigation/elements/internal';
 import type { ParamListBase, Route } from '@react-navigation/native';
 import * as React from 'react';
-import { type StyleProp, type ViewStyle } from 'react-native';
 
 import type {
   BottomTabNavigationOptions,
@@ -21,7 +20,7 @@ export function ScreenContent({
   route: Route<string>;
   navigation: BottomTabNavigationProp<ParamListBase>;
   options: BottomTabNavigationOptions;
-  style?: StyleProp<ViewStyle>;
+  style?: React.ComponentProps<typeof Screen>['style'];
   children: React.ReactNode;
 }) {
   const {

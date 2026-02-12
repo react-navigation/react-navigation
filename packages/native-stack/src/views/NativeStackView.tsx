@@ -127,22 +127,20 @@ export function NativeStackView({ state, descriptors }: Props) {
                 />
               )
             }
-            style={[
-              StyleSheet.absoluteFill,
-              {
-                display:
-                  (isFocused ||
-                    (nextPresentation != null &&
-                      TRANSPARENT_PRESENTATIONS.includes(nextPresentation))) &&
-                  !isPreloaded
-                    ? 'flex'
-                    : 'none',
-              },
-              presentation != null &&
+            style={{
+              ...StyleSheet.absoluteFillObject,
+              display:
+                (isFocused ||
+                  (nextPresentation != null &&
+                    TRANSPARENT_PRESENTATIONS.includes(nextPresentation))) &&
+                !isPreloaded
+                  ? 'flex'
+                  : 'none',
+              ...(presentation != null &&
               TRANSPARENT_PRESENTATIONS.includes(presentation)
                 ? { backgroundColor: 'transparent' }
-                : null,
-            ]}
+                : null),
+            }}
           >
             <HeaderBackContext.Provider value={headerBack}>
               <AnimatedHeaderHeightProvider>

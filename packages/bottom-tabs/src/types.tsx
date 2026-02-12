@@ -2,6 +2,7 @@ import type {
   HeaderOptions,
   PlatformPressable,
 } from '@react-navigation/elements';
+import type { Screen } from '@react-navigation/elements/internal';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -622,7 +623,7 @@ export type BottomTabNavigationOptions = {
   /**
    * Style object for the component wrapping the screen content.
    */
-  sceneStyle?: StyleProp<ViewStyle>;
+  sceneStyle?: React.ComponentProps<typeof Screen>['style'];
 
   /**
    * Function that returns a React Element to display as a header.
