@@ -533,7 +533,9 @@ export type BottomTabNavigationOptions = {
    * Custom style for the tab bar badge.
    * You can specify a background color or text color here.
    *
-   * @platform android
+   * With `native` implementation, limited customization is supported:
+   * - on iOS, you can only set the background color.
+   * - on Android, you can set both background and text colors.
    */
   tabBarBadgeStyle?: {
     backgroundColor?: ColorValue;
