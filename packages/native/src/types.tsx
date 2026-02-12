@@ -218,8 +218,6 @@ export type Persistor = {
   /**
    * Callback to restore the navigation state.
    * Should return the restored state or a Promise which resolves to the restored state.
-   *
-   * If a Promise is returned, providing a `fallback` component is recommended.
    */
   restore(): PromiseLike<InitialState | undefined> | InitialState | undefined;
 };

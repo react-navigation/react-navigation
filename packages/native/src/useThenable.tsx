@@ -1,50 +1,77 @@
 import * as React from 'react';
 
 export type Thenable<T> = {
-  then(onfulfilled?: (value: T) => unknown): PromiseLike<unknown>;
+  then(
+    onfulfilled?: ((value: T) => unknown) | null,
+    onrejected?: ((reason: unknown) => unknown) | null
+  ): PromiseLike<unknown>;
 };
 
-export function useThenable<T>(create: () => Thenable<T> | undefined) {
-  const [promise] = React.useState(create);
+type ThenableState<T> =
+  | {
+      status: 'pending';
+      promise: Promise<T | undefined>;
+    }
+  | {
+      status: 'resolved';
+      value: T | undefined;
+    };
 
-  let initialState: [boolean, T | undefined] = [false, undefined];
-
-  if (promise == null) {
-    initialState = [true, undefined];
-  } else {
-    // Check if our thenable is synchronous
-    // eslint-disable-next-line promise/catch-or-return, promise/always-return
-    promise.then((result) => {
-      initialState = [true, result];
-    });
+function createThenableState<T>(
+  thenable: Thenable<T> | undefined
+): ThenableState<T> {
+  if (thenable == null) {
+    return {
+      status: 'resolved',
+      value: undefined,
+    };
   }
 
-  const [state, setState] = React.useState(initialState);
-  const [resolved] = state;
+  let isResolved = false;
+  let isRejected = false;
+  let value: T | undefined;
+  let error: unknown;
 
-  React.useEffect(() => {
-    let cancelled = false;
-
-    const resolve = async () => {
-      let result;
-
-      try {
-        result = await promise;
-      } finally {
-        if (!cancelled) {
-          setState([true, result]);
-        }
+  const promise = new Promise<T | undefined>((resolve, reject) => {
+    thenable.then(
+      (result) => {
+        isResolved = true;
+        value = result;
+        resolve(result);
+      },
+      (reason) => {
+        isResolved = true;
+        isRejected = true;
+        error = reason;
+        reject(reason);
       }
-    };
+    );
+  });
 
-    if (!resolved) {
-      resolve();
+  if (isResolved) {
+    if (isRejected) {
+      throw error;
     }
 
-    return () => {
-      cancelled = true;
+    return {
+      status: 'resolved',
+      value,
     };
-  }, [promise, resolved]);
+  }
 
-  return state;
+  return {
+    status: 'pending',
+    count: Math.random(),
+    promise,
+  };
+}
+
+export function useThenable<T>(create: () => Thenable<T> | undefined) {
+  const [state] = React.useState(() => createThenableState(create()));
+
+  if (state.status === 'resolved') {
+    return state.value;
+  }
+
+  return React.use(state.promise);
 }

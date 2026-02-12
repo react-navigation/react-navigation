@@ -10,7 +10,6 @@ import {
   type ParamListBase,
   type PartialState,
   type RootParamList,
-  ThemeProvider,
   validatePathConfig,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -93,13 +92,6 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
    */
   persistor?: Persistor;
   /**
-   * Fallback element to render until initial state is resolved.
-   * Used when deep link or persisted state is being restored asynchronously.
-   *
-   * Defaults to `null`.
-   */
-  fallback?: React.ReactElement | null;
-  /**
    * Options to configure the document title on Web.
    *
    * Updating document title is handled by default,
@@ -117,7 +109,6 @@ function NavigationContainerInner(
     theme = LightTheme,
     linking,
     persistor,
-    fallback = null,
     documentTitle,
     onStateChange,
     ...rest
@@ -175,7 +166,7 @@ function NavigationContainerInner(
     }
   });
 
-  const [isLinkStateResolved, initialStateFromLink] = useThenable(() => {
+  const initialStateFromLink = useThenable(() => {
     if (rest.initialState != null || !linkingConfig.options.enabled) {
       return undefined;
     }
@@ -186,68 +177,54 @@ function NavigationContainerInner(
   const isPersistenceSupported =
     Platform.OS === 'web' ? !linkingConfig.options.enabled : true;
 
-  const [isPersistedStateResolved, initialStateFromPersisted] = useThenable(
-    () => {
-      if (
-        isPersistenceSupported === false ||
-        rest.initialState != null ||
-        persistor == null
-      ) {
-        return undefined;
-      }
-
-      let restoredState;
-
-      try {
-        restoredState = persistor.restore();
-      } catch (e) {
-        console.error(RESTORE_STATE_ERROR, e);
-
-        return undefined;
-      }
-
-      if (restoredState == null) {
-        return undefined;
-      }
-
-      if ('then' in restoredState) {
-        return restoredState.then(
-          (state) => state,
-          (error) => {
-            console.error(RESTORE_STATE_ERROR, error);
-
-            return undefined;
-          }
-        );
-      }
-
-      const thenable: Thenable<InitialState | undefined> = {
-        then(onfulfilled) {
-          return Promise.resolve(
-            onfulfilled ? onfulfilled(restoredState) : restoredState
-          );
-        },
-      };
-
-      return thenable;
+  const initialStateFromPersisted = useThenable(() => {
+    if (
+      isPersistenceSupported === false ||
+      rest.initialState != null ||
+      persistor == null
+    ) {
+      return undefined;
     }
-  );
+
+    let restoredState;
+
+    try {
+      restoredState = persistor.restore();
+    } catch (e) {
+      console.error(RESTORE_STATE_ERROR, e);
+
+      return undefined;
+    }
+
+    if (restoredState == null) {
+      return undefined;
+    }
+
+    if ('then' in restoredState) {
+      return restoredState.then(
+        (state) => state,
+        (error) => {
+          console.error(RESTORE_STATE_ERROR, error);
+
+          return undefined;
+        }
+      );
+    }
+
+    const thenable: Thenable<InitialState | undefined> = {
+      then(onfulfilled) {
+        return Promise.resolve(
+          onfulfilled ? onfulfilled(restoredState) : restoredState
+        );
+      },
+    };
+
+    return thenable;
+  });
 
   // FIXME
   // @ts-expect-error not sure why this is not working
   React.useImperativeHandle(ref, () => refContainer.current);
-
-  const isStateReady =
-    rest.initialState != null ||
-    (isLinkStateResolved && isPersistedStateResolved);
-
-  if (!isStateReady) {
-    return (
-      <LocaleDirContext.Provider value={direction}>
-        <ThemeProvider value={theme}>{fallback}</ThemeProvider>
-      </LocaleDirContext.Provider>
-    );
-  }
 
   return (
     <LocaleDirContext.Provider value={direction}>

@@ -21,6 +21,7 @@ import {
   MaterialDarkTheme,
   MaterialLightTheme,
   type Theme,
+  ThemeProvider,
   useNavigation,
   useNavigationContainerRef,
   useTheme,
@@ -442,7 +443,6 @@ export function App() {
                 return value ? JSON.parse(value) : undefined;
               },
             }}
-            fallback={<Text>Loading…</Text>}
             documentTitle={{
               formatter: (options, route) =>
                 `${options?.title ?? route?.name} - React Navigation Example`,
