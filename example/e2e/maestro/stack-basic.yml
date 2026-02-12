@@ -33,4 +33,4 @@ name: Stack - Basic
 - tapOn:
     text: 'Pop by 2'
 - assertVisible:
-    text: 'Contacts'
+    text: 'Article by Babel fish'
