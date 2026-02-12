@@ -44,10 +44,10 @@ type ParamsForScreenComponent<T> = T extends (...args: any[]) => any
 
 type ParamsForScreen<T> =
   // Nested navigator in screen property
-  T extends { screen: StaticNavigation<any, any, any> }
+  T extends { screen: StaticNavigationBase }
     ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
     : // Direct nested navigator
-      T extends StaticNavigation<any, any, any>
+      T extends StaticNavigationBase
       ? NavigatorScreenParams<StaticParamList<T>> | undefined
       : T extends {
             screen: React.ComponentType<any>;
@@ -75,7 +75,7 @@ type ParamsForConfig<Linking, Screen> = undefined extends Linking
   : // Only infer params from linking if it's a pattern (i.e., contains ':')
     // This avoids inferring non-literals like 'string'
     Linking extends ValidPathPattern | { path: ValidPathPattern }
-    ? Screen extends StaticNavigation<any, any, any>
+    ? Screen extends StaticNavigationBase
       ? FlatType<ParamsForLinking<Linking>> & ParamsForScreen<Screen>
       : // Don't combine if `undefined`, otherwise it'll result in `never`
         undefined extends ParamsForScreen<Screen>
@@ -503,12 +503,16 @@ export type StaticParamList<
     ParamListForGroups<T['config']['groups']>
 >;
 
-export type StaticNavigation<NavigatorProps, GroupProps, ScreenProps> = {
-  Navigator: React.ComponentType<NavigatorProps>;
-  Group: React.ComponentType<GroupProps>;
-  Screen: React.ComponentType<ScreenProps>;
+type StaticNavigationBase = {
   config: StaticConfig<NavigatorTypeBagBase>;
 };
+
+export type StaticNavigation<NavigatorProps, GroupProps, ScreenProps> =
+  StaticNavigationBase & {
+    Navigator: React.ComponentType<NavigatorProps>;
+    Group: React.ComponentType<GroupProps>;
+    Screen: React.ComponentType<ScreenProps>;
+  };
 
 const MemoizedScreen = React.memo(
   <T extends React.ComponentType<any>>({ component }: { component: T }) => {

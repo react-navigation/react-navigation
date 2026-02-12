@@ -1426,3 +1426,60 @@ createStackScreen({
     Omit<React.ComponentProps<typeof Stack.Navigator>, 'children'>
   >();
 }
+
+/**
+ * Infers type for nested navigator with createComponentForStaticNavigation
+ */
+{
+  const Stack = createStackNavigator({
+    screens: {
+      Home: createStackScreen({
+        screen: () => null,
+      }),
+      Profile: createStackScreen({
+        screen: (
+          _: StaticScreenProps<{
+            userId: string;
+          }>
+        ) => null,
+      }),
+    },
+  });
+
+  const StackComponent = createComponentForStaticNavigation(
+    Stack,
+    'DashboardInner'
+  );
+
+  const Dashboard = () => {
+    return <StackComponent />;
+  };
+
+  Dashboard.config = Stack.config;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const Tabs = createBottomTabNavigator({
+    screens: {
+      Dashboard: Dashboard,
+      Settings: createBottomTabScreen({
+        screen: (_: StaticScreenProps<{ category: string }>) => null,
+      }),
+    },
+  });
+
+  type TabsParamList = StaticParamList<typeof Tabs>;
+
+  expectTypeOf<TabsParamList>().toEqualTypeOf<{
+    Dashboard:
+      | NavigatorScreenParams<{
+          Home: undefined;
+          Profile: {
+            userId: string;
+          };
+        }>
+      | undefined;
+    Settings: {
+      category: string;
+    };
+  }>();
+}
