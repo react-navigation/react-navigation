@@ -153,17 +153,6 @@ function renderIcon({
             }}
           />
         );
-      case 'resource':
-        return (
-          <Image
-            source={{ uri: iconValue.name }}
-            style={{
-              width: size,
-              height: size,
-              tintColor: iconValue.tinted === false ? undefined : color,
-            }}
-          />
-        );
       case 'sfSymbol':
         return <SFSymbol name={iconValue.name} size={size} color={color} />;
       case 'materialSymbol':

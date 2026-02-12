@@ -516,18 +516,6 @@ function getPlatformIcon(icon: BottomTabIcon): PlatformIcon {
           imageSource: icon.source,
         },
       };
-    case 'resource':
-      return {
-        ios: {
-          type: 'xcasset',
-          name: icon.name,
-        },
-        android: {
-          type: 'drawableResource',
-          name: icon.name,
-        },
-        shared: undefined,
-      };
     default: {
       const _exhaustiveCheck: never = icon;
 
