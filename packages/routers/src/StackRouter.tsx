@@ -356,22 +356,58 @@ export function StackRouter(options: StackRouterOptions) {
 
           let route: Route<string> | undefined;
 
-          if (id !== undefined) {
-            route = state.routes.findLast(
-              (route) =>
-                route.name === action.payload.name &&
-                id === getId?.({ params: route.params })
-            );
-          } else if (action.type === 'NAVIGATE') {
+          if (action.type === 'NAVIGATE') {
             const currentRoute = state.routes[state.index];
 
-            // If the route matches the current one, then navigate to it
-            if (action.payload.name === currentRoute.name) {
-              route = currentRoute;
-            } else if (action.payload.pop) {
-              route = state.routes.findLast(
-                (route) => route.name === action.payload.name
-              );
+            if (id !== undefined) {
+              if (
+                currentRoute.name === action.payload.name &&
+                id === getId?.({ params: currentRoute.params })
+              ) {
+                route = currentRoute;
+              } else if (action.payload.pop) {
+                for (let i = state.routes.length - 1; i >= 0; i--) {
+                  const r = state.routes[i];
+
+                  if (r.name !== action.payload.name) {
+                    continue;
+                  }
+
+                  if (id === getId?.({ params: r.params })) {
+                    route = r;
+                    break;
+                  }
+
+                  if (r.history?.length) {
+                    for (let j = r.history.length - 1; j >= 0; j--) {
+                      if (
+                        r.history[j].type === 'params' &&
+                        id === getId?.({ params: r.history[j].params })
+                      ) {
+                        route = {
+                          ...r,
+                          params: r.history[j].params,
+                          history: r.history.slice(0, j),
+                        };
+                        break;
+                      }
+                    }
+
+                    if (route) {
+                      break;
+                    }
+                  }
+                }
+              }
+            } else {
+              // If the route matches the current one, then navigate to it
+              if (action.payload.name === currentRoute.name) {
+                route = currentRoute;
+              } else if (action.payload.pop) {
+                route = state.routes.findLast(
+                  (route) => route.name === action.payload.name
+                );
+              }
             }
           }
 
@@ -558,16 +594,41 @@ export function StackRouter(options: StackRouterOptions) {
 
           // If the route already exists, navigate to it
           let index = -1;
+          let historyIndex: number | undefined;
 
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
 
           if (id !== undefined) {
-            index = state.routes.findIndex(
-              (route) =>
-                route.name === action.payload.name &&
-                id === getId?.({ params: route.params })
-            );
+            for (let i = currentIndex; i >= 0; i--) {
+              const r = state.routes[i];
+
+              if (r.name !== action.payload.name) {
+                continue;
+              }
+
+              if (id === getId?.({ params: r.params })) {
+                index = i;
+                break;
+              }
+
+              if (r.history?.length) {
+                for (let j = r.history.length - 1; j >= 0; j--) {
+                  if (
+                    r.history[j].type === 'params' &&
+                    id === getId?.({ params: r.history[j].params })
+                  ) {
+                    index = i;
+                    historyIndex = j;
+                    break;
+                  }
+                }
+
+                if (index !== -1) {
+                  break;
+                }
+              }
+            }
           } else if (state.routes[currentIndex].name === action.payload.name) {
             index = currentIndex;
           } else {
@@ -606,6 +667,14 @@ export function StackRouter(options: StackRouterOptions) {
 
           const route = state.routes[index];
 
+          let baseParams = route.params;
+          let history = route.history;
+
+          if (historyIndex !== undefined && route.history) {
+            baseParams = route.history[historyIndex].params;
+            history = route.history.slice(0, historyIndex);
+          }
+
           let params;
 
           if (action.payload.merge) {
@@ -614,10 +683,10 @@ export function StackRouter(options: StackRouterOptions) {
               routeParamList[route.name] !== undefined
                 ? {
                     ...routeParamList[route.name],
-                    ...route.params,
+                    ...baseParams,
                     ...action.payload.params,
                   }
-                : route.params;
+                : baseParams;
           } else {
             params = createParamsFromAction({ action, routeParamList });
           }
@@ -627,8 +696,8 @@ export function StackRouter(options: StackRouterOptions) {
             index,
             routes: [
               ...state.routes.slice(0, index),
-              params !== route.params
-                ? { ...route, params }
+              params !== baseParams || historyIndex !== undefined
+                ? { ...route, params, history }
                 : state.routes[index],
             ],
           };
