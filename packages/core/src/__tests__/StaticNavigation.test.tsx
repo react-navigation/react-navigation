@@ -275,22 +275,22 @@ test('handles conditional groups with nested if hooks', () => {
   const root = render(element);
 
   expect(root).toMatchInlineSnapshot(`
-<main>
-  <div>
-    Screen:
-    Profile
-    (focused)
-  </div>
-  <div>
-    Screen:
-    Settings
-  </div>
-  <div>
-    Screen:
-    Feed
-  </div>
-</main>
-`);
+    <main>
+      <div>
+        Screen:
+        Profile
+        (focused)
+      </div>
+      <div>
+        Screen:
+        Settings
+      </div>
+      <div>
+        Screen:
+        Feed
+      </div>
+    </main>
+  `);
 
   act(() => {
     showNested = false;
@@ -300,14 +300,14 @@ test('handles conditional groups with nested if hooks', () => {
   root.rerender(element);
 
   expect(root).toMatchInlineSnapshot(`
-<main>
-  <div>
-    Screen:
-    Feed
-    (focused)
-  </div>
-</main>
-`);
+    <main>
+      <div>
+        Screen:
+        Feed
+        (focused)
+      </div>
+    </main>
+  `);
 });
 
 test('handles non-function screens', () => {
@@ -383,18 +383,18 @@ test('renders the initial screen based on the order of screens', () => {
       </BaseNavigationContainer>
     )
   ).toMatchInlineSnapshot(`
-<main>
-  <div>
-    Screen:
-    Home
-    (focused)
-  </div>
-  <div>
-    Screen:
-    Help
-  </div>
-</main>
-`);
+    <main>
+      <div>
+        Screen:
+        Home
+        (focused)
+      </div>
+      <div>
+        Screen:
+        Help
+      </div>
+    </main>
+  `);
 
   const B = createTestNavigator({
     groups: {
@@ -418,18 +418,70 @@ test('renders the initial screen based on the order of screens', () => {
       </BaseNavigationContainer>
     )
   ).toMatchInlineSnapshot(`
-<main>
-  <div>
-    Screen:
-    Help
-    (focused)
-  </div>
-  <div>
-    Screen:
-    Home
-  </div>
-</main>
-`);
+    <main>
+      <div>
+        Screen:
+        Help
+        (focused)
+      </div>
+      <div>
+        Screen:
+        Home
+      </div>
+    </main>
+  `);
+});
+
+test('passes additional props and options to the navigator component', () => {
+  const Root = createTestNavigator({
+    initialRouteName: 'Feed',
+    screenOptions: {
+      className: 'root-screen',
+    },
+    screens: {
+      Home: TestScreen,
+      Feed: TestScreen,
+      Profile: TestScreen,
+    },
+  });
+
+  const Component = createComponentForStaticNavigation(Root, 'RootNavigator');
+
+  expect(
+    render(
+      <BaseNavigationContainer>
+        <Component
+          initialRouteName="Profile"
+          screenOptions={{ testId: 'my-test-id' }}
+        />
+      </BaseNavigationContainer>
+    )
+  ).toMatchInlineSnapshot(`
+    <main>
+      <div
+        className="root-screen"
+        data-testid="my-test-id"
+      >
+        Screen:
+        Home
+      </div>
+      <div
+        className="root-screen"
+        data-testid="my-test-id"
+      >
+        Screen:
+        Feed
+      </div>
+      <div
+        className="root-screen"
+        data-testid="my-test-id"
+      >
+        Screen:
+        Profile
+        (focused)
+      </div>
+    </main>
+  `);
 });
 
 test('creates linking configuration for static config', () => {
@@ -509,43 +561,43 @@ test('creates linking configuration for static config', () => {
   const screens = createPathConfigForStaticNavigation(Root, {});
 
   expect(screens).toMatchInlineSnapshot(`
-{
-  "Contact": {
-    "path": "contact",
-  },
-  "FAQ": {
-    "path": "faq",
-  },
-  "Feed": {
-    "path": "feed",
-  },
-  "Nested": {
-    "path": "nested",
-    "screens": {
-      "Forgot": {
-        "exact": true,
-        "path": "forgot-password",
+    {
+      "Contact": {
+        "path": "contact",
       },
-      "Login": {
-        "path": "login",
+      "FAQ": {
+        "path": "faq",
       },
-      "Profile": {
-        "parse": {
-          "id": [Function],
+      "Feed": {
+        "path": "feed",
+      },
+      "Nested": {
+        "path": "nested",
+        "screens": {
+          "Forgot": {
+            "exact": true,
+            "path": "forgot-password",
+          },
+          "Login": {
+            "path": "login",
+          },
+          "Profile": {
+            "parse": {
+              "id": [Function],
+            },
+            "path": "profile/:id",
+          },
+          "Register": {
+            "path": "register",
+          },
+          "Settings": {
+            "exact": true,
+            "path": "settings",
+          },
         },
-        "path": "profile/:id",
       },
-      "Register": {
-        "path": "register",
-      },
-      "Settings": {
-        "exact": true,
-        "path": "settings",
-      },
-    },
-  },
-}
-`);
+    }
+  `);
 
   assert.ok(screens);
 
@@ -727,58 +779,58 @@ test('automatically generates paths if auto is specified', () => {
   assert.ok(screens);
 
   expect(screens).toMatchInlineSnapshot(`
-{
-  "Contact": {
-    "path": "contact",
-  },
-  "FAQ": {
-    "path": "faq",
-  },
-  "Feed": {
-    "path": "feed",
-  },
-  "NestedA": {
-    "screens": {
-      "Forgot": {
-        "path": "forgot-password",
+    {
+      "Contact": {
+        "path": "contact",
       },
-      "Home": {
-        "path": "",
+      "FAQ": {
+        "path": "faq",
       },
-      "Profile": {
-        "path": "profile",
+      "Feed": {
+        "path": "feed",
       },
-      "Register": {
-        "path": "register",
+      "NestedA": {
+        "screens": {
+          "Forgot": {
+            "path": "forgot-password",
+          },
+          "Home": {
+            "path": "",
+          },
+          "Profile": {
+            "path": "profile",
+          },
+          "Register": {
+            "path": "register",
+          },
+          "Settings": {
+            "path": "settings",
+          },
+        },
       },
-      "Settings": {
-        "path": "settings",
+      "NestedB": {
+        "path": "store/:type",
+        "screens": {
+          "Library": {
+            "path": "library",
+          },
+          "Wishlist": {
+            "path": "wishlist",
+          },
+        },
       },
-    },
-  },
-  "NestedB": {
-    "path": "store/:type",
-    "screens": {
-      "Library": {
-        "path": "library",
+      "NestedC": {
+        "screens": {
+          "Categories": {
+            "path": "categories",
+          },
+          "Misc": {
+            "path": "misc",
+          },
+        },
       },
-      "Wishlist": {
-        "path": "wishlist",
-      },
-    },
-  },
-  "NestedC": {
-    "screens": {
-      "Categories": {
-        "path": "categories",
-      },
-      "Misc": {
-        "path": "misc",
-      },
-    },
-  },
-}
-`);
+    }
+  `);
 
   expect(getStateFromPath('/', { screens })).toEqual({
     routes: [
@@ -938,58 +990,58 @@ test('use initialRouteName for the automatic home screen', () => {
   assert.ok(screens);
 
   expect(screens).toMatchInlineSnapshot(`
-{
-  "Contact": {
-    "path": "contact",
-  },
-  "FAQ": {
-    "path": "faq",
-  },
-  "Feed": {
-    "path": "feed",
-  },
-  "NestedA": {
-    "screens": {
-      "Forgot": {
-        "path": "forgot-password",
+    {
+      "Contact": {
+        "path": "contact",
       },
-      "Home": {
-        "path": "home",
+      "FAQ": {
+        "path": "faq",
       },
-      "Profile": {
-        "path": "",
+      "Feed": {
+        "path": "feed",
       },
-      "Register": {
-        "path": "register",
+      "NestedA": {
+        "screens": {
+          "Forgot": {
+            "path": "forgot-password",
+          },
+          "Home": {
+            "path": "home",
+          },
+          "Profile": {
+            "path": "",
+          },
+          "Register": {
+            "path": "register",
+          },
+          "Settings": {
+            "path": "settings",
+          },
+        },
       },
-      "Settings": {
-        "path": "settings",
+      "NestedB": {
+        "path": "store/:type",
+        "screens": {
+          "Library": {
+            "path": "library",
+          },
+          "Wishlist": {
+            "path": "wishlist",
+          },
+        },
       },
-    },
-  },
-  "NestedB": {
-    "path": "store/:type",
-    "screens": {
-      "Library": {
-        "path": "library",
+      "NestedC": {
+        "screens": {
+          "Categories": {
+            "path": "categories",
+          },
+          "Misc": {
+            "path": "misc",
+          },
+        },
       },
-      "Wishlist": {
-        "path": "wishlist",
-      },
-    },
-  },
-  "NestedC": {
-    "screens": {
-      "Categories": {
-        "path": "categories",
-      },
-      "Misc": {
-        "path": "misc",
-      },
-    },
-  },
-}
-`);
+    }
+  `);
 
   expect(getStateFromPath('/', { screens })).toEqual({
     routes: [
@@ -1078,21 +1130,21 @@ test('handles config with only groups', () => {
   const screens = createPathConfigForStaticNavigation(Root, {}, true);
 
   expect(screens).toMatchInlineSnapshot(`
-{
-  "Contact": {
-    "path": "",
-  },
-  "FAQ": {
-    "path": "faq",
-  },
-  "Privacy": {
-    "path": "privacy",
-  },
-  "Terms": {
-    "path": "terms",
-  },
-}
-`);
+    {
+      "Contact": {
+        "path": "",
+      },
+      "FAQ": {
+        "path": "faq",
+      },
+      "Privacy": {
+        "path": "privacy",
+      },
+      "Terms": {
+        "path": "terms",
+      },
+    }
+  `);
 });
 
 test("doesn't generate empty path if initialRouteName already has a path", () => {
@@ -1116,18 +1168,18 @@ test("doesn't generate empty path if initialRouteName already has a path", () =>
 
   expect(createPathConfigForStaticNavigation(Nested, {}, true))
     .toMatchInlineSnapshot(`
-{
-  "First": {
-    "path": "first",
-  },
-  "Second": {
-    "path": "second",
-  },
-  "Third": {
-    "path": "third",
-  },
-}
-`);
+    {
+      "First": {
+        "path": "first",
+      },
+      "Second": {
+        "path": "second",
+      },
+      "Third": {
+        "path": "third",
+      },
+    }
+  `);
 
   const Root = createTestNavigator({
     screens: {
@@ -1142,25 +1194,25 @@ test("doesn't generate empty path if initialRouteName already has a path", () =>
 
   expect(createPathConfigForStaticNavigation(Root, {}, true))
     .toMatchInlineSnapshot(`
-{
-  "Nested": {
-    "screens": {
-      "First": {
-        "path": "first",
+    {
+      "Nested": {
+        "screens": {
+          "First": {
+            "path": "first",
+          },
+          "Second": {
+            "path": "second",
+          },
+          "Third": {
+            "path": "third",
+          },
+        },
       },
-      "Second": {
-        "path": "second",
+      "Other": {
+        "path": "other",
       },
-      "Third": {
-        "path": "third",
-      },
-    },
-  },
-  "Other": {
-    "path": "other",
-  },
-}
-`);
+    }
+  `);
 });
 
 test("doesn't generate empty path if it's already present", () => {
@@ -1213,25 +1265,25 @@ test("doesn't generate empty path if it's already present", () => {
   const screens = createPathConfigForStaticNavigation(Root, {}, true);
 
   expect(screens).toMatchInlineSnapshot(`
-{
-  "HomeTabs": {
-    "screens": {
-      "Home": {
-        "path": "",
+    {
+      "HomeTabs": {
+        "screens": {
+          "Home": {
+            "path": "",
+          },
+          "Updates": {
+            "path": "updates",
+          },
+        },
       },
-      "Updates": {
-        "path": "updates",
+      "Profile": {
+        "path": "profile",
       },
-    },
-  },
-  "Profile": {
-    "path": "profile",
-  },
-  "SignIn": {
-    "path": "sign-in",
-  },
-}
-`);
+      "SignIn": {
+        "path": "sign-in",
+      },
+    }
+  `);
 });
 
 test("doesn't skip initial screen detection if parent has empty path", () => {
@@ -1283,26 +1335,26 @@ test("doesn't skip initial screen detection if parent has empty path", () => {
   const screens = createPathConfigForStaticNavigation(Root, {}, true);
 
   expect(screens).toMatchInlineSnapshot(`
-{
-  "HomeTabs": {
-    "path": "",
-    "screens": {
-      "Home": {
+    {
+      "HomeTabs": {
         "path": "",
+        "screens": {
+          "Home": {
+            "path": "",
+          },
+          "Updates": {
+            "path": "updates",
+          },
+        },
       },
-      "Updates": {
-        "path": "updates",
+      "Profile": {
+        "path": "profile",
       },
-    },
-  },
-  "Profile": {
-    "path": "profile",
-  },
-  "SignIn": {
-    "path": "sign-in",
-  },
-}
-`);
+      "SignIn": {
+        "path": "sign-in",
+      },
+    }
+  `);
 });
 
 test('adds group linking with string path', () => {
@@ -1340,21 +1392,21 @@ test('adds group linking with string path', () => {
   const screens = createPathConfigForStaticNavigation(Root, {});
 
   expect(screens).toMatchInlineSnapshot(`
-{
-  "Dashboard": {
-    "path": "admin/dashboard",
-  },
-  "Profile": {
-    "path": "users/profile",
-  },
-  "Reports": {
-    "path": "admin/reports",
-  },
-  "Settings": {
-    "path": "users/settings/:tab",
-  },
-}
-`);
+    {
+      "Dashboard": {
+        "path": "admin/dashboard",
+      },
+      "Profile": {
+        "path": "users/profile",
+      },
+      "Reports": {
+        "path": "admin/reports",
+      },
+      "Settings": {
+        "path": "users/settings/:tab",
+      },
+    }
+  `);
 });
 
 test('adds group linking with object configuration', () => {
@@ -1392,28 +1444,28 @@ test('adds group linking with object configuration', () => {
   const screens = createPathConfigForStaticNavigation(Root, {});
 
   expect(screens).toMatchInlineSnapshot(`
-{
-  "Profile": {
-    "parse": {
-      "userId": [Function],
-    },
-    "path": "users/:userId/profile",
-    "stringify": {
-      "userId": [Function],
-    },
-  },
-  "Settings": {
-    "parse": {
-      "tab": [Function],
-      "userId": [Function],
-    },
-    "path": "users/:userId/settings/:tab",
-    "stringify": {
-      "userId": [Function],
-    },
-  },
-}
-`);
+    {
+      "Profile": {
+        "parse": {
+          "userId": [Function],
+        },
+        "path": "users/:userId/profile",
+        "stringify": {
+          "userId": [Function],
+        },
+      },
+      "Settings": {
+        "parse": {
+          "tab": [Function],
+          "userId": [Function],
+        },
+        "path": "users/:userId/settings/:tab",
+        "stringify": {
+          "userId": [Function],
+        },
+      },
+    }
+  `);
 });
 
 test('handles group linking with nested navigators', () => {
@@ -1461,26 +1513,26 @@ test('handles group linking with nested navigators', () => {
   const screens = createPathConfigForStaticNavigation(Root, {});
 
   expect(screens).toMatchInlineSnapshot(`
-{
-  "Login": {
-    "path": "auth/login",
-  },
-  "Profile": {
-    "path": "app/profile",
-  },
-  "Register": {
-    "path": "auth/register",
-  },
-  "Tabs": {
-    "path": "app/tabs",
-    "screens": {
-      "Feed": {
-        "path": "feed",
+    {
+      "Login": {
+        "path": "auth/login",
       },
-    },
-  },
-}
-`);
+      "Profile": {
+        "path": "app/profile",
+      },
+      "Register": {
+        "path": "auth/register",
+      },
+      "Tabs": {
+        "path": "app/tabs",
+        "screens": {
+          "Feed": {
+            "path": "feed",
+          },
+        },
+      },
+    }
+  `);
 });
 
 test('handles group linking with auto path generation', () => {
@@ -1509,21 +1561,21 @@ test('handles group linking with auto path generation', () => {
   const screens = createPathConfigForStaticNavigation(Root, {}, true);
 
   expect(screens).toMatchInlineSnapshot(`
-{
-  "Dashboard": {
-    "path": "admin/dashboard",
-  },
-  "Profile": {
-    "path": "users/profile",
-  },
-  "Settings": {
-    "path": "users/custom-settings",
-  },
-  "UserManagement": {
-    "path": "admin/user-management",
-  },
-}
-`);
+    {
+      "Dashboard": {
+        "path": "admin/dashboard",
+      },
+      "Profile": {
+        "path": "users/profile",
+      },
+      "Settings": {
+        "path": "users/custom-settings",
+      },
+      "UserManagement": {
+        "path": "admin/user-management",
+      },
+    }
+  `);
 });
 
 test('handles group linking with empty path prefix', () => {
@@ -1561,21 +1613,21 @@ test('handles group linking with empty path prefix', () => {
   const screens = createPathConfigForStaticNavigation(Root, {});
 
   expect(screens).toMatchInlineSnapshot(`
-{
-  "About": {
-    "path": "about",
-  },
-  "Home": {
-    "path": "home",
-  },
-  "Profile": {
-    "path": "user",
-  },
-  "Settings": {
-    "path": "user/settings",
-  },
-}
-`);
+    {
+      "About": {
+        "path": "about",
+      },
+      "Home": {
+        "path": "home",
+      },
+      "Profile": {
+        "path": "user",
+      },
+      "Settings": {
+        "path": "user/settings",
+      },
+    }
+  `);
 });
 
 test('merges parse and stringify options from group and screen linking', () => {

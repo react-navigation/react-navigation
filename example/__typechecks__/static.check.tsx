@@ -7,6 +7,7 @@ import {
 } from '@react-navigation/bottom-tabs';
 import {
   type CompositeNavigationProp,
+  createComponentForStaticNavigation,
   createStaticNavigation,
   type NavigationContainerRef,
   type NavigationListForNested,
@@ -1388,3 +1389,40 @@ createStackScreen({
     return {};
   },
 });
+
+/**
+ * Preserves types with createComponentForStaticNavigation
+ */
+{
+  const Stack = createStackNavigator({
+    screens: {
+      Profile: createStackScreen({
+        screen: (
+          _: StaticScreenProps<{
+            userId: string;
+            filter?: 'recent' | 'popular';
+          }>
+        ) => null,
+        options: ({ route }) => {
+          return {
+            headerTitle: route.params.userId,
+          };
+        },
+      }),
+      Settings: createStackScreen({
+        screen: () => null,
+      }),
+    },
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const ProfileComponent = createComponentForStaticNavigation(Stack, 'Profile');
+
+  expectTypeOf<React.ComponentProps<typeof ProfileComponent>>().toExtend<{
+    initialRouteName?: 'Profile' | 'Settings';
+  }>();
+
+  expectTypeOf<React.ComponentProps<typeof ProfileComponent>>().toEqualTypeOf<
+    Omit<React.ComponentProps<typeof Stack.Navigator>, 'children'>
+  >();
+}

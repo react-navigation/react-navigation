@@ -589,10 +589,12 @@ const getItemsFromScreens = (
  * @param displayName Name of the component to be displayed in React DevTools.
  * @returns A component which renders the navigator.
  */
-export function createComponentForStaticNavigation(
-  tree: StaticNavigation<any, any, any>,
+export function createComponentForStaticNavigation<
+  T extends StaticNavigation<any, any, any>,
+>(
+  tree: T,
   displayName: string
-): React.ComponentType<{}> {
+): React.ComponentType<Omit<React.ComponentProps<T['Navigator']>, 'children'>> {
   const { Navigator, Group, Screen, config } = tree;
   const { screens, groups, ...rest } = config;
 
@@ -637,10 +639,27 @@ export function createComponentForStaticNavigation(
     }
   }
 
-  const NavigatorComponent = () => {
+  const NavigatorComponent = ({ children: _, ...props }: typeof rest) => {
     const children = items.map((item) => item());
 
-    return <Navigator {...rest}>{children}</Navigator>;
+    const screenOptions =
+      typeof props.screenOptions === 'function' ||
+      typeof rest.screenOptions === 'function'
+        ? (options: unknown) => ({
+            ...(typeof rest.screenOptions === 'function'
+              ? rest.screenOptions(options)
+              : rest.screenOptions),
+            ...(typeof props.screenOptions === 'function'
+              ? props.screenOptions(options)
+              : props.screenOptions),
+          })
+        : { ...rest.screenOptions, ...props.screenOptions };
+
+    return (
+      <Navigator {...rest} {...props} screenOptions={screenOptions}>
+        {children}
+      </Navigator>
+    );
   };
 
   NavigatorComponent.displayName = displayName;
