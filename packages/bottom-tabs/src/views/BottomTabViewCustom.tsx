@@ -1,5 +1,4 @@
 import {
-  Container,
   Lazy,
   SafeAreaProviderCompat,
 } from '@react-navigation/elements/internal';
@@ -251,6 +250,7 @@ export function BottomTabViewCustom({
 
           const content = (
             <AnimatedScreenContent
+              key={route.key}
               progress={tabAnims[route.key]}
               animationEnabled={animationEnabled}
               sceneStyleInterpolator={sceneStyleInterpolator}
@@ -262,6 +262,19 @@ export function BottomTabViewCustom({
                   route={route}
                   navigation={navigation}
                   options={options}
+                  style={
+                    Platform.OS === 'web'
+                      ? {
+                          /**
+                           * Don't use react-native-screens on web:
+                           * - It applies display: none as fallback, which triggers `onLayout` events
+                           * - We still need to hide the view when screens is not enabled
+                           */
+                          ...StyleSheet.absoluteFillObject,
+                          visibility: isFocused ? 'visible' : 'hidden',
+                        }
+                      : undefined
+                  }
                 >
                   <BottomTabBarHeightContext.Provider
                     value={tabBarPosition === 'bottom' ? tabBarHeight : 0}
@@ -274,24 +287,7 @@ export function BottomTabViewCustom({
           );
 
           if (Platform.OS === 'web') {
-            /**
-             * Don't use react-native-screens on web:
-             * - It applies display: none as fallback, which triggers `onLayout` events
-             * - We still need to hide the view when screens is not enabled
-             * - We can use `inert` to handle a11y better for unfocused screens
-             */
-            return (
-              <Container
-                key={route.key}
-                inert={!isFocused}
-                style={{
-                  ...StyleSheet.absoluteFillObject,
-                  visibility: isFocused ? 'visible' : 'hidden',
-                }}
-              >
-                {content}
-              </Container>
-            );
+            return content;
           }
 
           const activityState = isFocused

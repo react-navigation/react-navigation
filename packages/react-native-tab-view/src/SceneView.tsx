@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
+import {
+  Platform,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 
 import type {
   EventEmitterProps,
@@ -69,8 +75,27 @@ export function SceneView<T extends Route>({
     };
   }, [subscribe, index, isLoading, lazy]);
 
+  const ref = React.useRef<View>(null);
+
+  React.useLayoutEffect(() => {
+    const element = ref.current;
+
+    if (
+      Platform.OS === 'web' &&
+      typeof HTMLElement !== 'undefined' &&
+      element &&
+      element instanceof HTMLElement
+    ) {
+      if (isFocused) {
+        element.removeAttribute('inert');
+      } else {
+        element.setAttribute('inert', '');
+      }
+    }
+  }, [isFocused]);
+
   return (
-    <View aria-hidden={!isFocused} style={[styles.route, style]}>
+    <View ref={ref} aria-hidden={!isFocused} style={[styles.route, style]}>
       {children({ loading: isLoading })}
     </View>
   );

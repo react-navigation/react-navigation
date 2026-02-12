@@ -1,4 +1,5 @@
 import type { HeaderOptions } from '@react-navigation/elements';
+import type { Screen } from '@react-navigation/elements/internal';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -170,7 +171,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
   /**
    * Style object for the component wrapping the screen content.
    */
-  sceneStyle?: StyleProp<ViewStyle>;
+  sceneStyle?: React.ComponentProps<typeof Screen>['style'];
 
   /**
    * Function to modify the pan gesture handler via RNGH properties API.

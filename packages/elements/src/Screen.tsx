@@ -6,18 +6,13 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import {
-  Animated,
-  type StyleProp,
-  StyleSheet,
-  View,
-  type ViewStyle,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 import { HeaderHeightContext } from './Header/HeaderHeightContext';
 import { HeaderShownContext } from './Header/HeaderShownContext';
+import { Container } from './internal';
 import { useFrameSize } from './useFrameSize';
 
 type Props = {
@@ -29,7 +24,7 @@ type Props = {
   headerShown?: boolean;
   headerStatusBarHeight?: number;
   headerTransparent?: boolean;
-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  style?: React.ComponentProps<typeof Container>['style'];
   children: React.ReactNode;
 };
 
@@ -72,12 +67,17 @@ export function Screen(props: Props) {
   }, [route.name]);
 
   return (
-    <Animated.View
-      aria-hidden={!focused}
-      style={[styles.container, { backgroundColor: colors.background }, style]}
+    <Container
+      inert={!focused}
+      style={{
+        ...styles.container,
+        backgroundColor: colors.background,
+        ...style,
+      }}
       // On Fabric we need to disable collapsing for the background to ensure
       // that we won't render unnecessary views due to the view flattening.
-      collapsable={false}
+      // Container sets `collapsable` to `false` internally
+      // This comment is left to make sure refactors don't remove it by mistake
     >
       {headerShown ? (
         <NavigationProvider navigation={navigation} route={route}>
@@ -105,7 +105,7 @@ export function Screen(props: Props) {
           </HeaderHeightContext.Provider>
         </HeaderShownContext.Provider>
       </View>
-    </Animated.View>
+    </Container>
   );
 }
 

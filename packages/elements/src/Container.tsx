@@ -2,17 +2,28 @@ import { Platform, View, type ViewStyle } from 'react-native';
 
 export type Props = {
   inert?: boolean;
-  style?: React.CSSProperties & ViewStyle;
+  style?: ViewStyle &
+    Omit<React.CSSProperties, 'backgroundColor'> & {
+      backgroundColor?: ViewStyle['backgroundColor'];
+    };
   children: React.ReactNode;
 };
 
 export function Container({ inert, children, style }: Props) {
   if (Platform.OS === 'web') {
+    const { backgroundColor, ...rest } = style ?? {};
+
     return (
       <div
         inert={inert}
         aria-hidden={inert}
-        style={{ ...DEFAULT_STYLE, ...style }}
+        style={{
+          ...DEFAULT_STYLE,
+          ...rest,
+          backgroundColor:
+            // In practice we only get string on web instead of OpaqueValue
+            typeof backgroundColor === 'string' ? backgroundColor : undefined,
+        }}
       >
         {children}
       </div>
