@@ -9,7 +9,13 @@ import {
   type StackCardInterpolationProps,
   type StackScreenProps,
 } from '@react-navigation/stack';
-import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
@@ -68,9 +74,7 @@ const DrawerHomeScreen = ({
       <View style={styles.buttons}>
         <Button
           variant="filled"
-          onPress={() =>
-            navigation.navigate('Article', { author: 'Gandalf' })
-          }
+          onPress={() => navigation.navigate('Article', { author: 'Gandalf' })}
         >
           Open Article
         </Button>
@@ -79,9 +83,7 @@ const DrawerHomeScreen = ({
         </Button>
         <Button
           variant="filled"
-          onPress={() =>
-            navigation.navigate('NewsFeed', { date: Date.now() })
-          }
+          onPress={() => navigation.navigate('NewsFeed', { date: Date.now() })}
         >
           Open News Feed
         </Button>
