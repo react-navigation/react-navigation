@@ -28,7 +28,6 @@ jobs:
       API_LEVEL: 34
       AVD_NAME: e2e_emulator
       EMULATOR_PROFILE: pixel_5
-      EMULATOR_RAM_SIZE: '4096M'
       EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096'
       ORG_GRADLE_PROJECT_reactNativeArchitectures: x86_64
     steps:
@@ -143,22 +142,13 @@ jobs:
         run: |
           avdmanager create avd -n "${{ env.AVD_NAME }}" -d "${{ env.EMULATOR_PROFILE }}" -k "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
 
-      - name: Run Metro bundler in the background
-        uses: miguelteixeiraa/action-run-in-background@v1
-        with:
-          script: yarn --cwd example start
-          readiness-script: |
-            if curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=android&dev=true&minify=false" > /dev/null; then
-              echo "curl request to metro was successful."
-            else
-              echo "curl request to metro failed."
-              exit 1
-            fi
+      - name: Start Metro bundler
+        run: yarn --cwd example start &
 
       - name: Start emulator
         timeout-minutes: 10
         run: |
-          $ANDROID_HOME/emulator/emulator -avd "${{ env.AVD_NAME }}" -no-snapshot-save ${{ env.EMULATOR_OPTIONS }} &
+          $ANDROID_HOME/emulator/emulator -avd "${{ env.AVD_NAME }}" ${{ env.EMULATOR_OPTIONS }} &
           adb wait-for-device
           adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
 
@@ -166,11 +156,22 @@ jobs:
           adb shell pm disable-user com.google.android.gms || true
           adb shell pm disable-user com.google.android.googlequicksearchbox || true
 
+      - name: Wait for Metro bundler
+        timeout-minutes: 5
+        run: |
+          until curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=android&dev=true&minify=false" > /dev/null 2>&1; do
+            sleep 2
+          done
+
       - name: Run Maestro tests
         run: |
           adb install android-debug-build/android-debug.apk
           cd example
           yarn run e2e:native --platform android
+
+      - name: Kill emulator
+        if: always()
+        run: adb emu kill || true
 
       - name: Store debug output
         if: failure() || cancelled()
