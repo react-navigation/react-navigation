@@ -28,7 +28,7 @@ jobs:
       API_LEVEL: 34
       AVD_NAME: e2e_emulator
       EMULATOR_PROFILE: pixel_5
-      EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096'
+      EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096 -cores 2 -memory 4096'
       ORG_GRADLE_PROJECT_reactNativeArchitectures: x86_64
     steps:
       - name: Checkout
@@ -151,10 +151,6 @@ jobs:
           $ANDROID_HOME/emulator/emulator -avd "${{ env.AVD_NAME }}" ${{ env.EMULATOR_OPTIONS }} &
           adb wait-for-device
           adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
-
-          # Kill heavy system processes not needed for testing
-          adb shell pm disable-user com.google.android.gms || true
-          adb shell pm disable-user com.google.android.googlequicksearchbox || true
 
       - name: Wait for Metro bundler
         timeout-minutes: 5
