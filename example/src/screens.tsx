@@ -25,6 +25,7 @@ import { NavigatorLayout } from './Screens/NavigatorLayout';
 import { ScreenLayout } from './Screens/ScreenLayout';
 import { StackBasic } from './Screens/StackBasic';
 import { StackCardModal } from './Screens/StackCardModal';
+import { StackDrawer } from './Screens/StackDrawer';
 import { StackFloatScreenHeader } from './Screens/StackFloatScreenHeader';
 import { StackHeaderCustomization } from './Screens/StackHeaderCustomization';
 import { StackModal } from './Screens/StackModal';
@@ -41,6 +42,7 @@ export const SCREENS = {
   NativeStackPreloadFlow,
   NativeStackPreventRemove,
   StackBasic,
+  StackDrawer,
   StackCardModal,
   StackFloatScreenHeader,
   StackHeaderCustomization,
