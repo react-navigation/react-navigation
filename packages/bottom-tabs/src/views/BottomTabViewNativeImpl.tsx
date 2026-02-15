@@ -360,7 +360,14 @@ export function BottomTabViewNative({
               key={route.key}
               tabKey={route.key}
               icon={icon}
-              selectedIcon={selectedIcon?.ios ?? selectedIcon?.shared}
+              selectedIcon={
+                (Platform.OS === 'ios'
+                  ? (selectedIcon?.ios ?? selectedIcon?.shared)
+                  : (selectedIcon?.android ??
+                    selectedIcon?.shared)) as typeof selectedIcon extends undefined
+                  ? undefined
+                  : any
+              }
               tabBarItemBadgeBackgroundColor={badgeBackgroundColor}
               tabBarItemBadgeTextColor={badgeTextColor}
               tabBarItemAccessibilityLabel={tabBarAccessibilityLabel}
