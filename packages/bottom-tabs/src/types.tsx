@@ -587,6 +587,11 @@ export type BottomTabNavigationOptions = {
      * Only supported on iOS 18 and below.
      */
     shadowColor?: ColorValue;
+    /**
+     * Whether the tab bar is visible.
+     * Setting this to `'none'` hides the tab bar.
+     */
+    display?: 'flex' | 'none';
   };
 
   /**
