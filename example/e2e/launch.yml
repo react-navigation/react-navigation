@@ -1,6 +1,11 @@
 appId: ${APP_ID}
 ---
 - stopApp
+- runFlow:
+    when:
+      visible: ".*not responding.*"
+    commands:
+      - tapOn: "Wait"
 - retry:
     maxRetries: 3
     commands:
