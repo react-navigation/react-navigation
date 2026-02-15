@@ -81,12 +81,8 @@ jobs:
           restore-keys: |
             ios-ccache-${{ runner.os }}-
 
-      - name: Install macOS dependencies
-        run: |
-          brew tap facebook/fb
-          brew install facebook/fb/idb-companion ccache
-
       - name: Create ccache wrappers
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
         run: |
           mkdir -p "$RUNNER_TEMP/ccache"
           cat > "$RUNNER_TEMP/ccache/ccache-clang" <<'EOF'
@@ -133,7 +129,16 @@ jobs:
           curl -fsSL "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
+      - name: Install macOS dependencies
+        run: |
+          brew tap facebook/fb
+          brew install facebook/fb/idb-companion ccache
+
+      - name: Start Metro bundler
+        run: yarn --cwd example start &
+
       - name: Boot iOS Simulator
+        timeout-minutes: 5
         run: |
           DEVICE_ID=$(xcrun simctl list devices available | grep "$SIMULATOR_NAME" | head -n 1 | awk -F "[()]" '{print $2}')
 
@@ -146,50 +151,31 @@ jobs:
           echo "Booting $SIMULATOR_NAME simulator with DEVICE_ID=$DEVICE_ID..."
           xcrun simctl boot "$DEVICE_ID" || true
 
-          TIMEOUT=120
-          START_TIME=$(date +%s)
-          echo "Waiting for simulator to boot..."
-
-          while true; do
-            CURRENT_TIME=$(date +%s)
-            ELAPSED_TIME=$((CURRENT_TIME - START_TIME))
-
-            if [ $ELAPSED_TIME -ge $TIMEOUT ]; then
-              echo "Timeout: simulator failed to boot for $TIMEOUT seconds."
-              exit 1
-            fi
-
-            STATUS=$(xcrun simctl list | grep "$DEVICE_ID" | grep "(Booted)")
-
-            if [[ -n "$STATUS" ]]; then
-              echo "Simulator is booted!"
-              break
-            else
-              echo "Still waiting for the simulator to boot..."
-              sleep 5
-            fi
+          while ! xcrun simctl list devices | grep "$DEVICE_ID" | grep -q "(Booted)"; do
+            sleep 2
           done
+
+          echo "Simulator is booted!"
 
           # Add deep link handler so we don't see a prompt when running tests
           /usr/libexec/PlistBuddy ~/Library/Developer/CoreSimulator/Devices/${DEVICE_ID}/data/Library/Preferences/com.apple.launchservices.schemeapproval.plist -c "add com.apple.CoreSimulator.CoreSimulatorBridge-->rne string org.reactnavigation.playground"
 
-      - name: Run Metro bundler in the background
-        uses: miguelteixeiraa/action-run-in-background@v1
-        with:
-          script: yarn --cwd example start
-          readiness-script: |
-            if curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=ios&dev=true&minify=false" > /dev/null; then
-              echo "curl request to metro was successful."
-            else
-              echo "curl request to metro failed."
-              exit 1
-            fi
+      - name: Wait for Metro bundler
+        timeout-minutes: 5
+        run: |
+          until curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=ios&dev=true&minify=false" > /dev/null 2>&1; do
+            sleep 2
+          done
 
       - name: Run Maestro tests
         run: |
           xcrun simctl install booted ../ios-debug-build/ios-debug.app
           yarn run e2e:native --platform ios
         working-directory: example
+
+      - name: Shutdown simulator
+        if: always()
+        run: xcrun simctl shutdown booted || true
 
       - name: Store debug output
         if: failure() || cancelled()
