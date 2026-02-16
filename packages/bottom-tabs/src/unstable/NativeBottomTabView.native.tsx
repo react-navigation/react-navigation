@@ -141,6 +141,8 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
       ? 'automatic'
       : currentOptions.tabBarMinimizeBehavior;
 
+  const shouldHideTabBar = currentOptions.tabBarStyle?.display === 'none';
+
   const bottomAccessory = currentOptions.bottomAccessory;
 
   return (
@@ -151,6 +153,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
             ? (environment) => bottomAccessory({ placement: environment })
             : undefined
         }
+        tabBarHidden={shouldHideTabBar}
         tabBarItemLabelVisibilityMode={
           currentOptions?.tabBarLabelVisibilityMode
         }
