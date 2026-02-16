@@ -8654,9 +8654,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-config-satya164@npm:^5.1.6":
-  version: 5.1.6
-  resolution: "eslint-config-satya164@npm:5.1.6"
+"eslint-config-satya164@npm:^5.1.8":
+  version: 5.1.8
+  resolution: "eslint-config-satya164@npm:5.1.8"
   dependencies:
     "@eslint-community/eslint-plugin-eslint-comments": "npm:^4.4.1"
     "@eslint-react/eslint-plugin": "npm:^1.38.0"
@@ -8674,7 +8674,7 @@ __metadata:
   peerDependencies:
     eslint: "*"
     prettier: "*"
-  checksum: 10c0/540926e627c25bb577aa53c64c49a321c90524ec92f7c42436f097a272cc797c6e28994e62a7f257c90e7aaa41185a143e205485ded8ee5e783c2cefec6775b8
+  checksum: 10c0/3f3831c063f7a8b092b550db5f41ecdda268a29f6d8072aae4f9674dbcb3d5b419390da3cd52315483fd2eeaece0ed4f53ade15cbe09b4dc09c1ea22339b1286
   languageName: node
   linkType: hard
 
@@ -15436,7 +15436,7 @@ __metadata:
     check-dependency-version-consistency: "npm:^5.0.0"
     commitlint: "npm:^19.8.1"
     eslint: "npm:^9.29.0"
-    eslint-config-satya164: "npm:^5.1.6"
+    eslint-config-satya164: "npm:^5.1.8"
     eslint-plugin-simple-import-sort: "npm:^12.1.1"
     jest: "npm:^30.0.0"
     npm-run-all2: "npm:^8.0.4"

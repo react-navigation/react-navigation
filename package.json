@@ -40,7 +40,7 @@
     "check-dependency-version-consistency": "^5.0.0",
     "commitlint": "^19.8.1",
     "eslint": "^9.29.0",
-    "eslint-config-satya164": "^5.1.6",
+    "eslint-config-satya164": "^5.1.8",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "jest": "^30.0.0",
     "npm-run-all2": "^8.0.4",
