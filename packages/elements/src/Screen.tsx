@@ -9,10 +9,10 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import { Container } from './Container';
 import { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 import { HeaderHeightContext } from './Header/HeaderHeightContext';
 import { HeaderShownContext } from './Header/HeaderShownContext';
-import { Container } from './internal';
 import { useFrameSize } from './useFrameSize';
 
 type Props = {
