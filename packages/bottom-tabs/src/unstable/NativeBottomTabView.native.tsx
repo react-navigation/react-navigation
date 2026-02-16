@@ -22,6 +22,7 @@ import {
   type TabsScreenItemStateAppearance,
 } from 'react-native-screens';
 
+import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
 import { NativeScreen } from './NativeScreen/NativeScreen';
 import type {
   NativeBottomTabDescriptorMap,
@@ -325,9 +326,11 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
                   navigation={navigation}
                   options={options}
                 >
-                  <NavigationMetaContext.Provider value={meta}>
-                    {render()}
-                  </NavigationMetaContext.Provider>
+                  <BottomTabBarHeightContext.Provider value={0}>
+                    <NavigationMetaContext.Provider value={meta}>
+                      {render()}
+                    </NavigationMetaContext.Provider>
+                  </BottomTabBarHeightContext.Provider>
                 </ScreenWithHeader>
               </Lazy>
             </Tabs.Screen>
