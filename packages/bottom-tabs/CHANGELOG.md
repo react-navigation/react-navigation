@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.12...@react-navigation/bottom-tabs@8.0.0-alpha.13) (2026-02-16)
+
+### Bug Fixes
+
+* include tab item appearance in scrollEdgeAppearance for native tabs ([#12968](https://github.com/react-navigation/react-navigation/issues/12968)) ([c3b69e0](https://github.com/react-navigation/react-navigation/commit/c3b69e03802ad46a4c4807100079bad5b6f16913)) - by @Kasendwa
+
+### Features
+
+* support hiding native tab bar ([#12967](https://github.com/react-navigation/react-navigation/issues/12967)) ([7d23d38](https://github.com/react-navigation/react-navigation/commit/7d23d38c849a406af643dea72121efb47126cb1b)) - by @Kasendwa
+
 # [8.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.11...@react-navigation/bottom-tabs@8.0.0-alpha.12) (2026-02-12)
 
 ### Features
