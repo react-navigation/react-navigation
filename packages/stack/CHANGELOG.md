@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.7.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.7.1...@react-navigation/stack@7.7.2) (2026-02-16)
+
+### Bug Fixes
+
+* fix preventing remove from gesture in stack ([#12975](https://github.com/react-navigation/react-navigation/issues/12975)) ([03b7e0c](https://github.com/react-navigation/react-navigation/commit/03b7e0cf10f839b8ae471db9fc0096d576fe286a)) - by @satya164
+
 ## [7.7.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.7.0...@react-navigation/stack@7.7.1) (2026-02-03)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.13.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.12.0...@react-navigation/native-stack@7.13.0) (2026-02-16)
+
+### Features
+
+* drop 'resource' type for icons ([1f575fa](https://github.com/react-navigation/react-navigation/commit/1f575faa872843f376ebbc52fddcb4ec1f7f8b99)) - by @satya164
+
 # [7.12.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.11.1...@react-navigation/native-stack@7.12.0) (2026-02-02)
 
 ### Features
