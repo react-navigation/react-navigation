@@ -155,6 +155,16 @@ export class StackView extends React.Component<Props, State> {
 
     let { openingRouteKeys, closingRouteKeys, replacingRouteKeys } = state;
 
+    // If a route that was closing or being replaced is now back in the routes,
+    // it was added back before the animation finished, so stop tracking it
+    closingRouteKeys = closingRouteKeys.filter(
+      (key) => !routes.some((r) => r.key === key)
+    );
+
+    replacingRouteKeys = replacingRouteKeys.filter(
+      (key) => !routes.some((r) => r.key === key)
+    );
+
     const previousFocusedRoute = previousRoutes[previousRoutes.length - 1] as
       | Route<string>
       | undefined;
