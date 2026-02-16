@@ -155,14 +155,14 @@ function Card({
   containerStyle: customContainerStyle,
   contentStyle,
 }: Props) {
-  const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
-
   const didInitiallyAnimate = React.useRef(false);
   const lastToValueRef = React.useRef<number | undefined>(undefined);
 
   const interactionHandleRef = React.useRef<number | undefined>(undefined);
   const animationHandleRef = React.useRef<number | undefined>(undefined);
   const pendingGestureCallbackRef =
+    React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const pendingOnCloseCallbackRef =
     React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const [isClosing] = React.useState(() => new Animated.Value(FALSE));
@@ -237,10 +237,8 @@ function Card({
         }
 
         animationHandleRef.current = requestAnimationFrame(() => {
-          if (didInitiallyAnimate.current) {
-            // Make sure to re-open screen if it wasn't removed
-            forceUpdate();
-          }
+          // Make sure to re-open screen if it wasn't removed
+          maybeAnimate();
         });
       };
 
@@ -270,6 +268,8 @@ function Card({
     ({ nativeEvent }: PanGestureHandlerGestureEvent) => {
       switch (nativeEvent.state) {
         case GestureState.ACTIVE:
+          clearTimeout(pendingGestureCallbackRef.current);
+          clearTimeout(pendingOnCloseCallbackRef.current);
           isSwiping.setValue(TRUE);
           onStartInteraction();
           onGestureBegin?.();
@@ -328,10 +328,13 @@ function Card({
             pendingGestureCallbackRef.current = setTimeout(() => {
               onClose();
 
-              // Trigger an update after we dispatch the action to remove the screen
-              // This will make sure that we check if the screen didn't get removed so we can cancel the animation
-              forceUpdate();
-            }, 32);
+              // Check if the screen is still closing with a delay
+              // So state update from onClose has a chance to go through
+              // If route wasn't removed after onClose, re-open it
+              pendingOnCloseCallbackRef.current = setTimeout(() => {
+                maybeAnimate();
+              }, 32);
+            }, 16);
           }
 
           onGestureEnd?.();
@@ -375,18 +378,18 @@ function Card({
       }
 
       clearTimeout(pendingGestureCallbackRef.current);
+      clearTimeout(pendingOnCloseCallbackRef.current);
     };
 
     // We only want to clean up the animation on unmount
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
-  React.useEffect(() => {
-    if (preloaded) {
-      return;
-    }
+  const maybeAnimate = useLatestCallback(() => {
+    clearTimeout(pendingGestureCallbackRef.current);
+    clearTimeout(pendingOnCloseCallbackRef.current);
 
     if (!didInitiallyAnimate.current) {
       // Animate the card in on initial mount
@@ -394,9 +397,8 @@ function Card({
       // rending of the screen is done. This is especially important
       // in the new architecture
       // cf., https://github.com/react-navigation/react-navigation/issues/12401
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      clearTimeout(timeoutRef.current);
+
       timeoutRef.current = setTimeout(() => {
         didInitiallyAnimate.current = true;
         animate({ closing });
@@ -436,6 +438,14 @@ function Card({
         animate({ closing });
       }
     }
+  });
+
+  React.useEffect(() => {
+    if (preloaded) {
+      return;
+    }
+
+    maybeAnimate();
 
     previousPropsRef.current = {
       opening,
@@ -454,6 +464,7 @@ function Card({
     layout,
     opening,
     preloaded,
+    maybeAnimate,
   ]);
 
   const interpolationProps = React.useMemo(
