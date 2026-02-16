@@ -50,7 +50,10 @@ function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
   }
 }
 
-export function useScrollToTop(ref: React.RefObject<ScrollableWrapper>) {
+export function useScrollToTop(
+  ref: React.RefObject<ScrollableWrapper>,
+  callback?: () => void
+) {
   const navigation = React.useContext(NavigationContext);
   const route = useRoute();
 
@@ -110,6 +113,8 @@ export function useScrollToTop(ref: React.RefObject<ScrollableWrapper>) {
               } else if ('scrollResponderScrollTo' in scrollable) {
                 scrollable.scrollResponderScrollTo({ y: 0, animated: true });
               }
+
+              callback?.();
             }
           });
         }
@@ -119,5 +124,5 @@ export function useScrollToTop(ref: React.RefObject<ScrollableWrapper>) {
     return () => {
       unsubscribers.forEach((unsubscribe) => unsubscribe());
     };
-  }, [navigation, ref, route.key]);
+  }, [navigation, ref, route.key, callback]);
 }
