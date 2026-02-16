@@ -106,6 +106,8 @@ export function BottomTabViewNative({
   const backgroundColor =
     currentOptions.tabBarStyle?.backgroundColor ?? colors.background;
 
+  const shouldHideTabBar = currentOptions.tabBarStyle?.display === 'none';
+
   let activeIndicatorColor = currentOptions?.tabBarActiveIndicatorColor;
   let activeTintColor = currentOptions.tabBarActiveTintColor;
   let inactiveTintColor = currentOptions.tabBarInactiveTintColor;
@@ -212,7 +214,7 @@ export function BottomTabViewNative({
         ? tabBarElement
         : null}
       <Tabs.Host
-        tabBarHidden={hasCustomTabBar}
+        tabBarHidden={hasCustomTabBar || shouldHideTabBar}
         bottomAccessory={
           bottomAccessory
             ? (environment) => bottomAccessory({ placement: environment })
