@@ -389,9 +389,17 @@ export function BottomTabViewNative({
                     ? 'automatic'
                     : scrollEdgeEffects?.right,
               }}
-              // FIXME: if this is not provided, ScrollView on lazy tabs glitches on iOS 18
-              // For now we provide an empty object before adding proper support
-              scrollEdgeAppearance={{}}
+              scrollEdgeAppearance={{
+                stacked: {
+                  normal: tabItemAppearance,
+                },
+                inline: {
+                  normal: tabItemAppearance,
+                },
+                compactInline: {
+                  normal: tabItemAppearance,
+                },
+              }}
               standardAppearance={{
                 tabBarBackgroundColor,
                 tabBarShadowColor,
