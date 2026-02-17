@@ -10,6 +10,7 @@ export {
  * Views
  */
 export { NativeStackView } from './views/NativeStackView';
+export { ZoomAnchor } from './ZoomAnchor';
 
 /**
  * Hooks
@@ -38,4 +39,5 @@ export type {
   NativeStackNavigatorProps,
   NativeStackOptionsArgs,
   NativeStackScreenProps,
+  NativeStackZoomTransitionDimmingBlurEffect,
 } from './types';

@@ -30,6 +30,11 @@ import {
   ScreenStackItem,
 } from 'react-native-screens';
 
+import {
+  clearZoomTransitionRouteConfig,
+  setZoomTransitionRouteConfig,
+  setZoomTransitionSource,
+} from '../native/NativeStackZoomTransitionModule';
 import type {
   NativeStackDescriptor,
   NativeStackDescriptorMap,
@@ -40,6 +45,7 @@ import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 import { useDismissedRouteError } from '../utils/useDismissedRouteError';
 import { useInvalidPreventRemoveError } from '../utils/useInvalidPreventRemoveError';
+import { ZoomTransitionRouteKeyContext } from '../utils/ZoomTransitionRouteKeyContext';
 import { useHeaderConfigProps } from './useHeaderConfigProps';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
@@ -122,6 +128,9 @@ const SceneView = ({
     statusBarHidden,
     statusBarStyle,
     unstable_sheetFooter,
+    zoomTransitionSourceId,
+    zoomTransitionDimmingColor,
+    zoomTransitionDimmingBlurEffect,
     scrollEdgeEffects,
     freezeOnBlur,
     contentStyle,
@@ -134,6 +143,38 @@ const SceneView = ({
     // for navigator with first screen as `modal` and the next as `card`
     presentation = 'card';
   }
+
+  const shouldEnableZoomTransition =
+    Platform.OS === 'ios' &&
+    presentation === 'card' &&
+    zoomTransitionSourceId != null;
+
+  React.useLayoutEffect(() => {
+    if (shouldEnableZoomTransition) {
+      setZoomTransitionSource(zoomTransitionSourceId);
+      setZoomTransitionRouteConfig({
+        routeKey: route.key,
+        sourceId: zoomTransitionSourceId,
+        targetId: zoomTransitionSourceId,
+        dimmingColor: zoomTransitionDimmingColor,
+        dimmingBlurEffect: zoomTransitionDimmingBlurEffect,
+        interactiveDismiss: gestureEnabled,
+      });
+    } else {
+      clearZoomTransitionRouteConfig(route.key);
+    }
+
+    return () => {
+      clearZoomTransitionRouteConfig(route.key);
+    };
+  }, [
+    gestureEnabled,
+    route.key,
+    shouldEnableZoomTransition,
+    zoomTransitionDimmingBlurEffect,
+    zoomTransitionDimmingColor,
+    zoomTransitionSourceId,
+  ]);
 
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
@@ -404,7 +445,9 @@ const SceneView = ({
               value={isParentHeaderShown || headerShown !== false}
             >
               <HeaderBackContext.Provider value={headerBack}>
-                {render()}
+                <ZoomTransitionRouteKeyContext.Provider value={route.key}>
+                  {render()}
+                </ZoomTransitionRouteKeyContext.Provider>
               </HeaderBackContext.Provider>
             </HeaderShownContext.Provider>
           </HeaderHeightContext.Provider>

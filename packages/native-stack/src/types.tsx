@@ -87,6 +87,25 @@ export type NativeStackNavigationHelpers = NavigationHelpers<
 // We want it to be an empty object because navigator does not have any additional props
 export type NativeStackNavigationConfig = {};
 
+export type NativeStackZoomTransitionDimmingBlurEffect =
+  | 'regular'
+  | 'prominent'
+  | 'systemUltraThinMaterial'
+  | 'systemThinMaterial'
+  | 'systemMaterial'
+  | 'systemThickMaterial'
+  | 'systemChromeMaterial'
+  | 'systemUltraThinMaterialLight'
+  | 'systemThinMaterialLight'
+  | 'systemMaterialLight'
+  | 'systemThickMaterialLight'
+  | 'systemChromeMaterialLight'
+  | 'systemUltraThinMaterialDark'
+  | 'systemThinMaterialDark'
+  | 'systemMaterialDark'
+  | 'systemThickMaterialDark'
+  | 'systemChromeMaterialDark';
+
 export type NativeStackHeaderProps = {
   /**
    * Options for the back button.
@@ -579,6 +598,27 @@ export type NativeStackNavigationOptions = {
    * Only supported on iOS and Android.
    */
   animation?: ScreenProps['stackAnimation'];
+  /**
+   * Source `ZoomAnchor` ID for native zoom transition.
+   * Setting this enables zoom transition.
+   *
+   * @platform ios
+   *
+   * @supported iOS 18 or higher
+   */
+  zoomTransitionSourceId?: string;
+  /**
+   * Dimming color behind the zoomed screen.
+   *
+   * @platform ios
+   */
+  zoomTransitionDimmingColor?: ColorValue;
+  /**
+   * Blur effect behind the zoomed screen.
+   *
+   * @platform ios
+   */
+  zoomTransitionDimmingBlurEffect?: NativeStackZoomTransitionDimmingBlurEffect;
   /**
    * Duration (in milliseconds) for the following transition animations on iOS:
    * - `slide_from_bottom`

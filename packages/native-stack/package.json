@@ -35,6 +35,8 @@
   "files": [
     "src",
     "lib",
+    "ios",
+    "*.podspec",
     "!**/__tests__"
   ],
   "sideEffects": false,
@@ -87,5 +89,17 @@
         }
       ]
     ]
+  },
+  "codegenConfig": {
+    "name": "ReactNavigationNativeStackSpec",
+    "type": "all",
+    "jsSrcsDir": "src/native",
+    "ios": {
+      "components": {
+        "ReactNavigationZoomAnchor": {
+          "className": "ReactNavigationZoomAnchor"
+        }
+      }
+    }
   }
 }
