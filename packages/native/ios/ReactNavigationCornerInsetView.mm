@@ -11,11 +11,15 @@
 #import "ReactNavigationCornerInsetViewComponentDescriptor.h"
 #import "ReactNavigationCornerInsetViewShadowNode.h"
 
+#import <QuartzCore/QuartzCore.h>
 #import <react/renderer/components/ReactNavigationSpec/Props.h>
 
 #import "RCTFabricComponentsPlugins.h"
 
 using namespace facebook::react;
+
+static NSTimeInterval const ReactNavigationCornerInsetAnimationDuration = 0.2;
+static CGFloat const ReactNavigationCornerInsetAnimationTolerance = 0.01;
 
 @interface ReactNavigationCornerInsetView () <ReactNavigationCornerInsetViewImplDelegate>
 
@@ -25,6 +29,10 @@ using namespace facebook::react;
   ReactNavigationCornerInsetViewImpl * _view;
   ReactNavigationCornerInsetViewShadowNode::ConcreteState::Shared _state;
   CGFloat _currentCornerInset;
+  CADisplayLink * _cornerInsetAnimationDisplayLink;
+  CFTimeInterval _cornerInsetAnimationStartTime;
+  CGFloat _cornerInsetAnimationFromValue;
+  CGFloat _cornerInsetAnimationToValue;
 }
 
 + (ComponentDescriptorProvider)componentDescriptorProvider
@@ -83,12 +91,84 @@ static ReactNavigationCornerInsetViewImplProps *convertProps(const Props::Shared
     _state = std::static_pointer_cast<ReactNavigationCornerInsetViewShadowNode::ConcreteState const>(state);
 }
 
-- (void)cornerInsetDidChange:(CGFloat)cornerInset
+- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
 {
-    if (_currentCornerInset == cornerInset) {
+    if ([commandName isEqualToString:@"relayout"]) {
+        [_view relayout];
         return;
     }
 
+    [super handleCommand:commandName args:args];
+}
+
+- (void)dealloc
+{
+    [self stopCornerInsetAnimation];
+}
+
+- (void)cornerInsetDidChange:(CGFloat)cornerInset animated:(BOOL)animated
+{
+    if (animated) {
+        if (fabs(_currentCornerInset - cornerInset) <= ReactNavigationCornerInsetAnimationTolerance) {
+            return;
+        }
+
+        [self startCornerInsetAnimationTo:cornerInset];
+        return;
+    }
+
+    if (_cornerInsetAnimationDisplayLink != nil &&
+        fabs(_cornerInsetAnimationToValue - cornerInset) <= ReactNavigationCornerInsetAnimationTolerance) {
+        return;
+    }
+
+    [self stopCornerInsetAnimation];
+
+    if (fabs(_currentCornerInset - cornerInset) <= ReactNavigationCornerInsetAnimationTolerance) {
+        return;
+    }
+
+    [self applyCornerInset:cornerInset];
+}
+
+- (void)startCornerInsetAnimationTo:(CGFloat)cornerInset
+{
+    [self stopCornerInsetAnimation];
+
+    _cornerInsetAnimationFromValue = _currentCornerInset;
+    _cornerInsetAnimationToValue = cornerInset;
+    _cornerInsetAnimationStartTime = CACurrentMediaTime();
+    _cornerInsetAnimationDisplayLink =
+        [CADisplayLink displayLinkWithTarget:self selector:@selector(handleCornerInsetAnimationFrame:)];
+    [_cornerInsetAnimationDisplayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSRunLoopCommonModes];
+}
+
+- (void)stopCornerInsetAnimation
+{
+    [_cornerInsetAnimationDisplayLink invalidate];
+    _cornerInsetAnimationDisplayLink = nil;
+    _cornerInsetAnimationStartTime = 0;
+}
+
+- (void)handleCornerInsetAnimationFrame:(CADisplayLink *)displayLink
+{
+    NSTimeInterval elapsed = CACurrentMediaTime() - _cornerInsetAnimationStartTime;
+    CGFloat progress = MIN(1, elapsed / ReactNavigationCornerInsetAnimationDuration);
+    CGFloat inverseProgress = 1 - progress;
+    CGFloat easedProgress = 1 - inverseProgress * inverseProgress * inverseProgress;
+
+    CGFloat cornerInset = _cornerInsetAnimationFromValue +
+                          (_cornerInsetAnimationToValue - _cornerInsetAnimationFromValue) * easedProgress;
+    [self applyCornerInset:cornerInset];
+
+    if (progress >= 1) {
+        [self stopCornerInsetAnimation];
+        [self applyCornerInset:_cornerInsetAnimationToValue];
+    }
+}
+
+- (void)applyCornerInset:(CGFloat)cornerInset
+{
     _currentCornerInset = cornerInset;
 
     if (!_state) {

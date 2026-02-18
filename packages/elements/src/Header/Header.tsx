@@ -402,11 +402,7 @@ export function Header(props: Props) {
           },
         ]}
       >
-        <CornerInset
-          direction="horizontal"
-          edge="left"
-          style={{ backgroundColor: 'red' }}
-        />
+        <CornerInset direction="horizontal" edge="left" />
         <View
           style={[
             styles.start,
