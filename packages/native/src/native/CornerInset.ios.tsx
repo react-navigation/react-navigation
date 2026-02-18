@@ -75,11 +75,7 @@ function CornerInsetIOS(
   );
 
   return (
-    <ReactNavigationCornerInsetViewNativeComponent
-      {...props}
-      ref={nativeRef}
-      style={{ backgroundColor: 'red' }}
-    />
+    <ReactNavigationCornerInsetViewNativeComponent {...props} ref={nativeRef} />
   );
 }
 

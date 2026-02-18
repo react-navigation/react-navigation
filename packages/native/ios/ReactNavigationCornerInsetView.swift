@@ -103,12 +103,13 @@ import UIKit
 
   @available(iOS 26.0, *)
   private func resolveCornerMargins() -> UIEdgeInsets {
-    let region = UIView.LayoutRegion.margins(
+    let adaptedRegion = UIView.LayoutRegion.margins(
       cornerAdaptation: props.direction == .horizontal ? .horizontal : .vertical
     )
+    let baselineRegion = UIView.LayoutRegion.margins(cornerAdaptation: .none)
 
     guard let window else {
-      return edgeInsets(for: region)
+      return edgeInsets(for: adaptedRegion)
     }
 
     let measurementView = resolveMeasurementView(in: window)
@@ -120,7 +121,15 @@ import UIKit
     window.updatePropertiesIfNeeded()
     measurementView.updatePropertiesIfNeeded()
 
-    return measurementView.edgeInsets(for: region)
+    let adaptedMargins = measurementView.edgeInsets(for: adaptedRegion)
+    let baselineMargins = measurementView.edgeInsets(for: baselineRegion)
+
+    return UIEdgeInsets(
+      top: max(0, adaptedMargins.top - baselineMargins.top),
+      left: max(0, adaptedMargins.left - baselineMargins.left),
+      bottom: max(0, adaptedMargins.bottom - baselineMargins.bottom),
+      right: max(0, adaptedMargins.right - baselineMargins.right)
+    )
   }
 
   @available(iOS 26.0, *)
