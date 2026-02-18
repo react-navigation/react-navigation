@@ -1,4 +1,4 @@
-import { CornerInset, useLocale } from '@react-navigation/native';
+import { UNSTABLE_CornerInset, useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { ScrollView, type ScrollViewProps, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -26,7 +26,7 @@ function DrawerContentScrollViewInner(
 
   return (
     <>
-      <CornerInset direction="vertical" edge="top" />
+      <UNSTABLE_CornerInset direction="vertical" edge="top" />
       <ScrollView
         {...rest}
         ref={ref}
