@@ -599,27 +599,6 @@ export type NativeStackNavigationOptions = {
    */
   animation?: ScreenProps['stackAnimation'];
   /**
-   * Source `ZoomAnchor` ID for native zoom transition.
-   * Setting this enables zoom transition.
-   *
-   * @platform ios
-   *
-   * @supported iOS 18 or higher
-   */
-  zoomTransitionSourceId?: string;
-  /**
-   * Dimming color behind the zoomed screen.
-   *
-   * @platform ios
-   */
-  zoomTransitionDimmingColor?: ColorValue;
-  /**
-   * Blur effect behind the zoomed screen.
-   *
-   * @platform ios
-   */
-  zoomTransitionDimmingBlurEffect?: NativeStackZoomTransitionDimmingBlurEffect;
-  /**
    * Duration (in milliseconds) for the following transition animations on iOS:
    * - `slide_from_bottom`
    * - `fade_from_bottom`

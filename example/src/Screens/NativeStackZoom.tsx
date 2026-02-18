@@ -3,12 +3,13 @@ import { Button, Text } from '@react-navigation/elements';
 import {
   createNativeStackNavigator,
   type NativeStackScreenProps,
-  ZoomAnchor,
+  ZoomSourceAnchor,
+  ZoomSourceButton,
+  ZoomTarget,
 } from '@react-navigation/native-stack';
 import {
   ImageBackground,
   type ImageSourcePropType,
-  Pressable,
   ScrollView,
   StyleSheet,
   View,
@@ -119,14 +120,15 @@ const ListingsScreen = ({
       contentContainerStyle={styles.listContent}
     >
       {LISTINGS.map((listing) => (
-        <Pressable
+        <ZoomSourceButton
           key={listing.id}
-          onPress={() => {
-            navigation.navigate('ListingDetail', { listingId: listing.id });
-          }}
+          id={listing.id}
+          onPress={() =>
+            navigation.navigate('ListingDetail', { listingId: listing.id })
+          }
           style={styles.listItem}
         >
-          <ZoomAnchor id={listing.id} style={styles.listCover}>
+          <ZoomSourceAnchor style={styles.listCover}>
             <ImageBackground
               source={listing.image}
               resizeMode="cover"
@@ -136,7 +138,7 @@ const ListingsScreen = ({
               <View style={styles.coverOverlay} />
               <Text style={styles.listCoverLabel}>Explore</Text>
             </ImageBackground>
-          </ZoomAnchor>
+          </ZoomSourceAnchor>
 
           <Text style={styles.listTitle}>{listing.title}</Text>
           <Text style={styles.listMeta}>
@@ -145,7 +147,7 @@ const ListingsScreen = ({
           <Text style={styles.listPrice}>
             Best season: {listing.bestSeason}
           </Text>
-        </Pressable>
+        </ZoomSourceButton>
       ))}
     </ScrollView>
   );
@@ -167,7 +169,7 @@ const ListingDetailScreen = ({
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={styles.detailContent}
     >
-      <ZoomAnchor id={listing.id} style={styles.detailCover}>
+      <ZoomTarget id={listing.id} style={styles.detailCover}>
         <ImageBackground
           source={listing.image}
           resizeMode="cover"
@@ -179,7 +181,7 @@ const ListingDetailScreen = ({
           <Text style={styles.detailCoverTitle}>{listing.title}</Text>
           <Text style={styles.detailCoverMeta}>{listing.region}</Text>
         </ImageBackground>
-      </ZoomAnchor>
+      </ZoomTarget>
 
       <View style={styles.detailCard}>
         <Text style={styles.detailPrice}>
@@ -223,10 +225,7 @@ export function NativeStackZoom() {
       <Stack.Screen
         name="ListingDetail"
         component={ListingDetailScreen}
-        options={({ route }) => ({
-          title: 'Spot Details',
-          zoomTransitionSourceId: route.params.listingId,
-        })}
+        options={{ title: 'Spot Details' }}
       />
     </Stack.Navigator>
   );

@@ -10,7 +10,8 @@ export {
  * Views
  */
 export { NativeStackView } from './views/NativeStackView';
-export { ZoomAnchor } from './ZoomAnchor';
+export type { ZoomSourceButtonProps, ZoomTargetProps } from './views/zoom';
+export { ZoomSourceAnchor, ZoomSourceButton, ZoomTarget } from './views/zoom';
 
 /**
  * Hooks

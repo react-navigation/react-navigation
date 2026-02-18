@@ -26,17 +26,21 @@ export function setZoomTransitionRouteConfig({
   targetId,
   dimmingColor,
   dimmingBlurEffect,
-  interactiveDismiss,
+  interactiveDismissEnabled,
 }: {
   routeKey: string;
   sourceId?: string;
   targetId?: string;
   dimmingColor?: ColorValue;
   dimmingBlurEffect?: NativeStackZoomTransitionDimmingBlurEffect;
-  interactiveDismiss?: boolean;
+  interactiveDismissEnabled?: boolean;
 }) {
   const nativeInteractiveDismiss: NativeInteractiveDismissValue | null =
-    interactiveDismiss == null ? null : interactiveDismiss ? 'always' : 'never';
+    interactiveDismissEnabled == null
+      ? null
+      : interactiveDismissEnabled
+        ? 'always'
+        : 'never';
 
   ZoomTransitionModule?.setRouteConfig(
     routeKey,

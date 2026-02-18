@@ -30,11 +30,6 @@ import {
   ScreenStackItem,
 } from 'react-native-screens';
 
-import {
-  clearZoomTransitionRouteConfig,
-  setZoomTransitionRouteConfig,
-  setZoomTransitionSource,
-} from '../native/NativeStackZoomTransitionModule';
 import type {
   NativeStackDescriptor,
   NativeStackDescriptorMap,
@@ -128,9 +123,6 @@ const SceneView = ({
     statusBarHidden,
     statusBarStyle,
     unstable_sheetFooter,
-    zoomTransitionSourceId,
-    zoomTransitionDimmingColor,
-    zoomTransitionDimmingBlurEffect,
     scrollEdgeEffects,
     freezeOnBlur,
     contentStyle,
@@ -143,38 +135,6 @@ const SceneView = ({
     // for navigator with first screen as `modal` and the next as `card`
     presentation = 'card';
   }
-
-  const shouldEnableZoomTransition =
-    Platform.OS === 'ios' &&
-    presentation === 'card' &&
-    zoomTransitionSourceId != null;
-
-  React.useLayoutEffect(() => {
-    if (shouldEnableZoomTransition) {
-      setZoomTransitionSource(zoomTransitionSourceId);
-      setZoomTransitionRouteConfig({
-        routeKey: route.key,
-        sourceId: zoomTransitionSourceId,
-        targetId: zoomTransitionSourceId,
-        dimmingColor: zoomTransitionDimmingColor,
-        dimmingBlurEffect: zoomTransitionDimmingBlurEffect,
-        interactiveDismiss: gestureEnabled,
-      });
-    } else {
-      clearZoomTransitionRouteConfig(route.key);
-    }
-
-    return () => {
-      clearZoomTransitionRouteConfig(route.key);
-    };
-  }, [
-    gestureEnabled,
-    route.key,
-    shouldEnableZoomTransition,
-    zoomTransitionDimmingBlurEffect,
-    zoomTransitionDimmingColor,
-    zoomTransitionSourceId,
-  ]);
 
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
