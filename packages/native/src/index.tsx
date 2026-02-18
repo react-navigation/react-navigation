@@ -2,7 +2,11 @@ export { createStaticNavigation } from './createStaticNavigation';
 export { Link } from './Link';
 export { LinkingContext } from './LinkingContext';
 export { LocaleDirContext } from './LocaleDirContext';
-export { CornerInset, type CornerInsetProps } from './native/CornerInset';
+export {
+  CornerInset,
+  type CornerInsetProps,
+  type CornerInsetRef,
+} from './native/CornerInset';
 export {
   MaterialSymbol,
   type MaterialSymbolProps,

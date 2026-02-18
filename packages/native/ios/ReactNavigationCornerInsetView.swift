@@ -18,49 +18,73 @@ import UIKit
 }
 
 @objc public protocol ReactNavigationCornerInsetViewImplDelegate: NSObjectProtocol {
-  func cornerInsetDidChange(_ cornerInset: CGFloat)
+  func cornerInsetDidChange(_ cornerInset: CGFloat, animated: Bool)
 }
 
 @objc public class ReactNavigationCornerInsetViewImpl: UIView {
   @objc public weak var delegate: ReactNavigationCornerInsetViewImplDelegate?
 
   private var props: ReactNavigationCornerInsetViewImplProps = ReactNavigationCornerInsetViewImplProps()
-  private var windowObservation: NSObjectProtocol?
+  private var hasMeasuredCornerInset = false
+  private var lastMeasuredCornerInset: CGFloat = 0
+  private weak var measurementView: UIView?
+  private weak var lastMeasuredWindow: UIWindow?
 
   @objc public func updateProps(_ props: ReactNavigationCornerInsetViewImplProps, oldProps: ReactNavigationCornerInsetViewImplProps) {
     self.props = props
 
     if props.direction != oldProps.direction || props.edge != oldProps.edge {
       setNeedsLayout()
+      updateCornerInset(forceMeasurement: true)
     }
   }
 
-  public override func safeAreaInsetsDidChange() {
-    super.safeAreaInsetsDidChange()
+  @objc public func relayout() {
+    updateCornerInset(animated: true, forceMeasurement: true)
+  }
+
+  public override func didMoveToWindow() {
+    super.didMoveToWindow()
+
+    if window == nil {
+      measurementView?.removeFromSuperview()
+      measurementView = nil
+    }
+
     updateCornerInset()
   }
 
-  public override func layoutMarginsDidChange() {
-    super.layoutMarginsDidChange()
-    updateCornerInset()
+  private func updateCornerInset(animated: Bool = false, forceMeasurement: Bool = false) {
+    if shouldMeasureCornerInset(forceMeasurement: forceMeasurement) {
+      lastMeasuredCornerInset = measureCornerInset()
+      hasMeasuredCornerInset = true
+      lastMeasuredWindow = window
+    }
+
+    delegate?.cornerInsetDidChange(hasMeasuredCornerInset ? lastMeasuredCornerInset : 0, animated: animated)
   }
 
-  public override func layoutSubviews() {
-    super.layoutSubviews()
-    updateCornerInset()
+  private func shouldMeasureCornerInset(forceMeasurement: Bool) -> Bool {
+    let currentWindow = window
+
+    if forceMeasurement {
+      return currentWindow != nil || !hasMeasuredCornerInset
+    }
+
+    if !hasMeasuredCornerInset {
+      return true
+    }
+
+    guard let currentWindow else {
+      return false
+    }
+
+    return lastMeasuredWindow !== currentWindow
   }
 
-  private func updateCornerInset() {
-    let cornerInset = calculateCornerInset()
-
-    delegate?.cornerInsetDidChange(cornerInset)
-  }
-
-  private func calculateCornerInset() -> CGFloat {
+  private func measureCornerInset() -> CGFloat {
     if #available(iOS 26.0, *) {
-      let cornerMargins = self.edgeInsets(for: .margins(
-        cornerAdaptation: props.direction == .horizontal ? .horizontal : .vertical
-      ))
+      let cornerMargins = resolveCornerMargins()
 
       switch props.edge {
       case .top:
@@ -75,5 +99,75 @@ import UIKit
     }
 
     return 0
+  }
+
+  @available(iOS 26.0, *)
+  private func resolveCornerMargins() -> UIEdgeInsets {
+    let region = UIView.LayoutRegion.margins(
+      cornerAdaptation: props.direction == .horizontal ? .horizontal : .vertical
+    )
+
+    guard let window else {
+      return edgeInsets(for: region)
+    }
+
+    let measurementView = resolveMeasurementView(in: window)
+
+    measurementView.frame = resolveFrameInWindow()
+
+    window.setNeedsUpdateProperties()
+    measurementView.setNeedsUpdateProperties()
+    window.updatePropertiesIfNeeded()
+    measurementView.updatePropertiesIfNeeded()
+
+    return measurementView.edgeInsets(for: region)
+  }
+
+  @available(iOS 26.0, *)
+  private func resolveMeasurementView(in window: UIWindow) -> UIView {
+    if let measurementView, measurementView.window === window {
+      return measurementView
+    }
+
+    measurementView?.removeFromSuperview()
+
+    // Use a hidden view in the window so relayout can read the current corner
+    // insets even while transforms are animating.
+    let view = UIView(frame: .zero)
+
+    view.backgroundColor = .clear
+    view.isUserInteractionEnabled = false
+    view.isAccessibilityElement = false
+    view.alpha = 0
+
+    window.addSubview(view)
+    measurementView = view
+
+    return view
+  }
+
+  private func resolveFrameInWindow() -> CGRect {
+    guard let window else {
+      return .zero
+    }
+
+    guard
+      let superLayer = layer.superlayer,
+      let presentationLayer = layer.presentation()
+    else {
+      return superview?.convert(frame, to: window) ?? convert(bounds, to: window)
+    }
+
+    let sourceLayer = superLayer.presentation() ?? superLayer
+    let destinationLayer = window.layer.presentation() ?? window.layer
+    let center = destinationLayer.convert(presentationLayer.position, from: sourceLayer)
+    let bounds = presentationLayer.bounds
+
+    return CGRect(
+      x: center.x - bounds.size.width / 2,
+      y: center.y - bounds.size.height / 2,
+      width: bounds.size.width,
+      height: bounds.size.height
+    )
   }
 }

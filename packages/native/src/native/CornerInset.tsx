@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { View } from 'react-native';
 
 export type CornerInsetProps = {
@@ -11,6 +12,23 @@ export type CornerInsetProps = {
   edge: 'top' | 'right' | 'bottom' | 'left';
 } & React.ComponentProps<typeof View>;
 
-export function CornerInset(props: CornerInsetProps) {
+export type CornerInsetRef = {
+  relayout(): void;
+};
+
+function CornerInsetBase(
+  props: CornerInsetProps,
+  ref: React.Ref<CornerInsetRef>
+) {
+  React.useImperativeHandle(
+    ref,
+    () => ({
+      relayout() {},
+    }),
+    []
+  );
+
   return <View {...props} />;
 }
+
+export const CornerInset = React.forwardRef(CornerInsetBase);
