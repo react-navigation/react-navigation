@@ -4,11 +4,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface ReactNavigationNativeStackZoomRouteConfig : NSObject
 
-@property (nonatomic, copy, nullable) NSString *sourceId;
-@property (nonatomic, copy, nullable) NSString *targetId;
-@property (nonatomic, strong, nullable) UIColor *dimmingColor;
-@property (nonatomic, copy, nullable) NSString *dimmingBlurEffect;
-@property (nonatomic, copy, nullable) NSString *interactiveDismiss;
+@property (nonatomic, copy, readonly, nullable) NSString *sourceId;
+@property (nonatomic, copy, readonly, nullable) NSString *targetId;
+@property (nonatomic, strong, readonly, nullable) UIColor *dimmingColor;
+@property (nonatomic, copy, readonly, nullable) NSString *dimmingBlurEffect;
+@property (nonatomic, copy, readonly, nullable) NSNumber *interactiveDismissEnabled;
+
+- (instancetype)initWithSourceId:(nullable NSString *)sourceId
+                        targetId:(nullable NSString *)targetId
+                    dimmingColor:(nullable UIColor *)dimmingColor
+              dimmingBlurEffect:(nullable NSString *)dimmingBlurEffect
+          interactiveDismissEnabled:(nullable NSNumber *)interactiveDismissEnabled;
 
 @end
 
@@ -21,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
                          targetId:(nullable NSString *)targetId
                      dimmingColor:(nullable UIColor *)dimmingColor
                dimmingBlurEffect:(nullable NSString *)dimmingBlurEffect
-               interactiveDismiss:(nullable NSString *)interactiveDismiss;
+           interactiveDismissEnabled:(nullable NSNumber *)interactiveDismissEnabled;
 - (void)clearRouteConfigForRouteKey:(NSString *)routeKey;
 - (nullable ReactNavigationNativeStackZoomRouteConfig *)routeConfigForRouteKey:(NSString *)routeKey;
 
@@ -38,6 +44,7 @@ NS_ASSUME_NONNULL_BEGIN
                            triggerId:(NSString *)triggerId;
 
 - (void)setPendingSourceTriggerId:(NSString *)triggerId;
+- (nullable NSString *)pendingSourceTriggerId;
 - (nullable NSString *)consumePendingSourceTriggerId;
 
 @end

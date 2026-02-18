@@ -1,21 +1,27 @@
 #import "ReactNavigationNativeStackZoomTransitionStore.h"
+#import "ReactNavigationNativeStackZoomTransitionUtils.h"
 
 #import <React/RCTLog.h>
 
-#import <cmath>
+@implementation ReactNavigationNativeStackZoomRouteConfig
 
-static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
+- (instancetype)initWithSourceId:(nullable NSString *)sourceId
+                        targetId:(nullable NSString *)targetId
+                    dimmingColor:(nullable UIColor *)dimmingColor
+              dimmingBlurEffect:(nullable NSString *)dimmingBlurEffect
+          interactiveDismissEnabled:(nullable NSNumber *)interactiveDismissEnabled
 {
-  if (CGRectIsNull(rect) || CGRectIsInfinite(rect)) {
-    return NO;
+  if (self = [super init]) {
+    _sourceId = [sourceId copy];
+    _targetId = [targetId copy];
+    _dimmingColor = dimmingColor;
+    _dimmingBlurEffect = [dimmingBlurEffect copy];
+    _interactiveDismissEnabled = [interactiveDismissEnabled copy];
   }
 
-  return std::isfinite(rect.origin.x) && std::isfinite(rect.origin.y) &&
-      std::isfinite(rect.size.width) && std::isfinite(rect.size.height) &&
-      rect.size.width > 0 && rect.size.height > 0;
+  return self;
 }
 
-@implementation ReactNavigationNativeStackZoomRouteConfig
 @end
 
 @interface ReactNavigationNativeStackZoomTransitionStore ()
@@ -25,8 +31,9 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
     ReactNavigationNativeStackZoomRouteConfig *> *routeConfigs;
 @property (nonatomic) NSMutableDictionary<NSString *, NSMapTable<NSString *, UIView *> *> *triggerViewsByRoute;
 @property (nonatomic) NSMutableDictionary<NSString *, NSMutableDictionary<NSString *, NSValue *> *> *alignmentRectsByRoute;
-@property (nonatomic, copy, nullable) NSString *pendingSourceTriggerId;
+@property (nonatomic, copy, nullable) NSString *storedPendingSourceTriggerId;
 @property (nonatomic) NSMutableSet<NSString *> *warnedDuplicateTriggerKeys;
+@property (nonatomic) NSLock *lock;
 
 @end
 
@@ -50,6 +57,7 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
     _triggerViewsByRoute = [NSMutableDictionary new];
     _alignmentRectsByRoute = [NSMutableDictionary new];
     _warnedDuplicateTriggerKeys = [NSMutableSet new];
+    _lock = [NSLock new];
   }
 
   return self;
@@ -60,19 +68,25 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
                          targetId:(nullable NSString *)targetId
                      dimmingColor:(nullable UIColor *)dimmingColor
                dimmingBlurEffect:(nullable NSString *)dimmingBlurEffect
-               interactiveDismiss:(nullable NSString *)interactiveDismiss
+           interactiveDismissEnabled:(nullable NSNumber *)interactiveDismissEnabled
 {
   if (routeKey.length == 0) {
     return;
   }
 
-  ReactNavigationNativeStackZoomRouteConfig *config = [ReactNavigationNativeStackZoomRouteConfig new];
-  config.sourceId = sourceId.length > 0 ? sourceId : nil;
-  config.targetId = targetId.length > 0 ? targetId : nil;
-  config.dimmingColor = dimmingColor;
-  config.dimmingBlurEffect = dimmingBlurEffect.length > 0 ? dimmingBlurEffect : nil;
-  config.interactiveDismiss = interactiveDismiss.length > 0 ? interactiveDismiss : nil;
+  ReactNavigationNativeStackZoomRouteConfig *config =
+      [[ReactNavigationNativeStackZoomRouteConfig alloc]
+          initWithSourceId:sourceId.length > 0 ? sourceId : nil
+                  targetId:targetId.length > 0 ? targetId : nil
+              dimmingColor:dimmingColor
+        dimmingBlurEffect:dimmingBlurEffect.length > 0 ? dimmingBlurEffect : nil
+    interactiveDismissEnabled:interactiveDismissEnabled == nil
+                                 ? nil
+                                 : @(interactiveDismissEnabled.boolValue)];
+
+  [self.lock lock];
   self.routeConfigs[routeKey] = config;
+  [self.lock unlock];
 }
 
 - (void)clearRouteConfigForRouteKey:(NSString *)routeKey
@@ -81,7 +95,9 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
     return;
   }
 
+  [self.lock lock];
   [self.routeConfigs removeObjectForKey:routeKey];
+  [self.lock unlock];
 }
 
 - (nullable ReactNavigationNativeStackZoomRouteConfig *)routeConfigForRouteKey:(NSString *)routeKey
@@ -90,7 +106,11 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
     return nil;
   }
 
-  return self.routeConfigs[routeKey];
+  [self.lock lock];
+  ReactNavigationNativeStackZoomRouteConfig *config = self.routeConfigs[routeKey];
+  [self.lock unlock];
+
+  return config;
 }
 
 - (void)registerTriggerView:(UIView *)view
@@ -102,6 +122,7 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
     return;
   }
 
+  [self.lock lock];
   NSMapTable<NSString *, UIView *> *routeMap = self.triggerViewsByRoute[routeKey];
   if (routeMap == nil) {
     routeMap = [NSMapTable strongToWeakObjectsMapTable];
@@ -110,11 +131,12 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
 
   UIView *existingView = [routeMap objectForKey:triggerId];
   if (existingView != nil && existingView != view) {
-    [self warnDuplicateTriggerIdIfNeededForRouteKey:routeKey triggerId:triggerId];
+    [self _locked_warnDuplicateTriggerIdForRouteKey:routeKey triggerId:triggerId];
   }
 
   [routeMap setObject:view forKey:triggerId];
-  [self setAlignmentRect:alignmentRect forRouteKey:routeKey triggerId:triggerId];
+  [self _locked_setAlignmentRect:alignmentRect forRouteKey:routeKey triggerId:triggerId];
+  [self.lock unlock];
 }
 
 - (void)unregisterTriggerView:(UIView *)view
@@ -125,20 +147,23 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
     return;
   }
 
+  [self.lock lock];
   NSMapTable<NSString *, UIView *> *routeMap = self.triggerViewsByRoute[routeKey];
   if (routeMap == nil) {
+    [self.lock unlock];
     return;
   }
 
   UIView *currentView = [routeMap objectForKey:triggerId];
   if (currentView == nil || currentView == view) {
     [routeMap removeObjectForKey:triggerId];
-    [self clearAlignmentRectForRouteKey:routeKey triggerId:triggerId];
+    [self _locked_clearAlignmentRectForRouteKey:routeKey triggerId:triggerId];
   }
 
   if (routeMap.count == 0) {
     [self.triggerViewsByRoute removeObjectForKey:routeKey];
   }
+  [self.lock unlock];
 }
 
 - (nullable UIView *)triggerViewForRouteKey:(NSString *)routeKey
@@ -148,12 +173,17 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
     return nil;
   }
 
+  [self.lock lock];
   NSMapTable<NSString *, UIView *> *routeMap = self.triggerViewsByRoute[routeKey];
   if (routeMap == nil) {
+    [self.lock unlock];
     return nil;
   }
 
-  return [routeMap objectForKey:triggerId];
+  UIView *triggerView = [routeMap objectForKey:triggerId];
+  [self.lock unlock];
+
+  return triggerView;
 }
 
 - (CGRect)alignmentRectForRouteKey:(NSString *)routeKey
@@ -163,17 +193,23 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
     return CGRectNull;
   }
 
+  [self.lock lock];
   NSMutableDictionary<NSString *, NSValue *> *routeMap = self.alignmentRectsByRoute[routeKey];
   if (routeMap == nil) {
+    [self.lock unlock];
     return CGRectNull;
   }
 
   NSValue *storedRect = routeMap[triggerId];
   if (storedRect == nil) {
+    [self.lock unlock];
     return CGRectNull;
   }
 
-  return storedRect.CGRectValue;
+  CGRect alignmentRect = storedRect.CGRectValue;
+  [self.lock unlock];
+
+  return alignmentRect;
 }
 
 - (void)setPendingSourceTriggerId:(NSString *)triggerId
@@ -182,28 +218,44 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
     return;
   }
 
-  _pendingSourceTriggerId = [triggerId copy];
+  [self.lock lock];
+  _storedPendingSourceTriggerId = [triggerId copy];
+  [self.lock unlock];
 }
 
-- (nullable NSString *)consumePendingSourceTriggerId
+- (nullable NSString *)pendingSourceTriggerId
 {
-  NSString *pendingTriggerId = _pendingSourceTriggerId;
-  if (pendingTriggerId.length == 0) {
-    return nil;
-  }
-
-  _pendingSourceTriggerId = nil;
+  [self.lock lock];
+  NSString *pendingTriggerId = [_storedPendingSourceTriggerId copy];
+  [self.lock unlock];
 
   return pendingTriggerId;
 }
 
-- (void)setAlignmentRect:(CGRect)alignmentRect
-             forRouteKey:(NSString *)routeKey
-               triggerId:(NSString *)triggerId
+- (nullable NSString *)consumePendingSourceTriggerId
+{
+  [self.lock lock];
+  NSString *pendingTriggerId = [_storedPendingSourceTriggerId copy];
+  if (pendingTriggerId.length == 0) {
+    [self.lock unlock];
+    return nil;
+  }
+
+  _storedPendingSourceTriggerId = nil;
+  [self.lock unlock];
+
+  return pendingTriggerId;
+}
+
+#pragma mark - Private (must be called while self.lock is held)
+
+- (void)_locked_setAlignmentRect:(CGRect)alignmentRect
+                     forRouteKey:(NSString *)routeKey
+                       triggerId:(NSString *)triggerId
 {
   NSMutableDictionary<NSString *, NSValue *> *routeMap = self.alignmentRectsByRoute[routeKey];
 
-  if (!ReactNavigationIsValidAlignmentRect(alignmentRect)) {
+  if (!ReactNavigationIsValidRect(alignmentRect)) {
     [routeMap removeObjectForKey:triggerId];
 
     if (routeMap.count == 0) {
@@ -221,8 +273,8 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
   routeMap[triggerId] = [NSValue valueWithCGRect:alignmentRect];
 }
 
-- (void)clearAlignmentRectForRouteKey:(NSString *)routeKey
-                            triggerId:(NSString *)triggerId
+- (void)_locked_clearAlignmentRectForRouteKey:(NSString *)routeKey
+                                    triggerId:(NSString *)triggerId
 {
   NSMutableDictionary<NSString *, NSValue *> *routeMap = self.alignmentRectsByRoute[routeKey];
   if (routeMap == nil) {
@@ -236,8 +288,8 @@ static BOOL ReactNavigationIsValidAlignmentRect(CGRect rect)
   }
 }
 
-- (void)warnDuplicateTriggerIdIfNeededForRouteKey:(NSString *)routeKey
-                                         triggerId:(NSString *)triggerId
+- (void)_locked_warnDuplicateTriggerIdForRouteKey:(NSString *)routeKey
+                                        triggerId:(NSString *)triggerId
 {
 #if DEBUG
   NSString *warningKey = [NSString stringWithFormat:@"%@::%@", routeKey, triggerId];

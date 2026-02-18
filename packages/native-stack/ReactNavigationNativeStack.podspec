@@ -18,5 +18,4 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   install_modules_dependencies(s)
-  s.dependency "RNScreens"
 end

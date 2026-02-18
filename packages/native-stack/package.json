@@ -98,6 +98,9 @@
       "components": {
         "ReactNavigationZoomAnchor": {
           "className": "ReactNavigationZoomAnchor"
+        },
+        "ReactNavigationZoomTransitionEnabler": {
+          "className": "ReactNavigationZoomTransitionEnabler"
         }
       }
     }

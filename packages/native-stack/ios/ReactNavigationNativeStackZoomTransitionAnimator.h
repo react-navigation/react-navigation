@@ -1,4 +1,4 @@
-#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -6,7 +6,9 @@ NS_ASSUME_NONNULL_BEGIN
 extern "C" {
 #endif
 
-void ReactNavigationInstallNativeStackZoomTransitionHook(void);
+void ReactNavigationConfigureNativeStackZoomTransitionForViewController(
+    UIViewController *viewController,
+    NSString *_Nullable routeKey);
 
 #ifdef __cplusplus
 }

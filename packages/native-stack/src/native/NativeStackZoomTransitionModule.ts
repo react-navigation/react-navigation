@@ -2,8 +2,6 @@ import { type ColorValue, NativeModules } from 'react-native';
 
 import type { NativeStackZoomTransitionDimmingBlurEffect } from '../types';
 
-type NativeInteractiveDismissValue = 'always' | 'never';
-
 type NativeStackZoomTransitionModule = {
   setRouteConfig: (
     routeKey: string,
@@ -11,7 +9,7 @@ type NativeStackZoomTransitionModule = {
     targetId: string | null,
     dimmingColor: ColorValue | null,
     dimmingBlurEffect: NativeStackZoomTransitionDimmingBlurEffect | null,
-    interactiveDismiss: NativeInteractiveDismissValue | null
+    interactiveDismissEnabled: boolean | null
   ) => void;
   setPendingSource: (sourceId: string) => void;
   clearRouteConfig: (routeKey: string) => void;
@@ -35,20 +33,13 @@ export function setZoomTransitionRouteConfig({
   dimmingBlurEffect?: NativeStackZoomTransitionDimmingBlurEffect;
   interactiveDismissEnabled?: boolean;
 }) {
-  const nativeInteractiveDismiss: NativeInteractiveDismissValue | null =
-    interactiveDismissEnabled == null
-      ? null
-      : interactiveDismissEnabled
-        ? 'always'
-        : 'never';
-
   ZoomTransitionModule?.setRouteConfig(
     routeKey,
     sourceId ?? null,
     targetId ?? null,
     dimmingColor ?? null,
     dimmingBlurEffect ?? null,
-    nativeInteractiveDismiss
+    interactiveDismissEnabled ?? null
   );
 }
 

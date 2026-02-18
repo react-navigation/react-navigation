@@ -30,6 +30,7 @@ import {
   ScreenStackItem,
 } from 'react-native-screens';
 
+import ZoomTransitionEnablerNativeComponent from '../native/ZoomTransitionEnablerNativeComponent';
 import type {
   NativeStackDescriptor,
   NativeStackDescriptorMap,
@@ -406,6 +407,13 @@ const SceneView = ({
             >
               <HeaderBackContext.Provider value={headerBack}>
                 <ZoomTransitionRouteKeyContext.Provider value={route.key}>
+                  {Platform.OS === 'ios' ? (
+                    <ZoomTransitionEnablerNativeComponent
+                      collapsable={false}
+                      routeKey={route.key}
+                      style={styles.zoomTransitionEnabler}
+                    />
+                  ) : null}
                   {render()}
                 </ZoomTransitionRouteKeyContext.Provider>
               </HeaderBackContext.Provider>
@@ -566,5 +574,10 @@ const styles = StyleSheet.create({
   },
   background: {
     overflow: 'hidden',
+  },
+  zoomTransitionEnabler: {
+    width: 0,
+    height: 0,
+    opacity: 0,
   },
 });
