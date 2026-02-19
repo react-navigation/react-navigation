@@ -1,6 +1,7 @@
 import { Platform, View, type ViewStyle } from 'react-native';
 
 export type Props = {
+  ref?: React.Ref<HTMLDivElement | View>;
   inert?: boolean;
   style?: ViewStyle &
     Omit<React.CSSProperties, 'backgroundColor'> & {
@@ -9,12 +10,13 @@ export type Props = {
   children: React.ReactNode;
 };
 
-export function Container({ inert, children, style }: Props) {
+export function Container({ ref, inert, children, style }: Props) {
   if (Platform.OS === 'web') {
     const { backgroundColor, ...rest } = style ?? {};
 
     return (
       <div
+        ref={ref as React.Ref<HTMLDivElement> | undefined}
         inert={inert}
         aria-hidden={inert}
         style={{
@@ -32,6 +34,7 @@ export function Container({ inert, children, style }: Props) {
 
   return (
     <View
+      ref={ref as React.Ref<View> | undefined}
       aria-hidden={inert}
       style={[{ pointerEvents: inert ? 'none' : 'box-none' }, style]}
       collapsable={false}
