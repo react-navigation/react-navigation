@@ -273,13 +273,11 @@ test('renders correct focus state with preloading', () => {
 
   act(() => navigation.current.navigate('B'));
 
-  expect(
-    queryByText('focused', { includeHiddenElements: true })
-  ).not.toBeNull();
+  expect(queryByText('focused')).not.toBeNull();
 
   act(() => navigation.current.navigate('A'));
 
-  expect(queryByText('focused', { includeHiddenElements: true })).toBeNull();
+  expect(queryByText('focused')).toBeNull();
 });
 
 test('handles preloading screens with nested navigators', () => {

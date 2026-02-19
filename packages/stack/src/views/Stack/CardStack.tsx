@@ -745,14 +745,14 @@ export class CardStack extends React.Component<Props, State> {
                   style={StyleSheet.absoluteFill}
                   // Keep the last screen and the focused screen interactive
                   // So popping a screen won't wait for the animation to finish
-                  active={focused || index === routes.length - 1}
+                  // Keep preloaded screens active as well to make sure that effects are mounted
+                  active={focused || isPreloaded || index === routes.length - 1}
                   // Keep the following screens visible
                   // - Last two screens for smoother transitions
                   // - Screens involved in gesture animation (the previous screen of screen with gesture)
-                  // - Preloaded screens to mount its content
                   visible={
+                    focused ||
                     index >= routes.length - 2 ||
-                    isPreloaded ||
                     animatingRouteKeys.includes(routes[index + 1]?.key)
                   }
                 >

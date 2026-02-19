@@ -411,8 +411,7 @@ export type StackNavigationOptions = StackHeaderOptions &
     keyboardHandlingEnabled?: boolean;
   };
 
-export type StackNavigationConfig = {
-};
+export type StackNavigationConfig = {};
 
 export type TransitionSpec =
   | {
