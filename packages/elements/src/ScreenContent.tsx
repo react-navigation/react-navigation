@@ -1,5 +1,6 @@
-import { Activity, memo } from 'react';
-import { type ViewStyle } from 'react-native';
+import { UNSTABLE_View } from '@react-navigation/native';
+import { Activity, memo, useCallback } from 'react';
+import { Platform, View, type ViewStyle } from 'react-native';
 
 import { Container } from './Container';
 
@@ -11,12 +12,80 @@ type Props = {
 };
 
 function ScreenContentInner({ visible, active, style, children }: Props) {
+  /**
+   * Activity has 2 modes, visible and hidden - hidden unmounts effects
+   * But what we want is to unmount effects, without hiding content
+   * So we use hidden mode, but unset display: none to make content visible
+   */
+  const onRef = useCallback(
+    (node: HTMLDivElement | View | null) => {
+      if (Platform.OS !== 'web' || !(node && node instanceof HTMLElement)) {
+        return;
+      }
+
+      const observers: MutationObserver[] = [];
+
+      const observe = () => {
+        // Remove previous observers
+        observers.forEach((o) => o.disconnect());
+        observers.length = 0;
+
+        const children = node.childNodes;
+
+        // When the style attribute for children is updated by React
+        // We observe it and update display to make content visible
+        children.forEach((child) => {
+          if (child instanceof HTMLElement) {
+            const o = new MutationObserver(() => {
+              child.style.display = visible ? 'flex' : 'none';
+            });
+
+            o.observe(child, {
+              attributes: true,
+              attributeFilter: ['style'],
+            });
+
+            observers.push(o);
+          }
+        });
+      };
+
+      observe();
+
+      // React removes refs when `Activity` is hidden
+      // So we render outside of the `Activity` and observer child list
+      const observer = new MutationObserver(observe);
+
+      observer.observe(node, {
+        childList: true,
+      });
+
+      return () => {
+        observer.disconnect();
+        observers.forEach((o) => o.disconnect());
+      };
+    },
+    [visible]
+  );
+
+  const element =
+    Platform.OS === 'android' || Platform.OS === 'ios' ? (
+      <Activity mode={active ? 'visible' : 'hidden'}>
+        <UNSTABLE_View
+          collapsable={false}
+          style={{ display: visible ? 'contents' : 'hidden' }}
+        >
+          {children}
+        </UNSTABLE_View>
+      </Activity>
+    ) : (
+      <Activity mode={active ? 'visible' : 'hidden'}>{children}</Activity>
+    );
+
   return (
-    <Activity mode={visible ? 'visible' : 'hidden'}>
-      <Container inert={!active} style={style}>
-        {children}
-      </Container>
-    </Activity>
+    <Container ref={onRef} inert={!active} style={style}>
+      {element}
+    </Container>
   );
 }
 
