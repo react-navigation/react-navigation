@@ -991,3 +991,36 @@ test('warns for duplicate route names nested inside each other', () => {
 
   spy.mockRestore();
 });
+
+test('queues a navigate call before ready and then flushes it after mount()', async () => {
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const HomeScreen = () => null;
+  const PaywallScreen = () => null;
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+  };
+
+  const wrapper = render(
+    <BaseNavigationContainer ref={ref}>{null}</BaseNavigationContainer>
+  );
+
+  act(() => {
+    ref.current?.navigate('Paywall');
+  });
+
+  wrapper.update(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="Home" component={HomeScreen} />
+        <Screen name="Paywall" component={PaywallScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await Promise.resolve();
+
+  expect(ref.current?.getCurrentRoute()?.name).toBe('Paywall');
+});
