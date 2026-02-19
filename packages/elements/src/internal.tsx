@@ -1,3 +1,4 @@
+export { ActivityView } from './ActivityView';
 export { Color } from './Color';
 export { Container, type Props as ContainerProps } from './Container';
 export { Lazy } from './Lazy';

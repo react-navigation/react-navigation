@@ -1,5 +1,6 @@
 import type { StaticConfig } from '@react-navigation/native';
 
+import { ActivityModes } from './Screens/ActivityModes';
 import { AuthFlow } from './Screens/AuthFlow';
 import { BottomTabs } from './Screens/BottomTabs';
 import { BottomTabsDynamic } from './Screens/BottomTabsDynamic';
@@ -66,6 +67,7 @@ export const SCREENS = {
   NavigatorLayout,
   ScreenLayout,
   StaticConfigScreen,
+  ActivityModes,
 } as const satisfies {
   [key: string]:
     | (React.ComponentType<{ route: any }> & {
