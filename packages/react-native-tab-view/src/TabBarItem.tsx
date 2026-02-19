@@ -106,6 +106,7 @@ const TabBarItemInternal = <T extends Route>({
   defaultTabWidth,
   icon: customIcon,
   badge: customBadge,
+  badgeStyle,
   href,
   labelText,
   routesLength,
@@ -242,7 +243,9 @@ const TabBarItemInternal = <T extends Route>({
           </Animated.View>
         </View>
         {customBadge != null ? (
-          <View style={styles.badge}>{customBadge({ route })}</View>
+          <View style={[styles.badge, badgeStyle]}>
+            {customBadge({ route })}
+          </View>
         ) : null}
       </View>
     </PlatformPressable>
