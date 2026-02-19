@@ -398,7 +398,15 @@ export function Drawer({
         : minmax(translationX.get() - touchDistance, 0, drawerWidth);
 
     return translateX;
-  });
+  }, [
+    customWidth,
+    drawerPosition,
+    drawerType,
+    gestureState,
+    layoutWidth,
+    touchStartX,
+    translationX,
+  ]);
 
   const drawerAnimatedStyle = useAnimatedStyle(() => {
     const drawerWidth = getDrawerWidthNative({
@@ -492,7 +500,7 @@ export function Drawer({
           ],
           [0, 1]
         );
-  });
+  }, [drawerType, layoutWidth, translateX]);
 
   return (
     <GestureHandlerRootView style={[styles.container, style]}>
