@@ -22,8 +22,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "org.reactnavigation.playground",
-      "icon": "./assets/icon.icon",
-      "appleTeamId": "QMUB6G7U9C"
+      "icon": "./assets/icon.icon"
     },
     "web": {
       "bundler": "metro"

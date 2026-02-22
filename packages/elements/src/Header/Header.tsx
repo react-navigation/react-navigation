@@ -1,4 +1,8 @@
-import { useNavigation, useTheme } from '@react-navigation/native';
+import {
+  UNSTABLE_CornerInset,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -402,6 +406,7 @@ export function Header(props: Props) {
           },
         ]}
       >
+        <UNSTABLE_CornerInset direction="horizontal" edge="left" />
         <View
           style={[
             styles.start,
