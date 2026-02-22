@@ -1,4 +1,3 @@
-import { UNSTABLE_View } from '@react-navigation/native';
 import { Activity, memo, useCallback } from 'react';
 import { Platform, View, type ViewStyle } from 'react-native';
 
@@ -68,23 +67,9 @@ function ScreenContentInner({ visible, active, style, children }: Props) {
     [visible]
   );
 
-  const element =
-    Platform.OS === 'android' || Platform.OS === 'ios' ? (
-      <Activity mode={active ? 'visible' : 'hidden'}>
-        <UNSTABLE_View
-          collapsable={false}
-          style={{ display: visible ? 'contents' : 'hidden' }}
-        >
-          {children}
-        </UNSTABLE_View>
-      </Activity>
-    ) : (
-      <Activity mode={active ? 'visible' : 'hidden'}>{children}</Activity>
-    );
-
   return (
     <Container ref={onRef} inert={!active} style={style}>
-      {element}
+      <Activity mode={active ? 'visible' : 'hidden'}>{children}</Activity>
     </Container>
   );
 }
