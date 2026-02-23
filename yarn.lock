@@ -4835,6 +4835,7 @@ __metadata:
     expo: "npm:^54.0.12"
     expo-asset: "npm:~12.0.9"
     expo-blur: "npm:~15.0.7"
+    expo-build-disk-cache: "npm:^0.7.2"
     expo-linking: "npm:~8.0.8"
     expo-splash-screen: "npm:~31.0.10"
     expo-status-bar: "npm:~3.0.8"
@@ -9241,6 +9242,20 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/0285f0f39871fdcd94a397c07fd724b1ee1f4c055b5a733dc3b44cd6571a28016d863ae7e4205f00ce039ada730a8ad6d396b928ae4686cbc69cfcd232471431
+  languageName: node
+  linkType: hard
+
+"expo-build-disk-cache@npm:^0.7.2":
+  version: 0.7.2
+  resolution: "expo-build-disk-cache@npm:0.7.2"
+  dependencies:
+    cosmiconfig: "npm:^9.0.0"
+    env-paths: "npm:^2.2.1"
+    zod: "npm:^4.0.0"
+  peerDependencies:
+    "@expo/cli": "*"
+    "@expo/config": "*"
+  checksum: 10c0/666e66506f1760549d69c613db670ff1d3ff15703d893195dfb4150e87b70155a7d42911fffe4d54d69986a3f08e82b7f0f6939e1376c6cafa51048d466c4457
   languageName: node
   linkType: hard
 
@@ -17871,5 +17886,12 @@ __metadata:
   version: 3.25.76
   resolution: "zod@npm:3.25.76"
   checksum: 10c0/5718ec35e3c40b600316c5b4c5e4976f7fee68151bc8f8d90ec18a469be9571f072e1bbaace10f1e85cf8892ea12d90821b200e980ab46916a6166a4260a983c
+  languageName: node
+  linkType: hard
+
+"zod@npm:^4.0.0":
+  version: 4.3.6
+  resolution: "zod@npm:4.3.6"
+  checksum: 10c0/860d25a81ab41d33aa25f8d0d07b091a04acb426e605f396227a796e9e800c44723ed96d0f53a512b57be3d1520f45bf69c0cb3b378a232a00787a2609625307
   languageName: node
   linkType: hard
