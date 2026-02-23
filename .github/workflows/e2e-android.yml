@@ -61,6 +61,16 @@ jobs:
           remove-codeql: 'true'
           remove-docker-images: 'true'
 
+      - name: Install Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Install AVD dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y libpulse0 libgl1 libxkbfile1
+
       - name: Setup JDK
         uses: actions/setup-java@v5
         with:
@@ -98,16 +108,6 @@ jobs:
         with:
           path: android-debug-build/
           key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
-
-      - name: Install Maestro
-        run: |
-          curl -fsSL "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
-
-      - name: Install AVD dependencies
-        run: |
-          sudo apt update
-          sudo apt-get install -y libpulse0 libgl1 libxkbfile1
 
       - name: Setup Android SDK
         run: |

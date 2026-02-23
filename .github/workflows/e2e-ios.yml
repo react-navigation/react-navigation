@@ -51,6 +51,16 @@ jobs:
         with:
           xcode-version: '26'
 
+      - name: Install Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Install macOS dependencies
+        run: |
+          brew tap facebook/fb
+          brew install facebook/fb/idb-companion ccache
+
       - name: Cache CocoaPods
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
         uses: actions/cache@v4
@@ -123,16 +133,6 @@ jobs:
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
-
-      - name: Install Maestro
-        run: |
-          curl -fsSL "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
-
-      - name: Install macOS dependencies
-        run: |
-          brew tap facebook/fb
-          brew install facebook/fb/idb-companion ccache
 
       - name: Start Metro bundler
         run: yarn --cwd example start &
