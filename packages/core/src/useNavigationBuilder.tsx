@@ -438,14 +438,20 @@ export function useNavigationBuilder<
     getIsInitial,
   } = React.useContext(NavigationStateContext);
 
-  const stateCleanedUp = React.useRef(false);
+  const stateCleanupRef = React.useRef<{
+    state: State | PartialState<State> | undefined;
+    done: boolean;
+  }>(null);
 
   const setState = useLatestCallback(
-    (state: NavigationState | PartialState<NavigationState> | undefined) => {
-      if (stateCleanedUp.current) {
+    (state: State | PartialState<State> | undefined) => {
+      if (stateCleanupRef.current?.done) {
+        // Store the state locally in case the current navigator is in `Activity`
+        stateCleanupRef.current.state = state;
+
         // State might have been already cleaned up due to unmount
-        // We do not want to expose API allowing to override this
-        // This would lead to old data preservation on main navigator unmount
+        // We don't want to update `route.state` in parent
+        // Otherwise it will be reused if a new navigator gets mounted
         return;
       }
 
@@ -462,6 +468,26 @@ export function useNavigationBuilder<
     State | undefined,
     boolean,
   ] => {
+    // If the state was already cleaned up, but we have it stored in ref,
+    // It likely got cleaned up due to `<Activity mode="hidden">`
+    // We should reuse this state to avoid remounting screens
+    if (
+      stateCleanupRef.current?.done &&
+      stateCleanupRef.current.state &&
+      isStateValid(stateCleanupRef.current.state)
+    ) {
+      const state: State =
+        stateCleanupRef.current.state.stale === false
+          ? stateCleanupRef.current.state
+          : router.getRehydratedState(stateCleanupRef.current.state, {
+              routeNames,
+              routeParamList,
+              routeGetIdList,
+            });
+
+      return [undefined, state, false];
+    }
+
     const initialRouteParamList = routeNames.reduce<
       Record<string, object | undefined>
     >((acc, curr) => {
@@ -699,7 +725,7 @@ export function useNavigationBuilder<
   React.useEffect(() => {
     // In strict mode, React will double-invoke effects.
     // So we need to reset the flag if component was not unmounted
-    stateCleanedUp.current = false;
+    stateCleanupRef.current = null;
 
     setKey(navigatorKey);
 
@@ -714,7 +740,10 @@ export function useNavigationBuilder<
       // We need to clean up state for this navigator on unmount
       if (getCurrentState() !== undefined && getKey() === navigatorKey) {
         setCurrentState(undefined);
-        stateCleanedUp.current = true;
+        stateCleanupRef.current = {
+          state: nextState,
+          done: true,
+        };
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
