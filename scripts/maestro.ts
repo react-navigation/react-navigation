@@ -1,26 +1,31 @@
 import { spawn } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
-import { URL } from 'node:url';
+import { fileURLToPath, URL } from 'node:url';
 
-import config from '../example/app.json' with { type: 'json' };
+// eslint-disable-next-line import-x/no-extraneous-dependencies
+import { getConfig } from '@expo/config';
 
 const root = new URL('..', import.meta.url);
+const projectRoot = fileURLToPath(new URL('../example', import.meta.url));
+const { exp: config } = getConfig(projectRoot);
 
-const platformIndex = process.argv.indexOf('--platform');
-const platform =
-  platformIndex === -1 ? undefined : process.argv[platformIndex + 1];
+const platform = process.argv[process.argv.indexOf('--platform') + 1];
 
 if (platform !== 'ios' && platform !== 'android') {
   throw new Error('Expected --platform ios|android');
 }
 
 const appId =
-  platform === 'ios'
-    ? config.expo?.ios?.bundleIdentifier
-    : config.expo?.android?.package;
+  platform === 'ios' ? config.ios?.bundleIdentifier : config.android?.package;
 
-const scheme = `${config.expo?.scheme}://`;
+if (appId == null) {
+  throw new Error(
+    `Missing app ID for platform "${platform}" in config.ios.bundleIdentifier or config.android.package`
+  );
+}
+
+const scheme = `${Array.isArray(config.scheme) ? config.scheme[0] : config.scheme}://`;
 const ci = process.env.CI === 'true' || process.env.CI === '1';
 
 const flows = await getFlows(new URL('example/e2e/maestro/', root));

@@ -4,9 +4,9 @@
   "private": true,
   "main": "./App.tsx",
   "scripts": {
-    "start": "expo start --dev-client",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "start": "node ../scripts/expo.ts start --dev-client",
+    "android": "node ../scripts/expo.ts run:android",
+    "ios": "node ../scripts/expo.ts run:ios",
     "web": "vite",
     "server": "nodemon -e '.js,.ts,.tsx' --exec \"babel-node -i '/node_modules[/\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server\"",
     "e2e:native": "node ../scripts/maestro.ts",
