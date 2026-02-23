@@ -17,11 +17,11 @@ import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 import { shouldPreventRemove, useOnPreventRemove } from './useOnPreventRemove';
 
-type Options = {
-  router: Router<NavigationState, NavigationAction>;
+type Options<State extends NavigationState> = {
+  router: Router<State, NavigationAction>;
   key?: string;
-  getState: () => NavigationState;
-  setState: (state: NavigationState | PartialState<NavigationState>) => void;
+  getState: () => State;
+  setState: (state: State | PartialState<State>) => void;
   actionListeners: ChildActionListener[];
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;
@@ -37,7 +37,7 @@ type Options = {
  *
  * When the action handler handles as action, it returns `true`, otherwise `false`.
  */
-export function useOnAction({
+export function useOnAction<State extends NavigationState>({
   router,
   getState,
   setState,
@@ -46,7 +46,7 @@ export function useOnAction({
   beforeRemoveListeners,
   routerConfigOptions,
   emitter,
-}: Options) {
+}: Options<State>) {
   const {
     onAction: onActionParent,
     onRouteFocus: onRouteFocusParent,
