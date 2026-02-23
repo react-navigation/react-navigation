@@ -37,6 +37,13 @@
       ],
       "react-native-edge-to-edge"
     ],
+    "buildCacheProvider": {
+      "plugin": "expo-build-disk-cache",
+      "options": {
+        "cacheDir": ".expo/build-cache",
+        "cacheGcTimeDays": 30
+      }
+    },
     "extra": {
       "supportsRTL": true,
       "forcesRTL": false,
