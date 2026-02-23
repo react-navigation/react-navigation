@@ -35,7 +35,7 @@
     "@lerna-lite/cli": "^4.11.0",
     "@lerna-lite/publish": "^4.11.1",
     "@lerna-lite/run": "^4.11.1",
-    "@react-native/babel-preset": "0.81.1",
+    "@react-native/babel-preset": "0.83.2",
     "@types/babel__core": "^7",
     "check-dependency-version-consistency": "^5.0.0",
     "commitlint": "^19.8.1",

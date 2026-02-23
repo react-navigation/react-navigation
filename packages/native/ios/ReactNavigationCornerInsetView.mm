@@ -76,6 +76,7 @@ static ReactNavigationCornerInsetViewImplProps *convertProps(const Props::Shared
             : viewProps.edge == ReactNavigationCornerInsetViewEdge::Bottom
                 ? CornerInsetEdgeBottom
                 : CornerInsetEdgeTop;
+    swiftProps.adaptive = viewProps.adaptive;
 
     return swiftProps;
 }

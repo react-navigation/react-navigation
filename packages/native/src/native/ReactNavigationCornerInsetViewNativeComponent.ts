@@ -11,6 +11,7 @@ import {
 export interface NativeProps extends ViewProps {
   direction?: CodegenTypes.WithDefault<'vertical' | 'horizontal', 'vertical'>;
   edge?: CodegenTypes.WithDefault<'top' | 'right' | 'bottom' | 'left', 'top'>;
+  adaptive?: CodegenTypes.WithDefault<boolean, true>;
 }
 
 interface NativeCommands {

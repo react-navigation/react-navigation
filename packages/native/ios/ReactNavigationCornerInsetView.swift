@@ -15,6 +15,7 @@ import UIKit
 @objcMembers public class ReactNavigationCornerInsetViewImplProps: NSObject {
   public var direction: CornerInsetDirection = .vertical
   public var edge: CornerInsetEdge = .top
+  public var adaptive: Bool = true
 }
 
 @objc public protocol ReactNavigationCornerInsetViewImplDelegate: NSObjectProtocol {
@@ -33,7 +34,7 @@ import UIKit
   @objc public func updateProps(_ props: ReactNavigationCornerInsetViewImplProps, oldProps: ReactNavigationCornerInsetViewImplProps) {
     self.props = props
 
-    if props.direction != oldProps.direction || props.edge != oldProps.edge {
+    if props.direction != oldProps.direction || props.edge != oldProps.edge || props.adaptive != oldProps.adaptive {
       setNeedsLayout()
       updateCornerInset(forceMeasurement: true)
     }
@@ -56,7 +57,31 @@ import UIKit
 
   private func updateCornerInset(animated: Bool = false, forceMeasurement: Bool = false) {
     if shouldMeasureCornerInset(forceMeasurement: forceMeasurement) {
-      lastMeasuredCornerInset = measureCornerInset()
+      if #available(iOS 26.0, *) {
+        let sourceView: UIView
+
+        if let window {
+          sourceView = prepareMeasurementView(in: window)
+        } else {
+          sourceView = self
+        }
+
+        let cornerMargins = readCornerMargins(from: sourceView)
+
+        switch props.edge {
+        case .top:
+          lastMeasuredCornerInset = cornerMargins.top
+        case .right:
+          lastMeasuredCornerInset = cornerMargins.right
+        case .bottom:
+          lastMeasuredCornerInset = cornerMargins.bottom
+        case .left:
+          lastMeasuredCornerInset = cornerMargins.left
+        }
+      } else {
+        lastMeasuredCornerInset = 0
+      }
+
       hasMeasuredCornerInset = true
       lastMeasuredWindow = window
     }
@@ -82,36 +107,8 @@ import UIKit
     return lastMeasuredWindow !== currentWindow
   }
 
-  private func measureCornerInset() -> CGFloat {
-    if #available(iOS 26.0, *) {
-      let cornerMargins = resolveCornerMargins()
-
-      switch props.edge {
-      case .top:
-        return cornerMargins.top
-      case .right:
-        return cornerMargins.right
-      case .bottom:
-        return cornerMargins.bottom
-      case .left:
-        return cornerMargins.left
-      }
-    }
-
-    return 0
-  }
-
   @available(iOS 26.0, *)
-  private func resolveCornerMargins() -> UIEdgeInsets {
-    let adaptedRegion = UIView.LayoutRegion.margins(
-      cornerAdaptation: props.direction == .horizontal ? .horizontal : .vertical
-    )
-    let baselineRegion = UIView.LayoutRegion.margins(cornerAdaptation: .none)
-
-    guard let window else {
-      return edgeInsets(for: adaptedRegion)
-    }
-
+  private func prepareMeasurementView(in window: UIWindow) -> UIView {
     let measurementView = resolveMeasurementView(in: window)
 
     measurementView.frame = resolveFrameInWindow()
@@ -121,14 +118,28 @@ import UIKit
     window.updatePropertiesIfNeeded()
     measurementView.updatePropertiesIfNeeded()
 
-    let adaptedMargins = measurementView.edgeInsets(for: adaptedRegion)
-    let baselineMargins = measurementView.edgeInsets(for: baselineRegion)
+    return measurementView
+  }
+
+  @available(iOS 26.0, *)
+  private func readCornerMargins(from sourceView: UIView) -> UIEdgeInsets {
+    let adaptedRegion = UIView.LayoutRegion.margins(
+      cornerAdaptation: props.direction == .horizontal ? .horizontal : .vertical
+    )
+    let adaptedMargins = sourceView.edgeInsets(for: adaptedRegion)
+
+    if !props.adaptive {
+      return adaptedMargins
+    }
+
+    let baselineRegion = UIView.LayoutRegion.margins(cornerAdaptation: .none)
+    let baselineMargins = sourceView.edgeInsets(for: baselineRegion)
 
     return UIEdgeInsets(
-      top: max(0, adaptedMargins.top - baselineMargins.top),
-      left: max(0, adaptedMargins.left - baselineMargins.left),
-      bottom: max(0, adaptedMargins.bottom - baselineMargins.bottom),
-      right: max(0, adaptedMargins.right - baselineMargins.right)
+      top: adaptedMargins.top == baselineMargins.top ? 0 : adaptedMargins.top,
+      left: adaptedMargins.left == baselineMargins.left ? 0 : adaptedMargins.left,
+      bottom: adaptedMargins.bottom == baselineMargins.bottom ? 0 : adaptedMargins.bottom,
+      right: adaptedMargins.right == baselineMargins.right ? 0 : adaptedMargins.right
     )
   }
 

@@ -10,6 +10,13 @@ export type CornerInsetProps = {
    * The edge where the inset should be applied.
    */
   edge: 'top' | 'right' | 'bottom' | 'left';
+  /**
+   * Whether to collapse to 0 when corner inset matches the baseline inset.
+   * e.g. it will be 0 for corners without traffic lights on iPadOS.
+   *
+   * @default true
+   */
+  adaptive?: boolean;
 } & React.ComponentProps<typeof View>;
 
 export type CornerInsetRef = {
