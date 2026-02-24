@@ -1,5 +1,7 @@
 import { getHeaderTitle, Header } from '@react-navigation/elements';
 import {
+  ActivityView,
+  Container,
   SafeAreaProviderCompat,
   Screen as ScreenContent,
 } from '@react-navigation/elements/internal';
@@ -15,7 +17,6 @@ import {
 import * as React from 'react';
 import { Platform, StyleSheet } from 'react-native';
 import { Drawer } from 'react-native-drawer-layout';
-import { Screen, ScreenContainer } from 'react-native-screens';
 import useLatestCallback from 'use-latest-callback';
 
 import type {
@@ -52,9 +53,6 @@ function DrawerViewBase({
   descriptors,
   defaultStatus,
   drawerContent = renderDrawerContentDefault,
-  detachInactiveScreens = Platform.OS === 'web' ||
-    Platform.OS === 'android' ||
-    Platform.OS === 'ios',
 }: Props) {
   const { direction } = useLocale();
 
@@ -209,11 +207,7 @@ function DrawerViewBase({
 
   const renderSceneContent = () => {
     return (
-      <ScreenContainer
-        enabled={detachInactiveScreens}
-        hasTwoStates
-        style={styles.content}
-      >
+      <Container style={styles.content}>
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
           const { lazy = true } = descriptor.options;
@@ -231,7 +225,7 @@ function DrawerViewBase({
           }
 
           const {
-            freezeOnBlur,
+            inactiveBehavior = 'pause',
             header = ({ options }: DrawerHeaderProps) => (
               <Header
                 {...options}
@@ -254,14 +248,20 @@ function DrawerViewBase({
             sceneStyle,
           } = descriptor.options;
 
+          // For preloaded screens and if lazy is false,
+          // Keep them active so that the effects can run
+          const isActive =
+            inactiveBehavior === 'none' ||
+            isFocused ||
+            isPreloaded ||
+            (lazy === false && !loaded.includes(route.key));
+
           return (
-            <Screen
+            <ActivityView
               key={route.key}
-              style={[StyleSheet.absoluteFill, { zIndex: isFocused ? 0 : -1 }]}
-              activityState={isFocused ? 2 : 0}
-              enabled={detachInactiveScreens}
-              freezeOnBlur={freezeOnBlur}
-              shouldFreeze={!isFocused && !isPreloaded}
+              mode={isFocused ? 'normal' : isActive ? 'inert' : 'paused'}
+              visible={isFocused}
+              style={{ ...StyleSheet.absoluteFill, zIndex: isFocused ? 0 : -1 }}
             >
               <ScreenContent
                 focused={isFocused}
@@ -280,10 +280,10 @@ function DrawerViewBase({
               >
                 {descriptor.render()}
               </ScreenContent>
-            </Screen>
+            </ActivityView>
           );
         })}
-      </ScreenContainer>
+      </Container>
     );
   };
 
