@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.15.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.14.1...@react-navigation/core@7.15.0) (2026-02-25)
+
+### Features
+
+* mark params as used instead of cleaning up ([#12988](https://github.com/react-navigation/react-navigation/issues/12988)) ([9188f99](https://github.com/react-navigation/react-navigation/commit/9188f99f7f3cba4638ee733685c3c9ccaff730c1)) - by @satya164
+
 ## [7.14.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.14.0...@react-navigation/core@7.14.1) (2026-02-25)
 
 ### Bug Fixes
