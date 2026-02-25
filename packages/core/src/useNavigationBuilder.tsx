@@ -326,25 +326,6 @@ export function useNavigationBuilder<
     | NavigatorRoute
     | undefined;
 
-  React.useEffect(() => {
-    const hasNestedParams =
-      typeof route?.params?.state === 'object' ||
-      typeof route?.params?.screen === 'string';
-
-    // Track whether the params have been already consumed
-    // Set it to the same object so merged params will be handled again
-    if (
-      typeof route?.params === 'object' &&
-      route.params != null &&
-      hasNestedParams
-    ) {
-      Object.defineProperty(route.params, CONSUMED_PARAMS, {
-        value: route.params,
-        enumerable: false,
-      });
-    }
-  }, [route?.params]);
-
   const isNestedParamsConsumed =
     typeof route?.params === 'object' && route.params != null
       ? CONSUMED_PARAMS in route.params &&
@@ -666,7 +647,9 @@ export function useNavigationBuilder<
     });
   }
 
-  if (route?.params && route.params !== paramsUsedForInitialization) {
+  let didConsumeNestedParams = route?.params === paramsUsedForInitialization;
+
+  if (route?.params && !didConsumeNestedParams) {
     let action: CommonActions.Action | undefined;
 
     if (
@@ -674,6 +657,8 @@ export function useNavigationBuilder<
       route.params.state != null &&
       !isNestedParamsConsumed
     ) {
+      didConsumeNestedParams = true;
+
       if (
         options.routeNamesChangeBehavior === 'lastUnhandled' &&
         doesStateHaveOnlyInvalidRoutes(route.params.state)
@@ -690,6 +675,8 @@ export function useNavigationBuilder<
       ((route.params.initial === false && isFirstStateInitialization) ||
         !isNestedParamsConsumed)
     ) {
+      didConsumeNestedParams = true;
+
       if (
         options.routeNamesChangeBehavior === 'lastUnhandled' &&
         !routeNames.includes(route.params.screen)
@@ -729,6 +716,21 @@ export function useNavigationBuilder<
           })
         : nextState;
   }
+
+  React.useEffect(() => {
+    if (
+      didConsumeNestedParams &&
+      typeof route?.params === 'object' &&
+      route.params != null
+    ) {
+      // Track whether the params have been already consumed
+      // Set it to the same object, so merged params can be handled again
+      Object.defineProperty(route.params, CONSUMED_PARAMS, {
+        value: route.params,
+        enumerable: false,
+      });
+    }
+  }, [didConsumeNestedParams, route?.params]);
 
   const shouldUpdate = state !== nextState;
 
