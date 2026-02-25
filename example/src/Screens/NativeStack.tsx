@@ -290,11 +290,18 @@ export function NativeStack() {
                     label: 'Message',
                     icon: {
                       type: 'image',
-                      source: {
-                        ...Image.resolveAssetSource(messageCircle),
-                        scale:
-                          Image.resolveAssetSource(messageCircle).scale * 1.4,
-                      },
+                      source: Platform.select({
+                        // Avoid calling `Image.resolveAssetSource` on Web to prevent crash
+                        get ios() {
+                          return {
+                            ...Image.resolveAssetSource(messageCircle),
+                            scale:
+                              Image.resolveAssetSource(messageCircle).scale *
+                              1.4,
+                          };
+                        },
+                        default: messageCircle,
+                      }),
                     },
                     onPress: () => Alert.alert('Message pressed'),
                   },
