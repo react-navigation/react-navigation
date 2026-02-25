@@ -703,14 +703,22 @@ export function useNavigationBuilder<
         : nextState;
   }
 
-  const shouldUpdate =
-    state !== nextState ||
+  const hasNestedParams =
     typeof route?.params?.state === 'object' ||
     typeof route?.params?.screen === 'string';
 
+  React.useEffect(() => {
+    if (hasNestedParams) {
+      // Clear nested params after they are consumed
+      setState(nextState);
+    }
+  }, [hasNestedParams, nextState, setState]);
+
+  const shouldUpdate = state !== nextState;
+
   useScheduleUpdate(() => {
     if (shouldUpdate) {
-      // If the state needs to be updated, we'll schedule an update
+      // Schedule an update if the state needs to be updated
       setState(nextState);
 
       if (shouldClearUnhandledState) {
