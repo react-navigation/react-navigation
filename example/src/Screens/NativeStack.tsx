@@ -16,12 +16,14 @@ import * as React from 'react';
 import {
   Alert,
   Animated,
+  Image,
   Platform,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
 
+import messageCircle from '../../assets/icons/message-circle.png';
 import userRoundPlus from '../../assets/icons/user-round-plus.png';
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
@@ -282,6 +284,19 @@ export function NativeStack() {
                     },
                     destructive: true,
                     onPress: () => Alert.alert('Report pressed'),
+                  },
+                  {
+                    type: 'action',
+                    label: 'Message',
+                    icon: {
+                      type: 'image',
+                      source: {
+                        ...Image.resolveAssetSource(messageCircle),
+                        scale:
+                          Image.resolveAssetSource(messageCircle).scale * 1.4,
+                      },
+                    },
+                    onPress: () => Alert.alert('Message pressed'),
                   },
                   {
                     type: 'submenu',

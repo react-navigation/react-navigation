@@ -993,7 +993,7 @@ export type NativeStackHeaderItemMenuAction = {
   /**
    * Icon for the menu item.
    */
-  icon?: PlatformIconIOSSfSymbol;
+  icon?: PlatformIconIOS;
   /**
    * Function to call when the menu item is pressed.
    */
@@ -1051,7 +1051,7 @@ export type NativeStackHeaderItemMenuSubmenu = {
   /**
    * Icon for the submenu item.
    */
-  icon?: PlatformIconIOSSfSymbol;
+  icon?: PlatformIconIOS;
   /**
    * Whether the menu is displayed inline with the parent menu.
    * By default, submenus are displayed after expanding the parent menu item.

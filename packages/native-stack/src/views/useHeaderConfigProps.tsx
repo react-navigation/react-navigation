@@ -8,9 +8,10 @@ import {
 import color from 'color';
 import { Platform, StyleSheet, type TextStyle, View } from 'react-native';
 import {
-  type HeaderBarButtonItem,
   type HeaderBarButtonItemMenuAction,
   type HeaderBarButtonItemSubmenu,
+  type HeaderBarButtonItemWithAction,
+  type HeaderBarButtonItemWithMenu,
   isSearchBarAvailableForCurrentPlatform,
   ScreenStackHeaderBackButtonImage,
   ScreenStackHeaderCenterView,
@@ -23,6 +24,7 @@ import {
 
 import type {
   NativeStackHeaderItem,
+  NativeStackHeaderItemButton,
   NativeStackHeaderItemMenuAction,
   NativeStackHeaderItemMenuSubmenu,
   NativeStackNavigationOptions,
@@ -71,7 +73,7 @@ const processBarButtonItems = (
 
         const { badge, label, labelStyle, icon, ...rest } = item;
 
-        let processedItem: HeaderBarButtonItem = {
+        const processedItemCommon = {
           ...rest,
           index,
           title: label,
@@ -79,32 +81,34 @@ const processBarButtonItems = (
             ...fonts.regular,
             ...labelStyle,
           },
-          icon:
-            icon?.type === 'image'
-              ? icon.tinted === false
-                ? {
-                    type: 'imageSource',
-                    imageSource: icon.source,
-                  }
-                : {
-                    type: 'templateSource',
-                    templateSource: icon.source,
-                  }
-              : icon,
+          icon: transformIcon(icon),
         };
 
-        if (processedItem.type === 'menu' && item.type === 'menu') {
+        let processedItem:
+          | HeaderBarButtonItemWithAction
+          | HeaderBarButtonItemWithMenu;
+
+        if (processedItemCommon.type === 'menu' && item.type === 'menu') {
           const { multiselectable, layout } = item.menu;
 
           processedItem = {
-            ...processedItem,
+            ...processedItemCommon,
             menu: {
-              ...processedItem.menu,
+              ...processedItemCommon.menu,
               singleSelection: !multiselectable,
               displayAsPalette: layout === 'palette',
               items: item.menu.items.map(getMenuItem),
             },
           };
+        } else if (
+          processedItemCommon.type === 'button' &&
+          item.type === 'button'
+        ) {
+          processedItem = processedItemCommon;
+        } else {
+          throw new Error(
+            `Invalid item type: ${JSON.stringify(item)}. Valid types are 'button' and 'menu'.`
+          );
         }
 
         if (badge) {
@@ -139,14 +143,30 @@ const processBarButtonItems = (
     .filter((item) => item != null);
 };
 
+const transformIcon = (
+  icon: NativeStackHeaderItemButton['icon']
+):
+  | HeaderBarButtonItemWithAction['icon']
+  | HeaderBarButtonItemWithMenu['icon'] => {
+  if (icon?.type === 'image') {
+    return icon.tinted === false
+      ? { type: 'imageSource', imageSource: icon.source }
+      : { type: 'templateSource', templateSource: icon.source };
+  }
+
+  return icon;
+};
+
 const getMenuItem = (
   item: NativeStackHeaderItemMenuAction | NativeStackHeaderItemMenuSubmenu
 ): HeaderBarButtonItemMenuAction | HeaderBarButtonItemSubmenu => {
   if (item.type === 'submenu') {
-    const { label, inline, layout, items, multiselectable, ...rest } = item;
+    const { label, icon, inline, layout, items, multiselectable, ...rest } =
+      item;
 
     return {
       ...rest,
+      icon: transformIcon(icon),
       title: label,
       displayAsPalette: layout === 'palette',
       displayInline: inline,
@@ -155,10 +175,11 @@ const getMenuItem = (
     };
   }
 
-  const { label, description, ...rest } = item;
+  const { label, icon, description, ...rest } = item;
 
   return {
     ...rest,
+    icon: transformIcon(icon),
     title: label,
     subtitle: description,
   };
