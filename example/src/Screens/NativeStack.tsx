@@ -289,6 +289,17 @@ export function NativeStack(
                     onPress: () => Alert.alert('Report pressed'),
                   },
                   {
+                    type: 'action',
+                    label: 'Newspaper',
+                    icon: {
+                      type: 'image',
+                      source: require('../../assets/icons/newspaper.png'),
+                      tinted: true,
+                    },
+                    destructive: true,
+                    onPress: () => Alert.alert('Newspaper pressed'),
+                  },
+                  {
                     type: 'submenu',
                     label: 'View history',
                     icon: {
