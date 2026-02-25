@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.14.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.14.0...@react-navigation/core@7.14.1) (2026-02-25)
+
+### Bug Fixes
+
+* clear nested params after state is updated ([d58173c](https://github.com/react-navigation/react-navigation/commit/d58173c28e24570bbf3398791fd2fbb01d903d36)), closes [#12986](https://github.com/react-navigation/react-navigation/issues/12986) - by @satya164
+* preserve navigator state with <Activity mode="hidden"> ([8ff7f88](https://github.com/react-navigation/react-navigation/commit/8ff7f88582270fe1dadb2e3086e9b497156d3126)) - by @satya164
+* tweaks to better work inside `<Activity mode="hidden">` ([#12985](https://github.com/react-navigation/react-navigation/issues/12985)) ([f3e926e](https://github.com/react-navigation/react-navigation/commit/f3e926e93cb15c9c1c6fcefc254908c4581fcab2)) - by @satya164
+
 # [7.14.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.13.7...@react-navigation/core@7.14.0) (2026-01-16)
 
 ### Features

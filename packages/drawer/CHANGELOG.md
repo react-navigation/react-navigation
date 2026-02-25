@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.8.1...@react-navigation/drawer@7.9.0) (2026-02-25)
+
+### Features
+
+* **native-stack:** add support for images in nested header menus ([#12987](https://github.com/react-navigation/react-navigation/issues/12987)) ([46b34de](https://github.com/react-navigation/react-navigation/commit/46b34de83556472d9217014f22856e0019428977)) - by @Ubax
+
 ## [7.8.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.8.0...@react-navigation/drawer@7.8.1) (2026-02-10)
 
 **Note:** Version bump only for package @react-navigation/drawer

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.8.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.7.2...@react-navigation/stack@7.8.0) (2026-02-25)
+
+### Features
+
+* **native-stack:** add support for images in nested header menus ([#12987](https://github.com/react-navigation/react-navigation/issues/12987)) ([46b34de](https://github.com/react-navigation/react-navigation/commit/46b34de83556472d9217014f22856e0019428977)) - by @Ubax
+
 ## [7.7.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.7.1...@react-navigation/stack@7.7.2) (2026-02-16)
 
 ### Bug Fixes
