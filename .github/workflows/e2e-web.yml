@@ -1,4 +1,4 @@
-name: E2E
+name: E2E / Web
 on:
   push:
     branches:
