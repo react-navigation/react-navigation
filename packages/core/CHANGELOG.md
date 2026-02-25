@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.15.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.15.0...@react-navigation/core@7.15.1) (2026-02-25)
+
+**Note:** Version bump only for package @react-navigation/core
+
 # [7.15.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.14.1...@react-navigation/core@7.15.0) (2026-02-25)
 
 ### Features
