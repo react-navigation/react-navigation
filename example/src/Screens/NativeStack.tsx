@@ -21,12 +21,14 @@ import * as React from 'react';
 import {
   Alert,
   Animated,
+  Image,
   Platform,
   ScrollView,
   StyleSheet,
   View,
 } from 'react-native';
 
+import messageCircle from '../../assets/icons/message-circle.png';
 import userRoundPlus from '../../assets/icons/user-round-plus.png';
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
@@ -290,14 +292,16 @@ export function NativeStack(
                   },
                   {
                     type: 'action',
-                    label: 'Newspaper',
+                    label: 'Message',
                     icon: {
                       type: 'image',
-                      source: require('../../assets/icons/newspaper.png'),
-                      tinted: true,
+                      source: {
+                        ...Image.resolveAssetSource(messageCircle),
+                        scale:
+                          Image.resolveAssetSource(messageCircle).scale * 1.4,
+                      },
                     },
-                    destructive: true,
-                    onPress: () => Alert.alert('Newspaper pressed'),
+                    onPress: () => Alert.alert('Message pressed'),
                   },
                   {
                     type: 'submenu',

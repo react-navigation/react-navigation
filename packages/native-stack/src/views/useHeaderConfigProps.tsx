@@ -76,9 +76,7 @@ const processBarButtonItems = (
 
         const { badge, label, labelStyle, icon, ...rest } = item;
 
-        let processedItem:
-          | HeaderBarButtonItemWithAction
-          | HeaderBarButtonItemWithMenu = {
+        const processedItemCommon = {
           ...rest,
           index,
           title: label,
@@ -87,20 +85,33 @@ const processBarButtonItems = (
             ...labelStyle,
           },
           icon: transformIcon(icon),
-        } as HeaderBarButtonItemWithAction | HeaderBarButtonItemWithMenu;
+        };
 
-        if (processedItem.type === 'menu' && item.type === 'menu') {
+        let processedItem:
+          | HeaderBarButtonItemWithAction
+          | HeaderBarButtonItemWithMenu;
+
+        if (processedItemCommon.type === 'menu' && item.type === 'menu') {
           const { multiselectable, layout } = item.menu;
 
           processedItem = {
-            ...processedItem,
+            ...processedItemCommon,
             menu: {
-              ...processedItem.menu,
+              ...processedItemCommon.menu,
               singleSelection: !multiselectable,
               displayAsPalette: layout === 'palette',
               items: item.menu.items.map(getMenuItem),
             },
           };
+        } else if (
+          processedItemCommon.type === 'button' &&
+          item.type === 'button'
+        ) {
+          processedItem = processedItemCommon;
+        } else {
+          throw new Error(
+            `Invalid item type: ${JSON.stringify(item)}. Valid types are 'button' and 'menu'.`
+          );
         }
 
         if (badge) {
@@ -143,6 +154,7 @@ const transformIcon = (
       ? { type: 'imageSource', imageSource: icon.source }
       : { type: 'templateSource', templateSource: icon.source };
   }
+
   return icon;
 };
 
