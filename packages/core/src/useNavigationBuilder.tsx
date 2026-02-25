@@ -61,6 +61,8 @@ type NavigatorRoute = {
   params?: NavigatorScreenParams<ParamListBase>;
 };
 
+const CONSUMED_PARAMS = Symbol('CONSUMED_PARAMS');
+
 const isScreen = (
   child: React.ReactElement<unknown>
 ): child is React.ReactElement<{
@@ -325,6 +327,31 @@ export function useNavigationBuilder<
     | NavigatorRoute
     | undefined;
 
+  React.useEffect(() => {
+    const hasNestedParams =
+      typeof route?.params?.state === 'object' ||
+      typeof route?.params?.screen === 'string';
+
+    // Track whether the params have been already consumed
+    // Set it to the same object so merged params will be handled again
+    if (
+      typeof route?.params === 'object' &&
+      route.params != null &&
+      hasNestedParams
+    ) {
+      Object.defineProperty(route.params, CONSUMED_PARAMS, {
+        value: route.params,
+        enumerable: false,
+      });
+    }
+  }, [route?.params]);
+
+  const isNestedParamsConsumed =
+    typeof route?.params === 'object' && route.params != null
+      ? CONSUMED_PARAMS in route.params &&
+        route.params[CONSUMED_PARAMS] === route.params
+      : false;
+
   const {
     children,
     layout,
@@ -466,10 +493,12 @@ export function useNavigationBuilder<
     stateBeforeInitialization,
     initializedState,
     isFirstStateInitialization,
+    paramsUsedForInitialization,
   ] = React.useMemo((): [
     PartialState<State> | undefined,
     State | undefined,
     boolean,
+    object | undefined,
   ] => {
     // If the state was already cleaned up, but we have it stored in ref,
     // It likely got cleaned up due to `<Activity mode="hidden">`
@@ -487,7 +516,7 @@ export function useNavigationBuilder<
             routeGetIdList,
           });
 
-      return [undefined, state, false];
+      return [undefined, state, false, undefined];
     }
 
     const initialRouteParamList = routeNames.reduce<
@@ -522,7 +551,8 @@ export function useNavigationBuilder<
       !(
         typeof route?.params?.screen === 'string' &&
         route?.params?.initial !== false
-      )
+      ) &&
+      !isNestedParamsConsumed
     ) {
       return [
         undefined,
@@ -532,11 +562,17 @@ export function useNavigationBuilder<
           routeGetIdList,
         }),
         true,
+        undefined,
       ];
     } else {
-      const stateFromParams = getStateFromParams(route?.params);
+      const paramsForState = isNestedParamsConsumed ? undefined : route?.params;
+      const stateFromParams = paramsForState
+        ? getStateFromParams(paramsForState)
+        : undefined;
+
       const stateBeforeInitialization = (stateFromParams ??
         currentState) as PartialState<State>;
+
       const hydratedState = router.getRehydratedState(
         stateBeforeInitialization,
         {
@@ -550,10 +586,10 @@ export function useNavigationBuilder<
         options.UNSTABLE_routeNamesChangeBehavior === 'lastUnhandled' &&
         doesStateHaveOnlyInvalidRoutes(stateBeforeInitialization)
       ) {
-        return [stateBeforeInitialization, hydratedState, true];
+        return [stateBeforeInitialization, hydratedState, true, paramsForState];
       }
 
-      return [undefined, hydratedState, false];
+      return [undefined, hydratedState, false, paramsForState];
     }
     // We explicitly don't include routeNames, route.params etc. in the dep list
     // below. We want to avoid forcing a new state to be calculated in those cases
@@ -631,21 +667,13 @@ export function useNavigationBuilder<
     });
   }
 
-  const previousNestedParamsRef = React.useRef(route?.params);
-
-  React.useEffect(() => {
-    previousNestedParamsRef.current = route?.params;
-  }, [route?.params]);
-
-  if (route?.params) {
-    const previousParams = previousNestedParamsRef.current;
-
+  if (route?.params && route.params !== paramsUsedForInitialization) {
     let action: CommonActions.Action | undefined;
 
     if (
       typeof route.params.state === 'object' &&
       route.params.state != null &&
-      route.params !== previousParams
+      !isNestedParamsConsumed
     ) {
       if (
         options.UNSTABLE_routeNamesChangeBehavior === 'lastUnhandled' &&
@@ -661,7 +689,7 @@ export function useNavigationBuilder<
     } else if (
       typeof route.params.screen === 'string' &&
       ((route.params.initial === false && isFirstStateInitialization) ||
-        route.params !== previousParams)
+        !isNestedParamsConsumed)
     ) {
       if (
         options.UNSTABLE_routeNamesChangeBehavior === 'lastUnhandled' &&
@@ -702,17 +730,6 @@ export function useNavigationBuilder<
           })
         : nextState;
   }
-
-  const hasNestedParams =
-    typeof route?.params?.state === 'object' ||
-    typeof route?.params?.screen === 'string';
-
-  React.useEffect(() => {
-    if (hasNestedParams) {
-      // Clear nested params after they are consumed
-      setState(nextState);
-    }
-  }, [hasNestedParams, nextState, setState]);
 
   const shouldUpdate = state !== nextState;
 

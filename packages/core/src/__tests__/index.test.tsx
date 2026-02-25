@@ -1041,6 +1041,10 @@ test('navigates to nested child in a navigator with initial: false', () => {
       {
         key: '2',
         name: 'bar',
+        params: {
+          params: { test: 42 },
+          screen: 'bar-b',
+        },
         state: {
           index: 0,
           key: '4',
@@ -1139,6 +1143,11 @@ test('navigates to nested child in a navigator with initial: false', () => {
       {
         key: '7',
         name: 'bar',
+        params: {
+          screen: 'bar-b',
+          params: { test: 42 },
+          initial: false,
+        },
         state: {
           index: 2,
           key: '8',
@@ -1174,7 +1183,11 @@ test('navigates to nested child in a navigator with initial: false', () => {
           { name: 'foo' },
           {
             name: 'bar',
-            params: { initial: false, params: { test: 42 }, screen: 'bar-b' },
+            params: {
+              params: { test: 42 },
+              screen: 'bar-b',
+              initial: false,
+            },
             state: {
               index: 1,
               key: '7',
@@ -1228,6 +1241,11 @@ test('navigates to nested child in a navigator with initial: false', () => {
       {
         key: 'bar-11',
         name: 'bar',
+        params: {
+          params: { test: 42 },
+          screen: 'bar-b',
+          initial: false,
+        },
         state: {
           index: 1,
           key: '15',
@@ -1448,6 +1466,11 @@ test('resets state of a nested child in a navigator', () => {
       {
         key: 'bar',
         name: 'bar',
+        params: {
+          state: {
+            routes: [{ name: 'bar-a' }, { name: 'bar-b' }],
+          },
+        },
         state: {
           index: 0,
           key: '4',
@@ -1496,6 +1519,16 @@ test('resets state of a nested child in a navigator', () => {
       {
         key: 'bar',
         name: 'bar',
+        params: {
+          state: {
+            index: 2,
+            routes: [
+              { key: '37', name: 'bar-b' },
+              { name: 'bar-b' },
+              { name: 'bar-a', params: { test: 18 } },
+            ],
+          },
+        },
         state: {
           index: 2,
           key: '7',
@@ -1582,6 +1615,7 @@ test('resets state for navigator which has screen from params', () => {
       {
         key: 'bar',
         name: 'bar',
+        params: { screen: 'qux', params: { test: 42 } },
         state: {
           index: 0,
           key: '2',
@@ -1612,6 +1646,10 @@ test('resets state for navigator which has screen from params', () => {
       {
         key: 'bar',
         name: 'bar',
+        params: {
+          screen: 'qux',
+          params: { test: 42 },
+        },
         state: {
           index: 0,
           key: '4',
@@ -1670,6 +1708,10 @@ test('clears params for nested navigator after initial mount', () => {
       {
         key: 'bar',
         name: 'bar',
+        params: {
+          screen: 'qux',
+          params: { test: 42 },
+        },
         state: {
           index: 0,
           key: '2',
@@ -1695,6 +1737,10 @@ test('clears params for nested navigator after initial mount', () => {
       {
         key: 'bar',
         name: 'bar',
+        params: {
+          screen: 'qux',
+          params: { test: 42 },
+        },
       },
     ],
     stale: false,
@@ -1977,6 +2023,7 @@ test('restores previously discarded state when route names change after navigati
     stale: false,
     type: 'test',
   });
+
   expect(root).toMatchInlineSnapshot(`"[foo]"`);
 
   root.update(
@@ -2080,6 +2127,7 @@ test('restores previously discarded state when route names change after navigati
 
   act(() => navigation.navigate('test', { screen: 'qux' }));
 
+  expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenLastCalledWith({
     index: 0,
     key: '0',
@@ -2088,6 +2136,7 @@ test('restores previously discarded state when route names change after navigati
       {
         key: 'test',
         name: 'test',
+        params: { screen: 'qux' },
         state: {
           index: 0,
           key: '2',
@@ -2120,6 +2169,7 @@ test('restores previously discarded state when route names change after navigati
     </BaseNavigationContainer>
   );
 
+  expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenLastCalledWith({
     index: 0,
     key: '0',
@@ -2128,6 +2178,7 @@ test('restores previously discarded state when route names change after navigati
       {
         key: 'test',
         name: 'test',
+        params: { screen: 'qux' },
         state: {
           index: 0,
           key: '4',

@@ -76,46 +76,16 @@ export function SceneView<
       const state = getState();
 
       const routes = state.routes.map((r) => {
-        if (r.key !== route.key) {
-          return r;
+        if (r.key === route.key && r.state !== child) {
+          return {
+            ...r,
+            state: child,
+          };
         }
 
-        const nextRoute = r.state !== child ? { ...r, state: child } : r;
-
-        // Before updating the state, cleanup any nested screen and state
-        // This will avoid the navigator trying to handle them again
-        if (
-          nextRoute.params &&
-          (('state' in nextRoute.params &&
-            typeof nextRoute.params.state === 'object' &&
-            nextRoute.params.state !== null) ||
-            ('screen' in nextRoute.params &&
-              typeof nextRoute.params.screen === 'string'))
-        ) {
-          // @ts-expect-error: we don't have correct type for params
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { state, screen, params, initial, ...rest } = nextRoute.params;
-
-          if (Object.keys(rest).length) {
-            return { ...nextRoute, params: rest };
-          } else {
-            const {
-              // We destructure the params to omit them
-              // eslint-disable-next-line @typescript-eslint/no-unused-vars
-              params,
-              ...restRoute
-            } = nextRoute;
-
-            return restRoute;
-          }
-        }
-
-        return nextRoute;
+        return r;
       });
 
-      // Make sure not to update state if routes haven't changed
-      // Otherwise this will result in params cleanup as well
-      // We only want to cleanup params when state changes - after they are used
       if (!isArrayEqual(state.routes, routes)) {
         setState({
           ...state,
