@@ -3202,6 +3202,101 @@ test('uses optional schema default for missing query param', () => {
   });
 });
 
+test('treats ?query as null and ?query= as empty string', () => {
+  const QuerySchema = z.string().startsWith('@');
+
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id(\\d+)',
+        parse: {
+          id: Number,
+          query: QuerySchema,
+        },
+      },
+      Bar: {
+        path: 'foo/:slug',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/42?query', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: 42, query: null },
+        path: 'foo/42?query',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/42?query=', config)).toEqual({
+    routes: [
+      {
+        name: 'Bar',
+        params: { slug: '42', query: '' },
+        path: 'foo/42?query=',
+      },
+    ],
+  });
+});
+
+test('keeps repeated query params as array for schema parser', () => {
+  const QuerySchema = z.string().startsWith('@');
+
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id(\\d+)',
+        parse: {
+          id: Number,
+          query: QuerySchema,
+        },
+      },
+      Bar: {
+        path: 'foo/:slug',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/42?query=@a&query=@b', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: 42, query: ['@a', '@b'] },
+        path: 'foo/42?query=@a&query=@b',
+      },
+    ],
+  });
+});
+
+test('keeps repeated query params as array for function parser', () => {
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id(\\d+)',
+        parse: {
+          id: Number,
+          query: (value: string) => value.toUpperCase(),
+        },
+      },
+      Bar: {
+        path: 'foo/:slug',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/42?query=a&query=b', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: 42, query: ['a', 'b'] },
+        path: 'foo/42?query=a&query=b',
+      },
+    ],
+  });
+});
+
 test('throws when schema validate returns an asynchronous result', () => {
   const AsyncSchema = {
     '~standard': {
