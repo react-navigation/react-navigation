@@ -66,6 +66,11 @@ type ConfigResources = {
 const INVALID_SCHEMA_RESULT_ERROR =
   'Invalid validation result from schema. It should be an object with either "value" or "issues" property and cannot be asynchronous.';
 
+const INVALID_PARSER_ERROR =
+  'Invalid parser. Expected a function or a Standard Schema V1 object.';
+
+const PARAM_GROUP_PREFIX = 'param_';
+
 const getStandardSchema = (parser: ParseConfigValue) => {
   if (
     '~standard' in parser &&
@@ -88,11 +93,11 @@ const getValidationResult = (
 ): StandardSchemaValidationResult<unknown> => {
   const result = schema.validate(value);
 
-  if ('issues' in result && Array.isArray(result.issues)) {
-    return result;
-  }
-
-  if ('value' in result) {
+  if (
+    result != null &&
+    typeof result === 'object' &&
+    ('value' in result || ('issues' in result && Array.isArray(result.issues)))
+  ) {
     return result;
   }
 
@@ -422,7 +427,7 @@ const matchAgainstConfig = (
       const paramEntries: [string, unknown][] = [];
 
       for (const [key, value] of Object.entries(match.groups)) {
-        const index = Number(key.replace('param_', ''));
+        const index = Number(key.replace(PARAM_GROUP_PREFIX, ''));
         const param = routeConfig.params.find((it) => it.index === index);
 
         if (param?.screen !== routeName || !param.name) {
@@ -461,8 +466,7 @@ const matchAgainstConfig = (
           continue;
         }
 
-        validationFailed = true;
-        break;
+        throw new Error(INVALID_PARSER_ERROR);
       }
 
       if (validationFailed) {
@@ -625,7 +629,7 @@ const createConfigItem = (
             if (it.param) {
               const reg = it.regex || '[^/]+';
 
-              return `(((?<param_${i}>${reg})\\/)${it.optional ? '?' : ''})`;
+              return `(((?<${PARAM_GROUP_PREFIX}${i}>${reg})\\/)${it.optional ? '?' : ''})`;
             }
 
             return `${it.segment === '*' ? '.*' : escape(it.segment)}\\/`;
@@ -814,15 +818,21 @@ const parseQueryParams = (
   const query = path.split('?')[1];
   const params: Record<string, unknown> = queryString.parse(query);
 
+  // Path params should always win over same-named query params.
+  for (const name of pathParamNames) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete params[name];
+  }
+
   if (parseConfig) {
     for (const [name, parser] of Object.entries(parseConfig)) {
       if (!parser || pathParamNames.has(name)) {
         continue;
       }
 
-      if (!Object.hasOwn(params, name)) {
-        const schema = getStandardSchema(parser);
+      const schema = getStandardSchema(parser);
 
+      if (!Object.hasOwn(params, name)) {
         if (!schema) {
           continue;
         }
@@ -840,12 +850,6 @@ const parseQueryParams = (
         continue;
       }
 
-      if (typeof params[name] !== 'string') {
-        continue;
-      }
-
-      const schema = getStandardSchema(parser);
-
       if (schema) {
         const result = getValidationResult(schema, params[name]);
 
@@ -857,12 +861,22 @@ const parseQueryParams = (
         continue;
       }
 
-      if (typeof parser === 'function') {
-        params[name] = parser(params[name]);
+      const value = Array.isArray(params[name])
+        ? params[name][0]
+        : params[name];
+
+      if (typeof value !== 'string') {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete params[name];
         continue;
       }
 
-      return { valid: false };
+      if (typeof parser === 'function') {
+        params[name] = parser(value);
+        continue;
+      }
+
+      throw new Error(INVALID_PARSER_ERROR);
     }
   }
 

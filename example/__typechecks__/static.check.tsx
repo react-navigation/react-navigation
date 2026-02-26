@@ -984,6 +984,166 @@ createStackNavigator({
         return {};
       },
     }),
+    QueryParamZodCoords: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-zod/:id',
+        parse: {
+          id: Number,
+          coords: z
+            .union([z.string(), z.array(z.string()), z.null(), z.undefined()])
+            .transform((value) => {
+              if (value == null) {
+                return [0, 0] as const;
+              }
+
+              if (Array.isArray(value)) {
+                const [a = 0, b = 0] = value.slice(0, 2).map(Number);
+
+                return [a, b] as const;
+              }
+
+              const [a = 0, b = 0] = value.split(',').map(Number);
+
+              return [a, b] as const;
+            })
+            .pipe(z.tuple([z.number(), z.number()])),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          coords: [number, number];
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamValibotCoords: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-valibot/:id',
+        parse: {
+          id: Number,
+          coords: v.pipe(
+            v.union([v.string(), v.array(v.string()), v.null(), v.undefined()]),
+            v.transform((value) => {
+              if (value == null) {
+                return [0, 0] as const;
+              }
+
+              if (Array.isArray(value)) {
+                const [a = 0, b = 0] = value.slice(0, 2).map(Number);
+
+                return [a, b] as const;
+              }
+
+              const [a = 0, b = 0] = value.split(',').map(Number);
+
+              return [a, b] as const;
+            }),
+            v.tuple([v.number(), v.number()])
+          ),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          coords: [number, number];
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamArktypeCoords: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-arktype/:id',
+        parse: {
+          id: Number,
+          coords: arktype.type('string | string[] | null | undefined').pipe(
+            (value) => {
+              if (value == null) {
+                return [0, 0];
+              }
+
+              if (Array.isArray(value)) {
+                const [a = 0, b = 0] = value.slice(0, 2).map(Number);
+
+                return [a, b];
+              }
+
+              const [a = 0, b = 0] = value.split(',').map(Number);
+
+              return [a, b];
+            },
+            arktype.type(['number', 'number'])
+          ),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          coords: [number, number];
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamFunctionParser: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-function/:id',
+        parse: {
+          id: Number,
+          query: (value: string) => (value === 'new' ? 'new' : 'top'),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          query?: 'new' | 'top';
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamOptionalSchema: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-optional/:id',
+        parse: {
+          id: Number,
+          query: z.string().optional(),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          query?: string | undefined;
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamDefaultSchema: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-default/:id',
+        parse: {
+          id: Number,
+          query: z.string().optional().default('fallback'),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          query: string;
+        }>();
+
+        return {};
+      },
+    }),
   },
 });
 

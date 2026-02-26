@@ -1202,7 +1202,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
 type ParseConfig<Params> = {
   [K in keyof Params]?:
     | ((value: string) => Params[K])
-    | StandardSchemaV1<string, Params[K]>;
+    | StandardSchemaV1<string | string[] | null | undefined, Params[K]>;
 };
 
 type StringifyConfig<Params> = {

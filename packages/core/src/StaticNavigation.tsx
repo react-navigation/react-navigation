@@ -160,7 +160,8 @@ type StaticScreenConfigLinkingAlias = {
    */
   parse?: Record<
     string,
-    ((value: string) => unknown) | StandardSchemaV1<string, unknown>
+    | ((value: string) => unknown)
+    | StandardSchemaV1<string | string[] | null | undefined, unknown>
   >;
   /**
    * An object mapping the param name to a function which converts the param value to a string.
@@ -338,7 +339,7 @@ type StaticConfigScreens<
             path: string;
             parse?: Record<
               string,
-              ((value: string) => any) | StandardSchemaV1<string, any>
+              ((value: string) => any) | StandardSchemaV1<any, any>
             >;
           }
         | string

@@ -82,6 +82,8 @@ export type StandardSchemaV1<Input = unknown, Output = Input> = {
   };
 };
 
+export type QueryParamInput = string | string[] | null | undefined;
+
 /**
  * Extract path params from a path string.
  * e.g. `/foo/:userId/:postId` -> `{ userId: string; postId: string }`
@@ -94,18 +96,66 @@ export type ExtractParamStrings<Path extends string> =
     : ExtractSegmentParam<Path>;
 
 /**
- * Extract the parsed params type from base params and parse functions.
- * Applies the return type of parse functions to the corresponding params.
+ * Get the type of params based on the `parse` config and the path pattern.
  */
 export type ExtractParamsType<Params, Parse> = {
+  /**
+   * Base param types from path pattern
+   * Refine the type based on standard schema, then parse function
+   * Otherwise, use the type from path pattern
+   */
   [K in keyof Params]: K extends keyof Parse
-    ? Parse[K] extends StandardSchemaV1<string, infer R>
+    ? Parse[K] extends StandardSchemaV1<unknown, infer R>
       ? R
       : Parse[K] extends (value: string) => infer R
         ? R
         : Params[K]
     : Params[K];
+} & {
+  /**
+   * Optional param types not in path pattern (for query params)
+   */
+  [K in QueryParamOptionalKeys<Params, Parse>]?: QueryParamValue<Parse[K]>;
+} & {
+  /**
+   * Required param types not in path pattern (for query params)
+   */
+  [K in QueryParamRequiredKeys<Params, Parse>]: QueryParamValue<Parse[K]>;
 };
+
+type QueryParamValue<ParseValue> =
+  ParseValue extends StandardSchemaV1<unknown, infer R>
+    ? R
+    : ParseValue extends (value: string) => infer R
+      ? R
+      : never;
+
+/**
+ * For schema, it's optional if the output has `undefined`, otherwise required
+ * For parse function, it's always optional as it can't say if it's required or not
+ */
+type QueryParamOptionalKeys<Params, Parse> = {
+  [K in Exclude<keyof Parse, keyof Params>]: Parse[K] extends StandardSchemaV1<
+    unknown,
+    infer R
+  >
+    ? undefined extends R
+      ? K
+      : never
+    : Parse[K] extends (value: string) => unknown
+      ? K
+      : never;
+}[Exclude<keyof Parse, keyof Params>];
+
+/**
+ * Exclude optional keys to get required keys
+ * For schema, it's required if the output doesn't have `undefined`, otherwise optional
+ * It doesn't include parse functions (as they are always optional)
+ */
+type QueryParamRequiredKeys<Params, Parse> = Exclude<
+  Exclude<keyof Parse, keyof Params>,
+  QueryParamOptionalKeys<Params, Parse>
+>;
 
 /**
  * Infer the path string from a linking config.
