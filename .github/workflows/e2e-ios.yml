@@ -186,3 +186,12 @@ jobs:
           path: example/maestro-debug-output/**/*
           include-hidden-files: true
           overwrite: true
+
+      - name: Store simulator logs
+        if: failure() || cancelled()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-emulator-output
+          path: ~/Library/Logs/CoreSimulator/*
+          include-hidden-files: true
+          overwrite: true
