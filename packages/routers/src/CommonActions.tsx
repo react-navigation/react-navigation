@@ -28,7 +28,7 @@ type NavigateAction = {
 
 type ResetAction = {
   type: 'RESET';
-  payload: ResetState | undefined;
+  payload: ResetState;
   source?: string;
   target?: string;
 };
@@ -120,7 +120,7 @@ export function navigate(...args: any): Action {
   }
 }
 
-export function reset(state: ResetState | undefined) {
+export function reset(state: ResetState) {
   return { type: 'RESET', payload: state } as const satisfies ResetAction;
 }
 
