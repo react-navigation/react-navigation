@@ -1,6 +1,8 @@
 import { expect, test } from '@jest/globals';
 import type { InitialState } from '@react-navigation/routers';
 import { produce } from 'immer';
+import * as v from 'valibot';
+import { z } from 'zod';
 
 import { findFocusedRoute } from '../findFocusedRoute';
 import { getPathFromState } from '../getPathFromState';
@@ -2941,6 +2943,165 @@ test('matches regexp patterns when provided', () => {
   expect(getStateFromPath<object>('foo/bar/hello/world', config)).toEqual({
     routes: [{ name: 'NotFound', path: 'foo/bar/hello/world' }],
   });
+});
+
+test("doesn't match pattern when standard schema validation fails", () => {
+  const IdSchema = z.string().startsWith('@');
+
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id',
+        parse: {
+          id: IdSchema,
+        },
+      },
+      Bar: {
+        path: 'foo/:slug',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    routes: [
+      {
+        name: 'Bar',
+        params: { slug: '42' },
+        path: 'foo/42',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/@test', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: '@test' },
+        path: 'foo/@test',
+      },
+    ],
+  });
+});
+
+test('parses values with valibot schema and falls back on validation failure', () => {
+  const IdSchema = v.pipe(
+    v.string(),
+    v.transform((input) => Number(input)),
+    v.number()
+  );
+
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id',
+        parse: {
+          id: IdSchema,
+        },
+      },
+      Bar: {
+        path: 'foo/:slug',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: 42 },
+        path: 'foo/42',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/x', config)).toEqual({
+    routes: [
+      {
+        name: 'Bar',
+        params: { slug: 'x' },
+        path: 'foo/x',
+      },
+    ],
+  });
+});
+
+test('falls back to next pattern when query param schema validation fails', () => {
+  const QuerySchema = z.string().startsWith('@');
+
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id(\\d+)',
+        parse: {
+          id: Number,
+          query: QuerySchema,
+        },
+      },
+      Bar: {
+        path: 'foo/:slug',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/42?query=bad', config)).toEqual({
+    routes: [
+      {
+        name: 'Bar',
+        params: { slug: '42', query: 'bad' },
+        path: 'foo/42?query=bad',
+      },
+    ],
+  });
+});
+
+test('throws when schema validate returns an asynchronous result', () => {
+  const AsyncSchema = {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'test',
+      validate: async (value: string) => ({ value }),
+    },
+  };
+
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id',
+        parse: {
+          id: AsyncSchema,
+        },
+      },
+    },
+  };
+
+  expect(() => getStateFromPath<object>('foo/42', config)).toThrow(
+    'Invalid validation result from schema. It should be an object with either "value" or "issues" property and cannot be asynchronous.'
+  );
+});
+
+test('throws when schema validate returns an asynchronous result for query param', () => {
+  const AsyncSchema = {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'test',
+      validate: async (value: string) => ({ value }),
+    },
+  };
+
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id',
+        parse: {
+          query: AsyncSchema,
+        },
+      },
+    },
+  };
+
+  expect(() => getStateFromPath<object>('foo/42?query=test', config)).toThrow(
+    'Invalid validation result from schema. It should be an object with either "value" or "issues" property and cannot be asynchronous.'
+  );
 });
 
 test("regexp pattern doesn't match slash", () => {

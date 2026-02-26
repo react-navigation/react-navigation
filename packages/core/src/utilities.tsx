@@ -66,6 +66,22 @@ type ExtractSegmentParam<Segment extends string> =
       ? { [K in StripRegex<Param>]: string }
       : {};
 
+export type StandardSchemaValidationResult<Output> =
+  | { value: Output; issues?: undefined }
+  | { value?: undefined; issues: readonly unknown[] };
+
+export type StandardSchemaV1<Input = unknown, Output = Input> = {
+  readonly '~standard': {
+    readonly version: 1;
+    readonly vendor: string;
+    readonly validate: (
+      value: Input
+    ) =>
+      | StandardSchemaValidationResult<Output>
+      | Promise<StandardSchemaValidationResult<Output>>;
+  };
+};
+
 /**
  * Extract path params from a path string.
  * e.g. `/foo/:userId/:postId` -> `{ userId: string; postId: string }`
@@ -83,9 +99,11 @@ export type ExtractParamStrings<Path extends string> =
  */
 export type ExtractParamsType<Params, Parse> = {
   [K in keyof Params]: K extends keyof Parse
-    ? Parse[K] extends (value: string) => infer R
+    ? Parse[K] extends StandardSchemaV1<string, infer R>
       ? R
-      : Params[K]
+      : Parse[K] extends (value: string) => infer R
+        ? R
+        : Params[K]
     : Params[K];
 };
 

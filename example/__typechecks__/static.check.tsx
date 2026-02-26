@@ -26,7 +26,10 @@ import {
   createStackScreen,
   type StackNavigationProp,
 } from '@react-navigation/stack';
+import * as arktype from 'arktype';
 import { expectTypeOf } from 'expect-type';
+import * as v from 'valibot';
+import { z } from 'zod';
 
 const NativeStack = createNativeStackNavigator({
   groups: {
@@ -902,6 +905,83 @@ createStackNavigator({
         parse: {
           itemId: String,
         },
+      },
+    }),
+  },
+});
+
+/**
+ * Linking config infers params from Standard Schema-compatible parsers
+ */
+createStackNavigator({
+  screens: {
+    ZodCoords: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'zod/:id/:coords',
+        parse: {
+          id: Number,
+          coords: z
+            .string()
+            .transform((s) => s.split(',').map(Number))
+            .pipe(z.tuple([z.number(), z.number()])),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          coords: [number, number];
+        }>();
+
+        return {};
+      },
+    }),
+    ValibotCoords: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'valibot/:id/:coords',
+        parse: {
+          id: Number,
+          coords: v.pipe(
+            v.string(),
+            v.transform((s) => s.split(',').map(Number)),
+            v.tuple([
+              v.pipe(v.number(), v.finite()),
+              v.pipe(v.number(), v.finite()),
+            ])
+          ),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          coords: [number, number];
+        }>();
+
+        return {};
+      },
+    }),
+    ArkTypeCoords: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'arktype/:id/:coords',
+        parse: {
+          id: Number,
+          coords: arktype
+            .type('string')
+            .pipe(
+              (s) => s.split(','),
+              arktype.type(['string.numeric.parse', 'string.numeric.parse'])
+            ),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          coords: [number, number];
+        }>();
+
+        return {};
       },
     }),
   },

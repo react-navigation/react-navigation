@@ -24,10 +24,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ark/schema@npm:0.56.0":
+  version: 0.56.0
+  resolution: "@ark/schema@npm:0.56.0"
+  dependencies:
+    "@ark/util": "npm:0.56.0"
+  checksum: 10c0/89fb7e4e1304ea9b34c834a8cb34bc05201b4e3a1b26277f7d74b9505a2d7ed398bb55a77e491e7a14a7f0807424a5467e1d32ee725ee2f7b9d158ae30d8121a
+  languageName: node
+  linkType: hard
+
 "@ark/util@npm:0.46.0":
   version: 0.46.0
   resolution: "@ark/util@npm:0.46.0"
   checksum: 10c0/18fb146510856191ba1924f8ee50aa650b2f8795de7df85301cdd068b4bb9bd6f1548d6f3a8f99e75c3d9036d4c4b6ca245c964ceb4d3fa431ea53653faa2aa8
+  languageName: node
+  linkType: hard
+
+"@ark/util@npm:0.56.0":
+  version: 0.56.0
+  resolution: "@ark/util@npm:0.56.0"
+  checksum: 10c0/dfef779c90f9f814ba97069c63bf91fa67569b87c5cd925d0e2d96b91aa677c019ed1dd5ff95332d9bb0598f785057439074b8cbfcaa2578770616e260fc5761
   languageName: node
   linkType: hard
 
@@ -4433,6 +4449,8 @@ __metadata:
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
     use-sync-external-store: "npm:^1.5.0"
+    valibot: "npm:^1.2.0"
+    zod: "npm:^4.3.6"
   peerDependencies:
     react: ">= 19.0.0"
   languageName: unknown
@@ -4546,6 +4564,7 @@ __metadata:
     "@types/react": "npm:~19.2.2"
     "@types/react-dom": "npm:~19.1.7"
     "@vitejs/plugin-react": "npm:^5.0.0"
+    arktype: "npm:^2.1.29"
     babel-plugin-module-resolver: "npm:^5.0.2"
     babel-preset-expo: "npm:~55.0.0"
     cheerio: "npm:^1.1.0"
@@ -4578,9 +4597,11 @@ __metadata:
     react-native-worklets: "npm:0.7.2"
     react-test-renderer: "npm:19.2.0"
     typescript: "npm:^5.9.2"
+    valibot: "npm:^1.2.0"
     vite: "npm:^7.1.1"
     vite-plugin-commonjs: "npm:^0.10.4"
     yaml: "npm:^2.8.0"
+    zod: "npm:^4.3.6"
   languageName: unknown
   linkType: soft
 
@@ -5990,6 +6011,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"arkregex@npm:0.0.5":
+  version: 0.0.5
+  resolution: "arkregex@npm:0.0.5"
+  dependencies:
+    "@ark/util": "npm:0.56.0"
+  checksum: 10c0/1a39510e04d69b9287b9b53d3965afcc4ef27bdd9ff9c21a78092fcb841f35c11227d8476be66d2f76347deccfd10c202f395bd871383c328057ad004ffe7ebd
+  languageName: node
+  linkType: hard
+
 "arktype@npm:^2.1.15":
   version: 2.1.20
   resolution: "arktype@npm:2.1.20"
@@ -5997,6 +6027,17 @@ __metadata:
     "@ark/schema": "npm:0.46.0"
     "@ark/util": "npm:0.46.0"
   checksum: 10c0/9200a94616fac1a703ab0c7834fd15ba6f683fd8d909e12c48e5f321ac302c276ce0d6c2736063ca7fda0ff6ded00f1bda08b1155ae20fab0d178ec1238ffcae
+  languageName: node
+  linkType: hard
+
+"arktype@npm:^2.1.29":
+  version: 2.1.29
+  resolution: "arktype@npm:2.1.29"
+  dependencies:
+    "@ark/schema": "npm:0.56.0"
+    "@ark/util": "npm:0.56.0"
+    arkregex: "npm:0.0.5"
+  checksum: 10c0/c89cd5cc9eee7a5e14df0f32b228c06760b99440dabf2ed2d9272877a1607d7f27641d4105d1466b70fc620007fe864ddd826acee11c07102388c8dd301a20fe
   languageName: node
   linkType: hard
 
@@ -16214,6 +16255,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"valibot@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "valibot@npm:1.2.0"
+  peerDependencies:
+    typescript: ">=5"
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 10c0/e6897ed2008fc900380a6ce39b62bc5fca45fd5e070f70571c6380ede3ba026d0b7016230215d87f7f3d672a28dbde5a0522d39830b493fdc3dccd1a59ef4ee6
+  languageName: node
+  linkType: hard
+
 "validate-npm-package-license@npm:^3.0.4":
   version: 3.0.4
   resolution: "validate-npm-package-license@npm:3.0.4"
@@ -16873,7 +16926,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^4.0.0":
+"zod@npm:^4.0.0, zod@npm:^4.3.6":
   version: 4.3.6
   resolution: "zod@npm:4.3.6"
   checksum: 10c0/860d25a81ab41d33aa25f8d0d07b091a04acb426e605f396227a796e9e800c44723ed96d0f53a512b57be3d1520f45bf69c0cb3b378a232a00787a2609625307
