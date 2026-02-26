@@ -3054,6 +3054,154 @@ test('falls back to next pattern when query param schema validation fails', () =
   });
 });
 
+test('falls back to next pattern when required query param is missing', () => {
+  const QuerySchema = z.string().startsWith('@');
+
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id(\\d+)',
+        parse: {
+          id: Number,
+          query: QuerySchema,
+        },
+      },
+      Bar: {
+        path: 'foo/:slug',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    routes: [
+      {
+        name: 'Bar',
+        params: { slug: '42' },
+        path: 'foo/42',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/42?query=@ok', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: 42, query: '@ok' },
+        path: 'foo/42?query=@ok',
+      },
+    ],
+  });
+});
+
+test('allows missing query param when schema is optional', () => {
+  const QuerySchema = z.string().startsWith('@').optional();
+
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id(\\d+)',
+        parse: {
+          id: Number,
+          query: QuerySchema,
+        },
+      },
+      Bar: {
+        path: 'foo/:slug',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: 42 },
+        path: 'foo/42',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/42?query=@ok', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: 42, query: '@ok' },
+        path: 'foo/42?query=@ok',
+      },
+    ],
+  });
+});
+
+test('treats function query parser as optional when query param is missing', () => {
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id(\\d+)',
+        parse: {
+          id: Number,
+          query: (value: string) => value.toUpperCase(),
+        },
+      },
+      Bar: {
+        path: 'foo/:slug',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: 42 },
+        path: 'foo/42',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo/42?query=test', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: 42, query: 'TEST' },
+        path: 'foo/42?query=test',
+      },
+    ],
+  });
+});
+
+test('uses optional schema default for missing query param', () => {
+  const QuerySchema = z
+    .string()
+    .startsWith('@')
+    .optional()
+    .default('@fallback');
+
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id(\\d+)',
+        parse: {
+          id: Number,
+          query: QuerySchema,
+        },
+      },
+      Bar: {
+        path: 'foo/:slug',
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: 42, query: '@fallback' },
+        path: 'foo/42',
+      },
+    ],
+  });
+});
+
 test('throws when schema validate returns an asynchronous result', () => {
   const AsyncSchema = {
     '~standard': {

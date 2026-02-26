@@ -25,9 +25,14 @@ type Options<ParamList extends {}> = {
 
 type ParseConfigValue =
   | ((value: string) => unknown)
-  | StandardSchemaV1<string, unknown>;
+  | StandardSchemaV1<unknown, unknown>;
 
 type ParseConfig = Record<string, ParseConfigValue | undefined>;
+
+type RouteParseConfig = {
+  parseConfig?: ParseConfig;
+  pathParamNames: Set<string>;
+};
 
 type RouteConfig = {
   screen: string;
@@ -78,8 +83,8 @@ const getStandardSchema = (parser: ParseConfigValue) => {
 };
 
 const getValidationResult = (
-  schema: StandardSchemaV1<string, unknown>['~standard'],
-  value: string
+  schema: StandardSchemaV1<unknown, unknown>['~standard'],
+  value: unknown
 ): StandardSchemaValidationResult<unknown> => {
   const result = schema.validate(value);
 
@@ -655,10 +660,22 @@ const createConfigItem = (
 const findParseConfigForRoute = (
   routeName: string,
   flatConfig: RouteConfig[]
-): ParseConfig | undefined => {
+): RouteParseConfig | undefined => {
   for (const config of flatConfig) {
     if (routeName === config.routeNames[config.routeNames.length - 1]) {
-      return config.parse;
+      return {
+        parseConfig: config.parse,
+        pathParamNames: new Set(
+          config.params
+            .filter(
+              (
+                param
+              ): param is { screen: string; name: string; index: number } =>
+                param.screen === routeName && typeof param.name === 'string'
+            )
+            .map((param) => param.name)
+        ),
+      };
     }
   }
 
@@ -768,9 +785,14 @@ const createNestedStateObject = (
   route = findFocusedRoute(state) as ParsedRoute;
   route.path = path.replace(/\/$/, '');
 
+  const parseConfigForRoute = flatConfig
+    ? findParseConfigForRoute(route.name, flatConfig)
+    : undefined;
+
   const queryParams = parseQueryParams(
     path,
-    flatConfig ? findParseConfigForRoute(route.name, flatConfig) : undefined
+    parseConfigForRoute?.parseConfig,
+    parseConfigForRoute?.pathParamNames
   );
 
   if (!queryParams.valid) {
@@ -786,39 +808,61 @@ const createNestedStateObject = (
 
 const parseQueryParams = (
   path: string,
-  parseConfig?: ParseConfig
+  parseConfig?: ParseConfig,
+  pathParamNames: Set<string> = new Set()
 ): { valid: true; params?: Record<string, unknown> } | { valid: false } => {
   const query = path.split('?')[1];
   const params: Record<string, unknown> = queryString.parse(query);
 
   if (parseConfig) {
-    for (const name of Object.keys(params)) {
-      if (
-        Object.hasOwnProperty.call(parseConfig, name) &&
-        parseConfig[name] &&
-        typeof params[name] === 'string'
-      ) {
-        const parser = parseConfig[name];
-        const standard = getStandardSchema(parser);
-
-        if (standard) {
-          const result = getValidationResult(standard, params[name]);
-
-          if (result.issues) {
-            return { valid: false };
-          }
-
-          params[name] = result.value;
-          continue;
-        }
-
-        if (typeof parser === 'function') {
-          params[name] = parser(params[name]);
-          continue;
-        }
-
-        return { valid: false };
+    for (const [name, parser] of Object.entries(parseConfig)) {
+      if (!parser || pathParamNames.has(name)) {
+        continue;
       }
+
+      if (!Object.hasOwn(params, name)) {
+        const schema = getStandardSchema(parser);
+
+        if (!schema) {
+          continue;
+        }
+
+        const result = getValidationResult(schema, undefined);
+
+        if (result.issues) {
+          return { valid: false };
+        }
+
+        if (result.value !== undefined) {
+          params[name] = result.value;
+        }
+
+        continue;
+      }
+
+      if (typeof params[name] !== 'string') {
+        continue;
+      }
+
+      const schema = getStandardSchema(parser);
+
+      if (schema) {
+        const result = getValidationResult(schema, params[name]);
+
+        if (result.issues) {
+          return { valid: false };
+        }
+
+        params[name] = result.value;
+        continue;
+      }
+
+      if (typeof parser === 'function') {
+        params[name] = parser(params[name]);
+        continue;
+      }
+
+      return { valid: false };
     }
   }
 

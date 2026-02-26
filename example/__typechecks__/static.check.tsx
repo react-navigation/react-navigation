@@ -988,6 +988,46 @@ createStackNavigator({
 });
 
 /**
+ * Path optionality should come from `?` in the pattern, not schema `.optional()`
+ */
+createStackNavigator({
+  screens: {
+    RequiredPathWithOptionalSchema: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'required/:id',
+        parse: {
+          id: z.string().optional(),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: string | undefined;
+        }>();
+
+        return {};
+      },
+    }),
+    OptionalPathWithRequiredSchema: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'optional/:id?',
+        parse: {
+          id: z.string(),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id?: string;
+        }>();
+
+        return {};
+      },
+    }),
+  },
+});
+
+/**
  * Type tests for param inference from linking config
  */
 {
