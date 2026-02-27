@@ -16,7 +16,7 @@
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/), Michał Osadnik <micosa97@gmail.com> (https://github.com/osdnk/)",
   "scripts": {
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "typecheck": "tsc --noEmit --composite false",
+    "typecheck": "tsc --noEmit",
     "test": "jest",
     "clean": "lerna run clean",
     "build": "lerna run prepack",

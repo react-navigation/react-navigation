@@ -26,7 +26,10 @@ import {
   createStackScreen,
   type StackNavigationProp,
 } from '@react-navigation/stack';
+import * as arktype from 'arktype';
 import { expectTypeOf } from 'expect-type';
+import * as v from 'valibot';
+import { z } from 'zod';
 
 const NativeStack = createNativeStackNavigator({
   groups: {
@@ -902,6 +905,283 @@ createStackNavigator({
         parse: {
           itemId: String,
         },
+      },
+    }),
+  },
+});
+
+/**
+ * Linking config infers params from Standard Schema-compatible parsers
+ */
+createStackNavigator({
+  screens: {
+    ZodCoords: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'zod/:id/:coords',
+        parse: {
+          id: Number,
+          coords: z
+            .string()
+            .transform((s) => s.split(',').map(Number))
+            .pipe(z.tuple([z.number(), z.number()])),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          coords: [number, number];
+        }>();
+
+        return {};
+      },
+    }),
+    ValibotCoords: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'valibot/:id/:coords',
+        parse: {
+          id: Number,
+          coords: v.pipe(
+            v.string(),
+            v.transform((s) => s.split(',').map(Number)),
+            v.tuple([
+              v.pipe(v.number(), v.finite()),
+              v.pipe(v.number(), v.finite()),
+            ])
+          ),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          coords: [number, number];
+        }>();
+
+        return {};
+      },
+    }),
+    ArkTypeCoords: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'arktype/:id/:coords',
+        parse: {
+          id: Number,
+          coords: arktype
+            .type('string')
+            .pipe(
+              (s) => s.split(','),
+              arktype.type(['string.numeric.parse', 'string.numeric.parse'])
+            ),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          coords: [number, number];
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamZodCoords: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-zod/:id',
+        parse: {
+          id: Number,
+          coords: z
+            .union([z.string(), z.array(z.string()), z.null(), z.undefined()])
+            .transform((value) => {
+              if (value == null) {
+                return [0, 0] as const;
+              }
+
+              if (Array.isArray(value)) {
+                const [a = 0, b = 0] = value.slice(0, 2).map(Number);
+
+                return [a, b] as const;
+              }
+
+              const [a = 0, b = 0] = value.split(',').map(Number);
+
+              return [a, b] as const;
+            })
+            .pipe(z.tuple([z.number(), z.number()])),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          coords: [number, number];
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamValibotCoords: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-valibot/:id',
+        parse: {
+          id: Number,
+          coords: v.pipe(
+            v.union([v.string(), v.array(v.string()), v.null(), v.undefined()]),
+            v.transform((value) => {
+              if (value == null) {
+                return [0, 0] as const;
+              }
+
+              if (Array.isArray(value)) {
+                const [a = 0, b = 0] = value.slice(0, 2).map(Number);
+
+                return [a, b] as const;
+              }
+
+              const [a = 0, b = 0] = value.split(',').map(Number);
+
+              return [a, b] as const;
+            }),
+            v.tuple([v.number(), v.number()])
+          ),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          coords: [number, number];
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamArktypeCoords: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-arktype/:id',
+        parse: {
+          id: Number,
+          coords: arktype.type('string | string[] | null | undefined').pipe(
+            (value) => {
+              if (value == null) {
+                return [0, 0];
+              }
+
+              if (Array.isArray(value)) {
+                const [a = 0, b = 0] = value.slice(0, 2).map(Number);
+
+                return [a, b];
+              }
+
+              const [a = 0, b = 0] = value.split(',').map(Number);
+
+              return [a, b];
+            },
+            arktype.type(['number', 'number'])
+          ),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          coords: [number, number];
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamFunctionParser: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-function/:id',
+        parse: {
+          id: Number,
+          query: (value: string) => (value === 'new' ? 'new' : 'top'),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          query?: 'new' | 'top';
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamOptionalSchema: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-optional/:id',
+        parse: {
+          id: Number,
+          query: z.string().optional(),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          query?: string | undefined;
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamDefaultSchema: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-default/:id',
+        parse: {
+          id: Number,
+          query: z.string().optional().default('fallback'),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: number;
+          query: string;
+        }>();
+
+        return {};
+      },
+    }),
+  },
+});
+
+/**
+ * Path optionality should come from `?` in the pattern, not schema `.optional()`
+ */
+createStackNavigator({
+  screens: {
+    RequiredPathWithOptionalSchema: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'required/:id',
+        parse: {
+          id: z.string().optional(),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id: string | undefined;
+        }>();
+
+        return {};
+      },
+    }),
+    OptionalPathWithRequiredSchema: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'optional/:id?',
+        parse: {
+          id: z.string(),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          id?: string;
+        }>();
+
+        return {};
       },
     }),
   },

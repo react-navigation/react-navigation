@@ -28,6 +28,7 @@ import type {
   InferParse,
   InferPath,
   KeysOf,
+  StandardSchemaV1,
   UnionToIntersection,
   ValidPathPattern,
 } from './utilities';
@@ -147,7 +148,7 @@ type StaticScreenConfigLinkingAlias = {
    */
   exact?: boolean;
   /**
-   * An object mapping the param name to a function which parses the param value.
+   * An object mapping the param name to a parser function or a Standard Schema.
    *
    * @example
    * ```js
@@ -157,7 +158,11 @@ type StaticScreenConfigLinkingAlias = {
    * }
    * ```
    */
-  parse?: Record<string, (value: string) => unknown>;
+  parse?: Record<
+    string,
+    | ((value: string) => unknown)
+    | StandardSchemaV1<string | string[] | null | undefined, unknown>
+  >;
   /**
    * An object mapping the param name to a function which converts the param value to a string.
    * By default, all params are converted to strings using `String(value)`.
@@ -332,7 +337,10 @@ type StaticConfigScreens<
     | StaticScreenConfig<
         | {
             path: string;
-            parse?: Record<string, (value: string) => any>;
+            parse?: Record<
+              string,
+              ((value: string) => any) | StandardSchemaV1<any, any>
+            >;
           }
         | string
         | undefined,

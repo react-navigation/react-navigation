@@ -14,6 +14,7 @@ import type {
   FlatType,
   KeyOf,
   NotUndefined,
+  StandardSchemaV1,
   UnionToIntersection,
 } from './utilities';
 
@@ -1199,7 +1200,9 @@ export type NavigatorScreenParams<ParamList extends {}> =
     }[keyof ParamList];
 
 type ParseConfig<Params> = {
-  [K in keyof Params]?: (value: string) => Params[K];
+  [K in keyof Params]?:
+    | ((value: string) => Params[K])
+    | StandardSchemaV1<string | string[] | null | undefined, Params[K]>;
 };
 
 type StringifyConfig<Params> = {
@@ -1219,7 +1222,7 @@ type PathConfigAlias<Params> = {
    */
   exact?: boolean;
   /**
-   * An object mapping the param name to a function which parses the param value.
+   * An object mapping the param name to a parser function or a Standard Schema.
    *
    * @example
    * ```js

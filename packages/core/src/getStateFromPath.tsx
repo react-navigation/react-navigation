@@ -11,6 +11,10 @@ import { findFocusedRoute } from './findFocusedRoute';
 import { getPatternParts, type PatternPart } from './getPatternParts';
 import { isArrayEqual } from './isArrayEqual';
 import type { PathConfig, PathConfigMap } from './types';
+import type {
+  StandardSchemaV1,
+  StandardSchemaValidationResult,
+} from './utilities';
 import { validatePathConfig } from './validatePathConfig';
 
 type Options<ParamList extends {}> = {
@@ -19,7 +23,16 @@ type Options<ParamList extends {}> = {
   screens: PathConfigMap<ParamList>;
 };
 
-type ParseConfig = Record<string, ((value: string) => unknown) | undefined>;
+type ParseConfigValue =
+  | ((value: string) => unknown)
+  | StandardSchemaV1<unknown, unknown>;
+
+type ParseConfig = Record<string, ParseConfigValue | undefined>;
+
+type RouteParseConfig = {
+  parseConfig?: ParseConfig;
+  pathParamNames: Set<string>;
+};
 
 type RouteConfig = {
   screen: string;
@@ -48,6 +61,47 @@ type ParsedRoute = {
 type ConfigResources = {
   initialRoutes: InitialRouteConfig[];
   configs: RouteConfig[];
+};
+
+const INVALID_SCHEMA_RESULT_ERROR =
+  'Invalid validation result from schema. It should be an object with either "value" or "issues" property and cannot be asynchronous.';
+
+const INVALID_PARSER_ERROR =
+  'Invalid parser. Expected a function or a Standard Schema V1 object.';
+
+const PARAM_GROUP_PREFIX = 'param_';
+
+const getStandardSchema = (parser: ParseConfigValue) => {
+  if (
+    '~standard' in parser &&
+    typeof parser['~standard'] === 'object' &&
+    parser['~standard'] !== null &&
+    'version' in parser['~standard'] &&
+    parser['~standard'].version === 1 &&
+    'validate' in parser['~standard'] &&
+    typeof parser['~standard'].validate === 'function'
+  ) {
+    return parser['~standard'];
+  }
+
+  return undefined;
+};
+
+const getValidationResult = (
+  schema: StandardSchemaV1<unknown, unknown>['~standard'],
+  value: unknown
+): StandardSchemaValidationResult<unknown> => {
+  const result = schema.validate(value);
+
+  if (
+    result != null &&
+    typeof result === 'object' &&
+    ('value' in result || ('issues' in result && Array.isArray(result.issues)))
+  ) {
+    return result;
+  }
+
+  throw new Error(INVALID_SCHEMA_RESULT_ERROR);
 };
 
 /**
@@ -136,25 +190,23 @@ export function getStateFromPath<ParamList extends {}>(
     return undefined;
   }
 
-  let result: PartialState<NavigationState> | undefined;
-  let current: PartialState<NavigationState> | undefined;
-
   // We match the whole path against the regex instead of segments
   // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
-  const { routes, remainingPath } = matchAgainstConfigs(remaining, configs);
+  for (const config of configs) {
+    const routes = matchAgainstConfig(remaining, config, configs);
 
-  if (routes !== undefined) {
-    // This will always be empty if full path matched
-    current = createNestedStateObject(path, routes, initialRoutes, configs);
-    remaining = remainingPath;
-    result = current;
+    if (routes === undefined) {
+      continue;
+    }
+
+    const state = createNestedStateObject(path, routes, initialRoutes, configs);
+
+    if (state !== undefined) {
+      return state;
+    }
   }
 
-  if (current == null || result == null) {
-    return undefined;
-  }
-
-  return result;
+  return undefined;
 }
 
 /**
@@ -344,75 +396,101 @@ function getConfigsWithRegexes(configs: RouteConfig[]) {
   }));
 }
 
-const matchAgainstConfigs = (remaining: string, configs: RouteConfig[]) => {
-  let routes: ParsedRoute[] | undefined;
-  let remainingPath = remaining;
+const matchAgainstConfig = (
+  remaining: string,
+  config: RouteConfig,
+  configs: RouteConfig[]
+) => {
+  if (!config.regex) {
+    return undefined;
+  }
 
-  // Go through all configs, and see if the next path segment matches our regex
-  for (const config of configs) {
-    if (!config.regex) {
-      continue;
-    }
+  const match = remaining.match(config.regex);
 
-    const match = remainingPath.match(config.regex);
+  if (!match) {
+    return undefined;
+  }
 
-    // If our regex matches, we need to extract params from the path
-    if (match) {
-      routes = config.routeNames.map((routeName) => {
-        const routeConfig = configs.find((c) => {
-          // Check matching name AND pattern in case same screen is used at different levels in config
-          return (
-            c.screen === routeName &&
-            arrayStartsWith(config.segments, c.segments)
-          );
-        });
+  let validationFailed = false;
+  const matchedRoutes: ParsedRoute[] = [];
 
-        const params =
-          routeConfig && match.groups
-            ? Object.fromEntries(
-                Object.entries(match.groups)
-                  .map(([key, value]) => {
-                    const index = Number(key.replace('param_', ''));
-                    const param = routeConfig.params.find(
-                      (it) => it.index === index
-                    );
+  for (const routeName of config.routeNames) {
+    // Check matching name AND pattern in case same screen is used at different levels in config
+    const routeConfig = configs.find(
+      (c) =>
+        c.screen === routeName && arrayStartsWith(config.segments, c.segments)
+    );
 
-                    if (param?.screen === routeName && param?.name) {
-                      return [param.name, value];
-                    }
+    let params: Record<string, unknown> | undefined;
 
-                    return null;
-                  })
-                  .filter((it) => it != null)
-                  .map(([key, value]) => {
-                    if (value == null) {
-                      return [key, undefined];
-                    }
+    if (routeConfig && match.groups) {
+      const paramEntries: [string, unknown][] = [];
 
-                    const decoded = decodeURIComponent(value);
-                    const parsed = routeConfig.parse?.[key]
-                      ? routeConfig.parse[key](decoded)
-                      : decoded;
+      for (const [key, value] of Object.entries(match.groups)) {
+        const index = Number(key.replace(PARAM_GROUP_PREFIX, ''));
+        const param = routeConfig.params.find((it) => it.index === index);
 
-                    return [key, parsed];
-                  })
-              )
-            : undefined;
-
-        if (params && Object.keys(params).length) {
-          return { name: routeName, params };
+        if (param?.screen !== routeName || !param.name) {
+          continue;
         }
 
-        return { name: routeName };
-      });
+        if (value == null) {
+          paramEntries.push([param.name, undefined]);
+          continue;
+        }
 
-      remainingPath = remainingPath.replace(match[0], '');
+        const decoded = decodeURIComponent(value);
+        const parser = routeConfig.parse?.[param.name];
 
-      break;
+        if (!parser) {
+          paramEntries.push([param.name, decoded]);
+          continue;
+        }
+
+        const schema = getStandardSchema(parser);
+
+        if (schema) {
+          const result = getValidationResult(schema, decoded);
+
+          if (result.issues) {
+            validationFailed = true;
+            break;
+          }
+
+          paramEntries.push([param.name, result.value]);
+          continue;
+        }
+
+        if (typeof parser === 'function') {
+          paramEntries.push([param.name, parser(decoded)]);
+          continue;
+        }
+
+        throw new Error(INVALID_PARSER_ERROR);
+      }
+
+      if (validationFailed) {
+        // A failed param validation invalidates the whole nested route chain for this config.
+        break;
+      }
+
+      if (paramEntries.length) {
+        params = Object.fromEntries(paramEntries);
+      }
+    }
+
+    if (params && Object.keys(params).length) {
+      matchedRoutes.push({ name: routeName, params });
+    } else {
+      matchedRoutes.push({ name: routeName });
     }
   }
 
-  return { routes, remainingPath };
+  if (validationFailed) {
+    return undefined;
+  }
+
+  return matchedRoutes;
 };
 
 const createNormalizedConfigs = (
@@ -551,7 +629,7 @@ const createConfigItem = (
             if (it.param) {
               const reg = it.regex || '[^/]+';
 
-              return `(((?<param_${i}>${reg})\\/)${it.optional ? '?' : ''})`;
+              return `(((?<${PARAM_GROUP_PREFIX}${i}>${reg})\\/)${it.optional ? '?' : ''})`;
             }
 
             return `${it.segment === '*' ? '.*' : escape(it.segment)}\\/`;
@@ -586,10 +664,22 @@ const createConfigItem = (
 const findParseConfigForRoute = (
   routeName: string,
   flatConfig: RouteConfig[]
-): ParseConfig | undefined => {
+): RouteParseConfig | undefined => {
   for (const config of flatConfig) {
     if (routeName === config.routeNames[config.routeNames.length - 1]) {
-      return config.parse;
+      return {
+        parseConfig: config.parse,
+        pathParamNames: new Set(
+          config.params
+            .filter(
+              (
+                param
+              ): param is { screen: string; name: string; index: number } =>
+                param.screen === routeName && typeof param.name === 'string'
+            )
+            .map((param) => param.name)
+        ),
+      };
     }
   }
 
@@ -658,7 +748,7 @@ const createNestedStateObject = (
   routes: ParsedRoute[],
   initialRoutes: InitialRouteConfig[],
   flatConfig?: RouteConfig[]
-) => {
+): InitialState | undefined => {
   let route = routes.shift() as ParsedRoute;
   const parentScreens: string[] = [];
 
@@ -699,33 +789,99 @@ const createNestedStateObject = (
   route = findFocusedRoute(state) as ParsedRoute;
   route.path = path.replace(/\/$/, '');
 
-  const params = parseQueryParams(
+  const parseConfigForRoute = flatConfig
+    ? findParseConfigForRoute(route.name, flatConfig)
+    : undefined;
+
+  const queryParams = parseQueryParams(
     path,
-    flatConfig ? findParseConfigForRoute(route.name, flatConfig) : undefined
+    parseConfigForRoute?.parseConfig,
+    parseConfigForRoute?.pathParamNames
   );
 
-  if (params) {
-    route.params = { ...route.params, ...params };
+  if (!queryParams.valid) {
+    return undefined;
+  }
+
+  if (queryParams.params) {
+    route.params = { ...route.params, ...queryParams.params };
   }
 
   return state;
 };
 
-const parseQueryParams = (path: string, parseConfig?: ParseConfig) => {
+const parseQueryParams = (
+  path: string,
+  parseConfig?: ParseConfig,
+  pathParamNames: Set<string> = new Set()
+): { valid: true; params?: Record<string, unknown> } | { valid: false } => {
   const query = path.split('?')[1];
   const params: Record<string, unknown> = queryString.parse(query);
 
-  if (parseConfig) {
-    Object.keys(params).forEach((name) => {
-      if (
-        Object.hasOwnProperty.call(parseConfig, name) &&
-        parseConfig[name] &&
-        typeof params[name] === 'string'
-      ) {
-        params[name] = parseConfig[name](params[name]);
-      }
-    });
+  // Path params should always win over same-named query params.
+  for (const name of pathParamNames) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete params[name];
   }
 
-  return Object.keys(params).length ? params : undefined;
+  if (parseConfig) {
+    for (const [name, parser] of Object.entries(parseConfig)) {
+      if (!parser || pathParamNames.has(name)) {
+        continue;
+      }
+
+      const schema = getStandardSchema(parser);
+
+      if (!Object.hasOwn(params, name)) {
+        if (!schema) {
+          continue;
+        }
+
+        const result = getValidationResult(schema, undefined);
+
+        if (result.issues) {
+          return { valid: false };
+        }
+
+        if (result.value !== undefined) {
+          params[name] = result.value;
+        }
+
+        continue;
+      }
+
+      if (schema) {
+        const result = getValidationResult(schema, params[name]);
+
+        if (result.issues) {
+          return { valid: false };
+        }
+
+        params[name] = result.value;
+        continue;
+      }
+
+      const value = Array.isArray(params[name])
+        ? params[name][0]
+        : params[name];
+
+      if (typeof value !== 'string') {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete params[name];
+        continue;
+      }
+
+      if (typeof parser === 'function') {
+        params[name] = parser(value);
+        continue;
+      }
+
+      throw new Error(INVALID_PARSER_ERROR);
+    }
+  }
+
+  return {
+    valid: true,
+    params: Object.keys(params).length ? params : undefined,
+  };
 };

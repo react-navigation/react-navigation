@@ -44,5 +44,6 @@ export { usePreventRemove } from './usePreventRemove';
 export { usePreventRemoveContext } from './usePreventRemoveContext';
 export { useRoute } from './useRoute';
 export { useStateForPath } from './useStateForPath';
+export type { QueryParamInput, StandardSchemaV1 } from './utilities';
 export { validatePathConfig } from './validatePathConfig';
 export * from '@react-navigation/routers';
