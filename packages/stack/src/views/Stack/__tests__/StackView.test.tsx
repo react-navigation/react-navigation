@@ -69,6 +69,7 @@ const createState = (
 ): State => ({
   routes,
   previousRoutes: [],
+  previousFocusedRouteKey: undefined,
   previousDescriptors: {},
   openingRouteKeys: [],
   closingRouteKeys: [],
