@@ -1,6 +1,8 @@
 import type {
   NavigationState,
   ParamListBase,
+  PartialRoute,
+  PartialState,
   Route,
 } from '@react-navigation/routers';
 import * as React from 'react';
@@ -938,32 +940,22 @@ export function createPathConfigForStaticNavigation(
   return screens;
 }
 
-// Let us define simple types for the loaders
-type TreeForLoader = {
-  config: {
-    initialRouteName?: string;
-    screens?: Record<string, any>;
-    groups?: Record<string, { screens: Record<string, any> }>;
-  };
-};
-
-type StateForLoader = {
-  routes: { name: string; state?: StateForLoader }[];
-  index: number;
-};
-
 function findScreenInConfig(
-  config: TreeForLoader['config'],
+  config: StaticNavigation<any, any, any>['config'],
   name: string
 ): unknown | undefined {
-  if (config.screens?.[name] != null) {
-    return config.screens[name];
+  const screens = config.screens as Record<string, any> | undefined;
+
+  if (screens?.[name] != null) {
+    return screens[name];
   }
 
   if (config.groups) {
     for (const group of Object.values(config.groups)) {
-      if (group.screens[name] != null) {
-        return group.screens[name];
+      const groupScreens = group.screens as Record<string, any>;
+
+      if (groupScreens[name] != null) {
+        return groupScreens[name];
       }
     }
   }
@@ -971,14 +963,14 @@ function findScreenInConfig(
   return undefined;
 }
 
-function getNestedTree(item: any): TreeForLoader | undefined {
+function getNestedTree(item: any): StaticNavigation<any, any, any> | undefined {
   if (item && typeof item === 'object') {
     if ('config' in item && item.config?.screens) {
-      return item as TreeForLoader;
+      return item as StaticNavigation<any, any, any>;
     }
 
     if (item.screen && item.screen.config?.screens) {
-      return item.screen as TreeForLoader;
+      return item.screen as StaticNavigation<any, any, any>;
     }
   }
 
@@ -986,9 +978,9 @@ function getNestedTree(item: any): TreeForLoader | undefined {
 }
 
 function resolveChildState(
-  nestedTree: TreeForLoader,
-  focusedRoute: { name: string; state?: StateForLoader }
-): StateForLoader | undefined {
+  nestedTree: StaticNavigation<any, any, any>,
+  focusedRoute: PartialRoute<Route<string, any>>
+): PartialState<NavigationState> | undefined {
   if (focusedRoute.state) {
     return focusedRoute.state;
   }
@@ -1029,10 +1021,10 @@ function resolveChildState(
  * ```
  */
 export function UNSTABLE_getLoaderForState(
-  tree: TreeForLoader,
-  state: StateForLoader
+  tree: StaticNavigation<any, any, any>,
+  state: PartialState<NavigationState>
 ): (() => Promise<void>) | undefined {
-  const focusedRoute = state.routes[state.index];
+  const focusedRoute = state.routes[state.index ?? 0];
 
   if (!focusedRoute) {
     return undefined;
