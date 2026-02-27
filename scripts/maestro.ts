@@ -109,6 +109,8 @@ function runMaestro(
 
   args.push(...flows);
 
+  process.stdout.write(`Running Maestro with args: ${args.join(' ')}\n`);
+
   return new Promise((resolve) => {
     const startedAt = Date.now();
 
