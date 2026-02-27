@@ -18,7 +18,7 @@ export type Props = {
   /**
    * The style for the container view
    */
-  style?: React.CSSProperties & ViewStyle;
+  style?: Omit<React.CSSProperties & ViewStyle, 'display'>;
   /**
    * The content of the activity view
    */
@@ -31,65 +31,65 @@ export function ActivityView({ mode, visible, style, children }: Props) {
    * But what we want is to unmount effects, without hiding content
    * So we use hidden mode, but unset display: none to make content visible
    */
-  const onRef = useCallback((node: HTMLDivElement | View | null) => {
-    if (Platform.OS !== 'web' || !(node && node instanceof HTMLElement)) {
-      return;
-    }
+  const onRef = useCallback(
+    (node: HTMLDivElement | View | null) => {
+      if (Platform.OS !== 'web' || !(node && node instanceof HTMLElement)) {
+        return;
+      }
 
-    const observers: MutationObserver[] = [];
+      const observers: MutationObserver[] = [];
 
-    const observe = () => {
-      // Remove previous observers
-      observers.forEach((o) => o.disconnect());
-      observers.length = 0;
+      const observe = () => {
+        // Remove previous observers
+        observers.forEach((o) => o.disconnect());
+        observers.length = 0;
 
-      const children = node.childNodes;
+        const children = node.childNodes;
 
-      // When the style attribute for children is updated by React
-      // We observe it and update display to make content visible
-      children.forEach((child) => {
-        if (child instanceof HTMLElement) {
-          const o = new MutationObserver(() => {
-            child.style.display = 'contents';
-          });
+        // When the style attribute for children is updated by React
+        // We observe it and update display to make content visible
+        children.forEach((child) => {
+          if (child instanceof HTMLElement) {
+            child.style.display = visible ? 'flex' : 'none';
 
-          o.observe(child, {
-            attributes: true,
-            attributeFilter: ['style'],
-          });
+            const o = new MutationObserver(() => {
+              child.style.display = visible ? 'flex' : 'none';
+            });
 
-          observers.push(o);
-        }
+            o.observe(child, {
+              attributes: true,
+              attributeFilter: ['style'],
+            });
+
+            observers.push(o);
+          }
+        });
+      };
+
+      observe();
+
+      // React removes refs when `Activity` is hidden
+      // So we render outside of the `Activity` and observer child list
+      const observer = new MutationObserver(observe);
+
+      observer.observe(node, {
+        childList: true,
       });
-    };
 
-    observe();
-
-    // React removes refs when `Activity` is hidden
-    // So we render outside of the `Activity` and observer child list
-    const observer = new MutationObserver(observe);
-
-    observer.observe(node, {
-      childList: true,
-    });
-
-    return () => {
-      observer.disconnect();
-      observers.forEach((o) => o.disconnect());
-    };
-  }, []);
+      return () => {
+        observer.disconnect();
+        observers.forEach((o) => o.disconnect());
+      };
+    },
+    [visible]
+  );
 
   return (
-    <Container ref={onRef} inert={mode !== 'normal'} style={style}>
+    <Container ref={onRef} style={{ display: 'contents' }}>
       <Activity mode={mode === 'paused' ? 'hidden' : 'visible'}>
         <Container
-          style={{
-            display: 'contents',
-            /**
-             * We use `visibility` to hide content instead to keep layout
-             */
-            visibility: visible ? 'visible' : 'hidden',
-          }}
+          inert={mode !== 'normal'}
+          style={{ ...style, display: visible ? 'flex' : 'none' }}
         >
           {children}
         </Container>
