@@ -3484,19 +3484,20 @@ test('does not throw if while getting current options with empty container', () 
 
 function createSuspenseResource() {
   let status: 'pending' | 'success' = 'pending';
-  let resolve!: () => void;
+  let resolveHandle!: () => void;
 
-  const promise = new Promise<void>((res) => {
-    resolve = res;
+  const promise = new Promise<void>((resolve) => {
+    resolveHandle = resolve;
   }).then(() => {
     status = 'success';
+    return undefined;
   });
 
   return {
     read() {
       if (status === 'pending') throw promise;
     },
-    resolve,
+    resolve: resolveHandle,
   };
 }
 
