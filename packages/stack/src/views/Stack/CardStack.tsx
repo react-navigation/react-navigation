@@ -732,8 +732,8 @@ export class CardStack extends React.Component<Props, State> {
                         : 'paused'
                   }
                   visible={
-                    // keep animating & last two screens visible for smoother transitions
-                    isAnimating || index >= routes.length - 2
+                    // keep animating, preloaded & last two screens visible for smoother transitions
+                    isAnimating || isPreloaded || index >= routes.length - 2
                   }
                   style={StyleSheet.absoluteFill}
                 >
