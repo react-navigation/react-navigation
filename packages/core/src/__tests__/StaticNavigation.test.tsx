@@ -13,7 +13,7 @@ import { getStateFromPath } from '../getStateFromPath';
 import {
   createComponentForStaticNavigation,
   createPathConfigForStaticNavigation,
-  UNSTABLE_getLoaderForRoute,
+  UNSTABLE_getLoaderForState,
 } from '../StaticNavigation';
 import type { EventMapBase } from '../types';
 import { useIsFocused } from '../useIsFocused';
@@ -1686,7 +1686,10 @@ test('returns undefined when screen has no loader', () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForRoute(Navigator, { name: 'Home' });
+  const loader = UNSTABLE_getLoaderForState(Navigator, {
+    index: 0,
+    routes: [{ name: 'Home' }],
+  });
 
   expect(loader).toBeUndefined();
 });
@@ -1703,7 +1706,10 @@ test('returns the loader for a screen with UNSTABLE_loader', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForRoute(Navigator, { name: 'Home' });
+  const loader = UNSTABLE_getLoaderForState(Navigator, {
+    index: 0,
+    routes: [{ name: 'Home' }],
+  });
 
   expect(loader).toBeDefined();
 
@@ -1735,7 +1741,10 @@ test('composes loaders from nested navigators', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForRoute(RootNavigator, { name: 'Home' });
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [{ name: 'Home' }],
+  });
 
   expect(loader).toBeDefined();
 
@@ -1769,7 +1778,10 @@ test('uses initialRouteName to determine child loader', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForRoute(RootNavigator, { name: 'Home' });
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [{ name: 'Home' }],
+  });
 
   await loader!();
 
@@ -1777,7 +1789,7 @@ test('uses initialRouteName to determine child loader', async () => {
   expect(contactsFn).toHaveBeenCalledTimes(1);
 });
 
-test('uses params.screen to determine nested child loader', async () => {
+test('uses nested state to determine child loader', async () => {
   const albumsFn = jest.fn(async () => {});
   const contactsFn = jest.fn(async () => {});
 
@@ -1800,9 +1812,17 @@ test('uses params.screen to determine nested child loader', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForRoute(RootNavigator, {
-    name: 'Home',
-    params: { screen: 'Contacts' },
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [
+      {
+        name: 'Home',
+        state: {
+          index: 0,
+          routes: [{ name: 'Contacts' }],
+        },
+      },
+    ],
   });
 
   await loader!();
@@ -1811,7 +1831,7 @@ test('uses params.screen to determine nested child loader', async () => {
   expect(contactsFn).toHaveBeenCalledTimes(1);
 });
 
-test('uses route.state to determine nested child loader', async () => {
+test('uses focused route from nested state', async () => {
   const albumsFn = jest.fn(async () => {});
   const contactsFn = jest.fn(async () => {});
 
@@ -1834,12 +1854,17 @@ test('uses route.state to determine nested child loader', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForRoute(RootNavigator, {
-    name: 'Home',
-    state: {
-      index: 1,
-      routes: [{ name: 'Albums' }, { name: 'Contacts' }],
-    },
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [
+      {
+        name: 'Home',
+        state: {
+          index: 1,
+          routes: [{ name: 'Albums' }, { name: 'Contacts' }],
+        },
+      },
+    ],
   });
 
   await loader!();
@@ -1880,7 +1905,10 @@ test('traverses deeply nested navigators', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForRoute(RootNavigator, { name: 'Outer' });
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [{ name: 'Outer' }],
+  });
 
   await loader!();
 
@@ -1906,7 +1934,10 @@ test('finds loaders for screens inside groups', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForRoute(Navigator, { name: 'Login' });
+  const loader = UNSTABLE_getLoaderForState(Navigator, {
+    index: 0,
+    routes: [{ name: 'Login' }],
+  });
 
   await loader!();
 

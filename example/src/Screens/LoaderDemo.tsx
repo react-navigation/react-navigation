@@ -1,7 +1,7 @@
 import { Button, Text } from '@react-navigation/elements';
 import type { StaticParamList } from '@react-navigation/native';
 import {
-  UNSTABLE_getLoaderForRoute,
+  UNSTABLE_getLoaderForState,
   useNavigation,
 } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -50,7 +50,7 @@ function HomeScreen() {
     <View style={styles.content}>
       <Text style={styles.heading}>Loader Demo</Text>
       <Text style={styles.description}>
-        UNSTABLE_getLoaderForRoute can prefetch data for a route before
+        UNSTABLE_getLoaderForState can prefetch data for a route before
         navigating to it. This avoids showing Suspense fallbacks if not desired.
       </Text>
       <NavigateButtons />
@@ -62,8 +62,10 @@ function NavigateButtons() {
   const navigation = useNavigation<typeof LoaderStack>();
 
   const handleNavigateWithLoader = React.useCallback(() => {
-    const loader = UNSTABLE_getLoaderForRoute(LoaderStack, {
-      name: 'Detail',
+    // This looks a bit awkward for now, but this will be changed
+    const loader = UNSTABLE_getLoaderForState(LoaderStack, {
+      index: 0,
+      routes: [{ name: 'Detail' }],
     });
 
     React.startTransition(async () => {

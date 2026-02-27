@@ -938,6 +938,7 @@ export function createPathConfigForStaticNavigation(
   return screens;
 }
 
+// Let us define simple types for the loaders
 type TreeForLoader = {
   config: {
     initialRouteName?: string;
@@ -946,14 +947,9 @@ type TreeForLoader = {
   };
 };
 
-type RouteForLoader = {
-  name: string;
-  params?: {
-    screen?: string;
-    params?: Record<string, any>;
-    [key: string]: any;
-  };
-  state?: { routes: RouteForLoader[]; index: number };
+type StateForLoader = {
+  routes: { name: string; state?: StateForLoader }[];
+  index: number;
 };
 
 function findScreenInConfig(
@@ -981,10 +977,7 @@ function getNestedTree(item: any): TreeForLoader | undefined {
       return item as TreeForLoader;
     }
 
-    if (
-      item.screen &&
-      item.screen.config?.screens
-    ) {
+    if (item.screen && item.screen.config?.screens) {
       return item.screen as TreeForLoader;
     }
   }
@@ -992,19 +985,12 @@ function getNestedTree(item: any): TreeForLoader | undefined {
   return undefined;
 }
 
-function resolveChildRoute(
+function resolveChildState(
   nestedTree: TreeForLoader,
-  parentRoute: RouteForLoader
-): RouteForLoader | undefined {
-  if (parentRoute.params?.screen) {
-    return {
-      name: parentRoute.params.screen,
-      params: parentRoute.params.params,
-    };
-  }
-
-  if (parentRoute.state?.routes) {
-    return parentRoute.state.routes[parentRoute.state.index];
+  focusedRoute: { name: string; state?: StateForLoader }
+): StateForLoader | undefined {
+  if (focusedRoute.state) {
+    return focusedRoute.state;
   }
 
   const name =
@@ -1012,37 +998,47 @@ function resolveChildRoute(
     Object.keys(nestedTree.config.screens ?? {})[0];
 
   if (name) {
-    return { name };
+    return { routes: [{ name }], index: 0 };
   }
 
   return undefined;
 }
 
 /**
- * Get a loader function for a specific route from a static navigation config.
+ * Get a loader function for the focused route from a static navigation config
+ * and a navigation state.
  *
- * The function traverses nested navigators. For example, if screen A contains
- * a child navigator whose initial screen B also has a loader, calling this
- * for route A returns `() => Promise.all([loaderA(), loaderB()])`.
+ * The function follows the exact focused route path through the state to find
+ * the matching screen in the tree. This avoids ambiguity when multiple screens
+ * share the same name at different nesting levels.
  *
- * This is a pure function that uses only the static config object and route info.
- * It can be called outside React (e.g. SSR).
+ * For example, if the focused route A contains a child navigator whose focused
+ * screen B also has a loader, this returns `() => Promise.all([loaderA(), loaderB()])`.
  *
  * @param tree The static navigation config (the navigator object with `.config`).
- * @param route The route to get the loader for.
+ * @param state The navigation state to extract the focused route path from.
  * @returns A function that returns a `Promise<void>`, or `undefined` if no loaders found.
  *
  * @example
  * ```js
- * const loader = UNSTABLE_getLoaderForRoute(RootStack, { name: 'Home' });
+ * const loader = UNSTABLE_getLoaderForState(RootStack, {
+ *   index: 0,
+ *   routes: [{ name: 'Home' }],
+ * });
  * await loader?.();
  * ```
  */
-export function UNSTABLE_getLoaderForRoute(
+export function UNSTABLE_getLoaderForState(
   tree: TreeForLoader,
-  route: RouteForLoader
+  state: StateForLoader
 ): (() => Promise<void>) | undefined {
-  const item = findScreenInConfig(tree.config, route.name);
+  const focusedRoute = state.routes[state.index];
+
+  if (!focusedRoute) {
+    return undefined;
+  }
+
+  const item = findScreenInConfig(tree.config, focusedRoute.name);
 
   if (item == null) {
     return undefined;
@@ -1061,10 +1057,10 @@ export function UNSTABLE_getLoaderForRoute(
   const nested = getNestedTree(item);
 
   if (nested) {
-    const childRoute = resolveChildRoute(nested, route);
+    const childState = resolveChildState(nested, focusedRoute);
 
-    if (childRoute) {
-      const childLoader = UNSTABLE_getLoaderForRoute(nested, childRoute);
+    if (childState) {
+      const childLoader = UNSTABLE_getLoaderForState(nested, childState);
 
       if (childLoader) {
         loaders.push(childLoader);
