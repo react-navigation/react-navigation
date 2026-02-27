@@ -948,7 +948,11 @@ type TreeForLoader = {
 
 type RouteForLoader = {
   name: string;
-  params?: { screen?: string; params?: Record<string, any>; [key: string]: any };
+  params?: {
+    screen?: string;
+    params?: Record<string, any>;
+    [key: string]: any;
+  };
   state?: { routes: RouteForLoader[]; index: number };
 };
 
@@ -1050,7 +1054,7 @@ export function UNSTABLE_getLoaderForRoute(
     return undefined;
   }
 
-  const loaders: Array<() => Promise<void>> = [];
+  const loaders: (() => Promise<void>)[] = [];
 
   // Collect this screen's own loader
   if (
@@ -1079,7 +1083,7 @@ export function UNSTABLE_getLoaderForRoute(
   if (loaders.length === 0) {
     return undefined;
   }
-  
+
   return async () => {
     await Promise.all(loaders.map((l) => l()));
   };

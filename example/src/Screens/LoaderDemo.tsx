@@ -1,6 +1,9 @@
 import { Button, Text } from '@react-navigation/elements';
 import type { StaticParamList } from '@react-navigation/native';
-import { UNSTABLE_getLoaderForRoute, useNavigation } from '@react-navigation/native';
+import {
+  UNSTABLE_getLoaderForRoute,
+  useNavigation,
+} from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
@@ -31,16 +34,15 @@ function fetchData(key: string, delay: number): Promise<void> {
   return entry.promise;
 }
 
-function useData(key: string, delay: number): string {
+function useData(key: string, delay: number): string | undefined {
   const entry = cache.get(key);
 
   if (!entry || entry.promise) {
     const promise = fetchData(key, delay);
-
-    throw promise;
+    React.use(promise);
   }
 
-  return entry.data;
+  return entry?.data;
 }
 
 function HomeScreen() {
