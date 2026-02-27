@@ -171,7 +171,8 @@ export class StackView extends React.Component<Props, State> {
     // Use the actual focused route from the previous render, not the last in previousRoutes.
     // previousRoutes includes preloaded routes, so the last item can be a preloaded route that was never focused.
     const previousFocusedRoute =
-      previousRoutes.find((r) => r.key === state.previousFocusedRouteKey) ?? (previousRoutes[previousRoutes.length - 1] as Route<string> | undefined);
+      previousRoutes.find((r) => r.key === state.previousFocusedRouteKey) ??
+      (previousRoutes[previousRoutes.length - 1] as Route<string> | undefined);
     const nextFocusedRoute = routes[routes.length - 1];
 
     const isAnimationEnabled = (key: string) => {
