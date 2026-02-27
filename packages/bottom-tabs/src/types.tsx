@@ -622,6 +622,19 @@ export type BottomTabNavigationOptions = {
    * Defaults to `false` unless a header is provided.
    */
   headerShown?: boolean;
+
+  /**
+   * What should happen when screens become inactive.
+   * - `pause`: Effects are cleaned up.
+   * - `none`: Screen renders normally
+   *
+   * Defaults to `pause`.
+   *
+   * If you set `lazy: false` or preload a screen,
+   * It won't be paused until after the first time it becomes focused.
+   * This makes sure that effects are run to initialize the screen.
+   */
+  inactiveBehavior?: 'pause' | 'none';
 } & HeaderOptions &
   BottomTabNativeOptions &
   BottomTabCustomOptions;
@@ -712,15 +725,6 @@ export type BottomTabNavigationConfig = {
    * Function that returns a React element to display as the tab bar.
    */
   tabBar?: (props: BottomTabBarProps) => React.ReactNode;
-
-  /**
-   * Whether inactive screens should be detached from the view hierarchy to save memory.
-   *
-   * Defaults to `true`.
-   *
-   * Only supported with `custom` implementation.
-   */
-  detachInactiveScreens?: boolean;
 };
 
 export type BottomTabHeaderProps = {

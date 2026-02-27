@@ -1,7 +1,7 @@
 import { getLabel } from '@react-navigation/elements';
 import {
+  ActivityView,
   Color,
-  Lazy,
   SafeAreaProviderCompat,
 } from '@react-navigation/elements/internal';
 import {
@@ -20,6 +20,7 @@ import {
   type ColorValue,
   Platform,
   PlatformColor,
+  StyleSheet,
 } from 'react-native';
 import {
   type PlatformIcon,
@@ -62,6 +63,18 @@ export function BottomTabViewNative({
   const { dark, colors, fonts } = useTheme();
 
   const focusedRouteKey = state.routes[state.index].key;
+
+  const [loaded, setLoaded] = React.useState([focusedRouteKey]);
+
+  if (!loaded.includes(focusedRouteKey)) {
+    setLoaded([...loaded, focusedRouteKey]);
+  }
+
+  const [pendingNavigation, setPendingNavigation] = React.useState<{
+    from: string;
+    to: string;
+  } | null>(null);
+
   const previousRouteKeyRef = React.useRef(focusedRouteKey);
 
   React.useEffect(() => {
@@ -80,11 +93,26 @@ export function BottomTabViewNative({
           ...StackActions.popToTop(),
           target: prevRoute.state.key,
         };
+
         navigation.dispatch(popToTopAction);
       }
     }
 
     previousRouteKeyRef.current = focusedRouteKey;
+
+    // Delay clearing `isAnimating`
+    // This will give time for `popToAction` to get handled before pause
+    const timer = setTimeout(() => {
+      setPendingNavigation((pending) => {
+        if (pending?.to === focusedRouteKey) {
+          return null;
+        }
+
+        return pending;
+      });
+    }, 32);
+
+    return () => clearTimeout(timer);
   }, [descriptors, focusedRouteKey, navigation, state.index, state.routes]);
 
   const currentOptions = descriptors[state.routes[state.index].key]?.options;
@@ -265,6 +293,11 @@ export function BottomTabViewNative({
               state.routes.findIndex((r) => r.key === route.key);
 
             if (!isFocused) {
+              setPendingNavigation({
+                from: previousRouteKeyRef.current,
+                to: route.key,
+              });
+
               navigation.dispatch({
                 ...CommonActions.navigate(route.name, route.params),
                 target: state.key,
@@ -281,6 +314,7 @@ export function BottomTabViewNative({
           const {
             title,
             lazy = true,
+            inactiveBehavior = 'pause',
             tabBarLabel,
             tabBarBadgeStyle,
             tabBarIcon,
@@ -355,6 +389,15 @@ export function BottomTabViewNative({
           const icon = getIcon(false);
           const selectedIcon = getIcon(true);
 
+          // For preloaded screens and if lazy is false,
+          // Keep them active so that the effects can run
+          const isActive =
+            inactiveBehavior === 'none' ||
+            isPreloaded ||
+            pendingNavigation?.from === route.key ||
+            pendingNavigation?.to === route.key ||
+            (lazy === false && !loaded.includes(route.key));
+
           return (
             <Tabs.Screen
               onWillAppear={() => onTransitionStart({ route })}
@@ -425,23 +468,38 @@ export function BottomTabViewNative({
               }
               experimental_userInterfaceStyle={dark ? 'dark' : 'light'}
             >
-              <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
-                <ScreenContent
-                  isFocused={isFocused}
-                  route={route}
-                  navigation={navigation}
-                  options={options}
-                  style={sceneStyle}
+              {lazy &&
+              !loaded.includes(route.key) &&
+              !isFocused &&
+              !isPreloaded ? null : (
+                <ActivityView
+                  key={route.key}
+                  mode={isFocused ? 'normal' : isActive ? 'inert' : 'paused'}
+                  visible={
+                    // We don't need to hide the content since it's handled natively
+                    // Hiding may also cause flash due to lag after native tab switch
+                    // So we leave it always visible
+                    true
+                  }
+                  style={StyleSheet.absoluteFill}
                 >
-                  <AnimatedScreenContent isFocused={isFocused}>
-                    <BottomTabBarHeightContext.Provider value={0}>
-                      <NavigationMetaContext.Provider value={meta}>
-                        {render()}
-                      </NavigationMetaContext.Provider>
-                    </BottomTabBarHeightContext.Provider>
-                  </AnimatedScreenContent>
-                </ScreenContent>
-              </Lazy>
+                  <ScreenContent
+                    isFocused={isFocused}
+                    route={route}
+                    navigation={navigation}
+                    options={options}
+                    style={sceneStyle}
+                  >
+                    <AnimatedScreenContent isFocused={isFocused}>
+                      <BottomTabBarHeightContext.Provider value={0}>
+                        <NavigationMetaContext.Provider value={meta}>
+                          {render()}
+                        </NavigationMetaContext.Provider>
+                      </BottomTabBarHeightContext.Provider>
+                    </AnimatedScreenContent>
+                  </ScreenContent>
+                </ActivityView>
+              )}
             </Tabs.Screen>
           );
         })}
