@@ -3599,3 +3599,104 @@ test('shows Suspense fallback when setParams is called without startTransition',
 
   expect(root).toMatchInlineSnapshot(`"[content-1]"`);
 });
+
+test('shows Suspense fallback when navigating to a suspending screen without startTransition', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const resource = createSuspenseResource();
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const ScreenA = (): any => '[ScreenA]';
+
+  const SuspendingContent = (): any => {
+    resource.read();
+    return '[ScreenB content]';
+  };
+
+  const ScreenB = (): any => {
+    return (
+      <React.Suspense fallback="[fallback]">
+        <SuspendingContent />
+      </React.Suspense>
+    );
+  };
+
+  const root = await renderAsync(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator initialRouteName="A">
+        <Screen name="A" component={ScreenA} />
+        <Screen name="B" component={ScreenB} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`"[ScreenA]"`);
+
+  // Navigate without startTransition — urgent update
+  await act(async () => {
+    navigation.navigate('B');
+  });
+
+  expect(root).toMatchInlineSnapshot(`"[fallback]"`);
+
+  await act(async () => resource.resolve());
+
+  expect(root).toMatchInlineSnapshot(`"[ScreenB content]"`);
+});
+
+test('does not show Suspense fallback when navigating to a new screen with startTransition', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  let promise = new Promise<void>((resolve) => {
+    setTimeout(resolve);
+  });
+
+  let navigate!: (name: string) => void;
+
+  const ScreenA = (props: any): any => {
+    navigate = props.navigation.navigate;
+    return '[ScreenA]';
+  };
+
+  const SuspendingContent = (): any => {
+    React.use(promise);
+    return '[ScreenB content]';
+  };
+
+  const ScreenB = (): any => {
+    return (
+      <React.Suspense fallback="[fallback]">
+        <SuspendingContent />
+      </React.Suspense>
+    );
+  };
+
+  const root = await renderAsync(
+    <BaseNavigationContainer>
+      <TestNavigator initialRouteName="A">
+        <Screen name="A" component={ScreenA} />
+        <Screen name="B" component={ScreenB} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`"[ScreenA]"`);
+
+  await act(async () => {
+    React.startTransition(() => {
+      promise = new Promise((resolve) => {
+        setTimeout(resolve);
+      });
+      navigate('B');
+    });
+  });
+
+  expect(root).toMatchInlineSnapshot(`"[ScreenB content]"`);
+});
