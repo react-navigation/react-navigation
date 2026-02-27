@@ -1,4 +1,4 @@
-import { Activity } from 'react';
+import { Activity, useDeferredValue } from 'react';
 import {
   type HostComponent,
   NativeComponentRegistry,
@@ -10,8 +10,14 @@ import type { Props } from './ActivityView.tsx';
 import { Container } from './Container';
 
 export function ActivityView({ mode, visible, style, children }: Props) {
+  const deferredMode = useDeferredValue(mode);
+
   return (
-    <Activity mode={mode === 'paused' ? 'hidden' : 'visible'}>
+    <Activity
+      mode={
+        deferredMode !== 'paused' || mode !== 'paused' ? 'visible' : 'hidden'
+      }
+    >
       <ActivityContentView style={{ display: 'contents' }}>
         <Container
           inert={mode !== 'normal'}

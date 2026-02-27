@@ -1,4 +1,4 @@
-import { Activity, useCallback } from 'react';
+import { Activity, useCallback, useDeferredValue } from 'react';
 import { Platform, View, type ViewStyle } from 'react-native';
 
 import { Container } from './Container';
@@ -84,9 +84,15 @@ export function ActivityView({ mode, visible, style, children }: Props) {
     [visible]
   );
 
+  const deferredMode = useDeferredValue(mode);
+
   return (
     <Container ref={onRef} style={{ display: 'contents' }}>
-      <Activity mode={mode === 'paused' ? 'hidden' : 'visible'}>
+      <Activity
+        mode={
+          deferredMode !== 'paused' || mode !== 'paused' ? 'visible' : 'hidden'
+        }
+      >
         <Container
           inert={mode !== 'normal'}
           style={{ ...style, display: visible ? 'flex' : 'none' }}
