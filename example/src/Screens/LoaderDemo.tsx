@@ -127,7 +127,7 @@ function DetailScreen() {
 
 const LoaderStack = createNativeStackNavigator({
   screens: {
-    Home: {
+    LoaderHome: {
       screen: HomeScreen,
     },
     Detail: {
