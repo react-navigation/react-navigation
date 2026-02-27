@@ -322,6 +322,18 @@ export type StaticScreenConfig<
    * Optional key for this screen.
    */
   navigationKey?: string;
+
+  /**
+   * Loader function to prefetch data for this screen.
+   * Called before the screen is rendered, e.g. inside `startTransition`.
+   * If the screen contains a nested navigator, loaders are composed with `Promise.all`.
+   *
+   * @example
+   * ```js
+   * UNSTABLE_loader: () => prefetchProfileData(),
+   * ```
+   */
+  UNSTABLE_loader?: () => Promise<void>;
 };
 
 type StaticConfigScreens<
@@ -924,4 +936,155 @@ export function createPathConfigForStaticNavigation(
   }
 
   return screens;
+}
+
+type TreeForLoader = {
+  config: {
+    initialRouteName?: string;
+    screens?: Record<string, any>;
+    groups?: Record<string, { screens: Record<string, any> }>;
+  };
+};
+
+type RouteForLoader = {
+  name: string;
+  params?: { screen?: string; params?: Record<string, any>; [key: string]: any };
+  state?: { routes: RouteForLoader[]; index: number };
+};
+
+function findScreenInConfig(
+  config: TreeForLoader['config'],
+  name: string
+): unknown | undefined {
+  if (config.screens?.[name] != null) {
+    return config.screens[name];
+  }
+
+  if (config.groups) {
+    for (const group of Object.values(config.groups)) {
+      if (group.screens[name] != null) {
+        return group.screens[name];
+      }
+    }
+  }
+
+  return undefined;
+}
+
+function getNestedTree(item: any): TreeForLoader | undefined {
+  if (item && typeof item === 'object') {
+    if ('config' in item && item.config?.screens) {
+      return item as TreeForLoader;
+    }
+
+    if (
+      'screen' in item &&
+      item.screen &&
+      typeof item.screen === 'object' &&
+      'config' in item.screen &&
+      item.screen.config?.screens
+    ) {
+      return item.screen as TreeForLoader;
+    }
+  }
+
+  return undefined;
+}
+
+function resolveChildRoute(
+  nestedTree: TreeForLoader,
+  parentRoute: RouteForLoader
+): RouteForLoader | undefined {
+  // Explicit nested target from navigation params: navigate('Home', { screen: 'Albums' })
+  if (parentRoute.params?.screen) {
+    return {
+      name: parentRoute.params.screen,
+      params: parentRoute.params.params,
+    };
+  }
+
+  // From existing state (rehydration / already navigated)
+  if (parentRoute.state?.routes) {
+    return parentRoute.state.routes[parentRoute.state.index];
+  }
+
+  // Fall back to initialRouteName or first screen
+  const name =
+    nestedTree.config.initialRouteName ??
+    Object.keys(nestedTree.config.screens ?? {})[0];
+
+  if (name) {
+    return { name };
+  }
+
+  return undefined;
+}
+
+/**
+ * Get a loader function for a specific route from a static navigation config.
+ *
+ * The function traverses nested navigators. For example, if screen A contains
+ * a child navigator whose initial screen B also has a loader, calling this
+ * for route A returns `() => Promise.all([loaderA(), loaderB()])`.
+ *
+ * This is a pure function that uses only the static config object and route info.
+ * It can be called outside React (e.g. before SSR).
+ *
+ * @param tree The static navigation config (the navigator object with `.config`).
+ * @param route The route to get the loader for.
+ * @returns A function that returns a `Promise<void>`, or `undefined` if no loaders found.
+ *
+ * @example
+ * ```js
+ * const loader = UNSTABLE_getLoaderForRoute(RootStack, { name: 'Home' });
+ * await loader?.();
+ * ```
+ */
+export function UNSTABLE_getLoaderForRoute(
+  tree: TreeForLoader,
+  route: RouteForLoader
+): (() => Promise<void>) | undefined {
+  const item = findScreenInConfig(tree.config, route.name);
+
+  if (item == null) {
+    return undefined;
+  }
+
+  const loaders: Array<() => Promise<void>> = [];
+
+  // Collect this screen's own loader
+  if (
+    typeof item === 'object' &&
+    'UNSTABLE_loader' in item &&
+    typeof item.UNSTABLE_loader === 'function'
+  ) {
+    loaders.push(item.UNSTABLE_loader as () => Promise<void>);
+  }
+
+  // If the screen is a nested navigator, recurse into it
+  const nested = getNestedTree(item);
+
+  if (nested) {
+    const childRoute = resolveChildRoute(nested, route);
+
+    if (childRoute) {
+      const childLoader = UNSTABLE_getLoaderForRoute(nested, childRoute);
+
+      if (childLoader) {
+        loaders.push(childLoader);
+      }
+    }
+  }
+
+  if (loaders.length === 0) {
+    return undefined;
+  }
+
+  if (loaders.length === 1) {
+    return loaders[0];
+  }
+
+  return async () => {
+    await Promise.all(loaders.map((l) => l()));
+  };
 }

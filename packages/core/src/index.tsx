@@ -28,6 +28,7 @@ export {
   type StaticScreenConfigLinking,
   type StaticScreenConfigScreen,
   type StaticScreenProps,
+  UNSTABLE_getLoaderForRoute,
 } from './StaticNavigation';
 export { ThemeContext } from './theming/ThemeContext';
 export { ThemeProvider } from './theming/ThemeProvider';

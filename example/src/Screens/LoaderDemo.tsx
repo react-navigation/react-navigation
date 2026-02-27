@@ -1,0 +1,175 @@
+import { Button, Text } from '@react-navigation/elements';
+import type { StaticParamList } from '@react-navigation/native';
+import { UNSTABLE_getLoaderForRoute } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as React from 'react';
+import { StyleSheet, View } from 'react-native';
+
+// Simulated data cache
+const cache = new Map<string, { data: string; promise?: Promise<void> }>();
+
+function fetchData(key: string, delay: number): Promise<void> {
+  const existing = cache.get(key);
+
+  if (existing) {
+    return existing.promise ?? Promise.resolve();
+  }
+
+  const entry: { data: string; promise?: Promise<void> } = {
+    data: '',
+  };
+
+  entry.promise = new Promise<void>((_resolve) => {
+    setTimeout(() => {
+      entry.data = `Loaded "${key}" (took ${delay}ms)`;
+      entry.promise = undefined;
+      _resolve();
+    }, delay);
+  });
+
+  cache.set(key, entry);
+
+  return entry.promise;
+}
+
+function useData(key: string, delay: number): string {
+  const entry = cache.get(key);
+
+  if (!entry || entry.promise) {
+    const promise = fetchData(key, delay);
+
+    // eslint-disable-next-line no-throw-literal
+    throw promise;
+  }
+
+  return entry.data;
+}
+
+function HomeScreen() {
+  return (
+    <View style={styles.content}>
+      <Text style={styles.heading}>Loader Demo</Text>
+      <Text style={styles.description}>
+        UNSTABLE_getLoaderForRoute can prefetch data for a route before
+        navigating to it. This avoids showing Suspense fallbacks for fast loads.
+      </Text>
+      <NavigateButtons />
+    </View>
+  );
+}
+
+function NavigateButtons() {
+  const navigation =
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    require('@react-navigation/native').useNavigation();
+
+  const handleNavigateWithLoader = React.useCallback(() => {
+    const loader = UNSTABLE_getLoaderForRoute(LoaderStack, {
+      name: 'Detail',
+    });
+
+    React.startTransition(async () => {
+      await loader?.();
+      navigation.navigate('Detail');
+    });
+  }, [navigation]);
+
+  const handleNavigateWithoutLoader = React.useCallback(() => {
+    cache.delete('detail-data');
+    navigation.navigate('Detail');
+  }, [navigation]);
+
+  const handleReset = React.useCallback(() => {
+    cache.clear();
+  }, []);
+
+  return (
+    <View style={styles.buttons}>
+      <Button
+        variant="filled"
+        onPress={handleNavigateWithLoader}
+        style={styles.button}
+      >
+        Navigate with loader
+      </Button>
+      <Button onPress={handleNavigateWithoutLoader} style={styles.button}>
+        Navigate without loader
+      </Button>
+      <Button onPress={handleReset} style={styles.button}>
+        Clear cache
+      </Button>
+    </View>
+  );
+}
+
+function DetailContent() {
+  const data = useData('detail-data', 300);
+
+  return (
+    <View style={styles.content}>
+      <Text style={styles.heading}>Detail</Text>
+      <Text style={styles.description}>{data}</Text>
+    </View>
+  );
+}
+
+function DetailScreen() {
+  return (
+    <React.Suspense
+      fallback={
+        <View style={styles.content}>
+          <Text style={styles.description}>Loading…</Text>
+        </View>
+      }
+    >
+      <DetailContent />
+    </React.Suspense>
+  );
+}
+
+const LoaderStack = createNativeStackNavigator({
+  screens: {
+    Home: {
+      screen: HomeScreen,
+      linking: '',
+    },
+    Detail: {
+      screen: DetailScreen,
+      linking: 'detail',
+      UNSTABLE_loader: () => fetchData('detail-data', 300),
+    },
+  },
+});
+
+export type LoaderDemoParamList = StaticParamList<typeof LoaderStack>;
+
+export const LoaderDemo = {
+  screen: LoaderStack,
+  title: 'Misc - Loader Demo',
+};
+
+const styles = StyleSheet.create({
+  content: {
+    flex: 1,
+    padding: 16,
+    justifyContent: 'center',
+  },
+  heading: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  description: {
+    textAlign: 'center',
+    marginBottom: 16,
+    lineHeight: 22,
+  },
+  buttons: {
+    gap: 12,
+    alignItems: 'center',
+  },
+  button: {
+    minWidth: 220,
+  },
+});
