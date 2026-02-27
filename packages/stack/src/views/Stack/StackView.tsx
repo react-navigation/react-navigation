@@ -37,6 +37,8 @@ type State = {
   routes: Route<string>[];
   // Previous routes, to compare whether routes have changed or not
   previousRoutes: Route<string>[];
+  // Key of the previously focused route (actual focused route, not last in previousRoutes which can be a preloaded route)
+  previousFocusedRouteKey: string | undefined;
   // Previous descriptors, to compare whether descriptors have changed or not
   previousDescriptors: StackDescriptorMap;
   // List of routes being opened, we need to animate pushing of these new routes
@@ -135,6 +137,7 @@ export class StackView extends React.Component<Props, State> {
       return {
         routes,
         previousRoutes,
+        previousFocusedRouteKey: props.state.routes?.[props.state.index]?.key,
         descriptors,
         previousDescriptors,
       };
@@ -165,9 +168,10 @@ export class StackView extends React.Component<Props, State> {
       (key) => !routes.some((r) => r.key === key)
     );
 
-    const previousFocusedRoute = previousRoutes[previousRoutes.length - 1] as
-      | Route<string>
-      | undefined;
+    // Use the actual focused route from the previous render, not the last in previousRoutes.
+    // previousRoutes includes preloaded routes, so the last item can be a preloaded route that was never focused.
+    const previousFocusedRoute =
+      previousRoutes.find((r) => r.key === state.previousFocusedRouteKey) ?? (previousRoutes[previousRoutes.length - 1] as Route<string> | undefined);
     const nextFocusedRoute = routes[routes.length - 1];
 
     const isAnimationEnabled = (key: string) => {
@@ -317,6 +321,7 @@ export class StackView extends React.Component<Props, State> {
     return {
       routes,
       previousRoutes: [...props.state.routes, ...props.state.preloadedRoutes],
+      previousFocusedRouteKey: props.state.routes?.[props.state.index]?.key,
       previousDescriptors: props.descriptors,
       openingRouteKeys,
       closingRouteKeys,
@@ -328,6 +333,7 @@ export class StackView extends React.Component<Props, State> {
   state: State = {
     routes: [],
     previousRoutes: [],
+    previousFocusedRouteKey: undefined,
     previousDescriptors: {},
     openingRouteKeys: [],
     closingRouteKeys: [],
