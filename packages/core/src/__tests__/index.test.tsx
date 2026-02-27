@@ -6,7 +6,7 @@ import {
   type ParamListBase,
   type Router,
 } from '@react-navigation/routers';
-import { act, render } from '@testing-library/react-native';
+import { act, render, renderAsync } from '@testing-library/react-native';
 import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
@@ -525,6 +525,159 @@ test('cleans up state when the navigator unmounts', () => {
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenLastCalledWith(undefined);
+});
+
+test('preserves state after rendered in `<Activity mode="hidden">`', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return (
+      <>
+        <div>{state.routes.map((route) => route.name).join(', ')}</div>
+        {descriptors[state.routes[state.index].key].render()}
+      </>
+    );
+  };
+
+  const TestScreen = ({ route }: any): any => `[${route.name}]`;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ mode }: { mode: 'visible' | 'hidden' }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <React.Activity mode={mode}>
+        <TestNavigator>
+          <Screen name="foo" component={TestScreen} />
+          <Screen name="bar" component={TestScreen} />
+          <Screen name="baz" component={TestScreen} />
+        </TestNavigator>
+      </React.Activity>
+    </BaseNavigationContainer>
+  );
+
+  const root = await renderAsync(<Test mode="visible" />);
+
+  await act(async () => navigation.navigate('bar'));
+  await act(async () => navigation.navigate('baz'));
+
+  expect(root).toMatchInlineSnapshot(`
+    [
+      <div>
+        foo, bar, baz
+      </div>,
+      "[baz]",
+    ]
+  `);
+
+  await root.rerenderAsync(<Test mode="hidden" />);
+
+  // FIXME: the content is actually rendered, but test renderer returns `null`
+  expect(root).toMatchInlineSnapshot(`null`);
+
+  await root.rerenderAsync(<Test mode="visible" />);
+
+  expect(root).toMatchInlineSnapshot(`
+    [
+      <div>
+        foo, bar, baz
+      </div>,
+      "[baz]",
+    ]
+  `);
+});
+
+test('preserves child state after switching parent screens rendered in `<Activity>`', async () => {
+  const ParentNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return (
+      <>
+        {state.routes.map((route, index) => (
+          <React.Activity
+            key={route.key}
+            mode={index === state.index ? 'visible' : 'hidden'}
+          >
+            {descriptors[route.key].render()}
+          </React.Activity>
+        ))}
+      </>
+    );
+  };
+
+  const ChildNavigator = (props: any): any => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return (
+      <>
+        <div>{state.routes.map((route) => route.name).join(', ')}</div>
+        {descriptors[state.routes[state.index].key].render()}
+      </>
+    );
+  };
+
+  const ChildScreen = ({ route }: any): any => `[${route.name}]`;
+
+  const ParentFirstScreen = () => (
+    <ChildNavigator>
+      <Screen name="child-a" component={ChildScreen} />
+      <Screen name="child-b" component={ChildScreen} />
+      <Screen name="child-c" component={ChildScreen} />
+    </ChildNavigator>
+  );
+
+  const ParentSecondScreen = () => '[parent-b]';
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const root = await renderAsync(
+    <BaseNavigationContainer ref={navigation}>
+      <ParentNavigator>
+        <Screen name="parent-a" component={ParentFirstScreen} />
+        <Screen name="parent-b" component={ParentSecondScreen} />
+      </ParentNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(async () =>
+    navigation.navigate('parent-a', {
+      screen: 'child-b',
+    })
+  );
+
+  await act(async () =>
+    navigation.navigate('parent-a', {
+      screen: 'child-c',
+    })
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+    [
+      <div>
+        child-a, child-b, child-c
+      </div>,
+      "[child-c]",
+    ]
+  `);
+
+  act(() => navigation.navigate('parent-b'));
+
+  // FIXME: the content is actually rendered, but test renderer returns `null`
+  expect(root).toMatchInlineSnapshot(`
+    [
+      "[parent-b]",
+    ]
+  `);
+
+  act(() => navigation.navigate('parent-a'));
+
+  expect(root).toMatchInlineSnapshot(`
+    [
+      <div>
+        child-a, child-b, child-c
+      </div>,
+      "[child-c]",
+    ]
+  `);
 });
 
 test('allows state updates by dispatching a function returning an action', () => {
