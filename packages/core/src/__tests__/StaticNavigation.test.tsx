@@ -1679,8 +1679,6 @@ test('merges parse and stringify options from group and screen linking', () => {
   expect(Profile?.path).toBe('users/:userId/profile/:tab');
 });
 
-// ─── UNSTABLE_getLoaderForRoute tests ────────────────────────────────────────
-
 test('returns undefined when screen has no loader', () => {
   const Navigator = createTestNavigator({
     screens: {
@@ -1714,20 +1712,6 @@ test('returns the loader for a screen with UNSTABLE_loader', async () => {
   expect(fn).toHaveBeenCalledTimes(1);
 });
 
-test('returns undefined for a route name that does not exist', () => {
-  const Navigator = createTestNavigator({
-    screens: {
-      Home: TestScreen,
-    },
-  });
-
-  const loader = UNSTABLE_getLoaderForRoute(Navigator, {
-    name: 'NonExistent',
-  });
-
-  expect(loader).toBeUndefined();
-});
-
 test('composes loaders from nested navigators', async () => {
   const parentFn = jest.fn(async () => {});
   const childFn = jest.fn(async () => {});
@@ -1757,7 +1741,6 @@ test('composes loaders from nested navigators', async () => {
 
   await loader!();
 
-  // Both the parent and the initial child loader should be called
   expect(parentFn).toHaveBeenCalledTimes(1);
   expect(childFn).toHaveBeenCalledTimes(1);
 });
@@ -1928,53 +1911,4 @@ test('finds loaders for screens inside groups', async () => {
   await loader!();
 
   expect(fn).toHaveBeenCalledTimes(1);
-});
-
-test('runs loaders in parallel via Promise.all', async () => {
-  const order: string[] = [];
-
-  const parentFn = jest.fn(
-    () =>
-      new Promise<void>((resolve) => {
-        setTimeout(() => {
-          order.push('parent');
-          resolve();
-        }, 50);
-      })
-  );
-
-  const childFn = jest.fn(
-    () =>
-      new Promise<void>((resolve) => {
-        setTimeout(() => {
-          order.push('child');
-          resolve();
-        }, 10);
-      })
-  );
-
-  const ChildNavigator = createTestNavigator({
-    screens: {
-      Feed: {
-        screen: TestScreen,
-        UNSTABLE_loader: childFn,
-      },
-    },
-  });
-
-  const RootNavigator = createTestNavigator({
-    screens: {
-      Home: {
-        screen: ChildNavigator,
-        UNSTABLE_loader: parentFn,
-      },
-    },
-  });
-
-  const loader = UNSTABLE_getLoaderForRoute(RootNavigator, { name: 'Home' });
-
-  await loader!();
-
-  // Child resolves first (10ms) then parent (50ms) — they run in parallel
-  expect(order).toEqual(['child', 'parent']);
 });

@@ -1028,7 +1028,7 @@ function resolveChildRoute(
  * for route A returns `() => Promise.all([loaderA(), loaderB()])`.
  *
  * This is a pure function that uses only the static config object and route info.
- * It can be called outside React (e.g. before SSR).
+ * It can be called outside React (e.g. SSR).
  *
  * @param tree The static navigation config (the navigator object with `.config`).
  * @param route The route to get the loader for.
@@ -1079,11 +1079,7 @@ export function UNSTABLE_getLoaderForRoute(
   if (loaders.length === 0) {
     return undefined;
   }
-
-  if (loaders.length === 1) {
-    return loaders[0];
-  }
-
+  
   return async () => {
     await Promise.all(loaders.map((l) => l()));
   };

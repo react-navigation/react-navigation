@@ -1,11 +1,10 @@
 import { Button, Text } from '@react-navigation/elements';
 import type { StaticParamList } from '@react-navigation/native';
-import { UNSTABLE_getLoaderForRoute } from '@react-navigation/native';
+import { UNSTABLE_getLoaderForRoute, useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-// Simulated data cache
 const cache = new Map<string, { data: string; promise?: Promise<void> }>();
 
 function fetchData(key: string, delay: number): Promise<void> {
@@ -19,11 +18,11 @@ function fetchData(key: string, delay: number): Promise<void> {
     data: '',
   };
 
-  entry.promise = new Promise<void>((_resolve) => {
+  entry.promise = new Promise<void>((resolve) => {
     setTimeout(() => {
       entry.data = `Loaded "${key}" (took ${delay}ms)`;
       entry.promise = undefined;
-      _resolve();
+      resolve();
     }, delay);
   });
 
@@ -38,7 +37,6 @@ function useData(key: string, delay: number): string {
   if (!entry || entry.promise) {
     const promise = fetchData(key, delay);
 
-    // eslint-disable-next-line no-throw-literal
     throw promise;
   }
 
@@ -51,7 +49,7 @@ function HomeScreen() {
       <Text style={styles.heading}>Loader Demo</Text>
       <Text style={styles.description}>
         UNSTABLE_getLoaderForRoute can prefetch data for a route before
-        navigating to it. This avoids showing Suspense fallbacks for fast loads.
+        navigating to it. This avoids showing Suspense fallbacks if not desired.
       </Text>
       <NavigateButtons />
     </View>
@@ -59,9 +57,7 @@ function HomeScreen() {
 }
 
 function NavigateButtons() {
-  const navigation =
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    require('@react-navigation/native').useNavigation();
+  const navigation = useNavigation<typeof LoaderStack>();
 
   const handleNavigateWithLoader = React.useCallback(() => {
     const loader = UNSTABLE_getLoaderForRoute(LoaderStack, {
@@ -103,7 +99,7 @@ function NavigateButtons() {
 }
 
 function DetailContent() {
-  const data = useData('detail-data', 300);
+  const data = useData('detail-data', 1000);
 
   return (
     <View style={styles.content}>
@@ -131,12 +127,11 @@ const LoaderStack = createNativeStackNavigator({
   screens: {
     Home: {
       screen: HomeScreen,
-      linking: '',
     },
     Detail: {
       screen: DetailScreen,
       linking: 'detail',
-      UNSTABLE_loader: () => fetchData('detail-data', 300),
+      UNSTABLE_loader: () => fetchData('detail-data', 1000),
     },
   },
 });
