@@ -982,10 +982,7 @@ function getNestedTree(item: any): TreeForLoader | undefined {
     }
 
     if (
-      'screen' in item &&
       item.screen &&
-      typeof item.screen === 'object' &&
-      'config' in item.screen &&
       item.screen.config?.screens
     ) {
       return item.screen as TreeForLoader;
