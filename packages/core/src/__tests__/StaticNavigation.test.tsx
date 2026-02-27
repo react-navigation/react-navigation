@@ -1,4 +1,4 @@
-import { expect, test } from '@jest/globals';
+import { expect, jest, test } from '@jest/globals';
 import type {
   DefaultRouterOptions,
   NavigationState,
@@ -13,6 +13,7 @@ import { getStateFromPath } from '../getStateFromPath';
 import {
   createComponentForStaticNavigation,
   createPathConfigForStaticNavigation,
+  UNSTABLE_getLoaderForState,
 } from '../StaticNavigation';
 import type { EventMapBase } from '../types';
 import { useIsFocused } from '../useIsFocused';
@@ -1676,4 +1677,269 @@ test('merges parse and stringify options from group and screen linking', () => {
   expect(Profile?.stringify).toHaveProperty('tab');
   expect(Profile?.stringify).toHaveProperty('sharedParam');
   expect(Profile?.path).toBe('users/:userId/profile/:tab');
+});
+
+test('returns undefined when screen has no loader', () => {
+  const Navigator = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+    },
+  });
+
+  const loader = UNSTABLE_getLoaderForState(Navigator, {
+    index: 0,
+    routes: [{ name: 'Home' }],
+  });
+
+  expect(loader).toBeUndefined();
+});
+
+test('returns the loader for a screen with UNSTABLE_loader', async () => {
+  const fn = jest.fn(async () => {});
+
+  const Navigator = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+        UNSTABLE_loader: fn,
+      },
+    },
+  });
+
+  const loader = UNSTABLE_getLoaderForState(Navigator, {
+    index: 0,
+    routes: [{ name: 'Home' }],
+  });
+
+  expect(loader).toBeDefined();
+
+  await loader!();
+
+  expect(fn).toHaveBeenCalledTimes(1);
+});
+
+test('composes loaders from nested navigators', async () => {
+  const parentFn = jest.fn(async () => {});
+  const childFn = jest.fn(async () => {});
+
+  const ChildNavigator = createTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: childFn,
+      },
+      Contacts: TestScreen,
+    },
+  });
+
+  const RootNavigator = createTestNavigator({
+    screens: {
+      Home: {
+        screen: ChildNavigator,
+        UNSTABLE_loader: parentFn,
+      },
+    },
+  });
+
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [{ name: 'Home' }],
+  });
+
+  expect(loader).toBeDefined();
+
+  await loader!();
+
+  expect(parentFn).toHaveBeenCalledTimes(1);
+  expect(childFn).toHaveBeenCalledTimes(1);
+});
+
+test('uses initialRouteName to determine child loader', async () => {
+  const albumsFn = jest.fn(async () => {});
+  const contactsFn = jest.fn(async () => {});
+
+  const ChildNavigator = createTestNavigator({
+    initialRouteName: 'Contacts',
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: albumsFn,
+      },
+      Contacts: {
+        screen: TestScreen,
+        UNSTABLE_loader: contactsFn,
+      },
+    },
+  });
+
+  const RootNavigator = createTestNavigator({
+    screens: {
+      Home: ChildNavigator,
+    },
+  });
+
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [{ name: 'Home' }],
+  });
+
+  await loader!();
+
+  expect(albumsFn).not.toHaveBeenCalled();
+  expect(contactsFn).toHaveBeenCalledTimes(1);
+});
+
+test('uses nested state to determine child loader', async () => {
+  const albumsFn = jest.fn(async () => {});
+  const contactsFn = jest.fn(async () => {});
+
+  const ChildNavigator = createTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: albumsFn,
+      },
+      Contacts: {
+        screen: TestScreen,
+        UNSTABLE_loader: contactsFn,
+      },
+    },
+  });
+
+  const RootNavigator = createTestNavigator({
+    screens: {
+      Home: ChildNavigator,
+    },
+  });
+
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [
+      {
+        name: 'Home',
+        state: {
+          index: 0,
+          routes: [{ name: 'Contacts' }],
+        },
+      },
+    ],
+  });
+
+  await loader!();
+
+  expect(albumsFn).not.toHaveBeenCalled();
+  expect(contactsFn).toHaveBeenCalledTimes(1);
+});
+
+test('uses focused route from nested state', async () => {
+  const albumsFn = jest.fn(async () => {});
+  const contactsFn = jest.fn(async () => {});
+
+  const ChildNavigator = createTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: albumsFn,
+      },
+      Contacts: {
+        screen: TestScreen,
+        UNSTABLE_loader: contactsFn,
+      },
+    },
+  });
+
+  const RootNavigator = createTestNavigator({
+    screens: {
+      Home: ChildNavigator,
+    },
+  });
+
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [
+      {
+        name: 'Home',
+        state: {
+          index: 1,
+          routes: [{ name: 'Albums' }, { name: 'Contacts' }],
+        },
+      },
+    ],
+  });
+
+  await loader!();
+
+  expect(albumsFn).not.toHaveBeenCalled();
+  expect(contactsFn).toHaveBeenCalledTimes(1);
+});
+
+test('traverses deeply nested navigators', async () => {
+  const rootFn = jest.fn(async () => {});
+  const midFn = jest.fn(async () => {});
+  const leafFn = jest.fn(async () => {});
+
+  const LeafNavigator = createTestNavigator({
+    screens: {
+      Detail: {
+        screen: TestScreen,
+        UNSTABLE_loader: leafFn,
+      },
+    },
+  });
+
+  const MidNavigator = createTestNavigator({
+    screens: {
+      Inner: {
+        screen: LeafNavigator,
+        UNSTABLE_loader: midFn,
+      },
+    },
+  });
+
+  const RootNavigator = createTestNavigator({
+    screens: {
+      Outer: {
+        screen: MidNavigator,
+        UNSTABLE_loader: rootFn,
+      },
+    },
+  });
+
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [{ name: 'Outer' }],
+  });
+
+  await loader!();
+
+  expect(rootFn).toHaveBeenCalledTimes(1);
+  expect(midFn).toHaveBeenCalledTimes(1);
+  expect(leafFn).toHaveBeenCalledTimes(1);
+});
+
+test('finds loaders for screens inside groups', async () => {
+  const fn = jest.fn(async () => {});
+
+  const Navigator = createTestNavigator({
+    screens: {},
+    groups: {
+      Auth: {
+        screens: {
+          Login: {
+            screen: TestScreen,
+            UNSTABLE_loader: fn,
+          },
+        },
+      },
+    },
+  });
+
+  const loader = UNSTABLE_getLoaderForState(Navigator, {
+    index: 0,
+    routes: [{ name: 'Login' }],
+  });
+
+  await loader!();
+
+  expect(fn).toHaveBeenCalledTimes(1);
 });

@@ -1,6 +1,8 @@
 import type {
   NavigationState,
   ParamListBase,
+  PartialRoute,
+  PartialState,
   Route,
 } from '@react-navigation/routers';
 import * as React from 'react';
@@ -322,6 +324,18 @@ export type StaticScreenConfig<
    * Optional key for this screen.
    */
   navigationKey?: string;
+
+  /**
+   * Loader function to prefetch data for this screen.
+   * Called before the screen is rendered, e.g. inside `startTransition`.
+   * If the screen contains a nested navigator, loaders are composed with `Promise.all`.
+   *
+   * @example
+   * ```js
+   * UNSTABLE_loader: () => prefetchProfileData(),
+   * ```
+   */
+  UNSTABLE_loader?: () => Promise<void>;
 };
 
 type StaticConfigScreens<
@@ -924,4 +938,133 @@ export function createPathConfigForStaticNavigation(
   }
 
   return screens;
+}
+
+function findScreenInConfig(
+  config: StaticNavigation<any, any, any>['config'],
+  name: string
+): unknown | undefined {
+  const screens = config.screens as Record<string, any> | undefined;
+
+  if (screens?.[name] != null) {
+    return screens[name];
+  }
+
+  if (config.groups) {
+    for (const group of Object.values(config.groups)) {
+      const groupScreens = group.screens as Record<string, any>;
+
+      if (groupScreens[name] != null) {
+        return groupScreens[name];
+      }
+    }
+  }
+
+  return undefined;
+}
+
+function getNestedTree(item: any): StaticNavigation<any, any, any> | undefined {
+  if (item && typeof item === 'object') {
+    if ('config' in item && item.config?.screens) {
+      return item as StaticNavigation<any, any, any>;
+    }
+
+    if (item.screen && item.screen.config?.screens) {
+      return item.screen as StaticNavigation<any, any, any>;
+    }
+  }
+
+  return undefined;
+}
+
+function resolveChildState(
+  nestedTree: StaticNavigation<any, any, any>,
+  focusedRoute: PartialRoute<Route<string, any>>
+): PartialState<NavigationState> | undefined {
+  if (focusedRoute.state) {
+    return focusedRoute.state;
+  }
+
+  const name =
+    nestedTree.config.initialRouteName ??
+    Object.keys(nestedTree.config.screens ?? {})[0];
+
+  if (name) {
+    return { routes: [{ name }], index: 0 };
+  }
+
+  return undefined;
+}
+
+/**
+ * Get a loader function for the focused route from a static navigation config
+ * and a navigation state.
+ *
+ * The function follows the exact focused route path through the state to find
+ * the matching screen in the tree. This avoids ambiguity when multiple screens
+ * share the same name at different nesting levels.
+ *
+ * For example, if the focused route A contains a child navigator whose focused
+ * screen B also has a loader, this returns `() => Promise.all([loaderA(), loaderB()])`.
+ *
+ * @param tree The static navigation config (the navigator object with `.config`).
+ * @param state The navigation state to extract the focused route path from.
+ * @returns A function that returns a `Promise<void>`, or `undefined` if no loaders found.
+ *
+ * @example
+ * ```js
+ * const loader = UNSTABLE_getLoaderForState(RootStack, {
+ *   index: 0,
+ *   routes: [{ name: 'Home' }],
+ * });
+ * await loader?.();
+ * ```
+ */
+export function UNSTABLE_getLoaderForState(
+  tree: StaticNavigation<any, any, any>,
+  state: PartialState<NavigationState>
+): (() => Promise<void>) | undefined {
+  const focusedRoute = state.routes[state.index ?? 0];
+
+  if (!focusedRoute) {
+    return undefined;
+  }
+
+  const item = findScreenInConfig(tree.config, focusedRoute.name);
+
+  if (item == null) {
+    return undefined;
+  }
+
+  const loaders: (() => Promise<void>)[] = [];
+
+  if (
+    typeof item === 'object' &&
+    'UNSTABLE_loader' in item &&
+    typeof item.UNSTABLE_loader === 'function'
+  ) {
+    loaders.push(item.UNSTABLE_loader as () => Promise<void>);
+  }
+
+  const nested = getNestedTree(item);
+
+  if (nested) {
+    const childState = resolveChildState(nested, focusedRoute);
+
+    if (childState) {
+      const childLoader = UNSTABLE_getLoaderForState(nested, childState);
+
+      if (childLoader) {
+        loaders.push(childLoader);
+      }
+    }
+  }
+
+  if (loaders.length === 0) {
+    return undefined;
+  }
+
+  return async () => {
+    await Promise.all(loaders.map((l) => l()));
+  };
 }
