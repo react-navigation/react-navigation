@@ -999,7 +999,6 @@ function resolveChildRoute(
   nestedTree: TreeForLoader,
   parentRoute: RouteForLoader
 ): RouteForLoader | undefined {
-  // Explicit nested target from navigation params: navigate('Home', { screen: 'Albums' })
   if (parentRoute.params?.screen) {
     return {
       name: parentRoute.params.screen,
@@ -1007,12 +1006,10 @@ function resolveChildRoute(
     };
   }
 
-  // From existing state (rehydration / already navigated)
   if (parentRoute.state?.routes) {
     return parentRoute.state.routes[parentRoute.state.index];
   }
 
-  // Fall back to initialRouteName or first screen
   const name =
     nestedTree.config.initialRouteName ??
     Object.keys(nestedTree.config.screens ?? {})[0];
@@ -1056,7 +1053,6 @@ export function UNSTABLE_getLoaderForRoute(
 
   const loaders: (() => Promise<void>)[] = [];
 
-  // Collect this screen's own loader
   if (
     typeof item === 'object' &&
     'UNSTABLE_loader' in item &&
@@ -1065,7 +1061,6 @@ export function UNSTABLE_getLoaderForRoute(
     loaders.push(item.UNSTABLE_loader as () => Promise<void>);
   }
 
-  // If the screen is a nested navigator, recurse into it
   const nested = getNestedTree(item);
 
   if (nested) {
