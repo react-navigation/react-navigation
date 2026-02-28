@@ -387,6 +387,10 @@ test('default inactiveBehavior="pause" unmounts effects when navigating away', (
   expect(effectActive).toBe(true);
 
   act(() => navigation.navigate('B'));
+
+  expect(effectActive).toBe(true);
+
+  act(() => jest.runAllTimers());
   act(() => jest.runAllTimers());
 
   expect(effectActive).toBe(false);
@@ -420,6 +424,7 @@ test('preloading a screen runs effects', () => {
   expect(effectActive).toBe(false);
 
   act(() => navigation.preload('B'));
+
   expect(effectActive).toBe(true);
 });
 

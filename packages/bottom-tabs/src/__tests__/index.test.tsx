@@ -210,6 +210,7 @@ test('inactiveBehavior="none" keeps effects active when switching tabs', () => {
   expect(effectActive).toBe(true);
 
   act(() => navigation.navigate('B'));
+
   expect(effectActive).toBe(true);
 });
 
@@ -241,6 +242,10 @@ test('default inactiveBehavior="pause" unmounts effects when switching tabs', ()
   expect(effectActive).toBe(true);
 
   act(() => navigation.navigate('B'));
+
+  expect(effectActive).toBe(true);
+
+  act(() => jest.runAllTimers());
   act(() => jest.runAllTimers());
 
   expect(effectActive).toBe(false);
@@ -274,6 +279,7 @@ test('preloading a screen runs effects', () => {
   expect(effectActive).toBe(false);
 
   act(() => navigation.preload('B'));
+
   expect(effectActive).toBe(true);
 });
 
@@ -305,10 +311,15 @@ test('lazy=false pre-renders screen with effects active, pauses after first visi
   expect(
     queryByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
+
   expect(effectActive).toBe(true);
 
   act(() => navigation.navigate('B'));
   act(() => navigation.navigate('A'));
+
+  expect(effectActive).toBe(true);
+
+  act(() => jest.runAllTimers());
   act(() => jest.runAllTimers());
 
   expect(effectActive).toBe(false);
