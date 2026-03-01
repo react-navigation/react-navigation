@@ -11,7 +11,7 @@ name: Bottom Tabs - Preload Flow
 - tapOn:
     text: 'Preload Details'
 - extendedWaitUntil:
-    timeout: 3000
+    timeout: 5000
     visible: 'Details is preloaded!'
 - tapOn:
     text: 'Navigate to Details'

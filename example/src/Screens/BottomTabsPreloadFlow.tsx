@@ -24,7 +24,7 @@ const linking = {
 const DetailsScreen = ({
   navigation,
 }: BottomTabScreenProps<PreloadBottomTabsParamList, 'Details'>) => {
-  const [loadingCountdown, setLoadingCountdown] = useState(3);
+  const [loadingCountdown, setLoadingCountdown] = useState(5);
 
   useEffect(() => {
     if (loadingCountdown === 0) {
@@ -70,7 +70,7 @@ const HomeScreen = ({
         onPress={() => {
           setTimeout(() => {
             setIsReady(true);
-          }, 3000);
+          }, 5000);
 
           preload('Details');
         }}
