@@ -16,7 +16,7 @@ export type Props = {
    */
   visible: boolean;
   /**
-   * Delay before hiding content or pausing effects.
+   * Delay before pausing effects.
    * So pending animations have time to finish.
    *
    * Defaults to 500ms.
@@ -39,7 +39,7 @@ export function ActivityView({
   style,
   children,
 }: Props) {
-  const [delayed, setDelayed] = useState({ visible, mode });
+  const [delayedMode, setDelayedMode] = useState(mode);
 
   useEffect(() => {
     if (!delay) {
@@ -47,15 +47,15 @@ export function ActivityView({
     }
 
     const timer = setTimeout(() => {
-      setDelayed({ visible, mode });
+      setDelayedMode(mode);
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [visible, delay, mode]);
+  }, [delay, mode]);
 
-  const display = visible || (delay && delayed.visible) ? 'flex' : 'none';
+  const display = visible ? 'flex' : 'none';
   const activityMode =
-    mode !== 'paused' || (delay && delayed.mode !== 'paused')
+    mode !== 'paused' || (delay && delayedMode !== 'paused')
       ? 'visible'
       : 'hidden';
 
