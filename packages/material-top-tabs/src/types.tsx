@@ -265,6 +265,19 @@ export type MaterialTopTabNavigationOptions = {
    * Style object for the component wrapping the screen content.
    */
   sceneStyle?: StyleProp<ViewStyle>;
+
+  /**
+   * What should happen when screens become inactive.
+   * - `pause`: Effects are cleaned up.
+   * - `none`: Screen renders normally
+   *
+   * Defaults to `pause`.
+   *
+   * If you set `lazy: false` or preload a screen,
+   * It won't be paused until after the first time it becomes focused.
+   * This makes sure that effects are run to initialize the screen.
+   */
+  inactiveBehavior?: 'pause' | 'none';
 };
 
 export type MaterialTopTabDescriptor = Descriptor<
