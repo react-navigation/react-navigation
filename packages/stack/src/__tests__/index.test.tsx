@@ -322,6 +322,112 @@ test('handles preloading screens with nested navigators', () => {
   expect(queryByText('Screen C (focused)')).not.toBeNull();
 });
 
+test('inactiveBehavior="none" keeps effects active when navigating away', () => {
+  let effectActive = false;
+
+  const ScreenA = () => {
+    React.useEffect(() => {
+      effectActive = true;
+      return () => {
+        effectActive = false;
+      };
+    }, []);
+    return null;
+  };
+
+  const Stack = createStackNavigator<StackParamList>();
+  const navigation = createNavigationContainerRef<StackParamList>();
+
+  render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="A"
+          component={ScreenA}
+          options={{ inactiveBehavior: 'none' }}
+        />
+        <Stack.Screen name="B">{() => null}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(effectActive).toBe(true);
+
+  act(() => navigation.navigate('B'));
+  act(() => jest.runAllTimers());
+
+  expect(effectActive).toBe(true);
+});
+
+test('default inactiveBehavior="pause" unmounts effects when navigating away', () => {
+  let effectActive = false;
+
+  const ScreenA = () => {
+    React.useEffect(() => {
+      effectActive = true;
+      return () => {
+        effectActive = false;
+      };
+    }, []);
+    return null;
+  };
+
+  const Stack = createStackNavigator<StackParamList>();
+  const navigation = createNavigationContainerRef<StackParamList>();
+
+  render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="A" component={ScreenA} />
+        <Stack.Screen name="B">{() => null}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(effectActive).toBe(true);
+
+  act(() => navigation.navigate('B'));
+
+  expect(effectActive).toBe(true);
+
+  act(() => jest.runAllTimers());
+  act(() => jest.runAllTimers());
+
+  expect(effectActive).toBe(false);
+});
+
+test('preloading a screen runs effects', () => {
+  let effectActive = false;
+
+  const ScreenB = () => {
+    React.useEffect(() => {
+      effectActive = true;
+      return () => {
+        effectActive = false;
+      };
+    }, []);
+    return null;
+  };
+
+  const Stack = createStackNavigator<StackParamList>();
+  const navigation = createNavigationContainerRef<StackParamList>();
+
+  render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="A">{() => null}</Stack.Screen>
+        <Stack.Screen name="B" component={ScreenB} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(effectActive).toBe(false);
+
+  act(() => navigation.preload('B'));
+
+  expect(effectActive).toBe(true);
+});
+
 test('renders back button in the nested stack', async () => {
   const StackA = createStackNavigator<NestedStackParamList>();
 

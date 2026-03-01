@@ -1,4 +1,4 @@
-import { Activity, useCallback } from 'react';
+import { Activity, useCallback, useEffect, useState } from 'react';
 import { Platform, View, type ViewStyle } from 'react-native';
 
 import { Container } from './Container';
@@ -16,6 +16,13 @@ export type Props = {
    */
   visible: boolean;
   /**
+   * Delay before pausing effects.
+   * So pending animations have time to finish.
+   *
+   * Defaults to 500ms.
+   */
+  delay?: number;
+  /**
    * The style for the container view
    */
   style?: Omit<React.CSSProperties & ViewStyle, 'display'>;
@@ -25,7 +32,33 @@ export type Props = {
   children: React.ReactNode;
 };
 
-export function ActivityView({ mode, visible, style, children }: Props) {
+export function ActivityView({
+  mode,
+  visible,
+  delay = 500,
+  style,
+  children,
+}: Props) {
+  const [delayedMode, setDelayedMode] = useState(mode);
+
+  useEffect(() => {
+    if (!delay) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setDelayedMode(mode);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [delay, mode]);
+
+  const display = visible ? 'flex' : 'none';
+  const activityMode =
+    mode !== 'paused' || (delay && delayedMode !== 'paused')
+      ? 'visible'
+      : 'hidden';
+
   /**
    * Activity has 2 modes, visible and hidden - hidden unmounts effects
    * But what we want is to unmount effects, without hiding content
@@ -50,10 +83,10 @@ export function ActivityView({ mode, visible, style, children }: Props) {
         // We observe it and update display to make content visible
         children.forEach((child) => {
           if (child instanceof HTMLElement) {
-            child.style.display = visible ? 'flex' : 'none';
+            child.style.display = display;
 
             const o = new MutationObserver(() => {
-              child.style.display = visible ? 'flex' : 'none';
+              child.style.display = display;
             });
 
             o.observe(child, {
@@ -81,16 +114,13 @@ export function ActivityView({ mode, visible, style, children }: Props) {
         observers.forEach((o) => o.disconnect());
       };
     },
-    [visible]
+    [display]
   );
 
   return (
     <Container ref={onRef} style={{ display: 'contents' }}>
-      <Activity mode={mode === 'paused' ? 'hidden' : 'visible'}>
-        <Container
-          inert={mode !== 'normal'}
-          style={{ ...style, display: visible ? 'flex' : 'none' }}
-        >
+      <Activity mode={activityMode}>
+        <Container inert={mode !== 'normal'} style={{ ...style, display }}>
           {children}
         </Container>
       </Activity>

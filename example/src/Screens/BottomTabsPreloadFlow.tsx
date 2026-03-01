@@ -24,21 +24,20 @@ const linking = {
 const DetailsScreen = ({
   navigation,
 }: BottomTabScreenProps<PreloadBottomTabsParamList, 'Details'>) => {
-  const [loadingCountdown, setLoadingCountdown] = useState(3);
+  const [loadingCountdown, setLoadingCountdown] = useState(5);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setLoadingCountdown((loadingCountdown) => {
-        if (loadingCountdown === 1) {
-          clearInterval(interval);
-        }
+    if (loadingCountdown === 0) {
+      return;
+    }
 
-        return loadingCountdown - 1;
-      });
-    }, 1000);
+    const timer = setTimeout(
+      () => setLoadingCountdown(loadingCountdown - 1),
+      1000
+    );
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearTimeout(timer);
+  }, [loadingCountdown]);
 
   return (
     <View style={styles.content}>
@@ -71,7 +70,7 @@ const HomeScreen = ({
         onPress={() => {
           setTimeout(() => {
             setIsReady(true);
-          }, 3000);
+          }, 5000);
 
           preload('Details');
         }}

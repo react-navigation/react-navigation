@@ -1,4 +1,4 @@
-import { Activity } from 'react';
+import { Activity, useEffect, useState } from 'react';
 import {
   type HostComponent,
   NativeComponentRegistry,
@@ -9,9 +9,35 @@ import {
 import type { Props } from './ActivityView.tsx';
 import { Container } from './Container';
 
-export function ActivityView({ mode, visible, style, children }: Props) {
+export function ActivityView({
+  mode,
+  visible,
+  delay = 500,
+  style,
+  children,
+}: Props) {
+  const [delayedMode, setDelayedMode] = useState(mode);
+
+  useEffect(() => {
+    if (!delay) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setDelayedMode(mode);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [delay, mode]);
+
+  const display = visible ? 'flex' : 'none';
+  const activityMode =
+    mode !== 'paused' || (delay && delayedMode !== 'paused')
+      ? 'visible'
+      : 'hidden';
+
   return (
-    <Activity mode={mode === 'paused' ? 'hidden' : 'visible'}>
+    <Activity mode={activityMode}>
       <ActivityContentView style={{ display: 'contents' }}>
         <Container
           inert={mode !== 'normal'}
@@ -22,7 +48,7 @@ export function ActivityView({ mode, visible, style, children }: Props) {
              * It'll be overridden to `display: 'none'` when `mode="hidden"` regardless of what we set
              * So we set the visibility on another view instead
              */
-            display: visible ? 'flex' : 'none',
+            display,
           }}
         >
           {children}
