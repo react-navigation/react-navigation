@@ -6,7 +6,10 @@ import {
   HeaderShownContext,
   useFrameSize,
 } from '@react-navigation/elements';
-import { SafeAreaProviderCompat } from '@react-navigation/elements/internal';
+import {
+  ActivityView,
+  SafeAreaProviderCompat,
+} from '@react-navigation/elements/internal';
 import {
   NavigationProvider,
   type ParamListBase,
@@ -91,6 +94,7 @@ const SceneView = ({
   const { route, navigation, options, render } = descriptor;
 
   const {
+    inactiveBehavior = 'pause',
     animation,
     animationDuration,
     animationMatchesGesture,
@@ -285,6 +289,55 @@ const SceneView = ({
         }
       );
 
+  const content = (
+    <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+      <HeaderHeightContext.Provider
+        value={headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)}
+      >
+        {headerBackground != null ? (
+          /**
+           * To show a custom header background, we render it at the top of the screen below the header
+           * The header also needs to be positioned absolutely (with `translucent` style)
+           */
+          <View
+            style={[
+              styles.background,
+              headerTransparent ? styles.translucent : null,
+              { height: headerHeight },
+            ]}
+          >
+            {headerBackground()}
+          </View>
+        ) : null}
+        {header != null && headerShown !== false ? (
+          <View
+            onLayout={(e) => {
+              const headerHeight = e.nativeEvent.layout.height;
+
+              animatedHeaderHeight.setValue(headerHeight);
+              setHeaderHeight(headerHeight);
+            }}
+            style={[styles.header, headerTransparent ? styles.absolute : null]}
+          >
+            {header({
+              back: headerBack,
+              options,
+              route,
+              navigation,
+            })}
+          </View>
+        ) : null}
+        <HeaderShownContext.Provider
+          value={isParentHeaderShown || headerShown !== false}
+        >
+          <HeaderBackContext.Provider value={headerBack}>
+            {render()}
+          </HeaderBackContext.Provider>
+        </HeaderShownContext.Provider>
+      </HeaderHeightContext.Provider>
+    </AnimatedHeaderHeightContext.Provider>
+  );
+
   return (
     <NavigationProvider navigation={navigation} route={route}>
       <ScreenStackItem
@@ -358,57 +411,26 @@ const SceneView = ({
         // Otherwise invalid props may not be caught by TypeScript
         shouldFreeze={shouldFreeze}
       >
-        <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
-          <HeaderHeightContext.Provider
-            value={
-              headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)
-            }
-          >
-            {headerBackground != null ? (
-              /**
-               * To show a custom header background, we render it at the top of the screen below the header
-               * The header also needs to be positioned absolutely (with `translucent` style)
-               */
-              <View
-                style={[
-                  styles.background,
-                  headerTransparent ? styles.translucent : null,
-                  { height: headerHeight },
-                ]}
-              >
-                {headerBackground()}
-              </View>
-            ) : null}
-            {header != null && headerShown !== false ? (
-              <View
-                onLayout={(e) => {
-                  const headerHeight = e.nativeEvent.layout.height;
-
-                  animatedHeaderHeight.setValue(headerHeight);
-                  setHeaderHeight(headerHeight);
-                }}
-                style={[
-                  styles.header,
-                  headerTransparent ? styles.absolute : null,
-                ]}
-              >
-                {header({
-                  back: headerBack,
-                  options,
-                  route,
-                  navigation,
-                })}
-              </View>
-            ) : null}
-            <HeaderShownContext.Provider
-              value={isParentHeaderShown || headerShown !== false}
-            >
-              <HeaderBackContext.Provider value={headerBack}>
-                {render()}
-              </HeaderBackContext.Provider>
-            </HeaderShownContext.Provider>
-          </HeaderHeightContext.Provider>
-        </AnimatedHeaderHeightContext.Provider>
+        <ActivityView
+          mode={
+            // Render focused screens normally
+            // Unpause preloaded screens so updates are visible
+            // This lets effects on preloaded screens run
+            // We don't need to handle inert as it'll be handled natively
+            inactiveBehavior === 'none' || focused || isPreloaded
+              ? 'normal'
+              : 'paused'
+          }
+          visible={
+            // We don't need to hide the content since it's handled natively
+            // Hiding may also cause flash due to lag after native tab switch
+            // So we leave it always visible
+            true
+          }
+          style={StyleSheet.absoluteFill}
+        >
+          {content}
+        </ActivityView>
       </ScreenStackItem>
     </NavigationProvider>
   );
