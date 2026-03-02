@@ -283,6 +283,9 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
               isFocused={isFocused}
               title={tabTitle}
               scrollEdgeAppearance={{
+                tabBarBackgroundColor,
+                tabBarShadowColor,
+                tabBarBlurEffect,
                 stacked: {
                   normal: tabItemAppearance,
                 },
