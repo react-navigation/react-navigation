@@ -20,8 +20,8 @@ type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
   headerStatusBarHeight: number;
   title: string;
   modal: boolean;
-  onGoBack?: () => void;
-  backHref?: string;
+  onGoBack?: (() => void) | undefined;
+  backHref?: string | undefined;
   progress: SceneProgress;
   styleInterpolator: StackHeaderStyleInterpolator;
 };

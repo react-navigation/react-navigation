@@ -17,14 +17,14 @@ import { useFrameSize } from './useFrameSize';
 
 type Props = {
   focused: boolean;
-  modal?: boolean;
+  modal?: boolean | undefined;
   navigation: NavigationProp<ParamListBase>;
   route: RouteProp<ParamListBase>;
   header: React.ReactNode;
-  headerShown?: boolean;
-  headerStatusBarHeight?: number;
-  headerTransparent?: boolean;
-  style?: React.ComponentProps<typeof Container>['style'];
+  headerShown?: boolean | undefined;
+  headerStatusBarHeight?: number | undefined;
+  headerTransparent?: boolean | undefined;
+  style?: React.ComponentProps<typeof Container>['style'] | undefined;
   children: React.ReactNode;
 };
 

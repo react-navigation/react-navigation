@@ -29,7 +29,7 @@ type Props = {
   /**
    * The `href` to use for the anchor tag on web
    */
-  href?: string;
+  href?: string | undefined;
   /**
    * Whether the tab is focused.
    */
@@ -56,23 +56,23 @@ type Props = {
   /**
    * Text to show in a badge on the tab icon.
    */
-  badge?: number | string;
+  badge?: number | string | undefined;
   /**
    * Custom style for the badge.
    */
-  badgeStyle?: StyleProp<TextStyle>;
+  badgeStyle?: StyleProp<TextStyle> | undefined;
   /**
    * The button for the tab. Uses a `Pressable` by default.
    */
-  button?: (props: BottomTabBarButtonProps) => React.ReactNode;
+  button?: ((props: BottomTabBarButtonProps) => React.ReactNode) | undefined;
   /**
    * The accessibility label for the tab.
    */
-  accessibilityLabel?: string;
+  accessibilityLabel?: string | undefined;
   /**
    * An unique ID for testing for the tab.
    */
-  testID?: string;
+  testID?: string | undefined;
   /**
    * Function to execute on press in React Native.
    * On the web, this will use onClick.
@@ -105,44 +105,44 @@ type Props = {
   /**
    * Color for the icon and label when the item is active.
    */
-  activeTintColor?: ColorValue;
+  activeTintColor?: ColorValue | undefined;
   /**
    * Color for the icon and label when the item is inactive.
    */
-  inactiveTintColor?: ColorValue;
+  inactiveTintColor?: ColorValue | undefined;
   /**
    * Background color for item when its active.
    */
-  activeBackgroundColor?: ColorValue;
+  activeBackgroundColor?: ColorValue | undefined;
   /**
    * Background color for item when its inactive.
    */
-  inactiveBackgroundColor?: ColorValue;
+  inactiveBackgroundColor?: ColorValue | undefined;
   /**
    * Color of tab bar item's ripple effect.
    */
-  rippleColor?: ColorValue;
+  rippleColor?: ColorValue | undefined;
   /**
    * Label visibility mode for the tab bar item.
    */
-  labelVisibilityMode?: TabBarItemLabelVisibilityMode;
+  labelVisibilityMode?: TabBarItemLabelVisibilityMode | undefined;
   /**
    * Whether to allow scaling the font for the label for accessibility purposes.
    * Defaults to `false` on iOS 13+ where it uses `largeContentTitle`.
    */
-  allowFontScaling?: boolean;
+  allowFontScaling?: boolean | undefined;
   /**
    * Style object for the label element.
    */
-  labelStyle?: StyleProp<TextStyle>;
+  labelStyle?: StyleProp<TextStyle> | undefined;
   /**
    * Style object for the icon element.
    */
-  iconStyle?: StyleProp<ViewStyle>;
+  iconStyle?: StyleProp<ViewStyle> | undefined;
   /**
    * Style object for the wrapper element.
    */
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle> | undefined;
 };
 
 const renderButtonDefault = (props: BottomTabBarButtonProps) => (

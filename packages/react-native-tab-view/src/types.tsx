@@ -8,40 +8,44 @@ import type {
 } from 'react-native';
 
 export type TabDescriptor<T extends Route> = {
-  accessibilityLabel?: string;
-  accessible?: boolean;
-  testID?: string;
-  labelText?: string;
-  labelAllowFontScaling?: boolean;
-  href?: string;
-  label?: (props: {
-    route: T;
-    labelText?: string;
-    focused: boolean;
-    color: ColorValue;
-    allowFontScaling?: boolean;
-    style?: StyleProp<TextStyle>;
-  }) => React.ReactNode;
-  labelStyle?: StyleProp<TextStyle>;
-  icon?: (props: {
-    route: T;
-    focused: boolean;
-    color: ColorValue;
-    size: number;
-  }) => React.ReactNode;
-  badge?: (props: { route: T }) => React.ReactElement;
-  sceneStyle?: StyleProp<ViewStyle>;
+  accessibilityLabel?: string | undefined;
+  accessible?: boolean | undefined;
+  testID?: string | undefined;
+  labelText?: string | undefined;
+  labelAllowFontScaling?: boolean | undefined;
+  href?: string | undefined;
+  label?:
+    | ((props: {
+        route: T;
+        labelText?: string | undefined;
+        focused: boolean;
+        color: ColorValue;
+        allowFontScaling?: boolean | undefined;
+        style?: StyleProp<TextStyle> | undefined;
+      }) => React.ReactNode)
+    | undefined;
+  labelStyle?: StyleProp<TextStyle> | undefined;
+  icon?:
+    | ((props: {
+        route: T;
+        focused: boolean;
+        color: ColorValue;
+        size: number;
+      }) => React.ReactNode)
+    | undefined;
+  badge?: ((props: { route: T }) => React.ReactElement) | undefined;
+  sceneStyle?: StyleProp<ViewStyle> | undefined;
 };
 
 export type LocaleDirection = 'ltr' | 'rtl';
 
 export type Route = {
   key: string;
-  icon?: string;
-  title?: string;
-  accessible?: boolean;
-  accessibilityLabel?: string;
-  testID?: string;
+  icon?: string | undefined;
+  title?: string | undefined;
+  accessible?: boolean | undefined;
+  accessibilityLabel?: string | undefined;
+  testID?: string | undefined;
 };
 
 export type Event = {
@@ -81,33 +85,33 @@ export type AdapterCommonProps = {
    * - 'on-drag' - the keyboard is dismissed when a drag begins
    * - 'none' - drags and tab changes do not dismiss the keyboard
    */
-  keyboardDismissMode?: 'none' | 'on-drag' | 'auto';
+  keyboardDismissMode?: 'none' | 'on-drag' | 'auto' | undefined;
   /**
    * Whether swiping between tabs is enabled.
    */
-  swipeEnabled?: boolean;
+  swipeEnabled?: boolean | undefined;
   /**
    * Whether the tab switch animation is enabled.
    * If set to false, the tab switch will happen immediately without animation.
    */
-  animationEnabled?: boolean;
+  animationEnabled?: boolean | undefined;
   /**
    * Callback that is called when the swipe gesture starts.
    */
-  onSwipeStart?: () => void;
+  onSwipeStart?: (() => void) | undefined;
   /**
    * Callback that is called when the swipe gesture ends.
    */
-  onSwipeEnd?: () => void;
+  onSwipeEnd?: (() => void) | undefined;
   /**
    * Callback that is called when a tab is selected.
    * This is called regardless of whether the index has changed or not.
    */
-  onTabSelect?: (props: { index: number }) => void;
+  onTabSelect?: ((props: { index: number }) => void) | undefined;
   /**
    * Style for the pager adapter.
    */
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle> | undefined;
 };
 
 export type AdapterRendererProps = {
@@ -123,7 +127,7 @@ export type AdapterRendererProps = {
    * The writing direction of the layout.
    * This can be 'ltr' or 'rtl' based on tab view's `direction` prop.
    */
-  layoutDirection?: LocaleDirection;
+  layoutDirection?: LocaleDirection | undefined;
   /**
    * Render callback that should render the pages of the tab view.
    */

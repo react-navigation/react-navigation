@@ -58,7 +58,7 @@ const renderScene = SceneMap({
 const Test = ({
   onTabSelect,
 }: {
-  onTabSelect?: (props: { index: number }) => void;
+  onTabSelect?: ((props: { index: number }) => void) | undefined;
 }) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([

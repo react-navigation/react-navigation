@@ -162,14 +162,16 @@ export type HeaderOptions = {
   /**
    * Function which returns a React Element to display on the left side of the header.
    */
-  headerLeft?: (
-    props: HeaderBackButtonProps & {
-      /**
-       * Whether it's possible to navigate back.
-       */
-      canGoBack?: boolean | undefined;
-    }
-  ) => React.ReactNode;
+  headerLeft?:
+    | ((
+        props: HeaderBackButtonProps & {
+          /**
+           * Whether it's possible to navigate back.
+           */
+          canGoBack?: boolean | undefined;
+        }
+      ) => React.ReactNode)
+    | undefined;
   /**
    * Whether the liquid glass background is visible for the item.
    *
@@ -188,12 +190,14 @@ export type HeaderOptions = {
   /**
    * Function which returns a React Element to display on the right side of the header.
    */
-  headerRight?: (props: {
-    tintColor?: ColorValue | undefined;
-    pressColor?: ColorValue | undefined;
-    pressOpacity?: number | undefined;
-    canGoBack: boolean;
-  }) => React.ReactNode;
+  headerRight?:
+    | ((props: {
+        tintColor?: ColorValue | undefined;
+        pressColor?: ColorValue | undefined;
+        pressOpacity?: number | undefined;
+        canGoBack: boolean;
+      }) => React.ReactNode)
+    | undefined;
   /**
    * Whether the liquid glass background is visible for the item.
    *

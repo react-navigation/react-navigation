@@ -51,11 +51,11 @@ type SceneViewProps = {
   index: number;
   focused: boolean;
   descriptor: NativeStackDescriptor;
-  previousDescriptor?: NativeStackDescriptor;
-  nextDescriptor?: NativeStackDescriptor;
-  isPresentationModal?: boolean;
-  isNextScreenTransparent?: boolean;
-  isPreloaded?: boolean;
+  previousDescriptor?: NativeStackDescriptor | undefined;
+  nextDescriptor?: NativeStackDescriptor | undefined;
+  isPresentationModal?: boolean | undefined;
+  isNextScreenTransparent?: boolean | undefined;
+  isPreloaded?: boolean | undefined;
   onWillDisappear: () => void;
   onWillAppear: () => void;
   onAppear: () => void;

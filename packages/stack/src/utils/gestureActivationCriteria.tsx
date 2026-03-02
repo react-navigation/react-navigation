@@ -17,7 +17,7 @@ export const gestureActivationCriteria = ({
 }: {
   direction: LocaleDirection;
   gestureDirection: GestureDirection;
-  gestureResponseDistance?: number;
+  gestureResponseDistance?: number | undefined;
   layout: Layout;
 }) => {
   const enableTrackpadTwoFingerGesture = true;

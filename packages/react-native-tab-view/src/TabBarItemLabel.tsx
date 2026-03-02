@@ -4,7 +4,7 @@ import { Animated, StyleSheet } from 'react-native';
 
 interface TabBarItemLabelProps {
   color: ColorValue;
-  label?: string;
+  label?: string | undefined;
   style: StyleProp<ViewStyle>;
   icon: React.ReactNode;
 }

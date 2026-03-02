@@ -138,12 +138,12 @@ export type SceneProgress = {
    * Progress value for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
    */
-  next?: Animated.AnimatedInterpolation<number>;
+  next?: Animated.AnimatedInterpolation<number> | undefined;
   /**
    * Progress value for the screen before this one in the stack.
    * This can be `undefined` in case the screen animating is the first one.
    */
-  previous?: Animated.AnimatedInterpolation<number>;
+  previous?: Animated.AnimatedInterpolation<number> | undefined;
 };
 
 export type StackHeaderMode = 'float' | 'screen';
@@ -187,14 +187,14 @@ export type StackHeaderOptions = Omit<
    * Defaults to the previous screen's title, or "Back" if there's not enough space.
    * Use `headerBackButtonDisplayMode` to customize the behavior.
    */
-  headerBackTitle?: string;
+  headerBackTitle?: string | undefined;
   /**
    * Title string used by the back button when `headerBackTitle` doesn't fit on the screen.
    * Use `headerBackButtonDisplayMode` to customize the behavior.
    *
    * Defaults to "Back".
    */
-  headerBackTruncatedTitle?: string;
+  headerBackTruncatedTitle?: string | undefined;
   /**
    * How the back button displays icon and title.
    *
@@ -240,16 +240,18 @@ export type StackHeaderProps = {
   /**
    * Options for the back button.
    */
-  back?: {
-    /**
-     * Title of the previous screen.
-     */
-    title: string | undefined;
-    /**
-     * The `href` to use for the anchor tag on web
-     */
-    href: string | undefined;
-  };
+  back?:
+    | {
+        /**
+         * Title of the previous screen.
+         */
+        title: string | undefined;
+        /**
+         * The `href` to use for the anchor tag on web
+         */
+        href: string | undefined;
+      }
+    | undefined;
   /**
    * Animated nodes representing the progress of the animation.
    */
@@ -276,26 +278,26 @@ export type StackHeaderRightProps = {
   /**
    * Tint color for the header button.
    */
-  tintColor?: ColorValue;
+  tintColor?: ColorValue | undefined;
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
-  pressColor?: ColorValue;
+  pressColor?: ColorValue | undefined;
   /**
    * Opacity when the button is pressed, used when ripple is not supported.
    */
-  pressOpacity?: number;
+  pressOpacity?: number | undefined;
   /**
    * Whether it's possible to navigate back in stack.
    */
-  canGoBack?: boolean;
+  canGoBack?: boolean | undefined;
 };
 
 export type StackHeaderLeftProps = HeaderBackButtonProps & {
   /**
    * Whether it's possible to navigate back in stack.
    */
-  canGoBack?: boolean;
+  canGoBack?: boolean | undefined;
 };
 
 export type StackDescriptor = Descriptor<
@@ -455,12 +457,14 @@ export type StackCardInterpolationProps = {
    * Values for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
    */
-  next?: {
-    /**
-     * Animated node representing the progress value of the next screen.
-     */
-    progress: Animated.AnimatedInterpolation<number>;
-  };
+  next?:
+    | {
+        /**
+         * Animated node representing the progress value of the next screen.
+         */
+        progress: Animated.AnimatedInterpolation<number>;
+      }
+    | undefined;
   /**
    * The index of the card with this interpolation in the stack.
    */
@@ -534,12 +538,14 @@ export type StackHeaderInterpolationProps = {
    * Values for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
    */
-  next?: {
-    /**
-     * Animated node representing the progress value of the next screen.
-     */
-    progress: Animated.AnimatedInterpolation<number>;
-  };
+  next?:
+    | {
+        /**
+         * Animated node representing the progress value of the next screen.
+         */
+        progress: Animated.AnimatedInterpolation<number>;
+      }
+    | undefined;
   /**
    * Writing direction of the layout.
    */

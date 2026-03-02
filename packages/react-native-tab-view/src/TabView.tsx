@@ -39,7 +39,7 @@ export type Props<T extends Route> = AdapterCommonProps & {
    *
    * Unlike `onIndexChange`, this is called regardless of whether the index changed or not.
    */
-  onTabSelect?: (props: { index: number }) => void;
+  onTabSelect?: ((props: { index: number }) => void) | undefined;
   /**
    * State for the tab view containing the current index and routes.
    *
@@ -59,17 +59,21 @@ export type Props<T extends Route> = AdapterCommonProps & {
    * Callback which returns a custom placeholder element.
    * The placeholder is shown when a scene is not yet loaded when `lazy` is enabled.
    */
-  renderLazyPlaceholder?: (props: { route: T }) => React.ReactNode;
+  renderLazyPlaceholder?:
+    | ((props: { route: T }) => React.ReactNode)
+    | undefined;
   /**
    * Callback which returns a custom tab bar element to display.
    */
-  renderTabBar?: (
-    props: SceneRendererProps &
-      EventEmitterProps & {
-        navigationState: NavigationState<T>;
-        options: Record<string, TabDescriptor<T>> | undefined;
-      }
-  ) => React.ReactNode;
+  renderTabBar?:
+    | ((
+        props: SceneRendererProps &
+          EventEmitterProps & {
+            navigationState: NavigationState<T>;
+            options: Record<string, TabDescriptor<T>> | undefined;
+          }
+      ) => React.ReactNode)
+    | undefined;
   /**
    * Callback which returns a custom adapter to use for the tab view.
    * Adapters are responsible for handling gestures and animations between tabs.
@@ -81,12 +85,12 @@ export type Props<T extends Route> = AdapterCommonProps & {
    *
    * Defaults to `PagerViewAdapter` on Android and iOS, and `PanResponderAdapter` on other platforms.
    */
-  renderAdapter?: (props: AdapterProps) => React.ReactElement;
+  renderAdapter?: ((props: AdapterProps) => React.ReactElement) | undefined;
   /**
    * Position of the tab bar in the tab view.
    * Defaults to `'top'`.
    */
-  tabBarPosition?: 'top' | 'bottom';
+  tabBarPosition?: 'top' | 'bottom' | undefined;
   /**
    * Whether to lazily render the scenes.
    * When enabled, scenes are rendered only when they come into view.
@@ -94,27 +98,27 @@ export type Props<T extends Route> = AdapterCommonProps & {
    * Can be a boolean or a function that receives the route and returns a boolean.
    * Defaults to `false`.
    */
-  lazy?: ((props: { route: T }) => boolean) | boolean;
+  lazy?: ((props: { route: T }) => boolean) | boolean | undefined;
   /**
    * How many screens to preload when `lazy` is enabled.
    *
    * Defaults to `0`.
    */
-  lazyPreloadDistance?: number;
+  lazyPreloadDistance?: number | undefined;
   /**
    * The layout direction of the tab view.
    *
    * Defaults to the app's locale direction (RTL or LTR).
    */
-  direction?: LocaleDirection;
+  direction?: LocaleDirection | undefined;
   /**
    * Style to apply to the pager container.
    */
-  pagerStyle?: StyleProp<ViewStyle>;
+  pagerStyle?: StyleProp<ViewStyle> | undefined;
   /**
    * Style to apply to the tab view container.
    */
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle> | undefined;
   /**
    * Callback which returns a React element to render for each route.
    */
@@ -131,13 +135,13 @@ export type Props<T extends Route> = AdapterCommonProps & {
    *
    * These options are merged with `commonOptions`.
    */
-  options?: Record<string, TabDescriptor<T>>;
+  options?: Record<string, TabDescriptor<T>> | undefined;
   /**
    * Options that apply to all tabs.
    *
    * Individual tab options from `options` will override these.
    */
-  commonOptions?: TabDescriptor<T>;
+  commonOptions?: TabDescriptor<T> | undefined;
 };
 
 const renderLazyPlaceholderDefault = () => null;

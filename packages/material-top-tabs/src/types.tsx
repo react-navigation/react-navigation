@@ -78,7 +78,7 @@ export type MaterialTopTabNavigationOptions = {
   /**
    * Title text for the screen.
    */
-  title?: string;
+  title?: string | undefined;
 
   /**
    * Title string of a tab displayed in the tab bar
@@ -92,145 +92,147 @@ export type MaterialTopTabNavigationOptions = {
         focused: boolean;
         color: ColorValue;
         children: string;
-      }) => React.ReactNode);
+      }) => React.ReactNode)
+    | undefined;
 
   /**
    * Accessibility label for the tab button. This is read by the screen reader when the user taps the tab.
    * It's recommended to set this if you don't have a label for the tab.
    */
-  tabBarAccessibilityLabel?: string;
+  tabBarAccessibilityLabel?: string | undefined;
 
   /**
    * Whether label font should scale to respect Text Size accessibility settings.
    */
-  tabBarAllowFontScaling?: boolean;
+  tabBarAllowFontScaling?: boolean | undefined;
 
   /**
    * Whether the tab label should be visible. Defaults to `true`.
    */
-  tabBarShowLabel?: boolean;
+  tabBarShowLabel?: boolean | undefined;
 
   /**
    * A function that given { focused: boolean, color: ColorValue } returns a React.Node to display in the tab bar.
    */
-  tabBarIcon?: (props: {
-    focused: boolean;
-    color: ColorValue;
-  }) => React.ReactElement;
+  tabBarIcon?:
+    | ((props: { focused: boolean; color: ColorValue }) => React.ReactElement)
+    | undefined;
 
   /**
    * Whether the tab icon should be visible. Defaults to `false`.
    */
-  tabBarShowIcon?: boolean;
+  tabBarShowIcon?: boolean | undefined;
 
   /**
    * Function that returns a React element to use as a badge for the tab.
    */
-  tabBarBadge?: () => React.ReactElement;
+  tabBarBadge?: (() => React.ReactElement) | undefined;
 
   /**
    * Function that returns a React element as the tab bar indicator.
    */
-  tabBarIndicator?: (
-    props: Omit<
-      Parameters<
-        NonNullable<React.ComponentProps<typeof TabBar>['renderIndicator']>
-      >[0],
-      'navigationState'
-    > & { state: TabNavigationState<ParamListBase> }
-  ) => React.ReactNode;
+  tabBarIndicator?:
+    | ((
+        props: Omit<
+          Parameters<
+            NonNullable<React.ComponentProps<typeof TabBar>['renderIndicator']>
+          >[0],
+          'navigationState'
+        > & { state: TabNavigationState<ParamListBase> }
+      ) => React.ReactNode)
+    | undefined;
 
   /**
    * Style object for the tab bar indicator.
    */
-  tabBarIndicatorStyle?: StyleProp<ViewStyle>;
+  tabBarIndicatorStyle?: StyleProp<ViewStyle> | undefined;
 
   /**
    * Style object for the view containing the tab bar indicator.
    */
-  tabBarIndicatorContainerStyle?: StyleProp<ViewStyle>;
+  tabBarIndicatorContainerStyle?: StyleProp<ViewStyle> | undefined;
 
   /**
    * ID to locate this tab button in tests.
    */
-  tabBarButtonTestID?: string;
+  tabBarButtonTestID?: string | undefined;
 
   /**
    * Color for the icon and label in the active tab.
    */
-  tabBarActiveTintColor?: ColorValue;
+  tabBarActiveTintColor?: ColorValue | undefined;
 
   /**
    * Color for the icon and label in the inactive tabs.
    */
-  tabBarInactiveTintColor?: ColorValue;
+  tabBarInactiveTintColor?: ColorValue | undefined;
 
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
-  tabBarPressColor?: ColorValue;
+  tabBarPressColor?: ColorValue | undefined;
 
   /**
    * Opacity for pressed tab (iOS and Android < 5.0 only).
    */
-  tabBarPressOpacity?: number;
+  tabBarPressOpacity?: number | undefined;
 
   /**
    * Boolean indicating whether the tab bar bounces when overscrolling.
    */
-  tabBarBounces?: boolean;
+  tabBarBounces?: boolean | undefined;
 
   /**
    * Boolean indicating whether to make the tab bar scrollable.
    *
    * If you set this to `true`, you should also specify a width in `tabBarItemStyle` to improve the performance of initial render.
    */
-  tabBarScrollEnabled?: boolean;
+  tabBarScrollEnabled?: boolean | undefined;
 
   /**
    * Style object for the tab label.
    */
-  tabBarLabelStyle?: StyleProp<TextStyle>;
+  tabBarLabelStyle?: StyleProp<TextStyle> | undefined;
 
   /**
    * Style object for the individual tab items.
    */
-  tabBarItemStyle?: StyleProp<ViewStyle>;
+  tabBarItemStyle?: StyleProp<ViewStyle> | undefined;
 
   /**
    * Style object for the view containing the tab items.
    */
-  tabBarContentContainerStyle?: StyleProp<ViewStyle>;
+  tabBarContentContainerStyle?: StyleProp<ViewStyle> | undefined;
 
   /**
    * Style object for the the tab bar.
    */
-  tabBarStyle?: StyleProp<ViewStyle>;
+  tabBarStyle?: StyleProp<ViewStyle> | undefined;
 
   /**
    * Gap between tabs
    */
-  tabBarGap?: number;
+  tabBarGap?: number | undefined;
 
   /**
    * Allows to customize the android ripple effect (Android >= 5.0 only).
    *
    * Default: `{ borderless: true }`
    */
-  tabBarAndroidRipple?: PressableAndroidRippleConfig;
+  tabBarAndroidRipple?: PressableAndroidRippleConfig | undefined;
 
   /**
    * Whether to enable swipe gestures when this screen is focused.
    * Swipe gestures are enabled by default. Passing `false` will disable swipe gestures,
    * but the user can still switch tabs by pressing the tab bar.
    */
-  swipeEnabled?: boolean;
+  swipeEnabled?: boolean | undefined;
 
   /**
    * Whether to enable animations when switching between tabs by pressing on the tab bar or programmatically.
    * Switching tab via swipe gesture will still result in an animation.
    */
-  animationEnabled?: boolean;
+  animationEnabled?: boolean | undefined;
 
   /**
    * Whether this screen should be lazily rendered. When this is set to `true`,
@@ -243,13 +245,13 @@ export type MaterialTopTabNavigationOptions = {
    * when they come into the viewport. You can use the `lazyPlaceholder` prop to customize
    * what the user sees during this short period.
    */
-  lazy?: boolean;
+  lazy?: boolean | undefined;
 
   /**
    * When `lazy` is enabled, you can specify how many adjacent screens should be preloaded in advance with this prop.
    * This value defaults to `0` which means lazy pages are loaded as they come into the viewport.
    */
-  lazyPreloadDistance?: number;
+  lazyPreloadDistance?: number | undefined;
 
   /**
    * Function that returns a React element to render if this screen hasn't been rendered yet.
@@ -259,12 +261,12 @@ export type MaterialTopTabNavigationOptions = {
    *
    * By default, this renders `null`.
    */
-  lazyPlaceholder?: () => React.ReactNode;
+  lazyPlaceholder?: (() => React.ReactNode) | undefined;
 
   /**
    * Style object for the component wrapping the screen content.
    */
-  sceneStyle?: StyleProp<ViewStyle>;
+  sceneStyle?: StyleProp<ViewStyle> | undefined;
 
   /**
    * What should happen when screens become inactive.
@@ -277,7 +279,7 @@ export type MaterialTopTabNavigationOptions = {
    * It won't be paused until after the first time it becomes focused.
    * This makes sure that effects are run to initialize the screen.
    */
-  inactiveBehavior?: 'pause' | 'none';
+  inactiveBehavior?: ('pause' | 'none') | undefined;
 };
 
 export type MaterialTopTabDescriptor = Descriptor<
@@ -310,11 +312,11 @@ export type MaterialTopTabNavigationConfig = Omit<
   /**
    * Function that returns a React element to display as the tab bar.
    */
-  tabBar?: (props: MaterialTopTabBarProps) => React.ReactNode;
+  tabBar?: ((props: MaterialTopTabBarProps) => React.ReactNode) | undefined;
   /**
    * Function that returns a React element to override the underlying adapter.
    */
-  adapter?: TabViewProps<Route<string>>['renderAdapter'];
+  adapter?: TabViewProps<Route<string>>['renderAdapter'] | undefined;
 };
 
 export type MaterialTopTabBarProps = Pick<

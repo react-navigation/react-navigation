@@ -38,28 +38,30 @@ import { useMeasureLayout } from './useMeasureLayout';
 export type Props<T extends Route> = SceneRendererProps &
   EventEmitterProps & {
     navigationState: NavigationState<T>;
-    scrollEnabled?: boolean;
-    bounces?: boolean;
-    activeColor?: ColorValue;
-    inactiveColor?: ColorValue;
-    pressColor?: ColorValue;
-    pressOpacity?: number;
-    options?: Record<string, TabDescriptor<T>>;
-    renderIndicator?: (props: IndicatorProps<T>) => React.ReactNode;
-    renderTabBarItem?: (
-      props: TabBarItemProps<T> & { key: string }
-    ) => React.ReactElement;
-    onTabPress?: (scene: Scene<T> & Event) => void;
-    onTabLongPress?: (scene: Scene<T>) => void;
-    tabStyle?: StyleProp<ViewStyle>;
-    indicatorStyle?: StyleProp<ViewStyle>;
-    indicatorContainerStyle?: StyleProp<ViewStyle>;
-    contentContainerStyle?: StyleProp<ViewStyle>;
-    style?: StyleProp<ViewStyle>;
-    direction?: LocaleDirection;
-    gap?: number;
-    testID?: string;
-    android_ripple?: PressableAndroidRippleConfig;
+    scrollEnabled?: boolean | undefined;
+    bounces?: boolean | undefined;
+    activeColor?: ColorValue | undefined;
+    inactiveColor?: ColorValue | undefined;
+    pressColor?: ColorValue | undefined;
+    pressOpacity?: number | undefined;
+    options?: Record<string, TabDescriptor<T>> | undefined;
+    renderIndicator?:
+      | ((props: IndicatorProps<T>) => React.ReactNode)
+      | undefined;
+    renderTabBarItem?:
+      | ((props: TabBarItemProps<T> & { key: string }) => React.ReactElement)
+      | undefined;
+    onTabPress?: ((scene: Scene<T> & Event) => void) | undefined;
+    onTabLongPress?: ((scene: Scene<T>) => void) | undefined;
+    tabStyle?: StyleProp<ViewStyle> | undefined;
+    indicatorStyle?: StyleProp<ViewStyle> | undefined;
+    indicatorContainerStyle?: StyleProp<ViewStyle> | undefined;
+    contentContainerStyle?: StyleProp<ViewStyle> | undefined;
+    style?: StyleProp<ViewStyle> | undefined;
+    direction?: LocaleDirection | undefined;
+    gap?: number | undefined;
+    testID?: string | undefined;
+    android_ripple?: PressableAndroidRippleConfig | undefined;
   };
 
 type CalculationOptions = {
