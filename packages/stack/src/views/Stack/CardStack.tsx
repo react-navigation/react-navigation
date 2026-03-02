@@ -671,16 +671,15 @@ export class CardStack extends React.Component<Props, State> {
               scenes[index + 1]?.descriptor.options.presentation ===
               'transparentModal';
 
-            const animatingRouteKeys = [
-              ...openingRouteKeys,
-              ...closingRouteKeys,
-              ...replacingRouteKeys,
-            ];
+            const isRemoving =
+              replacingRouteKeys.includes(route.key) ||
+              closingRouteKeys.includes(route.key);
 
-            const isAnimating =
-              animatingRouteKeys.includes(route.key) ||
-              animatingRouteKeys.includes(self[index + 1]?.key) ||
-              animatingRouteKeys.includes(self[index - 1]?.key);
+            const isFocusing =
+              openingRouteKeys.includes(route.key) ||
+              [...closingRouteKeys, ...replacingRouteKeys].includes(
+                self[index + 1]?.key
+              );
 
             return (
               <CardContainer
@@ -721,18 +720,25 @@ export class CardStack extends React.Component<Props, State> {
                 <ActivityView
                   mode={
                     // Render focused and animating screens normally
-                    focused || isAnimating
+                    focused || isFocusing
                       ? 'normal'
                       : // Unpause preloaded screens so updates are visible
                         // This lets preloaded screens initialize
                         // And avoids things like pressable animation from being frozen
-                        inactiveBehavior === 'none' || isPreloaded
+                        inactiveBehavior === 'none' ||
+                          isPreloaded ||
+                          isRemoving ||
+                          isNextScreenTransparent
                         ? 'inert'
                         : 'paused'
                   }
                   visible={
                     // keep animating, preloaded & last two screens visible for smoother transitions
-                    isAnimating || isPreloaded || index >= routes.length - 2
+                    isFocusing ||
+                    isRemoving ||
+                    isPreloaded ||
+                    isNextScreenTransparent ||
+                    index >= routes.length - 2
                   }
                   style={StyleSheet.absoluteFill}
                 >

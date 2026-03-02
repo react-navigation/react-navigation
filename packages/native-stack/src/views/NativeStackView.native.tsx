@@ -54,6 +54,7 @@ type SceneViewProps = {
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
   isPresentationModal?: boolean;
+  isNextScreenTransparent?: boolean;
   isPreloaded?: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
@@ -68,12 +69,18 @@ type SceneViewProps = {
 
 const useNativeDriver = Platform.OS !== 'web';
 
+const TRANSPARENT_PRESENTATIONS = [
+  'transparentModal',
+  'containedTransparentModal',
+];
+
 const SceneView = ({
   index,
   focused,
   descriptor,
   previousDescriptor,
   isPresentationModal,
+  isNextScreenTransparent,
   isPreloaded,
   onWillDisappear,
   onWillAppear,
@@ -405,7 +412,10 @@ const SceneView = ({
             // Unpause preloaded screens so updates are visible
             // This lets effects on preloaded screens run
             // We don't need to handle inert as it'll be handled natively
-            inactiveBehavior === 'none' || focused || isPreloaded
+            inactiveBehavior === 'none' ||
+            focused ||
+            isPreloaded ||
+            isNextScreenTransparent
               ? 'normal'
               : 'paused'
           }
@@ -450,6 +460,12 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
             : undefined;
           const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
+          const nextPresentation = nextDescriptor?.options.presentation;
+
+          const isNextScreenTransparent =
+            nextPresentation != null &&
+            TRANSPARENT_PRESENTATIONS.includes(nextPresentation);
+
           const isModal = modalRouteKeys.includes(route.key);
 
           const isPreloaded = state.preloadedRoutes.some(
@@ -465,6 +481,7 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
               previousDescriptor={previousDescriptor}
               nextDescriptor={nextDescriptor}
               isPresentationModal={isModal}
+              isNextScreenTransparent={isNextScreenTransparent}
               isPreloaded={isPreloaded}
               onWillDisappear={() => {
                 navigation.emit({

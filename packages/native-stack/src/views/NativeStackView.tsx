@@ -81,6 +81,10 @@ export function NativeStackView({ state, descriptors }: Props) {
 
         const nextPresentation = nextDescriptor?.options.presentation;
 
+        const isNextScreenTransparent =
+          nextPresentation != null &&
+          TRANSPARENT_PRESENTATIONS.includes(nextPresentation);
+
         const isPreloaded = state.preloadedRoutes.some(
           (r) => r.key === route.key
         );
@@ -156,16 +160,13 @@ export function NativeStackView({ state, descriptors }: Props) {
                 ? 'normal'
                 : // Unpause preloaded screens so updates are visible
                   // This lets effects on preloaded screens run
-                  inactiveBehavior === 'none' || isPreloaded
+                  inactiveBehavior === 'none' ||
+                    isPreloaded ||
+                    isNextScreenTransparent
                   ? 'inert'
                   : 'paused'
             }
-            visible={
-              (isFocused ||
-                (nextPresentation != null &&
-                  TRANSPARENT_PRESENTATIONS.includes(nextPresentation))) &&
-              !isPreloaded
-            }
+            visible={isFocused || isPreloaded || isNextScreenTransparent}
             style={StyleSheet.absoluteFill}
           >
             {content}
