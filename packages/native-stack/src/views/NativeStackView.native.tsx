@@ -47,14 +47,9 @@ import { useHeaderConfigProps } from './useHeaderConfigProps';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
 
-function isFabric() {
-  return 'nativeFabricUIManager' in global;
-}
-
 type SceneViewProps = {
   index: number;
   focused: boolean;
-  shouldFreeze: boolean;
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
@@ -76,7 +71,6 @@ const useNativeDriver = Platform.OS !== 'web';
 const SceneView = ({
   index,
   focused,
-  shouldFreeze,
   descriptor,
   previousDescriptor,
   isPresentationModal,
@@ -127,7 +121,6 @@ const SceneView = ({
     statusBarStyle,
     unstable_sheetFooter,
     scrollEdgeEffects,
-    freezeOnBlur,
     contentStyle,
   } = options;
 
@@ -349,7 +342,6 @@ const SceneView = ({
         customAnimationOnSwipe={animationMatchesGesture}
         fullScreenSwipeEnabled={fullScreenGestureEnabled}
         fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
-        freezeOnBlur={freezeOnBlur}
         gestureEnabled={
           Platform.OS === 'android'
             ? // This prop enables handling of system back gestures on Android
@@ -406,10 +398,6 @@ const SceneView = ({
         ]}
         headerConfig={headerConfig}
         unstable_sheetFooter={unstable_sheetFooter}
-        // When ts-expect-error is added, it affects all the props below it
-        // So we keep any props that need it at the end
-        // Otherwise invalid props may not be caught by TypeScript
-        shouldFreeze={shouldFreeze}
       >
         <ActivityView
           mode={
@@ -455,7 +443,6 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
         {state.routes.concat(state.preloadedRoutes).map((route, index) => {
           const descriptor = descriptors[route.key];
           const isFocused = state.index === index;
-          const isBelowFocused = state.index - 1 === index;
           const previousKey = state.routes[index - 1]?.key;
           const nextKey = state.routes[index + 1]?.key;
           const previousDescriptor = previousKey
@@ -464,24 +451,16 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
           const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
           const isModal = modalRouteKeys.includes(route.key);
-          const isModalOnIos = isModal && Platform.OS === 'ios';
 
           const isPreloaded = state.preloadedRoutes.some(
             (r) => r.key === route.key
           );
-
-          // On Fabric, when screen is frozen, animated and reanimated values are not updated
-          // due to component being unmounted. To avoid this, we don't freeze the previous screen there
-          const shouldFreeze = isFabric()
-            ? !isPreloaded && !isFocused && !isBelowFocused && !isModalOnIos
-            : !isPreloaded && !isFocused && !isModalOnIos;
 
           return (
             <SceneView
               key={route.key}
               index={index}
               focused={isFocused}
-              shouldFreeze={shouldFreeze}
               descriptor={descriptor}
               previousDescriptor={previousDescriptor}
               nextDescriptor={nextDescriptor}

@@ -747,14 +747,6 @@ export type NativeStackNavigationOptions = {
    */
   orientation?: ScreenProps['screenOrientation'];
   /**
-   * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
-   * Defaults to `true` when `enableFreeze()` is run at the top of the application.
-   * Requires `react-native-screens` version >=3.16.0.
-   *
-   * Only supported on iOS and Android.
-   */
-  freezeOnBlur?: boolean;
-  /**
    * Configures the scroll edge effect for the _content ScrollView_ (the ScrollView that is present in first descendants chain of the Screen).
    * Depending on values set, it will blur the scrolling content below certain UI elements (header items, search bar)
    * for the specified edge of the ScrollView.
