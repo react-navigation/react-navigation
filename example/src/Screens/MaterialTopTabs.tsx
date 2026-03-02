@@ -1,58 +1,36 @@
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import type {
-  NavigatorScreenParams,
-  PathConfig,
-  StaticScreenProps,
-} from '@react-navigation/native';
+import {
+  createMaterialTopTabNavigator,
+  createMaterialTopTabScreen,
+} from '@react-navigation/material-top-tabs';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
 
-type MaterialTopTabParamList = {
-  Albums: undefined;
-  Contacts: undefined;
-  Chat: undefined;
-};
-
-const linking = {
-  screens: {
-    Albums: 'albums',
-    Contacts: 'contacts',
-    Chat: 'chat',
-  },
-} satisfies PathConfig<NavigatorScreenParams<MaterialTopTabParamList>>;
-
-const MaterialTopTabs =
-  createMaterialTopTabNavigator<MaterialTopTabParamList>();
-
 const ChatScreen = () => <Chat bottom />;
 
-export function MaterialTopTabsBasic(_: StaticScreenProps<{}>) {
-  return (
-    <MaterialTopTabs.Navigator>
-      <MaterialTopTabs.Screen
-        name="Chat"
-        component={ChatScreen}
-        options={{ title: 'Chat' }}
-      />
-      <MaterialTopTabs.Screen
-        name="Contacts"
-        component={Contacts}
-        options={{ title: 'Contacts' }}
-      />
-      <MaterialTopTabs.Screen
-        name="Albums"
-        component={Albums}
-        options={{ title: 'Albums' }}
-      />
-    </MaterialTopTabs.Navigator>
-  );
-}
+const MaterialTopTabsNavigator = createMaterialTopTabNavigator({
+  screens: {
+    Chat: createMaterialTopTabScreen({
+      screen: ChatScreen,
+      options: { title: 'Chat' },
+    }),
+    Contacts: createMaterialTopTabScreen({
+      screen: Contacts,
+      options: { title: 'Contacts' },
+    }),
+    Albums: createMaterialTopTabScreen({
+      screen: Albums,
+      options: { title: 'Albums' },
+    }),
+  },
+});
 
-MaterialTopTabsBasic.title = 'Material Top Tabs - Basic';
-MaterialTopTabsBasic.linking = linking;
-MaterialTopTabsBasic.options = {
-  headerShown: true,
-  cardStyle: { flex: 1 },
+export const MaterialTopTabsBasic = {
+  screen: MaterialTopTabsNavigator,
+  title: 'Material Top Tabs - Basic',
+  options: {
+    headerShown: true,
+    cardStyle: { flex: 1 },
+  },
 };

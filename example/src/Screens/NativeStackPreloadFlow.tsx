@@ -1,31 +1,14 @@
 import { Button, Text } from '@react-navigation/elements';
-import type {
-  NavigatorScreenParams,
-  PathConfig,
-  StaticScreenProps,
-} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
-  type NativeStackScreenProps,
+  createNativeStackScreen,
 } from '@react-navigation/native-stack';
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-type PreloadNativeStackParamList = {
-  Home: undefined;
-  Details: undefined;
-};
-
-const linking = {
-  screens: {
-    Home: '',
-    Details: 'details',
-  },
-} satisfies PathConfig<NavigatorScreenParams<PreloadNativeStackParamList>>;
-
-const DetailsScreen = ({
-  navigation,
-}: NativeStackScreenProps<PreloadNativeStackParamList, 'Details'>) => {
+const DetailsScreen = () => {
+  const navigation = useNavigation('Details');
   const [loadingCountdown, setLoadingCountdown] = useState(3);
 
   useEffect(() => {
@@ -56,10 +39,8 @@ const DetailsScreen = ({
   );
 };
 
-const HomeScreen = ({
-  navigation,
-}: NativeStackScreenProps<PreloadNativeStackParamList, 'Home'>) => {
-  const { navigate, preload } = navigation;
+const HomeScreen = () => {
+  const navigation = useNavigation('NativeStackPreloadFlowHome');
 
   const [isReady, setIsReady] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -82,34 +63,41 @@ const HomeScreen = ({
             setIsReady(true);
           }, 5000);
 
-          preload('Details');
+          navigation.preload('Details');
         }}
         style={styles.button}
       >
         Preload Details
       </Button>
-      <Button onPress={() => navigate('Details')} style={styles.button}>
+      <Button
+        onPress={() => navigation.navigate('Details')}
+        style={styles.button}
+      >
         Navigate to Details
       </Button>
     </View>
   );
 };
 
-const NativeStack = createNativeStackNavigator<PreloadNativeStackParamList>();
+const NativeStackPreloadNavigator = createNativeStackNavigator({
+  screens: {
+    NativeStackPreloadFlowHome: createNativeStackScreen({
+      screen: HomeScreen,
+      linking: '',
+      options: {
+        title: 'Native Stack Preload Flow',
+      },
+    }),
+    Details: createNativeStackScreen({
+      screen: DetailsScreen,
+    }),
+  },
+});
 
-export function NativeStackPreloadFlow(
-  _: StaticScreenProps<NavigatorScreenParams<PreloadNativeStackParamList>>
-) {
-  return (
-    <NativeStack.Navigator>
-      <NativeStack.Screen name="Home" component={HomeScreen} />
-      <NativeStack.Screen name="Details" component={DetailsScreen} />
-    </NativeStack.Navigator>
-  );
-}
-
-NativeStackPreloadFlow.title = 'Native Stack - Preload Flow';
-NativeStackPreloadFlow.linking = linking;
+export const NativeStackPreloadFlow = {
+  screen: NativeStackPreloadNavigator,
+  title: 'Native Stack - Preload Flow',
+};
 
 const styles = StyleSheet.create({
   content: {

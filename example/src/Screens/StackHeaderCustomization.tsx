@@ -34,7 +34,7 @@ import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
 type HeaderCustomizationStackParamList = {
-  Article: { author: string };
+  Article: { author?: string } | undefined;
   NewsFeed: { date: number };
   Albums: undefined;
 };

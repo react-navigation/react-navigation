@@ -1,23 +1,24 @@
 import { Button, Text } from '@react-navigation/elements';
-import { type RouteProp, useTheme } from '@react-navigation/native';
+import type { StaticScreenProps } from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
+  createNativeStackScreen,
   type NativeStackNavigationOptions,
-  type NativeStackNavigationProp,
 } from '@react-navigation/native-stack';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
-type FormSheetParams = {
-  paragraphs?: number;
-};
+import { entries, fromEntries } from '../utilities';
 
 export type FormSheetConfig = {
   name: string;
   options: NativeStackNavigationOptions;
-  params?: FormSheetParams;
+  params?: {
+    paragraphs?: number;
+  };
 };
 
-const FORM_SHEETS: Record<string, FormSheetConfig> = {
+const FORM_SHEETS = {
   FormSheetViewFitToContents: {
     name: 'Fit To Contents',
     options: {
@@ -101,33 +102,21 @@ const FORM_SHEETS: Record<string, FormSheetConfig> = {
       sheetLargestUndimmedDetentIndex: 0,
     },
   },
-};
+} satisfies Record<string, FormSheetConfig>;
 
-export type RouteParamList = {
-  Main: undefined;
-  FormSheet: FormSheetParams;
-} & {
-  [Key in keyof typeof FORM_SHEETS]: FormSheetParams;
-};
+function Main() {
+  const navigation = useNavigation('Main');
 
-type RouteProps<RouteName extends keyof RouteParamList> = {
-  navigation: NativeStackNavigationProp<RouteParamList, RouteName>;
-  route: RouteProp<RouteParamList, RouteName>;
-};
-
-const Stack = createNativeStackNavigator<RouteParamList>();
-
-function Main({ navigation }: RouteProps<'Main'>) {
   return (
     <View style={styles.centered}>
       <View style={styles.buttons}>
-        {Object.entries(FORM_SHEETS).map(([key, value]) => (
+        {entries(FORM_SHEETS).map(([key, value]) => (
           <Button
             key={key}
             onPress={() =>
               navigation.navigate(
-                key as keyof typeof FORM_SHEETS,
-                value.params ?? {}
+                key,
+                'params' in value ? value.params : undefined
               )
             }
           >
@@ -143,10 +132,10 @@ function Main({ navigation }: RouteProps<'Main'>) {
   );
 }
 
-function FormSheetView<T extends keyof typeof FORM_SHEETS>({
-  navigation,
+function FormSheetView({
   route,
-}: RouteProps<T>) {
+}: StaticScreenProps<{ paragraphs?: number } | undefined>) {
+  const navigation = useNavigation();
   const paragraph =
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam ' +
     'aliquam justo at dolor condimentum tincidunt. Proin velit nibh, ' +
@@ -177,46 +166,64 @@ function FormSheetView<T extends keyof typeof FORM_SHEETS>({
   );
 }
 
-export function NativeStackFormSheet() {
+const UnsupportedScreen = () => {
   const { colors } = useTheme();
 
-  if (Platform.OS !== 'android' && Platform.OS !== 'ios') {
-    return (
-      <View style={[styles.centered, { backgroundColor: colors.background }]}>
-        <Text style={{ color: colors.text }}>
-          Form Sheet presentation is only available on Android and iOS
-        </Text>
-      </View>
-    );
-  }
-
   return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Main"
-        component={Main}
-        options={{
-          title: 'Form Sheet',
-        }}
-      />
-      {Object.entries(FORM_SHEETS).map(([key, value]) => (
-        <Stack.Screen
-          key={key}
-          name={key as keyof typeof FORM_SHEETS}
-          component={FormSheetView}
-          options={{
-            presentation: 'formSheet',
-            headerShown: false,
-            ...value.options,
-          }}
-        />
-      ))}
-    </Stack.Navigator>
+    <View style={[styles.centered, { backgroundColor: colors.background }]}>
+      <Text style={{ color: colors.text }}>
+        Form Sheet presentation is only available on Android and iOS
+      </Text>
+    </View>
   );
-}
+};
 
-NativeStackFormSheet.title = 'Native Stack - Form Sheet';
-NativeStackFormSheet.linking = {};
+const isFormSheetSupported = Platform.OS === 'android' || Platform.OS === 'ios';
+
+const NativeStackFormSheetNavigator = createNativeStackNavigator({
+  groups: {
+    Supported: {
+      if: () => isFormSheetSupported,
+      screens: {
+        Main: createNativeStackScreen({
+          screen: Main,
+          options: {
+            title: 'Form Sheet',
+          },
+        }),
+        ...fromEntries(
+          entries(FORM_SHEETS).map(([key, config]) => [
+            key,
+            createNativeStackScreen({
+              screen: FormSheetView,
+              options: {
+                presentation: 'formSheet',
+                headerShown: false,
+                ...config.options,
+              },
+            }),
+          ])
+        ),
+      },
+    },
+    Unsupported: {
+      if: () => !isFormSheetSupported,
+      screens: {
+        Unsupported: createNativeStackScreen({
+          screen: UnsupportedScreen,
+          options: {
+            headerShown: false,
+          },
+        }),
+      },
+    },
+  },
+});
+
+export const NativeStackFormSheet = {
+  screen: NativeStackFormSheetNavigator,
+  title: 'Native Stack - Form Sheet',
+};
 
 const styles = StyleSheet.create({
   centered: {

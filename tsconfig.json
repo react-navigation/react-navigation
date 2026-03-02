@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "composite": true,
+    "noEmit": true,
     "customConditions": ["source"],
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

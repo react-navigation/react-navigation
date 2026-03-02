@@ -5,15 +5,10 @@ import {
   Header,
   HeaderButton,
 } from '@react-navigation/elements';
-import type {
-  NavigatorScreenParams,
-  PathConfig,
-  StaticScreenProps,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
-  type NativeStackOptionsArgs,
-  type NativeStackScreenProps,
+  createNativeStackScreen,
 } from '@react-navigation/native-stack';
 import {
   Alert,
@@ -29,31 +24,12 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type NativeHeaderCustomizationStackParamList = {
-  Article: { author: string } | undefined;
-  NewsFeed: { date: number };
-  Albums: undefined;
-};
-
-const linking = {
-  screens: {
-    Article: COMMON_LINKING_CONFIG.Article,
-    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-    Albums: 'albums',
-  },
-} satisfies PathConfig<
-  NavigatorScreenParams<NativeHeaderCustomizationStackParamList>
->;
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
-const ArticleScreen = ({
-  navigation,
-  route,
-}: NativeStackScreenProps<
-  NativeHeaderCustomizationStackParamList,
-  'Article'
->) => {
+const ArticleScreen = () => {
+  const route = useRoute('Article');
+  const navigation = useNavigation('Article');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -75,13 +51,10 @@ const ArticleScreen = ({
   );
 };
 
-const NewsFeedScreen = ({
-  route,
-  navigation,
-}: NativeStackScreenProps<
-  NativeHeaderCustomizationStackParamList,
-  'NewsFeed'
->) => {
+const NewsFeedScreen = () => {
+  const route = useRoute('NewsFeed');
+  const navigation = useNavigation('NewsFeed');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -97,12 +70,8 @@ const NewsFeedScreen = ({
   );
 };
 
-const AlbumsScreen = ({
-  navigation,
-}: NativeStackScreenProps<
-  NativeHeaderCustomizationStackParamList,
-  'Albums'
->) => {
+const AlbumsScreen = () => {
+  const navigation = useNavigation('Albums');
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -123,114 +92,92 @@ const AlbumsScreen = ({
   );
 };
 
-const Stack =
-  createNativeStackNavigator<NativeHeaderCustomizationStackParamList>();
-
-export function NativeStackHeaderCustomization(
-  _: StaticScreenProps<
-    NavigatorScreenParams<NativeHeaderCustomizationStackParamList>
-  >
-) {
-  const onPress = () => {
-    Alert.alert(
-      'Never gonna give you up!',
-      'Never gonna let you down! Never gonna run around and desert you!'
-    );
-  };
-
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Article"
-        component={ArticleScreen}
-        options={({
-          route,
-          navigation,
-        }: NativeStackOptionsArgs<
-          NativeHeaderCustomizationStackParamList,
-          'Article'
-        >) => ({
-          title: `Article byyyy ${route.params?.author ?? 'Unknown'}`,
-          headerTintColor: 'white',
-          headerTitle: ({ tintColor }) => (
-            <HeaderButton onPress={onPress}>
-              <MaterialCommunityIcons
-                name="signal-5g"
-                size={24}
-                color={tintColor}
-              />
-            </HeaderButton>
-          ),
-          headerLeft: ({ tintColor, canGoBack }) =>
-            canGoBack ? (
-              <HeaderButton onPress={navigation.goBack}>
-                <MaterialCommunityIcons
-                  name="arrow-left-thick"
-                  size={24}
-                  color={tintColor}
-                />
-              </HeaderButton>
-            ) : null,
-          headerRight: ({ tintColor }) => (
-            <HeaderButton onPress={onPress}>
-              <MaterialCommunityIcons
-                name="music"
-                size={24}
-                color={tintColor}
-              />
-            </HeaderButton>
-          ),
-          headerBackground: () => (
-            <Image
-              source={require('../../assets/misc/cpu.jpg')}
-              resizeMode="cover"
-              style={styles.headerBackground}
-            />
-          ),
-        })}
-        initialParams={{ author: 'Gandalf' }}
-      />
-      <Stack.Screen
-        name="NewsFeed"
-        component={NewsFeedScreen}
-        options={{
-          title: 'Feed',
-          header: ({ options, route, back }) => (
-            <Header
-              {...options}
-              back={back}
-              title={getHeaderTitle(options, route.name)}
-            />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="Albums"
-        component={AlbumsScreen}
-        options={{
-          title: 'Albums',
-          headerTintColor: 'tomato',
-          headerStyle: { backgroundColor: 'papayawhip' },
-          headerBackVisible: true,
-          headerLeft: ({ tintColor }) => (
-            <HeaderButton onPress={onPress}>
-              <MaterialCommunityIcons
-                name="music"
-                size={24}
-                color={tintColor}
-              />
-            </HeaderButton>
-          ),
-        }}
-      />
-    </Stack.Navigator>
+const onPress = () => {
+  Alert.alert(
+    'Never gonna give you up!',
+    'Never gonna let you down! Never gonna run around and desert you!'
   );
-}
+};
 
-NativeStackHeaderCustomization.title = 'Native Stack - Header Customization';
-NativeStackHeaderCustomization.linking = linking;
-NativeStackHeaderCustomization.options = {
-  gestureEnabled: false,
+const NativeStackHeaderCustomizationNavigator = createNativeStackNavigator({
+  screens: {
+    Article: createNativeStackScreen({
+      screen: ArticleScreen,
+      options: ({ route, navigation }) => ({
+        title: `Article byyyy ${route.params?.author ?? 'Unknown'}`,
+        headerTintColor: 'white',
+        headerTitle: ({ tintColor }) => (
+          <HeaderButton onPress={onPress}>
+            <MaterialCommunityIcons
+              name="signal-5g"
+              size={24}
+              color={tintColor}
+            />
+          </HeaderButton>
+        ),
+        headerLeft: ({ tintColor, canGoBack }) =>
+          canGoBack ? (
+            <HeaderButton onPress={navigation.goBack}>
+              <MaterialCommunityIcons
+                name="arrow-left-thick"
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
+          ) : null,
+        headerRight: ({ tintColor }) => (
+          <HeaderButton onPress={onPress}>
+            <MaterialCommunityIcons name="music" size={24} color={tintColor} />
+          </HeaderButton>
+        ),
+        headerBackground: () => (
+          <Image
+            source={require('../../assets/misc/cpu.jpg')}
+            resizeMode="cover"
+            style={styles.headerBackground}
+          />
+        ),
+      }),
+      initialParams: { author: 'Gandalf' },
+      linking: COMMON_LINKING_CONFIG.Article,
+    }),
+    NewsFeed: createNativeStackScreen({
+      screen: NewsFeedScreen,
+      options: {
+        title: 'Feed',
+        header: ({ options, route, back }) => (
+          <Header
+            {...options}
+            back={back}
+            title={getHeaderTitle(options, route.name)}
+          />
+        ),
+      },
+      linking: COMMON_LINKING_CONFIG.NewsFeed,
+    }),
+    Albums: createNativeStackScreen({
+      screen: AlbumsScreen,
+      options: {
+        title: 'Albums',
+        headerTintColor: 'tomato',
+        headerStyle: { backgroundColor: 'papayawhip' },
+        headerBackVisible: true,
+        headerLeft: ({ tintColor }) => (
+          <HeaderButton onPress={onPress}>
+            <MaterialCommunityIcons name="music" size={24} color={tintColor} />
+          </HeaderButton>
+        ),
+      },
+    }),
+  },
+});
+
+export const NativeStackHeaderCustomization = {
+  screen: NativeStackHeaderCustomizationNavigator,
+  title: 'Native Stack - Header Customization',
+  options: {
+    gestureEnabled: false,
+  },
 };
 
 const styles = StyleSheet.create({

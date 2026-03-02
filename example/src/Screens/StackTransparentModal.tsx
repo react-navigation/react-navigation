@@ -1,12 +1,8 @@
 import { Button, Text } from '@react-navigation/elements';
-import {
-  type NavigatorScreenParams,
-  type StaticScreenProps,
-  useTheme,
-} from '@react-navigation/native';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackScreenProps,
+  createStackScreen,
   useCardAnimation,
 } from '@react-navigation/stack';
 import {
@@ -22,33 +18,22 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type TransparentStackParamList = {
-  Article: { author: string };
-  NewsFeed: undefined;
-  Dialog: undefined;
-};
-
-const linking = {
-  screens: {
-    Article: COMMON_LINKING_CONFIG.Article,
-    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-    Dialog: 'dialog',
-  },
-};
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
-const ArticleScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<TransparentStackParamList, 'Article'>) => {
+const ArticleScreen = () => {
+  const route = useRoute('Article');
+  const navigation = useNavigation('Article');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Dialog')}>
           Show Dialog
         </Button>
-        <Button variant="filled" onPress={() => navigation.push('NewsFeed')}>
+        <Button
+          variant="filled"
+          onPress={() => navigation.push('NewsFeed', { date: Date.now() })}
+        >
           Push NewsFeed
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>
@@ -56,16 +41,17 @@ const ArticleScreen = ({
         </Button>
       </View>
       <Article
-        author={{ name: route.params.author }}
+        author={{ name: route.params?.author ?? 'Unknown' }}
         scrollEnabled={scrollEnabled}
       />
     </ScrollView>
   );
 };
 
-const NewsFeedScreen = ({
-  navigation,
-}: StackScreenProps<TransparentStackParamList, 'NewsFeed'>) => {
+const NewsFeedScreen = () => {
+  const route = useRoute('NewsFeed');
+  const navigation = useNavigation('NewsFeed');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -76,14 +62,13 @@ const NewsFeedScreen = ({
           Go back
         </Button>
       </View>
-      <NewsFeed scrollEnabled={scrollEnabled} />
+      <NewsFeed scrollEnabled={scrollEnabled} date={route.params.date} />
     </ScrollView>
   );
 };
 
-const DialogScreen = ({
-  navigation,
-}: StackScreenProps<TransparentStackParamList>) => {
+const DialogScreen = () => {
+  const navigation = useNavigation('Dialog');
   const { colors } = useTheme();
   const { current } = useCardAnimation();
 
@@ -134,37 +119,32 @@ const DialogScreen = ({
   );
 };
 
-const Stack = createStackNavigator<TransparentStackParamList>();
+const StackTransparentModalNavigator = createStackNavigator({
+  screens: {
+    Article: createStackScreen({
+      screen: ArticleScreen,
+      initialParams: { author: 'Gandalf' },
+      linking: COMMON_LINKING_CONFIG.Article,
+    }),
+    NewsFeed: createStackScreen({
+      screen: NewsFeedScreen,
+      options: { presentation: 'modal' },
+      linking: COMMON_LINKING_CONFIG.NewsFeed,
+    }),
+    Dialog: createStackScreen({
+      screen: DialogScreen,
+      options: {
+        headerShown: false,
+        presentation: 'transparentModal',
+      },
+    }),
+  },
+});
 
-export function StackTransparentModal(
-  _: StaticScreenProps<NavigatorScreenParams<TransparentStackParamList>>
-) {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Article"
-        component={ArticleScreen}
-        initialParams={{ author: 'Gandalf' }}
-      />
-      <Stack.Screen
-        name="NewsFeed"
-        component={NewsFeedScreen}
-        options={{ presentation: 'modal' }}
-      />
-      <Stack.Screen
-        name="Dialog"
-        component={DialogScreen}
-        options={{
-          headerShown: false,
-          presentation: 'transparentModal',
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-StackTransparentModal.title = 'Stack - Transparent Modal';
-StackTransparentModal.linking = linking;
+export const StackTransparentModal = {
+  screen: StackTransparentModalNavigator,
+  title: 'Stack - Transparent Modal',
+};
 
 const styles = StyleSheet.create({
   buttons: {

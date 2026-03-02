@@ -1,31 +1,14 @@
 import { Button, Text } from '@react-navigation/elements';
-import type {
-  NavigatorScreenParams,
-  PathConfig,
-  StaticScreenProps,
-} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackScreenProps,
+  createStackScreen,
 } from '@react-navigation/stack';
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-type PreloadStackParamList = {
-  Home: undefined;
-  Details: undefined;
-};
-
-const linking = {
-  screens: {
-    Home: '',
-    Details: 'details',
-  },
-} satisfies PathConfig<NavigatorScreenParams<PreloadStackParamList>>;
-
-const DetailsScreen = ({
-  navigation,
-}: StackScreenProps<PreloadStackParamList, 'Details'>) => {
+const DetailsScreen = () => {
+  const navigation = useNavigation('Details');
   const [loadingCountdown, setLoadingCountdown] = useState(3);
 
   useEffect(() => {
@@ -56,10 +39,8 @@ const DetailsScreen = ({
   );
 };
 
-const HomeScreen = ({
-  navigation,
-}: StackScreenProps<PreloadStackParamList, 'Home'>) => {
-  const { navigate, preload } = navigation;
+const HomeScreen = () => {
+  const navigation = useNavigation('StackPreloadFlowHome');
 
   const [isReady, setIsReady] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -82,34 +63,41 @@ const HomeScreen = ({
             setIsReady(true);
           }, 5000);
 
-          preload('Details');
+          navigation.preload('Details');
         }}
         style={styles.button}
       >
         Preload Details
       </Button>
-      <Button onPress={() => navigate('Details')} style={styles.button}>
+      <Button
+        onPress={() => navigation.navigate('Details')}
+        style={styles.button}
+      >
         Navigate to Details
       </Button>
     </View>
   );
 };
 
-const SimpleStack = createStackNavigator<PreloadStackParamList>();
+const StackPreloadNavigator = createStackNavigator({
+  screens: {
+    StackPreloadFlowHome: createStackScreen({
+      screen: HomeScreen,
+      linking: '',
+      options: {
+        title: 'Stack Preload Flow',
+      },
+    }),
+    Details: createStackScreen({
+      screen: DetailsScreen,
+    }),
+  },
+});
 
-export function StackPreloadFlow(
-  _: StaticScreenProps<NavigatorScreenParams<PreloadStackParamList>>
-) {
-  return (
-    <SimpleStack.Navigator>
-      <SimpleStack.Screen name="Home" component={HomeScreen} />
-      <SimpleStack.Screen name="Details" component={DetailsScreen} />
-    </SimpleStack.Navigator>
-  );
-}
-
-StackPreloadFlow.title = 'Stack - Preload Flow';
-StackPreloadFlow.linking = linking;
+export const StackPreloadFlow = {
+  screen: StackPreloadNavigator,
+  title: 'Stack - Preload Flow',
+};
 
 const styles = StyleSheet.create({
   content: {
