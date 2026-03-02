@@ -1,4 +1,4 @@
-import { spawn } from 'node:child_process';
+import { execSync, spawnSync } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import { URL } from 'node:url';
@@ -11,14 +11,18 @@ const platformIndex = process.argv.indexOf('--platform');
 const platform =
   platformIndex === -1 ? undefined : process.argv[platformIndex + 1];
 
-if (platform !== 'ios' && platform !== 'android') {
-  throw new Error('Expected --platform ios|android');
-}
-
 const appId =
   platform === 'ios'
     ? config.expo?.ios?.bundleIdentifier
-    : config.expo?.android?.package;
+    : platform === 'android'
+      ? config.expo?.android?.package
+      : config.expo?.ios?.bundleIdentifier === config.expo?.android?.package
+        ? config.expo?.ios?.bundleIdentifier
+        : undefined;
+
+if (!appId) {
+  throw new Error('Could not determine app ID.');
+}
 
 const scheme = `${config.expo?.scheme}://`;
 const ci = process.env.CI === 'true' || process.env.CI === '1';
@@ -31,11 +35,18 @@ const flowByFilename = new Map(
 const cwd = new URL('example/', root);
 const debugOutputDir = new URL('example/maestro-debug-output/', root);
 
-let result = await runMaestro(['e2e/maestro'], {
+const deviceIds = platform ? undefined : await getConnectedDeviceIds();
+
+if (!platform && !deviceIds?.length) {
+  throw new Error('No connected devices found');
+}
+
+let result = runMaestro(['e2e/maestro'], {
   appId,
   scheme,
   cwd,
   platform,
+  deviceIds,
   ci,
 });
 
@@ -49,11 +60,12 @@ if (ci && result.exitCode !== 0) {
   for (let attempt = 1; attempt <= 3 && failedFlows.length > 0; attempt += 1) {
     process.stdout.write(`Retry #${attempt}...\n`);
 
-    result = await runMaestro(failedFlows, {
+    result = runMaestro(failedFlows, {
       appId,
       scheme,
       cwd,
       platform,
+      deviceIds,
       ci,
     });
 
@@ -81,27 +93,73 @@ async function getFlows(dir: URL): Promise<string[]> {
     .sort();
 }
 
+async function getConnectedDeviceIds(): Promise<string[]> {
+  const ids: string[] = [];
+
+  try {
+    const data = JSON.parse(
+      execSync('xcrun simctl list devices booted --json').toString()
+    ) as {
+      devices: Record<string, { state: string; udid: string }[]>;
+    };
+    const iosIds = Object.values(data.devices)
+      .flat()
+      .filter((d) => d.state === 'Booted')
+      .map((d) => d.udid);
+
+    ids.push(...iosIds);
+  } catch {
+    // No iOS devices available
+  }
+
+  try {
+    const androidIds = execSync('adb devices')
+      .toString()
+      .split('\n')
+      .slice(1)
+      .map((line) => line.split('\t')[0].trim())
+      .filter((id) => id.length > 0);
+
+    ids.push(...androidIds);
+  } catch {
+    // No Android devices available
+  }
+
+  return ids;
+}
+
 function runMaestro(
   flows: string[],
   options: {
     appId: string;
     scheme: string;
     cwd: URL;
-    platform: string;
+    platform: string | undefined;
+    deviceIds: string[] | undefined;
     ci: boolean;
   }
-): Promise<{ exitCode: number; startedAt: number }> {
-  const args = [
-    '--platform',
-    options.platform,
+): { exitCode: number; startedAt: number } {
+  const args: string[] = [];
+
+  if (options.platform) {
+    args.push('--platform', options.platform);
+  } else if (options.deviceIds) {
+    args.push('--device', options.deviceIds.join(','));
+  }
+
+  args.push(
     'test',
     '--debug-output',
     'maestro-debug-output',
     '-e',
     `APP_ID=${options.appId}`,
     '-e',
-    `APP_SCHEME=${options.scheme}`,
-  ];
+    `APP_SCHEME=${options.scheme}`
+  );
+
+  if (options.deviceIds) {
+    args.push('--shard-all', String(options.deviceIds.length));
+  }
 
   if (options.ci) {
     args.push('--flatten-debug-output');
@@ -111,22 +169,13 @@ function runMaestro(
 
   process.stdout.write(`Running Maestro with args: ${args.join(' ')}\n`);
 
-  return new Promise((resolve) => {
-    const startedAt = Date.now();
-
-    const child = spawn('maestro', args, {
-      cwd: options.cwd,
-      stdio: ['ignore', 'inherit', 'inherit'],
-    });
-
-    child.on('close', (code) => {
-      resolve({ exitCode: code ?? 1, startedAt });
-    });
-
-    child.on('error', () => {
-      resolve({ exitCode: 1, startedAt });
-    });
+  const startedAt = Date.now();
+  const result = spawnSync('maestro', args, {
+    cwd: options.cwd,
+    stdio: ['ignore', 'inherit', 'inherit'],
   });
+
+  return { exitCode: result.status ?? 1, startedAt };
 }
 
 async function getFailedFlows(options: {
