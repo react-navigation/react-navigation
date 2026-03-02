@@ -7,7 +7,7 @@ type Options = {
   action: {
     payload: {
       name: string;
-      params?: object;
+      params?: object | undefined;
     };
   };
   routeParamList: ParamListBase;
