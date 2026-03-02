@@ -3,12 +3,24 @@ import {
   createBottomTabScreen,
 } from '@react-navigation/bottom-tabs';
 import { Button, HeaderBackButton, Text } from '@react-navigation/elements';
-import { useNavigation } from '@react-navigation/native';
+import {
+  useNavigation,
+  useNavigationState,
+  useRoute,
+} from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 const DetailsScreen = () => {
-  const navigation = useNavigation('Details');
+  const navigation = useNavigation('BottomTabsPreloadFlowDetails');
+  const route = useRoute('BottomTabsPreloadFlowDetails');
+
+  const [isPreloaded] = useState(
+    useNavigationState('BottomTabsPreloadFlowDetails', (state) =>
+      state.preloadedRouteKeys.includes(route.key)
+    )
+  );
+
   const [loadingCountdown, setLoadingCountdown] = useState(3);
 
   useEffect(() => {
@@ -32,6 +44,7 @@ const DetailsScreen = () => {
       <Text style={styles.text}>
         {loadingCountdown === 0 ? 'Loaded!' : 'Loading...'}
       </Text>
+      <Text style={styles.text}>{isPreloaded ? 'Preloaded' : 'Fresh'}</Text>
       <Button onPress={navigation.goBack} style={styles.button}>
         Back to home
       </Button>
@@ -55,14 +68,14 @@ const HomeScreen = () => {
             setIsReady(true);
           }, 5000);
 
-          navigation.preload('Details');
+          navigation.preload('BottomTabsPreloadFlowDetails');
         }}
         style={styles.button}
       >
         Preload Details
       </Button>
       <Button
-        onPress={() => navigation.navigate('Details')}
+        onPress={() => navigation.navigate('BottomTabsPreloadFlowDetails')}
         style={styles.button}
       >
         Navigate to Details
@@ -86,7 +99,7 @@ const BottomTabsPreloadNavigator = createBottomTabNavigator({
         title: 'Bottom Tabs Preload Flow',
       },
     }),
-    Details: createBottomTabScreen({
+    BottomTabsPreloadFlowDetails: createBottomTabScreen({
       screen: DetailsScreen,
     }),
   },

@@ -1,5 +1,9 @@
 import { Button, Text } from '@react-navigation/elements';
-import { useNavigation } from '@react-navigation/native';
+import {
+  useNavigation,
+  useNavigationState,
+  useRoute,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   createStackScreen,
@@ -8,7 +12,15 @@ import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 const DetailsScreen = () => {
-  const navigation = useNavigation('Details');
+  const navigation = useNavigation('StackPreloadFlowDetails');
+  const route = useRoute('StackPreloadFlowDetails');
+
+  const [isPreloaded] = useState(
+    useNavigationState('StackPreloadFlowDetails', (state) =>
+      state.preloadedRoutes.some((r) => r.key === route.key)
+    )
+  );
+
   const [loadingCountdown, setLoadingCountdown] = useState(3);
 
   useEffect(() => {
@@ -32,6 +44,7 @@ const DetailsScreen = () => {
       <Text style={styles.text}>
         {loadingCountdown === 0 ? 'Loaded!' : 'Loading...'}
       </Text>
+      <Text style={styles.text}>{isPreloaded ? 'Preloaded' : 'Fresh'}</Text>
       <Button onPress={navigation.goBack} style={styles.button}>
         Back to home
       </Button>
@@ -63,14 +76,14 @@ const HomeScreen = () => {
             setIsReady(true);
           }, 5000);
 
-          navigation.preload('Details');
+          navigation.preload('StackPreloadFlowDetails');
         }}
         style={styles.button}
       >
         Preload Details
       </Button>
       <Button
-        onPress={() => navigation.navigate('Details')}
+        onPress={() => navigation.navigate('StackPreloadFlowDetails')}
         style={styles.button}
       >
         Navigate to Details
@@ -88,8 +101,9 @@ const StackPreloadNavigator = createStackNavigator({
         title: 'Stack Preload Flow',
       },
     }),
-    Details: createStackScreen({
+    StackPreloadFlowDetails: createStackScreen({
       screen: DetailsScreen,
+      linking: 'details',
     }),
   },
 });

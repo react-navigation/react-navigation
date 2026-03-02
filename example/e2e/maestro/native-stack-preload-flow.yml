@@ -17,6 +17,8 @@ name: Native Stack - Preload Flow
     text: 'Navigate to Details'
 - assertVisible:
     text: 'Loaded!'
+- assertVisible:
+    text: 'Preloaded'
 - tapOn:
     text: 'Back to home'
 - assertVisible:
@@ -24,7 +26,4 @@ name: Native Stack - Preload Flow
 - tapOn:
     text: 'Navigate to Details'
 - assertVisible:
-    text: 'Loading...'
-- extendedWaitUntil:
-    timeout: 5000
-    visible: 'Loaded!'
+    text: 'Fresh'

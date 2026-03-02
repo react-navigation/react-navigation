@@ -1,5 +1,9 @@
 import { Button, Text } from '@react-navigation/elements';
-import { useNavigation } from '@react-navigation/native';
+import {
+  useNavigation,
+  useNavigationState,
+  useRoute,
+} from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   createNativeStackScreen,
@@ -8,7 +12,15 @@ import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 const DetailsScreen = () => {
-  const navigation = useNavigation('Details');
+  const navigation = useNavigation('NativeStackPreloadFlowDetails');
+  const route = useRoute('NativeStackPreloadFlowDetails');
+
+  const [isPreloaded] = useState(
+    useNavigationState('NativeStackPreloadFlowDetails', (state) =>
+      state.preloadedRoutes.some((r) => r.key === route.key)
+    )
+  );
+
   const [loadingCountdown, setLoadingCountdown] = useState(3);
 
   useEffect(() => {
@@ -32,6 +44,7 @@ const DetailsScreen = () => {
       <Text style={styles.text}>
         {loadingCountdown === 0 ? 'Loaded!' : 'Loading...'}
       </Text>
+      <Text style={styles.text}>{isPreloaded ? 'Preloaded' : 'Fresh'}</Text>
       <Button onPress={navigation.goBack} style={styles.button}>
         Back to home
       </Button>
@@ -63,14 +76,14 @@ const HomeScreen = () => {
             setIsReady(true);
           }, 5000);
 
-          navigation.preload('Details');
+          navigation.preload('NativeStackPreloadFlowDetails');
         }}
         style={styles.button}
       >
         Preload Details
       </Button>
       <Button
-        onPress={() => navigation.navigate('Details')}
+        onPress={() => navigation.navigate('NativeStackPreloadFlowDetails')}
         style={styles.button}
       >
         Navigate to Details
@@ -88,7 +101,7 @@ const NativeStackPreloadNavigator = createNativeStackNavigator({
         title: 'Native Stack Preload Flow',
       },
     }),
-    Details: createNativeStackScreen({
+    NativeStackPreloadFlowDetails: createNativeStackScreen({
       screen: DetailsScreen,
     }),
   },
