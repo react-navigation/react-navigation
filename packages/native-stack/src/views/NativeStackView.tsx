@@ -6,6 +6,7 @@ import {
   useHeaderHeight,
 } from '@react-navigation/elements';
 import {
+  ActivityView,
   SafeAreaProviderCompat,
   Screen,
 } from '@react-navigation/elements/internal';
@@ -66,6 +67,7 @@ export function NativeStackView({ state, descriptors }: Props) {
         const canGoBack = headerBack != null;
 
         const {
+          inactiveBehavior = 'pause',
           header,
           headerShown,
           headerBackIcon,
@@ -83,7 +85,7 @@ export function NativeStackView({ state, descriptors }: Props) {
           (r) => r.key === route.key
         );
 
-        return (
+        const content = (
           <Screen
             key={route.key}
             focused={isFocused}
@@ -128,14 +130,7 @@ export function NativeStackView({ state, descriptors }: Props) {
               )
             }
             style={{
-              ...StyleSheet.absoluteFillObject,
-              display:
-                (isFocused ||
-                  (nextPresentation != null &&
-                    TRANSPARENT_PRESENTATIONS.includes(nextPresentation))) &&
-                !isPreloaded
-                  ? 'flex'
-                  : 'none',
+              ...StyleSheet.absoluteFill,
               ...(presentation != null &&
               TRANSPARENT_PRESENTATIONS.includes(presentation)
                 ? { backgroundColor: 'transparent' }
@@ -150,6 +145,31 @@ export function NativeStackView({ state, descriptors }: Props) {
               </AnimatedHeaderHeightProvider>
             </HeaderBackContext.Provider>
           </Screen>
+        );
+
+        return (
+          <ActivityView
+            key={route.key}
+            mode={
+              // Render focused screens normally
+              isFocused
+                ? 'normal'
+                : // Unpause preloaded screens so updates are visible
+                  // This lets effects on preloaded screens run
+                  inactiveBehavior === 'none' || isPreloaded
+                  ? 'inert'
+                  : 'paused'
+            }
+            visible={
+              (isFocused ||
+                (nextPresentation != null &&
+                  TRANSPARENT_PRESENTATIONS.includes(nextPresentation))) &&
+              !isPreloaded
+            }
+            style={StyleSheet.absoluteFill}
+          >
+            {content}
+          </ActivityView>
         );
       })}
     </SafeAreaProviderCompat>
