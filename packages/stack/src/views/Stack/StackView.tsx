@@ -65,7 +65,9 @@ export class StackView extends React.Component<Props, State> {
     state: Readonly<State>
   ) {
     const allRoutes = [...props.state.routes, ...props.state.preloadedRoutes];
-    const previousRoutes = state.previousState ? [...state.previousState.routes, ...state.previousState.preloadedRoutes] : [];
+    const previousRoutes = state.previousState
+      ? [...state.previousState.routes, ...state.previousState.preloadedRoutes]
+      : [];
 
     // If there was no change in routes, we don't need to compute anything
     if (
@@ -149,7 +151,6 @@ export class StackView extends React.Component<Props, State> {
           props.state.routes.slice(0, props.state.index + 1)
         : props.state.routes;
 
-
     let { openingRouteKeys, closingRouteKeys, replacingRouteKeys } = state;
 
     // If a route that was closing or being replaced is now back in the routes,
@@ -168,7 +169,7 @@ export class StackView extends React.Component<Props, State> {
       ? (state.previousState.routes[state.previousState.index] as
           | Route<string>
           | undefined)
-      : undefined
+      : undefined;
     const nextFocusedRoute = routes[routes.length - 1];
 
     const isAnimationEnabled = (key: string) => {
