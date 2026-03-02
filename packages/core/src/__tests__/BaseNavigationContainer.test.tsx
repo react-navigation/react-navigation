@@ -787,10 +787,10 @@ test("throws if the ref hasn't finished initializing", () => {
   };
 
   const TestScreen = () => {
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
       const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      ref.current?.dispatch({ type: 'WHATEVER' });
+      ref?.dispatch({ type: 'WHATEVER' });
 
       expect(spy.mock.calls[0][0]).toMatch(
         "The 'navigation' object hasn't been initialized yet."
@@ -811,6 +811,49 @@ test("throws if the ref hasn't finished initializing", () => {
   );
 
   render(element);
+});
+
+test('handles navigation in useEffect', () => {
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const TestScreen = () => {
+    React.useEffect(() => {
+      ref?.navigate('bar');
+    }, []);
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  const element = (
+    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element);
+
+  expect(onStateChange).toHaveBeenCalledWith({
+    type: 'test',
+    stale: false,
+    index: 1,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+    ],
+  });
 });
 
 test('fires onReady after navigator is rendered', () => {

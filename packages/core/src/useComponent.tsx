@@ -19,7 +19,7 @@ export function useComponent(render: Render) {
   // So it's just for immediate consumption
   renderRef.current = render;
 
-  React.useEffect(() => {
+  React.useInsertionEffect(() => {
     renderRef.current = null;
   });
 

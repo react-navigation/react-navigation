@@ -44,12 +44,12 @@ test('fires focus and blur events in root navigator', () => {
   const createComponent =
     (focusCallback: any, blurCallback: any) =>
     ({ navigation }: any) => {
-      React.useEffect(
+      React.useLayoutEffect(
         () => navigation.addListener('focus', focusCallback),
         [navigation]
       );
 
-      React.useEffect(
+      React.useLayoutEffect(
         () => navigation.addListener('blur', blurCallback),
         [navigation]
       );
@@ -130,13 +130,13 @@ test('fires focus event after blur', () => {
   const callback = jest.fn();
 
   const Test = ({ route, navigation }: any) => {
-    React.useEffect(
+    React.useLayoutEffect(
       () =>
         navigation.addListener('focus', () => callback(route.name, 'focus')),
       [navigation, route.name]
     );
 
-    React.useEffect(
+    React.useLayoutEffect(
       () => navigation.addListener('blur', () => callback(route.name, 'blur')),
       [navigation, route.name]
     );
@@ -210,12 +210,12 @@ test('fires focus and blur events in nested navigator', () => {
   const createComponent =
     (focusCallback: any, blurCallback: any) =>
     ({ navigation }: any) => {
-      React.useEffect(
+      React.useLayoutEffect(
         () => navigation.addListener('focus', focusCallback),
         [navigation]
       );
 
-      React.useEffect(
+      React.useLayoutEffect(
         () => navigation.addListener('blur', blurCallback),
         [navigation]
       );

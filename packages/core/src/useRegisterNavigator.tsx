@@ -17,7 +17,7 @@ export function useRegisterNavigator() {
     );
   }
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     const { register, unregister } = container;
 
     register(key);

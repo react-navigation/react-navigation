@@ -31,7 +31,7 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
     }
   }, [navigation, onOptionsChange]);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     optionsRef.current = options;
     optionsChangeListener();
 
@@ -69,7 +69,7 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
     return optionsRef.current;
   }, [navigation, getOptionsFromListener]);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     return parentAddOptionsGetter?.(key!, getCurrentOptions);
   }, [getCurrentOptions, parentAddOptionsGetter, key]);
 

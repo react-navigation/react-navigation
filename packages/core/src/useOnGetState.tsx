@@ -39,7 +39,7 @@ export function useOnGetState({ getState, getStateListeners }: Options) {
     return { ...state, routes };
   }, [getState, getStateListeners]);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     return addKeyedListener?.('getState', key, getRehydratedState);
   }, [addKeyedListener, getRehydratedState, key]);
 }

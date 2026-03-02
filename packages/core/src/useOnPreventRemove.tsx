@@ -82,7 +82,7 @@ export function useOnPreventRemove({
   const route = React.useContext(NavigationRouteContext);
   const routeKey = route?.key;
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (routeKey) {
       return addKeyedListener?.('beforeRemove', routeKey, (action) => {
         const state = getState();

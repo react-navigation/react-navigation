@@ -587,7 +587,7 @@ export function useNavigationBuilder<
 
   const previousRouteKeyListRef = React.useRef(routeKeyList);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     previousRouteKeyListRef.current = routeKeyList;
   });
 
@@ -723,7 +723,7 @@ export function useNavigationBuilder<
         : nextState;
   }
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     if (
       didConsumeNestedParams &&
       typeof route?.params === 'object' &&
@@ -757,13 +757,13 @@ export function useNavigationBuilder<
   state = nextState;
 
   // Last state to reuse if component gets cleaned up due to `<Activity mode="hidden">`
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     lastStateRef.current = state;
   });
 
   const lastNotifiedStateRef = React.useRef<State | null>(null);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     // In strict mode, React will double-invoke effects.
     // So we need to reset the flag if component was not unmounted
     stateCleanupRef.current = false;
@@ -877,7 +877,7 @@ export function useNavigationBuilder<
 
   useFocusEvents({ state, emitter });
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     emitter.emit({ type: 'state', data: { state } });
   }, [emitter, state]);
 

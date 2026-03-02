@@ -92,7 +92,7 @@ export function SceneView<
 
   const isInitialRef = React.useRef(true);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     isInitialRef.current = false;
   });
 

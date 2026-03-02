@@ -317,7 +317,7 @@ export const BaseNavigationContainer = React.forwardRef(
     const onReadyRef = React.useRef(onReady);
     const onStateChangeRef = React.useRef(onStateChange);
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
       isInitialRef.current = false;
       onStateChangeRef.current = onStateChange;
       onReadyRef.current = onReady;
@@ -325,7 +325,7 @@ export const BaseNavigationContainer = React.forwardRef(
 
     const onReadyCalledRef = React.useRef(false);
 
-    React.useEffect(() => {
+    React.useLayoutEffect(() => {
       if (!onReadyCalledRef.current && isReady()) {
         onReadyCalledRef.current = true;
         onReadyRef.current?.();

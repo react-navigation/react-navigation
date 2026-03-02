@@ -17,7 +17,7 @@ export function useEventEmitter<T extends Record<string, any>>(
 ): NavigationEventEmitter<T> {
   const listenRef = React.useRef(listen);
 
-  React.useEffect(() => {
+  React.useInsertionEffect(() => {
     listenRef.current = listen;
   });
 

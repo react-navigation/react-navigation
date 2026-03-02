@@ -56,7 +56,7 @@ export function useOnAction<State extends NavigationState>({
   const routerConfigOptionsRef =
     React.useRef<RouterConfigOptions>(routerConfigOptions);
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     routerConfigOptionsRef.current = routerConfigOptions;
   });
 
