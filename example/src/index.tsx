@@ -307,15 +307,21 @@ const Stack = createStackNavigator({
           .replace(/^-/, '')
           .toLowerCase();
 
+        const options = {
+          title: item.title,
+          headerTitle: item.title.includes(' - ')
+            ? item.title.split(' - ')[1]
+            : item.title,
+          headerShown: false,
+          ...('options' in item ? item.options : null),
+        };
+
         if ('screen' in item) {
           return [
             name,
             {
               screen: item.screen,
-              options: {
-                headerShown: false,
-                title: item.title,
-              },
+              options,
               linking: {
                 path,
               },
@@ -327,14 +333,7 @@ const Stack = createStackNavigator({
           name,
           {
             screen: item,
-            options: {
-              headerShown: false,
-              title: item.title,
-              headerTitle: item.title.includes(' - ')
-                ? item.title.split(' - ')[1]
-                : item.title,
-              ...('options' in item ? item.options : null),
-            },
+            options,
             linking: {
               path,
               ...item.linking,

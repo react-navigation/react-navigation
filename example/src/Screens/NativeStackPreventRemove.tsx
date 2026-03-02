@@ -1,14 +1,14 @@
 import { Button } from '@react-navigation/elements';
 import {
-  type NavigatorScreenParams,
-  type PathConfig,
-  type StaticScreenProps,
+  CommonActions,
+  useNavigation,
   usePreventRemove,
+  useRoute,
+  useTheme,
 } from '@react-navigation/native';
-import { CommonActions, useTheme } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
-  type NativeStackScreenProps,
+  createNativeStackScreen,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
 import {
@@ -22,26 +22,13 @@ import {
 
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
-import type { PreventRemoveParamList } from './StackPreventRemove';
-
-type NativePreventRemoveParamList = {
-  Article: { author: string };
-  Input: undefined;
-};
-
-const linking = {
-  screens: {
-    Article: COMMON_LINKING_CONFIG.Article,
-    Input: 'input',
-  },
-} satisfies PathConfig<NavigatorScreenParams<NativePreventRemoveParamList>>;
 
 const scrollEnabled = Platform.select({ web: true, default: false });
 
-const ArticleScreen = ({
-  navigation,
-  route,
-}: NativeStackScreenProps<NativePreventRemoveParamList, 'Article'>) => {
+const ArticleScreen = () => {
+  const route = useRoute('Article');
+  const navigation = useNavigation('Article');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -60,9 +47,8 @@ const ArticleScreen = ({
   );
 };
 
-const InputScreen = ({
-  navigation,
-}: NativeStackScreenProps<NativePreventRemoveParamList, 'Input'>) => {
+const InputScreen = () => {
+  const navigation = useNavigation('Input');
   const [text, setText] = React.useState('');
   const { colors } = useTheme();
 
@@ -126,27 +112,25 @@ const InputScreen = ({
   );
 };
 
-const Stack = createNativeStackNavigator<NativePreventRemoveParamList>();
+const NativeStackPreventRemoveNavigator = createNativeStackNavigator({
+  screens: {
+    Input: createNativeStackScreen({
+      screen: InputScreen,
+      options: {
+        presentation: 'modal',
+      },
+    }),
+    Article: createNativeStackScreen({
+      screen: ArticleScreen,
+      linking: COMMON_LINKING_CONFIG.Article,
+    }),
+  },
+});
 
-export function NativeStackPreventRemove(
-  _: StaticScreenProps<NavigatorScreenParams<PreventRemoveParamList>>
-) {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Input"
-        component={InputScreen}
-        options={{
-          presentation: 'modal',
-        }}
-      />
-      <Stack.Screen name="Article" component={ArticleScreen} />
-    </Stack.Navigator>
-  );
-}
-
-NativeStackPreventRemove.title = 'Native Stack - Prevent Remove';
-NativeStackPreventRemove.linking = linking;
+export const NativeStackPreventRemove = {
+  screen: NativeStackPreventRemoveNavigator,
+  title: 'Native Stack - Prevent Remove',
+};
 
 const styles = StyleSheet.create({
   content: {

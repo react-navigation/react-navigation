@@ -5,7 +5,7 @@ name: Native Stack - Preload Flow
     file: ../launch.yml
     env:
       LINK: native-stack-preload-flow
-      TEXT: 'Home'
+      TEXT: 'Native Stack Preload Flow'
 - assertVisible:
     text: 'Details is not preloaded yet.'
 - tapOn:

@@ -5,7 +5,7 @@ name: Bottom Tabs - Preload Flow
     file: ../launch.yml
     env:
       LINK: bottom-tabs-preload-flow
-      TEXT: 'Home'
+      TEXT: 'Bottom Tabs Preload Flow'
 - assertVisible:
     text: 'Details is not preloaded yet.'
 - tapOn:
@@ -20,7 +20,7 @@ name: Bottom Tabs - Preload Flow
 - tapOn:
     text: 'Back to home'
 - assertVisible:
-    text: 'Home'
+    text: 'Bottom Tabs Preload Flow'
 - tapOn:
     text: 'Navigate to Details'
 - assertVisible:

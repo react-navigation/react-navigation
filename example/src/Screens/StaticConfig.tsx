@@ -77,7 +77,6 @@ const HomeTabs = createBottomTabNavigator({
           source: focused ? iconListMusic : iconMusic,
         }),
       },
-      linking: 'albums',
     },
     Contacts: {
       screen: Contacts,
@@ -88,7 +87,6 @@ const HomeTabs = createBottomTabNavigator({
           source: iconBookUser,
         },
       },
-      linking: 'contacts',
     },
     Chat: {
       screen: Chat,
@@ -99,7 +97,6 @@ const HomeTabs = createBottomTabNavigator({
           source: iconMessage,
         },
       },
-      linking: 'chat',
       if: useIsChatShown,
     },
   },

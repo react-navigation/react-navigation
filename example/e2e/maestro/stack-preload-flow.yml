@@ -5,7 +5,7 @@ name: Stack - Preload Flow
     file: ../launch.yml
     env:
       LINK: stack-preload-flow
-      TEXT: 'Home'
+      TEXT: 'Stack Preload Flow'
 - assertVisible:
     text: 'Details is not preloaded yet.'
 - tapOn:
