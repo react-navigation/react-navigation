@@ -26,7 +26,7 @@ const linking = {
 const DetailsScreen = ({
   navigation,
 }: StackScreenProps<PreloadStackParamList, 'Details'>) => {
-  const [loadingCountdown, setLoadingCountdown] = useState(5);
+  const [loadingCountdown, setLoadingCountdown] = useState(3);
 
   useEffect(() => {
     if (loadingCountdown === 0) {

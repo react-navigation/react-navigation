@@ -24,7 +24,7 @@ const linking = {
 const DetailsScreen = ({
   navigation,
 }: BottomTabScreenProps<PreloadBottomTabsParamList, 'Details'>) => {
-  const [loadingCountdown, setLoadingCountdown] = useState(5);
+  const [loadingCountdown, setLoadingCountdown] = useState(3);
 
   useEffect(() => {
     if (loadingCountdown === 0) {

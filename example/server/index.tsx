@@ -1,4 +1,5 @@
 import './resolve-hooks';
+import './env';
 
 import {
   ServerContainer,
