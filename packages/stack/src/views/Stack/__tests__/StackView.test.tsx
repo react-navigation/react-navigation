@@ -164,7 +164,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeC]);
       const state = createState(
         {
-          previousState: createNavigationState([routeA, routeB]),
+          previousState: createNavigationState([routeB]),
           replacingRouteKeys: ['A'],
           openingRouteKeys: ['B'],
         },
@@ -194,7 +194,7 @@ describe('StackView.getDerivedStateFromProps', () => {
 
       const state = createState(
         {
-          previousState: createNavigationState([routeA, routeB]),
+          previousState: createNavigationState([routeB]),
           previousDescriptors: oldDescriptors,
           replacingRouteKeys: ['A'],
           openingRouteKeys: ['B'],
@@ -218,7 +218,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeA]);
       const state = createState(
         {
-          previousState: createNavigationState([routeA, routeB]),
+          previousState: createNavigationState([routeA]),
           closingRouteKeys: ['B'],
         },
         [routeA, routeB]
@@ -236,7 +236,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeB]);
       const state = createState(
         {
-          previousState: createNavigationState([routeA, routeB]),
+          previousState: createNavigationState([routeB]),
           replacingRouteKeys: ['A'],
           openingRouteKeys: ['B'],
         },
@@ -256,7 +256,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([updatedRouteB]);
       const state = createState(
         {
-          previousState: createNavigationState([routeA, routeB]),
+          previousState: createNavigationState([routeB]),
           replacingRouteKeys: ['A'],
           openingRouteKeys: ['B'],
         },
@@ -339,7 +339,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeA]);
       const state = createState(
         {
-          previousState: createNavigationState([routeA, routeB]),
+          previousState: createNavigationState([routeB]),
           replacingRouteKeys: ['A'],
           openingRouteKeys: ['B'],
         },
