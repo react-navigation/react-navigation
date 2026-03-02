@@ -19,6 +19,8 @@ name: Bottom Tabs - Preload Flow
     text: 'Loaded!'
 - tapOn:
     text: 'Back to home'
+- assertVisible:
+    text: 'Home'
 - tapOn:
     text: 'Navigate to Details'
 - assertVisible:
