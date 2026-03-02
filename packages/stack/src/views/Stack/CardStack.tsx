@@ -627,7 +627,7 @@ export class CardStack extends React.Component<Props, State> {
           ],
         })}
         <View style={styles.container} onLayout={this.handleLayout}>
-          {[...routes, ...state.preloadedRoutes].map((route, index) => {
+          {[...routes, ...state.preloadedRoutes].map((route, index, self) => {
             const focused = focusedRoute.key === route.key;
             const gesture = gestures[route.key];
             const scene = scenes[index];
@@ -679,7 +679,8 @@ export class CardStack extends React.Component<Props, State> {
 
             const isAnimating =
               animatingRouteKeys.includes(route.key) ||
-              animatingRouteKeys.includes(routes[index + 1]?.key);
+              animatingRouteKeys.includes(self[index + 1]?.key) ||
+              animatingRouteKeys.includes(self[index - 1]?.key);
 
             return (
               <CardContainer
@@ -719,15 +720,13 @@ export class CardStack extends React.Component<Props, State> {
               >
                 <ActivityView
                   mode={
-                    // Render focused and preloaded screens normally
-                    focused
+                    // Render focused and animating screens normally
+                    focused || isAnimating
                       ? 'normal'
-                      : // Unpause preloaded and animating screens so updates are visible
+                      : // Unpause preloaded screens so updates are visible
                         // This lets preloaded screens initialize
                         // And avoids things like pressable animation from being frozen
-                        inactiveBehavior === 'none' ||
-                          isPreloaded ||
-                          isAnimating
+                        inactiveBehavior === 'none' || isPreloaded
                         ? 'inert'
                         : 'paused'
                   }
