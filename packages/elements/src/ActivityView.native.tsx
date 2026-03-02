@@ -76,9 +76,11 @@ const VIEW_CONFIG = {
 };
 
 type ActivityContentViewProps = Omit<ViewProps, 'style'> & {
-  style?: {
-    display?: 'contents';
-  };
+  style?:
+    | {
+        display?: 'contents' | undefined;
+      }
+    | undefined;
 };
 
 const ActivityContentView: HostComponent<ActivityContentViewProps> =

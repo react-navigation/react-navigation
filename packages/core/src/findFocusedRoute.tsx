@@ -2,10 +2,10 @@ import type { InitialState } from '@react-navigation/routers';
 
 type Result =
   | {
-      key?: string;
+      key?: string | undefined;
       name: string;
-      params?: object;
-      path?: string;
+      params?: object | undefined;
+      path?: string | undefined;
     }
   | undefined;
 

@@ -21,11 +21,11 @@ export type Props = {
    *
    * Defaults to 500ms.
    */
-  delay?: number;
+  delay?: number | undefined;
   /**
    * The style for the container view
    */
-  style?: Omit<React.CSSProperties & ViewStyle, 'display'>;
+  style?: Omit<React.CSSProperties & ViewStyle, 'display'> | undefined;
   /**
    * The content of the activity view
    */

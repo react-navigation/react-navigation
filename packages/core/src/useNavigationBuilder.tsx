@@ -58,7 +58,7 @@ PrivateValueStore;
 
 type NavigatorRoute = {
   key: string;
-  params?: NavigatorScreenParams<ParamListBase>;
+  params?: NavigatorScreenParams<ParamListBase> | undefined;
 };
 
 const CONSUMED_PARAMS = Symbol('CONSUMED_PARAMS');
