@@ -352,7 +352,7 @@ function AnimatedScreenContent({
 }: {
   progress: Animated.Value;
   animationEnabled: boolean;
-  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
+  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator | undefined;
   children: React.ReactNode;
   style: StyleProp<ViewStyle>;
 }) {

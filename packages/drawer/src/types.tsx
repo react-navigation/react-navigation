@@ -138,7 +138,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
    *
    * Defaults to `slide` on iOS and `front` on other platforms.
    */
-  drawerType?: 'front' | 'back' | 'slide' | 'permanent';
+  drawerType?: 'front' | 'back' | 'slide' | 'permanent' | undefined;
 
   /**
    * Whether the statusbar should be hidden when the drawer is pulled or opens,

@@ -1,5 +1,5 @@
 export function getLabel(
-  options: { label?: string; title?: string },
+  options: { label?: string | undefined; title?: string | undefined },
   fallback: string
 ): string {
   return options.label !== undefined

@@ -13,11 +13,12 @@ import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
 type Props = {
   icon?:
     | HeaderIcon
-    | ((props: { tintColor: ColorValue | undefined }) => React.ReactNode);
-  accessibilityLabel?: string;
-  pressColor?: ColorValue;
-  pressOpacity?: number;
-  tintColor?: ColorValue;
+    | ((props: { tintColor: ColorValue | undefined }) => React.ReactNode)
+    | undefined;
+  accessibilityLabel?: string | undefined;
+  pressColor?: ColorValue | undefined;
+  pressOpacity?: number | undefined;
+  tintColor?: ColorValue | undefined;
 };
 
 export function DrawerToggleButton({

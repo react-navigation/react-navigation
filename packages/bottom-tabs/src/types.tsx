@@ -194,7 +194,7 @@ type BottomTabCustomOptions = {
    *
    * Only supported with `custom` implementation.
    */
-  tabBarLabelPosition?: LabelPosition;
+  tabBarLabelPosition?: LabelPosition | undefined;
 
   /**
    * Whether label font should scale to respect Text Size accessibility settings.
@@ -509,7 +509,7 @@ export type BottomTabNavigationOptions = {
   /**
    * Text to show in a badge on the tab icon.
    */
-  tabBarBadge?: number | string;
+  tabBarBadge?: number | string | undefined;
 
   /**
    * Custom style for the tab bar badge.
@@ -527,7 +527,7 @@ export type BottomTabNavigationOptions = {
   /**
    * Color for the icon and label in the active tab.
    */
-  tabBarActiveTintColor?: ColorValue;
+  tabBarActiveTintColor?: ColorValue | undefined;
 
   /**
    * Color for the icon and label in the inactive tabs.
@@ -752,7 +752,7 @@ export type BottomTabBarButtonProps = Omit<
   React.ComponentProps<typeof PlatformPressable>,
   'style'
 > & {
-  href?: string;
+  href?: string | undefined;
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   onPress?: (

@@ -18,8 +18,8 @@ export type TabBarIconProps = {
   route: Route<string>;
   variant: 'uikit' | 'material';
   size: 'compact' | 'regular';
-  badge?: string | number;
-  badgeStyle?: StyleProp<TextStyle>;
+  badge?: string | number | undefined;
+  badgeStyle?: StyleProp<TextStyle> | undefined;
   activeOpacity: number;
   inactiveOpacity: number;
   activeTintColor: ColorValue;
@@ -31,7 +31,7 @@ export type TabBarIconProps = {
         color: ColorValue;
         size: number;
       }) => BottomTabIcon | React.ReactNode);
-  allowFontScaling?: boolean;
+  allowFontScaling?: boolean | undefined;
   style: StyleProp<ViewStyle>;
 };
 

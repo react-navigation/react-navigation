@@ -19,15 +19,15 @@ type Props = TextProps & {
   /**
    * Content of the `Badge`.
    */
-  children?: string | number;
+  children?: string | number | undefined;
   /**
    * Size of the `Badge`.
    */
-  size?: number;
+  size?: number | undefined;
   /**
    * Style object for the tab bar container.
    */
-  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
+  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>> | undefined;
 };
 
 const useNativeDriver = Platform.OS !== 'web';
