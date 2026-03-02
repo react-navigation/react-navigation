@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.15.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.15.2...@react-navigation/bottom-tabs@7.15.3) (2026-03-02)
+
+### Bug Fixes
+
+* include background color and blur effect in scrollEdgeAppearance in native bottom tabs ([#12997](https://github.com/react-navigation/react-navigation/issues/12997)) ([a329d59](https://github.com/react-navigation/react-navigation/commit/a329d59cf941563fa0f2fb610cb4db23b5806754)) - by @Kasendwa
+
 ## [7.15.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.15.1...@react-navigation/bottom-tabs@7.15.2) (2026-02-25)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
