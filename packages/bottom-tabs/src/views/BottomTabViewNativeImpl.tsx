@@ -433,6 +433,9 @@ export function BottomTabViewNative({
                     : scrollEdgeEffects?.right,
               }}
               scrollEdgeAppearance={{
+                tabBarBackgroundColor,
+                tabBarShadowColor,
+                tabBarBlurEffect,
                 stacked: {
                   normal: tabItemAppearance,
                 },
