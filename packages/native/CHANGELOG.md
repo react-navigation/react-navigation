@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.11...@react-navigation/native@8.0.0-alpha.12) (2026-03-03)
+
+### Bug Fixes
+
+* use nested screen from params when creating path ([#13005](https://github.com/react-navigation/react-navigation/issues/13005)) ([af23b4c](https://github.com/react-navigation/react-navigation/commit/af23b4cf01fd21aca1dfba1c8fd2143e14bec46d)) - by @satya164
+
+### Features
+
+* add a component that uses `Activity` but keeps content visible ([#12980](https://github.com/react-navigation/react-navigation/issues/12980)) ([174cb5d](https://github.com/react-navigation/react-navigation/commit/174cb5d91733d8eaeecddb9776e10d72afa2f08e)) - by @satya164
+* handle traffic lights on iOS with new `UNSTABLE_CornerInset` component ([#12978](https://github.com/react-navigation/react-navigation/issues/12978)) ([9dbcb9f](https://github.com/react-navigation/react-navigation/commit/9dbcb9faa02843853c52fc0e73ca1de5bef7a591)) - by @satya164
+
 # [8.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.10...@react-navigation/native@8.0.0-alpha.11) (2026-02-12)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.2...@react-navigation/routers@8.0.0-alpha.3) (2026-03-03)
+
+### Bug Fixes
+
+* fix incorrect type for reset action ([724e198](https://github.com/react-navigation/react-navigation/commit/724e198a4b3d4062db5b74bf396e54c1636f8e93)) - by @satya164
+
 # [8.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.1...@react-navigation/routers@8.0.0-alpha.2) (2026-02-12)
 
 ### Features

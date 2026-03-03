@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.12...@react-navigation/stack@8.0.0-alpha.13) (2026-03-03)
+
+### Bug Fixes
+
+* keep animating screens as interactive in stack ([32c1f28](https://github.com/react-navigation/react-navigation/commit/32c1f28c6e3a3ddc77cd667e3174c6d52c110485)) - by @satya164
+* **stack:** use correct previous focused route when preloaded routes exist ([#13000](https://github.com/react-navigation/react-navigation/issues/13000)) ([7778bae](https://github.com/react-navigation/react-navigation/commit/7778baed0aa500f960b8428c3cb281390a463c38)) - by @WojtekBoman
+
+### Features
+
+* delay marking activity as hidden so animations can finish ([#13002](https://github.com/react-navigation/react-navigation/issues/13002)) ([bf8c8f8](https://github.com/react-navigation/react-navigation/commit/bf8c8f846c0fa75b82b131002fd458fa92120e71)) - by @satya164
+* **native-stack:** add support for images in nested header menus ([#12987](https://github.com/react-navigation/react-navigation/issues/12987)) ([d915ad5](https://github.com/react-navigation/react-navigation/commit/d915ad516d4d465effa5135dc33e04fd05f7160c)) - by @Ubax
+
 # [8.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.11...@react-navigation/stack@8.0.0-alpha.12) (2026-02-16)
 
 ### Bug Fixes

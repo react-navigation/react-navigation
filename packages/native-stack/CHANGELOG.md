@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.13...@react-navigation/native-stack@8.0.0-alpha.14) (2026-03-03)
+
+### Features
+
+* **native-stack:** add support for images in nested header menus ([#12987](https://github.com/react-navigation/react-navigation/issues/12987)) ([d915ad5](https://github.com/react-navigation/react-navigation/commit/d915ad516d4d465effa5135dc33e04fd05f7160c)) - by @Ubax
+
 # [8.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.12...@react-navigation/native-stack@8.0.0-alpha.13) (2026-02-16)
 
 **Note:** Version bump only for package @react-navigation/native-stack
