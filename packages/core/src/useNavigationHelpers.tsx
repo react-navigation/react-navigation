@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { NavigationContext } from './NavigationProvider';
+import { NavigationContext } from './NavigationContext';
 import { type NavigationHelpers, PrivateValueStore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 

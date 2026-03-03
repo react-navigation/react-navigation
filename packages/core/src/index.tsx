@@ -8,11 +8,11 @@ export { getFocusedRouteNameFromRoute } from './getFocusedRouteNameFromRoute';
 export { getPathFromState } from './getPathFromState';
 export { getStateFromPath } from './getStateFromPath';
 export { NavigationContainerRefContext } from './NavigationContainerRefContext';
+export { NavigationContext } from './NavigationContext';
 export { NavigationHelpersContext } from './NavigationHelpersContext';
 export { NavigationIndependentTree } from './NavigationIndependentTree';
 export { NavigationMetaContext } from './NavigationMetaContext';
 export {
-  NavigationContext,
   NavigationProvider,
   NavigationRouteContext,
 } from './NavigationProvider';

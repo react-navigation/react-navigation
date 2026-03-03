@@ -42,6 +42,7 @@ import { type ScreenConfigWithParent, useDescriptors } from './useDescriptors';
 import { useEventEmitter } from './useEventEmitter';
 import { useFocusedListenersChildrenAdapter } from './useFocusedListenersChildrenAdapter';
 import { useFocusEvents } from './useFocusEvents';
+import { FocusedRouteKeyContext } from './useIsFocused';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
 import { useLazyValue } from './useLazyValue';
 import { useNavigationHelpers } from './useNavigationHelpers';
@@ -997,7 +998,11 @@ export function useNavigationBuilder<
       <NavigationMetaContext.Provider value={undefined}>
         <NavigationHelpersContext.Provider value={navigation}>
           <NavigationStateListenerProvider state={state}>
-            <PreventRemoveProvider>{element}</PreventRemoveProvider>
+            <FocusedRouteKeyContext.Provider
+              value={state.routes[state.index].key}
+            >
+              <PreventRemoveProvider>{element}</PreventRemoveProvider>
+            </FocusedRouteKeyContext.Provider>
           </NavigationStateListenerProvider>
         </NavigationHelpersContext.Provider>
       </NavigationMetaContext.Provider>
