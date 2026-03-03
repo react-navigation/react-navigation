@@ -2,6 +2,7 @@ import type { ParamListBase, Route } from '@react-navigation/routers';
 import * as React from 'react';
 
 import type { NavigationProp } from './types';
+import { FocusedRouteKeyContext, IsFocusedContext } from './useIsFocused';
 import { useLazyValue } from './useLazyValue';
 
 /**
@@ -48,14 +49,27 @@ export function NavigationProvider({ route, navigation, children }: Props) {
     [NamedRouteContext, parents, route.name]
   );
 
+  const parentIsFocused = React.useContext(IsFocusedContext);
+  const focusedRouteKey = React.useContext(FocusedRouteKeyContext);
+
+  // Mark route as focused only if:
+  // - It doesn't have a parent navigator
+  // - Parent navigator is focused
+  const isFocused =
+    parentIsFocused == null || parentIsFocused
+      ? focusedRouteKey === route.key
+      : false;
+
   return (
     <NamedRouteContextListContext.Provider value={NamedRouteContextList}>
       <NamedRouteContext.Provider value={route}>
         <NavigationRouteContext.Provider value={route}>
           <NavigationContext.Provider value={navigation}>
-            <NavigationRouteNameContext.Provider value={route.name}>
-              {children}
-            </NavigationRouteNameContext.Provider>
+            <IsFocusedContext.Provider value={isFocused}>
+              <NavigationRouteNameContext.Provider value={route.name}>
+                {children}
+              </NavigationRouteNameContext.Provider>
+            </IsFocusedContext.Provider>
           </NavigationContext.Provider>
         </NavigationRouteContext.Provider>
       </NamedRouteContext.Provider>
