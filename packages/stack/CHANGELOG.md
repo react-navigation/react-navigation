@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.8.2...@react-navigation/stack@7.8.3) (2026-03-03)
+
+### Bug Fixes
+
+* **stack:** use correct previous focused route when preloaded routes exist ([#13000](https://github.com/react-navigation/react-navigation/issues/13000)) ([ff15c05](https://github.com/react-navigation/react-navigation/commit/ff15c05d56f91abd5e9a75773eaff17f6587084c)) - by @
+
 ## [7.8.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.8.1...@react-navigation/stack@7.8.2) (2026-02-25)
 
 **Note:** Version bump only for package @react-navigation/stack

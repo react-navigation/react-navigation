@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.16.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.15.1...@react-navigation/core@7.16.0) (2026-03-03)
+
+### Bug Fixes
+
+* fix potential undefined state ([02f2175](https://github.com/react-navigation/react-navigation/commit/02f21752c3b8fe09197785c4c62c36dc9d87a570)) - by @
+* rework useIsFocused to update at the same time as the navigator ([ad88143](https://github.com/react-navigation/react-navigation/commit/ad8814381dafceb48c3e8961fadf329b3e78fb46)) - by @
+
+### Features
+
+* add a NavigationProvider component ([452a5a7](https://github.com/react-navigation/react-navigation/commit/452a5a740a52b4019c1b519ebd6b384cc7a498f8)) - by @
+
 ## [7.15.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.15.0...@react-navigation/core@7.15.1) (2026-02-25)
 
 **Note:** Version bump only for package @react-navigation/core
