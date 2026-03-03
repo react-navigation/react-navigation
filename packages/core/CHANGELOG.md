@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.16.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.16.0...@react-navigation/core@7.16.1) (2026-03-03)
+
+### Bug Fixes
+
+* update useNavigationState in layout effect ([dd17e22](https://github.com/react-navigation/react-navigation/commit/dd17e22451bf6fd01d01c17e2d1e1fdae22c08d0)) - by @satya164
+
 # [7.16.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.15.1...@react-navigation/core@7.16.0) (2026-03-03)
 
 ### Bug Fixes
