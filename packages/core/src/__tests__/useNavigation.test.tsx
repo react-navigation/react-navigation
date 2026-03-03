@@ -15,9 +15,16 @@ test('gets navigation prop from context', () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return state.routes.map((route) => descriptors[route.key].render());
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const Test = () => {
@@ -41,9 +48,16 @@ test("gets navigation's parent from context", () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return state.routes.map((route) => descriptors[route.key].render());
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const Test = () => {
@@ -73,9 +87,16 @@ test("gets navigation's parent's parent from context", () => {
   expect.assertions(2);
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return state.routes.map((route) => descriptors[route.key].render());
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const Test = () => {
@@ -113,9 +134,16 @@ test('gets navigation from container from context', () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return state.routes.map((route) => descriptors[route.key].render());
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const Test = () => {

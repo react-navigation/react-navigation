@@ -55,15 +55,29 @@ test("lets parent handle the action if child didn't", () => {
     return ParentRouter;
   }
   const ParentNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(CurrentRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      CurrentRouter,
+      props
+    );
 
-    return descriptors[state.routes[state.index].key].render();
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
   };
 
   const ChildNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return descriptors[state.routes[state.index].key].render();
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
   };
 
   const TestScreen = (props: any) => {
@@ -138,24 +152,28 @@ test("lets children handle the action if parent didn't with navigationInChildEna
   }
 
   const ChildNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       CurrentChildRouter,
       props
     );
 
-    return descriptors[state.routes[state.index].key].render();
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
   };
 
   const ParentNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       CurrentParentRouter,
       props
     );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -244,9 +262,16 @@ test("lets children handle the action if parent didn't with navigationInChildEna
 
 test("lets children handle the action if parent didn't with NAVIGATE_DEPRECATED", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const TestScreen = () => null;
@@ -328,15 +353,15 @@ test('action goes to correct parent navigator if target is specified', () => {
   }
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       CurrentTestRouter,
       props
     );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -456,15 +481,15 @@ test('action goes to correct child navigator if target is specified', () => {
   }
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       CurrentTestRouter,
       props
     );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -585,24 +610,28 @@ test("action doesn't bubble if target is specified", () => {
   }
 
   const ChildNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       CurrentChildRouter,
       props
     );
 
-    return descriptors[state.routes[state.index].key].render();
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
   };
 
   const ParentNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       CurrentParentRouter,
       props
     );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -644,12 +673,15 @@ test('logs error if no navigator handled the action', () => {
   const TestRouter = MockRouter;
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(TestRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      TestRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -716,12 +748,15 @@ test('logs error if no navigator handled the action', () => {
 
 test("prevents removing a screen with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -776,7 +811,7 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -792,9 +827,9 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
       {
-        key: 'baz-5',
+        key: 'baz-6',
         name: 'baz',
       },
     ],
@@ -814,8 +849,8 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
-      { key: 'baz-5', name: 'baz' },
+      { key: 'bar-5', name: 'bar' },
+      { key: 'baz-6', name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -856,12 +891,15 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
 
 test("prevents removing a child screen with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -923,7 +961,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -939,16 +977,16 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
       {
-        key: 'baz-5',
+        key: 'baz-6',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-7',
+          key: 'stack-8',
           preloadedRoutes: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-8', name: 'qux' }],
+          routes: [{ key: 'qux-9', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -970,16 +1008,16 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
       {
-        key: 'baz-5',
+        key: 'baz-6',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-7',
+          key: 'stack-8',
           preloadedRoutes: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-8', name: 'qux' }],
+          routes: [{ key: 'qux-9', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -1024,12 +1062,15 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
 
 test("prevents removing a grand child screen with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -1096,7 +1137,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -1112,25 +1153,25 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
       {
-        key: 'baz-5',
+        key: 'baz-6',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-7',
+          key: 'stack-8',
           preloadedRoutes: [],
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-8',
+              key: 'qux-9',
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-10',
+                key: 'stack-12',
                 preloadedRoutes: [],
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-11', name: 'lex' }],
+                routes: [{ key: 'lex-13', name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -1157,25 +1198,25 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
+      { key: 'bar-5', name: 'bar' },
       {
-        key: 'baz-5',
+        key: 'baz-6',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-7',
+          key: 'stack-8',
           preloadedRoutes: [],
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-8',
+              key: 'qux-9',
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-10',
+                key: 'stack-12',
                 preloadedRoutes: [],
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-11', name: 'lex' }],
+                routes: [{ key: 'lex-13', name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -1225,12 +1266,15 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
 
 test("prevents removing by multiple screens with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -1307,26 +1351,26 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [
       { key: 'foo-3', name: 'foo' },
-      { key: 'bar-4', name: 'bar' },
-      { key: 'baz-5', name: 'baz' },
+      { key: 'bar-5', name: 'bar' },
+      { key: 'baz-6', name: 'baz' },
       {
-        key: 'bax-6',
+        key: 'bax-7',
         name: 'bax',
         state: {
           index: 0,
-          key: 'stack-8',
+          key: 'stack-9',
           preloadedRoutes: [],
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-9',
+              key: 'qux-10',
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-11',
+                key: 'stack-13',
                 preloadedRoutes: [],
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-12', name: 'lex' }],
+                routes: [{ key: 'lex-14', name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -1387,12 +1431,15 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
 
 test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -1455,14 +1502,14 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
     routes: [
       { key: 'foo-3', name: 'foo' },
       {
-        key: 'baz-4',
+        key: 'baz-5',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-6',
+          key: 'stack-7',
           preloadedRoutes: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-7', name: 'qux' }],
+          routes: [{ key: 'qux-8', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -1494,14 +1541,14 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
     routes: [
       { key: 'foo-3', name: 'foo' },
       {
-        key: 'baz-4',
+        key: 'baz-5',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-6',
+          key: 'stack-7',
           preloadedRoutes: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-7', name: 'qux' }],
+          routes: [{ key: 'qux-8', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
