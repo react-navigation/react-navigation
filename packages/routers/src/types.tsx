@@ -45,7 +45,9 @@ export type NavigationState<ParamList extends ParamListBase = ParamListBase> =
 
 export type InitialState = Readonly<
   Partial<Omit<NavigationState, 'stale' | 'routes'>> & {
-    routes: (Omit<Route<string>, 'key'> & { state?: InitialState })[];
+    routes: (Omit<Route<string>, 'key'> & {
+      state?: InitialState | undefined;
+    })[];
   }
 >;
 

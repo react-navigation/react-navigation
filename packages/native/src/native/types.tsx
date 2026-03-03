@@ -30,7 +30,7 @@ export type MaterialSymbolOptions = {
    *
    * @default 'outlined'
    */
-  variant?: 'outlined' | 'rounded' | 'sharp';
+  variant?: 'outlined' | 'rounded' | 'sharp' | undefined;
   /**
    * The weight of the symbol.
    *
@@ -69,19 +69,20 @@ export type MaterialSymbolOptions = {
     | 400
     | 500
     | 600
-    | 700;
+    | 700
+    | undefined;
   /**
    * The size of the symbol.
    *
    * @default 24
    */
-  size?: number;
+  size?: number | undefined;
   /**
    * The color of the symbol.
    *
    * @default 'black'
    */
-  color?: ColorValue;
+  color?: ColorValue | undefined;
 };
 
 export type SFSymbolScale = 'small' | 'medium' | 'large';

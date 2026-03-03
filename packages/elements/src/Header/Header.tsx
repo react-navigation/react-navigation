@@ -34,20 +34,22 @@ type Props = HeaderOptions & {
   /**
    * Options for the back button.
    */
-  back?: {
-    /**
-     * Title of the previous screen.
-     */
-    title: string | undefined;
-    /**
-     * The `href` to use for the anchor tag on web
-     */
-    href: string | undefined;
-  };
+  back?:
+    | {
+        /**
+         * Title of the previous screen.
+         */
+        title: string | undefined;
+        /**
+         * The `href` to use for the anchor tag on web
+         */
+        href: string | undefined;
+      }
+    | undefined;
   /**
    * Whether the header is in a modal
    */
-  modal?: boolean;
+  modal?: boolean | undefined;
   /**
    * Title text for the header.
    */

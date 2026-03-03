@@ -68,7 +68,7 @@ export type LinkingOptions<ParamList extends {}> = {
    *
    * Defaults to `true` when a linking config is specified.
    */
-  enabled?: boolean;
+  enabled?: boolean | undefined;
   /**
    * The prefixes to match to determine whether to handle a URL.
    *
@@ -96,7 +96,7 @@ export type LinkingOptions<ParamList extends {}> = {
    * }
    * ```
    */
-  prefixes?: LinkingPrefix[];
+  prefixes?: LinkingPrefix[] | undefined;
   /**
    * Optional function which takes an incoming URL returns a boolean
    * indicating whether React Navigation should handle it.
@@ -114,7 +114,7 @@ export type LinkingOptions<ParamList extends {}> = {
    * }
    * ```
    */
-  filter?: (url: string) => boolean;
+  filter?: ((url: string) => boolean) | undefined;
   /**
    * Config to fine-tune how to parse the path.
    *
@@ -128,23 +128,25 @@ export type LinkingOptions<ParamList extends {}> = {
    * }
    * ```
    */
-  config?: {
-    /**
-     * Path string to match against for the whole navigation tree.
-     * It's not possible to specify params here since this doesn't belong to a screen.
-     * This is useful when the whole app is under a specific path.
-     * e.g. all of the screens are under `/admin` in `https://example.com/admin`
-     */
-    path?: string;
-    /**
-     * Path configuration for child screens.
-     */
-    screens: PathConfigMap<ParamList>;
-    /**
-     * Name of the initial route to use for the root navigator.
-     */
-    initialRouteName?: keyof ParamList;
-  };
+  config?:
+    | {
+        /**
+         * Path string to match against for the whole navigation tree.
+         * It's not possible to specify params here since this doesn't belong to a screen.
+         * This is useful when the whole app is under a specific path.
+         * e.g. all of the screens are under `/admin` in `https://example.com/admin`
+         */
+        path?: string | undefined;
+        /**
+         * Path configuration for child screens.
+         */
+        screens: PathConfigMap<ParamList>;
+        /**
+         * Name of the initial route to use for the root navigator.
+         */
+        initialRouteName?: keyof ParamList | undefined;
+      }
+    | undefined;
   /**
    * Custom function to get the initial URL used for linking.
    * Uses `Linking.getInitialURL()` by default.
@@ -158,11 +160,9 @@ export type LinkingOptions<ParamList extends {}> = {
    * }
    * ```
    */
-  getInitialURL?: () =>
-    | string
-    | null
-    | undefined
-    | Promise<string | null | undefined>;
+  getInitialURL?:
+    | (() => string | null | undefined | Promise<string | null | undefined>)
+    | undefined;
   /**
    * Custom function to get subscribe to URL updates.
    * Uses `Linking.addEventListener('url', callback)` by default.
@@ -184,30 +184,32 @@ export type LinkingOptions<ParamList extends {}> = {
    * }
    * ```
    */
-  subscribe?: (
-    listener: (url: string) => void
-  ) => undefined | void | (() => void);
+  subscribe?:
+    | ((listener: (url: string) => void) => undefined | void | (() => void))
+    | undefined;
   /**
    * Custom function to parse the URL to a valid navigation state (advanced).
    */
-  getStateFromPath?: typeof getStateFromPathDefault;
+  getStateFromPath?: typeof getStateFromPathDefault | undefined;
   /**
    * Custom function to convert the state object to a valid URL (advanced).
    * Only applicable on Web.
    */
-  getPathFromState?: typeof getPathFromStateDefault;
+  getPathFromState?: typeof getPathFromStateDefault | undefined;
   /**
    * Custom function to convert the state object to a valid action (advanced).
    */
-  getActionFromState?: typeof getActionFromStateDefault;
+  getActionFromState?: typeof getActionFromStateDefault | undefined;
 };
 
 export type DocumentTitleOptions = {
-  enabled?: boolean;
-  formatter?: (
-    options: Record<string, any> | undefined,
-    route: Route<string> | undefined
-  ) => string;
+  enabled?: boolean | undefined;
+  formatter?:
+    | ((
+        options: Record<string, any> | undefined,
+        route: Route<string> | undefined
+      ) => string)
+    | undefined;
 };
 
 export type Persistor = {

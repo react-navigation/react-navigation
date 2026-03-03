@@ -18,7 +18,7 @@ import { shouldPreventRemove, useOnPreventRemove } from './useOnPreventRemove';
 
 type Options<State extends NavigationState> = {
   router: Router<State, NavigationAction>;
-  key?: string;
+  key?: string | undefined;
   getState: () => State;
   setState: (state: State | PartialState<State>) => void;
   actionListeners: ChildActionListener[];

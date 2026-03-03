@@ -11,8 +11,8 @@ import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
 type Options<ParamList extends {}> = {
-  path?: string;
-  initialRouteName?: string;
+  path?: string | undefined;
+  initialRouteName?: string | undefined;
   screens: PathConfigMap<ParamList>;
 };
 
@@ -21,12 +21,14 @@ type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 type StringifyConfig = Record<string, ((value: unknown) => string) | undefined>;
 
 type ConfigItem = {
-  parts?: PatternPart[];
-  stringify?: StringifyConfig;
-  screens?: Record<string, ConfigItem>;
+  parts?: PatternPart[] | undefined;
+  stringify?: StringifyConfig | undefined;
+  screens?: Record<string, ConfigItem> | undefined;
 };
 
-const getActiveRoute = (state: State): { name: string; params?: object } => {
+const getActiveRoute = (
+  state: State
+): { name: string; params?: object | undefined } => {
   const route =
     typeof state.index === 'number'
       ? state.routes[state.index]

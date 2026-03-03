@@ -30,11 +30,11 @@ import { HeaderIcon } from './HeaderIcon';
 type Props = Omit<HeaderSearchBarOptions, 'ref'> & {
   visible: boolean;
   onClose: () => void;
-  tintColor?: ColorValue;
-  pressColor?: ColorValue;
-  pressOpacity?: number;
+  tintColor?: ColorValue | undefined;
+  pressColor?: ColorValue | undefined;
+  pressOpacity?: number | undefined;
   statusBarHeight: number;
-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
 };
 
 const INPUT_TYPE_TO_MODE = {

@@ -119,11 +119,11 @@ function HeaderBackLabel({
   truncatedLabel,
   onMeasureMinimal,
 }: {
-  allowFontScaling?: boolean;
+  allowFontScaling?: boolean | undefined;
   displayMode: HeaderBackButtonDisplayMode;
   label: string | undefined;
-  labelStyle?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
-  tintColor?: ColorValue;
+  labelStyle?: Animated.WithAnimatedValue<StyleProp<TextStyle>> | undefined;
+  tintColor?: ColorValue | undefined;
   truncatedLabel: string | undefined;
   onMeasureMinimal: () => void;
 }) {

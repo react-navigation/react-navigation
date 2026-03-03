@@ -11,7 +11,7 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
   router: Router<State, Action>;
   getState: () => State;
   setState: (state: State) => void;
-  key?: string;
+  key?: string | undefined;
 };
 
 /**

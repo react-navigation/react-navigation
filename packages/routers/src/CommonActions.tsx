@@ -79,19 +79,21 @@ export function goBack(): Action {
 
 export function navigate(
   name: string,
-  params?: object,
-  options?: {
-    merge?: boolean;
-    pop?: boolean;
-  }
+  params?: object | undefined,
+  options?:
+    | {
+        merge?: boolean | undefined;
+        pop?: boolean | undefined;
+      }
+    | undefined
 ): Action;
 
 export function navigate(options: {
   name: string;
-  params?: object;
-  path?: string;
-  merge?: boolean;
-  pop?: boolean;
+  params?: object | undefined;
+  path?: string | undefined;
+  merge?: boolean | undefined;
+  pop?: boolean | undefined;
 }): Action;
 
 export function navigate(...args: any): Action {
@@ -145,7 +147,7 @@ export function pushParams(params: object) {
   } as const satisfies PushParamsAction;
 }
 
-export function preload(name: string, params?: object) {
+export function preload(name: string, params?: object | undefined) {
   return {
     type: 'PRELOAD',
     payload: { name, params },
