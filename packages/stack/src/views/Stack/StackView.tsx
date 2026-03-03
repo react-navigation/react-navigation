@@ -166,10 +166,9 @@ export class StackView extends React.Component<Props, State> {
     // Get previous focused route from previousState (actual focused route, not last in previousRoutes
     // which can be a preloaded route that was never focused)
     const previousFocusedRoute = state.previousState
-      ? (state.previousState.routes[state.previousState.index] as
-          | Route<string>
-          | undefined)
+      ? state.previousState.routes[state.previousState.index]
       : undefined;
+
     const nextFocusedRoute = routes[routes.length - 1];
 
     const isAnimationEnabled = (key: string) => {
