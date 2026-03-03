@@ -14,9 +14,9 @@ import type {
 
 export type TabActionType = {
   type: 'JUMP_TO';
-  payload: { name: string; params?: object };
-  source?: string;
-  target?: string;
+  payload: { name: string; params?: object | undefined };
+  source?: string | undefined;
+  target?: string | undefined;
 };
 
 export type BackBehavior =
@@ -37,7 +37,7 @@ export type TabRouterOptions = DefaultRouterOptions & {
    * - `fullHistory` - return to last visited route; doesn't drop duplicate entries unlike `history` - matches behavior of web pages
    * - `none` - do not handle going back
    */
-  backBehavior?: BackBehavior;
+  backBehavior?: BackBehavior | undefined;
 };
 
 export type TabNavigationState<ParamList extends ParamListBase> = Omit<

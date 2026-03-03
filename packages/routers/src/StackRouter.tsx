@@ -16,36 +16,36 @@ import type {
 export type StackActionType =
   | {
       type: 'REPLACE';
-      payload: { name: string; params?: object };
-      source?: string;
-      target?: string;
+      payload: { name: string; params?: object | undefined };
+      source?: string | undefined;
+      target?: string | undefined;
     }
   | {
       type: 'PUSH';
-      payload: { name: string; params?: object };
-      source?: string;
-      target?: string;
+      payload: { name: string; params?: object | undefined };
+      source?: string | undefined;
+      target?: string | undefined;
     }
   | {
       type: 'POP';
       payload: { count: number };
-      source?: string;
-      target?: string;
+      source?: string | undefined;
+      target?: string | undefined;
     }
   | {
       type: 'POP_TO_TOP';
-      source?: string;
-      target?: string;
+      source?: string | undefined;
+      target?: string | undefined;
     }
   | {
       type: 'POP_TO';
       payload: {
         name: string;
-        params?: object;
-        merge?: boolean;
+        params?: object | undefined;
+        merge?: boolean | undefined;
       };
-      source?: string;
-      target?: string;
+      source?: string | undefined;
+      target?: string | undefined;
     };
 
 export type StackRouterOptions = DefaultRouterOptions;
