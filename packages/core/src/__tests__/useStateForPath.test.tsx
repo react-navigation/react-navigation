@@ -13,9 +13,16 @@ import { MockRouter } from './__fixtures__/MockRouter';
 
 test('gets focused route state at root', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const TestScreen = () => {
@@ -64,9 +71,16 @@ test('gets focused route state at root', () => {
 
 test('gets focused route state in nested navigator', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const TestScreen = () => {
@@ -187,9 +201,16 @@ test('gets path in each screen', () => {
   };
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const TestScreen = () => {

@@ -18,9 +18,16 @@ test('gets navigation prop from context', () => {
   expect.assertions(2);
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return state.routes.map((route) => descriptors[route.key].render());
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const Test = () => {
@@ -48,9 +55,16 @@ test("gets navigation's parent from context", () => {
   expect.assertions(6);
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return state.routes.map((route) => descriptors[route.key].render());
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const Test = () => {
@@ -102,9 +116,16 @@ test('gets navigation from container from context', () => {
   expect.assertions(3);
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return state.routes.map((route) => descriptors[route.key].render());
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const Test = () => {
@@ -136,9 +157,16 @@ test('gets navigation by route name', () => {
   expect.assertions(8);
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return state.routes.map((route) => descriptors[route.key].render());
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const Test = () => {
@@ -208,13 +236,16 @@ test('gets navigation in preloaded screen', () => {
   expect.assertions(4);
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
         {state.preloadedRoutes?.map((route) => descriptors[route.key].render())}
-      </>
+      </NavigationContent>
     );
   };
 
