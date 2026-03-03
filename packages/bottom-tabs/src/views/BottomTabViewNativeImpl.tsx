@@ -241,6 +241,7 @@ export function BottomTabViewNative({
       {tabBarPosition === 'top' || tabBarPosition === 'left'
         ? tabBarElement
         : null}
+      {/* @ts-expect-error — react-native-bottom-tabs types need | undefined for exactOptionalPropertyTypes */}
       <Tabs.Host
         tabBarHidden={hasCustomTabBar || shouldHideTabBar}
         bottomAccessory={
@@ -414,6 +415,7 @@ export function BottomTabViewNative({
               systemItem={tabBarSystemItem}
               isFocused={isFocused}
               title={tabTitle}
+              // @ts-expect-error — react-native-bottom-tabs types need | undefined for exactOptionalPropertyTypes
               scrollEdgeEffects={{
                 top:
                   scrollEdgeEffects?.top === 'auto'
@@ -432,6 +434,7 @@ export function BottomTabViewNative({
                     ? 'automatic'
                     : scrollEdgeEffects?.right,
               }}
+              // @ts-expect-error — react-native-bottom-tabs types need | undefined for exactOptionalPropertyTypes
               scrollEdgeAppearance={{
                 tabBarBackgroundColor,
                 tabBarShadowColor,
@@ -446,6 +449,7 @@ export function BottomTabViewNative({
                   normal: tabItemAppearance,
                 },
               }}
+              // @ts-expect-error — react-native-bottom-tabs types need | undefined for exactOptionalPropertyTypes
               standardAppearance={{
                 tabBarBackgroundColor,
                 tabBarShadowColor,
@@ -550,12 +554,14 @@ function AnimatedScreenContent({
 function getPlatformIcon(icon: BottomTabIcon): PlatformIcon {
   switch (icon.type) {
     case 'sfSymbol':
+      // @ts-expect-error — react-native-bottom-tabs types need | undefined for exactOptionalPropertyTypes
       return {
         ios: icon,
         android: undefined,
         shared: undefined,
       };
     case 'materialSymbol':
+      // @ts-expect-error — react-native-bottom-tabs types need | undefined for exactOptionalPropertyTypes
       return {
         ios: undefined,
         android: {
@@ -570,6 +576,7 @@ function getPlatformIcon(icon: BottomTabIcon): PlatformIcon {
         shared: undefined,
       };
     case 'image':
+      // @ts-expect-error — react-native-bottom-tabs types need | undefined for exactOptionalPropertyTypes
       return {
         ios:
           icon.tinted === false

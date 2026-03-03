@@ -528,6 +528,7 @@ function Card({
       <Animated.View
         style={[styles.container, containerStyle, customContainerStyle]}
       >
+        {/* @ts-expect-error — react-native-gesture-handler types need | undefined for exactOptionalPropertyTypes */}
         <PanGestureHandler
           enabled={layout.width !== 0 && gestureEnabled}
           onGestureEvent={onGestureEvent}
