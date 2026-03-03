@@ -8,7 +8,7 @@ import {
   type ChildBeforeRemoveListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
-import { NavigationRouteContext } from './NavigationRouteContext';
+import { NavigationRouteContext } from './NavigationProvider';
 import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 

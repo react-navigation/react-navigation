@@ -12,8 +12,10 @@ import {
   type AddListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
-import { NavigationContext } from './NavigationContext';
-import { NavigationRouteContext } from './NavigationRouteContext';
+import {
+  NavigationContext,
+  NavigationRouteContext,
+} from './NavigationProvider';
 import { SceneView } from './SceneView';
 import { ThemeContext } from './theming/ThemeContext';
 import type {

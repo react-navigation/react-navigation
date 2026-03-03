@@ -21,7 +21,7 @@ import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationMetaContext } from './NavigationMetaContext';
-import { NavigationRouteContext } from './NavigationRouteContext';
+import { NavigationRouteContext } from './NavigationProvider';
 import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
 import { Screen } from './Screen';

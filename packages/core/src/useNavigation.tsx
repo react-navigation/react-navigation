@@ -2,7 +2,7 @@ import { type NavigationState } from '@react-navigation/routers';
 import * as React from 'react';
 
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
-import { NavigationContext } from './NavigationContext';
+import { NavigationContext } from './NavigationProvider';
 import type { NavigationProp } from './types';
 
 /**
