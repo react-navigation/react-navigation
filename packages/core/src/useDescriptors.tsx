@@ -12,10 +12,7 @@ import {
   type AddListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
-import {
-  NavigationContext,
-  NavigationRouteContext,
-} from './NavigationProvider';
+import { NavigationProvider } from './NavigationProvider';
 import { SceneView } from './SceneView';
 import { ThemeContext } from './theming/ThemeContext';
 import type {
@@ -270,11 +267,9 @@ export function useDescriptors<
 
     return (
       <NavigationBuilderContext.Provider key={route.key} value={context}>
-        <NavigationContext.Provider value={navigation}>
-          <NavigationRouteContext.Provider value={route}>
-            {element}
-          </NavigationRouteContext.Provider>
-        </NavigationContext.Provider>
+        <NavigationProvider route={route} navigation={navigation}>
+          {element}
+        </NavigationProvider>
       </NavigationBuilderContext.Provider>
     );
   };

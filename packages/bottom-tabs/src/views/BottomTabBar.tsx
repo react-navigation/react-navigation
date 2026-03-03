@@ -6,8 +6,7 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
-  NavigationContext,
-  NavigationRouteContext,
+  NavigationProvider,
   type ParamListBase,
   type TabNavigationState,
   useLinkBuilder,
@@ -434,57 +433,56 @@ export function BottomTabBar({
                 : undefined;
 
           return (
-            <NavigationContext.Provider
+            <NavigationProvider
               key={route.key}
-              value={descriptors[route.key].navigation}
+              route={route}
+              navigation={descriptors[route.key].navigation}
             >
-              <NavigationRouteContext.Provider value={route}>
-                <BottomTabItem
-                  href={buildHref(route.name, route.params)}
-                  route={route}
-                  descriptor={descriptors[route.key]}
-                  focused={focused}
-                  horizontal={hasHorizontalLabels}
-                  compact={compact}
-                  sidebar={sidebar}
-                  variant={tabBarVariant}
-                  onPress={onPress}
-                  onLongPress={onLongPress}
-                  accessibilityLabel={accessibilityLabel}
-                  testID={options.tabBarButtonTestID}
-                  allowFontScaling={options.tabBarAllowFontScaling}
-                  activeTintColor={tabBarActiveTintColor}
-                  inactiveTintColor={tabBarInactiveTintColor}
-                  activeBackgroundColor={tabBarActiveBackgroundColor}
-                  inactiveBackgroundColor={tabBarInactiveBackgroundColor}
-                  button={options.tabBarButton}
-                  icon={
-                    options.tabBarIcon ??
-                    (({ color, size }) => (
-                      <MissingIcon color={color} size={size} />
-                    ))
-                  }
-                  badge={options.tabBarBadge}
-                  badgeStyle={options.tabBarBadgeStyle}
-                  label={label}
-                  showLabel={tabBarShowLabel}
-                  labelStyle={options.tabBarLabelStyle}
-                  iconStyle={options.tabBarIconStyle}
-                  style={[
-                    sidebar
-                      ? {
-                          marginVertical: hasHorizontalLabels
-                            ? tabBarVariant === 'material'
-                              ? 0
-                              : 1
-                            : spacing / 2,
-                        }
-                      : styles.bottomItem,
-                    options.tabBarItemStyle,
-                  ]}
-                />
-              </NavigationRouteContext.Provider>
-            </NavigationContext.Provider>
+              <BottomTabItem
+                href={buildHref(route.name, route.params)}
+                route={route}
+                descriptor={descriptors[route.key]}
+                focused={focused}
+                horizontal={hasHorizontalLabels}
+                compact={compact}
+                sidebar={sidebar}
+                variant={tabBarVariant}
+                onPress={onPress}
+                onLongPress={onLongPress}
+                accessibilityLabel={accessibilityLabel}
+                testID={options.tabBarButtonTestID}
+                allowFontScaling={options.tabBarAllowFontScaling}
+                activeTintColor={tabBarActiveTintColor}
+                inactiveTintColor={tabBarInactiveTintColor}
+                activeBackgroundColor={tabBarActiveBackgroundColor}
+                inactiveBackgroundColor={tabBarInactiveBackgroundColor}
+                button={options.tabBarButton}
+                icon={
+                  options.tabBarIcon ??
+                  (({ color, size }) => (
+                    <MissingIcon color={color} size={size} />
+                  ))
+                }
+                badge={options.tabBarBadge}
+                badgeStyle={options.tabBarBadgeStyle}
+                label={label}
+                showLabel={tabBarShowLabel}
+                labelStyle={options.tabBarLabelStyle}
+                iconStyle={options.tabBarIconStyle}
+                style={[
+                  sidebar
+                    ? {
+                        marginVertical: hasHorizontalLabels
+                          ? tabBarVariant === 'material'
+                            ? 0
+                            : 1
+                          : spacing / 2,
+                      }
+                    : styles.bottomItem,
+                  options.tabBarItemStyle,
+                ]}
+              />
+            </NavigationProvider>
           );
         })}
       </View>

@@ -1,7 +1,6 @@
 import {
-  NavigationContext,
   type NavigationProp,
-  NavigationRouteContext,
+  NavigationProvider,
   type ParamListBase,
   type RouteProp,
 } from '@react-navigation/native';
@@ -76,25 +75,20 @@ export function Screen(props: Props) {
       collapsable={false}
     >
       {headerShown ? (
-        <NavigationContext.Provider value={navigation}>
-          <NavigationRouteContext.Provider value={route}>
-            <View
-              ref={headerRef}
-              pointerEvents="box-none"
-              onLayout={(e) => {
-                const { height } = e.nativeEvent.layout;
+        <NavigationProvider route={route} navigation={navigation}>
+          <View
+            ref={headerRef}
+            pointerEvents="box-none"
+            onLayout={(e) => {
+              const { height } = e.nativeEvent.layout;
 
-                setHeaderHeight(height);
-              }}
-              style={[
-                styles.header,
-                headerTransparent ? styles.absolute : null,
-              ]}
-            >
-              {header}
-            </View>
-          </NavigationRouteContext.Provider>
-        </NavigationContext.Provider>
+              setHeaderHeight(height);
+            }}
+            style={[styles.header, headerTransparent ? styles.absolute : null]}
+          >
+            {header}
+          </View>
+        </NavigationProvider>
       ) : null}
       <View style={styles.content}>
         <HeaderShownContext.Provider

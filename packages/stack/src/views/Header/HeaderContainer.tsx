@@ -1,7 +1,6 @@
 import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
 import {
-  NavigationContext,
-  NavigationRouteContext,
+  NavigationProvider,
   type ParamListBase,
   type Route,
   useLinkBuilder,
@@ -143,38 +142,37 @@ export function HeaderContainer({
         };
 
         return (
-          <NavigationContext.Provider
+          <NavigationProvider
             key={scene.descriptor.route.key}
-            value={scene.descriptor.navigation}
+            route={scene.descriptor.route}
+            navigation={scene.descriptor.navigation}
           >
-            <NavigationRouteContext.Provider value={scene.descriptor.route}>
-              <View
-                onLayout={
-                  onContentHeightChange
-                    ? (e) => {
-                        const { height } = e.nativeEvent.layout;
+            <View
+              onLayout={
+                onContentHeightChange
+                  ? (e) => {
+                      const { height } = e.nativeEvent.layout;
 
-                        onContentHeightChange({
-                          route: scene.descriptor.route,
-                          height,
-                        });
-                      }
-                    : undefined
-                }
-                pointerEvents={isFocused ? 'box-none' : 'none'}
-                aria-hidden={!isFocused}
-                style={
-                  // Avoid positioning the focused header absolutely
-                  // Otherwise accessibility tools don't seem to be able to find it
-                  (mode === 'float' && !isFocused) || headerTransparent
-                    ? styles.header
-                    : null
-                }
-              >
-                {header !== undefined ? header(props) : <Header {...props} />}
-              </View>
-            </NavigationRouteContext.Provider>
-          </NavigationContext.Provider>
+                      onContentHeightChange({
+                        route: scene.descriptor.route,
+                        height,
+                      });
+                    }
+                  : undefined
+              }
+              pointerEvents={isFocused ? 'box-none' : 'none'}
+              aria-hidden={!isFocused}
+              style={
+                // Avoid positioning the focused header absolutely
+                // Otherwise accessibility tools don't seem to be able to find it
+                (mode === 'float' && !isFocused) || headerTransparent
+                  ? styles.header
+                  : null
+              }
+            >
+              {header !== undefined ? header(props) : <Header {...props} />}
+            </View>
+          </NavigationProvider>
         );
       })}
     </View>
