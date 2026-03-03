@@ -42,8 +42,9 @@ export function NavigationStateListenerProvider({
   children: React.ReactNode;
 }) {
   const listeners = React.useRef<(() => void)[]>([]);
+  const stateRef = React.useRef(state);
 
-  const getState = useLatestCallback(() => state);
+  const getState = useLatestCallback(() => stateRef.current);
 
   const subscribe = useLatestCallback((callback: () => void) => {
     listeners.current.push(callback);
@@ -53,7 +54,8 @@ export function NavigationStateListenerProvider({
     };
   });
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
+    stateRef.current = state;
     listeners.current.forEach((callback) => callback());
   }, [state]);
 
