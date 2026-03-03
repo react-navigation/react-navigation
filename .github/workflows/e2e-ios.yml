@@ -9,7 +9,7 @@ on:
 
 jobs:
   maestro-ios:
-    runs-on: macos-latest
+    runs-on: macos-26
     timeout-minutes: 60
     permissions:
       checks: read
@@ -18,7 +18,7 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      MAESTRO_VERSION: 2.1.0
+      MAESTRO_VERSION: 2.2.0
       MAESTRO_CLI_NO_ANALYTICS: 1
       MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
       JAVA_DISTRIBUTION: 'zulu'
@@ -169,6 +169,7 @@ jobs:
 
       - name: Run Maestro tests
         run: |
+          xcrun simctl spawn booted log stream --style syslog > ~/maestro-simulator.log 2>&1 & # Start capturing simulator logs in the background
           xcrun simctl install booted ../ios-debug-build/ios-debug.app
           yarn run e2e:native --platform ios
         working-directory: example
@@ -183,5 +184,17 @@ jobs:
         with:
           name: maestro-debug-output-ios
           path: example/maestro-debug-output/**/*
+          include-hidden-files: true
+          overwrite: true
+
+      - name: Store device logs
+        if: failure() || cancelled()
+        uses: actions/upload-artifact@v4
+        with:
+          name: maestro-simulator-output
+          path: |
+            ~/Library/Logs/CoreSimulator/*
+            ~/Library/Logs/maestro/xctest_runner_logs/*
+            ~/maestro-simulator.log
           include-hidden-files: true
           overwrite: true

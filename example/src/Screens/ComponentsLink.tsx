@@ -2,14 +2,13 @@ import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
   Link,
-  type NavigatorScreenParams,
-  type PathConfig,
   StackActions,
-  type StaticScreenProps,
+  useNavigation,
+  useRoute,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackScreenProps,
+  createStackScreen,
 } from '@react-navigation/stack';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
@@ -17,24 +16,12 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-type LinkComponentDemoParamList = {
-  Article: { author: string };
-  Albums: undefined;
-};
-
-const linking = {
-  screens: {
-    Article: COMMON_LINKING_CONFIG.Article,
-    Albums: 'albums',
-  },
-} satisfies PathConfig<NavigatorScreenParams<LinkComponentDemoParamList>>;
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
-const ArticleScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<LinkComponentDemoParamList, 'Article'>) => {
+const ArticleScreen = () => {
+  const route = useRoute('Article');
+  const navigation = useNavigation('Article');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -92,16 +79,16 @@ const ArticleScreen = ({
         )}
       </View>
       <Article
-        author={{ name: route.params.author }}
+        author={{ name: route.params?.author ?? 'Unknown' }}
         scrollEnabled={scrollEnabled}
       />
     </ScrollView>
   );
 };
 
-const AlbumsScreen = ({
-  navigation,
-}: StackScreenProps<LinkComponentDemoParamList>) => {
+const AlbumsScreen = () => {
+  const navigation = useNavigation('Albums');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -127,32 +114,27 @@ const AlbumsScreen = ({
   );
 };
 
-const SimpleStack = createStackNavigator<LinkComponentDemoParamList>();
+const ComponentsLinkNavigator = createStackNavigator({
+  screens: {
+    Article: createStackScreen({
+      screen: ArticleScreen,
+      options: ({ route }) => ({
+        title: `Article by ${route.params?.author ?? 'Unknown'}`,
+      }),
+      initialParams: { author: 'Gandalf' },
+      linking: COMMON_LINKING_CONFIG.Article,
+    }),
+    Albums: createStackScreen({
+      screen: AlbumsScreen,
+      options: { title: 'Albums' },
+    }),
+  },
+});
 
-export function ComponentsLink(
-  _: StaticScreenProps<NavigatorScreenParams<LinkComponentDemoParamList>>
-) {
-  return (
-    <SimpleStack.Navigator>
-      <SimpleStack.Screen
-        name="Article"
-        component={ArticleScreen}
-        options={({ route }) => ({
-          title: `Article by ${route.params.author}`,
-        })}
-        initialParams={{ author: 'Gandalf' }}
-      />
-      <SimpleStack.Screen
-        name="Albums"
-        component={AlbumsScreen}
-        options={{ title: 'Albums' }}
-      />
-    </SimpleStack.Navigator>
-  );
-}
-
-ComponentsLink.title = 'Components - Link';
-ComponentsLink.linking = linking;
+export const ComponentsLink = {
+  screen: ComponentsLinkNavigator,
+  title: 'Components - Link',
+};
 
 const styles = StyleSheet.create({
   buttons: {

@@ -30,12 +30,6 @@ export type DrawerNavigationConfig = {
    * Defaults to `DrawerContent`.
    */
   drawerContent?: (props: DrawerContentComponentProps) => React.ReactNode;
-  /**
-   * Whether inactive screens should be detached from the view hierarchy to save memory.
-   * Make sure to call `enableScreens` from `react-native-screens` to make it work.
-   * Defaults to `true`.
-   */
-  detachInactiveScreens?: boolean;
 };
 
 export type DrawerNavigationOptions = HeaderOptions & {
@@ -209,13 +203,17 @@ export type DrawerNavigationOptions = HeaderOptions & {
   popToTopOnBlur?: boolean;
 
   /**
-   * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
-   * Defaults to `true` when `enableFreeze()` is run at the top of the application.
-   * Requires `react-native-screens` version >=3.16.0.
+   * What should happen when screens become inactive.
+   * - `pause`: Effects are cleaned up.
+   * - `none`: Screen renders normally
    *
-   * Only supported on iOS and Android.
+   * Defaults to `pause`.
+   *
+   * If you set `lazy: false` or preload a screen,
+   * It won't be paused until after the first time it becomes focused.
+   * This makes sure that effects are run to initialize the screen.
    */
-  freezeOnBlur?: boolean;
+  inactiveBehavior?: 'pause' | 'none';
 };
 
 export type DrawerContentComponentProps = {

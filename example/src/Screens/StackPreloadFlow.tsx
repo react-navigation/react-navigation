@@ -1,46 +1,40 @@
 import { Button, Text } from '@react-navigation/elements';
-import type {
-  NavigatorScreenParams,
-  PathConfig,
-  StaticScreenProps,
+import {
+  useNavigation,
+  useNavigationState,
+  useRoute,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackScreenProps,
+  createStackScreen,
 } from '@react-navigation/stack';
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-type PreloadStackParamList = {
-  Home: undefined;
-  Details: undefined;
-};
+const DetailsScreen = () => {
+  const navigation = useNavigation('StackPreloadFlowDetails');
+  const route = useRoute('StackPreloadFlowDetails');
 
-const linking = {
-  screens: {
-    Home: '',
-    Details: 'details',
-  },
-} satisfies PathConfig<NavigatorScreenParams<PreloadStackParamList>>;
+  const [isPreloaded] = useState(
+    useNavigationState('StackPreloadFlowDetails', (state) =>
+      state.preloadedRoutes.some((r) => r.key === route.key)
+    )
+  );
 
-const DetailsScreen = ({
-  navigation,
-}: StackScreenProps<PreloadStackParamList, 'Details'>) => {
   const [loadingCountdown, setLoadingCountdown] = useState(3);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setLoadingCountdown((loadingCountdown) => {
-        if (loadingCountdown === 1) {
-          clearInterval(interval);
-        }
+    if (loadingCountdown === 0) {
+      return;
+    }
 
-        return loadingCountdown - 1;
-      });
-    }, 1000);
+    const timer = setTimeout(
+      () => setLoadingCountdown(loadingCountdown - 1),
+      1000
+    );
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearTimeout(timer);
+  }, [loadingCountdown]);
 
   return (
     <View style={styles.content}>
@@ -50,6 +44,7 @@ const DetailsScreen = ({
       <Text style={styles.text}>
         {loadingCountdown === 0 ? 'Loaded!' : 'Loading...'}
       </Text>
+      <Text style={styles.text}>{isPreloaded ? 'Preloaded' : 'Fresh'}</Text>
       <Button onPress={navigation.goBack} style={styles.button}>
         Back to home
       </Button>
@@ -57,10 +52,8 @@ const DetailsScreen = ({
   );
 };
 
-const HomeScreen = ({
-  navigation,
-}: StackScreenProps<PreloadStackParamList, 'Home'>) => {
-  const { navigate, preload } = navigation;
+const HomeScreen = () => {
+  const navigation = useNavigation('StackPreloadFlowHome');
 
   const [isReady, setIsReady] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -81,36 +74,44 @@ const HomeScreen = ({
         onPress={() => {
           timerRef.current = setTimeout(() => {
             setIsReady(true);
-          }, 3000);
+          }, 5000);
 
-          preload('Details');
+          navigation.preload('StackPreloadFlowDetails');
         }}
         style={styles.button}
       >
         Preload Details
       </Button>
-      <Button onPress={() => navigate('Details')} style={styles.button}>
+      <Button
+        onPress={() => navigation.navigate('StackPreloadFlowDetails')}
+        style={styles.button}
+      >
         Navigate to Details
       </Button>
     </View>
   );
 };
 
-const SimpleStack = createStackNavigator<PreloadStackParamList>();
+const StackPreloadNavigator = createStackNavigator({
+  screens: {
+    StackPreloadFlowHome: createStackScreen({
+      screen: HomeScreen,
+      linking: '',
+      options: {
+        title: 'Stack Preload Flow',
+      },
+    }),
+    StackPreloadFlowDetails: createStackScreen({
+      screen: DetailsScreen,
+      linking: 'details',
+    }),
+  },
+});
 
-export function StackPreloadFlow(
-  _: StaticScreenProps<NavigatorScreenParams<PreloadStackParamList>>
-) {
-  return (
-    <SimpleStack.Navigator>
-      <SimpleStack.Screen name="Home" component={HomeScreen} />
-      <SimpleStack.Screen name="Details" component={DetailsScreen} />
-    </SimpleStack.Navigator>
-  );
-}
-
-StackPreloadFlow.title = 'Stack - Preload Flow';
-StackPreloadFlow.linking = linking;
+export const StackPreloadFlow = {
+  screen: StackPreloadNavigator,
+  title: 'Stack - Preload Flow',
+};
 
 const styles = StyleSheet.create({
   content: {

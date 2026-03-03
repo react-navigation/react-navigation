@@ -46,4 +46,4 @@ jobs:
           key: ${{ steps.playwright-cache.outputs.cache-primary-key }}
 
       - name: Run e2e tests
-        run: yarn example e2e:web
+        run: yarn example e2e:web --retries=3

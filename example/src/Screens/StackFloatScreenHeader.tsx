@@ -1,12 +1,8 @@
 import { Button } from '@react-navigation/elements';
-import type {
-  NavigatorScreenParams,
-  PathConfig,
-  StaticScreenProps,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackScreenProps,
+  createStackScreen,
 } from '@react-navigation/stack';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
@@ -15,26 +11,12 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type MixedHeaderStackParamList = {
-  Article: { author: string } | undefined;
-  NewsFeed: { date: number };
-  Albums: undefined;
-};
-
-const linking = {
-  screens: {
-    Article: COMMON_LINKING_CONFIG.Article,
-    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-    Albums: 'albums',
-  },
-} satisfies PathConfig<NavigatorScreenParams<MixedHeaderStackParamList>>;
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
-const ArticleScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<MixedHeaderStackParamList, 'Article'>) => {
+const ArticleScreen = () => {
+  const route = useRoute('Article');
+  const navigation = useNavigation('Article');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -56,10 +38,10 @@ const ArticleScreen = ({
   );
 };
 
-const NewsFeedScreen = ({
-  route,
-  navigation,
-}: StackScreenProps<MixedHeaderStackParamList, 'NewsFeed'>) => {
+const NewsFeedScreen = () => {
+  const route = useRoute('NewsFeed');
+  const navigation = useNavigation('NewsFeed');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -75,9 +57,9 @@ const NewsFeedScreen = ({
   );
 };
 
-const AlbumsScreen = ({
-  navigation,
-}: StackScreenProps<MixedHeaderStackParamList, 'Albums'>) => {
+const AlbumsScreen = () => {
+  const navigation = useNavigation('Albums');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -96,48 +78,47 @@ const AlbumsScreen = ({
   );
 };
 
-const SimpleStack = createStackNavigator<MixedHeaderStackParamList>();
-
-export function StackFloatScreenHeader(
-  _: StaticScreenProps<NavigatorScreenParams<MixedHeaderStackParamList>>
-) {
-  return (
-    <SimpleStack.Navigator>
-      <SimpleStack.Group
-        screenOptions={{
-          animation: 'slide_from_right',
-          headerMode: 'float',
-        }}
-      >
-        <SimpleStack.Screen
-          name="Article"
-          component={ArticleScreen}
-          options={({ route }) => ({
+const StackFloatScreenHeaderNavigator = createStackNavigator({
+  initialRouteName: 'Article',
+  screens: {
+    Albums: createStackScreen({
+      screen: AlbumsScreen,
+      options: {
+        animation: 'slide_from_bottom',
+        headerMode: 'screen',
+        title: 'Albums',
+      },
+    }),
+  },
+  groups: {
+    FloatHeader: {
+      screenOptions: {
+        animation: 'slide_from_right',
+        headerMode: 'float',
+      },
+      screens: {
+        Article: createStackScreen({
+          screen: ArticleScreen,
+          options: ({ route }) => ({
             title: `Article by ${route.params?.author ?? 'Unknown'}`,
-          })}
-          initialParams={{ author: 'Gandalf' }}
-        />
-        <SimpleStack.Screen
-          name="NewsFeed"
-          component={NewsFeedScreen}
-          options={{ title: 'Feed' }}
-        />
-      </SimpleStack.Group>
-      <SimpleStack.Screen
-        name="Albums"
-        component={AlbumsScreen}
-        options={{
-          animation: 'slide_from_bottom',
-          headerMode: 'screen',
-          title: 'Albums',
-        }}
-      />
-    </SimpleStack.Navigator>
-  );
-}
+          }),
+          initialParams: { author: 'Gandalf' },
+          linking: COMMON_LINKING_CONFIG.Article,
+        }),
+        NewsFeed: createStackScreen({
+          screen: NewsFeedScreen,
+          options: { title: 'Feed' },
+          linking: COMMON_LINKING_CONFIG.NewsFeed,
+        }),
+      },
+    },
+  },
+});
 
-StackFloatScreenHeader.title = 'Stack - Float + Screen Header';
-StackFloatScreenHeader.linking = linking;
+export const StackFloatScreenHeader = {
+  screen: StackFloatScreenHeaderNavigator,
+  title: 'Stack - Float + Screen Header',
+};
 
 const styles = StyleSheet.create({
   buttons: {

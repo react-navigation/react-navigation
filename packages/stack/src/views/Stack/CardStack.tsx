@@ -1,5 +1,8 @@
 import { getDefaultHeaderHeight } from '@react-navigation/elements';
-import { SafeAreaProviderCompat } from '@react-navigation/elements/internal';
+import {
+  ActivityView,
+  SafeAreaProviderCompat,
+} from '@react-navigation/elements/internal';
 import type {
   LocaleDirection,
   ParamListBase,
@@ -15,7 +18,6 @@ import {
   View,
 } from 'react-native';
 import type { EdgeInsets } from 'react-native-safe-area-context';
-import { Screen, ScreenContainer } from 'react-native-screens';
 
 import {
   forModalPresentationIOS,
@@ -44,7 +46,6 @@ import type {
   StackNavigationOptions,
   TransitionPreset,
 } from '../../types';
-import { findLastIndex } from '../../utils/findLastIndex';
 import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
 import { getModalRouteKeys } from '../../utils/getModalRoutesKeys';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
@@ -62,6 +63,7 @@ type Props = {
   routes: Route<string>[];
   openingRouteKeys: string[];
   closingRouteKeys: string[];
+  replacingRouteKeys: string[];
   onOpenRoute: (props: { route: Route<string> }) => void;
   onCloseRoute: (props: { route: Route<string> }) => void;
   getPreviousRoute: (props: {
@@ -87,7 +89,6 @@ type State = {
   scenes: Scene[];
   gestures: GestureValues;
   layout: Layout;
-  activeStates: (0 | 1 | Animated.AnimatedInterpolation<0 | 1>)[];
   headerHeights: Record<string, number>;
 };
 
@@ -106,12 +107,6 @@ const NAMED_TRANSITIONS_PRESETS = {
     default: BottomSheetAndroid,
   }),
 } as const satisfies Record<StackAnimationName, TransitionPreset>;
-
-const EPSILON = 1e-5;
-
-const STATE_INACTIVE = 0;
-const STATE_TRANSITIONING_OR_BELOW_TOP = 1;
-const STATE_ON_TOP = 2;
 
 const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
 
@@ -465,88 +460,11 @@ export class CardStack extends React.Component<Props, State> {
       }
     );
 
-    let activeStates = state.activeStates;
-
-    if (props.routes.length !== state.routes.length) {
-      let activeScreensLimit = 1;
-
-      for (let i = props.routes.length - 1; i >= 0; i--) {
-        const { options } = scenes[i].descriptor;
-
-        const {
-          // By default, we don't want to detach the previous screen of the active one for modals
-          detachPreviousScreen = options.presentation === 'transparentModal'
-            ? false
-            : getIsModalPresentation(options.cardStyleInterpolator)
-              ? i !==
-                findLastIndex(scenes, (scene) => {
-                  const { cardStyleInterpolator } = scene.descriptor.options;
-
-                  return (
-                    cardStyleInterpolator === forModalPresentationIOS ||
-                    cardStyleInterpolator?.name === 'forModalPresentationIOS'
-                  );
-                })
-              : true,
-        } = options;
-
-        if (detachPreviousScreen === false) {
-          activeScreensLimit++;
-        } else {
-          // Check at least last 2 screens before stopping
-          // This will make sure that screen isn't detached when another screen is animating on top of the transparent one
-          // e.g. opaque -> transparent -> opaque
-          if (i <= props.routes.length - 2) {
-            break;
-          }
-        }
-      }
-
-      activeStates = props.routes.map((_, index, self) => {
-        // The activity state represents state of the screen:
-        // 0 - inactive, the screen is detached
-        // 1 - transitioning or below the top screen, the screen is mounted but interaction is disabled
-        // 2 - on top of the stack, the screen is mounted and interaction is enabled
-        let activityState:
-          | Animated.AnimatedInterpolation<0 | 1 | 2>
-          | 0
-          | 1
-          | 2;
-
-        const lastActiveState = state.activeStates[index];
-        const activeAfterTransition = index >= self.length - activeScreensLimit;
-
-        if (lastActiveState === STATE_INACTIVE && !activeAfterTransition) {
-          // screen was inactive before and it will still be inactive after the transition
-          activityState = STATE_INACTIVE;
-        } else {
-          const sceneForActivity = scenes[self.length - 1];
-          const outputValue =
-            index === self.length - 1
-              ? STATE_ON_TOP // the screen is on top after the transition
-              : activeAfterTransition
-                ? STATE_TRANSITIONING_OR_BELOW_TOP // the screen should stay active after the transition, it is not on top but is in activeLimit
-                : STATE_INACTIVE; // the screen should be active only during the transition, it is at the edge of activeLimit
-
-          activityState = sceneForActivity
-            ? sceneForActivity.progress.current.interpolate({
-                inputRange: [0, 1 - EPSILON, 1],
-                outputRange: [1, 1, outputValue],
-                extrapolate: 'clamp',
-              })
-            : STATE_TRANSITIONING_OR_BELOW_TOP;
-        }
-
-        return activityState;
-      });
-    }
-
     return {
       routes: props.routes,
       scenes,
       gestures,
       descriptors: props.descriptors,
-      activeStates,
       headerHeights: getHeaderHeights(
         scenes,
         props.insets,
@@ -567,7 +485,6 @@ export class CardStack extends React.Component<Props, State> {
       gestures: {},
       layout: SafeAreaProviderCompat.initialMetrics.frame,
       descriptors: this.props.descriptors,
-      activeStates: [],
       // Used when card's header is null and mode is float to make transition
       // between screens with headers and those without headers smooth.
       // This is not a great heuristic here. We don't know synchronously
@@ -654,23 +571,20 @@ export class CardStack extends React.Component<Props, State> {
       routes,
       openingRouteKeys,
       closingRouteKeys,
+      replacingRouteKeys,
       onOpenRoute,
       onCloseRoute,
+      onGestureStart,
+      onGestureEnd,
+      onGestureCancel,
       renderHeader,
       isParentHeaderShown,
       isParentModal,
       onTransitionStart,
       onTransitionEnd,
-      onGestureStart,
-      onGestureEnd,
-      onGestureCancel,
-      detachInactiveScreens = Platform.OS === 'web' ||
-        Platform.OS === 'android' ||
-        Platform.OS === 'ios',
     } = this.props;
 
-    const { scenes, layout, gestures, activeStates, headerHeights } =
-      this.state;
+    const { scenes, layout, gestures, headerHeights } = this.state;
 
     const focusedRoute = state.routes[state.index];
 
@@ -712,12 +626,8 @@ export class CardStack extends React.Component<Props, State> {
             ],
           ],
         })}
-        <ScreenContainer
-          enabled={detachInactiveScreens}
-          style={styles.container}
-          onLayout={this.handleLayout}
-        >
-          {[...routes, ...state.preloadedRoutes].map((route, index) => {
+        <View style={styles.container} onLayout={this.handleLayout}>
+          {[...routes, ...state.preloadedRoutes].map((route, index, self) => {
             const focused = focusedRoute.key === route.key;
             const gesture = gestures[route.key];
             const scene = scenes[index];
@@ -736,10 +646,9 @@ export class CardStack extends React.Component<Props, State> {
             }
 
             const {
+              inactiveBehavior = 'pause',
               headerShown = true,
               headerTransparent,
-              freezeOnBlur,
-              autoHideHomeIndicator,
             } = scene.descriptor.options;
 
             const safeAreaInsetTop = insets.top;
@@ -762,63 +671,83 @@ export class CardStack extends React.Component<Props, State> {
               scenes[index + 1]?.descriptor.options.presentation ===
               'transparentModal';
 
-            const detachCurrentScreen =
-              scenes[index + 1]?.descriptor.options.detachPreviousScreen !==
-              false;
+            const isRemoving =
+              replacingRouteKeys.includes(route.key) ||
+              closingRouteKeys.includes(route.key);
 
-            const activityState = isPreloaded
-              ? STATE_INACTIVE
-              : activeStates[index];
+            const isFocusing =
+              openingRouteKeys.includes(route.key) ||
+              [...closingRouteKeys, ...replacingRouteKeys].includes(
+                self[index + 1]?.key
+              );
 
             return (
-              <Screen
+              <CardContainer
                 key={route.key}
-                style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}
-                enabled={detachInactiveScreens}
-                activityState={activityState}
-                freezeOnBlur={freezeOnBlur}
-                shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
-                homeIndicatorHidden={autoHideHomeIndicator}
+                index={index}
+                interpolationIndex={interpolationIndex}
+                modal={isModal}
+                active={index === routes.length - 1}
+                focused={focused}
+                opening={openingRouteKeys.includes(route.key)}
+                closing={closingRouteKeys.includes(route.key)}
+                layout={layout}
+                gesture={gesture}
+                scene={scene}
+                safeAreaInsetTop={safeAreaInsetTop}
+                safeAreaInsetRight={safeAreaInsetRight}
+                safeAreaInsetBottom={safeAreaInsetBottom}
+                safeAreaInsetLeft={safeAreaInsetLeft}
+                onGestureStart={onGestureStart}
+                onGestureCancel={onGestureCancel}
+                onGestureEnd={onGestureEnd}
+                headerHeight={headerHeight}
+                isParentHeaderShown={isParentHeaderShown}
+                onHeaderHeightChange={this.handleHeaderLayout}
+                getPreviousScene={this.getPreviousScene}
+                getFocusedRoute={this.getFocusedRoute}
+                hasAbsoluteFloatHeader={
+                  isFloatHeaderAbsolute && !headerTransparent
+                }
+                renderHeader={renderHeader}
+                onOpenRoute={onOpenRoute}
+                onCloseRoute={onCloseRoute}
+                onTransitionStart={onTransitionStart}
+                onTransitionEnd={onTransitionEnd}
+                isNextScreenTransparent={isNextScreenTransparent}
+                preloaded={isPreloaded}
               >
-                <CardContainer
-                  index={index}
-                  interpolationIndex={interpolationIndex}
-                  modal={isModal}
-                  active={index === routes.length - 1}
-                  focused={focused}
-                  opening={openingRouteKeys.includes(route.key)}
-                  closing={closingRouteKeys.includes(route.key)}
-                  layout={layout}
-                  gesture={gesture}
-                  scene={scene}
-                  safeAreaInsetTop={safeAreaInsetTop}
-                  safeAreaInsetRight={safeAreaInsetRight}
-                  safeAreaInsetBottom={safeAreaInsetBottom}
-                  safeAreaInsetLeft={safeAreaInsetLeft}
-                  onGestureStart={onGestureStart}
-                  onGestureCancel={onGestureCancel}
-                  onGestureEnd={onGestureEnd}
-                  headerHeight={headerHeight}
-                  isParentHeaderShown={isParentHeaderShown}
-                  onHeaderHeightChange={this.handleHeaderLayout}
-                  getPreviousScene={this.getPreviousScene}
-                  getFocusedRoute={this.getFocusedRoute}
-                  hasAbsoluteFloatHeader={
-                    isFloatHeaderAbsolute && !headerTransparent
+                <ActivityView
+                  mode={
+                    // Render focused and animating screens normally
+                    focused || isFocusing
+                      ? 'normal'
+                      : // Unpause preloaded screens so updates are visible
+                        // This lets preloaded screens initialize
+                        // And avoids things like pressable animation from being frozen
+                        inactiveBehavior === 'none' ||
+                          isPreloaded ||
+                          isRemoving ||
+                          isNextScreenTransparent
+                        ? 'inert'
+                        : 'paused'
                   }
-                  renderHeader={renderHeader}
-                  onOpenRoute={onOpenRoute}
-                  onCloseRoute={onCloseRoute}
-                  onTransitionStart={onTransitionStart}
-                  onTransitionEnd={onTransitionEnd}
-                  isNextScreenTransparent={isNextScreenTransparent}
-                  detachCurrentScreen={detachCurrentScreen}
-                  preloaded={isPreloaded}
-                />
-              </Screen>
+                  visible={
+                    // keep animating, preloaded & last two screens visible for smoother transitions
+                    isFocusing ||
+                    isRemoving ||
+                    isPreloaded ||
+                    isNextScreenTransparent ||
+                    index >= routes.length - 2
+                  }
+                  style={StyleSheet.absoluteFill}
+                >
+                  {scene.descriptor.render()}
+                </ActivityView>
+              </CardContainer>
             );
           })}
-        </ScreenContainer>
+        </View>
       </View>
     );
   }

@@ -550,19 +550,25 @@ export function useNavigationBuilder<
         ? getStateFromParams(paramsForState)
         : undefined;
 
-      const stateBeforeInitialization = (stateFromParams ??
-        currentState) as PartialState<State>;
+      const stateBeforeInitialization = (stateFromParams ?? currentState) as
+        | PartialState<State>
+        | undefined;
 
-      const hydratedState = router.getRehydratedState(
-        stateBeforeInitialization,
-        {
-          routeNames,
-          routeParamList: initialRouteParamList,
-          routeGetIdList,
-        }
-      );
+      const hydratedState =
+        stateBeforeInitialization == null
+          ? router.getInitialState({
+              routeNames,
+              routeParamList: initialRouteParamList,
+              routeGetIdList,
+            })
+          : router.getRehydratedState(stateBeforeInitialization, {
+              routeNames,
+              routeParamList: initialRouteParamList,
+              routeGetIdList,
+            });
 
       if (
+        stateBeforeInitialization != null &&
         options.routeNamesChangeBehavior === 'lastUnhandled' &&
         doesStateHaveOnlyInvalidRoutes(stateBeforeInitialization)
       ) {

@@ -6,7 +6,10 @@ import {
   HeaderShownContext,
   useFrameSize,
 } from '@react-navigation/elements';
-import { SafeAreaProviderCompat } from '@react-navigation/elements/internal';
+import {
+  ActivityView,
+  SafeAreaProviderCompat,
+} from '@react-navigation/elements/internal';
 import {
   NavigationProvider,
   type ParamListBase,
@@ -44,18 +47,14 @@ import { useHeaderConfigProps } from './useHeaderConfigProps';
 
 const ANDROID_DEFAULT_HEADER_HEIGHT = 56;
 
-function isFabric() {
-  return 'nativeFabricUIManager' in global;
-}
-
 type SceneViewProps = {
   index: number;
   focused: boolean;
-  shouldFreeze: boolean;
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor;
   nextDescriptor?: NativeStackDescriptor;
   isPresentationModal?: boolean;
+  isNextScreenTransparent?: boolean;
   isPreloaded?: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
@@ -70,13 +69,18 @@ type SceneViewProps = {
 
 const useNativeDriver = Platform.OS !== 'web';
 
+const TRANSPARENT_PRESENTATIONS = [
+  'transparentModal',
+  'containedTransparentModal',
+];
+
 const SceneView = ({
   index,
   focused,
-  shouldFreeze,
   descriptor,
   previousDescriptor,
   isPresentationModal,
+  isNextScreenTransparent,
   isPreloaded,
   onWillDisappear,
   onWillAppear,
@@ -91,6 +95,7 @@ const SceneView = ({
   const { route, navigation, options, render } = descriptor;
 
   const {
+    inactiveBehavior = 'pause',
     animation,
     animationDuration,
     animationMatchesGesture,
@@ -123,7 +128,6 @@ const SceneView = ({
     statusBarStyle,
     unstable_sheetFooter,
     scrollEdgeEffects,
-    freezeOnBlur,
     contentStyle,
   } = options;
 
@@ -285,6 +289,55 @@ const SceneView = ({
         }
       );
 
+  const content = (
+    <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+      <HeaderHeightContext.Provider
+        value={headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)}
+      >
+        {headerBackground != null ? (
+          /**
+           * To show a custom header background, we render it at the top of the screen below the header
+           * The header also needs to be positioned absolutely (with `translucent` style)
+           */
+          <View
+            style={[
+              styles.background,
+              headerTransparent ? styles.translucent : null,
+              { height: headerHeight },
+            ]}
+          >
+            {headerBackground()}
+          </View>
+        ) : null}
+        {header != null && headerShown !== false ? (
+          <View
+            onLayout={(e) => {
+              const headerHeight = e.nativeEvent.layout.height;
+
+              animatedHeaderHeight.setValue(headerHeight);
+              setHeaderHeight(headerHeight);
+            }}
+            style={[styles.header, headerTransparent ? styles.absolute : null]}
+          >
+            {header({
+              back: headerBack,
+              options,
+              route,
+              navigation,
+            })}
+          </View>
+        ) : null}
+        <HeaderShownContext.Provider
+          value={isParentHeaderShown || headerShown !== false}
+        >
+          <HeaderBackContext.Provider value={headerBack}>
+            {render()}
+          </HeaderBackContext.Provider>
+        </HeaderShownContext.Provider>
+      </HeaderHeightContext.Provider>
+    </AnimatedHeaderHeightContext.Provider>
+  );
+
   return (
     <NavigationProvider navigation={navigation} route={route}>
       <ScreenStackItem
@@ -296,7 +349,6 @@ const SceneView = ({
         customAnimationOnSwipe={animationMatchesGesture}
         fullScreenSwipeEnabled={fullScreenGestureEnabled}
         fullScreenSwipeShadowEnabled={fullScreenGestureShadowEnabled}
-        freezeOnBlur={freezeOnBlur}
         gestureEnabled={
           Platform.OS === 'android'
             ? // This prop enables handling of system back gestures on Android
@@ -353,62 +405,30 @@ const SceneView = ({
         ]}
         headerConfig={headerConfig}
         unstable_sheetFooter={unstable_sheetFooter}
-        // When ts-expect-error is added, it affects all the props below it
-        // So we keep any props that need it at the end
-        // Otherwise invalid props may not be caught by TypeScript
-        shouldFreeze={shouldFreeze}
       >
-        <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
-          <HeaderHeightContext.Provider
-            value={
-              headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)
-            }
-          >
-            {headerBackground != null ? (
-              /**
-               * To show a custom header background, we render it at the top of the screen below the header
-               * The header also needs to be positioned absolutely (with `translucent` style)
-               */
-              <View
-                style={[
-                  styles.background,
-                  headerTransparent ? styles.translucent : null,
-                  { height: headerHeight },
-                ]}
-              >
-                {headerBackground()}
-              </View>
-            ) : null}
-            {header != null && headerShown !== false ? (
-              <View
-                onLayout={(e) => {
-                  const headerHeight = e.nativeEvent.layout.height;
-
-                  animatedHeaderHeight.setValue(headerHeight);
-                  setHeaderHeight(headerHeight);
-                }}
-                style={[
-                  styles.header,
-                  headerTransparent ? styles.absolute : null,
-                ]}
-              >
-                {header({
-                  back: headerBack,
-                  options,
-                  route,
-                  navigation,
-                })}
-              </View>
-            ) : null}
-            <HeaderShownContext.Provider
-              value={isParentHeaderShown || headerShown !== false}
-            >
-              <HeaderBackContext.Provider value={headerBack}>
-                {render()}
-              </HeaderBackContext.Provider>
-            </HeaderShownContext.Provider>
-          </HeaderHeightContext.Provider>
-        </AnimatedHeaderHeightContext.Provider>
+        <ActivityView
+          mode={
+            // Render focused screens normally
+            // Unpause preloaded screens so updates are visible
+            // This lets effects on preloaded screens run
+            // We don't need to handle inert as it'll be handled natively
+            inactiveBehavior === 'none' ||
+            focused ||
+            isPreloaded ||
+            isNextScreenTransparent
+              ? 'normal'
+              : 'paused'
+          }
+          visible={
+            // We don't need to hide the content since it's handled natively
+            // Hiding may also cause flash due to lag after native tab switch
+            // So we leave it always visible
+            true
+          }
+          style={StyleSheet.absoluteFill}
+        >
+          {content}
+        </ActivityView>
       </ScreenStackItem>
     </NavigationProvider>
   );
@@ -433,7 +453,6 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
         {state.routes.concat(state.preloadedRoutes).map((route, index) => {
           const descriptor = descriptors[route.key];
           const isFocused = state.index === index;
-          const isBelowFocused = state.index - 1 === index;
           const previousKey = state.routes[index - 1]?.key;
           const nextKey = state.routes[index + 1]?.key;
           const previousDescriptor = previousKey
@@ -441,29 +460,28 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
             : undefined;
           const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
 
+          const nextPresentation = nextDescriptor?.options.presentation;
+
+          const isNextScreenTransparent =
+            nextPresentation != null &&
+            TRANSPARENT_PRESENTATIONS.includes(nextPresentation);
+
           const isModal = modalRouteKeys.includes(route.key);
-          const isModalOnIos = isModal && Platform.OS === 'ios';
 
           const isPreloaded = state.preloadedRoutes.some(
             (r) => r.key === route.key
           );
-
-          // On Fabric, when screen is frozen, animated and reanimated values are not updated
-          // due to component being unmounted. To avoid this, we don't freeze the previous screen there
-          const shouldFreeze = isFabric()
-            ? !isPreloaded && !isFocused && !isBelowFocused && !isModalOnIos
-            : !isPreloaded && !isFocused && !isModalOnIos;
 
           return (
             <SceneView
               key={route.key}
               index={index}
               focused={isFocused}
-              shouldFreeze={shouldFreeze}
               descriptor={descriptor}
               previousDescriptor={previousDescriptor}
               nextDescriptor={nextDescriptor}
               isPresentationModal={isModal}
+              isNextScreenTransparent={isNextScreenTransparent}
               isPreloaded={isPreloaded}
               onWillDisappear={() => {
                 navigation.emit({

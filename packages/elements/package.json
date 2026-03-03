@@ -55,7 +55,7 @@
     "@callstack/liquid-glass": "^0.6.0",
     "@jest/globals": "^30.0.0",
     "@react-navigation/native": "workspace:^",
-    "@testing-library/react-native": "^13.2.1",
+    "@testing-library/react-native": "^13.3.3",
     "@types/react": "~19.2.2",
     "@types/use-sync-external-store": "^1.5.0",
     "del-cli": "^6.0.0",

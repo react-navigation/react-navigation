@@ -1,44 +1,40 @@
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  createBottomTabNavigator,
+  createBottomTabScreen,
+} from '@react-navigation/bottom-tabs';
 import { Button, HeaderBackButton, Text } from '@react-navigation/elements';
-import type {
-  NavigatorScreenParams,
-  PathConfig,
-  StaticScreenProps,
+import {
+  useNavigation,
+  useNavigationState,
+  useRoute,
 } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-type PreloadBottomTabsParamList = {
-  Home: undefined;
-  Details: undefined;
-};
+const DetailsScreen = () => {
+  const navigation = useNavigation('BottomTabsPreloadFlowDetails');
+  const route = useRoute('BottomTabsPreloadFlowDetails');
 
-const linking = {
-  screens: {
-    Home: '',
-    Details: 'details',
-  },
-} satisfies PathConfig<NavigatorScreenParams<PreloadBottomTabsParamList>>;
+  const [isPreloaded] = useState(
+    useNavigationState('BottomTabsPreloadFlowDetails', (state) =>
+      state.preloadedRouteKeys.includes(route.key)
+    )
+  );
 
-const DetailsScreen = ({
-  navigation,
-}: BottomTabScreenProps<PreloadBottomTabsParamList, 'Details'>) => {
   const [loadingCountdown, setLoadingCountdown] = useState(3);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setLoadingCountdown((loadingCountdown) => {
-        if (loadingCountdown === 1) {
-          clearInterval(interval);
-        }
+    if (loadingCountdown === 0) {
+      return;
+    }
 
-        return loadingCountdown - 1;
-      });
-    }, 1000);
+    const timer = setTimeout(
+      () => setLoadingCountdown(loadingCountdown - 1),
+      1000
+    );
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearTimeout(timer);
+  }, [loadingCountdown]);
 
   return (
     <View style={styles.content}>
@@ -48,6 +44,7 @@ const DetailsScreen = ({
       <Text style={styles.text}>
         {loadingCountdown === 0 ? 'Loaded!' : 'Loading...'}
       </Text>
+      <Text style={styles.text}>{isPreloaded ? 'Preloaded' : 'Fresh'}</Text>
       <Button onPress={navigation.goBack} style={styles.button}>
         Back to home
       </Button>
@@ -55,10 +52,8 @@ const DetailsScreen = ({
   );
 };
 
-const HomeScreen = ({
-  navigation,
-}: BottomTabScreenProps<PreloadBottomTabsParamList, 'Home'>) => {
-  const { navigate, preload } = navigation;
+const HomeScreen = () => {
+  const navigation = useNavigation('BottomTabsPreloadFlowHome');
 
   const [isReady, setIsReady] = useState(false);
 
@@ -71,45 +66,49 @@ const HomeScreen = ({
         onPress={() => {
           setTimeout(() => {
             setIsReady(true);
-          }, 3000);
+          }, 5000);
 
-          preload('Details');
+          navigation.preload('BottomTabsPreloadFlowDetails');
         }}
         style={styles.button}
       >
         Preload Details
       </Button>
-      <Button onPress={() => navigate('Details')} style={styles.button}>
+      <Button
+        onPress={() => navigation.navigate('BottomTabsPreloadFlowDetails')}
+        style={styles.button}
+      >
         Navigate to Details
       </Button>
     </View>
   );
 };
 
-const BottomsTabs = createBottomTabNavigator<PreloadBottomTabsParamList>();
+const BottomTabsPreloadNavigator = createBottomTabNavigator({
+  screenOptions: ({ navigation }) => ({
+    headerShown: true,
+    headerLeft: (props) => (
+      <HeaderBackButton {...props} onPress={navigation.goBack} />
+    ),
+  }),
+  screens: {
+    BottomTabsPreloadFlowHome: createBottomTabScreen({
+      screen: HomeScreen,
+      linking: '',
+      options: {
+        title: 'Bottom Tabs Preload Flow',
+      },
+    }),
+    BottomTabsPreloadFlowDetails: createBottomTabScreen({
+      screen: DetailsScreen,
+    }),
+  },
+});
 
-export function BottomTabsPreloadFlow(
-  _: StaticScreenProps<NavigatorScreenParams<PreloadBottomTabsParamList>>
-) {
-  return (
-    <BottomsTabs.Navigator
-      screenOptions={({
-        navigation,
-      }: BottomTabScreenProps<PreloadBottomTabsParamList>) => ({
-        headerShown: true,
-        headerLeft: (props) => (
-          <HeaderBackButton {...props} onPress={navigation.goBack} />
-        ),
-      })}
-    >
-      <BottomsTabs.Screen name="Home" component={HomeScreen} />
-      <BottomsTabs.Screen name="Details" component={DetailsScreen} />
-    </BottomsTabs.Navigator>
-  );
-}
-
-BottomTabsPreloadFlow.title = 'Bottom Tabs - Preload Flow';
-BottomTabsPreloadFlow.linking = linking;
+export const BottomTabsPreloadFlow = {
+  screen: BottomTabsPreloadNavigator,
+  title: 'Bottom Tabs - Preload Flow',
+};
 
 const styles = StyleSheet.create({
   content: {

@@ -6,7 +6,6 @@ type Props = {
   active: boolean;
   animated: boolean;
   isNextScreenTransparent: boolean;
-  detachCurrentScreen: boolean;
   children: React.ReactNode;
 };
 
@@ -14,14 +13,7 @@ export type CardA11yWrapperRef = { setInert: (value: boolean) => void };
 
 export const CardA11yWrapper = React.forwardRef(
   (
-    {
-      focused,
-      active,
-      animated,
-      isNextScreenTransparent,
-      detachCurrentScreen,
-      children,
-    }: Props,
+    { focused, active, animated, isNextScreenTransparent, children }: Props,
     ref: React.Ref<CardA11yWrapperRef>
   ) => {
     // Manage this in separate component to avoid re-rendering card during gestures
@@ -30,11 +22,7 @@ export const CardA11yWrapper = React.forwardRef(
 
     React.useImperativeHandle(ref, () => ({ setInert }), []);
 
-    const isHidden =
-      !animated &&
-      isNextScreenTransparent === false &&
-      detachCurrentScreen !== false &&
-      !focused;
+    const isHidden = !animated && isNextScreenTransparent === false && !focused;
 
     return (
       <View

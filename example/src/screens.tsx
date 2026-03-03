@@ -78,5 +78,6 @@ export const SCREENS = {
     | {
         title: string;
         screen: { config: StaticConfig<any> };
+        options?: object;
       };
 };

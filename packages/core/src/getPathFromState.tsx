@@ -6,6 +6,7 @@ import type {
 import * as queryString from 'query-string';
 
 import { getPatternParts, type PatternPart } from './getPatternParts';
+import { getStateFromRouteParams } from './getStateFromRouteParams';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
@@ -57,6 +58,46 @@ const getNormalizedConfigs = (options?: Options<{}>) => {
   return normalizedConfigs;
 };
 
+const getTransformedState = (
+  state: State,
+  configs: Record<string, ConfigItem> | undefined
+): Omit<PartialState<NavigationState>, 'stale'> => {
+  const routes = state.routes.map(
+    (route): Omit<PartialState<NavigationState>, 'stale'>['routes'][number] => {
+      if (
+        route.state ||
+        (configs?.[route.name]?.screens &&
+          route.params &&
+          (('screen' in route.params &&
+            typeof route.params.screen === 'string' &&
+            configs[route.name].screens?.[route.params.screen]) ||
+            'state' in route.params))
+      ) {
+        const nestedState: State | undefined =
+          route.state ?? getStateFromRouteParams(route.params);
+
+        if (nestedState) {
+          return {
+            ...route,
+            state: getTransformedState(
+              nestedState,
+              configs?.[route.name]?.screens
+            ),
+          };
+        }
+      }
+
+      // @ts-expect-error route.state is handled in previous condition
+      return route;
+    }
+  );
+
+  return {
+    ...state,
+    routes,
+  };
+};
+
 /**
  * Utility to serialize a navigation state object to a path string.
  *
@@ -101,9 +142,10 @@ export function getPathFromState<ParamList extends {}>(
   }
 
   const configs = getNormalizedConfigs(options);
+  const transformedState = getTransformedState(state, configs);
 
   let path = '/';
-  let current: State | undefined = state;
+  let current: State | undefined = transformedState;
 
   const allParams: Record<string, string> = {};
 
@@ -118,7 +160,7 @@ export function getPathFromState<ParamList extends {}>(
     let focusedParams: Record<string, string> | undefined;
     let currentOptions = configs;
 
-    const focusedRoute = getActiveRoute(state);
+    const focusedRoute = getActiveRoute(transformedState);
 
     // Keep all the route names that appeared during going deeper in config in case the pattern is resolved to undefined
     const nestedRouteNames = [];
