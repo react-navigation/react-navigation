@@ -563,7 +563,7 @@ const styles = StyleSheet.create({
     maxWidth: '50%',
   },
   background: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     pointerEvents: 'box-none',
   },
 });
