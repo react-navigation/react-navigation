@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.13...@react-navigation/native@8.0.0-alpha.14) (2026-03-05)
+
+### Bug Fixes
+
+* support specifying only variant or weight for material symbol ([d0a6a52](https://github.com/react-navigation/react-navigation/commit/d0a6a527c501e89b48bc845f68fe729587e1e480)) - by @
+* use double callback to ensure next frame for corner inset ([e4b95b2](https://github.com/react-navigation/react-navigation/commit/e4b95b2ad2b1b7300c097cd27439e45755b3bb61)) - by @
+
 # [8.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.12...@react-navigation/native@8.0.0-alpha.13) (2026-03-03)
 
 **Note:** Version bump only for package @react-navigation/native

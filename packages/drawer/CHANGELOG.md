@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.15...@react-navigation/drawer@8.0.0-alpha.16) (2026-03-05)
+
+### Bug Fixes
+
+* avoid applying double inset for drawer content ([43d9342](https://github.com/react-navigation/react-navigation/commit/43d93428d4f7e5ae61809af8361d589d4ae094d7)) - by @
+
 # [8.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.14...@react-navigation/drawer@8.0.0-alpha.15) (2026-03-03)
 
 **Note:** Version bump only for package @react-navigation/drawer
