@@ -26,13 +26,11 @@ function DrawerContentScrollViewInner(
 
   return (
     <>
-      <UNSTABLE_CornerInset direction="vertical" edge="top" />
       <ScrollView
         {...rest}
         ref={ref}
         contentContainerStyle={[
           {
-            paddingTop: SPACING + insets.top,
             paddingBottom: SPACING + insets.bottom,
             paddingStart: SPACING + (!isRight ? insets.left : 0),
             paddingEnd: SPACING + (isRight ? insets.right : 0),
@@ -41,6 +39,15 @@ function DrawerContentScrollViewInner(
         ]}
         style={[styles.container, style]}
       >
+        <UNSTABLE_CornerInset
+          direction="vertical"
+          edge="top"
+          style={{
+            // We don't want to apply both safe area and corner insets
+            minHeight: insets.top,
+            marginBottom: SPACING,
+          }}
+        />
         {children}
       </ScrollView>
     </>
