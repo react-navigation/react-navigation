@@ -681,6 +681,29 @@ export class CardStack extends React.Component<Props, State> {
                 self[index + 1]?.key
               );
 
+            const isBeforeLast = index === routes.length - 2;
+
+            const activityMode = // Render focused and animating screens normally
+              focused || isFocusing
+                ? 'normal'
+                : // Unpause preloaded screens so updates are visible
+                  // This lets preloaded screens initialize
+                  // And avoids things like pressable animation from being frozen
+                  inactiveBehavior === 'none' ||
+                    isPreloaded ||
+                    isRemoving ||
+                    isNextScreenTransparent
+                  ? 'inert'
+                  : inactiveBehavior === 'unmount' &&
+                      !isBeforeLast &&
+                      !('state' in route && route.state)
+                    ? 'unmounted'
+                    : 'paused';
+
+            if (activityMode === 'unmounted') {
+              return null;
+            }
+
             return (
               <CardContainer
                 key={route.key}
@@ -718,20 +741,7 @@ export class CardStack extends React.Component<Props, State> {
                 preloaded={isPreloaded}
               >
                 <ActivityView
-                  mode={
-                    // Render focused and animating screens normally
-                    focused || isFocusing
-                      ? 'normal'
-                      : // Unpause preloaded screens so updates are visible
-                        // This lets preloaded screens initialize
-                        // And avoids things like pressable animation from being frozen
-                        inactiveBehavior === 'none' ||
-                          isPreloaded ||
-                          isRemoving ||
-                          isNextScreenTransparent
-                        ? 'inert'
-                        : 'paused'
-                  }
+                  mode={activityMode}
                   visible={
                     // keep animating, preloaded & last two screens visible for smoother transitions
                     isFocusing ||
