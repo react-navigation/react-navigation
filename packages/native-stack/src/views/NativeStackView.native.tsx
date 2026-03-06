@@ -53,9 +53,10 @@ type SceneViewProps = {
   descriptor: NativeStackDescriptor;
   previousDescriptor?: NativeStackDescriptor | undefined;
   nextDescriptor?: NativeStackDescriptor | undefined;
-  isPresentationModal?: boolean | undefined;
-  isNextScreenTransparent?: boolean | undefined;
-  isPreloaded?: boolean | undefined;
+  isPresentationModal: boolean;
+  isNextScreenTransparent: boolean;
+  isPreloaded: boolean;
+  isBeforeLast: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
   onAppear: () => void;
@@ -82,6 +83,7 @@ const SceneView = ({
   isPresentationModal,
   isNextScreenTransparent,
   isPreloaded,
+  isBeforeLast,
   onWillDisappear,
   onWillAppear,
   onAppear,
@@ -289,6 +291,22 @@ const SceneView = ({
         }
       );
 
+  const activityMode =
+    // Render focused screens normally
+    // Unpause preloaded screens so updates are visible
+    // This lets effects on preloaded screens run
+    // We don't need to handle inert as it'll be handled natively
+    inactiveBehavior === 'none' ||
+    focused ||
+    isPreloaded ||
+    isNextScreenTransparent
+      ? 'normal'
+      : inactiveBehavior === 'unmount' &&
+          !isBeforeLast &&
+          !('state' in route && route.state)
+        ? 'unmounted'
+        : 'paused';
+
   const content = (
     <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
       <HeaderHeightContext.Provider
@@ -406,29 +424,20 @@ const SceneView = ({
         headerConfig={headerConfig}
         unstable_sheetFooter={unstable_sheetFooter}
       >
-        <ActivityView
-          mode={
-            // Render focused screens normally
-            // Unpause preloaded screens so updates are visible
-            // This lets effects on preloaded screens run
-            // We don't need to handle inert as it'll be handled natively
-            inactiveBehavior === 'none' ||
-            focused ||
-            isPreloaded ||
-            isNextScreenTransparent
-              ? 'normal'
-              : 'paused'
-          }
-          visible={
-            // We don't need to hide the content since it's handled natively
-            // Hiding may also cause flash due to lag after native tab switch
-            // So we leave it always visible
-            true
-          }
-          style={StyleSheet.absoluteFill}
-        >
-          {content}
-        </ActivityView>
+        {activityMode === 'unmounted' ? null : (
+          <ActivityView
+            mode={activityMode}
+            visible={
+              // We don't need to hide the content since it's handled natively
+              // Hiding may also cause flash due to lag after native tab switch
+              // So we leave it always visible
+              true
+            }
+            style={StyleSheet.absoluteFill}
+          >
+            {content}
+          </ActivityView>
+        )}
       </ScreenStackItem>
     </NavigationProvider>
   );
@@ -483,6 +492,7 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
               isPresentationModal={isModal}
               isNextScreenTransparent={isNextScreenTransparent}
               isPreloaded={isPreloaded}
+              isBeforeLast={index === state.routes.length - 2}
               onWillDisappear={() => {
                 navigation.emit({
                   type: 'transitionStart',

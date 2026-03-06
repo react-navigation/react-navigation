@@ -89,6 +89,26 @@ export function NativeStackView({ state, descriptors }: Props) {
           (r) => r.key === route.key
         );
 
+        const isBeforeLast = i === state.routes.length - 2;
+
+        const activityMode =
+          // Render focused screens normally
+          isFocused
+            ? 'normal'
+            : // Unpause preloaded screens so updates are visible
+              // This lets effects on preloaded screens run
+              inactiveBehavior === 'none' ||
+                isPreloaded ||
+                isNextScreenTransparent
+              ? 'inert'
+              : inactiveBehavior === 'unmount' && !isBeforeLast && !route.state
+                ? 'unmounted'
+                : 'paused';
+
+        if (activityMode === 'unmounted') {
+          return null;
+        }
+
         const content = (
           <Screen
             key={route.key}
@@ -154,18 +174,7 @@ export function NativeStackView({ state, descriptors }: Props) {
         return (
           <ActivityView
             key={route.key}
-            mode={
-              // Render focused screens normally
-              isFocused
-                ? 'normal'
-                : // Unpause preloaded screens so updates are visible
-                  // This lets effects on preloaded screens run
-                  inactiveBehavior === 'none' ||
-                    isPreloaded ||
-                    isNextScreenTransparent
-                  ? 'inert'
-                  : 'paused'
-            }
+            mode={activityMode}
             visible={isFocused || isPreloaded || isNextScreenTransparent}
             style={StyleSheet.absoluteFill}
           >

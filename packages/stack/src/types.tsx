@@ -414,15 +414,18 @@ export type StackNavigationOptions = StackHeaderOptions &
 
     /**
      * What should happen when screens become inactive.
-     * - `pause`: Effects are cleaned up.
+     * - `pause`: Effects are cleaned up
+     * - `unmount`: Screen is unmounted
      * - `none`: Screen renders normally
      *
      * Defaults to `pause`.
      *
      * Preloaded screens won't be paused until after navigated to.
      * This makes sure that effects are run to initialize the screen.
+     *
+     * Screens with nested navigators and last 2 screens won't be unmounted.
      */
-    inactiveBehavior?: 'pause' | 'none';
+    inactiveBehavior?: 'pause' | 'unmount' | 'none' | undefined;
   };
 
 export type StackNavigationConfig = {};
