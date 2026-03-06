@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { StyleSheet, View, type ViewStyle } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
 import type { DrawerProps } from '../types';
@@ -22,10 +21,9 @@ export function Drawer({
   renderDrawerContent,
   children,
   style,
-}: DrawerProps) {
-  const flattenedDrawerStyle = StyleSheet.flatten(drawerStyle) || {};
+}: DrawerProps<React.CSSProperties>) {
   const drawerWidth = getDrawerWidthWeb({
-    drawerStyle: flattenedDrawerStyle,
+    drawerStyle: drawerStyle || {},
   });
 
   const progress = useFakeSharedValue(open ? 1 : 0);
@@ -34,7 +32,7 @@ export function Drawer({
     progress.set(open ? 1 : 0);
   }, [open, progress]);
 
-  const drawerRef = React.useRef<View>(null);
+  const drawerRef = React.useRef<HTMLDivElement>(null);
 
   const onTransitionStartLatest = useLatestCallback(() => {
     onTransitionStart?.(open === false);
@@ -45,7 +43,7 @@ export function Drawer({
   });
 
   React.useEffect(() => {
-    const element = drawerRef.current as HTMLDivElement | null;
+    const element = drawerRef.current;
 
     element?.addEventListener('transitionstart', onTransitionStartLatest);
     element?.addEventListener('transitionend', onTransitionEndLatest);
@@ -91,38 +89,31 @@ export function Drawer({
       : null;
 
   const drawerElement = (
-    <View
+    <div
       key="drawer"
       ref={drawerRef}
-      style={[
-        styles.drawer,
-        {
-          position: drawerType === 'permanent' ? 'relative' : 'absolute',
-          zIndex: drawerType === 'back' ? -1 : 1,
-        },
-        // FIXME: width contains `px` on web
-        { width: drawerWidth } as ViewStyle,
-        // @ts-expect-error offset contains `calc` for web
-        drawerType !== 'permanent'
-          ? // Position drawer off-screen by default in closed state
-            // And add a translation only when drawer is open
-            // So changing position in closed state won't trigger a visible transition
-            drawerPosition === 'right'
+      style={{
+        ...styles.drawer,
+        position: drawerType === 'permanent' ? 'relative' : 'absolute',
+        zIndex: drawerType === 'back' ? -1 : 1,
+        width: drawerWidth,
+        ...(drawerType !== 'permanent'
+          ? drawerPosition === 'right'
             ? { right: `calc(${drawerWidth} * -1)` }
             : { left: `calc(${drawerWidth} * -1)` }
-          : null,
-        drawerAnimatedStyle,
-        drawerStyle,
-      ]}
+          : null),
+        ...drawerAnimatedStyle,
+        ...drawerStyle,
+      }}
     >
       <Inert enabled={drawerType !== 'permanent' && !isOpen}>
         {renderDrawerContent()}
       </Inert>
-    </View>
+    </div>
   );
 
   const mainContent = (
-    <View key="content" style={[styles.content, contentAnimatedStyle]}>
+    <div key="content" style={{ ...styles.content, ...contentAnimatedStyle }}>
       <Inert enabled={drawerType !== 'permanent' && isOpen}>{children}</Inert>
       {drawerType !== 'permanent' ? (
         <Overlay
@@ -133,16 +124,16 @@ export function Drawer({
           accessibilityLabel={overlayAccessibilityLabel}
         />
       ) : null}
-    </View>
+    </div>
   );
 
   return (
     <DrawerProgressContext.Provider value={progress}>
-      <View style={[styles.container, style]}>
+      <div style={{ ...styles.container, ...style }}>
         {!isRight && drawerElement}
         {mainContent}
         {isRight && drawerElement}
-      </View>
+      </div>
     </DrawerProgressContext.Provider>
   );
 }
@@ -171,8 +162,9 @@ function Inert({
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
+    display: 'flex',
     flex: 1,
     flexDirection: 'row',
   },
@@ -183,6 +175,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   content: {
+    display: 'flex',
     flex: 1,
+    flexDirection: 'column',
   },
-});
+} satisfies Record<string, React.CSSProperties>;

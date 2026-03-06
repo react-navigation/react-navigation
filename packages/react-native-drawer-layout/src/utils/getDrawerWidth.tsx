@@ -1,4 +1,4 @@
-import { type DimensionValue, type ViewStyle } from 'react-native';
+import { type DimensionValue } from 'react-native';
 
 const APPROX_APP_BAR_HEIGHT = 56;
 const DEFAULT_DRAWER_WIDTH = 360;
@@ -41,7 +41,7 @@ export function getDrawerWidthNative({
 export function getDrawerWidthWeb({
   drawerStyle,
 }: {
-  drawerStyle: ViewStyle;
+  drawerStyle: { width?: unknown };
 }): string {
   const { width } = drawerStyle;
 

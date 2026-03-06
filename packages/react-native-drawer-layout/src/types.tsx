@@ -1,9 +1,9 @@
 import * as React from 'react';
-import type { StyleProp, View, ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
 import type { PanGesture } from 'react-native-gesture-handler';
 import type { SharedValue } from 'react-native-reanimated';
 
-export type DrawerProps = {
+export type DrawerProps<Style extends object = ViewStyle> = {
   /**
    * Whether the drawer is open or not.
    */
@@ -76,12 +76,12 @@ export type DrawerProps = {
    * Style object for the drawer component.
    * You can pass a custom background color for drawer or a custom width here.
    */
-  drawerStyle?: StyleProp<ViewStyle> | undefined;
+  drawerStyle?: Style | undefined;
 
   /**
    * Style object for the drawer overlay.
    */
-  overlayStyle?: StyleProp<ViewStyle> | undefined;
+  overlayStyle?: Style | undefined;
 
   /**
    * Accessibility label for the overlay. This is read by the screen reader when the user taps the overlay.
@@ -142,7 +142,7 @@ export type DrawerProps = {
   /**
    * Style object for the wrapper view.
    */
-  style?: StyleProp<ViewStyle> | undefined;
+  style?: Style | undefined;
 
   /**
    * Content that the drawer should wrap.
@@ -150,9 +150,10 @@ export type DrawerProps = {
   children: React.ReactNode;
 };
 
-export type OverlayProps = React.ComponentProps<typeof View> & {
+export type OverlayProps<Style extends object = ViewStyle> = {
   open: boolean;
   progress: SharedValue<number>;
   onPress: () => void;
+  style?: Style | undefined;
   accessibilityLabel?: string | undefined;
 };

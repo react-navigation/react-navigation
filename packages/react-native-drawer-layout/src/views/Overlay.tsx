@@ -1,5 +1,3 @@
-import { Pressable, StyleSheet, View } from 'react-native';
-
 import type { OverlayProps } from '../types';
 
 export function Overlay({
@@ -7,39 +5,47 @@ export function Overlay({
   onPress,
   style,
   accessibilityLabel = 'Close drawer',
-  ...rest
-}: OverlayProps) {
+}: OverlayProps<React.CSSProperties>) {
   return (
-    <View
-      {...rest}
-      style={[
-        StyleSheet.absoluteFill,
-        styles.overlay,
-        { opacity: open ? 1 : 0, pointerEvents: open ? 'auto' : 'none' },
-        style,
-      ]}
+    <div
+      style={{
+        ...styles.overlay,
+        opacity: open ? 1 : 0,
+        pointerEvents: open ? 'auto' : 'none',
+        ...style,
+      }}
       aria-hidden={!open}
     >
-      <Pressable
-        onPress={onPress}
-        style={[styles.pressable, { pointerEvents: open ? 'auto' : 'none' }]}
-        role="button"
+      <button
+        type="button"
+        onClick={onPress}
+        style={{
+          ...styles.pressable,
+          pointerEvents: open ? 'auto' : 'none',
+        }}
         aria-label={accessibilityLabel}
       />
-    </View>
+    </div>
   );
 }
 
-const styles = StyleSheet.create({
+const styles = {
   overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    // Disable touch highlight on mobile Safari.
-    // WebkitTapHighlightColor must be used outside of StyleSheet.create because react-native-web will omit the property.
-    // @ts-expect-error: WebkitTapHighlightColor is web only
     WebkitTapHighlightColor: 'transparent',
     transition: 'opacity 0.3s',
   },
   pressable: {
+    display: 'flex',
     flex: 1,
+    border: 'none',
+    background: 'transparent',
+    padding: 0,
+    cursor: 'pointer',
   },
-});
+} satisfies Record<string, React.CSSProperties>;

@@ -13,7 +13,6 @@ export function Overlay({
   onPress,
   style,
   accessibilityLabel = 'Close drawer',
-  ...rest
 }: OverlayProps) {
   const animatedStyle = useAnimatedStyle(() => {
     const active = progress.value > PROGRESS_EPSILON;
@@ -34,7 +33,6 @@ export function Overlay({
 
   return (
     <Animated.View
-      {...rest}
       style={[StyleSheet.absoluteFill, styles.overlay, animatedStyle, style]}
       animatedProps={animatedProps}
     >

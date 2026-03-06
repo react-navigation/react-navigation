@@ -125,7 +125,7 @@ export function DrawerMasterDetail(
       screenOptions={{
         headerShown: false,
         drawerType: isLargeScreen ? 'permanent' : 'back',
-        drawerStyle: isLargeScreen ? null : { width: '100%' },
+        drawerStyle: isLargeScreen ? undefined : { width: '100%' },
         drawerContentContainerStyle: { paddingTop: 4 },
         overlayStyle: { backgroundColor: 'transparent' },
       }}

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { View } from 'react-native';
 import type { GestureType } from 'react-native-gesture-handler';
 
 // FIXME: Inline this type instead of getting it from react-native-gesture-handler
@@ -19,7 +18,26 @@ export const GestureDetector = ({
   return <>{children}</>;
 };
 
-export const GestureHandlerRootView = View;
+export function GestureHandlerRootView({
+  children,
+  style,
+}: {
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flex: 1,
+        flexDirection: 'column',
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
 
 export const Gesture:
   | typeof import('react-native-gesture-handler').Gesture

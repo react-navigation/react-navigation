@@ -122,7 +122,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * Style object for the drawer component.
    * You can pass a custom background color for a drawer or a custom width here.
    */
-  drawerStyle?: StyleProp<ViewStyle>;
+  drawerStyle?: React.CSSProperties;
 
   /**
    * Position of the drawer on the screen. Defaults to `left`.
@@ -154,7 +154,7 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * Color of the overlay to be displayed on top of the content view when drawer gets open.
    * The opacity is animated from `0` to `1` when the drawer opens.
    */
-  overlayStyle?: StyleProp<ViewStyle>;
+  overlayStyle?: React.CSSProperties;
 
   /**
    * Accessibility label for the overlay. This is read by the screen reader when the user taps the overlay.
@@ -308,7 +308,7 @@ export type DrawerDescriptorMap = Record<string, DrawerDescriptor>;
 export type DrawerProps = {
   dimensions: { width: number; height: number };
   drawerPosition: 'left' | 'right';
-  drawerStyle?: StyleProp<ViewStyle>;
+  drawerStyle?: React.CSSProperties;
   drawerType: 'front' | 'back' | 'slide' | 'permanent';
   configureGestureHandler?: (gesture: PanGesture) => PanGesture;
   hideStatusBarOnOpen: boolean;
@@ -316,7 +316,7 @@ export type DrawerProps = {
   onClose: () => void;
   onOpen: () => void;
   open: boolean;
-  overlayStyle?: StyleProp<ViewStyle>;
+  overlayStyle?: React.CSSProperties;
   renderDrawerContent: () => React.ReactNode;
   renderSceneContent: () => React.ReactNode;
   statusBarAnimation: 'slide' | 'none' | 'fade';

@@ -72,7 +72,7 @@ export function Drawer({
   children,
   style,
 }: DrawerProps) {
-  const { width: customWidth } = StyleSheet.flatten(drawerStyle) || {};
+  const customWidth = drawerStyle?.width;
 
   const isOpen = drawerType === 'permanent' ? true : open;
   const isRight = drawerPosition === 'right';
@@ -495,7 +495,8 @@ export function Drawer({
   });
 
   return (
-    <GestureHandlerRootView style={[styles.container, style]}>
+    // @ts-expect-error: TS resolves web stub types, but native uses real GestureHandlerRootView
+    <GestureHandlerRootView style={{ ...styles.container, ...style }}>
       <DrawerProgressContext.Provider value={progress}>
         <DrawerGestureContext.Provider value={pan}>
           <GestureDetector gesture={pan}>
@@ -530,6 +531,7 @@ export function Drawer({
                     open={open}
                     progress={progress}
                     onPress={() => toggleDrawer(false)}
+                    // @ts-expect-error: TS resolves web Overlay types, native uses real Overlay
                     style={overlayStyle}
                     accessibilityLabel={overlayAccessibilityLabel}
                   />

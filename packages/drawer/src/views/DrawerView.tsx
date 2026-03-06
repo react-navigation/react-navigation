@@ -309,15 +309,16 @@ function DrawerViewBase({
         drawerType={drawerType}
         overlayAccessibilityLabel={overlayAccessibilityLabel}
         drawerPosition={drawerPosition}
-        drawerStyle={[
-          { backgroundColor: colors.card },
-          drawerType === 'permanent' &&
-            ((
-              Platform.OS === 'web'
-                ? drawerPosition === 'right'
-                : (direction === 'rtl' && drawerPosition !== 'right') ||
-                  (direction !== 'rtl' && drawerPosition === 'right')
-            )
+        drawerStyle={{
+          // @ts-expect-error: colors.card is ColorValue which includes PlatformColor, but it's always a string on web
+          backgroundColor: colors.card,
+          ...(drawerType === 'permanent'
+            ? (
+                Platform.OS === 'web'
+                  ? drawerPosition === 'right'
+                  : (direction === 'rtl' && drawerPosition !== 'right') ||
+                    (direction !== 'rtl' && drawerPosition === 'right')
+              )
               ? {
                   borderLeftColor: colors.border,
                   borderLeftWidth: StyleSheet.hairlineWidth,
@@ -325,10 +326,10 @@ function DrawerViewBase({
               : {
                   borderRightColor: colors.border,
                   borderRightWidth: StyleSheet.hairlineWidth,
-                }),
-
-          drawerType === 'front' &&
-            (drawerPosition === 'left'
+                }
+            : null),
+          ...(drawerType === 'front'
+            ? drawerPosition === 'left'
               ? {
                   borderTopRightRadius: DRAWER_BORDER_RADIUS,
                   borderBottomRightRadius: DRAWER_BORDER_RADIUS,
@@ -336,9 +337,10 @@ function DrawerViewBase({
               : {
                   borderTopLeftRadius: DRAWER_BORDER_RADIUS,
                   borderBottomLeftRadius: DRAWER_BORDER_RADIUS,
-                }),
-          drawerStyle,
-        ]}
+                }
+            : null),
+          ...drawerStyle,
+        }}
         overlayStyle={overlayStyle}
         renderDrawerContent={renderDrawerContent}
       >
