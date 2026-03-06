@@ -1,0 +1,9 @@
+appId: ${APP_ID}
+name: Components - SF Symbols
+platforms: [ios]
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: components-sfsymbols
+      TEXT: 'SF Symbols'

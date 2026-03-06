@@ -1,0 +1,15 @@
+appId: ${APP_ID}
+name: Native Stack - Form Sheet
+platforms: [ios, android]
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: native-stack-form-sheet
+      TEXT: 'Form Sheet'
+- assertVisible:
+    text: 'Fit To Contents'
+- assertVisible:
+    text: 'Grabber Visible'
+- assertVisible:
+    text: 'Height Steps'

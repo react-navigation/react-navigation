@@ -1,0 +1,18 @@
+appId: ${APP_ID}
+name: Components - Headers
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: components-headers
+      TEXT: 'Center aligned'
+- assertVisible:
+    text: 'Left aligned'
+- assertVisible:
+    text: 'Center + right area'
+- assertVisible:
+    text: 'Center + back + right area'
+- assertVisible:
+    text: 'Left + back button'
+- assertVisible:
+    text: 'Left + right area'

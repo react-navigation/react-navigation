@@ -1,35 +1,32 @@
 appId: ${APP_ID}
-name: Stack - Prevent Remove
+name: Tab View - Auto Width Tab Bar
 ---
 - runFlow:
     file: ../launch.yml
     env:
-      LINK: stack-prevent-remove
-      TEXT: 'Input'
-- hideKeyboard
+      LINK: libraries-tab-view/auto-width-tab-bar
+      TEXT: 'Marissa Castillo'
 - tapOn:
-    text: 'Input'
-- tapOn:
-    text: 'Push Article'
+    text: 'Article'
 - extendedWaitUntil:
     visible:
       text: 'What is Lorem Ipsum?'
     timeout: 2000
 - tapOn:
-    text: 'Push Input'
+    text: 'Albums'
 - extendedWaitUntil:
     visible:
-      text: 'Discard and go back'
+      id: 'album-0'
     timeout: 2000
 - tapOn:
-    text: 'Discard and go back'
+    text: 'Chat'
 - extendedWaitUntil:
     visible:
-      text: 'What is Lorem Ipsum?'
+      text: 'make me a sandwich'
     timeout: 2000
 - tapOn:
-    text: 'Pop to top'
+    text: 'Contacts'
 - extendedWaitUntil:
     visible:
-      text: 'Push Article'
+      text: 'Marissa Castillo'
     timeout: 2000

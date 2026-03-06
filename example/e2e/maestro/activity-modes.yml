@@ -1,0 +1,30 @@
+appId: ${APP_ID}
+name: Activity Modes
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: activity-modes
+      TEXT: 'Normal'
+- assertVisible:
+    text: 'Visible'
+- tapOn:
+    text: 'Inert'
+- assertVisible:
+    text: 'Inert'
+- tapOn:
+    text: 'Paused'
+- assertVisible:
+    text: 'Paused'
+- tapOn:
+    text: 'Normal'
+- assertVisible:
+    text: 'Normal'
+- tapOn:
+    text: 'Hidden'
+- assertVisible:
+    text: 'Hidden'
+- tapOn:
+    text: 'Visible'
+- assertVisible:
+    text: 'Visible'

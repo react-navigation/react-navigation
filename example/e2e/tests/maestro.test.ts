@@ -16,6 +16,11 @@ fs.readdirSync(path.join(__dirname, '../maestro')).forEach((file) => {
   );
 
   test(metadata.name, async ({ page }) => {
+    if (metadata.platforms && !metadata.platforms.includes('web')) {
+      test.skip();
+      return;
+    }
+
     for (const step of steps) {
       try {
         await runStep(page, step);
@@ -164,7 +169,14 @@ async function runStep(page: Page, step: any) {
       break;
     }
 
-    case 'stopApp': {
+    case 'inputText': {
+      await page.keyboard.type(step.inputText);
+
+      break;
+    }
+
+    case 'stopApp':
+    case 'hideKeyboard': {
       // No-op on web
 
       break;

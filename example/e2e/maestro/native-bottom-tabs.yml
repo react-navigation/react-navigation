@@ -1,0 +1,18 @@
+appId: ${APP_ID}
+name: Native Bottom Tabs - Basic
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: native-bottom-tabs
+      TEXT: 'Article by Gandalf'
+- tapOn:
+    text: 'Update params'
+- assertVisible:
+    text: 'Article by Babel fish'
+- tapOn:
+    text: 'Navigate to feed'
+- extendedWaitUntil:
+    visible:
+      text: 'Feed'
+    timeout: 2000

@@ -1,0 +1,19 @@
+appId: ${APP_ID}
+name: Components - Material Symbols
+platforms: [android]
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: components-material-symbols
+      TEXT: 'Font'
+- assertVisible:
+    text: 'Image'
+- tapOn:
+    text: 'Image'
+- assertVisible:
+    text: 'Image'
+- tapOn:
+    text: 'Font'
+- assertVisible:
+    text: 'Font'

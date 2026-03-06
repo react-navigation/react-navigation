@@ -6,3 +6,30 @@ name: Native Stack - Prevent Remove
     env:
       LINK: native-stack-prevent-remove
       TEXT: 'Input'
+- hideKeyboard
+- tapOn:
+    text: 'Input'
+- tapOn:
+    text: 'Push Article'
+- extendedWaitUntil:
+    visible:
+      text: 'What is Lorem Ipsum?'
+    timeout: 2000
+- tapOn:
+    text: 'Push Input'
+- extendedWaitUntil:
+    visible:
+      text: 'Discard and go back'
+    timeout: 2000
+- tapOn:
+    text: 'Discard and go back'
+- extendedWaitUntil:
+    visible:
+      text: 'What is Lorem Ipsum?'
+    timeout: 2000
+- tapOn:
+    text: 'Pop to top'
+- extendedWaitUntil:
+    visible:
+      text: 'Push Article'
+    timeout: 2000
