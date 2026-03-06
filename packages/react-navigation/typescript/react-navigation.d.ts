@@ -75,7 +75,7 @@ export interface NavigationState {
    * Index refers to the active child route in the routes array.
    */
   index: number;
-  routes: NavigationRoute[];
+  routes?: NavigationRoute[];
   isTransitioning: boolean;
   key: string;
   params?: NavigationParams | undefined;
@@ -117,7 +117,7 @@ export interface NavigationLeafRoute<Params = NavigationParams> {
   /**
    * Array containing the navigator's routes
    */
-  routes: NavigationRoute[];
+  routes?: NavigationRoute[];
   /**
    * Flag that indicates the transition state of the route
    */
