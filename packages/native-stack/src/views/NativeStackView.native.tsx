@@ -268,20 +268,23 @@ const SceneView = ({
               if (doesHeaderAnimate) {
                 setHeaderHeightDebounced(headerHeight);
               } else {
-                if (
-                  Platform.OS === 'android' &&
-                  headerHeight !== 0 &&
-                  headerHeight <= ANDROID_DEFAULT_HEADER_HEIGHT
-                ) {
+                if (Platform.OS === 'android' && headerHeight !== 0) {
                   // FIXME: On Android, events may get delivered out-of-order
                   // https://github.com/facebook/react-native/issues/54636
-                  // We seem to get header height without status bar height first,
-                  // and then the correct height with status bar height included
-                  // But due to out-of-order delivery, we may get the correct height first
-                  // and then the one without status bar height
-                  // This is hack to include status bar height if it's not already included
-                  // It only works because header height doesn't change dynamically on Android
-                  setHeaderHeight(headerHeight + insets.top);
+                  // We may receive header height without top inset after the correct one.
+                  // Pick the candidate closer to default header height instead of using
+                  // hardcoded thresholds, which are brittle across devices/densities.
+                  const rawHeaderHeight = headerHeight;
+                  const correctedHeaderHeight = headerHeight + insets.top;
+                  const expectedHeaderHeight = defaultHeaderHeight;
+
+                  const nextHeaderHeight =
+                    Math.abs(correctedHeaderHeight - expectedHeaderHeight) <
+                    Math.abs(rawHeaderHeight - expectedHeaderHeight)
+                      ? correctedHeaderHeight
+                      : rawHeaderHeight;
+
+                  setHeaderHeight(nextHeaderHeight);
                 } else {
                   setHeaderHeight(headerHeight);
                 }
