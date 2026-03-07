@@ -460,12 +460,14 @@ export function BottomTabViewNative({
                   normal: tabItemAppearance,
                 },
               }}
-              specialEffects={{
-                repeatedTabSelection: {
-                  popToRoot: true,
-                  scrollToTop: true,
-                },
-              }}
+              specialEffects={
+                options.specialEffects ?? {
+                  repeatedTabSelection: {
+                    popToRoot: true,
+                    scrollToTop: true,
+                  },
+                }
+              }
               overrideScrollViewContentInsetAdjustmentBehavior={
                 overrideScrollViewContentInsetAdjustmentBehavior
               }
