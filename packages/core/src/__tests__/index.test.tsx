@@ -3489,9 +3489,9 @@ test('Suspense fallback behavior with setParams with and without startTransition
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
-  let resolve = () => {};
-  let promise = new Promise<void>((r) => {
-    resolve = r;
+  let resolvePromise: () => void;
+  let promise = new Promise<void>((resolve) => {
+    resolvePromise = resolve;
   });
 
   const Content = ({ contentId }: { contentId: number }) => {
@@ -3526,12 +3526,12 @@ test('Suspense fallback behavior with setParams with and without startTransition
 
   expect(root).toMatchInlineSnapshot(`"[fallback]"`);
 
-  await act(async () => resolve());
+  await act(async () => resolvePromise());
 
   expect(root).toMatchInlineSnapshot(`"[content-1]"`);
 
-  promise = new Promise<void>((r) => {
-    resolve = r;
+  promise = new Promise<void>((resolve) => {
+    resolvePromise = resolve;
   });
 
   await act(async () => {
@@ -3542,7 +3542,7 @@ test('Suspense fallback behavior with setParams with and without startTransition
 
   expect(root).toMatchInlineSnapshot(`"[content-1]"`);
 
-  await act(async () => resolve());
+  await act(async () => resolvePromise());
 
   expect(root).toMatchInlineSnapshot(`"[content-2]"`);
 });
@@ -3554,9 +3554,9 @@ test('Suspense fallback behavior when navigating with and without startTransitio
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
-  let resolve = () => {};
-  let promise = new Promise<void>((r) => {
-    resolve = r;
+  let resolvePromise: () => void;
+  let promise = new Promise<void>((resolve) => {
+    resolvePromise = resolve;
   });
 
   const ScreenA = () => '[ScreenA]';
@@ -3591,7 +3591,7 @@ test('Suspense fallback behavior when navigating with and without startTransitio
 
   expect(root).toMatchInlineSnapshot(`"[fallback]"`);
 
-  await act(async () => resolve());
+  await act(async () => resolvePromise());
 
   expect(root).toMatchInlineSnapshot(`"[ScreenB content]"`);
 
@@ -3601,8 +3601,8 @@ test('Suspense fallback behavior when navigating with and without startTransitio
 
   expect(root).toMatchInlineSnapshot(`"[ScreenA]"`);
 
-  promise = new Promise((r) => {
-    setTimeout(r);
+  promise = new Promise((resolve) => {
+    setTimeout(resolve);
   });
 
   await act(async () => {
@@ -3610,6 +3610,27 @@ test('Suspense fallback behavior when navigating with and without startTransitio
       navigation.navigate('B');
     });
   });
+
+  expect(root).toMatchInlineSnapshot(`"[ScreenB content]"`);
+
+  await act(async () => {
+    navigation.navigate('A');
+  });
+
+  promise = new Promise((resolve) => {
+    setTimeout(resolve, 250);
+    resolvePromise = resolve;
+  });
+
+  await act(async () => {
+    React.startTransition(() => {
+      navigation.navigate('B');
+    });
+  });
+
+  expect(root).toMatchInlineSnapshot(`"[fallback]"`);
+
+  await act(async () => resolvePromise());
 
   expect(root).toMatchInlineSnapshot(`"[ScreenB content]"`);
 });
