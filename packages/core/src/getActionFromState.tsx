@@ -10,12 +10,12 @@ import type {
 import type { NavigatorScreenParams, PathConfig, PathConfigMap } from './types';
 
 type ConfigItem = {
-  initialRouteName?: string;
-  screens?: Record<string, ConfigItem>;
+  initialRouteName?: string | undefined;
+  screens?: Record<string, ConfigItem> | undefined;
 };
 
 type Options = {
-  initialRouteName?: string;
+  initialRouteName?: string | undefined;
   screens: PathConfigMap<object>;
 };
 
@@ -23,8 +23,8 @@ type NavigateAction<State extends NavigationState> = {
   type: 'NAVIGATE';
   payload: {
     name: string;
-    params?: NavigatorScreenParams<State>;
-    path?: string;
+    params?: NavigatorScreenParams<State> | undefined;
+    path?: string | undefined;
   };
 };
 
@@ -69,8 +69,8 @@ export function getActionFromState(
     | {
         name: string;
         params: NavigatorScreenParams<ParamListBase>;
-        path?: string;
-        pop?: boolean;
+        path?: string | undefined;
+        pop?: boolean | undefined;
       }
     | undefined = route
     ? { name: route.name, path: route.path, params }

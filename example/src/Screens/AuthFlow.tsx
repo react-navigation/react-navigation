@@ -143,7 +143,7 @@ const ChatScreen = () => {
   );
 };
 
-const SimpleStack = createStackNavigator<AuthStackParamList>();
+const AuthFlowStack = createStackNavigator<AuthStackParamList>();
 
 type State = {
   isLoading: boolean;
@@ -214,9 +214,9 @@ export function AuthFlow(
 
   return (
     <AuthContext.Provider value={authContext}>
-      <SimpleStack.Navigator routeNamesChangeBehavior="lastUnhandled">
+      <AuthFlowStack.Navigator routeNamesChangeBehavior="lastUnhandled">
         {!isSignedIn ? (
-          <SimpleStack.Screen
+          <AuthFlowStack.Screen
             name="SignIn"
             options={{
               title: 'Welcome',
@@ -226,16 +226,16 @@ export function AuthFlow(
           />
         ) : (
           <>
-            <SimpleStack.Screen name="Home" component={HomeScreen} />
-            <SimpleStack.Screen name="Profile" component={ProfileScreen} />
+            <AuthFlowStack.Screen name="Home" component={HomeScreen} />
+            <AuthFlowStack.Screen name="Profile" component={ProfileScreen} />
           </>
         )}
-        <SimpleStack.Screen
+        <AuthFlowStack.Screen
           navigationKey={String(isSignedIn)}
           name="Chat"
           component={ChatScreen}
         />
-      </SimpleStack.Navigator>
+      </AuthFlowStack.Navigator>
     </AuthContext.Provider>
   );
 }

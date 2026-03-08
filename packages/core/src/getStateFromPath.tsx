@@ -18,8 +18,8 @@ import type {
 import { validatePathConfig } from './validatePathConfig';
 
 type Options<ParamList extends {}> = {
-  path?: string;
-  initialRouteName?: string;
+  path?: string | undefined;
+  initialRouteName?: string | undefined;
   screens: PathConfigMap<ParamList>;
 };
 
@@ -30,17 +30,17 @@ type ParseConfigValue =
 type ParseConfig = Record<string, ParseConfigValue | undefined>;
 
 type RouteParseConfig = {
-  parseConfig?: ParseConfig;
+  parseConfig?: ParseConfig | undefined;
   pathParamNames: Set<string>;
 };
 
 type RouteConfig = {
   screen: string;
-  regex?: RegExp;
+  regex?: RegExp | undefined;
   segments: string[];
-  params: { screen: string; name?: string; index: number }[];
+  params: { screen: string; name?: string | undefined; index: number }[];
   routeNames: string[];
-  parse?: ParseConfig;
+  parse?: ParseConfig | undefined;
 };
 
 type InitialRouteConfig = {
@@ -49,12 +49,12 @@ type InitialRouteConfig = {
 };
 
 type ResultState = PartialState<NavigationState> & {
-  state?: ResultState;
+  state?: ResultState | undefined;
 };
 
 type ParsedRoute = {
   name: string;
-  path?: string;
+  path?: string | undefined;
   params?: Record<string, unknown> | undefined;
 };
 
@@ -814,7 +814,9 @@ const parseQueryParams = (
   path: string,
   parseConfig?: ParseConfig,
   pathParamNames: Set<string> = new Set()
-): { valid: true; params?: Record<string, unknown> } | { valid: false } => {
+):
+  | { valid: true; params?: Record<string, unknown> | undefined }
+  | { valid: false } => {
   const query = path.split('?')[1];
   const params: Record<string, unknown> = queryString.parse(query);
 

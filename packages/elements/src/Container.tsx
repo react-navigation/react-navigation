@@ -1,12 +1,14 @@
 import { Platform, View, type ViewStyle } from 'react-native';
 
 export type Props = {
-  ref?: React.Ref<HTMLDivElement | View>;
-  inert?: boolean;
-  style?: ViewStyle &
-    Omit<React.CSSProperties, 'backgroundColor'> & {
-      backgroundColor?: ViewStyle['backgroundColor'];
-    };
+  ref?: React.Ref<HTMLDivElement | View> | undefined;
+  inert?: boolean | undefined;
+  style?:
+    | (ViewStyle &
+        Omit<React.CSSProperties, 'backgroundColor'> & {
+          backgroundColor?: ViewStyle['backgroundColor'] | undefined;
+        })
+    | undefined;
   children: React.ReactNode;
 };
 

@@ -12,9 +12,9 @@ import { BlurEffectBackground } from '../BlurEffectBackground';
 import { type BlurEffectType } from '../getBlurBackgroundColor';
 
 type Props = Omit<ViewProps, 'style'> & {
-  blurEffect?: BlurEffectType | 'none';
-  style?: StyleProp<ViewStyle>;
-  children?: React.ReactNode;
+  blurEffect?: BlurEffectType | 'none' | undefined;
+  style?: StyleProp<ViewStyle> | undefined;
+  children?: React.ReactNode | undefined;
 };
 
 export function HeaderBackground({

@@ -68,7 +68,7 @@ const createState = (
   routes: Route<string>[] = []
 ): State => ({
   routes,
-  previousRoutes: [],
+  previousState: undefined,
   previousDescriptors: {},
   openingRouteKeys: [],
   closingRouteKeys: [],
@@ -102,7 +102,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeA, routeB]);
       const state = createState(
         {
-          previousRoutes: [routeA],
+          previousState: createNavigationState([routeA]),
           openingRouteKeys: [],
         },
         [routeA]
@@ -123,7 +123,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeA]);
       const state = createState(
         {
-          previousRoutes: [routeA, routeB],
+          previousState: createNavigationState([routeA, routeB]),
           openingRouteKeys: [],
         },
         [routeA, routeB]
@@ -144,7 +144,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeB]);
       const state = createState(
         {
-          previousRoutes: [routeA],
+          previousState: createNavigationState([routeA]),
           openingRouteKeys: [],
         },
         [routeA]
@@ -164,7 +164,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeC]);
       const state = createState(
         {
-          previousRoutes: [routeB],
+          previousState: createNavigationState([routeB]),
           replacingRouteKeys: ['A'],
           openingRouteKeys: ['B'],
         },
@@ -194,7 +194,7 @@ describe('StackView.getDerivedStateFromProps', () => {
 
       const state = createState(
         {
-          previousRoutes: [routeB],
+          previousState: createNavigationState([routeB]),
           previousDescriptors: oldDescriptors,
           replacingRouteKeys: ['A'],
           openingRouteKeys: ['B'],
@@ -218,7 +218,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeA]);
       const state = createState(
         {
-          previousRoutes: [routeA],
+          previousState: createNavigationState([routeA]),
           closingRouteKeys: ['B'],
         },
         [routeA, routeB]
@@ -236,7 +236,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeB]);
       const state = createState(
         {
-          previousRoutes: [routeB],
+          previousState: createNavigationState([routeB]),
           replacingRouteKeys: ['A'],
           openingRouteKeys: ['B'],
         },
@@ -256,7 +256,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([updatedRouteB]);
       const state = createState(
         {
-          previousRoutes: [routeB],
+          previousState: createNavigationState([routeB]),
           replacingRouteKeys: ['A'],
           openingRouteKeys: ['B'],
         },
@@ -278,7 +278,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeA], { animation: 'none' });
       const state = createState(
         {
-          previousRoutes: [routeA, routeB],
+          previousState: createNavigationState([routeA, routeB]),
           openingRouteKeys: [],
           descriptors: createDescriptors([routeA, routeB], {
             animation: 'none',
@@ -299,7 +299,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeB], { animation: 'none' });
       const state = createState(
         {
-          previousRoutes: [routeA],
+          previousState: createNavigationState([routeA]),
           openingRouteKeys: [],
           descriptors: createDescriptors([routeA], { animation: 'none' }),
         },
@@ -321,7 +321,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeA]);
       const state = createState(
         {
-          previousRoutes: [routeA, routeB],
+          previousState: createNavigationState([routeA, routeB]),
           openingRouteKeys: ['B'],
         },
         [routeA, routeB]
@@ -339,7 +339,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeA]);
       const state = createState(
         {
-          previousRoutes: [routeB],
+          previousState: createNavigationState([routeB]),
           replacingRouteKeys: ['A'],
           openingRouteKeys: ['B'],
         },
@@ -358,7 +358,7 @@ describe('StackView.getDerivedStateFromProps', () => {
       const props = createProps([routeX, routeB]);
       const state = createState(
         {
-          previousRoutes: [routeX, routeA],
+          previousState: createNavigationState([routeX, routeA]),
           openingRouteKeys: [],
         },
         [routeX, routeA]

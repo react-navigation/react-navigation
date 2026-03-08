@@ -19,7 +19,7 @@ test('adds the listener even if container is mounted later', () => {
   ref.addListener('state', listener);
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder<
+    const { state, descriptors, NavigationContent } = useNavigationBuilder<
       NavigationState,
       any,
       {},
@@ -29,10 +29,12 @@ test('adds the listener even if container is mounted later', () => {
     const { render, options } = descriptors[state.routes[state.index].key];
 
     return (
-      <main>
-        <h1>{options.title}</h1>
-        <div>{render()}</div>
-      </main>
+      <NavigationContent>
+        <main>
+          <h1>{options.title}</h1>
+          <div>{render()}</div>
+        </main>
+      </NavigationContent>
     );
   };
 

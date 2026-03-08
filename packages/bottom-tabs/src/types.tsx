@@ -194,7 +194,7 @@ type BottomTabCustomOptions = {
    *
    * Only supported with `custom` implementation.
    */
-  tabBarLabelPosition?: LabelPosition;
+  tabBarLabelPosition?: LabelPosition | undefined;
 
   /**
    * Whether label font should scale to respect Text Size accessibility settings.
@@ -509,7 +509,7 @@ export type BottomTabNavigationOptions = {
   /**
    * Text to show in a badge on the tab icon.
    */
-  tabBarBadge?: number | string;
+  tabBarBadge?: number | string | undefined;
 
   /**
    * Custom style for the tab bar badge.
@@ -527,7 +527,7 @@ export type BottomTabNavigationOptions = {
   /**
    * Color for the icon and label in the active tab.
    */
-  tabBarActiveTintColor?: ColorValue;
+  tabBarActiveTintColor?: ColorValue | undefined;
 
   /**
    * Color for the icon and label in the inactive tabs.
@@ -622,6 +622,19 @@ export type BottomTabNavigationOptions = {
    * Defaults to `false` unless a header is provided.
    */
   headerShown?: boolean;
+
+  /**
+   * What should happen when screens become inactive.
+   * - `pause`: Effects are cleaned up.
+   * - `none`: Screen renders normally
+   *
+   * Defaults to `pause`.
+   *
+   * If you set `lazy: false` or preload a screen,
+   * It won't be paused until after the first time it becomes focused.
+   * This makes sure that effects are run to initialize the screen.
+   */
+  inactiveBehavior?: 'pause' | 'none';
 } & HeaderOptions &
   BottomTabNativeOptions &
   BottomTabCustomOptions;
@@ -712,15 +725,6 @@ export type BottomTabNavigationConfig = {
    * Function that returns a React element to display as the tab bar.
    */
   tabBar?: (props: BottomTabBarProps) => React.ReactNode;
-
-  /**
-   * Whether inactive screens should be detached from the view hierarchy to save memory.
-   *
-   * Defaults to `true`.
-   *
-   * Only supported with `custom` implementation.
-   */
-  detachInactiveScreens?: boolean;
 };
 
 export type BottomTabHeaderProps = {
@@ -748,7 +752,7 @@ export type BottomTabBarButtonProps = Omit<
   React.ComponentProps<typeof PlatformPressable>,
   'style'
 > & {
-  href?: string;
+  href?: string | undefined;
   children: React.ReactNode;
   style?: StyleProp<ViewStyle>;
   onPress?: (

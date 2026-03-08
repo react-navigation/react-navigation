@@ -138,12 +138,12 @@ export type SceneProgress = {
    * Progress value for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
    */
-  next?: Animated.AnimatedInterpolation<number>;
+  next?: Animated.AnimatedInterpolation<number> | undefined;
   /**
    * Progress value for the screen before this one in the stack.
    * This can be `undefined` in case the screen animating is the first one.
    */
-  previous?: Animated.AnimatedInterpolation<number>;
+  previous?: Animated.AnimatedInterpolation<number> | undefined;
 };
 
 export type StackHeaderMode = 'float' | 'screen';
@@ -187,14 +187,14 @@ export type StackHeaderOptions = Omit<
    * Defaults to the previous screen's title, or "Back" if there's not enough space.
    * Use `headerBackButtonDisplayMode` to customize the behavior.
    */
-  headerBackTitle?: string;
+  headerBackTitle?: string | undefined;
   /**
    * Title string used by the back button when `headerBackTitle` doesn't fit on the screen.
    * Use `headerBackButtonDisplayMode` to customize the behavior.
    *
    * Defaults to "Back".
    */
-  headerBackTruncatedTitle?: string;
+  headerBackTruncatedTitle?: string | undefined;
   /**
    * How the back button displays icon and title.
    *
@@ -240,16 +240,18 @@ export type StackHeaderProps = {
   /**
    * Options for the back button.
    */
-  back?: {
-    /**
-     * Title of the previous screen.
-     */
-    title: string | undefined;
-    /**
-     * The `href` to use for the anchor tag on web
-     */
-    href: string | undefined;
-  };
+  back?:
+    | {
+        /**
+         * Title of the previous screen.
+         */
+        title: string | undefined;
+        /**
+         * The `href` to use for the anchor tag on web
+         */
+        href: string | undefined;
+      }
+    | undefined;
   /**
    * Animated nodes representing the progress of the animation.
    */
@@ -276,26 +278,26 @@ export type StackHeaderRightProps = {
   /**
    * Tint color for the header button.
    */
-  tintColor?: ColorValue;
+  tintColor?: ColorValue | undefined;
   /**
    * Color for material ripple (Android >= 5.0 only).
    */
-  pressColor?: ColorValue;
+  pressColor?: ColorValue | undefined;
   /**
    * Opacity when the button is pressed, used when ripple is not supported.
    */
-  pressOpacity?: number;
+  pressOpacity?: number | undefined;
   /**
    * Whether it's possible to navigate back in stack.
    */
-  canGoBack?: boolean;
+  canGoBack?: boolean | undefined;
 };
 
 export type StackHeaderLeftProps = HeaderBackButtonProps & {
   /**
    * Whether it's possible to navigate back in stack.
    */
-  canGoBack?: boolean;
+  canGoBack?: boolean | undefined;
 };
 
 export type StackDescriptor = Descriptor<
@@ -348,9 +350,6 @@ export type StackNavigationOptions = StackHeaderOptions &
      * You can also specify `{ backgroundColor: 'transparent' }` to make the previous screen visible underneath.
      * This is useful to implement things like modal dialogs.
      *
-     * You should also specify `detachPreviousScreen: false` in options when using a transparent background
-     * so that the previous screen isn't detached and stays below the current screen.
-     *
      * You might also need to change the animation of the screen using `cardStyleInterpolator`
      * so that the previous screen isn't transformed or invisible.
      */
@@ -366,7 +365,6 @@ export type StackNavigationOptions = StackHeaderOptions &
      * - `transparentModal`: Similar to `modal`. This changes following things:
      *   - Sets `headerMode` to `screen` for the screen unless specified otherwise.
      *   - Sets background color of the screen to transparent, so previous screen is visible
-     *   - Adjusts the `detachPreviousScreen` option so that the previous screen stays rendered.
      *   - Prevents the previous screen from animating from its last position.
      *   - Changes the screen animation to a vertical slide animation.
      *
@@ -409,42 +407,28 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     gestureVelocityImpact?: number;
     /**
-     * Whether to detach the previous screen from the view hierarchy to save memory.
-     * Set it to `false` if you need the previous screen to be seen through the active screen.
-     * Only applicable if `detachInactiveScreens` isn't set to `false`.
-     * Defaults to `false` for the last screen for modals, otherwise `true`.
-     */
-    detachPreviousScreen?: boolean;
-    /**
      * If `false`, the keyboard will NOT automatically dismiss when navigating to a new screen from this screen.
      * Defaults to `true`.
      */
     keyboardHandlingEnabled?: boolean;
+
     /**
-     * Whether inactive screens should be suspended from re-rendering. Defaults to `false`.
-     * Defaults to `true` when `enableFreeze()` is run at the top of the application.
-     * Requires `react-native-screens` version >=3.16.0.
+     * What should happen when screens become inactive.
+     * - `pause`: Effects are cleaned up
+     * - `unmount`: Screen is unmounted
+     * - `none`: Screen renders normally
      *
-     * Only supported on iOS and Android.
-     */
-    freezeOnBlur?: boolean;
-    /**
-     * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
+     * Defaults to `pause`.
      *
-     * @platform ios
+     * Preloaded screens won't be paused until after navigated to.
+     * This makes sure that effects are run to initialize the screen.
+     *
+     * Screens with nested navigators and last 2 screens won't be unmounted.
      */
-    autoHideHomeIndicator?: boolean;
+    inactiveBehavior?: 'pause' | 'unmount' | 'none' | undefined;
   };
 
-export type StackNavigationConfig = {
-  /**
-   * Whether inactive screens should be detached from the view hierarchy to save memory.
-   * This will have no effect if you disable `react-native-screens`.
-   *
-   * Defaults to `true`.
-   */
-  detachInactiveScreens?: boolean;
-};
+export type StackNavigationConfig = {};
 
 export type TransitionSpec =
   | {
@@ -476,12 +460,14 @@ export type StackCardInterpolationProps = {
    * Values for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
    */
-  next?: {
-    /**
-     * Animated node representing the progress value of the next screen.
-     */
-    progress: Animated.AnimatedInterpolation<number>;
-  };
+  next?:
+    | {
+        /**
+         * Animated node representing the progress value of the next screen.
+         */
+        progress: Animated.AnimatedInterpolation<number>;
+      }
+    | undefined;
   /**
    * The index of the card with this interpolation in the stack.
    */
@@ -555,12 +541,14 @@ export type StackHeaderInterpolationProps = {
    * Values for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
    */
-  next?: {
-    /**
-     * Animated node representing the progress value of the next screen.
-     */
-    progress: Animated.AnimatedInterpolation<number>;
-  };
+  next?:
+    | {
+        /**
+         * Animated node representing the progress value of the next screen.
+         */
+        progress: Animated.AnimatedInterpolation<number>;
+      }
+    | undefined;
   /**
    * Writing direction of the layout.
    */

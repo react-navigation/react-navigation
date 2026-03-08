@@ -22,27 +22,27 @@ export type DrawerProps = {
   /**
    * Callback which is called when a gesture starts.
    */
-  onGestureStart?: () => void;
+  onGestureStart?: (() => void) | undefined;
 
   /**
    * Callback which is called when a gesture is cancelled.
    */
-  onGestureCancel?: () => void;
+  onGestureCancel?: (() => void) | undefined;
 
   /**
    * Callback which is called when a gesture ends.
    */
-  onGestureEnd?: () => void;
+  onGestureEnd?: (() => void) | undefined;
 
   /**
    * Callback which is called when the opening/closing transition starts.
    */
-  onTransitionStart?: (closing: boolean) => void;
+  onTransitionStart?: ((closing: boolean) => void) | undefined;
 
   /**
    * Callback which is called when the opening/closing transition ends.
    */
-  onTransitionEnd?: (closing: boolean) => void;
+  onTransitionEnd?: ((closing: boolean) => void) | undefined;
 
   /**
    * Callback which returns a react element to render as the content of the drawer.
@@ -53,13 +53,13 @@ export type DrawerProps = {
    * Locale direction of the drawer.
    * Defaults to `rtl` when `I18nManager.getConstants().isRTL` is `true` on Android & iOS, otherwise `ltr`.
    */
-  direction?: 'ltr' | 'rtl';
+  direction?: 'ltr' | 'rtl' | undefined;
 
   /**
    * Position of the drawer on the screen.
    * Defaults to `right` in RTL mode, otherwise `left`.
    */
-  drawerPosition?: 'left' | 'right';
+  drawerPosition?: 'left' | 'right' | undefined;
 
   /**
    * Type of the drawer. It determines how the drawer looks and animates.
@@ -70,79 +70,79 @@ export type DrawerProps = {
    *
    * Defaults to `slide` on iOS and `front` on other platforms.
    */
-  drawerType?: 'front' | 'back' | 'slide' | 'permanent';
+  drawerType?: 'front' | 'back' | 'slide' | 'permanent' | undefined;
 
   /**
    * Style object for the drawer component.
    * You can pass a custom background color for drawer or a custom width here.
    */
-  drawerStyle?: StyleProp<ViewStyle>;
+  drawerStyle?: StyleProp<ViewStyle> | undefined;
 
   /**
    * Style object for the drawer overlay.
    */
-  overlayStyle?: StyleProp<ViewStyle>;
+  overlayStyle?: StyleProp<ViewStyle> | undefined;
 
   /**
    * Accessibility label for the overlay. This is read by the screen reader when the user taps the overlay.
    * Defaults to "Close drawer".
    */
-  overlayAccessibilityLabel?: string;
+  overlayAccessibilityLabel?: string | undefined;
 
   /**
    * Whether the keyboard should be dismissed when the swipe gesture begins.
    * Defaults to `'on-drag'`. Set to `'none'` to disable keyboard handling.
    */
-  keyboardDismissMode?: 'none' | 'on-drag';
+  keyboardDismissMode?: 'none' | 'on-drag' | undefined;
 
   /**
    * Whether the statusbar should be hidden when the drawer is pulled or opens.
    * Defaults to `false`.
    */
-  hideStatusBarOnOpen?: boolean;
+  hideStatusBarOnOpen?: boolean | undefined;
 
   /**
    * Animation of the statusbar when hiding it. Use in combination with `hideStatusBarOnOpen`.
    */
-  statusBarAnimation?: 'slide' | 'fade' | 'none';
+  statusBarAnimation?: 'slide' | 'fade' | 'none' | undefined;
 
   /**
    * Whether you can use swipe gestures to open or close the drawer.
    * Defaults to `true`.
    * This is not supported on Web.
    */
-  swipeEnabled?: boolean;
+  swipeEnabled?: boolean | undefined;
 
   /**
    * How far from the edge of the screen the swipe gesture should activate.
    * Defaults to `32`.
    * This is not supported on Web.
    */
-  swipeEdgeWidth?: number;
+  swipeEdgeWidth?: number | undefined;
 
   /**
    * Minimum swipe distance that should activate opening the drawer.
    * Defaults to `60`.
    * This is not supported on Web.
    */
-  swipeMinDistance?: number;
+  swipeMinDistance?: number | undefined;
 
   /**
    * Minimum swipe velocity that should activate opening the drawer.
    * Defaults to `500`.
    * This is not supported on Web.
    */
-  swipeMinVelocity?: number;
+  swipeMinVelocity?: number | undefined;
 
   /**
    * Function to modify the pan gesture handler via RNGH properties API.
    */
-  configureGestureHandler?: (gesture: PanGesture) => PanGesture;
+  configureGestureHandler?: ((gesture: PanGesture) => PanGesture) | undefined;
 
   /**
    * Style object for the wrapper view.
    */
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle> | undefined;
 
   /**
    * Content that the drawer should wrap.
@@ -154,5 +154,5 @@ export type OverlayProps = React.ComponentProps<typeof View> & {
   open: boolean;
   progress: SharedValue<number>;
   onPress: () => void;
-  accessibilityLabel?: string;
+  accessibilityLabel?: string | undefined;
 };

@@ -19,14 +19,18 @@ type HoverEffectProps = {
 };
 
 export type Props = Omit<PressableProps, 'style' | 'onPress'> & {
-  href?: string;
-  pressColor?: ColorValue;
-  pressOpacity?: number;
-  hoverEffect?: HoverEffectProps;
-  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
-  onPress?: (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
-  ) => void;
+  href?: string | undefined;
+  pressColor?: ColorValue | undefined;
+  pressOpacity?: number | undefined;
+  hoverEffect?: HoverEffectProps | undefined;
+  style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
+  onPress?:
+    | ((
+        e:
+          | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+          | GestureResponderEvent
+      ) => void)
+    | undefined;
   children: React.ReactNode;
 };
 

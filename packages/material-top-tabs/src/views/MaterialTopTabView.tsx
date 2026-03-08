@@ -1,3 +1,4 @@
+import { ActivityView } from '@react-navigation/elements/internal';
 import {
   CommonActions,
   type ParamListBase,
@@ -6,6 +7,8 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
+import { useMemo, useState } from 'react';
+import { type Animated, StyleSheet } from 'react-native';
 import { TabView } from 'react-native-tab-view';
 
 import type {
@@ -13,6 +16,7 @@ import type {
   MaterialTopTabDescriptorMap,
   MaterialTopTabNavigationConfig,
   MaterialTopTabNavigationHelpers,
+  MaterialTopTabNavigationOptions,
 } from '../types';
 import { TabAnimationContext } from '../utils/TabAnimationContext';
 import { MaterialTopTabBar } from './MaterialTopTabBar';
@@ -68,9 +72,14 @@ export function MaterialTopTabView({
         });
       }}
       renderScene={({ route, position }) => (
-        <TabAnimationContext.Provider value={{ position }}>
+        <SceneContent
+          focused={route.key === state.routes[state.index].key}
+          preloaded={state.preloadedRouteKeys.includes(route.key)}
+          position={position}
+          options={descriptors[route.key].options}
+        >
           {descriptors[route.key].render()}
-        </TabAnimationContext.Provider>
+        </SceneContent>
       )}
       navigationState={state}
       renderTabBar={renderTabBar}
@@ -105,3 +114,57 @@ export function MaterialTopTabView({
     />
   );
 }
+
+function SceneContent({
+  focused,
+  preloaded,
+  position,
+  options,
+  children,
+}: {
+  focused: boolean;
+  preloaded: boolean;
+  position: Animated.AnimatedInterpolation<number>;
+  options: MaterialTopTabNavigationOptions;
+  children: React.ReactNode;
+}) {
+  const { inactiveBehavior = 'pause', lazy } = options;
+
+  const [loaded, setLoaded] = useState(focused);
+
+  if (focused && !loaded) {
+    setLoaded(true);
+  }
+
+  const animationContext = useMemo(() => ({ position }), [position]);
+
+  // For preloaded screens and if lazy is false,
+  // Keep them active so that the effects can run
+  const isActive =
+    inactiveBehavior === 'none' ||
+    focused ||
+    preloaded ||
+    (lazy === false && !loaded);
+
+  return (
+    <TabAnimationContext.Provider value={animationContext}>
+      <ActivityView
+        mode={isActive ? 'normal' : 'paused'}
+        visible={
+          // Tabs can be swiped quickly
+          // So we keep all tabs visible to avoid flash of blank screen
+          true
+        }
+        style={styles.scene}
+      >
+        {children}
+      </ActivityView>
+    </TabAnimationContext.Provider>
+  );
+}
+
+const styles = StyleSheet.create({
+  scene: {
+    flex: 1,
+  },
+});

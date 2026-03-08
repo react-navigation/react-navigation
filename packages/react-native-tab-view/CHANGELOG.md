@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.2...react-native-tab-view@5.0.0-alpha.3) (2026-03-03)
+
+### Bug Fixes
+
+* make tab view tabs interactive as soon as possible ([c34e871](https://github.com/react-navigation/react-navigation/commit/c34e871d93db5b47f8c0cf6535f7563e137ceb06)) - by @satya164
+
 # [5.0.0-alpha.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.1...react-native-tab-view@5.0.0-alpha.2) (2026-02-12)
 
 ### Features

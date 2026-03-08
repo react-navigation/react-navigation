@@ -20,16 +20,16 @@ export type Props<T extends Route> = TabDescriptor<T> & {
   position: Animated.AnimatedInterpolation<number>;
   route: T;
   navigationState: NavigationState<T>;
-  activeColor?: ColorValue;
-  inactiveColor?: ColorValue;
-  pressColor?: ColorValue;
-  pressOpacity?: number;
-  onLayout?: (event: LayoutChangeEvent) => void;
+  activeColor?: ColorValue | undefined;
+  inactiveColor?: ColorValue | undefined;
+  pressColor?: ColorValue | undefined;
+  pressOpacity?: number | undefined;
+  onLayout?: ((event: LayoutChangeEvent) => void) | undefined;
   onPress: () => void;
   onLongPress: () => void;
-  defaultTabWidth?: number;
+  defaultTabWidth?: number | undefined;
   style: StyleProp<ViewStyle>;
-  android_ripple?: PressableAndroidRippleConfig;
+  android_ripple?: PressableAndroidRippleConfig | undefined;
 };
 
 const DEFAULT_ACTIVE_COLOR = 'rgba(0, 0, 0, 1)';

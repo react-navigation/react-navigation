@@ -6,7 +6,8 @@ export const COMMON_LINKING_CONFIG = {
         author.charAt(0).toUpperCase() + author.slice(1).replace(/-/g, ' '),
     },
     stringify: {
-      author: (author: string) => author.toLowerCase().replace(/\s/g, '-'),
+      author: (author: unknown) =>
+        String(author).toLowerCase().replace(/\s/g, '-'),
     },
   },
   NewsFeed: {
@@ -15,4 +16,4 @@ export const COMMON_LINKING_CONFIG = {
       date: Number,
     },
   },
-};
+} as const;

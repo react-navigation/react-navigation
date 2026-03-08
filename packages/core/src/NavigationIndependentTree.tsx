@@ -7,6 +7,7 @@ import {
   NavigationRouteContext,
   NavigationRouteNameContext,
 } from './NavigationProvider';
+import { IsFocusedContext } from './useIsFocused';
 
 /**
  * Component to make the child navigation container independent of parent containers.
@@ -21,11 +22,13 @@ export function NavigationIndependentTree({
     <NamedRouteContextListContext.Provider value={undefined}>
       <NavigationRouteContext.Provider value={undefined}>
         <NavigationContext.Provider value={undefined}>
-          <NavigationRouteNameContext.Provider value={undefined}>
-            <NavigationIndependentTreeContext.Provider value={true}>
-              {children}
-            </NavigationIndependentTreeContext.Provider>
-          </NavigationRouteNameContext.Provider>
+          <IsFocusedContext.Provider value={undefined}>
+            <NavigationRouteNameContext.Provider value={undefined}>
+              <NavigationIndependentTreeContext.Provider value={true}>
+                {children}
+              </NavigationIndependentTreeContext.Provider>
+            </NavigationRouteNameContext.Provider>
+          </IsFocusedContext.Provider>
         </NavigationContext.Provider>
       </NavigationRouteContext.Provider>
     </NamedRouteContextListContext.Provider>

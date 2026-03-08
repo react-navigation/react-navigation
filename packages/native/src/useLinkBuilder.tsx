@@ -13,7 +13,13 @@ import { getStateFromHref } from './getStateFromHref';
 import { LinkingContext } from './LinkingContext';
 
 type MinimalState = {
-  routes: [{ name: string; params?: object; state?: MinimalState }];
+  routes: [
+    {
+      name: string;
+      params?: object | undefined;
+      state?: MinimalState | undefined;
+    },
+  ];
 };
 
 /**

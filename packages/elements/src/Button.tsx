@@ -15,8 +15,8 @@ import {
 import { Text } from './Text';
 
 type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
-  variant?: 'plain' | 'tinted' | 'filled';
-  color?: ColorValue;
+  variant?: 'plain' | 'tinted' | 'filled' | undefined;
+  color?: ColorValue | undefined;
   children: string | string[];
 };
 

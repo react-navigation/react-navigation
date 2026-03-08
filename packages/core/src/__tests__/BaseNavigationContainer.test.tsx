@@ -123,15 +123,15 @@ test('handle dispatching with ref', () => {
   }
 
   const RootNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
       CurrentRootRouter,
       props
     );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -184,12 +184,15 @@ test('handle dispatching with ref', () => {
 
 test('handle resetting state with ref', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -278,9 +281,16 @@ test('handle resetting state with ref', () => {
 
 test('handles getRootState', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return descriptors[state.routes[state.index].key].render();
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
   };
 
   const ref = createNavigationContainerRef<ParamListBase>();
@@ -336,11 +346,14 @@ test('handles getRootState', () => {
 
 test('emits ready event when the container is ready with synchronous content', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -368,11 +381,14 @@ test('emits ready event when the container is ready with synchronous content', (
 
 test('emits ready event when the container is ready with asynchronous content', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -407,12 +423,15 @@ test('emits ready event when the container is ready with asynchronous content', 
 
 test('emits state events when the state changes', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -478,12 +497,15 @@ test('emits state events when new navigator mounts', () => {
   jest.useFakeTimers();
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -568,12 +590,15 @@ test('emits state events when new navigator mounts', () => {
 
 test('emits option events when options change with tab router', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(TabRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      TabRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -644,12 +669,15 @@ test('emits option events when options change with tab router', () => {
 
 test('emits option events when options change with stack router', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(StackRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -746,9 +774,16 @@ test("throws if the ref hasn't finished initializing", () => {
   const ref = createNavigationContainerRef<ParamListBase>();
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return descriptors[state.routes[state.index].key].render();
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
   };
 
   const TestScreen = () => {
@@ -782,9 +817,16 @@ test('fires onReady after navigator is rendered', () => {
   const ref = createNavigationContainerRef<ParamListBase>();
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return descriptors[state.routes[state.index].key].render();
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
   };
 
   const onReady = jest.fn();
@@ -817,12 +859,15 @@ test('invokes the unhandled action listener with the unhandled action', () => {
   const fn = jest.fn();
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -850,12 +895,15 @@ test('invokes the unhandled action listener with the unhandled action', () => {
 
 test('works with state change events in independent nested container', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 
@@ -912,12 +960,15 @@ test('works with state change events in independent nested container', () => {
 
 test('warns for duplicate route names nested inside each other', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     return (
-      <React.Fragment>
+      <NavigationContent>
         {descriptors[state.routes[state.index].key].render()}
-      </React.Fragment>
+      </NavigationContent>
     );
   };
 

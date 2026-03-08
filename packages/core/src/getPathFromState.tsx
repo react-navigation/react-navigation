@@ -6,12 +6,13 @@ import type {
 import * as queryString from 'query-string';
 
 import { getPatternParts, type PatternPart } from './getPatternParts';
+import { getStateFromRouteParams } from './getStateFromRouteParams';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
 type Options<ParamList extends {}> = {
-  path?: string;
-  initialRouteName?: string;
+  path?: string | undefined;
+  initialRouteName?: string | undefined;
   screens: PathConfigMap<ParamList>;
 };
 
@@ -20,12 +21,14 @@ type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 type StringifyConfig = Record<string, ((value: unknown) => string) | undefined>;
 
 type ConfigItem = {
-  parts?: PatternPart[];
-  stringify?: StringifyConfig;
-  screens?: Record<string, ConfigItem>;
+  parts?: PatternPart[] | undefined;
+  stringify?: StringifyConfig | undefined;
+  screens?: Record<string, ConfigItem> | undefined;
 };
 
-const getActiveRoute = (state: State): { name: string; params?: object } => {
+const getActiveRoute = (
+  state: State
+): { name: string; params?: object | undefined } => {
   const route =
     typeof state.index === 'number'
       ? state.routes[state.index]
@@ -55,6 +58,46 @@ const getNormalizedConfigs = (options?: Options<{}>) => {
   cachedNormalizedConfigs.set(options.screens, normalizedConfigs);
 
   return normalizedConfigs;
+};
+
+const getTransformedState = (
+  state: State,
+  configs: Record<string, ConfigItem> | undefined
+): Omit<PartialState<NavigationState>, 'stale'> => {
+  const routes = state.routes.map(
+    (route): Omit<PartialState<NavigationState>, 'stale'>['routes'][number] => {
+      if (
+        route.state ||
+        (configs?.[route.name]?.screens &&
+          route.params &&
+          (('screen' in route.params &&
+            typeof route.params.screen === 'string' &&
+            configs[route.name].screens?.[route.params.screen]) ||
+            'state' in route.params))
+      ) {
+        const nestedState: State | undefined =
+          route.state ?? getStateFromRouteParams(route.params);
+
+        if (nestedState) {
+          return {
+            ...route,
+            state: getTransformedState(
+              nestedState,
+              configs?.[route.name]?.screens
+            ),
+          };
+        }
+      }
+
+      // @ts-expect-error route.state is handled in previous condition
+      return route;
+    }
+  );
+
+  return {
+    ...state,
+    routes,
+  };
 };
 
 /**
@@ -101,9 +144,10 @@ export function getPathFromState<ParamList extends {}>(
   }
 
   const configs = getNormalizedConfigs(options);
+  const transformedState = getTransformedState(state, configs);
 
   let path = '/';
-  let current: State | undefined = state;
+  let current: State | undefined = transformedState;
 
   const allParams: Record<string, string> = {};
 
@@ -118,7 +162,7 @@ export function getPathFromState<ParamList extends {}>(
     let focusedParams: Record<string, string> | undefined;
     let currentOptions = configs;
 
-    const focusedRoute = getActiveRoute(state);
+    const focusedRoute = getActiveRoute(transformedState);
 
     // Keep all the route names that appeared during going deeper in config in case the pattern is resolved to undefined
     const nestedRouteNames = [];

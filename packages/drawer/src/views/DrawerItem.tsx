@@ -16,11 +16,11 @@ type Props = {
   /**
    * The route object which should be specified by the drawer item.
    */
-  route?: Route<string>;
+  route?: Route<string> | undefined;
   /**
    * The `href` to use for the anchor tag on web
    */
-  href?: string;
+  href?: string | undefined;
   /**
    * The label text of the item.
    */
@@ -30,15 +30,17 @@ type Props = {
   /**
    * Icon to display for the `DrawerItem`.
    */
-  icon?: (props: {
-    focused: boolean;
-    size: number;
-    color: ColorValue;
-  }) => React.ReactNode;
+  icon?:
+    | ((props: {
+        focused: boolean;
+        size: number;
+        color: ColorValue;
+      }) => React.ReactNode)
+    | undefined;
   /**
    * Whether to highlight the drawer item as active.
    */
-  focused?: boolean;
+  focused?: boolean | undefined;
   /**
    * Function to execute on press.
    */
@@ -46,54 +48,54 @@ type Props = {
   /**
    * Color for the icon and label when the item is active.
    */
-  activeTintColor?: ColorValue;
+  activeTintColor?: ColorValue | undefined;
   /**
    * Color for the icon and label when the item is inactive.
    */
-  inactiveTintColor?: ColorValue;
+  inactiveTintColor?: ColorValue | undefined;
   /**
    * Background color for item when its active.
    */
-  activeBackgroundColor?: ColorValue;
+  activeBackgroundColor?: ColorValue | undefined;
   /**
    * Background color for item when its inactive.
    */
-  inactiveBackgroundColor?: ColorValue;
+  inactiveBackgroundColor?: ColorValue | undefined;
   /**
    * Color of the touchable effect on press.
    * Only supported on Android.
    *
    * @platform android
    */
-  pressColor?: ColorValue;
+  pressColor?: ColorValue | undefined;
   /**
    * Opacity of the touchable effect on press.
    * Only supported on iOS.
    *
    * @platform ios
    */
-  pressOpacity?: number;
+  pressOpacity?: number | undefined;
   /**
    * Style object for the label element.
    */
-  labelStyle?: StyleProp<TextStyle>;
+  labelStyle?: StyleProp<TextStyle> | undefined;
   /**
    * Style object for the wrapper element.
    */
-  style?: StyleProp<ViewStyle>;
+  style?: StyleProp<ViewStyle> | undefined;
   /**
    * Whether label font should scale to respect Text Size accessibility settings.
    */
-  allowFontScaling?: boolean;
+  allowFontScaling?: boolean | undefined;
 
   /**
    * Accessibility label for drawer item.
    */
-  accessibilityLabel?: string;
+  accessibilityLabel?: string | undefined;
   /**
    * ID to locate this drawer item in tests.
    */
-  testID?: string;
+  testID?: string | undefined;
 };
 
 /**

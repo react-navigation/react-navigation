@@ -8,12 +8,16 @@ import {
 } from 'react-native';
 
 export type Props = Omit<PressableProps, 'onPress'> & {
-  href?: string;
-  pressColor?: ColorValue;
-  pressOpacity?: number;
-  onPress?: (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
-  ) => void;
+  href?: string | undefined;
+  pressColor?: ColorValue | undefined;
+  pressOpacity?: number | undefined;
+  onPress?:
+    | ((
+        e:
+          | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+          | GestureResponderEvent
+      ) => void)
+    | undefined;
   children: React.ReactNode;
 };
 

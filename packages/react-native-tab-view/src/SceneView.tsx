@@ -78,6 +78,8 @@ export function SceneView<T extends Route>({
   const ref = React.useRef<View>(null);
 
   React.useLayoutEffect(() => {
+    let unsubscribe: (() => void) | undefined;
+
     const element = ref.current;
 
     if (
@@ -91,8 +93,20 @@ export function SceneView<T extends Route>({
       } else {
         element.setAttribute('inert', '');
       }
+
+      // Remove inert as soon as the view is in viewport
+      // This will allow quick interaction after swiping
+      unsubscribe = subscribe((event) => {
+        if (event.type === 'enter' && event.index === index) {
+          element.removeAttribute('inert');
+        }
+      });
     }
-  }, [isFocused]);
+
+    return () => {
+      unsubscribe?.();
+    };
+  }, [index, isFocused, subscribe]);
 
   return (
     <View ref={ref} aria-hidden={!isFocused} style={[styles.route, style]}>
