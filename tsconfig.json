@@ -21,6 +21,7 @@
     "resolvePackageJsonImports": false,
     "skipLibCheck": true,
     "strict": true,
+    "exactOptionalPropertyTypes": true,
     "target": "esnext",
     "verbatimModuleSyntax": true
   },
