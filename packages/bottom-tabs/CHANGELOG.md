@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.15...@react-navigation/bottom-tabs@8.0.0-alpha.16) (2026-03-05)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [8.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.14...@react-navigation/bottom-tabs@8.0.0-alpha.15) (2026-03-03)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [8.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.13...@react-navigation/bottom-tabs@8.0.0-alpha.14) (2026-03-03)
+
+### Bug Fixes
+
+* include background color and blur effect in scrollEdgeAppearance in native bottom tabs ([#12997](https://github.com/react-navigation/react-navigation/issues/12997)) ([11cc687](https://github.com/react-navigation/react-navigation/commit/11cc687f26df0e0985c2e8faa6367f7d1095dda5)) - by @Kasendwa
+
+### Features
+
+* delay marking activity as hidden so animations can finish ([#13002](https://github.com/react-navigation/react-navigation/issues/13002)) ([bf8c8f8](https://github.com/react-navigation/react-navigation/commit/bf8c8f846c0fa75b82b131002fd458fa92120e71)) - by @satya164
+* **native-stack:** add support for images in nested header menus ([#12987](https://github.com/react-navigation/react-navigation/issues/12987)) ([d915ad5](https://github.com/react-navigation/react-navigation/commit/d915ad516d4d465effa5135dc33e04fd05f7160c)) - by @Ubax
+
 # [8.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.12...@react-navigation/bottom-tabs@8.0.0-alpha.13) (2026-02-16)
 
 ### Bug Fixes

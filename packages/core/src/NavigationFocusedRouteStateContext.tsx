@@ -3,11 +3,11 @@ import * as React from 'react';
 export type FocusedRouteState = {
   routes: [
     {
-      key?: string;
+      key?: string | undefined;
       name: string;
-      params?: object;
-      path?: string;
-      state?: FocusedRouteState;
+      params?: object | undefined;
+      path?: string | undefined;
+      state?: FocusedRouteState | undefined;
     },
   ];
 };

@@ -83,58 +83,68 @@ export type DefaultNavigatorOptions<
    * Layout for the navigator.
    * Useful for wrapping with a component with access to navigator's state and options.
    */
-  layout?: (props: {
-    state: State;
-    navigation: NavigationHelpers<ParamList>;
-    descriptors: Record<
-      string,
-      Descriptor<
-        ScreenOptions,
-        NavigationProp<
-          ParamList,
-          keyof ParamList,
-          State,
-          ScreenOptions,
-          EventMap
-        >,
-        RouteProp<ParamList>
-      >
-    >;
-    children: React.ReactNode;
-  }) => React.ReactElement;
+  layout?:
+    | ((props: {
+        state: State;
+        navigation: NavigationHelpers<ParamList>;
+        descriptors: Record<
+          string,
+          Descriptor<
+            ScreenOptions,
+            NavigationProp<
+              ParamList,
+              keyof ParamList,
+              State,
+              ScreenOptions,
+              EventMap
+            >,
+            RouteProp<ParamList>
+          >
+        >;
+        children: React.ReactNode;
+      }) => React.ReactElement)
+    | undefined;
 
   /**
    * Event listeners for all the screens in the navigator.
    */
   screenListeners?:
-    | ScreenListeners<State, EventMap>
-    | ((props: {
-        route: RouteProp<ParamList>;
-        navigation: Navigation;
-      }) => ScreenListeners<State, EventMap>);
+    | (
+        | ScreenListeners<State, EventMap>
+        | ((props: {
+            route: RouteProp<ParamList>;
+            navigation: Navigation;
+          }) => ScreenListeners<State, EventMap>)
+      )
+    | undefined;
 
   /**
    * Default options for all screens under this navigator.
    */
   screenOptions?:
-    | ScreenOptions
-    | ((props: {
-        route: RouteProp<ParamList>;
-        navigation: Navigation;
-        theme: Theme;
-      }) => ScreenOptions);
+    | (
+        | ScreenOptions
+        | ((props: {
+            route: RouteProp<ParamList>;
+            navigation: Navigation;
+            theme: Theme;
+          }) => ScreenOptions)
+      )
+    | undefined;
 
   /**
    * Layout for all screens under this navigator.
    */
-  screenLayout?: (
-    props: ScreenLayoutArgs<
-      ParamList,
-      keyof ParamList,
-      ScreenOptions,
-      Navigation
-    >
-  ) => React.ReactElement;
+  screenLayout?:
+    | ((
+        props: ScreenLayoutArgs<
+          ParamList,
+          keyof ParamList,
+          ScreenOptions,
+          Navigation
+        >
+      ) => React.ReactElement)
+    | undefined;
 
   /**
    * A function returning overrides for the underlying router used by the navigator.
@@ -143,9 +153,11 @@ export type DefaultNavigatorOptions<
    *
    * This must be a pure function and cannot reference outside dynamic variables.
    */
-  router?: <Action extends NavigationAction>(
-    original: Router<State, Action>
-  ) => Partial<Router<State, Action>>;
+  router?:
+    | (<Action extends NavigationAction>(
+        original: Router<State, Action>
+      ) => Partial<Router<State, Action>>)
+    | undefined;
 
   /**
    * What should happen when the available route names change.
@@ -166,12 +178,12 @@ export type DefaultNavigatorOptions<
    * - Direct navigation is only handled for `NAVIGATE` actions.
    * - Unhandled state is restored only if the current state becomes invalid, i.e. it doesn't contain any currently defined screens.
    */
-  routeNamesChangeBehavior?: 'firstMatch' | 'lastUnhandled';
+  routeNamesChangeBehavior?: ('firstMatch' | 'lastUnhandled') | undefined;
 };
 
 export type EventMapBase = Record<
   string,
-  { data?: any; canPreventDefault?: boolean }
+  { data?: any; canPreventDefault?: boolean | undefined }
 >;
 
 export type EventMapCore<State extends NavigationState> = {
@@ -193,7 +205,7 @@ export type EventArg<
   /**
    * Key of the route which received the event.
    */
-  readonly target?: string;
+  readonly target?: string | undefined;
 } & (CanPreventDefault extends true
   ? {
       /**
@@ -207,7 +219,7 @@ export type EventArg<
     }
   : {}) &
   (undefined extends Data
-    ? { readonly data?: Readonly<Data> }
+    ? { readonly data?: Readonly<Data> | undefined }
     : { readonly data: Readonly<Data> });
 
 export type EventListenerCallback<
@@ -315,12 +327,18 @@ type NavigationHelpersCommon<
         ? [
             screen: RouteName,
             params?: ParamList[RouteName],
-            options?: { merge?: boolean; pop?: boolean },
+            options?: {
+              merge?: boolean | undefined;
+              pop?: boolean | undefined;
+            },
           ]
         : [
             screen: RouteName,
             params: ParamList[RouteName],
-            options?: { merge?: boolean; pop?: boolean },
+            options?: {
+              merge?: boolean | undefined;
+              pop?: boolean | undefined;
+            },
           ]
       : never
   ): void;
@@ -339,9 +357,9 @@ type NavigationHelpersCommon<
       ? {
           name: RouteName;
           params: ParamList[RouteName];
-          path?: string;
-          merge?: boolean;
-          pop?: boolean;
+          path?: string | undefined;
+          merge?: boolean | undefined;
+          pop?: boolean | undefined;
         }
       : never
   ): void;
@@ -450,23 +468,27 @@ export type NavigationContainerProps = {
   /**
    * Initial state object for the navigation tree.
    */
-  initialState?: InitialState;
+  initialState?: InitialState | undefined;
   /**
    * Callback which is called with the latest navigation state when it changes.
    */
-  onStateChange?: (state: Readonly<NavigationState> | undefined) => void;
+  onStateChange?:
+    | ((state: Readonly<NavigationState> | undefined) => void)
+    | undefined;
   /**
    * Callback which is called after the navigation tree mounts.
    */
-  onReady?: () => void;
+  onReady?: (() => void) | undefined;
   /**
    * Callback which is called when an action is not handled.
    */
-  onUnhandledAction?: (action: Readonly<NavigationAction>) => void;
+  onUnhandledAction?:
+    | ((action: Readonly<NavigationAction>) => void)
+    | undefined;
   /**
    * Theme object for the UI elements.
    */
-  theme?: Theme;
+  theme?: Theme | undefined;
   /**
    * Children elements to render.
    */
@@ -580,7 +602,7 @@ export type ScreenLayoutArgs<
 
 export type Descriptor<
   ScreenOptions extends {},
-  Navigation extends NavigationProp<any, any, any, any, any>,
+  Navigation extends NavigationProp<ParamListBase, any, any, any, any>,
   Route extends RouteProp<any, any>,
 > = {
   /**
@@ -633,16 +655,16 @@ export type RouteConfigComponent<
        * React component to render for this screen.
        */
       component: ScreenComponentType<ParamList, RouteName>;
-      getComponent?: never;
-      children?: never;
+      getComponent?: never | undefined;
+      children?: never | undefined;
     }
   | {
       /**
        * Lazily get a React component to render for this screen.
        */
       getComponent: () => ScreenComponentType<ParamList, RouteName>;
-      component?: never;
-      children?: never;
+      component?: never | undefined;
+      children?: never | undefined;
     }
   | {
       /**
@@ -652,8 +674,8 @@ export type RouteConfigComponent<
         route: RouteProp<ParamList, RouteName>;
         navigation: any;
       }) => React.ReactNode;
-      component?: never;
-      getComponent?: never;
+      component?: never | undefined;
+      getComponent?: never | undefined;
     };
 
 export type RouteConfigProps<
@@ -669,7 +691,7 @@ export type RouteConfigProps<
    * If the key changes, existing screens with this name will be removed or reset.
    * Useful when we have some common screens and have conditional rendering.
    */
-  navigationKey?: string;
+  navigationKey?: string | undefined;
 
   /**
    * Route name of this screen.
@@ -680,31 +702,39 @@ export type RouteConfigProps<
    * Navigator options for this screen.
    */
   options?:
-    | ScreenOptions
-    | ((props: {
-        route: RouteProp<ParamList, RouteName>;
-        navigation: Navigation;
-        theme: Theme;
-      }) => ScreenOptions);
+    | (
+        | ScreenOptions
+        | ((props: {
+            route: RouteProp<ParamList, RouteName>;
+            navigation: Navigation;
+            theme: Theme;
+          }) => ScreenOptions)
+      )
+    | undefined;
 
   /**
    * Event listeners for this screen.
    */
   listeners?:
-    | ScreenListeners<State, EventMap>
-    | ((props: {
-        route: RouteProp<ParamList, RouteName>;
-        navigation: Navigation;
-      }) => ScreenListeners<State, EventMap>);
+    | (
+        | ScreenListeners<State, EventMap>
+        | ((props: {
+            route: RouteProp<ParamList, RouteName>;
+            navigation: Navigation;
+          }) => ScreenListeners<State, EventMap>)
+      )
+    | undefined;
 
   /**
    * Layout for this screen.
    * Useful for wrapping the screen with custom containers.
    * e.g. for styling, error boundaries, suspense, etc.
    */
-  layout?: (
-    props: ScreenLayoutArgs<ParamList, RouteName, ScreenOptions, Navigation>
-  ) => React.ReactElement;
+  layout?:
+    | ((
+        props: ScreenLayoutArgs<ParamList, RouteName, ScreenOptions, Navigation>
+      ) => React.ReactElement)
+    | undefined;
 
   /**
    * Function to return an unique ID for this screen.
@@ -712,16 +742,18 @@ export type RouteConfigProps<
    * For a given screen name, there will always be only one screen corresponding to an ID.
    * If `undefined` is returned, it acts same as no `getId` being specified.
    */
-  getId?: ({
-    params,
-  }: {
-    params: Readonly<ParamList[RouteName]>;
-  }) => string | undefined;
+  getId?:
+    | (({
+        params,
+      }: {
+        params: Readonly<ParamList[RouteName]>;
+      }) => string | undefined)
+    | undefined;
 
   /**
    * Initial params object for the route.
    */
-  initialParams?: Partial<ParamList[RouteName]>;
+  initialParams?: Partial<ParamList[RouteName]> | undefined;
 };
 
 export type RouteConfig<
@@ -750,35 +782,41 @@ export type RouteGroupConfig<
    * Optional key for the screens in this group.
    * If the key changes, all existing screens in this group will be removed or reset.
    */
-  navigationKey?: string;
+  navigationKey?: string | undefined;
 
   /**
    * Navigator options for this screen.
    */
   screenOptions?:
-    | ScreenOptions
-    | ((props: {
-        route: RouteProp<ParamList, keyof ParamList>;
-        navigation: Navigation;
-        theme: Theme;
-      }) => ScreenOptions);
+    | (
+        | ScreenOptions
+        | ((props: {
+            route: RouteProp<ParamList, keyof ParamList>;
+            navigation: Navigation;
+            theme: Theme;
+          }) => ScreenOptions)
+      )
+    | undefined;
 
   /**
    * Layout for the screens inside the group.
    * This will override the `screenLayout` of parent group or navigator.
    */
   screenLayout?:
-    | ((
-        props: ScreenLayoutArgs<
-          ParamList,
-          keyof ParamList,
-          ScreenOptions,
-          Navigation
-        >
-      ) => React.ReactElement)
-    | {
-        // FIXME: TypeScript doesn't seem to infer `navigation` correctly without this
-      };
+    | (
+        | ((
+            props: ScreenLayoutArgs<
+              ParamList,
+              keyof ParamList,
+              ScreenOptions,
+              Navigation
+            >
+          ) => React.ReactElement)
+        | {
+            // FIXME: TypeScript doesn't seem to infer `navigation` correctly without this
+          }
+      )
+    | undefined;
 
   /**
    * Children React Elements to extract the route configuration from.
@@ -1174,27 +1212,27 @@ export type NavigatorScreenParams<ParamList extends {}> =
       merge?: never;
       initial?: never;
       pop?: never;
-      path?: string;
+      path?: string | undefined;
       state: PartialState<NavigationState> | NavigationState | undefined;
     }
   | {
       [RouteName in keyof ParamList]: undefined extends ParamList[RouteName]
         ? {
             screen: RouteName;
-            params?: ParamList[RouteName];
-            merge?: boolean;
-            initial?: boolean;
-            path?: string;
-            pop?: boolean;
+            params?: ParamList[RouteName] | undefined;
+            merge?: boolean | undefined;
+            initial?: boolean | undefined;
+            path?: string | undefined;
+            pop?: boolean | undefined;
             state?: never;
           }
         : {
             screen: RouteName;
             params: ParamList[RouteName];
-            merge?: boolean;
-            initial?: boolean;
-            path?: string;
-            pop?: boolean;
+            merge?: boolean | undefined;
+            initial?: boolean | undefined;
+            path?: string | undefined;
+            pop?: boolean | undefined;
             state?: never;
           };
     }[keyof ParamList];
@@ -1220,7 +1258,7 @@ type PathConfigAlias<Params> = {
    * By default, paths are relating to the path config on the parent screen.
    * If `exact` is set to `true`, the parent path configuration is not used.
    */
-  exact?: boolean;
+  exact?: boolean | undefined;
   /**
    * An object mapping the param name to a parser function or a Standard Schema.
    *
@@ -1232,7 +1270,7 @@ type PathConfigAlias<Params> = {
    * }
    * ```
    */
-  parse?: ParseConfig<Params>;
+  parse?: ParseConfig<Params> | undefined;
 };
 
 export type PathConfig<Params> = FlatType<
@@ -1249,25 +1287,28 @@ export type PathConfig<Params> = FlatType<
      * }
      * ```
      */
-    stringify?: StringifyConfig<Params>;
+    stringify?: StringifyConfig<Params> | undefined;
     /**
      * Additional path alias that will be matched to the same screen.
      */
-    alias?: (string | PathConfigAlias<Params>)[];
+    alias?: (string | PathConfigAlias<Params>)[] | undefined;
   } & (NonNullable<Params> extends NavigatorScreenParams<infer ParamList>
       ? {
           /**
            * Path configuration for child screens.
            */
-          screens?: PathConfigMap<ParamList>;
+          screens?: PathConfigMap<ParamList> | undefined;
           /**
            * Name of the initial route to use for the navigator when the path matches.
            */
-          initialRouteName?: keyof ParamList;
+          initialRouteName?: keyof ParamList | undefined;
         }
       : {})
 >;
 
 export type PathConfigMap<ParamList extends {}> = {
-  [RouteName in keyof ParamList]?: string | PathConfig<ParamList[RouteName]>;
+  [RouteName in keyof ParamList]?:
+    | string
+    | PathConfig<ParamList[RouteName]>
+    | undefined;
 };

@@ -744,7 +744,7 @@ type TreeForPathConfig = {
 export function createPathConfigForStaticNavigation(
   tree: TreeForPathConfig,
   options?: {
-    initialRouteName?: string;
+    initialRouteName?: string | undefined;
   },
   auto?: boolean
 ): PathConfigMap<ParamListBase> | undefined {
@@ -753,7 +753,7 @@ export function createPathConfigForStaticNavigation(
 
   const createPathConfigForTree = (
     t: TreeForPathConfig,
-    o: { initialRouteName?: string } | undefined,
+    o: { initialRouteName?: string | undefined } | undefined,
     // If a screen is a leaf node, but inside a screen with path,
     // It should not be used for initial detection
     skipInitialDetection: boolean

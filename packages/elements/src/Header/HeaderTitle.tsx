@@ -10,9 +10,9 @@ import {
 } from 'react-native';
 
 type Props = Omit<TextProps, 'style'> & {
-  tintColor?: ColorValue;
-  children?: string;
-  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
+  tintColor?: ColorValue | undefined;
+  children?: string | undefined;
+  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>> | undefined;
 };
 
 export function HeaderTitle({ tintColor, style, ...rest }: Props) {

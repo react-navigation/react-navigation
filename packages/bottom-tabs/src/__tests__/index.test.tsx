@@ -5,6 +5,7 @@ import {
   NavigationContainer,
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
+import { useEffect } from 'react';
 import {
   type EmitterSubscription,
   Keyboard,
@@ -175,4 +176,151 @@ test('tab bars render appropriate hrefs on web', () => {
 
   expect(getByText('/root/first')).not.toBeNull();
   expect(getByText('/root/second')).not.toBeNull();
+});
+
+test('inactiveBehavior="none" keeps effects active when switching tabs', () => {
+  let effectActive = false;
+
+  const ScreenA = () => {
+    useEffect(() => {
+      effectActive = true;
+      return () => {
+        effectActive = false;
+      };
+    }, []);
+    return null;
+  };
+
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
+  const navigation = createNavigationContainerRef<BottomTabParamList>();
+
+  render(
+    <NavigationContainer ref={navigation}>
+      <Tab.Navigator implementation="custom">
+        <Tab.Screen
+          name="A"
+          component={ScreenA}
+          options={{ inactiveBehavior: 'none' }}
+        />
+        <Tab.Screen name="B">{() => null}</Tab.Screen>
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(effectActive).toBe(true);
+
+  act(() => navigation.navigate('B'));
+
+  expect(effectActive).toBe(true);
+});
+
+test('default inactiveBehavior="pause" unmounts effects when switching tabs', () => {
+  let effectActive = false;
+
+  const ScreenA = () => {
+    useEffect(() => {
+      effectActive = true;
+      return () => {
+        effectActive = false;
+      };
+    }, []);
+    return null;
+  };
+
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
+  const navigation = createNavigationContainerRef<BottomTabParamList>();
+
+  render(
+    <NavigationContainer ref={navigation}>
+      <Tab.Navigator implementation="custom">
+        <Tab.Screen name="A" component={ScreenA} />
+        <Tab.Screen name="B">{() => null}</Tab.Screen>
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(effectActive).toBe(true);
+
+  act(() => navigation.navigate('B'));
+
+  expect(effectActive).toBe(true);
+
+  act(() => jest.runAllTimers());
+  act(() => jest.runAllTimers());
+
+  expect(effectActive).toBe(false);
+});
+
+test('preloading a screen runs effects', () => {
+  let effectActive = false;
+
+  const ScreenB = () => {
+    useEffect(() => {
+      effectActive = true;
+      return () => {
+        effectActive = false;
+      };
+    }, []);
+    return null;
+  };
+
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
+  const navigation = createNavigationContainerRef<BottomTabParamList>();
+
+  render(
+    <NavigationContainer ref={navigation}>
+      <Tab.Navigator implementation="custom">
+        <Tab.Screen name="A">{() => null}</Tab.Screen>
+        <Tab.Screen name="B" component={ScreenB} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(effectActive).toBe(false);
+
+  act(() => navigation.preload('B'));
+
+  expect(effectActive).toBe(true);
+});
+
+test('lazy=false pre-renders screen with effects active, pauses after first visit', () => {
+  let effectActive = false;
+
+  const ScreenB = () => {
+    useEffect(() => {
+      effectActive = true;
+      return () => {
+        effectActive = false;
+      };
+    }, []);
+    return <Text>Screen B</Text>;
+  };
+
+  const Tab = createBottomTabNavigator<BottomTabParamList>();
+  const navigation = createNavigationContainerRef<BottomTabParamList>();
+
+  const { queryByText } = render(
+    <NavigationContainer ref={navigation}>
+      <Tab.Navigator implementation="custom">
+        <Tab.Screen name="A">{() => null}</Tab.Screen>
+        <Tab.Screen name="B" component={ScreenB} options={{ lazy: false }} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(
+    queryByText('Screen B', { includeHiddenElements: true })
+  ).not.toBeNull();
+
+  expect(effectActive).toBe(true);
+
+  act(() => navigation.navigate('B'));
+  act(() => navigation.navigate('A'));
+
+  expect(effectActive).toBe(true);
+
+  act(() => jest.runAllTimers());
+  act(() => jest.runAllTimers());
+
+  expect(effectActive).toBe(false);
 });

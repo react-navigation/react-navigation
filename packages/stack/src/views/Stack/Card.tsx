@@ -58,7 +58,7 @@ type Props = {
   overlayEnabled: boolean;
   shadowEnabled: boolean | undefined;
   gestureEnabled: boolean;
-  gestureResponseDistance?: number;
+  gestureResponseDistance?: number | undefined;
   gestureVelocityImpact: number | undefined;
   transitionSpec: {
     open: TransitionSpec;
@@ -66,8 +66,8 @@ type Props = {
   };
   preloaded: boolean;
   styleInterpolator: StackCardStyleInterpolator;
-  containerStyle?: StyleProp<ViewStyle>;
-  contentStyle?: StyleProp<ViewStyle>;
+  containerStyle?: StyleProp<ViewStyle> | undefined;
+  contentStyle?: StyleProp<ViewStyle> | undefined;
 };
 
 const GESTURE_VELOCITY_IMPACT = 0.3;

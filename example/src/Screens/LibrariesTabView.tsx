@@ -1,17 +1,14 @@
-import type {
-  NavigatorScreenParams,
-  PathConfig,
-  StaticScreenProps,
-} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackScreenProps,
+  createStackScreen,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { ScrollView } from 'react-native';
 
 import { Divider } from '../Shared/Divider';
 import { ListItem } from '../Shared/LIstItem';
+import { fromEntries } from '../utilities';
 import { AutoWidthTabBar } from './TabView/AutoWidthTabBar';
 import { Coverflow } from './TabView/Coverflow';
 import { CustomIndicator } from './TabView/CustomIndicator';
@@ -34,33 +31,9 @@ const EXAMPLE_SCREEN_NAMES = Object.keys(
   EXAMPLE_SCREENS
 ) as (keyof typeof EXAMPLE_SCREENS)[];
 
-type TabViewStackParamList = {
-  [Key in keyof typeof EXAMPLE_SCREENS]: undefined;
-} & {
-  ExampleList: undefined;
-};
+const ExampleListScreen = () => {
+  const navigation = useNavigation('ExampleList');
 
-const linking = {
-  screens: {
-    ExampleList: '',
-    ...EXAMPLE_SCREEN_NAMES.reduce(
-      (acc, name) => ({
-        ...acc,
-        [name]: name
-          .replace(/([A-Z]+)/g, '-$1')
-          .replace(/^-/, '')
-          .toLowerCase(),
-      }),
-      {}
-    ),
-  },
-} satisfies PathConfig<NavigatorScreenParams<TabViewStackParamList>>;
-
-const TabViewStack = createStackNavigator<TabViewStackParamList>();
-
-const ExampleListScreen = ({
-  navigation,
-}: StackScreenProps<TabViewStackParamList, 'ExampleList'>) => {
   return (
     <ScrollView>
       {EXAMPLE_SCREEN_NAMES.map((name) => (
@@ -79,31 +52,27 @@ const ExampleListScreen = ({
   );
 };
 
-export function LibrariesTabView(_: StaticScreenProps<{}>) {
-  return (
-    <TabViewStack.Navigator
-      screenOptions={{ headerMode: 'screen', cardStyle: { flex: 1 } }}
-    >
-      <TabViewStack.Screen
-        name="ExampleList"
-        component={ExampleListScreen}
-        options={{
-          title: 'TabView Examples',
-        }}
-      />
-      {EXAMPLE_SCREEN_NAMES.map((name) => {
-        return (
-          <TabViewStack.Screen
-            key={name}
-            name={name}
-            component={EXAMPLE_SCREENS[name]}
-            options={EXAMPLE_SCREENS[name].options}
-          />
-        );
-      })}
-    </TabViewStack.Navigator>
-  );
-}
+const TabViewStackNavigator = createStackNavigator({
+  screenOptions: { headerMode: 'screen', cardStyle: { flex: 1 } },
+  screens: {
+    ExampleList: createStackScreen({
+      screen: ExampleListScreen,
+      options: { title: 'TabView Examples' },
+      linking: '',
+    }),
+    ...fromEntries(
+      EXAMPLE_SCREEN_NAMES.map((name) => [
+        name,
+        createStackScreen({
+          screen: EXAMPLE_SCREENS[name],
+          options: EXAMPLE_SCREENS[name].options,
+        }),
+      ])
+    ),
+  },
+});
 
-LibrariesTabView.title = 'Libraries - Tab View';
-LibrariesTabView.linking = linking;
+export const LibrariesTabView = {
+  screen: TabViewStackNavigator,
+  title: 'Libraries - Tab View',
+};

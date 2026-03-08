@@ -37,7 +37,7 @@ import { Contacts } from '../Shared/Contacts';
 import { NewsFeed } from '../Shared/NewsFeed';
 
 export type NativeStackParamList = {
-  Article: { author: string } | undefined;
+  Article: { author?: string } | undefined;
   NewsFeed: { date: number };
   Contacts: undefined;
   Albums: undefined;

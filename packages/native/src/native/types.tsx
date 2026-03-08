@@ -30,7 +30,7 @@ export type MaterialSymbolOptions = {
    *
    * @default 'outlined'
    */
-  variant?: 'outlined' | 'rounded' | 'sharp';
+  variant?: 'outlined' | 'rounded' | 'sharp' | undefined;
   /**
    * The weight of the symbol.
    *
@@ -69,19 +69,20 @@ export type MaterialSymbolOptions = {
     | 400
     | 500
     | 600
-    | 700;
+    | 700
+    | undefined;
   /**
    * The size of the symbol.
    *
    * @default 24
    */
-  size?: number;
+  size?: number | undefined;
   /**
    * The color of the symbol.
    *
    * @default 'black'
    */
-  color?: ColorValue;
+  color?: ColorValue | undefined;
 };
 
 export type SFSymbolScale = 'small' | 'medium' | 'large';
@@ -112,43 +113,43 @@ export type SFSymbolAnimationConfig = {
    *
    * @default false
    */
-  repeating?: boolean;
+  repeating?: boolean | undefined;
   /**
    * Number of times to repeat the animation.
    * Ignored if `repeating` is `true`.
    */
-  repeatCount?: number;
+  repeatCount?: number | undefined;
   /**
    * Speed multiplier for the animation.
    *
    * @default 1
    */
-  speed?: number;
+  speed?: number | undefined;
   /**
    * Whether to animate the whole symbol at once or layer by layer.
    *
    * @default false
    */
-  wholeSymbol?: boolean;
+  wholeSymbol?: boolean | undefined;
   /**
    * Direction of the animation.
    * Applicable to `bounce` and `wiggle`.
    */
-  direction?: 'up' | 'down';
+  direction?: 'up' | 'down' | undefined;
   /**
    * Whether the variable color effect reverses with each cycle.
    * Only applicable to `variableColor`.
    *
    * @default false
    */
-  reversing?: boolean;
+  reversing?: boolean | undefined;
   /**
    * Whether each layer remains changed until the end of the cycle.
    * Only applicable to `variableColor`.
    *
    * @default false
    */
-  cumulative?: boolean;
+  cumulative?: boolean | undefined;
 };
 
 export type SFSymbolAnimation =
@@ -164,7 +165,7 @@ export type SFSymbolOptions = {
    * The size of the symbol.
    * @default 24
    */
-  size?: number;
+  size?: number | undefined;
   /**
    * The color of the symbol.
    * Used as the tint color in monochrome mode, and as the fallback for
@@ -172,7 +173,7 @@ export type SFSymbolOptions = {
    *
    * @default 'black'
    */
-  color?: ColorValue;
+  color?: ColorValue | undefined;
   /**
    * The weight of the symbol.
    *
@@ -180,13 +181,14 @@ export type SFSymbolOptions = {
    */
   weight?:
     | keyof typeof FONT_WEIGHTS
-    | (typeof FONT_WEIGHTS)[keyof typeof FONT_WEIGHTS];
+    | (typeof FONT_WEIGHTS)[keyof typeof FONT_WEIGHTS]
+    | undefined;
   /**
    * The scale of the symbol relative to the font size.
    *
    * @default 'medium'
    */
-  scale?: SFSymbolScale;
+  scale?: SFSymbolScale | undefined;
   /**
    * The rendering mode of the symbol.
    * - `monochrome`: Single color tint (default).
@@ -196,7 +198,7 @@ export type SFSymbolOptions = {
    *
    * @default 'monochrome'
    */
-  mode?: SFSymbolMode;
+  mode?: SFSymbolMode | undefined;
   /**
    * The colors for non-monochrome rendering modes.
    * - `hierarchical`: uses `primary` as the base color.
@@ -205,14 +207,16 @@ export type SFSymbolOptions = {
    *
    * Falls back to `color` for `primary` if not specified.
    */
-  colors?: {
-    primary?: ColorValue;
-    secondary?: ColorValue;
-    tertiary?: ColorValue;
-  };
+  colors?:
+    | {
+        primary?: ColorValue | undefined;
+        secondary?: ColorValue | undefined;
+        tertiary?: ColorValue | undefined;
+      }
+    | undefined;
   /**
    * The animation effect to apply to the symbol.
    * Requires iOS 17+. Ignored on earlier versions.
    */
-  animation?: SFSymbolAnimation;
+  animation?: SFSymbolAnimation | undefined;
 };

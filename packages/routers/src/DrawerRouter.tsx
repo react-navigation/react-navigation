@@ -20,12 +20,12 @@ export type DrawerActionType =
   | TabActionType
   | {
       type: 'OPEN_DRAWER' | 'CLOSE_DRAWER' | 'TOGGLE_DRAWER';
-      source?: string;
-      target?: string;
+      source?: string | undefined;
+      target?: string | undefined;
     };
 
 export type DrawerRouterOptions = TabRouterOptions & {
-  defaultStatus?: DrawerStatus;
+  defaultStatus?: DrawerStatus | undefined;
 };
 
 export type DrawerNavigationState<ParamList extends ParamListBase> = Omit<

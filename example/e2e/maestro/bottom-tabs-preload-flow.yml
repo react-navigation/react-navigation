@@ -5,13 +5,13 @@ name: Bottom Tabs - Preload Flow
     file: ../launch.yml
     env:
       LINK: bottom-tabs-preload-flow
-      TEXT: 'Home'
+      TEXT: 'Bottom Tabs Preload Flow'
 - assertVisible:
     text: 'Details is not preloaded yet.'
 - tapOn:
     text: 'Preload Details'
 - extendedWaitUntil:
-    timeout: 3000
+    timeout: 5000
     visible: 'Details is preloaded!'
 - tapOn:
     text: 'Navigate to Details'
@@ -19,6 +19,8 @@ name: Bottom Tabs - Preload Flow
     text: 'Loaded!'
 - tapOn:
     text: 'Back to home'
+- assertVisible:
+    text: 'Bottom Tabs Preload Flow'
 - tapOn:
     text: 'Navigate to Details'
 - assertVisible:

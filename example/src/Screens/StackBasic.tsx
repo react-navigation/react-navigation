@@ -82,15 +82,13 @@ type NewsFeedScreenProps = CompositeScreenProps<
 >;
 
 const NewsFeedScreen = ({ route, navigation }: NewsFeedScreenProps) => {
-  const rootNavigation = navigation.getParent('StackBasic');
-
   return (
     <ScrollView>
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.replace('Contacts')}>
           Replace with contacts
         </Button>
-        <Button variant="tinted" onPress={() => rootNavigation.popTo('Home')}>
+        <Button variant="tinted" onPress={() => navigation.popTo('Home')}>
           Pop to home
         </Button>
         <Button variant="tinted" onPress={() => navigation.goBack()}>

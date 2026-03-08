@@ -5,8 +5,8 @@ const MISSING_CONTEXT_ERROR =
   "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'? See https://reactnavigation.org/docs/getting-started for setup instructions.";
 
 export const NavigationStateContext = React.createContext<{
-  isDefault?: true;
-  state?: NavigationState | PartialState<NavigationState>;
+  isDefault?: true | undefined;
+  state?: NavigationState | PartialState<NavigationState> | undefined;
   getKey: () => string | undefined;
   setKey: (key: string) => void;
   getState: () => NavigationState | PartialState<NavigationState> | undefined;
@@ -14,10 +14,9 @@ export const NavigationStateContext = React.createContext<{
     state: NavigationState | PartialState<NavigationState> | undefined
   ) => void;
   getIsInitial: () => boolean;
-  addOptionsGetter?: (
-    key: string,
-    getter: () => object | undefined | null
-  ) => void;
+  addOptionsGetter?:
+    | ((key: string, getter: () => object | undefined | null) => void)
+    | undefined;
 }>({
   isDefault: true,
 

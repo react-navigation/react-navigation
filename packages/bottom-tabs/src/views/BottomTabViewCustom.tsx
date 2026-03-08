@@ -1,5 +1,6 @@
 import {
-  Lazy,
+  ActivityView,
+  Container,
   SafeAreaProviderCompat,
 } from '@react-navigation/elements/internal';
 import {
@@ -16,7 +17,6 @@ import {
   StyleSheet,
   type ViewStyle,
 } from 'react-native';
-import { Screen, ScreenContainer } from 'react-native-screens';
 
 import {
   FadeTransition,
@@ -43,11 +43,6 @@ type Props = BottomTabNavigationConfig & {
   navigation: BottomTabNavigationHelpers;
   descriptors: BottomTabDescriptorMap;
 };
-
-const EPSILON = 1e-5;
-const STATE_INACTIVE = 0;
-const STATE_TRANSITIONING_OR_BELOW_TOP = 1;
-const STATE_ON_TOP = 2;
 
 const NAMED_TRANSITIONS_PRESETS = {
   fade: FadeTransition,
@@ -82,15 +77,35 @@ export function BottomTabViewCustom({
   state,
   navigation,
   descriptors,
-  detachInactiveScreens = Platform.OS === 'web' ||
-    Platform.OS === 'android' ||
-    Platform.OS === 'ios',
 }: Props) {
   const { routes } = state;
   const focusedRouteKey = routes[state.index].key;
 
-  const previousRouteKeyRef = React.useRef(focusedRouteKey);
+  const [loaded, setLoaded] = React.useState([focusedRouteKey]);
+
+  if (!loaded.includes(focusedRouteKey)) {
+    setLoaded([...loaded, focusedRouteKey]);
+  }
+
+  const [lastUpdate, setLastUpdate] = React.useState<{
+    current: string;
+    previous?: string;
+  }>({
+    current: focusedRouteKey,
+  });
+
+  if (lastUpdate.current !== focusedRouteKey) {
+    setLastUpdate({
+      current: focusedRouteKey,
+      previous: lastUpdate.current,
+    });
+  }
+
   const tabAnims = useAnimatedHashMap(state);
+
+  const [isAnimating, setIsAnimating] = React.useState(false);
+
+  const previousRouteKeyRef = React.useRef(focusedRouteKey);
 
   React.useEffect(() => {
     const previousRouteKey = previousRouteKeyRef.current;
@@ -98,11 +113,18 @@ export function BottomTabViewCustom({
     let popToTopAction: NavigationAction | undefined;
 
     if (
+      previousRouteKey &&
       previousRouteKey !== focusedRouteKey &&
       descriptors[previousRouteKey]?.options.popToTopOnBlur
     ) {
       const prevRoute = state.routes.find(
         (route) => route.key === previousRouteKey
+      );
+
+      console.log(
+        'checking if we need to pop to top for route',
+        previousRouteKey,
+        focusedRouteKey
       );
 
       if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
@@ -113,6 +135,8 @@ export function BottomTabViewCustom({
       }
     }
 
+    let timer: ReturnType<typeof setTimeout>;
+
     const animateToIndex = () => {
       if (previousRouteKey !== focusedRouteKey) {
         navigation.emit({
@@ -121,42 +145,45 @@ export function BottomTabViewCustom({
         });
       }
 
-      Animated.parallel(
-        state.routes
-          .map((route, index) => {
-            const { options } = descriptors[route.key];
-            const {
-              animation = 'none',
-              transitionSpec = NAMED_TRANSITIONS_PRESETS[animation]
-                .transitionSpec,
-            } = options;
+      const animations = state.routes
+        .map((route, index) => {
+          const { options } = descriptors[route.key];
+          const {
+            animation = 'none',
+            transitionSpec = NAMED_TRANSITIONS_PRESETS[animation]
+              .transitionSpec,
+          } = options;
 
-            let spec = transitionSpec;
+          let spec = transitionSpec;
 
-            if (
-              route.key !== previousRouteKey &&
-              route.key !== focusedRouteKey
-            ) {
-              // Don't animate if the screen is not previous one or new one
-              // This will avoid flicker for screens not involved in the transition
-              spec = NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
-            }
+          if (route.key !== previousRouteKey && route.key !== focusedRouteKey) {
+            // Don't animate if the screen is not previous one or new one
+            // This will avoid flicker for screens not involved in the transition
+            spec = NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
+          }
 
-            spec = spec ?? NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
+          spec = spec ?? NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
 
-            const toValue =
-              index === state.index ? 0 : index >= state.index ? 1 : -1;
+          const toValue =
+            index === state.index ? 0 : index >= state.index ? 1 : -1;
 
-            return Animated[spec.animation](tabAnims[route.key], {
-              ...spec.config,
-              toValue,
-              useNativeDriver,
-            });
-          })
-          .filter(Boolean) as Animated.CompositeAnimation[]
-      ).start(({ finished }) => {
+          return Animated[spec.animation](tabAnims[route.key], {
+            ...spec.config,
+            toValue,
+            useNativeDriver,
+          });
+        })
+        .filter((anim) => anim != null);
+
+      if (animations.length) {
+        // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+        setIsAnimating(true);
+      }
+
+      Animated.parallel(animations).start(({ finished }) => {
         if (finished && popToTopAction) {
-          navigation.dispatch(popToTopAction);
+          console.log('dispatching pop to top action', popToTopAction);
+          // navigation.dispatch(popToTopAction);
         }
 
         if (previousRouteKey !== focusedRouteKey) {
@@ -165,12 +192,24 @@ export function BottomTabViewCustom({
             target: focusedRouteKey,
           });
         }
+
+        if (finished && animations.length) {
+          // Delay clearing `isAnimating`
+          // This will give time for `popToAction` to get handled before pause
+          timer = setTimeout(() => {
+            setIsAnimating(false);
+          }, 32);
+        }
       });
     };
 
     animateToIndex();
 
     previousRouteKeyRef.current = focusedRouteKey;
+
+    return () => {
+      clearTimeout(timer);
+    };
   }, [
     descriptors,
     focusedRouteKey,
@@ -203,11 +242,6 @@ export function BottomTabViewCustom({
     </BottomTabBarHeightCallbackContext.Provider>
   );
 
-  // If there is no animation, we only have 2 states: visible and invisible
-  const hasTwoStates = !routes.some((route) =>
-    hasAnimation(descriptors[route.key].options)
-  );
-
   const tabBarPosition = useTabBarPosition(
     descriptors[focusedRouteKey].options
   );
@@ -224,12 +258,7 @@ export function BottomTabViewCustom({
       {tabBarPosition === 'top' || tabBarPosition === 'left'
         ? tabBarElement
         : null}
-      <ScreenContainer
-        key="screens"
-        enabled={detachInactiveScreens}
-        hasTwoStates={hasTwoStates}
-        style={styles.screens}
-      >
+      <Container key="screens" style={styles.screens}>
         {routes.map((route, index) => {
           const descriptor = descriptors[route.key];
 
@@ -237,6 +266,7 @@ export function BottomTabViewCustom({
 
           const {
             lazy = true,
+            inactiveBehavior = 'pause',
             animation = 'none',
             sceneStyleInterpolator = NAMED_TRANSITIONS_PRESETS[animation]
               .sceneStyleInterpolator,
@@ -246,6 +276,16 @@ export function BottomTabViewCustom({
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
+          if (
+            lazy &&
+            !loaded.includes(route.key) &&
+            !isFocused &&
+            !isPreloaded
+          ) {
+            // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
+            return null;
+          }
+
           const animationEnabled = hasAnimation(descriptor.options);
 
           const content = (
@@ -254,75 +294,48 @@ export function BottomTabViewCustom({
               progress={tabAnims[route.key]}
               animationEnabled={animationEnabled}
               sceneStyleInterpolator={sceneStyleInterpolator}
-              style={customSceneStyle}
+              style={[StyleSheet.absoluteFill, customSceneStyle]}
             >
-              <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
-                <ScreenContent
-                  isFocused={isFocused}
-                  route={route}
-                  navigation={navigation}
-                  options={options}
-                  style={
-                    Platform.OS === 'web'
-                      ? {
-                          /**
-                           * Don't use react-native-screens on web:
-                           * - It applies display: none as fallback, which triggers `onLayout` events
-                           * - We still need to hide the view when screens is not enabled
-                           */
-                          ...StyleSheet.absoluteFillObject,
-                          visibility: isFocused ? 'visible' : 'hidden',
-                        }
-                      : undefined
-                  }
+              <ScreenContent
+                isFocused={isFocused}
+                route={route}
+                navigation={navigation}
+                options={options}
+              >
+                <BottomTabBarHeightContext.Provider
+                  value={tabBarPosition === 'bottom' ? tabBarHeight : 0}
                 >
-                  <BottomTabBarHeightContext.Provider
-                    value={tabBarPosition === 'bottom' ? tabBarHeight : 0}
-                  >
-                    {render()}
-                  </BottomTabBarHeightContext.Provider>
-                </ScreenContent>
-              </Lazy>
+                  {render()}
+                </BottomTabBarHeightContext.Provider>
+              </ScreenContent>
             </AnimatedScreenContent>
           );
 
-          if (Platform.OS === 'web') {
-            return content;
-          }
+          const isAnimatingRoute =
+            isAnimating &&
+            (lastUpdate.previous === route.key ||
+              lastUpdate.current === route.key);
 
-          const activityState = isFocused
-            ? STATE_ON_TOP // the screen is on top after the transition
-            : animationEnabled // is animation is not enabled, immediately move to inactive state
-              ? tabAnims[route.key].interpolate({
-                  inputRange: [0, 1 - EPSILON, 1],
-                  outputRange: [
-                    STATE_TRANSITIONING_OR_BELOW_TOP, // screen visible during transition
-                    STATE_TRANSITIONING_OR_BELOW_TOP,
-                    STATE_INACTIVE, // the screen is detached after transition
-                  ],
-                  extrapolate: 'extend',
-                })
-              : STATE_INACTIVE;
+          // For preloaded screens and if lazy is false,
+          // Keep them active so that the effects can run
+          const isActive =
+            inactiveBehavior === 'none' ||
+            isAnimatingRoute ||
+            isPreloaded ||
+            (lazy === false && !loaded.includes(route.key));
 
           return (
-            <Screen
+            <ActivityView
               key={route.key}
-              style={[
-                StyleSheet.absoluteFill,
-                {
-                  zIndex: isFocused ? 0 : -1,
-                  pointerEvents: isFocused ? 'auto' : 'none',
-                },
-              ]}
-              activityState={activityState}
-              enabled={detachInactiveScreens}
-              shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
+              mode={isFocused ? 'normal' : isActive ? 'inert' : 'paused'}
+              visible={isFocused || isAnimatingRoute}
+              style={{ ...StyleSheet.absoluteFill, zIndex: isFocused ? 0 : -1 }}
             >
               {content}
-            </Screen>
+            </ActivityView>
           );
         })}
-      </ScreenContainer>
+      </Container>
       {tabBarPosition === 'bottom' || tabBarPosition === 'right'
         ? tabBarElement
         : null}
@@ -339,7 +352,7 @@ function AnimatedScreenContent({
 }: {
   progress: Animated.Value;
   animationEnabled: boolean;
-  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator;
+  sceneStyleInterpolator?: BottomTabSceneStyleInterpolator | undefined;
   children: React.ReactNode;
   style: StyleProp<ViewStyle>;
 }) {

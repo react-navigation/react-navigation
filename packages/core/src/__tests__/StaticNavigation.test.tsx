@@ -21,7 +21,7 @@ import { useNavigationBuilder } from '../useNavigationBuilder';
 import { MockRouter } from './__fixtures__/MockRouter';
 
 const TestNavigator = (props: any) => {
-  const { state, descriptors } = useNavigationBuilder<
+  const { state, descriptors, NavigationContent } = useNavigationBuilder<
     NavigationState,
     DefaultRouterOptions,
     {},
@@ -30,21 +30,23 @@ const TestNavigator = (props: any) => {
   >(MockRouter, props);
 
   return (
-    <main>
-      {state.routes.map((route) => {
-        const descriptor = descriptors[route.key];
+    <NavigationContent>
+      <main>
+        {state.routes.map((route) => {
+          const descriptor = descriptors[route.key];
 
-        return (
-          <div
-            key={route.key}
-            className={descriptor.options?.className}
-            data-testid={descriptor.options?.testId}
-          >
-            {descriptor.render()}
-          </div>
-        );
-      })}
-    </main>
+          return (
+            <div
+              key={route.key}
+              className={descriptor.options?.className}
+              data-testid={descriptor.options?.testId}
+            >
+              {descriptor.render()}
+            </div>
+          );
+        })}
+      </main>
+    </NavigationContent>
   );
 };
 

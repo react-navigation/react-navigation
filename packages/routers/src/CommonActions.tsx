@@ -9,59 +9,59 @@ type ResetState =
 
 type GoBackAction = {
   type: 'GO_BACK';
-  source?: string;
-  target?: string;
+  source?: string | undefined;
+  target?: string | undefined;
 };
 
 type NavigateAction = {
   type: 'NAVIGATE';
   payload: {
     name: string;
-    params?: object;
-    path?: string;
-    merge?: boolean;
-    pop?: boolean;
+    params?: object | undefined;
+    path?: string | undefined;
+    merge?: boolean | undefined;
+    pop?: boolean | undefined;
   };
-  source?: string;
-  target?: string;
+  source?: string | undefined;
+  target?: string | undefined;
 };
 
 type ResetAction = {
   type: 'RESET';
   payload: ResetState;
-  source?: string;
-  target?: string;
+  source?: string | undefined;
+  target?: string | undefined;
 };
 
 type SetParamsAction = {
   type: 'SET_PARAMS';
-  payload: { params?: object };
-  source?: string;
-  target?: string;
+  payload: { params?: object | undefined };
+  source?: string | undefined;
+  target?: string | undefined;
 };
 
 type ReplaceParamsAction = {
   type: 'REPLACE_PARAMS';
-  payload: { params?: object };
-  source?: string;
-  target?: string;
+  payload: { params?: object | undefined };
+  source?: string | undefined;
+  target?: string | undefined;
 };
 
 type PushParamsAction = {
   type: 'PUSH_PARAMS';
-  payload: { params?: object };
-  source?: string;
-  target?: string;
+  payload: { params?: object | undefined };
+  source?: string | undefined;
+  target?: string | undefined;
 };
 
 type PreloadAction = {
   type: 'PRELOAD';
   payload: {
     name: string;
-    params?: object;
+    params?: object | undefined;
   };
-  source?: string;
-  target?: string;
+  source?: string | undefined;
+  target?: string | undefined;
 };
 
 export type Action =
@@ -79,19 +79,21 @@ export function goBack(): Action {
 
 export function navigate(
   name: string,
-  params?: object,
-  options?: {
-    merge?: boolean;
-    pop?: boolean;
-  }
+  params?: object | undefined,
+  options?:
+    | {
+        merge?: boolean | undefined;
+        pop?: boolean | undefined;
+      }
+    | undefined
 ): Action;
 
 export function navigate(options: {
   name: string;
-  params?: object;
-  path?: string;
-  merge?: boolean;
-  pop?: boolean;
+  params?: object | undefined;
+  path?: string | undefined;
+  merge?: boolean | undefined;
+  pop?: boolean | undefined;
 }): Action;
 
 export function navigate(...args: any): Action {
@@ -145,7 +147,7 @@ export function pushParams(params: object) {
   } as const satisfies PushParamsAction;
 }
 
-export function preload(name: string, params?: object) {
+export function preload(name: string, params?: object | undefined) {
   return {
     type: 'PRELOAD',
     payload: { name, params },

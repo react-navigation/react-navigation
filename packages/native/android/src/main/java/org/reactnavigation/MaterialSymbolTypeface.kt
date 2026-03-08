@@ -7,20 +7,24 @@ data class MaterialSymbolTypefaceResult(val typeface: Typeface, val suffix: Stri
 
 object MaterialSymbolTypeface {
   private val typefaces = mutableMapOf<String, Typeface>()
-  private var defaultSuffix: String? = null
+  private var availableFonts: Map<String, Set<Int>>? = null
 
   fun get(context: Context, variant: String?, weight: Int?): MaterialSymbolTypefaceResult {
-    val suffix = if (variant != null && weight != null) {
-      val resolvedVariant = when (variant) {
+    val fonts = getAvailableFonts(context)
+
+    val resolvedVariant = if (variant != null) {
+      when (variant) {
         "rounded" -> "Rounded"
         "sharp" -> "Sharp"
         else -> "Outlined"
       }
-
-      "${resolvedVariant}_$weight"
     } else {
-      getDefaultSuffix(context)
+      resolveDefaultVariant(fonts)
     }
+
+    val resolvedWeight = weight ?: resolveDefaultWeight(fonts, resolvedVariant)
+
+    val suffix = "${resolvedVariant}_$resolvedWeight"
 
     val typeface = typefaces.getOrPut(suffix) {
       val path = "fonts/MaterialSymbols${suffix}.ttf"
@@ -35,43 +39,64 @@ object MaterialSymbolTypeface {
     return MaterialSymbolTypefaceResult(typeface, suffix)
   }
 
-  private fun getDefaultSuffix(context: Context): String {
-    defaultSuffix?.let { return it }
+  private fun getAvailableFonts(context: Context): Map<String, Set<Int>> {
+    availableFonts?.let { return it }
 
-    val fonts = context.assets.list("fonts")
+    val files = context.assets.list("fonts")
       ?.filter { it.startsWith("MaterialSymbols") && it.endsWith(".ttf") } ?: emptyList()
 
-    if (fonts.isEmpty()) {
+    if (files.isEmpty()) {
       throw RuntimeException("No MaterialSymbols font found in assets.")
     }
 
-    if (fonts.size > 1) {
-      val outlinedFonts = fonts.filter { it.startsWith("MaterialSymbolsOutlined") }
-      val outlinedFont = when {
-        outlinedFonts.isEmpty() -> null
-        outlinedFonts.size == 1 -> outlinedFonts[0]
-        else -> outlinedFonts.firstOrNull {
-          it.removePrefix("MaterialSymbols").removeSuffix(".ttf") == "Outlined_400"
-        }
-      }
+    val fonts = mutableMapOf<String, MutableSet<Int>>()
 
-      if (outlinedFont == null) {
-        throw RuntimeException(
-          "Multiple MaterialSymbols fonts found in assets: ${fonts.joinToString()}. " + "Please specify a variant and weight explicitly."
-        )
-      }
+    for (file in files) {
+      val suffix = file.removePrefix("MaterialSymbols").removeSuffix(".ttf")
+      val variant = suffix.substringBefore("_")
+      val weight = suffix.substringAfter("_").toIntOrNull() ?: continue
 
-      val outlinedSuffix = outlinedFont.removePrefix("MaterialSymbols").removeSuffix(".ttf")
-
-      defaultSuffix = outlinedSuffix
-
-      return outlinedSuffix
+      fonts.getOrPut(variant) { mutableSetOf() }.add(weight)
     }
 
-    val suffix = fonts[0].removePrefix("MaterialSymbols").removeSuffix(".ttf")
+    availableFonts = fonts
 
-    defaultSuffix = suffix
+    return fonts
+  }
 
-    return suffix
+  private fun resolveDefaultVariant(fonts: Map<String, Set<Int>>): String {
+    val variants = fonts.keys
+
+    if (variants.size == 1) {
+      return variants.first()
+    }
+
+    if (variants.contains("Outlined")) {
+      return "Outlined"
+    }
+
+    throw RuntimeException(
+      "Multiple MaterialSymbols variants found: ${variants.joinToString()}. " + "Please specify a variant explicitly."
+    )
+  }
+
+  private fun resolveDefaultWeight(fonts: Map<String, Set<Int>>, variant: String): Int {
+    val weights = fonts[variant]
+
+    if (weights.isNullOrEmpty()) {
+      throw RuntimeException("No MaterialSymbols font found for variant: $variant")
+    }
+
+    if (weights.size == 1) {
+      return weights.first()
+    }
+
+    if (weights.contains(400)) {
+      return 400
+    }
+
+    throw RuntimeException(
+      "Multiple MaterialSymbols weights found for variant $variant: ${weights.joinToString()}. " + "Please specify a weight explicitly."
+    )
   }
 }

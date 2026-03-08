@@ -4431,7 +4431,7 @@ __metadata:
   resolution: "@react-navigation/core@workspace:packages/core"
   dependencies:
     "@jest/globals": "npm:^30.0.0"
-    "@react-navigation/routers": "npm:^8.0.0-alpha.2"
+    "@react-navigation/routers": "npm:^8.0.0-alpha.3"
     "@testing-library/react-native": "npm:^13.3.3"
     "@types/react": "npm:~19.2.2"
     "@types/react-is": "npm:^19.0.0"
@@ -4687,7 +4687,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@react-navigation/routers@npm:^8.0.0-alpha.2, @react-navigation/routers@workspace:packages/routers":
+"@react-navigation/routers@npm:^8.0.0-alpha.3, @react-navigation/routers@workspace:packages/routers":
   version: 0.0.0-use.local
   resolution: "@react-navigation/routers@workspace:packages/routers"
   dependencies:

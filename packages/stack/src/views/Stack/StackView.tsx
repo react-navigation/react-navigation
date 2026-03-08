@@ -35,8 +35,8 @@ type Props = StackNavigationConfig & {
 type State = {
   // Local copy of the routes which are actually rendered
   routes: Route<string>[];
-  // Previous routes, to compare whether routes have changed or not
-  previousRoutes: Route<string>[];
+  // Previous navigation state for comparison
+  previousState: StackNavigationState<ParamListBase> | undefined;
   // Previous descriptors, to compare whether descriptors have changed or not
   previousDescriptors: StackDescriptorMap;
   // List of routes being opened, we need to animate pushing of these new routes
@@ -65,12 +65,15 @@ export class StackView extends React.Component<Props, State> {
     state: Readonly<State>
   ) {
     const allRoutes = [...props.state.routes, ...props.state.preloadedRoutes];
+    const previousRoutes = state.previousState
+      ? [...state.previousState.routes, ...state.previousState.preloadedRoutes]
+      : [];
 
     // If there was no change in routes, we don't need to compute anything
     if (
       isArrayEqual(
         allRoutes.map((r) => r.key),
-        state.previousRoutes.map((r) => r.key)
+        previousRoutes.map((r) => r.key)
       ) &&
       state.routes.length
     ) {
@@ -103,7 +106,6 @@ export class StackView extends React.Component<Props, State> {
         routes.push(...closingRoutes);
       }
 
-      let previousRoutes = state.previousRoutes;
       let descriptors = props.descriptors;
       let previousDescriptors = state.previousDescriptors;
 
@@ -118,7 +120,7 @@ export class StackView extends React.Component<Props, State> {
         previousDescriptors = props.descriptors;
       }
 
-      if (!isArrayEqual(allRoutes, state.previousRoutes)) {
+      if (!isArrayEqual(allRoutes, previousRoutes)) {
         // if any route objects have changed, we should update them
         const map = allRoutes.reduce<Record<string, Route<string>>>(
           (acc, route) => {
@@ -129,12 +131,11 @@ export class StackView extends React.Component<Props, State> {
         );
 
         routes = routes.map((route) => map[route.key] || route);
-        previousRoutes = allRoutes;
       }
 
       return {
         routes,
-        previousRoutes,
+        previousState: props.state,
         descriptors,
         previousDescriptors,
       };
@@ -150,9 +151,6 @@ export class StackView extends React.Component<Props, State> {
           props.state.routes.slice(0, props.state.index + 1)
         : props.state.routes;
 
-    // Now we need to determine which routes were added and removed
-    const { previousRoutes } = state;
-
     let { openingRouteKeys, closingRouteKeys, replacingRouteKeys } = state;
 
     // If a route that was closing or being replaced is now back in the routes,
@@ -165,9 +163,12 @@ export class StackView extends React.Component<Props, State> {
       (key) => !routes.some((r) => r.key === key)
     );
 
-    const previousFocusedRoute = previousRoutes[previousRoutes.length - 1] as
-      | Route<string>
-      | undefined;
+    // Get previous focused route from previousState (actual focused route, not last in previousRoutes
+    // which can be a preloaded route that was never focused)
+    const previousFocusedRoute = state.previousState
+      ? state.previousState.routes[state.previousState.index]
+      : undefined;
+
     const nextFocusedRoute = routes[routes.length - 1];
 
     const isAnimationEnabled = (key: string) => {
@@ -316,7 +317,7 @@ export class StackView extends React.Component<Props, State> {
 
     return {
       routes,
-      previousRoutes: [...props.state.routes, ...props.state.preloadedRoutes],
+      previousState: props.state,
       previousDescriptors: props.descriptors,
       openingRouteKeys,
       closingRouteKeys,
@@ -327,7 +328,7 @@ export class StackView extends React.Component<Props, State> {
 
   state: State = {
     routes: [],
-    previousRoutes: [],
+    previousState: undefined,
     previousDescriptors: {},
     openingRouteKeys: [],
     closingRouteKeys: [],
@@ -485,8 +486,13 @@ export class StackView extends React.Component<Props, State> {
       ...rest
     } = this.props;
 
-    const { routes, descriptors, openingRouteKeys, closingRouteKeys } =
-      this.state;
+    const {
+      routes,
+      descriptors,
+      openingRouteKeys,
+      closingRouteKeys,
+      replacingRouteKeys,
+    } = this.state;
 
     return (
       <GestureHandlerWrapper style={styles.container}>
@@ -505,6 +511,7 @@ export class StackView extends React.Component<Props, State> {
                         routes={routes}
                         openingRouteKeys={openingRouteKeys}
                         closingRouteKeys={closingRouteKeys}
+                        replacingRouteKeys={replacingRouteKeys}
                         onOpenRoute={this.handleOpenRoute}
                         onCloseRoute={this.handleCloseRoute}
                         onTransitionStart={this.handleTransitionStart}

@@ -38,6 +38,8 @@ function CornerInsetIOS(
     const unsubscribeWindowResize = Dimensions.addEventListener(
       'change',
       () => {
+        relayout();
+
         if (animationFrameHandle) {
           cancelAnimationFrame(animationFrameHandle);
         }
@@ -45,7 +47,9 @@ function CornerInsetIOS(
         // When window is unmaximized, calling relayout immediately doesn't work
         // So we delay it to the next frame as a workaround
         animationFrameHandle = requestAnimationFrame(() => {
-          relayout();
+          animationFrameHandle = requestAnimationFrame(() => {
+            relayout();
+          });
         });
       }
     );

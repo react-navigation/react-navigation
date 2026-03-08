@@ -13,9 +13,16 @@ import { MockRouter } from './__fixtures__/MockRouter';
 
 test('gets focused route state at root', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const TestScreen = () => {
@@ -42,31 +49,38 @@ test('gets focused route state at root', () => {
   );
 
   expect(screen).toMatchInlineSnapshot(`
-[
-  "bar",
-  "{"routes":[{"key":"bar","name":"bar"}]}",
-  "xux",
-  "{"routes":[{"key":"xux","name":"xux"}]}",
-]
-`);
+    [
+      "bar",
+      "{"routes":[{"key":"bar","name":"bar"}]}",
+      "xux",
+      "{"routes":[{"key":"xux","name":"xux"}]}",
+    ]
+  `);
 
   act(() => navigation.navigate('xux'));
 
   expect(screen).toMatchInlineSnapshot(`
-[
-  "bar",
-  "{"routes":[{"key":"bar","name":"bar"}]}",
-  "xux",
-  "{"routes":[{"key":"xux","name":"xux"}]}",
-]
-`);
+    [
+      "bar",
+      "{"routes":[{"key":"bar","name":"bar"}]}",
+      "xux",
+      "{"routes":[{"key":"xux","name":"xux"}]}",
+    ]
+  `);
 });
 
 test('gets focused route state in nested navigator', () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const TestScreen = () => {
@@ -100,67 +114,67 @@ test('gets focused route state in nested navigator', () => {
   );
 
   expect(screen).toMatchInlineSnapshot(`
-[
-  "bar-a",
-  "{"routes":[{"key":"bar","name":"bar","state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
-  "bar-b",
-  "{"routes":[{"key":"bar","name":"bar","state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
-  "xux",
-  "{"routes":[{"key":"xux","name":"xux"}]}",
-]
-`);
+    [
+      "bar-a",
+      "{"routes":[{"key":"bar","name":"bar","state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
+      "bar-b",
+      "{"routes":[{"key":"bar","name":"bar","state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
+      "xux",
+      "{"routes":[{"key":"xux","name":"xux"}]}",
+    ]
+  `);
 
   act(() => navigation.navigate('bar', { answer: 42 }));
 
   expect(screen).toMatchInlineSnapshot(`
-[
-  "bar-a",
-  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
-  "bar-b",
-  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
-  "xux",
-  "{"routes":[{"key":"xux","name":"xux"}]}",
-]
-`);
+    [
+      "bar-a",
+      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
+      "bar-b",
+      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
+      "xux",
+      "{"routes":[{"key":"xux","name":"xux"}]}",
+    ]
+  `);
 
   act(() => navigation.navigate('bar', { screen: 'bar-b' }));
 
   expect(screen).toMatchInlineSnapshot(`
-[
-  "bar-a",
-  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
-  "bar-b",
-  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
-  "xux",
-  "{"routes":[{"key":"xux","name":"xux"}]}",
-]
-`);
+    [
+      "bar-a",
+      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
+      "bar-b",
+      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
+      "xux",
+      "{"routes":[{"key":"xux","name":"xux"}]}",
+    ]
+  `);
 
   act(() => navigation.navigate('xux'));
 
   expect(screen).toMatchInlineSnapshot(`
-[
-  "bar-a",
-  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
-  "bar-b",
-  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
-  "xux",
-  "{"routes":[{"key":"xux","name":"xux"}]}",
-]
-`);
+    [
+      "bar-a",
+      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
+      "bar-b",
+      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
+      "xux",
+      "{"routes":[{"key":"xux","name":"xux"}]}",
+    ]
+  `);
 
   act(() => navigation.navigate('xux', { fruit: 'apple' }));
 
   expect(screen).toMatchInlineSnapshot(`
-[
-  "bar-a",
-  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
-  "bar-b",
-  "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
-  "xux",
-  "{"routes":[{"key":"xux","name":"xux","params":{"fruit":"apple"}}]}",
-]
-`);
+    [
+      "bar-a",
+      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
+      "bar-b",
+      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
+      "xux",
+      "{"routes":[{"key":"xux","name":"xux","params":{"fruit":"apple"}}]}",
+    ]
+  `);
 });
 
 test('gets path in each screen', () => {
@@ -187,9 +201,16 @@ test('gets path in each screen', () => {
   };
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
-    return <>{state.routes.map((route) => descriptors[route.key].render())}</>;
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
   };
 
   const TestScreen = () => {
@@ -221,55 +242,55 @@ test('gets path in each screen', () => {
   );
 
   expect(screen).toMatchInlineSnapshot(`
-[
-  "bar: /mybar",
-  "bar-a: /mybar/a",
-  "bar-b: /mybar/b",
-  "xux: /myxux",
-]
-`);
+    [
+      "bar: /mybar",
+      "bar-a: /mybar/a",
+      "bar-b: /mybar/b",
+      "xux: /myxux",
+    ]
+  `);
 
   act(() => navigation.navigate('bar', { answer: 42 }));
 
   expect(screen).toMatchInlineSnapshot(`
-[
-  "bar: /mybar/42",
-  "bar-a: /mybar/42/a",
-  "bar-b: /mybar/42/b",
-  "xux: /myxux",
-]
-`);
+    [
+      "bar: /mybar/42",
+      "bar-a: /mybar/42/a",
+      "bar-b: /mybar/42/b",
+      "xux: /myxux",
+    ]
+  `);
 
   act(() => navigation.navigate('bar', { screen: 'bar-b' }));
 
   expect(screen).toMatchInlineSnapshot(`
-[
-  "bar: /mybar/42?screen=bar-b",
-  "bar-a: /mybar/42/a",
-  "bar-b: /mybar/42/b",
-  "xux: /myxux",
-]
-`);
+    [
+      "bar: /mybar/42/b",
+      "bar-a: /mybar/42/a",
+      "bar-b: /mybar/42/b",
+      "xux: /myxux",
+    ]
+  `);
 
   act(() => navigation.navigate('xux'));
 
   expect(screen).toMatchInlineSnapshot(`
-[
-  "bar: /mybar/42?screen=bar-b",
-  "bar-a: /mybar/42/a",
-  "bar-b: /mybar/42/b",
-  "xux: /myxux",
-]
-`);
+    [
+      "bar: /mybar/42/b",
+      "bar-a: /mybar/42/a",
+      "bar-b: /mybar/42/b",
+      "xux: /myxux",
+    ]
+  `);
 
   act(() => navigation.navigate('xux', { fruit: 'apple' }));
 
   expect(screen).toMatchInlineSnapshot(`
-[
-  "bar: /mybar/42?screen=bar-b",
-  "bar-a: /mybar/42/a",
-  "bar-b: /mybar/42/b",
-  "xux: /myxux?fruit=apple",
-]
-`);
+    [
+      "bar: /mybar/42/b",
+      "bar-a: /mybar/42/a",
+      "bar-b: /mybar/42/b",
+      "xux: /myxux?fruit=apple",
+    ]
+  `);
 });

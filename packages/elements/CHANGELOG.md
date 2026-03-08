@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.14...@react-navigation/elements@3.0.0-alpha.15) (2026-03-05)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [3.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.13...@react-navigation/elements@3.0.0-alpha.14) (2026-03-03)
+
+**Note:** Version bump only for package @react-navigation/elements
+
+# [3.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.12...@react-navigation/elements@3.0.0-alpha.13) (2026-03-03)
+
+### Features
+
+* add a component that uses `Activity` but keeps content visible ([#12980](https://github.com/react-navigation/react-navigation/issues/12980)) ([174cb5d](https://github.com/react-navigation/react-navigation/commit/174cb5d91733d8eaeecddb9776e10d72afa2f08e)) - by @satya164
+* delay marking activity as hidden so animations can finish ([#13002](https://github.com/react-navigation/react-navigation/issues/13002)) ([bf8c8f8](https://github.com/react-navigation/react-navigation/commit/bf8c8f846c0fa75b82b131002fd458fa92120e71)) - by @satya164
+* handle traffic lights on iOS with new `UNSTABLE_CornerInset` component ([#12978](https://github.com/react-navigation/react-navigation/issues/12978)) ([9dbcb9f](https://github.com/react-navigation/react-navigation/commit/9dbcb9faa02843853c52fc0e73ca1de5bef7a591)) - by @satya164
+* **native-stack:** add support for images in nested header menus ([#12987](https://github.com/react-navigation/react-navigation/issues/12987)) ([d915ad5](https://github.com/react-navigation/react-navigation/commit/d915ad516d4d465effa5135dc33e04fd05f7160c)) - by @Ubax
+
 # [3.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.11...@react-navigation/elements@3.0.0-alpha.12) (2026-02-16)
 
 ### Bug Fixes

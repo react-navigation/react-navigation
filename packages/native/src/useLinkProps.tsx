@@ -3,11 +3,8 @@ import {
   type NavigationAction,
   NavigationContainerRefContext,
   NavigationHelpersContext,
-  type NavigatorScreenParams,
-  type ParamListBase,
   type RootParamList,
 } from '@react-navigation/core';
-import type { NavigationState, PartialState } from '@react-navigation/routers';
 import * as React from 'react';
 import { type GestureResponderEvent, Platform } from 'react-native';
 
@@ -31,35 +28,6 @@ export type LinkProps<
       screen?: undefined;
       params?: undefined;
     };
-
-const getStateFromParams = (
-  params: NavigatorScreenParams<ParamListBase> | undefined
-): PartialState<NavigationState> | NavigationState | undefined => {
-  if (params?.state) {
-    return params.state;
-  }
-
-  if (params?.screen) {
-    return {
-      routes: [
-        {
-          name: params.screen,
-          params: params.params,
-          // @ts-expect-error this is fine 🔥
-          state: params.screen
-            ? getStateFromParams(
-                params.params as
-                  | NavigatorScreenParams<ParamListBase>
-                  | undefined
-              )
-            : undefined,
-        },
-      ],
-    };
-  }
-
-  return undefined;
-};
 
 /**
  * Hook to get props for an anchor tag so it can work with in page navigation.
@@ -162,17 +130,16 @@ export function useLinkProps<
   return {
     href:
       href ??
-      (Platform.OS === 'web' && screen != null
+      (Platform.OS === 'web' && typeof screen === 'string'
         ? getPathFromStateHelper(
             {
               routes: [
                 {
-                  // @ts-expect-error this is fine 🔥
                   name: screen,
-                  // @ts-expect-error this is fine 🔥
-                  params: params,
-                  // @ts-expect-error this is fine 🔥
-                  state: getStateFromParams(params),
+                  params:
+                    typeof params === 'object' && params != null
+                      ? params
+                      : undefined,
                 },
               ],
             },

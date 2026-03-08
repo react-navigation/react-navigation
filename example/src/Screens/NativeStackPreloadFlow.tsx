@@ -1,46 +1,40 @@
 import { Button, Text } from '@react-navigation/elements';
-import type {
-  NavigatorScreenParams,
-  PathConfig,
-  StaticScreenProps,
+import {
+  useNavigation,
+  useNavigationState,
+  useRoute,
 } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
-  type NativeStackScreenProps,
+  createNativeStackScreen,
 } from '@react-navigation/native-stack';
 import { useEffect, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-type PreloadNativeStackParamList = {
-  Home: undefined;
-  Details: undefined;
-};
+const DetailsScreen = () => {
+  const navigation = useNavigation('NativeStackPreloadFlowDetails');
+  const route = useRoute('NativeStackPreloadFlowDetails');
 
-const linking = {
-  screens: {
-    Home: '',
-    Details: 'details',
-  },
-} satisfies PathConfig<NavigatorScreenParams<PreloadNativeStackParamList>>;
+  const [isPreloaded] = useState(
+    useNavigationState('NativeStackPreloadFlowDetails', (state) =>
+      state.preloadedRoutes.some((r) => r.key === route.key)
+    )
+  );
 
-const DetailsScreen = ({
-  navigation,
-}: NativeStackScreenProps<PreloadNativeStackParamList, 'Details'>) => {
   const [loadingCountdown, setLoadingCountdown] = useState(3);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setLoadingCountdown((loadingCountdown) => {
-        if (loadingCountdown === 1) {
-          clearInterval(interval);
-        }
+    if (loadingCountdown === 0) {
+      return;
+    }
 
-        return loadingCountdown - 1;
-      });
-    }, 1000);
+    const timer = setTimeout(
+      () => setLoadingCountdown(loadingCountdown - 1),
+      1000
+    );
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => clearTimeout(timer);
+  }, [loadingCountdown]);
 
   return (
     <View style={styles.content}>
@@ -50,6 +44,7 @@ const DetailsScreen = ({
       <Text style={styles.text}>
         {loadingCountdown === 0 ? 'Loaded!' : 'Loading...'}
       </Text>
+      <Text style={styles.text}>{isPreloaded ? 'Preloaded' : 'Fresh'}</Text>
       <Button onPress={navigation.goBack} style={styles.button}>
         Back to home
       </Button>
@@ -57,10 +52,8 @@ const DetailsScreen = ({
   );
 };
 
-const HomeScreen = ({
-  navigation,
-}: NativeStackScreenProps<PreloadNativeStackParamList, 'Home'>) => {
-  const { navigate, preload } = navigation;
+const HomeScreen = () => {
+  const navigation = useNavigation('NativeStackPreloadFlowHome');
 
   const [isReady, setIsReady] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
@@ -81,36 +74,43 @@ const HomeScreen = ({
         onPress={() => {
           timerRef.current = setTimeout(() => {
             setIsReady(true);
-          }, 3000);
+          }, 5000);
 
-          preload('Details');
+          navigation.preload('NativeStackPreloadFlowDetails');
         }}
         style={styles.button}
       >
         Preload Details
       </Button>
-      <Button onPress={() => navigate('Details')} style={styles.button}>
+      <Button
+        onPress={() => navigation.navigate('NativeStackPreloadFlowDetails')}
+        style={styles.button}
+      >
         Navigate to Details
       </Button>
     </View>
   );
 };
 
-const NativeStack = createNativeStackNavigator<PreloadNativeStackParamList>();
+const NativeStackPreloadNavigator = createNativeStackNavigator({
+  screens: {
+    NativeStackPreloadFlowHome: createNativeStackScreen({
+      screen: HomeScreen,
+      linking: '',
+      options: {
+        title: 'Native Stack Preload Flow',
+      },
+    }),
+    NativeStackPreloadFlowDetails: createNativeStackScreen({
+      screen: DetailsScreen,
+    }),
+  },
+});
 
-export function NativeStackPreloadFlow(
-  _: StaticScreenProps<NavigatorScreenParams<PreloadNativeStackParamList>>
-) {
-  return (
-    <NativeStack.Navigator>
-      <NativeStack.Screen name="Home" component={HomeScreen} />
-      <NativeStack.Screen name="Details" component={DetailsScreen} />
-    </NativeStack.Navigator>
-  );
-}
-
-NativeStackPreloadFlow.title = 'Native Stack - Preload Flow';
-NativeStackPreloadFlow.linking = linking;
+export const NativeStackPreloadFlow = {
+  screen: NativeStackPreloadNavigator,
+  title: 'Native Stack - Preload Flow',
+};
 
 const styles = StyleSheet.create({
   content: {

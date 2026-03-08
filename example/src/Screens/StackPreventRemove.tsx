@@ -1,14 +1,13 @@
 import { Button } from '@react-navigation/elements';
 import {
   CommonActions,
-  type NavigatorScreenParams,
-  type PathConfig,
-  type StaticScreenProps,
+  useNavigation,
+  useRoute,
   useTheme,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackScreenProps,
+  createStackScreen,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import {
@@ -23,24 +22,12 @@ import {
 import { COMMON_LINKING_CONFIG } from '../constants';
 import { Article } from '../Shared/Article';
 
-export type PreventRemoveParamList = {
-  Article: { author: string };
-  Input: undefined;
-};
-
-const linking = {
-  screens: {
-    Article: COMMON_LINKING_CONFIG.Article,
-    Input: 'input',
-  },
-} satisfies PathConfig<NavigatorScreenParams<PreventRemoveParamList>>;
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
-const ArticleScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<PreventRemoveParamList, 'Article'>) => {
+const ArticleScreen = () => {
+  const route = useRoute('Article');
+  const navigation = useNavigation('Article');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -59,9 +46,8 @@ const ArticleScreen = ({
   );
 };
 
-const InputScreen = ({
-  navigation,
-}: StackScreenProps<PreventRemoveParamList, 'Input'>) => {
+const InputScreen = () => {
+  const navigation = useNavigation('Input');
   const [text, setText] = React.useState('');
   const { colors } = useTheme();
 
@@ -136,21 +122,22 @@ const InputScreen = ({
   );
 };
 
-const Stack = createStackNavigator<PreventRemoveParamList>();
+const StackPreventRemoveNavigator = createStackNavigator({
+  screens: {
+    Input: createStackScreen({
+      screen: InputScreen,
+    }),
+    Article: createStackScreen({
+      screen: ArticleScreen,
+      linking: COMMON_LINKING_CONFIG.Article,
+    }),
+  },
+});
 
-export function StackPreventRemove(
-  _: StaticScreenProps<NavigatorScreenParams<PreventRemoveParamList>>
-) {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Input" component={InputScreen} />
-      <Stack.Screen name="Article" component={ArticleScreen} />
-    </Stack.Navigator>
-  );
-}
-
-StackPreventRemove.title = 'Stack - Prevent Remove';
-StackPreventRemove.linking = linking;
+export const StackPreventRemove = {
+  screen: StackPreventRemoveNavigator,
+  title: 'Stack - Prevent Remove',
+};
 
 const styles = StyleSheet.create({
   content: {

@@ -52,13 +52,12 @@ export type ChildBeforeRemoveListener = (action: NavigationAction) => boolean;
  * Context which holds the required helpers needed to build nested navigators.
  */
 export const NavigationBuilderContext = React.createContext<{
-  onAction?: (
-    action: NavigationAction,
-    visitedNavigators?: Set<string>
-  ) => boolean;
-  addListener?: AddListener;
-  addKeyedListener?: AddKeyedListener;
-  onRouteFocus?: (key: string) => void;
+  onAction?:
+    | ((action: NavigationAction, visitedNavigators?: Set<string>) => boolean)
+    | undefined;
+  addListener?: AddListener | undefined;
+  addKeyedListener?: AddKeyedListener | undefined;
+  onRouteFocus?: ((key: string) => void) | undefined;
   onDispatchAction: (action: NavigationAction, noop: boolean) => void;
   onEmitEvent: (event: {
     type: string;
@@ -69,7 +68,7 @@ export const NavigationBuilderContext = React.createContext<{
   onOptionsChange: (options: object) => void;
   scheduleUpdate: (callback: () => void) => void;
   flushUpdates: () => void;
-  stackRef?: React.MutableRefObject<string | undefined>;
+  stackRef?: React.MutableRefObject<string | undefined> | undefined;
 }>({
   onDispatchAction: () => undefined,
   onEmitEvent: () => undefined,

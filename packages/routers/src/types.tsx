@@ -6,7 +6,7 @@ export type NavigationRoute<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
 > = Route<Extract<RouteName, string>, ParamList[RouteName]> & {
-  state?: NavigationState | PartialState<NavigationState>;
+  state?: NavigationState | PartialState<NavigationState> | undefined;
 };
 
 export type NavigationState<ParamList extends ParamListBase = ParamListBase> =
@@ -26,7 +26,7 @@ export type NavigationState<ParamList extends ParamListBase = ParamListBase> =
     /**
      * Alternative entries for history.
      */
-    history?: unknown[];
+    history?: unknown[] | undefined;
     /**
      * List of rendered routes.
      */
@@ -45,20 +45,22 @@ export type NavigationState<ParamList extends ParamListBase = ParamListBase> =
 
 export type InitialState = Readonly<
   Partial<Omit<NavigationState, 'stale' | 'routes'>> & {
-    routes: (Omit<Route<string>, 'key'> & { state?: InitialState })[];
+    routes: (Omit<Route<string>, 'key'> & {
+      state?: InitialState | undefined;
+    })[];
   }
 >;
 
 export type PartialRoute<R extends Route<string>> = Omit<R, 'key'> & {
-  key?: string;
-  state?: PartialState<NavigationState>;
+  key?: string | undefined;
+  state?: PartialState<NavigationState> | undefined;
 };
 
 export type PartialState<State extends NavigationState> = Partial<
   Omit<State, 'stale' | 'routes'>
 > &
   Readonly<{
-    stale?: true;
+    stale?: true | undefined;
     routes: PartialRoute<Route<State['routeNames'][number]>>[];
   }>;
 
@@ -79,18 +81,18 @@ export type Route<
      * Path associated with the route.
      * Usually present when the screen was opened from a deep link.
      */
-    path?: string;
+    path?: string | undefined;
     /**
      * History of param changes for this route.
      */
-    history?: { type: 'params'; params: object }[];
+    history?: { type: 'params'; params: object }[] | undefined;
   } & Readonly<
     undefined extends Params
       ? {
           /**
            * Params for this route
            */
-          params?: Readonly<Params>;
+          params?: Readonly<Params> | undefined;
         }
       : {
           /**
@@ -111,15 +113,15 @@ export type NavigationAction = Readonly<{
   /**
    * Additional data for the action
    */
-  payload?: object;
+  payload?: object | undefined;
   /**
    * Key of the route which dispatched this action.
    */
-  source?: string;
+  source?: string | undefined;
   /**
    * Key of the navigator which should handle this action.
    */
-  target?: string;
+  target?: string | undefined;
 }>;
 
 export type ActionCreators<Action extends NavigationAction> = {
@@ -131,7 +133,7 @@ export type DefaultRouterOptions<RouteName extends string = string> = {
    * Name of the route to focus by on initial render.
    * If not specified, usually the first route is used.
    */
-  initialRouteName?: RouteName;
+  initialRouteName?: RouteName | undefined;
 };
 
 export type RouterFactory<
@@ -145,7 +147,9 @@ export type RouterConfigOptions = {
   routeParamList: ParamListBase;
   routeGetIdList: Record<
     string,
-    | ((options: { params?: Record<string, any> }) => string | undefined)
+    | ((options: {
+        params?: Record<string, any> | undefined;
+      }) => string | undefined)
     | undefined
   >;
 };

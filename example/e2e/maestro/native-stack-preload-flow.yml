@@ -5,24 +5,25 @@ name: Native Stack - Preload Flow
     file: ../launch.yml
     env:
       LINK: native-stack-preload-flow
-      TEXT: 'Home'
+      TEXT: 'Native Stack Preload Flow'
 - assertVisible:
     text: 'Details is not preloaded yet.'
 - tapOn:
     text: 'Preload Details'
 - extendedWaitUntil:
-    timeout: 3000
+    timeout: 5000
     visible: 'Details is preloaded!'
 - tapOn:
     text: 'Navigate to Details'
 - assertVisible:
     text: 'Loaded!'
+- assertVisible:
+    text: 'Preloaded'
 - tapOn:
     text: 'Back to home'
+- assertVisible:
+    text: 'Details is not preloaded yet.'
 - tapOn:
     text: 'Navigate to Details'
 - assertVisible:
-    text: 'Loading...'
-- extendedWaitUntil:
-    timeout: 3000
-    visible: 'Loaded!'
+    text: 'Fresh'

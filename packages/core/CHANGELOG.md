@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.5...@react-navigation/core@8.0.0-alpha.6) (2026-03-03)
+
+### Bug Fixes
+
+* update useNavigationState in layout effect ([4f96a7e](https://github.com/react-navigation/react-navigation/commit/4f96a7ef95ed56f97a62ee016b494c8b844ffeea)) - by @satya164
+
+# [8.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.4...@react-navigation/core@8.0.0-alpha.5) (2026-03-03)
+
+### Bug Fixes
+
+* clear nested params after state is updated ([be6796e](https://github.com/react-navigation/react-navigation/commit/be6796e22a899247274f783726e7fc6863eee12b)), closes [#12986](https://github.com/react-navigation/react-navigation/issues/12986) - by @satya164
+* fix incorrect type for reset action ([724e198](https://github.com/react-navigation/react-navigation/commit/724e198a4b3d4062db5b74bf396e54c1636f8e93)) - by @satya164
+* preserve navigator state with <Activity mode="hidden"> ([5308cae](https://github.com/react-navigation/react-navigation/commit/5308cae6d486e861ba9c1ef724a035a52607f084)) - by @satya164
+* rework useIsFocused to update at the same time as the navigator ([#13010](https://github.com/react-navigation/react-navigation/issues/13010)) ([ecf098b](https://github.com/react-navigation/react-navigation/commit/ecf098be7a8f5a58617a37666e5d780001cb0c36)) - by @satya164
+* tweaks to better work inside `<Activity mode="hidden">` ([#12985](https://github.com/react-navigation/react-navigation/issues/12985)) ([90a9394](https://github.com/react-navigation/react-navigation/commit/90a9394524bf6f384afc359ead30e4136a76db5d)) - by @satya164
+* use nested screen from params when creating path ([#13005](https://github.com/react-navigation/react-navigation/issues/13005)) ([af23b4c](https://github.com/react-navigation/react-navigation/commit/af23b4cf01fd21aca1dfba1c8fd2143e14bec46d)) - by @satya164
+
+### Features
+
+* mark params as used instead of cleaning up ([#12988](https://github.com/react-navigation/react-navigation/issues/12988)) ([95489eb](https://github.com/react-navigation/react-navigation/commit/95489eb3b83f1a85898ceb16b79e86e4e7448586)) - by @satya164
+* support standard schema for parsing paths ([#12993](https://github.com/react-navigation/react-navigation/issues/12993)) ([4c116b9](https://github.com/react-navigation/react-navigation/commit/4c116b93598b216dfb6545a861c0ec19f16548ad)) - by @satya164
+
 # [8.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.3...@react-navigation/core@8.0.0-alpha.4) (2026-02-12)
 
 ### Features

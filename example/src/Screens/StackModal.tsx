@@ -1,12 +1,8 @@
 import { Button } from '@react-navigation/elements';
-import type {
-  NavigatorScreenParams,
-  PathConfig,
-  StaticScreenProps,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackScreenProps,
+  createStackScreen,
 } from '@react-navigation/stack';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
@@ -14,24 +10,12 @@ import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 
-type ModalStackParamList = {
-  Article: { author: string };
-  Albums: undefined;
-};
-
-const linking = {
-  screens: {
-    Article: COMMON_LINKING_CONFIG.Article,
-    Albums: 'albums',
-  },
-} satisfies PathConfig<NavigatorScreenParams<ModalStackParamList>>;
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
-const ArticleScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<ModalStackParamList, 'Article'>) => {
+const ArticleScreen = () => {
+  const route = useRoute('Article');
+  const navigation = useNavigation('Article');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -43,16 +27,16 @@ const ArticleScreen = ({
         </Button>
       </View>
       <Article
-        author={{ name: route.params.author }}
+        author={{ name: route.params?.author ?? 'Unknown' }}
         scrollEnabled={scrollEnabled}
       />
     </ScrollView>
   );
 };
 
-const AlbumsScreen = ({
-  navigation,
-}: StackScreenProps<ModalStackParamList>) => {
+const AlbumsScreen = () => {
+  const navigation = useNavigation('Albums');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -71,32 +55,28 @@ const AlbumsScreen = ({
   );
 };
 
-const Stack = createStackNavigator<ModalStackParamList>();
+const StackModalNavigator = createStackNavigator({
+  screenOptions: { presentation: 'modal' },
+  screens: {
+    Article: createStackScreen({
+      screen: ArticleScreen,
+      options: ({ route }) => ({
+        title: `Article by ${route.params?.author ?? 'Unknown'}`,
+      }),
+      initialParams: { author: 'Gandalf' },
+      linking: COMMON_LINKING_CONFIG.Article,
+    }),
+    Albums: createStackScreen({
+      screen: AlbumsScreen,
+      options: { title: 'Albums' },
+    }),
+  },
+});
 
-export function StackModal(
-  _: StaticScreenProps<NavigatorScreenParams<ModalStackParamList>>
-) {
-  return (
-    <Stack.Navigator screenOptions={{ presentation: 'modal' }}>
-      <Stack.Screen
-        name="Article"
-        component={ArticleScreen}
-        options={({ route }) => ({
-          title: `Article by ${route.params.author}`,
-        })}
-        initialParams={{ author: 'Gandalf' }}
-      />
-      <Stack.Screen
-        name="Albums"
-        component={AlbumsScreen}
-        options={{ title: 'Albums' }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-StackModal.title = 'Stack - Modal';
-StackModal.linking = linking;
+export const StackModal = {
+  screen: StackModalNavigator,
+  title: 'Stack - Modal',
+};
 
 const styles = StyleSheet.create({
   buttons: {
