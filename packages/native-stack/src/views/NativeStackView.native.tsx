@@ -271,7 +271,7 @@ const SceneView = ({
                 if (
                   Platform.OS === 'android' &&
                   headerHeight !== 0 &&
-                  headerHeight <= ANDROID_DEFAULT_HEADER_HEIGHT
+                  Math.round(headerHeight) <= ANDROID_DEFAULT_HEADER_HEIGHT
                 ) {
                   // FIXME: On Android, events may get delivered out-of-order
                   // https://github.com/facebook/react-native/issues/54636
@@ -281,6 +281,11 @@ const SceneView = ({
                   // and then the one without status bar height
                   // This is hack to include status bar height if it's not already included
                   // It only works because header height doesn't change dynamically on Android
+                  //
+                  // Keep the existing correction logic, but round the measured height
+                  // before comparing against the default Android header height.
+                  // This avoids brittle cases such as values like 56.17 bypassing the
+                  // correction even though they are effectively the default 56dp header.
                   setHeaderHeight(headerHeight + insets.top);
                 } else {
                   setHeaderHeight(headerHeight);
