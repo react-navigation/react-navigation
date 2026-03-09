@@ -36,7 +36,15 @@ import { MiniPlayer } from '../Shared/MiniPlayer';
 import { NativeStack } from './NativeStack';
 
 function ContactsScreen(_: StaticScreenProps<{ count: number }>) {
-  return <Contacts />;
+  const insets = useSafeAreaInsets();
+
+  return (
+    <Contacts
+      contentContainerStyle={{
+        paddingTop: Platform.OS === 'android' ? insets.top : 0,
+      }}
+    />
+  );
 }
 
 function AlbumsScreen() {

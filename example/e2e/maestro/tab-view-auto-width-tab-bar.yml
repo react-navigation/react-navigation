@@ -1,0 +1,32 @@
+appId: ${APP_ID}
+name: Tab View - Auto Width Tab Bar
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: libraries-tab-view/auto-width-tab-bar
+      TEXT: 'Marissa Castillo'
+- tapOn:
+    text: 'Article'
+- extendedWaitUntil:
+    visible:
+      text: 'What is Lorem Ipsum?'
+    timeout: 2000
+- tapOn:
+    text: 'Albums'
+- extendedWaitUntil:
+    visible:
+      id: 'album-0'
+    timeout: 2000
+- tapOn:
+    text: 'Chat'
+- extendedWaitUntil:
+    visible:
+      text: 'make me a sandwich'
+    timeout: 2000
+- tapOn:
+    text: 'Contacts'
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 2000
