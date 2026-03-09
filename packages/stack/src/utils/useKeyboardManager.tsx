@@ -7,6 +7,9 @@ export function useKeyboardManager(isEnabled: () => boolean) {
   const previouslyFocusedTextInputRef = React.useRef<HostInstance>(undefined);
   const startTimestampRef = React.useRef<number>(0);
   const keyboardTimeoutRef = React.useRef<NodeJS.Timeout>(undefined);
+  // Previous value of isEnabled() (screen focused + keyboard handling enabled).
+  // Used to detect when this screen loses focus and dismiss its keyboard when navigating forward.
+  const prevKeyboardHandlingEnabledRef = React.useRef(isEnabled());
 
   const clearKeyboardTimeout = React.useCallback(() => {
     if (keyboardTimeoutRef.current !== undefined) {
@@ -90,6 +93,17 @@ export function useKeyboardManager(isEnabled: () => boolean) {
       }
     }
   }, [clearKeyboardTimeout, isEnabled]);
+
+  // Dismiss keyboard when screen loses focus (e.g. when pushing a new screen).
+  // This handles the "navigate forward" case so we don't dismiss the new screen's
+  // auto-focused input from handleTransition.
+  React.useLayoutEffect(() => {
+    const enabled = isEnabled();
+    if (prevKeyboardHandlingEnabledRef.current && !enabled) {
+      Keyboard.dismiss();
+    }
+    prevKeyboardHandlingEnabledRef.current = enabled;
+  }, [isEnabled]);
 
   React.useEffect(() => {
     return () => clearKeyboardTimeout();

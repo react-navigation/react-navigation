@@ -157,7 +157,10 @@ function CardContainerInner({
 
     const { route } = scene.descriptor;
 
-    if (!gesture) {
+    if (!gesture && closing) {
+      // Only dismiss when going back (closing). When opening a new screen,
+      // the previous screen's useLayoutEffect in useKeyboardManager handles dismiss on focus loss.
+      // Calling onPageChangeConfirm(true) when opening would dismiss the new screen's auto-focused input.
       onPageChangeConfirm?.(true);
     } else if (active && closing) {
       onPageChangeConfirm?.(false);
