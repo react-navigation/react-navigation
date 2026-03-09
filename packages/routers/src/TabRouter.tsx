@@ -361,6 +361,48 @@ export function TabRouter({
             return null;
           }
 
+          if (
+            action.type === 'NAVIGATE' &&
+            action.payload.preload &&
+            index !== state.index
+          ) {
+            // Preload the route instead of navigating to it
+            const route = state.routes[index];
+            const getId = routeGetIdList[route.name];
+
+            const currentId = getId?.({ params: route.params });
+            const nextId = getId?.({ params: action.payload.params });
+
+            const key =
+              currentId === nextId
+                ? route.key
+                : `${route.name}-${nanoid()}`;
+
+            const params = createParamsFromAction({
+              action,
+              routeParamList,
+            });
+
+            const newRoute =
+              params !== route.params ? { ...route, key, params } : route;
+
+            return {
+              ...state,
+              preloadedRouteKeys: state.preloadedRouteKeys
+                .filter((k) => k !== route.key)
+                .concat(newRoute.key),
+              routes: state.routes.map((r, i) =>
+                i === index ? newRoute : r
+              ),
+              history:
+                key === route.key
+                  ? state.history
+                  : state.history.filter(
+                      (record) => record.key !== route.key
+                    ),
+            };
+          }
+
           const updatedState = changeIndex(
             {
               ...state,

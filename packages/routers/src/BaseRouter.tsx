@@ -107,6 +107,6 @@ export const BaseRouter = {
   },
 
   shouldActionChangeFocus(action: CommonNavigationAction) {
-    return action.type === 'NAVIGATE';
+    return action.type === 'NAVIGATE' && !action.payload?.preload;
   },
 };

@@ -360,6 +360,7 @@ type NavigationHelpersCommon<
           path?: string | undefined;
           merge?: boolean | undefined;
           pop?: boolean | undefined;
+          preload?: boolean | undefined;
         }
       : never
   ): void;
@@ -1212,6 +1213,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
       merge?: never;
       initial?: never;
       pop?: never;
+      preload?: never;
       path?: string | undefined;
       state: PartialState<NavigationState> | NavigationState | undefined;
     }
@@ -1224,6 +1226,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
             initial?: boolean | undefined;
             path?: string | undefined;
             pop?: boolean | undefined;
+            preload?: boolean | undefined;
             state?: never;
           }
         : {
@@ -1233,6 +1236,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
             initial?: boolean | undefined;
             path?: string | undefined;
             pop?: boolean | undefined;
+            preload?: boolean | undefined;
             state?: never;
           };
     }[keyof ParamList];

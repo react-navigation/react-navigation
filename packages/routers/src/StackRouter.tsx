@@ -354,6 +354,67 @@ export function StackRouter(options: StackRouterOptions) {
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
 
+          if (action.type === 'NAVIGATE' && action.payload.preload) {
+            const currentRoute = state.routes[state.index];
+
+            const isCurrentRoute =
+              id !== undefined
+                ? currentRoute.name === action.payload.name &&
+                  id === getId?.({ params: currentRoute.params })
+                : currentRoute.name === action.payload.name;
+
+            if (!isCurrentRoute) {
+              // Preload the route instead of navigating to it
+              const existingRoute =
+                state.routes.find(
+                  (r) =>
+                    r.name === action.payload.name &&
+                    id === getId?.({ params: r.params })
+                ) ??
+                state.preloadedRoutes.find(
+                  (r) =>
+                    r.name === action.payload.name &&
+                    id === getId?.({ params: r.params })
+                );
+
+              if (existingRoute) {
+                const params = createParamsFromAction({
+                  action,
+                  routeParamList,
+                });
+
+                if (
+                  state.preloadedRoutes.some((r) => r.key === existingRoute.key)
+                ) {
+                  return {
+                    ...state,
+                    preloadedRoutes: state.preloadedRoutes.map((r) =>
+                      r.key === existingRoute.key ? { ...r, params } : r
+                    ),
+                  };
+                }
+
+                return {
+                  ...state,
+                  routes: state.routes.map((r) =>
+                    r.key === existingRoute.key ? { ...r, params } : r
+                  ),
+                };
+              }
+
+              return {
+                ...state,
+                preloadedRoutes: state.preloadedRoutes
+                  .filter(
+                    (r) =>
+                      r.name !== action.payload.name ||
+                      id !== getId?.({ params: r.params })
+                  )
+                  .concat(createRouteFromAction({ action, routeParamList })),
+              };
+            }
+          }
+
           let route: Route<string> | undefined;
 
           if (action.type === 'NAVIGATE') {

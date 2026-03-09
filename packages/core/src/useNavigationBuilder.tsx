@@ -282,7 +282,11 @@ const getRouteConfigsFromChildren = <
 const getStateFromParams = (params: NavigatorRoute['params']) => {
   if (params?.state != null) {
     return params.state;
-  } else if (typeof params?.screen === 'string' && params?.initial !== false) {
+  } else if (
+    typeof params?.screen === 'string' &&
+    params?.initial !== false &&
+    !params?.preload
+  ) {
     return {
       routes: [
         {
@@ -573,10 +577,20 @@ export function useNavigationBuilder<
         options.routeNamesChangeBehavior === 'lastUnhandled' &&
         doesStateHaveOnlyInvalidRoutes(stateBeforeInitialization)
       ) {
-        return [stateBeforeInitialization, hydratedState, true, paramsForState];
+        return [
+          stateBeforeInitialization,
+          hydratedState,
+          true,
+          paramsForState?.preload ? undefined : paramsForState,
+        ];
       }
 
-      return [undefined, hydratedState, false, paramsForState];
+      return [
+        undefined,
+        hydratedState,
+        false,
+        paramsForState?.preload ? undefined : paramsForState,
+      ];
     }
     // We explicitly don't include routeNames, route.params etc. in the dep list
     // below. We want to avoid forcing a new state to be calculated in those cases
@@ -701,6 +715,7 @@ export function useNavigationBuilder<
           path: route.params.path,
           merge: route.params.merge,
           pop: route.params.pop,
+          preload: route.params.preload,
         });
       }
     }

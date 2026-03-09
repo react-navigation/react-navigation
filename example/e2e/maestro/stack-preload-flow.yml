@@ -27,3 +27,14 @@ name: Stack - Preload Flow
     text: 'Navigate to Details'
 - assertVisible:
     text: 'Fresh'
+- tapOn:
+    text: 'Back to home'
+# Test nested preload via navigate
+- tapOn:
+    text: 'Navigate with Nested Preload'
+- assertVisible:
+    text: 'Nested default screen'
+- tapOn:
+    text: 'Go to Nested'
+- assertVisible:
+    text: 'Nested Preloaded'

@@ -21,6 +21,7 @@ type NavigateAction = {
     path?: string | undefined;
     merge?: boolean | undefined;
     pop?: boolean | undefined;
+    preload?: boolean | undefined;
   };
   source?: string | undefined;
   target?: string | undefined;
@@ -94,6 +95,7 @@ export function navigate(options: {
   path?: string | undefined;
   merge?: boolean | undefined;
   pop?: boolean | undefined;
+  preload?: boolean | undefined;
 }): Action;
 
 export function navigate(...args: any): Action {
