@@ -2,9 +2,18 @@ import './gesture-handler';
 
 import { registerRootComponent } from 'expo';
 import * as React from 'react';
-import { LogBox } from 'react-native';
+import { LogBox, Platform } from 'react-native';
+import { configure } from 'react-native-showtime';
 
 import { App } from './src/index';
+
+if (Platform.OS === 'ios') {
+  configure({
+    size: 24,
+    strokeColor: '#7b61c1',
+    strokeWidth: 2,
+  });
+}
 
 LogBox.ignoreLogs([
   'Open debugger to view warnings',
