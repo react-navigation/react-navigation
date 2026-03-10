@@ -334,7 +334,8 @@ const SceneView = ({
                 if (
                   Platform.OS === 'android' &&
                   headerHeight !== 0 &&
-                  headerHeight <= ANDROID_DEFAULT_HEADER_HEIGHT
+                  // On some devices, height maybe slightly off (e.g. 56.17 instead of 56)
+                  Math.round(headerHeight) <= ANDROID_DEFAULT_HEADER_HEIGHT
                 ) {
                   // FIXME: On Android, events may get delivered out-of-order
                   // https://github.com/facebook/react-native/issues/54636
