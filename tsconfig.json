@@ -22,5 +22,5 @@
     "types": ["node"],
     "verbatimModuleSyntax": true
   },
-  "exclude": ["packages/*/lib"]
+  "exclude": ["packages/*/lib", "example/drivers"]
 }

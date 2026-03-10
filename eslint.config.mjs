@@ -15,6 +15,7 @@ export default defineConfig([
     '**/.expo/',
     '**/.yarn/',
     '**/.vscode/',
+    'example/drivers',
   ]),
 
   {
