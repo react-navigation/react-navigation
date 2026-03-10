@@ -1,64 +1,81 @@
-import { execSync, spawnSync } from 'node:child_process';
+import { spawnSync } from 'node:child_process';
 import { promises as fs } from 'node:fs';
-import path from 'node:path';
-import process from 'node:process';
 import { URL } from 'node:url';
+import { parseArgs } from 'node:util';
 
 import config from '../example/app.json' with { type: 'json' };
 
+const DEBUG_OUTPUT_DIR = 'maestro-debug-output';
+
 const root = new URL('..', import.meta.url);
 
-const platformIndex = process.argv.indexOf('--platform');
-const platform =
-  platformIndex === -1 ? undefined : process.argv[platformIndex + 1];
+const { values, tokens } = parseArgs({
+  options: {
+    platform: { type: 'string' },
+    retry: { type: 'string' },
+  },
+  allowPositionals: true,
+  tokens: true,
+  strict: false,
+});
+
+const platform = values.platform;
+
+if (platform !== 'ios' && platform !== 'android') {
+  throw new Error('--platform ios or --platform android is required');
+}
+
+const retryCount =
+  typeof values.retry === 'string' ? parseInt(values.retry, 10) || 1 : 0;
+
+const forwardedArgs = tokens.reduce<string[]>((acc, token) => {
+  if (
+    token.kind === 'option-terminator' ||
+    (token.kind === 'option' &&
+      (token.name === 'platform' || token.name === 'retry'))
+  ) {
+    return acc;
+  }
+
+  if (token.kind === 'option') {
+    return token.value != null
+      ? [...acc, token.rawName, token.value]
+      : [...acc, token.rawName];
+  }
+
+  return [...acc, token.value];
+}, []);
 
 const appId =
   platform === 'ios'
     ? config.expo?.ios?.bundleIdentifier
-    : platform === 'android'
-      ? config.expo?.android?.package
-      : config.expo?.ios?.bundleIdentifier === config.expo?.android?.package
-        ? config.expo?.ios?.bundleIdentifier
-        : undefined;
+    : config.expo?.android?.package;
 
 if (!appId) {
   throw new Error('Could not determine app ID.');
 }
 
 const scheme = `${config.expo?.scheme}://`;
-const ci = process.env.CI === 'true' || process.env.CI === '1';
-
-const flows = await getFlows(new URL('example/e2e/maestro/', root));
-const flowByFilename = new Map(
-  flows.map((flow) => [path.basename(flow, path.extname(flow)), flow])
-);
 
 const cwd = new URL('example/', root);
-const debugOutputDir = new URL('example/maestro-debug-output/', root);
-
-const deviceIds = platform ? undefined : await getConnectedDeviceIds();
-
-if (!platform && !deviceIds?.length) {
-  throw new Error('No connected devices found');
-}
+const reportFile = new URL(`example/${DEBUG_OUTPUT_DIR}/report.json`, root);
 
 let result = runMaestro(['e2e/maestro'], {
   appId,
   scheme,
   cwd,
   platform,
-  deviceIds,
-  ci,
+  forwardedArgs,
 });
 
-if (ci && result.exitCode !== 0) {
-  let failedFlows = await getFailedFlows({
-    debugOutputDir,
-    flowByFilename,
-    since: result.startedAt,
-  });
+if (retryCount > 0 && result !== 0) {
+  let failedFlows = await getFailedFlows(reportFile);
 
-  for (let attempt = 1; attempt <= 3 && failedFlows.length > 0; attempt += 1) {
+  for (
+    let attempt = 1;
+    attempt <= retryCount && failedFlows.length > 0;
+    attempt += 1
+  ) {
     process.stdout.write(`Retry #${attempt}...\n`);
 
     result = runMaestro(failedFlows, {
@@ -66,68 +83,18 @@ if (ci && result.exitCode !== 0) {
       scheme,
       cwd,
       platform,
-      deviceIds,
-      ci,
+      forwardedArgs,
     });
 
-    if (result.exitCode === 0) {
-      failedFlows = [];
+    if (result === 0) {
       break;
     }
 
-    failedFlows = await getFailedFlows({
-      debugOutputDir,
-      flowByFilename,
-      since: result.startedAt,
-    });
+    failedFlows = await getFailedFlows(reportFile);
   }
 }
 
-process.exit(result.exitCode);
-
-async function getFlows(dir: URL): Promise<string[]> {
-  const entries = await fs.readdir(dir, { withFileTypes: true });
-
-  return entries
-    .filter((entry) => entry.isFile() && /\.ya?ml$/i.test(entry.name))
-    .map((entry) => path.join('e2e', 'maestro', entry.name))
-    .sort();
-}
-
-async function getConnectedDeviceIds(): Promise<string[]> {
-  const ids: string[] = [];
-
-  try {
-    const data = JSON.parse(
-      execSync('xcrun simctl list devices booted --json').toString()
-    ) as {
-      devices: Record<string, { state: string; udid: string }[]>;
-    };
-    const iosIds = Object.values(data.devices)
-      .flat()
-      .filter((d) => d.state === 'Booted')
-      .map((d) => d.udid);
-
-    ids.push(...iosIds);
-  } catch {
-    // No iOS devices available
-  }
-
-  try {
-    const androidIds = execSync('adb devices')
-      .toString()
-      .split('\n')
-      .slice(1)
-      .map((line) => line.split('\t')[0].trim())
-      .filter((id) => id.length > 0);
-
-    ids.push(...androidIds);
-  } catch {
-    // No Android devices available
-  }
-
-  return ids;
-}
+process.exit(result);
 
 function runMaestro(
   flows: string[],
@@ -135,137 +102,47 @@ function runMaestro(
     appId: string;
     scheme: string;
     cwd: URL;
-    platform: string | undefined;
-    deviceIds: string[] | undefined;
-    ci: boolean;
+    platform: 'ios' | 'android';
+    forwardedArgs: string[];
   }
-): { exitCode: number; startedAt: number } {
-  const args: string[] = [];
-
-  if (options.platform) {
-    args.push('--platform', options.platform);
-  } else if (options.deviceIds) {
-    args.push('--device', options.deviceIds.join(','));
-  }
-
-  args.push(
+): number {
+  const maestroArgs: string[] = [
+    '--platform',
+    options.platform,
     'test',
-    '--debug-output',
-    'maestro-debug-output',
+    '--output',
+    DEBUG_OUTPUT_DIR,
     '-e',
     `APP_ID=${options.appId}`,
     '-e',
-    `APP_SCHEME=${options.scheme}`
+    `APP_SCHEME=${options.scheme}`,
+    ...options.forwardedArgs,
+    ...flows,
+  ];
+
+  if (options.platform === 'android') {
+    maestroArgs.unshift('--driver', 'devicelab');
+  }
+
+  process.stdout.write(
+    `Running maestro-runner with args: ${maestroArgs.join(' ')}\n`
   );
 
-  if (options.deviceIds) {
-    args.push('--shard-all', String(options.deviceIds.length));
-  }
-
-  if (options.ci) {
-    args.push('--flatten-debug-output');
-  }
-
-  args.push(...flows);
-
-  process.stdout.write(`Running Maestro with args: ${args.join(' ')}\n`);
-
-  const startedAt = Date.now();
-  const result = spawnSync('maestro', args, {
+  const result = spawnSync('maestro-runner', maestroArgs, {
     cwd: options.cwd,
     stdio: ['ignore', 'inherit', 'inherit'],
   });
 
-  return { exitCode: result.status ?? 1, startedAt };
+  return result.status ?? 1;
 }
 
-async function getFailedFlows(options: {
-  debugOutputDir: URL;
-  flowByFilename: Map<string, string>;
-  since: number;
-}): Promise<string[]> {
-  const files = await getCommandFiles(options.debugOutputDir, options.since);
-  const failed = new Set<string>();
+async function getFailedFlows(reportFile: URL): Promise<string[]> {
+  const content = await fs.readFile(reportFile, 'utf8');
+  const report = JSON.parse(content) as {
+    flows: { sourceFile: string; status: string }[];
+  };
 
-  for (const file of files) {
-    const content = await fs.readFile(file, 'utf8');
-    let entries: unknown;
-
-    try {
-      entries = JSON.parse(content);
-    } catch {
-      continue;
-    }
-
-    if (!Array.isArray(entries)) {
-      continue;
-    }
-
-    let filename: string | undefined;
-    let hasFailure = false;
-
-    for (const entry of entries) {
-      const item = entry as {
-        command?: {
-          defineVariablesCommand?: { env?: { MAESTRO_FILENAME?: string } };
-        };
-        metadata?: { status?: string };
-      };
-
-      if (item.metadata?.status === 'FAILED') {
-        hasFailure = true;
-      }
-
-      const env = item.command?.defineVariablesCommand?.env;
-
-      if (!filename && env?.MAESTRO_FILENAME) {
-        filename = env.MAESTRO_FILENAME;
-      }
-    }
-
-    if (hasFailure && filename) {
-      const flow = options.flowByFilename.get(filename);
-
-      if (flow) {
-        failed.add(flow);
-      }
-    }
-  }
-
-  return [...failed];
-}
-
-async function getCommandFiles(dir: URL, since: number): Promise<URL[]> {
-  const files: URL[] = [];
-
-  try {
-    const entries = await fs.readdir(dir, { withFileTypes: true });
-
-    for (const entry of entries) {
-      const entryUrl = new URL(entry.name, dir);
-
-      if (entry.isDirectory()) {
-        files.push(
-          ...(await getCommandFiles(new URL(`${entry.name}/`, dir), since))
-        );
-        continue;
-      }
-
-      if (!entry.isFile() || !/^commands-.*\.json$/i.test(entry.name)) {
-        continue;
-      }
-
-      const stat = await fs.stat(entryUrl);
-
-      if (stat.mtimeMs < since - 1000) {
-        continue;
-      }
-
-      files.push(entryUrl);
-    }
-  } catch {
-    return files;
-  }
-
-  return files;
+  return report.flows
+    .filter((flow) => flow.status === 'failed')
+    .map((flow) => flow.sourceFile);
 }

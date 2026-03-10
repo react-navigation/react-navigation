@@ -320,12 +320,15 @@ function query(page: Page, by: string | { text: string } | { id: string }) {
     const text = typeof by === 'string' ? by : by.text;
     const isRegex = text.includes('.*');
 
-    const args = [
-      isRegex ? new RegExp(`^(?:${text})$`) : text,
-      isRegex ? undefined : { exact: true },
-    ] as const;
+    if (isRegex) {
+      const pattern = new RegExp(`^(?:${text})$`);
 
-    return page.getByLabel(...args).or(page.getByText(...args));
+      return page.getByLabel(pattern).or(page.getByText(pattern));
+    }
+
+    return page
+      .getByLabel(text, { exact: true })
+      .or(page.getByText(text, { exact: true }));
   }
 
   if ('id' in by) {
