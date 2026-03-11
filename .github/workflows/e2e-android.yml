@@ -45,15 +45,15 @@ jobs:
           echo "fingerprint=$FINGERPRINT" >> $GITHUB_OUTPUT
         working-directory: example
 
-      - name: Restore debug build from cache
-        id: restore-debug-build
+      - name: Restore release build from cache
+        id: restore-release-build
         uses: actions/cache/restore@v4
         with:
-          path: android-debug-build/
-          key: android-debug-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+          path: android-release-build/
+          key: android-release-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}
 
       - name: Maximize build space
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
         uses: AdityaGarg8/remove-unwanted-software@v4.1
         with:
           remove-dotnet: 'true'
@@ -78,7 +78,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
 
       - name: Cache Gradle
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
         uses: actions/cache@v4
         with:
           path: |
@@ -88,26 +88,37 @@ jobs:
           restore-keys: |
             gradle-${{ runner.os }}-
 
+      - name: Create debug keystore
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p $HOME/.android
+          keytool -genkey -v -keystore $HOME/.android/debug.keystore -alias androiddebugkey -keyalg RSA -keysize 2048 -validity 10000 -storepass android -keypass android -dname "CN=Android Debug,O=Android,C=US"
+
       - name: Build Android App
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
         run: |
           yarn expo prebuild --platform android
           cd android
-          ./gradlew assembleDebug -DtestBuildType=debug -Dorg.gradle.jvmargs=-Xmx4g
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file=$HOME/.android/debug.keystore \
+            -Pandroid.injected.signing.store.password=android \
+            -Pandroid.injected.signing.key.alias=androiddebugkey \
+            -Pandroid.injected.signing.key.password=android \
+            -Dorg.gradle.jvmargs=-Xmx4g
         working-directory: example
 
       - name: Prepare cache folder
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
         run: |
-          mkdir android-debug-build
-          mv example/android/app/build/outputs/apk/debug/app-debug.apk android-debug-build/android-debug.apk
+          mkdir android-release-build
+          mv example/android/app/build/outputs/apk/release/app-release.apk android-release-build/android-release.apk
 
-      - name: Store debug build in cache
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+      - name: Store release build in cache
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          path: android-debug-build/
-          key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
+          path: android-release-build/
+          key: ${{ steps.restore-release-build.outputs.cache-primary-key }}
 
       - name: Setup Android SDK
         run: |
@@ -142,9 +153,6 @@ jobs:
         run: |
           avdmanager create avd -n "${{ env.AVD_NAME }}" -d "${{ env.EMULATOR_PROFILE }}" -k "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
 
-      - name: Start Metro bundler
-        run: yarn --cwd example start &
-
       - name: Start emulator
         timeout-minutes: 10
         run: |
@@ -152,16 +160,22 @@ jobs:
           adb wait-for-device
           adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
 
-      - name: Wait for Metro bundler
-        timeout-minutes: 5
+      - name: Repack Android App
+        if: steps.restore-release-build.outputs.cache-hit == 'true'
         run: |
-          until curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=android&dev=true&minify=false" > /dev/null 2>&1; do
-            sleep 2
-          done
+          npx @expo/repack-app --platform android \
+            --source-app ../android-release-build/android-release.apk \
+            --output ../android-release-build/android-release.apk \
+            --embed-bundle-assets \
+            --ks $HOME/.android/debug.keystore \
+            --ks-pass pass:android \
+            --ks-key-alias androiddebugkey \
+            --ks-key-pass pass:android
+        working-directory: example
 
       - name: Run Maestro tests
         run: |
-          adb install android-debug-build/android-debug.apk
+          adb install android-release-build/android-release.apk
           cd example
           yarn run e2e:native --platform android
 

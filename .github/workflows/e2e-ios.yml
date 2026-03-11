@@ -39,12 +39,12 @@ jobs:
           echo "fingerprint=$FINGERPRINT" >> $GITHUB_OUTPUT
         working-directory: example
 
-      - name: Restore debug build from cache
-        id: restore-debug-build
+      - name: Restore release build from cache
+        id: restore-release-build
         uses: actions/cache/restore@v4
         with:
-          path: ios-debug-build/
-          key: ios-debug-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+          path: ios-release-build/
+          key: ios-release-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}
 
       - name: Use appropriate Xcode version
         uses: maxim-lobanov/setup-xcode@v1
@@ -62,7 +62,7 @@ jobs:
           brew install facebook/fb/idb-companion ccache
 
       - name: Cache CocoaPods
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
         uses: actions/cache@v4
         with:
           path: |
@@ -74,7 +74,7 @@ jobs:
             ios-pods-${{ runner.os }}-
 
       - name: Cache DerivedData
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
         uses: actions/cache@v4
         with:
           path: example/ios/build
@@ -83,7 +83,7 @@ jobs:
             ios-deriveddata-${{ runner.os }}-
 
       - name: Cache ccache
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
         uses: actions/cache@v4
         with:
           path: ~/.ccache
@@ -92,7 +92,7 @@ jobs:
             ios-ccache-${{ runner.os }}-
 
       - name: Create ccache wrappers
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
         run: |
           mkdir -p "$RUNNER_TEMP/ccache"
           cat > "$RUNNER_TEMP/ccache/ccache-clang" <<'EOF'
@@ -106,36 +106,35 @@ jobs:
           chmod +x "$RUNNER_TEMP/ccache/ccache-clang" "$RUNNER_TEMP/ccache/ccache-clang++"
 
       - name: Build iOS App
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
         run: |
           yarn expo prebuild --platform ios
-          xcodebuild ONLY_ACTIVE_ARCH=YES -workspace ios/ReactNavigationExample.xcworkspace -UseNewBuildSystem=YES -scheme ReactNavigationExample -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -quiet
+          xcodebuild ONLY_ACTIVE_ARCH=YES -workspace ios/ReactNavigationExample.xcworkspace -UseNewBuildSystem=YES -scheme ReactNavigationExample -configuration Release -sdk iphonesimulator -derivedDataPath ios/build -quiet
         working-directory: example
         env:
           CC: ${{ runner.temp }}/ccache/ccache-clang
           CXX: ${{ runner.temp }}/ccache/ccache-clang++
 
       - name: Prepare cache folder
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
         run: |
-          mkdir ios-debug-build
-          mv example/ios/build/Build/Products/Debug-iphonesimulator/ReactNavigationExample.app ios-debug-build/ios-debug.app
+          mkdir -p ios-release-build/Payload
+          cp -r example/ios/build/Build/Products/Release-iphonesimulator/ReactNavigationExample.app ios-release-build/Payload/
+          cd ios-release-build && zip -r ios-release.ipa Payload/ && cd ..
+          rm -rf ios-release-build/Payload
 
-      - name: Store debug build in cache
-        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+      - name: Store release build in cache
+        if: steps.restore-release-build.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
-          path: ios-debug-build/
-          key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
+          path: ios-release-build/
+          key: ${{ steps.restore-release-build.outputs.cache-primary-key }}
 
       - name: Setup JDK
         uses: actions/setup-java@v5
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
-
-      - name: Start Metro bundler
-        run: yarn --cwd example start &
 
       - name: Boot iOS Simulator
         timeout-minutes: 5
@@ -160,17 +159,20 @@ jobs:
           # Add deep link handler so we don't see a prompt when running tests
           /usr/libexec/PlistBuddy ~/Library/Developer/CoreSimulator/Devices/${DEVICE_ID}/data/Library/Preferences/com.apple.launchservices.schemeapproval.plist -c "add com.apple.CoreSimulator.CoreSimulatorBridge-->rne string org.reactnavigation.playground"
 
-      - name: Wait for Metro bundler
-        timeout-minutes: 5
+      - name: Repack iOS App
+        if: steps.restore-release-build.outputs.cache-hit == 'true'
         run: |
-          until curl -sSf "http://localhost:8081/.expo/.virtual-metro-entry.bundle?platform=ios&dev=true&minify=false" > /dev/null 2>&1; do
-            sleep 2
-          done
+          npx @expo/repack-app --platform ios \
+            --source-app ../ios-release-build/ios-release.ipa \
+            --output ../ios-release-build/ios-release.ipa \
+            --embed-bundle-assets
+        working-directory: example
 
       - name: Run Maestro tests
         run: |
           xcrun simctl spawn booted log stream --style syslog > ~/maestro-simulator.log 2>&1 & # Start capturing simulator logs in the background
-          xcrun simctl install booted ../ios-debug-build/ios-debug.app
+          unzip -q ../ios-release-build/ios-release.ipa -d ../ios-app
+          xcrun simctl install booted ../ios-app/Payload/ReactNavigationExample.app
           yarn run e2e:native --platform ios
         working-directory: example
 
