@@ -63,20 +63,39 @@ async function runStep(page: Page, step: any) {
       } else if (step.runFlow.when) {
         const condition = step.runFlow.when;
 
-        let conditionMet = false;
+        let conditionMet = null;
+
+        if (condition.true) {
+          // Ignore dynamic conditions for now
+          conditionMet = false;
+        }
+
+        if (condition.platform) {
+          conditionMet =
+            conditionMet !== false &&
+            condition.platform.toLowerCase() === 'web';
+        }
 
         if (condition.visible) {
           const locator = query(page, condition.visible).filter({
             visible: true,
           });
 
-          conditionMet = await locator.isVisible();
-        } else if (condition.notVisible) {
+          conditionMet = conditionMet !== false && (await locator.isVisible());
+        }
+
+        if (condition.notVisible) {
           const locator = query(page, condition.notVisible).filter({
             visible: false,
           });
 
-          conditionMet = await locator.isHidden();
+          conditionMet = conditionMet !== false && (await locator.isHidden());
+        }
+
+        if (conditionMet === null) {
+          throw new Error(
+            `Invalid runFlow condition: ${JSON.stringify(condition)}`
+          );
         }
 
         if (conditionMet) {
@@ -87,6 +106,22 @@ async function runStep(page: Page, step: any) {
       } else {
         throw new Error(
           `Invalid runFlow step: ${JSON.stringify(step.runFlow)}`
+        );
+      }
+
+      break;
+    }
+
+    case 'runScript': {
+      if (step.runScript.file) {
+        const result = await import(
+          path.join(__dirname, '../maestro', step.runScript.file)
+        );
+
+        await result.run(page, step.runScript.env || {});
+      } else {
+        throw new Error(
+          `Invalid runScript step: ${JSON.stringify(step.runScript)}`
         );
       }
 
@@ -164,12 +199,6 @@ async function runStep(page: Page, step: any) {
       break;
     }
 
-    case 'stopApp': {
-      // No-op on web
-
-      break;
-    }
-
     case 'retry': {
       const maxRetries = step.retry.maxRetries ?? 1;
 
@@ -216,6 +245,18 @@ async function runStep(page: Page, step: any) {
       await page.mouse.up();
 
       await page.waitForTimeout(duration);
+
+      break;
+    }
+
+    case 'inputText': {
+      await page.keyboard.type(step.inputText);
+
+      break;
+    }
+
+    case 'stopApp': {
+      // No-op on web
 
       break;
     }

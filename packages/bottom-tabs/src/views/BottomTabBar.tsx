@@ -435,8 +435,10 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
           const accessibilityLabel =
             options.tabBarAccessibilityLabel !== undefined
               ? options.tabBarAccessibilityLabel
-              : typeof label === 'string' && Platform.OS === 'ios'
-                ? `${label}, tab, ${index + 1} of ${routes.length}`
+              : typeof label === 'string'
+                ? Platform.OS === 'android'
+                  ? `${label}, ${index + 1} of ${routes.length}`
+                  : `${label}, ${focused ? 'selected' : 'unselected'}`
                 : undefined;
 
           return (

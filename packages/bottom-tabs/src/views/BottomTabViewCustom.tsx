@@ -121,12 +121,6 @@ export function BottomTabViewCustom({
         (route) => route.key === previousRouteKey
       );
 
-      console.log(
-        'checking if we need to pop to top for route',
-        previousRouteKey,
-        focusedRouteKey
-      );
-
       if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
         popToTopAction = {
           ...StackActions.popToTop(),
@@ -182,8 +176,7 @@ export function BottomTabViewCustom({
 
       Animated.parallel(animations).start(({ finished }) => {
         if (finished && popToTopAction) {
-          console.log('dispatching pop to top action', popToTopAction);
-          // navigation.dispatch(popToTopAction);
+          navigation.dispatch(popToTopAction);
         }
 
         if (previousRouteKey !== focusedRouteKey) {

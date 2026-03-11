@@ -1,0 +1,32 @@
+appId: ${APP_ID}
+name: Native Bottom Tabs - Basic
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: native-bottom-tabs
+      TEXT: 'Article by Gandalf'
+- tapOn:
+    text: 'Update params'
+- assertVisible:
+    text: 'Article by Babel fish'
+- tapOn:
+    text: 'Navigate to feed'
+- assertVisible:
+    text: 'Feed'
+- tapOn:
+    text: 'Albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Go to Contacts'
+- assertVisible:
+    text: 'Marissa Castillo'
+- tapOn:
+    text: 'Albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    text: 'Article'
+- assertVisible:
+    text: 'Article by Babel fish'

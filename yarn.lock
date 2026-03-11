@@ -4592,6 +4592,7 @@ __metadata:
     react-native-reanimated: "npm:~4.2.1"
     react-native-safe-area-context: "npm:~5.6.2"
     react-native-screens: "npm:^4.24.0"
+    react-native-showtime: "npm:^0.0.5"
     react-native-tab-view: "workspace:^"
     react-native-web: "npm:~0.21.0"
     react-native-worklets: "npm:0.7.2"
@@ -14165,6 +14166,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/49299e694ed20cf5a8c0f86702eb77df03f5b7353d9b73e7415bb593ac5ff3aa4dfe76b1e9d8efb0fd926917e507f02f13e0a8791c8833910080454b66d99943
+  languageName: node
+  linkType: hard
+
+"react-native-showtime@npm:^0.0.5":
+  version: 0.0.5
+  resolution: "react-native-showtime@npm:0.0.5"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/f5ceb6c6eeee2a0274993251a7c7c4b8ecb33934a78d9fb7df431bebbdb7ba8df4eb592f171be207f67da16a55d1322ad2a80cb9f79510cb76e4644be7c1a311
   languageName: node
   linkType: hard
 

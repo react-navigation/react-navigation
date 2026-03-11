@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.16...@react-navigation/native-stack@8.0.0-alpha.17) (2026-03-09)
+
+### Features
+
+* add option to unmount inactive screens for stacks ([#13017](https://github.com/react-navigation/react-navigation/issues/13017)) ([558b0e5](https://github.com/react-navigation/react-navigation/commit/558b0e5aee395c22dd59259edd71c27704b11c1f)) - by @satya164
+
 # [8.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.15...@react-navigation/native-stack@8.0.0-alpha.16) (2026-03-05)
 
 **Note:** Version bump only for package @react-navigation/native-stack
