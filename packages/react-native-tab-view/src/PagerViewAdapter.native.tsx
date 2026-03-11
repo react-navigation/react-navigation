@@ -90,6 +90,10 @@ export function PagerViewAdapter({
 
     switch (pageScrollState) {
       case 'idle':
+        if (Platform.OS === 'android') {
+          // Work around pager offset drift that can leave indicator in-between tabs.
+          offset.setValue(0);
+        }
         onSwipeEnd?.();
         return;
       case 'dragging': {
