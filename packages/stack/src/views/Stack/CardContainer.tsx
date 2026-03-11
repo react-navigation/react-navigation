@@ -101,16 +101,11 @@ function CardContainerInner({
 
   const parentHeaderHeight = React.useContext(HeaderHeightContext);
 
-  const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
-    useKeyboardManager(
-      React.useCallback(() => {
-        const { options, navigation } = scene.descriptor;
+  const { options } = scene.descriptor;
+  const enabled = focused && options.keyboardHandlingEnabled !== false;
 
-        return (
-          navigation.isFocused() && options.keyboardHandlingEnabled !== false
-        );
-      }, [scene.descriptor])
-    );
+  const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
+    useKeyboardManager({ enabled });
 
   const handleOpen = () => {
     const { route } = scene.descriptor;
@@ -157,16 +152,7 @@ function CardContainerInner({
 
     const { route } = scene.descriptor;
 
-    if (!gesture && closing) {
-      // Only dismiss when going back (closing). When opening a new screen,
-      // the previous screen's useLayoutEffect in useKeyboardManager handles dismiss on focus loss.
-      // Calling onPageChangeConfirm(true) when opening would dismiss the new screen's auto-focused input.
-      onPageChangeConfirm?.(true);
-    } else if (active && closing) {
-      onPageChangeConfirm?.(false);
-    } else {
-      onPageChangeCancel?.();
-    }
+    onPageChangeConfirm?.({ gesture, active, closing });
 
     onTransitionStart?.({ route }, closing);
   };

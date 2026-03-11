@@ -1,15 +1,13 @@
 import * as React from 'react';
 import { type HostInstance, Keyboard, TextInput } from 'react-native';
 
-export function useKeyboardManager(isEnabled: () => boolean) {
+export function useKeyboardManager({ enabled }: { enabled: boolean }) {
   // Numeric id of the previously focused text input
   // When a gesture didn't change the tab, we can restore the focused input with this
   const previouslyFocusedTextInputRef = React.useRef<HostInstance>(undefined);
   const startTimestampRef = React.useRef<number>(0);
   const keyboardTimeoutRef = React.useRef<NodeJS.Timeout>(undefined);
-  // Previous value of isEnabled() (screen focused + keyboard handling enabled).
-  // Used to detect when this screen loses focus and dismiss its keyboard when navigating forward.
-  const prevKeyboardHandlingEnabledRef = React.useRef(isEnabled());
+  const enabledRef = React.useRef(enabled);
 
   const clearKeyboardTimeout = React.useCallback(() => {
     if (keyboardTimeoutRef.current !== undefined) {
@@ -19,7 +17,7 @@ export function useKeyboardManager(isEnabled: () => boolean) {
   }, []);
 
   const onPageChangeStart = React.useCallback(() => {
-    if (!isEnabled()) {
+    if (!enabledRef.current) {
       return;
     }
 
@@ -35,37 +33,10 @@ export function useKeyboardManager(isEnabled: () => boolean) {
 
     // Store timestamp for touch start
     startTimestampRef.current = Date.now();
-  }, [clearKeyboardTimeout, isEnabled]);
-
-  const onPageChangeConfirm = React.useCallback(
-    (force: boolean) => {
-      if (!isEnabled()) {
-        return;
-      }
-
-      clearKeyboardTimeout();
-
-      if (force) {
-        // Always dismiss input, even if we don't have a ref to it
-        // We might not have the ref if onPageChangeStart was never called
-        // This can happen if page change was not from a gesture
-        Keyboard.dismiss();
-      } else {
-        const input = previouslyFocusedTextInputRef.current;
-
-        // Dismiss the keyboard only if an input was a focused before
-        // This makes sure we don't dismiss input on going back and focusing an input
-        input?.blur();
-      }
-
-      // Cleanup the ID on successful page change
-      previouslyFocusedTextInputRef.current = undefined;
-    },
-    [clearKeyboardTimeout, isEnabled]
-  );
+  }, [clearKeyboardTimeout]);
 
   const onPageChangeCancel = React.useCallback(() => {
-    if (!isEnabled()) {
+    if (!enabledRef.current) {
       return;
     }
 
@@ -82,6 +53,7 @@ export function useKeyboardManager(isEnabled: () => boolean) {
       // so we have to make sure it won't interrupt input refocus logic.
       // That's why when the interaction is shorter than 100ms we add delay so it won't hide once again.
       // Subtracting timestamps makes us sure the delay is executed only when needed.
+
       if (Date.now() - startTimestampRef.current < 100) {
         keyboardTimeoutRef.current = setTimeout(() => {
           input?.focus();
@@ -92,18 +64,58 @@ export function useKeyboardManager(isEnabled: () => boolean) {
         previouslyFocusedTextInputRef.current = undefined;
       }
     }
-  }, [clearKeyboardTimeout, isEnabled]);
+  }, [clearKeyboardTimeout]);
+
+  const onPageChangeConfirm = React.useCallback(
+    ({
+      gesture,
+      active,
+      closing,
+    }: {
+      gesture: boolean;
+      active: boolean;
+      closing: boolean;
+    }) => {
+      if (!enabledRef.current) {
+        return;
+      }
+
+      if (!closing) {
+        onPageChangeCancel();
+        return;
+      }
+
+      clearKeyboardTimeout();
+
+      if (!gesture) {
+        // Always dismiss input, even if we don't have a ref to it
+        // We might not have the ref if onPageChangeStart was never called
+        // This can happen if page change was not from a gesture
+        Keyboard.dismiss();
+      } else if (active) {
+        const input = previouslyFocusedTextInputRef.current;
+
+        // Dismiss the keyboard only if an input was a focused before
+        // This makes sure we don't dismiss input on going back and focusing an input
+        input?.blur();
+      }
+
+      // Cleanup the ID on successful page change
+      previouslyFocusedTextInputRef.current = undefined;
+    },
+    [clearKeyboardTimeout, onPageChangeCancel]
+  );
 
   // Dismiss keyboard when screen loses focus (e.g. when pushing a new screen).
   // This handles the "navigate forward" case so we don't dismiss the new screen's
   // auto-focused input from handleTransition.
   React.useLayoutEffect(() => {
-    const enabled = isEnabled();
-    if (prevKeyboardHandlingEnabledRef.current && !enabled) {
+    if (enabledRef.current && !enabled) {
       Keyboard.dismiss();
     }
-    prevKeyboardHandlingEnabledRef.current = enabled;
-  }, [isEnabled]);
+
+    enabledRef.current = enabled;
+  }, [enabled]);
 
   React.useEffect(() => {
     return () => clearKeyboardTimeout();
