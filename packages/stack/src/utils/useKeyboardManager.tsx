@@ -53,7 +53,6 @@ export function useKeyboardManager({ enabled }: { enabled: boolean }) {
       // so we have to make sure it won't interrupt input refocus logic.
       // That's why when the interaction is shorter than 100ms we add delay so it won't hide once again.
       // Subtracting timestamps makes us sure the delay is executed only when needed.
-
       if (Date.now() - startTimestampRef.current < 100) {
         keyboardTimeoutRef.current = setTimeout(() => {
           input?.focus();
