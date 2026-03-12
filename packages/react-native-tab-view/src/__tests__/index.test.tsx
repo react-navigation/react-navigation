@@ -12,7 +12,6 @@ jest.mock('react-native-pager-view', () => {
   const { View } = require('react-native');
 
   return class MockViewPager extends React.Component {
-    // eslint-disable-next-line @eslint-react/no-unused-class-component-members
     setPage = (index: number) => {
       if (this.props.onPageSelected) {
         this.props.onPageSelected({
@@ -20,7 +19,7 @@ jest.mock('react-native-pager-view', () => {
         });
       }
     };
-    // eslint-disable-next-line @eslint-react/no-unused-class-component-members
+
     setPageWithoutAnimation = (index: number) => {
       if (this.props.onPageSelected) {
         this.props.onPageSelected({

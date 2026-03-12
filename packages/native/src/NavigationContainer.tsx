@@ -222,6 +222,7 @@ function NavigationContainerInner(
       }
 
       const thenable: Thenable<InitialState | undefined> = {
+        // oxlint-disable-next-line unicorn/no-thenable
         then(onfulfilled) {
           return Promise.resolve(
             onfulfilled ? onfulfilled(restoredState) : restoredState

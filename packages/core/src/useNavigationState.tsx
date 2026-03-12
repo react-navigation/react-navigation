@@ -35,8 +35,8 @@ type NavigationStateForNested<
 export function useNavigationState<
   const T,
   const Navigator = RootNavigator,
-  const RouteName extends
-    keyof NavigationListForNested<Navigator> = keyof NavigationListForNested<Navigator>,
+  const RouteName extends keyof NavigationListForNested<Navigator> =
+    keyof NavigationListForNested<Navigator>,
 >(
   routeName: RouteName,
   selector: (state: NavigationStateForNested<Navigator, RouteName>) => T
@@ -52,7 +52,6 @@ export function useNavigationState(...args: unknown[]): unknown {
   if (typeof args[0] === 'string') {
     // `useNavigation` uses `use` internally, so it's fine to call it conditionally
     // @ts-expect-error we can't specify the type here
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     navigation = useNavigation(args[0]);
     selector = args[1];
   } else {

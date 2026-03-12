@@ -1088,20 +1088,20 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
     lex: true,
   };
 
-  const TestScreen = (props: any) => {
+  const TestScreen = ({ route, navigation }: any) => {
     React.useEffect(
       () =>
-        props.navigation.addListener('beforeRemove', (e: any) => {
+        navigation.addListener('beforeRemove', (e: any) => {
           // @ts-expect-error: we should have the required mocks
-          onBeforeRemove[props.route.name]();
+          onBeforeRemove[route.name]();
           e.preventDefault();
 
           // @ts-expect-error: we should have the required properties
-          if (!shouldPrevent[props.route.name]) {
-            props.navigation.dispatch(e.data.action);
+          if (!shouldPrevent[route.name]) {
+            navigation.dispatch(e.data.action);
           }
         }),
-      [props.navigation, props.route.name]
+      [navigation, route]
     );
 
     return null;

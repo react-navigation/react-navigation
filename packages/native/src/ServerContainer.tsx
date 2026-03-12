@@ -25,7 +25,6 @@ export const ServerContainer = React.forwardRef(function ServerContainer(
     );
   }, []);
 
-  // eslint-disable-next-line @eslint-react/no-unstable-context-value
   const current: { options?: object } = {};
 
   if (ref) {
@@ -47,8 +46,9 @@ export const ServerContainer = React.forwardRef(function ServerContainer(
   }
 
   return (
-    // eslint-disable-next-line @eslint-react/no-unstable-context-value
+    // oxlint-disable-next-line react/jsx-no-constructed-context-values
     <ServerContext.Provider value={{ location }}>
+      {/* oxlint-disable-next-line react/jsx-no-constructed-context-values */}
       <CurrentRenderContext.Provider value={current}>
         {children}
       </CurrentRenderContext.Provider>

@@ -26,17 +26,19 @@ While developing, you can run the [example app](/example/) with [Expo](https://e
 yarn example start
 ```
 
-Make sure your code passes TypeScript and ESLint. Run the following to verify:
+Make sure your code passes TypeScript, Oxlint, and Oxfmt. Run the following to verify:
 
 ```sh
 yarn typecheck
 yarn lint
+yarn format --check
 ```
 
-To fix formatting errors, run the following:
+To apply lint fixes and formatting, run the following:
 
 ```sh
 yarn lint --fix
+yarn format
 ```
 
 Remember to add tests for your change if possible. Run the unit tests by:
@@ -94,13 +96,11 @@ We follow the [conventional commits specification](https://www.conventionalcommi
 
 Our pre-commit hooks verify that your commit message matches this format when committing.
 
-### Linting and tests
+### Linting, formatting, and tests
 
-[ESLint](https://eslint.org/), [Prettier](https://prettier.io/), [TypeScript](https://www.typescriptlang.org/)
+We use [TypeScript](https://www.typescriptlang.org/) for type checking, [Oxlint](https://oxc.rs/docs/guide/usage/linter) for linting, [Oxfmt](https://oxc.rs/docs/guide/usage/formatter) for formatting, and [Jest](https://jestjs.io/) for testing.
 
-We use [TypeScript](https://www.typescriptlang.org/) for type checking, [ESLint](https://eslint.org/) with [Prettier](https://prettier.io/) for linting and formatting the code, and [Jest](https://jestjs.io/) for testing.
-
-Our pre-commit hooks verify that the linter and tests pass when committing.
+Our pre-commit hooks verify linting, formatting, type checking, and tests when committing.
 
 ### Scripts
 
@@ -108,7 +108,8 @@ The `package.json` file contains various scripts for common tasks:
 
 - `yarn install`: setup project by installing all dependencies and pods.
 - `yarn typecheck`: type-check files with TypeScript.
-- `yarn lint`: lint files with ESLint.
+- `yarn lint`: lint files with Oxlint.
+- `yarn format`: format files with Oxfmt.
 - `yarn test`: run unit tests with Jest.
 - `yarn example start`: run the example app with Expo.
 

@@ -1,10 +1,11 @@
+import assert from 'node:assert';
+
 import { expect, test } from '@jest/globals';
 import type {
   DefaultRouterOptions,
   NavigationState,
 } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
-import assert from 'assert';
 import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
@@ -314,8 +315,9 @@ test('handles conditional groups with nested if hooks', () => {
 
 test('handles non-function screens', () => {
   expect(() => {
-    // eslint-disable-next-line @eslint-react/no-useless-forward-ref, @eslint-react/ensure-forward-ref-using-ref, @eslint-react/no-missing-component-display-name
-    const TestScreen = React.forwardRef(() => null);
+    const TestScreen = React.forwardRef(function TestScreen() {
+      return null;
+    });
 
     const Root = createTestNavigator({
       screens: {

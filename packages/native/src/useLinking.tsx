@@ -182,6 +182,7 @@ export function useLinking(
     }
 
     const thenable: Thenable<ResultState | undefined> = {
+      // oxlint-disable-next-line unicorn/no-thenable
       then(onfulfilled) {
         return Promise.resolve(onfulfilled ? onfulfilled(value) : value);
       },

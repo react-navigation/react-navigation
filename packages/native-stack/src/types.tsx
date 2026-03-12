@@ -642,7 +642,7 @@ export type NativeStackNavigationOptions = {
    * Note that the array **must** be sorted in ascending order. This invariant is verified only in developement mode,
    * where violation results in error.
    *
-   * **Android is limited to up 3 values in the array** -- any surplus values, beside first three are ignored.
+   * **Android is limited to up 3 values in the array** - any surplus values, beside first three are ignored.
    *
    * Defaults to `[1.0]`.
    */

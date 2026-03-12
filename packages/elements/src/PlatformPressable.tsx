@@ -202,6 +202,7 @@ const HoverEffect = ({
 
   return (
     <>
+      {/* oxlint-disable-next-line react/no-unknown-property - React 19 style precedence */}
       <style href={CLASS_NAME} precedence="elements">
         {CSS_TEXT}
       </style>

@@ -20,9 +20,7 @@ export function validatePathConfig(config: unknown, root = true) {
 
   if (typeof config !== 'object' || config === null) {
     throw new Error(
-      `Expected the configuration to be an object, but got ${JSON.stringify(
-        config
-      )}.`
+      `Expected the configuration to be an object, but got ${JSON.stringify(config)}.`
     );
   }
 
