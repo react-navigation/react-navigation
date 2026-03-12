@@ -126,10 +126,6 @@ const StackPreventRemoveNavigator = createStackNavigator({
   screens: {
     Input: createStackScreen({
       screen: InputScreen,
-      options: {
-        // FIXME: Currently this causes auto focus to stop working on web
-        keyboardHandlingEnabled: Platform.OS !== 'web',
-      },
     }),
     Article: createStackScreen({
       screen: ArticleScreen,
