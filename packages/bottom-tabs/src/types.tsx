@@ -443,6 +443,20 @@ type BottomTabNativeOptions = {
    * @platform ios
    */
   overrideScrollViewContentInsetAdjustmentBehavior?: boolean;
+
+  /**
+   * Native tab special effects forwarded to `react-native-screens`.
+   *
+   * Only supported with `native` implementation.
+   *
+   * @platform ios, android
+   */
+  specialEffects?: {
+    repeatedTabSelection?: {
+      popToRoot?: boolean;
+      scrollToTop?: boolean;
+    };
+  };
 };
 
 export type BottomTabNavigationOptions = {
