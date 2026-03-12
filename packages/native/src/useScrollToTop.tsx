@@ -51,7 +51,7 @@ function getScrollableNode(ref: React.RefObject<ScrollableWrapper>) {
 }
 
 export function useScrollToTop(ref: React.RefObject<ScrollableWrapper>) {
-  const navigation = React.useContext(NavigationContext);
+  const navigation = React.use(NavigationContext);
   const route = useRoute();
 
   if (navigation === undefined) {

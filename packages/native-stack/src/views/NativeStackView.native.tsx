@@ -153,9 +153,9 @@ const SceneView = ({
   // Modals are fullscreen in landscape only on iPhone
   const isIPhone = Platform.OS === 'ios' && !(Platform.isPad || Platform.isTV);
 
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
-  const parentHeaderHeight = React.useContext(HeaderHeightContext);
-  const parentHeaderBack = React.useContext(HeaderBackContext);
+  const isParentHeaderShown = React.use(HeaderShownContext);
+  const parentHeaderHeight = React.use(HeaderHeightContext);
+  const parentHeaderBack = React.use(HeaderBackContext);
 
   const isLandscape = useFrameSize((frame) => frame.width > frame.height);
 

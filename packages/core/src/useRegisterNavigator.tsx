@@ -9,7 +9,7 @@ import { SingleNavigatorContext } from './EnsureSingleNavigator';
  */
 export function useRegisterNavigator() {
   const [key] = React.useState(() => nanoid());
-  const container = React.useContext(SingleNavigatorContext);
+  const container = React.use(SingleNavigatorContext);
 
   if (container === undefined) {
     throw new Error(

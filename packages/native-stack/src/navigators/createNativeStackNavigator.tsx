@@ -55,7 +55,7 @@ function NativeStackNavigator({
       router,
     });
 
-  const meta = React.useContext(NavigationMetaContext);
+  const meta = React.use(NavigationMetaContext);
 
   React.useEffect(() => {
     if (meta && 'type' in meta && meta.type === 'native-tabs') {

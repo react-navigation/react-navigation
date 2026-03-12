@@ -4,7 +4,7 @@ import type { SharedValue } from 'react-native-reanimated';
 import { DrawerProgressContext } from './DrawerProgressContext';
 
 export function useDrawerProgress(): Readonly<SharedValue<number>> {
-  const progress = React.useContext(DrawerProgressContext);
+  const progress = React.use(DrawerProgressContext);
 
   if (progress === undefined) {
     throw new Error(

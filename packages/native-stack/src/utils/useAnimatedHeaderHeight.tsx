@@ -6,7 +6,7 @@ export const AnimatedHeaderHeightContext = React.createContext<
 >(undefined);
 
 export function useAnimatedHeaderHeight() {
-  const animatedValue = React.useContext(AnimatedHeaderHeightContext);
+  const animatedValue = React.use(AnimatedHeaderHeightContext);
 
   if (animatedValue === undefined) {
     throw new Error(

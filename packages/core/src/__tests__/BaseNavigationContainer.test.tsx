@@ -34,7 +34,7 @@ test('throws when getState is accessed without a container', () => {
   expect.assertions(1);
 
   const Test = () => {
-    const { getState } = React.useContext(NavigationStateContext);
+    const { getState } = React.use(NavigationStateContext);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     getState;
@@ -53,7 +53,7 @@ test('throws when setState is accessed without a container', () => {
   expect.assertions(1);
 
   const Test = () => {
-    const { setState } = React.useContext(NavigationStateContext);
+    const { setState } = React.use(NavigationStateContext);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     setState;

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { BottomTabAnimationContext } from './BottomTabAnimationContext';
 
 export function useBottomTabAnimation() {
-  const animation = React.useContext(BottomTabAnimationContext);
+  const animation = React.use(BottomTabAnimationContext);
 
   if (animation === undefined) {
     throw new Error(

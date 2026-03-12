@@ -23,7 +23,7 @@ type Options = {
  * Mutating values like this is not safe in async mode, but it doesn't apply to SSR
  */
 export function useCurrentRender({ state, navigation, descriptors }: Options) {
-  const current = React.useContext(CurrentRenderContext);
+  const current = React.use(CurrentRenderContext);
 
   if (current && navigation.isFocused()) {
     current.options = descriptors[state.routes[state.index].key].options;

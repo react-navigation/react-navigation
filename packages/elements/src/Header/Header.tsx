@@ -85,7 +85,7 @@ export function Header(props: Props) {
   const { colors } = useTheme();
 
   const navigation = useNavigation();
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
+  const isParentHeaderShown = React.use(HeaderShownContext);
 
   const [searchBarVisible, setSearchBarVisible] = React.useState(false);
 

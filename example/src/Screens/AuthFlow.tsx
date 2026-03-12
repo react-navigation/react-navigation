@@ -58,7 +58,7 @@ const SplashScreen = () => {
 const SignInScreen = ({
   navigation,
 }: StackScreenProps<AuthStackParamList, 'SignIn'>) => {
-  const { signIn } = React.useContext(AuthContext);
+  const { signIn } = React.use(AuthContext);
   const { colors } = useTheme();
 
   return (
@@ -91,7 +91,7 @@ const SignInScreen = ({
 const HomeScreen = ({
   navigation,
 }: StackScreenProps<AuthStackParamList, 'Home'>) => {
-  const { signOut } = React.useContext(AuthContext);
+  const { signOut } = React.use(AuthContext);
 
   return (
     <View style={styles.content}>
@@ -109,7 +109,7 @@ const HomeScreen = ({
 const ProfileScreen = ({
   navigation,
 }: StackScreenProps<AuthStackParamList, 'Profile'>) => {
-  const { signOut } = React.useContext(AuthContext);
+  const { signOut } = React.use(AuthContext);
 
   return (
     <View style={styles.content}>
@@ -125,7 +125,7 @@ const ProfileScreen = ({
 };
 
 const ChatScreen = () => {
-  const { isSignedIn, signIn, signOut } = React.useContext(AuthContext);
+  const { isSignedIn, signIn, signOut } = React.use(AuthContext);
 
   return (
     <View style={styles.content}>

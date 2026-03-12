@@ -15,7 +15,7 @@ function DrawerContentScrollViewInner(
   { contentContainerStyle, style, children, ...rest }: Props,
   ref?: React.Ref<ScrollView>
 ) {
-  const drawerPosition = React.useContext(DrawerPositionContext);
+  const drawerPosition = React.use(DrawerPositionContext);
   const insets = useSafeAreaInsets();
   const { direction } = useLocale();
 

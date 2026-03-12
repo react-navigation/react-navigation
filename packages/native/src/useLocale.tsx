@@ -6,7 +6,7 @@ import { LocaleDirContext } from './LocaleDirContext';
  * Hook to access the text direction specified in the `NavigationContainer`.
  */
 export function useLocale() {
-  const direction = React.useContext(LocaleDirContext);
+  const direction = React.use(LocaleDirContext);
 
   if (direction === undefined) {
     throw new Error(

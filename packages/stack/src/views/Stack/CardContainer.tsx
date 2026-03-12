@@ -99,7 +99,7 @@ function CardContainerInner({
 
   const { direction } = useLocale();
 
-  const parentHeaderHeight = React.useContext(HeaderHeightContext);
+  const parentHeaderHeight = React.use(HeaderHeightContext);
 
   const { options } = scene.descriptor;
   const enabled = focused && options.keyboardHandlingEnabled !== false;

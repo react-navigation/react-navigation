@@ -8,7 +8,7 @@ import { DrawerStatusContext } from './DrawerStatusContext';
  * Returns 'open' if the drawer is open, 'closed' if the drawer is closed.
  */
 export function useDrawerStatus(): DrawerStatus {
-  const drawerStatus = React.useContext(DrawerStatusContext);
+  const drawerStatus = React.use(DrawerStatusContext);
 
   if (drawerStatus === undefined) {
     throw new Error(

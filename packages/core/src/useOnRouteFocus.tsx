@@ -23,7 +23,7 @@ export function useOnRouteFocus<
   State extends NavigationState,
   Action extends NavigationAction,
 >({ router, getState, key: sourceRouteKey, setState }: Options<State, Action>) {
-  const { onRouteFocus: onRouteFocusParent } = React.useContext(
+  const { onRouteFocus: onRouteFocusParent } = React.use(
     NavigationBuilderContext
   );
 

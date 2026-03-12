@@ -3,7 +3,7 @@ import * as React from 'react';
 import { TabAnimationContext } from './TabAnimationContext';
 
 export function useTabAnimation() {
-  const animation = React.useContext(TabAnimationContext);
+  const animation = React.use(TabAnimationContext);
 
   if (animation === undefined) {
     throw new Error(

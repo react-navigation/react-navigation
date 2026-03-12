@@ -9,7 +9,7 @@ import { LinkingContext } from './LinkingContext';
  * @returns Path for the current route.
  */
 export function useRoutePath() {
-  const { options } = React.useContext(LinkingContext);
+  const { options } = React.use(LinkingContext);
   const state = useStateForPath();
 
   if (state === undefined) {

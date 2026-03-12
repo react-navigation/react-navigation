@@ -104,9 +104,7 @@ export function SceneView<
 
   const getIsInitial = React.useCallback(() => isInitialRef.current, []);
 
-  const parentFocusedRouteState = React.useContext(
-    NavigationFocusedRouteStateContext
-  );
+  const parentFocusedRouteState = React.use(NavigationFocusedRouteStateContext);
 
   const focusedRouteState = React.useMemo(() => {
     const state: FocusedRouteState = {

@@ -20,7 +20,7 @@ export function useFocusedListenersChildrenAdapter({
   navigation,
   focusedListeners,
 }: Options) {
-  const { addListener } = React.useContext(NavigationBuilderContext);
+  const { addListener } = React.use(NavigationBuilderContext);
 
   const listener = React.useCallback(
     (callback: FocusedNavigationCallback<any>) => {

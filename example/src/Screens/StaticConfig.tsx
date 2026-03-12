@@ -21,7 +21,7 @@ const ChatShownContext = React.createContext({
 });
 
 const useIsChatShown = () => {
-  const { isChatShown } = React.useContext(ChatShownContext);
+  const { isChatShown } = React.use(ChatShownContext);
 
   return isChatShown;
 };
@@ -44,7 +44,7 @@ const ChatShownLayout = ({ children }: { children: React.ReactNode }) => {
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const AlbumsScreen = () => {
-  const { isChatShown, setIsChatShown } = React.useContext(ChatShownContext);
+  const { isChatShown, setIsChatShown } = React.use(ChatShownContext);
 
   return (
     <ScrollView>

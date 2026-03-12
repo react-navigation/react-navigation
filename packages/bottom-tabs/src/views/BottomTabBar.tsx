@@ -207,7 +207,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
   const insets = useSafeAreaInsets();
   const isKeyboardShown = useIsKeyboardShown();
 
-  const onHeightChange = React.useContext(BottomTabBarHeightCallbackContext);
+  const onHeightChange = React.use(BottomTabBarHeightCallbackContext);
 
   const shouldShowTabBar = !(tabBarHideOnKeyboard && isKeyboardShown);
 
