@@ -105,7 +105,7 @@ function CardContainerInner({
   const enabled = focused && options.keyboardHandlingEnabled !== false;
 
   const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
-    useKeyboardManager({ enabled });
+    useKeyboardManager({ enabled, focused });
 
   const handleOpen = () => {
     const { route } = scene.descriptor;

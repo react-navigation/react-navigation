@@ -10,7 +10,7 @@ describe('useKeyboardManager', () => {
   describe('onPageChangeConfirm', () => {
     test('calls onPageChangeCancel when closing is false', () => {
       const { result } = renderHook(() =>
-        useKeyboardManager({ enabled: true })
+        useKeyboardManager({ enabled: true, focused: true })
       );
 
       const blurMock = jest.fn();
@@ -36,7 +36,7 @@ describe('useKeyboardManager', () => {
       const dismissSpy = jest.spyOn(Keyboard, 'dismiss');
 
       const { result } = renderHook(() =>
-        useKeyboardManager({ enabled: true })
+        useKeyboardManager({ enabled: true, focused: true })
       );
 
       act(() =>
@@ -54,7 +54,7 @@ describe('useKeyboardManager', () => {
 
     test('blurs previously focused input when closing with gesture and active', () => {
       const { result } = renderHook(() =>
-        useKeyboardManager({ enabled: true })
+        useKeyboardManager({ enabled: true, focused: true })
       );
 
       const blurMock = jest.fn();
@@ -81,34 +81,72 @@ describe('useKeyboardManager', () => {
   });
 
   describe('useLayoutEffect keyboard dismiss on focus loss', () => {
-    test('dismisses keyboard when enabled transitions from true to false', () => {
+    test('dismisses keyboard when focused transitions from true to false', () => {
       const dismissSpy = jest.spyOn(Keyboard, 'dismiss');
 
       const { rerender } = renderHook(
-        ({ enabled }: { enabled: boolean }) => useKeyboardManager({ enabled }),
-        { initialProps: { enabled: true } }
+        (props: { enabled: boolean; focused: boolean }) =>
+          useKeyboardManager(props),
+        { initialProps: { enabled: true, focused: true } }
       );
 
       dismissSpy.mockClear();
 
-      rerender({ enabled: false });
+      rerender({ enabled: false, focused: false });
 
       expect(dismissSpy).toHaveBeenCalled();
 
       dismissSpy.mockRestore();
     });
 
-    test('does not dismiss keyboard when enabled stays false', () => {
+    test('does not dismiss keyboard when focused stays false', () => {
       const dismissSpy = jest.spyOn(Keyboard, 'dismiss');
 
       const { rerender } = renderHook(
-        ({ enabled }: { enabled: boolean }) => useKeyboardManager({ enabled }),
-        { initialProps: { enabled: false } }
+        (props: { enabled: boolean; focused: boolean }) =>
+          useKeyboardManager(props),
+        { initialProps: { enabled: false, focused: false } }
       );
 
       dismissSpy.mockClear();
 
-      rerender({ enabled: false });
+      rerender({ enabled: false, focused: false });
+
+      expect(dismissSpy).not.toHaveBeenCalled();
+
+      dismissSpy.mockRestore();
+    });
+
+    test('does not dismiss keyboard when only enabled changes without focus changing', () => {
+      const dismissSpy = jest.spyOn(Keyboard, 'dismiss');
+
+      const { rerender } = renderHook(
+        (props: { enabled: boolean; focused: boolean }) =>
+          useKeyboardManager(props),
+        { initialProps: { enabled: true, focused: true } }
+      );
+
+      dismissSpy.mockClear();
+
+      rerender({ enabled: false, focused: true });
+
+      expect(dismissSpy).not.toHaveBeenCalled();
+
+      dismissSpy.mockRestore();
+    });
+
+    test('does not dismiss keyboard when losing focus while disabled', () => {
+      const dismissSpy = jest.spyOn(Keyboard, 'dismiss');
+
+      const { rerender } = renderHook(
+        (props: { enabled: boolean; focused: boolean }) =>
+          useKeyboardManager(props),
+        { initialProps: { enabled: false, focused: true } }
+      );
+
+      dismissSpy.mockClear();
+
+      rerender({ enabled: false, focused: false });
 
       expect(dismissSpy).not.toHaveBeenCalled();
 

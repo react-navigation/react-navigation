@@ -1,7 +1,13 @@
 import * as React from 'react';
 import { type HostInstance, Keyboard, TextInput } from 'react-native';
 
-export function useKeyboardManager({ enabled }: { enabled: boolean }) {
+export function useKeyboardManager({
+  enabled,
+  focused,
+}: {
+  enabled: boolean;
+  focused: boolean;
+}) {
   // Numeric id of the previously focused text input
   // When a gesture didn't change the tab, we can restore the focused input with this
   const previouslyFocusedTextInputRef = React.useRef<HostInstance>(undefined);
@@ -109,12 +115,14 @@ export function useKeyboardManager({ enabled }: { enabled: boolean }) {
   // This handles the "navigate forward" case so we don't dismiss the new screen's
   // auto-focused input from handleTransition.
   React.useLayoutEffect(() => {
-    if (enabledRef.current && !enabled) {
+    if (enabledRef.current && !focused) {
       Keyboard.dismiss();
     }
+  }, [focused]);
 
+  React.useLayoutEffect(() => {
     enabledRef.current = enabled;
-  }, [enabled]);
+  });
 
   React.useEffect(() => {
     return () => clearKeyboardTimeout();
