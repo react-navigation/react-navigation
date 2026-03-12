@@ -144,14 +144,14 @@ async function runStep(page: Page, step: any) {
 
       const locator = query(page, step.tapOn);
 
-      await locator.filter({ visible: true }).first().dispatchEvent('click');
+      await locator.filter({ visible: true }).last().dispatchEvent('click');
 
       break;
     }
 
     case 'assertVisible': {
       await expect(
-        query(page, step.assertVisible).filter({ visible: true }).first()
+        query(page, step.assertVisible).filter({ visible: true }).last()
       ).toBeVisible();
 
       break;
@@ -177,8 +177,8 @@ async function runStep(page: Page, step: any) {
       const locator = step.extendedWaitUntil.visible
         ? query(page, step.extendedWaitUntil.visible)
             .filter({ visible: true })
-            .first()
-        : query(page, step.extendedWaitUntil.notVisible).first();
+            .last()
+        : query(page, step.extendedWaitUntil.notVisible).last();
 
       const element = await locator.elementHandle();
 
@@ -220,7 +220,6 @@ async function runStep(page: Page, step: any) {
     }
 
     case 'swipe': {
-      const direction = step.swipe.direction;
       const duration = step.swipe.duration || 300;
 
       const viewport = page.viewportSize();
@@ -229,16 +228,40 @@ async function runStep(page: Page, step: any) {
         throw new Error('Viewport size is not available');
       }
 
-      // Start from center of viewport and swipe across a portion of the screen
-      const centerY = viewport.height / 2;
-      const startX =
-        direction === 'LEFT' ? viewport.width * 0.8 : viewport.width * 0.2;
-      const endX =
-        direction === 'LEFT' ? viewport.width * 0.2 : viewport.width * 0.8;
+      let startX: number;
+      let startY: number;
+      let endX: number;
+      let endY: number;
 
-      await page.mouse.move(startX, centerY);
+      if (step.swipe.start && step.swipe.end) {
+        const parsePercent = (value: string, dimension: number) =>
+          (parseFloat(value) / 100) * dimension;
+
+        const [startXStr, startYStr] = step.swipe.start
+          .split(',')
+          .map((s: string) => s.trim());
+        const [endXStr, endYStr] = step.swipe.end
+          .split(',')
+          .map((s: string) => s.trim());
+
+        startX = parsePercent(startXStr, viewport.width);
+        startY = parsePercent(startYStr, viewport.height);
+        endX = parsePercent(endXStr, viewport.width);
+        endY = parsePercent(endYStr, viewport.height);
+      } else {
+        const direction = step.swipe.direction;
+
+        startY = viewport.height / 2;
+        endY = startY;
+        startX =
+          direction === 'LEFT' ? viewport.width * 0.8 : viewport.width * 0.2;
+        endX =
+          direction === 'LEFT' ? viewport.width * 0.2 : viewport.width * 0.8;
+      }
+
+      await page.mouse.move(startX, startY);
       await page.mouse.down();
-      await page.mouse.move(endX, centerY, {
+      await page.mouse.move(endX, endY, {
         // A swipe gesture emits many small mouse move events
         steps: Math.max(10, Math.floor(duration / 20)),
       });
@@ -269,11 +292,15 @@ async function runStep(page: Page, step: any) {
 
 function query(page: Page, by: string | { text: string } | { id: string }) {
   if (typeof by === 'string') {
-    return page.getByText(by, { exact: true });
+    return page
+      .getByLabel(by, { exact: true })
+      .or(page.getByText(by, { exact: true }));
   }
 
   if ('text' in by) {
-    return page.getByText(by.text, { exact: true });
+    return page
+      .getByLabel(by.text, { exact: true })
+      .or(page.getByText(by.text, { exact: true }));
   }
 
   if ('id' in by) {
