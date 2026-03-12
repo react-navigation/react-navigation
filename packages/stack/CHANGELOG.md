@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.8.4...@react-navigation/stack@7.8.5) (2026-03-12)
+
+### Bug Fixes
+
+* **stack:** preserve autoFocus on TextInput when navigating forward ([#13022](https://github.com/react-navigation/react-navigation/issues/13022)) ([3335a48](https://github.com/react-navigation/react-navigation/commit/3335a48e9fc900778c6bf3e0f76df31107c0716c)) - by @
+
 ## [7.8.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.8.3...@react-navigation/stack@7.8.4) (2026-03-03)
 
 **Note:** Version bump only for package @react-navigation/stack
