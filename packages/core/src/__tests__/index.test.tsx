@@ -17,6 +17,17 @@ import { useNavigation } from '../useNavigation';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import { MockRouter, MockRouterKey } from './__fixtures__/MockRouter';
 
+const createDeferred = () => {
+  let resolve: () => void;
+
+  // eslint-disable-next-line promise/param-names
+  const promise = new Promise<void>((res) => {
+    resolve = res;
+  });
+
+  return { promise, resolve: resolve! };
+};
+
 beforeEach(() => {
   MockRouterKey.current = 0;
 });
@@ -3778,22 +3789,21 @@ test('does not throw if while getting current options with empty container', () 
   expect(navigation.getCurrentOptions()).toBeUndefined();
 });
 
-test('Suspense fallback behavior with setParams with and without startTransition', async () => {
+test('shows stale content instead of fallback with startTransition for setParams', async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
     return descriptors[state.routes[state.index].key].render();
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
-  let resolvePromise: () => void;
-  let promise = new Promise<void>((resolve) => {
-    resolvePromise = resolve;
-  });
+
+  let { promise, resolve } = createDeferred();
 
   const Content = ({ contentId }: { contentId: number }) => {
     if (contentId !== 0) {
       React.use(promise);
     }
+
     return `[content-${contentId}]`;
   };
 
@@ -3822,43 +3832,51 @@ test('Suspense fallback behavior with setParams with and without startTransition
 
   expect(root).toMatchInlineSnapshot(`"[fallback]"`);
 
-  await act(async () => resolvePromise());
+  await act(async () => resolve());
 
   expect(root).toMatchInlineSnapshot(`"[content-1]"`);
 
-  promise = new Promise<void>((resolve) => {
-    resolvePromise = resolve;
+  ({ promise, resolve } = createDeferred());
+
+  await act(async () => {
+    navigation.dispatch(CommonActions.setParams({ contentId: 2 }));
   });
+
+  expect(root).toMatchInlineSnapshot(`"[fallback]"`);
+
+  await act(async () => resolve());
+
+  expect(root).toMatchInlineSnapshot(`"[content-2]"`);
+
+  ({ promise, resolve } = createDeferred());
 
   await act(async () => {
     React.startTransition(() => {
-      navigation.dispatch(CommonActions.setParams({ contentId: 2 }));
+      navigation.dispatch(CommonActions.setParams({ contentId: 3 }));
     });
   });
 
-  expect(root).toMatchInlineSnapshot(`"[content-1]"`);
-
-  await act(async () => resolvePromise());
-
   expect(root).toMatchInlineSnapshot(`"[content-2]"`);
+
+  await act(async () => resolve());
+
+  expect(root).toMatchInlineSnapshot(`"[content-3]"`);
 });
 
-test('Suspense fallback behavior when navigating with and without startTransition', async () => {
+test('shows fallback without startTransition for short promises', async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
     return descriptors[state.routes[state.index].key].render();
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
-  let resolvePromise: () => void;
-  let promise = new Promise<void>((resolve) => {
-    resolvePromise = resolve;
-  });
+  const { promise, resolve } = createDeferred();
 
   const ScreenA = () => '[ScreenA]';
 
   const SuspendingContent = () => {
     React.use(promise);
+
     return '[ScreenB content]';
   };
 
@@ -3887,46 +3905,104 @@ test('Suspense fallback behavior when navigating with and without startTransitio
 
   expect(root).toMatchInlineSnapshot(`"[fallback]"`);
 
-  await act(async () => resolvePromise());
+  await act(async () => resolve());
 
   expect(root).toMatchInlineSnapshot(`"[ScreenB content]"`);
+});
 
-  await act(async () => {
-    navigation.navigate('A');
-  });
+test('shows fallback with startTransition for unresolved promises', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+  const { promise, resolve } = createDeferred();
+
+  const ScreenA = () => '[ScreenA]';
+
+  const SuspendingContent = () => {
+    React.use(promise);
+
+    return '[ScreenB content]';
+  };
+
+  const ScreenB = () => {
+    return (
+      <React.Suspense fallback="[fallback]">
+        <SuspendingContent />
+      </React.Suspense>
+    );
+  };
+
+  const root = await renderAsync(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator initialRouteName="A">
+        <Screen name="A" component={ScreenA} />
+        <Screen name="B" component={ScreenB} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
 
   expect(root).toMatchInlineSnapshot(`"[ScreenA]"`);
 
-  promise = new Promise((resolve) => {
-    setTimeout(resolve);
-  });
-
   await act(async () => {
-    React.startTransition(() => {
-      navigation.navigate('B');
-    });
-  });
-
-  expect(root).toMatchInlineSnapshot(`"[ScreenB content]"`);
-
-  await act(async () => {
-    navigation.navigate('A');
-  });
-
-  promise = new Promise((resolve) => {
-    setTimeout(resolve, 250);
-    resolvePromise = resolve;
-  });
-
-  await act(async () => {
-    React.startTransition(() => {
+    React.startTransition(async () => {
       navigation.navigate('B');
     });
   });
 
   expect(root).toMatchInlineSnapshot(`"[fallback]"`);
 
-  await act(async () => resolvePromise());
+  await act(async () => resolve());
+
+  expect(root).toMatchInlineSnapshot(`"[ScreenB content]"`);
+});
+
+test("doesn't show fallback with startTransition for short promises", async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+  const { promise, resolve } = createDeferred();
+
+  const ScreenA = () => '[ScreenA]';
+
+  const SuspendingContent = () => {
+    React.use(promise);
+
+    return '[ScreenB content]';
+  };
+
+  const ScreenB = () => {
+    return (
+      <React.Suspense fallback="[fallback]">
+        <SuspendingContent />
+      </React.Suspense>
+    );
+  };
+
+  const root = await renderAsync(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator initialRouteName="A">
+        <Screen name="A" component={ScreenA} />
+        <Screen name="B" component={ScreenB} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`"[ScreenA]"`);
+
+  setTimeout(resolve, 10);
+
+  await act(async () => {
+    React.startTransition(async () => {
+      navigation.navigate('B');
+      await jest.advanceTimersByTimeAsync(10);
+    });
+  });
 
   expect(root).toMatchInlineSnapshot(`"[ScreenB content]"`);
 });
