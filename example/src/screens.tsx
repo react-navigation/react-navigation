@@ -33,6 +33,7 @@ import { StackPreloadFlow } from './Screens/StackPreloadFlow';
 import { StackPreventRemove } from './Screens/StackPreventRemove';
 import { StackTransparentModal } from './Screens/StackTransparentModal';
 import { StaticConfig as StaticConfigScreen } from './Screens/StaticConfig';
+import { Showcase } from './Showcase/Showcase';
 
 export const SCREENS = {
   NativeStack,
@@ -68,6 +69,7 @@ export const SCREENS = {
   ScreenLayout,
   StaticConfigScreen,
   ActivityModes,
+  Showcase,
 } as const satisfies {
   [key: string]:
     | (React.ComponentType<{ route: any }> & {
