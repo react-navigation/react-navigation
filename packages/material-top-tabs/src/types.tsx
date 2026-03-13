@@ -1,6 +1,7 @@
 import type {
   DefaultNavigatorOptions,
   Descriptor,
+  MaterialSymbolProps,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
@@ -15,12 +16,14 @@ import type React from 'react';
 import type {
   Animated,
   ColorValue,
+  ImageSourcePropType,
   PressableAndroidRippleConfig,
   StyleProp,
   TextStyle,
   ViewStyle,
 } from 'react-native';
 import type { TabBar, TabBarProps, TabViewProps } from 'react-native-tab-view';
+import type { SFSymbol } from 'sf-symbols-typescript';
 
 export type MaterialTopTabNavigationEventMap = {
   /**
@@ -74,6 +77,51 @@ export type MaterialTopTabOptionsArgs<
   theme: Theme;
 };
 
+type IconImage = {
+  /**
+   * - `image` - Use a local image as the icon.
+   */
+  type: 'image';
+  /**
+   * Image source to use as the icon.
+   * - Local image: `require('./path/to/image.png')`
+   * - Drawable resource or xcasset: `{ uri: 'image_name' }`
+   */
+  source: ImageSourcePropType;
+  /**
+   * Whether to apply tint color to the image.
+   * Disabling will keep the image's original colors.
+   *
+   * Defaults to `true`.
+   *
+   * @platform ios
+   */
+  tinted?: boolean;
+};
+
+type IconSfSymbol = {
+  /**
+   * - `sfSymbol` - Use an SF Symbol as the icon on iOS.
+   */
+  type: 'sfSymbol';
+  /**
+   * Name of the SF Symbol to use as the icon.
+   */
+  name: SFSymbol;
+};
+
+type IconMaterialSymbol = {
+  /**
+   * - `materialSymbol` - Use a Material Symbol as the icon on Android.
+   */
+  type: 'materialSymbol';
+} & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight'>;
+
+export type MaterialTopTabTabIcon =
+  | IconSfSymbol
+  | IconMaterialSymbol
+  | IconImage;
+
 export type MaterialTopTabNavigationOptions = {
   /**
    * Title text for the screen.
@@ -112,11 +160,15 @@ export type MaterialTopTabNavigationOptions = {
   tabBarShowLabel?: boolean | undefined;
 
   /**
-   * A function that given { focused: boolean, color: ColorValue } returns a React.Node to display in the tab bar.
+   * Icon to display for the tab.
    */
   tabBarIcon?:
-    | ((props: { focused: boolean; color: ColorValue }) => React.ReactElement)
-    | undefined;
+    | MaterialTopTabTabIcon
+    | ((props: {
+        focused: boolean;
+        color: ColorValue;
+        size: number;
+      }) => MaterialTopTabTabIcon | React.ReactNode);
 
   /**
    * Whether the tab icon should be visible. Defaults to `false`.

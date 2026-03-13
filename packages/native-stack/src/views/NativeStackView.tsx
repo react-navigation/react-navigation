@@ -36,7 +36,7 @@ const TRANSPARENT_PRESENTATIONS = [
 ];
 
 export function NativeStackView({ state, descriptors }: Props) {
-  const parentHeaderBack = React.useContext(HeaderBackContext);
+  const parentHeaderBack = React.use(HeaderBackContext);
   const { buildHref } = useLinkBuilder();
 
   return (

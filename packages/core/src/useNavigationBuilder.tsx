@@ -306,9 +306,7 @@ export function useNavigationBuilder<
 ) {
   const navigatorKey = useRegisterNavigator();
 
-  const route = React.useContext(NavigationRouteContext) as
-    | NavigatorRoute
-    | undefined;
+  const route = React.use(NavigationRouteContext) as NavigatorRoute | undefined;
 
   const isNestedParamsConsumed =
     typeof route?.params === 'object' && route.params != null
@@ -430,7 +428,7 @@ export function useNavigationBuilder<
     setKey,
     getKey,
     getIsInitial,
-  } = React.useContext(NavigationStateContext);
+  } = React.use(NavigationStateContext);
 
   const stateCleanupRef = React.useRef<boolean>(false);
   const lastStateRef = React.useRef<State | PartialState<State> | undefined>(
@@ -797,7 +795,7 @@ export function useNavigationBuilder<
     );
   });
 
-  const { onEmitEvent } = React.useContext(NavigationBuilderContext);
+  const { onEmitEvent } = React.use(NavigationBuilderContext);
 
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
     const routeNames = [];
@@ -891,7 +889,7 @@ export function useNavigationBuilder<
     setState,
   });
 
-  const onUnhandledActionParent = React.useContext(UnhandledActionContext);
+  const onUnhandledActionParent = React.use(UnhandledActionContext);
 
   const onUnhandledAction = useLatestCallback((action: NavigationAction) => {
     if (

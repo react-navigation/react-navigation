@@ -6,3 +6,50 @@ name: Native Stack - Prevent Remove
     env:
       LINK: native-stack-prevent-remove
       TEXT: 'Input'
+- tapOn:
+    text: 'Push Article'
+- assertVisible:
+    text: 'What is Lorem Ipsum?'
+- tapOn:
+    text: 'Push Input'
+- assertVisible:
+    text: 'Discard and go back'
+- inputText: 'hello'
+- runFlow:
+    when:
+      platform: Web
+    commands:
+      - runScript:
+          file: ../dialog.mjs
+          env:
+            action: dismiss
+      - tapOn:
+          text: 'Discard and go back'
+      - assertVisible:
+          text: 'Discard and go back'
+      - runScript:
+          file: ../dialog.mjs
+          env:
+            action: accept
+      - tapOn:
+          text: 'Discard and go back'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'android' || maestro.platform == 'ios'}
+    commands:
+      - tapOn:
+          text: 'Discard and go back'
+      - tapOn:
+          text: "Don't leave"
+      - assertVisible:
+          text: 'Discard and go back'
+      - tapOn:
+          text: 'Discard and go back'
+      - tapOn:
+          text: 'Discard'
+- assertVisible:
+    text: 'What is Lorem Ipsum?'
+- tapOn:
+    text: 'Pop to top'
+- assertVisible:
+    text: 'Push Article'

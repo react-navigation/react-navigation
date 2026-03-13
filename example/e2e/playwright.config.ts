@@ -21,6 +21,7 @@ export default defineConfig({
   ],
   use: {
     baseURL: `http://localhost:${PORT}`,
+    viewport: { width: 390, height: 844 },
     trace: 'on-first-retry',
   },
   webServer: [

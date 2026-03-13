@@ -9,7 +9,7 @@ import { NavigationFocusedRouteStateContext } from './NavigationFocusedRouteStat
  * @returns Minimal state to build a path for the current route.
  */
 export function useStateForPath() {
-  const state = React.useContext(NavigationFocusedRouteStateContext);
+  const state = React.use(NavigationFocusedRouteStateContext);
 
   return state;
 }

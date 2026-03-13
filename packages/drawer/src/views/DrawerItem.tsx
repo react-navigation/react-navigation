@@ -1,9 +1,15 @@
 import { PlatformPressable, Text } from '@react-navigation/elements';
 import { Color } from '@react-navigation/elements/internal';
-import { type Route, useTheme } from '@react-navigation/native';
-import * as React from 'react';
+import {
+  MaterialSymbol,
+  type Route,
+  SFSymbol,
+  useTheme,
+} from '@react-navigation/native';
+import React from 'react';
 import {
   type ColorValue,
+  Image,
   Platform,
   type StyleProp,
   StyleSheet,
@@ -11,6 +17,8 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
+
+import type { DrawerIcon } from '../types';
 
 type Props = {
   /**
@@ -31,11 +39,12 @@ type Props = {
    * Icon to display for the `DrawerItem`.
    */
   icon?:
+    | DrawerIcon
     | ((props: {
         focused: boolean;
         size: number;
         color: ColorValue;
-      }) => React.ReactNode)
+      }) => DrawerIcon | React.ReactNode)
     | undefined;
   /**
    * Whether to highlight the drawer item as active.
@@ -136,7 +145,59 @@ export function DrawerItem(props: Props) {
       'rgba(0, 0, 0, 0.06)')
     : inactiveBackgroundColor;
 
-  const iconNode = icon ? icon({ size: 24, focused, color }) : null;
+  const iconNode = React.useMemo(() => {
+    if (!icon) {
+      return null;
+    }
+
+    const size = 24;
+
+    const iconValue =
+      typeof icon === 'function' ? icon({ size, focused, color }) : icon;
+
+    if (React.isValidElement(iconValue)) {
+      return iconValue;
+    }
+
+    if (
+      typeof iconValue === 'object' &&
+      iconValue != null &&
+      'type' in iconValue
+    ) {
+      switch (iconValue.type) {
+        case 'image':
+          return (
+            <Image
+              source={iconValue.source}
+              style={{
+                width: size,
+                height: size,
+                tintColor: iconValue.tinted === false ? undefined : color,
+              }}
+            />
+          );
+        case 'sfSymbol':
+          return <SFSymbol name={iconValue.name} size={size} color={color} />;
+        case 'materialSymbol':
+          return (
+            <MaterialSymbol
+              name={iconValue.name}
+              variant={iconValue.variant}
+              weight={iconValue.weight}
+              size={size}
+              color={color}
+            />
+          );
+        default: {
+          const _exhaustiveCheck: never = iconValue;
+
+          return _exhaustiveCheck;
+        }
+      }
+    }
+
+    return null;
+  }, [icon, focused, color]);
 
   return (
     <View

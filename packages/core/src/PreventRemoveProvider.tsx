@@ -50,10 +50,10 @@ export function PreventRemoveProvider({ children }: Props) {
   const [preventedRoutesMap, setPreventedRoutesMap] =
     React.useState<PreventedRoutesMap>(() => new Map());
 
-  const navigation = React.useContext(NavigationHelpersContext);
-  const route = React.useContext(NavigationRouteContext);
+  const navigation = React.use(NavigationHelpersContext);
+  const route = React.use(NavigationRouteContext);
 
-  const preventRemoveContextValue = React.useContext(PreventRemoveContext);
+  const preventRemoveContextValue = React.use(PreventRemoveContext);
   // take `setPreventRemove` from parent context - if exist it means we're in a nested context
   const setParentPrevented = preventRemoveContextValue?.setPreventRemove;
 

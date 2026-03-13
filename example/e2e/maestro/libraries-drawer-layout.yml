@@ -6,3 +6,21 @@ name: Libraries - Drawer Layout
     env:
       LINK: drawer-view
       TEXT: 'Drawer Layout'
+- assertVisible:
+    text: 'Open drawer'
+- tapOn:
+    text: 'Open drawer'
+- extendedWaitUntil:
+    visible:
+      text: 'Close'
+    timeout: 2000
+- tapOn:
+    text: 'Close'
+- extendedWaitUntil:
+    visible:
+      text: 'Open drawer'
+    timeout: 2000
+- tapOn:
+    text: 'Change position (left)'
+- assertVisible:
+    text: 'Change position (right)'

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { CardAnimationContext } from './CardAnimationContext';
 
 export function useCardAnimation() {
-  const animation = React.useContext(CardAnimationContext);
+  const animation = React.use(CardAnimationContext);
 
   if (animation === undefined) {
     throw new Error(

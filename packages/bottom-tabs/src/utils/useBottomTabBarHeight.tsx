@@ -3,7 +3,7 @@ import * as React from 'react';
 import { BottomTabBarHeightContext } from './BottomTabBarHeightContext';
 
 export function useBottomTabBarHeight() {
-  const height = React.useContext(BottomTabBarHeightContext);
+  const height = React.use(BottomTabBarHeightContext);
 
   if (height === undefined) {
     throw new Error(

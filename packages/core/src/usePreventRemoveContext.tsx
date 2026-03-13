@@ -3,7 +3,7 @@ import * as React from 'react';
 import { PreventRemoveContext } from './PreventRemoveContext';
 
 export function usePreventRemoveContext() {
-  const value = React.useContext(PreventRemoveContext);
+  const value = React.use(PreventRemoveContext);
 
   if (value == null) {
     throw new Error(

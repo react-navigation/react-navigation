@@ -26,7 +26,7 @@ export function useFrameSize<T>(
   selector: (frame: Frame) => T,
   throttle?: boolean
 ): T {
-  const context = React.useContext(FrameContext);
+  const context = React.use(FrameContext);
 
   if (context == null) {
     throw new Error('useFrameSize must be used within a FrameSizeProvider');

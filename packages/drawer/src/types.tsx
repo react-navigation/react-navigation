@@ -6,6 +6,7 @@ import type {
   DrawerActionHelpers,
   DrawerNavigationState,
   DrawerRouterOptions,
+  MaterialSymbolProps,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
@@ -13,8 +14,15 @@ import type {
   RouteProp,
   Theme,
 } from '@react-navigation/native';
-import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type {
+  ColorValue,
+  ImageSourcePropType,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+} from 'react-native';
 import type { PanGesture } from 'react-native-gesture-handler';
+import type { SFSymbol } from 'sf-symbols-typescript';
 
 export type Scene = {
   route: Route<string>;
@@ -31,6 +39,48 @@ export type DrawerNavigationConfig = {
    */
   drawerContent?: (props: DrawerContentComponentProps) => React.ReactNode;
 };
+
+type IconImage = {
+  /**
+   * - `image` - Use a local image as the icon.
+   */
+  type: 'image';
+  /**
+   * Image source to use as the icon.
+   * - Local image: `require('./path/to/image.png')`
+   * - Drawable resource or xcasset: `{ uri: 'image_name' }`
+   */
+  source: ImageSourcePropType;
+  /**
+   * Whether to apply tint color to the image.
+   * Disabling will keep the image's original colors.
+   *
+   * Defaults to `true`.
+   *
+   * @platform ios
+   */
+  tinted?: boolean;
+};
+
+type IconSfSymbol = {
+  /**
+   * - `sfSymbol` - Use an SF Symbol as the icon on iOS.
+   */
+  type: 'sfSymbol';
+  /**
+   * Name of the SF Symbol to use as the icon.
+   */
+  name: SFSymbol;
+};
+
+type IconMaterialSymbol = {
+  /**
+   * - `materialSymbol` - Use a Material Symbol as the icon on Android.
+   */
+  type: 'materialSymbol';
+} & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight'>;
+
+export type DrawerIcon = IconSfSymbol | IconMaterialSymbol | IconImage;
 
 export type DrawerNavigationOptions = HeaderOptions & {
   /**
@@ -65,13 +115,15 @@ export type DrawerNavigationOptions = HeaderOptions & {
     | ((props: { color: ColorValue; focused: boolean }) => React.ReactNode);
 
   /**
-   * A function that given { focused: boolean, color: ColorValue } returns a React.Node to display an icon the drawer.
+   * Icon to display for the drawer item.
    */
-  drawerIcon?: (props: {
-    color: ColorValue;
-    size: number;
-    focused: boolean;
-  }) => React.ReactNode;
+  drawerIcon?:
+    | DrawerIcon
+    | ((props: {
+        color: ColorValue;
+        size: number;
+        focused: boolean;
+      }) => DrawerIcon | React.ReactNode);
 
   /**
    * Color for the icon and label in the active item in the drawer.

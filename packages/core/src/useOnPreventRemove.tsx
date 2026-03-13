@@ -78,8 +78,8 @@ export function useOnPreventRemove({
   emitter,
   beforeRemoveListeners,
 }: Options) {
-  const { addKeyedListener } = React.useContext(NavigationBuilderContext);
-  const route = React.useContext(NavigationRouteContext);
+  const { addKeyedListener } = React.use(NavigationBuilderContext);
+  const route = React.use(NavigationRouteContext);
   const routeKey = route?.key;
 
   React.useEffect(() => {

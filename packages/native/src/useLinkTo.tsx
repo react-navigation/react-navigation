@@ -9,7 +9,7 @@ import { useBuildAction } from './useLinkBuilder';
  * @returns function that receives the href to navigate to.
  */
 export function useLinkTo() {
-  const navigation = React.useContext(NavigationContainerRefContext);
+  const navigation = React.use(NavigationContainerRefContext);
   const buildAction = useBuildAction();
 
   const linkTo = React.useCallback(

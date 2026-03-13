@@ -43,7 +43,7 @@ export function HeaderContainer({
   style,
 }: Props) {
   const focusedRoute = getFocusedRoute();
-  const parentHeaderBack = React.useContext(HeaderBackContext);
+  const parentHeaderBack = React.use(HeaderBackContext);
   const { buildHref } = useLinkBuilder();
 
   return (

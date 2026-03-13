@@ -33,7 +33,7 @@ const config = {
 };
 
 const Test = () => {
-  const route = React.useContext(NavigationRouteContext);
+  const route = React.use(NavigationRouteContext);
   const path = useRoutePath();
 
   return `${route?.name}: ${path}`;

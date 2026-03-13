@@ -34,21 +34,21 @@ name: Tab View - Scrollable Tab Bar
     timeout: 2000
 - swipe:
     direction: LEFT
-    duration: 300
+    duration: 100
 - extendedWaitUntil:
     visible:
       id: 'album-0'
     timeout: 2000
 - swipe:
     direction: LEFT
-    duration: 300
+    duration: 100
 - extendedWaitUntil:
     visible:
       text: 'make me a sandwich'
     timeout: 2000
 - swipe:
     direction: RIGHT
-    duration: 300
+    duration: 100
 - extendedWaitUntil:
     visible:
       id: 'album-0'
