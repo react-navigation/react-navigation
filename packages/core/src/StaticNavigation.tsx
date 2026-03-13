@@ -7,6 +7,7 @@ import type {
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
+import { getStateFromParams } from './getStateFromParams';
 import type {
   DefaultNavigatorOptions,
   EventMapBase,
@@ -1022,7 +1023,9 @@ export function UNSTABLE_getLoaderForState(
   const nested = getNestedTree(item);
 
   if (nested) {
-    const childLoader = UNSTABLE_getLoaderForState(nested, focusedRoute?.state);
+    const childState =
+      focusedRoute?.state ?? getStateFromParams(focusedRoute?.params);
+    const childLoader = UNSTABLE_getLoaderForState(nested, childState);
     if (childLoader) {
       loaders.push(childLoader);
     }

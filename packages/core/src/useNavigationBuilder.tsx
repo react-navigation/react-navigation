@@ -16,6 +16,7 @@ import { isValidElementType } from 'react-is';
 import useLatestCallback from 'use-latest-callback';
 
 import { deepFreeze } from './deepFreeze';
+import { getStateFromParams } from './getStateFromParams';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
@@ -277,24 +278,6 @@ const getRouteConfigsFromChildren = <
   }
 
   return configs;
-};
-
-const getStateFromParams = (params: NavigatorRoute['params']) => {
-  if (params?.state != null) {
-    return params.state;
-  } else if (typeof params?.screen === 'string' && params?.initial !== false) {
-    return {
-      routes: [
-        {
-          name: params.screen,
-          params: params.params,
-          path: params.path,
-        },
-      ],
-    };
-  }
-
-  return undefined;
 };
 
 /**

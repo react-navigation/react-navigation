@@ -1946,3 +1946,87 @@ test('finds loaders for screens inside groups', async () => {
 
   expect(fn).toHaveBeenCalledTimes(1);
 });
+
+test('uses params.screen to determine child loader when no nested state', async () => {
+  const albumsFn = jest.fn(async () => {});
+  const contactsFn = jest.fn(async () => {});
+
+  const ChildNavigator = createTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: albumsFn,
+      },
+      Contacts: {
+        screen: TestScreen,
+        UNSTABLE_loader: contactsFn,
+      },
+    },
+  });
+
+  const RootNavigator = createTestNavigator({
+    screens: {
+      Home: ChildNavigator,
+    },
+  });
+
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [
+      {
+        name: 'Home',
+        params: { screen: 'Contacts' },
+      },
+    ],
+  });
+
+  await loader!({} as Route<string>);
+
+  expect(albumsFn).not.toHaveBeenCalled();
+  expect(contactsFn).toHaveBeenCalledTimes(1);
+});
+
+test('prefers route.state over params for determining child loader', async () => {
+  const albumsFn = jest.fn(async () => {});
+  const contactsFn = jest.fn(async () => {});
+
+  const ChildNavigator = createTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: albumsFn,
+      },
+      Contacts: {
+        screen: TestScreen,
+        UNSTABLE_loader: contactsFn,
+      },
+    },
+  });
+
+  const RootNavigator = createTestNavigator({
+    screens: {
+      Home: ChildNavigator,
+    },
+  });
+
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [
+      {
+        name: 'Home',
+        // route.state should take priority
+        state: {
+          index: 0,
+          routes: [{ name: 'Contacts' }],
+        },
+        // params.screen should be ignored
+        params: { screen: 'Albums' },
+      },
+    ],
+  });
+
+  await loader!({} as Route<string>);
+
+  expect(contactsFn).toHaveBeenCalledTimes(1);
+  expect(albumsFn).not.toHaveBeenCalled();
+});
