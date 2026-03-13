@@ -17,6 +17,17 @@ import { useNavigation } from '../useNavigation';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import { MockRouter, MockRouterKey } from './__fixtures__/MockRouter';
 
+const createDeferred = () => {
+  let resolve: () => void;
+
+  // eslint-disable-next-line promise/param-names
+  const promise = new Promise<void>((res) => {
+    resolve = res;
+  });
+
+  return { promise, resolve: resolve! };
+};
+
 beforeEach(() => {
   MockRouterKey.current = 0;
 });
@@ -3776,4 +3787,78 @@ test('does not throw if while getting current options with empty container', () 
   render(container).update(container);
 
   expect(navigation.getCurrentOptions()).toBeUndefined();
+});
+
+test('shows stale content instead of fallback with startTransition for setParams', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    return descriptors[state.routes[state.index].key].render();
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  let { promise, resolve } = createDeferred();
+
+  const Content = ({ contentId }: { contentId: number }) => {
+    if (contentId !== 0) {
+      React.use(promise);
+    }
+
+    return `[content-${contentId}]`;
+  };
+
+  const TestScreen = (props: any) => {
+    const contentId = props.route.params?.contentId ?? 0;
+    return (
+      <React.Suspense fallback="[fallback]">
+        <Content contentId={contentId} />
+      </React.Suspense>
+    );
+  };
+
+  const root = await renderAsync(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="A" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`"[content-0]"`);
+
+  await act(async () => {
+    navigation.dispatch(CommonActions.setParams({ contentId: 1 }));
+  });
+
+  expect(root).toMatchInlineSnapshot(`"[fallback]"`);
+
+  await act(async () => resolve());
+
+  expect(root).toMatchInlineSnapshot(`"[content-1]"`);
+
+  ({ promise, resolve } = createDeferred());
+
+  await act(async () => {
+    navigation.dispatch(CommonActions.setParams({ contentId: 2 }));
+  });
+
+  expect(root).toMatchInlineSnapshot(`"[fallback]"`);
+
+  await act(async () => resolve());
+
+  expect(root).toMatchInlineSnapshot(`"[content-2]"`);
+
+  ({ promise, resolve } = createDeferred());
+
+  await act(async () => {
+    React.startTransition(() => {
+      navigation.dispatch(CommonActions.setParams({ contentId: 3 }));
+    });
+  });
+
+  expect(root).toMatchInlineSnapshot(`"[content-2]"`);
+
+  await act(async () => resolve());
+
+  expect(root).toMatchInlineSnapshot(`"[content-3]"`);
 });
