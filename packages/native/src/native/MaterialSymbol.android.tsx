@@ -23,6 +23,7 @@ export function MaterialSymbol({
   ...rest
 }: MaterialSymbolProps): React.ReactElement {
   return (
+    // @ts-expect-error — NativeComponent codegen types lack | undefined for exactOptionalPropertyTypes
     <MaterialSymbolViewNativeComponent
       name={name}
       weight={typeof weight === 'string' ? FONT_WEIGHTS[weight] : (weight ?? 0)}

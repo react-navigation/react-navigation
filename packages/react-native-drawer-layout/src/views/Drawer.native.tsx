@@ -233,6 +233,7 @@ export function Drawer({
       translationX.set(
         withSpring(
           toValue,
+          // @ts-expect-error — react-native-reanimated SpringConfig.velocity lacks | undefined for exactOptionalPropertyTypes
           {
             velocity,
             stiffness: 1000,

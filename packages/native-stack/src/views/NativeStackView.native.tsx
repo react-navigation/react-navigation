@@ -359,6 +359,7 @@ const SceneView = ({
 
   return (
     <NavigationProvider navigation={navigation} route={route}>
+      {/* @ts-expect-error — react-native-screens types need | undefined for exactOptionalPropertyTypes */}
       <ScreenStackItem
         key={route.key}
         screenId={route.key}

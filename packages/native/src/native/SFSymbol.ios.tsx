@@ -22,6 +22,7 @@ export function SFSymbol({
     typeof animation === 'string' ? { effect: animation } : animation;
 
   return (
+    // @ts-expect-error — NativeComponent codegen types lack | undefined for exactOptionalPropertyTypes
     <SFSymbolViewNativeComponent
       name={name}
       size={size}

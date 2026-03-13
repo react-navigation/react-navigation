@@ -1698,6 +1698,7 @@ createStackScreen({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const ProfileComponent = createComponentForStaticNavigation(Stack, 'Profile');
 
+  // @ts-expect-error — expect-type#128: toExtend incompatible with exactOptionalPropertyTypes
   expectTypeOf<React.ComponentProps<typeof ProfileComponent>>().toExtend<{
     initialRouteName?: 'Profile' | 'Settings';
   }>();
