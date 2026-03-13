@@ -397,7 +397,9 @@ export function App() {
 
   return (
     <Providers>
-      <StatusBar style={theme.dark ? 'light' : 'dark'} />
+      <StatusBar
+        style={Platform.OS === 'ios' ? 'auto' : theme.dark ? 'light' : 'dark'}
+      />
       {Platform.OS === 'web' ? (
         <style>
           {`:root { ${Object.entries(WEB_COLORS)
