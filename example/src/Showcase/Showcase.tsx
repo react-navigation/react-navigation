@@ -13,6 +13,7 @@ import { Divider } from '../Shared/Divider';
 import { ListGroupItem } from '../Shared/ListGroupItem';
 import { ListItem } from '../Shared/LIstItem';
 import { fromEntries } from '../utilities';
+import { NativeBottomTabsShowcase } from './NativeBottomTabsShowcase';
 import { NativeStackShowcase } from './NativeStackShowcase';
 
 const EXAMPLE_SCREENS = [
@@ -20,6 +21,11 @@ const EXAMPLE_SCREENS = [
     name: 'NativeStackShowcase',
     title: 'Native Stack',
     screen: NativeStackShowcase,
+  },
+  {
+    name: 'NativeBottomTabsShowcase',
+    title: 'Native Bottom Tabs',
+    screen: NativeBottomTabsShowcase,
   },
 ] as const satisfies {
   name: string;
