@@ -17,8 +17,8 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
     Record<string, () => object | undefined | null>
   >({});
 
-  const { onOptionsChange } = React.useContext(NavigationBuilderContext);
-  const { addOptionsGetter: parentAddOptionsGetter } = React.useContext(
+  const { onOptionsChange } = React.use(NavigationBuilderContext);
+  const { addOptionsGetter: parentAddOptionsGetter } = React.use(
     NavigationStateContext
   );
 

@@ -92,7 +92,7 @@ export const BaseNavigationContainer = React.forwardRef(
     }: NavigationContainerProps,
     ref?: React.Ref<NavigationContainerRef<ParamListBase>>
   ) {
-    const parent = React.useContext(NavigationStateContext);
+    const parent = React.use(NavigationStateContext);
     const independent = useNavigationIndependentTree();
 
     if (!parent.isDefault && !independent) {

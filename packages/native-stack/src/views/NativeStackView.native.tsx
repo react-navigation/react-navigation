@@ -153,9 +153,9 @@ const SceneView = ({
   // Modals are fullscreen in landscape only on iPhone
   const isIPhone = Platform.OS === 'ios' && !(Platform.isPad || Platform.isTV);
 
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
-  const parentHeaderHeight = React.useContext(HeaderHeightContext);
-  const parentHeaderBack = React.useContext(HeaderBackContext);
+  const isParentHeaderShown = React.use(HeaderShownContext);
+  const parentHeaderHeight = React.use(HeaderHeightContext);
+  const parentHeaderBack = React.use(HeaderBackContext);
 
   const isLandscape = useFrameSize((frame) => frame.width > frame.height);
 
@@ -271,7 +271,8 @@ const SceneView = ({
                 if (
                   Platform.OS === 'android' &&
                   headerHeight !== 0 &&
-                  headerHeight <= ANDROID_DEFAULT_HEADER_HEIGHT
+                  // On some devices, height maybe slightly off (e.g. 56.17 instead of 56)
+                  Math.round(headerHeight) <= ANDROID_DEFAULT_HEADER_HEIGHT
                 ) {
                   // FIXME: On Android, events may get delivered out-of-order
                   // https://github.com/facebook/react-native/issues/54636

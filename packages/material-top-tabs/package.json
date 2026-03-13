@@ -48,7 +48,8 @@
   "dependencies": {
     "@react-navigation/elements": "workspace:^",
     "color": "^4.2.3",
-    "react-native-tab-view": "workspace:^"
+    "react-native-tab-view": "workspace:^",
+    "sf-symbols-typescript": "^2.2.0"
   },
   "devDependencies": {
     "@jest/globals": "^30.0.0",

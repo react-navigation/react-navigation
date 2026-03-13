@@ -63,20 +63,39 @@ async function runStep(page: Page, step: any) {
       } else if (step.runFlow.when) {
         const condition = step.runFlow.when;
 
-        let conditionMet = false;
+        let conditionMet = null;
+
+        if (condition.true) {
+          // Ignore dynamic conditions for now
+          conditionMet = false;
+        }
+
+        if (condition.platform) {
+          conditionMet =
+            conditionMet !== false &&
+            condition.platform.toLowerCase() === 'web';
+        }
 
         if (condition.visible) {
           const locator = query(page, condition.visible).filter({
             visible: true,
           });
 
-          conditionMet = await locator.isVisible();
-        } else if (condition.notVisible) {
+          conditionMet = conditionMet !== false && (await locator.isVisible());
+        }
+
+        if (condition.notVisible) {
           const locator = query(page, condition.notVisible).filter({
             visible: false,
           });
 
-          conditionMet = await locator.isHidden();
+          conditionMet = conditionMet !== false && (await locator.isHidden());
+        }
+
+        if (conditionMet === null) {
+          throw new Error(
+            `Invalid runFlow condition: ${JSON.stringify(condition)}`
+          );
         }
 
         if (conditionMet) {
@@ -87,6 +106,22 @@ async function runStep(page: Page, step: any) {
       } else {
         throw new Error(
           `Invalid runFlow step: ${JSON.stringify(step.runFlow)}`
+        );
+      }
+
+      break;
+    }
+
+    case 'runScript': {
+      if (step.runScript.file) {
+        const result = await import(
+          path.join(__dirname, '../maestro', step.runScript.file)
+        );
+
+        await result.run(page, step.runScript.env || {});
+      } else {
+        throw new Error(
+          `Invalid runScript step: ${JSON.stringify(step.runScript)}`
         );
       }
 
@@ -109,14 +144,14 @@ async function runStep(page: Page, step: any) {
 
       const locator = query(page, step.tapOn);
 
-      await locator.filter({ visible: true }).first().dispatchEvent('click');
+      await locator.filter({ visible: true }).last().dispatchEvent('click');
 
       break;
     }
 
     case 'assertVisible': {
       await expect(
-        query(page, step.assertVisible).filter({ visible: true }).first()
+        query(page, step.assertVisible).filter({ visible: true }).last()
       ).toBeVisible();
 
       break;
@@ -142,8 +177,8 @@ async function runStep(page: Page, step: any) {
       const locator = step.extendedWaitUntil.visible
         ? query(page, step.extendedWaitUntil.visible)
             .filter({ visible: true })
-            .first()
-        : query(page, step.extendedWaitUntil.notVisible).first();
+            .last()
+        : query(page, step.extendedWaitUntil.notVisible).last();
 
       const element = await locator.elementHandle();
 
@@ -160,12 +195,6 @@ async function runStep(page: Page, step: any) {
           await expect(locator).toBeHidden();
         }
       }
-
-      break;
-    }
-
-    case 'stopApp': {
-      // No-op on web
 
       break;
     }
@@ -191,7 +220,6 @@ async function runStep(page: Page, step: any) {
     }
 
     case 'swipe': {
-      const direction = step.swipe.direction;
       const duration = step.swipe.duration || 300;
 
       const viewport = page.viewportSize();
@@ -200,22 +228,58 @@ async function runStep(page: Page, step: any) {
         throw new Error('Viewport size is not available');
       }
 
-      // Start from center of viewport and swipe across a portion of the screen
-      const centerY = viewport.height / 2;
-      const startX =
-        direction === 'LEFT' ? viewport.width * 0.8 : viewport.width * 0.2;
-      const endX =
-        direction === 'LEFT' ? viewport.width * 0.2 : viewport.width * 0.8;
+      let startX: number;
+      let startY: number;
+      let endX: number;
+      let endY: number;
 
-      await page.mouse.move(startX, centerY);
+      if (step.swipe.start && step.swipe.end) {
+        const parsePercent = (value: string, dimension: number) =>
+          (parseFloat(value) / 100) * dimension;
+
+        const [startXStr, startYStr] = step.swipe.start
+          .split(',')
+          .map((s: string) => s.trim());
+        const [endXStr, endYStr] = step.swipe.end
+          .split(',')
+          .map((s: string) => s.trim());
+
+        startX = parsePercent(startXStr, viewport.width);
+        startY = parsePercent(startYStr, viewport.height);
+        endX = parsePercent(endXStr, viewport.width);
+        endY = parsePercent(endYStr, viewport.height);
+      } else {
+        const direction = step.swipe.direction;
+
+        startY = viewport.height / 2;
+        endY = startY;
+        startX =
+          direction === 'LEFT' ? viewport.width * 0.8 : viewport.width * 0.2;
+        endX =
+          direction === 'LEFT' ? viewport.width * 0.2 : viewport.width * 0.8;
+      }
+
+      await page.mouse.move(startX, startY);
       await page.mouse.down();
-      await page.mouse.move(endX, centerY, {
+      await page.mouse.move(endX, endY, {
         // A swipe gesture emits many small mouse move events
         steps: Math.max(10, Math.floor(duration / 20)),
       });
       await page.mouse.up();
 
       await page.waitForTimeout(duration);
+
+      break;
+    }
+
+    case 'inputText': {
+      await page.keyboard.type(step.inputText);
+
+      break;
+    }
+
+    case 'stopApp': {
+      // No-op on web
 
       break;
     }
@@ -228,11 +292,15 @@ async function runStep(page: Page, step: any) {
 
 function query(page: Page, by: string | { text: string } | { id: string }) {
   if (typeof by === 'string') {
-    return page.getByText(by, { exact: true });
+    return page
+      .getByLabel(by, { exact: true })
+      .or(page.getByText(by, { exact: true }));
   }
 
   if ('text' in by) {
-    return page.getByText(by.text, { exact: true });
+    return page
+      .getByLabel(by.text, { exact: true })
+      .or(page.getByText(by.text, { exact: true }));
   }
 
   if ('id' in by) {

@@ -5,4 +5,45 @@ name: Material Top Tabs - Basic
     file: ../launch.yml
     env:
       LINK: material-top-tabs-basic
-      TEXT: 'Basic'
+      TEXT: 'Chat'
+- assertVisible:
+    text: 'make me a sandwich'
+- tapOn:
+    text: 'Contacts'
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 2000
+- tapOn:
+    text: 'Albums'
+- extendedWaitUntil:
+    visible:
+      id: 'album-0'
+    timeout: 2000
+- tapOn:
+    text: 'Chat'
+- extendedWaitUntil:
+    visible:
+      text: 'make me a sandwich'
+    timeout: 2000
+- swipe:
+    direction: LEFT
+    duration: 100
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 2000
+- swipe:
+    direction: LEFT
+    duration: 100
+- extendedWaitUntil:
+    visible:
+      id: 'album-0'
+    timeout: 2000
+- swipe:
+    direction: RIGHT
+    duration: 100
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 2000

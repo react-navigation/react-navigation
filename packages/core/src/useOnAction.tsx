@@ -51,7 +51,7 @@ export function useOnAction<State extends NavigationState>({
     onRouteFocus: onRouteFocusParent,
     addListener: addListenerParent,
     onDispatchAction,
-  } = React.useContext(NavigationBuilderContext);
+  } = React.use(NavigationBuilderContext);
 
   const routerConfigOptionsRef =
     React.useRef<RouterConfigOptions>(routerConfigOptions);

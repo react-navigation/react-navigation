@@ -49,8 +49,8 @@ export function NavigationProvider({ route, navigation, children }: Props) {
     [NamedRouteContext, parents, route.name]
   );
 
-  const parentIsFocused = React.useContext(IsFocusedContext);
-  const focusedRouteKey = React.useContext(FocusedRouteKeyContext);
+  const parentIsFocused = React.use(IsFocusedContext);
+  const focusedRouteKey = React.use(FocusedRouteKeyContext);
 
   // Mark route as focused only if:
   // - It doesn't have a parent navigator

@@ -3,7 +3,7 @@ import * as React from 'react';
 import { GestureHandlerRefContext } from './GestureHandlerRefContext';
 
 export function useGestureHandlerRef() {
-  const ref = React.useContext(GestureHandlerRefContext);
+  const ref = React.use(GestureHandlerRefContext);
 
   if (ref === undefined) {
     throw new Error(

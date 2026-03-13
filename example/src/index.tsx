@@ -121,7 +121,7 @@ const SettingsContext = React.createContext<{
 const LargeScreenContext = React.createContext<boolean>(false);
 
 function Examples() {
-  const settings = React.useContext(SettingsContext);
+  const settings = React.use(SettingsContext);
 
   if (settings === null) {
     throw new Error('SettingsContext is not provided');

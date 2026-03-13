@@ -14,8 +14,8 @@ type Options = {
 };
 
 export function useOnGetState({ getState, getStateListeners }: Options) {
-  const { addKeyedListener } = React.useContext(NavigationBuilderContext);
-  const route = React.useContext(NavigationRouteContext);
+  const { addKeyedListener } = React.use(NavigationBuilderContext);
+  const route = React.use(NavigationRouteContext);
   const key = route ? route.key : 'root';
 
   const getRehydratedState = React.useCallback(() => {

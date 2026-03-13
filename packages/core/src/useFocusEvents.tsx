@@ -17,7 +17,7 @@ export function useFocusEvents<State extends NavigationState>({
   state,
   emitter,
 }: Options<State>) {
-  const navigation = React.useContext(NavigationContext);
+  const navigation = React.use(NavigationContext);
   const lastFocusedKeyRef = React.useRef<string | undefined>(undefined);
 
   const currentFocusedKey = state.routes[state.index].key;

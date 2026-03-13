@@ -26,10 +26,10 @@ type MinimalState = {
  * Helper to build a href for a screen based on the linking options.
  */
 export function useBuildHref() {
-  const navigation = React.useContext(NavigationHelpersContext);
-  const route = React.useContext(NavigationRouteContext);
+  const navigation = React.use(NavigationHelpersContext);
+  const route = React.use(NavigationRouteContext);
 
-  const { options } = React.useContext(LinkingContext);
+  const { options } = React.use(LinkingContext);
 
   const focusedRouteState = useStateForPath();
 
@@ -109,7 +109,7 @@ export function useBuildHref() {
  * Helper to build a navigation action from a href based on the linking options.
  */
 export function useBuildAction() {
-  const { options } = React.useContext(LinkingContext);
+  const { options } = React.use(LinkingContext);
 
   const getActionFromStateHelper =
     options?.getActionFromState ?? getActionFromState;

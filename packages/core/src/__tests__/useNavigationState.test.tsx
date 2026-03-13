@@ -137,7 +137,7 @@ test('gets the correct value if selector changes', () => {
   const SelectorContext = React.createContext<any>(null);
 
   const Test = () => {
-    const selector = React.useContext(SelectorContext);
+    const selector = React.use(SelectorContext);
     const result = useNavigationState(selector);
 
     return <>{result}</>;

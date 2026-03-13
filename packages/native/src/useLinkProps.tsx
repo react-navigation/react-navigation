@@ -41,9 +41,9 @@ export function useLinkProps<
   const ParamList extends {} = RootParamList,
   const RouteName extends keyof ParamList = keyof ParamList,
 >({ screen, params, href, action }: LinkProps<ParamList, RouteName>) {
-  const root = React.useContext(NavigationContainerRefContext);
-  const navigation = React.useContext(NavigationHelpersContext);
-  const { options } = React.useContext(LinkingContext);
+  const root = React.use(NavigationContainerRefContext);
+  const navigation = React.use(NavigationHelpersContext);
+  const { options } = React.use(LinkingContext);
 
   const onPress = (
     e?: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent

@@ -15,6 +15,14 @@ name: Native Bottom Tabs - Custom Tab Bar
 - assertVisible:
     text: 'Marissa Castillo'
 - tapOn:
+    id: 'albums'
+- assertVisible:
+    text: 'Albums'
+- tapOn:
+    id: 'contacts'
+- assertVisible:
+    text: 'Marissa Castillo'
+- tapOn:
     id: 'article'
 - assertVisible:
     text: 'What is Lorem Ipsum?'

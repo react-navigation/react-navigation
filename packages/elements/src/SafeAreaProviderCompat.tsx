@@ -34,7 +34,7 @@ const initialMetrics =
     : initialWindowMetrics;
 
 export function SafeAreaProviderCompat({ children, style }: Props) {
-  const insets = React.useContext(SafeAreaInsetsContext);
+  const insets = React.use(SafeAreaInsetsContext);
 
   return (
     <FrameSizeProvider

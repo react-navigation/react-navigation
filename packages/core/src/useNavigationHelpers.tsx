@@ -41,7 +41,7 @@ export function useNavigationHelpers<
   router,
   stateRef,
 }: Options<State, Action>) {
-  const parentNavigationHelpers = React.useContext(NavigationContext);
+  const parentNavigationHelpers = React.use(NavigationContext);
 
   return React.useMemo(() => {
     const dispatch = (op: Action | ((state: State) => Action)) => {

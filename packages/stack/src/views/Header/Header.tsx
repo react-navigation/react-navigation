@@ -41,8 +41,8 @@ export const Header = React.memo(function Header({
     [navigation, route.key]
   );
 
-  const isModal = React.useContext(ModalPresentationContext);
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
+  const isModal = React.use(ModalPresentationContext);
+  const isParentHeaderShown = React.use(HeaderShownContext);
 
   const statusBarHeight =
     options.headerStatusBarHeight !== undefined

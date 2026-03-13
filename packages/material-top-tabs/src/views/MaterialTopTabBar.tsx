@@ -1,13 +1,16 @@
 import { Text } from '@react-navigation/elements';
 import { Color } from '@react-navigation/elements/internal';
 import {
+  MaterialSymbol,
   type ParamListBase,
+  SFSymbol,
   type TabNavigationState,
   useLinkBuilder,
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import { type ColorValue, StyleSheet } from 'react-native';
+import React from 'react';
+import { type ColorValue, Image, StyleSheet } from 'react-native';
 import {
   type Route,
   TabBar,
@@ -79,6 +82,72 @@ export function MaterialTopTabBar({
         tabBarLabelStyle,
       } = options;
 
+      let icon;
+
+      if (tabBarShowIcon === false) {
+        icon = undefined;
+      } else if (tabBarIcon) {
+        icon = ({
+          focused,
+          color,
+          size,
+        }: {
+          focused: boolean;
+          color: ColorValue;
+          size: number;
+        }) => {
+          const iconValue =
+            typeof tabBarIcon === 'function'
+              ? tabBarIcon({ focused, color, size })
+              : tabBarIcon;
+
+          if (React.isValidElement(iconValue)) {
+            return iconValue;
+          }
+
+          if (
+            typeof iconValue === 'object' &&
+            iconValue != null &&
+            'type' in iconValue
+          ) {
+            switch (iconValue.type) {
+              case 'image':
+                return (
+                  <Image
+                    source={iconValue.source}
+                    style={{
+                      width: size,
+                      height: size,
+                      tintColor: iconValue.tinted === false ? undefined : color,
+                    }}
+                  />
+                );
+              case 'sfSymbol':
+                return (
+                  <SFSymbol name={iconValue.name} size={size} color={color} />
+                );
+              case 'materialSymbol':
+                return (
+                  <MaterialSymbol
+                    name={iconValue.name}
+                    variant={iconValue.variant}
+                    weight={iconValue.weight}
+                    size={size}
+                    color={color}
+                  />
+                );
+              default: {
+                const _exhaustiveCheck: never = iconValue;
+
+                return _exhaustiveCheck;
+              }
+            }
+          }
+
+          return null;
+        };
+      }
+
       return [
         route.key,
         {
@@ -86,7 +155,7 @@ export function MaterialTopTabBar({
           testID: tabBarButtonTestID,
           accessibilityLabel: tabBarAccessibilityLabel,
           badge: tabBarBadge,
-          icon: tabBarShowIcon === false ? undefined : tabBarIcon,
+          icon,
           label:
             tabBarShowLabel === false
               ? undefined

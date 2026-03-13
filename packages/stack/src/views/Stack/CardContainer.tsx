@@ -99,18 +99,13 @@ function CardContainerInner({
 
   const { direction } = useLocale();
 
-  const parentHeaderHeight = React.useContext(HeaderHeightContext);
+  const parentHeaderHeight = React.use(HeaderHeightContext);
+
+  const { options } = scene.descriptor;
+  const enabled = focused && options.keyboardHandlingEnabled !== false;
 
   const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
-    useKeyboardManager(
-      React.useCallback(() => {
-        const { options, navigation } = scene.descriptor;
-
-        return (
-          navigation.isFocused() && options.keyboardHandlingEnabled !== false
-        );
-      }, [scene.descriptor])
-    );
+    useKeyboardManager({ enabled, focused });
 
   const handleOpen = () => {
     const { route } = scene.descriptor;
@@ -157,13 +152,7 @@ function CardContainerInner({
 
     const { route } = scene.descriptor;
 
-    if (!gesture) {
-      onPageChangeConfirm?.(true);
-    } else if (active && closing) {
-      onPageChangeConfirm?.(false);
-    } else {
-      onPageChangeCancel?.();
-    }
+    onPageChangeConfirm?.({ gesture, active, closing });
 
     onTransitionStart?.({ route }, closing);
   };

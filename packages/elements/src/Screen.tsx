@@ -32,8 +32,8 @@ export function Screen(props: Props) {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
 
-  const isParentHeaderShown = React.useContext(HeaderShownContext);
-  const parentHeaderHeight = React.useContext(HeaderHeightContext);
+  const isParentHeaderShown = React.use(HeaderShownContext);
+  const parentHeaderHeight = React.use(HeaderHeightContext);
 
   const {
     focused,

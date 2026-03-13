@@ -113,7 +113,7 @@ export function useDescriptors<
   router,
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
-  const theme = React.useContext(ThemeContext);
+  const theme = React.use(ThemeContext);
   const [options, setOptions] = React.useState<Record<string, ScreenOptions>>(
     {}
   );
@@ -124,7 +124,7 @@ export function useDescriptors<
     scheduleUpdate,
     flushUpdates,
     stackRef,
-  } = React.useContext(NavigationBuilderContext);
+  } = React.use(NavigationBuilderContext);
 
   const context = React.useMemo(
     () => ({

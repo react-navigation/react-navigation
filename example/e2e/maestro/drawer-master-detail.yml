@@ -11,9 +11,13 @@ name: Drawer - Master Detail
 - assertVisible:
     text: 'Feed'
 - tapOn:
+    text: 'Go back'
+- tapOn:
     text: 'Albums'
 - assertVisible:
     text: 'Albums'
+- tapOn:
+    text: 'Go back'
 - tapOn:
     text: 'Article'
 - assertVisible:
