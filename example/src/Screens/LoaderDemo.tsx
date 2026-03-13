@@ -1,5 +1,5 @@
 import { Button, Text } from '@react-navigation/elements';
-import type { StaticParamList } from '@react-navigation/native';
+import type { Route, StaticParamList } from '@react-navigation/native';
 import {
   UNSTABLE_getLoaderForState,
   useNavigation,
@@ -69,7 +69,7 @@ function NavigateButtons() {
     });
 
     React.startTransition(async () => {
-      await loader?.();
+      await loader?.({} as Route<string>);
       navigation.navigate('Detail');
     });
   }, [navigation]);

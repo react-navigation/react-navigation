@@ -1,7 +1,6 @@
 import type {
   NavigationState,
   ParamListBase,
-  PartialRoute,
   PartialState,
   Route,
 } from '@react-navigation/routers';
@@ -326,16 +325,14 @@ export type StaticScreenConfig<
   navigationKey?: string;
 
   /**
-   * Loader function to prefetch data for this screen.
-   * Called before the screen is rendered, e.g. inside `startTransition`.
-   * If the screen contains a nested navigator, loaders are composed with `Promise.all`.
+   * Loader function to be called when the screen is focused. This can be used to load data before the screen is rendered.
    *
    * @example
    * ```js
-   * UNSTABLE_loader: () => prefetchProfileData(),
+   * UNSTABLE_loader: (route) => loadProfile(route.params?.id),
    * ```
    */
-  UNSTABLE_loader?: () => Promise<void>;
+  UNSTABLE_loader?: (route: Route<string>) => Promise<void>;
 };
 
 type StaticConfigScreens<
@@ -941,10 +938,21 @@ export function createPathConfigForStaticNavigation(
 }
 
 function findScreenInConfig(
-  config: StaticNavigation<any, any, any>['config'],
-  name: string
-): unknown | undefined {
-  const screens = config.screens as Record<string, any> | undefined;
+  config: TreeForPathConfig['config'],
+  name: string | undefined
+): TreeForPathConfig['config']['screens'] extends infer S
+  ? S extends Record<string, infer V>
+    ? V
+    : undefined
+  : undefined {
+  const screens = config.screens;
+
+  if (name === undefined) {
+    if (config.initialRouteName === undefined) {
+      return Object.values(config.screens ?? {})[0];
+    }
+    return screens?.[config.initialRouteName];
+  }
 
   if (screens?.[name] != null) {
     return screens[name];
@@ -952,7 +960,7 @@ function findScreenInConfig(
 
   if (config.groups) {
     for (const group of Object.values(config.groups)) {
-      const groupScreens = group.screens as Record<string, any>;
+      const groupScreens = group.screens;
 
       if (groupScreens[name] != null) {
         return groupScreens[name];
@@ -977,39 +985,12 @@ function getNestedTree(item: any): StaticNavigation<any, any, any> | undefined {
   return undefined;
 }
 
-function resolveChildState(
-  nestedTree: StaticNavigation<any, any, any>,
-  focusedRoute: PartialRoute<Route<string, any>>
-): PartialState<NavigationState> | undefined {
-  if (focusedRoute.state) {
-    return focusedRoute.state;
-  }
-
-  const name =
-    nestedTree.config.initialRouteName ??
-    Object.keys(nestedTree.config.screens ?? {})[0];
-
-  if (name) {
-    return { routes: [{ name }], index: 0 };
-  }
-
-  return undefined;
-}
-
 /**
- * Get a loader function for the focused route from a static navigation config
- * and a navigation state.
+ * Returns a loader function for the focused route in a static navigation config and navigation state.
  *
- * The function follows the exact focused route path through the state to find
- * the matching screen in the tree. This avoids ambiguity when multiple screens
- * share the same name at different nesting levels.
- *
- * For example, if the focused route A contains a child navigator whose focused
- * screen B also has a loader, this returns `() => Promise.all([loaderA(), loaderB()])`.
- *
- * @param tree The static navigation config (the navigator object with `.config`).
+ * @param tree The static navigation config.
  * @param state The navigation state to extract the focused route path from.
- * @returns A function that returns a `Promise<void>`, or `undefined` if no loaders found.
+ * @returns A function that returns a `Promise<void>`, or `undefined` if no loaders are found.
  *
  * @example
  * ```js
@@ -1022,41 +1003,28 @@ function resolveChildState(
  */
 export function UNSTABLE_getLoaderForState(
   tree: StaticNavigation<any, any, any>,
-  state: PartialState<NavigationState>
-): (() => Promise<void>) | undefined {
-  const focusedRoute = state.routes[state.index ?? 0];
+  state: PartialState<NavigationState> | undefined
+): ((route: Route<string>) => Promise<void>) | undefined {
+  const focusedRoute = state?.routes[state.index ?? 0];
 
-  if (!focusedRoute) {
-    return undefined;
-  }
+  const item = findScreenInConfig(tree.config, focusedRoute?.name);
 
-  const item = findScreenInConfig(tree.config, focusedRoute.name);
-
-  if (item == null) {
-    return undefined;
-  }
-
-  const loaders: (() => Promise<void>)[] = [];
+  const loaders: ((route: Route<string>) => Promise<void>)[] = [];
 
   if (
     typeof item === 'object' &&
     'UNSTABLE_loader' in item &&
     typeof item.UNSTABLE_loader === 'function'
   ) {
-    loaders.push(item.UNSTABLE_loader as () => Promise<void>);
+    loaders.push(item.UNSTABLE_loader);
   }
 
   const nested = getNestedTree(item);
 
   if (nested) {
-    const childState = resolveChildState(nested, focusedRoute);
-
-    if (childState) {
-      const childLoader = UNSTABLE_getLoaderForState(nested, childState);
-
-      if (childLoader) {
-        loaders.push(childLoader);
-      }
+    const childLoader = UNSTABLE_getLoaderForState(nested, focusedRoute?.state);
+    if (childLoader) {
+      loaders.push(childLoader);
     }
   }
 
@@ -1064,7 +1032,7 @@ export function UNSTABLE_getLoaderForState(
     return undefined;
   }
 
-  return async () => {
-    await Promise.all(loaders.map((l) => l()));
+  return async (route: Route<string>) => {
+    await Promise.all(loaders.map((l) => l(route)));
   };
 }
