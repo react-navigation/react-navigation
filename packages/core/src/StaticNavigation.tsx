@@ -1,6 +1,7 @@
 import type {
   NavigationState,
   ParamListBase,
+  PartialRoute,
   Route,
 } from '@react-navigation/routers';
 import * as React from 'react';
@@ -322,6 +323,18 @@ export type StaticScreenConfig<
    * Optional key for this screen.
    */
   navigationKey?: string;
+
+  /**
+   * Loader function to be called when the screen is focused. This can be used to load data before the screen is rendered.
+   *
+   * @example
+   * ```js
+   * UNSTABLE_loader: ({ route }) => loadProfile(route.params?.id),
+   * ```
+   */
+  UNSTABLE_loader?: (options: {
+    route: Route<string> | PartialRoute<Route<string>>;
+  }) => Promise<void>;
 };
 
 type StaticConfigScreens<
@@ -683,26 +696,27 @@ type LinkingForGroup =
   | Pick<PathConfig<any>, 'path' | 'stringify' | 'parse'>
   | string;
 
-type TreeForPathConfig = {
+type StaticScreensPathConfig = StaticConfigScreens<
+  ParamListBase,
+  NavigationState,
+  {},
+  EventMapBase,
+  Record<string, unknown>
+>;
+export type StaticScreenPathConfig = StaticScreensPathConfig extends infer S
+  ? S extends Record<string, infer V>
+    ? V
+    : undefined
+  : undefined;
+
+export type TreeForPathConfig = {
   config: {
     initialRouteName?: string;
-    screens?: StaticConfigScreens<
-      ParamListBase,
-      NavigationState,
-      {},
-      EventMapBase,
-      Record<string, unknown>
-    >;
+    screens?: StaticScreensPathConfig;
     groups?: {
       [key: string]: {
         linking?: LinkingForGroup;
-        screens: StaticConfigScreens<
-          ParamListBase,
-          NavigationState,
-          {},
-          EventMapBase,
-          Record<string, unknown>
-        >;
+        screens: StaticScreensPathConfig;
       };
     };
   };
