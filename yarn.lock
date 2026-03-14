@@ -4453,7 +4453,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.17"
     react-native-pager-view: "npm:6.9.1"
     react-native-safe-area-context: "npm:~5.6.0"
-    react-native-tab-view: "npm:^4.2.2"
+    react-native-tab-view: "npm:^4.3.0"
     react-test-renderer: "npm:19.1.0"
     typescript: "npm:^5.9.2"
   peerDependencies:
@@ -14037,7 +14037,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-tab-view@npm:^4.2.2, react-native-tab-view@workspace:packages/react-native-tab-view":
+"react-native-tab-view@npm:^4.3.0, react-native-tab-view@workspace:packages/react-native-tab-view":
   version: 0.0.0-use.local
   resolution: "react-native-tab-view@workspace:packages/react-native-tab-view"
   dependencies:
