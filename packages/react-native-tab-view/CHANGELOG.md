@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.3...react-native-tab-view@5.0.0-alpha.4) (2026-03-14)
+
+### Bug Fixes
+
+* bump peer deps to match required versions ([44416b0](https://github.com/react-navigation/react-navigation/commit/44416b09bf59a3af06cb6eea9eff0db1caa63c0b)) - by @
+* fix calculating indicator position on web ([9178f8a](https://github.com/react-navigation/react-navigation/commit/9178f8a31cc47e10d149d3631aa9d0a3c75bf678)) - by @satya164
+* fix indicator never becoming visible in strict mode with auto width ([d917e98](https://github.com/react-navigation/react-navigation/commit/d917e987f3ebaded999f3d74081b5ba9cb2fdaad)) - by @satya164
+* make indicator visible only after all tabs + current tab are measured ([36a7b34](https://github.com/react-navigation/react-navigation/commit/36a7b344e65285fad69983c78994a12cd875cc73)) - by @satya164
+
+### Features
+
+* support custom width for the tab bar indicator ([7709a38](https://github.com/react-navigation/react-navigation/commit/7709a38b9ef234260e7c353ab10e354c70eb52a8)) - by @satya164
+* support margins for the tab indicator ([b5fc9d4](https://github.com/react-navigation/react-navigation/commit/b5fc9d44b8e517901d93f1baa908644c2243f9d2)) - by @satya164
+
 # [5.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.2...react-native-tab-view@5.0.0-alpha.3) (2026-03-03)
 
 ### Bug Fixes

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.16...@react-navigation/drawer@8.0.0-alpha.17) (2026-03-14)
+
+### Bug Fixes
+
+* bump peer deps to match required versions ([44416b0](https://github.com/react-navigation/react-navigation/commit/44416b09bf59a3af06cb6eea9eff0db1caa63c0b)) - by @
+
+### Features
+
+* support system icons in drawer items ([a035d46](https://github.com/react-navigation/react-navigation/commit/a035d46ffcb5a3160302330068c8609df40c3e38)) - by @satya164
+
 # [8.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.15...@react-navigation/drawer@8.0.0-alpha.16) (2026-03-05)
 
 ### Bug Fixes

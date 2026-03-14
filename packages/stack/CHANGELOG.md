@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.16...@react-navigation/stack@8.0.0-alpha.17) (2026-03-14)
+
+### Bug Fixes
+
+* bump peer deps to match required versions ([44416b0](https://github.com/react-navigation/react-navigation/commit/44416b09bf59a3af06cb6eea9eff0db1caa63c0b)) - by @
+* **stack:** preserve autoFocus on TextInput when navigating forward ([#13022](https://github.com/react-navigation/react-navigation/issues/13022)) ([72eb121](https://github.com/react-navigation/react-navigation/commit/72eb12126a78f8c4c199d83b548dbf5365215e7a)) - by @WojtekBoman
+
 # [8.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.15...@react-navigation/stack@8.0.0-alpha.16) (2026-03-09)
 
 ### Features

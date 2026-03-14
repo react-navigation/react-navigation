@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.15...@react-navigation/material-top-tabs@8.0.0-alpha.16) (2026-03-14)
+
+### Bug Fixes
+
+* bump peer deps to match required versions ([44416b0](https://github.com/react-navigation/react-navigation/commit/44416b09bf59a3af06cb6eea9eff0db1caa63c0b)) - by @
+
+### Features
+
+* support system icons in material top tabs ([a6641ae](https://github.com/react-navigation/react-navigation/commit/a6641aec5bd167a15d115ece6562a87fdc2a3e76)) - by @satya164
+
 # [8.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.14...@react-navigation/material-top-tabs@8.0.0-alpha.15) (2026-03-05)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.17...@react-navigation/native-stack@8.0.0-alpha.18) (2026-03-14)
+
+### Bug Fixes
+
+* bump peer deps to match required versions ([44416b0](https://github.com/react-navigation/react-navigation/commit/44416b09bf59a3af06cb6eea9eff0db1caa63c0b)) - by @
+* **native-stack:** round header height to handle slightly off values  ([#13021](https://github.com/react-navigation/react-navigation/issues/13021)) ([058319d](https://github.com/react-navigation/react-navigation/commit/058319daeefebd5c08a70771119efdf2c99d1c5a)) - by @DragomirAndrei19
+
 # [8.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.16...@react-navigation/native-stack@8.0.0-alpha.17) (2026-03-09)
 
 ### Features

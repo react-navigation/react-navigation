@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.17...@react-navigation/bottom-tabs@8.0.0-alpha.18) (2026-03-14)
+
+### Bug Fixes
+
+* bump peer deps to match required versions ([44416b0](https://github.com/react-navigation/react-navigation/commit/44416b09bf59a3af06cb6eea9eff0db1caa63c0b)) - by @
+* match js tab bar a11y labels with platform ([43eb496](https://github.com/react-navigation/react-navigation/commit/43eb496fba0920f76592c789141d6efe01f02420)) - by @satya164
+
 # [8.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.16...@react-navigation/bottom-tabs@8.0.0-alpha.17) (2026-03-09)
 
 ### Bug Fixes

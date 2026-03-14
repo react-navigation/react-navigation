@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@8.0.0-alpha.7...@react-navigation/devtools@8.0.0-alpha.8) (2026-03-14)
+
+### Bug Fixes
+
+* bump peer deps to match required versions ([44416b0](https://github.com/react-navigation/react-navigation/commit/44416b09bf59a3af06cb6eea9eff0db1caa63c0b)) - by @
+
 # [8.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@8.0.0-alpha.6...@react-navigation/devtools@8.0.0-alpha.7) (2026-03-03)
 
 **Note:** Version bump only for package @react-navigation/devtools
