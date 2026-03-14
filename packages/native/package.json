@@ -78,7 +78,7 @@
     "typescript": "^5.9.2"
   },
   "peerDependencies": {
-    "react": ">= 19.0.0",
+    "react": ">= 19.2.0",
     "react-native": "*"
   },
   "react-native-builder-bob": {

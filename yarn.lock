@@ -4418,10 +4418,10 @@ __metadata:
     typescript: "npm:^5.9.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: ">= 19.0.0"
+    react: ">= 19.2.0"
     react-native: "*"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.19.0"
+    react-native-screens: ">= 4.24.0"
   languageName: unknown
   linkType: soft
 
@@ -4451,7 +4451,7 @@ __metadata:
     valibot: "npm:^1.2.0"
     zod: "npm:^4.3.6"
   peerDependencies:
-    react: ">= 19.0.0"
+    react: ">= 19.2.0"
   languageName: unknown
   linkType: soft
 
@@ -4469,7 +4469,7 @@ __metadata:
     stacktrace-parser: "npm:^0.1.11"
     typescript: "npm:^5.9.2"
   peerDependencies:
-    react: ">= 19.0.0"
+    react: ">= 19.2.0"
   languageName: unknown
   linkType: soft
 
@@ -4498,12 +4498,12 @@ __metadata:
     use-latest-callback: "npm:^0.3.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: ">= 19.0.0"
+    react: ">= 19.2.0"
     react-native: "*"
     react-native-gesture-handler: ">= 2.0.0"
     react-native-reanimated: ">= 4.0.0"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.19.0"
+    react-native-screens: ">= 4.24.0"
   languageName: unknown
   linkType: soft
 
@@ -4531,10 +4531,10 @@ __metadata:
   peerDependencies:
     "@callstack/liquid-glass": ">= 0.6.0"
     "@react-navigation/native": "workspace:^"
-    react: ">= 19.0.0"
+    react: ">= 19.2.0"
     react-native: "*"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.19.0"
+    react-native-screens: ">= 4.24.0"
   languageName: unknown
   linkType: soft
 
@@ -4627,7 +4627,7 @@ __metadata:
     typescript: "npm:^5.9.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: ">= 19.0.0"
+    react: ">= 19.2.0"
     react-native: "*"
     react-native-pager-view: ">= 7.0.0"
     react-native-safe-area-context: ">= 5.5.0"
@@ -4653,10 +4653,10 @@ __metadata:
     warn-once: "npm:^0.1.1"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: ">= 19.0.0"
+    react: ">= 19.2.0"
     react-native: "*"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.19.0"
+    react-native-screens: ">= 4.24.0"
   languageName: unknown
   linkType: soft
 
@@ -4682,7 +4682,7 @@ __metadata:
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
   peerDependencies:
-    react: ">= 19.0.0"
+    react: ">= 19.2.0"
     react-native: "*"
   languageName: unknown
   linkType: soft
@@ -4722,11 +4722,11 @@ __metadata:
     use-latest-callback: "npm:^0.3.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
-    react: ">= 19.0.0"
+    react: ">= 19.2.0"
     react-native: "*"
     react-native-gesture-handler: ">= 2.0.0"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.19.0"
+    react-native-screens: ">= 4.24.0"
   languageName: unknown
   linkType: soft
 
@@ -14070,7 +14070,7 @@ __metadata:
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
   peerDependencies:
-    react: ">= 19.0.0"
+    react: ">= 19.2.0"
     react-native: "*"
     react-native-gesture-handler: ">= 2.0.0"
     react-native-reanimated: ">= 4.0.0"
@@ -14193,7 +14193,7 @@ __metadata:
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
   peerDependencies:
-    react: ">= 19.0.0"
+    react: ">= 19.2.0"
     react-native: "*"
     react-native-pager-view: ">= 7.0.0"
   languageName: unknown
