@@ -12,9 +12,7 @@ import {
   StyleSheet,
   View,
   type ViewStyle,
-  type ViewToken,
 } from 'react-native';
-import useLatestCallback from 'use-latest-callback';
 
 import {
   type Props as IndicatorProps,
@@ -364,7 +362,6 @@ export function TabBar<T extends Route>({
   const flatListRef = React.useRef<FlatList | null>(null);
   const isFirst = React.useRef(true);
   const scrollAmount = useAnimatedValue(0);
-  const measuredTabWidths = React.useRef<Record<string, number>>({});
   const { routes } = navigationState;
   const flattenedTabWidth = getFlattenedTabWidth(tabStyle);
   const isWidthDynamic = flattenedTabWidth === 'auto';
@@ -444,6 +441,10 @@ export function TabBar<T extends Route>({
     [direction, layout.width, scrollAmount, tabBarWidth]
   );
 
+  const measuredTabWidths = React.useRef<Record<string, number>>({});
+  const animationFrameHandle =
+    React.useRef<ReturnType<typeof requestAnimationFrame>>(null);
+
   const renderItem = React.useCallback(
     ({ item: route, index }: ListRenderItemInfo<T>) => {
       const {
@@ -458,28 +459,13 @@ export function TabBar<T extends Route>({
         ? (e: LayoutChangeEvent) => {
             measuredTabWidths.current[route.key] = e.nativeEvent.layout.width;
 
-            // When we have measured widths for all of the tabs, we should updates the state
-            // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app
-            // If we have more than 10 routes divide updating tabWidths into multiple batches. Here we update only first batch of 10 items.
-            if (
-              routes.length > MEASURE_PER_BATCH &&
-              index === MEASURE_PER_BATCH &&
-              routes
-                .slice(0, MEASURE_PER_BATCH)
-                .every(
-                  (r) => typeof measuredTabWidths.current[r.key] === 'number'
-                )
-            ) {
-              setTabWidths({ ...measuredTabWidths.current });
-            } else if (
-              routes.every(
-                (r) => typeof measuredTabWidths.current[r.key] === 'number'
-              )
-            ) {
-              // When we have measured widths for all of the tabs, we should updates the state
-              // We avoid doing separate setState for each layout since it triggers multiple renders and slows down app
-              setTabWidths({ ...measuredTabWidths.current });
+            if (animationFrameHandle.current != null) {
+              cancelAnimationFrame(animationFrameHandle.current);
             }
+
+            animationFrameHandle.current = requestAnimationFrame(() => {
+              setTabWidths({ ...measuredTabWidths.current });
+            });
           }
         : undefined;
 
@@ -600,25 +586,6 @@ export function TabBar<T extends Route>({
     [scrollAmount]
   );
 
-  const handleViewableItemsChanged = useLatestCallback(
-    ({ changed }: { changed: ViewToken[] }) => {
-      if (routes.length <= MEASURE_PER_BATCH) {
-        return;
-      }
-      // Get next vievable item
-      const item = changed[changed.length - 1];
-      const index = item?.index || 0;
-      if (
-        item.isViewable &&
-        (index % 10 === 0 ||
-          index === navigationState.index ||
-          index === routes.length - 1)
-      ) {
-        setTabWidths({ ...measuredTabWidths.current });
-      }
-    }
-  );
-
   return (
     <Animated.View onLayout={handleLayout} style={[styles.tabBar, style]}>
       <Animated.View
@@ -671,7 +638,6 @@ export function TabBar<T extends Route>({
           scrollEnabled={scrollEnabled}
           bounces={bounces}
           initialNumToRender={MEASURE_PER_BATCH}
-          onViewableItemsChanged={handleViewableItemsChanged}
           alwaysBounceHorizontal={false}
           scrollsToTop={false}
           showsHorizontalScrollIndicator={false}
