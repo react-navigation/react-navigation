@@ -4415,7 +4415,6 @@ __metadata:
     react-native-safe-area-context: "npm:~5.6.2"
     react-native-screens: "npm:^4.24.0"
     react-test-renderer: "npm:19.2.0"
-    sf-symbols-typescript: "npm:^2.2.0"
     typescript: "npm:^5.9.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
@@ -4525,6 +4524,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-native-screens: "npm:^4.24.0"
     react-test-renderer: "npm:19.2.0"
+    sf-symbols-typescript: "npm:^2.2.0"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.3.2"
     use-sync-external-store: "npm:^1.5.0"
@@ -4624,7 +4624,6 @@ __metadata:
     react-native-safe-area-context: "npm:~5.6.2"
     react-native-tab-view: "workspace:^"
     react-test-renderer: "npm:19.2.0"
-    sf-symbols-typescript: "npm:^2.2.0"
     typescript: "npm:^5.9.2"
   peerDependencies:
     "@react-navigation/native": "workspace:^"
@@ -4650,7 +4649,6 @@ __metadata:
     react-native-builder-bob: "npm:^0.40.12"
     react-native-screens: "npm:^4.24.0"
     react-test-renderer: "npm:19.2.0"
-    sf-symbols-typescript: "npm:^2.2.0"
     typescript: "npm:^5.9.2"
     warn-once: "npm:^0.1.1"
   peerDependencies:

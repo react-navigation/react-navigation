@@ -1,4 +1,4 @@
-import { HeaderButton, type HeaderIcon } from '@react-navigation/elements';
+import { HeaderButton, type Icon } from '@react-navigation/elements';
 import {
   DrawerActions,
   MaterialSymbol,
@@ -12,7 +12,7 @@ import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
 
 type Props = {
   icon?:
-    | HeaderIcon
+    | Icon
     | ((props: { tintColor: ColorValue | undefined }) => React.ReactNode)
     | undefined;
   accessibilityLabel?: string | undefined;
@@ -31,7 +31,7 @@ export function DrawerToggleButton({
 
   const drawerIcon =
     icon ??
-    Platform.select<HeaderIcon>({
+    Platform.select<Icon>({
       ios: {
         type: 'sfSymbol',
         name: 'line.3.horizontal',

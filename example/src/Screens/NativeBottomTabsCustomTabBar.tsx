@@ -1,6 +1,5 @@
 import {
   BottomTabBar,
-  type BottomTabIcon,
   createBottomTabNavigator,
   createBottomTabScreen,
 } from '@react-navigation/bottom-tabs';
@@ -8,6 +7,7 @@ import {
   Button,
   getHeaderTitle,
   Header,
+  type Icon,
   useHeaderHeight,
 } from '@react-navigation/elements';
 import {
@@ -122,7 +122,7 @@ const NativeBottomTabsCustomNavigator = createBottomTabNavigator({
       options: ({ route }) => ({
         title: 'Contacts',
         tabBarButtonTestID: 'contacts',
-        tabBarIcon: Platform.select<BottomTabIcon>({
+        tabBarIcon: Platform.select<Icon>({
           ios: {
             type: 'sfSymbol',
             name: 'person.2',

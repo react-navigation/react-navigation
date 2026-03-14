@@ -7,10 +7,10 @@ import {
   StyleSheet,
 } from 'react-native';
 
-import type { HeaderIcon as HeaderIconType } from '../types';
+import type { Icon } from '../types';
 
 type Props = Omit<ImageProps, 'source'> & {
-  icon: HeaderIconType;
+  icon: Icon;
   color: ColorValue;
 };
 

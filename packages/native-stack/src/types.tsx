@@ -1,4 +1,4 @@
-import type { HeaderIcon } from '@react-navigation/elements';
+import type { Icon } from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
@@ -13,20 +13,13 @@ import type {
   Theme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import type {
-  ColorValue,
-  ImageSourcePropType,
-  StyleProp,
-  TextStyle,
-  ViewStyle,
-} from 'react-native';
+import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
 import type {
   ScreenProps,
   ScreenStackHeaderConfigProps,
   ScrollEdgeEffect,
   SearchBarProps,
 } from 'react-native-screens';
-import type { SFSymbol } from 'sf-symbols-typescript';
 
 export type NativeStackNavigationEventMap = {
   /**
@@ -213,7 +206,7 @@ export type NativeStackNavigationOptions = {
    * }
    * ```
    */
-  headerBackIcon?: HeaderIcon | undefined;
+  headerBackIcon?: Icon | undefined;
   /**
    * Style of the header when a large title is shown.
    * The large title is shown if `headerLargeTitleEnabled` is `true` and
@@ -831,38 +824,7 @@ export type NativeStackNavigationOptions = {
   inactiveBehavior?: 'pause' | 'unmount' | 'none' | undefined;
 };
 
-type PlatformIconShared = {
-  /**
-   * - `image` - Use a local image as the icon.
-   */
-  type: 'image';
-  /**
-   * Image source to use as the icon.
-   * - Local image: `require('./path/to/image.png')`
-   * - Drawable resource or xcasset: `{ uri: 'image_name' }`
-   */
-  source: ImageSourcePropType;
-  /**
-   * Whether to apply tint color to the icon.
-   * Defaults to `true`.
-   *
-   * @platform ios
-   */
-  tinted?: boolean | undefined;
-};
-
-type PlatformIconIOSSfSymbol = {
-  /**
-   * - `sfSymbol` - Use an SF Symbol as the icon on iOS.
-   */
-  type: 'sfSymbol';
-  /**
-   * Name of the SF Symbol to use as the icon.
-   */
-  name: SFSymbol;
-};
-
-type PlatformIconIOS = PlatformIconIOSSfSymbol | PlatformIconShared;
+type IconIOS = Extract<Icon, { type: 'image' | 'sfSymbol' }>;
 
 type SharedHeaderItem = {
   /**
@@ -883,7 +845,7 @@ type SharedHeaderItem = {
   /**
    * Icon for the item
    */
-  icon?: PlatformIconIOS | undefined;
+  icon?: IconIOS | undefined;
   /**
    * The variant of the item.
    * "prominent" only available from iOS 26.0 and later.
@@ -1000,7 +962,7 @@ export type NativeStackHeaderItemMenuAction = {
   /**
    * Icon for the menu item.
    */
-  icon?: PlatformIconIOS | undefined;
+  icon?: IconIOS | undefined;
   /**
    * Function to call when the menu item is pressed.
    */
@@ -1058,7 +1020,7 @@ export type NativeStackHeaderItemMenuSubmenu = {
   /**
    * Icon for the submenu item.
    */
-  icon?: PlatformIconIOS | undefined;
+  icon?: IconIOS | undefined;
   /**
    * Whether the menu is displayed inline with the parent menu.
    * By default, submenus are displayed after expanding the parent menu item.

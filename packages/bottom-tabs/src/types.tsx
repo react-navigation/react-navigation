@@ -1,12 +1,12 @@
 import type {
   HeaderOptions,
+  Icon,
   PlatformPressable,
 } from '@react-navigation/elements';
 import type { Screen } from '@react-navigation/elements/internal';
 import type {
   DefaultNavigatorOptions,
   Descriptor,
-  MaterialSymbolProps,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
@@ -21,7 +21,6 @@ import type {
   Animated,
   ColorValue,
   GestureResponderEvent,
-  ImageSourcePropType,
   StyleProp,
   TextStyle,
   ViewStyle,
@@ -31,7 +30,6 @@ import type {
   TabsScreenBlurEffect,
   TabsSystemItem,
 } from 'react-native-screens';
-import type { SFSymbol } from 'sf-symbols-typescript';
 
 export type Variant = 'uikit' | 'material';
 
@@ -114,48 +112,6 @@ export type TabBarVisibilityAnimationConfig =
   | SpringKeyboardAnimationConfig;
 
 export type TabAnimationName = 'none' | 'fade' | 'shift';
-
-type IconImage = {
-  /**
-   * - `image` - Use a local image as the icon.
-   */
-  type: 'image';
-  /**
-   * Image source to use as the icon.
-   * - Local image: `require('./path/to/image.png')`
-   * - Drawable resource or xcasset: `{ uri: 'image_name' }`
-   */
-  source: ImageSourcePropType;
-  /**
-   * Whether to apply tint color to the image.
-   * Disabling will keep the image's original colors.
-   *
-   * Defaults to `true`.
-   *
-   * @platform ios
-   */
-  tinted?: boolean;
-};
-
-type IconSfSymbol = {
-  /**
-   * - `sfSymbol` - Use an SF Symbol as the icon on iOS.
-   */
-  type: 'sfSymbol';
-  /**
-   * Name of the SF Symbol to use as the icon.
-   */
-  name: SFSymbol;
-};
-
-type IconMaterialSymbol = {
-  /**
-   * - `materialSymbol` - Use a Material Symbol as the icon on Android.
-   */
-  type: 'materialSymbol';
-} & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight'>;
-
-export type BottomTabIcon = IconSfSymbol | IconMaterialSymbol | IconImage;
 
 type BottomTabCustomOptions = {
   /**
@@ -496,15 +452,17 @@ export type BottomTabNavigationOptions = {
    * - on all platforms with `custom` implementation
    * - on iOS with `native` implementation
    *
+   * With `native` implementation, `tinted` for `image` can only be disabled on iOS.
+   *
    * A React element is only supported with `custom` implementation.
    */
   tabBarIcon?:
-    | BottomTabIcon
+    | Icon
     | ((props: {
         focused: boolean;
         color: ColorValue;
         size: number;
-      }) => BottomTabIcon | React.ReactNode);
+      }) => Icon | React.ReactNode);
 
   /**
    * Text to show in a badge on the tab icon.

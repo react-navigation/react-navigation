@@ -1,7 +1,6 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
-  type BottomTabIcon,
   type BottomTabScreenProps,
   createBottomTabNavigator,
   useBottomTabBarHeight,
@@ -10,6 +9,7 @@ import {
   Button,
   HeaderBackButton,
   HeaderButton,
+  type Icon,
   PlatformPressable,
   useHeaderHeight,
 } from '@react-navigation/elements';
@@ -240,7 +240,7 @@ export function BottomTabs(
           options={{
             title: 'Contacts',
             tabBarButtonTestID: 'contacts',
-            tabBarIcon: Platform.select<BottomTabIcon>({
+            tabBarIcon: Platform.select<Icon>({
               ios: {
                 type: 'sfSymbol',
                 name: 'person.2',

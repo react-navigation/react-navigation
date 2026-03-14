@@ -1,4 +1,4 @@
-import { Badge } from '@react-navigation/elements';
+import { Badge, type Icon } from '@react-navigation/elements';
 import { MissingIcon } from '@react-navigation/elements/internal';
 import { MaterialSymbol, type Route, SFSymbol } from '@react-navigation/native';
 import React from 'react';
@@ -12,8 +12,6 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import type { BottomTabIcon } from '../types';
-
 export type TabBarIconProps = {
   route: Route<string>;
   variant: 'uikit' | 'material';
@@ -25,12 +23,12 @@ export type TabBarIconProps = {
   activeTintColor: ColorValue;
   inactiveTintColor: ColorValue;
   icon:
-    | BottomTabIcon
+    | Icon
     | ((props: {
         focused: boolean;
         color: ColorValue;
         size: number;
-      }) => BottomTabIcon | React.ReactNode);
+      }) => Icon | React.ReactNode);
   allowFontScaling?: boolean | undefined;
   style: StyleProp<ViewStyle>;
 };

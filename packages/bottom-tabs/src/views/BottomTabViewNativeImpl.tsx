@@ -1,4 +1,4 @@
-import { getLabel } from '@react-navigation/elements';
+import { getLabel, type Icon } from '@react-navigation/elements';
 import {
   ActivityView,
   Color,
@@ -30,7 +30,6 @@ import {
 
 import type {
   BottomTabDescriptorMap,
-  BottomTabIcon,
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
 } from '../types';
@@ -547,7 +546,7 @@ function AnimatedScreenContent({
   );
 }
 
-function getPlatformIcon(icon: BottomTabIcon): PlatformIcon {
+function getPlatformIcon(icon: Icon): PlatformIcon {
   switch (icon.type) {
     case 'sfSymbol':
       return {

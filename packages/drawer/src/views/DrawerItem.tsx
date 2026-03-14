@@ -1,4 +1,4 @@
-import { PlatformPressable, Text } from '@react-navigation/elements';
+import { type Icon, PlatformPressable, Text } from '@react-navigation/elements';
 import { Color } from '@react-navigation/elements/internal';
 import {
   MaterialSymbol,
@@ -17,8 +17,6 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
-
-import type { DrawerIcon } from '../types';
 
 type Props = {
   /**
@@ -39,12 +37,12 @@ type Props = {
    * Icon to display for the `DrawerItem`.
    */
   icon?:
-    | DrawerIcon
+    | Icon
     | ((props: {
         focused: boolean;
         size: number;
         color: ColorValue;
-      }) => DrawerIcon | React.ReactNode)
+      }) => Icon | React.ReactNode)
     | undefined;
   /**
    * Whether to highlight the drawer item as active.

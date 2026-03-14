@@ -1,6 +1,5 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
-  type BottomTabIcon,
   createBottomTabNavigator,
   createBottomTabScreen,
 } from '@react-navigation/bottom-tabs';
@@ -9,6 +8,7 @@ import {
   getHeaderTitle,
   Header,
   HeaderButton,
+  type Icon,
   useHeaderHeight,
 } from '@react-navigation/elements';
 import {
@@ -134,7 +134,7 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
       initialParams: { count: i },
       options: ({ route }) => ({
         title: 'Contacts',
-        tabBarIcon: Platform.select<BottomTabIcon>({
+        tabBarIcon: Platform.select<Icon>({
           ios: {
             type: 'sfSymbol',
             name: 'person.2',

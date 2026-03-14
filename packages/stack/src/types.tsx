@@ -1,9 +1,9 @@
 import type {
   HeaderBackButtonDisplayMode,
   HeaderBackButtonProps,
-  HeaderIcon,
   HeaderOptions,
   HeaderTitleProps,
+  Icon,
 } from '@react-navigation/elements';
 import type {
   DefaultNavigatorOptions,
@@ -232,7 +232,7 @@ export type StackHeaderOptions = Omit<
    * ```
    */
   headerBackIcon?:
-    | HeaderIcon
+    | Icon
     | ((props: { tintColor: ColorValue | undefined }) => React.ReactNode);
 };
 

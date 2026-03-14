@@ -17,7 +17,7 @@ import { isLiquidGlassSupported } from '../LiquidGlassView';
 import type {
   HeaderBackButtonDisplayMode,
   HeaderBackButtonProps,
-  HeaderIcon as HeaderIconType,
+  Icon,
 } from '../types';
 import { BUTTON_SIZE, HeaderButton } from './HeaderButton';
 import { HeaderIcon } from './HeaderIcon';
@@ -57,7 +57,7 @@ export function HeaderBackButton({
 
     const backIcon =
       icon ??
-      Platform.select<HeaderIconType>({
+      Platform.select<Icon>({
         ios: {
           type: 'sfSymbol',
           name: 'chevron.left',

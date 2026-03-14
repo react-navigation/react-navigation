@@ -1,7 +1,4 @@
-import type {
-  MaterialSymbolProps,
-  SFSymbolProps,
-} from '@react-navigation/native';
+import type { MaterialSymbolProps } from '@react-navigation/native';
 import * as React from 'react';
 import type {
   Animated,
@@ -13,12 +10,53 @@ import type {
   TextStyle,
   ViewStyle,
 } from 'react-native';
+import type { SFSymbol } from 'sf-symbols-typescript';
 
 import type { BlurEffectType } from './getBlurBackgroundColor';
 
 export type HeaderBackButtonDisplayMode = 'default' | 'generic' | 'minimal';
 
 export type Layout = { width: number; height: number };
+
+type IconImage = {
+  /**
+   * - `image` - Use a local image as the icon.
+   */
+  type: 'image';
+  /**
+   * Image source to use as the icon.
+   * - Local image: `require('./path/to/image.png')`
+   * - Drawable resource or xcasset: `{ uri: 'image_name' }`
+   */
+  source: ImageSourcePropType;
+  /**
+   * Whether to apply tint color to the image.
+   * Disabling will keep the image's original colors.
+   *
+   * Defaults to `true`.
+   */
+  tinted?: boolean;
+};
+
+type IconSfSymbol = {
+  /**
+   * - `sfSymbol` - Use an SF Symbol as the icon on iOS.
+   */
+  type: 'sfSymbol';
+  /**
+   * Name of the SF Symbol to use as the icon.
+   */
+  name: SFSymbol;
+};
+
+type IconMaterialSymbol = {
+  /**
+   * - `materialSymbol` - Use a Material Symbol as the icon on Android.
+   */
+  type: 'materialSymbol';
+} & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight'>;
+
+export type Icon = IconSfSymbol | IconMaterialSymbol | IconImage;
 
 export type HeaderSearchBarRef = {
   focus: () => void;
@@ -351,19 +389,6 @@ export type HeaderButtonProps = {
   children: React.ReactNode;
 };
 
-export type HeaderIcon =
-  | {
-      type: 'image';
-      source: ImageSourcePropType;
-    }
-  | {
-      type: 'sfSymbol';
-      name: SFSymbolProps['name'];
-    }
-  | ({
-      type: 'materialSymbol';
-    } & Pick<MaterialSymbolProps, 'name' | 'variant' | 'weight'>);
-
 export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
   /**
    * Icon to display for the back button.
@@ -379,7 +404,7 @@ export type HeaderBackButtonProps = Omit<HeaderButtonProps, 'children'> & {
    * - An arrow on Android
    */
   icon?:
-    | HeaderIcon
+    | Icon
     | ((props: { tintColor: ColorValue | undefined }) => React.ReactNode)
     | undefined;
   /**
