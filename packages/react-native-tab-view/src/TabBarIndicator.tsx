@@ -100,14 +100,16 @@ export function TabBarIndicator<T extends Route>({
         // We should fade-in the indicator when we have widths for all the tab items
         indicatorVisible
       ) {
-        isIndicatorShown.current = true;
-
         Animated.timing(opacity, {
           toValue: 1,
           duration: 150,
           easing: Easing.in(Easing.linear),
           useNativeDriver,
-        }).start();
+        }).start(({ finished }) => {
+          if (finished) {
+            isIndicatorShown.current = true;
+          }
+        });
       }
     };
 
