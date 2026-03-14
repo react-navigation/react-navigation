@@ -696,26 +696,27 @@ type LinkingForGroup =
   | Pick<PathConfig<any>, 'path' | 'stringify' | 'parse'>
   | string;
 
+type StaticScreensPathConfig = StaticConfigScreens<
+  ParamListBase,
+  NavigationState,
+  {},
+  EventMapBase,
+  Record<string, unknown>
+>;
+export type StaticScreenPathConfig = StaticScreensPathConfig extends infer S
+  ? S extends Record<string, infer V>
+    ? V
+    : undefined
+  : undefined;
+
 export type TreeForPathConfig = {
   config: {
     initialRouteName?: string;
-    screens?: StaticConfigScreens<
-      ParamListBase,
-      NavigationState,
-      {},
-      EventMapBase,
-      Record<string, unknown>
-    >;
+    screens?: StaticScreensPathConfig;
     groups?: {
       [key: string]: {
         linking?: LinkingForGroup;
-        screens: StaticConfigScreens<
-          ParamListBase,
-          NavigationState,
-          {},
-          EventMapBase,
-          Record<string, unknown>
-        >;
+        screens: StaticScreensPathConfig;
       };
     };
   };

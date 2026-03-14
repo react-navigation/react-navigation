@@ -1,18 +1,16 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 
 import { getStateFromRouteParams } from './getStateFromRouteParams';
-import type { StaticNavigation, TreeForPathConfig } from './StaticNavigation';
-
-type ScreenConfig = TreeForPathConfig['config']['screens'] extends infer S
-  ? S extends Record<string, infer V>
-    ? V
-    : undefined
-  : undefined;
+import type {
+  StaticNavigation,
+  StaticScreenPathConfig,
+  TreeForPathConfig,
+} from './StaticNavigation';
 
 function findScreenInConfig(
   config: TreeForPathConfig['config'],
   name: string
-): ScreenConfig {
+): StaticScreenPathConfig | undefined {
   const screens = config.screens;
 
   if (screens?.[name] != null) {
@@ -33,7 +31,7 @@ function findScreenInConfig(
 }
 
 function getNestedTree(
-  item: ScreenConfig
+  item: StaticScreenPathConfig
 ): StaticNavigation<any, any, any> | undefined {
   if (item && typeof item === 'object') {
     if ('config' in item && item.config?.screens) {
