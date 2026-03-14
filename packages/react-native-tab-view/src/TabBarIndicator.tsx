@@ -144,11 +144,21 @@ export function TabBarIndicator<T extends Route>({
 
   const styleList: StyleProp<ViewStyle> = [];
 
-  // scaleX doesn't work properly on chrome and opera for linux and android
+  // transform doesn't work properly on chrome and opera for linux and android
+  // so we need to use width and left/right instead of scaleX and translateX
+  // https://github.com/react-navigation/react-navigation/pull/11440
   if (Platform.OS === 'web' && width === 'auto') {
+    const flattenedStyle = StyleSheet.flatten(style);
+
+    const start = flattenedStyle?.start;
+    const translate =
+      direction === 'rtl' ? Animated.multiply(translateX, -1) : translateX;
+    const offset =
+      typeof start === 'number' ? Animated.add(translate, start) : translate;
+
     styleList.push(
       { width: transform[1].scaleX },
-      { left: transform[0].translateX }
+      direction === 'rtl' ? { right: offset } : { left: offset }
     );
   } else {
     styleList.push(
