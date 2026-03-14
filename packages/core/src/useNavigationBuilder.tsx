@@ -279,9 +279,7 @@ const getRouteConfigsFromChildren = <
   return configs;
 };
 
-export function getStateFromParams(
-  params: Record<string, any> | undefined
-): PartialState<NavigationState> | undefined {
+const getStateFromParams = (params: NavigatorRoute['params']) => {
   if (params?.state != null) {
     return params.state;
   } else if (typeof params?.screen === 'string' && params?.initial !== false) {
@@ -297,7 +295,7 @@ export function getStateFromParams(
   }
 
   return undefined;
-}
+};
 
 /**
  * Hook for building navigators.
