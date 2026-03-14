@@ -16,7 +16,6 @@ import { isValidElementType } from 'react-is';
 import useLatestCallback from 'use-latest-callback';
 
 import { deepFreeze } from './deepFreeze';
-import { getStateFromParams } from './getStateFromParams';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
@@ -279,6 +278,26 @@ const getRouteConfigsFromChildren = <
 
   return configs;
 };
+
+export function getStateFromParams(
+  params: Record<string, any> | undefined
+): PartialState<NavigationState> | undefined {
+  if (params?.state != null) {
+    return params.state;
+  } else if (typeof params?.screen === 'string' && params?.initial !== false) {
+    return {
+      routes: [
+        {
+          name: params.screen,
+          params: params.params,
+          path: params.path,
+        },
+      ],
+    };
+  }
+
+  return undefined;
+}
 
 /**
  * Hook for building navigators.
