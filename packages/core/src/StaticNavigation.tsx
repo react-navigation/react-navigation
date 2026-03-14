@@ -1,13 +1,12 @@
 import type {
   NavigationState,
   ParamListBase,
-  PartialState,
+  PartialRoute,
   Route,
 } from '@react-navigation/routers';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
-import { getStateFromParams } from './getStateFromParams';
 import type {
   DefaultNavigatorOptions,
   EventMapBase,
@@ -330,10 +329,12 @@ export type StaticScreenConfig<
    *
    * @example
    * ```js
-   * UNSTABLE_loader: (route) => loadProfile(route.params?.id),
+   * UNSTABLE_loader: ({ route }) => loadProfile(route.params?.id),
    * ```
    */
-  UNSTABLE_loader?: (route: Route<string>) => Promise<void>;
+  UNSTABLE_loader?: (options: {
+    route: Route<string> | PartialRoute<Route<string>>;
+  }) => Promise<void>;
 };
 
 type StaticConfigScreens<
@@ -695,7 +696,7 @@ type LinkingForGroup =
   | Pick<PathConfig<any>, 'path' | 'stringify' | 'parse'>
   | string;
 
-type TreeForPathConfig = {
+export type TreeForPathConfig = {
   config: {
     initialRouteName?: string;
     screens?: StaticConfigScreens<
@@ -936,106 +937,4 @@ export function createPathConfigForStaticNavigation(
   }
 
   return screens;
-}
-
-function findScreenInConfig(
-  config: TreeForPathConfig['config'],
-  name: string | undefined
-): TreeForPathConfig['config']['screens'] extends infer S
-  ? S extends Record<string, infer V>
-    ? V
-    : undefined
-  : undefined {
-  const screens = config.screens;
-
-  if (name === undefined) {
-    if (config.initialRouteName === undefined) {
-      return Object.values(config.screens ?? {})[0];
-    }
-    return screens?.[config.initialRouteName];
-  }
-
-  if (screens?.[name] != null) {
-    return screens[name];
-  }
-
-  if (config.groups) {
-    for (const group of Object.values(config.groups)) {
-      const groupScreens = group.screens;
-
-      if (groupScreens[name] != null) {
-        return groupScreens[name];
-      }
-    }
-  }
-
-  return undefined;
-}
-
-function getNestedTree(item: any): StaticNavigation<any, any, any> | undefined {
-  if (item && typeof item === 'object') {
-    if ('config' in item && item.config?.screens) {
-      return item as StaticNavigation<any, any, any>;
-    }
-
-    if (item.screen && item.screen.config?.screens) {
-      return item.screen as StaticNavigation<any, any, any>;
-    }
-  }
-
-  return undefined;
-}
-
-/**
- * Returns a loader function for the focused route in a static navigation config and navigation state.
- *
- * @param tree The static navigation config.
- * @param state The navigation state to extract the focused route path from.
- * @returns A function that returns a `Promise<void>`, or `undefined` if no loaders are found.
- *
- * @example
- * ```js
- * const loader = UNSTABLE_getLoaderForState(RootStack, {
- *   index: 0,
- *   routes: [{ name: 'Home' }],
- * });
- * await loader?.();
- * ```
- */
-export function UNSTABLE_getLoaderForState(
-  tree: StaticNavigation<any, any, any>,
-  state: PartialState<NavigationState> | undefined
-): ((route: Route<string>) => Promise<void>) | undefined {
-  const focusedRoute = state?.routes[state.index ?? 0];
-
-  const item = findScreenInConfig(tree.config, focusedRoute?.name);
-
-  const loaders: ((route: Route<string>) => Promise<void>)[] = [];
-
-  if (
-    typeof item === 'object' &&
-    'UNSTABLE_loader' in item &&
-    typeof item.UNSTABLE_loader === 'function'
-  ) {
-    loaders.push(item.UNSTABLE_loader);
-  }
-
-  const nested = getNestedTree(item);
-
-  if (nested) {
-    const childState =
-      focusedRoute?.state ?? getStateFromParams(focusedRoute?.params);
-    const childLoader = UNSTABLE_getLoaderForState(nested, childState);
-    if (childLoader) {
-      loaders.push(childLoader);
-    }
-  }
-
-  if (loaders.length === 0) {
-    return undefined;
-  }
-
-  return async (route: Route<string>) => {
-    await Promise.all(loaders.map((l) => l(route)));
-  };
 }
