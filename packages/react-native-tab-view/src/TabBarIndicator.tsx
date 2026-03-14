@@ -85,21 +85,17 @@ export function TabBarIndicator<T extends Route>({
 
   const opacity = useAnimatedValue(isWidthDynamic ? 0 : 1);
 
+  // We should fade-in the indicator when we have widths for all the tab items
   const indicatorVisible = isWidthDynamic
     ? layout.width &&
       navigationState.routes
-        .slice(0, navigationState.index)
+        .slice(0, navigationState.index + 1)
         .every((_, r) => getTabWidth(r))
     : true;
 
   React.useEffect(() => {
     const fadeInIndicator = () => {
-      if (
-        !isIndicatorShown.current &&
-        isWidthDynamic &&
-        // We should fade-in the indicator when we have widths for all the tab items
-        indicatorVisible
-      ) {
+      if (!isIndicatorShown.current && isWidthDynamic && indicatorVisible) {
         Animated.timing(opacity, {
           toValue: 1,
           duration: 150,
