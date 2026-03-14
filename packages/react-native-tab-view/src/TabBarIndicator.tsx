@@ -30,6 +30,48 @@ export type Props<T extends Route> = SceneRendererProps & {
 
 const useNativeDriver = Platform.OS !== 'web';
 
+const getInset = (
+  value: ViewStyle['marginLeft'] | undefined,
+  layoutWidth: number
+) => {
+  if (typeof value === 'number') {
+    return value;
+  }
+
+  if (typeof value === 'string' && value.endsWith('%')) {
+    const inset = parseFloat(value);
+
+    if (Number.isFinite(inset)) {
+      return layoutWidth * (inset / 100);
+    }
+  }
+
+  return 0;
+};
+
+const getIndicatorWidth = (
+  width: number,
+  style: ViewStyle | undefined,
+  direction: LocaleDirection
+) => {
+  const marginHorizontal = style?.marginHorizontal ?? style?.margin;
+
+  const leftMargin =
+    (direction === 'ltr' ? style?.marginStart : style?.marginEnd) ??
+    style?.marginLeft ??
+    marginHorizontal;
+
+  const rightMargin =
+    (direction === 'rtl' ? style?.marginStart : style?.marginEnd) ??
+    style?.marginRight ??
+    marginHorizontal;
+
+  return Math.max(
+    0,
+    width - getInset(leftMargin, width) - getInset(rightMargin, width)
+  );
+};
+
 const getTranslateX = (
   position: Animated.AnimatedInterpolation<number>,
   routes: Route[],
@@ -82,6 +124,7 @@ export function TabBarIndicator<T extends Route>({
 }: Props<T>) {
   const isIndicatorShown = React.useRef(false);
   const isWidthDynamic = width === 'auto';
+  const flattenedStyle = StyleSheet.flatten(style);
 
   const opacity = useAnimatedValue(isWidthDynamic ? 0 : 1);
 
@@ -129,7 +172,9 @@ export function TabBarIndicator<T extends Route>({
 
   if (width === 'auto') {
     const inputRange = routes.map((_, i) => i);
-    const outputRange = inputRange.map(getTabWidth);
+    const outputRange = inputRange.map((i) =>
+      getIndicatorWidth(getTabWidth(i), flattenedStyle, direction)
+    );
 
     transform.push(
       {
@@ -152,8 +197,6 @@ export function TabBarIndicator<T extends Route>({
   // so we need to use width and left/right instead of scaleX and translateX
   // https://github.com/react-navigation/react-navigation/pull/11440
   if (Platform.OS === 'web' && width === 'auto') {
-    const flattenedStyle = StyleSheet.flatten(style);
-
     const start = flattenedStyle?.start;
     const translate =
       direction === 'rtl' ? Animated.multiply(translateX, -1) : translateX;
@@ -166,7 +209,14 @@ export function TabBarIndicator<T extends Route>({
     );
   } else {
     styleList.push(
-      { width: width === 'auto' ? 1 : width },
+      {
+        width:
+          width === 'auto'
+            ? 1
+            : typeof width === 'number'
+              ? getIndicatorWidth(width, flattenedStyle, direction)
+              : width,
+      },
       { start: `${(100 / routes.length) * navigationState.index}%` },
       { transform }
     );
