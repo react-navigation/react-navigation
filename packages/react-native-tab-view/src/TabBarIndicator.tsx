@@ -30,26 +30,26 @@ export type Props<T extends Route> = SceneRendererProps & {
 
 const useNativeDriver = Platform.OS !== 'web';
 
-const getInset = (
-  value: ViewStyle['marginLeft'] | undefined,
-  layoutWidth: number
-) => {
+const calculateSize = (
+  value: ViewStyle['width'] | undefined,
+  referenceWidth: number
+): number | undefined => {
   if (typeof value === 'number') {
     return value;
   }
 
   if (typeof value === 'string' && value.endsWith('%')) {
-    const inset = parseFloat(value);
+    const parsed = parseFloat(value);
 
-    if (Number.isFinite(inset)) {
-      return layoutWidth * (inset / 100);
+    if (Number.isFinite(parsed)) {
+      return referenceWidth * (parsed / 100);
     }
   }
 
-  return 0;
+  return undefined;
 };
 
-const getIndicatorWidth = (
+const getIndicatorWidthWithMargins = (
   width: number,
   style: ViewStyle | undefined,
   direction: LocaleDirection
@@ -68,8 +68,29 @@ const getIndicatorWidth = (
 
   return Math.max(
     0,
-    width - getInset(leftMargin, width) - getInset(rightMargin, width)
+    width -
+      (calculateSize(leftMargin, width) ?? 0) -
+      (calculateSize(rightMargin, width) ?? 0)
   );
+};
+
+const getIndicatorWidth = (
+  tabWidth: number,
+  width: number | `${number}%`,
+  style: ViewStyle | undefined,
+  direction: LocaleDirection
+): number | `${number}%` => {
+  const customWidth = calculateSize(style?.width, tabWidth);
+
+  if (customWidth !== undefined) {
+    return customWidth;
+  }
+
+  if (typeof width === 'number') {
+    return getIndicatorWidthWithMargins(width, style, direction);
+  }
+
+  return width;
 };
 
 const getTranslateX = (
@@ -78,29 +99,25 @@ const getTranslateX = (
   getTabWidth: GetTabWidth,
   direction: LocaleDirection,
   gap?: number,
-  width?: number | string
+  getWidth?: (index: number) => number | undefined
 ) => {
   const inputRange = routes.map((_, i) => i);
+  const outputRange = routes.map((_, i) => {
+    let sumTabWidth = 0;
 
-  // every index contains widths at all previous indices
-  const outputRange = routes.reduce<number[]>((acc, _, i) => {
-    if (typeof width === 'number') {
-      if (i === 0) return [getTabWidth(i) / 2 - width / 2];
-
-      let sumTabWidth = 0;
-      for (let j = 0; j < i; j++) {
-        sumTabWidth += getTabWidth(j);
-      }
-
-      return [
-        ...acc,
-        sumTabWidth + getTabWidth(i) / 2 + (gap ? gap * i : 0) - width / 2,
-      ];
-    } else {
-      if (i === 0) return [0];
-      return [...acc, acc[i - 1] + getTabWidth(i - 1) + (gap ?? 0)];
+    for (let j = 0; j < i; j++) {
+      sumTabWidth += getTabWidth(j);
     }
-  }, []);
+
+    const indicatorWidth = getWidth?.(i);
+    const tabOffset = sumTabWidth + (gap ? gap * i : 0);
+
+    if (indicatorWidth === undefined) {
+      return tabOffset;
+    }
+
+    return tabOffset + getTabWidth(i) / 2 - indicatorWidth / 2;
+  });
 
   const translateX = position.interpolate({
     inputRange,
@@ -124,7 +141,37 @@ export function TabBarIndicator<T extends Route>({
 }: Props<T>) {
   const isIndicatorShown = React.useRef(false);
   const isWidthDynamic = width === 'auto';
+
   const flattenedStyle = StyleSheet.flatten(style);
+
+  const hasCustomIndicatorWidth =
+    typeof flattenedStyle?.width === 'number' ||
+    (typeof flattenedStyle?.width === 'string' &&
+      flattenedStyle?.width.endsWith('%'));
+
+  const constantIndicatorWidth =
+    typeof flattenedStyle?.width === 'number'
+      ? flattenedStyle.width
+      : undefined;
+
+  const isCentered =
+    hasCustomIndicatorWidth &&
+    (flattenedStyle?.margin === 'auto' ||
+      flattenedStyle?.marginHorizontal === 'auto');
+
+  // If indicator has a custom width, we need to adjust calculations to account for it
+  // It should be centered relative to the tab if the margin is set to auto
+  const getCenteredIndicatorWidth = (tabWidth: number) => {
+    if (isCentered) {
+      return calculateSize(flattenedStyle?.width, tabWidth);
+    }
+
+    if (typeof width === 'number') {
+      return width;
+    }
+
+    return undefined;
+  };
 
   const opacity = useAnimatedValue(isWidthDynamic ? 0 : 1);
 
@@ -161,20 +208,25 @@ export function TabBarIndicator<T extends Route>({
 
   const transform = [];
 
-  if (layout.width) {
-    const translateX =
-      routes.length > 1
-        ? getTranslateX(position, routes, getTabWidth, direction, gap, width)
-        : 0;
+  const translateX =
+    layout.width && routes.length > 1
+      ? getTranslateX(position, routes, getTabWidth, direction, gap, (index) =>
+          getCenteredIndicatorWidth(getTabWidth(index))
+        )
+      : 0;
 
-    transform.push({ translateX });
-  }
+  transform.push({ translateX });
 
-  if (width === 'auto') {
+  if (width === 'auto' && constantIndicatorWidth == null) {
     const inputRange = routes.map((_, i) => i);
-    const outputRange = inputRange.map((i) =>
-      getIndicatorWidth(getTabWidth(i), flattenedStyle, direction)
-    );
+    const outputRange = inputRange.map((i) => {
+      const tabW = getTabWidth(i);
+
+      return (
+        calculateSize(flattenedStyle?.width, tabW) ??
+        getIndicatorWidthWithMargins(tabW, flattenedStyle, direction)
+      );
+    });
 
     transform.push(
       {
@@ -196,7 +248,11 @@ export function TabBarIndicator<T extends Route>({
   // transform doesn't work properly on chrome and opera for linux and android
   // so we need to use width and left/right instead of scaleX and translateX
   // https://github.com/react-navigation/react-navigation/pull/11440
-  if (Platform.OS === 'web' && width === 'auto') {
+  if (
+    Platform.OS === 'web' &&
+    width === 'auto' &&
+    constantIndicatorWidth == null
+  ) {
     const start = flattenedStyle?.start;
     const translate =
       direction === 'rtl' ? Animated.multiply(translateX, -1) : translateX;
@@ -212,14 +268,41 @@ export function TabBarIndicator<T extends Route>({
       {
         width:
           width === 'auto'
-            ? 1
-            : typeof width === 'number'
-              ? getIndicatorWidth(width, flattenedStyle, direction)
-              : width,
+            ? // if the indicator has a constant width, use it as is
+              // we don't need to scale it to match tab width
+              (constantIndicatorWidth ?? 1)
+            : getIndicatorWidth(
+                getTabWidth(navigationState.index),
+                width,
+                flattenedStyle,
+                direction
+              ),
       },
       { start: `${(100 / routes.length) * navigationState.index}%` },
       { transform }
     );
+  }
+
+  let finalStyle;
+
+  if (hasCustomIndicatorWidth && style != null) {
+    const rest = { ...flattenedStyle };
+
+    delete rest.width;
+
+    if (isCentered) {
+      if (rest.margin === 'auto') {
+        delete rest.margin;
+      }
+
+      if (rest.marginHorizontal === 'auto') {
+        delete rest.marginHorizontal;
+      }
+    }
+
+    finalStyle = rest;
+  } else {
+    finalStyle = style;
   }
 
   return (
@@ -228,7 +311,7 @@ export function TabBarIndicator<T extends Route>({
         styles.indicator,
         styleList,
         width === 'auto' ? { opacity: opacity } : null,
-        style,
+        finalStyle,
       ]}
     >
       {children}
