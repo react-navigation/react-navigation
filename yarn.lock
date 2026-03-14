@@ -2468,6 +2468,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo-google-fonts/roboto-slab@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "@expo-google-fonts/roboto-slab@npm:0.4.2"
+  checksum: 10c0/c2cd109c53d1230e34d849c6252782ad3d44d861b4481c9f5d959348f7a7175d260fad29ab6644a0b9e9806339211afc316bbae4377f3055612c28be0f135779
+  languageName: node
+  linkType: hard
+
 "@expo/cli@npm:55.0.11":
   version: 55.0.11
   resolution: "@expo/cli@npm:55.0.11"
@@ -4546,6 +4553,7 @@ __metadata:
     "@babel/node": "npm:^7.28.0"
     "@babel/plugin-transform-strict-mode": "npm:^7.27.1"
     "@callstack/liquid-glass": "npm:^0.6.0"
+    "@expo-google-fonts/roboto-slab": "npm:^0.4.2"
     "@expo/react-native-action-sheet": "npm:^4.1.1"
     "@expo/vector-icons": "npm:^15.0.2"
     "@playwright/test": "npm:^1.53.0"
@@ -4573,6 +4581,7 @@ __metadata:
     expo-asset: "npm:~55.0.7"
     expo-blur: "npm:~55.0.8"
     expo-build-disk-cache: "npm:^0.7.2"
+    expo-font: "npm:^55.0.4"
     expo-linking: "npm:~55.0.7"
     expo-splash-screen: "npm:~55.0.9"
     expo-status-bar: "npm:~55.0.4"
@@ -8778,7 +8787,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-font@npm:~55.0.4":
+"expo-font@npm:^55.0.4, expo-font@npm:~55.0.4":
   version: 55.0.4
   resolution: "expo-font@npm:55.0.4"
   dependencies:
