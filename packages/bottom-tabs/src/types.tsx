@@ -45,15 +45,15 @@ export type BottomTabNavigationEventMap = {
    *
    * Only supported with `custom` implementation.
    */
-  tabLongPress: { data: undefined };
+  tabLongPress: { data: undefined; canPreventDefault?: undefined };
   /**
    * Event which fires when a transition animation starts.
    */
-  transitionStart: { data: undefined };
+  transitionStart: { data: undefined; canPreventDefault?: undefined };
   /**
    * Event which fires when a transition animation ends.
    */
-  transitionEnd: { data: undefined };
+  transitionEnd: { data: undefined; canPreventDefault?: undefined };
 };
 
 export type LabelPosition = 'beside-icon' | 'below-icon';

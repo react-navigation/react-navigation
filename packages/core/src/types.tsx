@@ -187,9 +187,9 @@ export type EventMapBase = Record<
 >;
 
 export type EventMapCore<State extends NavigationState> = {
-  focus: { data: undefined };
-  blur: { data: undefined };
-  state: { data: { state: State } };
+  focus: { data: undefined; canPreventDefault?: undefined };
+  blur: { data: undefined; canPreventDefault?: undefined };
+  state: { data: { state: State }; canPreventDefault?: undefined };
   beforeRemove: { data: { action: NavigationAction }; canPreventDefault: true };
 };
 
