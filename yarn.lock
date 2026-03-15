@@ -2475,6 +2475,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo-google-fonts/space-grotesk@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "@expo-google-fonts/space-grotesk@npm:0.4.1"
+  checksum: 10c0/cc9d92782d296f751586eb829ebbe38c28447ec649292fad00010c74e6b10a672da874f261764e0c8f76f2d661c5bf85fe73ef090547ae7e1614f7dd9df4faa4
+  languageName: node
+  linkType: hard
+
 "@expo/cli@npm:55.0.11":
   version: 55.0.11
   resolution: "@expo/cli@npm:55.0.11"
@@ -4554,6 +4561,7 @@ __metadata:
     "@babel/plugin-transform-strict-mode": "npm:^7.27.1"
     "@callstack/liquid-glass": "npm:^0.6.0"
     "@expo-google-fonts/roboto-slab": "npm:^0.4.2"
+    "@expo-google-fonts/space-grotesk": "npm:^0.4.1"
     "@expo/react-native-action-sheet": "npm:^4.1.1"
     "@expo/vector-icons": "npm:^15.0.2"
     "@playwright/test": "npm:^1.53.0"

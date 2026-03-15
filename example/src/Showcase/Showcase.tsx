@@ -13,6 +13,7 @@ import { Divider } from '../Shared/Divider';
 import { ListGroupItem } from '../Shared/ListGroupItem';
 import { ListItem } from '../Shared/LIstItem';
 import { fromEntries } from '../utilities';
+import { DrawerShowcase } from './DrawerShowcase';
 import { MaterialTopTabsShowcase } from './MaterialTopTabsShowcase';
 import { NativeBottomTabsShowcase } from './NativeBottomTabsShowcase';
 import { NativeStackShowcase } from './NativeStackShowcase';
@@ -32,6 +33,11 @@ const EXAMPLE_SCREENS = [
     name: 'MaterialTopTabsShowcase',
     title: 'Material Top Tabs',
     screen: MaterialTopTabsShowcase,
+  },
+  {
+    name: 'DrawerShowcase',
+    title: 'Drawer',
+    screen: DrawerShowcase,
   },
 ] as const satisfies {
   name: string;
