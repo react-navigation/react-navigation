@@ -15,7 +15,8 @@
   },
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/), Michał Osadnik <micosa97@gmail.com> (https://github.com/osdnk/)",
   "scripts": {
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "oxlint -c oxlint.config.mts",
+    "format": "oxfmt",
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "clean": "lerna run clean",
@@ -39,12 +40,11 @@
     "@types/babel__core": "^7",
     "check-dependency-version-consistency": "^5.0.0",
     "commitlint": "^19.8.1",
-    "eslint": "^9.29.0",
-    "eslint-config-satya164": "^5.1.8",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
     "jest": "^30.0.0",
     "npm-run-all2": "^8.0.4",
-    "prettier": "^3.5.3",
+    "oxfmt": "^0.40.0",
+    "oxlint": "^1.55.0",
+    "oxlint-config-satya164": "^0.1.2",
     "typescript": "^5.9.2"
   },
   "jest": {
@@ -63,12 +63,5 @@
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context)/)"
     ]
-  },
-  "prettier": {
-    "quoteProps": "as-needed",
-    "tabWidth": 2,
-    "useTabs": false,
-    "singleQuote": true,
-    "trailingComma": "es5"
   }
 }

@@ -134,9 +134,7 @@ const getRouteConfigsFromChildren = <
           throw new Error(
             `Got an invalid 'navigationKey' prop (${JSON.stringify(
               child.props.navigationKey
-            )}) for the screen '${
-              child.props.name
-            }'. It must be a non-empty string or 'undefined'.`
+            )}) for the screen '${child.props.name}'. It must be a non-empty string or 'undefined'.`
           );
         }
 
@@ -192,9 +190,7 @@ const getRouteConfigsFromChildren = <
     throw new Error(
       `A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found ${
         React.isValidElement(child)
-          ? `'${
-              typeof child.type === 'string' ? child.type : child.type?.name
-            }'${
+          ? `'${typeof child.type === 'string' ? child.type : child.type?.name}'${
               child.props != null &&
               typeof child.props === 'object' &&
               'name' in child.props &&

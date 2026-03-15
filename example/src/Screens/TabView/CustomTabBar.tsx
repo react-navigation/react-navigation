@@ -37,6 +37,7 @@ export const CustomTabBar = () => {
     { key: 'chat', title: 'Chat', icon: 'chatbubble' },
   ]);
 
+  // oxlint-disable-next-line react/display-name
   const renderItem =
     ({
       navigationState,

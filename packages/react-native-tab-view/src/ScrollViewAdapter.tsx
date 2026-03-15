@@ -3,7 +3,7 @@ import {
   Animated,
   Keyboard,
   Platform,
-  ScrollView,
+  type ScrollView,
   StyleSheet,
   View,
   type ViewProps,

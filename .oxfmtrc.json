@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "quoteProps": "as-needed",
+  "tabWidth": 2,
+  "useTabs": false,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "printWidth": 80,
+  "sortImports": {},
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "node_modules",
+    "coverage",
+    "dist",
+    "lib",
+    ".expo",
+    ".expo-shared",
+    ".yarn",
+    ".vscode",
+    "CHANGELOG.md"
+  ]
+}

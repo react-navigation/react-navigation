@@ -3,7 +3,7 @@ import {
   Animated,
   type ColorValue,
   type DimensionValue,
-  FlatList,
+  type FlatList,
   I18nManager,
   type LayoutChangeEvent,
   type ListRenderItemInfo,

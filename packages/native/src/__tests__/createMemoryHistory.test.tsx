@@ -6,7 +6,6 @@ import { createMemoryHistory } from '../createMemoryHistory';
 
 Object.assign(global, window);
 
-// eslint-disable-next-line import-x/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
 test('will not attempt to navigate beyond whatever browser history it is possible to know about', () => {

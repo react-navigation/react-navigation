@@ -170,7 +170,6 @@ export function BottomTabViewCustom({
         .filter((anim) => anim != null);
 
       if (animations.length) {
-        // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
         setIsAnimating(true);
       }
 

@@ -510,7 +510,6 @@ const MyTabs = createBottomTabNavigator({
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MyStack = createStackNavigator({
   groups: {
     Guest: {
@@ -1191,7 +1190,6 @@ createStackNavigator({
  * Type tests for param inference from linking config
  */
 {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const TestNavigator = createStackNavigator({
     screens: {
       /**
@@ -1695,7 +1693,6 @@ createStackScreen({
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const ProfileComponent = createComponentForStaticNavigation(Stack, 'Profile');
 
   expectTypeOf<React.ComponentProps<typeof ProfileComponent>>().toExtend<{
@@ -1737,7 +1734,6 @@ createStackScreen({
 
   Dashboard.config = Stack.config;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const Tabs = createBottomTabNavigator({
     screens: {
       Dashboard: Dashboard,

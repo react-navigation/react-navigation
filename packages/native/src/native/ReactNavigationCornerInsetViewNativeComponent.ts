@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   codegenNativeCommands,
   codegenNativeComponent,
-  CodegenTypes,
+  type CodegenTypes,
   type HostComponent,
   type ViewProps,
 } from 'react-native';

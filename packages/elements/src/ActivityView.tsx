@@ -1,5 +1,5 @@
 import { Activity, useCallback, useEffect, useState } from 'react';
-import { Platform, View, type ViewStyle } from 'react-native';
+import { Platform, type View, type ViewStyle } from 'react-native';
 
 import { Container } from './Container';
 

@@ -86,6 +86,7 @@ test('builds href in route context', () => {
       <Stack.Navigator
         layout={({ state }) => (
           <NavigationRouteContext.Provider
+            // oxlint-disable-next-line react/jsx-no-constructed-context-values
             value={state.routes.find((r) => r.name === 'Foo')}
           >
             <Test />
@@ -179,6 +180,7 @@ test('builds href in nested route context', () => {
             <StackB.Navigator
               layout={({ state }) => (
                 <NavigationRouteContext.Provider
+                  // oxlint-disable-next-line react/jsx-no-constructed-context-values
                   value={state.routes.find((r) => r.name === 'Bar')}
                 >
                   <Test />
