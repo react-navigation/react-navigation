@@ -458,7 +458,7 @@ const LocationDetailsScreen = ({
   );
 };
 
-export const NativeStackShowcase = createNativeStackNavigator({
+const NativeStackShowcaseNavigator = createNativeStackNavigator({
   screenOptions: {
     headerBackButtonDisplayMode: 'minimal',
   },
@@ -613,6 +613,11 @@ export const NativeStackShowcase = createNativeStackNavigator({
     }),
   },
 });
+
+export const NativeStackShowcase = {
+  screen: NativeStackShowcaseNavigator,
+  title: 'Showcase - Native Stack',
+};
 
 const styles = StyleSheet.create({
   mapContainer: {

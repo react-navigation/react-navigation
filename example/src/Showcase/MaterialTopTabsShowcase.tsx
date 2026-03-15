@@ -712,7 +712,7 @@ const NavigatorLayout = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-export const MaterialTopTabsShowcase = createMaterialTopTabNavigator({
+const MaterialTopTabsShowcaseNavigator = createMaterialTopTabNavigator({
   layout: ({ children }) => <NavigatorLayout>{children}</NavigatorLayout>,
   screenOptions: ({ theme }) => ({
     tabBarScrollEnabled: true,
@@ -762,6 +762,11 @@ export const MaterialTopTabsShowcase = createMaterialTopTabNavigator({
     }),
   },
 });
+
+export const MaterialTopTabsShowcase = {
+  screen: MaterialTopTabsShowcaseNavigator,
+  title: 'Showcase - Material Top Tabs',
+};
 
 const styles = StyleSheet.create({
   screenContent: {

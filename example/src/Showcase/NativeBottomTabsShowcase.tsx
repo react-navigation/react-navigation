@@ -496,7 +496,7 @@ const NowPlayingBar = ({ placement }: { placement: 'inline' | 'regular' }) => {
   );
 };
 
-export const NativeBottomTabsShowcase = createBottomTabNavigator({
+const NativeBottomTabsShowcaseNavigator = createBottomTabNavigator({
   implementation: 'native',
   screenLayout: ({ children }) =>
     Platform.OS === 'android' ? (
@@ -564,6 +564,11 @@ export const NativeBottomTabsShowcase = createBottomTabNavigator({
     }),
   },
 });
+
+export const NativeBottomTabsShowcase = {
+  screen: NativeBottomTabsShowcaseNavigator,
+  title: 'Showcase - Native Bottom Tabs',
+};
 
 const styles = StyleSheet.create({
   ...Platform.select({

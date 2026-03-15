@@ -641,7 +641,7 @@ const NavigatorLayout = ({ children }: { children: React.ReactNode }) => {
   return <ThemeProvider value={customTheme}>{children}</ThemeProvider>;
 };
 
-export const DrawerShowcase = createDrawerNavigator({
+const DrawerShowcaseNavigator = createDrawerNavigator({
   layout: ({ children }) => <NavigatorLayout>{children}</NavigatorLayout>,
   drawerContent: CustomDrawerContent,
   screenOptions: {
@@ -683,6 +683,11 @@ export const DrawerShowcase = createDrawerNavigator({
     }),
   },
 });
+
+export const DrawerShowcase = {
+  screen: DrawerShowcaseNavigator,
+  title: 'Showcase - Drawer',
+};
 
 const styles = StyleSheet.create({
   screenContent: {
