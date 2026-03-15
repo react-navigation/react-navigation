@@ -37,6 +37,7 @@ import { DrawerShowcase } from './Showcase/DrawerShowcase';
 import { MaterialTopTabsShowcase } from './Showcase/MaterialTopTabsShowcase';
 import { NativeBottomTabsShowcase } from './Showcase/NativeBottomTabsShowcase';
 import { NativeStackShowcase } from './Showcase/NativeStackShowcase';
+import { StackShowcase } from './Showcase/StackShowcase';
 
 export const SCREENS = {
   NativeStack,
@@ -76,6 +77,7 @@ export const SCREENS = {
   MaterialTopTabsShowcase,
   NativeBottomTabsShowcase,
   NativeStackShowcase,
+  StackShowcase,
 } as const satisfies {
   [key: string]:
     | (React.ComponentType<{ route: any }> & {
