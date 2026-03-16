@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.17...@react-navigation/stack@8.0.0-alpha.18) (2026-03-16)
+
+### Bug Fixes
+
+* tweak inactiveBehavior for stack ([f020545](https://github.com/react-navigation/react-navigation/commit/f020545eeed889a7d75743d49689b31596242240)) - by @satya164
+
 # [8.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.16...@react-navigation/stack@8.0.0-alpha.17) (2026-03-14)
 
 ### Bug Fixes

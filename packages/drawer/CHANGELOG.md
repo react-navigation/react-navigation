@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.17...@react-navigation/drawer@8.0.0-alpha.18) (2026-03-16)
+
+### Features
+
+* support drawerItemTestID for drawer navigator ([186c8cb](https://github.com/react-navigation/react-navigation/commit/186c8cbf47ce22be39e55f46fd062c86eeeb498b)) - by @satya164
+
 # [8.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.16...@react-navigation/drawer@8.0.0-alpha.17) (2026-03-14)
 
 ### Bug Fixes

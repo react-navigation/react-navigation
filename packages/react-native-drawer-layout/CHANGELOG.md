@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.3...react-native-drawer-layout@5.0.0-alpha.4) (2026-03-16)
+
+### Bug Fixes
+
+* makes layout update logic consistent ([fd3591e](https://github.com/react-navigation/react-navigation/commit/fd3591e859e0775fcbbc63ef52590ed8f29843ff)) - by @
+
 # [5.0.0-alpha.3](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.2...react-native-drawer-layout@5.0.0-alpha.3) (2026-03-14)
 
 ### Bug Fixes
