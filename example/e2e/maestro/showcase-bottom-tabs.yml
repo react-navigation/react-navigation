@@ -1,10 +1,10 @@
 appId: ${APP_ID}
-name: Showcase - Native Bottom Tabs
+name: Showcase - Bottom Tabs
 ---
 - runFlow:
     file: ../launch.yml
     env:
-      LINK: native-bottom-tabs-showcase
+      LINK: bottom-tabs-showcase
       TEXT: 'Midnight Waves'
 - tapOn:
     text: '.*For You.*'

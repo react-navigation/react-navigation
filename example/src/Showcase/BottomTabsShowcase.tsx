@@ -496,8 +496,7 @@ const NowPlayingBar = ({ placement }: { placement: 'inline' | 'regular' }) => {
   );
 };
 
-const NativeBottomTabsShowcaseNavigator = createBottomTabNavigator({
-  implementation: 'native',
+const BottomTabsShowcaseNavigator = createBottomTabNavigator({
   screenLayout: ({ children }) =>
     Platform.OS === 'android' ? (
       <SafeAreaView edges={{ top: true, bottom: true }}>
@@ -565,9 +564,9 @@ const NativeBottomTabsShowcaseNavigator = createBottomTabNavigator({
   },
 });
 
-export const NativeBottomTabsShowcase = {
-  screen: NativeBottomTabsShowcaseNavigator,
-  title: 'Showcase - Native Bottom Tabs',
+export const BottomTabsShowcase = {
+  screen: BottomTabsShowcaseNavigator,
+  title: 'Showcase - Bottom Tabs',
 };
 
 const styles = StyleSheet.create({
