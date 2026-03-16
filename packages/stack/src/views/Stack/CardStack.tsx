@@ -683,19 +683,34 @@ export class CardStack extends React.Component<Props, State> {
 
             const isBeforeLast = index === routes.length - 2;
 
+            // Keep animating, preloaded & last two screens visible for smoother transitions
+            const isVisible =
+              focused ||
+              isFocusing ||
+              isRemoving ||
+              isPreloaded ||
+              isNextScreenTransparent ||
+              index >= routes.length - 2;
+
             const activityMode = // Render focused and animating screens normally
               focused || isFocusing
                 ? 'normal'
-                : // Unpause preloaded screens so updates are visible
-                  // This lets preloaded screens initialize
-                  // And avoids things like pressable animation from being frozen
-                  inactiveBehavior === 'none' ||
+                : inactiveBehavior === 'none' ||
+                    // Unpause preloaded screens so updates are visible
+                    // This lets preloaded screens initialize
                     isPreloaded ||
-                    isRemoving ||
-                    isNextScreenTransparent
+                    // Keep the screen before transparent screen active
+                    // This lets the screen under the transparent screen update and animate
+                    isNextScreenTransparent ||
+                    // Keep the screen before last screen active
+                    // Otherwise it breaks animation when going back
+                    isBeforeLast
                   ? 'inert'
                   : inactiveBehavior === 'unmount' &&
-                      !isBeforeLast &&
+                      // Don't unmount screens that needs to stay visible
+                      !isVisible &&
+                      // Don't unmount screens with nested navigators
+                      // So we don't lose their state
                       !('state' in route && route.state)
                     ? 'unmounted'
                     : 'paused';
@@ -742,14 +757,7 @@ export class CardStack extends React.Component<Props, State> {
               >
                 <ActivityView
                   mode={activityMode}
-                  visible={
-                    // keep animating, preloaded & last two screens visible for smoother transitions
-                    isFocusing ||
-                    isRemoving ||
-                    isPreloaded ||
-                    isNextScreenTransparent ||
-                    index >= routes.length - 2
-                  }
+                  visible={isVisible}
                   style={StyleSheet.absoluteFill}
                 >
                   {scene.descriptor.render()}
