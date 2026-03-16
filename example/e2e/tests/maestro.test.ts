@@ -66,8 +66,7 @@ async function runStep(page: Page, step: any) {
         let conditionMet = null;
 
         if (condition.true) {
-          // Ignore dynamic conditions for now
-          conditionMet = false;
+          conditionMet = evaluateCondition(condition.true);
         }
 
         if (condition.platform) {
@@ -287,6 +286,32 @@ async function runStep(page: Page, step: any) {
     default: {
       throw new Error(`Unknown command: ${JSON.stringify(step)}`);
     }
+  }
+}
+
+function evaluateCondition(condition: boolean | string) {
+  if (typeof condition === 'boolean') {
+    return condition;
+  }
+
+  const expression = condition.trim();
+
+  if (!expression.startsWith('${') || !expression.endsWith('}')) {
+    throw new Error(`Invalid runFlow true condition: ${condition}`);
+  }
+
+  try {
+    return Boolean(
+      // eslint-disable-next-line no-new-func
+      Function(
+        'maestro',
+        `"use strict"; return (${expression.slice(2, -1)});`
+      )({ platform: 'web' })
+    );
+  } catch (error) {
+    throw new Error(`Failed to evaluate runFlow true condition: ${condition}`, {
+      cause: error,
+    });
   }
 }
 
