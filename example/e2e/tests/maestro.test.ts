@@ -290,17 +290,21 @@ async function runStep(page: Page, step: any) {
   }
 }
 
+function getTextSelector(text: string) {
+  return new RegExp(`^(?:${text})$`);
+}
+
 function query(page: Page, by: string | { text: string } | { id: string }) {
   if (typeof by === 'string') {
-    return page
-      .getByLabel(by, { exact: true })
-      .or(page.getByText(by, { exact: true }));
+    const text = getTextSelector(by);
+
+    return page.getByLabel(text).or(page.getByText(text));
   }
 
   if ('text' in by) {
-    return page
-      .getByLabel(by.text, { exact: true })
-      .or(page.getByText(by.text, { exact: true }));
+    const text = getTextSelector(by.text);
+
+    return page.getByLabel(text).or(page.getByText(text));
   }
 
   if ('id' in by) {
