@@ -315,21 +315,17 @@ function evaluateCondition(condition: boolean | string) {
   }
 }
 
-function getTextSelector(text: string) {
-  return new RegExp(`^(?:${text})$`);
-}
-
 function query(page: Page, by: string | { text: string } | { id: string }) {
-  if (typeof by === 'string') {
-    const text = getTextSelector(by);
+  if (typeof by === 'string' || 'text' in by) {
+    const text = typeof by === 'string' ? by : by.text;
+    const isRegex = text.includes('.*');
 
-    return page.getByLabel(text).or(page.getByText(text));
-  }
+    const args = [
+      isRegex ? new RegExp(`^(?:${text})$`) : text,
+      isRegex ? undefined : { exact: true },
+    ] as const;
 
-  if ('text' in by) {
-    const text = getTextSelector(by.text);
-
-    return page.getByLabel(text).or(page.getByText(text));
+    return page.getByLabel(...args).or(page.getByText(...args));
   }
 
   if ('id' in by) {
