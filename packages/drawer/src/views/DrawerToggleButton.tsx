@@ -15,6 +15,7 @@ type Props = {
   pressOpacity?: number;
   tintColor?: string;
   imageSource?: ImageSourcePropType;
+  testID?: string;
 };
 
 export function DrawerToggleButton({
