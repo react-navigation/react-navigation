@@ -12,12 +12,12 @@ import {
 import Animated, {
   interpolate,
   ReduceMotion,
-  runOnJS,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import useLatestCallback from 'use-latest-callback';
 
 import type { DrawerProps } from '../types';
@@ -233,7 +233,7 @@ export function Drawer({
       }
 
       if (velocity === undefined) {
-        runOnJS(onAnimationStart)(open);
+        scheduleOnRN(onAnimationStart, open);
       }
 
       animatingTo.set(open ? 'open' : 'close');
@@ -250,15 +250,15 @@ export function Drawer({
           },
           (finished) => {
             animatingTo.set(null);
-            runOnJS(onAnimationEnd)(open, finished);
+            scheduleOnRN(onAnimationEnd, open, finished);
           }
         )
       );
 
       if (open) {
-        runOnJS(onOpen)();
+        scheduleOnRN(onOpen);
       } else {
-        runOnJS(onClose)();
+        scheduleOnRN(onClose);
       }
     },
     [
@@ -293,7 +293,7 @@ export function Drawer({
       .onStart(() => {
         'worklet';
 
-        runOnJS(onGestureBegin)();
+        scheduleOnRN(onGestureBegin);
       })
       .onChange((event) => {
         'worklet';
@@ -308,7 +308,7 @@ export function Drawer({
         gestureState.set(event.state);
 
         if (!success) {
-          runOnJS(onGestureAbort)();
+          scheduleOnRN(onGestureAbort);
         }
 
         const nextOpen =
@@ -325,7 +325,7 @@ export function Drawer({
             : open;
 
         toggleDrawer(nextOpen, event.velocityX);
-        runOnJS(onGestureFinish)();
+        scheduleOnRN(onGestureFinish);
       })
       .activeOffsetX([-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET])
       .failOffsetY([-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET])
