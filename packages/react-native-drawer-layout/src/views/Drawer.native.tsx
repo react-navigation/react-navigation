@@ -149,11 +149,15 @@ export function Drawer({
 
   const contentRef = React.useRef<View>(null);
 
+  const updateLayout = useLatestCallback((width: number) => {
+    layoutWidth.set(width);
+    translationX.set(getDrawerTranslationX(open, width));
+  });
+
   React.useLayoutEffect(() => {
     const measureLayout = () => {
       contentRef.current?.measure((_x, _y, width) => {
-        layoutWidth.set(width);
-        translationX.set(getDrawerTranslationX(open, width));
+        updateLayout(width);
       });
     };
 
@@ -183,9 +187,12 @@ export function Drawer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onLayout = (event: LayoutChangeEvent) => {
-    layoutWidth.set(event.nativeEvent.layout.width);
-  };
+  const onLayout = React.useCallback(
+    (event: LayoutChangeEvent) => {
+      updateLayout(event.nativeEvent.layout.width);
+    },
+    [updateLayout]
+  );
 
   const touchStartX = useSharedValue(0);
   const touchX = useSharedValue(0);
