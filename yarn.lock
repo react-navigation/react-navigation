@@ -2468,6 +2468,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@expo-google-fonts/lora@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "@expo-google-fonts/lora@npm:0.4.2"
+  checksum: 10c0/0be0a4fc59b9d39c607667f2a37b09c5d05ef74997410fa1a0c4d20246e6382137302dec7cf09cae8f7247a321340d571b6c0b1b50462f5e364b6416b6d13626
+  languageName: node
+  linkType: hard
+
+"@expo-google-fonts/nunito@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "@expo-google-fonts/nunito@npm:0.4.2"
+  checksum: 10c0/b22712e9892d47561b0d96bfb625fea24eeda3f34531bee88e781827892740e063dcde1ddf4615b097ba0b436e765f5101fbc4788430574369b6e5f4c8860eb3
+  languageName: node
+  linkType: hard
+
+"@expo-google-fonts/outfit@npm:^0.4.3":
+  version: 0.4.3
+  resolution: "@expo-google-fonts/outfit@npm:0.4.3"
+  checksum: 10c0/563b2e922343f3f73b8d4c05adf20035956e62581ae91bb3dfd39f53d50f121180ecff4a0be1cfa7cc42cfbd6ae1d3f440c1d7f0703d4e9ab9a0f7414d95c1ab
+  languageName: node
+  linkType: hard
+
+"@expo-google-fonts/roboto-slab@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "@expo-google-fonts/roboto-slab@npm:0.4.2"
+  checksum: 10c0/c2cd109c53d1230e34d849c6252782ad3d44d861b4481c9f5d959348f7a7175d260fad29ab6644a0b9e9806339211afc316bbae4377f3055612c28be0f135779
+  languageName: node
+  linkType: hard
+
+"@expo-google-fonts/space-grotesk@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "@expo-google-fonts/space-grotesk@npm:0.4.1"
+  checksum: 10c0/cc9d92782d296f751586eb829ebbe38c28447ec649292fad00010c74e6b10a672da874f261764e0c8f76f2d661c5bf85fe73ef090547ae7e1614f7dd9df4faa4
+  languageName: node
+  linkType: hard
+
 "@expo/cli@npm:55.0.11":
   version: 55.0.11
   resolution: "@expo/cli@npm:55.0.11"
@@ -4546,6 +4581,11 @@ __metadata:
     "@babel/node": "npm:^7.28.0"
     "@babel/plugin-transform-strict-mode": "npm:^7.27.1"
     "@callstack/liquid-glass": "npm:^0.6.0"
+    "@expo-google-fonts/lora": "npm:^0.4.2"
+    "@expo-google-fonts/nunito": "npm:^0.4.2"
+    "@expo-google-fonts/outfit": "npm:^0.4.3"
+    "@expo-google-fonts/roboto-slab": "npm:^0.4.2"
+    "@expo-google-fonts/space-grotesk": "npm:^0.4.1"
     "@expo/react-native-action-sheet": "npm:^4.1.1"
     "@expo/vector-icons": "npm:^15.0.2"
     "@playwright/test": "npm:^1.53.0"
@@ -4573,6 +4613,7 @@ __metadata:
     expo-asset: "npm:~55.0.7"
     expo-blur: "npm:~55.0.8"
     expo-build-disk-cache: "npm:^0.7.2"
+    expo-font: "npm:^55.0.4"
     expo-linking: "npm:~55.0.7"
     expo-splash-screen: "npm:~55.0.9"
     expo-status-bar: "npm:~55.0.4"
@@ -8778,7 +8819,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-font@npm:~55.0.4":
+"expo-font@npm:^55.0.4, expo-font@npm:~55.0.4":
   version: 55.0.4
   resolution: "expo-font@npm:55.0.4"
   dependencies:

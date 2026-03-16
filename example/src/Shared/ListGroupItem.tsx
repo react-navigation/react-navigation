@@ -3,7 +3,7 @@ import { useTheme } from '@react-navigation/native';
 import { StyleSheet, View } from 'react-native';
 
 type Props = {
-  title: string;
+  title?: string;
   children: React.ReactNode;
 };
 
@@ -11,11 +11,13 @@ export function ListGroupItem({ title, children }: Props) {
   const { colors, fonts } = useTheme();
 
   return (
-    <View>
-      <Text style={[fonts.medium, styles.title]}>{title}</Text>
+    <View style={styles.container}>
+      {title != null ? (
+        <Text style={[fonts.medium, styles.title]}>{title}</Text>
+      ) : null}
       <View
         style={[
-          styles.container,
+          styles.group,
           { backgroundColor: colors.card, borderColor: colors.border },
         ]}
       >
@@ -27,16 +29,16 @@ export function ListGroupItem({ title, children }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    marginHorizontal: 16,
-    marginTop: 8,
-    marginBottom: 16,
+    padding: 16,
+  },
+  group: {
     borderRadius: 20,
     borderCurve: 'continuous',
     borderWidth: StyleSheet.hairlineWidth,
   },
   title: {
-    marginHorizontal: 32,
-    marginTop: 16,
+    marginHorizontal: 16,
     fontSize: 13,
+    marginBottom: 8,
   },
 });

@@ -1,0 +1,20 @@
+appId: ${APP_ID}
+name: Showcase - Drawer
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: drawer-showcase
+      TEXT: 'Total Balance'
+- tapOn:
+    id: 'showcase-drawer-toggle'
+- tapOn:
+    id: 'showcase-drawer-budgets'
+- assertVisible:
+    text: 'Monthly Budget'
+- tapOn:
+    id: 'showcase-drawer-toggle'
+- tapOn:
+    id: 'showcase-drawer-accounts'
+- assertVisible:
+    text: 'Main Checking'

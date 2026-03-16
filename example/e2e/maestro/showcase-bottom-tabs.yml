@@ -1,0 +1,20 @@
+appId: ${APP_ID}
+name: Showcase - Bottom Tabs
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: bottom-tabs-showcase
+      TEXT: 'Midnight Waves'
+- tapOn:
+    text: '.*For You.*'
+- assertVisible:
+    text: 'Featured'
+- tapOn:
+    text: 'Radio'
+- assertVisible:
+    text: 'Velvet FM'
+- tapOn:
+    text: 'Search'
+- assertVisible:
+    text: 'Browse Categories'

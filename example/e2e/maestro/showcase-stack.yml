@@ -1,0 +1,24 @@
+appId: ${APP_ID}
+name: Showcase - Stack
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-showcase
+      TEXT: 'Specimens'
+- tapOn:
+    id: 'showcase-stack-dino-1'
+- assertVisible:
+    text: 'Quick facts'
+- tapOn:
+    id: 'showcase-stack-open-image-viewer'
+- assertVisible:
+    id: 'showcase-stack-close-image-viewer'
+- tapOn:
+    id: 'showcase-stack-close-image-viewer'
+- assertVisible:
+    text: 'Quick facts'
+- tapOn:
+    id: 'showcase-stack-detail-back'
+- assertVisible:
+    text: 'Specimens'
