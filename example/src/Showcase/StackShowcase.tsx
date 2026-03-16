@@ -1152,7 +1152,7 @@ const styles = StyleSheet.create({
   },
   viewerImage: {
     width: '100%',
-    height: null,
+    height: 'auto',
     aspectRatio: 1,
   },
   viewerCaption: {

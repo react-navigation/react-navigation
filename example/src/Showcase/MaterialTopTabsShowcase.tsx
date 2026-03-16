@@ -844,7 +844,7 @@ const styles = StyleSheet.create({
 
   cardImage: {
     width: '100%',
-    height: null,
+    height: 'auto',
     aspectRatio: 4 / 3,
   },
   cardBody: {
@@ -890,7 +890,7 @@ const styles = StyleSheet.create({
   },
   featuredImage: {
     width: '100%',
-    height: null,
+    height: 'auto',
     aspectRatio: 16 / 9,
   },
   featuredImageOverlay: {

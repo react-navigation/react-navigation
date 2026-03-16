@@ -607,8 +607,8 @@ const styles = StyleSheet.create({
       },
       albumGridItem: {},
       albumGridPhoto: {
-        height: null,
-        width: null,
+        height: 'auto',
+        width: 'auto',
         aspectRatio: 1,
         borderRadius: BORDER_RADIUS,
         borderCurve: 'continuous',
@@ -645,8 +645,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   featuredImage: {
-    width: null,
-    height: null,
+    width: 'auto',
+    height: 'auto',
     aspectRatio: 16 / 9,
   },
   featuredOverlay: {
