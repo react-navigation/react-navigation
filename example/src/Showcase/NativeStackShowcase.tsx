@@ -567,7 +567,7 @@ const NativeStackShowcaseNavigator = createNativeStackNavigator({
         ];
 
         return {
-          title: '',
+          headerTitle: '',
           headerTransparent: true,
           headerLeft: ({ tintColor }) => (
             <HeaderButton

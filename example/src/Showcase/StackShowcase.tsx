@@ -920,7 +920,7 @@ const StackShowcaseNavigator = createStackNavigator({
     DinoDetail: createStackScreen({
       screen: DinoDetailScreen,
       options: ({ theme }) => ({
-        title: '',
+        headerTitle: '',
         headerBackTestID: DETAIL_BACK_TEST_ID,
         headerStyle: { backgroundColor: theme.colors.background },
         headerShadowVisible: false,
