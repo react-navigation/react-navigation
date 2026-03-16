@@ -1,0 +1,25 @@
+appId: ${APP_ID}
+name: Showcase - Native Stack
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: native-stack-showcase
+      TEXT: 'Lake Tahoe'
+- tapOn:
+    text: 'Places'
+- assertVisible:
+    text: 'Places'
+- tapOn:
+    id: 'showcase-native-stack-place-1'
+- assertVisible:
+    text: 'Lake Tahoe'
+- tapOn:
+    text: 'Lake Tahoe'
+# The details sheet content is readable on Android and web, but not reliably on iOS.
+- runFlow:
+    when:
+      true: ${maestro.platform == 'web' || maestro.platform == 'android'}
+    commands:
+      - assertVisible:
+          text: 'Sierra Nevada.*'

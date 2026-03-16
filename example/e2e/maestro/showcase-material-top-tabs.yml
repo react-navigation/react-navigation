@@ -1,0 +1,50 @@
+appId: ${APP_ID}
+name: Showcase - Material Top Tabs
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: material-top-tabs-showcase
+      TEXT: 'Lemon Herb Risotto with Spring Peas'
+- swipe:
+    direction: LEFT
+    duration: 100
+- extendedWaitUntil:
+    visible:
+      text: 'Morning Favorites'
+- swipe:
+    direction: LEFT
+    duration: 100
+- extendedWaitUntil:
+    visible:
+      text: 'Light & Fresh'
+- swipe:
+    direction: LEFT
+    duration: 100
+- extendedWaitUntil:
+    visible:
+      text: 'Crowd Pleasers'
+- swipe:
+    direction: LEFT
+    duration: 100
+- extendedWaitUntil:
+    visible:
+      text: 'Lemon Tart with Meringue'
+- swipe:
+    direction: LEFT
+    duration: 100
+- extendedWaitUntil:
+    visible:
+      text: 'Lavender Honey Latte'
+- swipe:
+    direction: LEFT
+    duration: 100
+- extendedWaitUntil:
+    visible:
+      text: 'Pan-Seared Salmon with Dill Sauce'
+- swipe:
+    direction: LEFT
+    duration: 100
+- extendedWaitUntil:
+    visible:
+      text: "What's in Season"

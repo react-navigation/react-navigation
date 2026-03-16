@@ -76,6 +76,10 @@ const SECONDARY_OPACITY = 0.6;
 const CLOSE_BUTTON_SIZE = 40;
 const CARD_MIN_WIDTH = 160;
 
+const DETAIL_BACK_TEST_ID = 'showcase-stack-detail-back';
+const OPEN_IMAGE_VIEWER_TEST_ID = 'showcase-stack-open-image-viewer';
+const CLOSE_IMAGE_VIEWER_TEST_ID = 'showcase-stack-close-image-viewer';
+
 type Period = 'Triassic' | 'Jurassic' | 'Cretaceous';
 type Diet = 'Herbivore' | 'Carnivore' | 'Omnivore';
 type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
@@ -575,6 +579,7 @@ const DinoCard = React.memo(
 
     return (
       <Pressable
+        testID={`showcase-stack-dino-${item.id}`}
         style={[
           styles.card,
           width !== undefined && { width },
@@ -717,6 +722,7 @@ const DinoDetailScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
       contentContainerStyle={styles.detailContent}
     >
       <Pressable
+        testID={OPEN_IMAGE_VIEWER_TEST_ID}
         style={[styles.detailHero, { backgroundColor: colors.background }]}
         onPress={() => navigation.navigate('ImageViewer', { id: dino.id })}
       >
@@ -846,6 +852,7 @@ const ImageViewerScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
       </Animated.View>
 
       <Pressable
+        testID={CLOSE_IMAGE_VIEWER_TEST_ID}
         style={[styles.viewerClose, { top: insets.top + SPACING_S }]}
         onPress={navigation.goBack}
       >
@@ -912,11 +919,13 @@ const StackShowcaseNavigator = createStackNavigator({
 
     DinoDetail: createStackScreen({
       screen: DinoDetailScreen,
-      options: {
+      options: ({ theme }) => ({
         title: '',
-        headerTransparent: true,
+        headerBackTestID: DETAIL_BACK_TEST_ID,
+        headerStyle: { backgroundColor: theme.colors.background },
+        headerShadowVisible: false,
         presentation: 'modal',
-      },
+      }),
     }),
 
     ImageViewer: createStackScreen({
@@ -924,6 +933,7 @@ const StackShowcaseNavigator = createStackNavigator({
       options: {
         headerShown: false,
         presentation: 'transparentModal',
+        animation: 'default',
         cardOverlayEnabled: true,
       },
     }),

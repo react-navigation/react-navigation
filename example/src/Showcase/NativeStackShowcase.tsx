@@ -213,6 +213,9 @@ const DETAIL_INFO = [
   { label: 'Duration', value: '2-4 hours' },
 ];
 
+const getPlaceItemTestID = (placeId: string) =>
+  `showcase-native-stack-place-${placeId}`;
+
 const MapScreen = () => {
   const { colors, fonts } = useTheme();
   const navigation = useNavigation('Map');
@@ -291,7 +294,11 @@ const PlaceItem = React.memo(({ item }: { item: Place }) => {
   const navigation = useNavigation('Places');
 
   return (
-    <Pressable style={styles.placeItem} onPress={() => navigation.goBack()}>
+    <Pressable
+      testID={getPlaceItemTestID(item.id)}
+      style={styles.placeItem}
+      onPress={() => navigation.goBack()}
+    >
       <Image source={item.image} style={styles.placeImage} />
 
       <View style={styles.placeInfo}>
@@ -576,7 +583,10 @@ const NativeStackShowcaseNavigator = createNativeStackNavigator({
             </HeaderButton>
           ),
           headerRight: ({ tintColor }) => (
-            <HeaderButton onPress={() => navigation.navigate('Places')}>
+            <HeaderButton
+              accessibilityLabel="Places"
+              onPress={() => navigation.navigate('Places')}
+            >
               <MaterialCommunityIcons
                 name="format-list-bulleted"
                 size={24}

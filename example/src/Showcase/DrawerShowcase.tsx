@@ -11,6 +11,7 @@ import {
   type DrawerContentComponentProps,
   DrawerContentScrollView,
   DrawerItemList,
+  DrawerToggleButton,
 } from '@react-navigation/drawer';
 import { type Icon, PlatformPressable, Text } from '@react-navigation/elements';
 import {
@@ -37,6 +38,8 @@ const BORDER_RADIUS_L = 16;
 
 const COLOR_POSITIVE = '#4CAF50';
 const COLOR_NEGATIVE = '#EF5350';
+
+const DRAWER_TOGGLE_TEST_ID = 'showcase-drawer-toggle';
 
 type Transaction = {
   id: string;
@@ -646,12 +649,14 @@ const DrawerShowcaseNavigator = createDrawerNavigator({
   drawerContent: CustomDrawerContent,
   screenOptions: {
     drawerType: 'back',
+    headerLeft: () => <DrawerToggleButton testID={DRAWER_TOGGLE_TEST_ID} />,
   },
   screens: {
     Overview: createDrawerScreen({
       screen: OverviewScreen,
       options: {
         title: 'Overview',
+        drawerItemTestID: 'showcase-drawer-overview',
         drawerIcon: Platform.select<Icon>({
           ios: { type: 'sfSymbol', name: 'square.grid.2x2' },
           android: { type: 'materialSymbol', name: 'dashboard' },
@@ -663,6 +668,7 @@ const DrawerShowcaseNavigator = createDrawerNavigator({
       screen: BudgetsScreen,
       options: {
         title: 'Budgets',
+        drawerItemTestID: 'showcase-drawer-budgets',
         drawerIcon: Platform.select<Icon>({
           ios: { type: 'sfSymbol', name: 'chart.pie' },
           android: { type: 'materialSymbol', name: 'pie_chart' },
@@ -674,6 +680,7 @@ const DrawerShowcaseNavigator = createDrawerNavigator({
       screen: AccountsScreen,
       options: {
         title: 'Accounts',
+        drawerItemTestID: 'showcase-drawer-accounts',
         drawerIcon: Platform.select<Icon>({
           ios: { type: 'sfSymbol', name: 'building.columns' },
           android: { type: 'materialSymbol', name: 'account_balance' },
