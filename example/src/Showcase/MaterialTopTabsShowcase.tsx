@@ -1,6 +1,8 @@
 import {
   RobotoSlab_400Regular,
   RobotoSlab_500Medium,
+  RobotoSlab_600SemiBold,
+  RobotoSlab_700Bold,
   useFonts,
 } from '@expo-google-fonts/roboto-slab';
 import { Text } from '@react-navigation/elements';
@@ -8,7 +10,11 @@ import {
   createMaterialTopTabNavigator,
   createMaterialTopTabScreen,
 } from '@react-navigation/material-top-tabs';
-import { useNavigation, useTheme } from '@react-navigation/native';
+import {
+  ThemeProvider,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
 import * as React from 'react';
 import {
   Image,
@@ -40,9 +46,6 @@ import food17 from '../../assets/showcase/food/food-17.jpg';
 import food18 from '../../assets/showcase/food/food-18.jpg';
 import food19 from '../../assets/showcase/food/food-19.jpg';
 import food20 from '../../assets/showcase/food/food-20.jpg';
-
-const FONT_SERIF = 'RobotoSlab_400Regular';
-const FONT_SERIF_MEDIUM = 'RobotoSlab_500Medium';
 
 const SPACING_XS = 4;
 const SPACING_S = 8;
@@ -368,17 +371,17 @@ const getTrendingRecipes = () =>
   RECIPES.filter((r) => TRENDING_IDS.includes(r.id));
 
 const Badge = ({ count }: { count: number }) => {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   return (
     <View style={[styles.badge, { backgroundColor: colors.notification }]}>
-      <Text style={styles.badgeText}>{count}</Text>
+      <Text style={[styles.badgeText, fonts.medium]}>{count}</Text>
     </View>
   );
 };
 
 const RecipeCard = ({ item, width }: { item: Recipe; width?: number }) => {
-  const { colors } = useTheme();
+  const { colors, fonts } = useTheme();
 
   return (
     <View
@@ -391,7 +394,7 @@ const RecipeCard = ({ item, width }: { item: Recipe; width?: number }) => {
       <Image source={item.image} style={styles.cardImage} resizeMode="cover" />
 
       <View style={styles.cardBody}>
-        <Text style={styles.cardTitle} numberOfLines={2}>
+        <Text style={[styles.cardTitle, fonts.medium]} numberOfLines={2}>
           {item.title}
         </Text>
 
@@ -436,7 +439,7 @@ const RecipeListItem = ({ item }: { item: Recipe }) => {
       />
 
       <View style={styles.flexFill}>
-        <Text style={styles.cardTitle} numberOfLines={1}>
+        <Text style={[styles.cardTitle, fonts.medium]} numberOfLines={1}>
           {item.title}
         </Text>
 
@@ -609,7 +612,9 @@ const FeaturedCategoryScreen = ({
         />
 
         <View style={styles.featuredImageOverlay}>
-          <Text style={styles.featuredImageTitle}>{featured.title}</Text>
+          <Text style={[styles.featuredImageTitle, fonts.medium]}>
+            {featured.title}
+          </Text>
 
           <Text style={[styles.featuredImageMeta, fonts.medium]}>
             {featured.time} · {featured.difficulty}
@@ -683,33 +688,60 @@ const SeasonalScreen = () => {
 };
 
 const NavigatorLayout = ({ children }: { children: React.ReactNode }) => {
-  const { colors, dark } = useTheme();
+  const theme = useTheme();
   const navigation = useNavigation('MaterialTopTabsShowcase');
 
   const [fontsLoaded] = useFonts({
     RobotoSlab_400Regular,
     RobotoSlab_500Medium,
+    RobotoSlab_600SemiBold,
+    RobotoSlab_700Bold,
   });
+
+  const customTheme = React.useMemo(
+    () => ({
+      ...theme,
+      fonts: {
+        regular: {
+          fontFamily: 'RobotoSlab_400Regular',
+          fontWeight: '400' as const,
+        },
+        medium: {
+          fontFamily: 'RobotoSlab_500Medium',
+          fontWeight: '400' as const,
+        },
+        bold: {
+          fontFamily: 'RobotoSlab_600SemiBold',
+          fontWeight: '400' as const,
+        },
+        heavy: {
+          fontFamily: 'RobotoSlab_700Bold',
+          fontWeight: '400' as const,
+        },
+      },
+    }),
+    [theme]
+  );
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerShown: true,
-      title: 'Recipes',
-      headerTitleStyle: { fontFamily: FONT_SERIF_MEDIUM },
+      headerTitle: 'Recipes',
+      headerTitleStyle: { fontFamily: 'RobotoSlab_500Medium' },
       headerBackButtonDisplayMode: 'minimal',
       headerStyle:
-        Platform.OS === 'ios' && !dark
+        Platform.OS === 'ios' && !theme.dark
           ? { backgroundColor: 'white' }
           : undefined,
       headerShadowVisible: false,
     });
-  }, [navigation, colors, dark]);
+  }, [navigation, theme.dark]);
 
   if (!fontsLoaded) {
     return null;
   }
 
-  return <>{children}</>;
+  return <ThemeProvider value={customTheme}>{children}</ThemeProvider>;
 };
 
 const MaterialTopTabsShowcaseNavigator = createMaterialTopTabNavigator({
@@ -723,7 +755,6 @@ const MaterialTopTabsShowcaseNavigator = createMaterialTopTabNavigator({
     },
     tabBarLabelStyle: {
       fontSize: 14,
-      fontWeight: '500',
       letterSpacing: 0.1,
       textTransform: 'none',
     },
@@ -776,16 +807,13 @@ const styles = StyleSheet.create({
 
   displayTitle: {
     fontSize: 32,
-    fontFamily: FONT_SERIF,
     marginBottom: SPACING_S,
   },
   headlineText: {
     fontSize: 22,
-    fontFamily: FONT_SERIF,
   },
   cardTitle: {
     fontSize: 16,
-    fontFamily: FONT_SERIF_MEDIUM,
   },
   bodyText: {
     fontSize: 16,
@@ -875,7 +903,6 @@ const styles = StyleSheet.create({
   },
   featuredImageTitle: {
     fontSize: 20,
-    fontFamily: FONT_SERIF_MEDIUM,
     color: '#fff',
   },
   featuredImageMeta: {
@@ -914,7 +941,6 @@ const styles = StyleSheet.create({
   },
   badgeText: {
     fontSize: 11,
-    fontWeight: '500',
     color: '#fff',
   },
 });

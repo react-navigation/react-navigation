@@ -17,7 +17,6 @@ import { type Icon, PlatformPressable, Text } from '@react-navigation/elements';
 import {
   StackActions,
   ThemeProvider,
-  useNavigation,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -596,7 +595,6 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
 const NavigatorLayout = ({ children }: { children: React.ReactNode }) => {
   const theme = useTheme();
-  const navigation = useNavigation('DrawerShowcase');
 
   const [fontsLoaded] = useFonts({
     SpaceGrotesk_400Regular,
@@ -604,13 +602,6 @@ const NavigatorLayout = ({ children }: { children: React.ReactNode }) => {
     SpaceGrotesk_600SemiBold,
     SpaceGrotesk_700Bold,
   });
-
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      title: 'Ledger',
-      headerBackButtonDisplayMode: 'minimal',
-    });
-  }, [navigation]);
 
   const customTheme = React.useMemo(
     () => ({
