@@ -106,6 +106,11 @@ export type DrawerNavigationOptions = HeaderOptions & {
   drawerItemStyle?: StyleProp<ViewStyle>;
 
   /**
+   * ID to locate this drawer item in tests.
+   */
+  drawerItemTestID?: string;
+
+  /**
    * Style object to apply to the `Text` inside content section which renders a label.
    */
   drawerLabelStyle?: StyleProp<TextStyle>;

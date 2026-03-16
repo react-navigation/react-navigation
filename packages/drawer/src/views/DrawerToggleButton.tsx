@@ -19,6 +19,7 @@ type Props = {
   pressColor?: ColorValue | undefined;
   pressOpacity?: number | undefined;
   tintColor?: ColorValue | undefined;
+  testID?: string | undefined;
 };
 
 export function DrawerToggleButton({
