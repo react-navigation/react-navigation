@@ -27,6 +27,11 @@ export const CardA11yWrapper = React.forwardRef(
     return (
       <View
         aria-hidden={!focused}
+        // On web, aria-hidden alone doesn't prevent keyboard Tab navigation
+        // to focusable elements. The inert attribute blocks both screen reader
+        // access and keyboard focus, which is needed when animations keep the
+        // screen visible in the DOM.
+        inert={!focused || undefined}
         style={[
           StyleSheet.absoluteFill,
           {
