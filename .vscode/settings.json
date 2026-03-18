@@ -1,0 +1,5 @@
+{
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "oxc.enable": true,
+  "oxc.configPath": "oxlint.config.mts"
+}

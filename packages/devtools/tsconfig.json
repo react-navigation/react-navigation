@@ -1,9 +1,6 @@
 {
   "extends": "../../tsconfig",
-  "references": [
-    { "path": "../core" },
-    { "path": "../routers" }
-  ],
+  "references": [{ "path": "../core" }, { "path": "../routers" }],
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "./lib/typescript"

@@ -2,6 +2,7 @@ import { Animated, View } from 'react-native';
 
 type CallstackLiquidGlass = typeof import('@callstack/liquid-glass');
 
+// oxlint-disable-next-line import/no-mutable-exports
 let isLiquidGlassSupported: boolean,
   LiquidGlassView: CallstackLiquidGlass['LiquidGlassView'],
   LiquidGlassContainerView: CallstackLiquidGlass['LiquidGlassContainerView'],

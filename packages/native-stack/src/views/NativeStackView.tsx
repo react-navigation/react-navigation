@@ -161,6 +161,7 @@ export function NativeStackView({ state, descriptors }: Props) {
                 : null),
             }}
           >
+            {/* oxlint-disable-next-line react/jsx-no-constructed-context-values */}
             <HeaderBackContext.Provider value={headerBack}>
               <AnimatedHeaderHeightProvider>
                 <View style={[styles.contentContainer, contentStyle]}>

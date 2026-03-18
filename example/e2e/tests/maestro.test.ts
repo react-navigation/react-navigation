@@ -1,6 +1,7 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 import { expect, type Page, test } from '@playwright/test';
-import fs from 'fs';
-import path from 'path';
 import { parseAllDocuments } from 'yaml';
 
 test.describe.configure({ mode: 'parallel' });

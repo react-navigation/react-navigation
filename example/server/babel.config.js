@@ -1,5 +1,5 @@
-const path = require('path');
-const fs = require('fs');
+const path = require('node:path');
+const fs = require('node:fs');
 
 const packages = path.resolve(__dirname, '..', '..', 'packages');
 

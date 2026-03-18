@@ -2,7 +2,6 @@ import { NavigationContainerRefContext } from '@react-navigation/core';
 import * as React from 'react';
 import { Dimensions } from 'react-native';
 
-// eslint-disable-next-line import-x/extensions
 import type { CornerInsetProps, CornerInsetRef } from './CornerInset.tsx';
 import ReactNavigationCornerInsetViewNativeComponent, {
   Commands,

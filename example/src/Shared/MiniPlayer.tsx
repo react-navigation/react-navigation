@@ -19,7 +19,7 @@ export function MiniPlayer({ placement }: { placement: 'inline' | 'regular' }) {
       ) : (
         <>
           <Text numberOfLines={1} style={styles.miniPlayerAlbumTitle}>
-            Sgt Pepper's Lonely Hearts Club Band
+            Sgt Pepper&apos;s Lonely Hearts Club Band
           </Text>
           <View style={styles.miniPlayerButtons}>
             <Ionicons name="play" size={32} />

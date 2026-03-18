@@ -17,6 +17,7 @@ const SceneComponent = React.memo(
 
 SceneComponent.displayName = 'SceneComponent';
 
+// oxlint-disable-next-line react/display-name
 export function SceneMap<T>(scenes: { [key: string]: React.ComponentType<T> }) {
   return ({ route, jumpTo, position }: SceneProps) => (
     <SceneComponent

@@ -122,6 +122,7 @@ export function useNavigationCache<
             !stackRef.current
           ) {
             // Capture the stack trace for devtools
+            // oxlint-disable-next-line unicorn/error-message
             stackRef.current = new Error().stack;
             isStackSet = true;
           }

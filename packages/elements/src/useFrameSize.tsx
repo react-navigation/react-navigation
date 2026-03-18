@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { type LayoutChangeEvent, Platform, View } from 'react-native';
+import { type LayoutChangeEvent, Platform, type View } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 

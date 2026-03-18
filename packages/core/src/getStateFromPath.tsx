@@ -749,7 +749,12 @@ const createNestedStateObject = (
   initialRoutes: InitialRouteConfig[],
   flatConfig?: RouteConfig[]
 ): InitialState | undefined => {
-  let route = routes.shift() as ParsedRoute;
+  let route = routes.shift();
+
+  if (route == null) {
+    return undefined;
+  }
+
   const parentScreens: string[] = [];
 
   let initialRoute = findInitialRoute(route.name, parentScreens, initialRoutes);
@@ -765,7 +770,7 @@ const createNestedStateObject = (
   if (routes.length > 0) {
     let nestedState = state;
 
-    while ((route = routes.shift() as ParsedRoute)) {
+    while ((route = routes.shift())) {
       initialRoute = findInitialRoute(route.name, parentScreens, initialRoutes);
 
       const nestedStateIndex =

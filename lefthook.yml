@@ -2,16 +2,19 @@ pre-commit:
   parallel: true
   commands:
     lint:
-      glob: "*.{js,ts,tsx}"
+      glob: '*.{js,ts,tsx}'
       run: yarn lint {staged_files}
+    format:
+      glob: '*.{js,ts,tsx,json,yml,yaml,md,css}'
+      run: yarn format --check --no-error-on-unmatched-pattern {staged_files}
     types:
-      glob: "*.{json,js,ts,tsx}"
+      glob: '*.{json,js,ts,tsx}'
       run: yarn tsc --noEmit
     test:
-      glob: "*.{json,js,ts,tsx}"
+      glob: '*.{json,js,ts,tsx}'
       run: yarn test
     dependencies:
-      glob: "{package.json,yarn.lock}"
+      glob: '{package.json,yarn.lock}'
       run: yarn check-dependency-version-consistency .
 commit-msg:
   parallel: true

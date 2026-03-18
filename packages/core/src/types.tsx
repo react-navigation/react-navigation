@@ -225,9 +225,8 @@ export type EventArg<
 export type EventListenerCallback<
   EventMap extends EventMapBase,
   EventName extends keyof EventMap,
-  EventCanPreventDefault extends
-    | boolean
-    | undefined = EventMap[EventName]['canPreventDefault'],
+  EventCanPreventDefault extends boolean | undefined =
+    EventMap[EventName]['canPreventDefault'],
 > = (
   e: EventArg<
     EventName,

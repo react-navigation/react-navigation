@@ -1,5 +1,6 @@
+import path from 'node:path';
+
 import { defineConfig } from '@playwright/test';
-import path from 'path';
 
 const PORT = 5173;
 

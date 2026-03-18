@@ -56,9 +56,7 @@ const processBarButtonItems = (
       if (item.type === 'spacing') {
         if (item.spacing == null) {
           throw new Error(
-            `Spacing item must have a 'spacing' property defined: ${JSON.stringify(
-              item
-            )}`
+            `Spacing item must have a 'spacing' property defined: ${JSON.stringify(item)}`
           );
         }
 
@@ -68,9 +66,7 @@ const processBarButtonItems = (
       if (item.type === 'button' || item.type === 'menu') {
         if (item.type === 'menu' && item.menu == null) {
           throw new Error(
-            `Menu item must have a 'menu' property defined: ${JSON.stringify(
-              item
-            )}`
+            `Menu item must have a 'menu' property defined: ${JSON.stringify(item)}`
           );
         }
 
