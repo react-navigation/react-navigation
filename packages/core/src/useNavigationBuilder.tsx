@@ -15,6 +15,7 @@ import * as React from 'react';
 import { isValidElementType } from 'react-is';
 import useLatestCallback from 'use-latest-callback';
 
+import { ConsumedParamsContext } from './ConsumedParamsContext';
 import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
@@ -61,8 +62,6 @@ type NavigatorRoute = {
   key: string;
   params?: NavigatorScreenParams<ParamListBase>;
 };
-
-const CONSUMED_PARAMS = Symbol('CONSUMED_PARAMS');
 
 const isScreen = (
   child: React.ReactElement<unknown>
@@ -328,10 +327,11 @@ export function useNavigationBuilder<
     | NavigatorRoute
     | undefined;
 
+  const consumedParams = React.useContext(ConsumedParamsContext);
+
   const isNestedParamsConsumed =
     typeof route?.params === 'object' && route.params != null
-      ? CONSUMED_PARAMS in route.params &&
-        route.params[CONSUMED_PARAMS] === route.params
+      ? consumedParams?.ref?.deref() === route.params
       : false;
 
   const {
@@ -725,20 +725,20 @@ export function useNavigationBuilder<
         : nextState;
   }
 
+  const setConsumedParamsRef = consumedParams?.setRef;
+
   React.useEffect(() => {
     if (
+      setConsumedParamsRef &&
       didConsumeNestedParams &&
       typeof route?.params === 'object' &&
       route.params != null
     ) {
       // Track whether the params have been already consumed
       // Set it to the same object, so merged params can be handled again
-      Object.defineProperty(route.params, CONSUMED_PARAMS, {
-        value: route.params,
-        enumerable: false,
-      });
+      setConsumedParamsRef(new WeakRef(route.params));
     }
-  }, [didConsumeNestedParams, route?.params]);
+  }, [didConsumeNestedParams, route?.params, setConsumedParamsRef]);
 
   const shouldUpdate = state !== nextState;
 
