@@ -324,13 +324,11 @@ export function useNavigationBuilder<
 
   const route = React.use(NavigationRouteContext) as NavigatorRoute | undefined;
 
-  const { ref: consumedParamsRef, setRef: setConsumedParamsRef } = React.use(
-    ConsumedParamsContext
-  );
+  const consumedParams = React.use(ConsumedParamsContext);
 
   const isNestedParamsConsumed =
     typeof route?.params === 'object' && route.params != null
-      ? consumedParamsRef?.deref() === route.params
+      ? consumedParams?.ref?.deref() === route.params
       : false;
 
   const {
@@ -724,8 +722,11 @@ export function useNavigationBuilder<
         : nextState;
   }
 
+  const setConsumedParamsRef = consumedParams?.setRef;
+
   React.useEffect(() => {
     if (
+      setConsumedParamsRef &&
       didConsumeNestedParams &&
       typeof route?.params === 'object' &&
       route.params != null

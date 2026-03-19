@@ -5,8 +5,6 @@ type ConsumedParamsContextValue = {
   setRef: (ref: WeakRef<object>) => void;
 };
 
-export const ConsumedParamsContext =
-  React.createContext<ConsumedParamsContextValue>({
-    ref: null,
-    setRef: () => {},
-  });
+export const ConsumedParamsContext = React.createContext<
+  ConsumedParamsContextValue | undefined
+>(undefined);
