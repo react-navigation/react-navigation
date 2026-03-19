@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.16.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.16.1...@react-navigation/core@7.16.2) (2026-03-19)
+
+### Bug Fixes
+
+* use a weak ref instead of mutating params to avoid errors when it's frozen ([#13042](https://github.com/react-navigation/react-navigation/issues/13042)) ([802ba72](https://github.com/react-navigation/react-navigation/commit/802ba7254db46fab6a4c3919e77e214a12cd7af3)) - by @
+
 ## [7.16.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.16.0...@react-navigation/core@7.16.1) (2026-03-03)
 
 ### Bug Fixes
