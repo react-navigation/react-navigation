@@ -1,4 +1,5 @@
 import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
+import { ActivityView } from '@react-navigation/elements/internal';
 import {
   NavigationProvider,
   type ParamListBase,
@@ -156,7 +157,6 @@ export function HeaderContainer({
                     }
                   : undefined
               }
-              aria-hidden={!isFocused}
               style={[
                 // Avoid positioning the focused header absolutely
                 // Otherwise accessibility tools don't seem to be able to find it
@@ -168,7 +168,12 @@ export function HeaderContainer({
                 },
               ]}
             >
-              {header !== undefined ? header(props) : <Header {...props} />}
+              <ActivityView
+                mode={isFocused ? 'normal' : 'inert'}
+                visible={true}
+              >
+                {header !== undefined ? header(props) : <Header {...props} />}
+              </ActivityView>
             </View>
           </NavigationProvider>
         );
