@@ -62,7 +62,7 @@ type NavigatorRoute = {
   params?: NavigatorScreenParams<ParamListBase> | undefined
 }
 
-const CONSUMED_PARAMS = Symbol('CONSUMED_PARAMS')
+const consumedParams = new WeakSet<object>()
 
 const isScreen = (
   child: React.ReactElement<unknown>,
@@ -331,8 +331,7 @@ export function useNavigationBuilder<
 
   const isNestedParamsConsumed =
     typeof route?.params === 'object' && route.params != null
-      ? CONSUMED_PARAMS in route.params &&
-        route.params[CONSUMED_PARAMS] === route.params
+      ? consumedParams.has(route.params)
       : false
 
   const {
@@ -730,15 +729,11 @@ export function useNavigationBuilder<
     if (
       didConsumeNestedParams &&
       typeof route?.params === 'object' &&
-      route.params != null &&
-      Object.isExtensible(route.params)
+      route.params != null
     ) {
       // Track whether the params have been already consumed
       // Set it to the same object, so merged params can be handled again
-      Object.defineProperty(route.params, CONSUMED_PARAMS, {
-        value: route.params,
-        enumerable: false,
-      })
+      consumedParams.add(route.params)
     }
   }, [didConsumeNestedParams, route?.params])
 
