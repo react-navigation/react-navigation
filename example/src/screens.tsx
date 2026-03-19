@@ -22,6 +22,7 @@ import { NativeStackFormSheet } from './Screens/NativeStackFormSheet';
 import { NativeStackHeaderCustomization } from './Screens/NativeStackHeaderCustomization';
 import { NativeStackPreloadFlow } from './Screens/NativeStackPreloadFlow';
 import { NativeStackPreventRemove } from './Screens/NativeStackPreventRemove';
+import { NativeStackSplitView } from './Screens/NativeStackSplitView';
 import { NavigatorLayout } from './Screens/NavigatorLayout';
 import { ScreenLayout } from './Screens/ScreenLayout';
 import { StackBasic } from './Screens/StackBasic';
@@ -46,6 +47,7 @@ export const SCREENS = {
   NativeStackHeaderCustomization,
   NativeStackPreloadFlow,
   NativeStackPreventRemove,
+  NativeStackSplitView,
   StackBasic,
   StackCardModal,
   StackFloatScreenHeader,
