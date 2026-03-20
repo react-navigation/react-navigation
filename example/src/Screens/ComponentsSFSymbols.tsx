@@ -215,7 +215,7 @@ const SFSymbolRow = React.memo(function SFSymbolRow({
   scale: SFSymbolScale;
   mode: SFSymbolMode;
   colors?: SFSymbolProps['colors'];
-  animation?: SFSymbolAnimationEffect;
+  animation?: SFSymbolAnimationEffect | undefined;
 }) {
   const { colors } = useTheme();
 

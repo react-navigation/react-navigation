@@ -96,6 +96,7 @@ const processBarButtonItems = (
 
           processedItem = {
             ...processedItemCommon,
+            // @ts-expect-error — react-native-screens types need | undefined for exactOptionalPropertyTypes
             menu: {
               ...processedItemCommon.menu,
               singleSelection: !multiselectable,
@@ -107,6 +108,7 @@ const processBarButtonItems = (
           processedItemCommon.type === 'button' &&
           item.type === 'button'
         ) {
+          // @ts-expect-error — react-native-screens types need | undefined for exactOptionalPropertyTypes
           processedItem = processedItemCommon;
         } else {
           throw new Error(
@@ -124,6 +126,7 @@ const processBarButtonItems = (
             badge: {
               ...badge,
               value: String(badge.value),
+              // @ts-expect-error — react-native-screens types need | undefined for exactOptionalPropertyTypes
               style: {
                 backgroundColor: badgeBackgroundColor,
                 color: badgeTextColor,
@@ -165,6 +168,7 @@ const getMenuItem = (
     const { label, icon, inline, layout, items, multiselectable, ...rest } =
       item;
 
+    // @ts-expect-error — react-native-screens types need | undefined for exactOptionalPropertyTypes
     return {
       ...rest,
       icon: transformIcon(icon),
@@ -178,6 +182,7 @@ const getMenuItem = (
 
   const { label, icon, description, ...rest } = item;
 
+  // @ts-expect-error — react-native-screens types need | undefined for exactOptionalPropertyTypes
   return {
     ...rest,
     icon: transformIcon(icon),
@@ -404,6 +409,7 @@ export function useHeaderConfigProps({
             leftItems.map((item, index) => {
               if (item.type === 'custom') {
                 return (
+                  // @ts-expect-error — react-native-screens types need | undefined for exactOptionalPropertyTypes
                   <ScreenStackHeaderLeftView
                     // eslint-disable-next-line @eslint-react/no-array-index-key
                     key={index}
@@ -478,6 +484,7 @@ export function useHeaderConfigProps({
         rightItems.map((item, index) => {
           if (item.type === 'custom') {
             return (
+              // @ts-expect-error — react-native-screens types need | undefined for exactOptionalPropertyTypes
               <ScreenStackHeaderRightView
                 // eslint-disable-next-line @eslint-react/no-array-index-key
                 key={index}
@@ -499,6 +506,7 @@ export function useHeaderConfigProps({
       ) : null}
       {hasHeaderSearchBar ? (
         <ScreenStackHeaderSearchBarView>
+          {/* @ts-expect-error — react-native-screens types need | undefined for exactOptionalPropertyTypes */}
           <SearchBar
             {...headerSearchBarOptions}
             onChangeText={headerSearchBarOptions.onChange}
@@ -508,6 +516,7 @@ export function useHeaderConfigProps({
     </>
   );
 
+  // @ts-expect-error — react-native-screens types need | undefined for exactOptionalPropertyTypes
   return {
     backButtonInCustomView,
     backgroundColor: headerBackgroundColor,
