@@ -1,5 +1,4 @@
 import {
-  createComponentForStaticNavigation,
   createPathConfigForStaticNavigation,
   type NavigationContainerRef,
   type ParamListBase,
@@ -44,8 +43,8 @@ type Props = Omit<
  * @param tree Static navigation config.
  * @returns Navigation component to use in your app.
  */
-export function createStaticNavigation(tree: StaticNavigation<any, any, any>) {
-  const Component = createComponentForStaticNavigation(tree, 'RootNavigator');
+export function createStaticNavigation(tree: StaticNavigation<any>) {
+  const Component = tree.getComponent();
 
   function Navigation(
     { linking, ...rest }: Props,

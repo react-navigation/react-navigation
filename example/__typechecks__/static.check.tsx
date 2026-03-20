@@ -7,12 +7,13 @@ import {
 } from '@react-navigation/bottom-tabs';
 import {
   type CompositeNavigationProp,
-  createComponentForStaticNavigation,
   createStaticNavigation,
   type NavigationContainerRef,
   type NavigationListForNested,
   type NavigationProp,
   type NavigatorScreenParams,
+  type RouteProp,
+  type ScreenLayoutArgs,
   type StaticParamList,
   type StaticScreenProps,
   type Theme,
@@ -24,6 +25,7 @@ import {
 import {
   createStackNavigator,
   createStackScreen,
+  type StackNavigationOptions,
   type StackNavigationProp,
 } from '@react-navigation/stack';
 import * as arktype from 'arktype';
@@ -1671,7 +1673,7 @@ createStackScreen({
 });
 
 /**
- * Preserves types with createComponentForStaticNavigation
+ * Preserves types with getComponent
  */
 {
   const Stack = createStackNavigator({
@@ -1696,19 +1698,15 @@ createStackScreen({
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const ProfileComponent = createComponentForStaticNavigation(Stack, 'Profile');
+  const StackComponent = Stack.getComponent();
 
-  expectTypeOf<React.ComponentProps<typeof ProfileComponent>>().toExtend<{
+  expectTypeOf<React.ComponentProps<typeof StackComponent>>().toExtend<{
     initialRouteName?: 'Profile' | 'Settings';
   }>();
-
-  expectTypeOf<React.ComponentProps<typeof ProfileComponent>>().toEqualTypeOf<
-    Omit<React.ComponentProps<typeof Stack.Navigator>, 'children'>
-  >();
 }
 
 /**
- * Infers type for nested navigator with createComponentForStaticNavigation
+ * Infers type for nested navigator with getComponent
  */
 {
   const Stack = createStackNavigator({
@@ -1726,10 +1724,37 @@ createStackScreen({
     },
   });
 
-  const StackComponent = createComponentForStaticNavigation(
-    Stack,
-    'DashboardInner'
-  );
+  type FooParamList = {
+    Home: undefined;
+    Profile: {
+      userId: string;
+    };
+  };
+
+  type FooNavigation =
+    | StackNavigationProp<FooParamList, 'Home'>
+    | StackNavigationProp<FooParamList, 'Profile'>;
+
+  const StackComponent = Stack.getComponent();
+
+  expectTypeOf<React.ComponentProps<typeof StackComponent>>().toExtend<{
+    initialRouteName?: 'Home' | 'Profile';
+    screenLayout?: (
+      props: ScreenLayoutArgs<
+        FooParamList,
+        keyof FooParamList,
+        StackNavigationOptions,
+        FooNavigation
+      >
+    ) => React.ReactElement;
+    screenOptions?:
+      | StackNavigationOptions
+      | ((props: {
+          route: RouteProp<FooParamList, keyof FooParamList>;
+          navigation: FooNavigation;
+          theme: Theme;
+        }) => StackNavigationOptions);
+  }>();
 
   const Dashboard = () => {
     return <StackComponent />;
@@ -1762,4 +1787,68 @@ createStackScreen({
       category: string;
     };
   }>();
+}
+
+/**
+ * Supports with for decorating the static navigator component
+ */
+{
+  type FooParamList = {
+    Profile: {
+      userId: string;
+    };
+    Feed: {
+      sort: 'hot' | 'recent';
+    };
+  };
+
+  type FooNavigation =
+    | StackNavigationProp<FooParamList, 'Profile'>
+    | StackNavigationProp<FooParamList, 'Feed'>;
+
+  const config = {
+    screens: {
+      Profile: createStackScreen({
+        screen: (
+          _: StaticScreenProps<{
+            userId: string;
+          }>
+        ) => null,
+      }),
+      Feed: createStackScreen({
+        screen: (
+          _: StaticScreenProps<{
+            sort: 'hot' | 'recent';
+          }>
+        ) => null,
+      }),
+    },
+  } as const;
+
+  const Stack = createStackNavigator(config).with(({ Navigator }) => {
+    expectTypeOf<React.ComponentProps<typeof Navigator>>().toExtend<{
+      initialRouteName?: keyof FooParamList;
+      screenLayout?: (
+        props: ScreenLayoutArgs<
+          FooParamList,
+          keyof FooParamList,
+          StackNavigationOptions,
+          FooNavigation
+        >
+      ) => React.ReactElement;
+      screenOptions?:
+        | StackNavigationOptions
+        | ((props: {
+            route: RouteProp<FooParamList, keyof FooParamList>;
+            navigation: FooNavigation;
+            theme: Theme;
+          }) => StackNavigationOptions);
+    }>();
+
+    return <Navigator />;
+  });
+
+  expectTypeOf(Stack).not.toHaveProperty('with');
+
+  expectTypeOf(Stack.config).toEqualTypeOf<typeof config>();
 }

@@ -55,14 +55,7 @@ export interface RootNavigator {}
 export interface Theme {}
 
 export type RootParamList =
-  RootNavigator extends TypedNavigatorInternal<
-    infer ParamList,
-    any,
-    any,
-    any,
-    any,
-    any
-  >
+  RootNavigator extends PrivateValueStore<[infer ParamList, any, any]>
     ? ParamList
     : {};
 
@@ -1146,18 +1139,51 @@ export type NavigatorTypeBagBase = {
   Navigator: React.ComponentType<any>;
 };
 
+type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
+  React.ComponentType<
+    Omit<
+      React.ComponentProps<
+        TypedNavigatorInternal<
+          Bag['ParamList'],
+          Bag['State'],
+          Bag['ScreenOptions'],
+          Bag['EventMap'],
+          Bag['NavigationList'],
+          Bag['Navigator']
+        >['Navigator']
+      >,
+      'children'
+    >
+  >;
+
+type TypedNavigatorStaticDecorated<Bag extends NavigatorTypeBagBase, Config> = {
+  getComponent: () => React.ComponentType<{}>;
+  config: Config;
+} & PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
+
+type TypedNavigatorStatic<Bag extends NavigatorTypeBagBase, Config> = {
+  config: Config;
+  with: (
+    Component: React.ComponentType<{
+      Navigator: TypedNavigatorComponent<Bag>;
+    }>
+  ) => TypedNavigatorStaticDecorated<Bag, Config>;
+  getComponent: () => TypedNavigatorComponent<Bag>;
+};
+
 export type TypedNavigator<
   Bag extends NavigatorTypeBagBase,
   Config = unknown,
-> = TypedNavigatorInternal<
-  Bag['ParamList'],
-  Bag['State'],
-  Bag['ScreenOptions'],
-  Bag['EventMap'],
-  Bag['NavigationList'],
-  Bag['Navigator']
-> &
-  (undefined extends Config ? {} : { config: Config }) &
+> = (undefined extends Config
+  ? TypedNavigatorInternal<
+      Bag['ParamList'],
+      Bag['State'],
+      Bag['ScreenOptions'],
+      Bag['EventMap'],
+      Bag['NavigationList'],
+      Bag['Navigator']
+    >
+  : TypedNavigatorStatic<Bag, Config>) &
   PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
 
 type TypedNavigatorInternal<

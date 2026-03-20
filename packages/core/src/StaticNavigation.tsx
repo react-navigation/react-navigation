@@ -45,10 +45,12 @@ type ParamsForScreenComponent<T> = T extends (...args: any[]) => any
 
 type ParamsForScreen<T> =
   // Nested navigator in screen property
-  T extends { screen: StaticNavigationBase }
+  T extends {
+    screen: { config: StaticConfig<NavigatorTypeBagBase> };
+  }
     ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
     : // Direct nested navigator
-      T extends StaticNavigationBase
+      T extends { config: StaticConfig<NavigatorTypeBagBase> }
       ? NavigatorScreenParams<StaticParamList<T>> | undefined
       : T extends {
             screen: React.ComponentType<any>;
@@ -76,7 +78,7 @@ type ParamsForConfig<Linking, Screen> = undefined extends Linking
   : // Only infer params from linking if it's a pattern (i.e., contains ':')
     // This avoids inferring non-literals like 'string'
     Linking extends ValidPathPattern | { path: ValidPathPattern }
-    ? Screen extends StaticNavigationBase
+    ? Screen extends { config: StaticConfig<NavigatorTypeBagBase> }
       ? FlatType<ParamsForLinking<Linking>> & ParamsForScreen<Screen>
       : // Don't combine if `undefined`, otherwise it'll result in `never`
         undefined extends ParamsForScreen<Screen>
@@ -189,7 +191,7 @@ export type StaticScreenConfigLinking =
 
 export type StaticScreenConfigScreen =
   | React.ComponentType<any>
-  | StaticNavigation<any, any, any>;
+  | StaticNavigation<any>;
 
 export type StaticScreenConfig<
   Linking extends StaticScreenConfigLinking,
@@ -333,7 +335,7 @@ type StaticConfigScreens<
 > = {
   [RouteName in keyof ParamList]:
     | React.ComponentType<any>
-    | StaticNavigation<any, any, any>
+    | StaticNavigation<any>
     | StaticScreenConfig<
         | {
             path: string;
@@ -344,7 +346,7 @@ type StaticConfigScreens<
           }
         | string
         | undefined,
-        StaticNavigation<any, any, any> | React.ComponentType<any>,
+        StaticNavigation<any> | React.ComponentType<any>,
         State,
         ScreenOptions,
         EventMap,
@@ -511,16 +513,10 @@ export type StaticParamList<
     ParamListForGroups<T['config']['groups']>
 >;
 
-type StaticNavigationBase = {
-  config: StaticConfig<NavigatorTypeBagBase>;
+export type StaticNavigation<NavigatorTypeBag extends NavigatorTypeBagBase> = {
+  config: StaticConfig<NavigatorTypeBag>;
+  getComponent: () => React.ComponentType<{}>;
 };
-
-export type StaticNavigation<NavigatorProps, GroupProps, ScreenProps> =
-  StaticNavigationBase & {
-    Navigator: React.ComponentType<NavigatorProps>;
-    Group: React.ComponentType<GroupProps>;
-    Screen: React.ComponentType<ScreenProps>;
-  };
 
 const MemoizedScreen = React.memo(
   <T extends React.ComponentType<any>>({ component }: { component: T }) => {
@@ -554,16 +550,13 @@ const getItemsFromScreens = (
         component = screen;
       } else if ('config' in screen) {
         isNavigator = true;
-        component = createComponentForStaticNavigation(
-          screen,
-          `${name}Navigator`
-        );
+        component = screen.getComponent();
       }
     } else if (isValidElementType(item)) {
       component = item;
     } else if ('config' in item) {
       isNavigator = true;
-      component = createComponentForStaticNavigation(item, `${name}Navigator`);
+      component = item.getComponent();
     }
 
     if (component == null) {
@@ -601,8 +594,13 @@ const getItemsFromScreens = (
  * @param displayName Name of the component to be displayed in React DevTools.
  * @returns A component which renders the navigator.
  */
-export function createComponentForStaticNavigation<
-  T extends StaticNavigation<any, any, any>,
+export function createComponentForStaticConfig<
+  T extends {
+    Navigator: React.ComponentType<any>;
+    Group: React.ComponentType<any>;
+    Screen: React.ComponentType<any>;
+    config: StaticConfig<NavigatorTypeBagBase>;
+  },
 >(
   tree: T,
   displayName: string
@@ -651,6 +649,12 @@ export function createComponentForStaticNavigation<
     }
   }
 
+  if (items.length === 0) {
+    throw new Error(
+      "Couldn't find any screens in the 'screens' or 'groups' property. Make sure to define at least one screen in the configuration."
+    );
+  }
+
   const NavigatorComponent = ({ children: _, ...props }: typeof rest) => {
     const children = items.map((item) => item());
 
@@ -667,8 +671,26 @@ export function createComponentForStaticNavigation<
           })
         : { ...rest.screenOptions, ...props.screenOptions };
 
+    const screenListeners =
+      typeof props.screenListeners === 'function' ||
+      typeof rest.screenListeners === 'function'
+        ? (options: unknown) => ({
+            ...(typeof rest.screenListeners === 'function'
+              ? rest.screenListeners(options)
+              : rest.screenListeners),
+            ...(typeof props.screenListeners === 'function'
+              ? props.screenListeners(options)
+              : props.screenListeners),
+          })
+        : { ...rest.screenListeners, ...props.screenListeners };
+
     return (
-      <Navigator {...rest} {...props} screenOptions={screenOptions}>
+      <Navigator
+        {...rest}
+        {...props}
+        screenOptions={screenOptions}
+        screenListeners={screenListeners}
+      >
         {children}
       </Navigator>
     );

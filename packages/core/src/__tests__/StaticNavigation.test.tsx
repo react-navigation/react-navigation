@@ -2,6 +2,7 @@ import { expect, test } from '@jest/globals';
 import type {
   DefaultRouterOptions,
   NavigationState,
+  ParamListBase,
 } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import assert from 'assert';
@@ -11,20 +12,39 @@ import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigatorFactory } from '../createNavigatorFactory';
 import { getStateFromPath } from '../getStateFromPath';
 import {
-  createComponentForStaticNavigation,
   createPathConfigForStaticNavigation,
+  type StaticConfig,
+  type StaticParamList,
 } from '../StaticNavigation';
-import type { EventMapBase } from '../types';
+import type {
+  DefaultNavigatorOptions,
+  EventMapBase,
+  TypedNavigator,
+} from '../types';
 import { useIsFocused } from '../useIsFocused';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import { MockRouter } from './__fixtures__/MockRouter';
 
-const TestNavigator = (props: any) => {
+type TestNavigatorScreenOptions = {
+  className?: string;
+  testId?: string;
+  title?: string;
+};
+
+type TestNavigatorProps = DefaultNavigatorOptions<
+  ParamListBase,
+  NavigationState,
+  TestNavigatorScreenOptions,
+  EventMapBase,
+  unknown
+>;
+
+const TestNavigator = (props: TestNavigatorProps) => {
   const { state, descriptors, NavigationContent } = useNavigationBuilder<
     NavigationState,
     DefaultRouterOptions,
     {},
-    { className?: string; testId?: string },
+    TestNavigatorScreenOptions,
     EventMapBase
   >(MockRouter, props);
 
@@ -49,7 +69,31 @@ const TestNavigator = (props: any) => {
   );
 };
 
-const createTestNavigator = createNavigatorFactory(TestNavigator);
+type TestNavigatorTypeBag<ParamList extends {}> = {
+  ParamList: ParamList;
+  State: NavigationState;
+  ScreenOptions: TestNavigatorScreenOptions;
+  EventMap: EventMapBase;
+  NavigationList: {
+    [RouteName in keyof ParamList]: unknown;
+  };
+  Navigator: typeof TestNavigator;
+};
+
+function createTestNavigator<
+  const ParamList extends ParamListBase,
+>(): TypedNavigator<TestNavigatorTypeBag<ParamList>, undefined>;
+function createTestNavigator<
+  const Config extends StaticConfig<TestNavigatorTypeBag<ParamListBase>>,
+>(
+  config: Config
+): TypedNavigator<
+  TestNavigatorTypeBag<StaticParamList<{ config: Config }>>,
+  Config
+>;
+function createTestNavigator(config?: unknown) {
+  return createNavigatorFactory(TestNavigator)(config);
+}
 
 const TestScreen = ({ route }: any) => {
   const isFocused = useIsFocused();
@@ -93,11 +137,11 @@ test('renders the specified nested navigator configuration', () => {
     },
   });
 
-  const Component = createComponentForStaticNavigation(Root, 'RootNavigator');
+  const RootComponent = Root.getComponent();
 
   const element = render(
     <BaseNavigationContainer>
-      <Component />
+      <RootComponent />
     </BaseNavigationContainer>
   );
 
@@ -177,11 +221,11 @@ test('renders the specified nested navigator configuration with groups', () => {
     },
   });
 
-  const Component = createComponentForStaticNavigation(Root, 'RootNavigator');
+  const RootComponent = Root.getComponent();
 
   const element = render(
     <BaseNavigationContainer>
-      <Component />
+      <RootComponent />
     </BaseNavigationContainer>
   );
 
@@ -266,11 +310,11 @@ test('handles conditional groups with nested if hooks', () => {
   let onUpdate: (() => void) | undefined;
   let showNested = true;
 
-  const Component = createComponentForStaticNavigation(Root, 'RootNavigator');
+  const RootComponent = Root.getComponent();
 
   const element = (
     <BaseNavigationContainer>
-      <Component />
+      <RootComponent />
     </BaseNavigationContainer>
   );
 
@@ -326,11 +370,11 @@ test('handles non-function screens', () => {
       },
     });
 
-    const Component = createComponentForStaticNavigation(Root, 'RootNavigator');
+    const RootComponent = Root.getComponent();
 
     render(
       <BaseNavigationContainer>
-        <Component />
+        <RootComponent />
       </BaseNavigationContainer>
     );
   }).not.toThrow();
@@ -338,28 +382,30 @@ test('handles non-function screens', () => {
 
 test("throws if screens or groups property isn't specified", () => {
   expect(() => {
-    const Root = createTestNavigator({});
-
-    createComponentForStaticNavigation(Root, 'RootNavigator');
+    // @ts-expect-error: invalid static config for runtime error test
+    createTestNavigator({});
   }).toThrow("Couldn't find a 'screens' or 'groups' property");
 });
 
-test("doesn't throw if either screens or groups property is specified", () => {
+test('throws if no screens are specified', () => {
   expect(() => {
-    const Root = createTestNavigator({
+    createTestNavigator({
       screens: {},
     });
-
-    createComponentForStaticNavigation(Root, 'RootNavigator');
-  }).not.toThrow();
+  }).toThrow("Couldn't find any screens in the 'screens' or 'groups' property");
 
   expect(() => {
-    const Root = createTestNavigator({
+    createTestNavigator({
       groups: {},
     });
+  }).toThrow("Couldn't find any screens in the 'screens' or 'groups' property");
 
-    createComponentForStaticNavigation(Root, 'RootNavigator');
-  }).not.toThrow();
+  expect(() => {
+    createTestNavigator({
+      screens: {},
+      groups: {},
+    });
+  }).toThrow("Couldn't find any screens in the 'screens' or 'groups' property");
 });
 
 test('renders the initial screen based on the order of screens', () => {
@@ -376,7 +422,7 @@ test('renders the initial screen based on the order of screens', () => {
     },
   });
 
-  const AComponent = createComponentForStaticNavigation(A, 'A');
+  const AComponent = A.getComponent();
 
   expect(
     render(
@@ -411,7 +457,7 @@ test('renders the initial screen based on the order of screens', () => {
     },
   });
 
-  const BComponent = createComponentForStaticNavigation(B, 'B');
+  const BComponent = B.getComponent();
 
   expect(
     render(
@@ -447,12 +493,12 @@ test('passes additional props and options to the navigator component', () => {
     },
   });
 
-  const Component = createComponentForStaticNavigation(Root, 'RootNavigator');
+  const RootComponent = Root.getComponent();
 
   expect(
     render(
       <BaseNavigationContainer>
-        <Component
+        <RootComponent
           initialRouteName="Profile"
           screenOptions={{ testId: 'my-test-id' }}
         />
@@ -483,6 +529,272 @@ test('passes additional props and options to the navigator component', () => {
         (focused)
       </div>
     </main>
+  `);
+});
+
+test('renders wrapped navigator and merges options objects', () => {
+  const Root = createTestNavigator({
+    initialRouteName: 'Feed',
+    screenOptions: {
+      className: 'config-class',
+      testId: 'config-test-id',
+    },
+    screens: {
+      Feed: TestScreen,
+      Profile: TestScreen,
+      Settings: TestScreen,
+    },
+  }).with(({ Navigator }) => {
+    return (
+      <section data-testid="root-wrapper">
+        <Navigator
+          initialRouteName="Profile"
+          screenOptions={{ testId: 'navigator-test-id' }}
+        />
+      </section>
+    );
+  });
+
+  expect(Root).not.toHaveProperty('with');
+
+  const RootComponent = Root.getComponent();
+
+  const element = render(
+    <BaseNavigationContainer>
+      <RootComponent />
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`
+    <section
+      data-testid="root-wrapper"
+    >
+      <main>
+        <div
+          className="config-class"
+          data-testid="navigator-test-id"
+        >
+          Screen:
+          Feed
+        </div>
+        <div
+          className="config-class"
+          data-testid="navigator-test-id"
+        >
+          Screen:
+          Profile
+          (focused)
+        </div>
+        <div
+          className="config-class"
+          data-testid="navigator-test-id"
+        >
+          Screen:
+          Settings
+        </div>
+      </main>
+    </section>
+  `);
+});
+
+test('renders wrapped navigator and merges options object and options callback prop', () => {
+  const Root = createTestNavigator({
+    initialRouteName: 'Feed',
+    screenOptions: {
+      className: 'config-class',
+      testId: 'config-test-id',
+    },
+    screens: {
+      Feed: TestScreen,
+      Profile: TestScreen,
+      Settings: TestScreen,
+    },
+  }).with(({ Navigator }) => {
+    return (
+      <section data-testid="root-wrapper">
+        <Navigator
+          initialRouteName="Profile"
+          screenOptions={({ route }) => ({
+            testId: `navigator-${route.name}`,
+          })}
+        />
+      </section>
+    );
+  });
+
+  expect(Root).not.toHaveProperty('with');
+
+  const RootComponent = Root.getComponent();
+
+  const element = render(
+    <BaseNavigationContainer>
+      <RootComponent />
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`
+    <section
+      data-testid="root-wrapper"
+    >
+      <main>
+        <div
+          className="config-class"
+          data-testid="navigator-Feed"
+        >
+          Screen:
+          Feed
+        </div>
+        <div
+          className="config-class"
+          data-testid="navigator-Profile"
+        >
+          Screen:
+          Profile
+          (focused)
+        </div>
+        <div
+          className="config-class"
+          data-testid="navigator-Settings"
+        >
+          Screen:
+          Settings
+        </div>
+      </main>
+    </section>
+  `);
+});
+
+test('renders wrapped navigator and merges options callback and options object prop', () => {
+  const Root = createTestNavigator({
+    initialRouteName: 'Feed',
+    screenOptions: ({ route }) => {
+      return {
+        className: `${route.name}-config-class`,
+        testId: `config-${route.name}`,
+      };
+    },
+    screens: {
+      Feed: TestScreen,
+      Profile: TestScreen,
+      Settings: TestScreen,
+    },
+  }).with(({ Navigator }) => {
+    return (
+      <section data-testid="root-wrapper">
+        <Navigator
+          initialRouteName="Profile"
+          screenOptions={{ testId: 'navigator-test-id' }}
+        />
+      </section>
+    );
+  });
+
+  expect(Root).not.toHaveProperty('with');
+
+  const RootComponent = Root.getComponent();
+
+  const element = render(
+    <BaseNavigationContainer>
+      <RootComponent />
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`
+    <section
+      data-testid="root-wrapper"
+    >
+      <main>
+        <div
+          className="Feed-config-class"
+          data-testid="navigator-test-id"
+        >
+          Screen:
+          Feed
+        </div>
+        <div
+          className="Profile-config-class"
+          data-testid="navigator-test-id"
+        >
+          Screen:
+          Profile
+          (focused)
+        </div>
+        <div
+          className="Settings-config-class"
+          data-testid="navigator-test-id"
+        >
+          Screen:
+          Settings
+        </div>
+      </main>
+    </section>
+  `);
+});
+
+test('renders wrapped navigator and merges options callbacks', () => {
+  const Root = createTestNavigator({
+    initialRouteName: 'Feed',
+    screenOptions: ({ route }) => ({
+      className: `${route.name}-config-class`,
+      testId: `config-${route.name}`,
+    }),
+    screens: {
+      Feed: TestScreen,
+      Profile: TestScreen,
+      Settings: TestScreen,
+    },
+  }).with(({ Navigator }) => {
+    return (
+      <section data-testid="root-wrapper">
+        <Navigator
+          initialRouteName="Profile"
+          screenOptions={({ route }) => ({
+            testId: `navigator-${route.name}`,
+          })}
+        />
+      </section>
+    );
+  });
+
+  expect(Root).not.toHaveProperty('with');
+
+  const RootComponent = Root.getComponent();
+
+  const element = render(
+    <BaseNavigationContainer>
+      <RootComponent />
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`
+    <section
+      data-testid="root-wrapper"
+    >
+      <main>
+        <div
+          className="Feed-config-class"
+          data-testid="navigator-Feed"
+        >
+          Screen:
+          Feed
+        </div>
+        <div
+          className="Profile-config-class"
+          data-testid="navigator-Profile"
+        >
+          Screen:
+          Profile
+          (focused)
+        </div>
+        <div
+          className="Settings-config-class"
+          data-testid="navigator-Settings"
+        >
+          Screen:
+          Settings
+        </div>
+      </main>
+    </section>
   `);
 });
 
