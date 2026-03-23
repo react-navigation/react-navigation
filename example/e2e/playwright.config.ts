@@ -1,3 +1,5 @@
+import process from 'node:process';
+
 import { defineConfig } from '@playwright/test';
 import path from 'path';
 

@@ -146,7 +146,7 @@ export function useDevToolsBase(
   React.useEffect(() => {
     let cleaned = false;
 
-    let timer: NodeJS.Timeout;
+    let timer: ReturnType<typeof setInterval>;
     let navigation: NavigationContainerRef<any> | undefined;
     let unsubscribeAction: (() => void) | undefined;
     let unsubscribeState: (() => void) | undefined;
@@ -160,7 +160,7 @@ export function useDevToolsBase(
           timer = setInterval(() => {
             if (ref.current) {
               resolve();
-              clearTimeout(timer);
+              clearInterval(timer);
 
               const state = ref.current.getRootState();
 
@@ -256,7 +256,7 @@ export function useDevToolsBase(
       unsubscribeEvent?.();
       unsubscribeState?.();
       unsubscribeDeepLink?.();
-      clearTimeout(timer);
+      clearInterval(timer);
     };
   }, [ref, send]);
 

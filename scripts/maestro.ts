@@ -1,6 +1,7 @@
 import { execSync, spawnSync } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
+import process from 'node:process';
 import { URL } from 'node:url';
 
 import config from '../example/app.json' with { type: 'json' };

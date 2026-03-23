@@ -56,7 +56,7 @@ const HomeScreen = () => {
   const navigation = useNavigation('NativeStackPreloadFlowHome');
 
   const [isReady, setIsReady] = useState(false);
-  const timerRef = useRef<NodeJS.Timeout | undefined>(undefined);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     return navigation.addListener('blur', () => {

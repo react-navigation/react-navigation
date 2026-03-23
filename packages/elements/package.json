@@ -65,7 +65,7 @@
     "react-native-builder-bob": "^0.40.12",
     "react-native-screens": "^4.24.0",
     "react-test-renderer": "19.2.0",
-    "typescript": "^5.9.2"
+    "typescript": "^6.0.2"
   },
   "peerDependencies": {
     "@callstack/liquid-glass": ">= 0.6.0",

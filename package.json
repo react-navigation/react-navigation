@@ -45,7 +45,7 @@
     "jest": "^30.0.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.5.3",
-    "typescript": "^5.9.2"
+    "typescript": "^6.0.2"
   },
   "jest": {
     "preset": "react-native",

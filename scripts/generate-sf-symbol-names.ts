@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { relative } from 'node:path';
+import process from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
 
 const root = new URL('..', import.meta.url);

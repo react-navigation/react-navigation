@@ -57,7 +57,7 @@
     "react-native-safe-area-context": "~5.6.2",
     "react-native-screens": "^4.24.0",
     "react-test-renderer": "19.2.0",
-    "typescript": "^5.9.2"
+    "typescript": "^6.0.2"
   },
   "peerDependencies": {
     "@react-navigation/native": "workspace:^",

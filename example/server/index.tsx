@@ -1,6 +1,8 @@
 import './resolve-hooks';
 import './env';
 
+import process from 'node:process';
+
 import {
   ServerContainer,
   type ServerContainerRef,

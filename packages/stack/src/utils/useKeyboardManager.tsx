@@ -12,7 +12,8 @@ export function useKeyboardManager({
   // When a gesture didn't change the tab, we can restore the focused input with this
   const previouslyFocusedTextInputRef = React.useRef<HostInstance>(undefined);
   const startTimestampRef = React.useRef<number>(0);
-  const keyboardTimeoutRef = React.useRef<NodeJS.Timeout>(undefined);
+  const keyboardTimeoutRef =
+    React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const enabledRef = React.useRef(enabled);
 
   const clearKeyboardTimeout = React.useCallback(() => {

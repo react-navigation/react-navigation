@@ -5,7 +5,6 @@ import type {
   ParamListBase,
 } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
-import assert from 'assert';
 import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
@@ -913,7 +912,9 @@ test('creates linking configuration for static config', () => {
     }
   `);
 
-  assert.ok(screens);
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
 
   expect(getStateFromPath('contact', { screens })).toEqual({
     routes: [
@@ -1090,7 +1091,9 @@ test('automatically generates paths if auto is specified', () => {
 
   const screens = createPathConfigForStaticNavigation(Root, {}, true);
 
-  assert.ok(screens);
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
 
   expect(screens).toMatchInlineSnapshot(`
     {
@@ -1301,7 +1304,9 @@ test('use initialRouteName for the automatic home screen', () => {
 
   const screens = createPathConfigForStaticNavigation(Root, {}, true);
 
-  assert.ok(screens);
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
 
   expect(screens).toMatchInlineSnapshot(`
     {

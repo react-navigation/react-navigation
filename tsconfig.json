@@ -5,7 +5,6 @@
     "customConditions": ["source"],
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
-    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
     "lib": ["esnext", "dom"],
@@ -22,6 +21,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
+    "types": ["node"],
     "verbatimModuleSyntax": true
   },
   "exclude": ["packages/*/lib"]

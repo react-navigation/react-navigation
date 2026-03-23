@@ -125,7 +125,9 @@ export function ScrollViewAdapter({
   );
 
   const indexRef = React.useRef(index);
-  const timerRef = React.useRef<NodeJS.Timeout | undefined>(undefined);
+  const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
 
   const onScrollEnd = (x: number) => {
     const value = clamp(x / layout.width, 0, routes.length - 1);

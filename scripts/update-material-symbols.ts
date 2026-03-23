@@ -1,4 +1,5 @@
 import * as fs from 'node:fs';
+import process from 'node:process';
 import { URL } from 'node:url';
 
 const root = new URL('..', import.meta.url);
