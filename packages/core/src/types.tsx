@@ -56,7 +56,9 @@ export interface Theme {}
 
 export type RootParamList =
   RootNavigator extends PrivateValueStore<[infer ParamList, any, any]>
-    ? ParamList
+    ? ParamList extends {}
+      ? ParamList
+      : {}
     : {};
 
 export type DefaultNavigatorOptions<
