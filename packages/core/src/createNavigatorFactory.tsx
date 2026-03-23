@@ -1,7 +1,8 @@
-import type * as React from 'react';
+import * as React from 'react';
 
 import { Group } from './Group';
 import { Screen } from './Screen';
+import { createComponentForStaticConfig } from './StaticNavigation';
 
 /**
  * Higher order component to create a `Navigator` and `Screen` pair.
@@ -11,13 +12,43 @@ import { Screen } from './Screen';
  * @returns Factory method to create a `Navigator` and `Screen` pair.
  */
 export function createNavigatorFactory(Navigator: React.ComponentType<any>) {
+  const displayName = Navigator.displayName ?? Navigator.name ?? 'Navigator';
+
   function createNavigator(config?: any): any {
     if (config != null) {
+      const NavigatorComponent = createComponentForStaticConfig(
+        {
+          Navigator,
+          Screen,
+          Group,
+          config,
+        },
+        displayName
+      );
+
       return {
-        Navigator,
-        Screen,
-        Group,
         config,
+        with(
+          DecoratorComponent: React.ComponentType<{
+            Navigator: React.ComponentType<any>;
+          }>
+        ) {
+          const WithComponent = () => {
+            return React.createElement(DecoratorComponent, {
+              Navigator: NavigatorComponent,
+            });
+          };
+
+          WithComponent.displayName = `${displayName}With`;
+
+          return {
+            config,
+            getComponent: () => WithComponent,
+          };
+        },
+        getComponent() {
+          return NavigatorComponent;
+        },
       };
     }
 

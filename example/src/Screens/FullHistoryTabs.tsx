@@ -4,7 +4,6 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { Button, Text } from '@react-navigation/elements';
 import {
-  createComponentForStaticNavigation,
   createPathConfigForStaticNavigation,
   type StaticParamList,
   type StaticScreenProps,
@@ -71,10 +70,7 @@ const Tabs = createBottomTabNavigator({
   },
 });
 
-const FullHistoryTabsComponent = createComponentForStaticNavigation(
-  Tabs,
-  'FullHistoryTabs'
-);
+const FullHistoryTabsComponent = Tabs.getComponent();
 
 export function FullHistoryTabs() {
   useEffect(() => {

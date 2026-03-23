@@ -47,9 +47,11 @@ type ParamsForScreenComponent<T> = T extends {
     ? P
     : undefined;
 
-type ParamsForScreen<T> = T extends { screen: StaticNavigation<any, any, any> }
+type ParamsForScreen<T> = T extends {
+  screen: { config: StaticConfig<NavigatorTypeBagBase> };
+}
   ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
-  : T extends StaticNavigation<any, any, any>
+  : T extends { config: StaticConfig<NavigatorTypeBagBase> }
     ? NavigatorScreenParams<StaticParamList<T>> | undefined
     : UnknownToUndefined<ParamsForScreenComponent<T>>;
 
@@ -304,12 +306,17 @@ export type StaticParamList<
     ParamListForGroups<T['config']['groups']>
 >;
 
-export type StaticNavigation<NavigatorProps, GroupProps, ScreenProps> = {
-  Navigator: React.ComponentType<NavigatorProps>;
-  Group: React.ComponentType<GroupProps>;
-  Screen: React.ComponentType<ScreenProps>;
+type StaticNavigationBase = {
   config: StaticConfig<NavigatorTypeBagBase>;
+  getComponent: () => React.ComponentType<{}>;
 };
+
+export type StaticNavigation<NavigatorProps, GroupProps, ScreenProps> =
+  StaticNavigationBase & {
+    Navigator: React.ComponentType<NavigatorProps>;
+    Group: React.ComponentType<GroupProps>;
+    Screen: React.ComponentType<ScreenProps>;
+  };
 
 const MemoizedScreen = React.memo(
   <T extends React.ComponentType<any>>({ component }: { component: T }) => {
@@ -343,16 +350,13 @@ const getItemsFromScreens = (
         component = screen;
       } else if ('config' in screen) {
         isNavigator = true;
-        component = createComponentForStaticNavigation(
-          screen,
-          `${name}Navigator`
-        );
+        component = screen.getComponent();
       }
     } else if (isValidElementType(item)) {
       component = item;
     } else if ('config' in item) {
       isNavigator = true;
-      component = createComponentForStaticNavigation(item, `${name}Navigator`);
+      component = item.getComponent();
     }
 
     if (component == null) {
@@ -390,10 +394,17 @@ const getItemsFromScreens = (
  * @param displayName Name of the component to be displayed in React DevTools.
  * @returns A component which renders the navigator.
  */
-export function createComponentForStaticNavigation(
-  tree: StaticNavigation<any, any, any>,
+export function createComponentForStaticConfig<
+  T extends {
+    Navigator: React.ComponentType<any>;
+    Group: React.ComponentType<any>;
+    Screen: React.ComponentType<any>;
+    config: StaticConfig<NavigatorTypeBagBase>;
+  },
+>(
+  tree: T,
   displayName: string
-): React.ComponentType<{}> {
+): React.ComponentType<Omit<React.ComponentProps<T['Navigator']>, 'children'>> {
   const { Navigator, Group, Screen, config } = tree;
   const { screens, groups, ...rest } = config;
 
@@ -438,15 +449,73 @@ export function createComponentForStaticNavigation(
     }
   }
 
-  const NavigatorComponent = () => {
+  if (items.length === 0) {
+    throw new Error(
+      "Couldn't find any screens in the 'screens' or 'groups' property. Make sure to define at least one screen in the configuration."
+    );
+  }
+
+  type NavigatorProps = Omit<React.ComponentProps<T['Navigator']>, 'children'>;
+
+  const NavigatorComponent = (props: NavigatorProps) => {
     const children = items.map((item) => item());
 
-    return <Navigator {...rest}>{children}</Navigator>;
+    const screenOptions =
+      typeof props.screenOptions === 'function' ||
+      typeof rest.screenOptions === 'function'
+        ? (options: unknown) => ({
+            ...(typeof rest.screenOptions === 'function'
+              ? rest.screenOptions(options)
+              : rest.screenOptions),
+            ...(typeof props.screenOptions === 'function'
+              ? props.screenOptions(options)
+              : props.screenOptions),
+          })
+        : { ...rest.screenOptions, ...props.screenOptions };
+
+    const screenListeners =
+      typeof props.screenListeners === 'function' ||
+      typeof rest.screenListeners === 'function'
+        ? (options: unknown) => ({
+            ...(typeof rest.screenListeners === 'function'
+              ? rest.screenListeners(options)
+              : rest.screenListeners),
+            ...(typeof props.screenListeners === 'function'
+              ? props.screenListeners(options)
+              : props.screenListeners),
+          })
+        : { ...rest.screenListeners, ...props.screenListeners };
+
+    return (
+      <Navigator
+        {...rest}
+        {...props}
+        screenOptions={screenOptions}
+        screenListeners={screenListeners}
+      >
+        {children}
+      </Navigator>
+    );
   };
 
   NavigatorComponent.displayName = displayName;
 
   return NavigatorComponent;
+}
+
+/**
+ * Create a component that renders a navigator based on the static configuration.
+ *
+ * @deprecated Use `tree.getComponent()` instead.
+ */
+export function createComponentForStaticConfigDeprecated(
+  tree: StaticNavigation<any, any, any>
+): React.ComponentType<{}> {
+  console.warn(
+    '`createComponentForStaticConfig` is deprecated. Use `tree.getComponent()` instead.'
+  );
+
+  return tree.getComponent();
 }
 
 type TreeForPathConfig = {

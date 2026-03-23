@@ -938,9 +938,27 @@ export type NavigatorTypeBag<
   Navigator: Navigator;
 };
 
-export type TypedNavigator<
+type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
+  React.ComponentType<
+    Omit<
+      React.ComponentProps<
+        TypedNavigatorInternal<
+          Bag['ParamList'],
+          Bag['NavigatorID'],
+          Bag['State'],
+          Bag['ScreenOptions'],
+          Bag['EventMap'],
+          Bag['NavigationList'],
+          Bag['Navigator']
+        >['Navigator']
+      >,
+      'children'
+    >
+  >;
+
+type TypedNavigatorStaticDecorated<
   Bag extends NavigatorTypeBagBase,
-  Config = unknown,
+  Config,
 > = TypedNavigatorInternal<
   Bag['ParamList'],
   Bag['NavigatorID'],
@@ -949,8 +967,47 @@ export type TypedNavigator<
   Bag['EventMap'],
   Bag['NavigationList'],
   Bag['Navigator']
-> &
-  (undefined extends Config ? {} : { config: Config });
+> & {
+  getComponent: () => React.ComponentType<{}>;
+  config: Config;
+} & PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
+
+type TypedNavigatorStatic<
+  Bag extends NavigatorTypeBagBase,
+  Config,
+> = TypedNavigatorInternal<
+  Bag['ParamList'],
+  Bag['NavigatorID'],
+  Bag['State'],
+  Bag['ScreenOptions'],
+  Bag['EventMap'],
+  Bag['NavigationList'],
+  Bag['Navigator']
+> & {
+  config: Config;
+  with: (
+    Component: React.ComponentType<{
+      Navigator: TypedNavigatorComponent<Bag>;
+    }>
+  ) => TypedNavigatorStaticDecorated<Bag, Config>;
+  getComponent: () => TypedNavigatorComponent<Bag>;
+} & PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
+
+export type TypedNavigator<
+  Bag extends NavigatorTypeBagBase,
+  Config = unknown,
+> = (undefined extends Config
+  ? TypedNavigatorInternal<
+      Bag['ParamList'],
+      Bag['NavigatorID'],
+      Bag['State'],
+      Bag['ScreenOptions'],
+      Bag['EventMap'],
+      Bag['NavigationList'],
+      Bag['Navigator']
+    >
+  : TypedNavigatorStatic<Bag, Config>) &
+  PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
 
 type TypedNavigatorInternal<
   ParamList extends ParamListBase,

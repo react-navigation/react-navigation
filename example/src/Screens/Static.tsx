@@ -1,10 +1,7 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, HeaderBackButton } from '@react-navigation/elements';
-import {
-  createComponentForStaticNavigation,
-  createPathConfigForStaticNavigation,
-} from '@react-navigation/native';
+import { createPathConfigForStaticNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
@@ -92,7 +89,7 @@ const RootStack = createStackNavigator({
   },
 });
 
-const Navigation = createComponentForStaticNavigation(RootStack, 'Root');
+const Navigation = RootStack.getComponent();
 
 export function StaticScreen() {
   const [isChatShown, setIsChatShown] = React.useState(false);
