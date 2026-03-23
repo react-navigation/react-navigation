@@ -7,14 +7,14 @@ import {
 } from '@react-navigation/elements';
 import {
   CommonActions,
-  type NavigatorScreenParams,
-  type PathConfig,
-  type StaticScreenProps,
+  useNavigation,
+  useRoute,
   useTheme,
 } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackScreenProps,
+  createStackScreen,
+  type StackNavigatorProps,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import {
@@ -31,26 +31,12 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type CustomLayoutParamList = {
-  Article: { author: string } | undefined;
-  NewsFeed: { date: number };
-  Albums: undefined;
-};
-
-const linking = {
-  screens: {
-    Article: COMMON_LINKING_CONFIG.Article,
-    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-    Albums: 'albums',
-  },
-} satisfies PathConfig<NavigatorScreenParams<CustomLayoutParamList>>;
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
-const ArticleScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<CustomLayoutParamList, 'Article'>) => {
+const ArticleScreen = () => {
+  const navigation = useNavigation('Article');
+  const route = useRoute('Article');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -72,10 +58,10 @@ const ArticleScreen = ({
   );
 };
 
-const NewsFeedScreen = ({
-  route,
-  navigation,
-}: StackScreenProps<CustomLayoutParamList, 'NewsFeed'>) => {
+const NewsFeedScreen = () => {
+  const route = useRoute('NewsFeed');
+  const navigation = useNavigation('NewsFeed');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -91,9 +77,9 @@ const NewsFeedScreen = ({
   );
 };
 
-const AlbumsScreen = ({
-  navigation,
-}: StackScreenProps<CustomLayoutParamList, 'Albums'>) => {
+const AlbumsScreen = () => {
+  const navigation = useNavigation('Albums');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -114,11 +100,12 @@ const AlbumsScreen = ({
   );
 };
 
-const Stack = createStackNavigator<CustomLayoutParamList>();
-
-export function NavigatorLayout(
-  _: StaticScreenProps<NavigatorScreenParams<CustomLayoutParamList>>
-) {
+function BreadcrumbLayout({
+  children,
+  state,
+  descriptors,
+  navigation,
+}: Parameters<NonNullable<StackNavigatorProps['layout']>>[0]) {
   const { colors } = useTheme();
 
   const insets = useSafeAreaInsets();
@@ -131,85 +118,78 @@ export function NavigatorLayout(
   );
 
   return (
-    <Stack.Navigator
-      layout={({ children, state, descriptors, navigation }) => {
-        return (
-          <View style={styles.container}>
-            <ScrollView
-              horizontal
-              style={{
-                backgroundColor: colors.card,
-                borderBottomColor: colors.border,
-                borderBottomWidth: StyleSheet.hairlineWidth,
-                maxHeight: defaultHeaderHeight,
-              }}
-              contentContainerStyle={[
-                styles.breadcrumbs,
-                { paddingTop: insets.top },
-              ]}
-            >
-              {state.routes.map((route, i, self) => {
-                return (
-                  <React.Fragment key={route.key}>
-                    <Pressable
-                      onPress={() => {
-                        navigation.dispatch((state) => {
-                          return CommonActions.reset({
-                            ...state,
-                            index: i,
-                            routes: state.routes.slice(0, i + 1),
-                          });
-                        });
-                      }}
-                    >
-                      <Text style={[styles.title, { color: colors.text }]}>
-                        {getHeaderTitle(
-                          descriptors[route.key].options,
-                          route.name
-                        )}
-                      </Text>
-                    </Pressable>
-                    {self.length - 1 !== i ? (
-                      <Text style={[styles.arrow, { color: colors.text }]}>
-                        ❯
-                      </Text>
-                    ) : null}
-                  </React.Fragment>
-                );
-              })}
-            </ScrollView>
-            {children}
-          </View>
-        );
-      }}
-      screenOptions={{
-        headerShown: false,
-      }}
-    >
-      <Stack.Screen
-        name="Article"
-        component={ArticleScreen}
-        options={({ route }) => ({
-          title: `Article by ${route.params?.author ?? 'Unknown'}`,
+    <View style={styles.container}>
+      <ScrollView
+        horizontal
+        style={{
+          backgroundColor: colors.card,
+          borderBottomColor: colors.border,
+          borderBottomWidth: StyleSheet.hairlineWidth,
+          maxHeight: defaultHeaderHeight,
+        }}
+        contentContainerStyle={[styles.breadcrumbs, { paddingTop: insets.top }]}
+      >
+        {state.routes.map((route, i, self) => {
+          return (
+            <React.Fragment key={route.key}>
+              <Pressable
+                onPress={() => {
+                  navigation.dispatch((state) => {
+                    return CommonActions.reset({
+                      ...state,
+                      index: i,
+                      routes: state.routes.slice(0, i + 1),
+                    });
+                  });
+                }}
+              >
+                <Text style={[styles.title, { color: colors.text }]}>
+                  {getHeaderTitle(descriptors[route.key].options, route.name)}
+                </Text>
+              </Pressable>
+              {self.length - 1 !== i ? (
+                <Text style={[styles.arrow, { color: colors.text }]}>❯</Text>
+              ) : null}
+            </React.Fragment>
+          );
         })}
-        initialParams={{ author: 'Gandalf' }}
-      />
-      <Stack.Screen
-        name="NewsFeed"
-        component={NewsFeedScreen}
-        options={{ title: 'Feed' }}
-      />
-      <Stack.Screen
-        name="Albums"
-        component={AlbumsScreen}
-        options={{ title: 'Albums' }}
-      />
-    </Stack.Navigator>
+      </ScrollView>
+      {children}
+    </View>
   );
 }
 
-NavigatorLayout.title = 'Navigator Layout';
-NavigatorLayout.linking = linking;
+const NavigatorLayoutNavigator = createStackNavigator({
+  layout: (props) => <BreadcrumbLayout {...props} />,
+  screenOptions: {
+    headerShown: false,
+  },
+  screens: {
+    Article: createStackScreen({
+      screen: ArticleScreen,
+      options: ({ route }) => ({
+        title: `Article by ${route.params?.author ?? 'Unknown'}`,
+      }),
+      initialParams: { author: 'Gandalf' },
+      linking: COMMON_LINKING_CONFIG.Article,
+    }),
+    NewsFeed: createStackScreen({
+      screen: NewsFeedScreen,
+      options: { title: 'Feed' },
+      linking: COMMON_LINKING_CONFIG.NewsFeed,
+    }),
+    Albums: createStackScreen({
+      screen: AlbumsScreen,
+      options: { title: 'Albums' },
+      linking: 'albums',
+    }),
+  },
+});
+
+export const NavigatorLayout = {
+  screen: NavigatorLayoutNavigator,
+  title: 'Navigator Layout',
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -1,25 +1,11 @@
 import { Button, Text } from '@react-navigation/elements';
-import type {
-  NavigatorScreenParams,
-  PathConfig,
-  StaticScreenProps,
-} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackScreenProps,
+  createStackScreen,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-
-type LayoutsStackParamList = {
-  SuspenseDemo: undefined;
-};
-
-const linking = {
-  screens: {
-    SuspenseDemo: 'suspense',
-  },
-} satisfies PathConfig<NavigatorScreenParams<LayoutsStackParamList>>;
 
 let cached: number | undefined;
 
@@ -31,9 +17,8 @@ const createPromise = () =>
     return result;
   });
 
-const SuspenseDemoScreen = ({
-  navigation,
-}: StackScreenProps<LayoutsStackParamList, 'SuspenseDemo'>) => {
+const SuspenseDemoScreen = () => {
+  const navigation = useNavigation('SuspenseDemo');
   const [promise, setPromise] = React.useState(createPromise);
   const [error, setError] = React.useState<Error | null>(null);
 
@@ -101,37 +86,33 @@ class ErrorBoundary extends React.Component<
   }
 }
 
-const Stack = createStackNavigator<LayoutsStackParamList>();
+const ScreenLayoutNavigator = createStackNavigator({
+  screens: {
+    SuspenseDemo: createStackScreen({
+      screen: SuspenseDemoScreen,
+      options: { title: 'Suspense & ErrorBoundary' },
+      linking: 'suspense',
+      layout: ({ children }) => (
+        <ErrorBoundary>
+          <React.Suspense
+            fallback={
+              <View style={styles.fallback}>
+                <Text style={styles.text}>Loading…</Text>
+              </View>
+            }
+          >
+            {children}
+          </React.Suspense>
+        </ErrorBoundary>
+      ),
+    }),
+  },
+});
 
-export function ScreenLayout(
-  _: StaticScreenProps<NavigatorScreenParams<LayoutsStackParamList>>
-) {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="SuspenseDemo"
-        component={SuspenseDemoScreen}
-        options={{ title: 'Suspense & ErrorBoundary' }}
-        layout={({ children }) => (
-          <ErrorBoundary>
-            <React.Suspense
-              fallback={
-                <View style={styles.fallback}>
-                  <Text style={styles.text}>Loading…</Text>
-                </View>
-              }
-            >
-              {children}
-            </React.Suspense>
-          </ErrorBoundary>
-        )}
-      />
-    </Stack.Navigator>
-  );
-}
-
-ScreenLayout.title = 'Screen Layout';
-ScreenLayout.linking = linking;
+export const ScreenLayout = {
+  screen: ScreenLayoutNavigator,
+  title: 'Screen Layout',
+};
 
 const styles = StyleSheet.create({
   buttons: {

@@ -1,38 +1,20 @@
 import {
   createDrawerNavigator,
+  createDrawerScreen,
   DrawerContent,
   type DrawerContentComponentProps,
-  type DrawerScreenProps,
 } from '@react-navigation/drawer';
 import {
   Header as NavigationHeader,
   HeaderBackButton,
 } from '@react-navigation/elements';
-import {
-  type NavigatorScreenParams,
-  type PathConfig,
-  type StaticScreenProps,
-  useNavigation,
-} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { useWindowDimensions } from 'react-native';
 
+import { COMMON_LINKING_CONFIG } from '../constants';
 import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
-
-type MasterDetailParamList = {
-  Article: { author?: string } | undefined;
-  NewsFeed: { date: number };
-  Albums: undefined;
-};
-
-const linking = {
-  screens: {
-    Article: 'article',
-    NewsFeed: 'feed',
-    Albums: 'albums',
-  },
-} satisfies PathConfig<NavigatorScreenParams<MasterDetailParamList>>;
 
 const useIsLargeScreen = () => {
   const dimensions = useWindowDimensions();
@@ -61,9 +43,9 @@ const Header = ({
   );
 };
 
-const ArticleScreen = ({
-  navigation,
-}: DrawerScreenProps<MasterDetailParamList, 'Article'>) => {
+const ArticleScreen = () => {
+  const navigation = useNavigation('Article');
+
   return (
     <>
       <Header title="Article" onGoBack={() => navigation.toggleDrawer()} />
@@ -72,9 +54,9 @@ const ArticleScreen = ({
   );
 };
 
-const NewsFeedScreen = ({
-  navigation,
-}: DrawerScreenProps<MasterDetailParamList, 'NewsFeed'>) => {
+const NewsFeedScreen = () => {
+  const navigation = useNavigation('NewsFeed');
+
   return (
     <>
       <Header title="Feed" onGoBack={() => navigation.toggleDrawer()} />
@@ -83,9 +65,9 @@ const NewsFeedScreen = ({
   );
 };
 
-const AlbumsScreen = ({
-  navigation,
-}: DrawerScreenProps<MasterDetailParamList, 'Albums'>) => {
+const AlbumsScreen = () => {
+  const navigation = useNavigation('Albums');
+
   return (
     <>
       <Header title="Albums" onGoBack={() => navigation.toggleDrawer()} />
@@ -110,40 +92,47 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   );
 };
 
-const Drawer = createDrawerNavigator<MasterDetailParamList>();
-
-export function DrawerMasterDetail(
-  _: StaticScreenProps<NavigatorScreenParams<MasterDetailParamList>>
-) {
+const DrawerMasterDetailNavigator = createDrawerNavigator({
+  backBehavior: 'none',
+  defaultStatus: 'open',
+  drawerContent: (props) => <CustomDrawerContent {...props} />,
+  screenOptions: {
+    headerShown: false,
+    drawerContentContainerStyle: { paddingTop: 4 },
+    overlayStyle: { backgroundColor: 'transparent' },
+  },
+  screens: {
+    Article: createDrawerScreen({
+      screen: ArticleScreen,
+      initialParams: { author: 'Gandalf' },
+      linking: COMMON_LINKING_CONFIG.Article,
+    }),
+    NewsFeed: createDrawerScreen({
+      screen: NewsFeedScreen,
+      options: { title: 'Feed' },
+      initialParams: { date: 0 },
+      linking: COMMON_LINKING_CONFIG.NewsFeed,
+    }),
+    Albums: createDrawerScreen({
+      screen: AlbumsScreen,
+      options: { title: 'Albums' },
+      linking: 'albums',
+    }),
+  },
+}).with(({ Navigator }) => {
   const isLargeScreen = useIsLargeScreen();
 
   return (
-    <Drawer.Navigator
-      backBehavior="none"
-      defaultStatus="open"
-      drawerContent={(props) => <CustomDrawerContent {...props} />}
+    <Navigator
       screenOptions={{
-        headerShown: false,
         drawerType: isLargeScreen ? 'permanent' : 'back',
         drawerStyle: isLargeScreen ? null : { width: '100%' },
-        drawerContentContainerStyle: { paddingTop: 4 },
-        overlayStyle: { backgroundColor: 'transparent' },
       }}
-    >
-      <Drawer.Screen name="Article" component={ArticleScreen} />
-      <Drawer.Screen
-        name="NewsFeed"
-        component={NewsFeedScreen}
-        options={{ title: 'Feed' }}
-      />
-      <Drawer.Screen
-        name="Albums"
-        component={AlbumsScreen}
-        options={{ title: 'Albums' }}
-      />
-    </Drawer.Navigator>
+    />
   );
-}
+});
 
-DrawerMasterDetail.title = 'Drawer - Master Detail';
-DrawerMasterDetail.linking = linking;
+export const DrawerMasterDetail = {
+  screen: DrawerMasterDetailNavigator,
+  title: 'Drawer - Master Detail',
+};

@@ -6,16 +6,12 @@ import {
   HeaderButton,
   useHeaderHeight,
 } from '@react-navigation/elements';
-import type {
-  NavigatorScreenParams,
-  PathConfig,
-  StaticScreenProps,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   createStackNavigator,
+  createStackScreen,
   Header as StackHeader,
   type StackHeaderProps,
-  type StackScreenProps,
 } from '@react-navigation/stack';
 import { BlurView } from 'expo-blur';
 import * as React from 'react';
@@ -33,28 +29,12 @@ import { Albums } from '../Shared/Albums';
 import { Article } from '../Shared/Article';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type HeaderCustomizationStackParamList = {
-  Article: { author?: string } | undefined;
-  NewsFeed: { date: number };
-  Albums: undefined;
-};
-
-const linking = {
-  screens: {
-    Article: COMMON_LINKING_CONFIG.Article,
-    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-    Albums: 'albums',
-  },
-} satisfies PathConfig<
-  NavigatorScreenParams<HeaderCustomizationStackParamList>
->;
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
-const ArticleScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<HeaderCustomizationStackParamList, 'Article'>) => {
+const ArticleScreen = () => {
+  const navigation = useNavigation('Article');
+  const route = useRoute('Article');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -76,10 +56,10 @@ const ArticleScreen = ({
   );
 };
 
-const NewsFeedScreen = ({
-  route,
-  navigation,
-}: StackScreenProps<HeaderCustomizationStackParamList, 'NewsFeed'>) => {
+const NewsFeedScreen = () => {
+  const route = useRoute('NewsFeed');
+  const navigation = useNavigation('NewsFeed');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -95,9 +75,8 @@ const NewsFeedScreen = ({
   );
 };
 
-const AlbumsScreen = ({
-  navigation,
-}: StackScreenProps<HeaderCustomizationStackParamList>) => {
+const AlbumsScreen = () => {
+  const navigation = useNavigation('Albums');
   const headerHeight = useHeaderHeight();
 
   return (
@@ -120,8 +99,6 @@ const AlbumsScreen = ({
   );
 };
 
-const Stack = createStackNavigator<HeaderCustomizationStackParamList>();
-
 function CustomHeader(props: StackHeaderProps) {
   const { current, next } = props.progress;
 
@@ -141,88 +118,101 @@ function CustomHeader(props: StackHeaderProps) {
   );
 }
 
-export function StackHeaderCustomization(
-  _: StaticScreenProps<NavigatorScreenParams<HeaderCustomizationStackParamList>>
-) {
+const StackHeaderCustomizationNavigator = createStackNavigator({
+  screenOptions: { headerMode: 'float' },
+  screens: {
+    Article: createStackScreen({
+      screen: ArticleScreen,
+      options: ({ route }) => ({
+        title: `Article by ${route.params?.author}`,
+        header: (props) => <CustomHeader {...props} />,
+        headerTintColor: '#fff',
+        headerStyle: { backgroundColor: '#ff005d' },
+        headerBackButtonDisplayMode: 'minimal',
+        headerBackIcon: ({ tintColor }) => (
+          <MaterialCommunityIcons
+            name="arrow-left-circle-outline"
+            color={tintColor}
+            size={24}
+            style={{ marginHorizontal: Platform.OS === 'ios' ? 8 : 0 }}
+          />
+        ),
+      }),
+      initialParams: { author: 'Gandalf' },
+      linking: COMMON_LINKING_CONFIG.Article,
+    }),
+    NewsFeed: createStackScreen({
+      screen: NewsFeedScreen,
+      options: {
+        title: 'Feed',
+        headerMode: 'screen',
+        header: ({ options, route, back }) => (
+          <ElementsHeader
+            {...options}
+            back={back}
+            title={getHeaderTitle(options, route.name)}
+          />
+        ),
+      },
+      linking: COMMON_LINKING_CONFIG.NewsFeed,
+    }),
+    Albums: createStackScreen({
+      screen: AlbumsScreen,
+      options: ({ theme }) => ({
+        title: 'Albums',
+        headerBackTitle: 'Back',
+        headerTransparent: true,
+        headerBackground: () => (
+          <BlurView
+            tint={theme.dark ? 'dark' : 'light'}
+            intensity={100}
+            style={StyleSheet.absoluteFill}
+          />
+        ),
+      }),
+      linking: 'albums',
+    }),
+  },
+}).with(({ Navigator }) => {
   const [headerTitleCentered, setHeaderTitleCentered] = React.useState(true);
 
   return (
-    <Stack.Navigator screenOptions={{ headerMode: 'float' }}>
-      <Stack.Screen
-        name="Article"
-        component={ArticleScreen}
-        options={({ route }) => ({
-          title: `Article by ${route.params?.author}`,
-          header: (props) => <CustomHeader {...props} />,
-          headerTintColor: '#fff',
-          headerStyle: { backgroundColor: '#ff005d' },
-          headerBackButtonDisplayMode: 'minimal',
-          headerTitleAlign: headerTitleCentered ? 'center' : 'left',
-          headerBackIcon: ({ tintColor }) => (
-            <MaterialCommunityIcons
-              name="arrow-left-circle-outline"
-              color={tintColor}
-              size={24}
-              style={{ marginHorizontal: Platform.OS === 'ios' ? 8 : 0 }}
-            />
-          ),
-          headerRight: ({ tintColor }) => (
-            <HeaderButton
-              onPress={() => {
-                setHeaderTitleCentered((centered) => !centered);
-                Alert.alert(
-                  'Never gonna give you up!',
-                  'Never gonna let you down! Never gonna run around and desert you!'
-                );
-              }}
-            >
-              <MaterialCommunityIcons
-                name="dots-horizontal-circle-outline"
-                size={24}
-                color={tintColor}
-              />
-            </HeaderButton>
-          ),
-        })}
-        initialParams={{ author: 'Gandalf' }}
-      />
-      <Stack.Screen
-        name="NewsFeed"
-        component={NewsFeedScreen}
-        options={{
-          title: 'Feed',
-          headerMode: 'screen',
-          header: ({ options, route, back }) => (
-            <ElementsHeader
-              {...options}
-              back={back}
-              title={getHeaderTitle(options, route.name)}
-            />
-          ),
-        }}
-      />
-      <Stack.Screen
-        name="Albums"
-        component={AlbumsScreen}
-        options={({ theme }) => ({
-          title: 'Albums',
-          headerBackTitle: 'Back',
-          headerTransparent: true,
-          headerBackground: () => (
-            <BlurView
-              tint={theme.dark ? 'dark' : 'light'}
-              intensity={100}
-              style={StyleSheet.absoluteFill}
-            />
-          ),
-        })}
-      />
-    </Stack.Navigator>
+    <Navigator
+      screenOptions={({ route }) => {
+        switch (route.name) {
+          case 'Article':
+            return {
+              headerTitleAlign: headerTitleCentered ? 'center' : 'left',
+              headerRight: ({ tintColor }) => (
+                <HeaderButton
+                  onPress={() => {
+                    setHeaderTitleCentered((centered) => !centered);
+                    Alert.alert(
+                      'Never gonna give you up!',
+                      'Never gonna let you down! Never gonna run around and desert you!'
+                    );
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name="dots-horizontal-circle-outline"
+                    size={24}
+                    color={tintColor}
+                  />
+                </HeaderButton>
+              ),
+            };
+          default:
+            return {};
+        }
+      }}
+    />
   );
-}
+});
 
-StackHeaderCustomization.title = 'Stack - Header Customization';
-StackHeaderCustomization.linking = linking;
+export const StackHeaderCustomization = {
+  screen: StackHeaderCustomizationNavigator,
+  title: 'Stack - Header Customization',
+};
 
 const styles = StyleSheet.create({
   buttons: {

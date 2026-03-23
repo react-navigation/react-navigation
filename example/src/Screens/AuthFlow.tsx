@@ -1,32 +1,11 @@
 import { Button, Text } from '@react-navigation/elements';
-import {
-  type NavigatorScreenParams,
-  type PathConfig,
-  type StaticScreenProps,
-  useTheme,
-} from '@react-navigation/native';
+import { useNavigation, useTheme } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackScreenProps,
+  createStackScreen,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { ActivityIndicator, StyleSheet, TextInput, View } from 'react-native';
-
-type AuthStackParamList = {
-  Home: undefined;
-  Profile: undefined;
-  SignIn: undefined;
-  Chat: undefined;
-};
-
-const linking = {
-  screens: {
-    Home: '',
-    Profile: 'profile',
-    SignIn: 'signin',
-    Chat: 'chat',
-  },
-} satisfies PathConfig<NavigatorScreenParams<AuthStackParamList>>;
 
 const AUTH_CONTEXT_ERROR =
   'Authentication context not found. Have your wrapped your components with AuthContext.Consumer?';
@@ -45,6 +24,16 @@ const AuthContext = React.createContext<{
   },
 });
 
+const useIsSignedIn = () => {
+  const { isSignedIn } = React.use(AuthContext);
+  return isSignedIn;
+};
+
+const useIsSignedOut = () => {
+  const { isSignedIn } = React.use(AuthContext);
+  return !isSignedIn;
+};
+
 const SplashScreen = () => {
   const { colors } = useTheme();
 
@@ -55,9 +44,8 @@ const SplashScreen = () => {
   );
 };
 
-const SignInScreen = ({
-  navigation,
-}: StackScreenProps<AuthStackParamList, 'SignIn'>) => {
+const SignInScreen = () => {
+  const navigation = useNavigation('SignIn');
   const { signIn } = React.use(AuthContext);
   const { colors } = useTheme();
 
@@ -88,9 +76,8 @@ const SignInScreen = ({
   );
 };
 
-const HomeScreen = ({
-  navigation,
-}: StackScreenProps<AuthStackParamList, 'Home'>) => {
+const HomeScreen = () => {
+  const navigation = useNavigation('Main');
   const { signOut } = React.use(AuthContext);
 
   return (
@@ -106,9 +93,8 @@ const HomeScreen = ({
   );
 };
 
-const ProfileScreen = ({
-  navigation,
-}: StackScreenProps<AuthStackParamList, 'Profile'>) => {
+const ProfileScreen = () => {
+  const navigation = useNavigation('Profile');
   const { signOut } = React.use(AuthContext);
 
   return (
@@ -143,8 +129,6 @@ const ChatScreen = () => {
   );
 };
 
-const AuthFlowStack = createStackNavigator<AuthStackParamList>();
-
 type State = {
   isLoading: boolean;
   isSignout: boolean;
@@ -156,9 +140,46 @@ type Action =
   | { type: 'SIGN_IN'; token: string }
   | { type: 'SIGN_OUT' };
 
-export function AuthFlow(
-  _: StaticScreenProps<NavigatorScreenParams<AuthStackParamList>>
-) {
+const AuthFlowNavigator = createStackNavigator({
+  groups: {
+    SignedIn: {
+      if: useIsSignedIn,
+      screens: {
+        Main: createStackScreen({
+          screen: HomeScreen,
+          options: {
+            title: 'Home',
+          },
+          linking: '',
+        }),
+        Profile: createStackScreen({
+          screen: ProfileScreen,
+          linking: 'profile',
+        }),
+        Chat: createStackScreen({
+          screen: ChatScreen,
+          linking: 'chat',
+        }),
+      },
+    },
+    SignedOut: {
+      if: useIsSignedOut,
+      screens: {
+        SignIn: createStackScreen({
+          screen: SignInScreen,
+          options: {
+            title: 'Welcome',
+          },
+          linking: 'signin',
+        }),
+        Chat: createStackScreen({
+          screen: ChatScreen,
+          linking: 'chat',
+        }),
+      },
+    },
+  },
+}).with(({ Navigator }) => {
   const [state, dispatch] = React.useReducer(
     (prevState: State, action: Action) => {
       switch (action.type) {
@@ -214,34 +235,26 @@ export function AuthFlow(
 
   return (
     <AuthContext.Provider value={authContext}>
-      <AuthFlowStack.Navigator routeNamesChangeBehavior="lastUnhandled">
-        {!isSignedIn ? (
-          <AuthFlowStack.Screen
-            name="SignIn"
-            options={{
-              title: 'Welcome',
+      <Navigator
+        routeNamesChangeBehavior="lastUnhandled"
+        screenOptions={({ route }) => {
+          if (route.name === 'SignIn') {
+            return {
               animationTypeForReplace: state.isSignout ? 'pop' : 'push',
-            }}
-            component={SignInScreen}
-          />
-        ) : (
-          <>
-            <AuthFlowStack.Screen name="Home" component={HomeScreen} />
-            <AuthFlowStack.Screen name="Profile" component={ProfileScreen} />
-          </>
-        )}
-        <AuthFlowStack.Screen
-          navigationKey={String(isSignedIn)}
-          name="Chat"
-          component={ChatScreen}
-        />
-      </AuthFlowStack.Navigator>
+            };
+          }
+
+          return {};
+        }}
+      />
     </AuthContext.Provider>
   );
-}
+});
 
-AuthFlow.title = 'Auth Flow';
-AuthFlow.linking = linking;
+export const AuthFlow = {
+  screen: AuthFlowNavigator,
+  title: 'Auth Flow',
+};
 
 const styles = StyleSheet.create({
   content: {

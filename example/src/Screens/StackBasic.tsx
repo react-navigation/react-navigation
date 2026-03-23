@@ -1,14 +1,8 @@
 import { Button } from '@react-navigation/elements';
-import type {
-  CompositeScreenProps,
-  NavigatorScreenParams,
-  PathConfig,
-  RootParamList,
-  StaticScreenProps,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {
   createStackNavigator,
-  type StackScreenProps,
+  createStackScreen,
 } from '@react-navigation/stack';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
@@ -19,28 +13,12 @@ import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-type SimpleStackParamList = {
-  Article: { author: string } | undefined;
-  NewsFeed: { date: number };
-  Contacts: undefined;
-  Albums: undefined;
-};
-
-const linking = {
-  screens: {
-    Article: COMMON_LINKING_CONFIG.Article,
-    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-    Contacts: 'contacts',
-    Albums: 'albums',
-  },
-} satisfies PathConfig<NavigatorScreenParams<SimpleStackParamList>>;
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
-const ArticleScreen = ({
-  navigation,
-  route,
-}: StackScreenProps<SimpleStackParamList, 'Article'>) => {
+const ArticleScreen = () => {
+  const navigation = useNavigation('Article');
+  const route = useRoute('Article');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -76,12 +54,10 @@ const ArticleScreen = ({
   );
 };
 
-type NewsFeedScreenProps = CompositeScreenProps<
-  StackScreenProps<SimpleStackParamList, 'NewsFeed'>,
-  StackScreenProps<RootParamList, 'StackBasic'>
->;
+const NewsFeedScreen = () => {
+  const route = useRoute('NewsFeed');
+  const navigation = useNavigation('NewsFeed');
 
-const NewsFeedScreen = ({ route, navigation }: NewsFeedScreenProps) => {
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -100,9 +76,8 @@ const NewsFeedScreen = ({ route, navigation }: NewsFeedScreenProps) => {
   );
 };
 
-const ContactsScreen = ({
-  navigation,
-}: StackScreenProps<SimpleStackParamList, 'Contacts'>) => {
+const ContactsScreen = () => {
+  const navigation = useNavigation('Contacts');
   const [query, setQuery] = React.useState('');
 
   React.useLayoutEffect(() => {
@@ -133,9 +108,9 @@ const ContactsScreen = ({
   );
 };
 
-const AlbumsScreen = ({
-  navigation,
-}: StackScreenProps<SimpleStackParamList, 'Albums'>) => {
+const AlbumsScreen = () => {
+  const navigation = useNavigation('Albums');
+
   return (
     <ScrollView>
       <View style={styles.buttons}>
@@ -154,47 +129,43 @@ const AlbumsScreen = ({
   );
 };
 
-const StackNavigator = createStackNavigator<SimpleStackParamList>();
+const StackBasicNavigator = createStackNavigator({
+  screens: {
+    Article: createStackScreen({
+      screen: ArticleScreen,
+      options: ({ route }) => ({
+        title: `Article by ${route.params?.author ?? 'Unknown'}`,
+      }),
+      initialParams: { author: 'Gandalf' },
+      getId: ({ params }) => params?.author,
+      linking: COMMON_LINKING_CONFIG.Article,
+    }),
+    NewsFeed: createStackScreen({
+      screen: NewsFeedScreen,
+      options: { title: 'Feed' },
+      linking: COMMON_LINKING_CONFIG.NewsFeed,
+    }),
+    Contacts: createStackScreen({
+      screen: ContactsScreen,
+      options: {
+        headerSearchBarOptions: {
+          placeholder: 'Filter contacts',
+        },
+      },
+      linking: 'contacts',
+    }),
+    Albums: createStackScreen({
+      screen: AlbumsScreen,
+      options: { title: 'Albums' },
+      linking: 'albums',
+    }),
+  },
+});
 
-export function StackBasic(
-  _: StaticScreenProps<NavigatorScreenParams<SimpleStackParamList>>
-) {
-  return (
-    <StackNavigator.Navigator>
-      <StackNavigator.Screen
-        name="Article"
-        component={ArticleScreen}
-        options={({ route }) => ({
-          title: `Article by ${route.params?.author ?? 'Unknown'}`,
-        })}
-        initialParams={{ author: 'Gandalf' }}
-        getId={({ params }) => params?.author}
-      />
-      <StackNavigator.Screen
-        name="NewsFeed"
-        component={NewsFeedScreen}
-        options={{ title: 'Feed' }}
-      />
-      <StackNavigator.Screen
-        name="Contacts"
-        component={ContactsScreen}
-        options={{
-          headerSearchBarOptions: {
-            placeholder: 'Filter contacts',
-          },
-        }}
-      />
-      <StackNavigator.Screen
-        name="Albums"
-        component={AlbumsScreen}
-        options={{ title: 'Albums' }}
-      />
-    </StackNavigator.Navigator>
-  );
-}
-
-StackBasic.title = 'Stack - Basic';
-StackBasic.linking = linking;
+export const StackBasic = {
+  screen: StackBasicNavigator,
+  title: 'Stack - Basic',
+};
 
 const styles = StyleSheet.create({
   buttons: {
