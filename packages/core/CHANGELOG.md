@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.17.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.16.2...@react-navigation/core@7.17.0) (2026-03-23)
+
+### Features
+
+* support wrapping static config in a component ([57a622c](https://github.com/react-navigation/react-navigation/commit/57a622c1b26289c3d2592f76fe5793d024637e91)) - by @
+
 ## [7.16.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.16.1...@react-navigation/core@7.16.2) (2026-03-19)
 
 ### Bug Fixes
