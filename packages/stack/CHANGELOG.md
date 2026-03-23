@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.18...@react-navigation/stack@8.0.0-alpha.19) (2026-03-23)
+
+### Bug Fixes
+
+* use Activity for stack header ([#13040](https://github.com/react-navigation/react-navigation/issues/13040)) ([7d90811](https://github.com/react-navigation/react-navigation/commit/7d908115465df44a005693208f694ebcf44a0970)) - by @satya164
+
 # [8.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.17...@react-navigation/stack@8.0.0-alpha.18) (2026-03-16)
 
 ### Bug Fixes

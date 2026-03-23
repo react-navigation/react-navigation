@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.7...@react-navigation/core@8.0.0-alpha.8) (2026-03-23)
+
+### Bug Fixes
+
+* use a weak ref instead of mutating params to avoid errors when it's frozen ([#13042](https://github.com/react-navigation/react-navigation/issues/13042)) ([3de9e89](https://github.com/react-navigation/react-navigation/commit/3de9e890d1ef99f73af22261999ffd5290eaf8dd)) - by @gtokman
+
+### Features
+
+* add `with` method to static configuration ([604854f](https://github.com/react-navigation/react-navigation/commit/604854f6d4ce0f2a4bc09d6c542b7841c99fb857)) - by @satya164
+
 # [8.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.6...@react-navigation/core@8.0.0-alpha.7) (2026-03-14)
 
 ### Bug Fixes

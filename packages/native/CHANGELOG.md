@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.15...@react-navigation/native@8.0.0-alpha.16) (2026-03-23)
+
+### Features
+
+* add `with` method to static configuration ([604854f](https://github.com/react-navigation/react-navigation/commit/604854f6d4ce0f2a4bc09d6c542b7841c99fb857)) - by @satya164
+
 # [8.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.14...@react-navigation/native@8.0.0-alpha.15) (2026-03-14)
 
 ### Bug Fixes
