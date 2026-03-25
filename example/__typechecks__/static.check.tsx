@@ -187,12 +187,10 @@ declare let navigation: NavigationProp<RootParamList>;
  * Infer param list from navigator
  */
 expectTypeOf<RootParamList>().toEqualTypeOf<{
-  Home:
-    | NavigatorScreenParams<{
-        Groups: undefined;
-        Chat: { id: number };
-      }>
-    | undefined;
+  Home: NavigatorScreenParams<{
+    Groups: undefined;
+    Chat: { id: number };
+  }>;
   Profile: { user: string };
   Feed: { sort: 'hot' | 'recent' };
   Settings: undefined;
@@ -314,7 +312,8 @@ navigation.navigate('Register', { method: 'token' });
 /**
  * Infer params from nested navigator
  */
-navigation.navigate('Home'); // Navigate to screen without specifying a child screen
+// @ts-expect-error
+navigation.navigate('Home');
 navigation.navigate('Home', { screen: 'Groups' });
 navigation.navigate('Home', { screen: 'Chat', params: { id: 123 } });
 
@@ -536,11 +535,9 @@ expectTypeOf<MyParamList>().toEqualTypeOf<{
   Login: undefined;
   Home: undefined;
   Profile: { id: number };
-  Forum:
-    | NavigatorScreenParams<{
-        Test: { foo: string };
-      }>
-    | undefined;
+  Forum: NavigatorScreenParams<{
+    Test: { foo: string };
+  }>;
 }>();
 
 /**
@@ -766,12 +763,11 @@ createBottomTabNavigator({
       options: ({ route, navigation }) => {
         expectTypeOf(route.name).toEqualTypeOf<string>();
         expectTypeOf(route.params).toEqualTypeOf<
-          | NavigatorScreenParams<{
-              Profile: {
-                userId: string;
-              };
-            }>
-          | undefined
+          NavigatorScreenParams<{
+            Profile: {
+              userId: string;
+            };
+          }>
         >();
 
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
@@ -780,12 +776,11 @@ createBottomTabNavigator({
       },
       listeners: ({ route, navigation }) => {
         expectTypeOf(route.params).toEqualTypeOf<
-          | NavigatorScreenParams<{
-              Profile: {
-                userId: string;
-              };
-            }>
-          | undefined
+          NavigatorScreenParams<{
+            Profile: {
+              userId: string;
+            };
+          }>
         >();
 
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
@@ -794,12 +789,11 @@ createBottomTabNavigator({
       },
       layout: ({ route, navigation, children }) => {
         expectTypeOf(route.params).toEqualTypeOf<
-          | NavigatorScreenParams<{
-              Profile: {
-                userId: string;
-              };
-            }>
-          | undefined
+          NavigatorScreenParams<{
+            Profile: {
+              userId: string;
+            };
+          }>
         >();
 
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
@@ -808,12 +802,11 @@ createBottomTabNavigator({
       },
       getId: ({ params }) => {
         expectTypeOf(params).toEqualTypeOf<
-          | NavigatorScreenParams<{
-              Profile: {
-                userId: string;
-              };
-            }>
-          | undefined
+          NavigatorScreenParams<{
+            Profile: {
+              userId: string;
+            };
+          }>
         >();
 
         return 'static-id';
@@ -821,6 +814,146 @@ createBottomTabNavigator({
     }),
   },
 });
+
+/**
+ * Mark params as optional based on the nested screens' params
+ */
+{
+  const ExactUndefinedStack = createStackNavigator({
+    screens: {
+      Home: () => null,
+      Profile: () => null,
+    },
+  });
+
+  type ExactUndefinedStackParamList = StaticParamList<
+    typeof ExactUndefinedStack
+  >;
+
+  expectTypeOf<ExactUndefinedStackParamList>().toEqualTypeOf<{
+    Home: undefined;
+    Profile: undefined;
+  }>();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const ExactUndefinedTabs = createBottomTabNavigator({
+    screens: {
+      User: ExactUndefinedStack,
+    },
+  });
+
+  expectTypeOf<StaticParamList<typeof ExactUndefinedTabs>>().toEqualTypeOf<{
+    User: NavigatorScreenParams<ExactUndefinedStackParamList> | undefined;
+  }>();
+
+  const IncludedUndefinedStack = createStackNavigator({
+    screens: {
+      Home: (_: StaticScreenProps<{ homeId: string } | undefined>) => null,
+      Profile: (_: StaticScreenProps<{ userId: string } | undefined>) => null,
+    },
+  });
+
+  type IncludedUndefinedStackParamList = StaticParamList<
+    typeof IncludedUndefinedStack
+  >;
+
+  expectTypeOf<IncludedUndefinedStackParamList>().toEqualTypeOf<{
+    Home: { homeId: string } | undefined;
+    Profile: { userId: string } | undefined;
+  }>();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const IncludedUndefinedTabs = createBottomTabNavigator({
+    screens: {
+      User: IncludedUndefinedStack,
+    },
+  });
+
+  expectTypeOf<StaticParamList<typeof IncludedUndefinedTabs>>().toEqualTypeOf<{
+    User: NavigatorScreenParams<IncludedUndefinedStackParamList> | undefined;
+  }>();
+
+  const OneExactUndefinedStack = createStackNavigator({
+    screens: {
+      Home: () => null,
+      Profile: (_: StaticScreenProps<{ userId: string }>) => null,
+    },
+  });
+
+  type OneExactUndefinedStackParamList = StaticParamList<
+    typeof OneExactUndefinedStack
+  >;
+
+  expectTypeOf<OneExactUndefinedStackParamList>().toEqualTypeOf<{
+    Home: undefined;
+    Profile: { userId: string };
+  }>();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const OneExactUndefinedTabs = createBottomTabNavigator({
+    screens: {
+      User: OneExactUndefinedStack,
+    },
+  });
+
+  expectTypeOf<StaticParamList<typeof OneExactUndefinedTabs>>().toEqualTypeOf<{
+    User: NavigatorScreenParams<OneExactUndefinedStackParamList>;
+  }>();
+
+  const OneIncludedUndefinedStack = createStackNavigator({
+    screens: {
+      Home: (_: StaticScreenProps<{ homeId: string } | undefined>) => null,
+      Profile: (_: StaticScreenProps<{ userId: string }>) => null,
+    },
+  });
+
+  type OneIncludedUndefinedStackParamList = StaticParamList<
+    typeof OneIncludedUndefinedStack
+  >;
+
+  expectTypeOf<OneIncludedUndefinedStackParamList>().toEqualTypeOf<{
+    Home: { homeId: string } | undefined;
+    Profile: { userId: string };
+  }>();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const OneIncludedUndefinedTabs = createBottomTabNavigator({
+    screens: {
+      User: OneIncludedUndefinedStack,
+    },
+  });
+
+  expectTypeOf<
+    StaticParamList<typeof OneIncludedUndefinedTabs>
+  >().toEqualTypeOf<{
+    User: NavigatorScreenParams<OneIncludedUndefinedStackParamList>;
+  }>();
+
+  const NoUndefinedStack = createStackNavigator({
+    screens: {
+      Home: (_: StaticScreenProps<{ homeId: string }>) => null,
+      Profile: (_: StaticScreenProps<{ userId: string }>) => null,
+    },
+  });
+
+  type NoUndefinedStackParamList = StaticParamList<typeof NoUndefinedStack>;
+
+  expectTypeOf<NoUndefinedStackParamList>().toEqualTypeOf<{
+    Home: { homeId: string };
+    Profile: { userId: string };
+  }>();
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const NoUndefinedTabs = createBottomTabNavigator({
+    screens: {
+      User: NoUndefinedStack,
+    },
+  });
+
+  expectTypeOf<StaticParamList<typeof NoUndefinedTabs>>().toEqualTypeOf<{
+    User: NavigatorScreenParams<NoUndefinedStackParamList>;
+  }>();
+}
 
 /**
  * Params type is `unknown` when `createXScreen` isn't used
@@ -1410,15 +1543,14 @@ createStackNavigator({
         }),
         options: ({ route }) => {
           expectTypeOf(route.params).toEqualTypeOf<
-            | NavigatorScreenParams<{
-                Overview: {
-                  period: string;
-                };
-                Stats: {
-                  chartType: 'bar' | 'line';
-                };
-              }>
-            | undefined
+            NavigatorScreenParams<{
+              Overview: {
+                period: string;
+              };
+              Stats: {
+                chartType: 'bar' | 'line';
+              };
+            }>
           >();
 
           return {};
@@ -1442,17 +1574,14 @@ createStackNavigator({
         },
         options: ({ route }) => {
           expectTypeOf(route.params).toEqualTypeOf<
-            { section?: string } & (
-              | NavigatorScreenParams<{
-                  Overview: {
-                    period: string;
-                  };
-                  Stats: {
-                    chartType: 'bar' | 'line';
-                  };
-                }>
-              | undefined
-            )
+            { section?: string } & NavigatorScreenParams<{
+              Overview: {
+                period: string;
+              };
+              Stats: {
+                chartType: 'bar' | 'line';
+              };
+            }>
           >();
 
           return {};
@@ -1466,17 +1595,14 @@ createStackNavigator({
   expectTypeOf<TestParamList>().toEqualTypeOf<{
     Feed: {
       section?: string | undefined;
-    } & (
-      | NavigatorScreenParams<{
-          Overview: {
-            period: string;
-          };
-          Stats: {
-            chartType: 'bar' | 'line';
-          };
-        }>
-      | undefined
-    );
+    } & NavigatorScreenParams<{
+      Overview: {
+        period: string;
+      };
+      Stats: {
+        chartType: 'bar' | 'line';
+      };
+    }>;
     Settings: {
       name: string;
       age: number;
@@ -1516,16 +1642,14 @@ createStackNavigator({
       detailId: string;
     };
     About: undefined;
-    Dashboard:
-      | NavigatorScreenParams<{
-          Overview: {
-            period: string;
-          };
-          Stats: {
-            chartType: 'bar' | 'line';
-          };
-        }>
-      | undefined;
+    Dashboard: NavigatorScreenParams<{
+      Overview: {
+        period: string;
+      };
+      Stats: {
+        chartType: 'bar' | 'line';
+      };
+    }>;
   }>();
 }
 
@@ -1775,14 +1899,12 @@ createStackScreen({
   type TabsParamList = StaticParamList<typeof Tabs>;
 
   expectTypeOf<TabsParamList>().toEqualTypeOf<{
-    Dashboard:
-      | NavigatorScreenParams<{
-          Home: undefined;
-          Profile: {
-            userId: string;
-          };
-        }>
-      | undefined;
+    Dashboard: NavigatorScreenParams<{
+      Home: undefined;
+      Profile: {
+        userId: string;
+      };
+    }>;
     Settings: {
       category: string;
     };

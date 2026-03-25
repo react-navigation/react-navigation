@@ -43,15 +43,32 @@ type ParamsForScreenComponent<T> = T extends (...args: any[]) => any
     ? Params
     : undefined;
 
+// If every nested route's params include `undefined`, the nested navigator
+// itself can be omitted. Otherwise, require `NavigatorScreenParams`.
+type ParamsForNestedNavigator<
+  T extends {
+    config: StaticConfig<NavigatorTypeBagBase>;
+  },
+  ParamList extends {} = StaticParamList<T>,
+> = {
+  // Exclude routes with optional params so the resulting union only contains route names with required params.
+  // If there are no routes with required params, the resulting union will be `never`.
+  [RouteName in keyof ParamList]-?: undefined extends ParamList[RouteName]
+    ? never
+    : RouteName;
+}[keyof ParamList] extends never
+  ? NavigatorScreenParams<ParamList> | undefined
+  : NavigatorScreenParams<ParamList>;
+
 type ParamsForScreen<T> =
   // Nested navigator in screen property
   T extends {
     screen: { config: StaticConfig<NavigatorTypeBagBase> };
   }
-    ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
+    ? ParamsForNestedNavigator<T['screen']>
     : // Direct nested navigator
       T extends { config: StaticConfig<NavigatorTypeBagBase> }
-      ? NavigatorScreenParams<StaticParamList<T>> | undefined
+      ? ParamsForNestedNavigator<T>
       : T extends {
             screen: React.ComponentType<any>;
           }

@@ -726,6 +726,7 @@ useLinkProps<RootStackParamList>({ screen: 'Login' });
   Timeline
 </Button>;
 
+// @ts-expect-error
 useLinkProps({ screen: 'StackBasic' });
 // @ts-expect-error
 useLinkProps({ screen: 'StackBasi' });
@@ -739,6 +740,7 @@ useLinkProps({
   params: { screen: 'Examples' },
 });
 
+// @ts-expect-error
 <Link screen="StackBasic">StackBasic</Link>;
 // @ts-expect-error
 <Link screen="StackBasi">StackBasic</Link>;
@@ -750,6 +752,7 @@ useLinkProps({
   Home
 </Link>;
 
+// @ts-expect-error
 <Button screen="StackBasic">StackBasic</Button>;
 // @ts-expect-error
 <Button screen="StackBasi">StackBasic</Button>;
