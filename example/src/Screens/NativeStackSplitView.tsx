@@ -6,12 +6,19 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { Platform, Pressable, StyleSheet, View } from 'react-native';
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import type { SplitHostCommands } from 'react-native-screens/experimental';
-import { Split } from 'react-native-screens/experimental';
+import { SafeAreaView, Split } from 'react-native-screens/experimental';
 
 type SplitViewParamList = {
   SplitViewMain: undefined;
+  SplitViewSecond: undefined;
 };
 
 const linking = {
@@ -32,30 +39,40 @@ function Column({
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.column, { backgroundColor: color }]}>
-      <Text style={[styles.columnTitle, { color: colors.text }]}>{title}</Text>
+    <SafeAreaView
+      edges={{
+        left: true,
+        right: true,
+        top: true,
+      }}
+    >
+      <View style={[styles.column, { backgroundColor: color }]}>
+        <Text style={[styles.columnTitle, { color: colors.text }]}>
+          {title}
+        </Text>
 
-      <View style={styles.buttons}>
-        <Pressable
-          style={[styles.button, { backgroundColor: colors.primary }]}
-          onPress={() => splitRef.current?.show('primary')}
-        >
-          <Text style={styles.buttonText}>Show Primary</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.button, { backgroundColor: colors.primary }]}
-          onPress={() => splitRef.current?.show('supplementary')}
-        >
-          <Text style={styles.buttonText}>Show Supplementary</Text>
-        </Pressable>
-        <Pressable
-          style={[styles.button, { backgroundColor: colors.primary }]}
-          onPress={() => splitRef.current?.show('secondary')}
-        >
-          <Text style={styles.buttonText}>Show Secondary</Text>
-        </Pressable>
+        <View style={styles.buttons}>
+          <Pressable
+            style={[styles.button, { backgroundColor: colors.primary }]}
+            onPress={() => splitRef.current?.show('primary')}
+          >
+            <Text style={styles.buttonText}>Show Primary</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.button, { backgroundColor: colors.primary }]}
+            onPress={() => splitRef.current?.show('supplementary')}
+          >
+            <Text style={styles.buttonText}>Show Supplementary</Text>
+          </Pressable>
+          <Pressable
+            style={[styles.button, { backgroundColor: colors.primary }]}
+            onPress={() => splitRef.current?.show('secondary')}
+          >
+            <Text style={styles.buttonText}>Show Secondary</Text>
+          </Pressable>
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -76,24 +93,24 @@ function SplitViewContent() {
   return (
     <Split.Host
       ref={splitRef}
-      preferredDisplayMode="twoBesideSecondary"
+      // preferredDisplayMode="oneBesideSecondary"
       preferredSplitBehavior="tile"
-      topColumnForCollapsing="primary"
-      presentsWithGesture
-      primaryEdge="leading"
-      primaryBackgroundStyle="sidebar"
-      displayModeButtonVisibility="always"
-      showSecondaryToggleButton
+      // topColumnForCollapsing="primary"
+      // presentsWithGesture
+      // primaryEdge="leading"
+      // primaryBackgroundStyle="sidebar"
+      // displayModeButtonVisibility="always"
+      // showSecondaryToggleButton
       showInspector
-      orientation="all"
-      columnMetrics={{
-        minimumPrimaryColumnWidth: 200,
-        maximumPrimaryColumnWidth: 350,
-        preferredPrimaryColumnWidthOrFraction: 280,
-        minimumSupplementaryColumnWidth: 200,
-        maximumSupplementaryColumnWidth: 350,
-        preferredSupplementaryColumnWidthOrFraction: 280,
-      }}
+      // orientation="all"
+      // columnMetrics={{
+      //   minimumPrimaryColumnWidth: 200,
+      //   maximumPrimaryColumnWidth: 350,
+      //   preferredPrimaryColumnWidthOrFraction: 280,
+      //   minimumSupplementaryColumnWidth: 200,
+      //   maximumSupplementaryColumnWidth: 350,
+      //   preferredSupplementaryColumnWidthOrFraction: 280,
+      // }}
       onCollapse={() => {
         console.log('[SplitView] Collapsed to single column');
       }}
@@ -117,23 +134,66 @@ function SplitViewContent() {
       >
         <Column title="Primary" color="#e8f5e9" splitRef={splitRef} />
       </Split.Column>
-      <Split.Column
+      {/* <Split.Column
         onWillAppear={() => console.log('[Supplementary] will appear')}
         onDidAppear={() => console.log('[Supplementary] did appear')}
         onWillDisappear={() => console.log('[Supplementary] will disappear')}
         onDidDisappear={() => console.log('[Supplementary] did disappear')}
       >
         <Column title="Supplementary" color="#e3f2fd" splitRef={splitRef} />
-      </Split.Column>
+      </Split.Column> */}
       <Split.Column
         onWillAppear={() => console.log('[Secondary] will appear')}
         onDidAppear={() => console.log('[Secondary] did appear')}
         onWillDisappear={() => console.log('[Secondary] will disappear')}
         onDidDisappear={() => console.log('[Secondary] did disappear')}
       >
-        <Column title="Secondary" color="#fff3e0" splitRef={splitRef} />
+        {/* <Column title="Secondary" color="#fff3e0" splitRef={splitRef} /> */}
+        <ScrollView contentInsetAdjustmentBehavior="automatic" horizontal>
+          {Array.from({ length: 20 }, (_, i) => `Item ${i + 1}`).map(
+            (item, i) => (
+              <View
+                key={item}
+                style={{
+                  width: 150,
+                  height: 150,
+                  backgroundColor: i % 2 === 0 ? '#fff3e0' : '#ffe0b2',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: 8,
+                  borderRadius: 8,
+                }}
+              >
+                <Text style={{ color: colors.text }}>{item}</Text>
+              </View>
+            )
+          )}
+        </ScrollView>
+        {/* <Stack.Navigator screenOptions={{ headerTransparent: true }}>
+          <Stack.Screen name="SplitViewMain">
+            {({ navigation }) => (
+              <View style={[styles.column, { backgroundColor: '#fff3e0' }]}>
+                <Text style={[styles.columnTitle, { color: colors.text }]}>
+                  Main Content
+                </Text>
+                <Button onPress={() => navigation.navigate('SplitViewSecond')}>
+                  Go to Secondary
+                </Button>
+              </View>
+            )}
+          </Stack.Screen>
+          <Stack.Screen name="SplitViewSecond">
+            {() => (
+              <View style={[styles.column, { backgroundColor: '#fff3e0' }]}>
+                <Text style={[styles.columnTitle, { color: colors.text }]}>
+                  Secondary
+                </Text>
+              </View>
+            )}
+          </Stack.Screen>
+        </Stack.Navigator> */}
       </Split.Column>
-      <Split.Inspector
+      {/* <Split.Inspector
         onWillAppear={() => console.log('[Inspector] will appear')}
         onDidAppear={() => console.log('[Inspector] did appear')}
         onWillDisappear={() => console.log('[Inspector] will disappear')}
@@ -144,7 +204,7 @@ function SplitViewContent() {
             Inspector
           </Text>
         </View>
-      </Split.Inspector>
+      </Split.Inspector> */}
     </Split.Host>
   );
 }

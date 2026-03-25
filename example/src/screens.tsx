@@ -38,6 +38,8 @@ import { BottomTabsShowcase } from './Showcase/BottomTabsShowcase';
 import { DrawerShowcase } from './Showcase/DrawerShowcase';
 import { MaterialTopTabsShowcase } from './Showcase/MaterialTopTabsShowcase';
 import { NativeStackShowcase } from './Showcase/NativeStackShowcase';
+import { SplitViewFilesShowcase } from './Showcase/SplitViewFilesShowcase';
+import { SplitViewSettingsShowcase } from './Showcase/SplitViewSettingsShowcase';
 import { StackShowcase } from './Showcase/StackShowcase';
 
 export const SCREENS = {
@@ -79,6 +81,8 @@ export const SCREENS = {
   DrawerShowcase,
   MaterialTopTabsShowcase,
   NativeStackShowcase,
+  SplitViewFilesShowcase,
+  SplitViewSettingsShowcase,
   StackShowcase,
 } as const satisfies {
   [key: string]:
