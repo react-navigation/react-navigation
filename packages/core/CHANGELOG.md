@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.17.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.17.0...@react-navigation/core@7.17.1) (2026-03-26)
+
+### Bug Fixes
+
+* fix wrong name for createComponentForStaticNavigation export ([628f01c](https://github.com/react-navigation/react-navigation/commit/628f01c45ed0623bbb2f6d9172c51720664c0c96)), closes [#13045](https://github.com/react-navigation/react-navigation/issues/13045) - by @
+
 # [7.17.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.16.2...@react-navigation/core@7.17.0) (2026-03-23)
 
 ### Features
