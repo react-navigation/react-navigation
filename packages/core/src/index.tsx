@@ -19,7 +19,7 @@ export {
 export { PreventRemoveContext } from './PreventRemoveContext';
 export { PreventRemoveProvider } from './PreventRemoveProvider';
 export {
-  createComponentForStaticConfigDeprecated as createComponentForStaticConfig,
+  createComponentForStaticNavigationDeprecated as createComponentForStaticNavigation,
   createPathConfigForStaticNavigation,
   type StaticConfig,
   type StaticConfigGroup,

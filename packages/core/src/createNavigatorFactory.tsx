@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import { Group } from './Group';
 import { Screen } from './Screen';
-import { createComponentForStaticConfig } from './StaticNavigation';
+import { createComponentForStaticNavigation } from './StaticNavigation';
 
 /**
  * Higher order component to create a `Navigator` and `Screen` pair.
@@ -16,7 +16,7 @@ export function createNavigatorFactory(Navigator: React.ComponentType<any>) {
 
   function createNavigator(config?: any): any {
     if (config != null) {
-      const NavigatorComponent = createComponentForStaticConfig(
+      const NavigatorComponent = createComponentForStaticNavigation(
         {
           Navigator,
           Screen,

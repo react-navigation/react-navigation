@@ -394,7 +394,7 @@ const getItemsFromScreens = (
  * @param displayName Name of the component to be displayed in React DevTools.
  * @returns A component which renders the navigator.
  */
-export function createComponentForStaticConfig<
+export function createComponentForStaticNavigation<
   T extends {
     Navigator: React.ComponentType<any>;
     Group: React.ComponentType<any>;
@@ -508,11 +508,11 @@ export function createComponentForStaticConfig<
  *
  * @deprecated Use `tree.getComponent()` instead.
  */
-export function createComponentForStaticConfigDeprecated(
+export function createComponentForStaticNavigationDeprecated(
   tree: StaticNavigation<any, any, any>
 ): React.ComponentType<{}> {
   console.warn(
-    '`createComponentForStaticConfig` is deprecated. Use `tree.getComponent()` instead.'
+    '`createComponentForStaticNavigation` is deprecated. Use `tree.getComponent()` instead.'
   );
 
   return tree.getComponent();
