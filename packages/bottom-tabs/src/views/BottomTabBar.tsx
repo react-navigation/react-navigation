@@ -228,18 +228,22 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
   React.useEffect(() => {
     const visibilityAnimationConfig = visibilityAnimationConfigRef.current;
 
+    let animation;
+
     if (shouldShowTabBar) {
-      const animation =
+      const animate =
         visibilityAnimationConfig?.show?.animation === 'spring'
           ? Animated.spring
           : Animated.timing;
 
-      animation(visible, {
+      animation = animate(visible, {
         toValue: 1,
         useNativeDriver,
         duration: 250,
         ...visibilityAnimationConfig?.show?.config,
-      }).start(({ finished }) => {
+      });
+
+      animation.start(({ finished }) => {
         if (finished) {
           setIsTabBarHidden(false);
         }
@@ -248,20 +252,22 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
       // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
       setIsTabBarHidden(true);
 
-      const animation =
+      const animate =
         visibilityAnimationConfig?.hide?.animation === 'spring'
           ? Animated.spring
           : Animated.timing;
 
-      animation(visible, {
+      animation = animate(visible, {
         toValue: 0,
         useNativeDriver,
         duration: 200,
         ...visibilityAnimationConfig?.hide?.config,
-      }).start();
+      });
+
+      animation.start();
     }
 
-    return () => visible.stopAnimation();
+    return () => animation.stop();
   }, [visible, shouldShowTabBar]);
 
   const [layout, setLayout] = React.useState({

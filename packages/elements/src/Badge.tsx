@@ -49,17 +49,19 @@ export function Badge({
       return;
     }
 
-    Animated.timing(opacity, {
+    const animation = Animated.timing(opacity, {
       toValue: visible ? 1 : 0,
       duration: 150,
       useNativeDriver,
-    }).start(({ finished }) => {
+    });
+
+    animation.start(({ finished }) => {
       if (finished && !visible) {
         setRendered(false);
       }
     });
 
-    return () => opacity.stopAnimation();
+    return () => animation.stop();
   }, [opacity, rendered, visible]);
 
   if (!rendered) {

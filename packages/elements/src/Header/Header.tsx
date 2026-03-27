@@ -327,21 +327,21 @@ export function Header(props: Props) {
       return;
     }
 
-    Animated.timing(searchBarVisibleAnim, {
+    const animation = Animated.timing(searchBarVisibleAnim, {
       toValue: searchBarVisible ? 1 : 0,
       duration: 150,
       useNativeDriver,
       easing: Easing.in(Easing.linear),
-    }).start(({ finished }) => {
+    });
+
+    animation.start(({ finished }) => {
       if (finished) {
         setSearchBarRendered(searchBarVisible);
         searchBarVisibleRef.current = searchBarVisible;
       }
     });
 
-    return () => {
-      searchBarVisibleAnim.stopAnimation();
-    };
+    return () => animation.stop();
   }, [searchBarVisible, searchBarVisibleAnim]);
 
   const headerOpacity = searchBarVisibleAnim.interpolate({

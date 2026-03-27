@@ -182,14 +182,18 @@ export function TabBarIndicator<T extends Route>({
     : true;
 
   React.useEffect(() => {
+    let animation: Animated.CompositeAnimation | undefined;
+
     const fadeInIndicator = () => {
       if (!isIndicatorShown.current && isWidthDynamic && indicatorVisible) {
-        Animated.timing(opacity, {
+        animation = Animated.timing(opacity, {
           toValue: 1,
           duration: 150,
           easing: Easing.in(Easing.linear),
           useNativeDriver,
-        }).start(({ finished }) => {
+        });
+
+        animation.start(({ finished }) => {
           if (finished) {
             isIndicatorShown.current = true;
           }
@@ -199,7 +203,7 @@ export function TabBarIndicator<T extends Route>({
 
     fadeInIndicator();
 
-    return () => opacity.stopAnimation();
+    return () => animation?.stop();
   }, [indicatorVisible, isWidthDynamic, opacity]);
 
   const { routes } = navigationState;
