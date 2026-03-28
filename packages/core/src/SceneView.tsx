@@ -105,12 +105,35 @@ export function SceneView<
 
   const getIsInitial = React.useCallback(() => isInitialRef.current, []);
 
-  const [consumedParamsRef, setConsumedParamsRef] =
-    React.useState<WeakRef<object> | null>(null);
+  const [consumedParams, setConsumedParams] = React.useState<WeakMap<
+    object,
+    true
+  > | null>(null);
 
   const consumedParamsContext = React.useMemo(
-    () => ({ ref: consumedParamsRef, setRef: setConsumedParamsRef }),
-    [consumedParamsRef]
+    () => ({
+      isConsumed: (params: object) => {
+        if (consumedParams) {
+          return consumedParams.has(params);
+        }
+
+        return false;
+      },
+      setConsumed: (params: object) => {
+        setConsumedParams((prev) => {
+          if (prev && prev.has(params)) {
+            return prev;
+          }
+
+          const map = new WeakMap<object, true>();
+
+          map.set(params, true);
+
+          return map;
+        });
+      },
+    }),
+    [consumedParams]
   );
 
   const parentFocusedRouteState = React.use(NavigationFocusedRouteStateContext);
