@@ -114,12 +114,35 @@ export function SceneView<
   const parentFocusedRouteState = React.useContext(
     NavigationFocusedRouteStateContext
   );
-  const [consumedParamsRef, setConsumedParamsRef] =
-    React.useState<WeakRef<object> | null>(null);
+  const [consumedParams, setConsumedParams] = React.useState<WeakMap<
+    object,
+    true
+  > | null>(null);
 
   const consumedParamsContext = React.useMemo(
-    () => ({ ref: consumedParamsRef, setRef: setConsumedParamsRef }),
-    [consumedParamsRef]
+    () => ({
+      isConsumed: (params: object) => {
+        if (consumedParams) {
+          return consumedParams.has(params);
+        }
+
+        return false;
+      },
+      setConsumed: (params: object) => {
+        setConsumedParams((prev) => {
+          if (prev && prev.has(params)) {
+            return prev;
+          }
+
+          const map = new WeakMap();
+
+          map.set(params, true);
+
+          return map;
+        });
+      },
+    }),
+    [consumedParams]
   );
 
   const focusedRouteState = React.useMemo(() => {

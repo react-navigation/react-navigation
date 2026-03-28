@@ -331,7 +331,7 @@ export function useNavigationBuilder<
 
   const isNestedParamsConsumed =
     typeof route?.params === 'object' && route.params != null
-      ? consumedParams?.ref?.deref() === route.params
+      ? consumedParams?.isConsumed(route.params)
       : false;
 
   const {
@@ -725,20 +725,18 @@ export function useNavigationBuilder<
         : nextState;
   }
 
-  const setConsumedParamsRef = consumedParams?.setRef;
+  const setConsumedParams = consumedParams?.setConsumed;
 
   React.useEffect(() => {
     if (
-      setConsumedParamsRef &&
+      setConsumedParams &&
       didConsumeNestedParams &&
       typeof route?.params === 'object' &&
       route.params != null
     ) {
-      // Track whether the params have been already consumed
-      // Set it to the same object, so merged params can be handled again
-      setConsumedParamsRef(new WeakRef(route.params));
+      setConsumedParams(route.params);
     }
-  }, [didConsumeNestedParams, route?.params, setConsumedParamsRef]);
+  }, [didConsumeNestedParams, route?.params, setConsumedParams]);
 
   const shouldUpdate = state !== nextState;
 
