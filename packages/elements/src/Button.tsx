@@ -23,7 +23,7 @@ type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
 type ButtonLinkProps<
   ParamList extends {} = RootParamList,
   RouteName extends keyof ParamList = keyof ParamList,
-> = LinkProps<ParamList, RouteName> & Omit<ButtonBaseProps, 'onPress'>;
+> = LinkProps<ParamList, RouteName> & ButtonBaseProps;
 
 const BUTTON_RADIUS = 40;
 
@@ -54,12 +54,25 @@ function ButtonLink<
   params,
   action,
   href,
+  onPress,
   ...rest
 }: ButtonLinkProps<ParamList, RouteName>) {
   // @ts-expect-error: This is already type-checked by the prop types
   const props = useLinkProps({ screen, params, action, href });
 
-  return <ButtonBase {...rest} {...props} />;
+  return (
+    <ButtonBase
+      {...rest}
+      {...props}
+      onPress={(e) => {
+        onPress?.(e);
+
+        if (!e.defaultPrevented) {
+          props.onPress?.(e);
+        }
+      }}
+    />
+  );
 }
 
 function ButtonBase({
