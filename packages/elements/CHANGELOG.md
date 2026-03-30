@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.19...@react-navigation/elements@3.0.0-alpha.20) (2026-03-30)
+
+### Bug Fixes
+
+* fix onPress on Button ([9e27da4](https://github.com/react-navigation/react-navigation/commit/9e27da4f6019544783d9e6deb5da260da7ca0ccf)) - by @
+
 # [3.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.18...@react-navigation/elements@3.0.0-alpha.19) (2026-03-30)
 
 ### Bug Fixes
