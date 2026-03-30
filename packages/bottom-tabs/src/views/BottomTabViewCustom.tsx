@@ -322,7 +322,11 @@ export function BottomTabViewCustom({
               key={route.key}
               mode={isFocused ? 'normal' : isActive ? 'inert' : 'paused'}
               visible={isFocused || isAnimatingRoute}
-              style={{ ...StyleSheet.absoluteFill, zIndex: isFocused ? 0 : -1 }}
+              style={{
+                ...StyleSheet.absoluteFill,
+                zIndex: isFocused ? 0 : -1,
+                pointerEvents: isFocused ? 'auto' : 'none',
+              }}
             >
               {content}
             </ActivityView>
