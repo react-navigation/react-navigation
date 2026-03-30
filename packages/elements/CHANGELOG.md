@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.18...@react-navigation/elements@3.0.0-alpha.19) (2026-03-30)
+
+### Bug Fixes
+
+* fix onPress not being in Button props type ([a3a043c](https://github.com/react-navigation/react-navigation/commit/a3a043cb0ace8ecbdd5fd1317b527c23841bbe45)) - by @
+
 # [3.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.17...@react-navigation/elements@3.0.0-alpha.18) (2026-03-30)
 
 **Note:** Version bump only for package @react-navigation/elements
