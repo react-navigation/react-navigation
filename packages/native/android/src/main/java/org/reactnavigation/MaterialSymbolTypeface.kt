@@ -2,11 +2,12 @@ package org.reactnavigation
 
 import android.content.Context
 import android.graphics.Typeface
+import java.util.concurrent.ConcurrentHashMap
 
 data class MaterialSymbolTypefaceResult(val typeface: Typeface, val suffix: String)
 
 object MaterialSymbolTypeface {
-  private val typefaces = mutableMapOf<String, Typeface>()
+  private val typefaces = ConcurrentHashMap<String, Typeface>()
   private var availableFonts: Map<String, Set<Int>>? = null
 
   fun get(context: Context, variant: String?, weight: Int?): MaterialSymbolTypefaceResult {

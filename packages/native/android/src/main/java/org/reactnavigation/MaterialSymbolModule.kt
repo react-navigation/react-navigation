@@ -1,5 +1,6 @@
 package org.reactnavigation
 
+import android.net.Uri
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
@@ -15,6 +16,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.math.roundToInt
 
 class MaterialSymbolModule(reactContext: ReactApplicationContext) :
@@ -24,6 +26,7 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     const val NAME = NativeMaterialSymbolModuleSpec.NAME
 
     private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    private val cleanedCacheDirs = ConcurrentHashMap.newKeySet<String>()
   }
 
   private val fontHash: String by lazy {
@@ -42,8 +45,9 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
       }
     }
 
-    val resolvedColor = ColorPropConverter.getColor(colorValue, reactApplicationContext)
-      ?: throw IllegalArgumentException("Could not resolve color")
+    val resolvedColor = ColorPropConverter.getColor(
+      colorValue, currentActivity ?: reactApplicationContext
+    ) ?: throw IllegalArgumentException("Could not resolve color")
 
     val density = reactApplicationContext.resources.displayMetrics.density
     val scaledSize = (size * density).roundToInt().coerceAtLeast(1)
@@ -57,16 +61,23 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
       "react_navigation/material_symbols/$typefaceSuffix/$fontHash"
     )
 
-    val cacheKey = "${name.hashCode()}_${scaledSize}_$resolvedColor"
-    val cacheFile = File(cacheDir, "$cacheKey.png")
+    val cacheFile = File(
+      cacheDir, "${Uri.encode(name)}_${scaledSize}_$resolvedColor.png"
+    )
+
+    val cacheUri = cacheFile.toUri().toString()
 
     if (cacheFile.exists()) {
-      return cacheFile.toUri().toString()
+      return cacheUri
     }
 
-    scope.launch {
-      cacheDir.parentFile?.listFiles { it.isDirectory && it.name != fontHash }
-        ?.forEach { it.deleteRecursively() }
+    val cacheParent = cacheDir.parentFile
+
+    if (cacheParent != null && cleanedCacheDirs.add(cacheParent.absolutePath)) {
+      scope.launch {
+        cacheParent.listFiles { it.isDirectory && it.name != fontHash }
+          ?.forEach { it.deleteRecursively() }
+      }
     }
 
     cacheDir.mkdirs()
@@ -95,6 +106,6 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
       bitmap.recycle()
     }
 
-    return cacheFile.toUri().toString()
+    return cacheUri
   }
 }

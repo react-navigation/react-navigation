@@ -12,8 +12,6 @@ import type { MaterialSymbolOptions } from './types';
 
 export type MaterialSymbolProps = MaterialSymbolOptions & ViewProps;
 
-const imageSourceCache = new Map<string, ImageSourcePropType>();
-
 export function MaterialSymbol({
   name,
   weight,
@@ -53,15 +51,6 @@ MaterialSymbol.getImageSource = ({
     throw new Error(`Invalid color value: ${String(color)}`);
   }
 
-  const scale = PixelRatio.get();
-
-  const cacheKey = `${name}:${variant}:${weight}:${size}:${scale}:${JSON.stringify(processedColor)}`;
-  const cached = imageSourceCache.get(cacheKey);
-
-  if (cached !== undefined) {
-    return cached;
-  }
-
   const uri = NativeMaterialSymbolModule.getImageSource(
     name,
     variant,
@@ -72,12 +61,10 @@ MaterialSymbol.getImageSource = ({
 
   const source: ImageSourcePropType = {
     uri,
-    scale,
+    scale: PixelRatio.get(),
     width: size,
     height: size,
   };
-
-  imageSourceCache.set(cacheKey, source);
 
   return source;
 };
