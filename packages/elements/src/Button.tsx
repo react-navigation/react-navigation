@@ -66,10 +66,7 @@ function ButtonLink<
       {...props}
       onPress={(e) => {
         onPress?.(e);
-
-        if (!e.defaultPrevented) {
-          props.onPress?.(e);
-        }
+        props.onPress?.(e);
       }}
     />
   );
