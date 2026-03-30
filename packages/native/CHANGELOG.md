@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.16...@react-navigation/native@8.0.0-alpha.17) (2026-03-30)
+
+### Bug Fixes
+
+* use activity for resolving platform color ([6693a44](https://github.com/react-navigation/react-navigation/commit/6693a445ee3cb7cacf1151b4007af60740c0ccc9)) - by @satya164
+
 # [8.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.15...@react-navigation/native@8.0.0-alpha.16) (2026-03-23)
 
 ### Features

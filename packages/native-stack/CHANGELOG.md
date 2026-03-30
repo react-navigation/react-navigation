@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.19...@react-navigation/native-stack@8.0.0-alpha.20) (2026-03-30)
+
+### Bug Fixes
+
+* automatically change header title color based on content underneath ([44e76bb](https://github.com/react-navigation/react-navigation/commit/44e76bb6d9550a7562ae65af652a54caf067a2d2)) - by @satya164
+
 # [8.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.18...@react-navigation/native-stack@8.0.0-alpha.19) (2026-03-23)
 
 **Note:** Version bump only for package @react-navigation/native-stack

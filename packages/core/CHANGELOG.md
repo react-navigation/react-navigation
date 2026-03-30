@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.8...@react-navigation/core@8.0.0-alpha.9) (2026-03-30)
+
+### Bug Fixes
+
+* make nested navigator params required ([a268627](https://github.com/react-navigation/react-navigation/commit/a2686271265780cdc9bde071ca639b6897a0686f)) - by @satya164
+* use a weakmap to track consumed params instead of ref ([4ef8972](https://github.com/react-navigation/react-navigation/commit/4ef897298396017f0dcb37f77d1bb1bcb156b298)), closes [#13048](https://github.com/react-navigation/react-navigation/issues/13048) - by @satya164
+
 # [8.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.7...@react-navigation/core@8.0.0-alpha.8) (2026-03-23)
 
 ### Bug Fixes
