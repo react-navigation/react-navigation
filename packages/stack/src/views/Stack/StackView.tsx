@@ -45,8 +45,6 @@ type State = {
   routes: Route<string>[];
   // Previous navigation state for comparison
   previousState: StackNavigationState<ParamListBase> | undefined;
-  // Previous descriptors, to compare whether descriptors have changed or not
-  previousDescriptors: StackDescriptorMap;
   // List of routes being opened, we need to animate pushing of these new routes
   openingRouteKeys: string[];
   // List of routes being closed, we need to animate popping of these routes
@@ -114,20 +112,6 @@ export class StackView extends React.Component<Props, State> {
         routes.push(...closingRoutes);
       }
 
-      let descriptors = props.descriptors;
-      let previousDescriptors = state.previousDescriptors;
-
-      if (props.descriptors !== state.previousDescriptors) {
-        descriptors = routes.reduce<StackDescriptorMap>((acc, route) => {
-          acc[route.key] =
-            props.descriptors[route.key] || state.descriptors[route.key];
-
-          return acc;
-        }, {});
-
-        previousDescriptors = props.descriptors;
-      }
-
       if (!isArrayEqual(allRoutes, previousRoutes)) {
         // if any route objects have changed, we should update them
         const map = allRoutes.reduce<Record<string, Route<string>>>(
@@ -141,11 +125,20 @@ export class StackView extends React.Component<Props, State> {
         routes = routes.map((route) => map[route.key] || route);
       }
 
+      const descriptors = [
+        ...routes,
+        ...props.state.preloadedRoutes,
+      ].reduce<StackDescriptorMap>((acc, route) => {
+        acc[route.key] =
+          props.descriptors[route.key] || state.descriptors[route.key];
+
+        return acc;
+      }, {});
+
       return {
         routes,
         previousState: props.state,
         descriptors,
-        previousDescriptors,
       };
     }
 
@@ -316,7 +309,10 @@ export class StackView extends React.Component<Props, State> {
       );
     }
 
-    const descriptors = allRoutes.reduce<StackDescriptorMap>((acc, route) => {
+    const descriptors = [
+      ...routes,
+      ...props.state.preloadedRoutes,
+    ].reduce<StackDescriptorMap>((acc, route) => {
       acc[route.key] =
         props.descriptors[route.key] || state.descriptors[route.key];
 
@@ -326,7 +322,6 @@ export class StackView extends React.Component<Props, State> {
     return {
       routes,
       previousState: props.state,
-      previousDescriptors: props.descriptors,
       openingRouteKeys,
       closingRouteKeys,
       replacingRouteKeys,
@@ -337,7 +332,6 @@ export class StackView extends React.Component<Props, State> {
   state: State = {
     routes: [],
     previousState: undefined,
-    previousDescriptors: {},
     openingRouteKeys: [],
     closingRouteKeys: [],
     replacingRouteKeys: [],

@@ -70,7 +70,6 @@ const createState = (
 ): State => ({
   routes,
   previousState: undefined,
-  previousDescriptors: {},
   openingRouteKeys: [],
   closingRouteKeys: [],
   replacingRouteKeys: [],
@@ -136,6 +135,27 @@ describe('StackView.getDerivedStateFromProps', () => {
       expect(result.closingRouteKeys).toEqual(['B']);
       expect(result.openingRouteKeys).toEqual([]);
     });
+
+    test('preserves descriptor for closing route during pop animation', () => {
+      const routeA = createRoute('A');
+      const routeB = createRoute('B');
+      const stateDescriptors = createDescriptors([routeA, routeB]);
+      const props = createProps([routeA]);
+      const state = createState(
+        {
+          previousState: createNavigationState([routeA, routeB]),
+          descriptors: stateDescriptors,
+        },
+        [routeA, routeB]
+      );
+
+      const result = StackView.getDerivedStateFromProps(props, state);
+
+      expect(result.descriptors[routeA.key]).toBe(
+        props.descriptors[routeA.key]
+      );
+      expect(result.descriptors[routeB.key]).toBe(stateDescriptors[routeB.key]);
+    });
   });
 
   describe('replace navigation (push animation)', () => {
@@ -196,7 +216,6 @@ describe('StackView.getDerivedStateFromProps', () => {
       const state = createState(
         {
           previousState: createNavigationState([routeB]),
-          previousDescriptors: oldDescriptors,
           replacingRouteKeys: ['A'],
           openingRouteKeys: ['B'],
           descriptors: {
@@ -228,6 +247,33 @@ describe('StackView.getDerivedStateFromProps', () => {
       const result = StackView.getDerivedStateFromProps(props, state);
 
       expect(result.routes.map((r) => r.key)).toEqual(['A', 'B']);
+    });
+
+    test('preserves descriptor for closing route during re-render', () => {
+      const routeA = createRoute('A');
+      const routeB = createRoute('B');
+      const propsDescriptors = createDescriptors([routeA]);
+      const stateDescriptorB = createDescriptors([routeB])[routeB.key];
+      const props = {
+        ...createProps([routeA]),
+        descriptors: propsDescriptors,
+      };
+      const state = createState(
+        {
+          previousState: createNavigationState([routeA]),
+          closingRouteKeys: ['B'],
+          descriptors: {
+            ...propsDescriptors,
+            [routeB.key]: stateDescriptorB,
+          },
+        },
+        [routeA, routeB]
+      );
+
+      const result = StackView.getDerivedStateFromProps(props, state);
+
+      expect(result.descriptors[routeA.key]).toBe(propsDescriptors[routeA.key]);
+      expect(result.descriptors[routeB.key]).toBe(stateDescriptorB);
     });
 
     test('preserves replacing routes during re-render', () => {
