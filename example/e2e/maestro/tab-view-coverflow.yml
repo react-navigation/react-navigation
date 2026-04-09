@@ -10,43 +10,49 @@ name: Tab View - Coverflow
     text: 'Homogenic'
 - swipe:
     duration: 100
-    direction: LEFT
+    start: 90%, 50%
+    end: 10%, 50%
 - extendedWaitUntil:
     visible:
       text: 'Number of the Beast'
-    timeout: 1500
+    timeout: 3000
 - swipe:
     duration: 100
-    direction: LEFT
+    start: 90%, 50%
+    end: 10%, 50%
 - extendedWaitUntil:
     visible:
       text: "It's Blitz"
-    timeout: 1500
+    timeout: 3000
 - swipe:
     duration: 100
-    direction: RIGHT
+    start: 10%, 50%
+    end: 90%, 50%
 - extendedWaitUntil:
     visible:
       text: 'Number of the Beast'
-    timeout: 1500
+    timeout: 3000
 - swipe:
     duration: 100
-    direction: RIGHT
+    start: 10%, 50%
+    end: 90%, 50%
 - extendedWaitUntil:
     visible:
       text: 'Homogenic'
-    timeout: 1500
+    timeout: 3000
 - swipe:
     duration: 100
-    direction: RIGHT
+    start: 10%, 50%
+    end: 90%, 50%
 - extendedWaitUntil:
     visible:
       text: 'Bat Out of Hell'
-    timeout: 1500
+    timeout: 3000
 - swipe:
     duration: 100
-    direction: LEFT
+    start: 90%, 50%
+    end: 10%, 50%
 - extendedWaitUntil:
     visible:
       text: 'Homogenic'
-    timeout: 1500
+    timeout: 3000

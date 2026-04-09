@@ -18,7 +18,7 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      MAESTRO_RUNNER_VERSION: 1.1.1
+      MAESTRO_RUNNER_VERSION: 1.1.12
       SIMULATOR_NAME: iPhone 17 Pro
       USE_CCACHE: 1
       CCACHE_COMPILERCHECK: content
@@ -53,6 +53,14 @@ jobs:
         run: |
           curl -fsSL https://open.devicelab.dev/install/maestro-runner | bash -s -- --version ${{ env.MAESTRO_RUNNER_VERSION }}
           echo "$HOME/.maestro-runner/bin" >> $GITHUB_PATH
+
+      - name: Cache WebDriverAgent
+        uses: actions/cache@v4
+        with:
+          path: example/drivers/ios/WebDriverAgent
+          key: webdriveragent-${{ runner.os }}-${{ env.MAESTRO_RUNNER_VERSION }}
+          restore-keys: |
+            webdriveragent-${{ runner.os }}-
 
       - name: Install macOS dependencies
         run: |

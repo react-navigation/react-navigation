@@ -19,13 +19,7 @@ name: Showcase - Native Stack
 # The details sheet content is readable on Android and web, but not on iOS.
 - runFlow:
     when:
-      platform: Web
-    commands:
-      - assertVisible:
-          text: 'Sierra Nevada.*'
-- runFlow:
-    when:
-      platform: Android
+      true: ${maestro.platform == 'android' || maestro.platform == 'web'}
     commands:
       - assertVisible:
           text: 'Sierra Nevada.*'

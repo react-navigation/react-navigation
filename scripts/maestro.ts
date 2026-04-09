@@ -120,6 +120,10 @@ function runMaestro(
     ...flows,
   ];
 
+  if (options.platform === 'android') {
+    maestroArgs.unshift('--driver', 'devicelab');
+  }
+
   process.stdout.write(
     `Running maestro-runner with args: ${maestroArgs.join(' ')}\n`
   );

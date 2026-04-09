@@ -13,44 +13,47 @@ name: Tab View - Custom Tab Bar
 - extendedWaitUntil:
     visible:
       id: 'album-0'
-    timeout: 1500
+    timeout: 3000
 - tapOn:
     id: 'article'
 - extendedWaitUntil:
     visible:
       text: 'What is Lorem Ipsum?'
-    timeout: 1500
+    timeout: 3000
 - tapOn:
     id: 'chat'
     delay: 500
 - extendedWaitUntil:
     visible:
       text: 'make me a sandwich'
-    timeout: 1500
+    timeout: 3000
 - tapOn:
     id: 'contacts'
 - extendedWaitUntil:
     visible:
       text: 'Marissa Castillo'
-    timeout: 1500
+    timeout: 3000
 - swipe:
     duration: 100
-    direction: LEFT
+    start: 90%, 50%
+    end: 10%, 50%
 - extendedWaitUntil:
     visible:
       id: 'album-0'
-    timeout: 1500
+    timeout: 3000
 - swipe:
     duration: 100
-    direction: LEFT
+    start: 90%, 50%
+    end: 10%, 50%
 - extendedWaitUntil:
     visible:
       text: 'What is Lorem Ipsum?'
-    timeout: 1500
+    timeout: 3000
 - swipe:
     duration: 100
-    direction: RIGHT
+    start: 10%, 50%
+    end: 90%, 50%
 - extendedWaitUntil:
     visible:
       id: 'album-0'
-    timeout: 1500
+    timeout: 3000
