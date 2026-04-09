@@ -9,7 +9,7 @@ on:
 
 jobs:
   maestro-ios:
-    runs-on: macos-26
+    runs-on: macos-latest
     timeout-minutes: 60
     permissions:
       checks: read
@@ -24,6 +24,8 @@ jobs:
       JAVA_DISTRIBUTION: 'zulu'
       JAVA_VERSION: '17'
       SIMULATOR_NAME: iPhone 17 Pro
+      USE_CCACHE: 1
+      CCACHE_COMPILERCHECK: content
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -49,7 +51,7 @@ jobs:
       - name: Use appropriate Xcode version
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: '26'
+          xcode-version: '26.3'
 
       - name: Install Maestro
         run: |
@@ -91,29 +93,25 @@ jobs:
           restore-keys: |
             ios-ccache-${{ runner.os }}-
 
-      - name: Create ccache wrappers
+      - name: Set ccache directory
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
         run: |
-          mkdir -p "$RUNNER_TEMP/ccache"
-          cat > "$RUNNER_TEMP/ccache/ccache-clang" <<'EOF'
-          #!/bin/sh
-          exec ccache clang "$@"
-          EOF
-          cat > "$RUNNER_TEMP/ccache/ccache-clang++" <<'EOF'
-          #!/bin/sh
-          exec ccache clang++ "$@"
-          EOF
-          chmod +x "$RUNNER_TEMP/ccache/ccache-clang" "$RUNNER_TEMP/ccache/ccache-clang++"
+          echo "CCACHE_DIR=$HOME/.ccache" >> $GITHUB_ENV
 
       - name: Build iOS App
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
         run: |
           yarn expo prebuild --platform ios
-          xcodebuild ONLY_ACTIVE_ARCH=YES -workspace ios/ReactNavigationExample.xcworkspace -UseNewBuildSystem=YES -scheme ReactNavigationExample -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build -quiet
+          xcodebuild ONLY_ACTIVE_ARCH=YES \
+            -workspace ios/ReactNavigationExample.xcworkspace \
+            -UseNewBuildSystem=YES \
+            -scheme ReactNavigationExample \
+            -configuration Debug \
+            -destination 'generic/platform=iOS Simulator' \
+            -sdk iphonesimulator \
+            -derivedDataPath ios/build \
+            -quiet
         working-directory: example
-        env:
-          CC: ${{ runner.temp }}/ccache/ccache-clang
-          CXX: ${{ runner.temp }}/ccache/ccache-clang++
 
       - name: Prepare cache folder
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
