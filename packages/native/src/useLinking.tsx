@@ -88,17 +88,15 @@ export const series = (cb: () => Promise<void>) => {
 
 const linkingHandlers = new Set<symbol>();
 
-type Options = LinkingOptions<ParamListBase>;
-
-export function useLinking(
-  ref: React.RefObject<NavigationContainerRef<ParamListBase> | null>,
+export function useLinking<ParamList extends ParamListBase>(
+  ref: React.RefObject<NavigationContainerRef<ParamList> | null>,
   {
     enabled = true,
     config,
     getStateFromPath = getStateFromPathDefault,
     getPathFromState = getPathFromStateDefault,
     getActionFromState = getActionFromStateDefault,
-  }: Options
+  }: LinkingOptions<ParamList>
 ) {
   const independent = useNavigationIndependentTree();
 

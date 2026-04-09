@@ -8,10 +8,11 @@ import ReactNavigationCornerInsetViewNativeComponent, {
   Commands,
 } from './ReactNavigationCornerInsetViewNativeComponent';
 
-function CornerInsetIOS(
-  props: CornerInsetProps,
-  ref: React.Ref<CornerInsetRef>
-) {
+type Props = CornerInsetProps & {
+  ref?: React.Ref<CornerInsetRef>;
+};
+
+export function CornerInset({ ref, ...rest }: Props) {
   const root = React.use(NavigationContainerRefContext);
 
   const nativeRef =
@@ -79,8 +80,6 @@ function CornerInsetIOS(
   );
 
   return (
-    <ReactNavigationCornerInsetViewNativeComponent {...props} ref={nativeRef} />
+    <ReactNavigationCornerInsetViewNativeComponent {...rest} ref={nativeRef} />
   );
 }
-
-export const CornerInset = React.forwardRef(CornerInsetIOS);

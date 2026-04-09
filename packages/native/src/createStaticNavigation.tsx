@@ -1,7 +1,6 @@
 import {
   createPathConfigForStaticNavigation,
-  type NavigationContainerRef,
-  type ParamListBase,
+  type RootParamList,
   type StaticNavigation,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -9,14 +8,14 @@ import * as React from 'react';
 import { NavigationContainer } from './NavigationContainer';
 import type { LinkingOptions } from './types';
 
-type Props = Omit<
-  React.ComponentProps<typeof NavigationContainer>,
+type Props<ParamList extends {}> = Omit<
+  React.ComponentProps<typeof NavigationContainer<ParamList>>,
   'linking' | 'children'
 > & {
   /**
    * Options for deep linking.
    */
-  linking?: Omit<LinkingOptions<ParamListBase>, 'config' | 'enabled'> & {
+  linking?: Omit<LinkingOptions<ParamList>, 'config' | 'enabled'> & {
     /**
      * Whether deep link handling should be enabled.
      * Defaults to `auto`.
@@ -29,10 +28,7 @@ type Props = Omit<
     /**
      * Additional configuration
      */
-    config?: Omit<
-      NonNullable<LinkingOptions<ParamListBase>['config']>,
-      'screens'
-    >;
+    config?: Omit<NonNullable<LinkingOptions<ParamList>['config']>, 'screens'>;
   };
 };
 
@@ -46,10 +42,11 @@ type Props = Omit<
 export function createStaticNavigation(tree: StaticNavigation<any>) {
   const Component = tree.getComponent();
 
-  function Navigation(
-    { linking, ...rest }: Props,
-    ref: React.Ref<NavigationContainerRef<ParamListBase>>
-  ) {
+  function Navigation<ParamList extends {} = RootParamList>({
+    linking,
+    ref,
+    ...rest
+  }: Props<ParamList>) {
     const linkingConfig = React.useMemo(() => {
       const screens = createPathConfigForStaticNavigation(
         tree,
@@ -100,5 +97,5 @@ export function createStaticNavigation(tree: StaticNavigation<any>) {
     );
   }
 
-  return React.forwardRef(Navigation);
+  return Navigation;
 }

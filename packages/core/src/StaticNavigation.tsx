@@ -766,13 +766,13 @@ type TreeForPathConfig = {
  * };
  * ```
  */
-export function createPathConfigForStaticNavigation(
+export function createPathConfigForStaticNavigation<ParamList extends {}>(
   tree: TreeForPathConfig,
   options?: {
     initialRouteName?: string | undefined;
   },
   auto?: boolean
-): PathConfigMap<ParamListBase> | undefined {
+): PathConfigMap<ParamList> | undefined {
   let initialScreenHasPath: boolean = false;
   let initialScreenConfig: PathConfig<{}> | undefined;
 

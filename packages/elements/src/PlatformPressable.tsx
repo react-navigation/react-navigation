@@ -32,6 +32,7 @@ export type Props = Omit<PressableProps, 'style' | 'onPress'> & {
       ) => void)
     | undefined;
   children: React.ReactNode;
+  ref?: React.Ref<React.ComponentRef<typeof AnimatedPressable>>;
 };
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -45,22 +46,20 @@ const useNativeDriver = Platform.OS !== 'web';
 /**
  * PlatformPressable provides an abstraction on top of Pressable to handle platform differences.
  */
-function PlatformPressableInternal(
-  {
-    disabled,
-    onPress,
-    onPressIn,
-    onPressOut,
-    android_ripple,
-    pressColor,
-    pressOpacity = 0.3,
-    hoverEffect,
-    style,
-    children,
-    ...rest
-  }: Props,
-  ref: React.Ref<React.ComponentRef<typeof AnimatedPressable>>
-) {
+export function PlatformPressable({
+  disabled,
+  onPress,
+  onPressIn,
+  onPressOut,
+  android_ripple,
+  pressColor,
+  pressOpacity = 0.3,
+  hoverEffect,
+  style,
+  children,
+  ref,
+  ...rest
+}: Props) {
   const { dark } = useTheme();
   const [opacity] = React.useState(() => new Animated.Value(1));
 
@@ -159,10 +158,6 @@ function PlatformPressableInternal(
     </AnimatedPressable>
   );
 }
-
-export const PlatformPressable = React.forwardRef(PlatformPressableInternal);
-
-PlatformPressable.displayName = 'PlatformPressable';
 
 const css = String.raw;
 

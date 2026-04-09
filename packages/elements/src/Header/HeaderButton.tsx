@@ -4,20 +4,22 @@ import { Platform, StyleSheet } from 'react-native';
 import { PlatformPressable } from '../PlatformPressable';
 import type { HeaderButtonProps } from '../types';
 
-function HeaderButtonInternal(
-  {
-    disabled,
-    onPress,
-    pressColor,
-    pressOpacity,
-    accessibilityLabel,
-    testID,
-    style,
-    href,
-    children,
-  }: HeaderButtonProps,
-  ref: React.Ref<React.ComponentRef<typeof PlatformPressable>>
-) {
+type Props = HeaderButtonProps & {
+  ref?: React.Ref<React.ComponentRef<typeof PlatformPressable>>;
+};
+
+export function HeaderButton({
+  disabled,
+  onPress,
+  pressColor,
+  pressOpacity,
+  accessibilityLabel,
+  testID,
+  style,
+  href,
+  children,
+  ref,
+}: Props) {
   return (
     <PlatformPressable
       ref={ref}
@@ -39,10 +41,6 @@ function HeaderButtonInternal(
     </PlatformPressable>
   );
 }
-
-export const HeaderButton = React.forwardRef(HeaderButtonInternal);
-
-HeaderButton.displayName = 'HeaderButton';
 
 export const BUTTON_SIZE = Platform.OS === 'ios' ? 44 : 48;
 export const BUTTON_SPACING = Platform.OS === 'ios' ? 10 : 8;

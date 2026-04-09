@@ -9,8 +9,8 @@ import type { DocumentTitleOptions } from './types';
 /**
  * Set the document title for the active screen
  */
-export function useDocumentTitle(
-  ref: React.RefObject<NavigationContainerRef<ParamListBase> | null>,
+export function useDocumentTitle<ParamList extends ParamListBase>(
+  ref: React.RefObject<NavigationContainerRef<ParamList> | null>,
   {
     enabled = true,
     formatter = (options, route) => options?.title ?? route?.name,

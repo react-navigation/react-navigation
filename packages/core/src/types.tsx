@@ -1088,40 +1088,39 @@ type NavigationListForGroups<ParentList, Groups> =
       >
     : {};
 
-export type NavigationContainerRef<ParamList extends {}> =
-  NavigationHelpers<ParamList> &
-    EventConsumer<NavigationContainerEventMap> & {
-      /**
-       * Reset the navigation state of the root navigator to the provided state.
-       *
-       * @param state Navigation state object.
-       */
-      resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
-      /**
-       * Get the rehydrated navigation state of the navigation tree.
-       */
-      getRootState(): NavigationState;
-      /**
-       * Get the currently focused navigation route.
-       */
-      getCurrentRoute(): MaybeParamListRoute<ParamList> | undefined;
-      /**
-       * Get the currently focused route's options.
-       */
-      getCurrentOptions(): object | undefined;
-      /**
-       * Whether the navigation container is ready to handle actions.
-       */
-      isReady(): boolean;
-      /**
-       * Stub function for setOptions on navigation object for use with useNavigation.
-       */
-      setOptions(): never;
-      /**
-       * Stub function for getParent on navigation object for use with useNavigation.
-       */
-      getParent(): undefined;
-    };
+export type NavigationContainerRef<ParamList extends {}> = Omit<
+  NavigationHelpers<ParamList>,
+  keyof NavigationHelpersRoute<{}>
+> &
+  NavigationHelpersRoute<{}> &
+  EventConsumer<NavigationContainerEventMap> & {
+    /**
+     * Reset the navigation state of the root navigator to the provided state.
+     *
+     * @param state Navigation state object.
+     */
+    resetRoot(state?: PartialState<NavigationState> | NavigationState): void;
+    /**
+     * Get the rehydrated navigation state of the navigation tree.
+     */
+    getRootState(): NavigationState;
+    /**
+     * Get the currently focused navigation route.
+     */
+    getCurrentRoute(): MaybeParamListRoute<ParamList> | undefined;
+    /**
+     * Get the currently focused route's options.
+     */
+    getCurrentOptions(): object | undefined;
+    /**
+     * Whether the navigation container is ready to handle actions.
+     */
+    isReady(): boolean;
+    /**
+     * Stub function for setOptions on navigation object for use with useNavigation.
+     */
+    setOptions(): never;
+  };
 
 export type NavigationContainerRefWithCurrent<ParamList extends {}> =
   NavigationContainerRef<ParamList> & {
@@ -1329,7 +1328,7 @@ export type PathConfig<Params> = FlatType<
           /**
            * Name of the initial route to use for the navigator when the path matches.
            */
-          initialRouteName?: keyof ParamList | undefined;
+          initialRouteName?: Extract<keyof ParamList, string> | undefined;
         }
       : {})
 >;
