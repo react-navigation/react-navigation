@@ -35,8 +35,8 @@ type NavigationStateForNested<
 export function useNavigationState<
   const T,
   const Navigator = RootNavigator,
-  const RouteName extends
-    keyof NavigationListForNested<Navigator> = keyof NavigationListForNested<Navigator>,
+  const RouteName extends keyof NavigationListForNested<Navigator> =
+    keyof NavigationListForNested<Navigator>,
 >(
   routeName: RouteName,
   selector: (state: NavigationStateForNested<Navigator, RouteName>) => T

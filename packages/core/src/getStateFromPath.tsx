@@ -4,7 +4,7 @@ import type {
   PartialState,
 } from '@react-navigation/routers';
 import escape from 'escape-string-regexp';
-import * as queryString from 'query-string';
+import queryString from 'query-string';
 
 import { arrayStartsWith } from './arrayStartsWith';
 import { findFocusedRoute } from './findFocusedRoute';

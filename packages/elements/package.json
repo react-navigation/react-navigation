@@ -47,21 +47,21 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "color": "^4.2.3",
+    "color": "^5.0.3",
     "sf-symbols-typescript": "^2.2.0",
-    "use-latest-callback": "^0.3.2",
-    "use-sync-external-store": "^1.5.0"
+    "use-latest-callback": "^0.3.3",
+    "use-sync-external-store": "^1.6.0"
   },
   "devDependencies": {
-    "@callstack/liquid-glass": "^0.6.0",
-    "@jest/globals": "^30.0.0",
+    "@callstack/liquid-glass": "^0.7.1",
+    "@jest/globals": "^30.3.0",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^13.3.3",
     "@types/react": "~19.2.2",
     "@types/use-sync-external-store": "^1.5.0",
-    "del-cli": "^6.0.0",
+    "del-cli": "^7.0.0",
     "react": "19.2.0",
-    "react-native": "0.83.2",
+    "react-native": "0.83.4",
     "react-native-builder-bob": "^0.41.0",
     "react-native-screens": "^4.24.0",
     "react-test-renderer": "19.2.0",

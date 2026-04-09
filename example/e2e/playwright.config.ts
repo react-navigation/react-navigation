@@ -35,6 +35,7 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
     },
     {
+      cwd: path.join(__dirname, '..'),
       command: 'yarn server',
       url: 'http://localhost:3275',
       timeout: 120 * 1000,

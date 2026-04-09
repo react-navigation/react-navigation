@@ -47,17 +47,17 @@
   },
   "dependencies": {
     "@react-navigation/elements": "workspace:^",
-    "color": "^4.2.3",
+    "color": "^5.0.3",
     "react-native-tab-view": "workspace:^"
   },
   "devDependencies": {
-    "@jest/globals": "^30.0.0",
+    "@jest/globals": "^30.3.0",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^13.3.3",
     "@types/react": "~19.2.2",
-    "del-cli": "^6.0.0",
+    "del-cli": "^7.0.0",
     "react": "19.2.0",
-    "react-native": "0.83.2",
+    "react-native": "0.83.4",
     "react-native-builder-bob": "^0.41.0",
     "react-native-pager-view": "^8.0.0",
     "react-native-safe-area-context": "~5.6.2",

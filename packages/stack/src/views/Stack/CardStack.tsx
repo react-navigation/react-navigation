@@ -282,7 +282,7 @@ export class CardStack extends React.Component<Props, State> {
         new Animated.Value(
           (props.openingRouteKeys.includes(curr.key) &&
             getAnimationEnabled(animation)) ||
-          props.state.preloadedRoutes.includes(curr)
+            props.state.preloadedRoutes.includes(curr)
             ? getDistanceFromOptions(
                 state.layout,
                 descriptor?.options,

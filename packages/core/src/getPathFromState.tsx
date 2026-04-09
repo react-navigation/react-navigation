@@ -3,7 +3,7 @@ import type {
   PartialState,
   Route,
 } from '@react-navigation/routers';
-import * as queryString from 'query-string';
+import queryString from 'query-string';
 
 import { getPatternParts, type PatternPart } from './getPatternParts';
 import { getStateFromRouteParams } from './getStateFromRouteParams';
