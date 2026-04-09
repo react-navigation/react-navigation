@@ -18,7 +18,7 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      MAESTRO_RUNNER_VERSION: 1.1.0
+      MAESTRO_RUNNER_VERSION: 1.1.1
       SIMULATOR_NAME: iPhone 17 Pro
       USE_CCACHE: 1
       CCACHE_COMPILERCHECK: content

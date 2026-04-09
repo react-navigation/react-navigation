@@ -13,25 +13,25 @@ name: Tab View - Scrollable Tab Bar
 - extendedWaitUntil:
     visible:
       text: 'What is Lorem Ipsum?'
-    timeout: 2000
+    timeout: 1500
 - tapOn:
     text: 'Albums'
 - extendedWaitUntil:
     visible:
       id: 'album-0'
-    timeout: 2000
+    timeout: 1500
 - tapOn:
     text: 'Chat'
 - extendedWaitUntil:
     visible:
       text: 'make me a sandwich'
-    timeout: 2000
+    timeout: 1500
 - tapOn:
     text: 'Contacts'
 - extendedWaitUntil:
     visible:
       text: 'Marissa Castillo'
-    timeout: 2000
+    timeout: 1500
 - swipe:
     duration: 100
     start: 90%, 50%
@@ -39,7 +39,7 @@ name: Tab View - Scrollable Tab Bar
 - extendedWaitUntil:
     visible:
       id: 'album-0'
-    timeout: 2000
+    timeout: 1500
 - swipe:
     duration: 100
     start: 90%, 50%
@@ -47,7 +47,7 @@ name: Tab View - Scrollable Tab Bar
 - extendedWaitUntil:
     visible:
       text: 'make me a sandwich'
-    timeout: 2000
+    timeout: 1500
 - swipe:
     duration: 100
     start: 10%, 50%
@@ -55,4 +55,4 @@ name: Tab View - Scrollable Tab Bar
 - extendedWaitUntil:
     visible:
       id: 'album-0'
-    timeout: 2000
+    timeout: 1500

@@ -13,26 +13,26 @@ name: Tab View - Custom Tab Bar
 - extendedWaitUntil:
     visible:
       id: 'album-0'
-    timeout: 2000
+    timeout: 1500
 - tapOn:
     id: 'article'
 - extendedWaitUntil:
     visible:
       text: 'What is Lorem Ipsum?'
-    timeout: 2000
+    timeout: 1500
 - tapOn:
     id: 'chat'
     delay: 500
 - extendedWaitUntil:
     visible:
       text: 'make me a sandwich'
-    timeout: 2000
+    timeout: 1500
 - tapOn:
     id: 'contacts'
 - extendedWaitUntil:
     visible:
       text: 'Marissa Castillo'
-    timeout: 2000
+    timeout: 1500
 - swipe:
     duration: 100
     start: 90%, 50%
@@ -40,7 +40,7 @@ name: Tab View - Custom Tab Bar
 - extendedWaitUntil:
     visible:
       id: 'album-0'
-    timeout: 2000
+    timeout: 1500
 - swipe:
     duration: 100
     start: 90%, 50%
@@ -48,7 +48,7 @@ name: Tab View - Custom Tab Bar
 - extendedWaitUntil:
     visible:
       text: 'What is Lorem Ipsum?'
-    timeout: 2000
+    timeout: 1500
 - swipe:
     duration: 100
     start: 10%, 50%
@@ -56,4 +56,4 @@ name: Tab View - Custom Tab Bar
 - extendedWaitUntil:
     visible:
       id: 'album-0'
-    timeout: 2000
+    timeout: 1500

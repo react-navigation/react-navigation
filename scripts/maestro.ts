@@ -28,22 +28,22 @@ if (platform !== 'ios' && platform !== 'android') {
 const retryCount =
   typeof values.retry === 'string' ? parseInt(values.retry, 10) || 1 : 0;
 
+const flows = tokens
+  .filter((token) => token.kind === 'positional')
+  .map((token) => token.value);
+
 const forwardedArgs = tokens.reduce<string[]>((acc, token) => {
   if (
-    token.kind === 'option-terminator' ||
-    (token.kind === 'option' &&
-      (token.name === 'platform' || token.name === 'retry'))
+    token.kind !== 'option' ||
+    token.name === 'platform' ||
+    token.name === 'retry'
   ) {
     return acc;
   }
 
-  if (token.kind === 'option') {
-    return token.value != null
-      ? [...acc, token.rawName, token.value]
-      : [...acc, token.rawName];
-  }
-
-  return [...acc, token.value];
+  return token.value != null
+    ? [...acc, token.rawName, token.value]
+    : [...acc, token.rawName];
 }, []);
 
 const appId =
@@ -60,7 +60,7 @@ const scheme = `${config.expo?.scheme}://`;
 const cwd = new URL('example/', root);
 const reportFile = new URL(`example/${DEBUG_OUTPUT_DIR}/report.json`, root);
 
-let result = runMaestro(['e2e/maestro'], {
+let result = runMaestro(flows.length > 0 ? flows : ['e2e/maestro'], {
   appId,
   scheme,
   cwd,
@@ -119,10 +119,6 @@ function runMaestro(
     ...options.forwardedArgs,
     ...flows,
   ];
-
-  if (options.platform === 'android') {
-    maestroArgs.unshift('--driver', 'devicelab');
-  }
 
   process.stdout.write(
     `Running maestro-runner with args: ${maestroArgs.join(' ')}\n`
