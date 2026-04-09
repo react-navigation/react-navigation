@@ -144,7 +144,7 @@ export type LinkingOptions<ParamList extends {}> = {
         /**
          * Name of the initial route to use for the root navigator.
          */
-        initialRouteName?: keyof ParamList | undefined;
+        initialRouteName?: Extract<keyof ParamList, string> | undefined;
       }
     | undefined;
   /**

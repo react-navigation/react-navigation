@@ -14,12 +14,10 @@ import type { Thenable } from './useThenable';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
-type Options = LinkingOptions<ParamListBase>;
-
 const linkingHandlers = new Set<symbol>();
 
-export function useLinking(
-  ref: React.RefObject<NavigationContainerRef<ParamListBase> | null>,
+export function useLinking<ParamList extends ParamListBase>(
+  ref: React.RefObject<NavigationContainerRef<ParamList> | null>,
   {
     enabled = true,
     prefixes = ['*'],
@@ -45,7 +43,7 @@ export function useLinking(
     },
     getStateFromPath = getStateFromPathDefault,
     getActionFromState = getActionFromStateDefault,
-  }: Options
+  }: LinkingOptions<ParamListBase>
 ) {
   const independent = useNavigationIndependentTree();
 

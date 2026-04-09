@@ -7,7 +7,6 @@ import {
   type NavigationContainerProps,
   type NavigationContainerRef,
   type NavigationState,
-  type ParamListBase,
   type PartialState,
   type RootParamList,
   ThemeProvider,
@@ -32,7 +31,7 @@ import { type Thenable, useThenable } from './useThenable';
 
 declare global {
   var REACT_NAVIGATION_DEVTOOLS: WeakMap<
-    NavigationContainerRef<any>,
+    object,
     {
       readonly linking: LinkingOptions<any>;
       readonly listeners: Set<
@@ -106,30 +105,36 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
    * unless `documentTitle.enabled` is `false`.
    */
   documentTitle?: DocumentTitleOptions;
+  /**
+   * Ref object which refers to the navigation object containing helper methods.
+   */
+  ref?: React.Ref<NavigationContainerRef<ParamList>>;
 };
 
 const RESTORE_STATE_ERROR =
   'Failed to restore navigation state. The state will be initialized based on the navigation tree.';
 
-function NavigationContainerInner(
-  {
-    direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
-    theme = LightTheme,
-    linking,
-    persistor,
-    fallback = null,
-    documentTitle,
-    onStateChange,
-    ...rest
-  }: Props<ParamListBase>,
-  ref?: React.Ref<NavigationContainerRef<ParamListBase> | null>
-) {
+/**
+ * Container component that manages the navigation state.
+ *
+ * This should be rendered at the root wrapping the whole app.
+ */
+export function NavigationContainer<ParamList extends {} = RootParamList>({
+  direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
+  theme = LightTheme,
+  linking,
+  persistor,
+  fallback = null,
+  documentTitle,
+  onStateChange,
+  ref,
+  ...rest
+}: Props<ParamList>) {
   if (linking?.config) {
     validatePathConfig(linking.config);
   }
 
-  const refContainer =
-    React.useRef<NavigationContainerRef<ParamListBase>>(null);
+  const refContainer = React.useRef<NavigationContainerRef<ParamList>>(null);
 
   useBackButton(refContainer);
   useDocumentTitle(refContainer, documentTitle);
@@ -270,16 +275,3 @@ function NavigationContainerInner(
     </LocaleDirContext.Provider>
   );
 }
-
-/**
- * Container component that manages the navigation state.
- *
- * This should be rendered at the root wrapping the whole app.
- */
-export const NavigationContainer = React.forwardRef(
-  NavigationContainerInner
-) as <ParamList extends {} = RootParamList>(
-  props: Props<ParamList> & {
-    ref?: React.Ref<NavigationContainerRef<ParamList>>;
-  }
-) => React.ReactElement;

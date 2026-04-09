@@ -23,10 +23,11 @@ export type CornerInsetRef = {
   relayout(): void;
 };
 
-function CornerInsetBase(
-  props: CornerInsetProps,
-  ref: React.Ref<CornerInsetRef>
-) {
+type Props = CornerInsetProps & {
+  ref?: React.Ref<CornerInsetRef>;
+};
+
+export function CornerInset({ ref, ...rest }: Props) {
   React.useImperativeHandle(
     ref,
     () => ({
@@ -35,7 +36,5 @@ function CornerInsetBase(
     []
   );
 
-  return <View {...props} />;
+  return <View {...rest} />;
 }
-
-export const CornerInset = React.forwardRef(CornerInsetBase);

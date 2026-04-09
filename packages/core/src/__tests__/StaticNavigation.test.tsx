@@ -1986,7 +1986,15 @@ test('merges parse and stringify options from group and screen linking', () => {
   const screens = createPathConfigForStaticNavigation(Root, {});
 
   const Profile =
-    typeof screens?.Profile === 'object' ? screens?.Profile : null;
+    screens != null &&
+    'Profile' in screens &&
+    typeof screens?.Profile === 'object' &&
+    screens?.Profile != null &&
+    'path' in screens.Profile &&
+    'parse' in screens.Profile &&
+    'stringify' in screens.Profile
+      ? screens?.Profile
+      : null;
 
   expect(Profile?.parse).toHaveProperty('userId');
   expect(Profile?.parse).toHaveProperty('tab');

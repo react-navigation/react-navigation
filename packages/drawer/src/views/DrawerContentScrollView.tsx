@@ -12,20 +12,19 @@ import { DrawerPositionContext } from '../utils/DrawerPositionContext';
 
 type Props = ScrollViewProps & {
   children: React.ReactNode;
+  ref?: React.Ref<ScrollView>;
 };
 
 const SPACING = 12;
 
-function DrawerContentScrollViewInner(
-  {
-    contentInsetAdjustmentBehavior = 'automatic',
-    contentContainerStyle,
-    style,
-    children,
-    ...rest
-  }: Props,
-  ref?: React.Ref<ScrollView>
-) {
+export function DrawerContentScrollView({
+  contentInsetAdjustmentBehavior = 'automatic',
+  contentContainerStyle,
+  style,
+  children,
+  ref,
+  ...rest
+}: Props) {
   const drawerPosition = React.use(DrawerPositionContext);
   const insets = useSafeAreaInsets();
   const { direction } = useLocale();
@@ -64,10 +63,6 @@ function DrawerContentScrollViewInner(
     </ScrollView>
   );
 }
-
-export const DrawerContentScrollView = React.forwardRef(
-  DrawerContentScrollViewInner
-);
 
 const styles = StyleSheet.create({
   container: {

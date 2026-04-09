@@ -35,6 +35,7 @@ type Props = Omit<HeaderSearchBarOptions, 'ref'> & {
   pressOpacity?: number | undefined;
   statusBarHeight: number;
   style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
+  ref?: React.Ref<HeaderSearchBarRef>;
 };
 
 const INPUT_TYPE_TO_MODE = {
@@ -46,26 +47,24 @@ const INPUT_TYPE_TO_MODE = {
 
 const useNativeDriver = Platform.OS !== 'web';
 
-function HeaderSearchBarInternal(
-  {
-    visible,
-    inputType,
-    autoFocus = true,
-    autoCapitalize,
-    placeholder = 'Search',
-    enterKeyHint = 'search',
-    cancelButtonText = 'Cancel',
-    onChange,
-    onClose,
-    tintColor,
-    pressColor,
-    pressOpacity,
-    statusBarHeight,
-    style,
-    ...rest
-  }: Props,
-  ref: React.ForwardedRef<HeaderSearchBarRef>
-) {
+export function HeaderSearchBar({
+  visible,
+  inputType,
+  autoFocus = true,
+  autoCapitalize,
+  placeholder = 'Search',
+  enterKeyHint = 'search',
+  cancelButtonText = 'Cancel',
+  onChange,
+  onClose,
+  tintColor,
+  pressColor,
+  pressOpacity,
+  statusBarHeight,
+  style,
+  ref,
+  ...rest
+}: Props) {
   const navigation = useNavigation();
   const { dark, colors, fonts } = useTheme();
   const [value, setValue] = React.useState('');
@@ -426,5 +425,3 @@ const styles = StyleSheet.create({
     }),
   },
 });
-
-export const HeaderSearchBar = React.forwardRef(HeaderSearchBarInternal);
