@@ -35,24 +35,21 @@ name: Tab View - Custom Tab Bar
     timeout: 1500
 - swipe:
     duration: 100
-    start: 90%, 50%
-    end: 10%, 50%
+    direction: LEFT
 - extendedWaitUntil:
     visible:
       id: 'album-0'
     timeout: 1500
 - swipe:
     duration: 100
-    start: 90%, 50%
-    end: 10%, 50%
+    direction: LEFT
 - extendedWaitUntil:
     visible:
       text: 'What is Lorem Ipsum?'
     timeout: 1500
 - swipe:
     duration: 100
-    start: 10%, 50%
-    end: 90%, 50%
+    direction: RIGHT
 - extendedWaitUntil:
     visible:
       id: 'album-0'
