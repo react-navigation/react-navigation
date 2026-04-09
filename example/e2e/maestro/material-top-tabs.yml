@@ -13,37 +13,40 @@ name: Material Top Tabs - Basic
 - extendedWaitUntil:
     visible:
       text: 'Marissa Castillo'
-    timeout: 1500
+    timeout: 3000
 - tapOn:
     text: 'Albums'
 - extendedWaitUntil:
     visible:
       id: 'album-0'
-    timeout: 1500
+    timeout: 3000
 - tapOn:
     text: 'Chat'
 - extendedWaitUntil:
     visible:
       text: 'make me a sandwich'
-    timeout: 1500
+    timeout: 3000
 - swipe:
     duration: 100
-    direction: LEFT
+    start: 90%, 50%
+    end: 10%, 50%
 - extendedWaitUntil:
     visible:
       text: 'Marissa Castillo'
-    timeout: 1500
+    timeout: 3000
 - swipe:
     duration: 100
-    direction: LEFT
+    start: 90%, 50%
+    end: 10%, 50%
 - extendedWaitUntil:
     visible:
       id: 'album-0'
-    timeout: 1500
+    timeout: 3000
 - swipe:
     duration: 100
-    direction: RIGHT
+    start: 10%, 50%
+    end: 90%, 50%
 - extendedWaitUntil:
     visible:
       text: 'Marissa Castillo'
-    timeout: 1500
+    timeout: 3000

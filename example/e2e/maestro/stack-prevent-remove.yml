@@ -39,14 +39,34 @@ name: Stack - Prevent Remove
     commands:
       - tapOn:
           text: 'Discard and go back'
-      - tapOn:
-          text: "Don't leave"
+      - runFlow:
+          when:
+            platform: Android
+          commands:
+            - tapOn:
+                text: "DON'T LEAVE"
+      - runFlow:
+          when:
+            platform: iOS
+          commands:
+            - tapOn:
+                text: "Don't leave"
       - assertVisible:
           text: 'Discard and go back'
       - tapOn:
           text: 'Discard and go back'
-      - tapOn:
-          text: 'Discard'
+      - runFlow:
+          when:
+            platform: Android
+          commands:
+            - tapOn:
+                text: "DISCARD"
+      - runFlow:
+          when:
+            platform: iOS
+          commands:
+            - tapOn:
+                text: "Discard"
 - assertVisible:
     text: 'What is Lorem Ipsum?'
 - tapOn:

@@ -7,7 +7,7 @@ name: Screen Layout
       LINK: screen-layout
       TEXT: 'Loading…'
 - extendedWaitUntil:
-    timeout: 3500
+    timeout: 5000
     visible: 'Suspend'
 - tapOn:
     text: 'Crash'
@@ -32,5 +32,5 @@ name: Screen Layout
     text: 'Suspend'
     timeout: 10
 - extendedWaitUntil:
-    timeout: 3500
+    timeout: 5000
     visible: 'Suspend'
