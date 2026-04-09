@@ -15,7 +15,7 @@ name: Tab View - Coverflow
 - extendedWaitUntil:
     visible:
       text: 'Number of the Beast'
-    timeout: 3000
+    timeout: 1500
 - swipe:
     duration: 100
     start: 90%, 50%
@@ -23,7 +23,7 @@ name: Tab View - Coverflow
 - extendedWaitUntil:
     visible:
       text: "It's Blitz"
-    timeout: 3000
+    timeout: 1500
 - swipe:
     duration: 100
     start: 10%, 50%
@@ -31,7 +31,7 @@ name: Tab View - Coverflow
 - extendedWaitUntil:
     visible:
       text: 'Number of the Beast'
-    timeout: 3000
+    timeout: 1500
 - swipe:
     duration: 100
     start: 10%, 50%
@@ -39,7 +39,7 @@ name: Tab View - Coverflow
 - extendedWaitUntil:
     visible:
       text: 'Homogenic'
-    timeout: 3000
+    timeout: 1500
 - swipe:
     duration: 100
     start: 10%, 50%
@@ -47,7 +47,7 @@ name: Tab View - Coverflow
 - extendedWaitUntil:
     visible:
       text: 'Bat Out of Hell'
-    timeout: 3000
+    timeout: 1500
 - swipe:
     duration: 100
     start: 90%, 50%
@@ -55,4 +55,4 @@ name: Tab View - Coverflow
 - extendedWaitUntil:
     visible:
       text: 'Homogenic'
-    timeout: 3000
+    timeout: 1500

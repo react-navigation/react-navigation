@@ -18,7 +18,7 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      MAESTRO_RUNNER_VERSION: 1.1.0
+      MAESTRO_RUNNER_VERSION: 1.1.1
       JAVA_DISTRIBUTION: 'zulu'
       JAVA_VERSION: '17'
       ANDROID_HOME: /usr/local/lib/android/sdk
