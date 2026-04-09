@@ -29,26 +29,27 @@
   },
   "packageManager": "yarn@4.10.3",
   "devDependencies": {
-    "@babel/core": "^7.28.4",
-    "@commitlint/config-conventional": "^19.8.1",
-    "@evilmartians/lefthook": "^1.11.13",
-    "@lerna-lite/cli": "^4.11.0",
-    "@lerna-lite/publish": "^4.11.1",
-    "@lerna-lite/run": "^4.11.1",
-    "@react-native/babel-preset": "0.83.2",
-    "@types/babel__core": "^7",
-    "check-dependency-version-consistency": "^5.0.0",
-    "commitlint": "^19.8.1",
+    "@babel/core": "^7.29.0",
+    "@commitlint/config-conventional": "^20.5.0",
+    "@evilmartians/lefthook": "^2.1.5",
+    "@lerna-lite/cli": "^5.0.0",
+    "@lerna-lite/publish": "^5.0.0",
+    "@lerna-lite/run": "^5.0.0",
+    "@react-native/babel-preset": "0.85.0",
+    "@react-native/jest-preset": "^0.85.0",
+    "@types/babel__core": "^7.20.5",
+    "check-dependency-version-consistency": "^6.0.0",
+    "commitlint": "^20.5.0",
     "eslint": "^9.29.0",
     "eslint-config-satya164": "^5.1.8",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "jest": "^30.0.0",
+    "eslint-plugin-simple-import-sort": "^13.0.0",
+    "jest": "~29.7.0",
     "npm-run-all2": "^8.0.4",
-    "prettier": "^3.5.3",
+    "prettier": "^3.8.1",
     "typescript": "^6.0.2"
   },
   "jest": {
-    "preset": "react-native",
+    "preset": "@react-native/jest-preset",
     "testEnvironmentOptions": {
       "customExportConditions": [
         "require",
@@ -61,7 +62,7 @@
       "<rootDir>/jest/setup.js"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context)/)"
+      "node_modules/(?!((jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|color|color-string|color-name|color-convert|immer)/)"
     ]
   },
   "prettier": {

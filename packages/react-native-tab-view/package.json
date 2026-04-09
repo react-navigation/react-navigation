@@ -44,14 +44,14 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "use-latest-callback": "^0.3.2"
+    "use-latest-callback": "^0.3.3"
   },
   "devDependencies": {
-    "@jest/globals": "^30.0.0",
+    "@jest/globals": "^30.3.0",
     "@testing-library/react-native": "^13.3.3",
-    "del-cli": "^6.0.0",
+    "del-cli": "^7.0.0",
     "react": "19.2.0",
-    "react-native": "0.83.2",
+    "react-native": "0.83.4",
     "react-native-builder-bob": "^0.41.0",
     "react-native-pager-view": "^8.0.0",
     "react-test-renderer": "19.2.0",

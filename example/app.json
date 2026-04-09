@@ -39,6 +39,7 @@
     },
     "plugins": [
       "expo-asset",
+      "expo-font",
       [
         "expo-splash-screen",
         {
