@@ -241,14 +241,12 @@ export function useHeaderConfigProps({
 
   const headerBackgroundColor =
     headerStyleFlattened.backgroundColor ??
-    (headerBackground != null || headerTransparent
+    (headerBackground != null ||
+    headerTransparent ||
+    // The title becomes invisible if background color is set with large title on iOS 26
+    (Platform.OS === 'ios' && headerLargeTitleEnabled)
       ? 'transparent'
-      : Platform.OS === 'ios' &&
-          (headerTransparent !== false ||
-            // The title becomes invisible if background color is set with large title on iOS 26
-            headerLargeTitleEnabled)
-        ? undefined
-        : colors.card);
+      : colors.card);
 
   const backTitleFontSize =
     'fontSize' in headerBackTitleStyleFlattened
@@ -261,8 +259,7 @@ export function useHeaderConfigProps({
     'color' in headerTitleStyleFlattened
       ? headerTitleStyleFlattened.color
       : Platform.OS === 'ios' &&
-          (headerTransparent !== false ||
-            headerBackgroundColor === 'transparent')
+          (headerTransparent || headerBackgroundColor === 'transparent')
         ? // On iOS 26, we want header title to change color based on content underneath
           // So we don't set an explicit color when header is transparent
           undefined
@@ -340,7 +337,10 @@ export function useHeaderConfigProps({
   const translucent =
     headerBackground != null ||
     headerTransparent ||
-    (Platform.OS === 'ios' && headerTransparent !== false);
+    // When using a SearchBar or large title, the header needs to be translucent for it to work on iOS
+    ((hasHeaderSearchBar || headerLargeTitleEnabled) &&
+      Platform.OS === 'ios' &&
+      headerTransparent !== false);
 
   const isBackButtonDisplayModeAvailable =
     // On iOS 14+
