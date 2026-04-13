@@ -39,12 +39,12 @@ const StackScreen = () => {
             light: 'red',
             dark: 'green',
           }),
-          headerBlurEffect: 'regular',
-          unstable_headerRightItems: () => [
+          unstable_headerRightItems: ({ tintColor }) => [
             {
               type: 'button',
               label: 'Button',
               onPress: () => {},
+              tintColor,
             },
           ],
         }}
