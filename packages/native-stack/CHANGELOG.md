@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.14.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.14.10...@react-navigation/native-stack@7.14.11) (2026-04-13)
+
+### Bug Fixes
+
+* use explicit headerTintColor for header title if provided ([646390d](https://github.com/react-navigation/react-navigation/commit/646390d472c42b9f92596d4ff80576d7f8d8f207)), closes [#13070](https://github.com/react-navigation/react-navigation/issues/13070) - by @
+
 ## [7.14.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.14.9...@react-navigation/native-stack@7.14.10) (2026-03-28)
 
 **Note:** Version bump only for package @react-navigation/native-stack
