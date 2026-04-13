@@ -63,7 +63,8 @@
     ],
     "transformIgnorePatterns": [
       "node_modules/(?!((jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|color|color-string|color-name|color-convert|immer)/)"
-    ]
+    ],
+    "prettierPath": null
   },
   "prettier": {
     "quoteProps": "as-needed",

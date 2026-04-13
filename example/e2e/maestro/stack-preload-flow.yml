@@ -27,3 +27,38 @@ name: Stack - Preload Flow
     text: 'Navigate to Details'
 - assertVisible:
     text: 'Fresh'
+- tapOn:
+    text: 'Back to home'
+- assertVisible:
+    text: 'Details is not preloaded yet.'
+- tapOn:
+    text: 'Preload Nested Settings'
+- tapOn:
+    text: 'Navigate to Nested'
+- assertVisible:
+    text: 'Nested Settings'
+- assertVisible:
+    text: 'Loaded!'
+- assertVisible:
+    text: 'Fresh'
+- tapOn:
+    text: 'Back to home'
+- assertVisible:
+    text: 'Details is not preloaded yet.'
+- tapOn:
+    text: 'Navigate to Nested'
+- assertVisible:
+    text: 'Settings is not preloaded yet.'
+- tapOn:
+    text: 'Preload Settings'
+- extendedWaitUntil:
+    timeout: 5000
+    visible: 'Settings is preloaded!'
+- tapOn:
+    text: 'Navigate to Settings'
+- assertVisible:
+    text: 'Nested Settings'
+- assertVisible:
+    text: 'Loaded!'
+- assertVisible:
+    text: 'Preloaded'

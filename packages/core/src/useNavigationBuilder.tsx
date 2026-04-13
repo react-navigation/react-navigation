@@ -692,14 +692,17 @@ export function useNavigationBuilder<
           setUnhandledState(state);
         }
       } else {
-        // If the route was updated with new screen name and/or params, we should navigate there
-        action = CommonActions.navigate({
-          name: route.params.screen,
-          params: route.params.params,
-          path: route.params.path,
-          merge: route.params.merge,
-          pop: route.params.pop,
-        });
+        action = route.params.preload
+          ? CommonActions.preload(route.params.screen, route.params.params, {
+              reuse: true,
+            })
+          : CommonActions.navigate({
+              name: route.params.screen,
+              params: route.params.params,
+              path: route.params.path,
+              merge: route.params.merge,
+              pop: route.params.pop,
+            });
       }
     }
 

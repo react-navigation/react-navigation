@@ -5,6 +5,7 @@ import {
   type NavigationState,
   type ParamListBase,
   type Router,
+  StackRouter,
 } from '@react-navigation/routers';
 import { act, render, renderAsync } from '@testing-library/react-native';
 import * as React from 'react';
@@ -2555,6 +2556,208 @@ test('restores previously discarded state when route names change after navigati
     type: 'test',
   });
   expect(root).toMatchInlineSnapshot(`"[qux]"`);
+});
+
+test('does not preload on initial render in nested stack', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => (
+          <div key={route.key} data-name={route.name}>
+            {descriptors[route.key].render()}
+          </div>
+        ))}
+        {state.preloadedRoutes?.map((route) => (
+          <div key={route.key} data-name={route.name} data-preloaded>
+            {descriptors[route.key].render()}
+          </div>
+        ))}
+      </NavigationContent>
+    );
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const root = render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="Home">{() => null}</Screen>
+        <Screen name="Details">
+          {() => (
+            <TestNavigator>
+              <Screen name="Info">{() => null}</Screen>
+              <Screen name="Settings">{() => null}</Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+<div
+  data-name="Home"
+/>
+`);
+
+  act(() => {
+    ref.navigate('Details', { screen: 'Settings', preload: true });
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+[
+  <div
+    data-name="Home"
+  />,
+  <div
+    data-name="Details"
+  >
+    <div
+      data-name="Settings"
+    />
+  </div>,
+]
+`);
+});
+
+test('preloads a nested stack screen after the navigator renders', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => (
+          <div key={route.key} data-name={route.name}>
+            {descriptors[route.key].render()}
+          </div>
+        ))}
+        {state.preloadedRoutes?.map((route) => (
+          <div key={route.key} data-name={route.name} data-preloaded>
+            {descriptors[route.key].render()}
+          </div>
+        ))}
+      </NavigationContent>
+    );
+  };
+
+  const ref = createNavigationContainerRef<any>();
+
+  const root = render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="Home">{() => null}</Screen>
+        <Screen name="Details">
+          {() => (
+            <TestNavigator>
+              <Screen name="Info">{() => null}</Screen>
+              <Screen name="Settings">{() => null}</Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+<div
+  data-name="Home"
+/>
+`);
+
+  act(() => {
+    ref.navigate('Details');
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+[
+  <div
+    data-name="Home"
+  />,
+  <div
+    data-name="Details"
+  >
+    <div
+      data-name="Info"
+    />
+  </div>,
+]
+`);
+
+  act(() => {
+    ref.navigate('Details', { screen: 'Settings', preload: true });
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+[
+  <div
+    data-name="Home"
+  />,
+  <div
+    data-name="Details"
+  >
+    <div
+      data-name="Info"
+    />
+    <div
+      data-name="Settings"
+      data-preloaded={true}
+    />
+  </div>,
+]
+`);
+
+  act(() => {
+    ref.navigate('Details', { screen: 'Settings', preload: true });
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+[
+  <div
+    data-name="Home"
+  />,
+  <div
+    data-name="Details"
+  >
+    <div
+      data-name="Info"
+    />
+    <div
+      data-name="Settings"
+      data-preloaded={true}
+    />
+  </div>,
+]
+`);
+
+  act(() => {
+    ref.navigate('Details', { screen: 'Settings' });
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+[
+  <div
+    data-name="Home"
+  />,
+  <div
+    data-name="Details"
+  >
+    <div
+      data-name="Info"
+    />
+    <div
+      data-name="Settings"
+    />
+  </div>,
+]
+`);
 });
 
 test('overrides router with router prop', () => {
