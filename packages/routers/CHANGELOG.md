@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.4...@react-navigation/routers@8.0.0-alpha.5) (2026-04-13)
+
+### Features
+
+* add a reuse option to preload ([#13066](https://github.com/react-navigation/react-navigation/issues/13066)) ([fdfd1ae](https://github.com/react-navigation/react-navigation/commit/fdfd1aefe74784b8502231556ac353fad2bf1b05)) - by @satya164
+
 # [8.0.0-alpha.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.3...@react-navigation/routers@8.0.0-alpha.4) (2026-03-30)
 
 **Note:** Version bump only for package @react-navigation/routers

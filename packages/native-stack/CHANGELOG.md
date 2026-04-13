@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.22...@react-navigation/native-stack@8.0.0-alpha.23) (2026-04-13)
+
+### Bug Fixes
+
+* fix preloaded screens becoming visible on web ([e9d8a71](https://github.com/react-navigation/react-navigation/commit/e9d8a719894d0cb955e048804a31063c3abd8a3a)) - by @satya164
+
+### Features
+
+* make header translucent by default on iOS ([80ff09e](https://github.com/react-navigation/react-navigation/commit/80ff09ec7de985bdcab1067e4e849a6a60710955)) - by @satya164
+
+### BREAKING CHANGES
+
+* previously header used
+
 # [8.0.0-alpha.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.21...@react-navigation/native-stack@8.0.0-alpha.22) (2026-03-30)
 
 **Note:** Version bump only for package @react-navigation/native-stack

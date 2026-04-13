@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.22...@react-navigation/drawer@8.0.0-alpha.23) (2026-04-13)
+
+### Features
+
+* rework safe area handling in drawer content scroll view ([5446185](https://github.com/react-navigation/react-navigation/commit/5446185afd32ef696e960808e7c6ab944661b863)) - by @satya164
+
 # [8.0.0-alpha.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.21...@react-navigation/drawer@8.0.0-alpha.22) (2026-03-30)
 
 **Note:** Version bump only for package @react-navigation/drawer

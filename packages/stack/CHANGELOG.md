@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.22...@react-navigation/stack@8.0.0-alpha.23) (2026-04-13)
+
+### Bug Fixes
+
+* fix preloaded screens becoming visible on web ([e9d8a71](https://github.com/react-navigation/react-navigation/commit/e9d8a719894d0cb955e048804a31063c3abd8a3a)) - by @satya164
+* preserve options of old routes during transition ([a2a4a28](https://github.com/react-navigation/react-navigation/commit/a2a4a289b779000d0d65bf13a6b09476f59d7d79)), closes [#12982](https://github.com/react-navigation/react-navigation/issues/12982) - by @satya164
+
 # [8.0.0-alpha.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.21...@react-navigation/stack@8.0.0-alpha.22) (2026-03-30)
 
 **Note:** Version bump only for package @react-navigation/stack

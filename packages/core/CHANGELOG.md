@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.9...@react-navigation/core@8.0.0-alpha.10) (2026-04-13)
+
+### Bug Fixes
+
+* fix type inference for nested CompositeNavigationProp ([f0abff2](https://github.com/react-navigation/react-navigation/commit/f0abff2778526f840ce224f32c8a5695b336ddaa)) - by @satya164
+
+### Features
+
+* add a reuse option to preload ([#13066](https://github.com/react-navigation/react-navigation/issues/13066)) ([fdfd1ae](https://github.com/react-navigation/react-navigation/commit/fdfd1aefe74784b8502231556ac353fad2bf1b05)) - by @satya164
+
 # [8.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.8...@react-navigation/core@8.0.0-alpha.9) (2026-03-30)
 
 ### Bug Fixes

@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.20...@react-navigation/elements@3.0.0-alpha.21) (2026-04-13)
+
+**Note:** Version bump only for package @react-navigation/elements
+
 # [3.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.19...@react-navigation/elements@3.0.0-alpha.20) (2026-03-30)
 
 ### Bug Fixes
