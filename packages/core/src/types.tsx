@@ -555,31 +555,60 @@ export type CompositeNavigationProp<
        * Param list from both navigation objects needs to be combined
        * For example, we should be able to navigate to screens in both A and B
        */
-      (A extends NavigationHelpersCommon<infer T> ? T : never) &
-        (B extends NavigationHelpersCommon<infer U> ? U : never),
+      ParamListOfNavigationProp<A> & ParamListOfNavigationProp<B>,
       /**
        * The route name should refer to the route name specified in the first type
-       * Ideally it should work for any of them, but it's not possible to infer that way
        */
-      A extends NavigationProp<any, infer R> ? R : string,
+      RouteNameOfNavigationProp<A>,
       /**
        * The type of state should refer to the state specified in the first type
        */
-      A extends NavigationProp<any, any, infer S> ? S : NavigationState,
+      StateOfNavigationProp<A>,
       /**
        * Screen options should refer to the options specified in the first type
        */
-      A extends NavigationProp<any, any, any, infer O> ? O : {},
+      ScreenOptionsOfNavigationProp<A>,
       /**
-       * Event consumer config should refer to the config specified in the first type
-       * This allows typechecking `addListener`/`removeListener`
+       * Event map should refer to the config specified in the first type
        */
-      A extends NavigationProp<any, any, any, any, infer E> ? E : {}
+      EventMapOfNavigationProp<A>
     >,
     'getParent'
   > & {
     getParent: A['getParent'] & B['getParent'];
-  };
+  } & // Mapped types don't preserve protected members
+  // So `Omit` drops `PrivateValueStore`'s `protected` brand
+  // We add it back so this can be used for type inference
+  PrivateValueStore<
+    [
+      ParamListOfNavigationProp<A> & ParamListOfNavigationProp<B>,
+      RouteNameOfNavigationProp<A>,
+      EventMapOfNavigationProp<A>,
+    ]
+  >;
+
+type ParamListOfNavigationProp<T> =
+  T extends PrivateValueStore<[infer ParamList, any, any]> ? ParamList : never;
+
+type RouteNameOfNavigationProp<T> =
+  T extends PrivateValueStore<[any, infer RouteName, any]>
+    ? RouteName
+    : unknown;
+
+type StateOfNavigationProp<T> = T extends {
+  getState: () => infer State extends NavigationState;
+}
+  ? State
+  : NavigationState;
+
+type ScreenOptionsOfNavigationProp<T> = T extends {
+  setOptions: (options: Partial<infer ScreenOptions>) => void;
+}
+  ? ScreenOptions
+  : {};
+
+type EventMapOfNavigationProp<T> =
+  T extends PrivateValueStore<[any, any, infer EventMap]> ? EventMap : {};
 
 export type CompositeScreenProps<
   A extends {
@@ -1251,6 +1280,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
       merge?: never;
       initial?: never;
       pop?: never;
+      preload?: never;
       path?: string | undefined;
       state: PartialState<NavigationState> | NavigationState | undefined;
     }
@@ -1263,6 +1293,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
             initial?: boolean | undefined;
             path?: string | undefined;
             pop?: boolean | undefined;
+            preload?: boolean | undefined;
             state?: never;
           }
         : {
@@ -1272,6 +1303,7 @@ export type NavigatorScreenParams<ParamList extends {}> =
             initial?: boolean | undefined;
             path?: string | undefined;
             pop?: boolean | undefined;
+            preload?: boolean | undefined;
             state?: never;
           };
     }[keyof ParamList];

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
 import {
+  type BottomTabNavigationOptions,
   type BottomTabNavigationProp,
   createBottomTabNavigator,
   createBottomTabScreen,
@@ -539,6 +540,79 @@ expectTypeOf<MyParamList>().toEqualTypeOf<{
     Test: { foo: string };
   }>;
 }>();
+
+/**
+ * Preserves all five generics across 3+ levels of nesting in `CompositeNavigationProp`
+ */
+{
+  const NestedInner = createBottomTabNavigator({
+    screens: {
+      NestedLeaf: (_: StaticScreenProps<{ leafId: string } | undefined>) =>
+        null,
+    },
+  });
+
+  const NestedMiddle = createStackNavigator({
+    screens: {
+      NestedInner: NestedInner,
+    },
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const NestedOuter = createStackNavigator({
+    screens: {
+      NestedMiddle: NestedMiddle,
+    },
+  });
+
+  type NestedLeafNav = NavigationListForNested<
+    typeof NestedOuter
+  >['NestedLeaf'];
+
+  expectTypeOf<NestedLeafNav>().toEqualTypeOf<
+    CompositeNavigationProp<
+      CompositeNavigationProp<
+        BottomTabNavigationProp<
+          StaticParamList<typeof NestedInner>,
+          'NestedLeaf'
+        >,
+        StackNavigationProp<StaticParamList<typeof NestedMiddle>, 'NestedInner'>
+      >,
+      StackNavigationProp<StaticParamList<typeof NestedOuter>, 'NestedMiddle'>
+    >
+  >();
+
+  // State: `getState()` refers to the tab navigator's state
+  expectTypeOf<
+    ReturnType<NestedLeafNav['getState']>['type']
+  >().toEqualTypeOf<'tab'>();
+
+  // ScreenOptions: `setOptions` refers to the tab navigator's options
+  expectTypeOf<Parameters<NestedLeafNav['setOptions']>[0]>().toEqualTypeOf<
+    Partial<BottomTabNavigationOptions>
+  >();
+
+  // RouteName: `setParams` refers to `NestedLeaf`'s params
+  expectTypeOf<Parameters<NestedLeafNav['setParams']>[0]>().toEqualTypeOf<
+    Partial<{ leafId: string } | undefined>
+  >();
+
+  const navigation: NestedLeafNav = {} as any;
+
+  // EventMap: `addListener` accepts tab-specific and core events
+  navigation.addListener('tabPress', () => {});
+  navigation.addListener('focus', () => {});
+
+  // ParamList: `navigate` accepts route names from all three navigators
+  navigation.navigate('NestedLeaf');
+  navigation.navigate('NestedLeaf', { leafId: 'abc' });
+  navigation.navigate('NestedInner');
+  navigation.navigate('NestedMiddle');
+
+  // Parent `RouteName`: `getParent` covers all ancestor screens
+  navigation.getParent('NestedInner');
+  navigation.getParent('NestedMiddle');
+}
 
 /**
  * Check for errors on getCurrentRoute
