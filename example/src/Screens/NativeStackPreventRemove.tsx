@@ -30,7 +30,7 @@ const ArticleScreen = () => {
   const navigation = useNavigation('Article');
 
   return (
-    <ScrollView>
+    <ScrollView contentInsetAdjustmentBehavior="automatic">
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Input')}>
           Push Input
@@ -79,7 +79,10 @@ const InputScreen = () => {
   });
 
   return (
-    <View style={styles.content}>
+    <ScrollView
+      contentInsetAdjustmentBehavior="automatic"
+      contentContainerStyle={styles.content}
+    >
       <TextInput
         autoFocus
         style={[
@@ -108,7 +111,7 @@ const InputScreen = () => {
       >
         Push Article
       </Button>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -134,7 +137,7 @@ export const NativeStackPreventRemove = {
 
 const styles = StyleSheet.create({
   content: {
-    flex: 1,
+    flexGrow: 1,
     gap: 12,
     padding: 12,
   },

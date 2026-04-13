@@ -17,7 +17,7 @@ const ArticleScreen = () => {
   const navigation = useNavigation('Article');
 
   return (
-    <ScrollView>
+    <ScrollView contentInsetAdjustmentBehavior="automatic">
       <View style={styles.buttons}>
         <Button
           variant="filled"
@@ -44,7 +44,7 @@ const AlbumsScreen = () => {
   const navigation = useNavigation('Albums');
 
   return (
-    <ScrollView>
+    <ScrollView contentInsetAdjustmentBehavior="automatic">
       <View style={styles.buttons}>
         <Button variant="filled" onPress={() => navigation.push('Albums')}>
           Push albums

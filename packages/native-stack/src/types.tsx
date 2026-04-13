@@ -271,6 +271,8 @@ export type NativeStackNavigationOptions = {
   /**
    * Style object for header. Supported properties:
    * - backgroundColor
+   *
+   * On iOS, header uses platform background color by default.
    */
   headerStyle?:
     | StyleProp<{
@@ -282,9 +284,14 @@ export type NativeStackNavigationOptions = {
    */
   headerShadowVisible?: boolean | undefined;
   /**
-   * Boolean indicating whether the navigation bar is translucent.
+   * Boolean indicating whether the navigation bar is transparent.
    * Setting this to `true` makes the header absolutely positioned,
-   * and changes the background color to `transparent` unless specified in `headerStyle`.
+   * changes the background color to `transparent` unless specified in `headerStyle`,
+   * and hides the header shadow unless specified in `headerShadowVisible`.
+   *
+   * On iOS, the header is translucent by default, and renders content underneath.
+   * But it may still have a background shadow depending on iOS version.
+   * Set this to `undefined` instead of boolean for default platform behavior.
    */
   headerTransparent?: boolean | undefined;
   /**
