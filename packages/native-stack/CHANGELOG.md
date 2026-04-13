@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.23...@react-navigation/native-stack@8.0.0-alpha.24) (2026-04-13)
+
+### Bug Fixes
+
+* revert defaulting iOS header to translucent ([b6fb884](https://github.com/react-navigation/react-navigation/commit/b6fb88450b33abaf230261fcf6c89960b1afc8b0)) - by @
+* use explicit headerTintColor for header title if provided ([e57cbeb](https://github.com/react-navigation/react-navigation/commit/e57cbeb7d8eacc4111cfed4794ee1b2d16cebe87)), closes [#13070](https://github.com/react-navigation/react-navigation/issues/13070) - by @
+
 # [8.0.0-alpha.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.22...@react-navigation/native-stack@8.0.0-alpha.23) (2026-04-13)
 
 ### Bug Fixes
