@@ -5,7 +5,7 @@ import * as React from 'react';
 import { LogBox, Platform } from 'react-native';
 import { configure } from 'react-native-showtime';
 
-import { App } from './src/index';
+import { UserInterfaceBug } from './src/userinterface-bug';
 
 if (Platform.OS === 'ios') {
   configure({
@@ -23,6 +23,6 @@ LogBox.ignoreLogs([
 
 registerRootComponent(() => (
   <React.StrictMode>
-    <App />
+    <UserInterfaceBug />
   </React.StrictMode>
 ));
