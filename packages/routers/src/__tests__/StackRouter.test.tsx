@@ -3109,7 +3109,6 @@ test('adds route to preloaded list with preload', () => {
           { key: 'qux', name: 'qux' },
         ],
       },
-
       CommonActions.preload('bar'),
       options
     )
@@ -3128,6 +3127,20 @@ test('adds route to preloaded list with preload', () => {
       { key: 'qux', name: 'qux' },
     ],
   });
+});
+
+test('updates an existing route with preload when the ID matches', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {
+      bar: { color: 'test' },
+      baz: { foo: 12 },
+    },
+    routeGetIdList: {
+      bar: ({ params }) => params?.answer,
+    },
+  };
 
   expect(
     router.getStateForAction(
@@ -3147,7 +3160,6 @@ test('adds route to preloaded list with preload', () => {
           { key: 'baz', name: 'baz' },
         ],
       },
-
       CommonActions.preload('bar', { answer: 42, something: 'else' }),
       options
     )
@@ -3167,6 +3179,82 @@ test('adds route to preloaded list with preload', () => {
       { key: 'baz', name: 'baz' },
     ],
   });
+});
+
+test('updates the last matching route with preload when the ID matches', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {
+      bar: { color: 'test' },
+      baz: { foo: 12 },
+    },
+    routeGetIdList: {
+      bar: ({ params }) => params?.answer,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          {
+            key: 'bar-first',
+            name: 'bar',
+            params: { answer: 42, toBe: 'first' },
+          },
+          { key: 'baz', name: 'baz' },
+          {
+            key: 'bar-last',
+            name: 'bar',
+            params: { answer: 42, toBe: 'last' },
+          },
+        ],
+      },
+      CommonActions.preload('bar', { answer: 42, something: 'else' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    preloadedRoutes: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      {
+        key: 'bar-first',
+        name: 'bar',
+        params: { answer: 42, toBe: 'first' },
+      },
+      { key: 'baz', name: 'baz' },
+      {
+        key: 'bar-last',
+        name: 'bar',
+        params: { answer: 42, color: 'test', something: 'else' },
+      },
+    ],
+  });
+});
+
+test('adds preloaded route with preload when the ID changes', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {
+      bar: { color: 'test' },
+      baz: { foo: 12 },
+    },
+    routeGetIdList: {
+      bar: ({ params }) => params?.answer,
+    },
+  };
 
   expect(
     router.getStateForAction(
@@ -3186,7 +3274,6 @@ test('adds route to preloaded list with preload', () => {
           { key: 'baz', name: 'baz' },
         ],
       },
-
       CommonActions.preload('bar', { answer: 43 }),
       options
     )
@@ -3204,6 +3291,266 @@ test('adds route to preloaded list with preload', () => {
         key: 'bar-test',
         name: 'bar',
         params: { answer: 42, toBe: 'notMerged' },
+      },
+      { key: 'baz', name: 'baz' },
+    ],
+  });
+});
+
+test('updates the last matching route by name with preload and reuse when getId is not provided', () => {
+  const router = StackRouter({});
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          {
+            key: 'bar-first',
+            name: 'bar',
+            params: { answer: 1, toBe: 'first' },
+          },
+          { key: 'baz', name: 'baz' },
+          {
+            key: 'bar-last',
+            name: 'bar',
+            params: { answer: 2, toBe: 'last' },
+          },
+        ],
+      },
+      CommonActions.preload(
+        'bar',
+        { answer: 3 },
+        {
+          reuse: true,
+        }
+      ),
+      {
+        routeNames: ['baz', 'bar', 'qux'],
+        routeParamList: {},
+        routeGetIdList: {},
+      }
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    preloadedRoutes: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      {
+        key: 'bar-first',
+        name: 'bar',
+        params: { answer: 1, toBe: 'first' },
+      },
+      { key: 'baz', name: 'baz' },
+      {
+        key: 'bar-last',
+        name: 'bar',
+        params: { answer: 3 },
+      },
+    ],
+  });
+});
+
+test('updates the last matching route with preload and reuse', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {
+      bar: { color: 'test' },
+      baz: { foo: 12 },
+    },
+    routeGetIdList: {
+      bar: ({ params }) => params?.answer,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          {
+            key: 'bar-first',
+            name: 'bar',
+            params: { answer: 42, toBe: 'first' },
+          },
+          { key: 'baz', name: 'baz' },
+          {
+            key: 'bar-last',
+            name: 'bar',
+            params: { answer: 42, toBe: 'last' },
+          },
+        ],
+      },
+      CommonActions.preload(
+        'bar',
+        { answer: 42, something: 'else' },
+        { reuse: true }
+      ),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 2,
+    preloadedRoutes: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      {
+        key: 'bar-first',
+        name: 'bar',
+        params: { answer: 42, toBe: 'first' },
+      },
+      { key: 'baz', name: 'baz' },
+      {
+        key: 'bar-last',
+        name: 'bar',
+        params: { answer: 42, color: 'test', something: 'else' },
+      },
+    ],
+  });
+});
+
+test('updates the last matching preloaded route with preload and reuse', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {
+      bar: { color: 'test' },
+      baz: { foo: 12 },
+    },
+    routeGetIdList: {
+      bar: ({ params }) => params?.answer,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        preloadedRoutes: [
+          {
+            key: 'bar-first',
+            name: 'bar',
+            params: { answer: 42, toBe: 'first' },
+          },
+          {
+            key: 'bar-last',
+            name: 'bar',
+            params: { answer: 42, toBe: 'last' },
+          },
+        ],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [{ key: 'baz', name: 'baz' }],
+      },
+      CommonActions.preload(
+        'bar',
+        { answer: 42, something: 'else' },
+        { reuse: true }
+      ),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    preloadedRoutes: [
+      {
+        key: 'bar-first',
+        name: 'bar',
+        params: { answer: 42, toBe: 'first' },
+      },
+      {
+        key: 'bar-last',
+        name: 'bar',
+        params: { answer: 42, color: 'test', something: 'else' },
+      },
+    ],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [{ key: 'baz', name: 'baz' }],
+  });
+});
+
+test('prefers a matching preloaded route over matching routes with preload and reuse', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {
+      bar: { color: 'test' },
+      baz: { foo: 12 },
+    },
+    routeGetIdList: {
+      bar: ({ params }) => params?.answer,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        preloadedRoutes: [
+          {
+            key: 'bar-preloaded',
+            name: 'bar',
+            params: { answer: 42, toBe: 'preloaded' },
+          },
+        ],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          {
+            key: 'bar-route',
+            name: 'bar',
+            params: { answer: 42, toBe: 'route' },
+          },
+          { key: 'baz', name: 'baz' },
+        ],
+      },
+      CommonActions.preload(
+        'bar',
+        { answer: 42, something: 'else' },
+        { reuse: true }
+      ),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    preloadedRoutes: [
+      {
+        key: 'bar-preloaded',
+        name: 'bar',
+        params: { answer: 42, color: 'test', something: 'else' },
+      },
+    ],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      {
+        key: 'bar-route',
+        name: 'bar',
+        params: { answer: 42, toBe: 'route' },
       },
       { key: 'baz', name: 'baz' },
     ],

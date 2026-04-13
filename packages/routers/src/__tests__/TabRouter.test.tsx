@@ -2275,7 +2275,7 @@ test("doesn't merge params on jump to an existing screen", () => {
   });
 });
 
-test('handles screen preloading', () => {
+test('adds route key to preloadedRouteKeys with preload', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -2318,6 +2318,17 @@ test('handles screen preloading', () => {
     ],
     history: [{ type: 'route', key: 'baz' }],
   });
+});
+
+test('updates an existing route with preload when the ID changes', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => `bar-${params?.answer}`,
+    },
+  };
 
   expect(
     router.getStateForAction(
@@ -2352,6 +2363,17 @@ test('handles screen preloading', () => {
     ],
     history: [{ type: 'route', key: 'baz-test' }],
   });
+});
+
+test('replaces the preloaded route key with preload when the ID changes', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => `bar-${params?.answer}`,
+    },
+  };
 
   expect(
     router.getStateForAction(
@@ -2390,6 +2412,17 @@ test('handles screen preloading', () => {
     ],
     history: [{ type: 'route', key: 'baz-test' }],
   });
+});
+
+test('updates an existing route with preload when the ID matches', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => `bar-${params?.answer}`,
+    },
+  };
 
   expect(
     router.getStateForAction(
@@ -2432,6 +2465,17 @@ test('handles screen preloading', () => {
     ],
     history: [{ type: 'route', key: 'baz-test' }],
   });
+});
+
+test('removes focused route from preloadedRouteKeys on navigate', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => `bar-${params?.answer}`,
+    },
+  };
 
   expect(
     router.getStateForAction(
@@ -2477,6 +2521,17 @@ test('handles screen preloading', () => {
       { type: 'route', key: 'qux-test' },
     ],
   });
+});
+
+test('removes focused route from preloadedRouteKeys on goBack', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => `bar-${params?.answer}`,
+    },
+  };
 
   expect(
     router.getStateForAction(
@@ -2522,6 +2577,17 @@ test('handles screen preloading', () => {
     ],
     history: [{ type: 'route', key: 'baz-test' }],
   });
+});
+
+test('adds an existing route key to preloadedRouteKeys with preload and reuse', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => `bar-${params?.answer}`,
+    },
+  };
 
   expect(
     router.getStateForAction(
@@ -2546,7 +2612,7 @@ test('handles screen preloading', () => {
           { type: 'route', key: 'qux-test' },
         ],
       },
-      CommonActions.preload('bar', { answer: 42 }),
+      CommonActions.preload('bar', { answer: 42 }, { reuse: true }),
       options
     )
   ).toEqual({
@@ -2570,6 +2636,73 @@ test('handles screen preloading', () => {
       { type: 'route', key: 'qux-test' },
     ],
   });
+});
+
+test('updates a preloaded route with preload and reuse when the ID changes', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => `bar-${params?.answer}`,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        preloadedRouteKeys: ['bar-some'],
+        key: 'root',
+        index: 2,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz-test', name: 'baz' },
+          {
+            key: 'bar-some',
+            name: 'bar',
+            params: { answer: 42, willBe: 'untouched' },
+          },
+          { key: 'qux-test', name: 'qux' },
+        ],
+        history: [
+          { type: 'route', key: 'bar-some' },
+          { type: 'route', key: 'qux-test' },
+        ],
+      },
+      CommonActions.preload('bar', { answer: 43 }, { reuse: true }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['bar-test'],
+    key: 'root',
+    index: 2,
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz-test', name: 'baz' },
+      {
+        key: 'bar-test',
+        name: 'bar',
+        params: { answer: 43 },
+      },
+      { key: 'qux-test', name: 'qux' },
+    ],
+    history: [{ type: 'route', key: 'qux-test' }],
+  });
+});
+
+test('creates a new preloaded route with preload when the ID changes', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => `bar-${params?.answer}`,
+    },
+  };
 
   expect(
     router.getStateForAction(

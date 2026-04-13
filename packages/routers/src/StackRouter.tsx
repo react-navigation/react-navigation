@@ -722,29 +722,49 @@ export function StackRouter(options: StackRouterOptions) {
         case 'PRELOAD': {
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
+          const params = createParamsFromAction({ action, routeParamList });
 
           let route: Route<string> | undefined;
 
+          if (action.payload.reuse) {
+            route = state.preloadedRoutes.findLast(
+              (route) =>
+                route.name === action.payload.name &&
+                (id === undefined || id === getId?.({ params: route.params }))
+            );
+
+            if (route) {
+              return {
+                ...state,
+                preloadedRoutes: state.preloadedRoutes.map((r) =>
+                  r.key === route?.key && r.params !== params
+                    ? { ...r, params }
+                    : r
+                ),
+              };
+            }
+          }
+
           if (id !== undefined) {
-            route = state.routes.find(
+            route = state.routes.findLast(
               (route) =>
                 route.name === action.payload.name &&
                 id === getId?.({ params: route.params })
+            );
+          } else if (action.payload.reuse) {
+            route = state.routes.findLast(
+              (route) => route.name === action.payload.name
             );
           }
 
           if (route) {
             return {
               ...state,
-              routes: state.routes.map((r) => {
-                if (r.key !== route?.key) {
-                  return r;
-                }
-                return {
-                  ...r,
-                  params: createParamsFromAction({ action, routeParamList }),
-                };
-              }),
+              routes: state.routes.map((r) =>
+                r.key === route.key && r.params !== params
+                  ? { ...r, params }
+                  : r
+              ),
             };
           } else {
             return {
