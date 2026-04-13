@@ -175,7 +175,7 @@ export function NativeStackView({ state, descriptors }: Props) {
           <ActivityView
             key={route.key}
             mode={activityMode}
-            visible={isFocused || isPreloaded || isNextScreenTransparent}
+            visible={isFocused || isNextScreenTransparent}
             style={StyleSheet.absoluteFill}
           >
             {content}

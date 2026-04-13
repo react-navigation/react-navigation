@@ -683,14 +683,14 @@ export class CardStack extends React.Component<Props, State> {
 
             const isBeforeLast = index === routes.length - 2;
 
-            // Keep animating, preloaded & last two screens visible for smoother transitions
+            // Keep animating and the last two rendered routes visible for smoother transitions.
+            // Preloaded routes should stay mounted, but remain hidden until focused.
             const isVisible =
               focused ||
               isFocusing ||
               isRemoving ||
-              isPreloaded ||
               isNextScreenTransparent ||
-              index >= routes.length - 2;
+              (!isPreloaded && index >= routes.length - 2);
 
             const activityMode = // Render focused and animating screens normally
               focused || isFocusing
