@@ -11,16 +11,21 @@ import {
 
 const BlackWhiteScrollView = () => {
   return (
-    <ScrollView contentInsetAdjustmentBehavior="always">
-      <View style={{ padding: 10 }}>
+    <ScrollView
+      contentInsetAdjustmentBehavior="always"
+      contentContainerStyle={{ padding: 16 }}
+    >
+      <View style={{ paddingBottom: 20 }}>
         <Text>Current colorscheme: {useColorScheme()}</Text>
       </View>
-      <View style={{ height: 100, backgroundColor: 'black' }} />
-      <View style={{ height: 100, backgroundColor: 'white' }} />
-      <View style={{ height: 100, backgroundColor: 'black' }} />
-      <View style={{ height: 100, backgroundColor: 'white' }} />
-      <View style={{ height: 100, backgroundColor: 'black' }} />
-      <View style={{ height: 100, backgroundColor: 'white' }} />
+      <Text>View using DynamicColorIOS:</Text>
+      <View
+        style={{
+          height: 300,
+          width: 300,
+          backgroundColor: DynamicColorIOS({ dark: 'black', light: 'white' }),
+        }}
+      />
     </ScrollView>
   );
 };
