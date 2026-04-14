@@ -310,7 +310,7 @@ function DrawerViewBase({
         overlayAccessibilityLabel={overlayAccessibilityLabel}
         drawerPosition={drawerPosition}
         drawerStyle={[
-          { backgroundColor: colors.card },
+          { backgroundColor: colors?.card },
           drawerType === 'permanent' &&
             ((
               Platform.OS === 'web'
@@ -319,11 +319,11 @@ function DrawerViewBase({
                   (direction !== 'rtl' && drawerPosition === 'right')
             )
               ? {
-                  borderLeftColor: colors.border,
+                  borderLeftColor: colors?.border,
                   borderLeftWidth: StyleSheet.hairlineWidth,
                 }
               : {
-                  borderRightColor: colors.border,
+                  borderRightColor: colors?.border,
                   borderRightWidth: StyleSheet.hairlineWidth,
                 }),
 

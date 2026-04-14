@@ -222,11 +222,11 @@ const MapScreen = () => {
   const place = PLACES[0];
 
   return (
-    <View style={[styles.mapContainer, { backgroundColor: colors.card }]}>
+    <View style={[styles.mapContainer, { backgroundColor: colors?.card }]}>
       <View
         style={[
           StyleSheet.absoluteFill,
-          { backgroundColor: colors.primary, opacity: 0.08 },
+          { backgroundColor: colors?.primary, opacity: 0.08 },
         ]}
       />
       {MAP_ROADS.map((road, i) => (
@@ -234,7 +234,7 @@ const MapScreen = () => {
           key={`road-${String(i)}`}
           style={[
             styles.absolute,
-            { backgroundColor: colors.border, opacity: 0.15 },
+            { backgroundColor: colors?.border, opacity: 0.15 },
             {
               top: road.top,
               left: road.left,
@@ -259,7 +259,7 @@ const MapScreen = () => {
               width: lm.size,
               height: lm.size,
               borderRadius: lm.size / 2,
-              backgroundColor: colors.text,
+              backgroundColor: colors?.text,
               opacity: 0.1,
             },
           ]}
@@ -272,13 +272,13 @@ const MapScreen = () => {
           navigation.navigate('LocationDetails', { placeId: place.id })
         }
       >
-        <View style={[styles.pinDot, { backgroundColor: colors.primary }]} />
-        <View style={[styles.pinRing, { borderColor: colors.primary }]} />
+        <View style={[styles.pinDot, { backgroundColor: colors?.primary }]} />
+        <View style={[styles.pinRing, { borderColor: colors?.primary }]} />
         <Text
           style={[
             styles.pinLabel,
-            fonts.bold,
-            { color: colors.text, backgroundColor: colors.card },
+            fonts?.bold,
+            { color: colors?.text, backgroundColor: colors?.card },
           ]}
           numberOfLines={1}
         >
@@ -302,12 +302,12 @@ const PlaceItem = React.memo(({ item }: { item: Place }) => {
       <Image source={item.image} style={styles.placeImage} />
 
       <View style={styles.placeInfo}>
-        <Text style={[styles.placeName, fonts.bold]} numberOfLines={1}>
+        <Text style={[styles.placeName, fonts?.bold]} numberOfLines={1}>
           {item.name}
         </Text>
 
         <Text
-          style={[styles.caption, fonts.medium, { color: colors.primary }]}
+          style={[styles.caption, fonts?.medium, { color: colors?.primary }]}
           numberOfLines={1}
         >
           {item.category}
@@ -321,7 +321,9 @@ const PlaceItem = React.memo(({ item }: { item: Place }) => {
         </Text>
       </View>
 
-      <Text style={[styles.placeRating, fonts.medium, { color: colors.text }]}>
+      <Text
+        style={[styles.placeRating, fonts?.medium, { color: colors?.text }]}
+      >
         {'★ '}
         {item.rating}
       </Text>
@@ -335,7 +337,7 @@ const ItemSeparator = () => {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.separator, { backgroundColor: colors.border }]} />
+    <View style={[styles.separator, { backgroundColor: colors?.border }]} />
   );
 };
 
@@ -388,15 +390,19 @@ const LocationDetailsScreen = ({
 
   return (
     <ScrollView
-      style={{ backgroundColor: colors.card }}
+      style={{ backgroundColor: colors?.card }}
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={styles.detailsContent}
     >
       <View style={styles.detailsHeader}>
-        <Text style={[styles.detailsName, fonts.heavy]}>{place.name}</Text>
+        <Text style={[styles.detailsName, fonts?.heavy]}>{place.name}</Text>
 
-        <View style={[styles.categoryPill, { backgroundColor: colors.border }]}>
-          <Text style={[styles.caption, fonts.bold, { color: colors.primary }]}>
+        <View
+          style={[styles.categoryPill, { backgroundColor: colors?.border }]}
+        >
+          <Text
+            style={[styles.caption, fonts?.bold, { color: colors?.primary }]}
+          >
             {place.category}
           </Text>
         </View>
@@ -426,25 +432,25 @@ const LocationDetailsScreen = ({
             key={info.label}
             style={[
               styles.detailsInfoItem,
-              { backgroundColor: colors.background },
+              { backgroundColor: colors?.background },
             ]}
           >
             <Text
               style={[
                 styles.detailsInfoLabel,
-                fonts.medium,
+                fonts?.medium,
                 { opacity: SECONDARY_OPACITY },
               ]}
             >
               {info.label}
             </Text>
-            <Text style={[styles.detailsText, fonts.bold]}>{info.value}</Text>
+            <Text style={[styles.detailsText, fonts?.bold]}>{info.value}</Text>
           </View>
         ))}
       </View>
 
-      <View style={[styles.detailsSection, { borderColor: colors.border }]}>
-        <Text style={[styles.detailsSectionTitle, fonts.bold]}>About</Text>
+      <View style={[styles.detailsSection, { borderColor: colors?.border }]}>
+        <Text style={[styles.detailsSectionTitle, fonts?.bold]}>About</Text>
         <Text style={[styles.bodyText, { opacity: 0.8 }]}>
           This location is managed by the National Park Service. Visitors are
           encouraged to follow Leave No Trace principles and stay on designated

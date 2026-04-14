@@ -71,7 +71,7 @@ export function Screen(props: Props) {
       inert={!focused}
       style={{
         ...styles.container,
-        backgroundColor: colors.background,
+        backgroundColor: colors?.background,
         ...style,
       }}
       // On Fabric we need to disable collapsing for the background to ensure

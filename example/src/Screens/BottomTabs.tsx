@@ -222,7 +222,7 @@ export function BottomTabs(
               color,
               size,
             }: {
-              color: ColorValue;
+              color: ColorValue | undefined;
               size: number;
             }) => (
               <MaterialCommunityIcons

@@ -270,7 +270,7 @@ function CardContainerInner({
             backgroundColor:
               presentation === 'transparentModal'
                 ? 'transparent'
-                : colors.background,
+                : colors?.background,
           },
           cardStyle,
         ]}

@@ -94,7 +94,7 @@ const InputScreen = () => {
         autoFocus
         style={[
           styles.input,
-          { backgroundColor: colors.card, color: colors.text },
+          { backgroundColor: colors?.card, color: colors?.text },
         ]}
         value={text}
         placeholder="Type something…"

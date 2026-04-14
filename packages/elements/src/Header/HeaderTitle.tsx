@@ -25,8 +25,8 @@ export function HeaderTitle({ tintColor, style, ...rest }: Props) {
       numberOfLines={1}
       {...rest}
       style={[
-        { color: tintColor === undefined ? colors.text : tintColor },
-        Platform.select({ ios: fonts.bold, default: fonts.medium }),
+        { color: tintColor === undefined ? colors?.text : tintColor },
+        Platform.select({ ios: fonts?.bold, default: fonts?.medium }),
         styles.title,
         style,
       ]}

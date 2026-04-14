@@ -65,7 +65,7 @@ const HomeTabs = createBottomTabNavigator({
     headerLeft: (props) => (
       <HeaderBackButton {...props} onPress={navigation.goBack} />
     ),
-    tabBarActiveTintColor: theme.colors.notification,
+    tabBarActiveTintColor: theme.colors?.notification,
   }),
   screens: {
     Albums: {

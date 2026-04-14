@@ -61,10 +61,12 @@ function Content() {
     <View
       style={[
         styles.clock,
-        { borderColor: colors.border, backgroundColor: colors.card },
+        { borderColor: colors?.border, backgroundColor: colors?.card },
       ]}
     >
-      <Text style={[styles.time, { color: colors.text }]}>{formattedTime}</Text>
+      <Text style={[styles.time, { color: colors?.text }]}>
+        {formattedTime}
+      </Text>
       <View style={styles.buttons}>
         <PlatformPressable onPress={() => setOffset((o) => --o)}>
           <Text style={styles.button}>↓</Text>
@@ -77,7 +79,7 @@ function Content() {
         style={[
           styles.dot,
           {
-            backgroundColor: colors.text,
+            backgroundColor: colors?.text,
             transform: [
               {
                 translateX: dotAnim.interpolate({

@@ -17,6 +17,7 @@ export { ServerContainer } from './ServerContainer';
 export { DarkTheme } from './theming/DarkTheme';
 export { LightTheme as DefaultTheme } from './theming/LightTheme';
 export { MaterialDarkTheme, MaterialLightTheme } from './theming/MaterialTheme';
+export { SystemTheme } from './theming/SystemTheme';
 export * from './types';
 export { useLinkBuilder } from './useLinkBuilder';
 export { type LinkProps, useLinkProps } from './useLinkProps';

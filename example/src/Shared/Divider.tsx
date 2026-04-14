@@ -5,7 +5,7 @@ export function Divider() {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.divider, { borderBottomColor: colors.border }]} />
+    <View style={[styles.divider, { borderBottomColor: colors?.border }]} />
   );
 }
 

@@ -37,8 +37,8 @@ type FontStyle = {
 };
 
 interface NativeTheme {
-  dark: boolean;
-  colors: {
+  dark?: boolean;
+  colors?: {
     primary: ColorValue;
     background: ColorValue;
     card: ColorValue;
@@ -46,7 +46,7 @@ interface NativeTheme {
     border: ColorValue;
     notification: ColorValue;
   };
-  fonts: {
+  fonts?: {
     regular: FontStyle;
     medium: FontStyle;
     bold: FontStyle;

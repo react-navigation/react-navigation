@@ -164,7 +164,7 @@ export function HeaderSearchBar({
     [cancelSearch, clearText]
   );
 
-  const textColor = tintColor ?? colors.text;
+  const textColor = tintColor ?? colors?.text ?? 'transparent';
 
   // When status bar height is provided, add spacing below it
   // Otherwise, use a smaller top margin to align with the header content
@@ -196,7 +196,7 @@ export function HeaderSearchBar({
       {Platform.OS !== 'ios' ? (
         <HeaderBackButton
           accessibilityLabel={cancelButtonText}
-          tintColor={tintColor ?? colors.text}
+          tintColor={tintColor ?? colors?.text}
           pressColor={pressColor}
           pressOpacity={pressOpacity}
           onPress={cancelSearch}
@@ -228,13 +228,17 @@ export function HeaderSearchBar({
           enterKeyHint={enterKeyHint}
           placeholder={placeholder}
           placeholderTextColor={Color(textColor)?.alpha(0.5).string()}
-          cursorColor={colors.primary}
-          selectionHandleColor={colors.primary}
-          selectionColor={Color(colors.primary)?.alpha(0.3).string()}
+          cursorColor={colors?.primary ?? 'transparent'}
+          selectionHandleColor={colors?.primary ?? 'transparent'}
+          selectionColor={
+            Color(colors?.primary ?? 'transparent')
+              ?.alpha(0.3)
+              .string() ?? 'transparent'
+          }
           style={[
             Platform.select({
-              ios: isLiquidGlassSupported ? fonts.medium : fonts.regular,
-              default: fonts.regular,
+              ios: isLiquidGlassSupported ? fonts?.medium : fonts?.regular,
+              default: fonts?.regular,
             }),
             styles.searchbar,
             Platform.OS === 'ios' &&
@@ -307,8 +311,8 @@ export function HeaderSearchBar({
           >
             <Text
               style={[
-                fonts.regular,
-                { color: tintColor ?? colors.primary },
+                fonts?.regular,
+                { color: tintColor ?? colors?.primary },
                 styles.cancelText,
               ]}
             >

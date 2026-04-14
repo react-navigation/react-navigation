@@ -8,7 +8,7 @@ export function Text({ style, ...rest }: TextProps) {
   return (
     <NativeText
       {...rest}
-      style={[{ color: colors.text }, fonts.regular, style]}
+      style={[{ color: colors?.text }, fonts?.regular, style]}
     />
   );
 }

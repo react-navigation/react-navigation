@@ -106,16 +106,16 @@ export function ComponentsSFSymbols(_: StaticScreenProps<{}>) {
   const symbolColors =
     mode === 'palette'
       ? {
-          primary: colors.primary,
-          secondary: colors.notification,
-          tertiary: colors.text,
+          primary: colors?.primary,
+          secondary: colors?.notification,
+          tertiary: colors?.text,
         }
       : undefined;
 
   if (Platform.OS !== 'ios') {
     return (
-      <View style={[styles.centered, { backgroundColor: colors.background }]}>
-        <Text style={{ color: colors.text }}>
+      <View style={[styles.centered, { backgroundColor: colors?.background }]}>
+        <Text style={{ color: colors?.text }}>
           SFSymbol is only available on iOS
         </Text>
       </View>
@@ -131,8 +131,8 @@ export function ComponentsSFSymbols(_: StaticScreenProps<{}>) {
           style={[
             styles.header,
             {
-              backgroundColor: colors.background,
-              borderBottomColor: colors.border,
+              backgroundColor: colors?.background,
+              borderBottomColor: colors?.border,
             },
           ]}
         >
@@ -140,11 +140,11 @@ export function ComponentsSFSymbols(_: StaticScreenProps<{}>) {
             onPress={() => setExpanded((v) => !v)}
             style={styles.headerToggle}
           >
-            <Text style={{ color: colors.text }}>Customization</Text>
+            <Text style={{ color: colors?.text }}>Customization</Text>
             <SFSymbol
               name={expanded ? 'chevron.up' : 'chevron.down'}
               size={14}
-              color={colors.text}
+              color={colors?.text}
             />
           </Pressable>
           {expanded && (
@@ -185,7 +185,7 @@ export function ComponentsSFSymbols(_: StaticScreenProps<{}>) {
       )}
       keyExtractor={(item) => item[0]}
       contentContainerStyle={{
-        backgroundColor: colors.background,
+        backgroundColor: colors?.background,
         paddingLeft: insets.left,
         paddingRight: insets.right,
         paddingBottom: insets.bottom,
@@ -222,7 +222,7 @@ const SFSymbolRow = React.memo(function SFSymbolRow({
   return (
     <View style={styles.row}>
       {items.map((item) => (
-        <View key={item} style={[styles.item, { borderColor: colors.border }]}>
+        <View key={item} style={[styles.item, { borderColor: colors?.border }]}>
           <SFSymbol
             name={item}
             size={ICON_SIZE}
@@ -232,7 +232,10 @@ const SFSymbolRow = React.memo(function SFSymbolRow({
             colors={symbolColors}
             animation={animation}
           />
-          <Text style={[styles.name, { color: colors.text }]} numberOfLines={1}>
+          <Text
+            style={[styles.name, { color: colors?.text }]}
+            numberOfLines={1}
+          >
             {item}
           </Text>
         </View>

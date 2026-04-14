@@ -195,8 +195,8 @@ const HeaderHeightView = ({ hasOffset }: { hasOffset: boolean }) => {
       style={[
         styles.headerHeight,
         {
-          backgroundColor: colors.card,
-          borderColor: colors.border,
+          backgroundColor: colors?.card,
+          borderColor: colors?.border,
         },
         hasOffset && {
           transform: [{ translateY: animatedHeaderHeight }],
@@ -462,7 +462,7 @@ export function NativeStack(
           headerStyle: {
             backgroundColor: Platform.select({
               // Add a background color since Android doesn't support blur effect
-              android: colors.card,
+              android: colors?.card,
               default: 'transparent',
             }),
           },

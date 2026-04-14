@@ -82,7 +82,7 @@ function ButtonBase({
 }: ButtonBaseProps) {
   const { dark, colors, fonts } = useTheme();
 
-  const color = customColor ?? colors.primary;
+  const color = customColor ?? colors?.primary ?? 'transparent';
 
   let backgroundColor: ColorValue;
   let textColor: ColorValue;
@@ -118,7 +118,7 @@ function ButtonBase({
       }
       style={[{ backgroundColor }, styles.button, style]}
     >
-      <Text style={[{ color: textColor }, fonts.regular, styles.text]}>
+      <Text style={[{ color: textColor }, fonts?.regular, styles.text]}>
         {children}
       </Text>
     </PlatformPressable>

@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Text } from '@react-navigation/elements';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, SystemTheme } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   DynamicColorIOS,
@@ -35,6 +35,7 @@ const StackScreen = () => {
         component={BlackWhiteScrollView}
         options={{
           headerTransparent: true,
+          headerBlurEffect: 'regular',
           headerTintColor: DynamicColorIOS({
             light: 'red',
             dark: 'green',
@@ -56,7 +57,7 @@ const Tabs = createBottomTabNavigator();
 
 export const UserInterfaceBug = () => {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={SystemTheme}>
       <Tabs.Navigator>
         <Tabs.Screen name="Stack" component={StackScreen} />
       </Tabs.Navigator>

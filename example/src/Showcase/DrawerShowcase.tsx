@@ -215,14 +215,14 @@ const OverviewScreen = () => {
         style={[
           styles.card,
           styles.cardLarge,
-          { backgroundColor: colors.card, borderColor: colors.border },
+          { backgroundColor: colors?.card, borderColor: colors?.border },
         ]}
       >
-        <Text style={[styles.label, { color: colors.text, opacity: 0.6 }]}>
+        <Text style={[styles.label, { color: colors?.text, opacity: 0.6 }]}>
           Total Balance
         </Text>
 
-        <Text style={[styles.amountLarge, fonts.bold]}>
+        <Text style={[styles.amountLarge, fonts?.bold]}>
           {formatCurrency(totalBalance)}
         </Text>
       </View>
@@ -232,15 +232,19 @@ const OverviewScreen = () => {
           style={[
             styles.card,
             styles.summaryItem,
-            { backgroundColor: colors.card, borderColor: colors.border },
+            { backgroundColor: colors?.card, borderColor: colors?.border },
           ]}
         >
-          <Text style={[styles.label, { color: colors.text, opacity: 0.6 }]}>
+          <Text style={[styles.label, { color: colors?.text, opacity: 0.6 }]}>
             Income
           </Text>
 
           <Text
-            style={[styles.amountMedium, fonts.bold, { color: COLOR_POSITIVE }]}
+            style={[
+              styles.amountMedium,
+              fonts?.bold,
+              { color: COLOR_POSITIVE },
+            ]}
           >
             {formatCurrency(income)}
           </Text>
@@ -250,26 +254,26 @@ const OverviewScreen = () => {
           style={[
             styles.card,
             styles.summaryItem,
-            { backgroundColor: colors.card, borderColor: colors.border },
+            { backgroundColor: colors?.card, borderColor: colors?.border },
           ]}
         >
-          <Text style={[styles.label, { color: colors.text, opacity: 0.6 }]}>
+          <Text style={[styles.label, { color: colors?.text, opacity: 0.6 }]}>
             Expenses
           </Text>
 
-          <Text style={[styles.amountMedium, fonts.bold]}>
+          <Text style={[styles.amountMedium, fonts?.bold]}>
             {formatCurrency(expenses)}
           </Text>
         </View>
       </View>
 
-      <Text style={[styles.sectionTitle, fonts.bold]}>This Week</Text>
+      <Text style={[styles.sectionTitle, fonts?.bold]}>This Week</Text>
 
       <View
         style={[
           styles.card,
           styles.chartCard,
-          { backgroundColor: colors.card, borderColor: colors.border },
+          { backgroundColor: colors?.card, borderColor: colors?.border },
         ]}
       >
         {DAILY_SPEND.map((spend, index) => (
@@ -280,7 +284,7 @@ const OverviewScreen = () => {
                   styles.barFill,
                   {
                     height: `${(spend / maxSpend) * 100}%`,
-                    backgroundColor: colors.primary,
+                    backgroundColor: colors?.primary,
                     opacity: index === DAILY_SPEND.length - 1 ? 1 : 0.5,
                   },
                 ]}
@@ -290,8 +294,8 @@ const OverviewScreen = () => {
             <Text
               style={[
                 styles.barLabel,
-                fonts.medium,
-                { color: colors.text, opacity: 0.6 },
+                fonts?.medium,
+                { color: colors?.text, opacity: 0.6 },
               ]}
             >
               {DAY_LABELS[index]}
@@ -300,13 +304,15 @@ const OverviewScreen = () => {
         ))}
       </View>
 
-      <Text style={[styles.sectionTitle, fonts.bold]}>Recent Transactions</Text>
+      <Text style={[styles.sectionTitle, fonts?.bold]}>
+        Recent Transactions
+      </Text>
 
       {TRANSACTIONS.map((transaction, index) => (
         <React.Fragment key={transaction.id}>
           {index > 0 && (
             <View
-              style={[styles.divider, { backgroundColor: colors.border }]}
+              style={[styles.divider, { backgroundColor: colors?.border }]}
             />
           )}
 
@@ -317,18 +323,18 @@ const OverviewScreen = () => {
                 { backgroundColor: getCategoryColor(transaction.category) },
               ]}
             >
-              <Text style={[styles.categoryDotText, fonts.bold]}>
+              <Text style={[styles.categoryDotText, fonts?.bold]}>
                 {transaction.category.charAt(0)}
               </Text>
             </View>
 
             <View style={styles.flexFill}>
-              <Text style={[styles.bodyText, fonts.medium]}>
+              <Text style={[styles.bodyText, fonts?.medium]}>
                 {transaction.merchant}
               </Text>
 
               <Text
-                style={[styles.caption, { color: colors.text, opacity: 0.6 }]}
+                style={[styles.caption, { color: colors?.text, opacity: 0.6 }]}
               >
                 {transaction.category} · {transaction.date}
               </Text>
@@ -337,7 +343,7 @@ const OverviewScreen = () => {
             <Text
               style={[
                 styles.bodyText,
-                fonts.bold,
+                fonts?.bold,
                 transaction.amount > 0 && { color: COLOR_POSITIVE },
               ]}
             >
@@ -365,14 +371,14 @@ const BudgetsScreen = () => {
         style={[
           styles.card,
           styles.cardLarge,
-          { backgroundColor: colors.card, borderColor: colors.border },
+          { backgroundColor: colors?.card, borderColor: colors?.border },
         ]}
       >
-        <Text style={[styles.label, { color: colors.text, opacity: 0.6 }]}>
+        <Text style={[styles.label, { color: colors?.text, opacity: 0.6 }]}>
           Monthly Budget
         </Text>
 
-        <Text style={[styles.amountLarge, fonts.bold]}>
+        <Text style={[styles.amountLarge, fonts?.bold]}>
           {formatCurrency(totalSpent)}{' '}
           <Text style={{ opacity: 0.4 }}>/ {formatCurrency(totalLimit)}</Text>
         </Text>
@@ -380,7 +386,7 @@ const BudgetsScreen = () => {
         <View
           style={[
             styles.progressTrack,
-            { backgroundColor: colors.border, marginTop: SPACING_M },
+            { backgroundColor: colors?.border, marginTop: SPACING_M },
           ]}
         >
           <View
@@ -389,7 +395,7 @@ const BudgetsScreen = () => {
               {
                 width: `${Math.min((totalSpent / totalLimit) * 100, 100)}%`,
                 backgroundColor:
-                  totalSpent > totalLimit ? COLOR_NEGATIVE : colors.primary,
+                  totalSpent > totalLimit ? COLOR_NEGATIVE : colors?.primary,
               },
             ]}
           />
@@ -406,7 +412,7 @@ const BudgetsScreen = () => {
             style={[
               styles.card,
               styles.budgetCard,
-              { backgroundColor: colors.card, borderColor: colors.border },
+              { backgroundColor: colors?.card, borderColor: colors?.border },
             ]}
           >
             <View style={styles.rowBetween}>
@@ -415,7 +421,7 @@ const BudgetsScreen = () => {
                   style={[styles.colorDot, { backgroundColor: budget.color }]}
                 />
 
-                <Text style={[styles.bodyText, fonts.medium]}>
+                <Text style={[styles.bodyText, fonts?.medium]}>
                   {budget.name}
                 </Text>
               </View>
@@ -423,7 +429,7 @@ const BudgetsScreen = () => {
               <Text
                 style={[
                   styles.caption,
-                  fonts.medium,
+                  fonts?.medium,
                   isOver && { color: COLOR_NEGATIVE },
                 ]}
               >
@@ -432,7 +438,10 @@ const BudgetsScreen = () => {
             </View>
 
             <View
-              style={[styles.progressTrack, { backgroundColor: colors.border }]}
+              style={[
+                styles.progressTrack,
+                { backgroundColor: colors?.border },
+              ]}
             >
               <View
                 style={[
@@ -449,7 +458,7 @@ const BudgetsScreen = () => {
               <Text
                 style={[
                   styles.caption,
-                  fonts.medium,
+                  fonts?.medium,
                   { color: COLOR_NEGATIVE, marginTop: SPACING_XS },
                 ]}
               >
@@ -479,7 +488,7 @@ const AccountsScreen = () => {
           style={[
             styles.card,
             styles.accountCard,
-            { backgroundColor: colors.card, borderColor: colors.border },
+            { backgroundColor: colors?.card, borderColor: colors?.border },
           ]}
         >
           <View style={styles.rowBetween}>
@@ -488,14 +497,14 @@ const AccountsScreen = () => {
                 style={[styles.colorDot, { backgroundColor: account.color }]}
               />
 
-              <Text style={[styles.bodyText, fonts.bold]}>{account.name}</Text>
+              <Text style={[styles.bodyText, fonts?.bold]}>{account.name}</Text>
             </View>
 
             <Text
               style={[
                 styles.caption,
-                fonts.medium,
-                { color: colors.text, opacity: 0.6 },
+                fonts?.medium,
+                { color: colors?.text, opacity: 0.6 },
               ]}
             >
               {account.typeLabel}
@@ -505,14 +514,14 @@ const AccountsScreen = () => {
           <Text
             style={[
               styles.amountMedium,
-              fonts.bold,
+              fonts?.bold,
               account.balance < 0 && { color: COLOR_NEGATIVE },
             ]}
           >
             {formatCurrency(account.balance)}
           </Text>
 
-          <Text style={[styles.caption, { color: colors.text, opacity: 0.4 }]}>
+          <Text style={[styles.caption, { color: colors?.text, opacity: 0.4 }]}>
             •••• {account.lastFour}
           </Text>
         </View>
@@ -522,14 +531,14 @@ const AccountsScreen = () => {
         style={[
           styles.card,
           styles.totalCard,
-          { backgroundColor: colors.card, borderColor: colors.border },
+          { backgroundColor: colors?.card, borderColor: colors?.border },
         ]}
       >
-        <Text style={[styles.label, { color: colors.text, opacity: 0.6 }]}>
+        <Text style={[styles.label, { color: colors?.text, opacity: 0.6 }]}>
           Net Worth
         </Text>
 
-        <Text style={[styles.amountLarge, fonts.bold]}>
+        <Text style={[styles.amountLarge, fonts?.bold]}>
           {formatCurrency(totalBalance)}
         </Text>
       </View>
@@ -546,33 +555,33 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       contentContainerStyle={styles.drawerContentContainer}
     >
       <View style={styles.profileSection}>
-        <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
-          <Text style={[styles.avatarText, fonts.bold]}>AC</Text>
+        <View style={[styles.avatar, { backgroundColor: colors?.primary }]}>
+          <Text style={[styles.avatarText, fonts?.bold]}>AC</Text>
         </View>
 
-        <Text style={[styles.bodyText, fonts.bold]}>Alex Chen</Text>
+        <Text style={[styles.bodyText, fonts?.bold]}>Alex Chen</Text>
 
-        <Text style={[styles.caption, { color: colors.text, opacity: 0.6 }]}>
+        <Text style={[styles.caption, { color: colors?.text, opacity: 0.6 }]}>
           alex@ledger.app
         </Text>
       </View>
 
       <View
-        style={[styles.drawerDivider, { backgroundColor: colors.border }]}
+        style={[styles.drawerDivider, { backgroundColor: colors?.border }]}
       />
 
       <DrawerItemList {...props} />
 
       <View
-        style={[styles.drawerDivider, { backgroundColor: colors.border }]}
+        style={[styles.drawerDivider, { backgroundColor: colors?.border }]}
       />
 
       <View style={styles.drawerFooter}>
         <Text
           style={[
             styles.caption,
-            fonts.medium,
-            { color: colors.text, opacity: 0.4 },
+            fonts?.medium,
+            { color: colors?.text, opacity: 0.4 },
           ]}
         >
           Ledger v1.0
@@ -585,7 +594,9 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         onPress={() => props.navigation.dispatch(StackActions.pop())}
         style={styles.backButton}
       >
-        <Text style={[styles.caption, fonts.medium, { color: colors.primary }]}>
+        <Text
+          style={[styles.caption, fonts?.medium, { color: colors?.primary }]}
+        >
           Back
         </Text>
       </PlatformPressable>

@@ -118,12 +118,12 @@ export function BottomTabViewNative({
 
   const {
     fontFamily = Platform.select({
-      ios: fonts.medium.fontFamily,
-      default: fonts.regular.fontFamily,
+      ios: fonts?.medium.fontFamily,
+      default: fonts?.regular.fontFamily,
     }),
     fontWeight = Platform.select({
-      ios: fonts.medium.fontWeight,
-      default: fonts.regular.fontWeight,
+      ios: fonts?.medium.fontWeight,
+      default: fonts?.regular.fontWeight,
     }),
     fontSize,
     fontStyle,
@@ -131,7 +131,7 @@ export function BottomTabViewNative({
   } = currentOptions.tabBarLabelStyle || {};
 
   const backgroundColor =
-    currentOptions.tabBarStyle?.backgroundColor ?? colors.background;
+    currentOptions.tabBarStyle?.backgroundColor ?? colors?.background;
 
   const shouldHideTabBar = currentOptions.tabBarStyle?.display === 'none';
 
@@ -141,7 +141,7 @@ export function BottomTabViewNative({
 
   // Derive colors based on Material Design guidelines
   // https://m3.material.io/components/navigation-bar/specs
-  if (Platform.OS === 'android') {
+  if (Platform.OS === 'android' && backgroundColor) {
     switch (getAndroidColorName(backgroundColor)) {
       case 'system_surface_container_light':
       case 'system_surface_container_high_light':
@@ -178,14 +178,16 @@ export function BottomTabViewNative({
 
   inactiveTintColor =
     inactiveTintColor ??
-    Platform.select({ ios: PlatformColor('label'), default: colors.text });
+    Platform.select({ ios: PlatformColor('label'), default: colors?.text });
 
-  activeTintColor = activeTintColor ?? colors.primary;
+  activeTintColor = activeTintColor ?? colors?.primary;
 
   activeIndicatorColor =
     activeIndicatorColor ??
     Platform.select({
-      android: Color(activeTintColor)?.alpha(0.075).string(),
+      android: activeTintColor
+        ? Color(activeTintColor)?.alpha(0.075).string()
+        : undefined,
       default: undefined,
     });
 
@@ -341,9 +343,12 @@ export function BottomTabViewNative({
               : getLabel({ label: tabBarLabel, title }, route.name);
 
           const badgeBackgroundColor =
-            tabBarBadgeStyle?.backgroundColor ?? colors.notification;
+            tabBarBadgeStyle?.backgroundColor ?? colors?.notification;
           const badgeTextColor =
-            tabBarBadgeStyle?.color ?? Color.foreground(badgeBackgroundColor);
+            tabBarBadgeStyle?.color ??
+            (badgeBackgroundColor
+              ? Color.foreground(badgeBackgroundColor)
+              : undefined);
 
           const tabItemAppearance: TabsScreenItemStateAppearance = {
             tabBarItemTitleFontFamily: fontFamily,
@@ -468,7 +473,13 @@ export function BottomTabViewNative({
               overrideScrollViewContentInsetAdjustmentBehavior={
                 overrideScrollViewContentInsetAdjustmentBehavior
               }
-              experimental_userInterfaceStyle={dark ? 'dark' : 'light'}
+              experimental_userInterfaceStyle={
+                typeof dark === 'boolean'
+                  ? dark
+                    ? 'dark'
+                    : 'light'
+                  : undefined
+              }
             >
               {lazy &&
               !loaded.includes(route.key) &&

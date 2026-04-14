@@ -418,7 +418,7 @@ const SceneView = ({
         contentStyle={[
           presentation !== 'transparentModal' &&
             presentation !== 'containedTransparentModal' && {
-              backgroundColor: colors.background,
+              backgroundColor: colors?.background,
             },
           contentStyle,
         ]}
