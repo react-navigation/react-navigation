@@ -242,7 +242,13 @@ export function useHeaderConfigProps({
   const headerLargeStyleFlattened = StyleSheet.flatten(headerLargeStyle) || {};
 
   const headerBackgroundColor =
-    headerStyleFlattened.backgroundColor ?? colors?.card;
+    headerStyleFlattened.backgroundColor ??
+    (headerBackground != null ||
+    headerTransparent ||
+    // The title becomes invisible if background color is set with large title on iOS 26
+    (Platform.OS === 'ios' && headerLargeTitleEnabled)
+      ? 'transparent'
+      : colors?.card);
 
   const backTitleFontSize =
     'fontSize' in headerBackTitleStyleFlattened
