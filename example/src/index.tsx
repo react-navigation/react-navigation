@@ -20,7 +20,6 @@ import {
   DefaultTheme,
   MaterialDarkTheme,
   MaterialLightTheme,
-  SystemTheme,
   type Theme,
   useNavigation,
   useNavigationContainerRef,
@@ -93,7 +92,7 @@ if (Platform.OS === 'web') {
   }
 }
 
-type ThemeName = 'light' | 'dark' | 'material' | 'custom' | 'undefined';
+type ThemeName = 'light' | 'dark' | 'material' | 'custom';
 
 type AppState = {
   isReady: boolean;
@@ -148,7 +147,7 @@ function Examples() {
   }, [filter, navigation]);
 
   return (
-    <ScrollView style={{ backgroundColor: theme?.colors?.background }}>
+    <ScrollView style={{ backgroundColor: theme.colors?.background }}>
       <SafeAreaView edges={['right', 'bottom', 'left']}>
         {!filter.length ? (
           <ListGroupItem title="Settings">
@@ -161,7 +160,7 @@ function Examples() {
                     payload: value,
                   })
                 }
-                trackColor={{ true: theme?.colors?.primary }}
+                trackColor={{ true: theme.colors?.primary }}
                 style={{
                   // FIXME: On iOS, switch doesn't center vertically
                   marginVertical: 12,
@@ -177,7 +176,6 @@ function Examples() {
                     { label: 'Material', value: 'material' },
                     { label: 'Light', value: 'light' },
                     { label: 'Dark', value: 'dark' },
-                    { label: 'Undefined', value: 'undefined' },
                   ] as const
                 ).filter((choice) =>
                   Platform.OS !== 'android' ? choice.value !== 'material' : true
@@ -387,22 +385,20 @@ export function App() {
   const isLargeScreen = dimensions.width >= 1024;
 
   const theme =
-    themeName === 'undefined'
-      ? SystemTheme
-      : themeName === 'dark'
-        ? DarkTheme
-        : themeName === 'light'
-          ? DefaultTheme
-          : Platform.OS === 'android' && themeName === 'material'
-            ? colorScheme === 'dark'
-              ? MaterialDarkTheme
-              : MaterialLightTheme
-            : PlatformTheme;
+    themeName === 'dark'
+      ? DarkTheme
+      : themeName === 'light'
+        ? DefaultTheme
+        : Platform.OS === 'android' && themeName === 'material'
+          ? colorScheme === 'dark'
+            ? MaterialDarkTheme
+            : MaterialLightTheme
+          : PlatformTheme;
 
   return (
     <Providers>
       <StatusBar
-        style={Platform.OS === 'ios' ? 'auto' : theme?.dark ? 'light' : 'dark'}
+        style={Platform.OS === 'ios' ? 'auto' : theme.dark ? 'light' : 'dark'}
       />
       {Platform.OS === 'web' ? (
         <style>
