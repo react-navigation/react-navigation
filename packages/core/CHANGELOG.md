@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.10...@react-navigation/core@8.0.0-alpha.11) (2026-04-15)
+
+### Bug Fixes
+
+* handle type inference for query param without pattern ([eebdf4b](https://github.com/react-navigation/react-navigation/commit/eebdf4bcf726b513071b3ed70c2d70f5e03541c6)), closes [#13073](https://github.com/react-navigation/react-navigation/issues/13073) - by @
+
 # [8.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.9...@react-navigation/core@8.0.0-alpha.10) (2026-04-13)
 
 ### Bug Fixes
