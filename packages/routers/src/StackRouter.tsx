@@ -46,6 +46,12 @@ export type StackActionType =
       };
       source?: string | undefined;
       target?: string | undefined;
+    }
+  | {
+      type: 'RETAIN';
+      payload: { enable: boolean };
+      source?: string | undefined;
+      target?: string | undefined;
     };
 
 export type StackRouterOptions = DefaultRouterOptions;
@@ -60,6 +66,13 @@ export type StackNavigationState<ParamList extends ParamListBase> =
      * List of routes, which are supposed to be preloaded before navigating to.
      */
     preloadedRoutes: NavigationRoute<ParamList, keyof ParamList>[];
+    /**
+     * List of route keys to retain in the stack
+     * When a retained route gets removed from the stack,
+     * it'll be treated as preloaded route and not completely removed
+     * So it preserves the route and can be navigated back to
+     */
+    retainedRouteKeys: string[];
   };
 
 export type StackActionHelpers<ParamList extends ParamListBase> = {
@@ -124,6 +137,16 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
           ]
       : never
   ): void;
+
+  /**
+   * Enable or disable retaining the current route in the stack
+   * When a retained route gets removed from the stack,
+   * it'll be treated as preloaded route and not completely removed
+   * So it preserves the route and can be navigated back to
+   *
+   * @param enable Whether to retain the current route in the stack or not.
+   */
+  retain(enable: boolean): void;
 };
 
 export const StackActions = {
@@ -158,7 +181,46 @@ export const StackActions = {
       },
     } as const satisfies StackActionType;
   },
+  retain(enable: boolean) {
+    return {
+      type: 'RETAIN',
+      payload: { enable },
+    } as const satisfies StackActionType;
+  },
 };
+
+function retainRoutes<ParamList extends ParamListBase>(
+  previousState: StackNavigationState<ParamList>,
+  nextState: StackNavigationState<ParamList>
+) {
+  if (!nextState.retainedRouteKeys.length) {
+    return nextState;
+  }
+
+  const retainedRouteKeySet = new Set(nextState.retainedRouteKeys);
+  const nextRouteKeySet = new Set(nextState.routes.map((route) => route.key));
+  const retainedRoutes = previousState.routes.filter(
+    (route) =>
+      retainedRouteKeySet.has(route.key) && !nextRouteKeySet.has(route.key)
+  );
+
+  if (!retainedRoutes.length) {
+    return nextState;
+  }
+
+  const removedRetainedRouteKeys = new Set(
+    retainedRoutes.map((route) => route.key)
+  );
+
+  return {
+    ...nextState,
+    preloadedRoutes: retainedRoutes.concat(
+      nextState.preloadedRoutes.filter(
+        (route) => !removedRetainedRouteKeys.has(route.key)
+      )
+    ),
+  };
+}
 
 export function StackRouter(options: StackRouterOptions) {
   const router: Router<
@@ -183,6 +245,7 @@ export function StackRouter(options: StackRouterOptions) {
         index: 0,
         routeNames,
         preloadedRoutes: [],
+        retainedRouteKeys: [],
         routes: [
           {
             key: `${initialRouteName}-${nanoid()}`,
@@ -232,6 +295,11 @@ export function StackRouter(options: StackRouterOptions) {
               }) as Route<string>
           ) ?? [];
 
+      const retainedRouteKeys =
+        state.retainedRouteKeys?.filter((key) =>
+          [...routes, ...preloadedRoutes].some((route) => route.key === key)
+        ) ?? [];
+
       if (routes.length === 0) {
         const initialRouteName =
           options.initialRouteName !== undefined
@@ -253,6 +321,7 @@ export function StackRouter(options: StackRouterOptions) {
         routeNames,
         routes,
         preloadedRoutes,
+        retainedRouteKeys,
       };
     },
 
@@ -261,6 +330,12 @@ export function StackRouter(options: StackRouterOptions) {
       { routeNames, routeParamList, routeKeyChanges }
     ) {
       const routes = state.routes.filter(
+        (route) =>
+          routeNames.includes(route.name) &&
+          !routeKeyChanges.includes(route.name)
+      );
+
+      const preloadedRoutes = state.preloadedRoutes.filter(
         (route) =>
           routeNames.includes(route.name) &&
           !routeKeyChanges.includes(route.name)
@@ -280,10 +355,20 @@ export function StackRouter(options: StackRouterOptions) {
         });
       }
 
+      const routeKeys = new Set(
+        [...routes, ...preloadedRoutes].map((route) => route.key)
+      );
+
+      const retainedRouteKeys = state.retainedRouteKeys.filter((key) =>
+        routeKeys.has(key)
+      );
+
       return {
         ...state,
         routeNames,
         routes,
+        preloadedRoutes,
+        retainedRouteKeys,
         index: Math.min(state.index, routes.length - 1),
       };
     },
@@ -295,11 +380,11 @@ export function StackRouter(options: StackRouterOptions) {
         return state;
       }
 
-      return {
+      return retainRoutes(state, {
         ...state,
         index,
         routes: state.routes.slice(0, index + 1),
-      };
+      });
     },
 
     getStateForAction(state, action, options) {
@@ -334,7 +419,7 @@ export function StackRouter(options: StackRouterOptions) {
             route = createRouteFromAction({ action, routeParamList });
           }
 
-          return {
+          return retainRoutes(state, {
             ...state,
             routes: state.routes.map((r, i) =>
               i === currentIndex ? route : r
@@ -342,7 +427,7 @@ export function StackRouter(options: StackRouterOptions) {
             preloadedRoutes: state.preloadedRoutes.filter(
               (r) => r.key !== route.key
             ),
-          };
+          });
         }
 
         case 'PUSH':
@@ -482,14 +567,14 @@ export function StackRouter(options: StackRouterOptions) {
             ];
           }
 
-          return {
+          return retainRoutes(state, {
             ...state,
             index: routes.length - 1,
             preloadedRoutes: state.preloadedRoutes.filter(
               (route) => routes[routes.length - 1].key !== route.key
             ),
             routes,
-          };
+          });
         }
 
         case 'POP': {
@@ -547,11 +632,11 @@ export function StackRouter(options: StackRouterOptions) {
               }
             }
 
-            return {
+            return retainRoutes(state, {
               ...state,
               index: routes.length - 1,
               routes,
-            };
+            });
           }
 
           return null;
@@ -568,11 +653,11 @@ export function StackRouter(options: StackRouterOptions) {
               };
             }
 
-            return {
+            return retainRoutes(state, {
               ...state,
               index: 0,
               routes: [route],
-            };
+            });
           }
 
           return null;
@@ -655,14 +740,14 @@ export function StackRouter(options: StackRouterOptions) {
 
             const routes = state.routes.slice(0, currentIndex).concat(route);
 
-            return {
+            return retainRoutes(state, {
               ...state,
               index: routes.length - 1,
               routes,
               preloadedRoutes: state.preloadedRoutes.filter(
                 (r) => r.key !== route.key
               ),
-            };
+            });
           }
 
           const route = state.routes[index];
@@ -691,7 +776,7 @@ export function StackRouter(options: StackRouterOptions) {
             params = createParamsFromAction({ action, routeParamList });
           }
 
-          return {
+          return retainRoutes(state, {
             ...state,
             index,
             routes: [
@@ -700,7 +785,7 @@ export function StackRouter(options: StackRouterOptions) {
                 ? { ...route, params, history }
                 : state.routes[index],
             ],
-          };
+          });
         }
 
         case 'GO_BACK':
@@ -718,6 +803,42 @@ export function StackRouter(options: StackRouterOptions) {
           }
 
           return null;
+
+        case 'RETAIN': {
+          const routeKey = action.source ?? state.routes[state.index].key;
+
+          if (
+            !state.routes.some((route) => route.key === routeKey) &&
+            !state.preloadedRoutes.some((route) => route.key === routeKey)
+          ) {
+            return null;
+          }
+
+          if (action.payload.enable) {
+            if (state.retainedRouteKeys.includes(routeKey)) {
+              return state;
+            }
+
+            return {
+              ...state,
+              retainedRouteKeys: [...state.retainedRouteKeys, routeKey],
+            };
+          }
+
+          if (!state.retainedRouteKeys.includes(routeKey)) {
+            return state;
+          }
+
+          return {
+            ...state,
+            preloadedRoutes: state.preloadedRoutes.filter(
+              (route) => route.key !== routeKey
+            ),
+            retainedRouteKeys: state.retainedRouteKeys.filter(
+              (key) => key !== routeKey
+            ),
+          };
+        }
 
         case 'PRELOAD': {
           const getId = options.routeGetIdList[action.payload.name];
