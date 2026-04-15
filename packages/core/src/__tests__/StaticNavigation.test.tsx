@@ -77,6 +77,7 @@ type TestNavigatorTypeBag<ParamList extends {}> = {
     [RouteName in keyof ParamList]: unknown;
   };
   Navigator: typeof TestNavigator;
+  RouteExtras: {};
 };
 
 function createTestNavigator<

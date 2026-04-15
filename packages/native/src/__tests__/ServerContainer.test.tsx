@@ -74,6 +74,7 @@ test('renders correct state with location', () => {
     EventMap: {};
     NavigationList: NavigationListBase<ParamList>;
     Navigator: typeof StackNavigator;
+    RouteExtras: {};
   }> {
     return createNavigatorFactory(StackNavigator)();
   }

@@ -2,6 +2,7 @@ import {
   createNavigatorFactory,
   type DrawerActionHelpers,
   type DrawerNavigationState,
+  type DrawerRouteExtras,
   DrawerRouter,
   type DrawerRouterOptions,
   type ParamListBase,
@@ -77,6 +78,7 @@ type DrawerTypeBag<ParamList extends {}> = {
     [RouteName in keyof ParamList]: DrawerNavigationProp<ParamList, RouteName>;
   };
   Navigator: typeof DrawerNavigator;
+  RouteExtras: DrawerRouteExtras;
 };
 
 export function createDrawerNavigator<
@@ -102,7 +104,8 @@ export function createDrawerScreen<
     DrawerNavigationOptions,
     DrawerNavigationEventMap,
     DrawerNavigationProp<ParamListBase>
-  >
+  > &
+    DrawerRouteExtras
 ) {
   return config;
 }

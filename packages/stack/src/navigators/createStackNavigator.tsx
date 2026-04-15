@@ -5,6 +5,7 @@ import {
   type StackActionHelpers,
   StackActions,
   type StackNavigationState,
+  type StackRouteExtras,
   StackRouter,
   type StackRouterOptions,
   type StaticConfig,
@@ -105,6 +106,7 @@ type StackTypeBag<ParamList extends {}> = {
     [RouteName in keyof ParamList]: StackNavigationProp<ParamList, RouteName>;
   };
   Navigator: typeof StackNavigator;
+  RouteExtras: StackRouteExtras;
 };
 
 export function createStackNavigator<
@@ -130,7 +132,8 @@ export function createStackScreen<
     StackNavigationOptions,
     StackNavigationEventMap,
     StackNavigationProp<ParamListBase>
-  >
+  > &
+    StackRouteExtras
 ) {
   return config;
 }

@@ -8,6 +8,7 @@ import {
   type StaticScreenConfigScreen,
   type TabActionHelpers,
   type TabNavigationState,
+  type TabRouteExtras,
   TabRouter,
   type TabRouterOptions,
   type TypedNavigator,
@@ -77,6 +78,7 @@ type BottomTabTypeBag<ParamList extends {}> = {
     >;
   };
   Navigator: typeof BottomTabNavigator;
+  RouteExtras: TabRouteExtras;
 };
 
 export function createBottomTabNavigator<
@@ -105,7 +107,8 @@ export function createBottomTabScreen<
     BottomTabNavigationOptions,
     BottomTabNavigationEventMap,
     BottomTabNavigationProp<ParamListBase>
-  >
+  > &
+    TabRouteExtras
 ) {
   return config;
 }

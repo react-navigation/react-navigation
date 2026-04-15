@@ -63,6 +63,22 @@ type NavigatorRoute = {
   params?: NavigatorScreenParams<ParamListBase> | undefined;
 };
 
+// Props recognized by `Screen` directly. Any prop on a `Screen` that isn't in
+// this set is treated as a route extra and is forwarded to the router via
+// `routeExtrasList`.
+const KNOWN_SCREEN_PROPS = new Set([
+  'name',
+  'navigationKey',
+  'options',
+  'listeners',
+  'layout',
+  'getId',
+  'initialParams',
+  'component',
+  'getComponent',
+  'children',
+]);
+
 const isScreen = (
   child: React.ReactElement<unknown>
 ): child is React.ReactElement<{
@@ -411,6 +427,19 @@ export function useNavigationBuilder<
       }),
     {}
   );
+  const routeExtrasList = routeNames.reduce<
+    NonNullable<RouterConfigOptions['routeExtrasList']>
+  >((acc, curr) => {
+    const extra = Object.fromEntries(
+      Object.entries(screens[curr].props).filter(
+        ([key]) => !KNOWN_SCREEN_PROPS.has(key)
+      )
+    );
+
+    acc[curr] = Object.keys(extra).length > 0 ? extra : undefined;
+
+    return acc;
+  }, {});
 
   if (!routeNames.length) {
     throw new Error(
@@ -493,6 +522,7 @@ export function useNavigationBuilder<
             routeNames,
             routeParamList,
             routeGetIdList,
+            routeExtrasList,
           });
 
       return [undefined, state, false, undefined];
@@ -539,6 +569,7 @@ export function useNavigationBuilder<
           routeNames,
           routeParamList: initialRouteParamList,
           routeGetIdList,
+          routeExtrasList,
         }),
         true,
         undefined,
@@ -559,11 +590,13 @@ export function useNavigationBuilder<
               routeNames,
               routeParamList: initialRouteParamList,
               routeGetIdList,
+              routeExtrasList,
             })
           : router.getRehydratedState(stateBeforeInitialization, {
               routeNames,
               routeParamList: initialRouteParamList,
               routeGetIdList,
+              routeExtrasList,
             });
 
       if (
@@ -633,6 +666,7 @@ export function useNavigationBuilder<
         routeNames,
         routeParamList,
         routeGetIdList,
+        routeExtrasList,
       }
     );
   } else if (
@@ -644,6 +678,7 @@ export function useNavigationBuilder<
       routeNames,
       routeParamList,
       routeGetIdList,
+      routeExtrasList,
       routeKeyChanges: Object.keys(routeKeyList).filter(
         (name) =>
           name in previousRouteKeyList &&
@@ -709,6 +744,7 @@ export function useNavigationBuilder<
           routeNames,
           routeParamList,
           routeGetIdList,
+          routeExtrasList,
         })
       : null;
 
@@ -718,6 +754,7 @@ export function useNavigationBuilder<
             routeNames,
             routeParamList,
             routeGetIdList,
+            routeExtrasList,
           })
         : nextState;
   }
@@ -893,6 +930,7 @@ export function useNavigationBuilder<
       routeNames,
       routeParamList,
       routeGetIdList,
+      routeExtrasList,
     },
     emitter,
   });

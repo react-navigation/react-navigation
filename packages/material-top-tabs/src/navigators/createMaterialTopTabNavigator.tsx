@@ -8,6 +8,7 @@ import {
   type StaticScreenConfigScreen,
   type TabActionHelpers,
   type TabNavigationState,
+  type TabRouteExtras,
   TabRouter,
   type TabRouterOptions,
   type TypedNavigator,
@@ -77,6 +78,7 @@ type MaterialTopTabTypeBag<ParamList extends {}> = {
     >;
   };
   Navigator: typeof MaterialTopTabNavigator;
+  RouteExtras: TabRouteExtras;
 };
 
 export function createMaterialTopTabNavigator<
@@ -105,7 +107,8 @@ export function createMaterialTopTabScreen<
     MaterialTopTabNavigationOptions,
     MaterialTopTabNavigationEventMap,
     MaterialTopTabNavigationProp<ParamListBase>
-  >
+  > &
+    TabRouteExtras
 ) {
   return config;
 }

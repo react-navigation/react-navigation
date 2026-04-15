@@ -6,6 +6,7 @@ import {
   type StackActionHelpers,
   StackActions,
   type StackNavigationState,
+  type StackRouteExtras,
   StackRouter,
   type StackRouterOptions,
   type StaticConfig,
@@ -111,6 +112,7 @@ type NativeStackTypeBag<ParamList extends {}> = {
     >;
   };
   Navigator: typeof NativeStackNavigator;
+  RouteExtras: StackRouteExtras;
 };
 
 export function createNativeStackNavigator<
@@ -139,7 +141,8 @@ export function createNativeStackScreen<
     NativeStackNavigationOptions,
     NativeStackNavigationEventMap,
     NativeStackNavigationProp<ParamListBase>
-  >
+  > &
+    StackRouteExtras
 ) {
   return config;
 }

@@ -1179,6 +1179,7 @@ export type NavigatorTypeBagBase = {
   EventMap: {};
   NavigationList: NavigationListBase<ParamListBase>;
   Navigator: React.ComponentType<any>;
+  RouteExtras: {};
 };
 
 type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
@@ -1191,7 +1192,8 @@ type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
           Bag['ScreenOptions'],
           Bag['EventMap'],
           Bag['NavigationList'],
-          Bag['Navigator']
+          Bag['Navigator'],
+          Bag['RouteExtras']
         >['Navigator']
       >,
       'children'
@@ -1223,7 +1225,8 @@ export type TypedNavigator<
       Bag['ScreenOptions'],
       Bag['EventMap'],
       Bag['NavigationList'],
-      Bag['Navigator']
+      Bag['Navigator'],
+      Bag['RouteExtras']
     >
   : TypedNavigatorStatic<Bag, Config>) &
   PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
@@ -1235,6 +1238,7 @@ type TypedNavigatorInternal<
   EventMap extends EventMapBase,
   NavigationList extends NavigationListBase<ParamList>,
   Navigator extends React.ComponentType<any>,
+  RouteExtras extends {},
 > = {
   /**
    * Navigator component which manages the child screens.
@@ -1269,7 +1273,8 @@ type TypedNavigatorInternal<
       ScreenOptions,
       EventMap,
       NavigationList[RouteName]
-    >
+    > &
+      RouteExtras
   ) => null;
 };
 

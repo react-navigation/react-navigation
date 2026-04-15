@@ -39,6 +39,7 @@ export function createStackNavigator<
   EventMap: {};
   NavigationList: NavigationListBase<ParamList>;
   Navigator: typeof StackNavigator;
+  RouteExtras: {};
 }> {
   return createNavigatorFactory(StackNavigator)();
 }

@@ -152,7 +152,29 @@ export type RouterConfigOptions = {
       }) => string | undefined)
     | undefined
   >;
+  routeExtrasList?: Record<string, object | undefined>;
 };
+
+/**
+ * Extra route config that can be set on `Screen` in a stack navigator.
+ * This allows declaring per-screen props specific to the stack router
+ * in addition to the standard ones like `name`, `options` etc.
+ */
+export type StackRouteExtras = {};
+
+/**
+ * Extra route config that can be set on `Screen` in a tab navigator.
+ * This allows declaring per-screen props specific to the tab router
+ * in addition to the standard ones like `name`, `options` etc.
+ */
+export type TabRouteExtras = {};
+
+/**
+ * Extra route config that can be set on `Screen` in a drawer navigator.
+ * This allows declaring per-screen props specific to the drawer router
+ * in addition to the standard ones like `name`, `options` etc.
+ */
+export type DrawerRouteExtras = {};
 
 export type Router<
   State extends NavigationState,

@@ -349,11 +349,12 @@ type StaticConfigScreens<
   ScreenOptions extends {},
   EventMap extends EventMapBase,
   NavigationList extends NavigationListBase<ParamList>,
+  RouteExtras extends {},
 > = {
   [RouteName in keyof ParamList]:
     | React.ComponentType<any>
     | StaticNavigation<any>
-    | StaticScreenConfig<
+    | (StaticScreenConfig<
         | {
             path: string;
             parse?: Record<
@@ -369,7 +370,8 @@ type StaticConfigScreens<
         EventMap,
         NavigationList[RouteName],
         any
-      >;
+      > &
+        RouteExtras);
 };
 
 type StaticConfigGroup<
@@ -378,6 +380,7 @@ type StaticConfigGroup<
   ScreenOptions extends {},
   EventMap extends EventMapBase,
   NavigationList extends NavigationListBase<ParamList>,
+  RouteExtras extends {},
 > = Omit<
   RouteGroupConfig<ParamList, ScreenOptions, NavigationList[keyof ParamList]>,
   'screens' | 'children'
@@ -416,7 +419,8 @@ type StaticConfigGroup<
     State,
     ScreenOptions,
     EventMap,
-    NavigationList
+    NavigationList,
+    RouteExtras
   >;
 };
 
@@ -427,7 +431,8 @@ export type StaticConfig<Bag extends NavigatorTypeBagBase> =
     Bag['ScreenOptions'],
     Bag['EventMap'],
     Bag['NavigationList'],
-    Bag['Navigator']
+    Bag['Navigator'],
+    Bag['RouteExtras']
   >;
 
 type StaticConfigInternal<
@@ -437,6 +442,7 @@ type StaticConfigInternal<
   EventMap extends EventMapBase,
   NavigationList extends NavigationListBase<ParamList>,
   Navigator extends React.ComponentType<any>,
+  RouteExtras extends {},
 > = Omit<
   Omit<
     React.ComponentProps<Navigator>,
@@ -467,7 +473,8 @@ type StaticConfigInternal<
           State,
           ScreenOptions,
           EventMap,
-          NavigationList
+          NavigationList,
+          RouteExtras
         >;
         /**
          * Groups of screens to render in the navigator and their configuration.
@@ -478,7 +485,8 @@ type StaticConfigInternal<
             State,
             ScreenOptions,
             EventMap,
-            NavigationList
+            NavigationList,
+            RouteExtras
           >;
         };
       }
@@ -491,7 +499,8 @@ type StaticConfigInternal<
           State,
           ScreenOptions,
           EventMap,
-          NavigationList
+          NavigationList,
+          RouteExtras
         >;
         /**
          * Groups of screens to render in the navigator and their configuration.
@@ -502,7 +511,8 @@ type StaticConfigInternal<
             State,
             ScreenOptions,
             EventMap,
-            NavigationList
+            NavigationList,
+            RouteExtras
           >;
         };
       }
@@ -548,7 +558,7 @@ MemoizedScreen.displayName = 'Memo(Screen)';
 
 const getItemsFromScreens = (
   Screen: React.ComponentType<any>,
-  screens: StaticConfigScreens<any, any, any, any, any>
+  screens: StaticConfigScreens<any, any, any, any, any, {}>
 ) => {
   return Object.entries(screens).map(([name, item]) => {
     let component: React.ComponentType<any> | undefined;
@@ -730,7 +740,8 @@ type TreeForPathConfig = {
       NavigationState,
       {},
       EventMapBase,
-      Record<string, unknown>
+      Record<string, unknown>,
+      {}
     >;
     groups?: {
       [key: string]: {
@@ -740,7 +751,8 @@ type TreeForPathConfig = {
           NavigationState,
           {},
           EventMapBase,
-          Record<string, unknown>
+          Record<string, unknown>,
+          {}
         >;
       };
     };
@@ -789,7 +801,8 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
         NavigationState,
         {},
         EventMapBase,
-        Record<string, unknown>
+        Record<string, unknown>,
+        {}
       >,
       groupLinking: LinkingForGroup | undefined,
       initialRouteName: string | undefined
