@@ -21,12 +21,9 @@ import type {
 import { useRoute } from './useRoute';
 import type {
   AnyToUnknown,
-  ExtractParamStrings,
-  ExtractParamsType,
   FlatType,
   HasArguments,
-  InferParse,
-  InferPath,
+  InferParamsFromLinking,
   KeysOf,
   StandardSchemaV1,
   UnionToIntersection,
@@ -75,14 +72,20 @@ type ParamsForScreen<T> =
         ? ParamsForScreenComponent<T['screen']>
         : ParamsForScreenComponent<T>;
 
-type ParamsForLinking<Linking> = Linking extends { path: string }
-  ? ExtractParamsType<
-      ExtractParamStrings<InferPath<Linking>>,
-      InferParse<Linking>
-    >
-  : Linking extends string
-    ? ExtractParamsType<ExtractParamStrings<Linking>, undefined>
-    : undefined;
+// Only infer params from linking if it's a pattern (i.e., contains ':')
+// or if parse is present for query params.
+// This avoids inferring non-literals like 'string' without parse.
+type ShouldInferFromLinking<Linking> = Linking extends
+  | ValidPathPattern
+  | { path: ValidPathPattern }
+  | { parse: Record<string, unknown> }
+  ? true
+  : false;
+
+type MergeLinkingAndScreenParams<LinkingParams, ScreenParams> =
+  undefined extends ScreenParams
+    ? FlatType<LinkingParams>
+    : FlatType<LinkingParams & ScreenParams>;
 
 /**
  * Inferred params type based on both linking config and screen.
@@ -92,16 +95,13 @@ type ParamsForLinking<Linking> = Linking extends { path: string }
  */
 type ParamsForConfig<Linking, Screen> = undefined extends Linking
   ? ParamsForScreen<Screen>
-  : // Only infer params from linking if it's a pattern (i.e., contains ':')
-    // This avoids inferring non-literals like 'string'
-    Linking extends ValidPathPattern | { path: ValidPathPattern }
+  : ShouldInferFromLinking<Linking> extends true
     ? Screen extends { config: StaticConfig<NavigatorTypeBagBase> }
-      ? FlatType<ParamsForLinking<Linking>> & ParamsForScreen<Screen>
-      : // Don't combine if `undefined`, otherwise it'll result in `never`
-        undefined extends ParamsForScreen<Screen>
-        ? // Only flatten when not a navigator to keep it legible
-          FlatType<ParamsForLinking<Linking>>
-        : FlatType<ParamsForLinking<Linking> & ParamsForScreen<Screen>>
+      ? FlatType<InferParamsFromLinking<Linking>> & ParamsForScreen<Screen>
+      : MergeLinkingAndScreenParams<
+          InferParamsFromLinking<Linking>,
+          ParamsForScreen<Screen>
+        >
     : ParamsForScreen<Screen>;
 
 type ParamListForScreens<Screens> = {

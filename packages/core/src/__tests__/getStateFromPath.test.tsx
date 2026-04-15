@@ -3074,6 +3074,120 @@ test("doesn't overwrite path param with same-named query param", () => {
   });
 });
 
+test("doesn't use same-named query param when optional path param is missing with function parser", () => {
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:query?',
+        parse: {
+          query: (value: string) => value.toUpperCase(),
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo?query=test', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { query: undefined },
+        path: 'foo?query=test',
+      },
+    ],
+  });
+});
+
+test("doesn't use same-named query param when optional path param is missing with schema parser", () => {
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:query?',
+        parse: {
+          query: z.string(),
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo?query=test', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { query: undefined },
+        path: 'foo?query=test',
+      },
+    ],
+  });
+});
+
+test('keeps params object when optional path param is missing with optional function query parser', () => {
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id?',
+        parse: {
+          query: (value: string) => value.toUpperCase(),
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: undefined },
+        path: 'foo',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo?query=test', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: undefined, query: 'TEST' },
+        path: 'foo?query=test',
+      },
+    ],
+  });
+});
+
+test('keeps params object when optional path param is missing with optional schema query parser', () => {
+  const QuerySchema = z.string().startsWith('@').optional();
+
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo/:id?',
+        parse: {
+          query: QuerySchema,
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: undefined },
+        path: 'foo',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('foo?query=@ok', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: undefined, query: '@ok' },
+        path: 'foo?query=@ok',
+      },
+    ],
+  });
+});
+
 test('falls back to next pattern when required query param is missing', () => {
   const QuerySchema = z.string().startsWith('@');
 
@@ -3217,6 +3331,35 @@ test('uses optional schema default for missing query param', () => {
         name: 'Foo',
         params: { id: 42, query: '@fallback' },
         path: 'foo/42',
+      },
+    ],
+  });
+});
+
+test('uses optional schema default for missing query param with no path params', () => {
+  const QuerySchema = z
+    .string()
+    .startsWith('@')
+    .optional()
+    .default('@fallback');
+
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        parse: {
+          query: QuerySchema,
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('foo', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { query: '@fallback' },
+        path: 'foo',
       },
     ],
   });

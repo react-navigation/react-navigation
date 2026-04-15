@@ -35,6 +35,16 @@ export type NotUndefined<T> = T extends undefined ? never : T;
 
 export type AnyToUnknown<T> = 0 extends 1 & T ? unknown : T;
 
+export type RequiredKeys<T extends object> = {
+  [K in keyof T]-?: {} extends Pick<T, K> ? never : K;
+}[keyof T];
+
+export type UndefinedIfAllOptional<T> = T extends object
+  ? RequiredKeys<T> extends never
+    ? T | undefined
+    : T
+  : T;
+
 /**
  * Check if a function type has arguments.
  */
@@ -168,6 +178,18 @@ export type InferPath<T> = T extends { path: infer P extends string }
  * Infer the parse functions from a linking config.
  */
 export type InferParse<T> = T extends { parse: infer P } ? P : {};
+
+export type InferParamsFromLinking<T> = T extends {
+  path: infer P extends string;
+}
+  ? UndefinedIfAllOptional<
+      ExtractParamsType<ExtractParamStrings<P>, InferParse<T>>
+    >
+  : T extends string
+    ? UndefinedIfAllOptional<
+        ExtractParamsType<ExtractParamStrings<T>, undefined>
+      >
+    : undefined;
 
 /**
  * Infer the params type from a screen component or nested navigator.

@@ -1317,6 +1317,25 @@ createStackNavigator({
         return {};
       },
     }),
+    QueryParamOnlyFunctionParser: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-function-only',
+        parse: {
+          query: (value: string) => (value === 'new' ? 'new' : 'top'),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<
+          | {
+              query?: 'new' | 'top';
+            }
+          | undefined
+        >();
+
+        return {};
+      },
+    }),
     QueryParamOptionalSchema: createStackScreen({
       screen: () => null,
       linking: {
@@ -1347,6 +1366,97 @@ createStackNavigator({
       options: ({ route }) => {
         expectTypeOf(route.params).toEqualTypeOf<{
           id: number;
+          query: string;
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamOnlySchema: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-only',
+        parse: {
+          query: z.string(),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
+          query: string;
+        }>();
+
+        return {};
+      },
+    }),
+    QueryParamOnlyOptionalSchema: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-only-optional',
+        parse: {
+          query: z.string().optional(),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<
+          | {
+              query?: string;
+            }
+          | undefined
+        >();
+
+        return {};
+      },
+    }),
+    OptionalPathAndQueryFunctionParser: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-function-optional/:id?',
+        parse: {
+          query: (value: string) => (value === 'new' ? 'new' : 'top'),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<
+          | {
+              id?: string;
+              query?: 'new' | 'top';
+            }
+          | undefined
+        >();
+
+        return {};
+      },
+    }),
+    OptionalPathAndQueryOptionalSchema: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-schema-optional/:id?',
+        parse: {
+          query: z.string().optional(),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<
+          | {
+              id?: string;
+              query?: string | undefined;
+            }
+          | undefined
+        >();
+
+        return {};
+      },
+    }),
+    QueryParamOnlyDefaultSchema: createStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'query-param-default-only',
+        parse: {
+          query: z.string().optional().default('fallback'),
+        },
+      },
+      options: ({ route }) => {
+        expectTypeOf(route.params).toEqualTypeOf<{
           query: string;
         }>();
 
@@ -1386,9 +1496,12 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          id?: string;
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          | {
+              id?: string;
+            }
+          | undefined
+        >();
 
         return {};
       },
@@ -1788,9 +1901,12 @@ createStackScreen({
   screen: () => null,
   linking: '/:start?',
   options: ({ route }) => {
-    expectTypeOf(route.params).toEqualTypeOf<{
-      start?: string;
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      | {
+          start?: string;
+        }
+      | undefined
+    >();
 
     return {};
   },
@@ -1824,9 +1940,12 @@ createStackScreen({
   screen: () => null,
   linking: 'static/:optional?/path',
   options: ({ route }) => {
-    expectTypeOf(route.params).toEqualTypeOf<{
-      optional?: string;
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      | {
+          optional?: string;
+        }
+      | undefined
+    >();
 
     return {};
   },
@@ -1862,9 +1981,12 @@ createStackScreen({
   screen: () => null,
   linking: 'static/:optionalRegex([a-z]+)?/path',
   options: ({ route }) => {
-    expectTypeOf(route.params).toEqualTypeOf<{
-      optionalRegex?: string;
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      | {
+          optionalRegex?: string;
+        }
+      | undefined
+    >();
 
     return {};
   },
