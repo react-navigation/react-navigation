@@ -18,15 +18,20 @@ import type { Thenable } from './useThenable';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
+const getRoutesUntilIndex = (state: NavigationState) =>
+  state.routes.slice(0, state.index + 1);
+
 /**
  * Calculate total history length including both navigator history and route history
  */
 const getTotalHistoryLength = (state: NavigationState): number => {
+  const routes = getRoutesUntilIndex(state);
+
   const baseHistoryLength = state.history
     ? state.history.length
-    : state.routes.length;
+    : routes.length;
 
-  const routeHistoryLength = state.routes.reduce((acc, r) => {
+  const routeHistoryLength = routes.reduce((acc, r) => {
     return acc + (r.history ? r.history.length : 0);
   }, 0);
 
@@ -72,6 +77,39 @@ const findMatchingState = <T extends NavigationState>(
   }
 
   return findMatchingState(aChildState, bChildState);
+};
+
+/**
+ * Check if the state change is popping the last route or history entry.
+ */
+const isPoppingLastEntry = (
+  current: NavigationState,
+  record: NavigationState
+): boolean => {
+  const currentRoute = current.routes[current.index];
+  const recordRoute = record.routes[record.index];
+  const currentRouteHistory = currentRoute.history;
+  const recordRouteHistory = recordRoute.history ?? [];
+
+  if (currentRouteHistory?.length) {
+    return (
+      currentRoute.key === recordRoute.key &&
+      currentRouteHistory.length === recordRouteHistory.length + 1
+    );
+  }
+
+  if (current.history && record.history) {
+    return current.history.length === record.history.length + 1;
+  }
+
+  const currentRoutes = getRoutesUntilIndex(current);
+  const recordRoutes = getRoutesUntilIndex(record);
+
+  if (currentRoutes.length === recordRoutes.length + 1) {
+    return recordRoutes.every((route, i) => route.key === currentRoutes[i].key);
+  }
+
+  return false;
 };
 
 /**
@@ -219,7 +257,27 @@ export function useLinking<ParamList extends ParamListBase>(
       const record = history.get(index);
 
       if (record?.path === path && record?.state) {
-        navigation.resetRoot(record.state);
+        const currentState = navigation.getRootState();
+
+        const [currentFocused, recordFocused] = findMatchingState(
+          currentState,
+          record.state
+        );
+
+        if (
+          previousIndex - index === 1 &&
+          currentFocused &&
+          recordFocused &&
+          isPoppingLastEntry(currentFocused, recordFocused)
+        ) {
+          // If we detect that the state change is popping the last entry
+          // Dispatch a back action instead of resetting to the state
+          // This makes sure changes to history state since the entry was added don't get lost
+          navigation.goBack();
+        } else {
+          navigation.resetRoot(record.state);
+        }
+
         return;
       }
 
@@ -335,6 +393,7 @@ export function useLinking<ParamList extends ParamListBase>(
         }
 
         history.replace({ path, state });
+        previousIndexRef.current = history.index;
       }
     }
 
@@ -420,6 +479,8 @@ export function useLinking<ParamList extends ParamListBase>(
         // This would happen if the user did a reset/conditionally changed navigators
         history.replace({ path, state });
       }
+
+      previousIndexRef.current = history.index;
     };
 
     // We debounce onStateChange coz we don't want multiple state changes to be handled at one time
