@@ -203,6 +203,15 @@ export type StaticScreenConfigLinking =
        * Additional path alias that will be matched to the same screen.
        */
       alias?: (string | StaticScreenConfigLinkingAlias)[];
+      /**
+       * Name of the initial route to use for the nested navigator when the path matches.
+       */
+      initialRouteName?: string | undefined;
+      /**
+       * Path configuration for child screens in the nested navigator.
+       * Only supported when the screen renders a navigator with dynamic API.
+       */
+      screens?: PathConfigMap<ParamListBase> | undefined;
     })
   | undefined;
 
