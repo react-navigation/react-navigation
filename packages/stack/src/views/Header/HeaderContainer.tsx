@@ -61,7 +61,6 @@ export function HeaderContainer({
           header,
           headerMode,
           headerShown = true,
-          headerTransparent,
           headerStyleInterpolator,
         } = scene.descriptor.options;
 
@@ -160,9 +159,7 @@ export function HeaderContainer({
               style={[
                 // Avoid positioning the focused header absolutely
                 // Otherwise accessibility tools don't seem to be able to find it
-                (mode === 'float' && !isFocused) || headerTransparent
-                  ? styles.header
-                  : null,
+                mode === 'float' && !isFocused ? styles.header : null,
                 {
                   pointerEvents: isFocused ? 'box-none' : 'none',
                 },
