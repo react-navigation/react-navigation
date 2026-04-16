@@ -258,6 +258,39 @@ export function getAnimationEnabled(animation: StackAnimationName | undefined) {
   return getDefaultAnimation(animation) !== 'none';
 }
 
+const getAllRoutes = (
+  routes: Route<string>[],
+  preloadedRoutes: Route<string>[]
+) => {
+  const routeKeys = new Set(routes.map((route) => route.key));
+
+  // If a route is moved from `state.routes` to `state.preloadedRoutes`,
+  // It can still be in the local copy of `routes` until the animation ends
+  // So we need to deduplicate the routes to avoid rendering the same route twice
+  return [
+    ...routes,
+    ...preloadedRoutes.filter((route) => !routeKeys.has(route.key)),
+  ];
+};
+
+const isPreloadedRoute = (
+  route: Route<string>,
+  props: {
+    routes: Route<string>[];
+    state: StackNavigationState<ParamListBase>;
+  }
+) => {
+  // The route can be in both `routes` and `preloadedRoutes` until the animation ends
+  // Treat it as not preloaded, similar to how removed routes are treated until the animation ends
+  if (props.routes.some((currentRoute) => currentRoute.key === route.key)) {
+    return false;
+  }
+
+  return props.state.preloadedRoutes.some(
+    (currentRoute) => currentRoute.key === route.key
+  );
+};
+
 export class CardStack extends React.Component<Props, State> {
   static getDerivedStateFromProps(
     props: Props,
@@ -270,10 +303,9 @@ export class CardStack extends React.Component<Props, State> {
       return null;
     }
 
-    const gestures = [
-      ...props.routes,
-      ...props.state.preloadedRoutes,
-    ].reduce<GestureValues>((acc, curr) => {
+    const allRoutes = getAllRoutes(props.routes, props.state.preloadedRoutes);
+
+    const gestures = allRoutes.reduce<GestureValues>((acc, curr) => {
       const descriptor = props.descriptors[curr.key];
       const { animation } = descriptor?.options || {};
 
@@ -282,7 +314,7 @@ export class CardStack extends React.Component<Props, State> {
         new Animated.Value(
           (props.openingRouteKeys.includes(curr.key) &&
             getAnimationEnabled(animation)) ||
-            props.state.preloadedRoutes.includes(curr)
+            isPreloadedRoute(curr, props)
             ? getDistanceFromOptions(
                 state.layout,
                 descriptor?.options,
@@ -294,171 +326,164 @@ export class CardStack extends React.Component<Props, State> {
       return acc;
     }, {});
 
-    const modalRouteKeys = getModalRouteKeys(
-      [...props.routes, ...props.state.preloadedRoutes],
-      props.descriptors
-    );
+    const modalRouteKeys = getModalRouteKeys(allRoutes, props.descriptors);
 
-    const scenes = [...props.routes, ...props.state.preloadedRoutes].map(
-      (route, index, self) => {
-        // For preloaded screens, we don't care about the previous and the next screen
-        const isPreloaded = props.state.preloadedRoutes.includes(route);
-        const previousRoute = isPreloaded ? undefined : self[index - 1];
-        const nextRoute = isPreloaded ? undefined : self[index + 1];
+    const scenes = allRoutes.map((route, index, self) => {
+      // For preloaded screens, we don't care about the previous and the next screen
+      const isPreloaded = isPreloadedRoute(route, props);
+      const previousRoute = isPreloaded ? undefined : self[index - 1];
+      const nextRoute = isPreloaded ? undefined : self[index + 1];
 
-        const oldScene = state.scenes[index];
+      const oldScene = state.scenes[index];
 
-        const currentGesture = gestures[route.key];
-        const previousGesture = previousRoute
-          ? gestures[previousRoute.key]
-          : undefined;
-        const nextGesture = nextRoute ? gestures[nextRoute.key] : undefined;
+      const currentGesture = gestures[route.key];
+      const previousGesture = previousRoute
+        ? gestures[previousRoute.key]
+        : undefined;
+      const nextGesture = nextRoute ? gestures[nextRoute.key] : undefined;
 
-        const descriptor =
-          props.descriptors[route.key] ||
-          state.descriptors[route.key] ||
-          (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
+      const descriptor =
+        props.descriptors[route.key] ||
+        state.descriptors[route.key] ||
+        (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
 
-        const nextOptions =
-          nextRoute &&
-          (
-            props.descriptors[nextRoute?.key] ||
-            state.descriptors[nextRoute?.key]
-          )?.options;
+      const nextOptions =
+        nextRoute &&
+        (props.descriptors[nextRoute?.key] || state.descriptors[nextRoute?.key])
+          ?.options;
 
-        const previousOptions =
-          previousRoute &&
-          (
-            props.descriptors[previousRoute?.key] ||
-            state.descriptors[previousRoute?.key]
-          )?.options;
+      const previousOptions =
+        previousRoute &&
+        (
+          props.descriptors[previousRoute?.key] ||
+          state.descriptors[previousRoute?.key]
+        )?.options;
 
-        // When a screen is not the last, it should use next screen's transition config
-        // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
-        // For example combining a slide and a modal transition would look wrong otherwise
-        // With this approach, combining different transition styles in the same navigator mostly looks right
-        // This will still be broken when 2 transitions have different idle state (e.g. modal presentation),
-        // but the majority of the transitions look alright
-        const optionsForTransitionConfig =
-          index !== self.length - 1 &&
-          nextOptions &&
-          nextOptions?.presentation !== 'transparentModal'
-            ? nextOptions
-            : descriptor.options;
+      // When a screen is not the last, it should use next screen's transition config
+      // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
+      // For example combining a slide and a modal transition would look wrong otherwise
+      // With this approach, combining different transition styles in the same navigator mostly looks right
+      // This will still be broken when 2 transitions have different idle state (e.g. modal presentation),
+      // but the majority of the transitions look alright
+      const optionsForTransitionConfig =
+        index !== self.length - 1 &&
+        nextOptions &&
+        nextOptions?.presentation !== 'transparentModal'
+          ? nextOptions
+          : descriptor.options;
 
-        // Assume modal if there are already modal screens in the stack
-        // or current screen is a modal when no presentation is specified
-        const isModal = modalRouteKeys.includes(route.key);
+      // Assume modal if there are already modal screens in the stack
+      // or current screen is a modal when no presentation is specified
+      const isModal = modalRouteKeys.includes(route.key);
 
-        const animation = getDefaultAnimation(
-          optionsForTransitionConfig.animation
-        );
+      const animation = getDefaultAnimation(
+        optionsForTransitionConfig.animation
+      );
 
-        const isAnimationEnabled = getAnimationEnabled(animation);
+      const isAnimationEnabled = getAnimationEnabled(animation);
 
-        const transitionPreset =
-          animation !== 'default'
-            ? NAMED_TRANSITIONS_PRESETS[animation]
-            : optionsForTransitionConfig.presentation === 'transparentModal'
-              ? ModalFadeTransition
-              : optionsForTransitionConfig.presentation === 'modal' || isModal
-                ? ModalTransition
-                : DefaultTransition;
+      const transitionPreset =
+        animation !== 'default'
+          ? NAMED_TRANSITIONS_PRESETS[animation]
+          : optionsForTransitionConfig.presentation === 'transparentModal'
+            ? ModalFadeTransition
+            : optionsForTransitionConfig.presentation === 'modal' || isModal
+              ? ModalTransition
+              : DefaultTransition;
 
-        const {
-          gestureEnabled = Platform.OS === 'ios' && isAnimationEnabled,
-          gestureDirection = transitionPreset.gestureDirection,
-          transitionSpec = transitionPreset.transitionSpec,
-          cardStyleInterpolator = isAnimationEnabled
-            ? transitionPreset.cardStyleInterpolator
-            : forNoAnimationCard,
-          headerStyleInterpolator = transitionPreset.headerStyleInterpolator,
-          cardOverlayEnabled = (Platform.OS !== 'ios' &&
-            optionsForTransitionConfig.presentation !== 'transparentModal') ||
-            getIsModalPresentation(cardStyleInterpolator),
-        } = optionsForTransitionConfig;
+      const {
+        gestureEnabled = Platform.OS === 'ios' && isAnimationEnabled,
+        gestureDirection = transitionPreset.gestureDirection,
+        transitionSpec = transitionPreset.transitionSpec,
+        cardStyleInterpolator = isAnimationEnabled
+          ? transitionPreset.cardStyleInterpolator
+          : forNoAnimationCard,
+        headerStyleInterpolator = transitionPreset.headerStyleInterpolator,
+        cardOverlayEnabled = (Platform.OS !== 'ios' &&
+          optionsForTransitionConfig.presentation !== 'transparentModal') ||
+          getIsModalPresentation(cardStyleInterpolator),
+      } = optionsForTransitionConfig;
 
-        const headerMode: StackHeaderMode =
-          descriptor.options.headerMode ??
-          (!(
-            optionsForTransitionConfig.presentation === 'modal' ||
-            optionsForTransitionConfig.presentation === 'transparentModal' ||
-            nextOptions?.presentation === 'modal' ||
-            nextOptions?.presentation === 'transparentModal' ||
-            getIsModalPresentation(cardStyleInterpolator)
-          ) &&
-          Platform.OS === 'ios' &&
-          descriptor.options.header === undefined
-            ? 'float'
-            : 'screen');
+      const headerMode: StackHeaderMode =
+        descriptor.options.headerMode ??
+        (!(
+          optionsForTransitionConfig.presentation === 'modal' ||
+          optionsForTransitionConfig.presentation === 'transparentModal' ||
+          nextOptions?.presentation === 'modal' ||
+          nextOptions?.presentation === 'transparentModal' ||
+          getIsModalPresentation(cardStyleInterpolator)
+        ) &&
+        Platform.OS === 'ios' &&
+        descriptor.options.header === undefined
+          ? 'float'
+          : 'screen');
 
-        const isRTL = props.direction === 'rtl';
+      const isRTL = props.direction === 'rtl';
 
-        const scene = {
-          route,
-          descriptor: {
-            ...descriptor,
-            options: {
-              ...descriptor.options,
-              animation,
-              cardOverlayEnabled,
-              cardStyleInterpolator,
-              gestureDirection,
-              gestureEnabled,
-              headerStyleInterpolator,
-              transitionSpec,
-              headerMode,
-            },
+      const scene = {
+        route,
+        descriptor: {
+          ...descriptor,
+          options: {
+            ...descriptor.options,
+            animation,
+            cardOverlayEnabled,
+            cardStyleInterpolator,
+            gestureDirection,
+            gestureEnabled,
+            headerStyleInterpolator,
+            transitionSpec,
+            headerMode,
           },
-          progress: {
-            current: getProgressFromGesture(
-              currentGesture,
-              state.layout,
-              descriptor.options,
-              isRTL
-            ),
-            next:
-              nextGesture && nextOptions?.presentation !== 'transparentModal'
-                ? getProgressFromGesture(
-                    nextGesture,
-                    state.layout,
-                    nextOptions,
-                    isRTL
-                  )
-                : undefined,
-            previous: previousGesture
+        },
+        progress: {
+          current: getProgressFromGesture(
+            currentGesture,
+            state.layout,
+            descriptor.options,
+            isRTL
+          ),
+          next:
+            nextGesture && nextOptions?.presentation !== 'transparentModal'
               ? getProgressFromGesture(
-                  previousGesture,
+                  nextGesture,
                   state.layout,
-                  previousOptions,
+                  nextOptions,
                   isRTL
                 )
               : undefined,
-          },
-          __memo: [
-            state.layout,
-            descriptor,
-            nextOptions,
-            previousOptions,
-            currentGesture,
-            nextGesture,
-            previousGesture,
-          ],
-        };
+          previous: previousGesture
+            ? getProgressFromGesture(
+                previousGesture,
+                state.layout,
+                previousOptions,
+                isRTL
+              )
+            : undefined,
+        },
+        __memo: [
+          state.layout,
+          descriptor,
+          nextOptions,
+          previousOptions,
+          currentGesture,
+          nextGesture,
+          previousGesture,
+        ],
+      };
 
-        if (
-          oldScene &&
-          scene.__memo.every((it, i) => {
-            // @ts-expect-error: we haven't added __memo to the annotation to prevent usage elsewhere
-            return oldScene.__memo[i] === it;
-          })
-        ) {
-          return oldScene;
-        }
-
-        return scene;
+      if (
+        oldScene &&
+        scene.__memo.every((it, i) => {
+          // @ts-expect-error: we haven't added __memo to the annotation to prevent usage elsewhere
+          return oldScene.__memo[i] === it;
+        })
+      ) {
+        return oldScene;
       }
-    );
+
+      return scene;
+    });
 
     return {
       routes: props.routes,
@@ -586,6 +611,8 @@ export class CardStack extends React.Component<Props, State> {
 
     const { scenes, layout, gestures, headerHeights } = this.state;
 
+    const allRoutes = getAllRoutes(routes, state.preloadedRoutes);
+
     const focusedRoute = state.routes[state.index];
 
     const isFloatHeaderAbsolute = scenes.slice(-2).some((scene) => {
@@ -627,23 +654,11 @@ export class CardStack extends React.Component<Props, State> {
           ],
         })}
         <View style={styles.container} onLayout={this.handleLayout}>
-          {[...routes, ...state.preloadedRoutes].map((route, index, self) => {
+          {allRoutes.map((route, index, self) => {
             const focused = focusedRoute.key === route.key;
             const gesture = gestures[route.key];
             const scene = scenes[index];
-            // It is possible that for a short period the route appears in both arrays.
-            // Particularly, if the screen is removed with `retain`, then it needs a moment to execute the animation.
-            // However, due to the router action, it immediately populates the `preloadedRoutes` array.
-            // Practically, the logic below takes care that it is rendered only once.
-            const isPreloaded =
-              state.preloadedRoutes.includes(route) && !routes.includes(route);
-            if (
-              state.preloadedRoutes.includes(route) &&
-              routes.includes(route) &&
-              index >= routes.length
-            ) {
-              return null;
-            }
+            const isPreloaded = isPreloadedRoute(route, this.props);
 
             const {
               inactiveBehavior = 'pause',

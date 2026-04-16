@@ -135,6 +135,27 @@ describe('StackView.getDerivedStateFromProps', () => {
       expect(result.openingRouteKeys).toEqual([]);
     });
 
+    test('adds focused route to closing list when it moves to preloaded routes', () => {
+      const routeA = createRoute('A');
+      const routeB = createRoute('B');
+      const props = createProps([routeA], {
+        preloadedRoutes: [routeB],
+      });
+      const state = createState(
+        {
+          previousState: createNavigationState([routeA, routeB]),
+          openingRouteKeys: [],
+        },
+        [routeA, routeB]
+      );
+
+      const result = StackView.getDerivedStateFromProps(props, state);
+
+      expect(result.routes.map((r) => r.key)).toEqual(['A', 'B']);
+      expect(result.closingRouteKeys).toEqual(['B']);
+      expect(result.openingRouteKeys).toEqual([]);
+    });
+
     test('preserves descriptor for closing route during pop animation', () => {
       const routeA = createRoute('A');
       const routeB = createRoute('B');
