@@ -277,6 +277,12 @@ async function runStep(page: Page, step: any) {
       break;
     }
 
+    case 'back': {
+      await page.goBack();
+
+      break;
+    }
+
     case 'stopApp': {
       // No-op on web
 

@@ -67,10 +67,10 @@ export type StackNavigationState<ParamList extends ParamListBase> =
      */
     preloadedRoutes: NavigationRoute<ParamList, keyof ParamList>[];
     /**
-     * List of route keys to retain in the stack
+     * List of route keys to retain in the stack.
      * When a retained route gets removed from the stack,
      * it'll be treated as preloaded route and not completely removed
-     * So it preserves the route and can be navigated back to
+     * So it preserves the route and can be navigated to again.
      */
     retainedRouteKeys: string[];
   };
@@ -139,10 +139,10 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   ): void;
 
   /**
-   * Enable or disable retaining the current route in the stack
+   * Enable or disable retaining the current route in the stack.
    * When a retained route gets removed from the stack,
    * it'll be treated as preloaded route and not completely removed
-   * So it preserves the route and can be navigated back to
+   * So it preserves the route and can be navigated to again.
    *
    * @param enable Whether to retain the current route in the stack or not.
    */

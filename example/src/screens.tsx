@@ -31,6 +31,7 @@ import { StackHeaderCustomization } from './Screens/StackHeaderCustomization';
 import { StackModal } from './Screens/StackModal';
 import { StackPreloadFlow } from './Screens/StackPreloadFlow';
 import { StackPreventRemove } from './Screens/StackPreventRemove';
+import { StackRetain } from './Screens/StackRetain';
 import { StackTransparentModal } from './Screens/StackTransparentModal';
 import { StaticConfig as StaticConfigScreen } from './Screens/StaticConfig';
 import { BottomTabsShowcase } from './Showcase/BottomTabsShowcase';
@@ -72,6 +73,7 @@ export const SCREENS = {
   NavigatorLayout,
   ScreenLayout,
   StaticConfigScreen,
+  StackRetain,
   ActivityModes,
   BottomTabsShowcase,
   DrawerShowcase,
