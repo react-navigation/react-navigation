@@ -336,7 +336,12 @@ const SceneView = ({
               animatedHeaderHeight.setValue(headerHeight);
               setHeaderHeight(headerHeight);
             }}
-            style={[styles.header, headerTransparent ? styles.absolute : null]}
+            style={[
+              styles.header,
+              headerTransparent
+                ? [styles.absolute, { height: headerHeight }]
+                : null,
+            ]}
           >
             {header({
               back: headerBack,

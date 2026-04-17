@@ -88,7 +88,12 @@ export function Screen(props: Props) {
 
               setHeaderHeight(height);
             }}
-            style={[styles.header, headerTransparent ? styles.absolute : null]}
+            style={[
+              styles.header,
+              headerTransparent
+                ? [styles.absolute, { height: headerHeight }]
+                : null,
+            ]}
           >
             {header}
           </View>
