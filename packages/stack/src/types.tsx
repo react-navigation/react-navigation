@@ -346,12 +346,6 @@ export type StackNavigationOptions = StackHeaderOptions &
     /**
      * Style object for the card in stack.
      * You can provide a custom background color to use instead of the default background here.
-     *
-     * You can also specify `{ backgroundColor: 'transparent' }` to make the previous screen visible underneath.
-     * This is useful to implement things like modal dialogs.
-     *
-     * You might also need to change the animation of the screen using `cardStyleInterpolator`
-     * so that the previous screen isn't transformed or invisible.
      */
     cardStyle?: StyleProp<ViewStyle>;
     /**

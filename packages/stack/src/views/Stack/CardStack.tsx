@@ -662,6 +662,7 @@ export class CardStack extends React.Component<Props, State> {
 
             const {
               inactiveBehavior = 'pause',
+              animation,
               headerShown = true,
               headerTransparent,
             } = scene.descriptor.options;
@@ -682,6 +683,16 @@ export class CardStack extends React.Component<Props, State> {
               isParentModal
             );
 
+            const isAnimationEnabled =
+              getAnimationEnabled(animation) ||
+              // Also check next screen's animation,
+              // As it will result in both screens being visible
+              (scenes[index + 1]
+                ? getAnimationEnabled(
+                    scenes[index + 1].descriptor.options.animation
+                  )
+                : false);
+
             const isNextScreenTransparent =
               scenes[index + 1]?.descriptor.options.presentation ===
               'transparentModal';
@@ -698,14 +709,16 @@ export class CardStack extends React.Component<Props, State> {
 
             const isBeforeLast = index === routes.length - 2;
 
-            // Keep animating and the last two rendered routes visible for smoother transitions.
-            // Preloaded routes should stay mounted, but remain hidden until focused.
+            // Keep animating and the last two rendered routes visible for smoother transitions
             const isVisible =
               focused ||
-              isFocusing ||
-              isRemoving ||
               isNextScreenTransparent ||
-              (!isPreloaded && index >= routes.length - 2);
+              // We only need to keep other screens visible when animation is enabled
+              (isAnimationEnabled &&
+                (isFocusing ||
+                  isRemoving ||
+                  // Preloaded routes should stay mounted, but remain hidden until focused
+                  (!isPreloaded && index >= routes.length - 2)));
 
             const activityMode = // Render focused and animating screens normally
               focused || isFocusing
