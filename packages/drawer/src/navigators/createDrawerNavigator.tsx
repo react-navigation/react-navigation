@@ -1,6 +1,6 @@
 import {
   createNavigatorFactory,
-  createStaticScreenFactory,
+  createScreenFactory,
   type DrawerActionHelpers,
   type DrawerNavigationState,
   DrawerRouter,
@@ -74,4 +74,4 @@ export interface DrawerTypeBag extends NavigatorTypeBagFactory {
 export const createDrawerNavigator =
   createNavigatorFactory<DrawerTypeBag>(DrawerNavigator);
 
-export const createDrawerScreen = createStaticScreenFactory<DrawerTypeBag>();
+export const createDrawerScreen = createScreenFactory<DrawerTypeBag>();

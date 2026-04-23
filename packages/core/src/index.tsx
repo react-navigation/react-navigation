@@ -23,7 +23,7 @@ export { PreventRemoveContext } from './PreventRemoveContext';
 export { PreventRemoveProvider } from './PreventRemoveProvider';
 export {
   createPathConfigForStaticNavigation,
-  createStaticScreenFactory,
+  createScreenFactory,
   type StaticConfig,
   type StaticNavigation,
   type StaticParamList,

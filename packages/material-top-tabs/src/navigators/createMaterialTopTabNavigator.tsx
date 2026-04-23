@@ -1,6 +1,6 @@
 import {
   createNavigatorFactory,
-  createStaticScreenFactory,
+  createScreenFactory,
   type NavigatorTypeBagFactory,
   type ParamListBase,
   type TabActionHelpers,
@@ -72,4 +72,4 @@ export const createMaterialTopTabNavigator =
   createNavigatorFactory<MaterialTopTabTypeBag>(MaterialTopTabNavigator);
 
 export const createMaterialTopTabScreen =
-  createStaticScreenFactory<MaterialTopTabTypeBag>();
+  createScreenFactory<MaterialTopTabTypeBag>();

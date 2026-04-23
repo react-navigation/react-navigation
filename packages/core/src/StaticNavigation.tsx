@@ -385,7 +385,7 @@ export type StaticScreenCreator<
  * Used by navigator authors to expose a `createXScreen` identity function
  * that types the screen config for their navigator.
  */
-export function createStaticScreenFactory<
+export function createScreenFactory<
   F extends NavigatorTypeBagFactory,
 >(): ApplyNavigatorTypeBagFactory<F, ParamListBase> extends infer B extends
   NavigatorTypeBagBase

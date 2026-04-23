@@ -1,6 +1,6 @@
 import {
   createNavigatorFactory,
-  createStaticScreenFactory,
+  createScreenFactory,
   type NavigatorTypeBagFactory,
   type ParamListBase,
   type TabActionHelpers,
@@ -71,5 +71,4 @@ export interface BottomTabTypeBag extends NavigatorTypeBagFactory {
 export const createBottomTabNavigator =
   createNavigatorFactory<BottomTabTypeBag>(BottomTabNavigator);
 
-export const createBottomTabScreen =
-  createStaticScreenFactory<BottomTabTypeBag>();
+export const createBottomTabScreen = createScreenFactory<BottomTabTypeBag>();

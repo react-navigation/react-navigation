@@ -1,6 +1,6 @@
 import {
   createNavigatorFactory,
-  createStaticScreenFactory,
+  createScreenFactory,
   type EventArg,
   NavigationMetaContext,
   type NavigatorTypeBagFactory,
@@ -106,4 +106,4 @@ export const createNativeStackNavigator =
   createNavigatorFactory<NativeStackTypeBag>(NativeStackNavigator);
 
 export const createNativeStackScreen =
-  createStaticScreenFactory<NativeStackTypeBag>();
+  createScreenFactory<NativeStackTypeBag>();

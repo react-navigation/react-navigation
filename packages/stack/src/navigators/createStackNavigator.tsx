@@ -1,6 +1,6 @@
 import {
   createNavigatorFactory,
-  createStaticScreenFactory,
+  createScreenFactory,
   type EventArg,
   type NavigatorTypeBagFactory,
   type ParamListBase,
@@ -102,4 +102,4 @@ export interface StackTypeBag extends NavigatorTypeBagFactory {
 export const createStackNavigator =
   createNavigatorFactory<StackTypeBag>(StackNavigator);
 
-export const createStackScreen = createStaticScreenFactory<StackTypeBag>();
+export const createStackScreen = createScreenFactory<StackTypeBag>();
