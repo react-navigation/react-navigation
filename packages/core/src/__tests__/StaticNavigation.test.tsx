@@ -14,7 +14,7 @@ import { createPathConfigForStaticNavigation } from '../StaticNavigation';
 import type {
   DefaultNavigatorOptions,
   EventMapBase,
-  NavigatorTypeBagFactory,
+  NavigatorTypeBagBase,
 } from '../types';
 import { useIsFocused } from '../useIsFocused';
 import { useNavigationBuilder } from '../useNavigationBuilder';
@@ -64,7 +64,7 @@ const TestNavigator = (props: TestNavigatorProps) => {
   );
 };
 
-interface TestNavigatorTypeBag extends NavigatorTypeBagFactory {
+interface TestNavigatorTypeBag extends NavigatorTypeBagBase {
   ScreenOptions: TestNavigatorScreenOptions;
   Navigator: typeof TestNavigator;
 }

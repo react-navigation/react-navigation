@@ -1172,27 +1172,18 @@ export type NavigationListBase<ParamList extends ParamListBase> = {
   [RouteName in keyof ParamList]: unknown;
 };
 
-export type NavigatorTypeBagBase = {
-  ParamList: {};
-  State: NavigationState;
-  ScreenOptions: {};
-  EventMap: {};
-  NavigationList: NavigationListBase<ParamListBase>;
-  Navigator: React.ComponentType<any>;
-};
-
 /**
  * Higher-kinded encoding of a navigator type bag.
  * Navigator authors extend this and reference `this['ParamList']` in
  * the other bag fields to express how they depend on it.
- * `ApplyNavigatorTypeBagFactory` overrides `ParamList` at the call
+ * `NavigatorTypeBagFor` overrides `ParamList` at the call
  * site, and TS's `this`-resolution threads the new value through.
  *
  * `NavigationList` defaults to a derivation of the other fields, so
  * navigator authors only need to override `State`, `ScreenOptions`,
  * `EventMap`, `ActionHelpers`, and `Navigator`.
  */
-export interface NavigatorTypeBagFactory {
+export interface NavigatorTypeBagBase {
   ParamList: {};
   State: NavigationState;
   ScreenOptions: {};
@@ -1214,10 +1205,10 @@ export interface NavigatorTypeBagFactory {
 }
 
 /**
- * Applies a navigator type bag factory to a param list.
+ * Resolves a navigator type bag for a specific param list.
  */
-export type ApplyNavigatorTypeBagFactory<
-  F extends NavigatorTypeBagFactory,
+export type NavigatorTypeBagFor<
+  F extends NavigatorTypeBagBase,
   ParamList extends {},
 > = F & { ParamList: ParamList };
 

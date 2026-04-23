@@ -1,7 +1,7 @@
 import {
   createNavigatorFactory,
   createScreenFactory,
-  type NavigatorTypeBagFactory,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type TabActionHelpers,
   type TabNavigationState,
@@ -60,7 +60,7 @@ function MaterialTopTabNavigator({
   );
 }
 
-export interface MaterialTopTabTypeBag extends NavigatorTypeBagFactory {
+export interface MaterialTopTabTypeBag extends NavigatorTypeBagBase {
   State: TabNavigationState<this['ParamList']>;
   ScreenOptions: MaterialTopTabNavigationOptions;
   EventMap: MaterialTopTabNavigationEventMap;

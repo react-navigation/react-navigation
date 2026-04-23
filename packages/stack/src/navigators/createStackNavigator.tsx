@@ -2,7 +2,7 @@ import {
   createNavigatorFactory,
   createScreenFactory,
   type EventArg,
-  type NavigatorTypeBagFactory,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type StackActionHelpers,
   StackActions,
@@ -91,7 +91,7 @@ function StackNavigator({
   );
 }
 
-export interface StackTypeBag extends NavigatorTypeBagFactory {
+export interface StackTypeBag extends NavigatorTypeBagBase {
   State: StackNavigationState<this['ParamList']>;
   ScreenOptions: StackNavigationOptions;
   EventMap: StackNavigationEventMap;

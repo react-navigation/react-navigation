@@ -9,24 +9,20 @@ import {
   type StaticParamList,
 } from './StaticNavigation';
 import type {
-  ApplyNavigatorTypeBagFactory,
-  NavigatorTypeBagFactory,
+  NavigatorTypeBagBase,
+  NavigatorTypeBagFor,
   TypedNavigator,
 } from './types';
 
-export type TypedNavigatorCreator<F extends NavigatorTypeBagFactory> = {
+export type TypedNavigatorCreator<F extends NavigatorTypeBagBase> = {
   <const ParamList extends ParamListBase>(): TypedNavigator<
-    ApplyNavigatorTypeBagFactory<F, ParamList>,
+    NavigatorTypeBagFor<F, ParamList>,
     undefined
   >;
-  <
-    const Config extends StaticConfig<
-      ApplyNavigatorTypeBagFactory<F, ParamListBase>
-    >,
-  >(
+  <const Config extends StaticConfig<NavigatorTypeBagFor<F, ParamListBase>>>(
     config: Config
   ): TypedNavigator<
-    ApplyNavigatorTypeBagFactory<F, StaticParamList<{ config: Config }>>,
+    NavigatorTypeBagFor<F, StaticParamList<{ config: Config }>>,
     Config
   >;
 };
@@ -39,7 +35,7 @@ export type TypedNavigatorCreator<F extends NavigatorTypeBagFactory> = {
  * @returns Factory method to create a `Navigator` and `Screen` pair.
  */
 export function createNavigatorFactory<
-  F extends NavigatorTypeBagFactory = NavigatorTypeBagFactory,
+  F extends NavigatorTypeBagBase = NavigatorTypeBagBase,
 >(Navigator: React.ComponentType<any>): TypedNavigatorCreator<F> {
   const displayName = Navigator.displayName ?? Navigator.name ?? 'Navigator';
 

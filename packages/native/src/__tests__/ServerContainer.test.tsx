@@ -3,7 +3,7 @@ import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
   type NavigatorScreenParams,
-  type NavigatorTypeBagFactory,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type StackNavigationState,
   StackRouter,
@@ -66,7 +66,7 @@ test('renders correct state with location', () => {
     );
   };
 
-  interface StackTypeBag extends NavigatorTypeBagFactory {
+  interface StackTypeBag extends NavigatorTypeBagBase {
     State: StackNavigationState<this['ParamList']>;
     Navigator: typeof StackNavigator;
   }

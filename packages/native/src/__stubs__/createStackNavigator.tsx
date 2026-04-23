@@ -1,7 +1,7 @@
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
-  type NavigatorTypeBagFactory,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type StackNavigationState,
   StackRouter,
@@ -29,7 +29,7 @@ const StackNavigator = (
   );
 };
 
-interface StubStackTypeBag extends NavigatorTypeBagFactory {
+interface StubStackTypeBag extends NavigatorTypeBagBase {
   State: StackNavigationState<this['ParamList']>;
   Navigator: typeof StackNavigator;
 }

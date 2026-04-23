@@ -5,7 +5,7 @@ import {
   type DrawerNavigationState,
   DrawerRouter,
   type DrawerRouterOptions,
-  type NavigatorTypeBagFactory,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -63,7 +63,7 @@ function DrawerNavigator({
   );
 }
 
-export interface DrawerTypeBag extends NavigatorTypeBagFactory {
+export interface DrawerTypeBag extends NavigatorTypeBagBase {
   State: DrawerNavigationState<this['ParamList']>;
   ScreenOptions: DrawerNavigationOptions;
   EventMap: DrawerNavigationEventMap;

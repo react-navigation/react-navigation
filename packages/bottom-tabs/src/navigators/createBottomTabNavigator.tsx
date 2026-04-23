@@ -1,7 +1,7 @@
 import {
   createNavigatorFactory,
   createScreenFactory,
-  type NavigatorTypeBagFactory,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type TabActionHelpers,
   type TabNavigationState,
@@ -60,7 +60,7 @@ function BottomTabNavigator({
   );
 }
 
-export interface BottomTabTypeBag extends NavigatorTypeBagFactory {
+export interface BottomTabTypeBag extends NavigatorTypeBagBase {
   State: TabNavigationState<this['ParamList']>;
   ScreenOptions: BottomTabNavigationOptions;
   EventMap: BottomTabNavigationEventMap;

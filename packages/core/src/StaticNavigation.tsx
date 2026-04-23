@@ -7,13 +7,12 @@ import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
 import type {
-  ApplyNavigatorTypeBagFactory,
   DefaultNavigatorOptions,
   EventMapBase,
   NavigationListBase,
   NavigatorScreenParams,
   NavigatorTypeBagBase,
-  NavigatorTypeBagFactory,
+  NavigatorTypeBagFor,
   PathConfig,
   PathConfigMap,
   RouteGroupConfig,
@@ -386,14 +385,14 @@ export type StaticScreenCreator<
  * that types the screen config for their navigator.
  */
 export function createScreenFactory<
-  F extends NavigatorTypeBagFactory,
->(): ApplyNavigatorTypeBagFactory<F, ParamListBase> extends infer B extends
+  F extends NavigatorTypeBagBase,
+>(): NavigatorTypeBagFor<F, ParamListBase> extends infer B extends
   NavigatorTypeBagBase
   ? StaticScreenCreator<
       B['State'],
       B['ScreenOptions'],
       B['EventMap'],
-      B['NavigationList'][keyof ParamListBase]
+      B['NavigationList'][keyof B['ParamList']]
     >
   : never {
   return ((config: unknown) => config) as never;
