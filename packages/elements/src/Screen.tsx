@@ -91,7 +91,11 @@ export function Screen(props: Props) {
             style={[
               styles.header,
               headerTransparent
-                ? [styles.absolute, { height: headerHeight }]
+                ? [
+                    styles.absolute,
+                    // Specify an explicit min height for Android screen readers
+                    { minHeight: headerHeight },
+                  ]
                 : null,
             ]}
           >

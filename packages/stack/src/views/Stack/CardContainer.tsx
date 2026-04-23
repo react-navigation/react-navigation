@@ -287,7 +287,12 @@ function CardContainerInner({
                   onContentHeightChange: onHeaderHeightChange,
                   style: [
                     styles.header,
-                    headerTransparent ? { height: headerHeight } : null,
+                    headerTransparent
+                      ? {
+                          // Specify an explicit min height for Android screen readers
+                          minHeight: headerHeight,
+                        }
+                      : null,
                   ],
                 })
               : null}
