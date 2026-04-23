@@ -1,19 +1,15 @@
 import {
   createNavigatorFactory,
+  createStaticScreenFactory,
   type EventArg,
   NavigationMetaContext,
+  type NavigatorTypeBagFactory,
   type ParamListBase,
   type StackActionHelpers,
   StackActions,
   type StackNavigationState,
   StackRouter,
   type StackRouterOptions,
-  type StaticConfig,
-  type StaticParamList,
-  type StaticScreenConfig,
-  type StaticScreenConfigLinking,
-  type StaticScreenConfigScreen,
-  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -99,47 +95,22 @@ function NativeStackNavigator({
   );
 }
 
-type NativeStackTypeBag<ParamList extends {}> = {
-  ParamList: ParamList;
-  State: StackNavigationState<ParamList>;
+export interface NativeStackTypeBag extends NavigatorTypeBagFactory {
+  ParamList: this['input'];
+  State: StackNavigationState<this['input']>;
   ScreenOptions: NativeStackNavigationOptions;
   EventMap: NativeStackNavigationEventMap;
   NavigationList: {
-    [RouteName in keyof ParamList]: NativeStackNavigationProp<
-      ParamList,
+    [RouteName in keyof this['input']]: NativeStackNavigationProp<
+      this['input'],
       RouteName
     >;
   };
   Navigator: typeof NativeStackNavigator;
-};
-
-export function createNativeStackNavigator<
-  const ParamList extends ParamListBase,
->(): TypedNavigator<NativeStackTypeBag<ParamList>, undefined>;
-export function createNativeStackNavigator<
-  const Config extends StaticConfig<NativeStackTypeBag<ParamListBase>>,
->(
-  config: Config
-): TypedNavigator<
-  NativeStackTypeBag<StaticParamList<{ config: Config }>>,
-  Config
->;
-export function createNativeStackNavigator(config?: unknown) {
-  return createNavigatorFactory(NativeStackNavigator)(config);
 }
 
-export function createNativeStackScreen<
-  const Linking extends StaticScreenConfigLinking,
-  const Screen extends StaticScreenConfigScreen,
->(
-  config: StaticScreenConfig<
-    Linking,
-    Screen,
-    StackNavigationState<ParamListBase>,
-    NativeStackNavigationOptions,
-    NativeStackNavigationEventMap,
-    NativeStackNavigationProp<ParamListBase>
-  >
-) {
-  return config;
-}
+export const createNativeStackNavigator =
+  createNavigatorFactory<NativeStackTypeBag>(NativeStackNavigator);
+
+export const createNativeStackScreen =
+  createStaticScreenFactory<NativeStackTypeBag>();

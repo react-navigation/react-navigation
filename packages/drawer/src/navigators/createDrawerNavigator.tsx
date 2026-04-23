@@ -1,16 +1,12 @@
 import {
   createNavigatorFactory,
+  createStaticScreenFactory,
   type DrawerActionHelpers,
   type DrawerNavigationState,
   DrawerRouter,
   type DrawerRouterOptions,
+  type NavigatorTypeBagFactory,
   type ParamListBase,
-  type StaticConfig,
-  type StaticParamList,
-  type StaticScreenConfig,
-  type StaticScreenConfigLinking,
-  type StaticScreenConfigScreen,
-  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
 
@@ -68,41 +64,21 @@ function DrawerNavigator({
   );
 }
 
-type DrawerTypeBag<ParamList extends {}> = {
-  ParamList: ParamList;
-  State: DrawerNavigationState<ParamList>;
+export interface DrawerTypeBag extends NavigatorTypeBagFactory {
+  ParamList: this['input'];
+  State: DrawerNavigationState<this['input']>;
   ScreenOptions: DrawerNavigationOptions;
   EventMap: DrawerNavigationEventMap;
   NavigationList: {
-    [RouteName in keyof ParamList]: DrawerNavigationProp<ParamList, RouteName>;
+    [RouteName in keyof this['input']]: DrawerNavigationProp<
+      this['input'],
+      RouteName
+    >;
   };
   Navigator: typeof DrawerNavigator;
-};
-
-export function createDrawerNavigator<
-  const ParamList extends ParamListBase,
->(): TypedNavigator<DrawerTypeBag<ParamList>, undefined>;
-export function createDrawerNavigator<
-  const Config extends StaticConfig<DrawerTypeBag<ParamListBase>>,
->(
-  config: Config
-): TypedNavigator<DrawerTypeBag<StaticParamList<{ config: Config }>>, Config>;
-export function createDrawerNavigator(config?: unknown) {
-  return createNavigatorFactory(DrawerNavigator)(config);
 }
 
-export function createDrawerScreen<
-  const Linking extends StaticScreenConfigLinking,
-  const Screen extends StaticScreenConfigScreen,
->(
-  config: StaticScreenConfig<
-    Linking,
-    Screen,
-    DrawerNavigationState<ParamListBase>,
-    DrawerNavigationOptions,
-    DrawerNavigationEventMap,
-    DrawerNavigationProp<ParamListBase>
-  >
-) {
-  return config;
-}
+export const createDrawerNavigator =
+  createNavigatorFactory<DrawerTypeBag>(DrawerNavigator);
+
+export const createDrawerScreen = createStaticScreenFactory<DrawerTypeBag>();

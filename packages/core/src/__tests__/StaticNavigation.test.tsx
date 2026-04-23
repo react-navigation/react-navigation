@@ -10,15 +10,11 @@ import * as React from 'react';
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigatorFactory } from '../createNavigatorFactory';
 import { getStateFromPath } from '../getStateFromPath';
-import {
-  createPathConfigForStaticNavigation,
-  type StaticConfig,
-  type StaticParamList,
-} from '../StaticNavigation';
+import { createPathConfigForStaticNavigation } from '../StaticNavigation';
 import type {
   DefaultNavigatorOptions,
   EventMapBase,
-  TypedNavigator,
+  NavigatorTypeBagFactory,
 } from '../types';
 import { useIsFocused } from '../useIsFocused';
 import { useNavigationBuilder } from '../useNavigationBuilder';
@@ -68,31 +64,19 @@ const TestNavigator = (props: TestNavigatorProps) => {
   );
 };
 
-type TestNavigatorTypeBag<ParamList extends {}> = {
-  ParamList: ParamList;
+interface TestNavigatorTypeBag extends NavigatorTypeBagFactory {
+  ParamList: this['input'];
   State: NavigationState;
   ScreenOptions: TestNavigatorScreenOptions;
   EventMap: EventMapBase;
   NavigationList: {
-    [RouteName in keyof ParamList]: unknown;
+    [RouteName in keyof this['input']]: unknown;
   };
   Navigator: typeof TestNavigator;
-};
-
-function createTestNavigator<
-  const ParamList extends ParamListBase,
->(): TypedNavigator<TestNavigatorTypeBag<ParamList>, undefined>;
-function createTestNavigator<
-  const Config extends StaticConfig<TestNavigatorTypeBag<ParamListBase>>,
->(
-  config: Config
-): TypedNavigator<
-  TestNavigatorTypeBag<StaticParamList<{ config: Config }>>,
-  Config
->;
-function createTestNavigator(config?: unknown) {
-  return createNavigatorFactory(TestNavigator)(config);
 }
+
+const createTestNavigator =
+  createNavigatorFactory<TestNavigatorTypeBag>(TestNavigator);
 
 const TestScreen = ({ route }: any) => {
   const isFocused = useIsFocused();

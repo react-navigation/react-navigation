@@ -4,11 +4,11 @@ import {
   type DefaultNavigatorOptions,
   type NavigationListBase,
   type NavigatorScreenParams,
+  type NavigatorTypeBagFactory,
   type ParamListBase,
   type StackNavigationState,
   StackRouter,
   TabRouter,
-  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -67,16 +67,17 @@ test('renders correct state with location', () => {
     );
   };
 
-  function createStackNavigator<ParamList extends {}>(): TypedNavigator<{
-    ParamList: ParamList;
-    State: StackNavigationState<ParamList>;
+  interface StackTypeBag extends NavigatorTypeBagFactory {
+    ParamList: this['input'];
+    State: StackNavigationState<this['input']>;
     ScreenOptions: {};
     EventMap: {};
-    NavigationList: NavigationListBase<ParamList>;
+    NavigationList: NavigationListBase<this['input']>;
     Navigator: typeof StackNavigator;
-  }> {
-    return createNavigatorFactory(StackNavigator)();
   }
+
+  const createStackNavigator =
+    createNavigatorFactory<StackTypeBag>(StackNavigator);
 
   type StackAParamList = {
     Home: NavigatorScreenParams<StackBParamList>;

@@ -11,6 +11,7 @@ export { SceneStyleInterpolators, TransitionPresets, TransitionSpecs };
  * Navigators
  */
 export {
+  type BottomTabTypeBag,
   createBottomTabNavigator,
   createBottomTabScreen,
 } from './navigators/createBottomTabNavigator';

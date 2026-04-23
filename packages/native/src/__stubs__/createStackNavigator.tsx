@@ -2,10 +2,10 @@ import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
   type NavigationListBase,
+  type NavigatorTypeBagFactory,
   type ParamListBase,
   type StackNavigationState,
   StackRouter,
-  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/core';
 
@@ -30,15 +30,14 @@ const StackNavigator = (
   );
 };
 
-export function createStackNavigator<
-  ParamList extends ParamListBase,
->(): TypedNavigator<{
-  ParamList: ParamList;
-  State: StackNavigationState<ParamList>;
+interface StubStackTypeBag extends NavigatorTypeBagFactory {
+  ParamList: this['input'];
+  State: StackNavigationState<this['input']>;
   ScreenOptions: {};
   EventMap: {};
-  NavigationList: NavigationListBase<ParamList>;
+  NavigationList: NavigationListBase<this['input']>;
   Navigator: typeof StackNavigator;
-}> {
-  return createNavigatorFactory(StackNavigator)();
 }
+
+export const createStackNavigator =
+  createNavigatorFactory<StubStackTypeBag>(StackNavigator);

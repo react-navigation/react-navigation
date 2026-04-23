@@ -1,8 +1,35 @@
+import type { ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
 import { Group } from './Group';
 import { Screen } from './Screen';
-import { createComponentForStaticConfig } from './StaticNavigation';
+import {
+  createComponentForStaticConfig,
+  type StaticConfig,
+  type StaticParamList,
+} from './StaticNavigation';
+import type {
+  ApplyNavigatorTypeBagFactory,
+  NavigatorTypeBagFactory,
+  TypedNavigator,
+} from './types';
+
+export type TypedNavigatorCreator<F extends NavigatorTypeBagFactory> = {
+  <const ParamList extends ParamListBase>(): TypedNavigator<
+    ApplyNavigatorTypeBagFactory<F, ParamList>,
+    undefined
+  >;
+  <
+    const Config extends StaticConfig<
+      ApplyNavigatorTypeBagFactory<F, ParamListBase>
+    >,
+  >(
+    config: Config
+  ): TypedNavigator<
+    ApplyNavigatorTypeBagFactory<F, StaticParamList<{ config: Config }>>,
+    Config
+  >;
+};
 
 /**
  * Higher order component to create a `Navigator` and `Screen` pair.
@@ -11,7 +38,9 @@ import { createComponentForStaticConfig } from './StaticNavigation';
  * @param Navigator The navigator component to wrap.
  * @returns Factory method to create a `Navigator` and `Screen` pair.
  */
-export function createNavigatorFactory(Navigator: React.ComponentType<any>) {
+export function createNavigatorFactory<
+  F extends NavigatorTypeBagFactory = NavigatorTypeBagFactory,
+>(Navigator: React.ComponentType<any>): TypedNavigatorCreator<F> {
   const displayName = Navigator.displayName ?? Navigator.name ?? 'Navigator';
 
   function createNavigator(config?: any): any {
@@ -59,5 +88,5 @@ export function createNavigatorFactory(Navigator: React.ComponentType<any>) {
     };
   }
 
-  return createNavigator;
+  return createNavigator as never;
 }

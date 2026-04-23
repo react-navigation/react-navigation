@@ -4,6 +4,7 @@
 export {
   createDrawerNavigator,
   createDrawerScreen,
+  type DrawerTypeBag,
 } from './navigators/createDrawerNavigator';
 
 /**

@@ -7,11 +7,13 @@ import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
 import type {
+  ApplyNavigatorTypeBagFactory,
   DefaultNavigatorOptions,
   EventMapBase,
   NavigationListBase,
   NavigatorScreenParams,
   NavigatorTypeBagBase,
+  NavigatorTypeBagFactory,
   PathConfig,
   PathConfigMap,
   RouteGroupConfig,
@@ -351,6 +353,51 @@ export type StaticScreenConfig<
    */
   navigationKey?: string;
 };
+
+export type StaticScreenCreator<
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  Navigation,
+> = <
+  const Linking extends StaticScreenConfigLinking,
+  const Screen extends StaticScreenConfigScreen,
+>(
+  config: StaticScreenConfig<
+    Linking,
+    Screen,
+    State,
+    ScreenOptions,
+    EventMap,
+    Navigation
+  >
+) => StaticScreenConfig<
+  Linking,
+  Screen,
+  State,
+  ScreenOptions,
+  EventMap,
+  Navigation
+>;
+
+/**
+ * Factory to create a typed `createScreen` helper for a navigator.
+ * Used by navigator authors to expose a `createXScreen` identity function
+ * that types the screen config for their navigator.
+ */
+export function createStaticScreenFactory<
+  F extends NavigatorTypeBagFactory,
+>(): ApplyNavigatorTypeBagFactory<F, ParamListBase> extends infer B extends
+  NavigatorTypeBagBase
+  ? StaticScreenCreator<
+      B['State'],
+      B['ScreenOptions'],
+      B['EventMap'],
+      B['NavigationList'][keyof ParamListBase]
+    >
+  : never {
+  return ((config: unknown) => config) as never;
+}
 
 type StaticConfigScreens<
   ParamList extends ParamListBase,

@@ -1181,6 +1181,32 @@ export type NavigatorTypeBagBase = {
   Navigator: React.ComponentType<any>;
 };
 
+/**
+ * Higher-kinded encoding of a navigator type bag.
+ * Navigator authors extend this and reference `this['input']` (the
+ * param list) in the bag fields to express how they depend on it.
+ *
+ * The defaults are a permissive bag used when the factory is called
+ * without a generic — any string is a valid screen name.
+ */
+export interface NavigatorTypeBagFactory {
+  input: {};
+  ParamList: ParamListBase;
+  State: NavigationState;
+  ScreenOptions: {};
+  EventMap: {};
+  NavigationList: NavigationListBase<ParamListBase>;
+  Navigator: React.ComponentType<any>;
+}
+
+/**
+ * Applies a navigator type bag factory to a param list.
+ */
+export type ApplyNavigatorTypeBagFactory<
+  F extends NavigatorTypeBagFactory,
+  Input extends {},
+> = Omit<F & { input: Input }, 'input'>;
+
 type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
   React.ComponentType<
     Omit<

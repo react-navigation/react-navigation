@@ -1,16 +1,12 @@
 import {
   createNavigatorFactory,
+  createStaticScreenFactory,
+  type NavigatorTypeBagFactory,
   type ParamListBase,
-  type StaticConfig,
-  type StaticParamList,
-  type StaticScreenConfig,
-  type StaticScreenConfigLinking,
-  type StaticScreenConfigScreen,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
   type TabRouterOptions,
-  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
 
@@ -65,47 +61,22 @@ function MaterialTopTabNavigator({
   );
 }
 
-type MaterialTopTabTypeBag<ParamList extends {}> = {
-  ParamList: ParamList;
-  State: TabNavigationState<ParamList>;
+export interface MaterialTopTabTypeBag extends NavigatorTypeBagFactory {
+  ParamList: this['input'];
+  State: TabNavigationState<this['input']>;
   ScreenOptions: MaterialTopTabNavigationOptions;
   EventMap: MaterialTopTabNavigationEventMap;
   NavigationList: {
-    [RouteName in keyof ParamList]: MaterialTopTabNavigationProp<
-      ParamList,
+    [RouteName in keyof this['input']]: MaterialTopTabNavigationProp<
+      this['input'],
       RouteName
     >;
   };
   Navigator: typeof MaterialTopTabNavigator;
-};
-
-export function createMaterialTopTabNavigator<
-  const ParamList extends ParamListBase,
->(): TypedNavigator<MaterialTopTabTypeBag<ParamList>, undefined>;
-export function createMaterialTopTabNavigator<
-  const Config extends StaticConfig<MaterialTopTabTypeBag<ParamListBase>>,
->(
-  config: Config
-): TypedNavigator<
-  MaterialTopTabTypeBag<StaticParamList<{ config: Config }>>,
-  Config
->;
-export function createMaterialTopTabNavigator(config?: unknown) {
-  return createNavigatorFactory(MaterialTopTabNavigator)(config);
 }
 
-export function createMaterialTopTabScreen<
-  const Linking extends StaticScreenConfigLinking,
-  const Screen extends StaticScreenConfigScreen,
->(
-  config: StaticScreenConfig<
-    Linking,
-    Screen,
-    TabNavigationState<ParamListBase>,
-    MaterialTopTabNavigationOptions,
-    MaterialTopTabNavigationEventMap,
-    MaterialTopTabNavigationProp<ParamListBase>
-  >
-) {
-  return config;
-}
+export const createMaterialTopTabNavigator =
+  createNavigatorFactory<MaterialTopTabTypeBag>(MaterialTopTabNavigator);
+
+export const createMaterialTopTabScreen =
+  createStaticScreenFactory<MaterialTopTabTypeBag>();
