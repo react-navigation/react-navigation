@@ -353,30 +353,25 @@ export type StaticScreenConfig<
   navigationKey?: string;
 };
 
-export type StaticScreenCreator<
-  State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase,
-  Navigation,
-> = <
+export type StaticScreenCreator<Bag extends NavigatorTypeBagBase> = <
   const Linking extends StaticScreenConfigLinking,
   const Screen extends StaticScreenConfigScreen,
 >(
   config: StaticScreenConfig<
     Linking,
     Screen,
-    State,
-    ScreenOptions,
-    EventMap,
-    Navigation
+    Bag['State'],
+    Bag['ScreenOptions'],
+    Bag['EventMap'],
+    Bag['NavigationList'][keyof Bag['ParamList']]
   >
 ) => StaticScreenConfig<
   Linking,
   Screen,
-  State,
-  ScreenOptions,
-  EventMap,
-  Navigation
+  Bag['State'],
+  Bag['ScreenOptions'],
+  Bag['EventMap'],
+  Bag['NavigationList'][keyof Bag['ParamList']]
 >;
 
 /**
@@ -386,15 +381,7 @@ export type StaticScreenCreator<
  */
 export function createScreenFactory<
   F extends NavigatorTypeBagBase,
->(): NavigatorTypeBagFor<F, ParamListBase> extends infer B extends
-  NavigatorTypeBagBase
-  ? StaticScreenCreator<
-      B['State'],
-      B['ScreenOptions'],
-      B['EventMap'],
-      B['NavigationList'][keyof B['ParamList']]
-    >
-  : never {
+>(): StaticScreenCreator<NavigatorTypeBagFor<F, ParamListBase>> {
   return ((config: unknown) => config) as never;
 }
 

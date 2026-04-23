@@ -1183,6 +1183,9 @@ export type NavigationListBase<ParamList extends ParamListBase> = {
  * navigator authors only need to override `State`, `ScreenOptions`,
  * `EventMap`, `ActionHelpers`, and `Navigator`.
  */
+type ActionHelpersOf<T> =
+  T extends Record<string, (...args: any) => void> ? T : {};
+
 export interface NavigatorTypeBagBase {
   ParamList: {};
   State: NavigationState;
@@ -1196,9 +1199,7 @@ export interface NavigatorTypeBagBase {
       this['State'],
       this['ScreenOptions'],
       this['EventMap'],
-      this['ActionHelpers'] extends Record<string, (...args: any) => void>
-        ? this['ActionHelpers']
-        : {}
+      ActionHelpersOf<this['ActionHelpers']>
     >;
   };
   Navigator: React.ComponentType<any>;
