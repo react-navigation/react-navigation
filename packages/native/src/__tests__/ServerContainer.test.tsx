@@ -2,7 +2,6 @@ import { expect, jest, test } from '@jest/globals';
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
-  type NavigationListBase,
   type NavigatorScreenParams,
   type NavigatorTypeBagFactory,
   type ParamListBase,
@@ -68,11 +67,7 @@ test('renders correct state with location', () => {
   };
 
   interface StackTypeBag extends NavigatorTypeBagFactory {
-    ParamList: this['input'];
     State: StackNavigationState<this['input']>;
-    ScreenOptions: {};
-    EventMap: {};
-    NavigationList: NavigationListBase<this['input']>;
     Navigator: typeof StackNavigator;
   }
 

@@ -1,7 +1,6 @@
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
-  type NavigationListBase,
   type NavigatorTypeBagFactory,
   type ParamListBase,
   type StackNavigationState,
@@ -31,11 +30,7 @@ const StackNavigator = (
 };
 
 interface StubStackTypeBag extends NavigatorTypeBagFactory {
-  ParamList: this['input'];
   State: StackNavigationState<this['input']>;
-  ScreenOptions: {};
-  EventMap: {};
-  NavigationList: NavigationListBase<this['input']>;
   Navigator: typeof StackNavigator;
 }
 

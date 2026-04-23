@@ -1186,16 +1186,29 @@ export type NavigatorTypeBagBase = {
  * Navigator authors extend this and reference `this['input']` (the
  * param list) in the bag fields to express how they depend on it.
  *
- * The defaults are a permissive bag used when the factory is called
- * without a generic — any string is a valid screen name.
+ * `ParamList` and `NavigationList` default to derivations of the other
+ * fields, so navigator authors only need to override `State`,
+ * `ScreenOptions`, `EventMap`, `ActionHelpers`, and `Navigator`.
  */
 export interface NavigatorTypeBagFactory {
   input: {};
-  ParamList: ParamListBase;
+  ParamList: this['input'];
   State: NavigationState;
   ScreenOptions: {};
   EventMap: {};
-  NavigationList: NavigationListBase<ParamListBase>;
+  ActionHelpers: {};
+  NavigationList: {
+    [RouteName in keyof this['input']]: NavigationProp<
+      this['input'],
+      RouteName,
+      this['State'],
+      this['ScreenOptions'],
+      this['EventMap'],
+      this['ActionHelpers'] extends Record<string, (...args: any) => void>
+        ? this['ActionHelpers']
+        : {}
+    >;
+  };
   Navigator: React.ComponentType<any>;
 }
 

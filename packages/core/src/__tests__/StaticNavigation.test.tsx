@@ -65,13 +65,7 @@ const TestNavigator = (props: TestNavigatorProps) => {
 };
 
 interface TestNavigatorTypeBag extends NavigatorTypeBagFactory {
-  ParamList: this['input'];
-  State: NavigationState;
   ScreenOptions: TestNavigatorScreenOptions;
-  EventMap: EventMapBase;
-  NavigationList: {
-    [RouteName in keyof this['input']]: unknown;
-  };
   Navigator: typeof TestNavigator;
 }
 

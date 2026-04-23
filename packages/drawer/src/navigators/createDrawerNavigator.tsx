@@ -13,7 +13,6 @@ import {
 import type {
   DrawerNavigationEventMap,
   DrawerNavigationOptions,
-  DrawerNavigationProp,
   DrawerNavigatorProps,
 } from '../types';
 import { DrawerView } from '../views/DrawerView';
@@ -65,16 +64,10 @@ function DrawerNavigator({
 }
 
 export interface DrawerTypeBag extends NavigatorTypeBagFactory {
-  ParamList: this['input'];
   State: DrawerNavigationState<this['input']>;
   ScreenOptions: DrawerNavigationOptions;
   EventMap: DrawerNavigationEventMap;
-  NavigationList: {
-    [RouteName in keyof this['input']]: DrawerNavigationProp<
-      this['input'],
-      RouteName
-    >;
-  };
+  ActionHelpers: DrawerActionHelpers<this['input']>;
   Navigator: typeof DrawerNavigator;
 }
 

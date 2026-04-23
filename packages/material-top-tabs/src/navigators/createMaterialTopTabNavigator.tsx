@@ -13,7 +13,6 @@ import {
 import type {
   MaterialTopTabNavigationEventMap,
   MaterialTopTabNavigationOptions,
-  MaterialTopTabNavigationProp,
   MaterialTopTabNavigatorProps,
 } from '../types';
 import { MaterialTopTabView } from '../views/MaterialTopTabView';
@@ -62,16 +61,10 @@ function MaterialTopTabNavigator({
 }
 
 export interface MaterialTopTabTypeBag extends NavigatorTypeBagFactory {
-  ParamList: this['input'];
   State: TabNavigationState<this['input']>;
   ScreenOptions: MaterialTopTabNavigationOptions;
   EventMap: MaterialTopTabNavigationEventMap;
-  NavigationList: {
-    [RouteName in keyof this['input']]: MaterialTopTabNavigationProp<
-      this['input'],
-      RouteName
-    >;
-  };
+  ActionHelpers: TabActionHelpers<this['input']>;
   Navigator: typeof MaterialTopTabNavigator;
 }
 

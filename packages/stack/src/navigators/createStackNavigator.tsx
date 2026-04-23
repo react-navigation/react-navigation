@@ -17,7 +17,6 @@ import * as React from 'react';
 import type {
   StackNavigationEventMap,
   StackNavigationOptions,
-  StackNavigationProp,
   StackNavigatorProps,
 } from '../types';
 import { StackView } from '../views/Stack/StackView';
@@ -93,16 +92,10 @@ function StackNavigator({
 }
 
 export interface StackTypeBag extends NavigatorTypeBagFactory {
-  ParamList: this['input'];
   State: StackNavigationState<this['input']>;
   ScreenOptions: StackNavigationOptions;
   EventMap: StackNavigationEventMap;
-  NavigationList: {
-    [RouteName in keyof this['input']]: StackNavigationProp<
-      this['input'],
-      RouteName
-    >;
-  };
+  ActionHelpers: StackActionHelpers<this['input']>;
   Navigator: typeof StackNavigator;
 }
 

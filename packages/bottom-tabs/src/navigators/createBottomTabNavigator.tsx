@@ -13,7 +13,6 @@ import {
 import type {
   BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
-  BottomTabNavigationProp,
   BottomTabNavigatorProps,
 } from '../types';
 import { BottomTabView } from '../views/BottomTabViewCommon';
@@ -62,16 +61,10 @@ function BottomTabNavigator({
 }
 
 export interface BottomTabTypeBag extends NavigatorTypeBagFactory {
-  ParamList: this['input'];
   State: TabNavigationState<this['input']>;
   ScreenOptions: BottomTabNavigationOptions;
   EventMap: BottomTabNavigationEventMap;
-  NavigationList: {
-    [RouteName in keyof this['input']]: BottomTabNavigationProp<
-      this['input'],
-      RouteName
-    >;
-  };
+  ActionHelpers: TabActionHelpers<this['input']>;
   Navigator: typeof BottomTabNavigator;
 }
 

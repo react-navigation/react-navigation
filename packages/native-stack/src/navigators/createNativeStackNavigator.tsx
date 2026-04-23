@@ -17,7 +17,6 @@ import * as React from 'react';
 import type {
   NativeStackNavigationEventMap,
   NativeStackNavigationOptions,
-  NativeStackNavigationProp,
   NativeStackNavigatorProps,
 } from '../types';
 import { NativeStackView } from '../views/NativeStackView';
@@ -96,16 +95,10 @@ function NativeStackNavigator({
 }
 
 export interface NativeStackTypeBag extends NavigatorTypeBagFactory {
-  ParamList: this['input'];
   State: StackNavigationState<this['input']>;
   ScreenOptions: NativeStackNavigationOptions;
   EventMap: NativeStackNavigationEventMap;
-  NavigationList: {
-    [RouteName in keyof this['input']]: NativeStackNavigationProp<
-      this['input'],
-      RouteName
-    >;
-  };
+  ActionHelpers: StackActionHelpers<this['input']>;
   Navigator: typeof NativeStackNavigator;
 }
 
