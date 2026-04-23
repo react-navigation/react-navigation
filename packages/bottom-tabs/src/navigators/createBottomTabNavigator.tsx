@@ -61,10 +61,10 @@ function BottomTabNavigator({
 }
 
 export interface BottomTabTypeBag extends NavigatorTypeBagFactory {
-  State: TabNavigationState<this['input']>;
+  State: TabNavigationState<this['ParamList']>;
   ScreenOptions: BottomTabNavigationOptions;
   EventMap: BottomTabNavigationEventMap;
-  ActionHelpers: TabActionHelpers<this['input']>;
+  ActionHelpers: TabActionHelpers<this['ParamList']>;
   Navigator: typeof BottomTabNavigator;
 }
 

@@ -67,7 +67,7 @@ test('renders correct state with location', () => {
   };
 
   interface StackTypeBag extends NavigatorTypeBagFactory {
-    State: StackNavigationState<this['input']>;
+    State: StackNavigationState<this['ParamList']>;
     Navigator: typeof StackNavigator;
   }
 

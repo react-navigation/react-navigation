@@ -95,10 +95,10 @@ function NativeStackNavigator({
 }
 
 export interface NativeStackTypeBag extends NavigatorTypeBagFactory {
-  State: StackNavigationState<this['input']>;
+  State: StackNavigationState<this['ParamList']>;
   ScreenOptions: NativeStackNavigationOptions;
   EventMap: NativeStackNavigationEventMap;
-  ActionHelpers: StackActionHelpers<this['input']>;
+  ActionHelpers: StackActionHelpers<this['ParamList']>;
   Navigator: typeof NativeStackNavigator;
 }
 

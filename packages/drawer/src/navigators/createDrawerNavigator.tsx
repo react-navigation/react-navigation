@@ -64,10 +64,10 @@ function DrawerNavigator({
 }
 
 export interface DrawerTypeBag extends NavigatorTypeBagFactory {
-  State: DrawerNavigationState<this['input']>;
+  State: DrawerNavigationState<this['ParamList']>;
   ScreenOptions: DrawerNavigationOptions;
   EventMap: DrawerNavigationEventMap;
-  ActionHelpers: DrawerActionHelpers<this['input']>;
+  ActionHelpers: DrawerActionHelpers<this['ParamList']>;
   Navigator: typeof DrawerNavigator;
 }
 

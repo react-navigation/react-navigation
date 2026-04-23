@@ -92,10 +92,10 @@ function StackNavigator({
 }
 
 export interface StackTypeBag extends NavigatorTypeBagFactory {
-  State: StackNavigationState<this['input']>;
+  State: StackNavigationState<this['ParamList']>;
   ScreenOptions: StackNavigationOptions;
   EventMap: StackNavigationEventMap;
-  ActionHelpers: StackActionHelpers<this['input']>;
+  ActionHelpers: StackActionHelpers<this['ParamList']>;
   Navigator: typeof StackNavigator;
 }
 

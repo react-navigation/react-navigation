@@ -1183,23 +1183,24 @@ export type NavigatorTypeBagBase = {
 
 /**
  * Higher-kinded encoding of a navigator type bag.
- * Navigator authors extend this and reference `this['input']` (the
- * param list) in the bag fields to express how they depend on it.
+ * Navigator authors extend this and reference `this['ParamList']` in
+ * the other bag fields to express how they depend on it.
+ * `ApplyNavigatorTypeBagFactory` overrides `ParamList` at the call
+ * site, and TS's `this`-resolution threads the new value through.
  *
- * `ParamList` and `NavigationList` default to derivations of the other
- * fields, so navigator authors only need to override `State`,
- * `ScreenOptions`, `EventMap`, `ActionHelpers`, and `Navigator`.
+ * `NavigationList` defaults to a derivation of the other fields, so
+ * navigator authors only need to override `State`, `ScreenOptions`,
+ * `EventMap`, `ActionHelpers`, and `Navigator`.
  */
 export interface NavigatorTypeBagFactory {
-  input: {};
-  ParamList: this['input'];
+  ParamList: {};
   State: NavigationState;
   ScreenOptions: {};
   EventMap: {};
   ActionHelpers: {};
   NavigationList: {
-    [RouteName in keyof this['input']]: NavigationProp<
-      this['input'],
+    [RouteName in keyof this['ParamList']]: NavigationProp<
+      this['ParamList'],
       RouteName,
       this['State'],
       this['ScreenOptions'],
@@ -1217,8 +1218,8 @@ export interface NavigatorTypeBagFactory {
  */
 export type ApplyNavigatorTypeBagFactory<
   F extends NavigatorTypeBagFactory,
-  Input extends {},
-> = Omit<F & { input: Input }, 'input'>;
+  ParamList extends {},
+> = F & { ParamList: ParamList };
 
 type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
   React.ComponentType<

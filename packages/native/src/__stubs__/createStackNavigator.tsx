@@ -30,7 +30,7 @@ const StackNavigator = (
 };
 
 interface StubStackTypeBag extends NavigatorTypeBagFactory {
-  State: StackNavigationState<this['input']>;
+  State: StackNavigationState<this['ParamList']>;
   Navigator: typeof StackNavigator;
 }
 

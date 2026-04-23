@@ -61,10 +61,10 @@ function MaterialTopTabNavigator({
 }
 
 export interface MaterialTopTabTypeBag extends NavigatorTypeBagFactory {
-  State: TabNavigationState<this['input']>;
+  State: TabNavigationState<this['ParamList']>;
   ScreenOptions: MaterialTopTabNavigationOptions;
   EventMap: MaterialTopTabNavigationEventMap;
-  ActionHelpers: TabActionHelpers<this['input']>;
+  ActionHelpers: TabActionHelpers<this['ParamList']>;
   Navigator: typeof MaterialTopTabNavigator;
 }
 
