@@ -14,22 +14,23 @@ import type {
   TypedNavigator,
 } from './types';
 
-export type TypedNavigatorFactory<TypeBag extends NavigatorTypeBagBase> = {
-  <const ParamList extends ParamListBase>(): TypedNavigator<
-    NavigatorTypeBagFor<TypeBag, ParamList>,
-    undefined
-  >;
-  <
-    const Config extends StaticConfig<
-      NavigatorTypeBagFor<TypeBag, ParamListBase>
-    >,
-  >(
-    config: Config
-  ): TypedNavigator<
-    NavigatorTypeBagFor<TypeBag, StaticParamList<{ config: Config }>>,
-    Config
-  >;
-};
+export type TypedNavigatorFactory<in out TypeBag extends NavigatorTypeBagBase> =
+  {
+    <const ParamList extends ParamListBase>(): TypedNavigator<
+      NavigatorTypeBagFor<TypeBag, ParamList>,
+      undefined
+    >;
+    <
+      const Config extends StaticConfig<
+        NavigatorTypeBagFor<TypeBag, ParamListBase>
+      >,
+    >(
+      config: Config
+    ): TypedNavigator<
+      NavigatorTypeBagFor<TypeBag, StaticParamList<{ config: Config }>>,
+      Config
+    >;
+  };
 
 /**
  * Higher order function to create a navigator factory
