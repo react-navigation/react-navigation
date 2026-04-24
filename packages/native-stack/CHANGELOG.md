@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.25...@react-navigation/native-stack@8.0.0-alpha.26) (2026-04-24)
+
+### Bug Fixes
+
+* fix formSheet fitToContents not working ([7b7e3ef](https://github.com/react-navigation/react-navigation/commit/7b7e3effce4f44452d539f237e3e37a288119ca8)), closes [#13083](https://github.com/react-navigation/react-navigation/issues/13083) - by @satya164
+* preserve accessibility on android when header transparent is true ([#13075](https://github.com/react-navigation/react-navigation/issues/13075)) ([7def789](https://github.com/react-navigation/react-navigation/commit/7def7896512e5c187d00c7b92fec946fd3c9d0c2)), closes [#13043](https://github.com/react-navigation/react-navigation/issues/13043) - by @lcsy1234
+
 # [8.0.0-alpha.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.24...@react-navigation/native-stack@8.0.0-alpha.25) (2026-04-15)
 
 **Note:** Version bump only for package @react-navigation/native-stack

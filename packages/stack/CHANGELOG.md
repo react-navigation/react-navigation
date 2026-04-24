@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.24...@react-navigation/stack@8.0.0-alpha.25) (2026-04-24)
+
+### Bug Fixes
+
+* don't keep screens visible in stack if animation isn't enabled ([4528665](https://github.com/react-navigation/react-navigation/commit/4528665e37f0b0acf9d499ac1e0ff48ef17e97bf)) - by @satya164
+* handle routes moved to preloadedRoutes in stack ([ac06c2c](https://github.com/react-navigation/react-navigation/commit/ac06c2cb41e555efa8163dc2df5ba911aa93cb32)) - by @satya164
+* preserve accessibility on android when header transparent is true ([#13075](https://github.com/react-navigation/react-navigation/issues/13075)) ([7def789](https://github.com/react-navigation/react-navigation/commit/7def7896512e5c187d00c7b92fec946fd3c9d0c2)), closes [#13043](https://github.com/react-navigation/react-navigation/issues/13043) - by @lcsy1234
+
+### Features
+
+* add support for retaining screens in stack ([#13076](https://github.com/react-navigation/react-navigation/issues/13076)) ([451fa65](https://github.com/react-navigation/react-navigation/commit/451fa65ad2af479eeb3ffce9bb0a4d90bdc695cc)) - by @satya164
+
 # [8.0.0-alpha.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.23...@react-navigation/stack@8.0.0-alpha.24) (2026-04-15)
 
 **Note:** Version bump only for package @react-navigation/stack

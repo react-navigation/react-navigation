@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.22...@react-navigation/elements@3.0.0-alpha.23) (2026-04-24)
+
+### Bug Fixes
+
+* preserve accessibility on android when header transparent is true ([#13075](https://github.com/react-navigation/react-navigation/issues/13075)) ([7def789](https://github.com/react-navigation/react-navigation/commit/7def7896512e5c187d00c7b92fec946fd3c9d0c2)), closes [#13043](https://github.com/react-navigation/react-navigation/issues/13043) - by @lcsy1234
+
 # [3.0.0-alpha.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.21...@react-navigation/elements@3.0.0-alpha.22) (2026-04-15)
 
 **Note:** Version bump only for package @react-navigation/elements

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.5...@react-navigation/routers@8.0.0-alpha.6) (2026-04-24)
+
+### Features
+
+* add support for retaining screens in stack ([#13076](https://github.com/react-navigation/react-navigation/issues/13076)) ([451fa65](https://github.com/react-navigation/react-navigation/commit/451fa65ad2af479eeb3ffce9bb0a4d90bdc695cc)) - by @satya164
+
 # [8.0.0-alpha.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.4...@react-navigation/routers@8.0.0-alpha.5) (2026-04-13)
 
 ### Features

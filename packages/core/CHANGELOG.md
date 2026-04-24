@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.11...@react-navigation/core@8.0.0-alpha.12) (2026-04-24)
+
+### Bug Fixes
+
+* expose initialRouteName and screens in static config linking types ([bce29d6](https://github.com/react-navigation/react-navigation/commit/bce29d64514eb09b16ba513ca3e4b1777b8d1297)) - by @satya164
+* improve type inference performance ([#13081](https://github.com/react-navigation/react-navigation/issues/13081)) ([2c5f5bb](https://github.com/react-navigation/react-navigation/commit/2c5f5bbb1b391e38f3b2cc057e42ed45768f38bf)) - by @satya164
+
+### Features
+
+* add support for retaining screens in stack ([#13076](https://github.com/react-navigation/react-navigation/issues/13076)) ([451fa65](https://github.com/react-navigation/react-navigation/commit/451fa65ad2af479eeb3ffce9bb0a4d90bdc695cc)) - by @satya164
+
 # [8.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.10...@react-navigation/core@8.0.0-alpha.11) (2026-04-15)
 
 ### Bug Fixes
