@@ -606,6 +606,7 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
     index: 1,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -622,6 +623,7 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -644,6 +646,7 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -663,6 +666,7 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -680,6 +684,7 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -756,6 +761,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
     index: 1,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -772,6 +778,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -783,6 +790,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
           index: 0,
           key: 'stack-8',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-9', name: 'qux' }],
           stale: false,
@@ -803,6 +811,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -814,6 +823,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
           index: 0,
           key: 'stack-8',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-9', name: 'qux' }],
           stale: false,
@@ -834,6 +844,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -851,6 +862,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -932,6 +944,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
     index: 1,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -948,6 +961,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -959,6 +973,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
           index: 0,
           key: 'stack-8',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
@@ -968,6 +983,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
                 index: 0,
                 key: 'stack-12',
                 preloadedRoutes: [],
+                retainedRouteKeys: [],
                 routeNames: ['lex'],
                 routes: [{ key: 'lex-13', name: 'lex' }],
                 stale: false,
@@ -993,6 +1009,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -1004,6 +1021,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
           index: 0,
           key: 'stack-8',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
@@ -1013,6 +1031,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
                 index: 0,
                 key: 'stack-12',
                 preloadedRoutes: [],
+                retainedRouteKeys: [],
                 routeNames: ['lex'],
                 routes: [{ key: 'lex-13', name: 'lex' }],
                 stale: false,
@@ -1038,6 +1057,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -1055,6 +1075,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -1146,6 +1167,7 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
     index: 3,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -1158,6 +1180,7 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
           index: 0,
           key: 'stack-9',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
@@ -1167,6 +1190,7 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
                 index: 0,
                 key: 'stack-13',
                 preloadedRoutes: [],
+                retainedRouteKeys: [],
                 routeNames: ['lex'],
                 routes: [{ key: 'lex-14', name: 'lex' }],
                 stale: false,
@@ -1220,6 +1244,7 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -1296,6 +1321,7 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
     index: 1,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -1306,6 +1332,7 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
           index: 0,
           key: 'stack-7',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-8', name: 'qux' }],
           stale: false,
@@ -1324,6 +1351,7 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
       routeNames: ['foo', 'bar', 'baz'],
       routes: [{ key: 'foo-3', name: 'foo' }],
       preloadedRoutes: [],
+      retainedRouteKeys: [],
       stale: false,
       type: 'stack',
     };
@@ -1338,6 +1366,7 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
     index: 1,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -1348,6 +1377,7 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
           index: 0,
           key: 'stack-7',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-8', name: 'qux' }],
           stale: false,
@@ -1368,6 +1398,7 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
       routeNames: ['foo', 'bar', 'baz'],
       routes: [{ key: 'foo-3', name: 'foo' }],
       preloadedRoutes: [],
+      retainedRouteKeys: [],
       stale: false,
       type: 'stack',
     };
@@ -1382,6 +1413,7 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     stale: false,
     type: 'stack',
   });

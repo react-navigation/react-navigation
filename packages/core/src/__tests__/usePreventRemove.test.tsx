@@ -77,6 +77,7 @@ test("prevents removing a screen with 'usePreventRemove' hook", () => {
     index: 1,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -93,6 +94,7 @@ test("prevents removing a screen with 'usePreventRemove' hook", () => {
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -112,6 +114,7 @@ test("prevents removing a screen with 'usePreventRemove' hook", () => {
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -132,6 +135,7 @@ test("prevents removing a screen with 'usePreventRemove' hook", () => {
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -193,6 +197,7 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
     index: 1,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -209,6 +214,7 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -228,6 +234,7 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -248,6 +255,7 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -302,6 +310,7 @@ test("should have no effect when 'usePreventRemove' hook is set to false", () =>
     index: 1,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -318,6 +327,7 @@ test("should have no effect when 'usePreventRemove' hook is set to false", () =>
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -336,6 +346,7 @@ test("should have no effect when 'usePreventRemove' hook is set to false", () =>
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -350,6 +361,7 @@ test("should have no effect when 'usePreventRemove' hook is set to false", () =>
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -417,6 +429,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
     index: 1,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -433,6 +446,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -444,6 +458,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
           index: 0,
           key: 'stack-8',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-9', name: 'qux' }],
           stale: false,
@@ -464,6 +479,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -475,6 +491,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
           index: 0,
           key: 'stack-8',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-9', name: 'qux' }],
           stale: false,
@@ -493,6 +510,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -504,6 +522,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
           index: 0,
           key: 'stack-8',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-9', name: 'qux' }],
           stale: false,
@@ -525,6 +544,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -596,6 +616,7 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
     index: 1,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -612,6 +633,7 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -623,6 +645,7 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
           index: 0,
           key: 'stack-8',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
@@ -632,6 +655,7 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
                 index: 0,
                 key: 'stack-12',
                 preloadedRoutes: [],
+                retainedRouteKeys: [],
                 routeNames: ['lex'],
                 routes: [{ key: 'lex-13', name: 'lex' }],
                 stale: false,
@@ -657,6 +681,7 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
     index: 2,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -668,6 +693,7 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
           index: 0,
           key: 'stack-8',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
@@ -677,6 +703,7 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
                 index: 0,
                 key: 'stack-12',
                 preloadedRoutes: [],
+                retainedRouteKeys: [],
                 routeNames: ['lex'],
                 routes: [{ key: 'lex-13', name: 'lex' }],
                 stale: false,
@@ -703,6 +730,7 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -789,6 +817,7 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", () =>
     index: 3,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -801,6 +830,7 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", () =>
           index: 0,
           key: 'stack-11',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
@@ -810,6 +840,7 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", () =>
                 index: 0,
                 key: 'stack-15',
                 preloadedRoutes: [],
+                retainedRouteKeys: [],
                 routeNames: ['lex'],
                 routes: [{ key: 'lex-16', name: 'lex' }],
                 stale: false,
@@ -863,6 +894,7 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", () =>
     index: 0,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
@@ -926,6 +958,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
     index: 1,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -936,6 +969,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
           index: 0,
           key: 'stack-7',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-8', name: 'qux' }],
           stale: false,
@@ -954,6 +988,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
       routeNames: ['foo', 'bar', 'baz'],
       routes: [{ key: 'foo-3', name: 'foo' }],
       preloadedRoutes: [],
+      retainedRouteKeys: [],
       stale: false,
       type: 'stack',
     };
@@ -967,6 +1002,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
     index: 1,
     key: 'stack-2',
     preloadedRoutes: [],
+    retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
       { key: 'foo-3', name: 'foo' },
@@ -977,6 +1013,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
           index: 0,
           key: 'stack-7',
           preloadedRoutes: [],
+          retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-8', name: 'qux' }],
           stale: false,

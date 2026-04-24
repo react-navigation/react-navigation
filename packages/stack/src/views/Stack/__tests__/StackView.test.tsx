@@ -29,6 +29,7 @@ const createNavigationState = (
   routeNames: routes.map((r) => r.name),
   routes,
   preloadedRoutes: options.preloadedRoutes ?? [],
+  retainedRouteKeys: [],
 });
 
 const createDescriptors = (

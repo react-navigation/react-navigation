@@ -1,0 +1,36 @@
+appId: ${APP_ID}
+name: Stack - Retain
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: stack-retain
+      TEXT: "Let's Go!"
+- tapOn:
+    text: "Let's Go!"
+- assertVisible:
+    text: 'Retain'
+- extendedWaitUntil:
+    timeout: 5000
+    visible: '3'
+- tapOn:
+    text: 'Retain'
+- assertVisible:
+    text: '📌'
+- back
+- tapOn:
+    text: "Let's Go!"
+- extendedWaitUntil:
+    timeout: 5000
+    visible: '6'
+- assertVisible:
+    text: '📌'
+- tapOn:
+    text: 'Unretain'
+- back
+- tapOn:
+    text: "Let's Go!"
+- assertNotVisible:
+    text: '📌'
+- assertVisible:
+    text: 'Retain'
