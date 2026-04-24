@@ -447,7 +447,7 @@ const SceneView = ({
               // So we leave it always visible
               true
             }
-            style={StyleSheet.absoluteFill}
+            style={styles.content}
           >
             {content}
           </ActivityView>
@@ -584,6 +584,9 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  content: {
     flex: 1,
   },
   header: {
