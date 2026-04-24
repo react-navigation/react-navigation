@@ -4,6 +4,7 @@
 export {
   createMaterialTopTabNavigator,
   createMaterialTopTabScreen,
+  type MaterialTopTabTypeBag,
 } from './navigators/createMaterialTopTabNavigator';
 
 /**

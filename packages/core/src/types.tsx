@@ -1172,14 +1172,37 @@ export type NavigationListBase<ParamList extends ParamListBase> = {
   [RouteName in keyof ParamList]: unknown;
 };
 
-export type NavigatorTypeBagBase = {
+// Only use action helpers if all values are functions
+type ActionHelpersOf<T> =
+  T extends Record<string, (...args: any) => void> ? T : {};
+
+export interface NavigatorTypeBagBase {
   ParamList: {};
   State: NavigationState;
   ScreenOptions: {};
   EventMap: {};
-  NavigationList: NavigationListBase<ParamListBase>;
+  ActionHelpers: {};
+  NavigationList: {
+    [RouteName in keyof this['ParamList']]: NavigationProp<
+      this['ParamList'],
+      RouteName,
+      this['State'],
+      this['ScreenOptions'],
+      this['EventMap'],
+      ActionHelpersOf<this['ActionHelpers']>
+    >;
+  };
   Navigator: React.ComponentType<any>;
-};
+}
+
+/**
+ * Adds a proper `ParamList` to a type bag interface
+ * So it can be used as `this['ParamList']`
+ */
+export type NavigatorTypeBagFor<
+  TypeBag extends NavigatorTypeBagBase,
+  ParamList extends {},
+> = TypeBag & { ParamList: ParamList };
 
 type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
   React.ComponentType<

@@ -9,6 +9,7 @@ import * as TransitionSpecs from './TransitionConfigs/TransitionSpecs';
 export {
   createStackNavigator,
   createStackScreen,
+  type StackTypeBag,
 } from './navigators/createStackNavigator';
 
 /**

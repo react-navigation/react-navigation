@@ -1,19 +1,15 @@
 import {
   createNavigatorFactory,
+  createScreenFactory,
   type EventArg,
   NavigationMetaContext,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type StackActionHelpers,
   StackActions,
   type StackNavigationState,
   StackRouter,
   type StackRouterOptions,
-  type StaticConfig,
-  type StaticParamList,
-  type StaticScreenConfig,
-  type StaticScreenConfigLinking,
-  type StaticScreenConfigScreen,
-  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
@@ -21,7 +17,6 @@ import * as React from 'react';
 import type {
   NativeStackNavigationEventMap,
   NativeStackNavigationOptions,
-  NativeStackNavigationProp,
   NativeStackNavigatorProps,
 } from '../types';
 import { NativeStackView } from '../views/NativeStackView';
@@ -99,47 +94,16 @@ function NativeStackNavigator({
   );
 }
 
-type NativeStackTypeBag<ParamList extends {}> = {
-  ParamList: ParamList;
-  State: StackNavigationState<ParamList>;
+export interface NativeStackTypeBag extends NavigatorTypeBagBase {
+  State: StackNavigationState<this['ParamList']>;
   ScreenOptions: NativeStackNavigationOptions;
   EventMap: NativeStackNavigationEventMap;
-  NavigationList: {
-    [RouteName in keyof ParamList]: NativeStackNavigationProp<
-      ParamList,
-      RouteName
-    >;
-  };
+  ActionHelpers: StackActionHelpers<this['ParamList']>;
   Navigator: typeof NativeStackNavigator;
-};
-
-export function createNativeStackNavigator<
-  const ParamList extends ParamListBase,
->(): TypedNavigator<NativeStackTypeBag<ParamList>, undefined>;
-export function createNativeStackNavigator<
-  const Config extends StaticConfig<NativeStackTypeBag<ParamListBase>>,
->(
-  config: Config
-): TypedNavigator<
-  NativeStackTypeBag<StaticParamList<{ config: Config }>>,
-  Config
->;
-export function createNativeStackNavigator(config?: unknown) {
-  return createNavigatorFactory(NativeStackNavigator)(config);
 }
 
-export function createNativeStackScreen<
-  const Linking extends StaticScreenConfigLinking,
-  const Screen extends StaticScreenConfigScreen,
->(
-  config: StaticScreenConfig<
-    Linking,
-    Screen,
-    StackNavigationState<ParamListBase>,
-    NativeStackNavigationOptions,
-    NativeStackNavigationEventMap,
-    NativeStackNavigationProp<ParamListBase>
-  >
-) {
-  return config;
-}
+export const createNativeStackNavigator =
+  createNavigatorFactory<NativeStackTypeBag>(NativeStackNavigator);
+
+export const createNativeStackScreen =
+  createScreenFactory<NativeStackTypeBag>();

@@ -1,23 +1,18 @@
 import {
   createNavigatorFactory,
+  createScreenFactory,
+  type NavigatorTypeBagBase,
   type ParamListBase,
-  type StaticConfig,
-  type StaticParamList,
-  type StaticScreenConfig,
-  type StaticScreenConfigLinking,
-  type StaticScreenConfigScreen,
   type TabActionHelpers,
   type TabNavigationState,
   TabRouter,
   type TabRouterOptions,
-  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/native';
 
 import type {
   BottomTabNavigationEventMap,
   BottomTabNavigationOptions,
-  BottomTabNavigationProp,
   BottomTabNavigatorProps,
 } from '../types';
 import { BottomTabView } from '../views/BottomTabViewCommon';
@@ -65,47 +60,15 @@ function BottomTabNavigator({
   );
 }
 
-type BottomTabTypeBag<ParamList extends {}> = {
-  ParamList: ParamList;
-  State: TabNavigationState<ParamList>;
+export interface BottomTabTypeBag extends NavigatorTypeBagBase {
+  State: TabNavigationState<this['ParamList']>;
   ScreenOptions: BottomTabNavigationOptions;
   EventMap: BottomTabNavigationEventMap;
-  NavigationList: {
-    [RouteName in keyof ParamList]: BottomTabNavigationProp<
-      ParamList,
-      RouteName
-    >;
-  };
+  ActionHelpers: TabActionHelpers<this['ParamList']>;
   Navigator: typeof BottomTabNavigator;
-};
-
-export function createBottomTabNavigator<
-  const ParamList extends ParamListBase,
->(): TypedNavigator<BottomTabTypeBag<ParamList>, undefined>;
-export function createBottomTabNavigator<
-  const Config extends StaticConfig<BottomTabTypeBag<ParamListBase>>,
->(
-  config: Config
-): TypedNavigator<
-  BottomTabTypeBag<StaticParamList<{ config: Config }>>,
-  Config
->;
-export function createBottomTabNavigator(config?: unknown) {
-  return createNavigatorFactory(BottomTabNavigator)(config);
 }
 
-export function createBottomTabScreen<
-  const Linking extends StaticScreenConfigLinking,
-  const Screen extends StaticScreenConfigScreen,
->(
-  config: StaticScreenConfig<
-    Linking,
-    Screen,
-    TabNavigationState<ParamListBase>,
-    BottomTabNavigationOptions,
-    BottomTabNavigationEventMap,
-    BottomTabNavigationProp<ParamListBase>
-  >
-) {
-  return config;
-}
+export const createBottomTabNavigator =
+  createNavigatorFactory<BottomTabTypeBag>(BottomTabNavigator);
+
+export const createBottomTabScreen = createScreenFactory<BottomTabTypeBag>();

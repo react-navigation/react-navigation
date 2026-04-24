@@ -1,18 +1,14 @@
 import {
   createNavigatorFactory,
+  createScreenFactory,
   type EventArg,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type StackActionHelpers,
   StackActions,
   type StackNavigationState,
   StackRouter,
   type StackRouterOptions,
-  type StaticConfig,
-  type StaticParamList,
-  type StaticScreenConfig,
-  type StaticScreenConfigLinking,
-  type StaticScreenConfigScreen,
-  type TypedNavigator,
   useLocale,
   useNavigationBuilder,
 } from '@react-navigation/native';
@@ -21,7 +17,6 @@ import * as React from 'react';
 import type {
   StackNavigationEventMap,
   StackNavigationOptions,
-  StackNavigationProp,
   StackNavigatorProps,
 } from '../types';
 import { StackView } from '../views/Stack/StackView';
@@ -96,41 +91,15 @@ function StackNavigator({
   );
 }
 
-type StackTypeBag<ParamList extends {}> = {
-  ParamList: ParamList;
-  State: StackNavigationState<ParamList>;
+export interface StackTypeBag extends NavigatorTypeBagBase {
+  State: StackNavigationState<this['ParamList']>;
   ScreenOptions: StackNavigationOptions;
   EventMap: StackNavigationEventMap;
-  NavigationList: {
-    [RouteName in keyof ParamList]: StackNavigationProp<ParamList, RouteName>;
-  };
+  ActionHelpers: StackActionHelpers<this['ParamList']>;
   Navigator: typeof StackNavigator;
-};
-
-export function createStackNavigator<
-  const ParamList extends ParamListBase,
->(): TypedNavigator<StackTypeBag<ParamList>, undefined>;
-export function createStackNavigator<
-  const Config extends StaticConfig<StackTypeBag<ParamListBase>>,
->(
-  config: Config
-): TypedNavigator<StackTypeBag<StaticParamList<{ config: Config }>>, Config>;
-export function createStackNavigator(config?: unknown) {
-  return createNavigatorFactory(StackNavigator)(config);
 }
 
-export function createStackScreen<
-  const Linking extends StaticScreenConfigLinking,
-  const Screen extends StaticScreenConfigScreen,
->(
-  config: StaticScreenConfig<
-    Linking,
-    Screen,
-    StackNavigationState<ParamListBase>,
-    StackNavigationOptions,
-    StackNavigationEventMap,
-    StackNavigationProp<ParamListBase>
-  >
-) {
-  return config;
-}
+export const createStackNavigator =
+  createNavigatorFactory<StackTypeBag>(StackNavigator);
+
+export const createStackScreen = createScreenFactory<StackTypeBag>();

@@ -4,6 +4,7 @@
 export {
   createNativeStackNavigator,
   createNativeStackScreen,
+  type NativeStackTypeBag,
 } from './navigators/createNativeStackNavigator';
 
 /**

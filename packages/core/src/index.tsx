@@ -1,6 +1,9 @@
 export { BaseNavigationContainer } from './BaseNavigationContainer';
 export { createNavigationContainerRef } from './createNavigationContainerRef';
-export { createNavigatorFactory } from './createNavigatorFactory';
+export {
+  createNavigatorFactory,
+  type TypedNavigatorFactory,
+} from './createNavigatorFactory';
 export { CurrentRenderContext } from './CurrentRenderContext';
 export { findFocusedRoute } from './findFocusedRoute';
 export { getActionFromState } from './getActionFromState';
@@ -20,12 +23,14 @@ export { PreventRemoveContext } from './PreventRemoveContext';
 export { PreventRemoveProvider } from './PreventRemoveProvider';
 export {
   createPathConfigForStaticNavigation,
+  createScreenFactory,
   type StaticConfig,
   type StaticNavigation,
   type StaticParamList,
   type StaticScreenConfig,
   type StaticScreenConfigLinking,
   type StaticScreenConfigScreen,
+  type StaticScreenFactory,
   type StaticScreenProps,
 } from './StaticNavigation';
 export { ThemeContext } from './theming/ThemeContext';

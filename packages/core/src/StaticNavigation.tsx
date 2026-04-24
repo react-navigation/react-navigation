@@ -12,6 +12,7 @@ import type {
   NavigationListBase,
   NavigatorScreenParams,
   NavigatorTypeBagBase,
+  NavigatorTypeBagFor,
   PathConfig,
   PathConfigMap,
   RouteGroupConfig,
@@ -351,6 +352,36 @@ export type StaticScreenConfig<
    */
   navigationKey?: string;
 };
+
+export type StaticScreenFactory<Bag extends NavigatorTypeBagBase> = <
+  const Linking extends StaticScreenConfigLinking,
+  const Screen extends StaticScreenConfigScreen,
+>(
+  config: StaticScreenConfig<
+    Linking,
+    Screen,
+    Bag['State'],
+    Bag['ScreenOptions'],
+    Bag['EventMap'],
+    Bag['NavigationList'][keyof Bag['ParamList']]
+  >
+) => StaticScreenConfig<
+  Linking,
+  Screen,
+  Bag['State'],
+  Bag['ScreenOptions'],
+  Bag['EventMap'],
+  Bag['NavigationList'][keyof Bag['ParamList']]
+>;
+
+/**
+ * Helper to create a typed `createXScreen` for static configuration.
+ */
+export function createScreenFactory<
+  TypeBag extends NavigatorTypeBagBase,
+>(): StaticScreenFactory<NavigatorTypeBagFor<TypeBag, ParamListBase>> {
+  return ((config: unknown) => config) as never;
+}
 
 type StaticConfigScreens<
   ParamList extends ParamListBase,

@@ -2,13 +2,12 @@ import { expect, jest, test } from '@jest/globals';
 import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
-  type NavigationListBase,
   type NavigatorScreenParams,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type StackNavigationState,
   StackRouter,
   TabRouter,
-  type TypedNavigator,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -67,16 +66,13 @@ test('renders correct state with location', () => {
     );
   };
 
-  function createStackNavigator<ParamList extends {}>(): TypedNavigator<{
-    ParamList: ParamList;
-    State: StackNavigationState<ParamList>;
-    ScreenOptions: {};
-    EventMap: {};
-    NavigationList: NavigationListBase<ParamList>;
+  interface StackTypeBag extends NavigatorTypeBagBase {
+    State: StackNavigationState<this['ParamList']>;
     Navigator: typeof StackNavigator;
-  }> {
-    return createNavigatorFactory(StackNavigator)();
   }
+
+  const createStackNavigator =
+    createNavigatorFactory<StackTypeBag>(StackNavigator);
 
   type StackAParamList = {
     Home: NavigatorScreenParams<StackBParamList>;
