@@ -194,6 +194,7 @@ function CardContainerInner({
     gestureVelocityImpact,
     headerMode,
     headerShown,
+    headerTransparent,
     transitionSpec,
   } = scene.descriptor.options;
 
@@ -284,7 +285,15 @@ function CardContainerInner({
                   getPreviousScene,
                   getFocusedRoute,
                   onContentHeightChange: onHeaderHeightChange,
-                  style: styles.header,
+                  style: [
+                    styles.header,
+                    headerTransparent
+                      ? {
+                          // Specify an explicit min height for Android screen readers
+                          minHeight: headerHeight,
+                        }
+                      : null,
+                  ],
                 })
               : null}
             <View style={styles.scene}>
