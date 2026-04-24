@@ -17,6 +17,15 @@ import type { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
+const getRoutesUntilIndex = (state: NavigationState) =>
+  state.routes.slice(0, state.index + 1);
+
+/**
+ * Calculate history length from navigator history or active routes.
+ */
+const getHistoryLength = (state: NavigationState): number =>
+  state.history ? state.history.length : getRoutesUntilIndex(state).length;
+
 /**
  * Find the matching navigation state that changed between 2 navigation states
  * e.g.: a -> b -> c -> d and a -> b -> c -> e -> f, if history in b changed, b is the matching state
@@ -29,9 +38,8 @@ const findMatchingState = <T extends NavigationState>(
     return [undefined, undefined];
   }
 
-  // Tab and drawer will have `history` property, but stack will have history in `routes`
-  const aHistoryLength = a.history ? a.history.length : a.routes.length;
-  const bHistoryLength = b.history ? b.history.length : b.routes.length;
+  const aHistoryLength = getHistoryLength(a);
+  const bHistoryLength = getHistoryLength(b);
 
   const aRoute = a.routes[a.index];
   const bRoute = b.routes[b.index];
@@ -55,6 +63,27 @@ const findMatchingState = <T extends NavigationState>(
   }
 
   return findMatchingState(aChildState, bChildState);
+};
+
+/**
+ * Check if the state change is popping the last route or history entry.
+ */
+const isPoppingLastEntry = (
+  current: NavigationState,
+  record: NavigationState
+): boolean => {
+  if (current.history && record.history) {
+    return current.history.length === record.history.length + 1;
+  }
+
+  const currentRoutes = getRoutesUntilIndex(current);
+  const recordRoutes = getRoutesUntilIndex(record);
+
+  if (currentRoutes.length === recordRoutes.length + 1) {
+    return recordRoutes.every((route, i) => route.key === currentRoutes[i].key);
+  }
+
+  return false;
 };
 
 /**
@@ -215,7 +244,27 @@ export function useLinking(
       const record = history.get(index);
 
       if (record?.path === path && record?.state) {
-        navigation.resetRoot(record.state);
+        const currentState = navigation.getRootState();
+
+        const [currentFocused, recordFocused] = findMatchingState(
+          currentState,
+          record.state
+        );
+
+        if (
+          previousIndex - index === 1 &&
+          currentFocused &&
+          recordFocused &&
+          isPoppingLastEntry(currentFocused, recordFocused)
+        ) {
+          // If we detect that the state change is popping the last entry
+          // Dispatch a back action instead of resetting to the state
+          // This makes sure changes to history state since the entry was added don't get lost
+          navigation.goBack();
+        } else {
+          navigation.resetRoot(record.state);
+        }
+
         return;
       }
 
@@ -339,6 +388,7 @@ export function useLinking(
         }
 
         history.replace({ path, state });
+        previousIndexRef.current = history.index;
       }
     }
 
@@ -381,12 +431,8 @@ export function useLinking(
         path !== pendingPath
       ) {
         const historyDelta =
-          (focusedState.history
-            ? focusedState.history.length
-            : focusedState.routes.length) -
-          (previousFocusedState.history
-            ? previousFocusedState.history.length
-            : previousFocusedState.routes.length);
+          getHistoryLength(focusedState) -
+          getHistoryLength(previousFocusedState);
 
         if (historyDelta > 0) {
           // If history length is increased, we should pushState
@@ -428,6 +474,8 @@ export function useLinking(
         // This would happen if the user did a reset/conditionally changed navigators
         history.replace({ path, state });
       }
+
+      previousIndexRef.current = history.index;
     };
 
     // We debounce onStateChange coz we don't want multiple state changes to be handled at one time
