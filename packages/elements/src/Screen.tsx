@@ -82,12 +82,6 @@ export function Screen(props: Props) {
       {headerShown ? (
         <NavigationProvider navigation={navigation} route={route}>
           <View
-            ref={headerRef}
-            onLayout={(e) => {
-              const { height } = e.nativeEvent.layout;
-
-              setHeaderHeight(height);
-            }}
             style={[
               styles.header,
               headerTransparent
@@ -99,7 +93,17 @@ export function Screen(props: Props) {
                 : null,
             ]}
           >
-            {header}
+            <View
+              ref={headerRef}
+              onLayout={(e) => {
+                const { height } = e.nativeEvent.layout;
+
+                setHeaderHeight(height);
+              }}
+              style={{ pointerEvents: 'box-none' }}
+            >
+              {header}
+            </View>
           </View>
         </NavigationProvider>
       ) : null}

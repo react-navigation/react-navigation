@@ -330,12 +330,6 @@ const SceneView = ({
         ) : null}
         {header != null && headerShown !== false ? (
           <View
-            onLayout={(e) => {
-              const headerHeight = e.nativeEvent.layout.height;
-
-              animatedHeaderHeight.setValue(headerHeight);
-              setHeaderHeight(headerHeight);
-            }}
             style={[
               styles.header,
               headerTransparent
@@ -347,12 +341,22 @@ const SceneView = ({
                 : null,
             ]}
           >
-            {header({
-              back: headerBack,
-              options,
-              route,
-              navigation,
-            })}
+            <View
+              onLayout={(e) => {
+                const headerHeight = e.nativeEvent.layout.height;
+
+                animatedHeaderHeight.setValue(headerHeight);
+                setHeaderHeight(headerHeight);
+              }}
+              style={{ pointerEvents: 'box-none' }}
+            >
+              {header({
+                back: headerBack,
+                options,
+                route,
+                navigation,
+              })}
+            </View>
           </View>
         ) : null}
         <HeaderShownContext.Provider
