@@ -353,7 +353,7 @@ export type StaticScreenConfig<
   navigationKey?: string;
 };
 
-export type StaticScreenCreator<Bag extends NavigatorTypeBagBase> = <
+export type StaticScreenFactory<Bag extends NavigatorTypeBagBase> = <
   const Linking extends StaticScreenConfigLinking,
   const Screen extends StaticScreenConfigScreen,
 >(
@@ -375,13 +375,11 @@ export type StaticScreenCreator<Bag extends NavigatorTypeBagBase> = <
 >;
 
 /**
- * Factory to create a typed `createScreen` helper for a navigator.
- * Used by navigator authors to expose a `createXScreen` identity function
- * that types the screen config for their navigator.
+ * Helper to create a typed `createXScreen` for static configuration.
  */
 export function createScreenFactory<
-  F extends NavigatorTypeBagBase,
->(): StaticScreenCreator<NavigatorTypeBagFor<F, ParamListBase>> {
+  TypeBag extends NavigatorTypeBagBase,
+>(): StaticScreenFactory<NavigatorTypeBagFor<TypeBag, ParamListBase>> {
   return ((config: unknown) => config) as never;
 }
 

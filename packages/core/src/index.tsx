@@ -2,7 +2,7 @@ export { BaseNavigationContainer } from './BaseNavigationContainer';
 export { createNavigationContainerRef } from './createNavigationContainerRef';
 export {
   createNavigatorFactory,
-  type TypedNavigatorCreator,
+  type TypedNavigatorFactory,
 } from './createNavigatorFactory';
 export { CurrentRenderContext } from './CurrentRenderContext';
 export { findFocusedRoute } from './findFocusedRoute';
@@ -30,7 +30,7 @@ export {
   type StaticScreenConfig,
   type StaticScreenConfigLinking,
   type StaticScreenConfigScreen,
-  type StaticScreenCreator,
+  type StaticScreenFactory,
   type StaticScreenProps,
 } from './StaticNavigation';
 export { ThemeContext } from './theming/ThemeContext';

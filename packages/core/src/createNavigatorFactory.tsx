@@ -14,29 +14,35 @@ import type {
   TypedNavigator,
 } from './types';
 
-export type TypedNavigatorCreator<F extends NavigatorTypeBagBase> = {
+export type TypedNavigatorFactory<TypeBag extends NavigatorTypeBagBase> = {
   <const ParamList extends ParamListBase>(): TypedNavigator<
-    NavigatorTypeBagFor<F, ParamList>,
+    NavigatorTypeBagFor<TypeBag, ParamList>,
     undefined
   >;
-  <const Config extends StaticConfig<NavigatorTypeBagFor<F, ParamListBase>>>(
+  <
+    const Config extends StaticConfig<
+      NavigatorTypeBagFor<TypeBag, ParamListBase>
+    >,
+  >(
     config: Config
   ): TypedNavigator<
-    NavigatorTypeBagFor<F, StaticParamList<{ config: Config }>>,
+    NavigatorTypeBagFor<TypeBag, StaticParamList<{ config: Config }>>,
     Config
   >;
 };
 
 /**
- * Higher order component to create a `Navigator` and `Screen` pair.
- * Custom navigators should wrap the navigator component in `createNavigator` before exporting.
+ * Higher order function to create a navigator factory
+ * A navigator factory creates a navigator:
+ * - `Navigator` and `Screen` pairs for dynamic configuration
+ * - Static navigator object for static configuration
  *
  * @param Navigator The navigator component to wrap.
- * @returns Factory method to create a `Navigator` and `Screen` pair.
+ * @returns Factory method to create a navigator
  */
-export function createNavigatorFactory<
-  F extends NavigatorTypeBagBase = NavigatorTypeBagBase,
->(Navigator: React.ComponentType<any>): TypedNavigatorCreator<F> {
+export function createNavigatorFactory<TypeBag extends NavigatorTypeBagBase>(
+  Navigator: React.ComponentType<any>
+): TypedNavigatorFactory<TypeBag> {
   const displayName = Navigator.displayName ?? Navigator.name ?? 'Navigator';
 
   function createNavigator(config?: any): any {
@@ -84,5 +90,5 @@ export function createNavigatorFactory<
     };
   }
 
-  return createNavigator as never;
+  return createNavigator;
 }
