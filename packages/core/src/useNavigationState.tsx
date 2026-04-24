@@ -51,9 +51,11 @@ export function useNavigationState(...args: unknown[]): unknown {
 
   if (typeof args[0] === 'string') {
     // `useNavigation` uses `use` internally, so it's fine to call it conditionally
-    // @ts-expect-error we can't specify the type here
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    navigation = useNavigation(args[0]);
+    // Cast to a non-generic signature to skip overload resolution - otherwise TS
+    // eagerly expands `NavigationListForNested<RootNavigator>` at this call site.
+    navigation = (
+      useNavigation as (name: string) => NavigationProp<ParamListBase>
+    )(args[0]);
     selector = args[1];
   } else {
     selector = args[0];

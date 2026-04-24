@@ -181,7 +181,7 @@ export type EventMapBase = Record<
   { data?: any; canPreventDefault?: boolean | undefined }
 >;
 
-export type EventMapCore<State extends NavigationState> = {
+export type EventMapCore<in out State extends NavigationState> = {
   focus: { data: undefined };
   blur: { data: undefined };
   state: { data: { state: State } };
@@ -218,9 +218,9 @@ export type EventArg<
     : { readonly data: Readonly<Data> });
 
 export type EventListenerCallback<
-  EventMap extends EventMapBase,
-  EventName extends keyof EventMap,
-  EventCanPreventDefault extends boolean | undefined =
+  in out EventMap extends EventMapBase,
+  in out EventName extends keyof EventMap,
+  in out EventCanPreventDefault extends boolean | undefined =
     EventMap[EventName]['canPreventDefault'],
 > = (
   e: EventArg<
@@ -230,7 +230,7 @@ export type EventListenerCallback<
   >
 ) => void;
 
-export type EventConsumer<EventMap extends EventMapBase> = {
+export type EventConsumer<in out EventMap extends EventMapBase> = {
   /**
    * Subscribe to events from the parent navigator.
    *
@@ -247,7 +247,7 @@ export type EventConsumer<EventMap extends EventMapBase> = {
   ): void;
 };
 
-export type EventEmitter<EventMap extends EventMapBase> = {
+export type EventEmitter<in out EventMap extends EventMapBase> = {
   /**
    * Emit an event to child screens.
    *
@@ -436,8 +436,8 @@ type ParamType<
   : unknown;
 
 type NavigationHelpersRoute<
-  ParamList extends {},
-  RouteName extends keyof ParamList = KeyOf<ParamList>,
+  in out ParamList extends {},
+  in out RouteName extends keyof ParamList = KeyOf<ParamList>,
 > = {
   /**
    * Update the param object for the route.
@@ -541,37 +541,45 @@ export type NavigationProp<
   PrivateValueStore<[ParamList, RouteName, EventMap]>;
 
 export type RouteProp<
-  ParamList extends ParamListBase,
-  RouteName extends keyof ParamList = KeyOf<ParamList>,
+  in out ParamList extends ParamListBase,
+  in out RouteName extends keyof ParamList = KeyOf<ParamList>,
 > = Route<Extract<RouteName, string>, ParamList[RouteName]>;
 
 export type CompositeNavigationProp<
   A extends NavigationProp<ParamListBase, any, any, any, any>,
   B extends NavigationProp<ParamListBase, any, any, any, any>,
+> = CompositeNavigationPropInternal<
+  A,
+  B,
+  /**
+   * Param list from both navigation objects needs to be combined
+   * For example, we should be able to navigate to screens in both A and B
+   */
+  ParamListOfNavigationProp<A> & ParamListOfNavigationProp<B>,
+  /**
+   * The route name should refer to the route name specified in the first type
+   */
+  RouteNameOfNavigationProp<A>,
+  /**
+   * Event map should refer to the config specified in the first type
+   */
+  EventMapOfNavigationProp<A>
+>;
+
+type CompositeNavigationPropInternal<
+  A extends NavigationProp<ParamListBase, any, any, any, any>,
+  B extends NavigationProp<ParamListBase, any, any, any, any>,
+  ParamList extends {},
+  RouteName extends keyof ParamList,
+  EventMap extends EventMapBase,
 > = Omit<A & B, keyof NavigationProp<any, any, any, any, any>> &
   Omit<
     NavigationProp<
-      /**
-       * Param list from both navigation objects needs to be combined
-       * For example, we should be able to navigate to screens in both A and B
-       */
-      ParamListOfNavigationProp<A> & ParamListOfNavigationProp<B>,
-      /**
-       * The route name should refer to the route name specified in the first type
-       */
-      RouteNameOfNavigationProp<A>,
-      /**
-       * The type of state should refer to the state specified in the first type
-       */
+      ParamList,
+      RouteName,
       StateOfNavigationProp<A>,
-      /**
-       * Screen options should refer to the options specified in the first type
-       */
       ScreenOptionsOfNavigationProp<A>,
-      /**
-       * Event map should refer to the config specified in the first type
-       */
-      EventMapOfNavigationProp<A>
+      EventMap
     >,
     'getParent'
   > & {
@@ -579,13 +587,7 @@ export type CompositeNavigationProp<
   } & // Mapped types don't preserve protected members
   // So `Omit` drops `PrivateValueStore`'s `protected` brand
   // We add it back so this can be used for type inference
-  PrivateValueStore<
-    [
-      ParamListOfNavigationProp<A> & ParamListOfNavigationProp<B>,
-      RouteNameOfNavigationProp<A>,
-      EventMapOfNavigationProp<A>,
-    ]
-  >;
+  PrivateValueStore<[ParamList, RouteName, EventMap]>;
 
 type ParamListOfNavigationProp<T> =
   T extends PrivateValueStore<[infer ParamList, any, any]> ? ParamList : never;
@@ -611,11 +613,11 @@ type EventMapOfNavigationProp<T> =
   T extends PrivateValueStore<[any, any, infer EventMap]> ? EventMap : {};
 
 export type CompositeScreenProps<
-  A extends {
+  in out A extends {
     navigation: NavigationProp<ParamListBase, string, any, any, any>;
     route: RouteProp<ParamListBase>;
   },
-  B extends {
+  in out B extends {
     navigation: NavigationProp<ParamListBase, string, any, any, any>;
   },
 > = {
@@ -624,10 +626,10 @@ export type CompositeScreenProps<
 };
 
 export type ScreenLayoutArgs<
-  ParamList extends ParamListBase,
-  RouteName extends keyof ParamList,
-  ScreenOptions extends {},
-  Navigation,
+  in out ParamList extends ParamListBase,
+  in out RouteName extends keyof ParamList,
+  in out ScreenOptions extends {},
+  in out Navigation,
 > = {
   route: RouteProp<ParamList, RouteName>;
   options: ScreenOptions;
@@ -637,9 +639,9 @@ export type ScreenLayoutArgs<
 };
 
 export type Descriptor<
-  ScreenOptions extends {},
-  Navigation extends NavigationProp<ParamListBase, any, any, any, any>,
-  Route extends RouteProp<any, any>,
+  out ScreenOptions extends {},
+  out Navigation extends NavigationProp<ParamListBase, any, any, any, any>,
+  out Route extends RouteProp<any, any>,
 > = {
   /**
    * Render the component associated with this route.
@@ -663,8 +665,8 @@ export type Descriptor<
 };
 
 export type ScreenListeners<
-  State extends NavigationState,
-  EventMap extends EventMapBase,
+  in out State extends NavigationState,
+  in out EventMap extends EventMapBase,
 > = Partial<{
   [EventName in keyof (EventMap & EventMapCore<State>)]: EventListenerCallback<
     EventMap & EventMapCore<State>,
@@ -715,12 +717,12 @@ export type RouteConfigComponent<
     };
 
 export type RouteConfigProps<
-  ParamList extends ParamListBase,
-  RouteName extends keyof ParamList,
-  State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase,
-  Navigation,
+  in out ParamList extends ParamListBase,
+  in out RouteName extends keyof ParamList,
+  in out State extends NavigationState,
+  in out ScreenOptions extends {},
+  in out EventMap extends EventMapBase,
+  in out Navigation,
 > = {
   /**
    * Optional key for this screen. This doesn't need to be unique.
@@ -810,9 +812,9 @@ export type RouteConfig<
   RouteConfigComponent<ParamList, RouteName>;
 
 export type RouteGroupConfig<
-  ParamList extends ParamListBase,
-  ScreenOptions extends {},
-  Navigation,
+  in out ParamList extends ParamListBase,
+  in out ScreenOptions extends {},
+  in out Navigation,
 > = {
   /**
    * Optional key for the screens in this group.
@@ -1081,8 +1083,8 @@ type NavigationListForNestedInternal<Navigator> =
     >;
 
 type NavigationListWithComposite<
-  Parent extends NavigationProp<any, any, any, any, any>,
-  NavigatorList extends Record<string, any>,
+  in out Parent extends NavigationProp<any, any, any, any, any>,
+  in out NavigatorList extends Record<string, any>,
 > = {
   [K in keyof NavigatorList]: CompositeNavigationProp<NavigatorList[K], Parent>;
 };
@@ -1168,7 +1170,7 @@ export type NavigationContainerRefWithCurrent<ParamList extends {}> =
     current: NavigationContainerRef<ParamList> | null;
   };
 
-export type NavigationListBase<ParamList extends ParamListBase> = {
+export type NavigationListBase<in out ParamList extends ParamListBase> = {
   [RouteName in keyof ParamList]: unknown;
 };
 
@@ -1226,7 +1228,10 @@ type TypedNavigatorStaticDecorated<Bag extends NavigatorTypeBagBase, Config> = {
   config: Config;
 } & PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
 
-type TypedNavigatorStatic<Bag extends NavigatorTypeBagBase, Config> = {
+type TypedNavigatorStatic<
+  in out Bag extends NavigatorTypeBagBase,
+  in out Config,
+> = {
   config: Config;
   with: (
     Component: React.ComponentType<{
@@ -1252,12 +1257,12 @@ export type TypedNavigator<
   PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
 
 type TypedNavigatorInternal<
-  ParamList extends ParamListBase,
-  State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase,
-  NavigationList extends NavigationListBase<ParamList>,
-  Navigator extends React.ComponentType<any>,
+  in out ParamList extends ParamListBase,
+  in out State extends NavigationState,
+  in out ScreenOptions extends {},
+  in out EventMap extends EventMapBase,
+  in out NavigationList extends NavigationListBase<ParamList>,
+  in out Navigator extends React.ComponentType<any>,
 > = {
   /**
    * Navigator component which manages the child screens.

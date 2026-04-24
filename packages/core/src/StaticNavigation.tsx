@@ -44,9 +44,7 @@ type ParamsForScreenComponent<T> = T extends (...args: any[]) => any
 // If every nested route's params include `undefined`, the nested navigator
 // itself can be omitted. Otherwise, require `NavigatorScreenParams`.
 type ParamsForNestedNavigator<
-  T extends {
-    config: StaticConfig<NavigatorTypeBagBase>;
-  },
+  T extends { config: any },
   ParamList extends {} = StaticParamList<T>,
 > = {
   // Exclude routes with optional params so the resulting union only contains route names with required params.
@@ -60,12 +58,10 @@ type ParamsForNestedNavigator<
 
 type ParamsForScreen<T> =
   // Nested navigator in screen property
-  T extends {
-    screen: { config: StaticConfig<NavigatorTypeBagBase> };
-  }
+  T extends { screen: { config: any } }
     ? ParamsForNestedNavigator<T['screen']>
     : // Direct nested navigator
-      T extends { config: StaticConfig<NavigatorTypeBagBase> }
+      T extends { config: any }
       ? ParamsForNestedNavigator<T>
       : T extends {
             screen: React.ComponentType<any>;
@@ -94,16 +90,19 @@ type MergeLinkingAndScreenParams<LinkingParams, ScreenParams> =
  * - When screen is a nested navigator: merges path params with navigator screen params
  * - Otherwise: merges path params with screen component params
  */
-type ParamsForConfig<Linking, Screen> = undefined extends Linking
-  ? ParamsForScreen<Screen>
+type ParamsForConfig<Linking, Screen> = ParamsForConfigInternal<
+  Linking,
+  Screen,
+  ParamsForScreen<Screen>
+>;
+
+type ParamsForConfigInternal<Linking, Screen, SP> = undefined extends Linking
+  ? SP
   : ShouldInferFromLinking<Linking> extends true
-    ? Screen extends { config: StaticConfig<NavigatorTypeBagBase> }
-      ? FlatType<InferParamsFromLinking<Linking>> & ParamsForScreen<Screen>
-      : MergeLinkingAndScreenParams<
-          InferParamsFromLinking<Linking>,
-          ParamsForScreen<Screen>
-        >
-    : ParamsForScreen<Screen>;
+    ? Screen extends { config: any }
+      ? FlatType<InferParamsFromLinking<Linking>> & SP
+      : MergeLinkingAndScreenParams<InferParamsFromLinking<Linking>, SP>
+    : SP;
 
 type ParamListForScreens<Screens> = {
   [Key in KeysOf<Screens>]: Screens[Key] extends StaticScreenConfig<
@@ -353,7 +352,7 @@ export type StaticScreenConfig<
   navigationKey?: string;
 };
 
-export type StaticScreenFactory<Bag extends NavigatorTypeBagBase> = <
+export type StaticScreenFactory<in out Bag extends NavigatorTypeBagBase> = <
   const Linking extends StaticScreenConfigLinking,
   const Screen extends StaticScreenConfigScreen,
 >(
@@ -384,11 +383,11 @@ export function createScreenFactory<
 }
 
 type StaticConfigScreens<
-  ParamList extends ParamListBase,
-  State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase,
-  NavigationList extends NavigationListBase<ParamList>,
+  in out ParamList extends ParamListBase,
+  in out State extends NavigationState,
+  in out ScreenOptions extends {},
+  in out EventMap extends EventMapBase,
+  in out NavigationList extends NavigationListBase<ParamList>,
 > = {
   [RouteName in keyof ParamList]:
     | React.ComponentType<any>
@@ -480,13 +479,7 @@ type StaticConfigInternal<
 > = Omit<
   Omit<
     React.ComponentProps<Navigator>,
-    keyof DefaultNavigatorOptions<
-      ParamListBase,
-      NavigationState,
-      {},
-      EventMapBase,
-      NavigationList[keyof ParamList]
-    >
+    keyof DefaultNavigatorOptions<any, any, any, any, any>
   > &
     DefaultNavigatorOptions<
       ParamList,
@@ -552,7 +545,9 @@ type StaticConfigInternal<
  * Props for a screen component which is rendered by a static navigator.
  * Takes the route params as a generic argument.
  */
-export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
+export type StaticScreenProps<
+  in out T extends Record<string, unknown> | undefined,
+> = {
   route: {
     params: T;
   };
@@ -570,7 +565,9 @@ export type StaticParamList<
     ParamListForGroups<T['config']['groups']>
 >;
 
-export type StaticNavigation<NavigatorTypeBag extends NavigatorTypeBagBase> = {
+export type StaticNavigation<
+  in out NavigatorTypeBag extends NavigatorTypeBagBase,
+> = {
   config: StaticConfig<NavigatorTypeBag>;
   getComponent: () => React.ComponentType<{}>;
 };
