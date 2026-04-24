@@ -1,4 +1,4 @@
-name: Measure TypeScript perf
+name: TypeScript Performance
 
 on:
   pull_request:
@@ -31,7 +31,7 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
-      - name: Measure TypeScript perf
+      - name: Measure TypeScript performance
         id: measure
         run: |
           {
@@ -40,7 +40,7 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
-      - name: Post or update PR comment if noticeable
+      - name: Comment noticeable variations
         uses: actions/github-script@v7
         env:
           REPORT: ${{ steps.measure.outputs.report }}
