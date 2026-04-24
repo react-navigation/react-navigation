@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.8.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.8.10...@react-navigation/stack@7.8.11) (2026-04-24)
+
+### Bug Fixes
+
+* preserve accessibility on android when header transparent is true ([#13075](https://github.com/react-navigation/react-navigation/issues/13075)) ([96130d4](https://github.com/react-navigation/react-navigation/commit/96130d479788022f26e7b4d1afb6daeb73e9015e)), closes [#13043](https://github.com/react-navigation/react-navigation/issues/13043) - by @
+
 ## [7.8.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.8.9...@react-navigation/stack@7.8.10) (2026-04-09)
 
 ### Bug Fixes
