@@ -77,16 +77,28 @@ export function Screen(props: Props) {
       {headerShown ? (
         <NavigationProvider route={route} navigation={navigation}>
           <View
-            ref={headerRef}
-            pointerEvents="box-none"
-            onLayout={(e) => {
-              const { height } = e.nativeEvent.layout;
-
-              setHeaderHeight(height);
-            }}
-            style={[styles.header, headerTransparent ? styles.absolute : null]}
+            style={[
+              styles.header,
+              headerTransparent
+                ? [
+                    styles.absolute,
+                    // Specify an explicit min height for Android screen readers
+                    { minHeight: headerHeight },
+                  ]
+                : null,
+            ]}
           >
-            {header}
+            <View
+              ref={headerRef}
+              pointerEvents="box-none"
+              onLayout={(e) => {
+                const { height } = e.nativeEvent.layout;
+
+                setHeaderHeight(height);
+              }}
+            >
+              {header}
+            </View>
           </View>
         </NavigationProvider>
       ) : null}

@@ -454,23 +454,33 @@ const SceneView = ({
             ) : null}
             {header != null && headerShown !== false ? (
               <View
-                onLayout={(e) => {
-                  const headerHeight = e.nativeEvent.layout.height;
-
-                  setHeaderHeight(headerHeight);
-                  rawAnimatedHeaderHeight.setValue(headerHeight);
-                }}
                 style={[
                   styles.header,
-                  headerTransparent ? styles.absolute : null,
+                  headerTransparent
+                    ? [
+                        styles.absolute,
+                        // Specify an explicit min height for Android screen readers
+                        { minHeight: headerHeight },
+                      ]
+                    : null,
                 ]}
               >
-                {header({
-                  back: headerBack,
-                  options,
-                  route,
-                  navigation,
-                })}
+                <View
+                  onLayout={(e) => {
+                    const headerHeight = e.nativeEvent.layout.height;
+
+                    setHeaderHeight(headerHeight);
+                    rawAnimatedHeaderHeight.setValue(headerHeight);
+                  }}
+                  style={{ pointerEvents: 'box-none' }}
+                >
+                  {header({
+                    back: headerBack,
+                    options,
+                    route,
+                    navigation,
+                  })}
+                </View>
               </View>
             ) : null}
             <HeaderShownContext.Provider
