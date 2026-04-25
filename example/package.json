@@ -25,6 +25,7 @@
     "@react-navigation/native": "workspace:^",
     "@react-navigation/native-stack": "workspace:^",
     "@react-navigation/stack": "workspace:^",
+    "@tanstack/react-query": "^5.100.3",
     "expo": "^55.0.0",
     "expo-asset": "~55.0.7",
     "expo-blur": "~55.0.8",

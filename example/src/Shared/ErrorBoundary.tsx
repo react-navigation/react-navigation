@@ -7,6 +7,7 @@ export class ErrorBoundary extends React.Component<
   {
     children: React.ReactNode;
     onError?: (error: Error, info: React.ErrorInfo) => void;
+    onReset?: () => void;
   },
   { error: Error | null }
 > {
@@ -30,6 +31,7 @@ export class ErrorBoundary extends React.Component<
           <Pressable
             style={styles.button}
             onPress={() => {
+              this.props.onReset?.();
               this.setState({ error: null });
             }}
           >

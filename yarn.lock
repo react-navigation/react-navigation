@@ -4558,6 +4558,7 @@ __metadata:
     "@react-navigation/native": "workspace:^"
     "@react-navigation/native-stack": "workspace:^"
     "@react-navigation/stack": "workspace:^"
+    "@tanstack/react-query": "npm:^5.100.3"
     "@types/cheerio": "npm:^0.22.35"
     "@types/koa": "npm:^2.15.0"
     "@types/mock-require": "npm:^3.0.0"
@@ -5015,6 +5016,24 @@ __metadata:
   dependencies:
     "@sinonjs/commons": "npm:^3.0.1"
   checksum: 10c0/a707476efd523d2138ef6bba916c83c4a377a8372ef04fad87499458af9f01afc58f4f245c5fd062793d6d70587309330c6f96947b5bd5697961c18004dc3e26
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-core@npm:5.100.3":
+  version: 5.100.3
+  resolution: "@tanstack/query-core@npm:5.100.3"
+  checksum: 10c0/a292eee2c7ffc9d4251e9cfcd5d26f90eef4a539de9c17ea3633739fa58547ada9d80c09532907cef24c5beef6bb716144324075caad5a37626dd4d9c569cc5e
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^5.100.3":
+  version: 5.100.3
+  resolution: "@tanstack/react-query@npm:5.100.3"
+  dependencies:
+    "@tanstack/query-core": "npm:5.100.3"
+  peerDependencies:
+    react: ^18 || ^19
+  checksum: 10c0/b66e8271062b937834e72c81c3cbecadf92b85115ce545a79d07d3af9715e10c601f99619cd3a6f49b71f39a2e74c373dac2c0c93aaf2a0515da0bb028bbbab9
   languageName: node
   linkType: hard
 

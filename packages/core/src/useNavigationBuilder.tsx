@@ -15,6 +15,7 @@ import * as React from 'react';
 import { isValidElementType } from 'react-is';
 import useLatestCallback from 'use-latest-callback';
 
+import { UNSTABLE_getLoaderForState } from './DataLoading';
 import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
@@ -26,6 +27,7 @@ import { NavigationRouteContext } from './NavigationProvider';
 import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
 import { Screen } from './Screen';
+import { StaticNavigationContext } from './StaticNavigationContext';
 import {
   type DefaultNavigatorOptions,
   type EventMapBase,
@@ -875,6 +877,32 @@ export function useNavigationBuilder<
   });
 
   useFocusEvents({ state, emitter });
+
+  const staticContext = React.use(StaticNavigationContext);
+  const initialLoaderFiredRef = React.useRef(false);
+
+  // TODO: useLayoutEffect?
+  React.useEffect(() => {
+    if (
+      initialLoaderFiredRef.current ||
+      staticContext == null ||
+      !staticContext.isOutermost
+    ) {
+      return;
+    }
+    initialLoaderFiredRef.current = true;
+    const composedLoader = UNSTABLE_getLoaderForState(
+      staticContext.tree,
+      state
+    );
+    if (!composedLoader) return;
+    staticContext.abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    staticContext.abortControllerRef.current = controller;
+    composedLoader(controller.signal).catch(() => {});
+    // Only the initial state
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [staticContext]);
 
   React.useEffect(() => {
     emitter.emit({ type: 'state', data: { state } });
