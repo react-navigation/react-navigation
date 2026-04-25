@@ -34,7 +34,10 @@ function getNestedTree(
   item: StaticScreenPathConfig
 ): StaticNavigation<any, any, any> | undefined {
   if (item && typeof item === 'object') {
-    if ('config' in item && item.config?.screens) {
+    if (
+      'config' in item &&
+      (item.config?.screens || item.config?.groups)
+    ) {
       return item;
     }
 
@@ -43,7 +46,7 @@ function getNestedTree(
       item.screen &&
       typeof item.screen === 'object' &&
       'config' in item.screen &&
-      item.screen.config?.screens
+      (item.screen.config?.screens || item.screen.config?.groups)
     ) {
       return item.screen;
     }
@@ -75,23 +78,26 @@ export function UNSTABLE_getLoaderForState(
   const config = tree.config;
   const focusedRoute = state?.routes[state.index ?? 0];
 
-  const name =
-    focusedRoute?.name ??
-    config.initialRouteName ??
-    Object.keys(config.screens ?? {})[0] ??
-    Object.values(config.groups ?? {}).flatMap((g) =>
-      Object.keys(g.screens)
-    )[0];
-
-  if (!name) {
+  if (!focusedRoute) {
     return undefined;
   }
 
+  const { name } = focusedRoute;
   const item = findScreenInConfig(config, name);
 
   if (item == null) {
     return undefined;
   }
+
+  const initialParams =
+    typeof item === 'object' && 'initialParams' in item
+      ? item.initialParams
+      : undefined;
+
+  const params =
+    initialParams != null || focusedRoute.params != null
+      ? { ...initialParams, ...focusedRoute.params }
+      : undefined;
 
   const loaders: (() => Promise<void>)[] = [];
 
@@ -101,15 +107,14 @@ export function UNSTABLE_getLoaderForState(
     typeof item.UNSTABLE_loader === 'function'
   ) {
     const loader = item.UNSTABLE_loader;
-    const route = focusedRoute ?? { name };
-    loaders.push(() => loader({ route }));
+    loaders.push(() => loader({ name, params }));
   }
 
   const nested = getNestedTree(item);
 
   if (nested) {
     const childState =
-      focusedRoute?.state ?? getStateFromRouteParams(focusedRoute?.params);
+      focusedRoute.state ?? getStateFromRouteParams(params);
     const childLoader = UNSTABLE_getLoaderForState(nested, childState);
     if (childLoader) {
       loaders.push(childLoader);

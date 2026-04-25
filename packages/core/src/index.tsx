@@ -2,7 +2,6 @@ export { BaseNavigationContainer } from './BaseNavigationContainer';
 export { createNavigationContainerRef } from './createNavigationContainerRef';
 export { createNavigatorFactory } from './createNavigatorFactory';
 export { CurrentRenderContext } from './CurrentRenderContext';
-export { UNSTABLE_getLoaderForState } from './DataLoading';
 export { findFocusedRoute } from './findFocusedRoute';
 export { getActionFromState } from './getActionFromState';
 export { getFocusedRouteNameFromRoute } from './getFocusedRouteNameFromRoute';

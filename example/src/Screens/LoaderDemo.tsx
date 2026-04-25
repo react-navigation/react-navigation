@@ -1,20 +1,17 @@
 import { Button, Text } from '@react-navigation/elements';
 import type { StaticParamList } from '@react-navigation/native';
-import {
-  UNSTABLE_getLoaderForState,
-  useNavigation,
-} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
 const cache = new Map<string, { data: string; promise?: Promise<void> }>();
 
-function fetchData(key: string, delay: number): Promise<void> {
+function fetchData(key: string, delay: number): Promise<void> | string {
   const existing = cache.get(key);
 
   if (existing) {
-    return existing.promise ?? Promise.resolve();
+    return existing.promise ?? existing.data;
   }
 
   const entry: { data: string; promise?: Promise<void> } = {
@@ -34,15 +31,14 @@ function fetchData(key: string, delay: number): Promise<void> {
   return entry.promise;
 }
 
-function useData(key: string, delay: number): string | undefined {
-  const entry = cache.get(key);
+function useData(key: string, delay: number): string {
+  const result = fetchData(key, delay);
 
-  if (!entry || entry.promise) {
-    const promise = fetchData(key, delay);
-    React.use(promise);
+  if (typeof result !== 'string') {
+    React.use(result);
   }
 
-  return entry?.data;
+  return cache.get(key)?.data ?? '';
 }
 
 function HomeScreen() {
@@ -50,8 +46,8 @@ function HomeScreen() {
     <View style={styles.content}>
       <Text style={styles.heading}>Loader Demo</Text>
       <Text style={styles.description}>
-        UNSTABLE_getLoaderForState can prefetch data for a route before
-        navigating to it. This avoids showing Suspense fallbacks if not desired.
+        Data can be prefetched for a route before navigating to it. This avoids
+        showing Suspense fallbacks if not desired.
       </Text>
       <NavigateButtons />
     </View>
@@ -62,14 +58,11 @@ function NavigateButtons() {
   const navigation = useNavigation<typeof LoaderStack>();
 
   const handleNavigateWithLoader = React.useCallback(() => {
-    // This looks a bit awkward for now, but this will be changed
-    const loader = UNSTABLE_getLoaderForState(LoaderStack, {
-      index: 0,
-      routes: [{ name: 'Detail' }],
-    });
-
     React.startTransition(async () => {
-      await loader?.();
+      const result = fetchData('detail-data', 1000);
+      if (typeof result !== 'string') {
+        await result;
+      }
       navigation.navigate('Detail');
     });
   }, [navigation]);
@@ -135,7 +128,9 @@ const LoaderStack = createNativeStackNavigator({
     Detail: {
       screen: DetailScreen,
       linking: 'detail',
-      UNSTABLE_loader: () => fetchData('detail-data', 1000),
+      UNSTABLE_loader: async () => {
+        await fetchData('detail-data', 1000);
+      },
     },
   },
 });

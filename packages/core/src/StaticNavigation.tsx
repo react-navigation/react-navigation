@@ -1,7 +1,6 @@
 import type {
   NavigationState,
   ParamListBase,
-  PartialRoute,
   Route,
 } from '@react-navigation/routers';
 import * as React from 'react';
@@ -329,11 +328,12 @@ export type StaticScreenConfig<
    *
    * @example
    * ```js
-   * UNSTABLE_loader: ({ route }) => loadProfile(route.params?.id),
+   * UNSTABLE_loader: ({ params }) => loadProfile(params.id),
    * ```
    */
   UNSTABLE_loader?: (options: {
-    route: Route<string> | PartialRoute<Route<string>>;
+    name: string;
+    params: AnyToUnknown<Params>;
   }) => Promise<void>;
 };
 
