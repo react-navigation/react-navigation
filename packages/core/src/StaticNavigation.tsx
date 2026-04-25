@@ -7,6 +7,7 @@ import {
   getPatternParts,
   type PatternPart,
 } from './getPatternParts';
+import { StaticNavigationContext } from './StaticNavigationContext';
 import type {
   EventMapBase,
   NavigationListBase,
@@ -386,12 +387,13 @@ export type StaticScreenConfig<
    *
    * @example
    * ```js
-   * UNSTABLE_loader: ({ params }) => loadProfile(params.id),
+   * UNSTABLE_loader: ({ params, signal }) => loadProfile(params.id, { signal }),
    * ```
    */
   UNSTABLE_loader?: (options: {
     name: string;
     params: AnyToUnknown<Params>;
+    signal: AbortSignal;
   }) => Promise<void>;
 };
 
@@ -714,15 +716,42 @@ export function createComponentForStaticConfig<
           })
         : { ...rest.screenListeners, ...props.screenListeners };
 
+    const parent = React.use(StaticNavigationContext);
+    const localAbortControllerRef = React.useRef<AbortController | null>(null);
+    const isOutermost = parent == null;
+
+    React.useEffect(() => {
+      if (!isOutermost) {
+        return undefined;
+      }
+
+      return () => {
+        localAbortControllerRef.current?.abort();
+        localAbortControllerRef.current = null;
+      };
+    }, [isOutermost]);
+
+    const value = React.useMemo(
+      () => ({
+        tree,
+        abortControllerRef:
+          parent?.abortControllerRef ?? localAbortControllerRef,
+        isOutermost,
+      }),
+      [parent, isOutermost]
+    );
+
     return (
-      <Navigator
-        {...rest}
-        {...props}
-        screenOptions={screenOptions}
-        screenListeners={screenListeners}
-      >
-        {children}
-      </Navigator>
+      <StaticNavigationContext.Provider value={value}>
+        <Navigator
+          {...rest}
+          {...props}
+          screenOptions={screenOptions}
+          screenListeners={screenListeners}
+        >
+          {children}
+        </Navigator>
+      </StaticNavigationContext.Provider>
     );
   };
 
