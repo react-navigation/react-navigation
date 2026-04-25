@@ -70,9 +70,7 @@ test('returns undefined when screen has no loader', () => {
 });
 
 test('returns the loader for a screen with UNSTABLE_loader', async () => {
-  const fn = jest.fn(
-    async (_options: { name: string; params: unknown }) => {}
-  );
+  const fn = jest.fn(async (_options: { name: string; params: unknown }) => {});
 
   const Navigator = createTestNavigator({
     screens: {
@@ -97,9 +95,7 @@ test('returns the loader for a screen with UNSTABLE_loader', async () => {
 });
 
 test('merges initialParams with route params for the loader', async () => {
-  const fn = jest.fn(
-    async (_options: { name: string; params: unknown }) => {}
-  );
+  const fn = jest.fn(async (_options: { name: string; params: unknown }) => {});
 
   const Navigator = createTestNavigator({
     screens: {

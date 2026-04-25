@@ -34,10 +34,7 @@ function getNestedTree(
   item: StaticScreenPathConfig
 ): StaticNavigation<any, any, any> | undefined {
   if (item && typeof item === 'object') {
-    if (
-      'config' in item &&
-      (item.config?.screens || item.config?.groups)
-    ) {
+    if ('config' in item && (item.config?.screens || item.config?.groups)) {
       return item;
     }
 
@@ -113,8 +110,7 @@ export function UNSTABLE_getLoaderForState(
   const nested = getNestedTree(item);
 
   if (nested) {
-    const childState =
-      focusedRoute.state ?? getStateFromRouteParams(params);
+    const childState = focusedRoute.state ?? getStateFromRouteParams(params);
     const childLoader = UNSTABLE_getLoaderForState(nested, childState);
     if (childLoader) {
       loaders.push(childLoader);
