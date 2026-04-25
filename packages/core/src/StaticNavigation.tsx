@@ -683,22 +683,21 @@ export function createComponentForStaticNavigation<
         : { ...rest.screenOptions, ...props.screenOptions };
 
     const parent = React.use(StaticNavigationContext);
-    const localAbortControllerRef = React.useRef<AbortController | null>(null);
+    const abortControllerRef = React.useRef<AbortController | null>(null);
     const isOutermost = parent == null;
 
     React.useEffect(() => {
       if (!isOutermost) return;
       return () => {
-        localAbortControllerRef.current?.abort();
-        localAbortControllerRef.current = null;
+        abortControllerRef.current?.abort();
+        abortControllerRef.current = null;
       };
     }, [isOutermost]);
 
     const value = React.useMemo(
       () => ({
         tree,
-        abortControllerRef:
-          parent?.abortControllerRef ?? localAbortControllerRef,
+        abortControllerRef: parent?.abortControllerRef ?? abortControllerRef,
         isOutermost,
       }),
       [parent?.abortControllerRef, isOutermost]
