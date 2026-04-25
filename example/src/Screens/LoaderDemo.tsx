@@ -2,125 +2,127 @@ import { Button, Text } from '@react-navigation/elements';
 import type { StaticParamList } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
-const cache = new Map<string, { data: string; promise?: Promise<void> }>();
+import { queryClient } from '../queryClient';
+import { ErrorBoundary } from '../Shared/ErrorBoundary';
 
-function fetchData(key: string, delay: number): Promise<void> | string {
-  const existing = cache.get(key);
+const config = { shouldFail: false };
 
-  if (existing) {
-    return existing.promise ?? existing.data;
-  }
+const debug = { wasLoadingVisible: false };
 
-  const entry: { data: string; promise?: Promise<void> } = {
-    data: '',
-  };
+const detailQuery = (delay: number) => ({
+  queryKey: ['detail-data', delay] as const,
+  queryFn: () =>
+    new Promise<string>((resolve, reject) => {
+      setTimeout(() => {
+        if (config.shouldFail) {
+          reject(new Error('Loader failed (toggle on)'));
+        } else {
+          resolve(`Loaded detail (took ${delay}ms)`);
+        }
+      }, delay);
+    }),
+});
 
-  entry.promise = new Promise<void>((resolve) => {
-    setTimeout(() => {
-      entry.data = `Loaded "${key}" (took ${delay}ms)`;
-      entry.promise = undefined;
-      resolve();
-    }, delay);
-  });
-
-  cache.set(key, entry);
-
-  return entry.promise;
-}
-
-function useData(key: string, delay: number): string {
-  const result = fetchData(key, delay);
-
-  if (typeof result !== 'string') {
-    React.use(result);
-  }
-
-  return cache.get(key)?.data ?? '';
-}
+const getDelay = (params: unknown): number =>
+  (params as { delay?: number } | undefined)?.delay ?? 1000;
 
 function HomeScreen() {
+  const navigation = useNavigation<typeof LoaderStack>();
+
   return (
     <View style={styles.content}>
       <Text style={styles.heading}>Loader Demo</Text>
       <Text style={styles.description}>
-        Data can be prefetched for a route before navigating to it. This avoids
-        showing Suspense fallbacks if not desired.
+        UNSTABLE_loader runs before the screen mounts. The screen reads via
+        useSuspenseQuery, so the same fetch is shared between the loader and the
+        screen through TanStack Query's cache.
       </Text>
-      <NavigateButtons />
+      <View style={styles.buttons}>
+        <Button
+          variant="filled"
+          onPress={() => {
+            debug.wasLoadingVisible = false;
+            navigation.navigate('Detail', { delay: 10 });
+          }}
+          style={styles.button}
+        >
+          Open detail (10ms)
+        </Button>
+        <Button
+          variant="filled"
+          onPress={() => {
+            debug.wasLoadingVisible = false;
+            navigation.navigate('Detail', { delay: 1000 });
+          }}
+          style={styles.button}
+        >
+          Open detail (1s)
+        </Button>
+        <Button
+          onPress={() => {
+            config.shouldFail = !config.shouldFail;
+          }}
+          style={styles.button}
+        >
+          Make next load fail: {config.shouldFail ? 'on' : 'off'}
+        </Button>
+        <Button
+          onPress={() =>
+            queryClient.removeQueries({ queryKey: ['detail-data'] })
+          }
+          style={styles.button}
+        >
+          Clear cache
+        </Button>
+      </View>
     </View>
   );
 }
 
-function NavigateButtons() {
-  const navigation = useNavigation<typeof LoaderStack>();
-
-  const handleNavigateWithLoader = React.useCallback(() => {
-    React.startTransition(async () => {
-      const result = fetchData('detail-data', 1000);
-      if (typeof result !== 'string') {
-        await result;
-      }
-      navigation.navigate('Detail');
-    });
-  }, [navigation]);
-
-  const handleNavigateWithoutLoader = React.useCallback(() => {
-    cache.delete('detail-data');
-    navigation.navigate('Detail');
-  }, [navigation]);
-
-  const handleReset = React.useCallback(() => {
-    cache.clear();
-  }, []);
-
-  return (
-    <View style={styles.buttons}>
-      <Button
-        variant="filled"
-        onPress={handleNavigateWithLoader}
-        style={styles.button}
-      >
-        Navigate with loader
-      </Button>
-      <Button onPress={handleNavigateWithoutLoader} style={styles.button}>
-        Navigate without loader
-      </Button>
-      <Button onPress={handleReset} style={styles.button}>
-        Clear cache
-      </Button>
-    </View>
-  );
-}
-
-function DetailContent() {
-  const data = useData('detail-data', 1000);
+function DetailScreen({ route }: { route: { params?: unknown } }) {
+  const delay = getDelay(route.params);
+  const { data } = useSuspenseQuery(detailQuery(delay));
+  const wasLoadingVisible = React.useRef(debug.wasLoadingVisible).current;
 
   return (
     <View style={styles.content}>
       <Text style={styles.heading}>Detail</Text>
       <Text style={styles.description}>{data}</Text>
+      <Text style={styles.description}>
+        Loading state was {wasLoadingVisible ? 'visible' : 'not visible'}
+      </Text>
     </View>
   );
 }
 
-function DetailScreen() {
+function LoadingFallback() {
+  debug.wasLoadingVisible = true;
+
   return (
-    <React.Suspense
-      fallback={
-        <View style={styles.content}>
-          <Text style={styles.description}>Loading…</Text>
-        </View>
-      }
-    >
-      <DetailContent />
-    </React.Suspense>
+    <View style={styles.content}>
+      <Text style={styles.description}>Loading…</Text>
+    </View>
   );
 }
 
 const LoaderStack = createNativeStackNavigator({
+  layout: ({ children }) => (
+    <ErrorBoundary
+      onReset={() => {
+        config.shouldFail = false;
+        queryClient.clear();
+      }}
+    >
+      {children}
+    </ErrorBoundary>
+  ),
+  screenLayout: ({ children }) => (
+    <React.Suspense fallback={<LoadingFallback />}>{children}</React.Suspense>
+  ),
   screens: {
     LoaderHome: {
       screen: HomeScreen,
@@ -128,8 +130,14 @@ const LoaderStack = createNativeStackNavigator({
     Detail: {
       screen: DetailScreen,
       linking: 'detail',
-      UNSTABLE_loader: async () => {
-        await fetchData('detail-data', 1000);
+      UNSTABLE_loader: ({ params, signal }) => {
+        const delay = getDelay(params);
+        signal.addEventListener('abort', () => {
+          queryClient.cancelQueries({ queryKey: ['detail-data', delay] });
+        });
+        return queryClient
+          .ensureQueryData(detailQuery(delay))
+          .then(() => undefined);
       },
     },
   },

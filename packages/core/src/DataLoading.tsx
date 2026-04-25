@@ -57,7 +57,7 @@ function getNestedTree(
  *
  * @param tree The static navigation config.
  * @param state The navigation state to extract the focused route path from.
- * @returns A function that returns a `Promise<void>`, or `undefined` if no loaders are found.
+ * @returns A function that takes an `AbortSignal` and returns a `Promise<void>`, or `undefined` if no loaders are found.
  *
  * @example
  * ```js
@@ -65,13 +65,13 @@ function getNestedTree(
  *   index: 0,
  *   routes: [{ name: 'Home' }],
  * });
- * await loader?.();
+ * await loader?.(controller.signal);
  * ```
  */
 export function UNSTABLE_getLoaderForState(
   tree: StaticNavigation<any, any, any>,
   state: PartialState<NavigationState> | NavigationState | undefined
-): (() => Promise<void>) | undefined {
+): ((signal: AbortSignal) => Promise<void>) | undefined {
   const config = tree.config;
   const focusedRoute = state?.routes[state.index ?? 0];
 
@@ -96,7 +96,7 @@ export function UNSTABLE_getLoaderForState(
       ? { ...initialParams, ...focusedRoute.params }
       : undefined;
 
-  const loaders: (() => Promise<void>)[] = [];
+  const loaders: ((signal: AbortSignal) => Promise<void>)[] = [];
 
   if (
     typeof item === 'object' &&
@@ -104,7 +104,7 @@ export function UNSTABLE_getLoaderForState(
     typeof item.UNSTABLE_loader === 'function'
   ) {
     const loader = item.UNSTABLE_loader;
-    loaders.push(() => loader({ name, params }));
+    loaders.push((signal) => loader({ name, params, signal }));
   }
 
   const nested = getNestedTree(item);
@@ -121,7 +121,7 @@ export function UNSTABLE_getLoaderForState(
     return undefined;
   }
 
-  return async () => {
-    await Promise.all(loaders.map((l) => l()));
+  return async (signal) => {
+    await Promise.all(loaders.map((l) => l(signal)));
   };
 }

@@ -7,11 +7,13 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
+import { UNSTABLE_getLoaderForState } from './DataLoading';
 import {
   type ChildActionListener,
   type ChildBeforeRemoveListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
+import { StaticNavigationContext } from './StaticNavigationContext';
 import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 import { shouldPreventRemove, useOnPreventRemove } from './useOnPreventRemove';
@@ -52,6 +54,8 @@ export function useOnAction<State extends NavigationState>({
     addListener: addListenerParent,
     onDispatchAction,
   } = React.use(NavigationBuilderContext);
+
+  const staticContext = React.use(StaticNavigationContext);
 
   const routerConfigOptionsRef =
     React.useRef<RouterConfigOptions>(routerConfigOptions);
@@ -102,8 +106,21 @@ export function useOnAction<State extends NavigationState>({
             if (isPrevented) {
               return true;
             }
+            const loader = staticContext
+              ? UNSTABLE_getLoaderForState(staticContext.tree, result)
+              : undefined;
 
-            setState(result);
+            if (loader && staticContext) {
+              staticContext.abortControllerRef.current?.abort();
+              const controller = new AbortController();
+              staticContext.abortControllerRef.current = controller;
+              loader(controller.signal).catch(() => {});
+              React.startTransition(() => {
+                setState(result);
+              });
+            } else {
+              setState(result);
+            }
           }
 
           if (onRouteFocusParent !== undefined) {
@@ -151,6 +168,7 @@ export function useOnAction<State extends NavigationState>({
       onRouteFocusParent,
       router,
       setState,
+      staticContext,
     ]
   );
 

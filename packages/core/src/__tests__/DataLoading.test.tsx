@@ -70,7 +70,13 @@ test('returns undefined when screen has no loader', () => {
 });
 
 test('returns the loader for a screen with UNSTABLE_loader', async () => {
-  const fn = jest.fn(async (_options: { name: string; params: unknown }) => {});
+  const fn = jest.fn(
+    async (_options: {
+      name: string;
+      params: unknown;
+      signal: AbortSignal;
+    }) => {}
+  );
 
   const Navigator = createTestNavigator({
     screens: {
@@ -88,14 +94,24 @@ test('returns the loader for a screen with UNSTABLE_loader', async () => {
 
   expect(loader).toBeDefined();
 
-  await loader!();
+  await loader!(new AbortController().signal);
 
   expect(fn).toHaveBeenCalledTimes(1);
-  expect(fn).toHaveBeenCalledWith({ name: 'Home', params: undefined });
+  expect(fn).toHaveBeenCalledWith({
+    name: 'Home',
+    params: undefined,
+    signal: expect.any(AbortSignal),
+  });
 });
 
 test('merges initialParams with route params for the loader', async () => {
-  const fn = jest.fn(async (_options: { name: string; params: unknown }) => {});
+  const fn = jest.fn(
+    async (_options: {
+      name: string;
+      params: unknown;
+      signal: AbortSignal;
+    }) => {}
+  );
 
   const Navigator = createTestNavigator({
     screens: {
@@ -112,11 +128,12 @@ test('merges initialParams with route params for the loader', async () => {
     routes: [{ name: 'Profile', params: { id: 'override' } }],
   });
 
-  await loader!();
+  await loader!(new AbortController().signal);
 
   expect(fn).toHaveBeenCalledWith({
     name: 'Profile',
     params: { id: 'override', tab: 'overview' },
+    signal: expect.any(AbortSignal),
   });
 });
 
@@ -158,7 +175,7 @@ test('composes loaders from nested navigators', async () => {
 
   expect(loader).toBeDefined();
 
-  await loader!();
+  await loader!(new AbortController().signal);
 
   expect(parentFn).toHaveBeenCalledTimes(1);
   expect(childFn).toHaveBeenCalledTimes(1);
@@ -166,10 +183,18 @@ test('composes loaders from nested navigators', async () => {
 
 test('each loader receives its own name and params', async () => {
   const parentFn = jest.fn(
-    async (_options: { name: string; params: unknown }) => {}
+    async (_options: {
+      name: string;
+      params: unknown;
+      signal: AbortSignal;
+    }) => {}
   );
   const childFn = jest.fn(
-    async (_options: { name: string; params: unknown }) => {}
+    async (_options: {
+      name: string;
+      params: unknown;
+      signal: AbortSignal;
+    }) => {}
   );
 
   const ChildNavigator = createTestNavigator({
@@ -203,10 +228,69 @@ test('each loader receives its own name and params', async () => {
     ],
   });
 
-  await loader!();
+  await loader!(new AbortController().signal);
 
-  expect(parentFn).toHaveBeenCalledWith({ name: 'Home', params: undefined });
-  expect(childFn).toHaveBeenCalledWith({ name: 'Albums', params: undefined });
+  expect(parentFn).toHaveBeenCalledWith({
+    name: 'Home',
+    params: undefined,
+    signal: expect.any(AbortSignal),
+  });
+  expect(childFn).toHaveBeenCalledWith({
+    name: 'Albums',
+    params: undefined,
+    signal: expect.any(AbortSignal),
+  });
+});
+
+test('forwards the same signal to every nested loader', async () => {
+  const parentFn = jest.fn(
+    async (_options: {
+      name: string;
+      params: unknown;
+      signal: AbortSignal;
+    }) => {}
+  );
+  const childFn = jest.fn(
+    async (_options: {
+      name: string;
+      params: unknown;
+      signal: AbortSignal;
+    }) => {}
+  );
+
+  const ChildNavigator = createTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: childFn,
+      },
+    },
+  });
+
+  const RootNavigator = createTestNavigator({
+    screens: {
+      Home: {
+        screen: ChildNavigator,
+        UNSTABLE_loader: parentFn,
+      },
+    },
+  });
+
+  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+    index: 0,
+    routes: [
+      {
+        name: 'Home',
+        state: { index: 0, routes: [{ name: 'Albums' }] },
+      },
+    ],
+  });
+
+  const controller = new AbortController();
+  await loader!(controller.signal);
+
+  expect(parentFn.mock.calls[0][0].signal).toBe(controller.signal);
+  expect(childFn.mock.calls[0][0].signal).toBe(controller.signal);
 });
 
 test('uses nested state to determine child loader', async () => {
@@ -245,7 +329,7 @@ test('uses nested state to determine child loader', async () => {
     ],
   });
 
-  await loader!();
+  await loader!(new AbortController().signal);
 
   expect(albumsFn).not.toHaveBeenCalled();
   expect(contactsFn).toHaveBeenCalledTimes(1);
@@ -287,7 +371,7 @@ test('uses focused route from nested state', async () => {
     ],
   });
 
-  await loader!();
+  await loader!(new AbortController().signal);
 
   expect(albumsFn).not.toHaveBeenCalled();
   expect(contactsFn).toHaveBeenCalledTimes(1);
@@ -346,7 +430,7 @@ test('traverses deeply nested navigators', async () => {
     ],
   });
 
-  await loader!();
+  await loader!(new AbortController().signal);
 
   expect(rootFn).toHaveBeenCalledTimes(1);
   expect(midFn).toHaveBeenCalledTimes(1);
@@ -375,7 +459,7 @@ test('finds loaders for screens inside groups', async () => {
     routes: [{ name: 'Login' }],
   });
 
-  await loader!();
+  await loader!(new AbortController().signal);
 
   expect(fn).toHaveBeenCalledTimes(1);
 });
@@ -413,7 +497,7 @@ test('uses params.screen to determine child loader when no nested state', async 
     ],
   });
 
-  await loader!();
+  await loader!(new AbortController().signal);
 
   expect(albumsFn).not.toHaveBeenCalled();
   expect(contactsFn).toHaveBeenCalledTimes(1);
@@ -457,7 +541,7 @@ test('uses params.state to determine child loader when no nested state', async (
     ],
   });
 
-  await loader!();
+  await loader!(new AbortController().signal);
 
   expect(albumsFn).toHaveBeenCalledTimes(1);
   expect(contactsFn).not.toHaveBeenCalled();
@@ -502,7 +586,7 @@ test('prefers route.state over params for determining child loader', async () =>
     ],
   });
 
-  await loader!();
+  await loader!(new AbortController().signal);
 
   expect(contactsFn).toHaveBeenCalledTimes(1);
   expect(albumsFn).not.toHaveBeenCalled();
@@ -563,7 +647,7 @@ test('traverses deeply nested navigators via params', async () => {
     ],
   });
 
-  await loader!();
+  await loader!(new AbortController().signal);
 
   expect(leafFn).toHaveBeenCalledTimes(1);
 });
