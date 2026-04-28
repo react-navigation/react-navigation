@@ -1,5 +1,5 @@
 import { Activity, useCallback, useEffect, useState } from 'react';
-import { Platform, View, type ViewStyle } from 'react-native';
+import { Platform, View, type ViewProps, type ViewStyle } from 'react-native';
 
 import { Container } from './Container';
 
@@ -27,6 +27,10 @@ export type Props = {
    */
   style?: Omit<React.CSSProperties & ViewStyle, 'display'> | undefined;
   /**
+   * Controls whether the view can be the target of touch events.
+   */
+  pointerEvents?: ViewProps['pointerEvents'];
+  /**
    * The content of the activity view
    */
   children: React.ReactNode;
@@ -37,6 +41,7 @@ export function ActivityView({
   visible,
   delay = 500,
   style,
+  pointerEvents,
   children,
 }: Props) {
   const [delayedMode, setDelayedMode] = useState(mode);
@@ -120,7 +125,7 @@ export function ActivityView({
   return (
     <Container ref={onRef} style={{ display: 'contents' }}>
       <Activity mode={activityMode}>
-        <Container inert={mode !== 'normal'} style={{ ...style, display }}>
+        <Container inert={mode !== 'normal'} pointerEvents={pointerEvents} style={{ ...style, display }}>
           {children}
         </Container>
       </Activity>

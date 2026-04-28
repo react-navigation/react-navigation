@@ -14,6 +14,7 @@ export function ActivityView({
   visible,
   delay = 500,
   style,
+  pointerEvents,
   children,
 }: Props) {
   const [delayedMode, setDelayedMode] = useState(mode);
@@ -40,7 +41,7 @@ export function ActivityView({
     <Activity mode={activityMode}>
       <ActivityContentView style={{ display: 'contents' }}>
         <Container
-          inert={mode !== 'normal'}
+          inert={mode !== 'normal'} pointerEvents={pointerEvents}
           style={{
             ...style,
             /**
