@@ -13,7 +13,13 @@ export type Props = {
   children: React.ReactNode;
 };
 
-export function Container({ ref, inert, pointerEvents, children, style }: Props) {
+export function Container({
+  ref,
+  inert,
+  pointerEvents,
+  children,
+  style,
+}: Props) {
   if (Platform.OS === 'web') {
     const { backgroundColor, ...rest } = style ?? {};
 
@@ -39,7 +45,10 @@ export function Container({ ref, inert, pointerEvents, children, style }: Props)
     <View
       ref={ref as React.Ref<View> | undefined}
       aria-hidden={inert}
-      style={[{ pointerEvents: pointerEvents ?? (inert ? 'none' : 'box-none') }, style]}
+      style={[
+        { pointerEvents: pointerEvents ?? (inert ? 'none' : 'box-none') },
+        style,
+      ]}
       collapsable={false}
     >
       {children}

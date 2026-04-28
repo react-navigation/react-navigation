@@ -41,7 +41,8 @@ export function ActivityView({
     <Activity mode={activityMode}>
       <ActivityContentView style={{ display: 'contents' }}>
         <Container
-          inert={mode !== 'normal'} pointerEvents={pointerEvents}
+          inert={mode !== 'normal'}
+          pointerEvents={pointerEvents}
           style={{
             ...style,
             /**

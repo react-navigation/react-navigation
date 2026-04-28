@@ -125,7 +125,11 @@ export function ActivityView({
   return (
     <Container ref={onRef} style={{ display: 'contents' }}>
       <Activity mode={activityMode}>
-        <Container inert={mode !== 'normal'} pointerEvents={pointerEvents} style={{ ...style, display }}>
+        <Container
+          inert={mode !== 'normal'}
+          pointerEvents={pointerEvents}
+          style={{ ...style, display }}
+        >
           {children}
         </Container>
       </Activity>
