@@ -323,6 +323,7 @@ export function BottomTabView(props: Props) {
               enabled={detachInactiveScreens}
               freezeOnBlur={freezeOnBlur}
               shouldFreeze={activityState === STATE_INACTIVE && !isPreloaded}
+              pointerEvents={isFocused ? 'box-none' : 'none'}
             >
               <BottomTabBarHeightContext.Provider
                 value={tabBarPosition === 'bottom' ? tabBarHeight : 0}
