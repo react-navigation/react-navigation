@@ -40,7 +40,7 @@ export function ComponentsHeaders(_: StaticScreenProps<{}>) {
       contentContainerStyle={[
         styles.content,
         {
-          backgroundColor: colors.background,
+          backgroundColor: colors?.background,
           paddingTop: insets.top + SPACING,
           paddingLeft: insets.left + SPACING,
           paddingRight: insets.right + SPACING,

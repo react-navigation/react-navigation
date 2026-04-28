@@ -82,7 +82,7 @@ const DialogScreen = () => {
         style={[
           styles.dialog,
           {
-            backgroundColor: colors.card,
+            backgroundColor: colors?.card,
             transform: [
               {
                 scale: current.progress.interpolate({

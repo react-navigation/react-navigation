@@ -147,7 +147,7 @@ function Examples() {
   }, [filter, navigation]);
 
   return (
-    <ScrollView style={{ backgroundColor: theme.colors.background }}>
+    <ScrollView style={{ backgroundColor: theme.colors?.background }}>
       <SafeAreaView edges={['right', 'bottom', 'left']}>
         {!filter.length ? (
           <ListGroupItem title="Settings">
@@ -160,7 +160,7 @@ function Examples() {
                     payload: value,
                   })
                 }
-                trackColor={{ true: theme.colors.primary }}
+                trackColor={{ true: theme.colors?.primary }}
                 style={{
                   // FIXME: On iOS, switch doesn't center vertically
                   marginVertical: 12,

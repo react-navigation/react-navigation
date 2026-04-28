@@ -456,7 +456,7 @@ const PeriodBadge = ({ period }: { period: Period }) => {
     <View
       style={[styles.periodBadge, { backgroundColor: PERIOD_COLORS[period] }]}
     >
-      <Text style={[styles.periodBadgeText, fonts.medium]}>{period}</Text>
+      <Text style={[styles.periodBadgeText, fonts?.medium]}>{period}</Text>
     </View>
   );
 };
@@ -471,8 +471,8 @@ const SectionCard = ({
   const { colors, fonts } = useTheme();
 
   return (
-    <View style={[styles.sectionCard, { backgroundColor: colors.card }]}>
-      <Text style={[styles.sectionTitle, fonts.bold, { color: colors.text }]}>
+    <View style={[styles.sectionCard, { backgroundColor: colors?.card }]}>
+      <Text style={[styles.sectionTitle, fonts?.bold, { color: colors?.text }]}>
         {title}
       </Text>
       {children}
@@ -492,19 +492,19 @@ const DetailStat = ({
   const { colors, fonts } = useTheme();
 
   return (
-    <View style={[styles.detailStat, { backgroundColor: colors.background }]}>
-      <MaterialCommunityIcons name={icon} size={18} color={colors.primary} />
+    <View style={[styles.detailStat, { backgroundColor: colors?.background }]}>
+      <MaterialCommunityIcons name={icon} size={18} color={colors?.primary} />
       <Text
         style={[
           styles.detailStatLabel,
-          fonts.medium,
-          { color: colors.text, opacity: SECONDARY_OPACITY },
+          fonts?.medium,
+          { color: colors?.text, opacity: SECONDARY_OPACITY },
         ]}
       >
         {label}
       </Text>
       <Text
-        style={[styles.detailStatValue, fonts.bold, { color: colors.text }]}
+        style={[styles.detailStatValue, fonts?.bold, { color: colors?.text }]}
       >
         {value}
       </Text>
@@ -517,7 +517,7 @@ const CatalogHero = () => {
   const featured = DINOS[9];
 
   return (
-    <View style={[styles.heroCard, { backgroundColor: colors.card }]}>
+    <View style={[styles.heroCard, { backgroundColor: colors?.card }]}>
       <View
         style={[
           StyleSheet.absoluteFill,
@@ -532,12 +532,12 @@ const CatalogHero = () => {
       <View style={[StyleSheet.absoluteFill, styles.heroImageScrim]} />
 
       <View style={styles.heroHeaderRow}>
-        <Text style={[styles.heroEyebrow, fonts.medium]}>Exhibit guide</Text>
+        <Text style={[styles.heroEyebrow, fonts?.medium]}>Exhibit guide</Text>
         <PeriodBadge period={featured.period} />
       </View>
 
       <View style={styles.heroCopy}>
-        <Text style={[styles.heroTitle, fonts.heavy]}>
+        <Text style={[styles.heroTitle, fonts?.heavy]}>
           Dinosaurs of the Mesozoic
         </Text>
         <Text style={styles.heroDescription}>
@@ -553,17 +553,21 @@ const EmptyState = () => {
   const { colors, fonts } = useTheme();
 
   return (
-    <View style={[styles.emptyState, { backgroundColor: colors.card }]}>
-      <MaterialCommunityIcons name="magnify" size={28} color={colors.primary} />
+    <View style={[styles.emptyState, { backgroundColor: colors?.card }]}>
+      <MaterialCommunityIcons
+        name="magnify"
+        size={28}
+        color={colors?.primary}
+      />
       <Text
-        style={[styles.emptyStateTitle, fonts.bold, { color: colors.text }]}
+        style={[styles.emptyStateTitle, fonts?.bold, { color: colors?.text }]}
       >
         No specimens found
       </Text>
       <Text
         style={[
           styles.emptyStateText,
-          { color: colors.text, opacity: SECONDARY_OPACITY },
+          { color: colors?.text, opacity: SECONDARY_OPACITY },
         ]}
       >
         Try another search term or switch to a different period.
@@ -583,7 +587,7 @@ const DinoCard = React.memo(
         style={[
           styles.card,
           width !== undefined && { width },
-          { backgroundColor: colors.card },
+          { backgroundColor: colors?.card },
         ]}
         onPress={() => navigation.navigate('DinoDetail', { id: item.id })}
       >
@@ -604,11 +608,11 @@ const DinoCard = React.memo(
         <View style={styles.cardBody}>
           <PeriodBadge period={item.period} />
 
-          <Text style={[styles.cardName, fonts.bold]} numberOfLines={2}>
+          <Text style={[styles.cardName, fonts?.bold]} numberOfLines={2}>
             {item.name}
           </Text>
 
-          <Text style={[styles.cardMeta, fonts.medium]} numberOfLines={1}>
+          <Text style={[styles.cardMeta, fonts?.medium]} numberOfLines={1}>
             {item.diet} · {item.length} · {item.weight}
           </Text>
         </View>
@@ -675,7 +679,7 @@ const CatalogScreen = () => {
 
   return (
     <ScrollView
-      style={{ backgroundColor: colors.background }}
+      style={{ backgroundColor: colors?.background }}
       contentContainerStyle={[styles.catalogContent, { paddingTop: SPACING_M }]}
     >
       <CatalogHero />
@@ -684,8 +688,8 @@ const CatalogScreen = () => {
         <Text
           style={[
             styles.catalogSectionTitle,
-            fonts.bold,
-            { color: colors.text },
+            fonts?.bold,
+            { color: colors?.text },
           ]}
         >
           Specimens
@@ -693,7 +697,7 @@ const CatalogScreen = () => {
         <Text
           style={[
             styles.catalogSectionMeta,
-            { color: colors.text, opacity: SECONDARY_OPACITY },
+            { color: colors?.text, opacity: SECONDARY_OPACITY },
           ]}
         >
           {resultsLabel}
@@ -718,12 +722,12 @@ const DinoDetailScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
 
   return (
     <ScrollView
-      style={{ backgroundColor: colors.background }}
+      style={{ backgroundColor: colors?.background }}
       contentContainerStyle={styles.detailContent}
     >
       <Pressable
         testID={OPEN_IMAGE_VIEWER_TEST_ID}
-        style={[styles.detailHero, { backgroundColor: colors.background }]}
+        style={[styles.detailHero, { backgroundColor: colors?.background }]}
         onPress={() => navigation.navigate('ImageViewer', { id: dino.id })}
       >
         <Image
@@ -736,7 +740,7 @@ const DinoDetailScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
       <View style={styles.detailBody}>
         <View style={styles.detailIntro}>
           <PeriodBadge period={dino.period} />
-          <Text style={[styles.detailName, fonts.heavy]}>{dino.name}</Text>
+          <Text style={[styles.detailName, fonts?.heavy]}>{dino.name}</Text>
         </View>
 
         <SectionCard title="Quick facts">
@@ -753,7 +757,7 @@ const DinoDetailScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
         </SectionCard>
 
         <SectionCard title="Field notes">
-          <Text style={[styles.bodyText, { color: colors.text }]}>
+          <Text style={[styles.bodyText, { color: colors?.text }]}>
             {dino.description}
           </Text>
         </SectionCard>
@@ -762,7 +766,7 @@ const DinoDetailScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
           <Text
             style={[
               styles.bodyText,
-              { color: colors.text, opacity: SECONDARY_OPACITY },
+              { color: colors?.text, opacity: SECONDARY_OPACITY },
             ]}
           >
             {PERIOD_DESCRIPTIONS[dino.period]}
@@ -824,7 +828,7 @@ const ImageViewerScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
         ]}
       >
         <View
-          style={[styles.viewerImageWrapper, { backgroundColor: colors.card }]}
+          style={[styles.viewerImageWrapper, { backgroundColor: colors?.card }]}
         >
           <Image
             source={dino.image}
@@ -833,17 +837,17 @@ const ImageViewerScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
           />
         </View>
 
-        <View style={[styles.viewerCaption, { backgroundColor: colors.card }]}>
+        <View style={[styles.viewerCaption, { backgroundColor: colors?.card }]}>
           <PeriodBadge period={dino.period} />
           <Text
-            style={[styles.viewerTitle, fonts.heavy, { color: colors.text }]}
+            style={[styles.viewerTitle, fonts?.heavy, { color: colors?.text }]}
           >
             {dino.name}
           </Text>
           <Text
             style={[
               styles.viewerMeta,
-              { color: colors.text, opacity: SECONDARY_OPACITY },
+              { color: colors?.text, opacity: SECONDARY_OPACITY },
             ]}
           >
             {dino.diet} · {dino.length} · {dino.weight}
@@ -922,7 +926,7 @@ const StackShowcaseNavigator = createStackNavigator({
       options: ({ theme }) => ({
         headerTitle: '',
         headerBackTestID: DETAIL_BACK_TEST_ID,
-        headerStyle: { backgroundColor: theme.colors.background },
+        headerStyle: { backgroundColor: theme.colors?.background },
         headerShadowVisible: false,
         presentation: 'modal',
       }),

@@ -13,12 +13,12 @@ export function ListGroupItem({ title, children }: Props) {
   return (
     <View style={styles.container}>
       {title != null ? (
-        <Text style={[fonts.medium, styles.title]}>{title}</Text>
+        <Text style={[fonts?.medium, styles.title]}>{title}</Text>
       ) : null}
       <View
         style={[
           styles.group,
-          { backgroundColor: colors.card, borderColor: colors.border },
+          { backgroundColor: colors?.card, borderColor: colors?.border },
         ]}
       >
         {children}

@@ -79,7 +79,7 @@ export function LibrariesDrawerLayout(_: StaticScreenProps<Params>) {
         );
       }}
     >
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.container, { backgroundColor: colors?.background }]}>
         <DrawerProgress />
         <View style={styles.buttons}>
           <Button

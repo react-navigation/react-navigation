@@ -67,7 +67,7 @@ const ContactItem = React.memo(
     const { colors } = useTheme();
 
     return (
-      <View style={[styles.item, { backgroundColor: colors.card }]}>
+      <View style={[styles.item, { backgroundColor: colors?.card }]}>
         <View style={styles.avatar}>
           <Text style={styles.letter}>
             {item.name.slice(0, 1).toUpperCase()}
@@ -88,7 +88,7 @@ const ItemSeparator = () => {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.separator, { backgroundColor: colors.border }]} />
+    <View style={[styles.separator, { backgroundColor: colors?.border }]} />
   );
 };
 

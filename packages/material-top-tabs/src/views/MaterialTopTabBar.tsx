@@ -34,7 +34,7 @@ const MaterialLabel = ({
 
   return (
     <Text
-      style={[{ color }, fonts.medium, styles.label, style]}
+      style={[{ color }, fonts?.medium, styles.label, style]}
       allowFontScaling={allowFontScaling}
     >
       {labelText}
@@ -59,7 +59,7 @@ export function MaterialTopTabBar({
   const focusedOptions = descriptors[state.routes[state.index].key].options;
 
   const activeColor: ColorValue =
-    focusedOptions.tabBarActiveTintColor ?? colors.text;
+    focusedOptions.tabBarActiveTintColor ?? colors?.text ?? 'transparent';
   const inactiveColor: ColorValue =
     focusedOptions.tabBarInactiveTintColor ??
     Color(activeColor)?.alpha(0.5).string() ??
@@ -196,14 +196,14 @@ export function MaterialTopTabBar({
       pressOpacity={focusedOptions.tabBarPressOpacity}
       tabStyle={focusedOptions.tabBarItemStyle}
       indicatorStyle={[
-        { backgroundColor: colors.primary },
+        { backgroundColor: colors?.primary },
         focusedOptions.tabBarIndicatorStyle,
       ]}
       gap={focusedOptions.tabBarGap}
       android_ripple={focusedOptions.tabBarAndroidRipple}
       indicatorContainerStyle={focusedOptions.tabBarIndicatorContainerStyle}
       contentContainerStyle={focusedOptions.tabBarContentContainerStyle}
-      style={[{ backgroundColor: colors.card }, focusedOptions.tabBarStyle]}
+      style={[{ backgroundColor: colors?.card }, focusedOptions.tabBarStyle]}
       onTabPress={({ route, preventDefault }) => {
         const event = navigation.emit({
           type: 'tabPress',

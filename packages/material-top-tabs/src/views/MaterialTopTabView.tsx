@@ -104,7 +104,7 @@ export function MaterialTopTabView({
             route.key,
             {
               sceneStyle: [
-                { backgroundColor: colors.background },
+                { backgroundColor: colors?.background },
                 options?.sceneStyle,
               ],
             },

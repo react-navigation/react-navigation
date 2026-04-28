@@ -189,14 +189,18 @@ export function BottomTabItem({
   const activeTintColor: ColorValue =
     customActiveTintColor ??
     (variant === 'uikit' && sidebar && horizontal
-      ? Color.foreground(colors.primary)
-      : colors.primary);
+      ? Color.foreground(colors?.primary ?? 'transparent')
+      : (colors?.primary ?? 'transparent'));
 
   const inactiveTintColor: ColorValue =
     customInactiveTintColor === undefined
       ? variant === 'material'
-        ? (Color(colors.text)?.alpha(0.68).string() ?? 'rgba(0, 0, 0, 0.68)')
-        : (Color(colors.text)?.alpha(0.5).string() ?? 'rgba(0, 0, 0, 0.5)')
+        ? (Color(colors?.text ?? 'transparent')
+            ?.alpha(0.68)
+            .string() ?? 'rgba(0, 0, 0, 0.68)')
+        : (Color(colors?.text ?? 'transparent')
+            ?.alpha(0.5)
+            .string() ?? 'rgba(0, 0, 0, 0.5)')
       : customInactiveTintColor;
 
   const activeBackgroundColor: ColorValue =
@@ -204,7 +208,7 @@ export function BottomTabItem({
     (variant === 'material'
       ? (Color(activeTintColor)?.alpha(0.12).string() ?? 'rgba(0, 0, 0, 0.06)')
       : sidebar && horizontal
-        ? colors.primary
+        ? (colors?.primary ?? 'transparent')
         : 'transparent');
 
   const { options } = descriptor;
@@ -228,8 +232,8 @@ export function BottomTabItem({
     horizontal &&
     customInactiveTintColor === undefined
   ) {
-    iconInactiveTintColor = colors.primary;
-    labelInactiveTintColor = colors.text;
+    iconInactiveTintColor = colors?.primary ?? 'transparent';
+    labelInactiveTintColor = colors?.text ?? 'transparent';
   }
 
   const renderLabel = ({ focused }: { focused: boolean }) => {
@@ -265,8 +269,8 @@ export function BottomTabItem({
               ]
             : styles.labelBeneath,
           compact || (variant === 'uikit' && sidebar && horizontal)
-            ? fonts.regular
-            : fonts.medium,
+            ? fonts?.regular
+            : fonts?.medium,
           labelStyle,
         ]}
         allowFontScaling={allowFontScaling}
@@ -345,8 +349,8 @@ export function BottomTabItem({
         pressColor: rippleColor,
         hoverEffect:
           (variant === 'material' || (sidebar && horizontal)) &&
-          typeof colors.text === 'string'
-            ? { color: colors.text }
+          typeof colors?.text === 'string'
+            ? { color: colors?.text }
             : undefined,
         pressOpacity: 1,
         style: [

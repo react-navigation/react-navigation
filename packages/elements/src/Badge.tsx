@@ -73,7 +73,7 @@ export function Badge({
   }
 
   // @ts-expect-error: backgroundColor definitely exists
-  const { backgroundColor = colors.notification, ...restStyle } =
+  const { backgroundColor = colors?.notification, ...restStyle } =
     StyleSheet.flatten(style) || {};
   const textColor = Color.foreground(backgroundColor);
 
@@ -103,7 +103,7 @@ export function Badge({
           borderRadius,
           borderCurve: 'continuous',
         },
-        fonts.regular,
+        fonts?.regular,
         styles.container,
         restStyle,
       ]}

@@ -63,8 +63,8 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
 
   if (Platform.OS !== 'android') {
     return (
-      <View style={[styles.centered, { backgroundColor: colors.background }]}>
-        <Text style={{ color: colors.text }}>
+      <View style={[styles.centered, { backgroundColor: colors?.background }]}>
+        <Text style={{ color: colors?.text }}>
           MaterialSymbol is only available on Android
         </Text>
       </View>
@@ -80,8 +80,8 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
           style={[
             styles.header,
             {
-              backgroundColor: colors.background,
-              borderBottomColor: colors.border,
+              backgroundColor: colors?.background,
+              borderBottomColor: colors?.border,
             },
           ]}
         >
@@ -100,7 +100,7 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
       )}
       keyExtractor={(item) => item[0]}
       contentContainerStyle={{
-        backgroundColor: colors.background,
+        backgroundColor: colors?.background,
         paddingLeft: insets.left,
         paddingRight: insets.right,
         paddingBottom: insets.bottom,
@@ -129,20 +129,20 @@ const MaterialSymbolRow = React.memo(function MaterialSymbolRow({
   return (
     <View style={styles.row}>
       {items.map((item) => (
-        <View key={item} style={[styles.item, { borderColor: colors.border }]}>
+        <View key={item} style={[styles.item, { borderColor: colors?.border }]}>
           {image ? (
             <Image
               source={MaterialSymbol.getImageSource({
                 name: item,
                 size: ICON_SIZE,
-                color: colors.text,
+                color: colors?.text,
               })}
             />
           ) : (
             <MaterialSymbol name={item} size={ICON_SIZE} />
           )}
           <Text
-            style={[styles.iconName, { color: colors.text }]}
+            style={[styles.iconName, { color: colors?.text }]}
             numberOfLines={1}
           >
             {item}

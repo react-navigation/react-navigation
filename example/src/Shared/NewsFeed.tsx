@@ -22,7 +22,7 @@ const Card = ({ children }: { children: React.ReactNode }) => {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.card }]}>
+    <View style={[styles.card, { backgroundColor: colors?.card }]}>
       {children}
     </View>
   );
@@ -39,7 +39,7 @@ const FooterIcon = ({
 
   return (
     <PlatformPressable style={styles.icon}>
-      <MaterialCommunityIcons name={icon} size={size} color={colors.text} />
+      <MaterialCommunityIcons name={icon} size={size} color={colors?.text} />
     </PlatformPressable>
   );
 };
@@ -78,7 +78,9 @@ export function NewsFeed(props: Props) {
       <Card>
         <TextInput
           placeholder="What's on your mind?"
-          placeholderTextColor={Color(colors.text)?.alpha(0.5).string()}
+          placeholderTextColor={Color(colors?.text ?? 'transparent')
+            ?.alpha(0.5)
+            .string()}
           style={styles.input}
         />
       </Card>

@@ -11,6 +11,7 @@
       "android",
       "web"
     ],
+    "userInterfaceStyle": "automatic",
     "scheme": "rne",
     "android": {
       "package": "org.reactnavigation.playground",

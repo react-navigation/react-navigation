@@ -24,7 +24,7 @@ const Heading = ({
   const { colors } = useTheme();
 
   return (
-    <Text style={[styles.heading, { color: colors.text }, style]} {...rest} />
+    <Text style={[styles.heading, { color: colors?.text }, style]} {...rest} />
   );
 };
 
@@ -35,7 +35,10 @@ const Paragraph = ({
   const { colors } = useTheme();
 
   return (
-    <Text style={[styles.paragraph, { color: colors.text }, style]} {...rest} />
+    <Text
+      style={[styles.paragraph, { color: colors?.text }, style]}
+      {...rest}
+    />
   );
 };
 
@@ -57,7 +60,7 @@ export function Article({
   return (
     <ScrollView
       ref={ref}
-      style={{ backgroundColor: colors.card }}
+      style={{ backgroundColor: colors?.card }}
       contentContainerStyle={styles.content}
       {...rest}
     >
@@ -67,10 +70,12 @@ export function Article({
           source={require('../../assets/misc/avatar-1.png')}
         />
         <View style={styles.meta}>
-          <Text style={[styles.name, { color: colors.text }]}>
+          <Text style={[styles.name, { color: colors?.text }]}>
             {author.name}
           </Text>
-          <Text style={[styles.timestamp, { color: colors.text }]}>{date}</Text>
+          <Text style={[styles.timestamp, { color: colors?.text }]}>
+            {date}
+          </Text>
         </View>
       </View>
       <Heading>What is Lorem Ipsum?</Heading>

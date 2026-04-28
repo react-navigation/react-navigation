@@ -170,8 +170,8 @@ const UnsupportedScreen = () => {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.centered, { backgroundColor: colors.background }]}>
-      <Text style={{ color: colors.text }}>
+    <View style={[styles.centered, { backgroundColor: colors?.background }]}>
+      <Text style={{ color: colors?.text }}>
         Form Sheet presentation is only available on Android and iOS
       </Text>
     </View>

@@ -271,8 +271,8 @@ export function Header(props: Props) {
       ios:
         isLiquidGlassSupported && PlatformColor
           ? PlatformColor('label')
-          : colors.primary,
-      default: colors.text,
+          : (colors?.primary ?? 'transparent'),
+      default: colors?.text ?? 'transparent',
     });
 
   const leftButton = headerLeft

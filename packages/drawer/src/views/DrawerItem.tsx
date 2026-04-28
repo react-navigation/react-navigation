@@ -118,7 +118,7 @@ export function DrawerItem(props: Props) {
     labelStyle,
     focused = false,
     allowFontScaling,
-    activeTintColor = colors.primary,
+    activeTintColor = colors?.primary ?? 'transparent',
     inactiveTintColor,
     activeBackgroundColor,
     inactiveBackgroundColor = 'transparent',
@@ -135,7 +135,9 @@ export function DrawerItem(props: Props) {
   const color: ColorValue = focused
     ? activeTintColor
     : (inactiveTintColor ??
-      Color(colors.text)?.alpha(0.68).string() ??
+      Color(colors?.text ?? 'transparent')
+        ?.alpha(0.68)
+        .string() ??
       'rgba(0, 0, 0, 0.68)');
   const backgroundColor: ColorValue = focused
     ? (activeBackgroundColor ??
@@ -222,7 +224,7 @@ export function DrawerItem(props: Props) {
               <Text
                 numberOfLines={1}
                 allowFontScaling={allowFontScaling}
-                style={[styles.labelText, { color }, fonts.medium, labelStyle]}
+                style={[styles.labelText, { color }, fonts?.medium, labelStyle]}
               >
                 {label}
               </Text>

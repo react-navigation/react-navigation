@@ -31,8 +31,8 @@ export function HeaderBackground({
       style={[
         styles.container,
         {
-          backgroundColor: colors.card,
-          borderBottomColor: colors.border,
+          backgroundColor: colors?.card,
+          borderBottomColor: colors?.border,
         },
         style,
       ]}

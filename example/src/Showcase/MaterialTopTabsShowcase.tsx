@@ -374,8 +374,8 @@ const Badge = ({ count }: { count: number }) => {
   const { colors, fonts } = useTheme();
 
   return (
-    <View style={[styles.badge, { backgroundColor: colors.notification }]}>
-      <Text style={[styles.badgeText, fonts.medium]}>{count}</Text>
+    <View style={[styles.badge, { backgroundColor: colors?.notification }]}>
+      <Text style={[styles.badgeText, fonts?.medium]}>{count}</Text>
     </View>
   );
 };
@@ -387,18 +387,18 @@ const RecipeCard = ({ item, width }: { item: Recipe; width?: number }) => {
     <View
       style={[
         styles.card,
-        { backgroundColor: colors.card },
+        { backgroundColor: colors?.card },
         width != null && { width },
       ]}
     >
       <Image source={item.image} style={styles.cardImage} resizeMode="cover" />
 
       <View style={styles.cardBody}>
-        <Text style={[styles.cardTitle, fonts.medium]} numberOfLines={2}>
+        <Text style={[styles.cardTitle, fonts?.medium]} numberOfLines={2}>
           {item.title}
         </Text>
 
-        <Text style={[styles.cardMeta, { color: colors.text, opacity: 0.5 }]}>
+        <Text style={[styles.cardMeta, { color: colors?.text, opacity: 0.5 }]}>
           {item.time} · {item.difficulty}
         </Text>
       </View>
@@ -439,21 +439,21 @@ const RecipeListItem = ({ item }: { item: Recipe }) => {
       />
 
       <View style={styles.flexFill}>
-        <Text style={[styles.cardTitle, fonts.medium]} numberOfLines={1}>
+        <Text style={[styles.cardTitle, fonts?.medium]} numberOfLines={1}>
           {item.title}
         </Text>
 
         <Text
           style={[
             styles.listItemAuthor,
-            fonts.medium,
-            { color: colors.text, opacity: 0.6 },
+            fonts?.medium,
+            { color: colors?.text, opacity: 0.6 },
           ]}
         >
           {item.author}
         </Text>
 
-        <Text style={[styles.cardMeta, { color: colors.text, opacity: 0.5 }]}>
+        <Text style={[styles.cardMeta, { color: colors?.text, opacity: 0.5 }]}>
           {item.time} · {item.difficulty}
         </Text>
       </View>
@@ -470,7 +470,7 @@ const RecipeList = ({ items }: { items: Recipe[] }) => {
         <React.Fragment key={item.id}>
           {index > 0 && (
             <View
-              style={[styles.listDivider, { backgroundColor: colors.border }]}
+              style={[styles.listDivider, { backgroundColor: colors?.border }]}
             />
           )}
 
@@ -512,11 +512,11 @@ const TrendingScreen = () => {
 
       <View style={styles.metaRow}>
         <Text
-          style={[styles.smallText, fonts.medium, { color: colors.primary }]}
+          style={[styles.smallText, fonts?.medium, { color: colors?.primary }]}
         >
           {featured.author}
         </Text>
-        <Text style={[styles.smallText, { color: colors.text, opacity: 0.5 }]}>
+        <Text style={[styles.smallText, { color: colors?.text, opacity: 0.5 }]}>
           {' · '}
           {featured.time}
           {' · '}
@@ -527,7 +527,7 @@ const TrendingScreen = () => {
       </View>
 
       <View
-        style={[styles.accentDivider, { backgroundColor: colors.border }]}
+        style={[styles.accentDivider, { backgroundColor: colors?.border }]}
       />
 
       <Text style={styles.bodyText}>{featured.description}</Text>
@@ -612,11 +612,11 @@ const FeaturedCategoryScreen = ({
         />
 
         <View style={styles.featuredImageOverlay}>
-          <Text style={[styles.featuredImageTitle, fonts.medium]}>
+          <Text style={[styles.featuredImageTitle, fonts?.medium]}>
             {featured.title}
           </Text>
 
-          <Text style={[styles.featuredImageMeta, fonts.medium]}>
+          <Text style={[styles.featuredImageMeta, fonts?.medium]}>
             {featured.time} · {featured.difficulty}
           </Text>
         </View>
@@ -679,7 +679,7 @@ const SeasonalScreen = () => {
       </Text>
 
       <View
-        style={[styles.accentDivider, { backgroundColor: colors.border }]}
+        style={[styles.accentDivider, { backgroundColor: colors?.border }]}
       />
 
       <RecipeList items={recipes} />

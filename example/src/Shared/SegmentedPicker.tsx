@@ -32,17 +32,17 @@ export function SegmentedPicker<T extends string | number | boolean>({
           onPress={() => onValueChange(option.value)}
           style={[
             styles.segment,
-            option.value === value && { backgroundColor: colors.primary },
+            option.value === value && { backgroundColor: colors?.primary },
           ]}
         >
           <Text
             style={[
-              fonts.medium,
+              fonts?.medium,
               {
                 color:
                   option.value === value
-                    ? Color.foreground(colors.primary)
-                    : colors.text,
+                    ? Color.foreground(colors?.primary ?? 'transparent')
+                    : colors?.text,
               },
             ]}
           >

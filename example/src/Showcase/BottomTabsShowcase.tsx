@@ -185,12 +185,12 @@ const AlbumsScreen = () => {
           />
 
           <View style={styles.albumInfo}>
-            <Text style={[styles.albumTitle, fonts.bold]} numberOfLines={1}>
+            <Text style={[styles.albumTitle, fonts?.bold]} numberOfLines={1}>
               {item.title}
             </Text>
 
             <Text
-              style={[styles.artistText, { color: colors.text }]}
+              style={[styles.artistText, { color: colors?.text }]}
               numberOfLines={1}
             >
               {item.artist}
@@ -215,13 +215,13 @@ const ForYouScreen = () => {
         <Image source={featured.cover} style={styles.featuredImage} />
 
         <View style={styles.featuredOverlay}>
-          <Text style={[styles.featuredLabel, fonts.medium]}>Featured</Text>
+          <Text style={[styles.featuredLabel, fonts?.medium]}>Featured</Text>
 
-          <Text style={[styles.featuredTitle, fonts.heavy]}>
+          <Text style={[styles.featuredTitle, fonts?.heavy]}>
             {featured.title}
           </Text>
 
-          <Text style={[styles.featuredArtist, fonts.medium]}>
+          <Text style={[styles.featuredArtist, fonts?.medium]}>
             {featured.artist}
           </Text>
         </View>
@@ -229,7 +229,9 @@ const ForYouScreen = () => {
 
       {FOR_YOU_SECTIONS.map((section) => (
         <View key={section.title} style={styles.section}>
-          <Text style={[styles.sectionTitle, fonts.bold]}>{section.title}</Text>
+          <Text style={[styles.sectionTitle, fonts?.bold]}>
+            {section.title}
+          </Text>
 
           <FlatList
             horizontal
@@ -242,14 +244,14 @@ const ForYouScreen = () => {
                 <Image source={item.cover} style={styles.horizontalCover} />
 
                 <Text
-                  style={[styles.horizontalTitle, fonts.medium]}
+                  style={[styles.horizontalTitle, fonts?.medium]}
                   numberOfLines={1}
                 >
                   {item.title}
                 </Text>
 
                 <Text
-                  style={[styles.artistText, { color: colors.text }]}
+                  style={[styles.artistText, { color: colors?.text }]}
                   numberOfLines={1}
                 >
                   {item.artist}
@@ -273,7 +275,7 @@ const RadioScreen = () => {
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={styles.stationList}
       ItemSeparatorComponent={() => (
-        <View style={[styles.separator, { backgroundColor: colors.border }]} />
+        <View style={[styles.separator, { backgroundColor: colors?.border }]} />
       )}
       renderItem={({ item }) => (
         <View style={styles.stationRow}>
@@ -290,12 +292,12 @@ const RadioScreen = () => {
                 ]}
               />
 
-              <Text style={[styles.stationName, fonts.bold]}>{item.name}</Text>
+              <Text style={[styles.stationName, fonts?.bold]}>{item.name}</Text>
 
               <View
-                style={[styles.genreTag, { backgroundColor: colors.border }]}
+                style={[styles.genreTag, { backgroundColor: colors?.border }]}
               >
-                <Text style={[styles.genreText, fonts.medium]}>
+                <Text style={[styles.genreText, fonts?.medium]}>
                   {item.genre}
                 </Text>
               </View>
@@ -304,7 +306,7 @@ const RadioScreen = () => {
             <Text
               style={[
                 styles.stationDetailText,
-                { color: colors.text, opacity: item.nowPlaying ? 1 : 0.6 },
+                { color: colors?.text, opacity: item.nowPlaying ? 1 : 0.6 },
               ]}
               numberOfLines={1}
             >
@@ -367,7 +369,10 @@ const SearchScreenContent = () => {
       {query ? (
         filteredAlbums.length > 0 ? (
           <View
-            style={[styles.searchResultsCard, { backgroundColor: colors.card }]}
+            style={[
+              styles.searchResultsCard,
+              { backgroundColor: colors?.card },
+            ]}
           >
             {filteredAlbums.map((item, index) => (
               <React.Fragment key={item.id}>
@@ -375,7 +380,7 @@ const SearchScreenContent = () => {
                   <View
                     style={[
                       styles.searchResultSeparator,
-                      { backgroundColor: colors.border },
+                      { backgroundColor: colors?.border },
                     ]}
                   />
                 )}
@@ -384,14 +389,14 @@ const SearchScreenContent = () => {
                   <Image source={item.cover} style={styles.searchResultCover} />
 
                   <View style={styles.searchResultInfo}>
-                    <Text style={[styles.searchResultTitle, fonts.medium]}>
+                    <Text style={[styles.searchResultTitle, fonts?.medium]}>
                       {item.title}
                     </Text>
 
                     <Text
                       style={[
                         styles.searchResultArtist,
-                        { color: colors.text },
+                        { color: colors?.text },
                       ]}
                     >
                       {item.artist}
@@ -403,14 +408,14 @@ const SearchScreenContent = () => {
           </View>
         ) : (
           <Text
-            style={[styles.emptyText, { color: colors.text, opacity: 0.5 }]}
+            style={[styles.emptyText, { color: colors?.text, opacity: 0.5 }]}
           >
             No results
           </Text>
         )
       ) : (
         <>
-          <Text style={[styles.browseSectionTitle, fonts.bold]}>
+          <Text style={[styles.browseSectionTitle, fonts?.bold]}>
             Browse Categories
           </Text>
 
@@ -425,7 +430,7 @@ const SearchScreenContent = () => {
                   { backgroundColor: genre.color },
                 ]}
               >
-                <Text style={[styles.genreCardText, fonts.bold]}>
+                <Text style={[styles.genreCardText, fonts?.bold]}>
                   {genre.name}
                 </Text>
               </View>
@@ -464,8 +469,8 @@ const NowPlayingBar = ({ placement }: { placement: 'inline' | 'regular' }) => {
             <Text
               style={[
                 styles.nowPlayingTitle,
-                fonts.bold,
-                { color: colors.text },
+                fonts?.bold,
+                { color: colors?.text },
               ]}
               numberOfLines={1}
             >
@@ -473,7 +478,7 @@ const NowPlayingBar = ({ placement }: { placement: 'inline' | 'regular' }) => {
             </Text>
 
             <Text
-              style={[styles.nowPlayingArtist, { color: colors.text }]}
+              style={[styles.nowPlayingArtist, { color: colors?.text }]}
               numberOfLines={1}
             >
               {NOW_PLAYING.artist}
@@ -481,15 +486,15 @@ const NowPlayingBar = ({ placement }: { placement: 'inline' | 'regular' }) => {
           </View>
 
           <View style={styles.nowPlayingButtons}>
-            <Ionicons name="play" size={28} color={colors.text} />
-            <Ionicons name="play-forward" size={28} color={colors.text} />
+            <Ionicons name="play" size={28} color={colors?.text} />
+            <Ionicons name="play-forward" size={28} color={colors?.text} />
           </View>
         </>
       ) : (
         <View style={styles.nowPlayingButtons}>
-          <Ionicons name="play-back" size={28} color={colors.text} />
-          <Ionicons name="play" size={28} color={colors.text} />
-          <Ionicons name="play-forward" size={28} color={colors.text} />
+          <Ionicons name="play-back" size={28} color={colors?.text} />
+          <Ionicons name="play" size={28} color={colors?.text} />
+          <Ionicons name="play-forward" size={28} color={colors?.text} />
         </View>
       )}
     </View>

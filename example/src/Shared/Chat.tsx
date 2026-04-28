@@ -57,10 +57,10 @@ export function Chat({
               <View
                 style={[
                   styles.bubble,
-                  { backgroundColor: odd ? colors.primary : colors.card },
+                  { backgroundColor: odd ? colors?.primary : colors?.card },
                 ]}
               >
-                <Text style={{ color: odd ? 'white' : colors.text }}>
+                <Text style={{ color: odd ? 'white' : colors?.text }}>
                   {text}
                 </Text>
               </View>
@@ -71,9 +71,11 @@ export function Chat({
       <TextInput
         style={[
           styles.input,
-          { backgroundColor: colors.card, color: colors.text },
+          { backgroundColor: colors?.card, color: colors?.text },
         ]}
-        placeholderTextColor={Color(colors.text)?.alpha(0.5).string()}
+        placeholderTextColor={Color(colors?.text ?? 'transparent')
+          ?.alpha(0.5)
+          .string()}
         placeholder="Write a message"
         underlineColorAndroid="transparent"
       />

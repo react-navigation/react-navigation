@@ -460,7 +460,7 @@ export type BottomTabNavigationOptions = {
     | Icon
     | ((props: {
         focused: boolean;
-        color: ColorValue;
+        color: ColorValue | undefined;
         size: number;
       }) => Icon | React.ReactNode);
 

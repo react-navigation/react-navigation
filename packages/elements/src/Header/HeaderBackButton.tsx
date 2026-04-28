@@ -49,7 +49,7 @@ export function HeaderBackButton({
   const isMinimal = displayMode === 'minimal' || measuredMinimal;
 
   const renderBackImage = () => {
-    const color = tintColor ?? colors.text;
+    const color = tintColor ?? colors?.text ?? 'transparent';
 
     if (typeof icon === 'function') {
       return icon({ tintColor: color });
@@ -181,7 +181,7 @@ function HeaderBackLabel({
   }, [isMinimal, onMeasureMinimal]);
 
   const commonStyle: Animated.WithAnimatedValue<StyleProp<TextStyle>> = [
-    fonts.regular,
+    fonts?.regular,
     styles.label,
     labelStyle,
   ];

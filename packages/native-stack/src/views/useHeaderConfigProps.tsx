@@ -43,8 +43,8 @@ const ICON_SIZE = 24;
 
 const processBarButtonItems = (
   items: NativeStackHeaderItem[] | undefined,
-  colors: Theme['colors'],
-  fonts: Theme['fonts']
+  colors?: Theme['colors'],
+  fonts?: Theme['fonts']
 ) => {
   return items
     ?.map((item, index) => {
@@ -81,7 +81,7 @@ const processBarButtonItems = (
           index,
           title: label,
           titleStyle: {
-            ...fonts.regular,
+            ...fonts?.regular,
             ...labelStyle,
           },
           icon: transformIcon(icon),
@@ -116,8 +116,10 @@ const processBarButtonItems = (
 
         if (badge) {
           const badgeBackgroundColor =
-            badge.style?.backgroundColor ?? colors.notification;
-          const badgeTextColor = Color.foreground(badgeBackgroundColor);
+            badge.style?.backgroundColor ?? colors?.notification;
+          const badgeTextColor = badgeBackgroundColor
+            ? Color.foreground(badgeBackgroundColor)
+            : undefined;
 
           processedItem = {
             ...processedItem,
@@ -127,7 +129,7 @@ const processBarButtonItems = (
               style: {
                 backgroundColor: badgeBackgroundColor,
                 color: badgeTextColor,
-                ...fonts.regular,
+                ...fonts?.regular,
                 ...badge.style,
               },
             },
@@ -222,18 +224,18 @@ export function useHeaderConfigProps({
   const { direction } = useLocale();
   const { colors, fonts, dark } = useTheme();
   const tintColor =
-    headerTintColor ?? (Platform.OS === 'ios' ? colors.primary : colors.text);
+    headerTintColor ?? (Platform.OS === 'ios' ? colors?.primary : colors?.text);
 
   const headerBackTitleStyleFlattened =
-    StyleSheet.flatten([fonts.regular, headerBackTitleStyle]) || {};
+    StyleSheet.flatten([fonts?.regular, headerBackTitleStyle]) || {};
   const headerLargeTitleStyleFlattened =
     StyleSheet.flatten([
-      Platform.select({ ios: fonts.heavy, default: fonts.medium }),
+      Platform.select({ ios: fonts?.heavy, default: fonts?.medium }),
       headerLargeTitleStyle,
     ]) || {};
   const headerTitleStyleFlattened =
     StyleSheet.flatten([
-      Platform.select({ ios: fonts.bold, default: fonts.medium }),
+      Platform.select({ ios: fonts?.bold, default: fonts?.medium }),
       headerTitleStyle,
     ]) || {};
   const headerStyleFlattened = StyleSheet.flatten(headerStyle) || {};
@@ -246,7 +248,7 @@ export function useHeaderConfigProps({
     // The title becomes invisible if background color is set with large title on iOS 26
     (Platform.OS === 'ios' && headerLargeTitleEnabled)
       ? 'transparent'
-      : colors.card);
+      : colors?.card);
 
   const backTitleFontSize =
     'fontSize' in headerBackTitleStyleFlattened
@@ -264,7 +266,8 @@ export function useHeaderConfigProps({
           // So we don't set an explicit color when header is transparent
           // Unless a custom tint color is explicitly provided
           headerTintColor
-        : (headerTintColor ?? colors.text);
+        : (headerTintColor ?? colors?.text);
+
   const titleFontSize =
     'fontSize' in headerTitleStyleFlattened
       ? headerTitleStyleFlattened.fontSize
@@ -553,6 +556,7 @@ export function useHeaderConfigProps({
     children,
     headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
     headerRightBarButtonItems: processBarButtonItems(rightItems, colors, fonts),
-    experimental_userInterfaceStyle: dark ? 'dark' : 'light',
+    experimental_userInterfaceStyle:
+      typeof dark === 'boolean' ? (dark ? 'dark' : 'light') : undefined,
   } as const;
 }

@@ -39,7 +39,7 @@ const SplashScreen = () => {
 
   return (
     <View style={styles.content}>
-      <ActivityIndicator color={colors.primary} />
+      <ActivityIndicator color={colors?.primary} />
     </View>
   );
 };
@@ -55,7 +55,7 @@ const SignInScreen = () => {
         placeholder="Username"
         style={[
           styles.input,
-          { backgroundColor: colors.card, color: colors.text },
+          { backgroundColor: colors?.card, color: colors?.text },
         ]}
       />
       <TextInput
@@ -63,7 +63,7 @@ const SignInScreen = () => {
         secureTextEntry
         style={[
           styles.input,
-          { backgroundColor: colors.card, color: colors.text },
+          { backgroundColor: colors?.card, color: colors?.text },
         ]}
       />
       <Button variant="filled" onPress={signIn} style={styles.button}>

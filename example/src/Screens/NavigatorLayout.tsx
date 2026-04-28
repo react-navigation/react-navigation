@@ -122,8 +122,8 @@ function BreadcrumbLayout({
       <ScrollView
         horizontal
         style={{
-          backgroundColor: colors.card,
-          borderBottomColor: colors.border,
+          backgroundColor: colors?.card,
+          borderBottomColor: colors?.border,
           borderBottomWidth: StyleSheet.hairlineWidth,
           maxHeight: defaultHeaderHeight,
         }}
@@ -143,12 +143,12 @@ function BreadcrumbLayout({
                   });
                 }}
               >
-                <Text style={[styles.title, { color: colors.text }]}>
+                <Text style={[styles.title, { color: colors?.text }]}>
                   {getHeaderTitle(descriptors[route.key].options, route.name)}
                 </Text>
               </Pressable>
               {self.length - 1 !== i ? (
-                <Text style={[styles.arrow, { color: colors.text }]}>❯</Text>
+                <Text style={[styles.arrow, { color: colors?.text }]}>❯</Text>
               ) : null}
             </React.Fragment>
           );

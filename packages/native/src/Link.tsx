@@ -67,6 +67,6 @@ export function Link<
       web: { onClick: onPress } as any,
       default: { onPress },
     }),
-    style: [{ color: colors.primary }, fonts.regular, style],
+    style: [{ color: colors?.primary }, fonts?.regular, style],
   });
 }
