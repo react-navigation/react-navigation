@@ -11,7 +11,7 @@ name: Stack - Preload Flow
 - tapOn:
     text: 'Preload Details'
 - extendedWaitUntil:
-    timeout: 5000
+    timeout: 3000
     visible: 'Details is preloaded!'
 - tapOn:
     text: 'Navigate to Details'
