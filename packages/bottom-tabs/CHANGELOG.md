@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.15.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.15.10...@react-navigation/bottom-tabs@7.15.11) (2026-04-29)
+
+### Bug Fixes
+
+* **bottom-tabs:** disable pointer events on inactive tab screens ([#13086](https://github.com/react-navigation/react-navigation/issues/13086)) ([6858453](https://github.com/react-navigation/react-navigation/commit/6858453d0a399c2d0cfa87c2f6e3a0a419a8b596)) - by @cortinico
+
 ## [7.15.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.15.9...@react-navigation/bottom-tabs@7.15.10) (2026-04-24)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
