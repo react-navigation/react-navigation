@@ -1,4 +1,4 @@
-# React Navigation 7
+# React Navigation 8
 
 [![Build Status][build-badge]][build]
 [![Code Coverage][coverage-badge]][coverage]
