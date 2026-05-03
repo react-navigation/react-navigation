@@ -167,6 +167,7 @@ export function TabView<T extends Route>({
   swipeEnabled = true,
   tabBarPosition = 'top',
   animationEnabled = true,
+  pageMargin = 0,
   options: sceneOptions,
   commonOptions,
 }: Props<T>) {
@@ -207,6 +208,7 @@ export function TabView<T extends Route>({
     onTabSelect,
     animationEnabled,
     layoutDirection: direction,
+    pageMargin,
     style: pagerStyle,
     children: ({ position, render, subscribe, jumpTo }) => {
       // All the props here must not change between re-renders
