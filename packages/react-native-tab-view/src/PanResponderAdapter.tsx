@@ -38,6 +38,7 @@ export function PanResponderAdapter({
   style,
   animationEnabled = false,
   layoutDirection = 'ltr',
+  pageMargin = 0,
 }: PanResponderAdapterProps) {
   const { routes, index } = navigationState;
 
@@ -57,9 +58,11 @@ export function PanResponderAdapter({
   const swipeVelocityThreshold = 0.15;
   const swipeDistanceThreshold = layout.width / 1.75;
 
+  const pageWidth = layout.width + pageMargin;
+
   const jumpToIndex = useLatestCallback(
     (index: number, animate = animationEnabled) => {
-      const offset = -index * layout.width;
+      const offset = -index * pageWidth;
 
       const { timing, ...transitionConfig } = DefaultTransitionSpec;
 
@@ -94,10 +97,10 @@ export function PanResponderAdapter({
   });
 
   React.useLayoutEffect(() => {
-    const offset = -navigationStateRef.current.index * layout.width;
+    const offset = -navigationStateRef.current.index * pageWidth;
 
     panX.setValue(offset);
-  }, [layout.width, panX]);
+  }, [pageWidth, panX]);
 
   React.useEffect(() => {
     if (keyboardDismissMode === 'auto') {
@@ -168,7 +171,7 @@ export function PanResponderAdapter({
 
     if (layout.width) {
       // @ts-expect-error: _offset is private, but docs use it as well
-      const position = (panX._offset + diffX) / -layout.width;
+      const position = (panX._offset + diffX) / -pageWidth;
       const next =
         position > index ? Math.ceil(position) : Math.floor(position);
 
@@ -255,7 +258,7 @@ export function PanResponderAdapter({
     onPanResponderTerminationRequest: () => true,
   });
 
-  const maxTranslate = layout.width * (routes.length - 1);
+  const maxTranslate = pageWidth * (routes.length - 1);
   const translateX = Animated.multiply(
     panX.interpolate({
       inputRange: [-maxTranslate, 0],
@@ -266,8 +269,8 @@ export function PanResponderAdapter({
   );
 
   const position = React.useMemo(
-    () => (layout.width ? Animated.divide(panX, -layout.width) : null),
-    [layout.width, panX]
+    () => (layout.width ? Animated.divide(panX, -pageWidth) : null),
+    [pageWidth, panX]
   );
 
   return children({
@@ -281,7 +284,9 @@ export function PanResponderAdapter({
             styles.sheet,
             layout.width
               ? {
-                  width: routes.length * layout.width,
+                  width:
+                    routes.length * layout.width +
+                    (routes.length - 1) * pageMargin,
                   transform: [{ translateX }],
                 }
               : null,
@@ -302,7 +307,11 @@ export function PanResponderAdapter({
                 key={route.key}
                 style={
                   layout.width
-                    ? { width: layout.width }
+                    ? {
+                        width: layout.width,
+                        marginRight:
+                          i < routes.length - 1 ? pageMargin : undefined,
+                      }
                     : focused
                       ? StyleSheet.absoluteFill
                       : null
