@@ -112,6 +112,14 @@ export type AdapterCommonProps = {
    * Style for the pager adapter.
    */
   style?: StyleProp<ViewStyle> | undefined;
+  /**
+   * Amount of space (in points) between each page in the pager.
+   * On iOS and Android, this is forwarded to the native PagerView component.
+   * On web and other platforms using the JS-based pager, it adds a gap between pages.
+   *
+   * Defaults to `0`.
+   */
+  pageMargin?: number | undefined;
 };
 
 export type AdapterRendererProps = {
