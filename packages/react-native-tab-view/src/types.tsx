@@ -109,6 +109,12 @@ export type AdapterCommonProps = {
    */
   onTabSelect?: ((props: { index: number }) => void) | undefined;
   /**
+   * Spacing between adjacent pages in the pager.
+   * On iOS and Android this is passed to the underlying `PagerView`.
+   * On web the gap is implemented using margins.
+   */
+  pageMargin?: number | undefined;
+  /**
    * Style for the pager adapter.
    */
   style?: StyleProp<ViewStyle> | undefined;

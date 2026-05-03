@@ -167,6 +167,7 @@ export function TabView<T extends Route>({
   swipeEnabled = true,
   tabBarPosition = 'top',
   animationEnabled = true,
+  pageMargin,
   options: sceneOptions,
   commonOptions,
 }: Props<T>) {
@@ -206,6 +207,7 @@ export function TabView<T extends Route>({
     onIndexChange: jumpToIndex,
     onTabSelect,
     animationEnabled,
+    pageMargin,
     layoutDirection: direction,
     style: pagerStyle,
     children: ({ position, render, subscribe, jumpTo }) => {
