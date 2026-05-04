@@ -395,6 +395,77 @@ test('handles retain for preloaded routes', () => {
   });
 });
 
+test('handles param actions for preloaded routes', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    preloadedRoutes: [{ key: 'bar', name: 'bar', params: { answer: 42 } }],
+    retainedRouteKeys: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [{ key: 'baz', name: 'baz' }],
+  };
+
+  expect(
+    router.getStateForAction(
+      state,
+      {
+        ...CommonActions.setParams({ name: 'Jane' }),
+        source: 'bar',
+      },
+      options
+    )
+  ).toEqual({
+    ...state,
+    preloadedRoutes: [
+      { key: 'bar', name: 'bar', params: { answer: 42, name: 'Jane' } },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      state,
+      {
+        ...CommonActions.replaceParams({ name: 'Jane' }),
+        source: 'bar',
+      },
+      options
+    )
+  ).toEqual({
+    ...state,
+    preloadedRoutes: [{ key: 'bar', name: 'bar', params: { name: 'Jane' } }],
+  });
+
+  expect(
+    router.getStateForAction(
+      state,
+      {
+        ...CommonActions.pushParams({ name: 'Jane' }),
+        source: 'bar',
+      },
+      options
+    )
+  ).toEqual({
+    ...state,
+    preloadedRoutes: [
+      {
+        key: 'bar',
+        name: 'bar',
+        params: { name: 'Jane' },
+        history: [{ type: 'params', params: { answer: 42 } }],
+      },
+    ],
+  });
+});
+
 test('gets state on route names change', () => {
   const router = StackRouter({});
 

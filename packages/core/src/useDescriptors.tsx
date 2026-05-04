@@ -77,7 +77,13 @@ type Options<
   screenLayout: ScreenLayout<ScreenOptions> | undefined;
   onAction: (action: NavigationAction) => boolean;
   getState: () => State;
-  setState: (state: State) => void;
+  getRouteState: (
+    routeKey: string
+  ) => NavigationState | PartialState<NavigationState> | undefined;
+  setRouteState: (
+    routeKey: string,
+    state: NavigationState | PartialState<NavigationState> | undefined
+  ) => void;
   addListener: AddListener;
   addKeyedListener: AddKeyedListener;
   onRouteFocus: (key: string) => void;
@@ -106,7 +112,8 @@ export function useDescriptors<
   screenLayout,
   onAction,
   getState,
-  setState,
+  getRouteState,
+  setRouteState,
   addListener,
   addKeyedListener,
   onRouteFocus,
@@ -249,8 +256,8 @@ export function useDescriptors<
         route={route}
         screen={screen}
         routeState={routeState}
-        getState={getState}
-        setState={setState}
+        getRouteState={getRouteState}
+        setRouteState={setRouteState}
         options={customOptions}
         clearOptions={clearOptions}
       />

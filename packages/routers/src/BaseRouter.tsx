@@ -1,10 +1,45 @@
 import { nanoid } from 'nanoid/non-secure';
 
 import type {
+  PushParamsAction,
+  ReplaceParamsAction,
+  SetParamsAction,
+} from './CommonActions';
+import type {
   CommonNavigationAction,
   NavigationState,
   PartialState,
+  Route,
 } from './types';
+
+export function getRouteForParamsAction<T extends Route<string>>(
+  route: T,
+  action: SetParamsAction | ReplaceParamsAction | PushParamsAction
+): T {
+  switch (action.type) {
+    case 'SET_PARAMS':
+      return {
+        ...route,
+        params: { ...route.params, ...action.payload.params },
+      };
+
+    case 'REPLACE_PARAMS':
+      return {
+        ...route,
+        params: action.payload.params,
+      };
+
+    case 'PUSH_PARAMS':
+      return {
+        ...route,
+        params: action.payload.params,
+        history: [
+          ...(route.history ?? []),
+          { type: 'params', params: route.params },
+        ],
+      };
+  }
+}
 
 /**
  * Base router object that can be used when writing custom routers.
@@ -17,31 +52,7 @@ export const BaseRouter = {
   ): State | PartialState<State> | null {
     switch (action.type) {
       case 'SET_PARAMS':
-      case 'REPLACE_PARAMS': {
-        const index = action.source
-          ? state.routes.findIndex((r) => r.key === action.source)
-          : state.index;
-
-        if (index === -1) {
-          return null;
-        }
-
-        return {
-          ...state,
-          routes: state.routes.map((r, i) =>
-            i === index
-              ? {
-                  ...r,
-                  params:
-                    action.type === 'REPLACE_PARAMS'
-                      ? action.payload.params
-                      : { ...r.params, ...action.payload.params },
-                }
-              : r
-          ),
-        };
-      }
-
+      case 'REPLACE_PARAMS':
       case 'PUSH_PARAMS': {
         const index = action.source
           ? state.routes.findIndex((r) => r.key === action.source)
@@ -51,20 +62,11 @@ export const BaseRouter = {
           return null;
         }
 
+        const route = getRouteForParamsAction(state.routes[index], action);
+
         return {
           ...state,
-          routes: state.routes.map((r, i) =>
-            i === index
-              ? {
-                  ...r,
-                  params: action.payload.params,
-                  history: [
-                    ...(r.history ?? []),
-                    { type: 'params', params: r.params },
-                  ],
-                }
-              : r
-          ),
+          routes: state.routes.map((r, i) => (i === index ? route : r)),
         };
       }
 

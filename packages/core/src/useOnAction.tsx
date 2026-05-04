@@ -21,6 +21,7 @@ type Options<State extends NavigationState> = {
   key?: string | undefined;
   getState: () => State;
   setState: (state: State | PartialState<State>) => void;
+  getRoutesFromState: (state: State) => State['routes'];
   actionListeners: ChildActionListener[];
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;
@@ -40,6 +41,7 @@ export function useOnAction<State extends NavigationState>({
   router,
   getState,
   setState,
+  getRoutesFromState,
   key,
   actionListeners,
   beforeRemoveListeners,
@@ -94,8 +96,10 @@ export function useOnAction<State extends NavigationState>({
             const isPrevented = shouldPreventRemove(
               emitter,
               beforeRemoveListeners,
-              state.routes,
-              result.routes,
+              getRoutesFromState(state),
+              result.stale === false
+                ? getRoutesFromState(result)
+                : result.routes,
               action
             );
 
@@ -144,6 +148,7 @@ export function useOnAction<State extends NavigationState>({
       actionListeners,
       beforeRemoveListeners,
       emitter,
+      getRoutesFromState,
       getState,
       key,
       onActionParent,
@@ -156,6 +161,7 @@ export function useOnAction<State extends NavigationState>({
 
   useOnPreventRemove({
     getState,
+    getRoutesFromState,
     emitter,
     beforeRemoveListeners,
   });

@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid/non-secure';
 
-import { BaseRouter } from './BaseRouter';
+import { BaseRouter, getRouteForParamsAction } from './BaseRouter';
 import { createParamsFromAction } from './createParamsFromAction';
 import { createRouteFromAction } from './createRouteFromAction';
 import type {
@@ -385,6 +385,38 @@ export function StackRouter(options: StackRouterOptions) {
         index,
         routes: state.routes.slice(0, index + 1),
       });
+    },
+
+    getStateForRouteUpdate(state, route) {
+      const index = state.routes.findIndex((r) => r.key === route.key);
+
+      if (index > -1) {
+        const routes = [...state.routes];
+
+        routes[index] = route;
+
+        return {
+          ...state,
+          routes,
+        };
+      }
+
+      const preloadedIndex = state.preloadedRoutes.findIndex(
+        (r) => r.key === route.key
+      );
+
+      if (preloadedIndex > -1) {
+        const preloadedRoutes = [...state.preloadedRoutes];
+
+        preloadedRoutes[preloadedIndex] = route;
+
+        return {
+          ...state,
+          preloadedRoutes,
+        };
+      }
+
+      return null;
     },
 
     getStateForAction(state, action, options) {
@@ -899,6 +931,33 @@ export function StackRouter(options: StackRouterOptions) {
                 .concat(createRouteFromAction({ action, routeParamList })),
             };
           }
+        }
+
+        case 'SET_PARAMS':
+        case 'REPLACE_PARAMS':
+        case 'PUSH_PARAMS': {
+          const result = BaseRouter.getStateForAction(state, action);
+
+          if (result != null || action.source == null) {
+            return result;
+          }
+
+          const route = state.preloadedRoutes.find(
+            (route) => route.key === action.source
+          );
+
+          if (route == null) {
+            return null;
+          }
+
+          const updatedRoute = getRouteForParamsAction(route, action);
+
+          return {
+            ...state,
+            preloadedRoutes: state.preloadedRoutes.map((route) =>
+              route.key === updatedRoute.key ? updatedRoute : route
+            ),
+          };
         }
 
         default:

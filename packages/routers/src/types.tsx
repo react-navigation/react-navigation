@@ -85,7 +85,7 @@ export type Route<
     /**
      * History of param changes for this route.
      */
-    history?: { type: 'params'; params: object }[] | undefined;
+    history?: { type: 'params'; params: object | undefined }[] | undefined;
   } & Readonly<
     undefined extends Params
       ? {
@@ -211,6 +211,22 @@ export type Router<
   getStateForRouteFocus(state: State, key: string): State;
 
   /**
+   * Take the current state and a route object, and return a new state with the route updated.
+   * Necessary to update route objects not in `state.routes` (e.g. `preloadedRoutes` in stack)
+   *
+   * Returns `null` if the route cannot be found.
+   *
+   * Also specify `getRoutesFromState` when this is specified.
+   *
+   * @param state State object to apply the action on.
+   * @param route Route object to update.
+   */
+  getStateForRouteUpdate?(
+    state: State,
+    route: State['routes'][number]
+  ): State | null;
+
+  /**
    * Take the current state and action, and return a new state.
    * If the action cannot be handled, return `null`.
    *
@@ -236,12 +252,13 @@ export type Router<
    * Get the list of routes from the navigation state.
    *
    * By default, `state.routes` is used.
-   * But in some cases (like `preloadedRoutes` in stack),
-   * the actual list of routes may be different.
+   * But the actual routes can be different in some cases (e.g. `preloadedRoutes` in stack).
+   *
+   * Also specify `getStateForRouteUpdate` when this is specified.
    *
    * @param state Navigation state to get the routes from.
    */
-  getRoutesFromState?(state: State): Route<string>[];
+  getRoutesFromState?(state: State): State['routes'];
 
   /**
    * Action creators for the router.

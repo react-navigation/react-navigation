@@ -1,5 +1,9 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
-import type { NavigationState, Router } from '@react-navigation/routers';
+import {
+  type NavigationState,
+  type Router,
+  StackRouter,
+} from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
@@ -531,6 +535,67 @@ test('fires custom events added with addListener', () => {
   expect(firstCallback).toHaveBeenCalledTimes(1);
   expect(secondCallback).toHaveBeenCalledTimes(1);
   expect(thirdCallback).toHaveBeenCalledTimes(2);
+});
+
+test('fires targeted custom events for preloaded routes', () => {
+  const eventName = 'someSuperCoolEvent';
+
+  function TestNavigator({ ref, ...props }: any): any {
+    const { state, navigation, descriptors, NavigationContent } =
+      useNavigationBuilder(StackRouter, props);
+
+    React.useImperativeHandle(ref, () => ({ navigation, state }), [
+      navigation,
+      state,
+    ]);
+
+    return (
+      <NavigationContent>
+        {[...state.routes, ...state.preloadedRoutes].map((route) =>
+          descriptors[route.key].render()
+        )}
+      </NavigationContent>
+    );
+  }
+
+  const callback: any = jest.fn();
+
+  const Test = ({ navigation }: any) => {
+    React.useEffect(
+      () => navigation.addListener(eventName, callback),
+      [navigation]
+    );
+
+    return null;
+  };
+
+  const ref = React.createRef<any>();
+
+  render(
+    <BaseNavigationContainer>
+      <TestNavigator ref={ref}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="second" component={Test} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  act(() => ref.current.navigation.preload('second'));
+
+  const target = ref.current.state.preloadedRoutes[0].key;
+
+  act(() => {
+    ref.current.navigation.emit({
+      type: eventName,
+      target,
+      data: 42,
+    });
+  });
+
+  expect(callback).toHaveBeenCalledTimes(1);
+  expect(callback.mock.calls[0][0].type).toBe(eventName);
+  expect(callback.mock.calls[0][0].data).toBe(42);
+  expect(callback.mock.calls[0][0].target).toBe(target);
 });
 
 test("doesn't call same listener multiple times with addListener", () => {

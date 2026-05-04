@@ -810,6 +810,14 @@ export function useNavigationBuilder<
     );
   });
 
+  const getRoutesFromState = React.useCallback(
+    (state: State) =>
+      router.getRoutesFromState
+        ? router.getRoutesFromState(state)
+        : state.routes,
+    [router]
+  );
+
   const { onEmitEvent } = React.use(NavigationBuilderContext);
 
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
@@ -818,7 +826,7 @@ export function useNavigationBuilder<
     let route: Route<string> | undefined;
 
     if (e.target) {
-      route = state.routes.find((route) => route.key === e.target);
+      route = getRoutesFromState(state).find((route) => route.key === e.target);
 
       if (route?.name) {
         routeNames.push(route.name);
@@ -886,6 +894,7 @@ export function useNavigationBuilder<
     router,
     getState,
     setState,
+    getRoutesFromState,
     key: route?.key,
     actionListeners: childListeners.action,
     beforeRemoveListeners: keyedListeners.beforeRemove,
@@ -961,8 +970,65 @@ export function useNavigationBuilder<
 
   useOnGetState({
     getState,
+    getRoutesFromState,
+    getStateForRouteUpdate: router.getStateForRouteUpdate,
     getStateListeners: keyedListeners.getState,
   });
+
+  const getRouteState = React.useCallback(
+    (routeKey: string) => {
+      const state = getState();
+      const route = getRoutesFromState(state).find((r) => r.key === routeKey);
+
+      return route?.state;
+    },
+    [getState, getRoutesFromState]
+  );
+
+  const setRouteState = React.useCallback(
+    (
+      routeKey: string,
+      routeState: NavigationState | PartialState<NavigationState> | undefined
+    ) => {
+      const state = getState();
+
+      if (router.getStateForRouteUpdate) {
+        const route = getRoutesFromState(state).find((r) => r.key === routeKey);
+
+        if (route == null) {
+          return;
+        }
+
+        const nextState = router.getStateForRouteUpdate(state, {
+          ...route,
+          state: routeState,
+        });
+
+        if (nextState !== null) {
+          setState(nextState);
+        }
+      } else {
+        const routes = state.routes.map((r) => {
+          if (r.key === routeKey && r.state !== routeState) {
+            return {
+              ...r,
+              state: routeState,
+            };
+          }
+
+          return r;
+        });
+
+        if (!isArrayEqual(state.routes, routes)) {
+          setState({
+            ...state,
+            routes,
+          });
+        }
+      }
+    },
+    [getRoutesFromState, getState, router, setState]
+  );
 
   const descriptors = useDescriptors<
     State,
@@ -970,9 +1036,9 @@ export function useNavigationBuilder<
     ScreenOptions,
     EventMap
   >({
-    routes: router.getRoutesFromState
-      ? router.getRoutesFromState(state)
-      : state.routes,
+    routes: getRoutesFromState(state),
+    getRouteState,
+    setRouteState,
     screens,
     navigation,
     screenOptions,

@@ -7,13 +7,13 @@ type ResetState =
       routes: Omit<Route<string>, 'key'>[];
     });
 
-type GoBackAction = {
+export type GoBackAction = {
   type: 'GO_BACK';
   source?: string | undefined;
   target?: string | undefined;
 };
 
-type NavigateAction = {
+export type NavigateAction = {
   type: 'NAVIGATE';
   payload: {
     name: string;
@@ -26,35 +26,35 @@ type NavigateAction = {
   target?: string | undefined;
 };
 
-type ResetAction = {
+export type ResetAction = {
   type: 'RESET';
   payload: ResetState;
   source?: string | undefined;
   target?: string | undefined;
 };
 
-type SetParamsAction = {
+export type SetParamsAction = {
   type: 'SET_PARAMS';
   payload: { params?: object | undefined };
   source?: string | undefined;
   target?: string | undefined;
 };
 
-type ReplaceParamsAction = {
+export type ReplaceParamsAction = {
   type: 'REPLACE_PARAMS';
   payload: { params?: object | undefined };
   source?: string | undefined;
   target?: string | undefined;
 };
 
-type PushParamsAction = {
+export type PushParamsAction = {
   type: 'PUSH_PARAMS';
   payload: { params?: object | undefined };
   source?: string | undefined;
   target?: string | undefined;
 };
 
-type PreloadAction = {
+export type PreloadAction = {
   type: 'PRELOAD';
   payload: {
     name: string;

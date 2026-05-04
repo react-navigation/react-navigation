@@ -12,8 +12,9 @@ import { NavigationRouteContext } from './NavigationProvider';
 import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 
-type Options = {
-  getState: () => NavigationState;
+type Options<State extends NavigationState> = {
+  getState: () => State;
+  getRoutesFromState: (state: State) => State['routes'];
   emitter: NavigationEventEmitter<EventMapCore<any>>;
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
 };
@@ -73,11 +74,12 @@ export const shouldPreventRemove = (
   return false;
 };
 
-export function useOnPreventRemove({
+export function useOnPreventRemove<State extends NavigationState>({
   getState,
+  getRoutesFromState,
   emitter,
   beforeRemoveListeners,
-}: Options) {
+}: Options<State>) {
   const { addKeyedListener } = React.use(NavigationBuilderContext);
   const route = React.use(NavigationRouteContext);
   const routeKey = route?.key;
@@ -90,11 +92,18 @@ export function useOnPreventRemove({
         return shouldPreventRemove(
           emitter,
           beforeRemoveListeners,
-          state.routes,
+          getRoutesFromState(state),
           [],
           action
         );
       });
     }
-  }, [addKeyedListener, beforeRemoveListeners, emitter, getState, routeKey]);
+  }, [
+    addKeyedListener,
+    beforeRemoveListeners,
+    emitter,
+    getRoutesFromState,
+    getState,
+    routeKey,
+  ]);
 }

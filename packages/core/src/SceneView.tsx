@@ -8,7 +8,6 @@ import * as React from 'react';
 
 import { ConsumedParamsContext } from './ConsumedParamsContext';
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
-import { isArrayEqual } from './isArrayEqual';
 import {
   type FocusedRouteState,
   NavigationFocusedRouteStateContext,
@@ -23,8 +22,13 @@ type Props<State extends NavigationState, ScreenOptions extends {}> = {
   navigation: NavigationProp<ParamListBase, string, State, ScreenOptions>;
   route: Route<string>;
   routeState: NavigationState | PartialState<NavigationState> | undefined;
-  getState: () => State;
-  setState: (state: State) => void;
+  getRouteState: (
+    routeKey: string
+  ) => NavigationState | PartialState<NavigationState> | undefined;
+  setRouteState: (
+    routeKey: string,
+    state: NavigationState | PartialState<NavigationState> | undefined
+  ) => void;
   options: object;
   clearOptions: () => void;
 };
@@ -41,8 +45,8 @@ export function SceneView<
   route,
   navigation,
   routeState,
-  getState,
-  setState,
+  getRouteState,
+  setRouteState,
   options,
   clearOptions,
 }: Props<State, ScreenOptions>) {
@@ -60,35 +64,14 @@ export function SceneView<
   }, []);
 
   const getCurrentState = React.useCallback(() => {
-    const state = getState();
-    const currentRoute = state.routes.find((r) => r.key === route.key);
-
-    return currentRoute ? currentRoute.state : undefined;
-  }, [getState, route.key]);
+    return getRouteState(route.key);
+  }, [getRouteState, route.key]);
 
   const setCurrentState = React.useCallback(
     (child: NavigationState | PartialState<NavigationState> | undefined) => {
-      const state = getState();
-
-      const routes = state.routes.map((r) => {
-        if (r.key === route.key && r.state !== child) {
-          return {
-            ...r,
-            state: child,
-          };
-        }
-
-        return r;
-      });
-
-      if (!isArrayEqual(state.routes, routes)) {
-        setState({
-          ...state,
-          routes,
-        });
-      }
+      setRouteState(route.key, child);
     },
-    [getState, route.key, setState]
+    [route.key, setRouteState]
   );
 
   const isInitialRef = React.useRef(true);

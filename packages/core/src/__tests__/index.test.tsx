@@ -5,6 +5,7 @@ import {
   type NavigationState,
   type ParamListBase,
   type Router,
+  StackRouter,
 } from '@react-navigation/routers';
 import { act, render, renderAsync } from '@testing-library/react-native';
 import * as React from 'react';
@@ -1569,6 +1570,156 @@ test('navigates to nested child in a navigator with initial: false', () => {
     stale: false,
     type: 'test',
   });
+});
+
+test('preserves navigation state changes for preloaded screens', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {[...state.routes, ...state.preloadedRoutes].map((route) =>
+          descriptors[route.key].render()
+        )}
+      </NavigationContent>
+    );
+  };
+
+  const ChildNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
+  };
+
+  let navigate: any;
+
+  const BazScreen = ({ navigation }: any) => {
+    React.useEffect(() => {
+      navigate = navigation.navigate;
+    }, [navigation]);
+
+    return 'baz';
+  };
+
+  const TestScreen = ({ route }: any): any =>
+    `[${route.name}, ${JSON.stringify(route.params)}]`;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const element = render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar">
+          {() => (
+            <ChildNavigator>
+              <Screen name="baz" component={BazScreen} />
+              <Screen name="qux" component={TestScreen} />
+            </ChildNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(element).toMatchInlineSnapshot(`"[foo, undefined]"`);
+
+  act(() => navigation.preload('bar'));
+
+  expect(element).toMatchInlineSnapshot(`
+[
+  "[foo, undefined]",
+  "baz",
+]
+`);
+
+  act(() => navigate('qux', { answer: 42 }));
+
+  act(() => navigation.navigate('bar'));
+
+  expect(element).toMatchInlineSnapshot(`
+[
+  "[foo, undefined]",
+  "[qux, {"answer":42}]",
+]
+`);
+});
+
+test('includes child state for preloaded screens in root state', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {[...state.routes, ...state.preloadedRoutes].map((route) =>
+          descriptors[route.key].render()
+        )}
+      </NavigationContent>
+    );
+  };
+
+  const ChildNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">
+          {() => (
+            <ChildNavigator>
+              <Screen name="baz">{() => null}</Screen>
+              <Screen name="qux">{() => null}</Screen>
+            </ChildNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  act(() => navigation.preload('bar'));
+
+  expect(navigation.getRootState()).toEqual(
+    expect.objectContaining({
+      preloadedRoutes: [
+        expect.objectContaining({
+          name: 'bar',
+          state: expect.objectContaining({
+            index: 0,
+            routeNames: ['baz', 'qux'],
+            routes: [expect.objectContaining({ name: 'baz' })],
+            stale: false,
+            type: 'stack',
+          }),
+        }),
+      ],
+    })
+  );
 });
 
 test('resets to nested child in a navigator', () => {

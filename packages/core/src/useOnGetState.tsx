@@ -8,18 +8,51 @@ import {
 } from './NavigationBuilderContext';
 import { NavigationRouteContext } from './NavigationProvider';
 
-type Options = {
-  getState: () => NavigationState;
+type Options<State extends NavigationState> = {
+  getState: () => State;
+  getRoutesFromState: (state: State) => State['routes'];
+  getStateForRouteUpdate?: (
+    state: State,
+    route: State['routes'][number]
+  ) => State | null;
   getStateListeners: Record<string, GetStateListener | undefined>;
 };
 
-export function useOnGetState({ getState, getStateListeners }: Options) {
+export function useOnGetState<State extends NavigationState>({
+  getState,
+  getRoutesFromState,
+  getStateForRouteUpdate,
+  getStateListeners,
+}: Options<State>) {
   const { addKeyedListener } = React.use(NavigationBuilderContext);
   const route = React.use(NavigationRouteContext);
   const key = route ? route.key : 'root';
 
   const getRehydratedState = React.useCallback(() => {
     const state = getState();
+
+    if (getStateForRouteUpdate) {
+      let nextState = state;
+
+      for (const route of getRoutesFromState(state)) {
+        const childState = getStateListeners[route.key]?.();
+
+        if (route.state === childState) {
+          continue;
+        }
+
+        const updatedState = getStateForRouteUpdate(nextState, {
+          ...route,
+          state: childState,
+        });
+
+        if (updatedState !== null) {
+          nextState = updatedState;
+        }
+      }
+
+      return nextState;
+    }
 
     // Avoid returning new route objects if we don't need to
     const routes = state.routes.map((route) => {
@@ -37,7 +70,7 @@ export function useOnGetState({ getState, getStateListeners }: Options) {
     }
 
     return { ...state, routes };
-  }, [getState, getStateListeners]);
+  }, [getRoutesFromState, getState, getStateForRouteUpdate, getStateListeners]);
 
   React.useEffect(() => {
     return addKeyedListener?.('getState', key, getRehydratedState);
