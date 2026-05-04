@@ -156,6 +156,12 @@ function ButtonBase({
     }
   }
 
+  const rippleColor =
+    Color(textColor)?.fade(0.88).string() ??
+    (variant === 'filled' || dark
+      ? 'rgba(255, 255, 255, 0.12)'
+      : 'rgba(0, 0, 0, 0.12)');
+
   const iconNode = renderIcon(icon, textColor, ICON_SIZE);
 
   return (
@@ -163,8 +169,8 @@ function ButtonBase({
       {...rest}
       disabled={disabled}
       android_ripple={{
-        radius: BUTTON_RADIUS,
-        color: Color(textColor)?.fade(0.85).string() ?? 'rgba(0, 0, 0, 0.1)',
+        foreground: true,
+        color: rippleColor,
         ...android_ripple,
       }}
       pressOpacity={Platform.OS === 'ios' ? undefined : 1}
@@ -244,6 +250,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: BUTTON_RADIUS,
     borderCurve: 'continuous',
+    overflow: 'hidden',
   },
   content: {
     flexDirection: 'row',
