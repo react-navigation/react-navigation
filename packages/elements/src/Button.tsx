@@ -56,7 +56,7 @@ type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
   /**
    * Label text to display inside the button.
    */
-  children: string | string[];
+  children: string | string[] | React.ReactElement | React.ReactElement[];
 };
 
 type ButtonLinkProps<
