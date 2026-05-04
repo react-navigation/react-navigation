@@ -117,6 +117,7 @@ function ButtonBase({
   color: customColor,
   icon,
   android_ripple,
+  disabled,
   style,
   children,
   ...rest
@@ -145,11 +146,22 @@ function ButtonBase({
       break;
   }
 
+  if (disabled) {
+    textColor = dark ? 'rgba(235, 235, 245, 0.3)' : 'rgba(60, 60, 67, 0.3)';
+
+    if (variant !== 'plain') {
+      backgroundColor = dark
+        ? 'rgba(118, 118, 128, 0.24)'
+        : 'rgba(118, 118, 128, 0.12)';
+    }
+  }
+
   const iconNode = renderIcon(icon, textColor, ICON_SIZE);
 
   return (
     <PlatformPressable
       {...rest}
+      disabled={disabled}
       android_ripple={{
         radius: BUTTON_RADIUS,
         color: Color(textColor)?.fade(0.85).string() ?? 'rgba(0, 0, 0, 0.1)',
