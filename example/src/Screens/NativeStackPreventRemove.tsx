@@ -80,6 +80,7 @@ const InputScreen = () => {
 
   return (
     <ScrollView
+      keyboardShouldPersistTaps="handled"
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={styles.content}
     >

@@ -34,14 +34,6 @@ const CounterScreen = () => {
 
   const navigation = useNavigation('RetainCounter');
 
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setCount((prev) => prev + 1);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   const route = useRoute('RetainCounter');
   const isRetained = useNavigationState('RetainCounter', (state) =>
     state.retainedRouteKeys.includes(route.key)
@@ -66,7 +58,12 @@ const CounterScreen = () => {
         <Text style={{ fontSize: 48, fontVariant: ['tabular-nums'] }}>
           {count}
         </Text>
-        <Button onPress={() => navigation.retain(isRetained ? false : true)}>
+        <Button
+          onPress={() => {
+            setCount(3);
+            navigation.retain(isRetained ? false : true);
+          }}
+        >
           {isRetained ? 'Unretain' : 'Retain'}
         </Button>
       </View>
@@ -86,6 +83,7 @@ const StackRetainNavigator = createStackNavigator({
       screen: CounterScreen,
       options: {
         title: 'Counter',
+        headerBackTestID: 'Go back',
       },
     },
   },

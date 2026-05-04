@@ -10,27 +10,31 @@ name: Stack - Retain
     text: "Let's Go!"
 - assertVisible:
     text: 'Retain'
-- extendedWaitUntil:
-    timeout: 5000
-    visible: '3'
+- assertVisible:
+    text: '0'
 - tapOn:
     text: 'Retain'
 - assertVisible:
     text: '📌'
-- back
+- assertVisible:
+    text: '3'
+- tapOn:
+    id: 'Go back'
 - tapOn:
     text: "Let's Go!"
-- extendedWaitUntil:
-    timeout: 5000
-    visible: '6'
+- assertVisible:
+    text: '3'
 - assertVisible:
     text: '📌'
 - tapOn:
     text: 'Unretain'
-- back
+- tapOn:
+    id: 'Go back'
 - tapOn:
     text: "Let's Go!"
 - assertNotVisible:
     text: '📌'
 - assertVisible:
     text: 'Retain'
+- assertVisible:
+    text: '0'
