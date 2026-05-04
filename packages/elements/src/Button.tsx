@@ -1,11 +1,19 @@
 import {
   type LinkProps,
+  MaterialSymbol,
   type RootParamList,
+  SFSymbol,
   useLinkProps,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { type ColorValue, Platform, StyleSheet } from 'react-native';
+import {
+  type ColorValue,
+  Image,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { Color } from './Color';
 import {
@@ -13,10 +21,41 @@ import {
   type Props as PlatformPressableProps,
 } from './PlatformPressable';
 import { Text } from './Text';
+import type { Icon } from './types';
 
 type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
+  /**
+   * Variant of the button.
+   *
+   * - `plain`: transparent background, colored text
+   * - `tinted`: lightly tinted background, colored text
+   * - `filled`: colored background, contrasting text color
+   *
+   * @default 'tinted'
+   */
   variant?: 'plain' | 'tinted' | 'filled' | undefined;
+  /**
+   * Custom color for the button.
+   * Changes the text color for `plain` and `tinted` variants,
+   * and background color for `filled` variant.
+   */
   color?: ColorValue | undefined;
+  /**
+   * Icon to display before the label.
+   *
+   * Supported types:
+   * - image: custom image source
+   * - sfSymbol: SF Symbol icon (iOS only)
+   * - materialSymbol: material symbol icon (Android only)
+   * - React Node: function that returns a React Element
+   */
+  icon?:
+    | Icon
+    | ((props: { color: ColorValue; size: number }) => Icon | React.ReactNode)
+    | undefined;
+  /**
+   * Label text to display inside the button.
+   */
   children: string | string[];
 };
 
@@ -26,6 +65,7 @@ type ButtonLinkProps<
 > = LinkProps<ParamList, RouteName> & ButtonBaseProps;
 
 const BUTTON_RADIUS = 40;
+const ICON_SIZE = 14;
 
 export function Button<
   ParamList extends {} = RootParamList,
@@ -75,6 +115,7 @@ function ButtonLink<
 function ButtonBase({
   variant = 'tinted',
   color: customColor,
+  icon,
   android_ripple,
   style,
   children,
@@ -104,6 +145,8 @@ function ButtonBase({
       break;
   }
 
+  const iconNode = renderIcon(icon, textColor, ICON_SIZE);
+
   return (
     <PlatformPressable
       {...rest}
@@ -118,11 +161,69 @@ function ButtonBase({
       }
       style={[{ backgroundColor }, styles.button, style]}
     >
-      <Text style={[{ color: textColor }, fonts.regular, styles.text]}>
-        {children}
-      </Text>
+      <View style={styles.content}>
+        {iconNode && <View style={styles.icon}>{iconNode}</View>}
+        <Text style={[{ color: textColor }, fonts.regular, styles.text]}>
+          {children}
+        </Text>
+      </View>
     </PlatformPressable>
   );
+}
+
+function renderIcon(
+  icon: ButtonBaseProps['icon'],
+  color: ColorValue,
+  size: number
+) {
+  if (!icon) {
+    return null;
+  }
+
+  const iconValue = typeof icon === 'function' ? icon({ color, size }) : icon;
+
+  if (React.isValidElement(iconValue)) {
+    return iconValue;
+  }
+
+  if (
+    typeof iconValue === 'object' &&
+    iconValue != null &&
+    'type' in iconValue
+  ) {
+    switch (iconValue.type) {
+      case 'image':
+        return (
+          <Image
+            source={iconValue.source}
+            style={{
+              width: size,
+              height: size,
+              tintColor: iconValue.tinted === false ? undefined : color,
+            }}
+          />
+        );
+      case 'sfSymbol':
+        return <SFSymbol name={iconValue.name} size={size} color={color} />;
+      case 'materialSymbol':
+        return (
+          <MaterialSymbol
+            name={iconValue.name}
+            variant={iconValue.variant}
+            weight={iconValue.weight}
+            size={size}
+            color={color}
+          />
+        );
+      default: {
+        const _exhaustiveCheck: never = iconValue;
+
+        return _exhaustiveCheck;
+      }
+    }
+  }
+
+  return null;
 }
 
 const styles = StyleSheet.create({
@@ -131,6 +232,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: BUTTON_RADIUS,
     borderCurve: 'continuous',
+  },
+  content: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  icon: {
+    marginLeft: -6,
   },
   text: {
     fontSize: 14,

@@ -6,6 +6,7 @@ import { BottomTabs } from './Screens/BottomTabs';
 import { BottomTabsDynamic } from './Screens/BottomTabsDynamic';
 import { BottomTabsFullHistory } from './Screens/BottomTabsFullHistory';
 import { BottomTabsPreloadFlow } from './Screens/BottomTabsPreloadFlow';
+import { ComponentsButton } from './Screens/ComponentsButton';
 import { ComponentsHeaders } from './Screens/ComponentsHeaders';
 import { ComponentsLink } from './Screens/ComponentsLink';
 import { ComponentsMaterialSymbols } from './Screens/ComponentsMaterialSymbols';
@@ -65,6 +66,7 @@ export const SCREENS = {
   MaterialTopTabsBasic,
   LibrariesDrawerLayout,
   LibrariesTabView,
+  ComponentsButton,
   ComponentsHeaders,
   ComponentsLink,
   ComponentsMaterialSymbols,
