@@ -47,7 +47,6 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "color": "^5.0.3",
     "sf-symbols-typescript": "^2.2.0",
     "use-latest-callback": "^0.3.3",
     "use-sync-external-store": "^1.6.0"

@@ -42,7 +42,6 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "color": "^5.0.3",
     "use-latest-callback": "^0.3.3"
   },
   "devDependencies": {
