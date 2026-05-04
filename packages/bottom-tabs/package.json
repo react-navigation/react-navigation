@@ -41,14 +41,12 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "@react-navigation/elements": "workspace:^",
-    "color": "^5.0.3"
+    "@react-navigation/elements": "workspace:^"
   },
   "devDependencies": {
     "@jest/globals": "^30.3.0",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^13.3.3",
-    "@types/color": "^4.2.0",
     "@types/react": "~19.2.2",
     "del-cli": "^7.0.0",
     "react": "19.2.0",
