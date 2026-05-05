@@ -1,4 +1,4 @@
-import { expect, jest, test } from '@jest/globals';
+import { beforeEach, expect, jest, test } from '@jest/globals';
 
 import {
   CommonActions,
@@ -9,7 +9,15 @@ import {
   type RouterConfigOptions,
 } from '..';
 
-jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
+jest.mock('nanoid/non-secure', () => {
+  const m = { nanoid: () => String(++m.__key), __key: 0 };
+
+  return m;
+});
+
+beforeEach(() => {
+  require('nanoid/non-secure').__key = 0;
+});
 
 test('gets initial state from route names and params with initialRouteName', () => {
   const router = DrawerRouter({ initialRouteName: 'baz' });
@@ -25,17 +33,17 @@ test('gets initial state from route names and params with initialRouteName', () 
     })
   ).toEqual({
     index: 1,
-    key: 'drawer-test',
+    key: 'drawer-5',
     routeNames: ['bar', 'baz', 'qux'],
     preloadedRouteKeys: [],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
-      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz', params: { answer: 42 } },
+      { key: 'qux-3', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [
-      { type: 'route', key: 'bar-test' },
-      { type: 'route', key: 'baz-test' },
+      { type: 'route', key: 'bar-1' },
+      { type: 'route', key: 'baz-2' },
     ],
     default: 'closed',
     stale: false,
@@ -57,15 +65,15 @@ test('gets initial state from route names and params without initialRouteName', 
     })
   ).toEqual({
     index: 0,
-    key: 'drawer-test',
+    key: 'drawer-5',
     routeNames: ['bar', 'baz', 'qux'],
     preloadedRouteKeys: [],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
-      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz', params: { answer: 42 } },
+      { key: 'qux-3', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'bar-test' }],
+    history: [{ type: 'route', key: 'bar-1' }],
     default: 'closed',
     stale: false,
     type: 'drawer',
@@ -96,12 +104,12 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 0,
-    key: 'drawer-test',
+    key: 'drawer-3',
     routeNames: ['bar', 'baz', 'qux'],
     preloadedRouteKeys: [],
     routes: [
       { key: 'bar-0', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+      { key: 'baz-1', name: 'baz', params: { answer: 42 } },
       { key: 'qux-1', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [{ type: 'route', key: 'bar-0' }],
@@ -119,16 +127,16 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 1,
-    key: 'drawer-test',
+    key: 'drawer-7',
     routeNames: ['bar', 'baz', 'qux'],
     preloadedRouteKeys: [],
     routes: [
-      { key: 'bar-test', name: 'bar' },
+      { key: 'bar-4', name: 'bar' },
       { key: 'baz-0', name: 'baz', params: { answer: 42 } },
-      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+      { key: 'qux-5', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [
-      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'bar-4' },
       { type: 'route', key: 'baz-0' },
     ],
     default: 'closed',
@@ -150,7 +158,7 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 2,
-    key: 'drawer-test',
+    key: 'drawer-9',
     routeNames: ['bar', 'baz', 'qux'],
     preloadedRouteKeys: [],
     routes: [
@@ -177,15 +185,15 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 0,
-    key: 'drawer-test',
+    key: 'drawer-14',
     routeNames: ['bar', 'baz', 'qux'],
     preloadedRouteKeys: [],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
-      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+      { key: 'bar-10', name: 'bar' },
+      { key: 'baz-11', name: 'baz', params: { answer: 42 } },
+      { key: 'qux-12', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'bar-test' }],
+    history: [{ type: 'route', key: 'bar-10' }],
     default: 'closed',
     stale: false,
     type: 'drawer',
@@ -207,16 +215,16 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 0,
-    key: 'drawer-test',
+    key: 'drawer-19',
     routeNames: ['bar', 'baz', 'qux'],
     preloadedRouteKeys: [],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
-      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+      { key: 'bar-15', name: 'bar' },
+      { key: 'baz-16', name: 'baz', params: { answer: 42 } },
+      { key: 'qux-17', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [
-      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'bar-15' },
       { type: 'drawer', status: 'open' },
     ],
     default: 'closed',

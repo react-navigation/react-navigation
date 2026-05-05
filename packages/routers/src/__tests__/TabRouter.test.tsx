@@ -1,4 +1,4 @@
-import { expect, jest, test } from '@jest/globals';
+import { beforeEach, expect, jest, test } from '@jest/globals';
 
 import {
   CommonActions,
@@ -9,7 +9,15 @@ import {
   TabRouter,
 } from '../index';
 
-jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
+jest.mock('nanoid/non-secure', () => {
+  const m = { nanoid: () => String(++m.__key), __key: 0 };
+
+  return m;
+});
+
+beforeEach(() => {
+  require('nanoid/non-secure').__key = 0;
+});
 
 test('gets initial state from route names and params with initialRouteName', () => {
   const router = TabRouter({ initialRouteName: 'baz' });
@@ -25,16 +33,16 @@ test('gets initial state from route names and params with initialRouteName', () 
     })
   ).toEqual({
     index: 1,
-    key: 'tab-test',
+    key: 'tab-4',
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
-      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz', params: { answer: 42 } },
+      { key: 'qux-3', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [
-      { type: 'route', key: 'bar-test' },
-      { type: 'route', key: 'baz-test' },
+      { type: 'route', key: 'bar-1' },
+      { type: 'route', key: 'baz-2' },
     ],
     stale: false,
     type: 'tab',
@@ -56,14 +64,14 @@ test('gets initial state from route names and params without initialRouteName', 
     })
   ).toEqual({
     index: 0,
-    key: 'tab-test',
+    key: 'tab-4',
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
-      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz', params: { answer: 42 } },
+      { key: 'qux-3', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'bar-test' }],
+    history: [{ type: 'route', key: 'bar-1' }],
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
@@ -94,11 +102,11 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 0,
-    key: 'tab-test',
+    key: 'tab-2',
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
       { key: 'bar-0', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+      { key: 'baz-1', name: 'baz', params: { answer: 42 } },
       { key: 'qux-1', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [{ type: 'route', key: 'bar-0' }],
@@ -116,15 +124,15 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 1,
-    key: 'tab-test',
+    key: 'tab-5',
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
+      { key: 'bar-3', name: 'bar' },
       { key: 'baz-0', name: 'baz', params: { answer: 42 } },
-      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+      { key: 'qux-4', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [
-      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'bar-3' },
       { type: 'route', key: 'baz-0' },
     ],
     stale: false,
@@ -146,7 +154,7 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 2,
-    key: 'tab-test',
+    key: 'tab-6',
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
       { key: 'bar-0', name: 'bar' },
@@ -175,11 +183,11 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 2,
-    key: 'tab-test',
+    key: 'tab-8',
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
       { key: 'bar-0', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+      { key: 'baz-7', name: 'baz', params: { answer: 42 } },
       { key: 'qux-2', name: 'qux', params: { name: 'Jane' } },
     ],
     history: [
@@ -201,14 +209,14 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 0,
-    key: 'tab-test',
+    key: 'tab-12',
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
-      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+      { key: 'bar-9', name: 'bar' },
+      { key: 'baz-10', name: 'baz', params: { answer: 42 } },
+      { key: 'qux-11', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'bar-test' }],
+    history: [{ type: 'route', key: 'bar-9' }],
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
@@ -229,14 +237,14 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 0,
-    key: 'tab-test',
+    key: 'tab-16',
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
-      { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
+      { key: 'bar-13', name: 'bar' },
+      { key: 'baz-14', name: 'baz', params: { answer: 42 } },
+      { key: 'qux-15', name: 'qux', params: { name: 'Jane' } },
     ],
-    history: [{ type: 'route', key: 'bar-test' }],
+    history: [{ type: 'route', key: 'bar-13' }],
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
@@ -293,7 +301,7 @@ test('restores correct history on rehydrating with backBehavior: order', () => {
       options
     )
   ).toEqual({
-    key: 'tab-test',
+    key: 'tab-1',
     index: 2,
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routes: [
@@ -336,7 +344,7 @@ test('restores correct history on rehydrating with backBehavior: history', () =>
       options
     )
   ).toEqual({
-    key: 'tab-test',
+    key: 'tab-1',
     index: 2,
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routes: [
@@ -375,7 +383,7 @@ test('restores correct history on rehydrating with backBehavior: fullHistory', (
       options
     )
   ).toEqual({
-    key: 'tab-test',
+    key: 'tab-1',
     index: 2,
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routes: [
@@ -417,7 +425,7 @@ test('restores correct history on rehydrating with backBehavior: firstRoute', ()
       options
     )
   ).toEqual({
-    key: 'tab-test',
+    key: 'tab-1',
     index: 2,
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routes: [
@@ -462,7 +470,7 @@ test('restores correct history on rehydrating with backBehavior: initialRoute', 
       options
     )
   ).toEqual({
-    key: 'tab-test',
+    key: 'tab-1',
     index: 2,
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routes: [
@@ -504,7 +512,7 @@ test('restores correct history on rehydrating with backBehavior: none', () => {
       options
     )
   ).toEqual({
-    key: 'tab-test',
+    key: 'tab-1',
     index: 2,
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routes: [
@@ -556,8 +564,8 @@ test('gets state on route names change', () => {
     routes: [
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
-      { key: 'foo-test', name: 'foo' },
-      { key: 'fiz-test', name: 'fiz', params: { fruit: 'apple' } },
+      { key: 'foo-1', name: 'foo' },
+      { key: 'fiz-2', name: 'fiz', params: { fruit: 'apple' } },
     ],
     history: [{ type: 'route', key: 'qux-test' }],
     stale: false,
@@ -592,10 +600,10 @@ test('gets state on route names change', () => {
     key: 'tab-test',
     routeNames: ['foo', 'fiz'],
     routes: [
-      { key: 'foo-test', name: 'foo' },
-      { key: 'fiz-test', name: 'fiz' },
+      { key: 'foo-3', name: 'foo' },
+      { key: 'fiz-4', name: 'fiz' },
     ],
-    history: [{ type: 'route', key: 'foo-test' }],
+    history: [{ type: 'route', key: 'foo-3' }],
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
@@ -637,8 +645,8 @@ test('preserves focused route on route names change', () => {
     routeNames: ['qux', 'foo', 'fiz', 'baz'],
     routes: [
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
-      { key: 'foo-test', name: 'foo' },
-      { key: 'fiz-test', name: 'fiz', params: { fruit: 'apple' } },
+      { key: 'foo-1', name: 'foo' },
+      { key: 'fiz-2', name: 'fiz', params: { fruit: 'apple' } },
       { key: 'baz-test', name: 'baz', params: { answer: 42 } },
     ],
     history: [{ type: 'route', key: 'baz-test' }],
@@ -683,8 +691,8 @@ test('falls back to first route if route is removed on route names change', () =
     routeNames: ['qux', 'foo', 'fiz'],
     routes: [
       { key: 'qux-test', name: 'qux', params: { name: 'Jane' } },
-      { key: 'foo-test', name: 'foo' },
-      { key: 'fiz-test', name: 'fiz', params: { fruit: 'apple' } },
+      { key: 'foo-1', name: 'foo' },
+      { key: 'fiz-2', name: 'fiz', params: { fruit: 'apple' } },
     ],
     history: [{ type: 'route', key: 'qux-test' }],
     stale: false,
@@ -861,10 +869,10 @@ test('ensures unique ID for navigate', () => {
     index: 0,
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
-      { key: 'baz-test', name: 'baz', params: { foo: 'a' } },
+      { key: 'baz-1', name: 'baz', params: { foo: 'a' } },
       { key: 'bar', name: 'bar' },
     ],
-    history: [{ type: 'route', key: 'baz-test' }],
+    history: [{ type: 'route', key: 'baz-1' }],
   });
 
   expect(
@@ -894,11 +902,11 @@ test('ensures unique ID for navigate', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+      { key: 'bar-2', name: 'bar', params: { foo: 'a' } },
     ],
     history: [
       { type: 'route', key: 'baz' },
-      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'bar-2' },
     ],
   });
 });
@@ -1013,10 +1021,10 @@ test('ensures unique ID for jump to', () => {
     index: 0,
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
-      { key: 'baz-test', name: 'baz', params: { foo: 'a' } },
+      { key: 'baz-1', name: 'baz', params: { foo: 'a' } },
       { key: 'bar', name: 'bar' },
     ],
-    history: [{ type: 'route', key: 'baz-test' }],
+    history: [{ type: 'route', key: 'baz-1' }],
   });
 
   expect(
@@ -1046,11 +1054,11 @@ test('ensures unique ID for jump to', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+      { key: 'bar-2', name: 'bar', params: { foo: 'a' } },
     ],
     history: [
       { type: 'route', key: 'baz' },
-      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'bar-2' },
     ],
   });
 });
@@ -1081,15 +1089,15 @@ test('handles back action with backBehavior: history', () => {
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
-    key: 'tab-test',
+    key: 'tab-4',
     index: 0,
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+      { key: 'qux-3', name: 'qux' },
     ],
-    history: [{ type: 'route', key: 'bar-test' }],
+    history: [{ type: 'route', key: 'bar-1' }],
   });
 
   state = router.getStateForAction(
@@ -1104,17 +1112,17 @@ test('handles back action with backBehavior: history', () => {
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
-    key: 'tab-test',
+    key: 'tab-4',
     index: 2,
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+      { key: 'qux-3', name: 'qux' },
     ],
     history: [
-      { type: 'route', key: 'bar-test' },
-      { type: 'route', key: 'qux-test' },
+      { type: 'route', key: 'bar-1' },
+      { type: 'route', key: 'qux-3' },
     ],
   });
 
@@ -1130,17 +1138,17 @@ test('handles back action with backBehavior: history', () => {
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
-    key: 'tab-test',
+    key: 'tab-4',
     index: 1,
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+      { key: 'qux-3', name: 'qux' },
     ],
     history: [
-      { type: 'route', key: 'qux-test' },
-      { type: 'route', key: 'baz-test' },
+      { type: 'route', key: 'qux-3' },
+      { type: 'route', key: 'baz-2' },
     ],
   });
 });
@@ -1171,15 +1179,15 @@ test('handles back action with backBehavior: fullHistory', () => {
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
-    key: 'tab-test',
+    key: 'tab-4',
     index: 0,
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+      { key: 'qux-3', name: 'qux' },
     ],
-    history: [{ type: 'route', key: 'bar-test' }],
+    history: [{ type: 'route', key: 'bar-1' }],
   });
 
   state = router.getStateForAction(
@@ -1194,17 +1202,17 @@ test('handles back action with backBehavior: fullHistory', () => {
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
-    key: 'tab-test',
+    key: 'tab-4',
     index: 2,
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+      { key: 'qux-3', name: 'qux' },
     ],
     history: [
-      { type: 'route', key: 'bar-test' },
-      { type: 'route', key: 'qux-test' },
+      { type: 'route', key: 'bar-1' },
+      { type: 'route', key: 'qux-3' },
     ],
   });
 
@@ -1220,18 +1228,18 @@ test('handles back action with backBehavior: fullHistory', () => {
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
-    key: 'tab-test',
+    key: 'tab-4',
     index: 1,
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+      { key: 'qux-3', name: 'qux' },
     ],
     history: [
-      { type: 'route', key: 'bar-test' },
-      { type: 'route', key: 'qux-test' },
-      { type: 'route', key: 'baz-test' },
+      { type: 'route', key: 'bar-1' },
+      { type: 'route', key: 'qux-3' },
+      { type: 'route', key: 'baz-2' },
     ],
   });
 });
@@ -1262,17 +1270,17 @@ test('handles back action with backBehavior: order', () => {
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
-    key: 'tab-test',
+    key: 'tab-4',
     index: 1,
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+      { key: 'qux-3', name: 'qux' },
     ],
     history: [
-      { type: 'route', key: 'bar-test' },
-      { type: 'route', key: 'baz-test' },
+      { type: 'route', key: 'bar-1' },
+      { type: 'route', key: 'baz-2' },
     ],
   });
 
@@ -1288,15 +1296,15 @@ test('handles back action with backBehavior: order', () => {
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
-    key: 'tab-test',
+    key: 'tab-4',
     index: 0,
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+      { key: 'qux-3', name: 'qux' },
     ],
-    history: [{ type: 'route', key: 'bar-test' }],
+    history: [{ type: 'route', key: 'bar-1' }],
   });
 
   state = router.getStateForAction(
@@ -1336,15 +1344,15 @@ test('handles back action with backBehavior: initialRoute', () => {
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
-    key: 'tab-test',
+    key: 'tab-4',
     index: 0,
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+      { key: 'qux-3', name: 'qux' },
     ],
-    history: [{ type: 'route', key: 'bar-test' }],
+    history: [{ type: 'route', key: 'bar-1' }],
   });
 
   state = router.getStateForAction(
@@ -1359,15 +1367,15 @@ test('handles back action with backBehavior: initialRoute', () => {
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
-    key: 'tab-test',
+    key: 'tab-4',
     index: 0,
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+      { key: 'qux-3', name: 'qux' },
     ],
-    history: [{ type: 'route', key: 'bar-test' }],
+    history: [{ type: 'route', key: 'bar-1' }],
   });
 
   state = router.getStateForAction(
@@ -1411,15 +1419,15 @@ test('handles back action with backBehavior: initialRoute and initialRouteName',
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
-    key: 'tab-test',
+    key: 'tab-4',
     index: 1,
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+      { key: 'qux-3', name: 'qux' },
     ],
-    history: [{ type: 'route', key: 'baz-test' }],
+    history: [{ type: 'route', key: 'baz-2' }],
   });
 
   state = router.getStateForAction(
@@ -1434,15 +1442,15 @@ test('handles back action with backBehavior: initialRoute and initialRouteName',
     stale: false,
     type: 'tab',
     preloadedRouteKeys: [],
-    key: 'tab-test',
+    key: 'tab-4',
     index: 1,
     routeNames: ['bar', 'baz', 'qux'],
     routes: [
-      { key: 'bar-test', name: 'bar' },
-      { key: 'baz-test', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+      { key: 'qux-3', name: 'qux' },
     ],
-    history: [{ type: 'route', key: 'baz-test' }],
+    history: [{ type: 'route', key: 'baz-2' }],
   });
 
   state = router.getStateForAction(
@@ -2352,13 +2360,13 @@ test('updates an existing route with preload when the ID changes', () => {
   ).toEqual({
     stale: false,
     type: 'tab',
-    preloadedRouteKeys: ['bar-test'],
+    preloadedRouteKeys: ['bar-1'],
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz-test', name: 'baz' },
-      { key: 'bar-test', name: 'bar', params: { answer: 43 } },
+      { key: 'bar-1', name: 'bar', params: { answer: 43 } },
       { key: 'qux-test', name: 'qux' },
     ],
     history: [{ type: 'route', key: 'baz-test' }],
@@ -2401,13 +2409,13 @@ test('replaces the preloaded route key with preload when the ID changes', () => 
   ).toEqual({
     stale: false,
     type: 'tab',
-    preloadedRouteKeys: ['bar-test'],
+    preloadedRouteKeys: ['bar-1'],
     key: 'root',
     index: 0,
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz-test', name: 'baz' },
-      { key: 'bar-test', name: 'bar', params: { answer: 43 } },
+      { key: 'bar-1', name: 'bar', params: { answer: 43 } },
       { key: 'qux-test', name: 'qux' },
     ],
     history: [{ type: 'route', key: 'baz-test' }],
@@ -2677,14 +2685,14 @@ test('updates a preloaded route with preload and reuse when the ID changes', () 
   ).toEqual({
     stale: false,
     type: 'tab',
-    preloadedRouteKeys: ['bar-test'],
+    preloadedRouteKeys: ['bar-1'],
     key: 'root',
     index: 2,
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz-test', name: 'baz' },
       {
-        key: 'bar-test',
+        key: 'bar-1',
         name: 'bar',
         params: { answer: 43 },
       },
@@ -2733,14 +2741,14 @@ test('creates a new preloaded route with preload when the ID changes', () => {
   ).toEqual({
     stale: false,
     type: 'tab',
-    preloadedRouteKeys: ['bar-test'],
+    preloadedRouteKeys: ['bar-1'],
     key: 'root',
     index: 2,
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz-test', name: 'baz' },
       {
-        key: 'bar-test',
+        key: 'bar-1',
         name: 'bar',
         params: { answer: 43 },
       },

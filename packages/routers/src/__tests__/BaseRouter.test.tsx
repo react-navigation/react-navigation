@@ -1,9 +1,17 @@
-import { expect, jest, test } from '@jest/globals';
+import { beforeEach, expect, jest, test } from '@jest/globals';
 
 import { BaseRouter } from '../BaseRouter';
 import * as CommonActions from '../CommonActions';
 
-jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
+jest.mock('nanoid/non-secure', () => {
+  const m = { nanoid: () => String(++m.__key), __key: 0 };
+
+  return m;
+});
+
+beforeEach(() => {
+  require('nanoid/non-secure').__key = 0;
+});
 
 const STATE = {
   stale: false as const,
@@ -312,7 +320,7 @@ test('adds keys to routes missing keys during RESET', () => {
 
   expect(result).toEqual({
     ...STATE,
-    routes: [...STATE.routes, { key: 'qux-test', name: 'qux' }],
+    routes: [...STATE.routes, { key: 'qux-1', name: 'qux' }],
   });
 });
 

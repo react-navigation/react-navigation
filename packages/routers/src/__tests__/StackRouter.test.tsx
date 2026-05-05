@@ -1,4 +1,4 @@
-import { expect, jest, test } from '@jest/globals';
+import { beforeEach, expect, jest, test } from '@jest/globals';
 
 import {
   CommonActions,
@@ -9,7 +9,15 @@ import {
   StackRouter,
 } from '..';
 
-jest.mock('nanoid/non-secure', () => ({ nanoid: () => 'test' }));
+jest.mock('nanoid/non-secure', () => {
+  const m = { nanoid: () => String(++m.__key), __key: 0 };
+
+  return m;
+});
+
+beforeEach(() => {
+  require('nanoid/non-secure').__key = 0;
+});
 
 test('gets initial state from route names and params with initialRouteName', () => {
   const router = StackRouter({ initialRouteName: 'baz' });
@@ -25,11 +33,11 @@ test('gets initial state from route names and params with initialRouteName', () 
     })
   ).toEqual({
     index: 0,
-    key: 'stack-test',
+    key: 'stack-1',
     preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['bar', 'baz', 'qux'],
-    routes: [{ key: 'baz-test', name: 'baz', params: { answer: 42 } }],
+    routes: [{ key: 'baz-2', name: 'baz', params: { answer: 42 } }],
     stale: false,
     type: 'stack',
   });
@@ -49,11 +57,11 @@ test('gets initial state from route names and params without initialRouteName', 
     })
   ).toEqual({
     index: 0,
-    key: 'stack-test',
+    key: 'stack-1',
     preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['bar', 'baz', 'qux'],
-    routes: [{ key: 'bar-test', name: 'bar' }],
+    routes: [{ key: 'bar-2', name: 'bar' }],
     stale: false,
     type: 'stack',
   });
@@ -85,7 +93,7 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 1,
-    key: 'stack-test',
+    key: 'stack-1',
     preloadedRoutes: [{ name: 'baz', key: 'baz-test', params: { answer: 42 } }],
     retainedRouteKeys: [],
     routeNames: ['bar', 'baz', 'qux'],
@@ -111,7 +119,7 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 2,
-    key: 'stack-test',
+    key: 'stack-2',
     preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['bar', 'baz', 'qux'],
@@ -134,11 +142,11 @@ test('gets rehydrated state from partial state', () => {
     )
   ).toEqual({
     index: 0,
-    key: 'stack-test',
+    key: 'stack-4',
     preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['bar', 'baz', 'qux'],
-    routes: [{ key: 'bar-test', name: 'bar' }],
+    routes: [{ key: 'bar-3', name: 'bar' }],
     stale: false,
     type: 'stack',
   });
@@ -468,7 +476,7 @@ test('gets state on route names change', () => {
     preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['baz', 'qux'],
-    routes: [{ key: 'baz-test', name: 'baz', params: { name: 'John' } }],
+    routes: [{ key: 'baz-1', name: 'baz', params: { name: 'John' } }],
     stale: false,
     type: 'stack',
   });
@@ -548,7 +556,7 @@ test('gets state on route names change with initialRouteName', () => {
     preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['baz', 'qux'],
-    routes: [{ key: 'qux-test', name: 'qux' }],
+    routes: [{ key: 'qux-1', name: 'qux' }],
     stale: false,
     type: 'stack',
   });
@@ -625,7 +633,7 @@ test('handles navigate action', () => {
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
       {
-        key: 'qux-test',
+        key: 'qux-1',
         name: 'qux',
         params: { answer: 42 },
       },
@@ -661,7 +669,7 @@ test('handles navigate action', () => {
     routes: [
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { answer: 42 } },
+      { key: 'baz-2', name: 'baz', params: { answer: 42 } },
     ],
   });
 });
@@ -813,7 +821,7 @@ test('handles getId for navigate', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
-      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+      { key: 'bar-1', name: 'bar', params: { foo: 'a' } },
     ],
   });
 
@@ -878,7 +886,7 @@ test('handles getId for navigate', () => {
     routes: [
       { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
       { key: 'bar', name: 'bar' },
-      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+      { key: 'bar-2', name: 'bar', params: { foo: 'a' } },
     ],
   });
 
@@ -911,7 +919,7 @@ test('handles getId for navigate', () => {
     routes: [
       { key: 'bar', name: 'bar' },
       { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
-      { key: 'bar-test', name: 'bar', params: { foo: 'b' } },
+      { key: 'bar-3', name: 'bar', params: { foo: 'b' } },
     ],
   });
 });
@@ -957,7 +965,7 @@ test('getId is scoped to route name for navigate', () => {
     routes: [
       { key: 'qux-test', name: 'qux', params: { test: 'a' } },
       { key: 'baz-test', name: 'baz', params: { foo: 'a' } },
-      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+      { key: 'bar-1', name: 'bar', params: { foo: 'a' } },
     ],
   });
 });
@@ -1004,7 +1012,7 @@ test('goes back to matching screen for navigate if pop: true', () => {
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
       {
-        key: 'qux-test',
+        key: 'qux-1',
         name: 'qux',
         params: { answer: 42 },
       },
@@ -2595,7 +2603,7 @@ test('replaces focused screen with replace', () => {
     index: 1,
     routes: [
       { key: 'foo', name: 'foo' },
-      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
+      { key: 'qux-1', name: 'qux', params: { answer: 42 } },
       { key: 'baz', name: 'baz' },
     ],
     preloadedRoutes: [],
@@ -2641,7 +2649,7 @@ test('replaces active screen with replace', () => {
     index: 1,
     routes: [
       { key: 'foo', name: 'foo' },
-      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
+      { key: 'qux-1', name: 'qux', params: { answer: 42 } },
       { key: 'baz', name: 'baz' },
     ],
     preloadedRoutes: [],
@@ -2684,7 +2692,7 @@ test('moves retained routes to preloadedRoutes on replace', () => {
     index: 1,
     routes: [
       { key: 'foo', name: 'foo' },
-      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
+      { key: 'qux-1', name: 'qux', params: { answer: 42 } },
       { key: 'baz', name: 'baz' },
     ],
     preloadedRoutes: [{ key: 'bar', name: 'bar' }],
@@ -2731,7 +2739,7 @@ test("handles replace if source key isn't present but target is not specified", 
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routes: [
       { key: 'foo', name: 'foo' },
-      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
+      { key: 'qux-1', name: 'qux', params: { answer: 42 } },
       { key: 'baz', name: 'baz' },
     ],
     stale: false,
@@ -2841,7 +2849,7 @@ test('handles push action', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { foo: 21 } },
+      { key: 'baz-1', name: 'baz', params: { foo: 21 } },
     ],
   });
 
@@ -2870,7 +2878,7 @@ test('handles push action', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
-      { key: 'baz-test', name: 'baz', params: { foo: 21, bar: 29 } },
+      { key: 'baz-2', name: 'baz', params: { foo: 21, bar: 29 } },
     ],
   });
 
@@ -2957,7 +2965,7 @@ test('handles getId for push', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'bar', name: 'bar' },
-      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+      { key: 'bar-1', name: 'bar', params: { foo: 'a' } },
     ],
   });
 
@@ -2990,7 +2998,7 @@ test('handles getId for push', () => {
     routes: [
       { key: 'bar', name: 'bar' },
       { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
-      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+      { key: 'bar-2', name: 'bar', params: { foo: 'a' } },
     ],
   });
 
@@ -3023,7 +3031,7 @@ test('handles getId for push', () => {
     routes: [
       { key: 'bar', name: 'bar' },
       { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
-      { key: 'bar-test', name: 'bar', params: { foo: 'b' } },
+      { key: 'bar-3', name: 'bar', params: { foo: 'b' } },
     ],
   });
 });
@@ -3069,7 +3077,7 @@ test('getId is scoped to route name for push', () => {
     routes: [
       { key: 'qux-test', name: 'qux', params: { test: 'a' } },
       { key: 'baz-test', name: 'baz', params: { foo: 'a' } },
-      { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
+      { key: 'bar-1', name: 'bar', params: { foo: 'a' } },
     ],
   });
 });
@@ -3188,7 +3196,7 @@ test('adds path on navigate if provided', () => {
     routes: [
       { key: 'bar', name: 'bar', params: { answer: 42 } },
       {
-        key: 'baz-test',
+        key: 'baz-1',
         name: 'baz',
         path: '/foo/bar',
       },
@@ -3278,7 +3286,7 @@ test('handles popTo action', () => {
     routes: [
       { key: 'baz', name: 'baz' },
       {
-        key: 'qux-test',
+        key: 'qux-1',
         name: 'qux',
         params: { answer: 42 },
       },
@@ -3416,7 +3424,7 @@ test('moves retained routes to preloadedRoutes on popTo', () => {
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
       { key: 'baz', name: 'baz' },
-      { key: 'qux-test', name: 'qux' },
+      { key: 'qux-1', name: 'qux' },
     ],
   });
 });
@@ -3681,7 +3689,7 @@ test("handles popTo if source key isn't present but target is not specified", ()
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routes: [
       { key: 'foo', name: 'foo' },
-      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
+      { key: 'qux-1', name: 'qux', params: { answer: 42 } },
     ],
     stale: false,
     type: 'stack',
@@ -3727,7 +3735,7 @@ test('handles popTo when source and target match a route', () => {
     routeNames: ['foo', 'bar', 'baz', 'qux'],
     routes: [
       { key: 'foo', name: 'foo' },
-      { key: 'qux-test', name: 'qux', params: { answer: 42 } },
+      { key: 'qux-1', name: 'qux', params: { answer: 42 } },
     ],
     stale: false,
     type: 'stack',
@@ -3946,9 +3954,7 @@ test('adds route to preloaded list with preload', () => {
     type: 'stack',
     key: 'root',
     index: 2,
-    preloadedRoutes: [
-      { key: 'bar-test', name: 'bar', params: { color: 'test' } },
-    ],
+    preloadedRoutes: [{ key: 'bar-1', name: 'bar', params: { color: 'test' } }],
     retainedRouteKeys: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
@@ -4118,7 +4124,7 @@ test('adds preloaded route with preload when the ID changes', () => {
     key: 'root',
     index: 1,
     preloadedRoutes: [
-      { key: 'bar-test', name: 'bar', params: { answer: 43, color: 'test' } },
+      { key: 'bar-1', name: 'bar', params: { answer: 43, color: 'test' } },
     ],
     retainedRouteKeys: [],
     routeNames: ['baz', 'bar', 'qux'],
@@ -4636,7 +4642,7 @@ test('does not use preloaded route when pushing a route with different ID', () =
     routes: [
       { key: 'qux-test', name: 'qux' },
       {
-        key: 'bar-test',
+        key: 'bar-1',
         params: {
           color: 'test',
           answer: 41,
@@ -4808,7 +4814,7 @@ test('does not use preloaded route with different ID when replacing current rout
     routes: [
       { key: 'baz', name: 'baz' },
       {
-        key: 'bar-test',
+        key: 'bar-1',
         name: 'bar',
         params: { color: 'test', answer: 42 },
       },
@@ -4977,7 +4983,7 @@ test('does not use preloaded route with different ID when popTo replaces current
     routes: [
       { key: 'baz', name: 'baz' },
       {
-        key: 'bar-test',
+        key: 'bar-1',
         name: 'bar',
         params: { color: 'test', answer: 42 },
       },
