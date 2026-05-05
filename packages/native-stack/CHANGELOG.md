@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.26...@react-navigation/native-stack@8.0.0-alpha.27) (2026-05-05)
+
+### Features
+
+* rework preload handling in stack ([#13094](https://github.com/react-navigation/react-navigation/issues/13094)) ([6626b95](https://github.com/react-navigation/react-navigation/commit/6626b953105a9844e99522983bb81a597d3dc614)) - by @satya164
+
+### BREAKING CHANGES
+
+* Previously `state.routes` in stack didn't contain
+routes beyond index.
+This changes the behavior to add preloaded and retained routes in those
+positions,
+and removes the `preloadedRoutes` array in favor of routes beyond index.
+
+This makes it possible to treat preloaded routes the same way as regular
+routes.
+
+This means they can:
+
+- Receive events from parent navigator
+- Update their params
+- Allow navigation in nested navigators
+- Include nested navigator state in getRootState
+
+It also stops treating preloaded routes as removed for `preventRemove`.
+
 # [8.0.0-alpha.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.25...@react-navigation/native-stack@8.0.0-alpha.26) (2026-04-24)
 
 ### Bug Fixes

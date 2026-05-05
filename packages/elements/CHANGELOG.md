@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.23...@react-navigation/elements@3.0.0-alpha.24) (2026-05-05)
+
+### Bug Fixes
+
+* accept react element as Button children ([b238a90](https://github.com/react-navigation/react-navigation/commit/b238a90ae89238098cde2340e9ba62c6f69d8c5d)) - by @satya164
+* add disabled styling for button ([f0584ce](https://github.com/react-navigation/react-navigation/commit/f0584cee03d63e638027b962947cc17910e7fd7d)) - by @satya164
+* fix ripple effect for button on android ([fac4ac0](https://github.com/react-navigation/react-navigation/commit/fac4ac07355ddc92c173127970602079b9c52494)) - by @satya164
+
+### Features
+
+* add icon support to Button ([92809bc](https://github.com/react-navigation/react-navigation/commit/92809bcae8b14b36d309fa316ca943ea2d8f7d66)) - by @satya164
+
 # [3.0.0-alpha.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.22...@react-navigation/elements@3.0.0-alpha.23) (2026-04-24)
 
 ### Bug Fixes
