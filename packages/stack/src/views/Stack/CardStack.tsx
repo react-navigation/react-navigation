@@ -260,36 +260,24 @@ export function getAnimationEnabled(animation: StackAnimationName | undefined) {
 
 const getAllRoutes = (
   routes: Route<string>[],
-  preloadedRoutes: Route<string>[]
+  state: StackNavigationState<ParamListBase>
 ) => {
   const routeKeys = new Set(routes.map((route) => route.key));
+  const inactiveRoutes = state.routes.slice(state.index + 1);
 
-  // If a route is moved from `state.routes` to `state.preloadedRoutes`,
+  // If a route is moved from active routes to inactive routes,
   // It can still be in the local copy of `routes` until the animation ends
   // So we need to deduplicate the routes to avoid rendering the same route twice
   return [
     ...routes,
-    ...preloadedRoutes.filter((route) => !routeKeys.has(route.key)),
+    ...inactiveRoutes.filter((route) => !routeKeys.has(route.key)),
   ];
 };
 
-const isPreloadedRoute = (
-  route: Route<string>,
-  props: {
-    routes: Route<string>[];
-    state: StackNavigationState<ParamListBase>;
-  }
-) => {
-  // The route can be in both `routes` and `preloadedRoutes` until the animation ends
-  // Treat it as not preloaded, similar to how removed routes are treated until the animation ends
-  if (props.routes.some((currentRoute) => currentRoute.key === route.key)) {
-    return false;
-  }
-
-  return props.state.preloadedRoutes.some(
-    (currentRoute) => currentRoute.key === route.key
-  );
-};
+const isInactiveRoute = (route: Route<string>, routes: Route<string>[]) =>
+  // `routes` contains active routes and routes animating during transitions.
+  // Any route added by `getAllRoutes` that's missing from this list is inactive.
+  !routes.some((currentRoute) => currentRoute.key === route.key);
 
 export class CardStack extends React.Component<Props, State> {
   static getDerivedStateFromProps(
@@ -303,7 +291,7 @@ export class CardStack extends React.Component<Props, State> {
       return null;
     }
 
-    const allRoutes = getAllRoutes(props.routes, props.state.preloadedRoutes);
+    const allRoutes = getAllRoutes(props.routes, props.state);
 
     const gestures = allRoutes.reduce<GestureValues>((acc, curr) => {
       const descriptor = props.descriptors[curr.key];
@@ -314,7 +302,7 @@ export class CardStack extends React.Component<Props, State> {
         new Animated.Value(
           (props.openingRouteKeys.includes(curr.key) &&
             getAnimationEnabled(animation)) ||
-            isPreloadedRoute(curr, props)
+            isInactiveRoute(curr, props.routes)
             ? getDistanceFromOptions(
                 state.layout,
                 descriptor?.options,
@@ -329,10 +317,10 @@ export class CardStack extends React.Component<Props, State> {
     const modalRouteKeys = getModalRouteKeys(allRoutes, props.descriptors);
 
     const scenes = allRoutes.map((route, index, self) => {
-      // For preloaded screens, we don't care about the previous and the next screen
-      const isPreloaded = isPreloadedRoute(route, props);
-      const previousRoute = isPreloaded ? undefined : self[index - 1];
-      const nextRoute = isPreloaded ? undefined : self[index + 1];
+      // For preloaded or retained screens, we don't care about the previous and the next screen
+      const isInactive = isInactiveRoute(route, props.routes);
+      const previousRoute = isInactive ? undefined : self[index - 1];
+      const nextRoute = isInactive ? undefined : self[index + 1];
 
       const oldScene = state.scenes[index];
 
@@ -611,7 +599,7 @@ export class CardStack extends React.Component<Props, State> {
 
     const { scenes, layout, gestures, headerHeights } = this.state;
 
-    const allRoutes = getAllRoutes(routes, state.preloadedRoutes);
+    const allRoutes = getAllRoutes(routes, state);
 
     const focusedRoute = state.routes[state.index];
 
@@ -658,7 +646,7 @@ export class CardStack extends React.Component<Props, State> {
             const focused = focusedRoute.key === route.key;
             const gesture = gestures[route.key];
             const scene = scenes[index];
-            const isPreloaded = isPreloadedRoute(route, this.props);
+            const isInactive = isInactiveRoute(route, this.props.routes);
 
             const {
               inactiveBehavior = 'pause',
@@ -717,16 +705,15 @@ export class CardStack extends React.Component<Props, State> {
               (isAnimationEnabled &&
                 (isFocusing ||
                   isRemoving ||
-                  // Preloaded routes should stay mounted, but remain hidden until focused
-                  (!isPreloaded && index >= routes.length - 2)));
+                  // Preloaded and retained screens should stay mounted, but remain hidden until focused
+                  (!isInactive && index >= routes.length - 2)));
 
             const activityMode = // Render focused and animating screens normally
               focused || isFocusing
                 ? 'normal'
                 : inactiveBehavior === 'none' ||
-                    // Unpause preloaded screens so updates are visible
-                    // This lets preloaded screens initialize
-                    isPreloaded ||
+                    // Unpause preloaded or retained screens so updates are visible
+                    isInactive ||
                     // Keep the screen before transparent screen active
                     // This lets the screen under the transparent screen update and animate
                     isNextScreenTransparent ||
@@ -781,7 +768,7 @@ export class CardStack extends React.Component<Props, State> {
                 onTransitionStart={onTransitionStart}
                 onTransitionEnd={onTransitionEnd}
                 isNextScreenTransparent={isNextScreenTransparent}
-                preloaded={isPreloaded}
+                preloaded={isInactive}
               >
                 <ActivityView
                   mode={activityMode}

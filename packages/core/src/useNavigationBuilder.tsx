@@ -970,9 +970,7 @@ export function useNavigationBuilder<
     ScreenOptions,
     EventMap
   >({
-    routes: router.getRoutesFromState
-      ? router.getRoutesFromState(state)
-      : state.routes,
+    routes: state.routes,
     screens,
     navigation,
     screenOptions,

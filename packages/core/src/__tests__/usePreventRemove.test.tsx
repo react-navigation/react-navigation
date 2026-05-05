@@ -76,7 +76,6 @@ test("prevents removing a screen with 'usePreventRemove' hook", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -93,7 +92,6 @@ test("prevents removing a screen with 'usePreventRemove' hook", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -113,7 +111,6 @@ test("prevents removing a screen with 'usePreventRemove' hook", () => {
   expect(ref.current?.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -134,7 +131,6 @@ test("prevents removing a screen with 'usePreventRemove' hook", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
@@ -196,7 +192,6 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -213,7 +208,6 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -233,7 +227,6 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
   expect(ref.current?.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -254,13 +247,65 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
     type: 'stack',
   });
+});
+
+test("doesn't prevent retaining a screen in inactive routes", () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
+  };
+
+  const onPreventRemove = jest.fn();
+
+  const TestScreen = () => {
+    usePreventRemove(true, onPreventRemove);
+
+    return null;
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar" component={TestScreen} />
+        <Screen name="baz">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  act(() => ref.current?.navigate('bar'));
+  act(() => ref.current?.dispatch(StackActions.retain(true)));
+  act(() => ref.current?.navigate('baz'));
+  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+
+  expect(onPreventRemove).not.toHaveBeenCalled();
+
+  expect(ref.current?.getRootState()).toEqual(
+    expect.objectContaining({
+      index: 0,
+      routes: [
+        { key: 'foo-3', name: 'foo' },
+        { key: 'bar-5', name: 'bar' },
+      ],
+      retainedRouteKeys: ['bar-5'],
+    })
+  );
 });
 
 test("should have no effect when 'usePreventRemove' hook is set to false", () => {
@@ -309,7 +354,6 @@ test("should have no effect when 'usePreventRemove' hook is set to false", () =>
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -326,7 +370,6 @@ test("should have no effect when 'usePreventRemove' hook is set to false", () =>
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -345,7 +388,6 @@ test("should have no effect when 'usePreventRemove' hook is set to false", () =>
   expect(ref.current?.getRootState()).toEqual({
     index: 0,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
@@ -360,7 +402,6 @@ test("should have no effect when 'usePreventRemove' hook is set to false", () =>
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
@@ -428,7 +469,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -445,7 +485,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -457,7 +496,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
         state: {
           index: 0,
           key: 'stack-8',
-          preloadedRoutes: [],
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-9', name: 'qux' }],
@@ -478,7 +516,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
   expect(ref.current?.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -490,7 +527,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
         state: {
           index: 0,
           key: 'stack-8',
-          preloadedRoutes: [],
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-9', name: 'qux' }],
@@ -509,7 +545,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
   expect(ref.current?.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -521,7 +556,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
         state: {
           index: 0,
           key: 'stack-8',
-          preloadedRoutes: [],
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-9', name: 'qux' }],
@@ -543,7 +577,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
@@ -615,7 +648,6 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -632,7 +664,6 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -644,7 +675,6 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
         state: {
           index: 0,
           key: 'stack-8',
-          preloadedRoutes: [],
           retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
@@ -654,7 +684,6 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
               state: {
                 index: 0,
                 key: 'stack-12',
-                preloadedRoutes: [],
                 retainedRouteKeys: [],
                 routeNames: ['lex'],
                 routes: [{ key: 'lex-13', name: 'lex' }],
@@ -680,7 +709,6 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
   expect(ref.current?.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -692,7 +720,6 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
         state: {
           index: 0,
           key: 'stack-8',
-          preloadedRoutes: [],
           retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
@@ -702,7 +729,6 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
               state: {
                 index: 0,
                 key: 'stack-12',
-                preloadedRoutes: [],
                 retainedRouteKeys: [],
                 routeNames: ['lex'],
                 routes: [{ key: 'lex-13', name: 'lex' }],
@@ -729,7 +755,6 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", () =
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [{ key: 'foo-3', name: 'foo' }],
@@ -816,7 +841,6 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", () =>
   const preventedState = {
     index: 3,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [
@@ -829,7 +853,6 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", () =>
         state: {
           index: 0,
           key: 'stack-11',
-          preloadedRoutes: [],
           retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
@@ -839,7 +862,6 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", () =>
               state: {
                 index: 0,
                 key: 'stack-15',
-                preloadedRoutes: [],
                 retainedRouteKeys: [],
                 routeNames: ['lex'],
                 routes: [{ key: 'lex-16', name: 'lex' }],
@@ -893,7 +915,6 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", () =>
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [{ key: 'foo-3', name: 'foo' }],
@@ -957,7 +978,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -968,7 +988,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
         state: {
           index: 0,
           key: 'stack-7',
-          preloadedRoutes: [],
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-8', name: 'qux' }],
@@ -987,7 +1006,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
       key: 'stack-2',
       routeNames: ['foo', 'bar', 'baz'],
       routes: [{ key: 'foo-3', name: 'foo' }],
-      preloadedRoutes: [],
       retainedRouteKeys: [],
       stale: false,
       type: 'stack',
@@ -1001,7 +1019,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
   expect(ref.current?.getRootState()).toEqual({
     index: 1,
     key: 'stack-2',
-    preloadedRoutes: [],
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
@@ -1012,7 +1029,6 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
         state: {
           index: 0,
           key: 'stack-7',
-          preloadedRoutes: [],
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
           routes: [{ key: 'qux-8', name: 'qux' }],

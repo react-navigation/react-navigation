@@ -55,7 +55,7 @@ type SceneViewProps = {
   nextDescriptor?: NativeStackDescriptor | undefined;
   isPresentationModal: boolean;
   isNextScreenTransparent: boolean;
-  isPreloaded: boolean;
+  isInactive: boolean;
   isBeforeLast: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
@@ -82,7 +82,7 @@ const SceneView = ({
   previousDescriptor,
   isPresentationModal,
   isNextScreenTransparent,
-  isPreloaded,
+  isInactive,
   isBeforeLast,
   onWillDisappear,
   onWillAppear,
@@ -294,12 +294,12 @@ const SceneView = ({
 
   const activityMode =
     // Render focused screens normally
-    // Unpause preloaded screens so updates are visible
-    // This lets effects on preloaded screens run
+    // Unpause preloaded and retained screens so updates are visible
+    // This lets effects on those screens run
     // We don't need to handle inert as it'll be handled natively
     inactiveBehavior === 'none' ||
     focused ||
-    isPreloaded ||
+    isInactive ||
     isNextScreenTransparent
       ? 'normal'
       : inactiveBehavior === 'unmount' &&
@@ -375,7 +375,7 @@ const SceneView = ({
       <ScreenStackItem
         key={route.key}
         screenId={route.key}
-        activityState={isPreloaded ? 0 : 2}
+        activityState={isInactive ? 0 : 2}
         style={StyleSheet.absoluteFill}
         aria-hidden={!focused}
         customAnimationOnSwipe={animationMatchesGesture}
@@ -468,16 +468,17 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
   useInvalidPreventRemoveError(descriptors);
 
-  const modalRouteKeys = getModalRouteKeys(state.routes, descriptors);
+  const activeRoutes = state.routes.slice(0, state.index + 1);
+  const modalRouteKeys = getModalRouteKeys(activeRoutes, descriptors);
 
   return (
     <SafeAreaProviderCompat>
       <ScreenStack style={styles.container}>
-        {state.routes.concat(state.preloadedRoutes).map((route, index) => {
+        {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
           const isFocused = state.index === index;
-          const previousKey = state.routes[index - 1]?.key;
-          const nextKey = state.routes[index + 1]?.key;
+          const previousKey = activeRoutes[index - 1]?.key;
+          const nextKey = activeRoutes[index + 1]?.key;
           const previousDescriptor = previousKey
             ? descriptors[previousKey]
             : undefined;
@@ -491,10 +492,6 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
 
           const isModal = modalRouteKeys.includes(route.key);
 
-          const isPreloaded = state.preloadedRoutes.some(
-            (r) => r.key === route.key
-          );
-
           return (
             <SceneView
               key={route.key}
@@ -505,8 +502,8 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
               nextDescriptor={nextDescriptor}
               isPresentationModal={isModal}
               isNextScreenTransparent={isNextScreenTransparent}
-              isPreloaded={isPreloaded}
-              isBeforeLast={index === state.routes.length - 2}
+              isInactive={index > state.index}
+              isBeforeLast={index === activeRoutes.length - 2}
               onWillDisappear={() => {
                 navigation.emit({
                   type: 'transitionStart',
