@@ -1,9 +1,16 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
-import type { NavigationState, Router } from '@react-navigation/routers';
+import {
+  CommonActions,
+  type NavigationState,
+  type ParamListBase,
+  type Router,
+  StackRouter,
+} from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
+import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { Screen } from '../Screen';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import { MockRouter, MockRouterKey } from './__fixtures__/MockRouter';
@@ -531,6 +538,81 @@ test('fires custom events added with addListener', () => {
   expect(firstCallback).toHaveBeenCalledTimes(1);
   expect(secondCallback).toHaveBeenCalledTimes(1);
   expect(thirdCallback).toHaveBeenCalledTimes(2);
+});
+
+test('fires custom events for preloaded routes', () => {
+  const eventName = 'someSuperCoolEvent';
+
+  function TestNavigator({ ref, ...props }: any): any {
+    const { state, navigation, descriptors, NavigationContent } =
+      useNavigationBuilder(StackRouter, props);
+
+    React.useImperativeHandle(ref, () => ({ navigation, state }), [
+      navigation,
+      state,
+    ]);
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key].render())}
+      </NavigationContent>
+    );
+  }
+
+  const callback: any = jest.fn();
+
+  const Test = ({ navigation }: any) => {
+    React.useEffect(
+      () => navigation.addListener(eventName, callback),
+      [navigation]
+    );
+
+    return null;
+  };
+
+  const ref = React.createRef<any>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator ref={ref}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="second" component={Test} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  act(() => navigation.dispatch(CommonActions.preload('second')));
+
+  const target = ref.current.state.routes[1].key;
+
+  ref.current.navigation.emit({
+    type: eventName,
+    target,
+    data: 42,
+  });
+
+  expect(callback).toHaveBeenCalledTimes(1);
+  expect(callback).toHaveBeenCalledWith(
+    expect.objectContaining({
+      type: eventName,
+      target,
+      data: 42,
+    })
+  );
+
+  ref.current.navigation.emit({
+    type: eventName,
+    data: 21,
+  });
+
+  expect(callback).toHaveBeenCalledTimes(2);
+  expect(callback).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      type: eventName,
+      data: 21,
+    })
+  );
 });
 
 test("doesn't call same listener multiple times with addListener", () => {

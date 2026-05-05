@@ -39,12 +39,14 @@ export function NativeStackView({ state, descriptors }: Props) {
   const parentHeaderBack = React.use(HeaderBackContext);
   const { buildHref } = useLinkBuilder();
 
+  const activeRoutes = state.routes.slice(0, state.index + 1);
+
   return (
     <SafeAreaProviderCompat>
-      {state.routes.concat(state.preloadedRoutes).map((route, i) => {
+      {state.routes.map((route, i) => {
         const isFocused = state.index === i;
-        const previousKey = state.routes[i - 1]?.key;
-        const nextKey = state.routes[i + 1]?.key;
+        const previousKey = activeRoutes[i - 1]?.key;
+        const nextKey = activeRoutes[i + 1]?.key;
         const previousDescriptor = previousKey
           ? descriptors[previousKey]
           : undefined;
@@ -85,20 +87,18 @@ export function NativeStackView({ state, descriptors }: Props) {
           nextPresentation != null &&
           TRANSPARENT_PRESENTATIONS.includes(nextPresentation);
 
-        const isPreloaded = state.preloadedRoutes.some(
-          (r) => r.key === route.key
-        );
+        const isInactive = i > state.index;
 
-        const isBeforeLast = i === state.routes.length - 2;
+        const isBeforeLast = i === activeRoutes.length - 2;
 
         const activityMode =
           // Render focused screens normally
           isFocused
             ? 'normal'
-            : // Unpause preloaded screens so updates are visible
-              // This lets effects on preloaded screens run
+            : // Unpause preloaded and retained screens so updates are visible
+              // This lets effects on those screens run
               inactiveBehavior === 'none' ||
-                isPreloaded ||
+                isInactive ||
                 isNextScreenTransparent
               ? 'inert'
               : inactiveBehavior === 'unmount' && !isBeforeLast && !route.state

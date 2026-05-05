@@ -244,7 +244,6 @@ test('gets navigation in preloaded screen', () => {
     return (
       <NavigationContent>
         {state.routes.map((route) => descriptors[route.key].render())}
-        {state.preloadedRoutes?.map((route) => descriptors[route.key].render())}
       </NavigationContent>
     );
   };

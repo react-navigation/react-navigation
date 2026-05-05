@@ -16,9 +16,13 @@ const DetailsScreen = () => {
   const route = useRoute('NativeStackPreloadFlowDetails');
 
   const [isPreloaded] = useState(
-    useNavigationState('NativeStackPreloadFlowDetails', (state) =>
-      state.preloadedRoutes.some((r) => r.key === route.key)
-    )
+    useNavigationState('NativeStackPreloadFlowDetails', (state) => {
+      const index = state.routes.findIndex((r) => r.key === route.key);
+
+      return (
+        index > state.index && !state.retainedRouteKeys.includes(route.key)
+      );
+    })
   );
 
   const [loadingCountdown, setLoadingCountdown] = useState(3);

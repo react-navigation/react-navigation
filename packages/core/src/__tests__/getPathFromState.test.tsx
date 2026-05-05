@@ -110,6 +110,30 @@ test('converts state to path string with config', () => {
   ).toBe(path);
 });
 
+test('converts stack state with preloaded routes to path from focused route', () => {
+  const config = {
+    screens: {
+      Foo: 'foo',
+      Bar: 'bar/:id',
+      Baz: 'baz',
+    },
+  };
+
+  const state = {
+    type: 'stack',
+    key: 'stack-test',
+    index: 1,
+    routeNames: ['Foo', 'Bar', 'Baz'],
+    routes: [
+      { key: 'Foo-test', name: 'Foo' },
+      { key: 'Bar-test', name: 'Bar', params: { id: 42 } },
+      { key: 'Baz-test', name: 'Baz' },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/bar/42');
+});
+
 test('prepends trailing slash to path', () => {
   expect(
     getPathFromState<object>({
