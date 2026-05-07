@@ -12,7 +12,6 @@ import {
 import * as React from 'react';
 import {
   Animated,
-  Platform,
   type StyleProp,
   StyleSheet,
   type ViewStyle,
@@ -56,7 +55,7 @@ const NAMED_TRANSITIONS_PRESETS = {
   },
 } as const;
 
-const useNativeDriver = Platform.OS !== 'web';
+const useNativeDriver = false;
 
 const hasAnimation = (options: BottomTabNavigationOptions) => {
   const { animation, transitionSpec } = options;
