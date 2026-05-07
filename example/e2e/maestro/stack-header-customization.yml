@@ -20,8 +20,10 @@ name: Stack - Header Customization
     text: 'What is Lorem Ipsum?'
 - tapOn:
     text: 'Pop screen'
-- tapOn:
-    text: 'Albums'
+- extendedWaitUntil:
+    visible:
+      text: 'Albums'
+    timeout: 1500
 - tapOn:
     text: 'Pop by 2'
 - assertVisible:

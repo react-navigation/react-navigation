@@ -13,14 +13,16 @@ name: Libraries - Drawer Layout
 - extendedWaitUntil:
     visible:
       text: 'Close'
-    timeout: 2000
+    timeout: 1500
 - tapOn:
     text: 'Close'
+    delay: 1000
 - extendedWaitUntil:
     visible:
       text: 'Open drawer'
-    timeout: 2000
+    timeout: 1500
 - tapOn:
     text: 'Change position (left)'
+    delay: 1500
 - assertVisible:
     text: 'Change position (right)'

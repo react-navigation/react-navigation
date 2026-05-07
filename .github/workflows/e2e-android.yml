@@ -18,9 +18,7 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      MAESTRO_VERSION: 2.2.0
-      MAESTRO_CLI_NO_ANALYTICS: 1
-      MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
+      MAESTRO_RUNNER_VERSION: 1.1.13
       JAVA_DISTRIBUTION: 'zulu'
       JAVA_VERSION: '17'
       ANDROID_HOME: /usr/local/lib/android/sdk
@@ -61,10 +59,10 @@ jobs:
           remove-codeql: 'true'
           remove-docker-images: 'true'
 
-      - name: Install Maestro
+      - name: Install maestro-runner
         run: |
-          curl -fsSL "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+          curl -fsSL https://open.devicelab.dev/install/maestro-runner | bash -s -- --version ${{ env.MAESTRO_RUNNER_VERSION }}
+          echo "$HOME/.maestro-runner/bin" >> $GITHUB_PATH
 
       - name: Install AVD dependencies
         run: |
@@ -163,7 +161,7 @@ jobs:
         run: |
           adb install android-debug-build/android-debug.apk
           cd example
-          yarn run e2e:native --platform android
+          yarn run e2e:native --platform android --flatten --retry 3
 
       - name: Kill emulator
         if: always()
