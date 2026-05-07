@@ -1,14 +1,16 @@
-const checkSerializableWithoutCircularReference = (
-  o: { [key: string]: any },
-  seen: Set<any>,
-  location: (string | number)[]
-):
+type Result =
   | { serializable: true }
   | {
       serializable: false;
       location: (string | number)[];
       reason: string;
-    } => {
+    };
+
+const checkSerializableWithoutCircularReference = (
+  o: { [key: string]: any },
+  seen: Set<any>,
+  location: (string | number)[]
+): Result => {
   if (
     o === undefined ||
     o === null ||
@@ -25,7 +27,7 @@ const checkSerializableWithoutCircularReference = (
   ) {
     return {
       serializable: false,
-      location,
+      location: location.slice(),
       reason: typeof o === 'function' ? 'Function' : String(o),
     };
   }
@@ -34,7 +36,7 @@ const checkSerializableWithoutCircularReference = (
     return {
       serializable: false,
       reason: 'Circular reference',
-      location,
+      location: location.slice(),
     };
   }
 
@@ -42,29 +44,37 @@ const checkSerializableWithoutCircularReference = (
 
   if (Array.isArray(o)) {
     for (let i = 0; i < o.length; i++) {
+      location.push(i);
       const childResult = checkSerializableWithoutCircularReference(
         o[i],
-        new Set<any>(seen),
-        [...location, i]
+        seen,
+        location
       );
+      location.pop();
 
       if (!childResult.serializable) {
+        seen.delete(o);
         return childResult;
       }
     }
   } else {
     for (const key in o) {
+      location.push(key);
       const childResult = checkSerializableWithoutCircularReference(
         o[key],
-        new Set<any>(seen),
-        [...location, key]
+        seen,
+        location
       );
+      location.pop();
 
       if (!childResult.serializable) {
+        seen.delete(o);
         return childResult;
       }
     }
   }
+
+  seen.delete(o);
 
   return { serializable: true };
 };

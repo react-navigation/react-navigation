@@ -45,10 +45,12 @@ export const BaseRouter = {
       case 'RESET': {
         const nextState = action.payload as State | PartialState<State>;
 
+        const routeNamesSet = new Set(state.routeNames);
+
         if (
           nextState.routes.length === 0 ||
           nextState.routes.some(
-            (route: { name: string }) => !state.routeNames.includes(route.name)
+            (route: { name: string }) => !routeNamesSet.has(route.name)
           )
         ) {
           return null;
@@ -57,9 +59,7 @@ export const BaseRouter = {
         if (nextState.stale === false) {
           if (
             state.routeNames.length !== nextState.routeNames.length ||
-            nextState.routeNames.some(
-              (name) => !state.routeNames.includes(name)
-            )
+            nextState.routeNames.some((name) => !routeNamesSet.has(name))
           ) {
             return null;
           }

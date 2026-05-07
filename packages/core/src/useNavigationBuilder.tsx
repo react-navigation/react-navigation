@@ -376,49 +376,37 @@ export function useNavigationBuilder<
     return original;
   });
 
-  const screens = routeConfigs.reduce<
-    Record<string, ScreenConfigWithParent<State, ScreenOptions, EventMap>>
-  >((acc, config) => {
-    if (config.props.name in acc) {
-      throw new Error(
-        `A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named '${config.props.name}')`
-      );
-    }
-
-    acc[config.props.name] = config;
-    return acc;
-  }, {});
-
   const routeNames = routeConfigs.map((config) => config.props.name);
-  const routeKeyList = routeNames.reduce<Record<string, React.Key | undefined>>(
-    (acc, curr) => {
-      acc[curr] = screens[curr].keys.map((key) => key ?? '').join(':');
-      return acc;
-    },
-    {}
-  );
-  const routeParamList = routeNames.reduce<Record<string, object | undefined>>(
-    (acc, curr) => {
-      const { initialParams } = screens[curr].props;
-      acc[curr] = initialParams;
-      return acc;
-    },
-    {}
-  );
-  const routeGetIdList = routeNames.reduce<
-    RouterConfigOptions['routeGetIdList']
-  >(
-    (acc, curr) =>
-      Object.assign(acc, {
-        [curr]: screens[curr].props.getId,
-      }),
-    {}
-  );
 
   if (!routeNames.length) {
     throw new Error(
       "Couldn't find any screens for the navigator. Have you defined any screens as its children?"
     );
+  }
+
+  const screens: Record<
+    string,
+    ScreenConfigWithParent<State, ScreenOptions, EventMap>
+  > = {};
+
+  const routeKeyList: Record<string, React.Key | undefined> = {};
+  const routeParamList: Record<string, object | undefined> = {};
+  const routeGetIdList: RouterConfigOptions['routeGetIdList'] = {};
+
+  for (const config of routeConfigs) {
+    const name = config.props.name;
+
+    if (name in screens) {
+      throw new Error(
+        `A navigator cannot contain multiple 'Screen' components with the same name (found duplicate screen named '${name}')`
+      );
+    }
+
+    screens[name] = config;
+    routeKeyList[name] = config.keys.map((key) => key ?? '').join(':');
+    routeParamList[name] = config.props.initialParams;
+
+    Object.assign(routeGetIdList, { [name]: config.props.getId });
   }
 
   const isStateValid = React.useCallback(
@@ -835,35 +823,41 @@ export function useNavigationBuilder<
       return;
     }
 
-    const navigation = descriptors[route.key].navigation;
+    const hasPerScreenListeners = routeNames.some(
+      (name) => screens[name].props.listeners != null
+    );
 
-    const listeners = ([] as (((e: any) => void) | undefined)[])
-      .concat(
-        // Get an array of listeners for all screens + common listeners on navigator
-        ...[
-          screenListeners,
-          ...routeNames.map((name) => {
-            const { listeners } = screens[name].props;
-            return listeners;
-          }),
-        ].map((listeners) => {
-          const map =
-            typeof listeners === 'function'
-              ? listeners({ route: route as any, navigation })
-              : listeners;
+    if (screenListeners != null || hasPerScreenListeners) {
+      const navigation = descriptors[route.key].navigation;
 
-          return map
-            ? Object.keys(map)
-                .filter((type) => type === e.type)
-                .map((type) => map?.[type])
-            : undefined;
-        })
-      )
-      // We don't want same listener to be called multiple times for same event
-      // So we remove any duplicate functions from the array
-      .filter((cb, i, self) => cb && self.lastIndexOf(cb) === i);
+      const listeners = ([] as (((e: any) => void) | undefined)[])
+        .concat(
+          // Get an array of listeners for all screens + common listeners on navigator
+          ...[
+            screenListeners,
+            ...routeNames.map((name) => {
+              const { listeners } = screens[name].props;
+              return listeners;
+            }),
+          ].map((listeners) => {
+            const map =
+              typeof listeners === 'function'
+                ? listeners({ route: route as any, navigation })
+                : listeners;
 
-    listeners.forEach((listener) => listener?.(e));
+            return map
+              ? Object.keys(map)
+                  .filter((type) => type === e.type)
+                  .map((type) => map?.[type])
+              : undefined;
+          })
+        )
+        // We don't want same listener to be called multiple times for same event
+        // So we remove any duplicate functions from the array
+        .filter((cb, i, self) => cb && self.lastIndexOf(cb) === i);
+
+      listeners.forEach((listener) => listener?.(e));
+    }
   });
 
   useFocusEvents({ state, emitter });

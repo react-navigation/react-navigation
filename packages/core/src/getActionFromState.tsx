@@ -28,14 +28,30 @@ type NavigateAction<State extends NavigationState> = {
   };
 };
 
+// Cache the normalized config across calls for the same `options` reference,
+// so we don't re-walk the config tree on every action conversion.
+const cachedNormalizedConfig = new WeakMap<Options, ConfigItem>();
+
 export function getActionFromState(
   state: PartialState<NavigationState>,
   options?: Options
 ): NavigateAction<NavigationState> | CommonActions.Action | undefined {
-  // Create a normalized configs object which will be easier to use
-  const normalizedConfig = options
-    ? createNormalizedConfigItem(options as PathConfig<object> | string)
-    : {};
+  let normalizedConfig;
+
+  if (options) {
+    const cached = cachedNormalizedConfig.get(options);
+
+    if (cached) {
+      normalizedConfig = cached;
+    } else {
+      normalizedConfig = createNormalizedConfigItem(
+        options as PathConfig<object> | string
+      );
+      cachedNormalizedConfig.set(options, normalizedConfig as ConfigItem);
+    }
+  } else {
+    normalizedConfig = {};
+  }
 
   const routes =
     state.index != null ? state.routes.slice(0, state.index + 1) : state.routes;
