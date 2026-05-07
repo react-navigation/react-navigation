@@ -6,7 +6,6 @@ import type {
   DefaultNavigatorOptions,
   EventMapBase,
   NavigationListBase,
-  NavigatorScreenParams,
   NavigatorTypeBagBase,
   PathConfig,
   RouteConfigComponent,
@@ -15,77 +14,7 @@ import type {
 } from './types';
 import { useRoute } from './useRoute';
 
-/**
- * Flatten a type to remove all type alias names, unions etc.
- * This will show a plain object when hovering over the type.
- */
-type FlatType<T> = { [K in keyof T]: T[K] } & {};
-
-/**
- * keyof T doesn't work for union types. We can use distributive conditional types instead.
- * https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types
- */
-type KeysOf<T> = T extends {} ? keyof T : never;
-
-/**
- * We get a union type when using keyof, but we want an intersection instead.
- * https://stackoverflow.com/a/50375286/1665026
- */
-type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
-  k: infer I
-) => void
-  ? I
-  : never;
-
-type UnknownToUndefined<T> = unknown extends T ? undefined : T;
-
-type ParamsForScreenComponent<T> = T extends {
-  screen: React.ComponentType<{ route: { params: infer P } }>;
-}
-  ? P
-  : T extends React.ComponentType<{ route: { params: infer P } }>
-    ? P
-    : undefined;
-
-type ParamsForScreen<T> = T extends {
-  screen: { config: StaticConfig<NavigatorTypeBagBase> };
-}
-  ? NavigatorScreenParams<StaticParamList<T['screen']>> | undefined
-  : T extends { config: StaticConfig<NavigatorTypeBagBase> }
-    ? NavigatorScreenParams<StaticParamList<T>> | undefined
-    : UnknownToUndefined<ParamsForScreenComponent<T>>;
-
-type ParamListForScreens<Screens> = {
-  [Key in KeysOf<Screens>]: ParamsForScreen<Screens[Key]>;
-};
-
-type ParamListForGroups<
-  Groups extends
-    | Readonly<{
-        [key: string]: {
-          screens: StaticConfigScreens<
-            ParamListBase,
-            NavigationState,
-            {},
-            EventMapBase,
-            any
-          >;
-        };
-      }>
-    | undefined,
-> = Groups extends {
-  [key: string]: {
-    screens: StaticConfigScreens<
-      ParamListBase,
-      NavigationState,
-      {},
-      EventMapBase,
-      any
-    >;
-  };
-}
-  ? ParamListForScreens<UnionToIntersection<Groups[keyof Groups]['screens']>>
-  : {};
+export type { StaticParamList } from './types';
 
 type StaticRouteConfig<
   ParamList extends ParamListBase,
@@ -286,25 +215,6 @@ export type StaticScreenProps<T extends Record<string, unknown> | undefined> = {
     params: T;
   };
 };
-
-/**
- * Infer the param list from the static navigation config.
- */
-export type StaticParamList<
-  T extends {
-    readonly config: {
-      readonly screens?: Record<string, any>;
-      readonly groups?: {
-        [key: string]: {
-          screens: Record<string, any>;
-        };
-      };
-    };
-  },
-> = FlatType<
-  ParamListForScreens<T['config']['screens']> &
-    ParamListForGroups<T['config']['groups']>
->;
 
 type StaticNavigationBase = {
   config: StaticConfig<NavigatorTypeBagBase>;

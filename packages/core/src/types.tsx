@@ -10,14 +10,148 @@ import type {
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
+/**
+ * Flatten a type to remove all type alias names, unions etc.
+ * This will show a plain object when hovering over the type.
+ */
+type FlatType<T> = { [K in keyof T]: T[K] } & {};
+
+/**
+ * keyof T doesn't work for union types. We can use distributive conditional types instead.
+ * https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types
+ */
+type KeysOf<T> = T extends {} ? keyof T : never;
+
+/**
+ * We get a union type when using keyof, but we want an intersection instead.
+ * https://stackoverflow.com/a/50375286/1665026
+ */
+type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+  k: infer I
+) => void
+  ? I
+  : never;
+
+type UnknownToUndefined<T> = unknown extends T ? undefined : T;
+
+type ParamsForScreenComponent<T> = T extends {
+  screen: React.ComponentType<{ route: { params: infer P } }>;
+}
+  ? P
+  : T extends React.ComponentType<{ route: { params: infer P } }>
+    ? P
+    : undefined;
+
+type StaticNavigationConfig = {
+  readonly config: {
+    readonly screens?: Record<string, any>;
+    readonly groups?: {
+      [key: string]: {
+        screens: Record<string, any>;
+      };
+    };
+  };
+};
+
+type ParamsForScreen<T> = T extends {
+  screen: infer Screen;
+}
+  ? Screen extends StaticNavigationConfig
+    ? NavigatorScreenParams<StaticParamList<Screen>> | undefined
+    : UnknownToUndefined<ParamsForScreenComponent<T>>
+  : T extends StaticNavigationConfig
+    ? NavigatorScreenParams<StaticParamList<T>> | undefined
+    : UnknownToUndefined<ParamsForScreenComponent<T>>;
+
+type ParamListForScreens<Screens> = {
+  [Key in KeysOf<Screens>]: ParamsForScreen<Screens[Key]>;
+};
+
+type ParamListForGroups<
+  Groups extends
+    | Readonly<{
+        [key: string]: {
+          screens: Record<string, any>;
+        };
+      }>
+    | undefined,
+> = Groups extends {
+  [key: string]: {
+    screens: Record<string, any>;
+  };
+}
+  ? ParamListForScreens<UnionToIntersection<Groups[keyof Groups]['screens']>>
+  : {};
+
+/**
+ * Infer the param list from the static navigation config.
+ */
+export type StaticParamList<T extends StaticNavigationConfig> = FlatType<
+  ParamListForScreens<T['config']['screens']> &
+    ParamListForGroups<T['config']['groups']>
+>;
+
+type ParamListForStaticNavigator<T> = T extends StaticNavigationConfig
+  ? StaticParamList<T>
+  : {};
+
+type ParamListForTypedNavigator<T> = T extends {
+  Screen: any;
+} & PrivateValueStore<infer Value>
+  ? Value[0]
+  : {};
+
+type ParamListForRootNavigator<T> =
+  string extends keyof ParamListForTypedNavigator<T>
+    ? ParamListForStaticNavigator<T>
+    : ParamListForTypedNavigator<T>;
+
+/**
+ * Root navigator used in the app.
+ * It's used for the global types in the app.
+ *
+ * Users need to use module augmentation to add their navigator type:
+ *
+ * ```ts
+ * // Navigator created with static or dynamic API
+ * const RootStack = createStackNavigator({
+ *   // ...
+ * });
+ *
+ * type RootStackType = typeof RootStack;
+ *
+ * declare module '@react-navigation/core' {
+ *   interface RootNavigator extends RootStackType {}
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface RootNavigator {}
+
+/**
+ * Theme object for the navigation components.
+ *
+ * Custom properties can be added using declaration merging:
+ *
+ * ```ts
+ * declare module '@react-navigation/core' {
+ *   interface Theme extends NativeTheme {
+ *     myCustomProperty: string;
+ *   }
+ * }
+ * ```
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface Theme {}
+
+type RootTheme = Theme;
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace ReactNavigation {
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface RootParamList {}
+    interface RootParamList extends ParamListForRootNavigator<RootNavigator> {}
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface Theme {}
+    interface Theme extends RootTheme {}
   }
 }
 

@@ -6,11 +6,8 @@ import type {
   Route,
 } from '@react-navigation/core';
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace ReactNavigation {
-    interface Theme extends NativeTheme {}
-  }
+declare module '@react-navigation/core' {
+  interface Theme extends NativeTheme {}
 }
 
 type FontStyle = {
@@ -46,8 +43,6 @@ interface NativeTheme {
     heavy: FontStyle;
   };
 }
-
-export type Theme = NativeTheme;
 
 export type LocaleDirection = 'ltr' | 'rtl';
 

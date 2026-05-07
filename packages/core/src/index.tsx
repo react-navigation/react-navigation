@@ -25,7 +25,6 @@ export {
   type StaticConfigGroup,
   type StaticConfigScreens,
   type StaticNavigation,
-  type StaticParamList,
   type StaticScreenProps,
 } from './StaticNavigation';
 export { ThemeContext } from './theming/ThemeContext';
