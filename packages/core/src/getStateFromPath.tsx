@@ -61,6 +61,7 @@ type ParsedRoute = {
 type ConfigResources = {
   initialRoutes: InitialRouteConfig[];
   configs: RouteConfig[];
+  configsByScreen: Record<string, RouteConfig[]>;
 };
 
 const INVALID_SCHEMA_RESULT_ERROR =
@@ -129,7 +130,8 @@ export function getStateFromPath<ParamList extends {}>(
   path: string,
   options?: Options<ParamList>
 ): ResultState | undefined {
-  const { initialRoutes, configs } = getConfigResources(options);
+  const { initialRoutes, configs, configsByScreen } =
+    getConfigResources(options);
 
   const screens = options?.screens;
 
@@ -193,7 +195,7 @@ export function getStateFromPath<ParamList extends {}>(
   // We match the whole path against the regex instead of segments
   // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
   for (const config of configs) {
-    const routes = matchAgainstConfig(remaining, config, configs);
+    const routes = matchAgainstConfig(remaining, config, configsByScreen);
 
     if (routes === undefined) {
       continue;
@@ -240,12 +242,16 @@ function prepareConfigResources(options?: Options<{}>) {
 
   checkForDuplicatedConfigs(configs);
 
-  const configWithRegexes = getConfigsWithRegexes(configs);
+  const configsByScreen: Record<string, RouteConfig[]> = {};
+
+  for (const c of configs) {
+    (configsByScreen[c.screen] ??= []).push(c);
+  }
 
   return {
     initialRoutes,
     configs,
-    configWithRegexes,
+    configsByScreen,
   };
 }
 
@@ -388,18 +394,10 @@ function checkForDuplicatedConfigs(configs: RouteConfig[]) {
   }, {});
 }
 
-function getConfigsWithRegexes(configs: RouteConfig[]) {
-  return configs.map((c) => ({
-    ...c,
-    // Add `$` to the regex to make sure it matches till end of the path and not just beginning
-    regex: c.regex ? new RegExp(c.regex.source + '$') : undefined,
-  }));
-}
-
 const matchAgainstConfig = (
   remaining: string,
   config: RouteConfig,
-  configs: RouteConfig[]
+  configsByScreen: Record<string, RouteConfig[]>
 ) => {
   if (!config.regex) {
     return undefined;
@@ -416,9 +414,8 @@ const matchAgainstConfig = (
 
   for (const routeName of config.routeNames) {
     // Check matching name AND pattern in case same screen is used at different levels in config
-    const routeConfig = configs.find(
-      (c) =>
-        c.screen === routeName && arrayStartsWith(config.segments, c.segments)
+    const routeConfig = configsByScreen[routeName]?.find((c) =>
+      arrayStartsWith(config.segments, c.segments)
     );
 
     let params: Record<string, unknown> | undefined;

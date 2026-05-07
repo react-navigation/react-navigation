@@ -59,57 +59,66 @@ export function useEventEmitter<T extends Record<string, any>>(
       target?: string;
       canPreventDefault?: boolean;
     }) => {
-      const items = listeners.current[type] || {};
+      const items = listeners.current[type];
 
       // Copy the current list of callbacks in case they are mutated during execution
-      const callbacks = new Set(
-        Object.values(target ? { [target]: items[target] } : items).flatMap(
-          (t) => (t ? Array.from(t) : [])
-        )
-      );
+      let callbacks: Set<(e: any) => void> | undefined;
 
-      const event: EventArg<any, any, any> = {
-        get type() {
-          return type;
-        },
+      if (items) {
+        if (target !== undefined) {
+          const targetSet = items[target];
+
+          if (targetSet && targetSet.size) {
+            callbacks = new Set(targetSet);
+          }
+        } else {
+          for (const key in items) {
+            const set = items[key];
+
+            if (set && set.size) {
+              callbacks ??= new Set();
+
+              for (const cb of set) {
+                callbacks.add(cb);
+              }
+            }
+          }
+        }
+      }
+
+      const descriptors: PropertyDescriptorMap = {
+        type: { enumerable: true, value: type },
       };
 
       if (target !== undefined) {
-        Object.defineProperty(event, 'target', {
-          enumerable: true,
-          get() {
-            return target;
-          },
-        });
+        descriptors.target = { enumerable: true, value: target };
       }
 
       if (data !== undefined) {
-        Object.defineProperty(event, 'data', {
-          enumerable: true,
-          get() {
-            return data;
-          },
-        });
+        descriptors.data = { enumerable: true, value: data };
       }
+
+      let defaultPrevented = false;
 
       if (canPreventDefault) {
-        let defaultPrevented = false;
-
-        Object.defineProperties(event, {
-          defaultPrevented: {
-            enumerable: true,
-            get() {
-              return defaultPrevented;
-            },
+        descriptors.defaultPrevented = {
+          enumerable: true,
+          get() {
+            return defaultPrevented;
           },
-          preventDefault: {
-            enumerable: true,
-            value() {
-              defaultPrevented = true;
-            },
+        };
+        descriptors.preventDefault = {
+          enumerable: true,
+          value() {
+            defaultPrevented = true;
           },
-        });
+        };
       }
+
+      const event: EventArg<any, any, any> = Object.defineProperties(
+        {} as EventArg<any, any, any>,
+        descriptors
+      );
 
       listenRef.current?.(event);
 

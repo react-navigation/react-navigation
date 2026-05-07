@@ -36,9 +36,10 @@ export function useRouteCache<State extends NavigationState>(
       proxy = routeWithoutState;
     }
 
-    if (process.env.NODE_ENV !== 'production') {
+    if (process.env.NODE_ENV !== 'production' && proxy !== previous) {
       // FIXME: since the state is updated with mutation, the route object cannot be frozen
       // As a workaround, loop through the object and make the properties readonly
+      // Only needed once per proxy - skip if we're reusing a previously-frozen one
       for (const key in proxy) {
         // @ts-expect-error: this is fine since we are looping through the object
         const value = proxy[key];
