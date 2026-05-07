@@ -49,6 +49,8 @@ export type BottomTabNavigationEventMap = {
 
 export type LabelPosition = 'beside-icon' | 'below-icon';
 
+export type LabelVisibilityMode = 'auto' | 'labeled' | 'unlabeled';
+
 export type BottomTabNavigationHelpers = NavigationHelpers<
   ParamListBase,
   BottomTabNavigationEventMap
@@ -118,7 +120,7 @@ export type BottomTabNavigationOptions = HeaderOptions & {
    * Title string of a tab displayed in the tab bar
    * or a function that given { focused: boolean, color: string, position: 'below-icon' | 'beside-icon', children: string } returns a React.Node to display in tab bar.
    *
-   * When undefined, scene title is used. Use `tabBarShowLabel` to hide the label.
+   * When undefined, screen title is used. Use `tabBarLabelVisibilityMode` to hide the label.
    */
   tabBarLabel?:
     | string
@@ -131,8 +133,22 @@ export type BottomTabNavigationOptions = HeaderOptions & {
 
   /**
    * Whether the tab label should be visible. Defaults to `true`.
+   *
+   * @deprecated Use `tabBarLabelVisibilityMode` instead.
    */
   tabBarShowLabel?: boolean;
+
+  /**
+   * Label visibility mode for the tab bar items.
+   *
+   * Supported values:
+   * - `auto` - labels are shown automatically
+   * - `labeled` - labels are always shown
+   * - `unlabeled` - labels are never shown
+   *
+   * Defaults to `auto`.
+   */
+  tabBarLabelVisibilityMode?: LabelVisibilityMode;
 
   /**
    * Whether the label is shown below the icon or beside the icon.

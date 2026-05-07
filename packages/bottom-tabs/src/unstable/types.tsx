@@ -305,7 +305,7 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    *
    * @platform ios
    */
-  tabBarMinimizeBehavior?: 'auto' | 'never' | 'onScrollDown' | 'onScrollUp';
+  tabBarMinimizeBehavior?: 'auto' | 'none' | 'onScrollDown' | 'onScrollUp';
 
   /**
    * Function which returns a React element to display as an accessory view.

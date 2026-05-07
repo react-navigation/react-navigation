@@ -139,7 +139,9 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
   const tabBarMinimizeBehavior =
     currentOptions.tabBarMinimizeBehavior === 'auto'
       ? 'automatic'
-      : currentOptions.tabBarMinimizeBehavior;
+      : currentOptions.tabBarMinimizeBehavior === 'none'
+        ? 'never'
+        : currentOptions.tabBarMinimizeBehavior;
 
   const shouldHideTabBar = currentOptions.tabBarStyle?.display === 'none';
 

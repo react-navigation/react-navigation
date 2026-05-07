@@ -70,6 +70,7 @@ function DrawerViewBase({
     configureGestureHandler,
     keyboardDismissMode,
     overlayColor = 'rgba(0, 0, 0, 0.5)',
+    overlayStyle,
     swipeEdgeWidth,
     swipeEnabled = Platform.OS !== 'web' &&
       Platform.OS !== 'windows' &&
@@ -346,7 +347,7 @@ function DrawerViewBase({
                 }),
           drawerStyle,
         ]}
-        overlayStyle={{ backgroundColor: overlayColor }}
+        overlayStyle={[{ backgroundColor: overlayColor }, overlayStyle]}
         renderDrawerContent={renderDrawerContent}
       >
         {renderSceneContent()}

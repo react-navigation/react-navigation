@@ -16,6 +16,7 @@ import type {
   BottomTabBarButtonProps,
   BottomTabDescriptor,
   LabelPosition,
+  LabelVisibilityMode,
 } from '../types';
 import { TabBarIcon } from './TabBarIcon';
 
@@ -122,8 +123,14 @@ type Props = {
   inactiveBackgroundColor?: string;
   /**
    * Whether to show the label text for the tab.
+   *
+   * @deprecated Use `labelVisibilityMode` instead
    */
   showLabel?: boolean;
+  /**
+   * Visibility mode for the label text of the tab.
+   */
+  labelVisibilityMode?: LabelVisibilityMode;
   /**
    * Whether to allow scaling the font for the label for accessibility purposes.
    * Defaults to `false` on iOS 13+ where it uses `largeContentTitle`.
@@ -173,6 +180,7 @@ export function BottomTabItem({
   activeBackgroundColor: customActiveBackgroundColor,
   inactiveBackgroundColor = 'transparent',
   showLabel = true,
+  labelVisibilityMode,
   // On iOS 13+, we use `largeContentTitle` for accessibility
   // So we don't need the font to scale up
   // https://developer.apple.com/documentation/uikit/uiview/3183939-largecontenttitle
@@ -232,7 +240,10 @@ export function BottomTabItem({
   }
 
   const renderLabel = ({ focused }: { focused: boolean }) => {
-    if (showLabel === false) {
+    if (
+      labelVisibilityMode === 'unlabeled' ||
+      (labelVisibilityMode === undefined && showLabel === false)
+    ) {
       return null;
     }
 

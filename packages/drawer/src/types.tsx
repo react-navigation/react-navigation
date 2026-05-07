@@ -158,8 +158,16 @@ export type DrawerNavigationOptions = HeaderOptions & {
   /**
    * Color of the overlay to be displayed on top of the content view when drawer gets open.
    * The opacity is animated from `0` to `1` when the drawer opens.
+   *
+   * @deprecated Use `overlayStyle` instead.
    */
   overlayColor?: string;
+
+  /**
+   * Style object for the overlay to be displayed on top of the content view when drawer gets open.
+   * The opacity is animated from `0` to `1` when the drawer opens.
+   */
+  overlayStyle?: StyleProp<ViewStyle>;
 
   /**
    * Accessibility label for the overlay. This is read by the screen reader when the user taps the overlay.
