@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.3](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.2...react-native-drawer-layout@4.2.3) (2026-05-08)
+
+### Bug Fixes
+
+* fix swipeMinVelocity not being respected in drawer ([b489d02](https://github.com/react-navigation/react-navigation/commit/b489d020381b0ed8efdd2b9c57e49e505ca55273)) - by @satya164
+
 ## [4.2.2](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.1...react-native-drawer-layout@4.2.2) (2026-02-10)
 
 ### Bug Fixes

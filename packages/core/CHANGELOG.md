@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.17.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.17.3...@react-navigation/core@7.17.4) (2026-05-08)
+
+### Bug Fixes
+
+* handle errors in parsing query params gracefully ([ec42524](https://github.com/react-navigation/react-navigation/commit/ec42524de67b9b594189274aa5cbe69fc4ff1514)) - by @satya164
+* strip reserved param names from the URL ([3a1686f](https://github.com/react-navigation/react-navigation/commit/3a1686f87482d9f46876f4cce4273f703b302fa8)) - by @satya164
+
 ## [7.17.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.17.2...@react-navigation/core@7.17.3) (2026-05-07)
 
 **Note:** Version bump only for package @react-navigation/core

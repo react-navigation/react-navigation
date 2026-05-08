@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.2.3...@react-navigation/native@7.2.4) (2026-05-08)
+
+### Bug Fixes
+
+* fix linking prefix matching host with additional characters ([680a3eb](https://github.com/react-navigation/react-navigation/commit/680a3ebf75015c1ab291bbc9c26ca8d6c6eca419)) - by @satya164
+* fix URLs with hashes not being matched correctly ([5a884b1](https://github.com/react-navigation/react-navigation/commit/5a884b10cc8b62cbc296cd36ed9ee3f9913fa60d)) - by @satya164
+* handle errors in parsing query params gracefully ([ec42524](https://github.com/react-navigation/react-navigation/commit/ec42524de67b9b594189274aa5cbe69fc4ff1514)) - by @satya164
+
 ## [7.2.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.2.2...@react-navigation/native@7.2.3) (2026-05-07)
 
 **Note:** Version bump only for package @react-navigation/native
