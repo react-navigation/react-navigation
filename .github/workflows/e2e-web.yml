@@ -16,18 +16,18 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Setup
         uses: ./.github/actions/setup
 
       - name: Get Playwright version
         id: playwright
-        run: echo "VERSION=$(node --print 'require(`@playwright/test/package.json`).version')" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(node --print "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
 
       - name: Restore Playwright
         id: playwright-cache
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.cache/ms-playwright
@@ -40,7 +40,7 @@ jobs:
 
       - name: Cache Playwright
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: ~/.cache/ms-playwright
           key: ${{ steps.playwright-cache.outputs.cache-primary-key }}

@@ -9,13 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.issue.state == 'closed' }}
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
               const body = "Hey! This issue is closed and isn't watched by the core team. You are welcome to discuss the issue with others in this thread, but if you think this issue is still valid and needs to be tracked, please open a new issue with a repro.";
 
-              const comments = await github.issues.listComments({
+              const comments = await github.rest.issues.listComments({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -25,7 +25,7 @@ jobs:
                 return;
               }
 
-              await github.issues.createComment({
+              await github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
