@@ -29,6 +29,8 @@ type RouteConfig = {
   params: { screen: string; name?: string; index: number }[];
   routeNames: string[];
   parse?: ParseConfig;
+  explicitParamNames?: Set<string>;
+  hasNestedScreens: boolean;
 };
 
 type InitialRouteConfig = {
@@ -50,6 +52,21 @@ type ConfigResources = {
   initialRoutes: InitialRouteConfig[];
   configs: RouteConfig[];
   configsByScreen: Record<string, RouteConfig[]>;
+};
+
+const NESTED_SCREEN_PARAM_NAMES = [
+  'screen',
+  'params',
+  'initial',
+  'path',
+  'merge',
+  'pop',
+];
+
+const getExplicitParamNames = (parse?: ParseConfig) => {
+  const names = Object.entries(parse ?? {}).map(([name]) => name);
+
+  return names.length ? new Set(names) : undefined;
 };
 
 /**
@@ -140,36 +157,26 @@ export function getStateFromPath<ParamList extends {}>(
         path,
         match.routeNames.map((name) => ({ name })),
         initialRoutes,
-        configs
+        match
       );
     }
 
     return undefined;
   }
 
-  let result: PartialState<NavigationState> | undefined;
-  let current: PartialState<NavigationState> | undefined;
-
   // We match the whole path against the regex instead of segments
   // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
-  const { routes, remainingPath } = matchAgainstConfigs(
+  const { routes, config } = matchAgainstConfigs(
     remaining,
     configs,
     configsByScreen
   );
 
-  if (routes !== undefined) {
-    // This will always be empty if full path matched
-    current = createNestedStateObject(path, routes, initialRoutes, configs);
-    remaining = remainingPath;
-    result = current;
-  }
-
-  if (current == null || result == null) {
+  if (routes === undefined || config === undefined) {
     return undefined;
   }
 
-  return result;
+  return createNestedStateObject(path, routes, initialRoutes, config);
 }
 
 /**
@@ -362,6 +369,7 @@ const matchAgainstConfigs = (
 ) => {
   let routes: ParsedRoute[] | undefined;
   let remainingPath = remaining;
+  let matchingConfig: RouteConfig | undefined;
 
   // Go through all configs, and see if the next path segment matches our regex
   for (const config of configs) {
@@ -374,6 +382,7 @@ const matchAgainstConfigs = (
     // If our regex matches, we need to extract params from the path
     if (match) {
       routes = [];
+      matchingConfig = config;
 
       for (const routeName of config.routeNames) {
         // Check matching name AND pattern in case same screen is used at different levels in config
@@ -430,7 +439,7 @@ const matchAgainstConfigs = (
     }
   }
 
-  return { routes, remainingPath };
+  return { routes, remainingPath, config: matchingConfig };
 };
 
 const createNormalizedConfigs = (
@@ -456,6 +465,9 @@ const createNormalizedConfigs = (
     // if an object is specified as the value (e.g. Foo: { ... }),
     // it can have `path` property and
     // it could have `screens` prop which has nested configs
+    const nestedScreens = config.screens;
+    const hasNestedScreens = !!nestedScreens;
+
     if (typeof config.path === 'string') {
       if (config.exact && config.path == null) {
         throw new Error(
@@ -475,7 +487,8 @@ const createNormalizedConfigs = (
                 screen,
                 [...routeNames],
                 [...paths, { screen, path: alias }],
-                config.parse
+                config.parse,
+                hasNestedScreens
               )
             );
           } else if (typeof alias === 'object') {
@@ -486,7 +499,8 @@ const createNormalizedConfigs = (
                 alias.exact
                   ? [{ screen, path: alias.path }]
                   : [...paths, { screen, path: alias.path }],
-                alias.parse
+                alias.parse,
+                hasNestedScreens
               )
             );
           }
@@ -501,7 +515,13 @@ const createNormalizedConfigs = (
 
       paths.push({ screen, path: config.path });
       configs.push(
-        createConfigItem(screen, [...routeNames], [...paths], config.parse)
+        createConfigItem(
+          screen,
+          [...routeNames],
+          [...paths],
+          config.parse,
+          hasNestedScreens
+        )
       );
 
       configs.push(...aliasConfigs);
@@ -517,7 +537,7 @@ const createNormalizedConfigs = (
       );
     }
 
-    if (config.screens) {
+    if (nestedScreens) {
       // property `initialRouteName` without `screens` has no purpose
       if (config.initialRouteName) {
         initials.push({
@@ -526,10 +546,10 @@ const createNormalizedConfigs = (
         });
       }
 
-      Object.keys(config.screens).forEach((nestedConfig) => {
+      Object.keys(nestedScreens).forEach((nestedConfig) => {
         const result = createNormalizedConfigs(
           nestedConfig,
-          config.screens as Record<string, string | PathConfig<ParamListBase>>,
+          nestedScreens as Record<string, string | PathConfig<ParamListBase>>,
           initials,
           [...paths],
           [...parentScreens],
@@ -550,7 +570,8 @@ const createConfigItem = (
   screen: string,
   routeNames: string[],
   paths: { screen: string; path: string }[],
-  parse?: ParseConfig
+  parse?: ParseConfig,
+  hasNestedScreens = false
 ): RouteConfig => {
   const parts: (PatternPart & { screen: string })[] = [];
 
@@ -595,20 +616,9 @@ const createConfigItem = (
     params,
     routeNames,
     parse,
+    explicitParamNames: getExplicitParamNames(parse),
+    hasNestedScreens,
   };
-};
-
-const findParseConfigForRoute = (
-  routeName: string,
-  flatConfig: RouteConfig[]
-): ParseConfig | undefined => {
-  for (const config of flatConfig) {
-    if (routeName === config.routeNames[config.routeNames.length - 1]) {
-      return config.parse;
-    }
-  }
-
-  return undefined;
 };
 
 // Try to find an initial route connected with the one passed
@@ -672,7 +682,7 @@ const createNestedStateObject = (
   path: string,
   routes: ParsedRoute[],
   initialRoutes: InitialRouteConfig[],
-  flatConfig?: RouteConfig[]
+  routeConfig?: RouteConfig
 ) => {
   let route = routes.shift() as ParsedRoute;
   const parentScreens: string[] = [];
@@ -716,7 +726,10 @@ const createNestedStateObject = (
 
   const params = parseQueryParams(
     path,
-    flatConfig ? findParseConfigForRoute(route.name, flatConfig) : undefined
+    routeConfig?.parse,
+    routeConfig?.explicitParamNames,
+    routeConfig?.hasNestedScreens,
+    route.params
   );
 
   if (params) {
@@ -728,7 +741,10 @@ const createNestedStateObject = (
 
 const parseQueryParams = (
   path: string,
-  parseConfig?: Record<string, (value: string) => unknown>
+  parseConfig?: ParseConfig,
+  explicitParamNames?: Set<string>,
+  hasNestedScreens = false,
+  routeParams?: Record<string, unknown>
 ) => {
   const query = path.split('?')[1];
   const params: Record<string, unknown> = queryString.parse(query);
@@ -742,6 +758,20 @@ const parseQueryParams = (
         params[name] = parseConfig[name](params[name]);
       }
     });
+  }
+
+  if (
+    hasNestedScreens &&
+    !explicitParamNames?.has('screen') &&
+    (typeof params.screen === 'string' ||
+      typeof routeParams?.screen === 'string')
+  ) {
+    for (const name of NESTED_SCREEN_PARAM_NAMES) {
+      if (!explicitParamNames?.has(name)) {
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete params[name];
+      }
+    }
   }
 
   return Object.keys(params).length ? params : undefined;
