@@ -255,7 +255,7 @@ export function Drawer({
 
         const nextOpen =
           (Math.abs(event.translationX) > SWIPE_MIN_OFFSET &&
-            Math.abs(event.translationX) > swipeMinVelocity) ||
+            Math.abs(event.velocityX) > swipeMinVelocity) ||
           Math.abs(event.translationX) > swipeMinDistance
             ? drawerPosition === 'left'
               ? // If swiped to right, open the drawer, otherwise close it
