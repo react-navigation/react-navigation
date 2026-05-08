@@ -1,4 +1,4 @@
-import { execSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import process from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
@@ -73,8 +73,11 @@ if (!Number.isFinite(runs) || runs < 1) {
   process.exit(1);
 }
 
-function git(command: string): string {
-  return execSync(`git ${command}`, { cwd: root, encoding: 'utf-8' }).trim();
+function git(args: string[]): string {
+  return execFileSync('git', args, {
+    cwd: root,
+    encoding: 'utf-8',
+  }).trim();
 }
 
 function yarnInstall(): void {
@@ -86,7 +89,7 @@ function yarnInstall(): void {
 
 function resolveRef(ref: string): string {
   try {
-    return git(`rev-parse --verify ${JSON.stringify(ref)}`);
+    return git(['rev-parse', '--verify', ref]);
   } catch {
     process.stderr.write(`Cannot resolve baseline ref: ${ref}\n`);
     process.exit(1);
@@ -276,16 +279,16 @@ function printSummary(base: Metrics, current: Metrics): void {
   process.stdout.write(`${separator}\n`);
 }
 
-if (git('rev-parse --is-inside-work-tree') !== 'true') {
+if (git(['rev-parse', '--is-inside-work-tree']) !== 'true') {
   process.stderr.write('Not inside a git working tree.\n');
 
   process.exit(1);
 }
 
 const baselineSha = resolveRef(baseline);
-const currentSha = git('rev-parse HEAD');
-const currentBranch = git('rev-parse --abbrev-ref HEAD');
-const hasChanges = git('status --porcelain').length > 0;
+const currentSha = git(['rev-parse', 'HEAD']);
+const currentBranch = git(['rev-parse', '--abbrev-ref', 'HEAD']);
+const hasChanges = git(['status', '--porcelain']).length > 0;
 
 if (baselineSha === currentSha && !hasChanges) {
   process.stderr.write(
@@ -316,7 +319,7 @@ function restore(): void {
   try {
     const ref = currentBranch === 'HEAD' ? currentSha : currentBranch;
 
-    git(`checkout --quiet ${JSON.stringify(ref)}`);
+    git(['checkout', '--quiet', ref]);
   } catch (error) {
     process.stderr.write(
       `\nFailed to restore original checkout (${currentBranch}). ` +
@@ -330,7 +333,7 @@ function restore(): void {
 
   if (stashed) {
     try {
-      git('stash pop --quiet');
+      git(['stash', 'pop', '--quiet']);
 
       stashed = false;
     } catch (error) {
@@ -353,15 +356,20 @@ process.on('SIGINT', () => {
 });
 
 if (hasChanges) {
-  git(
-    `stash push --quiet --include-untracked --message ${JSON.stringify(stashLabel)}`
-  );
+  git([
+    'stash',
+    'push',
+    '--quiet',
+    '--include-untracked',
+    '--message',
+    stashLabel,
+  ]);
 
   stashed = true;
 }
 
 try {
-  git(`checkout --quiet ${JSON.stringify(baselineSha)}`);
+  git(['checkout', '--quiet', baselineSha]);
 
   yarnInstall();
 
