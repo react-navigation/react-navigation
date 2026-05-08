@@ -10,6 +10,8 @@ type HistoryRecord = {
   path: string;
 };
 
+const getPathWithoutHash = (path: string) => path.split('#')[0];
+
 export function createMemoryHistory() {
   let index = 0;
   let items: HistoryRecord[] = [];
@@ -48,11 +50,13 @@ export function createMemoryHistory() {
     },
 
     backIndex({ path }: { path: string }) {
+      const pathWithoutHash = getPathWithoutHash(path);
+
       // We need to find the index from the element before current to get closest path to go back to
       for (let i = index - 1; i >= 0; i--) {
         const item = items[i];
 
-        if (item.path === path) {
+        if (item.path === pathWithoutHash) {
           return i;
         }
       }
@@ -64,12 +68,13 @@ export function createMemoryHistory() {
       interrupt();
 
       const id = nanoid();
+      const pathWithoutHash = getPathWithoutHash(path);
 
       // When a new entry is pushed, all the existing entries after index will be inaccessible
       // So we remove any existing entries after the current index to clean them up
       items = items.slice(0, index + 1);
 
-      items.push({ path, state, id });
+      items.push({ path: pathWithoutHash, state, id });
       index = items.length - 1;
 
       // We pass empty string for title because it's ignored in all browsers except safari
@@ -83,6 +88,7 @@ export function createMemoryHistory() {
       interrupt();
 
       const id = window.history.state?.id ?? nanoid();
+      const pathWithoutHash = getPathWithoutHash(path);
 
       // Need to keep the hash part of the path if there was no previous history entry
       // or the previous history entry had the same path
@@ -98,13 +104,13 @@ export function createMemoryHistory() {
         //   So we need to push the entry as there's nothing to replace
 
         pathWithHash = pathWithHash + hash;
-        items = [{ path: pathWithHash, state, id }];
+        items = [{ path: pathWithoutHash, state, id }];
         index = 0;
       } else {
-        if (items[index].path === path) {
+        if (items[index].path === pathWithoutHash) {
           pathWithHash = pathWithHash + hash;
         }
-        items[index] = { path, state, id };
+        items[index] = { path: pathWithoutHash, state, id };
       }
 
       window.history.replaceState({ id }, '', pathWithHash);
