@@ -63,6 +63,14 @@ type NavigatorRoute = {
   params?: NavigatorScreenParams<ParamListBase> | undefined;
 };
 
+const isNavigationState = (
+  state: unknown
+): state is NavigationState | PartialState<NavigationState> =>
+  state != null &&
+  typeof state === 'object' &&
+  'routes' in state &&
+  Array.isArray(state.routes);
+
 const isScreen = (
   child: React.ReactElement<unknown>
 ): child is React.ReactElement<{
@@ -279,8 +287,10 @@ const getRouteConfigsFromChildren = <
 };
 
 const getStateFromParams = (params: NavigatorRoute['params']) => {
-  if (params?.state != null) {
-    return params.state;
+  const state = params?.state;
+
+  if (isNavigationState(state)) {
+    return state;
   } else if (typeof params?.screen === 'string' && params?.initial !== false) {
     return {
       routes: [
@@ -644,24 +654,21 @@ export function useNavigationBuilder<
 
   if (route?.params && !didConsumeNestedParams) {
     let action: CommonActions.Action | undefined;
+    const stateFromParams = route.params.state;
 
-    if (
-      typeof route.params.state === 'object' &&
-      route.params.state != null &&
-      !isNestedParamsConsumed
-    ) {
+    if (isNavigationState(stateFromParams) && !isNestedParamsConsumed) {
       didConsumeNestedParams = true;
 
       if (
         options.routeNamesChangeBehavior === 'lastUnhandled' &&
-        doesStateHaveOnlyInvalidRoutes(route.params.state)
+        doesStateHaveOnlyInvalidRoutes(stateFromParams)
       ) {
-        if (route.params.state !== unhandledState) {
-          setUnhandledState(route.params.state);
+        if (stateFromParams !== unhandledState) {
+          setUnhandledState(stateFromParams);
         }
       } else {
         // If the route was updated with new state, we should reset to it
-        action = CommonActions.reset(route.params.state);
+        action = CommonActions.reset(stateFromParams);
       }
     } else if (
       typeof route.params.screen === 'string' &&
