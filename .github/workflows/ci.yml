@@ -7,6 +7,9 @@ on:
     branches:
       - 7.x
 
+permissions:
+  contents: read
+
 jobs:
   dependencies:
     runs-on: ubuntu-latest

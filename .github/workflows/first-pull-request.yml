@@ -2,6 +2,10 @@ name: First pull request
 on:
   pull_request_target:
 
+permissions:
+  issues: write
+  pull-requests: read
+
 jobs:
   welcome:
     runs-on: ubuntu-latest

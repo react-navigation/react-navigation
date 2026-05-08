@@ -4,6 +4,9 @@ on:
     types:
       - created
 
+permissions:
+  issues: write
+
 jobs:
   closed-issue:
     runs-on: ubuntu-latest
