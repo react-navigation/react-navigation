@@ -1,13 +1,98 @@
-import { expect, jest, test } from '@jest/globals';
+import { beforeEach, expect, jest, test } from '@jest/globals';
 import type { NavigationState } from '@react-navigation/core';
-
-import { window } from '../__stubs__/window';
-import { createMemoryHistory } from '../createMemoryHistory';
-
-Object.assign(global, window);
 
 // eslint-disable-next-line import-x/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
+
+let window: typeof import('../__stubs__/window').window;
+let createMemoryHistory: typeof import('../createMemoryHistory').createMemoryHistory;
+
+beforeEach(() => {
+  jest.useRealTimers();
+  jest.resetModules();
+
+  window = require('../__stubs__/window').window;
+  createMemoryHistory = require('../createMemoryHistory').createMemoryHistory;
+
+  Object.assign(global, window);
+  Object.defineProperty(global, 'location', {
+    configurable: true,
+    get() {
+      return window.location;
+    },
+  });
+});
+
+test('finds previous entries without matching hash fragments', () => {
+  const createState = (path: string): NavigationState => ({
+    key: 'stack-123',
+    index: 0,
+    routeNames: ['One'],
+    routes: [
+      {
+        name: 'One',
+        path,
+        key: 'One-23',
+        params: undefined,
+      },
+    ],
+    type: 'stack',
+    stale: false,
+  });
+
+  const history = createMemoryHistory();
+
+  history.replace({
+    path: '/route-one#section',
+    state: createState('/route-one'),
+  });
+
+  history.push({
+    path: '/route-two',
+    state: createState('/route-two'),
+  });
+
+  history.push({
+    path: '/route-three',
+    state: createState('/route-three'),
+  });
+
+  expect(history.backIndex({ path: '/route-one#details' })).toBe(0);
+  expect(history.backIndex({ path: '/route-two#details' })).toBe(1);
+});
+
+test('keeps current hash when replacing the same path', () => {
+  const createState = (path: string): NavigationState => ({
+    key: 'stack-123',
+    index: 0,
+    routeNames: ['One'],
+    routes: [
+      {
+        name: 'One',
+        path,
+        key: 'One-23',
+        params: undefined,
+      },
+    ],
+    type: 'stack',
+    stale: false,
+  });
+
+  const history = createMemoryHistory();
+
+  history.push({
+    path: '/route-one#section',
+    state: createState('/route-one'),
+  });
+
+  history.replace({
+    path: '/route-one',
+    state: createState('/route-one'),
+  });
+
+  expect(window.location.pathname).toBe('/route-one');
+  expect(window.location.hash).toBe('#section');
+});
 
 test('will not attempt to navigate beyond whatever browser history it is possible to know about', () => {
   jest.useFakeTimers();
