@@ -128,9 +128,15 @@ export function useLinking(
 
       const path = extractPathFromURL(prefixesRef.current, url);
 
-      return path !== undefined
-        ? getStateFromPathRef.current(path, configRef.current)
-        : undefined;
+      if (path !== undefined) {
+        try {
+          return getStateFromPathRef.current(path, configRef.current);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      return undefined;
     },
     []
   );

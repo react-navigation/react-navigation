@@ -194,7 +194,13 @@ export function useLinking(
       const path = location ? location.pathname + location.search : undefined;
 
       if (path) {
-        value = getStateFromPathRef.current(path, configRef.current);
+        try {
+          value = getStateFromPathRef.current(path, configRef.current);
+        } catch (e) {
+          console.error(e);
+
+          value = undefined;
+        }
       }
 
       // If the link were handled, it gets cleared in NavigationContainer
@@ -268,7 +274,15 @@ export function useLinking(
         return;
       }
 
-      const state = getStateFromPathRef.current(path, configRef.current);
+      let state: ResultState | undefined;
+
+      try {
+        state = getStateFromPathRef.current(path, configRef.current);
+      } catch (e) {
+        console.error(e);
+
+        state = undefined;
+      }
 
       // We should only dispatch an action when going forward
       // Otherwise the action will likely add items to history, which would mess things up
@@ -334,10 +348,18 @@ export function useLinking(
       // If the `route` object contains a `path`, use that path as long as `route.name` and `params` still match
       // This makes sure that we preserve the original URL for wildcard routes
       if (route?.path) {
-        const stateForPath = getStateFromPathRef.current(
-          route.path,
-          configRef.current
-        );
+        let stateForPath: ResultState | undefined;
+
+        try {
+          stateForPath = getStateFromPathRef.current(
+            route.path,
+            configRef.current
+          );
+        } catch (e) {
+          console.error(e);
+
+          stateForPath = undefined;
+        }
 
         if (stateForPath) {
           const focusedRoute = findFocusedRoute(stateForPath);

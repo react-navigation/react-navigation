@@ -105,15 +105,23 @@ export function getStateFromPath<ParamList extends {}>(
     remaining = remaining.replace(normalizedPrefix, '');
   }
 
+  const decodedSegments: string[] = [];
+
+  for (const segment of remaining.split('/')) {
+    if (!segment) {
+      continue;
+    }
+
+    try {
+      decodedSegments.push(decodeURIComponent(segment));
+    } catch {
+      return undefined;
+    }
+  }
+
   if (screens === undefined) {
     // When no config is specified, use the path segments as route names
-    const routes = remaining
-      .split('/')
-      .filter(Boolean)
-      .map((segment) => {
-        const name = decodeURIComponent(segment);
-        return { name };
-      });
+    const routes = decodedSegments.map((name) => ({ name }));
 
     if (routes.length) {
       return createNestedStateObject(path, routes, initialRoutes);
@@ -365,50 +373,56 @@ const matchAgainstConfigs = (
 
     // If our regex matches, we need to extract params from the path
     if (match) {
-      routes = config.routeNames.map((routeName) => {
+      routes = [];
+
+      for (const routeName of config.routeNames) {
         // Check matching name AND pattern in case same screen is used at different levels in config
         const routeConfig = configsByScreen[routeName]?.find((c) =>
           arrayStartsWith(config.segments, c.segments)
         );
 
-        const params =
-          routeConfig && match.groups
-            ? Object.fromEntries(
-                Object.entries(match.groups)
-                  .map(([key, value]) => {
-                    const index = Number(key.replace('param_', ''));
-                    const param = routeConfig.params.find(
-                      (it) => it.index === index
-                    );
+        let params: Record<string, unknown> | undefined;
 
-                    if (param?.screen === routeName && param?.name) {
-                      return [param.name, value];
-                    }
+        if (routeConfig && match.groups) {
+          const paramEntries: [string, unknown][] = [];
 
-                    return null;
-                  })
-                  .filter((it) => it != null)
-                  .map(([key, value]) => {
-                    if (value == null) {
-                      return [key, undefined];
-                    }
+          for (const [key, value] of Object.entries(match.groups)) {
+            const index = Number(key.replace('param_', ''));
+            const param = routeConfig.params.find((it) => it.index === index);
 
-                    const decoded = decodeURIComponent(value);
-                    const parsed = routeConfig.parse?.[key]
-                      ? routeConfig.parse[key](decoded)
-                      : decoded;
+            if (param?.screen !== routeName || !param.name) {
+              continue;
+            }
 
-                    return [key, parsed];
-                  })
-              )
-            : undefined;
+            if (value == null) {
+              paramEntries.push([param.name, undefined]);
+              continue;
+            }
 
-        if (params && Object.keys(params).length) {
-          return { name: routeName, params };
+            let decoded: string;
+
+            try {
+              decoded = decodeURIComponent(value);
+            } catch {
+              return { routes: undefined, remainingPath };
+            }
+
+            const parser = routeConfig.parse?.[param.name];
+
+            paramEntries.push([param.name, parser ? parser(decoded) : decoded]);
+          }
+
+          if (paramEntries.length) {
+            params = Object.fromEntries(paramEntries);
+          }
         }
 
-        return { name: routeName };
-      });
+        if (params && Object.keys(params).length) {
+          routes.push({ name: routeName, params });
+        } else {
+          routes.push({ name: routeName });
+        }
+      }
 
       remainingPath = remainingPath.replace(match[0], '');
 

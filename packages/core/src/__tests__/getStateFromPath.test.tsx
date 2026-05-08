@@ -17,6 +17,20 @@ test('returns undefined for invalid path', () => {
   expect(getStateFromPath<object>('//')).toBeUndefined();
 });
 
+test('returns undefined for malformed encoded path segment', () => {
+  expect(getStateFromPath<object>('foo/%E0%A4%A')).toBeUndefined();
+});
+
+test('returns undefined for malformed encoded path param', () => {
+  const config = {
+    screens: {
+      Foo: 'foo/:id',
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/%E0%A4%A', config)).toBeUndefined();
+});
+
 test('converts path string to initial state', () => {
   const path = 'foo/bar/baz%20qux?author=jane%20%26%20co&valid=true';
   const state = {
