@@ -18,8 +18,10 @@ export function extractPathFromURL(prefixes: LinkingPrefix[], url: string) {
       prefixRegex = new RegExp(
         `^${escapeStringRegexp(protocol)}(/)*${host
           .split('.')
-          .map((it) => (it === '*' ? '[^/]+' : escapeStringRegexp(it)))
-          .join('\\.')}`
+          .map((it) => (it === '*' ? '[^/?#]+' : escapeStringRegexp(it)))
+          .join('\\.')}${
+          host === '' || host.endsWith('/') ? '' : '(?=$|[/?#])'
+        }`
       );
     }
 
