@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     if: (github.event.action == 'labeled' && github.event.label.name == 'needs repro') || github.event.action != 'labeled'
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -32,7 +32,7 @@ jobs:
             );
 
             if (context.payload.action != 'labeled' && regex.test(body)) {
-              await github.issues.addLabels({
+              await github.rest.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -40,7 +40,7 @@ jobs:
               });
 
               try {
-                await github.issues.removeLabel({
+                await github.rest.issues.removeLabel({
                   issue_number: context.issue.number,
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -72,7 +72,7 @@ jobs:
 
               You can edit your original issue to include a link to the repro, or leave it as a comment. **The issue will be closed automatically after a while** if you don't provide a valid repro.`
 
-              const comments = await github.issues.listComments({
+              const comments = await github.rest.issues.listComments({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -82,14 +82,14 @@ jobs:
                 return;
               }
 
-              await github.issues.createComment({
+              await github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body,
               });
 
-              await github.issues.addLabels({
+              await github.rest.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
