@@ -128,6 +128,8 @@ export function useLinking<ParamList extends ParamListBase>(
           getStateFromPath: getStateFromPathRef.current,
         });
       } catch (e) {
+        console.error(e);
+
         return undefined;
       }
     },

@@ -158,15 +158,23 @@ export function getStateFromPath<ParamList extends {}>(
     remaining = remaining.replace(normalizedPrefix, '');
   }
 
+  const decodedSegments: string[] = [];
+
+  for (const segment of remaining.split('/')) {
+    if (!segment) {
+      continue;
+    }
+
+    try {
+      decodedSegments.push(decodeURIComponent(segment));
+    } catch {
+      return undefined;
+    }
+  }
+
   if (screens === undefined) {
     // When no config is specified, use the path segments as route names
-    const routes = remaining
-      .split('/')
-      .filter(Boolean)
-      .map((segment) => {
-        const name = decodeURIComponent(segment);
-        return { name };
-      });
+    const routes = decodedSegments.map((name) => ({ name }));
 
     if (routes.length) {
       return createNestedStateObject(path, routes, initialRoutes);
@@ -436,7 +444,14 @@ const matchAgainstConfig = (
           continue;
         }
 
-        const decoded = decodeURIComponent(value);
+        let decoded: string;
+
+        try {
+          decoded = decodeURIComponent(value);
+        } catch {
+          return undefined;
+        }
+
         const parser = routeConfig.parse?.[param.name];
 
         if (!parser) {
