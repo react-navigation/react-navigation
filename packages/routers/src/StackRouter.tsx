@@ -681,6 +681,10 @@ export function StackRouter(options: StackRouterOptions) {
           return null;
 
         case 'PRELOAD': {
+          if (!state.routeNames.includes(action.payload.name)) {
+            return null;
+          }
+
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
 
