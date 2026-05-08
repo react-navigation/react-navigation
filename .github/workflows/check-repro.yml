@@ -10,6 +10,9 @@ on:
       - created
       - edited
 
+permissions:
+  issues: write
+
 jobs:
   check-repro:
     runs-on: ubuntu-latest
