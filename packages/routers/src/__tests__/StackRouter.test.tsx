@@ -1372,6 +1372,38 @@ test('handles pop action', () => {
   ).toBeNull();
 });
 
+test("doesn't handle pop if source key isn't present when target is specified", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        preloadedRoutes: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+      },
+      {
+        ...StackActions.pop(),
+        source: 'magic',
+        target: 'root',
+      },
+      options
+    )
+  ).toBeNull();
+});
+
 test('handles pop to top action', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {

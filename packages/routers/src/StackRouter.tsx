@@ -546,6 +546,10 @@ export function StackRouter(options: StackRouterOptions) {
               ? state.routes.findIndex((r) => r.key === action.source)
               : state.index;
 
+          if (currentIndex === -1) {
+            return null;
+          }
+
           if (currentIndex > 0) {
             const count = Math.max(currentIndex - action.payload.count + 1, 1);
             const routes = state.routes
