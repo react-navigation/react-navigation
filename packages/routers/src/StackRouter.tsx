@@ -644,6 +644,10 @@ export function StackRouter(options: StackRouterOptions) {
               ? routes.findIndex((r) => r.key === action.source)
               : state.index;
 
+          if (currentIndex === -1) {
+            return null;
+          }
+
           let route = routes[currentIndex];
 
           /**
