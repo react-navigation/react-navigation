@@ -2890,7 +2890,7 @@ test('uses preloaded route when replacing current route', () => {
       {
         key: 'bar-preloaded',
         name: 'bar',
-        params: { answer: 42 },
+        params: { color: 'test' },
       },
     ],
   });
@@ -2919,7 +2919,7 @@ test('uses preloaded route with the same ID when replacing current route', () =>
           {
             key: 'bar-preloaded',
             name: 'bar',
-            params: { answer: 42 },
+            params: { answer: 42, stale: 'param' },
           },
         ],
         routeNames: ['baz', 'bar', 'qux'],
@@ -2928,7 +2928,7 @@ test('uses preloaded route with the same ID when replacing current route', () =>
           { key: 'qux', name: 'qux' },
         ],
       },
-      StackActions.replace('bar', { answer: 42 }),
+      StackActions.replace('bar', { answer: 42, fruit: 'orange' }),
       options
     )
   ).toEqual({
@@ -2943,7 +2943,7 @@ test('uses preloaded route with the same ID when replacing current route', () =>
       {
         key: 'bar-preloaded',
         name: 'bar',
-        params: { answer: 42 },
+        params: { color: 'test', answer: 42, fruit: 'orange' },
       },
     ],
   });
@@ -2981,7 +2981,7 @@ test('does not use preloaded route with different ID when replacing current rout
           { key: 'qux', name: 'qux' },
         ],
       },
-      StackActions.popTo('bar', { answer: 42 }),
+      StackActions.replace('bar', { answer: 42 }),
       options
     )
   ).toEqual({
@@ -3053,7 +3053,7 @@ test('uses preloaded route with the same name when popTo replaces current route'
       {
         key: 'bar-preloaded',
         name: 'bar',
-        params: { answer: 42 },
+        params: { color: 'test' },
       },
     ],
   });
@@ -3082,7 +3082,7 @@ test('uses preloaded route with the same ID when popTo replaces current route', 
           {
             key: 'bar-preloaded',
             name: 'bar',
-            params: { answer: 42 },
+            params: { answer: 42, stale: 'param' },
           },
         ],
         routeNames: ['baz', 'bar', 'qux'],
@@ -3091,7 +3091,7 @@ test('uses preloaded route with the same ID when popTo replaces current route', 
           { key: 'qux', name: 'qux' },
         ],
       },
-      StackActions.popTo('bar', { answer: 42 }),
+      StackActions.popTo('bar', { answer: 42, fruit: 'orange' }),
       options
     )
   ).toEqual({
@@ -3106,7 +3106,7 @@ test('uses preloaded route with the same ID when popTo replaces current route', 
       {
         key: 'bar-preloaded',
         name: 'bar',
-        params: { answer: 42 },
+        params: { color: 'test', answer: 42, fruit: 'orange' },
       },
     ],
   });
