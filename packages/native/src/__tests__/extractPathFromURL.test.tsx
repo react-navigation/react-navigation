@@ -198,6 +198,20 @@ test('extracts path from URL with protocol, host and path', () => {
       'scheme:///example.com/test/some//path'
     )
   ).toBe('/some/path');
+
+  expect(
+    extractPathFromURL(
+      ['scheme://example.com/test'],
+      'scheme://example.com/test?foo=bar'
+    )
+  ).toBe('/?foo=bar');
+
+  expect(
+    extractPathFromURL(
+      ['scheme://example.com/test'],
+      'scheme://example.com/test#section'
+    )
+  ).toBe('/#section');
 });
 
 test('returns undefined for non-matching protocol', () => {
@@ -274,6 +288,13 @@ test('returns undefined for non-matching host', () => {
   expect(
     extractPathFromURL(['scheme:example.com'], 'scheme:///foo.com/some/path')
   ).toBeUndefined();
+
+  expect(
+    extractPathFromURL(
+      ['https://example.com'],
+      'https://example.com.evil.com/some/path'
+    )
+  ).toBeUndefined();
 });
 
 test('returns undefined for non-matching host with wildcard', () => {
@@ -323,6 +344,29 @@ test('returns undefined for non-matching host with wildcard', () => {
     extractPathFromURL(
       ['scheme:*.example.com'],
       'scheme:///test.foo.com/some/path'
+    )
+  ).toBeUndefined();
+
+  expect(
+    extractPathFromURL(
+      ['https://*.example.com'],
+      'https://test.example.com.evil.com/some/path'
+    )
+  ).toBeUndefined();
+});
+
+test('returns undefined for path prefix collisions', () => {
+  expect(
+    extractPathFromURL(
+      ['https://example.com/app'],
+      'https://example.com/application/path'
+    )
+  ).toBeUndefined();
+
+  expect(
+    extractPathFromURL(
+      ['https://example.com/app'],
+      'https://example.com/apply/path'
     )
   ).toBeUndefined();
 });

@@ -11,8 +11,8 @@ export function extractPathFromURL(prefixes: string[], url: string) {
     const prefixRegex = new RegExp(
       `^${escapeStringRegexp(protocol)}(/)*${host
         .split('.')
-        .map((it) => (it === '*' ? '[^/]+' : escapeStringRegexp(it)))
-        .join('\\.')}`
+        .map((it) => (it === '*' ? '[^/?#]+' : escapeStringRegexp(it)))
+        .join('\\.')}${host === '' || host.endsWith('/') ? '' : '(?=$|[/?#])'}`
     );
 
     const [originAndPath, ...searchParams] = url.split('?');
@@ -21,7 +21,11 @@ export function extractPathFromURL(prefixes: string[], url: string) {
       .concat(searchParams.length ? `?${searchParams.join('?')}` : '');
 
     if (prefixRegex.test(normalizedURL)) {
-      return normalizedURL.replace(prefixRegex, '');
+      const result = normalizedURL.replace(prefixRegex, '');
+
+      return result.startsWith('?') || result.startsWith('#')
+        ? `/${result}`
+        : result;
     }
   }
 
