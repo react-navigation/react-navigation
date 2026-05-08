@@ -21,12 +21,15 @@ jobs:
   measure:
     runs-on: ubuntu-latest
     permissions:
-      pull-requests: write
+      contents: read
+    outputs:
+      report: ${{ steps.measure.outputs.report }}
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -40,10 +43,16 @@ jobs:
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
+  comment:
+    needs: measure
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
       - name: Comment noticeable variations
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         env:
-          REPORT: ${{ steps.measure.outputs.report }}
+          REPORT: ${{ needs.measure.outputs.report }}
         with:
           script: |
             const MARKER = '<!-- ts-perf-report -->';
@@ -56,35 +65,42 @@ jobs:
             ];
 
             const report = JSON.parse(process.env.REPORT);
-            const { metrics, noticeable } = report;
+
+            const metrics = report.metrics ?? {};
+
+            const text = (value) => String(value ?? '').replaceAll('`', '\\`').replaceAll('\n', ' ');
+            const value = (input) => Number.isFinite(Number(input)) ? Number(input) : 0;
 
             const num = (v, fraction = 0) =>
-              v.toLocaleString('en-US', { maximumFractionDigits: fraction, minimumFractionDigits: fraction });
+              value(v).toLocaleString('en-US', { maximumFractionDigits: fraction, minimumFractionDigits: fraction });
 
             const delta = (v) => {
               if (v === null) return '—';
-              const sign = v > 0 ? '+' : '';
-              return `${sign}${v.toFixed(1)}%`;
+              const n = value(v);
+              const sign = n > 0 ? '+' : '';
+              return `${sign}${n.toFixed(1)}%`;
             };
 
             const tableRows = ROWS.map(({ key, label, transform, fraction }) => {
-              const m = metrics[key];
-              const base = transform ? transform(m.base) : m.base;
-              const curr = transform ? transform(m.current) : m.current;
-              return `| ${label} | ${num(base, fraction)} | ${num(curr, fraction)} | ${delta(m.delta)} |`;
+              const m = metrics[key] ?? {};
+              const base = value(m.base);
+              const curr = value(m.current);
+              const baseValue = transform ? transform(base) : base;
+              const currValue = transform ? transform(curr) : curr;
+              return `| ${label} | ${num(baseValue, fraction)} | ${num(currValue, fraction)} | ${delta(m.delta)} |`;
             }).join('\n');
 
             const body = `${MARKER}\n## TypeScript performance impact\n\n` +
-              `Baseline: \`${report.baseline.ref}\` (\`${report.baseline.sha.slice(0, 10)}\`) · ` +
-              `Current: \`${report.current.sha.slice(0, 10)}\` · ` +
-              `${report.runs} run${report.runs === 1 ? '' : 's'}\n\n` +
+              `Baseline: \`${text(report.baseline?.ref)}\` (\`${text(report.baseline?.sha).slice(0, 10)}\`) · ` +
+              `Current: \`${text(report.current?.sha).slice(0, 10)}\` · ` +
+              `${num(report.runs)} run${value(report.runs) === 1 ? '' : 's'}\n\n` +
               `| Metric | Baseline | Current | Δ |\n` +
               `| --- | ---: | ---: | ---: |\n` +
               tableRows + '\n';
 
             core.info(body);
 
-            if (!noticeable) {
+            if (report.noticeable !== true) {
               core.info('No noticeable change - skipping PR comment.');
               return;
             }

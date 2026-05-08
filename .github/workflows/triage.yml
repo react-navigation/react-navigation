@@ -4,6 +4,9 @@ on:
     types:
       - labeled
 
+permissions:
+  issues: write
+
 jobs:
   needs-more-info:
     runs-on: ubuntu-latest
