@@ -15,13 +15,13 @@ jobs:
           script: |
               const body = "Hey! This issue is closed and isn't watched by the core team. You are welcome to discuss the issue with others in this thread, but if you think this issue is still valid and needs to be tracked, please open a new issue with a repro.";
 
-              const comments = await github.rest.issues.listComments({
+              const comments = await github.paginate(github.rest.issues.listComments, {
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
               });
 
-              if (comments.data.some(comment => comment.body === body)) {
+              if (comments.some((comment) => comment.body === body)) {
                 return;
               }
 
