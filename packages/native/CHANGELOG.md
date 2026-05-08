@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.21...@react-navigation/native@8.0.0-alpha.22) (2026-05-08)
+
+### Bug Fixes
+
+* fix linking prefix matching host with additional characters ([1e8ccb1](https://github.com/react-navigation/react-navigation/commit/1e8ccb1935a5032759aa69bd7cacf761a522e6ec)) - by @satya164
+* fix URLs with hashes not being matched correctly ([cba735f](https://github.com/react-navigation/react-navigation/commit/cba735fe3eed7e743597aa808102855e9ebcaaa9)) - by @satya164
+* handle errors in parsing query params gracefully ([2a3fd56](https://github.com/react-navigation/react-navigation/commit/2a3fd56ff7c7f6a5ad4c2d08d752de74706b9d98)) - by @satya164
+
 # [8.0.0-alpha.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.20...@react-navigation/native@8.0.0-alpha.21) (2026-05-05)
 
 **Note:** Version bump only for package @react-navigation/native

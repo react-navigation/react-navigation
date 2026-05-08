@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.24...@react-navigation/elements@3.0.0-alpha.25) (2026-05-08)
+
+### Bug Fixes
+
+* improve disabled and focusable behavior ([d16e146](https://github.com/react-navigation/react-navigation/commit/d16e146d83083ac0f9b359b7c09fc640629f8220)) - by @satya164
+
 # [3.0.0-alpha.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.23...@react-navigation/elements@3.0.0-alpha.24) (2026-05-05)
 
 ### Bug Fixes
