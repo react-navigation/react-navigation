@@ -466,6 +466,12 @@ export function StackRouter(options: StackRouterOptions) {
 
           if (!route) {
             route = createRouteFromAction({ action, routeParamList });
+          } else {
+            const params = createParamsFromAction({ action, routeParamList });
+
+            if (route.params !== params) {
+              route = { ...route, params };
+            }
           }
 
           return retainRoutes(
@@ -793,6 +799,12 @@ export function StackRouter(options: StackRouterOptions) {
 
             if (!route) {
               route = createRouteFromAction({ action, routeParamList });
+            } else {
+              const params = createParamsFromAction({ action, routeParamList });
+
+              if (route.params !== params) {
+                route = { ...route, params };
+              }
             }
 
             const nextRoutes = routes.slice(0, currentIndex).concat(route);
