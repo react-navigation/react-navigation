@@ -1658,6 +1658,38 @@ test('handles pop action', () => {
   ).toBeNull();
 });
 
+test("doesn't handle pop if source key isn't present when target is specified", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 1,
+        retainedRouteKeys: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+        ],
+      },
+      {
+        ...StackActions.pop(),
+        source: 'magic',
+        target: 'root',
+      },
+      options
+    )
+  ).toBeNull();
+});
+
 test('moves retained routes to inactive routes on pop', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
@@ -4709,7 +4741,7 @@ test('uses preloaded route when replacing current route', () => {
       {
         key: 'bar-preloaded',
         name: 'bar',
-        params: { answer: 42 },
+        params: { color: 'test' },
       },
     ],
   });
@@ -4742,11 +4774,11 @@ test('uses preloaded route with the same ID when replacing current route', () =>
           {
             key: 'bar-preloaded',
             name: 'bar',
-            params: { answer: 42 },
+            params: { answer: 42, stale: 'param' },
           },
         ],
       },
-      StackActions.replace('bar', { answer: 42 }),
+      StackActions.replace('bar', { answer: 42, fruit: 'orange' }),
       options
     )
   ).toEqual({
@@ -4761,7 +4793,7 @@ test('uses preloaded route with the same ID when replacing current route', () =>
       {
         key: 'bar-preloaded',
         name: 'bar',
-        params: { answer: 42 },
+        params: { color: 'test', answer: 42, fruit: 'orange' },
       },
     ],
   });
@@ -4798,7 +4830,7 @@ test('does not use preloaded route with different ID when replacing current rout
           },
         ],
       },
-      StackActions.popTo('bar', { answer: 42 }),
+      StackActions.replace('bar', { answer: 42 }),
       options
     )
   ).toEqual({
@@ -4868,7 +4900,7 @@ test('uses preloaded route with the same name when popTo replaces current route'
       {
         key: 'bar-preloaded',
         name: 'bar',
-        params: { answer: 42 },
+        params: { color: 'test' },
       },
     ],
   });
@@ -4901,11 +4933,11 @@ test('uses preloaded route with the same ID when popTo replaces current route', 
           {
             key: 'bar-preloaded',
             name: 'bar',
-            params: { answer: 42 },
+            params: { answer: 42, stale: 'param' },
           },
         ],
       },
-      StackActions.popTo('bar', { answer: 42 }),
+      StackActions.popTo('bar', { answer: 42, fruit: 'orange' }),
       options
     )
   ).toEqual({
@@ -4920,7 +4952,7 @@ test('uses preloaded route with the same ID when popTo replaces current route', 
       {
         key: 'bar-preloaded',
         name: 'bar',
-        params: { answer: 42 },
+        params: { color: 'test', answer: 42, fruit: 'orange' },
       },
     ],
   });

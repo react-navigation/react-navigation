@@ -4,31 +4,34 @@ on:
     types:
       - labeled
 
+permissions:
+  issues: write
+
 jobs:
   needs-more-info:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'needs more info'
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "Hey! Thanks for opening the issue. Can you provide more information about the issue? Please fill the issue template when opening the issue without deleting any section. We need all the information we can to be able to help.\n\nMake sure to at least provide - Current behaviour, Expected behaviour, A way to [reproduce the issue with minimal code](https://stackoverflow.com/help/minimal-reproducible-example) (link to [snack.expo.dev](https://snack.expo.dev)) or a repo on GitHub, and the information about your environment (such as the platform of the device, exact versions of all the packages mentioned in the template etc.). In addition, if you can provide a video or GIF demonstrating the issue, it will also be very helpful."
+              body: "Hey! Thanks for opening the issue. Can you provide more information about the issue? Please fill the issue template when opening the issue without deleting any section. We need all the information we can to be able to help.\n\nMake sure to at least provide - Current behaviour, Expected behaviour, A way to [reproduce the issue with minimal code](https://stackoverflow.com/help/minimal-reproducible-example) with a public GitHub repo under your username, and the information about your environment (such as the platform of the device, exact versions of all the packages mentioned in the template etc.). In addition, if you can provide a video or GIF demonstrating the issue, it will also be very helpful."
             })
 
   question:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'question'
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -39,11 +42,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'feature-request'
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -54,11 +57,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'platform:windows' || github.event.label.name == 'platform:macos'
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -69,11 +72,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'library:react-native-screens'
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -84,11 +87,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'library:react-native-reanimated'
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -99,11 +102,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'library:react-native-gesture-handler'
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -114,11 +117,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'library:react-native-safe-area-context'
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -129,11 +132,11 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.label.name == 'library:react-native-pager-view'
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            github.issues.createComment({
+            await github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,

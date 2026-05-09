@@ -19,6 +19,7 @@ jobs:
       cancel-in-progress: true
     env:
       MAESTRO_VERSION: 2.2.0
+      MAESTRO_ZIP_SHA256: 6de501d2e8adf2d60f4b6b3174dc4b5e393f2f2617245d350a659627dccb0922
       MAESTRO_CLI_NO_ANALYTICS: 1
       MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
       JAVA_DISTRIBUTION: 'zulu'
@@ -32,7 +33,7 @@ jobs:
       ORG_GRADLE_PROJECT_reactNativeArchitectures: x86_64
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -42,19 +43,19 @@ jobs:
         run: |
           FINGERPRINT=$(npx expo-updates fingerprint:generate --platform android | jq -r '.hash')
           echo "Fingerprint for Android: $FINGERPRINT"
-          echo "fingerprint=$FINGERPRINT" >> $GITHUB_OUTPUT
+          echo "fingerprint=$FINGERPRINT" >> "$GITHUB_OUTPUT"
         working-directory: example
 
       - name: Restore debug build from cache
         id: restore-debug-build
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: android-debug-build/
           key: android-debug-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}
 
       - name: Maximize build space
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: AdityaGarg8/remove-unwanted-software@v4.1
+        uses: AdityaGarg8/remove-unwanted-software@90e01b21170618765a73370fcc3abbd1684a7793
         with:
           remove-dotnet: 'true'
           remove-haskell: 'true'
@@ -63,8 +64,20 @@ jobs:
 
       - name: Install Maestro
         run: |
-          curl -fsSL "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+          maestro_dir="$HOME/.maestro"
+          maestro_tmp_folder="${RUNNER_TEMP:-/tmp}/maestro"
+          maestro_zip_file="$maestro_tmp_folder/maestro.zip"
+          maestro_url="https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
+
+          mkdir -p "$maestro_dir" "$maestro_tmp_folder"
+          curl -fsSL "$maestro_url" -o "$maestro_zip_file"
+          printf '%s  %s\n' "$MAESTRO_ZIP_SHA256" "$maestro_zip_file" | shasum -a 256 -c -
+
+          unzip -q "$maestro_zip_file" -d "$maestro_tmp_folder"
+          rm -rf "${maestro_dir:?}/bin" "${maestro_dir:?}/lib"
+          cp -R "$maestro_tmp_folder/maestro/." "$maestro_dir"
+
+          echo "$maestro_dir/bin" >> "$GITHUB_PATH"
 
       - name: Install AVD dependencies
         run: |
@@ -72,14 +85,14 @@ jobs:
           sudo apt-get install -y libpulse0 libgl1 libxkbfile1
 
       - name: Setup JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
 
       - name: Cache Gradle
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ~/.gradle/caches
@@ -104,20 +117,22 @@ jobs:
 
       - name: Store debug build in cache
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: android-debug-build/
           key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
 
       - name: Setup Android SDK
         run: |
-          echo "$ANDROID_HOME/emulator" >> $GITHUB_PATH
-          echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
-          echo "$ANDROID_HOME/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          {
+            echo "$ANDROID_HOME/emulator"
+            echo "$ANDROID_HOME/platform-tools"
+            echo "$ANDROID_HOME/cmdline-tools/latest/bin"
+          } >> "$GITHUB_PATH"
 
       - name: Cache Android SDK
         id: android-sdk-cache
-        uses: actions/cache@v4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             ${{ env.ANDROID_HOME }}/system-images
@@ -129,8 +144,8 @@ jobs:
       - name: Install Android SDK components
         if: steps.android-sdk-cache.outputs.cache-hit != 'true'
         run: |
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses > /dev/null 2>&1 || true
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --install emulator "platform-tools" "platforms;android-${{ env.API_LEVEL }}" "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install emulator "platform-tools" "platforms;android-${{ env.API_LEVEL }}" "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
 
       - name: Enable KVM
         run: |
@@ -148,9 +163,9 @@ jobs:
       - name: Start emulator
         timeout-minutes: 10
         run: |
-          $ANDROID_HOME/emulator/emulator -avd "${{ env.AVD_NAME }}" ${{ env.EMULATOR_OPTIONS }} &
+          "$ANDROID_HOME/emulator/emulator" -avd "${{ env.AVD_NAME }}" ${{ env.EMULATOR_OPTIONS }} &
           adb wait-for-device
-          adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done'
+          adb shell "while [[ -z \$(getprop sys.boot_completed) ]]; do sleep 1; done"
 
       - name: Wait for Metro bundler
         timeout-minutes: 5
@@ -171,7 +186,7 @@ jobs:
 
       - name: Store debug output
         if: failure() || cancelled()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: maestro-debug-output-android
           path: example/maestro-debug-output/**/*

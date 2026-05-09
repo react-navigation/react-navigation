@@ -1,4 +1,4 @@
-import { useTheme } from '@react-navigation/native';
+import { IsFocusedContext, useTheme } from '@react-navigation/native';
 import * as React from 'react';
 import {
   Animated,
@@ -118,10 +118,22 @@ export function PlatformPressable({
     onPressOut?.(e);
   };
 
+  let focusable: boolean | undefined;
+
+  if (disabled) {
+    focusable = false;
+  } else if (Platform.isTV) {
+    // On `react-native-tvos`, the focus engine doesn't respect `aria-hidden` on screens
+    // So we hide them from TV focus engine for unfocused screens
+    focusable = React.use(IsFocusedContext);
+  }
+
   return (
     <AnimatedPressable
       ref={ref}
       accessible
+      disabled={disabled}
+      focusable={focusable}
       role={Platform.OS === 'web' && rest.href != null ? 'link' : 'button'}
       onPress={disabled ? undefined : handlePress}
       onPressIn={disabled ? undefined : handlePressIn}

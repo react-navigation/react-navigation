@@ -1,9 +1,16 @@
 import type { Theme } from '@react-navigation/core';
-import { PlatformColor } from 'react-native';
+import { Platform, PlatformColor } from 'react-native';
 
 import { fonts } from './fonts';
+import {
+  MaterialDarkFallbackTheme,
+  MaterialLightFallbackTheme,
+} from './MaterialFallbackTheme';
 
-export const MaterialLightTheme = {
+const isDynamicThemeSupported =
+  Platform.OS === 'android' && Platform.Version >= 34;
+
+const MaterialLightDynamicTheme = {
   dark: false,
   colors: {
     primary: PlatformColor('@android:color/system_primary_light'),
@@ -16,7 +23,7 @@ export const MaterialLightTheme = {
   fonts,
 } as const satisfies Theme;
 
-export const MaterialDarkTheme = {
+const MaterialDarkDynamicTheme = {
   dark: true,
   colors: {
     primary: PlatformColor('@android:color/system_primary_dark'),
@@ -28,3 +35,11 @@ export const MaterialDarkTheme = {
   },
   fonts,
 } as const satisfies Theme;
+
+export const MaterialLightTheme = isDynamicThemeSupported
+  ? MaterialLightDynamicTheme
+  : MaterialLightFallbackTheme;
+
+export const MaterialDarkTheme = isDynamicThemeSupported
+  ? MaterialDarkDynamicTheme
+  : MaterialDarkFallbackTheme;

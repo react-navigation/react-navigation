@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.7...@react-navigation/routers@8.0.0-alpha.8) (2026-05-08)
+
+### Bug Fixes
+
+* don't handle invalid source for POP ([a6d152c](https://github.com/react-navigation/react-navigation/commit/a6d152c41cff6fe4905d9af443070616ebb927b8)) - by @satya164
+* fix preload to only handle routes from current navigator ([d05da40](https://github.com/react-navigation/react-navigation/commit/d05da408dfff258ce1caf5afb49aa18f5a232611)) - by @satya164
+* fix replace and popTo not updating params ([4ffe681](https://github.com/react-navigation/react-navigation/commit/4ffe681aa84c55731439fd484d8af09d3e8ae500)) - by @satya164
+
 # [8.0.0-alpha.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.6...@react-navigation/routers@8.0.0-alpha.7) (2026-05-05)
 
 ### Features

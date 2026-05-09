@@ -5,11 +5,14 @@ on:
       - opened
       - edited
 
+permissions:
+  issues: write
+
 jobs:
   check-versions:
     runs-on: ubuntu-latest
     steps:
-      - uses: react-navigation/check-versions-action@v1.2.2
+      - uses: react-navigation/check-versions-action@1f7edac18020a4dc38c4d174bb04311b196f9b75
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           required-packages: |

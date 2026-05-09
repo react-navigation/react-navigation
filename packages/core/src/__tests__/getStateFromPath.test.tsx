@@ -19,6 +19,20 @@ test('returns undefined for invalid path', () => {
   expect(getStateFromPath<object>('//')).toBeUndefined();
 });
 
+test('returns undefined for malformed encoded path segment', () => {
+  expect(getStateFromPath<object>('foo/%E0%A4%A')).toBeUndefined();
+});
+
+test('returns undefined for malformed encoded path param', () => {
+  const config = {
+    screens: {
+      Foo: 'foo/:id',
+    },
+  };
+
+  expect(getStateFromPath<object>('foo/%E0%A4%A', config)).toBeUndefined();
+});
+
 test('converts path string to initial state', () => {
   const path = 'foo/bar/baz%20qux?author=jane%20%26%20co&valid=true';
   const state = {
@@ -3667,6 +3681,136 @@ test('strips null query param when function parser is configured', () => {
         name: 'Foo',
         params: { id: 42 },
         path: 'foo/42?query',
+      },
+    ],
+  });
+});
+
+test('strips nested navigation query params for routes with nested screens', () => {
+  const config = {
+    screens: {
+      Parent: {
+        path: 'parent',
+        screens: {
+          Child: 'child',
+        },
+      },
+    },
+  };
+
+  const path =
+    'parent?screen=Child&params=value&initial=false&path=/child&merge=true&pop=true&state=keep&query=test';
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Parent',
+        params: {
+          query: 'test',
+          state: 'keep',
+        },
+        path,
+      },
+    ],
+  });
+});
+
+test("doesn't strip nested navigation query params for leaf routes", () => {
+  const config = {
+    screens: {
+      Leaf: 'leaf',
+    },
+  };
+
+  const path =
+    'leaf?screen=Child&params=value&initial=false&path=/child&merge=true&pop=true';
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Leaf',
+        params: {
+          screen: 'Child',
+          params: 'value',
+          initial: 'false',
+          path: '/child',
+          merge: 'true',
+          pop: 'true',
+        },
+        path,
+      },
+    ],
+  });
+});
+
+test("doesn't strip nested navigation query params without screen", () => {
+  const config = {
+    screens: {
+      Parent: {
+        path: 'parent',
+        screens: {
+          Child: 'child',
+        },
+      },
+    },
+  };
+
+  const path =
+    'parent?params=value&initial=false&path=/child&merge=true&pop=true';
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Parent',
+        params: {
+          params: 'value',
+          initial: 'false',
+          path: '/child',
+          merge: 'true',
+          pop: 'true',
+        },
+        path,
+      },
+    ],
+  });
+});
+
+test('keeps reserved query params configured with parsers on routes with nested screens', () => {
+  const config = {
+    screens: {
+      Parent: {
+        path: 'parent',
+        parse: {
+          screen: (value: string) => value.toUpperCase(),
+          params: (value: string) => `parsed:${value}`,
+          initial: z.string().transform((value) => `schema:${value}`),
+          path: (value: string) => `parsed:${value}`,
+          merge: (value: string) => value === 'true',
+          pop: (value: string) => value === 'true',
+        },
+        screens: {
+          Child: 'child',
+        },
+      },
+    },
+  };
+
+  const path =
+    'parent?screen=Child&params=value&initial=false&path=/child&merge=true&pop=true';
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Parent',
+        params: {
+          screen: 'CHILD',
+          params: 'parsed:value',
+          initial: 'schema:false',
+          path: 'parsed:/child',
+          merge: true,
+          pop: true,
+        },
+        path,
       },
     ],
   });

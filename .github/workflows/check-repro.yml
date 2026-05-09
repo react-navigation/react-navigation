@@ -10,12 +10,15 @@ on:
       - created
       - edited
 
+permissions:
+  issues: write
+
 jobs:
   check-repro:
     runs-on: ubuntu-latest
     if: (github.event.action == 'labeled' && github.event.label.name == 'needs repro') || github.event.action != 'labeled'
     steps:
-      - uses: actions/github-script@v3
+      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -27,12 +30,12 @@ jobs:
               : context.payload.issue.body;
 
             const regex = new RegExp(
-              `https?:\\/\\/((github\\.com\\/${user}\\/[^/]+\\/?[\\s\\n]+)|(snack\\.expo\\.dev\\/.+)|(www\\.typescriptlang\\.org\\/play\\?.+))`,
+              `https?:\\/\\/((github\\.com\\/${user}\\/[^/\\s]+(?:\\/tree\\/[^\\s]+)?\\/?(?:\\s|$))|(www\\.typescriptlang\\.org\\/play\\?.+))`,
               'gm'
             );
 
             if (context.payload.action != 'labeled' && regex.test(body)) {
-              await github.issues.addLabels({
+              await github.rest.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -40,7 +43,7 @@ jobs:
               });
 
               try {
-                await github.issues.removeLabel({
+                await github.rest.issues.removeLabel({
                   issue_number: context.issue.number,
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -62,17 +65,19 @@ jobs:
 
               You can provide a repro using any of the following:
 
-              - [Expo Snack](https://snack.expo.io)
+              - Public GitHub repo under your username
               - [TypeScript Playground](https://www.typescriptlang.org/play)
-              - GitHub repo under your username
 
-              A snack link is preferred since it's the easiest way to both create and share a repro. If it's not possible to create a repro using a snack, link to a GitHub repo under your username is a good alternative. **Don't link to a branch or specific file etc.** as it won't be detected.
+              Try to keep the repro as small as possible by narrowing down the minimal amount of code needed to reproduce the issue. See ["How to create a Minimal, Reproducible Example"](https://stackoverflow.com/help/minimal-reproducible-example) for more information.
 
-              Try to keep the repro as small as possible by narrowing down the minimal amount of code needed to reproduce the issue. **Don't link to your entire project or a project containing code unrelated to the issue.** See ["How to create a Minimal, Reproducible Example"](https://stackoverflow.com/help/minimal-reproducible-example) for more information.
+              **Don't:**
+
+              - Link to your entire project or a project containing code unrelated to the issue.
+              - Link to a specific file in a GitHub repo, as it won't be detected.
 
               You can edit your original issue to include a link to the repro, or leave it as a comment. **The issue will be closed automatically after a while** if you don't provide a valid repro.`
 
-              const comments = await github.issues.listComments({
+              const comments = await github.rest.issues.listComments({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -82,14 +87,14 @@ jobs:
                 return;
               }
 
-              await github.issues.createComment({
+              await github.rest.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 body,
               });
 
-              await github.issues.addLabels({
+              await github.rest.issues.addLabels({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,

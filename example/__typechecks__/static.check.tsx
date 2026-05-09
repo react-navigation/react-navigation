@@ -500,6 +500,35 @@ createStackNavigator({
 });
 
 /**
+ * Rejects unknown properties on the navigator config
+ */
+createStackNavigator({
+  screens: {},
+  // @ts-expect-error
+  bogusOption: 'oops',
+});
+
+createStackNavigator({
+  groups: {},
+  // @ts-expect-error
+  unknownKey: true,
+  // @ts-expect-error
+  anotherOne: 123,
+});
+
+createBottomTabNavigator({
+  screens: {},
+  // @ts-expect-error
+  notARealKey: 1,
+});
+
+createNativeStackNavigator({
+  screens: {},
+  // @ts-expect-error
+  screenOption: {},
+});
+
+/**
  * Infer types from group without screens
  */
 const MyTabs = createBottomTabNavigator({

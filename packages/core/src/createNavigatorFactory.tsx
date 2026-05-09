@@ -13,6 +13,7 @@ import type {
   NavigatorTypeBagFor,
   TypedNavigator,
 } from './types';
+import type { KeysOf } from './utilities';
 
 export type TypedNavigatorFactory<in out TypeBag extends NavigatorTypeBagBase> =
   {
@@ -23,7 +24,18 @@ export type TypedNavigatorFactory<in out TypeBag extends NavigatorTypeBagBase> =
     <
       const Config extends StaticConfig<
         NavigatorTypeBagFor<TypeBag, ParamListBase>
-      >,
+      > &
+        // TS only checks for excess properties for non-generic object literal types.
+        // Since `Config` is generic, extra keys satisfy the constraint and slip through.
+        // So we force any key in `Config` that isn't a known key to have the type `never`,
+        // Thus causing an error for any extra key.
+        Record<
+          Exclude<
+            keyof Config,
+            KeysOf<StaticConfig<NavigatorTypeBagFor<TypeBag, ParamListBase>>>
+          >,
+          never
+        >,
     >(
       config: Config
     ): TypedNavigator<

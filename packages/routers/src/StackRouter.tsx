@@ -466,6 +466,12 @@ export function StackRouter(options: StackRouterOptions) {
 
           if (!route) {
             route = createRouteFromAction({ action, routeParamList });
+          } else {
+            const params = createParamsFromAction({ action, routeParamList });
+
+            if (route.params !== params) {
+              route = { ...route, params };
+            }
           }
 
           return retainRoutes(
@@ -644,6 +650,10 @@ export function StackRouter(options: StackRouterOptions) {
               ? routes.findIndex((r) => r.key === action.source)
               : state.index;
 
+          if (currentIndex === -1) {
+            return null;
+          }
+
           let route = routes[currentIndex];
 
           /**
@@ -789,6 +799,12 @@ export function StackRouter(options: StackRouterOptions) {
 
             if (!route) {
               route = createRouteFromAction({ action, routeParamList });
+            } else {
+              const params = createParamsFromAction({ action, routeParamList });
+
+              if (route.params !== params) {
+                route = { ...route, params };
+              }
             }
 
             const nextRoutes = routes.slice(0, currentIndex).concat(route);
@@ -891,6 +907,10 @@ export function StackRouter(options: StackRouterOptions) {
         }
 
         case 'PRELOAD': {
+          if (!state.routeNames.includes(action.payload.name)) {
+            return null;
+          }
+
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
           const params = createParamsFromAction({ action, routeParamList });

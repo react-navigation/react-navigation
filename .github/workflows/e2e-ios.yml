@@ -19,6 +19,7 @@ jobs:
       cancel-in-progress: true
     env:
       MAESTRO_VERSION: 2.2.0
+      MAESTRO_ZIP_SHA256: 6de501d2e8adf2d60f4b6b3174dc4b5e393f2f2617245d350a659627dccb0922
       MAESTRO_CLI_NO_ANALYTICS: 1
       MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
       JAVA_DISTRIBUTION: 'zulu'
@@ -28,7 +29,7 @@ jobs:
       CCACHE_COMPILERCHECK: content
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - name: Setup
         uses: ./.github/actions/setup
@@ -38,25 +39,37 @@ jobs:
         run: |
           FINGERPRINT=$(npx expo-updates fingerprint:generate --platform ios | jq -r '.hash')
           echo "Fingerprint for iOS: $FINGERPRINT"
-          echo "fingerprint=$FINGERPRINT" >> $GITHUB_OUTPUT
+          echo "fingerprint=$FINGERPRINT" >> "$GITHUB_OUTPUT"
         working-directory: example
 
       - name: Restore debug build from cache
         id: restore-debug-build
-        uses: actions/cache/restore@v4
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: ios-debug-build/
           key: ios-debug-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}
 
       - name: Use appropriate Xcode version
-        uses: maxim-lobanov/setup-xcode@v1
+        uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90
         with:
           xcode-version: '26.3'
 
       - name: Install Maestro
         run: |
-          curl -fsSL "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+          maestro_dir="$HOME/.maestro"
+          maestro_tmp_folder="${RUNNER_TEMP:-/tmp}/maestro"
+          maestro_zip_file="$maestro_tmp_folder/maestro.zip"
+          maestro_url="https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
+
+          mkdir -p "$maestro_dir" "$maestro_tmp_folder"
+          curl -fsSL "$maestro_url" -o "$maestro_zip_file"
+          printf '%s  %s\n' "$MAESTRO_ZIP_SHA256" "$maestro_zip_file" | shasum -a 256 -c -
+
+          unzip -q "$maestro_zip_file" -d "$maestro_tmp_folder"
+          rm -rf "${maestro_dir:?}/bin" "${maestro_dir:?}/lib"
+          cp -R "$maestro_tmp_folder/maestro/." "$maestro_dir"
+
+          echo "$maestro_dir/bin" >> "$GITHUB_PATH"
 
       - name: Install macOS dependencies
         run: |
@@ -65,7 +78,7 @@ jobs:
 
       - name: Cache CocoaPods
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: |
             example/ios/Pods
@@ -77,7 +90,7 @@ jobs:
 
       - name: Cache DerivedData
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: example/ios/build
           key: ios-deriveddata-${{ runner.os }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
@@ -86,7 +99,7 @@ jobs:
 
       - name: Cache ccache
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: ~/.ccache
           key: ios-ccache-${{ runner.os }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
@@ -96,7 +109,7 @@ jobs:
       - name: Set ccache directory
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
         run: |
-          echo "CCACHE_DIR=$HOME/.ccache" >> $GITHUB_ENV
+          echo "CCACHE_DIR=$HOME/.ccache" >> "$GITHUB_ENV"
 
       - name: Build iOS App
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -121,13 +134,13 @@ jobs:
 
       - name: Store debug build in cache
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: ios-debug-build/
           key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
 
       - name: Setup JDK
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
           java-version: ${{ env.JAVA_VERSION }}
@@ -156,7 +169,7 @@ jobs:
           echo "Simulator is booted!"
 
           # Add deep link handler so we don't see a prompt when running tests
-          /usr/libexec/PlistBuddy ~/Library/Developer/CoreSimulator/Devices/${DEVICE_ID}/data/Library/Preferences/com.apple.launchservices.schemeapproval.plist -c "add com.apple.CoreSimulator.CoreSimulatorBridge-->rne string org.reactnavigation.playground"
+          /usr/libexec/PlistBuddy "$HOME/Library/Developer/CoreSimulator/Devices/${DEVICE_ID}/data/Library/Preferences/com.apple.launchservices.schemeapproval.plist" -c "add com.apple.CoreSimulator.CoreSimulatorBridge-->rne string org.reactnavigation.playground"
 
       - name: Wait for Metro bundler
         timeout-minutes: 5
@@ -178,7 +191,7 @@ jobs:
 
       - name: Store debug output
         if: failure() || cancelled()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: maestro-debug-output-ios
           path: example/maestro-debug-output/**/*
@@ -187,7 +200,7 @@ jobs:
 
       - name: Store device logs
         if: failure() || cancelled()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: maestro-simulator-output
           path: |

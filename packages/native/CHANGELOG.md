@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.22...@react-navigation/native@8.0.0-alpha.23) (2026-05-08)
+
+### Bug Fixes
+
+* don't log error for URL parsing ([f81c300](https://github.com/react-navigation/react-navigation/commit/f81c30073346bd2806d4c971196c738d1f0d6151)) - by @
+
+### Features
+
+* add fallback material themes for older Android ([77716d4](https://github.com/react-navigation/react-navigation/commit/77716d44000e41b0c5a584c184de9a2623d75d8e)) - by @
+
+# [8.0.0-alpha.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.21...@react-navigation/native@8.0.0-alpha.22) (2026-05-08)
+
+### Bug Fixes
+
+* fix linking prefix matching host with additional characters ([1e8ccb1](https://github.com/react-navigation/react-navigation/commit/1e8ccb1935a5032759aa69bd7cacf761a522e6ec)) - by @satya164
+* fix URLs with hashes not being matched correctly ([cba735f](https://github.com/react-navigation/react-navigation/commit/cba735fe3eed7e743597aa808102855e9ebcaaa9)) - by @satya164
+* handle errors in parsing query params gracefully ([2a3fd56](https://github.com/react-navigation/react-navigation/commit/2a3fd56ff7c7f6a5ad4c2d08d752de74706b9d98)) - by @satya164
+
 # [8.0.0-alpha.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.20...@react-navigation/native@8.0.0-alpha.21) (2026-05-05)
 
 **Note:** Version bump only for package @react-navigation/native

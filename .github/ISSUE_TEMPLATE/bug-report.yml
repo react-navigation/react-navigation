@@ -40,8 +40,7 @@ body:
       description: |
         You must provide a way to reproduce the problem. If you don't provide a repro, the issue will be closed automatically after a specific period.
 
-        - [Snack](https://snack.expo.dev) is the easiest way to share a repro.
-        - If you can't reproduce the bug on Snack, provide a link to a GitHub repository under your username that reproduces the bug.
+        - Provide a link to a public GitHub repository under your username that reproduces the bug.
         - For TypeScript related issues, use [TypeScript Playground](https://www.typescriptlang.org/play) to reproduce the issue.
 
         Keep the repro code as simple as possible, with the minimum amount of code required to repro the issue.

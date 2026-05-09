@@ -38,7 +38,7 @@ export { ThemeProvider } from './theming/ThemeProvider';
 export { useTheme } from './theming/useTheme';
 export * from './types';
 export { useFocusEffect } from './useFocusEffect';
-export { useIsFocused } from './useIsFocused';
+export { IsFocusedContext, useIsFocused } from './useIsFocused';
 export { useNavigation } from './useNavigation';
 export { useNavigationBuilder } from './useNavigationBuilder';
 export { useNavigationContainerRef } from './useNavigationContainerRef';

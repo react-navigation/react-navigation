@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.13...@react-navigation/core@8.0.0-alpha.14) (2026-05-08)
+
+### Bug Fixes
+
+* add make-shift excess property checking ([21a0a94](https://github.com/react-navigation/react-navigation/commit/21a0a94ef7ff612e9cc3cac6f7cb864b434b0490)) - by @satya164
+* handle errors in parsing query params gracefully ([2a3fd56](https://github.com/react-navigation/react-navigation/commit/2a3fd56ff7c7f6a5ad4c2d08d752de74706b9d98)) - by @satya164
+* improve disabled and focusable behavior ([d16e146](https://github.com/react-navigation/react-navigation/commit/d16e146d83083ac0f9b359b7c09fc640629f8220)) - by @satya164
+* strip reserved param names from the URL ([a07bfc2](https://github.com/react-navigation/react-navigation/commit/a07bfc2f619c0f16de1748efc1c2de64ba739566)) - by @satya164
+
 # [8.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.12...@react-navigation/core@8.0.0-alpha.13) (2026-05-05)
 
 ### Features
