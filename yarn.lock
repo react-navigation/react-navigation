@@ -4307,7 +4307,7 @@ __metadata:
     react-native: "npm:0.83.4"
     react-native-builder-bob: "npm:^0.41.0"
     react-native-safe-area-context: "npm:~5.6.2"
-    react-native-screens: "npm:^4.24.0"
+    react-native-screens: "npm:4.25.0-beta.3"
     react-test-renderer: "npm:19.2.0"
     typescript: "npm:^6.0.2"
   peerDependencies:
@@ -4315,7 +4315,7 @@ __metadata:
     react: ">= 19.2.0"
     react-native: "*"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.24.0"
+    react-native-screens: ">= 4.25.0-beta.3"
   languageName: unknown
   linkType: soft
 
@@ -4384,7 +4384,7 @@ __metadata:
     react-native-gesture-handler: "npm:~2.30.0"
     react-native-reanimated: "npm:~4.2.1"
     react-native-safe-area-context: "npm:~5.6.2"
-    react-native-screens: "npm:^4.24.0"
+    react-native-screens: "npm:4.25.0-beta.3"
     react-native-worklets: "npm:0.7.2"
     react-test-renderer: "npm:19.2.0"
     typescript: "npm:^6.0.2"
@@ -4396,7 +4396,7 @@ __metadata:
     react-native-gesture-handler: ">= 2.0.0"
     react-native-reanimated: ">= 4.0.0"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.24.0"
+    react-native-screens: ">= 4.25.0-beta.3"
     react-native-worklets: ">= 0.4.0"
   languageName: unknown
   linkType: soft
@@ -4415,7 +4415,7 @@ __metadata:
     react: "npm:19.2.0"
     react-native: "npm:0.83.4"
     react-native-builder-bob: "npm:^0.41.0"
-    react-native-screens: "npm:^4.24.0"
+    react-native-screens: "npm:4.25.0-beta.3"
     react-test-renderer: "npm:19.2.0"
     sf-symbols-typescript: "npm:^2.2.0"
     typescript: "npm:^6.0.2"
@@ -4427,7 +4427,7 @@ __metadata:
     react: ">= 19.2.0"
     react-native: "*"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.24.0"
+    react-native-screens: ">= 4.25.0-beta.3"
   languageName: unknown
   linkType: soft
 
@@ -4487,7 +4487,7 @@ __metadata:
     react-native-pager-view: "npm:^8.0.0"
     react-native-reanimated: "npm:~4.2.1"
     react-native-safe-area-context: "npm:~5.6.2"
-    react-native-screens: "npm:^4.24.0"
+    react-native-screens: "npm:4.25.0-beta.3"
     react-native-showtime: "npm:^0.0.5"
     react-native-tab-view: "workspace:^"
     react-native-web: "npm:~0.21.2"
@@ -4542,7 +4542,7 @@ __metadata:
     react: "npm:19.2.0"
     react-native: "npm:0.83.4"
     react-native-builder-bob: "npm:^0.41.0"
-    react-native-screens: "npm:^4.24.0"
+    react-native-screens: "npm:4.25.0-beta.3"
     react-test-renderer: "npm:19.2.0"
     typescript: "npm:^6.0.2"
     warn-once: "npm:^0.1.1"
@@ -4551,7 +4551,7 @@ __metadata:
     react: ">= 19.2.0"
     react-native: "*"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.24.0"
+    react-native-screens: ">= 4.25.0-beta.3"
   languageName: unknown
   linkType: soft
 
@@ -4608,7 +4608,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.41.0"
     react-native-gesture-handler: "npm:~2.30.0"
     react-native-safe-area-context: "npm:~5.6.2"
-    react-native-screens: "npm:^4.24.0"
+    react-native-screens: "npm:4.25.0-beta.3"
     react-test-renderer: "npm:19.2.0"
     typescript: "npm:^6.0.2"
     use-latest-callback: "npm:^0.3.3"
@@ -4618,7 +4618,7 @@ __metadata:
     react-native: "*"
     react-native-gesture-handler: ">= 2.0.0"
     react-native-safe-area-context: ">= 5.5.0"
-    react-native-screens: ">= 4.24.0"
+    react-native-screens: ">= 4.25.0-beta.3"
   languageName: unknown
   linkType: soft
 
@@ -13463,16 +13463,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-screens@npm:^4.24.0":
-  version: 4.24.0
-  resolution: "react-native-screens@npm:4.24.0"
+"react-native-screens@npm:4.25.0-beta.3":
+  version: 4.25.0-beta.3
+  resolution: "react-native-screens@npm:4.25.0-beta.3"
   dependencies:
     react-freeze: "npm:^1.0.0"
     warn-once: "npm:^0.1.0"
   peerDependencies:
     react: "*"
-    react-native: "*"
-  checksum: 10c0/49299e694ed20cf5a8c0f86702eb77df03f5b7353d9b73e7415bb593ac5ff3aa4dfe76b1e9d8efb0fd926917e507f02f13e0a8791c8833910080454b66d99943
+    react-native: ">=0.82.0"
+  checksum: 10c0/78eef4e2c2a280bfeb5b3cc6445674e2f4418de39bd42cb1f65abfc733cf76de3bf9eeef76d8d23750a5f8cf2c4cd1d34cdb5b139bf18c184b88fd17ca4424a9
   languageName: node
   linkType: hard
 

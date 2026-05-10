@@ -28,7 +28,7 @@ import type {
 import type {
   TabBarItemLabelVisibilityMode,
   TabsScreenBlurEffect,
-  TabsSystemItem,
+  TabsScreenSystemItem,
 } from 'react-native-screens';
 
 export type Variant = 'uikit' | 'material';
@@ -262,7 +262,7 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  tabBarSystemItem?: TabsSystemItem;
+  tabBarSystemItem?: TabsScreenSystemItem;
 
   /**
    * Blur effect applied to the tab bar when tab screen is selected.

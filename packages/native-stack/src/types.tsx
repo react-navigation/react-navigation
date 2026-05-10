@@ -20,6 +20,7 @@ import type {
   ScrollEdgeEffect,
   SearchBarProps,
 } from 'react-native-screens';
+import type { StackHeaderConfigProps } from 'react-native-screens/experimental';
 
 export type NativeStackNavigationEventMap = {
   /**
@@ -807,6 +808,13 @@ export type NativeStackNavigationOptions = {
    * @platform android
    */
   unstable_sheetFooter?: (() => React.ReactNode) | undefined;
+
+  /**
+   * Configuration for the experimental native stack header.
+   *
+   * Only used by `@react-navigation/native-stack/next`.
+   */
+  unstable_headerConfig?: StackHeaderConfigProps | undefined;
 
   /**
    * What should happen when screens become inactive.

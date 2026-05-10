@@ -732,7 +732,7 @@ useLinkProps({ screen: 'StackBasic' });
 useLinkProps({ screen: 'StackBasi' });
 useLinkProps({
   screen: 'StackBasic',
-  params: { screen: 'Albums' },
+  params: { screen: 'StackAlbums' },
 });
 useLinkProps({ screen: 'Home' });
 useLinkProps({
@@ -744,7 +744,7 @@ useLinkProps({
 <Link screen="StackBasic">StackBasic</Link>;
 // @ts-expect-error
 <Link screen="StackBasi">StackBasic</Link>;
-<Link screen="StackBasic" params={{ screen: 'Albums' }}>
+<Link screen="StackBasic" params={{ screen: 'StackAlbums' }}>
   StackBasic
 </Link>;
 <Link screen="Home">Home</Link>;
@@ -756,7 +756,7 @@ useLinkProps({
 <Button screen="StackBasic">StackBasic</Button>;
 // @ts-expect-error
 <Button screen="StackBasi">StackBasic</Button>;
-<Button screen="StackBasic" params={{ screen: 'Albums' }}>
+<Button screen="StackBasic" params={{ screen: 'StackAlbums' }}>
   StackBasic
 </Button>;
 <Button screen="Home">Home</Button>;

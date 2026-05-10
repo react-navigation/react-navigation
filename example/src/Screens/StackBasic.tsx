@@ -16,19 +16,24 @@ import { NewsFeed } from '../Shared/NewsFeed';
 const scrollEnabled = Platform.select({ web: true, default: false });
 
 const ArticleScreen = () => {
-  const navigation = useNavigation('Article');
-  const route = useRoute('Article');
+  const navigation = useNavigation('StackArticle');
+  const route = useRoute('StackArticle');
 
   return (
     <ScrollView>
       <View style={styles.buttons}>
         <Button
           variant="filled"
-          onPress={() => navigation.navigate('NewsFeed', { date: Date.now() })}
+          onPress={() =>
+            navigation.navigate('StackNewsFeed', { date: Date.now() })
+          }
         >
           Navigate to feed
         </Button>
-        <Button variant="filled" onPress={() => navigation.popTo('Albums')}>
+        <Button
+          variant="filled"
+          onPress={() => navigation.popTo('StackAlbums')}
+        >
           Pop to albums
         </Button>
         <Button
@@ -55,13 +60,16 @@ const ArticleScreen = () => {
 };
 
 const NewsFeedScreen = () => {
-  const route = useRoute('NewsFeed');
-  const navigation = useNavigation('NewsFeed');
+  const route = useRoute('StackNewsFeed');
+  const navigation = useNavigation('StackNewsFeed');
 
   return (
     <ScrollView>
       <View style={styles.buttons}>
-        <Button variant="filled" onPress={() => navigation.replace('Contacts')}>
+        <Button
+          variant="filled"
+          onPress={() => navigation.replace('StackContacts')}
+        >
           Replace with contacts
         </Button>
         <Button variant="tinted" onPress={() => navigation.popTo('Home')}>
@@ -77,7 +85,7 @@ const NewsFeedScreen = () => {
 };
 
 const ContactsScreen = () => {
-  const navigation = useNavigation('Contacts');
+  const navigation = useNavigation('StackContacts');
   const [query, setQuery] = React.useState('');
 
   React.useLayoutEffect(() => {
@@ -96,7 +104,10 @@ const ContactsScreen = () => {
       query={query}
       ListHeaderComponent={
         <View style={styles.buttons}>
-          <Button variant="filled" onPress={() => navigation.push('Albums')}>
+          <Button
+            variant="filled"
+            onPress={() => navigation.push('StackAlbums')}
+          >
             Push albums
           </Button>
           <Button variant="tinted" onPress={() => navigation.goBack()}>
@@ -109,14 +120,16 @@ const ContactsScreen = () => {
 };
 
 const AlbumsScreen = () => {
-  const navigation = useNavigation('Albums');
+  const navigation = useNavigation('StackAlbums');
 
   return (
     <ScrollView>
       <View style={styles.buttons}>
         <Button
           variant="filled"
-          onPress={() => navigation.push('Article', { author: 'Babel fish' })}
+          onPress={() =>
+            navigation.push('StackArticle', { author: 'Babel fish' })
+          }
         >
           Push article
         </Button>
@@ -131,7 +144,7 @@ const AlbumsScreen = () => {
 
 const StackBasicNavigator = createStackNavigator({
   screens: {
-    Article: createStackScreen({
+    StackArticle: createStackScreen({
       screen: ArticleScreen,
       options: ({ route }) => ({
         title: `Article by ${route.params?.author ?? 'Unknown'}`,
@@ -140,12 +153,12 @@ const StackBasicNavigator = createStackNavigator({
       getId: ({ params }) => params?.author,
       linking: COMMON_LINKING_CONFIG.Article,
     }),
-    NewsFeed: createStackScreen({
+    StackNewsFeed: createStackScreen({
       screen: NewsFeedScreen,
       options: { title: 'Feed' },
       linking: COMMON_LINKING_CONFIG.NewsFeed,
     }),
-    Contacts: createStackScreen({
+    StackContacts: createStackScreen({
       screen: ContactsScreen,
       options: {
         headerSearchBarOptions: {
@@ -154,7 +167,7 @@ const StackBasicNavigator = createStackNavigator({
       },
       linking: 'contacts',
     }),
-    Albums: createStackScreen({
+    StackAlbums: createStackScreen({
       screen: AlbumsScreen,
       options: { title: 'Albums' },
       linking: 'albums',

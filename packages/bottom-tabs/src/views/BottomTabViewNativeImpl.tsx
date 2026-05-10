@@ -18,14 +18,19 @@ import * as React from 'react';
 import {
   Animated,
   type ColorValue,
+  type NativeSyntheticEvent,
   Platform,
   PlatformColor,
   StyleSheet,
 } from 'react-native';
 import {
-  type PlatformIcon,
+  type PlatformIconAndroid,
+  type PlatformIconIOS,
   Tabs,
-  type TabsScreenItemStateAppearance,
+  type TabsBottomAccessoryEnvironment,
+  type TabSelectedEvent,
+  type TabsScreenItemStateAppearanceAndroid,
+  type TabsScreenItemStateAppearanceIOS,
 } from 'react-native-screens';
 
 import type {
@@ -53,6 +58,12 @@ const meta = {
   type: 'native-tabs',
 };
 
+type PlatformIcon = {
+  ios?: PlatformIconIOS | undefined;
+  android?: PlatformIconAndroid | undefined;
+  shared?: (PlatformIconIOS & PlatformIconAndroid) | undefined;
+};
+
 export function BottomTabViewNative({
   state,
   navigation,
@@ -75,6 +86,15 @@ export function BottomTabViewNative({
   } | null>(null);
 
   const previousRouteKeyRef = React.useRef(focusedRouteKey);
+  const provenanceRef = React.useRef(0);
+
+  const navStateRequest = React.useMemo(
+    () => ({
+      selectedScreenKey: focusedRouteKey,
+      baseProvenance: provenanceRef.current,
+    }),
+    [focusedRouteKey]
+  );
 
   React.useEffect(() => {
     const previousRouteKey = previousRouteKeyRef.current;
@@ -241,37 +261,23 @@ export function BottomTabViewNative({
         ? tabBarElement
         : null}
       <Tabs.Host
+        navStateRequest={navStateRequest}
         tabBarHidden={hasCustomTabBar || shouldHideTabBar}
-        bottomAccessory={
-          bottomAccessory
-            ? (environment) => bottomAccessory({ placement: environment })
-            : undefined
-        }
-        tabBarItemLabelVisibilityMode={
-          currentOptions?.tabBarLabelVisibilityMode
-        }
-        tabBarControllerMode={tabBarControllerMode}
-        tabBarMinimizeBehavior={tabBarMinimizeBehavior}
-        tabBarTintColor={activeTintColor}
-        tabBarItemIconColor={inactiveTintColor}
-        tabBarItemIconColorActive={activeTintColor}
-        tabBarItemTitleFontColor={inactiveTintColor ?? fontColor}
-        tabBarItemTitleFontColorActive={activeTintColor}
-        tabBarItemTitleFontFamily={fontFamily}
-        tabBarItemTitleFontWeight={fontWeight}
-        tabBarItemTitleFontSize={fontSize}
-        tabBarItemTitleFontSizeActive={fontSize}
-        tabBarItemTitleFontStyle={fontStyle}
-        tabBarBackgroundColor={backgroundColor}
-        tabBarItemActiveIndicatorColor={activeIndicatorColor}
-        tabBarItemActiveIndicatorEnabled={
-          currentOptions?.tabBarActiveIndicatorEnabled
-        }
-        tabBarItemRippleColor={currentOptions?.tabBarRippleColor}
-        experimentalControlNavigationStateInJS={false}
-        onNativeFocusChange={(e) => {
+        colorScheme={dark ? 'dark' : 'light'}
+        ios={{
+          bottomAccessory: bottomAccessory
+            ? (environment: TabsBottomAccessoryEnvironment) =>
+                bottomAccessory({ placement: environment })
+            : undefined,
+          tabBarControllerMode,
+          tabBarMinimizeBehavior,
+          tabBarTintColor: activeTintColor,
+        }}
+        onTabSelected={(e: NativeSyntheticEvent<TabSelectedEvent>) => {
+          provenanceRef.current = e.nativeEvent.provenance;
+
           const route = state.routes.find(
-            (route) => route.key === e.nativeEvent.tabKey
+            (route) => route.key === e.nativeEvent.selectedScreenKey
           );
 
           if (route) {
@@ -324,7 +330,6 @@ export function BottomTabViewNative({
             tabBarAccessibilityLabel,
             tabBarButtonTestID,
             sceneStyle,
-            scrollEdgeEffects,
             overrideScrollViewContentInsetAdjustmentBehavior,
           } = options;
 
@@ -345,7 +350,7 @@ export function BottomTabViewNative({
           const badgeTextColor =
             tabBarBadgeStyle?.color ?? Color.foreground(badgeBackgroundColor);
 
-          const tabItemAppearance: TabsScreenItemStateAppearance = {
+          const tabItemAppearanceIOS: TabsScreenItemStateAppearanceIOS = {
             tabBarItemTitleFontFamily: fontFamily,
             tabBarItemTitleFontSize: fontSize,
             tabBarItemTitleFontWeight: fontWeight,
@@ -354,6 +359,12 @@ export function BottomTabViewNative({
             tabBarItemIconColor: inactiveTintColor,
             tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
           };
+
+          const tabItemAppearanceAndroid: TabsScreenItemStateAppearanceAndroid =
+            {
+              tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
+              tabBarItemIconColor: inactiveTintColor,
+            };
 
           const getIcon = (selected: boolean) => {
             if (typeof tabBarIcon === 'function') {
@@ -402,73 +413,77 @@ export function BottomTabViewNative({
               onWillAppear={() => onTransitionStart({ route })}
               onDidAppear={() => onTransitionEnd({ route })}
               key={route.key}
-              tabKey={route.key}
-              icon={icon}
-              selectedIcon={selectedIcon?.ios ?? selectedIcon?.shared}
-              tabBarItemBadgeBackgroundColor={badgeBackgroundColor}
-              tabBarItemBadgeTextColor={badgeTextColor}
+              screenKey={route.key}
               tabBarItemAccessibilityLabel={tabBarAccessibilityLabel}
               tabBarItemTestID={tabBarButtonTestID}
               badgeValue={tabBarBadge?.toString()}
-              systemItem={tabBarSystemItem}
-              isFocused={isFocused}
               title={tabTitle}
-              scrollEdgeEffects={{
-                top:
-                  scrollEdgeEffects?.top === 'auto'
-                    ? 'automatic'
-                    : scrollEdgeEffects?.top,
-                bottom:
-                  scrollEdgeEffects?.bottom === 'auto'
-                    ? 'automatic'
-                    : scrollEdgeEffects?.bottom,
-                left:
-                  scrollEdgeEffects?.left === 'auto'
-                    ? 'automatic'
-                    : scrollEdgeEffects?.left,
-                right:
-                  scrollEdgeEffects?.right === 'auto'
-                    ? 'automatic'
-                    : scrollEdgeEffects?.right,
-              }}
-              scrollEdgeAppearance={{
-                tabBarBackgroundColor,
-                tabBarShadowColor,
-                tabBarBlurEffect,
-                stacked: {
-                  normal: tabItemAppearance,
-                },
-                inline: {
-                  normal: tabItemAppearance,
-                },
-                compactInline: {
-                  normal: tabItemAppearance,
-                },
-              }}
-              standardAppearance={{
-                tabBarBackgroundColor,
-                tabBarShadowColor,
-                tabBarBlurEffect,
-                stacked: {
-                  normal: tabItemAppearance,
-                },
-                inline: {
-                  normal: tabItemAppearance,
-                },
-                compactInline: {
-                  normal: tabItemAppearance,
-                },
-              }}
               specialEffects={{
                 repeatedTabSelection: {
                   popToRoot: true,
                   scrollToTop: true,
                 },
               }}
-              overrideScrollViewContentInsetAdjustmentBehavior={
-                overrideScrollViewContentInsetAdjustmentBehavior
-              }
-              experimental_userInterfaceStyle={dark ? 'dark' : 'light'}
+              android={{
+                icon: icon?.android ?? icon?.shared,
+                selectedIcon: selectedIcon?.android ?? selectedIcon?.shared,
+                standardAppearance: {
+                  tabBarBackgroundColor,
+                  tabBarItemLabelVisibilityMode:
+                    currentOptions?.tabBarLabelVisibilityMode,
+                  tabBarItemRippleColor: currentOptions?.tabBarRippleColor,
+                  tabBarItemActiveIndicatorColor: activeIndicatorColor,
+                  tabBarItemActiveIndicatorEnabled:
+                    currentOptions?.tabBarActiveIndicatorEnabled,
+                  tabBarItemTitleFontFamily: fontFamily,
+                  tabBarItemTitleFontWeight: fontWeight,
+                  tabBarItemTitleSmallLabelFontSize: fontSize,
+                  tabBarItemTitleLargeLabelFontSize: fontSize,
+                  tabBarItemTitleFontStyle: fontStyle,
+                  tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
+                  tabBarItemBadgeTextColor: badgeTextColor,
+                  normal: tabItemAppearanceAndroid,
+                  selected: {
+                    tabBarItemTitleFontColor: activeTintColor,
+                    tabBarItemIconColor: activeTintColor,
+                  },
+                },
+              }}
+              ios={{
+                icon: icon?.ios ?? icon?.shared,
+                selectedIcon: selectedIcon?.ios ?? selectedIcon?.shared,
+                systemItem: tabBarSystemItem,
+                scrollEdgeAppearance: {
+                  tabBarBackgroundColor,
+                  tabBarShadowColor,
+                  tabBarBlurEffect,
+                  stacked: {
+                    normal: tabItemAppearanceIOS,
+                  },
+                  inline: {
+                    normal: tabItemAppearanceIOS,
+                  },
+                  compactInline: {
+                    normal: tabItemAppearanceIOS,
+                  },
+                },
+                standardAppearance: {
+                  tabBarBackgroundColor,
+                  tabBarShadowColor,
+                  tabBarBlurEffect,
+                  stacked: {
+                    normal: tabItemAppearanceIOS,
+                  },
+                  inline: {
+                    normal: tabItemAppearanceIOS,
+                  },
+                  compactInline: {
+                    normal: tabItemAppearanceIOS,
+                  },
+                },
+                overrideScrollViewContentInsetAdjustmentBehavior,
+                experimental_userInterfaceStyle: dark ? 'dark' : 'light',
+              }}
             >
               {lazy &&
               !loaded.includes(route.key) &&
