@@ -20,7 +20,7 @@ export {
  * Views
  */
 export { BottomTabBar } from './views/BottomTabBar';
-export { BottomTabView } from './views/BottomTabViewCommon';
+export { BottomTabView } from './views/BottomTabView';
 
 /**
  * Utilities

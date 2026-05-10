@@ -28,7 +28,7 @@ import type {
 import type {
   TabBarItemLabelVisibilityMode,
   TabsScreenBlurEffect,
-  TabsSystemItem,
+  TabsScreenSystemItem,
 } from 'react-native-screens';
 
 export type Variant = 'uikit' | 'material';
@@ -249,8 +249,6 @@ type BottomTabCustomOptions = {
   tabBarButton?: (props: BottomTabBarButtonProps) => React.ReactNode;
 };
 
-type ScrollEdgeEffect = 'auto' | 'hard' | 'soft' | 'hidden';
-
 type BottomTabNativeOptions = {
   /**
    * Uses iOS built-in tab bar items with standard iOS styling and localized titles.
@@ -262,7 +260,7 @@ type BottomTabNativeOptions = {
    *
    * @platform ios
    */
-  tabBarSystemItem?: TabsSystemItem;
+  tabBarSystemItem?: TabsScreenSystemItem;
 
   /**
    * Blur effect applied to the tab bar when tab screen is selected.
@@ -346,38 +344,6 @@ type BottomTabNativeOptions = {
   bottomAccessory?: (options: {
     placement: 'regular' | 'inline';
   }) => React.ReactNode;
-
-  /**
-   * Configures the scroll edge effect for the _content ScrollView_ (the ScrollView that is present in first descendants chain of the Screen).
-   * Depending on values set, it will blur the scrolling content below certain UI elements (header items, search bar)
-   * for the specified edge of the ScrollView.
-   *
-   * When set in nested containers, i.e. Native Stack inside Native Bottom Tabs, or the other way around,
-   * the ScrollView will use only the innermost one's config.
-   *
-   * **Note:** Using both `headerBlurEffect` and `scrollEdgeEffects` (>= iOS 26) simultaneously may cause overlapping effects.
-   *
-   * Edge effects can be configured for each edge separately. The following values are currently supported:
-   *
-   * - `auto` - the automatic scroll edge effect style,
-   * - `hard` - a scroll edge effect with a hard cutoff and dividing line,
-   * - `soft` - a soft-edged scroll edge effect,
-   * - `hidden` - no scroll edge effect.
-   *
-   * Defaults to `automatic` for each edge.
-   *
-   * Available starting from iOS 26.
-   *
-   * Only supported with `native` implementation.
-   *
-   * @platform ios
-   */
-  scrollEdgeEffects?: {
-    bottom?: ScrollEdgeEffect;
-    left?: ScrollEdgeEffect;
-    right?: ScrollEdgeEffect;
-    top?: ScrollEdgeEffect;
-  };
 
   /**
    * Specifies whether `contentInsetAdjustmentBehavior` of the `ScrollView`
