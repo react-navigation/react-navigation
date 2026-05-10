@@ -15,7 +15,7 @@ import type {
   BottomTabNavigationOptions,
   BottomTabNavigatorProps,
 } from '../types';
-import { BottomTabView } from '../views/BottomTabViewCommon';
+import { BottomTabView } from '../views/BottomTabView';
 
 function BottomTabNavigator({
   initialRouteName,
