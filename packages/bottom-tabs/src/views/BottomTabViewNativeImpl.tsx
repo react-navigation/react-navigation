@@ -51,6 +51,12 @@ type Props = BottomTabNavigationConfig & {
   descriptors: BottomTabDescriptorMap;
 };
 
+type TabSelectionPreventedEvent = {
+  selectedScreenKey: string;
+  provenance: number;
+  preventedScreenKey: string;
+};
+
 type PlatformIcon = {
   ios?: PlatformIconIOS;
   android?: PlatformIconAndroid;
@@ -222,7 +228,7 @@ export function BottomTabViewNative({
 
       if (event.defaultPrevented) {
         throw new Error(
-          "Preventing default for 'tabPress' is not supported with native tab bar."
+          "Preventing default for 'tabPress' is not supported with native tab bar. Use the 'tabBarSelectionEnabled: false' option instead."
         );
       }
     }
@@ -271,6 +277,29 @@ export function BottomTabViewNative({
     }
 
     navigate(route, confirmed);
+  };
+
+  const onTabSelectionPrevented = (
+    event: NativeSyntheticEvent<TabSelectionPreventedEvent>
+  ) => {
+    const { selectedScreenKey, provenance, preventedScreenKey } =
+      event.nativeEvent;
+
+    const confirmed = {
+      routeKey: selectedScreenKey,
+      provenance,
+    };
+
+    dispatch({
+      type: 'CONFIRM_STATE',
+      confirmed,
+    });
+
+    navigation.emit({
+      type: 'tabPress',
+      target: preventedScreenKey,
+      canPreventDefault: true,
+    });
   };
 
   const currentOptions = descriptors[state.routes[state.index].key]?.options;
@@ -407,6 +436,7 @@ export function BottomTabViewNative({
         rejectStaleNavStateUpdates
         onTabSelected={onTabSelected}
         onTabSelectionRejected={onTabSelectionRejected}
+        onTabSelectionPrevented={onTabSelectionPrevented}
         tabBarHidden={hasCustomTabBar || shouldHideTabBar}
         colorScheme={dark ? 'dark' : 'light'}
         ios={{
@@ -429,6 +459,7 @@ export function BottomTabViewNative({
             lazy = true,
             inactiveBehavior = 'pause',
             tabBarLabel,
+            tabBarSelectionEnabled,
             tabBarBadgeStyle,
             tabBarIcon,
             tabBarBadge,
@@ -530,6 +561,7 @@ export function BottomTabViewNative({
               screenKey={route.key}
               tabBarItemAccessibilityLabel={tabBarAccessibilityLabel}
               tabBarItemTestID={tabBarButtonTestID}
+              preventNativeSelection={tabBarSelectionEnabled === false}
               badgeValue={tabBarBadge?.toString()}
               title={tabTitle}
               specialEffects={{

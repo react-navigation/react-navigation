@@ -38,6 +38,7 @@ export type BottomTabNavigationEventMap = {
    * Event which fires on tapping on the tab in the tab bar.
    *
    * Preventing default is only supported with `custom` implementation.
+   * Use `tabBarSelectionEnabled: false` option with `native` implementation.
    */
   tabPress: { data: undefined; canPreventDefault: true };
   /**
@@ -517,6 +518,15 @@ export type BottomTabNavigationOptions = {
      */
     display?: 'flex' | 'none';
   };
+
+  /**
+   * Whether this tab can be selected.
+   * When `false`, tapping on the tab in tab bar won't select the tab.
+   * Custom behavior can be implemented by listening to `tabPress` event.
+   *
+   * Defaults to `true`.
+   */
+  tabBarSelectionEnabled?: boolean;
 
   /**
    * Whether this screens should render the first time it's accessed. Defaults to `true`.
