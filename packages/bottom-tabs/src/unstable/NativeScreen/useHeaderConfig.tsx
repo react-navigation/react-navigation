@@ -97,7 +97,10 @@ const processBarButtonItems = (
             ...processedItem,
             menu: {
               ...processedItem.menu,
-              singleSelection: !multiselectable,
+              singleSelection:
+                typeof multiselectable === 'boolean'
+                  ? !multiselectable
+                  : undefined,
               displayAsPalette: layout === 'palette',
               items: item.menu.items.map(getMenuItem),
             },
@@ -149,7 +152,8 @@ const getMenuItem = (
       title: label,
       displayAsPalette: layout === 'palette',
       displayInline: inline,
-      singleSelection: !multiselectable,
+      singleSelection:
+        typeof multiselectable === 'boolean' ? !multiselectable : undefined,
       items: items.map(getMenuItem),
     };
   }
