@@ -510,20 +510,10 @@ export class CardStack extends React.Component<Props, State> {
   private handleLayout = (e: LayoutChangeEvent) => {
     const { height, width } = e.nativeEvent.layout;
 
+    const layout = { width, height };
+
     this.setState((state, props) => {
-      // iOS Safari can report transient layout height shrink events during scroll,
-      // which can cause visible jitter.
-      const nextHeight =
-        Platform.OS === 'web' && width === state.layout.width
-          ? Math.max(state.layout.height, height)
-          : height;
-
-      const layout = {
-        width,
-        height: nextHeight,
-      };
-
-      if (nextHeight === state.layout.height && width === state.layout.width) {
+      if (height === state.layout.height && width === state.layout.width) {
         return null;
       }
 
