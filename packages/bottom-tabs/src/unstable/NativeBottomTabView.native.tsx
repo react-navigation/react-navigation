@@ -55,6 +55,12 @@ type PlatformIcon = {
   shared?: PlatformIconShared;
 };
 
+type TabSelectionPreventedEvent = {
+  selectedScreenKey: string;
+  provenance: number;
+  preventedScreenKey: string;
+};
+
 type ConfirmedState = {
   routeKey: string;
   provenance: number;
@@ -208,6 +214,26 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
     navigate(route, confirmed);
   };
 
+  const onTabSelectionPrevented = (
+    event: NativeSyntheticEvent<TabSelectionPreventedEvent>
+  ) => {
+    const { selectedScreenKey, provenance, preventedScreenKey } =
+      event.nativeEvent;
+
+    dispatch({
+      type: 'CONFIRM_STATE',
+      confirmed: {
+        routeKey: selectedScreenKey,
+        provenance,
+      },
+    });
+
+    navigation.emit({
+      type: 'tabPress',
+      target: preventedScreenKey,
+    });
+  };
+
   const currentOptions = descriptors[state.routes[state.index].key]?.options;
 
   const {
@@ -294,6 +320,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
         rejectStaleNavStateUpdates
         onTabSelected={onTabSelected}
         onTabSelectionRejected={onTabSelectionRejected}
+        onTabSelectionPrevented={onTabSelectionPrevented}
         tabBarHidden={shouldHideTabBar}
         colorScheme={dark ? 'dark' : 'light'}
         ios={{
@@ -315,6 +342,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
             title,
             lazy = true,
             tabBarLabel,
+            tabBarSelectionEnabled,
             tabBarBadgeStyle,
             tabBarIcon,
             tabBarBadge,
@@ -390,6 +418,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
               onDidDisappear={() => onTransitionEnd({ closing: true, route })}
               key={route.key}
               screenKey={route.key}
+              preventNativeSelection={tabBarSelectionEnabled === false}
               badgeValue={tabBarBadge?.toString()}
               title={tabTitle}
               specialEffects={{

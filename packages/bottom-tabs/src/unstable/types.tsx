@@ -26,6 +26,8 @@ export type Layout = { width: number; height: number };
 export type NativeBottomTabNavigationEventMap = {
   /**
    * Event which fires on tapping on the tab in the tab bar.
+   *
+   * Use the `tabBarSelectionEnabled: false` option to prevent the tab from being selected.
    */
   tabPress: { data: undefined; canPreventDefault: false };
   /**
@@ -241,6 +243,15 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
      */
     display?: 'flex' | 'none';
   };
+
+  /**
+   * Whether this tab can be selected.
+   * When `false`, tapping on the tab in tab bar won't select the tab.
+   * Custom behavior can be implemented by listening to `tabPress` event.
+   *
+   * Defaults to `true`.
+   */
+  tabBarSelectionEnabled?: boolean;
 
   /**
    * Blur effect applied to the tab bar when tab screen is selected.
