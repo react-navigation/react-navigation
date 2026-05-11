@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 8.0.0-alpha.30 (2026-05-11)
+
+### Bug Fixes
+
+* default `multiselectable` to `undefined` ([841ef74](https://github.com/react-navigation/react-navigation/commit/841ef745e938b37870ec9456ed4a792cd24e176a)) - by @satya164
+
+### Features
+
+* update native tabs to use the new API in react-native-screens ([f7b3dd0](https://github.com/react-navigation/react-navigation/commit/f7b3dd007815b7a8f51c951491d1e72f74d395b8)) - by @satya164
+
 # [8.0.0-alpha.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.28...@react-navigation/native-stack@8.0.0-alpha.29) (2026-05-08)
 
 **Note:** Version bump only for package @react-navigation/native-stack

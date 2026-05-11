@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 8.0.0-alpha.29 (2026-05-11)
+
+### Features
+
+* add ability to prevent tab bar selection ([0bafb7c](https://github.com/react-navigation/react-navigation/commit/0bafb7c32f049e6125a4700eda1a5d8fe7bbc4c5)) - by @satya164
+* update native tabs to use the new API in react-native-screens ([f7b3dd0](https://github.com/react-navigation/react-navigation/commit/f7b3dd007815b7a8f51c951491d1e72f74d395b8)) - by @satya164
+
 # [8.0.0-alpha.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.27...@react-navigation/bottom-tabs@8.0.0-alpha.28) (2026-05-08)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

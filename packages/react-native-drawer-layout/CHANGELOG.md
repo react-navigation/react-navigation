@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# 5.0.0-alpha.9 (2026-05-11)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
 # [5.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.7...react-native-drawer-layout@5.0.0-alpha.8) (2026-05-08)
 
 ### Bug Fixes
