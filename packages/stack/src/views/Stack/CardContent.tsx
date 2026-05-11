@@ -78,7 +78,7 @@ export function CardContent({ enabled, layout, style, ...rest }: Props) {
 
       if (isTouchDevice) {
         // Keep page mode stable on touch devices while width remains unchanged to
-        // avoid transient re-layout flips to `overflow:hidden card mode.
+        // avoid transient re-layout flips to `overflow:hidden` card mode.
         return isSameWidth;
       }
 
