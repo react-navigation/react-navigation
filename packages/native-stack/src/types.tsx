@@ -364,6 +364,19 @@ export type NativeStackNavigationOptions = {
     | ((props: NativeStackHeaderItemProps) => NativeStackHeaderItem[])
     | undefined;
   /**
+   * Function which returns an array of items to display in the bottom toolbar of the navigation controller.
+   * The toolbar is automatically shown when items are provided and hidden when empty or undefined.
+   *
+   * This is an unstable API and might change in the future.
+   *
+   * Only supported on iOS.
+   *
+   * @platform ios
+   */
+  unstable_toolbarItems?: (
+    props: NativeStackHeaderItemProps
+  ) => NativeStackToolbarItem[];
+  /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
    *
@@ -1151,6 +1164,63 @@ export type NativeStackHeaderItem =
   | NativeStackHeaderItemMenu
   | NativeStackHeaderItemSpacing
   | NativeStackHeaderItemCustom;
+
+type SharedToolbarItem = Omit<SharedHeaderItem, 'label'> & {
+  /**
+   * Label of the item. Optional for toolbar items since icon-only buttons are common.
+   */
+  label?: string;
+};
+
+/**
+ * A button item in the toolbar.
+ */
+export type NativeStackToolbarItemButton = SharedToolbarItem & {
+  type: 'button';
+  /**
+   * Function to call when the item is pressed.
+   */
+  onPress: () => void;
+  /**
+   * Whether the item is in a selected state.
+   */
+  selected?: boolean;
+};
+
+/**
+ * An item that shows a menu when pressed, for use in the toolbar.
+ */
+export type NativeStackToolbarItemMenu = SharedToolbarItem & {
+  type: 'menu';
+  /**
+   * Whether the menu is a selection menu.
+   */
+  changesSelectionAsPrimaryAction?: boolean;
+  /**
+   * Menu for the item.
+   */
+  menu: NativeStackHeaderItemMenu['menu'];
+};
+
+/**
+ * A flexible space item that expands to fill available space in the toolbar.
+ */
+export type NativeStackToolbarItemFlexibleSpace = {
+  type: 'flexibleSpace';
+};
+
+/**
+ * An item that can be displayed in the bottom toolbar of the navigation controller.
+ *
+ * Only supported on iOS.
+ *
+ * @platform ios
+ */
+export type NativeStackToolbarItem =
+  | NativeStackToolbarItemButton
+  | NativeStackToolbarItemMenu
+  | NativeStackHeaderItemSpacing
+  | NativeStackToolbarItemFlexibleSpace;
 
 export type NativeStackNavigatorProps = DefaultNavigatorOptions<
   ParamListBase,
