@@ -15,11 +15,22 @@ import {
 } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
-import { type ColorValue, Platform, PlatformColor } from 'react-native';
 import {
-  type PlatformIcon,
+  type ColorValue,
+  type NativeSyntheticEvent,
+  Platform,
+  PlatformColor,
+} from 'react-native';
+import {
+  type PlatformIconAndroid,
+  type PlatformIconIOS,
+  type PlatformIconShared,
   Tabs,
-  type TabsScreenItemStateAppearance,
+  type TabsBottomAccessoryEnvironment,
+  type TabSelectedEvent,
+  type TabSelectionRejectedEvent,
+  type TabsScreenItemStateAppearanceAndroid,
+  type TabsScreenItemStateAppearanceIOS,
 } from 'react-native-screens';
 
 import { NativeScreen } from './NativeScreen/NativeScreen';
@@ -38,14 +49,51 @@ type Props = NativeBottomTabNavigationConfig & {
   descriptors: NativeBottomTabDescriptorMap;
 };
 
+type PlatformIcon = {
+  ios?: PlatformIconIOS;
+  android?: PlatformIconAndroid;
+  shared?: PlatformIconShared;
+};
+
+type ConfirmedState = {
+  routeKey: string;
+  provenance: number;
+};
+
+type NativeState = {
+  confirmed: ConfirmedState;
+};
+
+type NativeAction = { type: 'CONFIRM_STATE'; confirmed: ConfirmedState };
+
 const meta = {
   type: 'native-tabs',
 };
+
+function reducer(state: NativeState, action: NativeAction): NativeState {
+  switch (action.type) {
+    case 'CONFIRM_STATE':
+      return state.confirmed.routeKey === action.confirmed.routeKey &&
+        state.confirmed.provenance === action.confirmed.provenance
+        ? state
+        : {
+            ...state,
+            confirmed: action.confirmed,
+          };
+  }
+}
 
 export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
   const { dark, colors, fonts } = useTheme();
 
   const focusedRouteKey = state.routes[state.index].key;
+  const [nativeState, dispatch] = React.useReducer(reducer, {
+    confirmed: {
+      routeKey: focusedRouteKey,
+      provenance: 0,
+    },
+  });
+
   const previousRouteKeyRef = React.useRef(focusedRouteKey);
 
   React.useEffect(() => {
@@ -70,6 +118,95 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
 
     previousRouteKeyRef.current = focusedRouteKey;
   }, [descriptors, focusedRouteKey, navigation, state.index, state.routes]);
+
+  const navigate = (
+    route: (typeof state.routes)[number],
+    confirmed: ConfirmedState
+  ) => {
+    dispatch({
+      type: 'CONFIRM_STATE',
+      confirmed,
+    });
+
+    navigation.dispatch({
+      ...CommonActions.navigate(route.name, route.params),
+      target: state.key,
+    });
+  };
+
+  // Native tabs are the source of truth for the selected tab.
+  // JS sends a requested tab with the native provenance it was based on.
+  // Native replies with the selected tab and its new provenance.
+  const onTabSelected = (event: NativeSyntheticEvent<TabSelectedEvent>) => {
+    const { selectedScreenKey, provenance, actionOrigin } = event.nativeEvent;
+
+    const confirmed = {
+      routeKey: selectedScreenKey,
+      provenance,
+    };
+
+    const route = state.routes.find((route) => route.key === selectedScreenKey);
+
+    if (!route) {
+      console.error(
+        `Received 'tabSelected' for route that doesn't exist: ${selectedScreenKey}`
+      );
+
+      return;
+    }
+
+    if (actionOrigin === 'user') {
+      navigation.emit({
+        type: 'tabPress',
+        target: route.key,
+      });
+    }
+
+    if (actionOrigin === 'programmatic-js' || focusedRouteKey === route.key) {
+      dispatch({
+        type: 'CONFIRM_STATE',
+        confirmed,
+      });
+
+      return;
+    }
+
+    navigate(route, confirmed);
+  };
+
+  // If native rejects a JS request, keep native as the source of truth
+  // and move JS back to the tab that native says is selected.
+  const onTabSelectionRejected = (
+    event: NativeSyntheticEvent<TabSelectionRejectedEvent>
+  ) => {
+    const { selectedScreenKey, provenance } = event.nativeEvent;
+
+    const confirmed = {
+      routeKey: selectedScreenKey,
+      provenance,
+    };
+
+    const route = state.routes.find((route) => route.key === selectedScreenKey);
+
+    if (!route) {
+      console.error(
+        `Received 'tabSelectionRejected' for route that doesn't exist: ${selectedScreenKey}`
+      );
+
+      return;
+    }
+
+    if (focusedRouteKey === route.key) {
+      dispatch({
+        type: 'CONFIRM_STATE',
+        confirmed,
+      });
+
+      return;
+    }
+
+    navigate(route, confirmed);
+  };
 
   const currentOptions = descriptors[state.routes[state.index].key]?.options;
 
@@ -150,58 +287,23 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
   return (
     <SafeAreaProviderCompat>
       <Tabs.Host
-        bottomAccessory={
-          bottomAccessory
-            ? (environment) => bottomAccessory({ placement: environment })
-            : undefined
-        }
+        navStateRequest={{
+          selectedScreenKey: focusedRouteKey,
+          baseProvenance: nativeState.confirmed.provenance,
+        }}
+        rejectStaleNavStateUpdates
+        onTabSelected={onTabSelected}
+        onTabSelectionRejected={onTabSelectionRejected}
         tabBarHidden={shouldHideTabBar}
-        tabBarItemLabelVisibilityMode={
-          currentOptions?.tabBarLabelVisibilityMode
-        }
-        tabBarControllerMode={tabBarControllerMode}
-        tabBarMinimizeBehavior={tabBarMinimizeBehavior}
-        tabBarTintColor={activeTintColor}
-        tabBarItemIconColor={inactiveTintColor}
-        tabBarItemIconColorActive={activeTintColor}
-        tabBarItemTitleFontColor={inactiveTintColor ?? fontColor}
-        tabBarItemTitleFontColorActive={activeTintColor}
-        tabBarItemTitleFontFamily={fontFamily}
-        tabBarItemTitleFontWeight={fontWeight}
-        tabBarItemTitleFontSize={fontSize}
-        tabBarItemTitleFontSizeActive={fontSize}
-        tabBarItemTitleFontStyle={fontStyle}
-        tabBarBackgroundColor={
-          currentOptions.tabBarStyle?.backgroundColor ?? colors.card
-        }
-        tabBarItemActiveIndicatorColor={activeIndicatorColor}
-        tabBarItemActiveIndicatorEnabled={
-          currentOptions?.tabBarActiveIndicatorEnabled
-        }
-        tabBarItemRippleColor={currentOptions?.tabBarRippleColor}
-        experimentalControlNavigationStateInJS={false}
-        onNativeFocusChange={(e) => {
-          const route = state.routes.find(
-            (route) => route.key === e.nativeEvent.tabKey
-          );
-
-          if (route) {
-            navigation.emit({
-              type: 'tabPress',
-              target: route.key,
-            });
-
-            const isFocused =
-              state.index ===
-              state.routes.findIndex((r) => r.key === route.key);
-
-            if (!isFocused) {
-              navigation.dispatch({
-                ...CommonActions.navigate(route.name, route.params),
-                target: state.key,
-              });
-            }
-          }
+        colorScheme={dark ? 'dark' : 'light'}
+        ios={{
+          bottomAccessory: bottomAccessory
+            ? (environment: TabsBottomAccessoryEnvironment) =>
+                bottomAccessory({ placement: environment })
+            : undefined,
+          tabBarControllerMode,
+          tabBarMinimizeBehavior,
+          tabBarTintColor: activeTintColor,
         }}
       >
         {state.routes.map((route, index) => {
@@ -244,7 +346,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
                 : 'white'
               : undefined);
 
-          const tabItemAppearance: TabsScreenItemStateAppearance = {
+          const tabItemAppearance: TabsScreenItemStateAppearanceIOS = {
             tabBarItemTitleFontFamily: fontFamily,
             tabBarItemTitleFontSize: fontSize,
             tabBarItemTitleFontWeight: fontWeight,
@@ -253,6 +355,18 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
             tabBarItemIconColor: inactiveTintColor,
             tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
           };
+
+          const normalTabItemAppearance: TabsScreenItemStateAppearanceAndroid =
+            {
+              tabBarItemTitleFontColor: inactiveTintColor ?? fontColor,
+              tabBarItemIconColor: inactiveTintColor,
+            };
+
+          const selectedTabItemAppearance: TabsScreenItemStateAppearanceAndroid =
+            {
+              tabBarItemTitleFontColor: activeTintColor,
+              tabBarItemIconColor: activeTintColor,
+            };
 
           const icon =
             typeof tabBarIcon === 'function'
@@ -275,53 +389,71 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
               onDidAppear={() => onTransitionEnd({ closing: false, route })}
               onDidDisappear={() => onTransitionEnd({ closing: true, route })}
               key={route.key}
-              tabKey={route.key}
-              icon={icon}
-              selectedIcon={selectedIcon?.ios ?? selectedIcon?.shared}
-              tabBarItemBadgeBackgroundColor={badgeBackgroundColor}
-              tabBarItemBadgeTextColor={badgeTextColor}
+              screenKey={route.key}
               badgeValue={tabBarBadge?.toString()}
-              systemItem={tabBarSystemItem}
-              isFocused={isFocused}
               title={tabTitle}
-              scrollEdgeAppearance={{
-                tabBarBackgroundColor,
-                tabBarShadowColor,
-                tabBarBlurEffect,
-                stacked: {
-                  normal: tabItemAppearance,
-                },
-                inline: {
-                  normal: tabItemAppearance,
-                },
-                compactInline: {
-                  normal: tabItemAppearance,
-                },
-              }}
-              standardAppearance={{
-                tabBarBackgroundColor,
-                tabBarShadowColor,
-                tabBarBlurEffect,
-                stacked: {
-                  normal: tabItemAppearance,
-                },
-                inline: {
-                  normal: tabItemAppearance,
-                },
-                compactInline: {
-                  normal: tabItemAppearance,
-                },
-              }}
               specialEffects={{
                 repeatedTabSelection: {
                   popToRoot: true,
                   scrollToTop: true,
                 },
               }}
-              overrideScrollViewContentInsetAdjustmentBehavior={
-                overrideScrollViewContentInsetAdjustmentBehavior
-              }
-              experimental_userInterfaceStyle={dark ? 'dark' : 'light'}
+              android={{
+                icon: icon?.android ?? icon?.shared,
+                selectedIcon: selectedIcon?.android ?? selectedIcon?.shared,
+                standardAppearance: {
+                  tabBarBackgroundColor: tabBarBackgroundColor ?? colors.card,
+                  tabBarItemRippleColor: currentOptions?.tabBarRippleColor,
+                  tabBarItemLabelVisibilityMode:
+                    currentOptions?.tabBarLabelVisibilityMode,
+                  normal: normalTabItemAppearance,
+                  selected: selectedTabItemAppearance,
+                  tabBarItemActiveIndicatorColor: activeIndicatorColor,
+                  tabBarItemActiveIndicatorEnabled:
+                    currentOptions?.tabBarActiveIndicatorEnabled,
+                  tabBarItemTitleFontFamily: fontFamily,
+                  tabBarItemTitleFontWeight: fontWeight,
+                  tabBarItemTitleSmallLabelFontSize: fontSize,
+                  tabBarItemTitleLargeLabelFontSize: fontSize,
+                  tabBarItemTitleFontStyle: fontStyle,
+                  tabBarItemBadgeBackgroundColor: badgeBackgroundColor,
+                  tabBarItemBadgeTextColor: badgeTextColor,
+                },
+              }}
+              ios={{
+                icon: icon?.ios ?? icon?.shared,
+                selectedIcon: selectedIcon?.ios ?? selectedIcon?.shared,
+                systemItem: tabBarSystemItem,
+                scrollEdgeAppearance: {
+                  tabBarBackgroundColor,
+                  tabBarShadowColor,
+                  tabBarBlurEffect,
+                  stacked: {
+                    normal: tabItemAppearance,
+                  },
+                  inline: {
+                    normal: tabItemAppearance,
+                  },
+                  compactInline: {
+                    normal: tabItemAppearance,
+                  },
+                },
+                standardAppearance: {
+                  tabBarBackgroundColor,
+                  tabBarShadowColor,
+                  tabBarBlurEffect,
+                  stacked: {
+                    normal: tabItemAppearance,
+                  },
+                  inline: {
+                    normal: tabItemAppearance,
+                  },
+                  compactInline: {
+                    normal: tabItemAppearance,
+                  },
+                },
+                overrideScrollViewContentInsetAdjustmentBehavior,
+              }}
             >
               <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
                 <ScreenWithHeader

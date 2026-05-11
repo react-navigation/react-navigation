@@ -15,7 +15,7 @@ import type { EdgeInsets } from 'react-native-safe-area-context';
 import type {
   TabBarItemLabelVisibilityMode,
   TabsScreenBlurEffect,
-  TabsSystemItem,
+  TabsScreenSystemItem,
 } from 'react-native-screens';
 import type { SFSymbol } from 'sf-symbols-typescript';
 
@@ -122,7 +122,7 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
    *
    * @platform ios
    */
-  tabBarSystemItem?: TabsSystemItem;
+  tabBarSystemItem?: TabsScreenSystemItem;
 
   /**
    * Title string of the tab displayed in the tab bar
