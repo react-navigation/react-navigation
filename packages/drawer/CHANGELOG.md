@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.10.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.9.11...@react-navigation/drawer@7.10.0) (2026-05-11)
+
+### Features
+
+* update native tabs to use the new API in react-native-screens ([a12db96](https://github.com/react-navigation/react-navigation/commit/a12db9657f5f2af2a0aaa71193e35382dc72a623)) - by @satya164
+
 ## [7.9.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.9.10...@react-navigation/drawer@7.9.11) (2026-05-08)
 
 **Note:** Version bump only for package @react-navigation/drawer

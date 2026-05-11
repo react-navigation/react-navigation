@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.16.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.15.13...@react-navigation/bottom-tabs@7.16.0) (2026-05-11)
+
+### Bug Fixes
+
+* default `multiselectable` to `undefined` ([cd466d4](https://github.com/react-navigation/react-navigation/commit/cd466d48aeefec6e513bb6c8d5103d15f9d73f7f)) - by @satya164
+
+### Features
+
+* add ability to prevent tab bar selection ([1930fa0](https://github.com/react-navigation/react-navigation/commit/1930fa0d3c8d266d8b288b2da92c04f758f82571)) - by @satya164
+* update native tabs to use the new API in react-native-screens ([a12db96](https://github.com/react-navigation/react-navigation/commit/a12db9657f5f2af2a0aaa71193e35382dc72a623)) - by @satya164
+
 ## [7.15.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.15.12...@react-navigation/bottom-tabs@7.15.13) (2026-05-08)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

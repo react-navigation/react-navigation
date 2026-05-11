@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.15.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.14.14...@react-navigation/native-stack@7.15.0) (2026-05-11)
+
+### Bug Fixes
+
+* default `multiselectable` to `undefined` ([cd466d4](https://github.com/react-navigation/react-navigation/commit/cd466d48aeefec6e513bb6c8d5103d15f9d73f7f)) - by @satya164
+
+### Features
+
+* update native tabs to use the new API in react-native-screens ([a12db96](https://github.com/react-navigation/react-navigation/commit/a12db9657f5f2af2a0aaa71193e35382dc72a623)) - by @satya164
+
 ## [7.14.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.14.13...@react-navigation/native-stack@7.14.14) (2026-05-08)
 
 **Note:** Version bump only for package @react-navigation/native-stack
