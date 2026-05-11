@@ -415,7 +415,11 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
               canPreventDefault: true,
             });
 
-            if (!focused && !event.defaultPrevented) {
+            if (
+              !focused &&
+              !event.defaultPrevented &&
+              options.tabBarSelectionEnabled !== false
+            ) {
               navigation.dispatch({
                 ...CommonActions.navigate(route),
                 target: state.key,
