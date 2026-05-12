@@ -28,6 +28,7 @@ export type Props = {
   scenes: (Scene | undefined)[];
   getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
   getFocusedRoute: () => Route<string>;
+  contentHeight: number | undefined;
   onContentHeightChange?: (props: {
     route: Route<string>;
     height: number;
@@ -40,6 +41,7 @@ export function HeaderContainer({
   scenes,
   getPreviousScene,
   getFocusedRoute,
+  contentHeight,
   onContentHeightChange,
   style,
 }: Props) {
@@ -145,35 +147,47 @@ export function HeaderContainer({
             route={scene.descriptor.route}
           >
             <View
-              onLayout={
-                onContentHeightChange
-                  ? (e) => {
-                      const { height } = e.nativeEvent.layout;
-
-                      onContentHeightChange({
-                        route: scene.descriptor.route,
-                        height,
-                      });
-                    }
-                  : undefined
-              }
               style={[
-                // Avoid positioning the focused header absolutely
+                // Avoid absolutely positioning the focused header unnecessarily
                 // Otherwise accessibility tools don't seem to be able to find it
                 (mode === 'float' && !isFocused) || headerTransparent
-                  ? styles.header
+                  ? [
+                      styles.absolute,
+                      mode === 'screen'
+                        ? // For transparent headers, specify a min height
+                          // This is needed for screen readers, and testing tools on Android
+                          // For float header, it's handled in CardStack
+                          { minHeight: contentHeight }
+                        : null,
+                    ]
                   : null,
                 {
                   pointerEvents: isFocused ? 'box-none' : 'none',
                 },
               ]}
             >
-              <ActivityView
-                mode={isFocused ? 'normal' : 'inert'}
-                visible={true}
+              <View
+                onLayout={
+                  onContentHeightChange
+                    ? (e) => {
+                        const { height } = e.nativeEvent.layout;
+
+                        onContentHeightChange({
+                          route: scene.descriptor.route,
+                          height,
+                        });
+                      }
+                    : undefined
+                }
+                style={{ pointerEvents: 'box-none' }}
               >
-                {header !== undefined ? header(props) : <Header {...props} />}
-              </ActivityView>
+                <ActivityView
+                  mode={isFocused ? 'normal' : 'inert'}
+                  visible={true}
+                >
+                  {header !== undefined ? header(props) : <Header {...props} />}
+                </ActivityView>
+              </View>
             </View>
           </NavigationProvider>
         );
@@ -186,7 +200,7 @@ const styles = StyleSheet.create({
   container: {
     pointerEvents: 'box-none',
   },
-  header: {
+  absolute: {
     position: 'absolute',
     top: 0,
     start: 0,

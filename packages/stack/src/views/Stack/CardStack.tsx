@@ -629,6 +629,7 @@ export class CardStack extends React.Component<Props, State> {
           scenes,
           getPreviousScene: this.getPreviousScene,
           getFocusedRoute: this.getFocusedRoute,
+          contentHeight: headerHeights[focusedRoute.key],
           onContentHeightChange: this.handleHeaderLayout,
           style: [
             isFloatHeaderAbsolute && [
