@@ -29,6 +29,7 @@ export type Props = {
   scenes: (Scene | undefined)[];
   getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
   getFocusedRoute: () => Route<string>;
+  contentHeight: number | undefined;
   onContentHeightChange?: (props: {
     route: Route<string>;
     height: number;
@@ -42,6 +43,7 @@ export function HeaderContainer({
   layout,
   getPreviousScene,
   getFocusedRoute,
+  contentHeight,
   onContentHeightChange,
   style,
 }: Props) {
@@ -148,29 +150,41 @@ export function HeaderContainer({
             navigation={scene.descriptor.navigation}
           >
             <View
-              onLayout={
-                onContentHeightChange
-                  ? (e) => {
-                      const { height } = e.nativeEvent.layout;
-
-                      onContentHeightChange({
-                        route: scene.descriptor.route,
-                        height,
-                      });
-                    }
-                  : undefined
-              }
               pointerEvents={isFocused ? 'box-none' : 'none'}
               aria-hidden={!isFocused}
               style={
-                // Avoid positioning the focused header absolutely
+                // Avoid absolutely positioning the focused header unnecessarily
                 // Otherwise accessibility tools don't seem to be able to find it
                 (mode === 'float' && !isFocused) || headerTransparent
-                  ? styles.header
+                  ? [
+                      styles.absolute,
+                      mode === 'screen'
+                        ? // For transparent headers, specify a min height
+                          // This is needed for screen readers, and testing tools on Android
+                          // For float header, it's handled in CardStack
+                          { minHeight: contentHeight }
+                        : null,
+                    ]
                   : null
               }
             >
-              {header !== undefined ? header(props) : <Header {...props} />}
+              <View
+                pointerEvents="box-none"
+                onLayout={
+                  onContentHeightChange
+                    ? (e) => {
+                        const { height } = e.nativeEvent.layout;
+
+                        onContentHeightChange({
+                          route: scene.descriptor.route,
+                          height,
+                        });
+                      }
+                    : undefined
+                }
+              >
+                {header !== undefined ? header(props) : <Header {...props} />}
+              </View>
             </View>
           </NavigationProvider>
         );
@@ -180,7 +194,7 @@ export function HeaderContainer({
 }
 
 const styles = StyleSheet.create({
-  header: {
+  absolute: {
     position: 'absolute',
     top: 0,
     start: 0,
