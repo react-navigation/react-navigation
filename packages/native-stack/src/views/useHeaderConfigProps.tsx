@@ -505,10 +505,7 @@ export function useHeaderConfigProps({
     return undefined;
   }, [headerBackIcon, tintColor]);
 
-  const toolbarItems = toolbarItemsProp?.({
-    tintColor,
-    canGoBack,
-  });
+  const toolbarItems = toolbarItemsProp?.();
 
   const children = (
     <>

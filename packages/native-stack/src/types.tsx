@@ -373,9 +373,7 @@ export type NativeStackNavigationOptions = {
    *
    * @platform ios
    */
-  unstable_toolbarItems?: (
-    props: NativeStackHeaderItemProps
-  ) => NativeStackToolbarItem[];
+  unstable_toolbarItems?: () => NativeStackToolbarItem[];
   /**
    * String or a function that returns a React Element to be used by the header.
    * Defaults to screen `title` or route name.
