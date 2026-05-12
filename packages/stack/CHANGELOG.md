@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.9.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.9.0...@react-navigation/stack@7.9.1) (2026-05-12)
+
+### Bug Fixes
+
+* correctly set header height for mode: 'screen' ([9a09410](https://github.com/react-navigation/react-navigation/commit/9a09410a2f34132f512fef8be3814978c863a3b3)), closes [#13096](https://github.com/react-navigation/react-navigation/issues/13096) - by @satya164
+
 # [7.9.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.8.13...@react-navigation/stack@7.9.0) (2026-05-11)
 
 ### Features
