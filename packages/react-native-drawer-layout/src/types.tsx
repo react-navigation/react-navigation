@@ -1,6 +1,6 @@
 import * as React from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
-import type { PanGesture } from 'react-native-gesture-handler';
+import type { PanGestureConfig } from 'react-native-gesture-handler';
 import type { SharedValue } from 'react-native-reanimated';
 
 export type DrawerProps = {
@@ -135,9 +135,11 @@ export type DrawerProps = {
   swipeMinVelocity?: number | undefined;
 
   /**
-   * Function to modify the pan gesture handler via RNGH properties API.
+   * Function to modify the pan gesture config.
    */
-  configureGestureHandler?: ((gesture: PanGesture) => PanGesture) | undefined;
+  configureGestureHandler?:
+    | ((gesture: PanGestureConfig) => PanGestureConfig)
+    | undefined;
 
   /**
    * Style object for the wrapper view.

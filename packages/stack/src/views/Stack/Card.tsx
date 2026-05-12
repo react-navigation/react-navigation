@@ -9,6 +9,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native';
+import type { PanGestureConfig } from 'react-native-gesture-handler';
 import type { EdgeInsets } from 'react-native-safe-area-context';
 import useLatestCallback from 'use-latest-callback';
 
@@ -23,11 +24,7 @@ import { gestureActivationCriteria } from '../../utils/gestureActivationCriteria
 import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
 import { getInvertedMultiplier } from '../../utils/getInvertedMultiplier';
 import { getShadowStyle } from '../../utils/getShadowStyle';
-import {
-  GestureState,
-  PanGestureHandler,
-  type PanGestureHandlerGestureEvent,
-} from '../GestureHandler';
+import { GestureDetector, usePanGesture } from '../GestureHandler';
 import { CardContent } from './CardContent';
 
 type Props = {
@@ -243,84 +240,6 @@ function Card({
     }
   );
 
-  const onGestureStateChange = useLatestCallback(
-    ({ nativeEvent }: PanGestureHandlerGestureEvent) => {
-      switch (nativeEvent.state) {
-        case GestureState.ACTIVE:
-          clearTimeout(pendingGestureCallbackRef.current);
-          clearTimeout(pendingOnCloseCallbackRef.current);
-          isSwiping.setValue(TRUE);
-          onGestureBegin?.();
-          break;
-        case GestureState.CANCELLED:
-        case GestureState.FAILED: {
-          isSwiping.setValue(FALSE);
-
-          const velocity =
-            gestureDirection === 'vertical' ||
-            gestureDirection === 'vertical-inverted'
-              ? nativeEvent.velocityY
-              : nativeEvent.velocityX;
-
-          animate({
-            closing,
-            velocity,
-          });
-
-          onGestureCanceled?.();
-          break;
-        }
-        case GestureState.END: {
-          isSwiping.setValue(FALSE);
-
-          let distance;
-          let translation;
-          let velocity;
-
-          if (
-            gestureDirection === 'vertical' ||
-            gestureDirection === 'vertical-inverted'
-          ) {
-            distance = layout.height;
-            translation = nativeEvent.translationY;
-            velocity = nativeEvent.velocityY;
-          } else {
-            distance = layout.width;
-            translation = nativeEvent.translationX;
-            velocity = nativeEvent.velocityX;
-          }
-
-          const shouldClose =
-            (translation + velocity * gestureVelocityImpact) *
-              getInvertedMultiplier(gestureDirection, direction === 'rtl') >
-            distance / 2
-              ? velocity !== 0 || translation !== 0
-              : closing;
-
-          animate({ closing: shouldClose, velocity });
-
-          if (shouldClose) {
-            // We call onClose with a delay to make sure that the animation has already started
-            // This will make sure that the state update caused by this doesn't affect start of animation
-            pendingGestureCallbackRef.current = setTimeout(() => {
-              onClose();
-
-              // Check if the screen is still closing with a delay
-              // So state update from onClose has a chance to go through
-              // If route wasn't removed after onClose, re-open it
-              pendingOnCloseCallbackRef.current = setTimeout(() => {
-                maybeAnimate();
-              }, 32);
-            }, 16);
-          }
-
-          onGestureEnd?.();
-          break;
-        }
-      }
-    }
-  );
-
   React.useLayoutEffect(() => {
     layoutAnim.width.setValue(layout.width);
     layoutAnim.height.setValue(layout.height);
@@ -478,17 +397,89 @@ function Card({
       [styleInterpolator, interpolationProps]
     );
 
-  const onGestureEvent = React.useMemo(
+  const onGestureActivate: PanGestureConfig['onActivate'] = useLatestCallback(
+    () => {
+      clearTimeout(pendingGestureCallbackRef.current);
+      clearTimeout(pendingOnCloseCallbackRef.current);
+      isSwiping.setValue(TRUE);
+      onGestureBegin?.();
+    }
+  );
+
+  const onGestureDeactivate: PanGestureConfig['onDeactivate'] =
+    useLatestCallback((event) => {
+      isSwiping.setValue(FALSE);
+
+      let distance;
+      let translation;
+      let velocity;
+
+      if (
+        gestureDirection === 'vertical' ||
+        gestureDirection === 'vertical-inverted'
+      ) {
+        distance = layout.height;
+        translation = event.translationY;
+        velocity = event.velocityY;
+      } else {
+        distance = layout.width;
+        translation = event.translationX;
+        velocity = event.velocityX;
+      }
+
+      gesture.setValue(translation);
+
+      if (event.canceled) {
+        animate({
+          closing,
+          velocity,
+        });
+
+        onGestureCanceled?.();
+
+        return;
+      }
+
+      const shouldClose =
+        (translation + velocity * gestureVelocityImpact) *
+          getInvertedMultiplier(gestureDirection, direction === 'rtl') >
+        distance / 2
+          ? velocity !== 0 || translation !== 0
+          : closing;
+
+      animate({ closing: shouldClose, velocity });
+
+      if (shouldClose) {
+        // We call onClose with a delay to make sure that the animation has already started
+        // This will make sure that the state update caused by this doesn't affect start of animation
+        pendingGestureCallbackRef.current = setTimeout(() => {
+          onClose();
+
+          // Check if the screen is still closing with a delay
+          // So state update from onClose has a chance to go through
+          // If route wasn't removed after onClose, re-open it
+          pendingOnCloseCallbackRef.current = setTimeout(() => {
+            maybeAnimate();
+          }, 32);
+        }, 16);
+      }
+
+      onGestureEnd?.();
+    });
+
+  const onGestureEvent: PanGestureConfig['onUpdate'] = React.useMemo(
     () =>
       gestureEnabled
         ? Animated.event(
             [
               {
-                nativeEvent:
-                  gestureDirection === 'vertical' ||
-                  gestureDirection === 'vertical-inverted'
-                    ? { translationY: gesture }
-                    : { translationX: gesture },
+                nativeEvent: {
+                  handlerData:
+                    gestureDirection === 'vertical' ||
+                    gestureDirection === 'vertical-inverted'
+                      ? { translationY: gesture }
+                      : { translationX: gesture },
+                },
               },
             ],
             { useNativeDriver }
@@ -496,6 +487,35 @@ function Card({
         : undefined,
     [gesture, gestureDirection, gestureEnabled]
   );
+
+  const panGestureConfig = React.useMemo(
+    (): PanGestureConfig => ({
+      enabled: layout.width !== 0 && gestureEnabled,
+      onActivate: onGestureActivate,
+      onDeactivate: onGestureDeactivate,
+      onUpdate: onGestureEvent,
+      disableReanimated: true,
+      useAnimated: true,
+      ...gestureActivationCriteria({
+        layout,
+        direction,
+        gestureDirection,
+        gestureResponseDistance,
+      }),
+    }),
+    [
+      direction,
+      gestureDirection,
+      gestureEnabled,
+      gestureResponseDistance,
+      layout,
+      onGestureActivate,
+      onGestureDeactivate,
+      onGestureEvent,
+    ]
+  );
+
+  const panGesture = usePanGesture(panGestureConfig);
 
   const { backgroundColor } = StyleSheet.flatten(contentStyle || {});
 
@@ -528,17 +548,7 @@ function Card({
       <Animated.View
         style={[styles.container, containerStyle, customContainerStyle]}
       >
-        <PanGestureHandler
-          enabled={layout.width !== 0 && gestureEnabled}
-          onGestureEvent={onGestureEvent}
-          onHandlerStateChange={onGestureStateChange}
-          {...gestureActivationCriteria({
-            layout,
-            direction,
-            gestureDirection,
-            gestureResponseDistance,
-          })}
-        >
+        <GestureDetector gesture={panGesture}>
           <Animated.View
             needsOffscreenAlphaCompositing={hasOpacityStyle(cardStyle)}
             style={[styles.container, cardStyle]}
@@ -567,7 +577,7 @@ function Card({
               {children}
             </CardContent>
           </Animated.View>
-        </PanGestureHandler>
+        </GestureDetector>
       </Animated.View>
     </CardAnimationContext.Provider>
   );
