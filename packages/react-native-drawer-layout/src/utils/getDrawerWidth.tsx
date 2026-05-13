@@ -19,10 +19,12 @@ export function getDrawerWidthNative({
 }) {
   'worklet';
 
-  const defaultWidth =
-    containerWidth - APPROX_APP_BAR_HEIGHT <= 360
+  const defaultWidth = Math.max(
+    containerWidth - APPROX_APP_BAR_HEIGHT <= DEFAULT_DRAWER_WIDTH
       ? containerWidth - APPROX_APP_BAR_HEIGHT
-      : DEFAULT_DRAWER_WIDTH;
+      : DEFAULT_DRAWER_WIDTH,
+    0
+  );
 
   const width = customWidth ?? defaultWidth;
 
