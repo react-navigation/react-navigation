@@ -79,6 +79,7 @@ export const createPathParser = (
 ) => {
   const pathsByRouteNames = {};
   let paths = [];
+  const exactMatchers = {};
 
   // Build pathsByRouteNames, which includes a regex to match paths for each route. Keep in mind, the regex will pass for the route and all child routes. The code that uses pathsByRouteNames will need to also verify that the child router produces an action, in the case of isPathMatchable false (a null path).
   Object.keys(childRouters).forEach((routeName) => {
@@ -123,6 +124,32 @@ export const createPathParser = (
       isWildcard,
       toPath: pathPattern === null ? () => '' : compile(pathPattern),
     };
+
+    // Detect conflicting route path patterns where matching would be ambiguous.
+    // We intentionally exclude wildcard/null paths because they are used as pass-through
+    // configurations for nested routers.
+    if (exactRe && !isWildcard) {
+      const matcherKey = exactRe.toString();
+      if (!exactMatchers[matcherKey]) {
+        exactMatchers[matcherKey] = [];
+      }
+      exactMatchers[matcherKey].push({ routeName, pathPattern });
+    }
+  });
+
+  Object.keys(exactMatchers).forEach((matcherKey) => {
+    const conflicts = exactMatchers[matcherKey];
+    if (conflicts.length > 1) {
+      const conflictDescriptions = conflicts
+        .map(
+          ({ routeName, pathPattern }) => `"${routeName}" ("${pathPattern}")`
+        )
+        .join(', ');
+      invariant(
+        false,
+        `Found conflicting route paths in the same router: ${conflictDescriptions}.`
+      );
+    }
   });
 
   paths = Object.entries(pathsByRouteNames);

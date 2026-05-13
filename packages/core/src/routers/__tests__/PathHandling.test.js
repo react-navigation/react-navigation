@@ -554,6 +554,48 @@ const performRouterTest = (createTestRouter) => {
     expect(action.type).toEqual(NavigationActions.NAVIGATE);
     expect(action.routeName).toEqual('baz');
   });
+
+  it('throws when route configs resolve to conflicting path patterns', () => {
+    expect(() =>
+      createTestRouter({
+        alpha: {
+          path: 'user/:id',
+          screen: FooNavigator,
+        },
+        beta: {
+          path: 'user/:userId',
+          screen: FooNavigator,
+        },
+      })
+    ).toThrow(
+      'Found conflicting route paths in the same router: "alpha" ("user/:id"), "beta" ("user/:userId").'
+    );
+  });
+
+  it('throws when paths option creates conflicting path patterns', () => {
+    expect(() =>
+      createTestRouter(
+        {
+          alpha: {
+            path: 'a/:id',
+            screen: FooNavigator,
+          },
+          beta: {
+            path: 'b/:id',
+            screen: FooNavigator,
+          },
+        },
+        {
+          paths: {
+            alpha: 'users/:id',
+            beta: 'users/:userId',
+          },
+        }
+      )
+    ).toThrow(
+      'Found conflicting route paths in the same router: "alpha" ("users/:id"), "beta" ("users/:userId").'
+    );
+  });
 };
 
 describe('Path handling for stack router', () => {
