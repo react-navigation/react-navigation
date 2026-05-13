@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.4](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.3...react-native-drawer-layout@4.2.4) (2026-05-13)
+
+### Bug Fixes
+
+* handle async layout in drawer ([20189b5](https://github.com/react-navigation/react-navigation/commit/20189b59094a1bf1736d2b3e15690689d6f5ab3a)), closes [#13107](https://github.com/react-navigation/react-navigation/issues/13107) - by @
+
 ## [4.2.3](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.2...react-native-drawer-layout@4.2.3) (2026-05-08)
 
 ### Bug Fixes
