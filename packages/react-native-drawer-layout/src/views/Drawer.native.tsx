@@ -219,6 +219,28 @@ export function Drawer({
     ]
   );
 
+  const hasDrawerWidth = drawerWidth > 0;
+
+  const previousHasDrawerWidthRef = React.useRef(hasDrawerWidth);
+  const isHidden = useSharedValue(!isOpen && !hasDrawerWidth);
+
+  React.useLayoutEffect(() => {
+    if (
+      hasDrawerWidth !== previousHasDrawerWidthRef.current &&
+      isHidden.value
+    ) {
+      // Update translationX without animation after measurement
+      // This avoids flash of animation on initial render with async layout
+      // We only want to animate it when something changes after measurement
+      translationX.value = getDrawerTranslationX(open);
+      // Unhide the drawer only after we set the correct translationX
+      // Otherwise the drawer might briefly flash in the wrong position
+      isHidden.value = false;
+    }
+
+    previousHasDrawerWidthRef.current = hasDrawerWidth;
+  }, [getDrawerTranslationX, hasDrawerWidth, isHidden, open, translationX]);
+
   React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
 
   const startX = useSharedValue(0);
@@ -345,7 +367,7 @@ export function Drawer({
   });
 
   const drawerAnimatedStyle = useAnimatedStyle(() => {
-    const distanceFromEdge = layout.width - drawerWidth;
+    const distanceFromEdge = Math.max(layout.width - drawerWidth, 0);
 
     return {
       // FIXME: Reanimated skips committing to the shadow tree if no layout props are animated
@@ -355,12 +377,13 @@ export function Drawer({
       // For other types: 0 when open, 1 when closed/animating
       zIndex:
         drawerType === 'back'
-          ? translateX.get() === 0
+          ? translateX.value === 0
             ? -1
             : 0
-          : translateX.get() === 0
+          : translateX.value === 0
             ? 0
             : 1,
+      display: isHidden.value ? 'none' : 'flex',
       transform:
         drawerType === 'permanent'
           ? // Reanimated needs the property to be present, but it results in Browser bug
@@ -386,6 +409,7 @@ export function Drawer({
     drawerPosition,
     drawerType,
     drawerWidth,
+    isHidden,
     layout.width,
     translateX,
   ]);

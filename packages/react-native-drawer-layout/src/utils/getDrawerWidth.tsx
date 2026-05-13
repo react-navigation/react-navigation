@@ -17,10 +17,12 @@ export function getDrawerWidthNative({
   layout: { width: number; height: number };
   drawerStyle?: StyleProp<ViewStyle>;
 }) {
-  const defaultWidth =
+  const defaultWidth = Math.max(
     layout.width - APPROX_APP_BAR_HEIGHT <= 360
       ? layout.width - APPROX_APP_BAR_HEIGHT
-      : DEFAULT_DRAWER_WIDTH;
+      : DEFAULT_DRAWER_WIDTH,
+    0
+  );
 
   const { width = defaultWidth } = StyleSheet.flatten(drawerStyle) || {};
 
