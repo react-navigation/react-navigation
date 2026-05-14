@@ -143,6 +143,13 @@ export function FrameSizeProvider({
     }
 
     viewRef.current?.measure((_x, _y, width, height) => {
+      // On old architecture, `measure` is async
+      // It can also be called before layout is ready with 0 values
+      // So we ignore the updates if we already have layout from `onLayout`
+      if (frameRef.current.width > 0 && frameRef.current.height > 0) {
+        return;
+      }
+
       onChange({ width, height });
     });
   }, [onChange]);
