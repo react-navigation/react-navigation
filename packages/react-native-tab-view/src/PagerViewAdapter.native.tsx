@@ -163,7 +163,7 @@ export function PagerViewAdapter({
         }}
         onPageScrollStateChanged={onPageScrollStateChanged}
         scrollEnabled={swipeEnabled}
-        pageMargin={pageMargin}
+        {...(pageMargin != null ? { pageMargin } : null)}
       >
         {children}
       </AnimatedViewPager>
