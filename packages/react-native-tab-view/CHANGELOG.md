@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.7...react-native-tab-view@5.0.0-alpha.8) (2026-05-14)
+
+### Features
+
+* export DefaultAdapater in react-native-tab-view for convenience ([61b1758](https://github.com/react-navigation/react-navigation/commit/61b175882fe460a8f7af8be3dca8e98db606a43e)) - by @satya164
+
 # 5.0.0-alpha.7 (2026-05-11)
 
 **Note:** Version bump only for package react-native-tab-view

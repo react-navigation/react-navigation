@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.31](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.30...@react-navigation/stack@8.0.0-alpha.31) (2026-05-14)
+
+### Bug Fixes
+
+* don't hide or pause retained screens ([cef57c7](https://github.com/react-navigation/react-navigation/commit/cef57c7d90b24df51873070b4e06e3c9f6eca00b)) - by @satya164
+* fix jumps and flickers with float headers ([3cb4759](https://github.com/react-navigation/react-navigation/commit/3cb4759e58850074b27e7c3e443749b3696b58c6)) - by @satya164
+* fix previous header showing through when header is transparent ([72d2fe6](https://github.com/react-navigation/react-navigation/commit/72d2fe6a8d62ec5fd0f51477a5ec70b7abec02df)) - by @satya164
+
 # [8.0.0-alpha.30](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.29...@react-navigation/stack@8.0.0-alpha.30) (2026-05-12)
 
 ### Bug Fixes

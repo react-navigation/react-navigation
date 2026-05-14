@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.9...react-native-drawer-layout@5.0.0-alpha.10) (2026-05-14)
+
+### Bug Fixes
+
+* avoid negative drawer width when calculating ([3417a51](https://github.com/react-navigation/react-navigation/commit/3417a5128f58f7ba9421e5cb347aaf3e4193e2b8)) - by @satya164
+
 # 5.0.0-alpha.9 (2026-05-11)
 
 **Note:** Version bump only for package react-native-drawer-layout
