@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.32](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.31...@react-navigation/stack@8.0.0-alpha.32) (2026-05-14)
+
+### Bug Fixes
+
+* don't render header for preloaded and retained screens ([ee47f81](https://github.com/react-navigation/react-navigation/commit/ee47f8154d48954b725929478fd2830e881b3ead)) - by @
+
 # [8.0.0-alpha.31](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.30...@react-navigation/stack@8.0.0-alpha.31) (2026-05-14)
 
 ### Bug Fixes
