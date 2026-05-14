@@ -628,7 +628,14 @@ export class CardStack extends React.Component<Props, State> {
 
     const focusedRoute = state.routes[state.index];
 
-    const isFloatHeaderAbsolute = scenes.slice(-2).some((scene) => {
+    // Render only two top-most active headers as a workaround for
+    // https://github.com/react-navigation/react-navigation/issues/12456.
+    // If the header is persisted, it might be placed incorrectly when navigating back
+    const activeHeaderScenes = scenes
+      .filter((scene) => !isInactiveRoute(scene.route, routes))
+      .slice(-2);
+
+    const isFloatHeaderAbsolute = activeHeaderScenes.some((scene) => {
       const options = scene.descriptor.options ?? {};
       const { headerMode, headerTransparent, headerShown = true } = options;
 
@@ -653,7 +660,7 @@ export class CardStack extends React.Component<Props, State> {
       <View style={styles.container}>
         {renderHeader({
           mode: 'float',
-          scenes,
+          scenes: activeHeaderScenes,
           getPreviousScene: this.getPreviousScene,
           getFocusedRoute: this.getFocusedRoute,
           contentHeight: headerHeights[focusedRoute.key],
