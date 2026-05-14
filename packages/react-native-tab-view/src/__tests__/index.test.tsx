@@ -128,7 +128,11 @@ describe.each([{ type: 'ios' as const }, { type: 'web' as const }])(
     });
 
     test('forwards pageMargin to adapter', () => {
-      const renderAdapter = jest.fn((props: any) => <View {...props} />);
+      let capturedProps: { pageMargin?: number } | undefined;
+      const renderAdapter = jest.fn((props: any) => {
+        capturedProps = props;
+        return <View />;
+      });
 
       render(
         <TabView
@@ -144,10 +148,7 @@ describe.each([{ type: 'ios' as const }, { type: 'web' as const }])(
       );
 
       expect(renderAdapter).toHaveBeenCalled();
-      const adapterProps = renderAdapter.mock.calls[0]?.[0] as
-        | { pageMargin?: number }
-        | undefined;
-      expect(adapterProps?.pageMargin).toBe(16);
+      expect(capturedProps?.pageMargin).toBe(16);
     });
   }
 );
