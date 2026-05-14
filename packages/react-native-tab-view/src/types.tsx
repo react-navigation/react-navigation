@@ -112,6 +112,10 @@ export type AdapterCommonProps = {
    * Style for the pager adapter.
    */
   style?: StyleProp<ViewStyle> | undefined;
+  /**
+   * Gap between pages.
+   */
+  pageMargin?: number | undefined;
 };
 
 export type AdapterRendererProps = {
