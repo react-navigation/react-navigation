@@ -16,7 +16,10 @@ import { Animated, StyleSheet, View } from 'react-native';
 import type { Layout, Scene } from '../../types';
 import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
 import { useKeyboardManager } from '../../utils/useKeyboardManager';
-import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
+import type {
+  HeaderHeight,
+  Props as HeaderContainerProps,
+} from '../Header/HeaderContainer';
 import { Card } from './Card';
 
 type Props = {
@@ -48,8 +51,7 @@ type Props = {
   onGestureStart: (props: { route: Route<string> }) => void;
   onGestureEnd: (props: { route: Route<string> }) => void;
   onGestureCancel: (props: { route: Route<string> }) => void;
-  hasAbsoluteFloatHeader: boolean;
-  headerHeight: number;
+  headerHeight: HeaderHeight | undefined;
   onHeaderHeightChange: (props: {
     route: Route<string>;
     height: number;
@@ -69,7 +71,6 @@ function CardContainerInner({
   modal,
   getPreviousScene,
   getFocusedRoute,
-  hasAbsoluteFloatHeader,
   headerHeight,
   onHeaderHeightChange,
   isParentHeaderShown,
@@ -230,11 +231,6 @@ function CardContainerInner({
       styleInterpolator={cardStyleInterpolator}
       pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
       preloaded={preloaded}
-      containerStyle={
-        hasAbsoluteFloatHeader && headerMode !== 'screen'
-          ? { marginTop: headerHeight }
-          : null
-      }
       contentStyle={[
         {
           backgroundColor:
@@ -266,7 +262,7 @@ function CardContainerInner({
                 <HeaderHeightContext.Provider
                   value={
                     headerShown !== false
-                      ? headerHeight
+                      ? (headerHeight?.value ?? 0)
                       : (parentHeaderHeight ?? 0)
                   }
                 >

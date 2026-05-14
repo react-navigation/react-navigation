@@ -48,12 +48,17 @@ import type {
 } from '../../types';
 import { getDistanceForDirection } from '../../utils/getDistanceForDirection';
 import { getModalRouteKeys } from '../../utils/getModalRoutesKeys';
-import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
+import type {
+  HeaderHeight,
+  Props as HeaderContainerProps,
+} from '../Header/HeaderContainer';
 import { CardContainer } from './CardContainer';
 
 type GestureValues = {
   [key: string]: Animated.Value;
 };
+
+type HeaderHeights = Record<string, HeaderHeight>;
 
 type Props = {
   direction: LocaleDirection;
@@ -89,7 +94,7 @@ type State = {
   scenes: Scene[];
   gestures: GestureValues;
   layout: Layout;
-  headerHeights: Record<string, number>;
+  headerHeights: HeaderHeights;
 };
 
 const NAMED_TRANSITIONS_PRESETS = {
@@ -109,6 +114,8 @@ const NAMED_TRANSITIONS_PRESETS = {
 } as const satisfies Record<StackAnimationName, TransitionPreset>;
 
 const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
+
+const HIDDEN_HEADER_HEIGHT = { measured: false, value: 0 };
 
 const getInterpolationIndex = (scenes: Scene[], index: number) => {
   const { cardStyleInterpolator } = scenes[index].descriptor.options;
@@ -162,9 +169,9 @@ const getHeaderHeights = (
   isParentHeaderShown: boolean,
   isParentModal: boolean,
   layout: Layout,
-  previous: Record<string, number>
+  previous: HeaderHeights
 ) => {
-  return scenes.reduce<Record<string, number>>((acc, curr, index) => {
+  return scenes.reduce<HeaderHeights>((acc, curr, index) => {
     const {
       headerStatusBarHeight = isParentHeaderShown ? 0 : insets.top,
       headerStyle,
@@ -175,19 +182,34 @@ const getHeaderHeights = (
     const height =
       'height' in style && typeof style.height === 'number'
         ? style.height
-        : previous[curr.route.key];
+        : undefined;
 
     const interpolationIndex = getInterpolationIndex(scenes, index);
     const isModal = getIsModal(curr, interpolationIndex, isParentModal);
 
-    acc[curr.route.key] =
-      typeof height === 'number'
-        ? height
-        : getDefaultHeaderHeight({
-            landscape: layout.width > layout.height,
-            modalPresentation: isModal,
-            topInset: headerStatusBarHeight,
-          });
+    if (typeof height === 'number') {
+      acc[curr.route.key] = { measured: true, value: height };
+    } else {
+      const previousHeight = previous[curr.route.key];
+      const defaultHeight = getDefaultHeaderHeight({
+        landscape: layout.width > layout.height,
+        modalPresentation: isModal,
+        topInset: headerStatusBarHeight,
+      });
+
+      // If we hadn't measured before, use re-computed default height
+      if (
+        !previousHeight?.measured &&
+        defaultHeight !== previousHeight?.value
+      ) {
+        acc[curr.route.key] = {
+          measured: false,
+          value: defaultHeight,
+        };
+      } else if (previousHeight) {
+        acc[curr.route.key] = previousHeight;
+      }
+    }
 
     return acc;
   }, {});
@@ -541,14 +563,17 @@ export class CardStack extends React.Component<Props, State> {
     this.setState(({ headerHeights }) => {
       const previousHeight = headerHeights[route.key];
 
-      if (previousHeight === height) {
+      if (previousHeight?.value === height) {
         return null;
       }
 
       return {
         headerHeights: {
           ...headerHeights,
-          [route.key]: height,
+          [route.key]: {
+            measured: true,
+            value: height,
+          },
         },
       };
     });
@@ -622,6 +647,8 @@ export class CardStack extends React.Component<Props, State> {
       scenes.findLast((scene) => scene.route.key === focusedRoute.key)
         ?.descriptor.options.headerMode === 'float';
 
+    const focusedHeaderHeight = headerHeights[focusedRoute.key];
+
     return (
       <View style={styles.container}>
         {renderHeader({
@@ -637,7 +664,7 @@ export class CardStack extends React.Component<Props, State> {
               // The header title can't be found with maestro without this
               // In some cases, header buttons may not be touchable as well
               isFloatHeaderFocused && {
-                height: headerHeights[focusedRoute.key],
+                height: focusedHeaderHeight?.value,
               },
             ],
           ],
@@ -652,6 +679,7 @@ export class CardStack extends React.Component<Props, State> {
               inactiveBehavior = 'pause',
               animation,
               headerShown = true,
+              headerMode,
               headerTransparent,
             } = scene.descriptor.options;
 
@@ -661,7 +689,9 @@ export class CardStack extends React.Component<Props, State> {
             const safeAreaInsetLeft = insets.left;
 
             const headerHeight =
-              headerShown !== false ? headerHeights[route.key] : 0;
+              headerShown !== false
+                ? headerHeights[route.key]
+                : HIDDEN_HEADER_HEIGHT;
 
             // Start from current card and count backwards the number of cards with same interpolation
             const interpolationIndex = getInterpolationIndex(scenes, index);
@@ -755,6 +785,18 @@ export class CardStack extends React.Component<Props, State> {
                   // Avoid unfocused larger pages increasing scroll area
                   // e.g. when a smaller screen is pushed over a larger one on web
                   overflow: isTopmost ? undefined : 'hidden',
+                  marginTop:
+                    headerTransparent || headerMode === 'screen'
+                      ? 0
+                      : // Add offset for non-transparent floating header
+                        isFloatHeaderAbsolute
+                        ? // If header is absolute, offset the card by the header height
+                          headerHeight?.value
+                        : // Otherwise, the in-flow float header already takes the
+                          // focused header's space, so offset by the difference
+                          headerHeight && focusedHeaderHeight
+                          ? headerHeight.value - focusedHeaderHeight.value
+                          : 0,
                 }}
               >
                 <CardContainer
@@ -780,9 +822,6 @@ export class CardStack extends React.Component<Props, State> {
                   onHeaderHeightChange={this.handleHeaderLayout}
                   getPreviousScene={this.getPreviousScene}
                   getFocusedRoute={this.getFocusedRoute}
-                  hasAbsoluteFloatHeader={
-                    isFloatHeaderAbsolute && !headerTransparent
-                  }
                   renderHeader={renderHeader}
                   onOpenRoute={onOpenRoute}
                   onCloseRoute={onCloseRoute}

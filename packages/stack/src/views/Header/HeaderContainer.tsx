@@ -7,7 +7,13 @@ import {
   useLinkBuilder,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
+import {
+  type LayoutChangeEvent,
+  type StyleProp,
+  StyleSheet,
+  View,
+  type ViewStyle,
+} from 'react-native';
 
 import {
   forNoAnimation,
@@ -23,13 +29,18 @@ import type {
 } from '../../types';
 import { Header } from './Header';
 
+export type HeaderHeight = {
+  measured: boolean;
+  value: number;
+};
+
 export type Props = {
   mode: StackHeaderMode;
   scenes: (Scene | undefined)[];
   getPreviousScene: (props: { route: Route<string> }) => Scene | undefined;
   getFocusedRoute: () => Route<string>;
-  contentHeight: number | undefined;
-  onContentHeightChange?: (props: {
+  contentHeight: HeaderHeight | undefined;
+  onContentHeightChange: (props: {
     route: Route<string>;
     height: number;
   }) => void;
@@ -146,6 +157,26 @@ export function HeaderContainer({
               : forNoAnimation,
         };
 
+        const onRef = (node: View | null) => {
+          node?.measure((_x, _y, _width, height) => {
+            if (height && !contentHeight?.measured) {
+              onContentHeightChange({
+                route: scene.descriptor.route,
+                height,
+              });
+            }
+          });
+        };
+
+        const onLayout = (e: LayoutChangeEvent) => {
+          const { height } = e.nativeEvent.layout;
+
+          onContentHeightChange({
+            route: scene.descriptor.route,
+            height,
+          });
+        };
+
         return (
           <NavigationProvider
             key={scene.descriptor.route.key}
@@ -163,7 +194,7 @@ export function HeaderContainer({
                         ? // For transparent headers, specify a min height
                           // This is needed for screen readers, and testing tools on Android
                           // For float header, it's handled in CardStack
-                          { minHeight: contentHeight }
+                          { minHeight: contentHeight?.value }
                         : null,
                     ]
                   : null,
@@ -173,18 +204,8 @@ export function HeaderContainer({
               ]}
             >
               <View
-                onLayout={
-                  onContentHeightChange
-                    ? (e) => {
-                        const { height } = e.nativeEvent.layout;
-
-                        onContentHeightChange({
-                          route: scene.descriptor.route,
-                          height,
-                        });
-                      }
-                    : undefined
-                }
+                ref={onRef}
+                onLayout={onLayout}
                 style={{ pointerEvents: 'box-none' }}
               >
                 <ActivityView
