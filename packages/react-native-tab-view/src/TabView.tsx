@@ -8,7 +8,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 
-import { Pager } from './Pager';
+import { DefaultAdapter } from './DefaultAdapter';
 import { SceneView } from './SceneView';
 import { TabBar } from './TabBar';
 import type {
@@ -160,7 +160,7 @@ export function TabView<T extends Route>({
   // eslint-disable-next-line @eslint-react/no-unstable-default-props
   renderTabBar = (props) => <TabBar {...props} />,
   // eslint-disable-next-line @eslint-react/no-unstable-default-props
-  renderAdapter = (props) => <Pager {...props} />,
+  renderAdapter = (props) => <DefaultAdapter {...props} />,
   pagerStyle,
   style,
   direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',

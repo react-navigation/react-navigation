@@ -1,8 +1,12 @@
+export { DefaultAdapter, type DefaultAdapterProps } from './DefaultAdapter';
 export {
   PagerViewAdapter,
   type PagerViewAdapterProps,
 } from './PagerViewAdapter';
-export { PanResponderAdapter } from './PanResponderAdapter';
+export {
+  PanResponderAdapter,
+  type PanResponderAdapterProps,
+} from './PanResponderAdapter';
 export { SceneMap } from './SceneMap';
 export {
   ScrollViewAdapter,

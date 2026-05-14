@@ -34,12 +34,12 @@ jest.mock('react-native-pager-view', () => {
   };
 });
 
-jest.mock('../Pager', () => {
+jest.mock('../DefaultAdapter', () => {
   const Platform = require('react-native').Platform;
 
   return Platform.OS === 'web'
-    ? jest.requireActual('../Pager.tsx')
-    : jest.requireActual('../Pager.ios.tsx');
+    ? jest.requireActual('../DefaultAdapter.tsx')
+    : jest.requireActual('../DefaultAdapter.ios.tsx');
 });
 
 const FirstRoute = () => (
