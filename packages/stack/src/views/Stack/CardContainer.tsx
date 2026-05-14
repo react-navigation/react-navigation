@@ -18,7 +18,6 @@ import { ModalPresentationContext } from '../../utils/ModalPresentationContext';
 import { useKeyboardManager } from '../../utils/useKeyboardManager';
 import type { Props as HeaderContainerProps } from '../Header/HeaderContainer';
 import { Card } from './Card';
-import { CardA11yWrapper, type CardA11yWrapperRef } from './CardA11yWrapper';
 
 type Props = {
   interpolationIndex: number;
@@ -56,11 +55,8 @@ type Props = {
     height: number;
   }) => void;
   isParentHeaderShown: boolean;
-  isNextScreenTransparent: boolean;
   children: React.ReactNode;
 };
-
-const EPSILON = 0.1;
 
 function CardContainerInner({
   interpolationIndex,
@@ -77,7 +73,6 @@ function CardContainerInner({
   headerHeight,
   onHeaderHeightChange,
   isParentHeaderShown,
-  isNextScreenTransparent,
   layout,
   onCloseRoute,
   onOpenRoute,
@@ -95,8 +90,6 @@ function CardContainerInner({
   scene,
   children,
 }: Props) {
-  const wrapperRef = React.useRef<CardA11yWrapperRef>(null);
-
   const { direction } = useLocale();
 
   const parentHeaderHeight = React.use(HeaderHeightContext);
@@ -148,8 +141,6 @@ function CardContainerInner({
     closing: boolean;
     gesture: boolean;
   }) => {
-    wrapperRef.current?.setInert(closing);
-
     const { route } = scene.descriptor;
 
     onPageChangeConfirm?.({ gesture, active, closing });
@@ -165,20 +156,6 @@ function CardContainerInner({
   };
 
   const { colors } = useTheme();
-
-  React.useEffect(() => {
-    const listener = scene.progress.next?.addListener?.(
-      ({ value }: { value: number }) => {
-        wrapperRef.current?.setInert(value > EPSILON);
-      }
-    );
-
-    return () => {
-      if (listener) {
-        scene.progress.next?.removeListener?.(listener);
-      }
-    };
-  }, [scene.progress.next]);
 
   const {
     presentation,
@@ -225,90 +202,82 @@ function CardContainerInner({
   const animated = animation !== 'none';
 
   return (
-    <CardA11yWrapper
-      ref={wrapperRef}
-      focused={focused}
-      active={active}
+    <Card
       animated={animated}
-      isNextScreenTransparent={isNextScreenTransparent}
+      interpolationIndex={interpolationIndex}
+      gestureDirection={gestureDirection}
+      layout={layout}
+      insets={insets}
+      direction={direction}
+      gesture={gesture}
+      current={scene.progress.current}
+      next={scene.progress.next}
+      opening={opening}
+      closing={closing}
+      onOpen={handleOpen}
+      onClose={handleClose}
+      overlay={cardOverlay}
+      overlayEnabled={cardOverlayEnabled}
+      shadowEnabled={cardShadowEnabled}
+      onTransition={handleTransition}
+      onGestureBegin={handleGestureBegin}
+      onGestureCanceled={handleGestureCanceled}
+      onGestureEnd={handleGestureEnd}
+      gestureEnabled={index === 0 ? false : gestureEnabled}
+      gestureResponseDistance={gestureResponseDistance}
+      gestureVelocityImpact={gestureVelocityImpact}
+      transitionSpec={transitionSpec}
+      styleInterpolator={cardStyleInterpolator}
+      pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
+      preloaded={preloaded}
+      containerStyle={
+        hasAbsoluteFloatHeader && headerMode !== 'screen'
+          ? { marginTop: headerHeight }
+          : null
+      }
+      contentStyle={[
+        {
+          backgroundColor:
+            presentation === 'transparentModal'
+              ? 'transparent'
+              : colors.background,
+        },
+        cardStyle,
+      ]}
     >
-      <Card
-        animated={animated}
-        interpolationIndex={interpolationIndex}
-        gestureDirection={gestureDirection}
-        layout={layout}
-        insets={insets}
-        direction={direction}
-        gesture={gesture}
-        current={scene.progress.current}
-        next={scene.progress.next}
-        opening={opening}
-        closing={closing}
-        onOpen={handleOpen}
-        onClose={handleClose}
-        overlay={cardOverlay}
-        overlayEnabled={cardOverlayEnabled}
-        shadowEnabled={cardShadowEnabled}
-        onTransition={handleTransition}
-        onGestureBegin={handleGestureBegin}
-        onGestureCanceled={handleGestureCanceled}
-        onGestureEnd={handleGestureEnd}
-        gestureEnabled={index === 0 ? false : gestureEnabled}
-        gestureResponseDistance={gestureResponseDistance}
-        gestureVelocityImpact={gestureVelocityImpact}
-        transitionSpec={transitionSpec}
-        styleInterpolator={cardStyleInterpolator}
-        pageOverflowEnabled={headerMode !== 'float' && presentation !== 'modal'}
-        preloaded={preloaded}
-        containerStyle={
-          hasAbsoluteFloatHeader && headerMode !== 'screen'
-            ? { marginTop: headerHeight }
-            : null
-        }
-        contentStyle={[
-          {
-            backgroundColor:
-              presentation === 'transparentModal'
-                ? 'transparent'
-                : colors.background,
-          },
-          cardStyle,
-        ]}
-      >
-        <View style={styles.container}>
-          <ModalPresentationContext.Provider value={modal}>
-            {headerMode !== 'float'
-              ? renderHeader({
-                  mode: 'screen',
-                  scenes: [previousScene, scene],
-                  getPreviousScene,
-                  getFocusedRoute,
-                  contentHeight: headerHeight,
-                  onContentHeightChange: onHeaderHeightChange,
-                  style: styles.header,
-                })
-              : null}
-            <View style={styles.scene}>
-              <HeaderBackContext.Provider value={headerBack}>
-                <HeaderShownContext.Provider
-                  value={isParentHeaderShown || headerShown !== false}
+      <View style={styles.container}>
+        <ModalPresentationContext.Provider value={modal}>
+          {headerMode !== 'float'
+            ? renderHeader({
+                mode: 'screen',
+                scenes: [previousScene, scene],
+                getPreviousScene,
+                getFocusedRoute,
+                contentHeight: headerHeight,
+                onContentHeightChange: onHeaderHeightChange,
+                style: styles.header,
+              })
+            : null}
+          <View style={styles.scene}>
+            <HeaderBackContext.Provider value={headerBack}>
+              <HeaderShownContext.Provider
+                value={isParentHeaderShown || headerShown !== false}
+              >
+                <HeaderHeightContext.Provider
+                  value={
+                    headerShown !== false
+                      ? headerHeight
+                      : (parentHeaderHeight ?? 0)
+                  }
                 >
-                  <HeaderHeightContext.Provider
-                    value={
-                      headerShown !== false
-                        ? headerHeight
-                        : (parentHeaderHeight ?? 0)
-                    }
-                  >
-                    {children}
-                  </HeaderHeightContext.Provider>
-                </HeaderShownContext.Provider>
-              </HeaderBackContext.Provider>
-            </View>
-          </ModalPresentationContext.Provider>
-        </View>
-      </Card>
-    </CardA11yWrapper>
+                  {children}
+                </HeaderHeightContext.Provider>
+              </HeaderShownContext.Provider>
+            </HeaderBackContext.Provider>
+          </View>
+        </ModalPresentationContext.Provider>
+      </View>
+    </Card>
   );
 }
 

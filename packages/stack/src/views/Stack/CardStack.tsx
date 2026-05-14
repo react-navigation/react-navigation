@@ -735,50 +735,56 @@ export class CardStack extends React.Component<Props, State> {
               return null;
             }
 
+            const isTopmost = index === routes.length - 1;
+
             return (
-              <CardContainer
+              <ActivityView
                 key={route.key}
-                index={index}
-                interpolationIndex={interpolationIndex}
-                modal={isModal}
-                active={index === routes.length - 1}
-                focused={focused}
-                opening={openingRouteKeys.includes(route.key)}
-                closing={closingRouteKeys.includes(route.key)}
-                layout={layout}
-                gesture={gesture}
-                scene={scene}
-                safeAreaInsetTop={safeAreaInsetTop}
-                safeAreaInsetRight={safeAreaInsetRight}
-                safeAreaInsetBottom={safeAreaInsetBottom}
-                safeAreaInsetLeft={safeAreaInsetLeft}
-                onGestureStart={onGestureStart}
-                onGestureCancel={onGestureCancel}
-                onGestureEnd={onGestureEnd}
-                headerHeight={headerHeight}
-                isParentHeaderShown={isParentHeaderShown}
-                onHeaderHeightChange={this.handleHeaderLayout}
-                getPreviousScene={this.getPreviousScene}
-                getFocusedRoute={this.getFocusedRoute}
-                hasAbsoluteFloatHeader={
-                  isFloatHeaderAbsolute && !headerTransparent
-                }
-                renderHeader={renderHeader}
-                onOpenRoute={onOpenRoute}
-                onCloseRoute={onCloseRoute}
-                onTransitionStart={onTransitionStart}
-                onTransitionEnd={onTransitionEnd}
-                isNextScreenTransparent={isNextScreenTransparent}
-                preloaded={isInactive}
+                mode={activityMode}
+                visible={isVisible}
+                style={{
+                  ...StyleSheet.absoluteFill,
+                  // Avoid unfocused larger pages increasing scroll area
+                  // e.g. when a smaller screen is pushed over a larger one on web
+                  overflow: isTopmost ? undefined : 'hidden',
+                }}
               >
-                <ActivityView
-                  mode={activityMode}
-                  visible={isVisible}
-                  style={StyleSheet.absoluteFill}
+                <CardContainer
+                  index={index}
+                  interpolationIndex={interpolationIndex}
+                  modal={isModal}
+                  active={isTopmost}
+                  focused={focused}
+                  opening={openingRouteKeys.includes(route.key)}
+                  closing={closingRouteKeys.includes(route.key)}
+                  layout={layout}
+                  gesture={gesture}
+                  scene={scene}
+                  safeAreaInsetTop={safeAreaInsetTop}
+                  safeAreaInsetRight={safeAreaInsetRight}
+                  safeAreaInsetBottom={safeAreaInsetBottom}
+                  safeAreaInsetLeft={safeAreaInsetLeft}
+                  onGestureStart={onGestureStart}
+                  onGestureCancel={onGestureCancel}
+                  onGestureEnd={onGestureEnd}
+                  headerHeight={headerHeight}
+                  isParentHeaderShown={isParentHeaderShown}
+                  onHeaderHeightChange={this.handleHeaderLayout}
+                  getPreviousScene={this.getPreviousScene}
+                  getFocusedRoute={this.getFocusedRoute}
+                  hasAbsoluteFloatHeader={
+                    isFloatHeaderAbsolute && !headerTransparent
+                  }
+                  renderHeader={renderHeader}
+                  onOpenRoute={onOpenRoute}
+                  onCloseRoute={onCloseRoute}
+                  onTransitionStart={onTransitionStart}
+                  onTransitionEnd={onTransitionEnd}
+                  preloaded={isInactive}
                 >
                   {scene.descriptor.render()}
-                </ActivityView>
-              </CardContainer>
+                </CardContainer>
+              </ActivityView>
             );
           })}
         </View>
