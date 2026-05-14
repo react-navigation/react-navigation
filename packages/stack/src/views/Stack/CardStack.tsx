@@ -647,7 +647,6 @@ export class CardStack extends React.Component<Props, State> {
             const focused = focusedRoute.key === route.key;
             const gesture = gestures[route.key];
             const scene = scenes[index];
-            const isInactive = isInactiveRoute(route, this.props.routes);
 
             const {
               inactiveBehavior = 'pause',
@@ -696,25 +695,36 @@ export class CardStack extends React.Component<Props, State> {
                 self[index + 1]?.key
               );
 
+            const isInactive = isInactiveRoute(route, this.props.routes);
+            const isRetained = state.retainedRouteKeys?.includes(route.key);
+            const isPreloaded = isInactive && !isRetained;
+
+            const isTopmost = index === routes.length - 1;
             const isBeforeLast = index === routes.length - 2;
 
             // Keep animating and the last two rendered routes visible for smoother transitions
             const isVisible =
               focused ||
               isNextScreenTransparent ||
+              // React native destroys the view when hidden
+              // So we keep retained screens visible
+              // This makes sure any videos being played don't stop etc.
+              isRetained ||
               // We only need to keep other screens visible when animation is enabled
               (isAnimationEnabled &&
                 (isFocusing ||
                   isRemoving ||
-                  // Preloaded and retained screens should stay mounted, but remain hidden until focused
-                  (!isInactive && index >= routes.length - 2)));
+                  // Preloaded screens should stay mounted, but remain hidden until focused
+                  (!isPreloaded && index >= routes.length - 2)));
 
             const activityMode = // Render focused and animating screens normally
               focused || isFocusing
                 ? 'normal'
                 : inactiveBehavior === 'none' ||
                     // Unpause preloaded or retained screens so updates are visible
+                    // Handle retained explicitly as isInactive won't be updated until animation end
                     isInactive ||
+                    isRetained ||
                     // Keep the screen before transparent screen active
                     // This lets the screen under the transparent screen update and animate
                     isNextScreenTransparent ||
@@ -734,8 +744,6 @@ export class CardStack extends React.Component<Props, State> {
             if (activityMode === 'unmounted') {
               return null;
             }
-
-            const isTopmost = index === routes.length - 1;
 
             return (
               <ActivityView
