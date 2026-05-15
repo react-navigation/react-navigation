@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.9...@react-navigation/routers@8.0.0-alpha.10) (2026-05-15)
+
+### Features
+
+* rework how preload action is handled ([3ffbdef](https://github.com/react-navigation/react-navigation/commit/3ffbdefc5554ebff3cab77107b04b83f5a29e6b7)) - by @
+
 # 8.0.0-alpha.9 (2026-05-11)
 
 **Note:** Version bump only for package @react-navigation/routers

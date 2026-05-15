@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.30](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.29...@react-navigation/bottom-tabs@8.0.0-alpha.30) (2026-05-15)
+
+### Bug Fixes
+
+* don't throw error for icons in custom tab bar ([d1a909e](https://github.com/react-navigation/react-navigation/commit/d1a909ec9ac0ffca1d6aff4713e00cac526ea750)) - by @
+
 # 8.0.0-alpha.29 (2026-05-11)
 
 ### Features
