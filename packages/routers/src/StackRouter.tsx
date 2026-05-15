@@ -915,63 +915,31 @@ export function StackRouter(options: StackRouterOptions) {
           const id = getId?.({ params: action.payload.params });
           const params = createParamsFromAction({ action, routeParamList });
 
-          let route: Route<string> | undefined;
-
-          if (action.payload.reuse) {
-            route = preloadedRoutes.findLast(
-              (route) =>
-                route.name === action.payload.name &&
-                (id === undefined || id === getId?.({ params: route.params }))
-            );
-
-            if (route) {
-              return getStateWithRoutes(
-                state,
-                routes,
-                preloadedRoutes.map((r) =>
-                  r.key === route?.key && r.params !== params
-                    ? { ...r, params }
-                    : r
-                )
-              );
-            }
-          }
-
-          if (id !== undefined) {
-            route = routes.findLast(
-              (route) =>
-                route.name === action.payload.name &&
-                id === getId?.({ params: route.params })
-            );
-          } else if (action.payload.reuse) {
-            route = routes.findLast(
-              (route) => route.name === action.payload.name
-            );
-          }
+          const route = preloadedRoutes.findLast(
+            (route) =>
+              route.name === action.payload.name &&
+              (id === undefined || id === getId?.({ params: route.params }))
+          );
 
           if (route) {
             return getStateWithRoutes(
               state,
-              routes.map((r) =>
+              routes,
+              preloadedRoutes.map((r) =>
                 r.key === route.key && r.params !== params
                   ? { ...r, params }
                   : r
-              ),
-              preloadedRoutes
-            );
-          } else {
-            return getStateWithRoutes(
-              state,
-              routes,
-              preloadedRoutes
-                .filter(
-                  (r) =>
-                    r.name !== action.payload.name ||
-                    id !== getId?.({ params: r.params })
-                )
-                .concat(createRouteFromAction({ action, routeParamList }))
+              )
             );
           }
+
+          return getStateWithRoutes(
+            state,
+            routes,
+            preloadedRoutes.concat(
+              createRouteFromAction({ action, routeParamList })
+            )
+          );
         }
 
         default:

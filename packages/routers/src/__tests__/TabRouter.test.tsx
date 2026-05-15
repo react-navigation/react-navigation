@@ -2587,7 +2587,7 @@ test('removes focused route from preloadedRouteKeys on goBack', () => {
   });
 });
 
-test('adds an existing route key to preloadedRouteKeys with preload and reuse', () => {
+test('adds an existing route key to preloadedRouteKeys with preload', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -2620,7 +2620,7 @@ test('adds an existing route key to preloadedRouteKeys with preload and reuse', 
           { type: 'route', key: 'qux-test' },
         ],
       },
-      CommonActions.preload('bar', { answer: 42 }, { reuse: true }),
+      CommonActions.preload('bar', { answer: 42 }),
       options
     )
   ).toEqual({
@@ -2646,7 +2646,7 @@ test('adds an existing route key to preloadedRouteKeys with preload and reuse', 
   });
 });
 
-test('updates a preloaded route with preload and reuse when the ID changes', () => {
+test('updates a preloaded route with preload when the ID changes', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -2679,7 +2679,7 @@ test('updates a preloaded route with preload and reuse when the ID changes', () 
           { type: 'route', key: 'qux-test' },
         ],
       },
-      CommonActions.preload('bar', { answer: 43 }, { reuse: true }),
+      CommonActions.preload('bar', { answer: 43 }),
       options
     )
   ).toEqual({

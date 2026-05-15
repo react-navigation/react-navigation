@@ -363,25 +363,12 @@ type NavigationHelpersCommon<
    *
    * @param screen Name of the route to preload.
    * @param [params] Params object for the route.
-   * @param [options.reuse] Whether to reuse a matching route or preloaded route.
    */
   preload<RouteName extends keyof ParamList>(
     ...args: RouteName extends unknown
       ? undefined extends ParamList[RouteName]
-        ? [
-            screen: RouteName,
-            params?: ParamList[RouteName],
-            options?: {
-              reuse?: boolean | undefined;
-            },
-          ]
-        : [
-            screen: RouteName,
-            params: ParamList[RouteName],
-            options?: {
-              reuse?: boolean | undefined;
-            },
-          ]
+        ? [screen: RouteName, params?: ParamList[RouteName]]
+        : [screen: RouteName, params: ParamList[RouteName]]
       : never
   ): void;
 

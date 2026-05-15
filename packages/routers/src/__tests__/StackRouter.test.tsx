@@ -4028,7 +4028,7 @@ test('adds preloaded route with preload', () => {
   });
 });
 
-test('updates an existing route with preload when the ID matches', () => {
+test('adds preloaded route with preload when an active route has the same ID', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -4054,7 +4054,7 @@ test('updates an existing route with preload when the ID matches', () => {
           {
             key: 'bar-test',
             name: 'bar',
-            params: { answer: 42, toBe: 'overrode' },
+            params: { answer: 42, toBe: 'untouched' },
           },
           { key: 'baz', name: 'baz' },
         ],
@@ -4073,14 +4073,19 @@ test('updates an existing route with preload when the ID matches', () => {
       {
         key: 'bar-test',
         name: 'bar',
-        params: { answer: 42, color: 'test', something: 'else' },
+        params: { answer: 42, toBe: 'untouched' },
       },
       { key: 'baz', name: 'baz' },
+      {
+        key: 'bar-1',
+        name: 'bar',
+        params: { answer: 42, color: 'test', something: 'else' },
+      },
     ],
   });
 });
 
-test('updates the last matching route with preload when the ID matches', () => {
+test('adds preloaded route with preload when active routes have the same ID', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -4135,6 +4140,11 @@ test('updates the last matching route with preload when the ID matches', () => {
       { key: 'baz', name: 'baz' },
       {
         key: 'bar-last',
+        name: 'bar',
+        params: { answer: 42, toBe: 'last' },
+      },
+      {
+        key: 'bar-1',
         name: 'bar',
         params: { answer: 42, color: 'test', something: 'else' },
       },
@@ -4195,7 +4205,7 @@ test('adds preloaded route with preload when the ID changes', () => {
   });
 });
 
-test('updates the last matching route by name with preload and reuse when getId is not provided', () => {
+test('updates the last matching preloaded route by name when getId is not provided', () => {
   const router = StackRouter({});
 
   expect(
@@ -4204,16 +4214,16 @@ test('updates the last matching route by name with preload and reuse when getId 
         stale: false,
         type: 'stack',
         key: 'root',
-        index: 2,
+        index: 0,
         retainedRouteKeys: [],
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
+          { key: 'baz', name: 'baz' },
           {
             key: 'bar-first',
             name: 'bar',
             params: { answer: 1, toBe: 'first' },
           },
-          { key: 'baz', name: 'baz' },
           {
             key: 'bar-last',
             name: 'bar',
@@ -4221,13 +4231,7 @@ test('updates the last matching route by name with preload and reuse when getId 
           },
         ],
       },
-      CommonActions.preload(
-        'bar',
-        { answer: 3 },
-        {
-          reuse: true,
-        }
-      ),
+      CommonActions.preload('bar', { answer: 3 }),
       {
         routeNames: ['baz', 'bar', 'qux'],
         routeParamList: {},
@@ -4238,16 +4242,16 @@ test('updates the last matching route by name with preload and reuse when getId 
     stale: false,
     type: 'stack',
     key: 'root',
-    index: 2,
+    index: 0,
     retainedRouteKeys: [],
     routeNames: ['baz', 'bar', 'qux'],
     routes: [
+      { key: 'baz', name: 'baz' },
       {
         key: 'bar-first',
         name: 'bar',
         params: { answer: 1, toBe: 'first' },
       },
-      { key: 'baz', name: 'baz' },
       {
         key: 'bar-last',
         name: 'bar',
@@ -4257,73 +4261,7 @@ test('updates the last matching route by name with preload and reuse when getId 
   });
 });
 
-test('updates the last matching route with preload and reuse', () => {
-  const router = StackRouter({});
-  const options: RouterConfigOptions = {
-    routeNames: ['baz', 'bar', 'qux'],
-    routeParamList: {
-      bar: { color: 'test' },
-      baz: { foo: 12 },
-    },
-    routeGetIdList: {
-      bar: ({ params }) => params?.answer,
-    },
-  };
-
-  expect(
-    router.getStateForAction(
-      {
-        stale: false,
-        type: 'stack',
-        key: 'root',
-        index: 2,
-        retainedRouteKeys: [],
-        routeNames: ['baz', 'bar', 'qux'],
-        routes: [
-          {
-            key: 'bar-first',
-            name: 'bar',
-            params: { answer: 42, toBe: 'first' },
-          },
-          { key: 'baz', name: 'baz' },
-          {
-            key: 'bar-last',
-            name: 'bar',
-            params: { answer: 42, toBe: 'last' },
-          },
-        ],
-      },
-      CommonActions.preload(
-        'bar',
-        { answer: 42, something: 'else' },
-        { reuse: true }
-      ),
-      options
-    )
-  ).toEqual({
-    stale: false,
-    type: 'stack',
-    key: 'root',
-    index: 2,
-    retainedRouteKeys: [],
-    routeNames: ['baz', 'bar', 'qux'],
-    routes: [
-      {
-        key: 'bar-first',
-        name: 'bar',
-        params: { answer: 42, toBe: 'first' },
-      },
-      { key: 'baz', name: 'baz' },
-      {
-        key: 'bar-last',
-        name: 'bar',
-        params: { answer: 42, color: 'test', something: 'else' },
-      },
-    ],
-  });
-});
-
-test('updates the last matching preloaded route with preload and reuse', () => {
+test('updates the last matching preloaded route with preload when the ID matches', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -4359,11 +4297,7 @@ test('updates the last matching preloaded route with preload and reuse', () => {
           },
         ],
       },
-      CommonActions.preload(
-        'bar',
-        { answer: 42, something: 'else' },
-        { reuse: true }
-      ),
+      CommonActions.preload('bar', { answer: 42, something: 'else' }),
       options
     )
   ).toEqual({
@@ -4389,7 +4323,7 @@ test('updates the last matching preloaded route with preload and reuse', () => {
   });
 });
 
-test('prefers a matching preloaded route over matching routes with preload and reuse', () => {
+test('prefers a matching preloaded route over matching active routes with preload', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -4425,11 +4359,7 @@ test('prefers a matching preloaded route over matching routes with preload and r
           },
         ],
       },
-      CommonActions.preload(
-        'bar',
-        { answer: 42, something: 'else' },
-        { reuse: true }
-      ),
+      CommonActions.preload('bar', { answer: 42, something: 'else' }),
       options
     )
   ).toEqual({

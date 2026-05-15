@@ -59,7 +59,6 @@ type PreloadAction = {
   payload: {
     name: string;
     params?: object | undefined;
-    reuse?: boolean | undefined;
   };
   source?: string | undefined;
   target?: string | undefined;
@@ -148,15 +147,9 @@ export function pushParams(params: object) {
   } as const satisfies PushParamsAction;
 }
 
-export function preload(
-  name: string,
-  params?: object | undefined,
-  options?: {
-    reuse?: boolean | undefined;
-  }
-) {
+export function preload(name: string, params?: object | undefined) {
   return {
     type: 'PRELOAD',
-    payload: { name, params, reuse: options?.reuse },
+    payload: { name, params },
   } as const satisfies PreloadAction;
 }
