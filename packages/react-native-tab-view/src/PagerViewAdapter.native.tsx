@@ -21,7 +21,9 @@ export type PagerViewAdapterProps = AdapterProps &
     | 'onPageSelected'
     | 'onPageScrollStateChanged'
     | 'children'
-  >;
+  > & {
+    pageMargin?: PagerViewProps['pageMargin'] | undefined;
+  };
 
 const useNativeDriver = Platform.OS !== 'web';
 
@@ -36,6 +38,7 @@ export function PagerViewAdapter({
   children,
   style,
   animationEnabled,
+  pageMargin,
   ...rest
 }: PagerViewAdapterProps) {
   const { index } = navigationState;
@@ -160,6 +163,7 @@ export function PagerViewAdapter({
         }}
         onPageScrollStateChanged={onPageScrollStateChanged}
         scrollEnabled={swipeEnabled}
+        {...(pageMargin != null ? { pageMargin } : null)}
       >
         {children}
       </AnimatedViewPager>

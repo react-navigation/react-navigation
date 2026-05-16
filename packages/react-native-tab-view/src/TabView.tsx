@@ -162,6 +162,7 @@ export function TabView<T extends Route>({
   // eslint-disable-next-line @eslint-react/no-unstable-default-props
   renderAdapter = (props) => <DefaultAdapter {...props} />,
   pagerStyle,
+  pageMargin,
   style,
   direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
   swipeEnabled = true,
@@ -208,6 +209,7 @@ export function TabView<T extends Route>({
     animationEnabled,
     layoutDirection: direction,
     style: pagerStyle,
+    pageMargin,
     children: ({ position, render, subscribe, jumpTo }) => {
       // All the props here must not change between re-renders
       // This is crucial to optimizing the routes with PureComponent

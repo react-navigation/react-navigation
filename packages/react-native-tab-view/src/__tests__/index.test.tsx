@@ -126,5 +126,29 @@ describe.each([{ type: 'ios' as const }, { type: 'web' as const }])(
       expect(onTabSelect).toHaveBeenCalledTimes(1);
       expect(onTabSelect).toHaveBeenCalledWith({ index: 1 });
     });
+
+    test('forwards pageMargin to adapter', () => {
+      let capturedProps: { pageMargin?: number } | undefined;
+      const renderAdapter = jest.fn((props: any) => {
+        capturedProps = props;
+        return <View />;
+      });
+
+      render(
+        <TabView
+          navigationState={{
+            index: 0,
+            routes: [{ key: 'first', title: 'First' }],
+          }}
+          renderScene={renderScene}
+          onIndexChange={jest.fn()}
+          pageMargin={16}
+          renderAdapter={renderAdapter}
+        />
+      );
+
+      expect(renderAdapter).toHaveBeenCalled();
+      expect(capturedProps?.pageMargin).toBe(16);
+    });
   }
 );
