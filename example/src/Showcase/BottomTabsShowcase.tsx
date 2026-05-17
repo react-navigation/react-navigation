@@ -20,7 +20,7 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-screens/experimental';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import iconCirclePlay from '../../assets/icons/circle-play.png';
 import iconLibrary from '../../assets/icons/library.png';
@@ -496,12 +496,26 @@ const NowPlayingBar = ({ placement }: { placement: 'inline' | 'regular' }) => {
   );
 };
 
+const SafeAreaLayout = ({ children }: { children: React.ReactNode }) => {
+  const insets = useSafeAreaInsets();
+
+  return (
+    <View
+      style={{
+        flex: 1,
+        paddingTop: insets.top,
+        paddingBottom: insets.bottom,
+      }}
+    >
+      {children}
+    </View>
+  );
+};
+
 const BottomTabsShowcaseNavigator = createBottomTabNavigator({
   screenLayout: ({ children }) =>
     Platform.OS === 'android' ? (
-      <SafeAreaView edges={{ top: true, bottom: true }}>
-        {children}
-      </SafeAreaView>
+      <SafeAreaLayout>{children}</SafeAreaLayout>
     ) : (
       children
     ),

@@ -28,21 +28,21 @@ name: Material Top Tabs - Basic
     timeout: 2000
 - swipe:
     direction: LEFT
-    duration: 100
+    duration: 300
 - extendedWaitUntil:
     visible:
       text: 'Marissa Castillo'
     timeout: 2000
 - swipe:
     direction: LEFT
-    duration: 100
+    duration: 300
 - extendedWaitUntil:
     visible:
       id: 'album-0'
     timeout: 2000
 - swipe:
     direction: RIGHT
-    duration: 100
+    duration: 300
 - extendedWaitUntil:
     visible:
       text: 'Marissa Castillo'
