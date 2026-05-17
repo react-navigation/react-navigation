@@ -96,10 +96,15 @@ function CardContainerInner({
   const parentHeaderHeight = React.use(HeaderHeightContext);
 
   const { options } = scene.descriptor;
-  const enabled = focused && options.keyboardHandlingEnabled !== false;
+  const enabled = options.keyboardHandlingEnabled !== false;
+  const contentRef = React.useRef<View>(null);
 
   const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
-    useKeyboardManager({ enabled, focused });
+    useKeyboardManager({
+      enabled,
+      focused,
+      contentRef,
+    });
 
   const handleOpen = () => {
     const { route } = scene.descriptor;
@@ -241,7 +246,7 @@ function CardContainerInner({
         cardStyle,
       ]}
     >
-      <View style={styles.container}>
+      <View ref={contentRef} style={styles.container}>
         <ModalPresentationContext.Provider value={modal}>
           {headerMode !== 'float'
             ? renderHeader({

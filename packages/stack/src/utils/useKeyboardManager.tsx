@@ -4,9 +4,11 @@ import { type HostInstance, Keyboard, TextInput } from 'react-native';
 export function useKeyboardManager({
   enabled,
   focused,
+  contentRef,
 }: {
   enabled: boolean;
   focused: boolean;
+  contentRef: React.RefObject<HostInstance | null>;
 }) {
   // Numeric id of the previously focused text input
   // When a gesture didn't change the tab, we can restore the focused input with this
@@ -15,6 +17,7 @@ export function useKeyboardManager({
   const keyboardTimeoutRef =
     React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const enabledRef = React.useRef(enabled);
+  const focusedRef = React.useRef(focused);
 
   const clearKeyboardTimeout = React.useCallback(() => {
     if (keyboardTimeoutRef.current !== undefined) {
@@ -24,7 +27,7 @@ export function useKeyboardManager({
   }, []);
 
   const onPageChangeStart = React.useCallback(() => {
-    if (!enabledRef.current) {
+    if (!enabledRef.current || !focusedRef.current) {
       return;
     }
 
@@ -43,7 +46,7 @@ export function useKeyboardManager({
   }, [clearKeyboardTimeout]);
 
   const onPageChangeCancel = React.useCallback(() => {
-    if (!enabledRef.current) {
+    if (!enabledRef.current || !focusedRef.current) {
       return;
     }
 
@@ -82,7 +85,7 @@ export function useKeyboardManager({
       active: boolean;
       closing: boolean;
     }) => {
-      if (!enabledRef.current) {
+      if (!enabledRef.current || !focusedRef.current) {
         return;
       }
 
@@ -121,8 +124,34 @@ export function useKeyboardManager({
     }
   }, [focused]);
 
+  // Dismiss keyboard if native focus is restored to an input in an unfocused screen.
+  // This can happen after dismissing a native alert when `autoFocus` is used on iOS.
+  React.useEffect(() => {
+    const blurInputInScreen = () => {
+      if (focusedRef.current || !enabledRef.current) {
+        return;
+      }
+
+      const input = TextInput.State.currentlyFocusedInput();
+
+      if (input && contentRef.current?.contains(input)) {
+        input.blur();
+      }
+    };
+
+    const subscriptions = [
+      Keyboard.addListener('keyboardWillShow', blurInputInScreen),
+      Keyboard.addListener('keyboardDidShow', blurInputInScreen),
+    ];
+
+    return () => {
+      subscriptions.forEach((subscription) => subscription.remove());
+    };
+  }, [contentRef]);
+
   React.useLayoutEffect(() => {
     enabledRef.current = enabled;
+    focusedRef.current = focused;
   });
 
   React.useEffect(() => {
