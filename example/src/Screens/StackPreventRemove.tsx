@@ -89,7 +89,11 @@ const InputScreen = () => {
   );
 
   return (
-    <View style={styles.content}>
+    <ScrollView
+      keyboardShouldPersistTaps="handled"
+      contentInsetAdjustmentBehavior="automatic"
+      contentContainerStyle={styles.content}
+    >
       <TextInput
         autoFocus
         style={[
@@ -118,7 +122,7 @@ const InputScreen = () => {
       >
         Push Article
       </Button>
-    </View>
+    </ScrollView>
   );
 };
 

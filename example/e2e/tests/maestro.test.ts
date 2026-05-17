@@ -258,13 +258,7 @@ async function runStep(page: Page, step: any) {
           direction === 'LEFT' ? viewport.width * 0.2 : viewport.width * 0.8;
       }
 
-      await page.mouse.move(startX, startY);
-      await page.mouse.down();
-      await page.mouse.move(endX, endY, {
-        // A swipe gesture emits many small mouse move events
-        steps: Math.max(10, Math.floor(duration / 20)),
-      });
-      await page.mouse.up();
+      await swipe(page, { startX, startY, endX, endY, duration });
 
       await page.waitForTimeout(duration);
 
@@ -293,6 +287,78 @@ async function runStep(page: Page, step: any) {
       throw new Error(`Unknown command: ${JSON.stringify(step)}`);
     }
   }
+}
+
+async function swipe(
+  page: Page,
+  {
+    startX,
+    startY,
+    endX,
+    endY,
+    duration,
+  }: {
+    startX: number;
+    startY: number;
+    endX: number;
+    endY: number;
+    duration: number;
+  }
+) {
+  await page.evaluate(
+    async ({ startX, startY, endX, endY, duration }) => {
+      const target = document.elementFromPoint(startX, startY) ?? document.body;
+      const steps = Math.max(10, Math.floor(duration / 20));
+
+      const dispatchTouchEvent = (type: string, x: number, y: number) => {
+        const touch = new Touch({
+          identifier: 0,
+          target,
+          clientX: x,
+          clientY: y,
+          screenX: x,
+          screenY: y,
+          pageX: x + window.scrollX,
+          pageY: y + window.scrollY,
+          radiusX: 1,
+          radiusY: 1,
+          force: 0.5,
+        });
+
+        const activeTouches = type === 'touchend' ? [] : [touch];
+
+        target.dispatchEvent(
+          new TouchEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            touches: activeTouches,
+            targetTouches: activeTouches,
+            changedTouches: [touch],
+          })
+        );
+      };
+
+      dispatchTouchEvent('touchstart', startX, startY);
+
+      for (let i = 1; i <= steps; i++) {
+        const progress = i / steps;
+
+        dispatchTouchEvent(
+          'touchmove',
+          startX + (endX - startX) * progress,
+          startY + (endY - startY) * progress
+        );
+
+        await new Promise((resolve) => {
+          setTimeout(resolve, duration / steps);
+        });
+      }
+
+      dispatchTouchEvent('touchend', endX, endY);
+    },
+    { startX, startY, endX, endY, duration }
+  );
 }
 
 function evaluateCondition(condition: boolean | string) {

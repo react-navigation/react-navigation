@@ -130,19 +130,7 @@ jobs:
             echo "$ANDROID_HOME/cmdline-tools/latest/bin"
           } >> "$GITHUB_PATH"
 
-      - name: Cache Android SDK
-        id: android-sdk-cache
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
-        with:
-          path: |
-            ${{ env.ANDROID_HOME }}/system-images
-            ${{ env.ANDROID_HOME }}/emulator
-            ${{ env.ANDROID_HOME }}/platform-tools
-            ${{ env.ANDROID_HOME }}/platforms/android-${{ env.API_LEVEL }}
-          key: android-sdk-${{ env.API_LEVEL }}
-
       - name: Install Android SDK components
-        if: steps.android-sdk-cache.outputs.cache-hit != 'true'
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install emulator "platform-tools" "platforms;android-${{ env.API_LEVEL }}" "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
