@@ -70,7 +70,10 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
   }, [navigation, getOptionsFromListener]);
 
   React.useInsertionEffect(() => {
-    return parentAddOptionsGetter?.(key!, getCurrentOptions);
+    // We don't have a parent at the root
+    if (key != null) {
+      return parentAddOptionsGetter?.(key, getCurrentOptions);
+    }
   }, [getCurrentOptions, parentAddOptionsGetter, key]);
 
   const addOptionsGetter = React.useCallback(
