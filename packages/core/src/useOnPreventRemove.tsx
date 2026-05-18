@@ -82,7 +82,7 @@ export function useOnPreventRemove({
   const route = React.use(NavigationRouteContext);
   const routeKey = route?.key;
 
-  React.useEffect(() => {
+  React.useInsertionEffect(() => {
     if (routeKey) {
       return addKeyedListener?.('beforeRemove', routeKey, (action) => {
         const state = getState();

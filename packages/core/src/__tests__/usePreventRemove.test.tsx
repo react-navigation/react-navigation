@@ -5,6 +5,7 @@ import {
   StackRouter,
 } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
+import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
@@ -583,6 +584,65 @@ test("prevents removing a child screen with 'usePreventRemove' hook", () => {
     stale: false,
     type: 'stack',
   });
+});
+
+test("prevents removing a hidden screen with 'usePreventRemove' hook", () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route, index) => (
+          <React.Activity
+            key={route.key}
+            mode={index === state.index ? 'visible' : 'hidden'}
+          >
+            {descriptors[route.key].render()}
+          </React.Activity>
+        ))}
+      </NavigationContent>
+    );
+  };
+
+  const onPreventRemove = jest.fn();
+
+  const TestScreen = () => {
+    usePreventRemove(true, () => {
+      onPreventRemove();
+    });
+
+    return null;
+  };
+
+  const onStateChange = jest.fn();
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  act(() => ref.current?.navigate('bar'));
+
+  const state = ref.current?.getRootState();
+
+  act(() => {
+    ref.current?.resetRoot({
+      index: 0,
+      routes: [{ name: 'bar' }],
+    });
+  });
+
+  expect(onPreventRemove).toHaveBeenCalledTimes(1);
+  expect(ref.current?.getRootState()).toEqual(state);
 });
 
 test("prevents removing a grand child screen with 'usePreventRemove' hook", () => {

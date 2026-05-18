@@ -44,7 +44,7 @@ export function usePreventRemove(
     callback({ data: e.data });
   });
 
-  React.useEffect(
+  React.useInsertionEffect(
     () => navigation?.addListener('beforeRemove', beforeRemoveListener),
     [navigation, beforeRemoveListener]
   );
