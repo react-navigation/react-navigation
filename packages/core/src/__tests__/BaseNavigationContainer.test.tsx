@@ -787,10 +787,10 @@ test("throws if the ref hasn't finished initializing", () => {
   };
 
   const TestScreen = () => {
-    React.useEffect(() => {
+    React.useInsertionEffect(() => {
       const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-      ref.current?.dispatch({ type: 'WHATEVER' });
+      ref.dispatch({ type: 'WHATEVER' });
 
       expect(spy.mock.calls[0][0]).toMatch(
         "The 'navigation' object hasn't been initialized yet."
@@ -811,6 +811,78 @@ test("throws if the ref hasn't finished initializing", () => {
   );
 
   render(element);
+});
+
+test('handles action dispatched on the ref after navigator is rendered', () => {
+  function CurrentRouter(options: DefaultRouterOptions) {
+    const CurrentMockRouter = MockRouter(options);
+    const RootRouter: Router<
+      NavigationState,
+      MockActions | { type: 'REVERSE' }
+    > = {
+      ...CurrentMockRouter,
+
+      getStateForAction(state, action, options) {
+        if (action.type === 'REVERSE') {
+          return {
+            ...state,
+            routes: state.routes.slice().reverse(),
+          };
+        }
+
+        return CurrentMockRouter.getStateForAction(state, action, options);
+      },
+    };
+
+    return RootRouter;
+  }
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+  const onStateChange = jest.fn();
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      CurrentRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
+  };
+
+  const TestScreen = () => {
+    React.useEffect(() => {
+      ref.current?.dispatch({ type: 'REVERSE' });
+    }, []);
+
+    return null;
+  };
+
+  const element = (
+    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  render(element);
+
+  expect(onStateChange).toHaveBeenCalledWith({
+    index: 0,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'bar', name: 'bar' },
+      { key: 'foo', name: 'foo' },
+    ],
+    stale: false,
+    type: 'test',
+  });
 });
 
 test('fires onReady after navigator is rendered', () => {

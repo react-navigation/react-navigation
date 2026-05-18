@@ -678,6 +678,68 @@ test('preserves state after rendered in `<Activity mode="hidden">`', async () =>
   `);
 });
 
+test('handles container ref methods in hidden trees', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        <div>{state.routes.map((route) => route.name).join(', ')}</div>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
+  };
+
+  const TestScreen = ({ route }: any): any => `[${route.name}]`;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ mode }: { mode: 'visible' | 'hidden' }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <React.Activity mode={mode}>
+        <TestNavigator>
+          <Screen name="foo" component={TestScreen} />
+          <Screen name="bar" component={TestScreen} />
+          <Screen name="baz" component={TestScreen} />
+        </TestNavigator>
+      </React.Activity>
+    </BaseNavigationContainer>
+  );
+
+  const root = await renderAsync(<Test mode="visible" />);
+
+  await root.rerenderAsync(<Test mode="hidden" />);
+
+  await act(async () => navigation.navigate('baz'));
+
+  expect(navigation.getRootState()).toEqual({
+    stale: false,
+    type: 'test',
+    index: 2,
+    key: '0',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'baz', name: 'baz' },
+    ],
+  });
+
+  await root.rerenderAsync(<Test mode="visible" />);
+
+  expect(root).toMatchInlineSnapshot(`
+    [
+      <div>
+        foo, bar, baz
+      </div>,
+      "[baz]",
+    ]
+  `);
+});
+
 test('preserves child state after switching parent screens rendered in `<Activity>`', async () => {
   const ParentNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(

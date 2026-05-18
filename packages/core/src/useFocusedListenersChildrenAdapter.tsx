@@ -41,7 +41,7 @@ export function useFocusedListenersChildrenAdapter({
     [focusedListeners, navigation]
   );
 
-  React.useEffect(
+  React.useInsertionEffect(
     () => addListener?.('focus', listener),
     [addListener, listener]
   );
