@@ -34,13 +34,18 @@ jest.mock('react-native-pager-view', () => {
   };
 });
 
-jest.mock('../DefaultAdapter', () => {
-  const Platform = require('react-native').Platform;
+jest.mock('../DefaultAdapter', () => ({
+  get DefaultAdapter() {
+    // Make sure to use our mocked platform
+    const Platform = require('react-native').Platform;
 
-  return Platform.OS === 'web'
-    ? jest.requireActual('../DefaultAdapter.tsx')
-    : jest.requireActual('../DefaultAdapter.ios.tsx');
-});
+    return jest.requireActual<typeof import('../DefaultAdapter')>(
+      Platform.OS === 'web'
+        ? '../DefaultAdapter.tsx'
+        : '../DefaultAdapter.ios.tsx'
+    ).DefaultAdapter;
+  },
+}));
 
 const FirstRoute = () => (
   <View style={{ flex: 1, backgroundColor: '#ff4081' }} testID={'route1'} />

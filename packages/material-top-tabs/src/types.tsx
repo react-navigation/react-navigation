@@ -148,6 +148,18 @@ export type MaterialTopTabNavigationOptions = {
     | undefined;
 
   /**
+   * Variant of the tab bar.
+   *
+   * The following variants are available:
+   *
+   * - `primary`: the indicator matches the label & icon width and is centered under the tab.
+   * - `secondary`: the indicator spans the full tab width.
+   *
+   * Defaults to `primary`.
+   */
+  tabBarVariant?: 'primary' | 'secondary' | undefined;
+
+  /**
    * Style object for the tab bar indicator.
    */
   tabBarIndicatorStyle?: StyleProp<ViewStyle> | undefined;
@@ -222,7 +234,7 @@ export type MaterialTopTabNavigationOptions = {
   /**
    * Allows to customize the android ripple effect (Android >= 5.0 only).
    *
-   * Default: `{ borderless: true }`
+   * Default: `{ borderless: false, foreground: true }`
    */
   tabBarAndroidRipple?: PressableAndroidRippleConfig | undefined;
 

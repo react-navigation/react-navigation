@@ -35,9 +35,11 @@ export const ScrollableTabBar = () => {
   >['renderTabBar'] = (props) => (
     <TabBar
       {...props}
+      variant="secondary"
       scrollEnabled
       contentContainerStyle={styles.tabbarContentContainer}
       tabStyle={styles.tab}
+      indicatorStyle={styles.indicator}
       gap={20}
       direction={direction}
     />
@@ -69,5 +71,8 @@ const styles = StyleSheet.create({
   },
   tab: {
     width: 120,
+  },
+  indicator: {
+    marginHorizontal: 10,
   },
 });

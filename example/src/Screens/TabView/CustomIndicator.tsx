@@ -46,7 +46,7 @@ export const CustomIndicator = () => {
   ]);
 
   const renderIndicator = (props: TabBarIndicatorProps<Route>) => {
-    const { position, getTabWidth, gap, width, style } = props;
+    const { position, widths, offsets, style } = props;
     const inputRange = [
       0, 0.48, 0.49, 0.51, 0.52, 1, 1.48, 1.49, 1.51, 1.52, 2,
     ];
@@ -68,9 +68,7 @@ export const CustomIndicator = () => {
       inputRange: inputRange,
       outputRange: inputRange.map((x) => {
         const i = Math.round(x);
-        return (
-          (i * getTabWidth(i) + i * (gap ?? 0)) * (direction === 'rtl' ? -1 : 1)
-        );
+        return offsets[i] * (direction === 'rtl' ? -1 : 1);
       }),
     });
 
@@ -79,11 +77,11 @@ export const CustomIndicator = () => {
         style={[
           style,
           styles.container,
-          { width, transform: [{ translateX }] },
+          { width: widths[0], transform: [{ translateX }] },
         ]}
       >
         <Animated.View
-          style={[styles.indicator, { opacity, transform: [{ scale }] } as any]}
+          style={[styles.indicator, { opacity, transform: [{ scale }] }]}
         />
       </Animated.View>
     );
@@ -152,6 +150,7 @@ CustomIndicator.options = {
 const styles = StyleSheet.create({
   tabbar: {
     backgroundColor: '#263238',
+    borderBottomWidth: 0,
     overflow: 'hidden',
   },
   tabbarContentContainer: {
