@@ -31,7 +31,7 @@ const ANDROID_SUPPORTS_RIPPLE =
 export function PlatformPressable({
   disabled,
   android_ripple,
-  pressColor = 'rgba(0, 0, 0, .32)',
+  pressColor = 'rgba(0, 0, 0, .10)',
   pressOpacity,
   style,
   onPress,

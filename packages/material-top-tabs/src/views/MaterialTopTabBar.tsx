@@ -2,21 +2,14 @@ import { Text } from '@react-navigation/elements';
 import { Color } from '@react-navigation/elements/internal';
 import {
   MaterialSymbol,
-  type ParamListBase,
   SFSymbol,
-  type TabNavigationState,
   useLinkBuilder,
   useLocale,
   useTheme,
 } from '@react-navigation/native';
 import React from 'react';
 import { type ColorValue, Image, StyleSheet } from 'react-native';
-import {
-  type Route,
-  TabBar,
-  TabBarIndicator,
-  type TabDescriptor,
-} from 'react-native-tab-view';
+import { type Route, TabBar, type TabDescriptor } from 'react-native-tab-view';
 
 import type { MaterialTopTabBarProps } from '../types';
 
@@ -57,13 +50,23 @@ export function MaterialTopTabBar({
   const { buildHref } = useLinkBuilder();
 
   const focusedOptions = descriptors[state.routes[state.index].key].options;
+  const tabBarVariant = focusedOptions.tabBarVariant ?? 'primary';
 
   const activeColor: ColorValue =
-    focusedOptions.tabBarActiveTintColor ?? colors.text;
+    focusedOptions.tabBarActiveTintColor ??
+    (tabBarVariant === 'primary' ? colors.primary : colors.text);
+
   const inactiveColor: ColorValue =
     focusedOptions.tabBarInactiveTintColor ??
-    Color(activeColor)?.alpha(0.5).string() ??
-    (dark ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.5)');
+    Color(colors.text)?.alpha(0.68).string() ??
+    (dark ? 'rgba(255, 255, 255, 0.68)' : 'rgba(0, 0, 0, 0.68)');
+
+  const pressColor: ColorValue =
+    focusedOptions.tabBarPressColor ??
+    Color(tabBarVariant === 'primary' ? colors.primary : colors.text)
+      ?.alpha(0.12)
+      .string() ??
+    (dark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)');
 
   const tabBarOptions = Object.fromEntries(
     state.routes.map((route) => {
@@ -182,6 +185,8 @@ export function MaterialTopTabBar({
     })
   );
 
+  const tabBarIndicator = focusedOptions.tabBarIndicator;
+
   return (
     <TabBar
       {...rest}
@@ -192,7 +197,7 @@ export function MaterialTopTabBar({
       bounces={focusedOptions.tabBarBounces}
       activeColor={activeColor}
       inactiveColor={inactiveColor}
-      pressColor={focusedOptions.tabBarPressColor}
+      pressColor={pressColor}
       pressOpacity={focusedOptions.tabBarPressOpacity}
       tabStyle={focusedOptions.tabBarItemStyle}
       indicatorStyle={[
@@ -200,10 +205,14 @@ export function MaterialTopTabBar({
         focusedOptions.tabBarIndicatorStyle,
       ]}
       gap={focusedOptions.tabBarGap}
+      variant={tabBarVariant}
       android_ripple={focusedOptions.tabBarAndroidRipple}
       indicatorContainerStyle={focusedOptions.tabBarIndicatorContainerStyle}
       contentContainerStyle={focusedOptions.tabBarContentContainerStyle}
-      style={[{ backgroundColor: colors.card }, focusedOptions.tabBarStyle]}
+      style={[
+        { backgroundColor: colors.card, borderBottomColor: colors.border },
+        focusedOptions.tabBarStyle,
+      ]}
       onTabPress={({ route, preventDefault }) => {
         const event = navigation.emit({
           type: 'tabPress',
@@ -221,16 +230,12 @@ export function MaterialTopTabBar({
           target: route.key,
         })
       }
-      renderIndicator={({ navigationState: state, ...rest }) => {
-        return focusedOptions.tabBarIndicator ? (
-          focusedOptions.tabBarIndicator({
-            state: state as TabNavigationState<ParamListBase>,
-            ...rest,
-          })
-        ) : (
-          <TabBarIndicator navigationState={state} {...rest} />
-        );
-      }}
+      renderIndicator={
+        tabBarIndicator
+          ? ({ navigationState: _, ...rest }) =>
+              tabBarIndicator({ ...rest, state })
+          : undefined
+      }
     />
   );
 }
@@ -239,7 +244,6 @@ const styles = StyleSheet.create({
   label: {
     textAlign: 'center',
     fontSize: 14,
-    margin: 4,
     backgroundColor: 'transparent',
   },
 });

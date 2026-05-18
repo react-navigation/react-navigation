@@ -4,19 +4,21 @@ import { Animated, StyleSheet } from 'react-native';
 
 interface TabBarItemLabelProps {
   color: ColorValue;
-  label?: string | undefined;
-  style: StyleProp<ViewStyle>;
+  label: string | undefined;
   icon: React.ReactNode;
+  style: StyleProp<ViewStyle>;
+  allowFontScaling?: boolean | undefined;
 }
 
 export const TabBarItemLabel = React.memo(
-  ({ color, label, style, icon }: TabBarItemLabelProps) => {
+  ({ color, label, style, icon, allowFontScaling }: TabBarItemLabelProps) => {
     if (!label) {
       return null;
     }
 
     return (
       <Animated.Text
+        allowFontScaling={allowFontScaling}
         style={[
           styles.label,
           icon ? { marginTop: 0 } : null,
@@ -34,7 +36,6 @@ TabBarItemLabel.displayName = 'TabBarItemLabel';
 
 const styles = StyleSheet.create({
   label: {
-    margin: 4,
     fontSize: 14,
     fontWeight: '500',
     backgroundColor: 'transparent',

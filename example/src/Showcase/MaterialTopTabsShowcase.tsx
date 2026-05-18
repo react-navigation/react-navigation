@@ -750,9 +750,6 @@ const MaterialTopTabsShowcaseNavigator = createMaterialTopTabNavigator({
     tabBarScrollEnabled: true,
     tabBarItemStyle: { width: 'auto' },
     tabBarGap: SPACING_XS,
-    tabBarIndicatorStyle: {
-      marginHorizontal: SPACING_XL,
-    },
     tabBarLabelStyle: {
       fontSize: 14,
       letterSpacing: 0.1,

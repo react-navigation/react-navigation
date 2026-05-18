@@ -8,326 +8,401 @@ import {
   type ViewStyle,
 } from 'react-native';
 
+import { TAB_BAR_PRIMARY_ACTIVE_COLOR } from './constants';
 import type {
   LocaleDirection,
   NavigationState,
   Route,
   SceneRendererProps,
 } from './types';
-import { useAnimatedValue } from './useAnimatedValue';
 
-export type GetTabWidth = (index: number) => number;
+const CAP_FILL_OVERLAP = 1;
+const EASING_SAMPLE_COUNT = 16;
+
+const samplePoints = (easing: (t: number) => number) =>
+  Array.from({ length: EASING_SAMPLE_COUNT + 1 }, (_, i) =>
+    easing(i / EASING_SAMPLE_COUNT)
+  );
+
+const TRAILING_EDGE_SAMPLES = samplePoints(Easing.bezier(0.3, 0, 0.8, 0.15));
+const LEADING_EDGE_SAMPLES = samplePoints(Easing.bezier(0.05, 0.7, 0.1, 1));
 
 export type Props<T extends Route> = SceneRendererProps & {
+  variant?: 'primary' | 'secondary' | undefined;
   navigationState: NavigationState<T>;
-  width: 'auto' | `${number}%` | number;
-  getTabWidth: GetTabWidth;
+  widths: number[];
+  offsets: number[];
   direction: LocaleDirection;
   style?: StyleProp<ViewStyle>;
-  gap?: number;
-  children?: React.ReactNode;
-};
-
-const useNativeDriver = Platform.OS !== 'web';
-
-const calculateSize = (
-  value: ViewStyle['width'] | undefined,
-  referenceWidth: number
-): number | undefined => {
-  if (typeof value === 'number') {
-    return value;
-  }
-
-  if (typeof value === 'string' && value.endsWith('%')) {
-    const parsed = parseFloat(value);
-
-    if (Number.isFinite(parsed)) {
-      return referenceWidth * (parsed / 100);
-    }
-  }
-
-  return undefined;
-};
-
-const getIndicatorWidthWithMargins = (
-  width: number,
-  style: ViewStyle | undefined,
-  direction: LocaleDirection
-) => {
-  const marginHorizontal = style?.marginHorizontal ?? style?.margin;
-
-  const leftMargin =
-    (direction === 'ltr' ? style?.marginStart : style?.marginEnd) ??
-    style?.marginLeft ??
-    marginHorizontal;
-
-  const rightMargin =
-    (direction === 'rtl' ? style?.marginStart : style?.marginEnd) ??
-    style?.marginRight ??
-    marginHorizontal;
-
-  return Math.max(
-    0,
-    width -
-      (calculateSize(leftMargin, width) ?? 0) -
-      (calculateSize(rightMargin, width) ?? 0)
-  );
-};
-
-const getIndicatorWidth = (
-  tabWidth: number,
-  width: number | `${number}%`,
-  style: ViewStyle | undefined,
-  direction: LocaleDirection
-): number | `${number}%` => {
-  const customWidth = calculateSize(style?.width, tabWidth);
-
-  if (customWidth !== undefined) {
-    return customWidth;
-  }
-
-  if (typeof width === 'number') {
-    return getIndicatorWidthWithMargins(width, style, direction);
-  }
-
-  return width;
-};
-
-const getTranslateX = (
-  position: Animated.AnimatedInterpolation<number>,
-  routes: Route[],
-  getTabWidth: GetTabWidth,
-  direction: LocaleDirection,
-  gap?: number,
-  getWidth?: (index: number) => number | undefined
-) => {
-  const inputRange = routes.map((_, i) => i);
-  const outputRange = routes.map((_, i) => {
-    let sumTabWidth = 0;
-
-    for (let j = 0; j < i; j++) {
-      sumTabWidth += getTabWidth(j);
-    }
-
-    const indicatorWidth = getWidth?.(i);
-    const tabOffset = sumTabWidth + (gap ? gap * i : 0);
-
-    if (indicatorWidth === undefined) {
-      return tabOffset;
-    }
-
-    return tabOffset + getTabWidth(i) / 2 - indicatorWidth / 2;
-  });
-
-  const translateX = position.interpolate({
-    inputRange,
-    outputRange,
-    extrapolate: 'clamp',
-  });
-
-  return Animated.multiply(translateX, direction === 'rtl' ? -1 : 1);
 };
 
 export function TabBarIndicator<T extends Route>({
-  getTabWidth,
+  variant = 'primary',
+  widths,
+  offsets,
   navigationState,
   position,
-  width,
   direction,
-  gap,
   style,
-  children,
 }: Props<T>) {
-  const isIndicatorShown = React.useRef(false);
-  const isWidthDynamic = width === 'auto';
+  const isRTL = direction === 'rtl';
 
-  const flattenedStyle = StyleSheet.flatten(style);
+  const flattenedStyle: ViewStyle =
+    StyleSheet.flatten([styles.defaults, style]) || {};
 
-  const hasCustomIndicatorWidth =
-    typeof flattenedStyle?.width === 'number' ||
-    (typeof flattenedStyle?.width === 'string' &&
-      flattenedStyle?.width.endsWith('%'));
+  const {
+    backgroundColor,
+    borderRadius,
+    borderBottomEndRadius = borderRadius,
+    borderBottomLeftRadius = borderRadius,
+    borderBottomRightRadius = borderRadius,
+    borderBottomStartRadius = borderRadius,
+    borderTopEndRadius = borderRadius,
+    borderTopLeftRadius = borderRadius,
+    borderTopRightRadius = borderRadius,
+    borderTopStartRadius = borderRadius,
+    height,
+    start: indicatorStart,
+    end: indicatorEnd,
+    left: indicatorLeft,
+    right: indicatorRight,
+    ...restStyle
+  } = flattenedStyle;
 
-  const constantIndicatorWidth =
-    typeof flattenedStyle?.width === 'number'
-      ? flattenedStyle.width
-      : undefined;
+  delete restStyle.width;
+  delete restStyle.margin;
+  delete restStyle.marginHorizontal;
+  delete restStyle.marginStart;
+  delete restStyle.marginEnd;
+  delete restStyle.marginLeft;
+  delete restStyle.marginRight;
 
-  const isCentered =
-    hasCustomIndicatorWidth &&
-    (flattenedStyle?.margin === 'auto' ||
-      flattenedStyle?.marginHorizontal === 'auto');
+  const containerStart =
+    indicatorStart ?? (isRTL ? indicatorRight : indicatorLeft);
+  const containerEnd = indicatorEnd ?? (isRTL ? indicatorLeft : indicatorRight);
 
-  // If indicator has a custom width, we need to adjust calculations to account for it
-  // It should be centered relative to the tab if the margin is set to auto
-  const getCenteredIndicatorWidth = (tabWidth: number) => {
-    if (isCentered) {
-      return calculateSize(flattenedStyle?.width, tabWidth);
-    }
+  if (
+    (borderBottomEndRadius != null &&
+      typeof borderBottomEndRadius !== 'number') ||
+    (borderBottomStartRadius != null &&
+      typeof borderBottomStartRadius !== 'number') ||
+    (borderBottomLeftRadius != null &&
+      typeof borderBottomLeftRadius !== 'number') ||
+    (borderBottomRightRadius != null &&
+      typeof borderBottomRightRadius !== 'number') ||
+    (borderTopEndRadius != null && typeof borderTopEndRadius !== 'number') ||
+    (borderTopStartRadius != null &&
+      typeof borderTopStartRadius !== 'number') ||
+    (borderTopLeftRadius != null && typeof borderTopLeftRadius !== 'number') ||
+    (borderTopRightRadius != null && typeof borderTopRightRadius !== 'number')
+  ) {
+    throw new Error(
+      'Only numeric border radii are supported in TabBarIndicator.'
+    );
+  }
 
-    if (typeof width === 'number') {
-      return width;
-    }
+  const leftRadiusWidth = Math.max(
+    borderTopStartRadius ?? 0,
+    borderBottomStartRadius ?? 0,
+    (isRTL ? borderTopRightRadius : borderTopLeftRadius) ?? 0,
+    (isRTL ? borderBottomRightRadius : borderBottomLeftRadius) ?? 0
+  );
 
-    return undefined;
-  };
+  const rightRadiusWidth = Math.max(
+    borderTopEndRadius ?? 0,
+    borderBottomEndRadius ?? 0,
+    (isRTL ? borderTopLeftRadius : borderTopRightRadius) ?? 0,
+    (isRTL ? borderBottomLeftRadius : borderBottomRightRadius) ?? 0
+  );
 
-  const opacity = useAnimatedValue(isWidthDynamic ? 0 : 1);
-
-  // We should fade-in the indicator when we have widths for all the tab items
-  const indicatorVisible = isWidthDynamic
-    ? navigationState.routes
-        .slice(0, navigationState.index + 1)
-        .every((_, r) => getTabWidth(r))
-    : true;
-
-  React.useEffect(() => {
-    let animation: Animated.CompositeAnimation | undefined;
-
-    const fadeInIndicator = () => {
-      if (!isIndicatorShown.current && isWidthDynamic && indicatorVisible) {
-        animation = Animated.timing(opacity, {
-          toValue: 1,
-          duration: 150,
-          easing: Easing.in(Easing.linear),
-          useNativeDriver,
-        });
-
-        animation.start(({ finished }) => {
-          if (finished) {
-            isIndicatorShown.current = true;
-          }
-        });
-      }
-    };
-
-    fadeInIndicator();
-
-    return () => animation?.stop();
-  }, [indicatorVisible, isWidthDynamic, opacity]);
+  const leftPieceWidth = leftRadiusWidth + CAP_FILL_OVERLAP;
+  const rightPieceWidth = rightRadiusWidth + CAP_FILL_OVERLAP;
 
   const { routes } = navigationState;
 
-  const transform = [];
+  const easedInterpolate = (values: number[], samples: number[] | null) => {
+    if (routes.length <= 1) {
+      return values[0] ?? 0;
+    }
 
-  const translateX =
-    routes.length > 1
-      ? getTranslateX(position, routes, getTabWidth, direction, gap, (index) =>
-          getCenteredIndicatorWidth(getTabWidth(index))
-        )
-      : 0;
+    // On multi-tab jumps, slide directly from source to destination and
+    // Settle one tab before the pager finishes scrolling
+    // This makes the animation feel snappier
+    // Especially on Android where the pager animation is slow
+    if (jumpRange) {
+      const inputRange =
+        jumpRange.from > jumpRange.to
+          ? [jumpRange.to, jumpRange.to + 1, jumpRange.from]
+          : [jumpRange.from, jumpRange.to - 1, jumpRange.to];
 
-  transform.push({ translateX });
-
-  if (width === 'auto' && constantIndicatorWidth == null) {
-    const inputRange = routes.map((_, i) => i);
-    const outputRange = inputRange.map((i) => {
-      const tabW = getTabWidth(i);
-
-      return (
-        calculateSize(flattenedStyle?.width, tabW) ??
-        getIndicatorWidthWithMargins(tabW, flattenedStyle, direction)
+      const outputRange = inputRange.map((i) =>
+        i === jumpRange.from ? values[jumpRange.from] : values[jumpRange.to]
       );
-    });
 
-    transform.push(
-      {
-        scaleX:
-          routes.length > 1
-            ? position.interpolate({
-                inputRange,
-                outputRange,
-                extrapolate: 'clamp',
-              })
-            : outputRange[0],
-      },
-      { translateX: direction === 'rtl' ? -0.5 : 0.5 }
-    );
-  }
+      return position.interpolate({
+        inputRange,
+        outputRange,
+        extrapolate: 'clamp',
+      });
+    }
 
-  const styleList: StyleProp<ViewStyle> = [];
+    if (samples == null) {
+      return position.interpolate({
+        inputRange: values.map((_, i) => i),
+        outputRange: values,
+        extrapolate: 'clamp',
+      });
+    }
 
-  // transform doesn't work properly on chrome and opera for linux and android
-  // so we need to use width and left/right instead of scaleX and translateX
-  // https://github.com/react-navigation/react-navigation/pull/11440
-  if (
-    Platform.OS === 'web' &&
-    width === 'auto' &&
-    constantIndicatorWidth == null
-  ) {
-    const start = flattenedStyle?.start;
-    const translate =
-      direction === 'rtl' ? Animated.multiply(translateX, -1) : translateX;
-    const offset =
-      typeof start === 'number' ? Animated.add(translate, start) : translate;
+    const inputRange: number[] = [];
+    const outputRange: number[] = [];
 
-    styleList.push(
-      { width: transform[1].scaleX },
-      direction === 'rtl' ? { right: offset } : { left: offset }
-    );
-  } else {
-    styleList.push(
-      {
-        width:
-          width === 'auto'
-            ? // if the indicator has a constant width, use it as is
-              // we don't need to scale it to match tab width
-              (constantIndicatorWidth ?? 1)
-            : getIndicatorWidth(
-                getTabWidth(navigationState.index),
-                width,
-                flattenedStyle,
-                direction
-              ),
-      },
-      { start: `${(100 / routes.length) * navigationState.index}%` },
-      { transform }
-    );
-  }
+    for (let i = 0; i < values.length - 1; i++) {
+      const start = values[i];
+      const end = values[i + 1];
 
-  let finalStyle;
-
-  if (hasCustomIndicatorWidth && style != null) {
-    const rest = { ...flattenedStyle };
-
-    delete rest.width;
-
-    if (isCentered) {
-      if (rest.margin === 'auto') {
-        delete rest.margin;
-      }
-
-      if (rest.marginHorizontal === 'auto') {
-        delete rest.marginHorizontal;
+      for (let j = 0; j < samples.length - 1; j++) {
+        inputRange.push(i + j / EASING_SAMPLE_COUNT);
+        outputRange.push(start + (end - start) * samples[j]);
       }
     }
 
-    finalStyle = rest;
-  } else {
-    finalStyle = style;
+    inputRange.push(values.length - 1);
+    outputRange.push(values[values.length - 1]);
+
+    return position.interpolate({
+      inputRange,
+      outputRange,
+      extrapolate: 'clamp',
+    });
+  };
+
+  let containerLayout: ViewStyle;
+  let leftFillStyle: ViewStyle;
+  let centerFillStyle: ViewStyle;
+  let rightCapStyle: ViewStyle;
+  let rightFillStyle: ViewStyle;
+
+  const rightEdges = widths.map((w, i) => offsets[i] + w);
+
+  const [lastIndex, setLastIndex] = React.useState(navigationState.index);
+  const [jumpRange, setJumpRange] = React.useState<{
+    from: number;
+    to: number;
+  } | null>(null);
+
+  if (navigationState.index !== lastIndex) {
+    setLastIndex(navigationState.index);
+
+    if (Math.abs(navigationState.index - lastIndex) > 1) {
+      setJumpRange({ from: lastIndex, to: navigationState.index });
+    }
   }
 
+  React.useEffect(() => {
+    if (jumpRange == null) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setJumpRange(null);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [jumpRange]);
+
+  // Primary tabs use stretch animation
+  // Secondary tabs and multi-tab jumps slide linearly
+  const shouldStretch = variant === 'primary' && jumpRange == null;
+
+  const trailingSamples = shouldStretch ? TRAILING_EDGE_SAMPLES : null;
+  const leadingSamples = shouldStretch ? LEADING_EDGE_SAMPLES : null;
+
+  const offset = easedInterpolate(offsets, trailingSamples);
+  const rightEdge = easedInterpolate(rightEdges, leadingSamples);
+
+  const containerWidth = Animated.subtract(rightEdge, offset);
+  const sideFillWidth = Animated.divide(
+    Animated.subtract(containerWidth, leftPieceWidth + rightPieceWidth),
+    2
+  );
+  const sideFillScale = Animated.add(sideFillWidth, CAP_FILL_OVERLAP);
+
+  if (Platform.OS === 'web') {
+    const centerFillStart = Animated.add(sideFillWidth, leftPieceWidth);
+
+    const positioned =
+      typeof containerStart === 'number'
+        ? Animated.add(offset, containerStart)
+        : offset;
+
+    // Web can't reliably scale via transforms
+    // So the fills use animated `width` instead of `scaleX`
+    // See https://github.com/react-navigation/react-navigation/pull/11440
+    containerLayout = {
+      width: containerWidth,
+      ...(direction === 'rtl' ? { right: positioned } : { left: positioned }),
+    };
+
+    leftFillStyle = {
+      position: 'absolute',
+      start: leftRadiusWidth,
+      width: sideFillScale,
+    };
+
+    centerFillStyle = {
+      position: 'absolute',
+      start: centerFillStart,
+      width: sideFillWidth,
+    };
+
+    rightCapStyle = {
+      position: 'absolute',
+      end: 0,
+    };
+
+    rightFillStyle = {
+      position: 'absolute',
+      end: rightRadiusWidth,
+      width: sideFillScale,
+    };
+  } else {
+    const directionSign = direction === 'rtl' ? -1 : 1;
+    const translateX = Animated.multiply(offset, directionSign);
+
+    const centerFillTranslateX = Animated.multiply(
+      Animated.divide(sideFillWidth, 2),
+      directionSign
+    );
+
+    const rightCapTranslateX = Animated.multiply(
+      Animated.subtract(containerWidth, rightPieceWidth),
+      directionSign
+    );
+
+    containerLayout = {
+      start: containerStart ?? 0,
+      end: containerEnd ?? 0,
+      transform: [{ translateX }],
+    };
+
+    leftFillStyle = {
+      position: 'absolute',
+      start: leftRadiusWidth,
+      width: 1,
+      transformOrigin: isRTL ? 'right center' : 'left center',
+      transform: [{ scaleX: sideFillScale }],
+    };
+
+    centerFillStyle = {
+      position: 'absolute',
+      start: leftPieceWidth,
+      width: 1,
+      transformOrigin: isRTL ? 'right center' : 'left center',
+      transform: [
+        {
+          translateX: centerFillTranslateX,
+        },
+        { scaleX: sideFillWidth },
+      ],
+    };
+
+    rightCapStyle = {
+      position: 'absolute',
+      start: 0,
+      transform: [{ translateX: rightCapTranslateX }],
+    };
+
+    rightFillStyle = {
+      position: 'absolute',
+      end: rightRadiusWidth,
+      width: 1,
+      transformOrigin: isRTL ? 'left center' : 'right center',
+      transform: [{ scaleX: sideFillScale }],
+    };
+  }
+
+  // The tab widths may be measured asynchronously
+  // So we show the indicator when we have widths till focused tab
+  const indicatorVisible = widths
+    .slice(0, navigationState.index + 1)
+    .every((w, i) => w > 0 && offsets[i] >= 0);
+
+  /**
+   * We render the indicator in multiple pieces
+   * So we can preserve border radii when the indicator is scaled with transform
+   * We use 3 pieces for the inner fill as the math isn't correct on Android
+   * So using 1 or 2 pieces result in misalignment or gaps.
+   * Using 3 pieces lets us cover most space from all directions.
+   *
+   * [left fixed cap [left scaled fill >>>]]
+   *                  [center scaled fill]
+   *                [[<<< right scaled fill] right fixed cap]
+   */
   return (
     <Animated.View
       style={[
         styles.indicator,
-        styleList,
-        width === 'auto' ? { opacity: opacity } : null,
-        finalStyle,
+        {
+          height,
+          opacity: indicatorVisible ? 1 : 0,
+        },
+        containerLayout,
+        restStyle,
       ]}
     >
-      {children}
+      <Animated.View
+        style={[
+          {
+            backgroundColor,
+            borderTopStartRadius,
+            borderBottomStartRadius,
+            ...(isRTL
+              ? { borderTopRightRadius, borderBottomRightRadius }
+              : { borderTopLeftRadius, borderBottomLeftRadius }),
+            height,
+            width: leftPieceWidth,
+          },
+          styles.cap,
+        ]}
+      >
+        <Animated.View style={[{ backgroundColor, height }, leftFillStyle]} />
+      </Animated.View>
+      <Animated.View style={[{ backgroundColor, height }, centerFillStyle]} />
+      <Animated.View
+        style={[
+          {
+            backgroundColor,
+            borderTopEndRadius,
+            borderBottomEndRadius,
+            ...(isRTL
+              ? { borderTopLeftRadius, borderBottomLeftRadius }
+              : { borderTopRightRadius, borderBottomRightRadius }),
+            height,
+            width: rightPieceWidth,
+          },
+          rightCapStyle,
+        ]}
+      >
+        <Animated.View style={[{ backgroundColor, height }, rightFillStyle]} />
+      </Animated.View>
     </Animated.View>
   );
 }
 
 const styles = StyleSheet.create({
   indicator: {
-    backgroundColor: 'rgb(0, 122, 255)',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    position: 'absolute',
+    bottom: 0,
+  },
+  defaults: {
+    backgroundColor: TAB_BAR_PRIMARY_ACTIVE_COLOR,
+    height: 2,
+  },
+  cap: {
     position: 'absolute',
     start: 0,
-    bottom: 0,
-    end: 0,
-    height: 2,
   },
 });

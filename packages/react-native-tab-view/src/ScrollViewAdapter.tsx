@@ -152,7 +152,7 @@ export function ScrollViewAdapter({
       },
     ],
     {
-      useNativeDriver: true,
+      useNativeDriver: Platform.OS !== 'web',
       listener: (event: ScrollEvent) => {
         const { x } = event.nativeEvent.contentOffset;
 
