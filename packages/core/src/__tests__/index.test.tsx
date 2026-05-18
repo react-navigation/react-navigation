@@ -766,6 +766,36 @@ test('preserves child state after switching parent screens rendered in `<Activit
     ]
   `);
 
+  expect(navigation.getRootState()).toEqual({
+    stale: false,
+    type: 'test',
+    index: 1,
+    key: '0',
+    routeNames: ['parent-a', 'parent-b'],
+    routes: [
+      {
+        key: 'parent-a',
+        name: 'parent-a',
+        params: {
+          screen: 'child-c',
+        },
+        state: {
+          stale: false,
+          type: 'test',
+          index: 2,
+          key: '1',
+          routeNames: ['child-a', 'child-b', 'child-c'],
+          routes: [
+            { key: 'child-a', name: 'child-a' },
+            { key: 'child-b', name: 'child-b' },
+            { key: 'child-c', name: 'child-c' },
+          ],
+        },
+      },
+      { key: 'parent-b', name: 'parent-b' },
+    ],
+  });
+
   act(() => navigation.navigate('parent-a'));
 
   expect(root).toMatchInlineSnapshot(`

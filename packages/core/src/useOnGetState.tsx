@@ -39,7 +39,9 @@ export function useOnGetState({ getState, getStateListeners }: Options) {
     return { ...state, routes };
   }, [getState, getStateListeners]);
 
-  React.useEffect(() => {
+  // Use insertion effect to preserve the listener under `<Activity mode="hidden">`
+  // So `getRootState` will still return state of nested navigators
+  React.useInsertionEffect(() => {
     return addKeyedListener?.('getState', key, getRehydratedState);
   }, [addKeyedListener, getRehydratedState, key]);
 }
