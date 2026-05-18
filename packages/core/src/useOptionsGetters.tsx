@@ -69,7 +69,7 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
     return optionsRef.current;
   }, [navigation, getOptionsFromListener]);
 
-  React.useEffect(() => {
+  React.useInsertionEffect(() => {
     return parentAddOptionsGetter?.(key!, getCurrentOptions);
   }, [getCurrentOptions, parentAddOptionsGetter, key]);
 

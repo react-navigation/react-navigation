@@ -3703,6 +3703,63 @@ test("returns focused screen's options with getCurrentOptions when focused scree
   });
 });
 
+test('returns focused screen options with getCurrentOptions from navigators in hidden trees', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ mode }: { mode: 'visible' | 'hidden' }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <React.Activity mode={mode}>
+        <TestNavigator>
+          <Screen name="bar" options={{ a: 'b' }}>
+            {() => (
+              <TestNavigator initialRouteName="bar-a">
+                <Screen
+                  name="bar-a"
+                  component={TestScreen}
+                  options={{ sample: '1' }}
+                />
+                <Screen
+                  name="bar-b"
+                  component={TestScreen}
+                  options={{ sample2: '2' }}
+                />
+              </TestNavigator>
+            )}
+          </Screen>
+          <Screen name="xux" component={TestScreen} />
+        </TestNavigator>
+      </React.Activity>
+    </BaseNavigationContainer>
+  );
+
+  const root = await renderAsync(<Test mode="visible" />);
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample: '1',
+  });
+
+  await root.rerenderAsync(<Test mode="hidden" />);
+
+  expect(navigation.getCurrentOptions()).toEqual({
+    sample: '1',
+  });
+});
+
 test("returns focused screen's options with getCurrentOptions when focused screen is rendered when using screenOptions", () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
