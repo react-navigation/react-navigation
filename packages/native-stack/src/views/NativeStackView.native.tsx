@@ -232,6 +232,15 @@ const SceneView = ({
     headerBack,
   });
 
+  const headerContainerRef = React.useRef<View>(null);
+
+  React.useLayoutEffect(() => {
+    headerContainerRef.current?.measure((_x, _y, _width, height) => {
+      animatedHeaderHeight.setValue(height);
+      setHeaderHeight(height);
+    });
+  }, [animatedHeaderHeight]);
+
   const onHeaderHeightChange = hasCustomHeader
     ? // If we have a custom header, don't use native header height
       undefined
@@ -342,6 +351,7 @@ const SceneView = ({
             ]}
           >
             <View
+              ref={headerContainerRef}
               onLayout={(e) => {
                 const headerHeight = e.nativeEvent.layout.height;
 
