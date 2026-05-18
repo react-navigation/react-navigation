@@ -208,7 +208,9 @@ export function DrawerItem(props: Props) {
         onPress={onPress}
         role="button"
         aria-label={accessibilityLabel}
-        aria-selected={focused}
+        accessibilityState={
+          Platform.OS === 'web' ? undefined : { selected: focused }
+        }
         pressColor={pressColor}
         pressOpacity={pressOpacity}
         hoverEffect={typeof color === 'string' ? { color } : undefined}
