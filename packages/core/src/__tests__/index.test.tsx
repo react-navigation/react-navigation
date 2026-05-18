@@ -3218,6 +3218,34 @@ test('throws if multiple navigators rendered under one container', () => {
   );
 });
 
+test('throws if multiple navigators rendered under one container in hidden trees', async () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const Test = ({ showSecond }: { showSecond: boolean }) => (
+    <BaseNavigationContainer>
+      <React.Activity mode={showSecond ? 'hidden' : 'visible'}>
+        <TestNavigator>
+          <Screen name="foo" component={React.Fragment} />
+        </TestNavigator>
+      </React.Activity>
+      {showSecond ? (
+        <TestNavigator>
+          <Screen name="bar" component={React.Fragment} />
+        </TestNavigator>
+      ) : null}
+    </BaseNavigationContainer>
+  );
+
+  const root = await renderAsync(<Test showSecond={false} />);
+
+  await expect(root.rerenderAsync(<Test showSecond />)).rejects.toThrow(
+    'Another navigator is already registered for this container'
+  );
+});
+
 test('throws when Screen is not the direct children', () => {
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);

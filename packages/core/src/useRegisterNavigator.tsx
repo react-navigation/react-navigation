@@ -17,7 +17,7 @@ export function useRegisterNavigator() {
     );
   }
 
-  React.useEffect(() => {
+  React.useInsertionEffect(() => {
     const { register, unregister } = container;
 
     register(key);
