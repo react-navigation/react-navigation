@@ -1,5 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import {
+  CommonActions,
   type DefaultRouterOptions,
   type NavigationState,
   type ParamListBase,
@@ -119,6 +120,96 @@ test("lets parent handle the action if child didn't", () => {
       { key: 'baz', name: 'baz' },
       { key: 'bar', name: 'bar' },
       { key: 'foo', name: 'foo' },
+    ],
+  });
+});
+
+test('action goes to hidden nested navigator if target is specified', () => {
+  const ParentNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route, index) => (
+          <React.Activity
+            key={route.key}
+            mode={index === state.index ? 'visible' : 'hidden'}
+          >
+            {descriptors[route.key].render()}
+          </React.Activity>
+        ))}
+      </NavigationContent>
+    );
+  };
+
+  const ChildNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <ParentNavigator>
+        <Screen name="parent-a">
+          {() => (
+            <ChildNavigator>
+              <Screen name="child-a">{() => null}</Screen>
+              <Screen name="child-b">{() => null}</Screen>
+            </ChildNavigator>
+          )}
+        </Screen>
+        <Screen name="parent-b">{() => null}</Screen>
+      </ParentNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const childKey = navigation.getRootState().routes[0].state?.key;
+
+  act(() => navigation.navigate('parent-b'));
+
+  act(() =>
+    navigation.dispatch({
+      ...CommonActions.navigate('child-b'),
+      target: childKey,
+    })
+  );
+
+  expect(navigation.getRootState()).toEqual({
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: '0',
+    routeNames: ['parent-a', 'parent-b'],
+    routes: [
+      {
+        key: 'parent-a',
+        name: 'parent-a',
+        state: {
+          stale: false,
+          type: 'test',
+          index: 1,
+          key: '1',
+          routeNames: ['child-a', 'child-b'],
+          routes: [
+            { key: 'child-a', name: 'child-a' },
+            { key: 'child-b', name: 'child-b' },
+          ],
+        },
+      },
+      { key: 'parent-b', name: 'parent-b' },
     ],
   });
 });

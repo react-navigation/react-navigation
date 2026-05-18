@@ -160,7 +160,7 @@ export function useOnAction<State extends NavigationState>({
     beforeRemoveListeners,
   });
 
-  React.useEffect(
+  React.useInsertionEffect(
     () => addListenerParent?.('action', onAction),
     [addListenerParent, onAction]
   );
