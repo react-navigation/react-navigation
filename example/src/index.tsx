@@ -160,10 +160,22 @@ function Examples() {
                     payload: value,
                   })
                 }
-                trackColor={{ true: theme.colors.primary }}
+                trackColor={{
+                  true: theme.colors.primary,
+                  false: 'rgba(0,0,0,0.23)',
+                }}
+                thumbColor={theme.colors.background}
                 style={{
                   // FIXME: On iOS, switch doesn't center vertically
                   marginVertical: 12,
+                  // FIXME: On web, RTL results a broken layout
+                  // So we flip the switch instead
+                  ...(Platform.OS === 'web'
+                    ? {
+                        direction: 'ltr',
+                        transform: [{ scaleX: isRTL ? -1 : 1 }],
+                      }
+                    : null),
                 }}
               />
             </ListItem>
