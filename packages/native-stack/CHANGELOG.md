@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.32](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.31...@react-navigation/native-stack@8.0.0-alpha.32) (2026-05-19)
+
+### Bug Fixes
+
+* measure custom header height in native stack in layout effect ([f9c3dc0](https://github.com/react-navigation/react-navigation/commit/f9c3dc065bc3b2cee835f07cdde0805fd3e8180b)) - by @satya164
+
 # [8.0.0-alpha.31](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.30...@react-navigation/native-stack@8.0.0-alpha.31) (2026-05-15)
 
 **Note:** Version bump only for package @react-navigation/native-stack

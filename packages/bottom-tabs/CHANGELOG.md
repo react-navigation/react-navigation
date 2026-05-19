@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.31](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.30...@react-navigation/bottom-tabs@8.0.0-alpha.31) (2026-05-19)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
 # [8.0.0-alpha.30](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.29...@react-navigation/bottom-tabs@8.0.0-alpha.30) (2026-05-15)
 
 ### Bug Fixes

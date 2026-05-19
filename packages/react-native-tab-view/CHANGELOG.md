@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.8...react-native-tab-view@5.0.0-alpha.9) (2026-05-19)
+
+### Bug Fixes
+
+* fix tab bar item with icon ([85fce92](https://github.com/react-navigation/react-navigation/commit/85fce92e1d791fd2018e74d65492b49a6c612c30)) - by @satya164
+* fix tab view in RTL ([db6433a](https://github.com/react-navigation/react-navigation/commit/db6433ab7995fb5ccf06b9d3adf418756f45db31)) - by @satya164
+
+### Features
+
+* align tab bar with latest material design guidelines ([6c4c7ad](https://github.com/react-navigation/react-navigation/commit/6c4c7adde68313a2381872fb3721f23ac800a431)) - by @satya164
+
 # [5.0.0-alpha.8](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.7...react-native-tab-view@5.0.0-alpha.8) (2026-05-14)
 
 ### Features

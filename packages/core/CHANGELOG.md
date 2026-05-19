@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.16...@react-navigation/core@8.0.0-alpha.17) (2026-05-19)
+
+### Bug Fixes
+
+* detect duplicate navigators in hidden trees ([ab1db32](https://github.com/react-navigation/react-navigation/commit/ab1db321fb5dde5f1a866a2f9c82ce225eb41bfe)) - by @satya164
+* handle container ref methods in hidden trees ([d3ef9c2](https://github.com/react-navigation/react-navigation/commit/d3ef9c2a92eb6219906213c4de409b93ba25c1db)) - by @satya164
+* handle targeted actions in hidden nested navigators ([fee99a3](https://github.com/react-navigation/react-navigation/commit/fee99a34f89c108a9940287a10df50e80b4786a6)) - by @satya164
+* make beforeRemove event work even when navigator or screen is hidden ([5f280d9](https://github.com/react-navigation/react-navigation/commit/5f280d970d3af1903ade275d8269475b8eb1eed4)) - by @satya164
+* make getRootState return state for hidden nested navigators ([e600b34](https://github.com/react-navigation/react-navigation/commit/e600b344c4d479dbc1054399ac6b11dcea4f18b9)) - by @satya164
+* return current options from navigators in hidden trees ([37fd105](https://github.com/react-navigation/react-navigation/commit/37fd105c2567f172fa66a1306f45e82d5e4889ce)) - by @satya164
+
 # [8.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.15...@react-navigation/core@8.0.0-alpha.16) (2026-05-15)
 
 ### Features

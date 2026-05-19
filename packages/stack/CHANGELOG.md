@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.33...@react-navigation/stack@8.0.0-alpha.34) (2026-05-19)
+
+### Bug Fixes
+
+* prevent input from being focused in an unfocused screen in stack ([4ddef3f](https://github.com/react-navigation/react-navigation/commit/4ddef3fd39c7c04966e3c99e931d327a1fb98f17)) - by @satya164
+
 # [8.0.0-alpha.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.32...@react-navigation/stack@8.0.0-alpha.33) (2026-05-15)
 
 **Note:** Version bump only for package @react-navigation/stack

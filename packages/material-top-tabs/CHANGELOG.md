@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.30](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.29...@react-navigation/material-top-tabs@8.0.0-alpha.30) (2026-05-19)
+
+### Features
+
+* align tab bar with latest material design guidelines ([6c4c7ad](https://github.com/react-navigation/react-navigation/commit/6c4c7adde68313a2381872fb3721f23ac800a431)) - by @satya164
+
 # [8.0.0-alpha.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.28...@react-navigation/material-top-tabs@8.0.0-alpha.29) (2026-05-15)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
