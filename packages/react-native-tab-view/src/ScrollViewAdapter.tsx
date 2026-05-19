@@ -36,7 +36,7 @@ export function ScrollViewAdapter({
   children,
   style,
   animationEnabled = true,
-  layoutDirection: _, // Not supported in ScrollViewAdapter
+  layoutDirection = 'ltr',
   decelerationRate = 'fast',
   bounces = false,
   overScrollMode = 'never',
@@ -45,6 +45,16 @@ export function ScrollViewAdapter({
 }: ScrollViewAdapterProps) {
   const { index, routes } = navigationState;
 
+  const isRTL = layoutDirection === 'rtl';
+
+  // Android reports RTL scroll offsets from the opposite end (0 at the max scroll offset)
+  // So we need to invert them to get the logical route index
+  const shouldInvertOffset = Platform.OS === 'android' && isRTL;
+
+  // Web uses negative scroll offsets in RTL
+  // So we need to negate them to get the logical route index
+  const shouldNegateOffset = Platform.OS === 'web' && isRTL;
+
   const listeners = React.useRef<Set<Listener>>(new Set()).current;
 
   const scrollViewRef = React.useRef<ScrollView>(null);
@@ -52,13 +62,48 @@ export function ScrollViewAdapter({
 
   const isInitialRef = React.useRef(true);
 
+  const getScrollOffsetForIndex = React.useCallback(
+    (index: number, width: number) =>
+      (shouldNegateOffset ? -index : index) * width,
+    [shouldNegateOffset]
+  );
+
+  const getReportedOffsetForIndex = React.useCallback(
+    (index: number, width: number) =>
+      shouldInvertOffset
+        ? (routes.length - 1 - index) * width
+        : getScrollOffsetForIndex(index, width),
+    [getScrollOffsetForIndex, routes.length, shouldInvertOffset]
+  );
+
+  const getIndexFromOffset = React.useCallback(
+    (x: number, width: number) => {
+      const offset = clamp(
+        x / width,
+        shouldNegateOffset ? -(routes.length - 1) : 0,
+        routes.length - 1
+      );
+
+      if (shouldInvertOffset) {
+        return routes.length - 1 - offset;
+      }
+
+      if (shouldNegateOffset) {
+        return -offset;
+      }
+
+      return offset;
+    },
+    [routes.length, shouldInvertOffset, shouldNegateOffset]
+  );
+
   const [layout, onLayout] = useMeasureLayout(containerRef, ({ width }) => {
     if (isInitialRef.current) {
-      const x = index * width;
+      const x = getScrollOffsetForIndex(index, width);
 
       setContentOffset({ x, y: 0 });
 
-      offsetX.setValue(x);
+      offsetX.setValue(getReportedOffsetForIndex(index, width));
     } else if (indexRef.current !== index) {
       scrollToIndex(index);
     }
@@ -67,14 +112,14 @@ export function ScrollViewAdapter({
   });
 
   const [contentOffset, setContentOffset] = React.useState(() => ({
-    x: index * layout.width,
+    x: getScrollOffsetForIndex(index, layout.width),
     y: 0,
   }));
 
   React.useEffect(() => {
-    // FIXME: contentOffset is not supported on Android
+    // FIXME: contentOffset is not supported on Android and Web
     // So we manually scroll after state update
-    if (Platform.OS === 'android') {
+    if (Platform.OS === 'android' || Platform.OS === 'web') {
       requestAnimationFrame(() => {
         scrollViewRef.current?.scrollTo({
           x: contentOffset.x,
@@ -82,13 +127,13 @@ export function ScrollViewAdapter({
         });
       });
     }
-  }, [animationEnabled, contentOffset.x]);
+  }, [contentOffset.x]);
 
   const [offsetX] = React.useState(() => new Animated.Value(contentOffset.x));
 
   const scrollToIndex = useLatestCallback((index: number) => {
     scrollViewRef.current?.scrollTo({
-      x: index * layout.width,
+      x: getScrollOffsetForIndex(index, layout.width),
       animated: animationEnabled,
     });
   });
@@ -119,10 +164,26 @@ export function ScrollViewAdapter({
     };
   });
 
-  const position = React.useMemo(
-    () => (layout.width ? Animated.divide(offsetX, layout.width) : null),
-    [layout.width, offsetX]
-  );
+  const position = React.useMemo(() => {
+    if (!layout.width) {
+      return null;
+    }
+
+    const value = Animated.divide(offsetX, layout.width);
+
+    // Convert platform scroll offsets back to logical route index
+    return shouldInvertOffset
+      ? Animated.subtract(routes.length - 1, value)
+      : shouldNegateOffset
+        ? Animated.multiply(value, -1)
+        : value;
+  }, [
+    layout.width,
+    offsetX,
+    routes.length,
+    shouldInvertOffset,
+    shouldNegateOffset,
+  ]);
 
   const indexRef = React.useRef(index);
   const timerRef = React.useRef<ReturnType<typeof setTimeout> | undefined>(
@@ -130,16 +191,16 @@ export function ScrollViewAdapter({
   );
 
   const onScrollEnd = (x: number) => {
-    const value = clamp(x / layout.width, 0, routes.length - 1);
+    const nextIndex = getIndexFromOffset(x, layout.width);
 
-    if (value % 1 === 0) {
-      indexRef.current = value;
+    if (nextIndex % 1 === 0) {
+      indexRef.current = nextIndex;
 
-      if (value !== index) {
-        onIndexChange(value);
+      if (nextIndex !== index) {
+        onIndexChange(nextIndex);
       }
 
-      onTabSelect?.({ index: value });
+      onTabSelect?.({ index: nextIndex });
     }
   };
 
@@ -155,8 +216,7 @@ export function ScrollViewAdapter({
       useNativeDriver: Platform.OS !== 'web',
       listener: (event: ScrollEvent) => {
         const { x } = event.nativeEvent.contentOffset;
-
-        const value = clamp(x / layout.width, 0, routes.length - 1);
+        const value = getIndexFromOffset(x, layout.width);
 
         // The offset will overlap the current and the adjacent page
         // So we need to get the index of the adjacent page

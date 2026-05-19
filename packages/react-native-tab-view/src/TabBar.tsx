@@ -197,13 +197,15 @@ const getTranslateX = (
   scrollAmount: Animated.Value,
   maxScrollDistance: number,
   direction: LocaleDirection
-) =>
-  Animated.multiply(
+) => {
+  const amount =
+    // Android reports scroll from the opposite side in RTL
     Platform.OS === 'android' && direction === 'rtl'
       ? Animated.add(maxScrollDistance, Animated.multiply(scrollAmount, -1))
-      : scrollAmount,
-    direction === 'rtl' ? 1 : -1
-  );
+      : scrollAmount;
+
+  return Animated.multiply(amount, direction === 'rtl' ? 1 : -1);
+};
 
 const getTabBarWidth = <T extends Route>({
   routes,
@@ -252,11 +254,9 @@ const normalizeScrollValue = <T extends Route>({
   flattenedTabWidth,
   flattenedPaddingStart,
   flattenedPaddingEnd,
-  direction,
 }: CalculationOptions & {
   routes: T[];
   value: number;
-  direction: LocaleDirection;
 }) => {
   const tabBarWidth = getTabBarWidth({
     layoutWidth,
@@ -270,12 +270,6 @@ const normalizeScrollValue = <T extends Route>({
   });
   const maxDistance = getMaxScrollDistance(tabBarWidth, layoutWidth);
   const scrollValue = Math.max(Math.min(value, maxDistance), 0);
-
-  if (Platform.OS === 'android' && direction === 'rtl') {
-    // On Android, scroll value is not applied in reverse in RTL
-    // so we need to manually adjust it to apply correct value
-    return maxDistance - scrollValue;
-  }
 
   return scrollValue;
 };
@@ -335,7 +329,6 @@ const getScrollAmount = <T extends Route>({
     flattenedTabWidth,
     flattenedPaddingStart,
     flattenedPaddingEnd,
-    direction,
   });
 };
 const getLabelTextDefault = ({ route }: Scene<Route>) => route.title;
@@ -402,8 +395,6 @@ export function TabBar<T extends Route>({
 
   const flatListRef = React.useRef<FlatList | null>(null);
   const isFirst = React.useRef(true);
-
-  const scrollAmount = useAnimatedValue(0);
 
   const { routes } = navigationState;
 
@@ -473,14 +464,18 @@ export function TabBar<T extends Route>({
     flattenedPaddingEnd,
   });
 
+  const maxScrollDistance = getMaxScrollDistance(tabBarWidth, layout.width);
+  const scrollAmount = useAnimatedValue(0);
+
+  React.useLayoutEffect(() => {
+    scrollAmount.setValue(
+      Platform.OS === 'android' && direction === 'rtl' ? maxScrollDistance : 0
+    );
+  }, [direction, maxScrollDistance, scrollAmount]);
+
   const translateX = React.useMemo(
-    () =>
-      getTranslateX(
-        scrollAmount,
-        getMaxScrollDistance(tabBarWidth, layout.width),
-        direction
-      ),
-    [direction, layout.width, scrollAmount, tabBarWidth]
+    () => getTranslateX(scrollAmount, maxScrollDistance, direction),
+    [direction, maxScrollDistance, scrollAmount]
   );
 
   const flattenedTabStyle = StyleSheet.flatten(tabStyle);
