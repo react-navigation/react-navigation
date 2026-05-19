@@ -167,7 +167,7 @@ const TabBarItemInternal = <T extends Route>({
     });
 
     return (
-      <View style={styles.icon}>
+      <View>
         <Animated.View style={{ opacity: inactiveOpacity }}>
           {inactiveIcon}
         </Animated.View>
@@ -250,6 +250,8 @@ const TabBarItemInternal = <T extends Route>({
     onMeasureLabelLayout({ width, height });
   };
 
+  const hasIconAndLabel = Boolean(customIcon && labelText);
+
   return (
     <PlatformPressable
       android_ripple={android_ripple}
@@ -266,8 +268,16 @@ const TabBarItemInternal = <T extends Route>({
       href={href}
       style={styles.pressable}
     >
-      <View ref={viewRef} onLayout={onLayout} style={[styles.item, style]}>
-        <View ref={labelRef} onLayout={onLabelLayout}>
+      <View
+        ref={viewRef}
+        onLayout={onLayout}
+        style={[
+          styles.item,
+          hasIconAndLabel ? styles.itemWithIcon : null,
+          style,
+        ]}
+      >
+        <View ref={labelRef} onLayout={onLabelLayout} style={styles.content}>
           {icon}
           <View>
             <Animated.View style={{ opacity: inactiveOpacity }}>
@@ -326,16 +336,19 @@ export function TabBarItem<T extends Route>({
 }
 
 const styles = StyleSheet.create({
-  icon: {
-    margin: 2,
-  },
   item: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 16,
     minHeight: 48,
     pointerEvents: 'none',
+  },
+  itemWithIcon: {
+    minHeight: 62,
+  },
+  content: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   badge: {
     position: 'absolute',
