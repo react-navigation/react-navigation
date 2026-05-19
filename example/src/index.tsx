@@ -495,7 +495,7 @@ const useAppState = () => {
         const savedDirection =
           Platform.OS !== 'web'
             ? await AsyncStorage.getItem(DIRECTION_PERSISTENCE_KEY)
-            : undefined;
+            : previousDirection;
 
         dispatch({
           type: 'RESTORE_SUCCESS',
