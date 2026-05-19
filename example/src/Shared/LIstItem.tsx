@@ -1,5 +1,5 @@
 import { PlatformPressable, Text } from '@react-navigation/elements';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 type Props = {
   title: string;
@@ -9,16 +9,27 @@ type Props = {
 };
 
 export function ListItem({ title, onPress, testID, children }: Props) {
+  if (onPress) {
+    return (
+      <PlatformPressable
+        disabled={!onPress}
+        onPress={onPress}
+        testID={testID}
+        style={styles.container}
+      >
+        <Text style={styles.title}>{title}</Text>
+        {children}
+      </PlatformPressable>
+    );
+  }
+
   return (
-    <PlatformPressable
-      disabled={!onPress}
-      onPress={onPress}
-      testID={testID}
-      style={styles.container}
-    >
-      <Text style={styles.title}>{title}</Text>
+    <View style={styles.container}>
+      <Text style={styles.title} testID={testID}>
+        {title}
+      </Text>
       {children}
-    </PlatformPressable>
+    </View>
   );
 }
 
