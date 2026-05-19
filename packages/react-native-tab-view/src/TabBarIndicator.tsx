@@ -102,17 +102,17 @@ export function TabBarIndicator<T extends Route>({
   }
 
   const leftRadiusWidth = Math.max(
-    borderTopStartRadius ?? 0,
-    borderBottomStartRadius ?? 0,
-    (isRTL ? borderTopRightRadius : borderTopLeftRadius) ?? 0,
-    (isRTL ? borderBottomRightRadius : borderBottomLeftRadius) ?? 0
+    (isRTL ? borderTopEndRadius : borderTopStartRadius) ?? 0,
+    (isRTL ? borderBottomEndRadius : borderBottomStartRadius) ?? 0,
+    borderTopLeftRadius ?? 0,
+    borderBottomLeftRadius ?? 0
   );
 
   const rightRadiusWidth = Math.max(
-    borderTopEndRadius ?? 0,
-    borderBottomEndRadius ?? 0,
-    (isRTL ? borderTopLeftRadius : borderTopRightRadius) ?? 0,
-    (isRTL ? borderBottomLeftRadius : borderBottomRightRadius) ?? 0
+    (isRTL ? borderTopStartRadius : borderTopEndRadius) ?? 0,
+    (isRTL ? borderBottomStartRadius : borderBottomEndRadius) ?? 0,
+    borderTopRightRadius ?? 0,
+    borderBottomRightRadius ?? 0
   );
 
   const leftPieceWidth = leftRadiusWidth + CAP_FILL_OVERLAP;
@@ -354,37 +354,37 @@ export function TabBarIndicator<T extends Route>({
       <Animated.View
         style={[
           {
-            backgroundColor,
-            borderTopStartRadius,
-            borderBottomStartRadius,
             ...(isRTL
-              ? { borderTopRightRadius, borderBottomRightRadius }
-              : { borderTopLeftRadius, borderBottomLeftRadius }),
+              ? { borderTopEndRadius, borderBottomEndRadius }
+              : { borderTopStartRadius, borderBottomStartRadius }),
+            borderTopLeftRadius,
+            borderBottomLeftRadius,
             height,
             width: leftPieceWidth,
+            backgroundColor,
           },
           styles.cap,
         ]}
       >
-        <Animated.View style={[{ backgroundColor, height }, leftFillStyle]} />
+        <Animated.View style={[{ height, backgroundColor }, leftFillStyle]} />
       </Animated.View>
-      <Animated.View style={[{ backgroundColor, height }, centerFillStyle]} />
+      <Animated.View style={[{ height, backgroundColor }, centerFillStyle]} />
       <Animated.View
         style={[
           {
-            backgroundColor,
-            borderTopEndRadius,
-            borderBottomEndRadius,
             ...(isRTL
-              ? { borderTopLeftRadius, borderBottomLeftRadius }
-              : { borderTopRightRadius, borderBottomRightRadius }),
+              ? { borderTopStartRadius, borderBottomStartRadius }
+              : { borderTopEndRadius, borderBottomEndRadius }),
+            borderTopRightRadius,
+            borderBottomRightRadius,
             height,
             width: rightPieceWidth,
+            backgroundColor,
           },
           rightCapStyle,
         ]}
       >
-        <Animated.View style={[{ backgroundColor, height }, rightFillStyle]} />
+        <Animated.View style={[{ height, backgroundColor }, rightFillStyle]} />
       </Animated.View>
     </Animated.View>
   );

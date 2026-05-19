@@ -36,9 +36,19 @@ export function PagerViewAdapter({
   children,
   style,
   animationEnabled,
+  layoutDirection = 'ltr',
   ...rest
 }: PagerViewAdapterProps) {
-  const { index } = navigationState;
+  const { index, routes } = navigationState;
+
+  const isRTL = layoutDirection === 'rtl';
+
+  // iOS reports RTL pager offsets from the opposite end
+  // So we need to invert them to get the logical route index
+  const shouldInvertOffset = Platform.OS === 'ios' && isRTL;
+  const initialPosition = shouldInvertOffset
+    ? routes.length - 1 - index
+    : index;
 
   const listeners = React.useRef<Set<Listener>>(new Set()).current;
 
@@ -46,11 +56,25 @@ export function PagerViewAdapter({
   const indexRef = React.useRef<number>(index);
   const navigationStateRef = React.useRef(navigationState);
 
-  const position = useAnimatedValue(index);
+  const position = useAnimatedValue(initialPosition);
   const offset = useAnimatedValue(0);
 
   React.useEffect(() => {
     navigationStateRef.current = navigationState;
+  });
+
+  const setReportedOffset = useLatestCallback((index: number) => {
+    position.setValue(shouldInvertOffset ? routes.length - 1 - index : index);
+    offset.setValue(0);
+  });
+
+  const setPage = useLatestCallback((index: number) => {
+    if (animationEnabled) {
+      pagerRef.current?.setPage(index);
+    } else {
+      pagerRef.current?.setPageWithoutAnimation(index);
+      setReportedOffset(index);
+    }
   });
 
   const jumpTo = useLatestCallback((key: string) => {
@@ -58,13 +82,7 @@ export function PagerViewAdapter({
       (route: { key: string }) => route.key === key
     );
 
-    if (animationEnabled) {
-      pagerRef.current?.setPage(index);
-    } else {
-      pagerRef.current?.setPageWithoutAnimation(index);
-      position.setValue(index);
-    }
-
+    setPage(index);
     onIndexChange(index);
   });
 
@@ -74,14 +92,9 @@ export function PagerViewAdapter({
     }
 
     if (indexRef.current !== index) {
-      if (animationEnabled) {
-        pagerRef.current?.setPage(index);
-      } else {
-        pagerRef.current?.setPageWithoutAnimation(index);
-        position.setValue(index);
-      }
+      setPage(index);
     }
-  }, [keyboardDismissMode, index, animationEnabled, position]);
+  }, [keyboardDismissMode, index, setPage]);
 
   const onPageScrollStateChanged = (
     state: PageScrollStateChangedNativeEvent
@@ -123,10 +136,14 @@ export function PagerViewAdapter({
     };
   });
 
-  const memoizedPosition = React.useMemo(
-    () => Animated.add(position, offset),
-    [offset, position]
-  );
+  const memoizedPosition = React.useMemo(() => {
+    const value = Animated.add(position, offset);
+
+    // Convert the native RTL offset back to the logical route index
+    return shouldInvertOffset
+      ? Animated.subtract(routes.length - 1, value)
+      : value;
+  }, [offset, position, routes.length, shouldInvertOffset]);
 
   return children({
     position: memoizedPosition,
@@ -138,6 +155,7 @@ export function PagerViewAdapter({
         ref={pagerRef}
         style={[styles.container, style]}
         initialPage={index}
+        layoutDirection={layoutDirection}
         keyboardDismissMode={
           keyboardDismissMode === 'auto' ? 'on-drag' : keyboardDismissMode
         }
