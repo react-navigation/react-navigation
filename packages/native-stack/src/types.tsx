@@ -428,19 +428,6 @@ export type NativeStackNavigationOptions = {
    */
   headerBackButtonDisplayMode?: ScreenStackHeaderConfigProps['backButtonDisplayMode'];
   /**
-   * When set to `true` on the outermost stack with a **visible** header, disables top inset
-   * handling for that header and the entire subtree.
-   *
-   * This prop only takes effect on the outermost visible header in the hierarchy.
-   * Setting it on an inner stack has no additional impact because a parent stack
-   * has already made the decision (whether inset should be applied or not).
-   *
-   * Has no effect when `androidLegacyTopInsetBehavior` feature flag is enabled.
-   *
-   * @platform android
-   */
-  disableTopInsetApplication?: boolean;
-  /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
    * @platform ios
