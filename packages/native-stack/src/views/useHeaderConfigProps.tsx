@@ -527,6 +527,7 @@ export function useHeaderConfigProps({
     titleFontSize,
     titleFontWeight: String(titleFontWeight),
     topInsetEnabled: headerTopInsetEnabled,
+    disableTopInsetApplication: !headerTopInsetEnabled,
     translucent: translucent === true,
     children,
     headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
