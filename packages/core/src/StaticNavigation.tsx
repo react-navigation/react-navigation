@@ -36,10 +36,8 @@ type StaticRouteConfig<
 > &
   RouteConfigComponent<ParamList, RouteName>;
 
-declare const StaticScreenConfigSymbol: unique symbol;
-
 type StaticScreenConfigBrand = {
-  readonly [StaticScreenConfigSymbol]: true;
+  readonly __reactNavigationStaticScreenConfig: true;
 };
 
 type UnknownToUndefined<T> = unknown extends T ? undefined : T;
