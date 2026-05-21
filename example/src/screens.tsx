@@ -24,6 +24,7 @@ import { NativeStack } from './Screens/NativeStack';
 import { NativeStackCardModal } from './Screens/NativeStackCardModal';
 import { NativeStackFormSheet } from './Screens/NativeStackFormSheet';
 import { NativeStackHeaderCustomization } from './Screens/NativeStackHeaderCustomization';
+import { NativeStackNext } from './Screens/NativeStackNext';
 import { NativeStackPreloadFlow } from './Screens/NativeStackPreloadFlow';
 import { NativeStackPreventRemove } from './Screens/NativeStackPreventRemove';
 import { NavigatorLayout } from './Screens/NavigatorLayout';
@@ -52,6 +53,7 @@ export const SCREENS = {
   NativeStackCardModal,
   NativeStackFormSheet,
   NativeStackHeaderCustomization,
+  NativeStackNext,
   NativeStackPreloadFlow,
   NativeStackPreventRemove,
   StackAnimations,
