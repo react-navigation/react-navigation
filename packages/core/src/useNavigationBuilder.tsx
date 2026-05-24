@@ -38,7 +38,6 @@ import {
 import { UnhandledActionContext } from './UnhandledActionContext';
 import { useChildListeners } from './useChildListeners';
 import { useComponent } from './useComponent';
-import { useCurrentRender } from './useCurrentRender';
 import { type ScreenConfigWithParent, useDescriptors } from './useDescriptors';
 import { useEventEmitter } from './useEventEmitter';
 import { useFocusedListenersChildrenAdapter } from './useFocusedListenersChildrenAdapter';
@@ -985,12 +984,6 @@ export function useNavigationBuilder<
     router,
     // @ts-expect-error: this should have both core and custom events, but too much work right now
     emitter,
-  });
-
-  useCurrentRender({
-    state,
-    navigation,
-    descriptors,
   });
 
   const NavigationContent = useComponent((children: React.ReactNode) => {

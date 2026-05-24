@@ -13,7 +13,6 @@ export {
 } from './native/MaterialSymbol';
 export { SFSymbol, type SFSymbolProps } from './native/SFSymbol';
 export { NavigationContainer } from './NavigationContainer';
-export { ServerContainer } from './ServerContainer';
 export { DarkTheme } from './theming/DarkTheme';
 export { LightTheme as DefaultTheme } from './theming/LightTheme';
 export { MaterialDarkTheme, MaterialLightTheme } from './theming/MaterialTheme';

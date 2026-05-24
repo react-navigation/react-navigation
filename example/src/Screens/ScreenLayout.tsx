@@ -7,26 +7,38 @@ import {
 import * as React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-let cached: number | undefined;
-
 const createPromise = () =>
   new Promise<number>((resolve) => {
     setTimeout(() => resolve(42), 3000);
-  }).then((result) => {
-    cached = result;
-    return result;
   });
+
+type SuspenseContextType = {
+  promise: Promise<number>;
+  refresh: () => void;
+};
+
+const SuspenseContext = React.createContext<SuspenseContextType | undefined>(
+  undefined
+);
+
+const useSuspenseContext = () => {
+  const context = React.useContext(SuspenseContext);
+
+  if (context === undefined) {
+    throw new Error('SuspenseContext is missing');
+  }
+
+  return context;
+};
 
 const SuspenseDemoScreen = () => {
   const navigation = useNavigation('SuspenseDemo');
-  const [promise, setPromise] = React.useState(createPromise);
+
+  const { promise, refresh } = useSuspenseContext();
+
   const [error, setError] = React.useState<Error | null>(null);
 
-  // Naive implementation for suspense intended for demo purposes
-  // We need to suspend when there's no cached value by throwing a promise
-  if (cached == null) {
-    throw promise;
-  }
+  React.use(promise);
 
   if (error) {
     throw error;
@@ -38,8 +50,7 @@ const SuspenseDemoScreen = () => {
         <Button
           variant="filled"
           onPress={() => {
-            cached = undefined;
-            setPromise(createPromise());
+            refresh();
           }}
         >
           Suspend
@@ -86,6 +97,34 @@ class ErrorBoundary extends React.Component<
   }
 }
 
+const SuspenseDemoLayout = ({ children }: { children: React.ReactNode }) => {
+  const [promise, setPromise] = React.useState(createPromise);
+
+  const value = React.useMemo(
+    () => ({
+      promise,
+      refresh: () => setPromise(createPromise()),
+    }),
+    [promise]
+  );
+
+  return (
+    <SuspenseContext.Provider value={value}>
+      <ErrorBoundary>
+        <React.Suspense
+          fallback={
+            <View style={styles.fallback}>
+              <Text style={styles.text}>Loading…</Text>
+            </View>
+          }
+        >
+          {children}
+        </React.Suspense>
+      </ErrorBoundary>
+    </SuspenseContext.Provider>
+  );
+};
+
 const ScreenLayoutNavigator = createStackNavigator({
   screens: {
     SuspenseDemo: createStackScreen({
@@ -93,17 +132,7 @@ const ScreenLayoutNavigator = createStackNavigator({
       options: { title: 'Suspense & ErrorBoundary' },
       linking: 'suspense',
       layout: ({ children }) => (
-        <ErrorBoundary>
-          <React.Suspense
-            fallback={
-              <View style={styles.fallback}>
-                <Text style={styles.text}>Loading…</Text>
-              </View>
-            }
-          >
-            {children}
-          </React.Suspense>
-        </ErrorBoundary>
+        <SuspenseDemoLayout>{children}</SuspenseDemoLayout>
       ),
     }),
   },
