@@ -4,7 +4,6 @@ export {
   createNavigatorFactory,
   type TypedNavigatorFactory,
 } from './createNavigatorFactory';
-export { CurrentRenderContext } from './CurrentRenderContext';
 export { findFocusedRoute } from './findFocusedRoute';
 export { getActionFromState } from './getActionFromState';
 export { getFocusedRouteNameFromRoute } from './getFocusedRouteNameFromRoute';

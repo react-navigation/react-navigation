@@ -225,7 +225,3 @@ export type Persistor = {
    */
   restore(): PromiseLike<InitialState | undefined> | InitialState | undefined;
 };
-
-export type ServerContainerRef = {
-  getCurrentOptions(): Record<string, any> | undefined;
-};

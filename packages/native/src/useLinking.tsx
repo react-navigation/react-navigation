@@ -12,7 +12,7 @@ import isEqual from 'fast-deep-equal';
 import * as React from 'react';
 
 import { createMemoryHistory } from './createMemoryHistory';
-import { ServerContext } from './ServerContext';
+import { ServerContext } from './server/ServerContext';
 import type { LinkingOptions } from './types';
 import type { Thenable } from './useThenable';
 
@@ -170,7 +170,15 @@ export function useLinking<ParamList extends ParamListBase>(
     };
   }, [enabled, independent]);
 
-  const [history] = React.useState(createMemoryHistory);
+  const server = React.use(ServerContext);
+
+  const [history] = React.useState(() => {
+    if (server || typeof window === 'undefined') {
+      return undefined;
+    }
+
+    return createMemoryHistory();
+  });
 
   // We store these options in ref to avoid re-creating getInitialState and re-subscribing listeners
   // This lets user avoid wrapping the items in `React.useCallback` or `React.useMemo`
@@ -200,15 +208,15 @@ export function useLinking<ParamList extends ParamListBase>(
     [ref]
   );
 
-  const server = React.use(ServerContext);
-
   const getInitialState = React.useCallback(() => {
     let value: ResultState | undefined;
 
     if (enabledRef.current) {
-      const location =
-        server?.location ??
-        (typeof window !== 'undefined' ? window.location : undefined);
+      const location = server
+        ? server.location
+        : typeof window !== 'undefined'
+          ? window.location
+          : undefined;
 
       const path = location ? location.pathname + location.search : undefined;
 
@@ -238,6 +246,10 @@ export function useLinking<ParamList extends ParamListBase>(
   const pendingPopStatePathRef = React.useRef<string | undefined>(undefined);
 
   React.useEffect(() => {
+    if (!history) {
+      return;
+    }
+
     previousIndexRef.current = history.index;
 
     return history.listen(() => {
@@ -340,7 +352,7 @@ export function useLinking<ParamList extends ParamListBase>(
   }, [enabled, history, ref, validateRoutesNotExistInRootState]);
 
   React.useEffect(() => {
-    if (!enabled) {
+    if (!enabled || !history) {
       return;
     }
 

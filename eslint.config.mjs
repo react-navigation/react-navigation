@@ -29,6 +29,7 @@ export default defineConfig([
           patterns: [
             '@react-navigation/*/*',
             '!@react-navigation/elements/internal',
+            '!@react-navigation/native/server',
           ],
 
           paths: [
