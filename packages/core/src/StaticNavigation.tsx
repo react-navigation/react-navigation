@@ -31,13 +31,13 @@ import type {
   ValidPathPattern,
 } from './utilities';
 
-type ParamsForScreenComponent<T> = T extends (...args: any[]) => any
+type ParamsForScreenComponent<T> = [T] extends [(...args: any[]) => any]
   ? HasArguments<T> extends true
-    ? T extends React.ComponentType<{ route: { params: infer Params } }>
+    ? [T] extends [React.ComponentType<{ route: { params: infer Params } }>]
       ? Params
       : undefined
     : undefined
-  : T extends React.ComponentType<{ route: { params: infer Params } }>
+  : [T] extends [React.ComponentType<{ route: { params: infer Params } }>]
     ? Params
     : undefined;
 
@@ -58,16 +58,22 @@ type ParamsForNestedNavigator<
 
 type ParamsForScreen<T> =
   // Nested navigator in screen property
-  T extends { screen: { config: any } }
-    ? ParamsForNestedNavigator<T['screen']>
+  T extends { screen: infer Screen }
+    ? ParamsForScreenInner<Screen>
     : // Direct nested navigator
       T extends { config: any }
       ? ParamsForNestedNavigator<T>
-      : T extends {
-            screen: React.ComponentType<any>;
-          }
-        ? ParamsForScreenComponent<T['screen']>
-        : ParamsForScreenComponent<T>;
+      : ParamsForScreenComponent<T>;
+
+// `screen` can be a union when users build their screens map from a
+// `Record<K, V>`. A naked `T extends ...` conditional would distribute over
+// every screen in that union, creating a large params union for each route.
+// Wrapping `T` in a tuple checks the union as a whole and avoids that fanout.
+type ParamsForScreenInner<T> = [T] extends [{ config: any }]
+  ? ParamsForNestedNavigator<T>
+  : [T] extends [React.ComponentType<any>]
+    ? ParamsForScreenComponent<T>
+    : undefined;
 
 // Only infer params from linking if it's a pattern (i.e., contains ':')
 // or if parse is present for query params.
@@ -93,13 +99,13 @@ type MergeLinkingAndScreenParams<LinkingParams, ScreenParams> =
 type ParamsForConfig<Linking, Screen> = ParamsForConfigInternal<
   Linking,
   Screen,
-  ParamsForScreen<Screen>
+  ParamsForScreenInner<Screen>
 >;
 
 type ParamsForConfigInternal<Linking, Screen, SP> = undefined extends Linking
   ? SP
   : ShouldInferFromLinking<Linking> extends true
-    ? Screen extends { config: any }
+    ? [Screen] extends [{ config: any }]
       ? FlatType<InferParamsFromLinking<Linking>> & SP
       : MergeLinkingAndScreenParams<InferParamsFromLinking<Linking>, SP>
     : SP;
