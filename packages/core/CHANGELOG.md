@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.18...@react-navigation/core@8.0.0-alpha.19) (2026-05-25)
+
+### Bug Fixes
+
+* fix various issues with path generation with automatic paths ([e6fb1b6](https://github.com/react-navigation/react-navigation/commit/e6fb1b61f0ac5cbcbb23f3632a2507f2529b46c3)) - by @satya164
+
 # [8.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.17...@react-navigation/core@8.0.0-alpha.18) (2026-05-25)
 
 ### Bug Fixes
