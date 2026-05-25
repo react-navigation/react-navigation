@@ -358,8 +358,12 @@ export type NativeBottomTabNavigationOptions = NativeHeaderOptions & {
   overrideScrollViewContentInsetAdjustmentBehavior?: boolean;
 
   /**
-   * Whether this screens should render the first time it's accessed. Defaults to `true`.
-   * Set it to `false` if you want to render the screen on initial render.
+   * Whether this screen should render only when first accessed.
+   *
+   * Defaults to `false`.
+   *
+   * Enabling may result in flicker as React renders
+   * after native transition is already finished.
    */
   lazy?: boolean;
 

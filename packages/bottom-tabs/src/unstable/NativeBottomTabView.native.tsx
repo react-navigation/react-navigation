@@ -1,6 +1,5 @@
 import {
   getLabel,
-  Lazy,
   SafeAreaProviderCompat,
   Screen as ScreenContent,
 } from '@react-navigation/elements';
@@ -33,6 +32,7 @@ import {
   type TabsScreenItemStateAppearanceIOS,
 } from 'react-native-screens';
 
+import { Deferred } from './Deferred';
 import { NativeScreen } from './NativeScreen/NativeScreen';
 import type {
   NativeBottomTabDescriptorMap,
@@ -93,6 +93,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
   const { dark, colors, fonts } = useTheme();
 
   const focusedRouteKey = state.routes[state.index].key;
+
   const [nativeState, dispatch] = React.useReducer(reducer, {
     confirmed: {
       routeKey: focusedRouteKey,
@@ -340,7 +341,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
 
           const {
             title,
-            lazy = true,
+            lazy = false,
             tabBarLabel,
             tabBarSelectionEnabled,
             tabBarBadgeStyle,
@@ -484,7 +485,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
                 overrideScrollViewContentInsetAdjustmentBehavior,
               }}
             >
-              <Lazy enabled={lazy} visible={isFocused || isPreloaded}>
+              <Deferred lazy={lazy} visible={isFocused || isPreloaded}>
                 <ScreenWithHeader
                   isFocused={isFocused}
                   route={route}
@@ -495,7 +496,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
                     {render()}
                   </NavigationMetaContext.Provider>
                 </ScreenWithHeader>
-              </Lazy>
+              </Deferred>
             </Tabs.Screen>
           );
         })}
