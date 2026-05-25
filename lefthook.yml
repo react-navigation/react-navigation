@@ -12,7 +12,7 @@ pre-commit:
       run: yarn test
     dependencies:
       glob: "{package.json,yarn.lock}"
-      run: yarn check-dependency-version-consistency .
+      run: yarn versions check
 commit-msg:
   parallel: true
   commands:

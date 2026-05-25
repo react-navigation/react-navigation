@@ -21,7 +21,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Verify dependency versions
-        run: yarn check-dependency-version-consistency .
+        run: yarn versions check
 
   lint:
     runs-on: ubuntu-latest
