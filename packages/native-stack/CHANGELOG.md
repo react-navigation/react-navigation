@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.16.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.15.1...@react-navigation/native-stack@7.16.0) (2026-05-25)
+
+### Features
+
+* add prop for disabling default top inset application ([#13114](https://github.com/react-navigation/react-navigation/issues/13114)) ([40b7e21](https://github.com/react-navigation/react-navigation/commit/40b7e211a7737574f5d01aa8820bf7e8a4f95499)) - by @t0maboro
+
 ## [7.15.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.15.0...@react-navigation/native-stack@7.15.1) (2026-05-14)
 
 **Note:** Version bump only for package @react-navigation/native-stack

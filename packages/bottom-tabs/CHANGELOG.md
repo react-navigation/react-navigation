@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.16.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.16.1...@react-navigation/bottom-tabs@7.16.2) (2026-05-25)
+
+### Bug Fixes
+
+* default lazy to true for native tabs to avoid flicker ([ca4ac56](https://github.com/react-navigation/react-navigation/commit/ca4ac561a7f1d13cbec675a5e6af056041a6cfcf)) - by @satya164
+
 ## [7.16.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.16.0...@react-navigation/bottom-tabs@7.16.1) (2026-05-14)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
