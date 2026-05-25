@@ -18,6 +18,7 @@ import {
   type StaticParamList,
   type StaticScreenProps,
   type Theme,
+  useNavigation,
 } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
@@ -58,6 +59,154 @@ createStaticNavigation(NativeStack);
 expectTypeOf<StaticParamList<typeof NativeStack>>().toEqualTypeOf<{
   Foo: undefined;
 }>();
+
+/**
+ * Infer params for a widened screen map without producing a complex union
+ */
+{
+  const S0 = () => null;
+  const S1 = () => null;
+  const S2 = () => null;
+  const S3 = () => null;
+  const S4 = () => null;
+  const S5 = () => null;
+  const S6 = () => null;
+  const S7 = () => null;
+  const S8 = () => null;
+  const S9 = () => null;
+  const S10 = () => null;
+  const S11 = () => null;
+  const S12 = () => null;
+  const S13 = () => null;
+  const S14 = () => null;
+  const S15 = () => null;
+  const S16 = () => null;
+  const S17 = () => null;
+  const S18 = () => null;
+  const S19 = () => null;
+  const S20 = () => null;
+  const S21 = () => null;
+  const S22 = () => null;
+  const S23 = () => null;
+  const S24 = () => null;
+  const S25 = () => null;
+  const S26 = () => null;
+  const S27 = () => null;
+  const S28 = () => null;
+  const S29 = () => null;
+  const S30 = () => null;
+  const S31 = () => null;
+  const S32 = () => null;
+  const S33 = () => null;
+  const S34 = () => null;
+  const S35 = () => null;
+  const S36 = () => null;
+  const S37 = () => null;
+  const S38 = () => null;
+  const S39 = () => null;
+  const S40 = () => null;
+  const S41 = () => null;
+  const S42 = () => null;
+  const S43 = () => null;
+  const S44 = () => null;
+  const S45 = () => null;
+  const S46 = () => null;
+  const S47 = () => null;
+  const S48 = () => null;
+  const S49 = () => null;
+
+  const screens = {
+    S0,
+    S1,
+    S2,
+    S3,
+    S4,
+    S5,
+    S6,
+    S7,
+    S8,
+    S9,
+    S10,
+    S11,
+    S12,
+    S13,
+    S14,
+    S15,
+    S16,
+    S17,
+    S18,
+    S19,
+    S20,
+    S21,
+    S22,
+    S23,
+    S24,
+    S25,
+    S26,
+    S27,
+    S28,
+    S29,
+    S30,
+    S31,
+    S32,
+    S33,
+    S34,
+    S35,
+    S36,
+    S37,
+    S38,
+    S39,
+    S40,
+    S41,
+    S42,
+    S43,
+    S44,
+    S45,
+    S46,
+    S47,
+    S48,
+    S49,
+  };
+
+  type ScreenId = keyof typeof screens;
+
+  const fromEntries = <K extends PropertyKey, V>(entries: [K, V][]) =>
+    Object.fromEntries(entries) as Record<K, V>;
+
+  const ManyScreensStack = createNativeStackNavigator({
+    screens: {
+      ...fromEntries(
+        (Object.keys(screens) as ScreenId[]).map((id) => [
+          id,
+          createNativeStackScreen({ screen: screens[id] }),
+        ])
+      ),
+    },
+  });
+
+  const ManyScreensNavigation = createStaticNavigation(ManyScreensStack);
+
+  <ManyScreensNavigation />;
+
+  type ManyScreensParamList = StaticParamList<typeof ManyScreensStack>;
+
+  expectTypeOf<ManyScreensParamList>().toEqualTypeOf<
+    Record<ScreenId, undefined>
+  >();
+
+  function ManyScreensChild() {
+    const navigation = useNavigation<typeof ManyScreensStack>('S0');
+
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+    navigation.navigate('S1');
+    navigation.preload('S2');
+
+    return null;
+  }
+
+  <ManyScreensChild />;
+}
 
 const HomeTabs = createBottomTabNavigator({
   screens: {
