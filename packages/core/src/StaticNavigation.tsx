@@ -426,27 +426,6 @@ type StaticConfigGroup<
    */
   if?: () => boolean;
   /**
-   * Linking config for the screens in the group.
-   * This can be a string to specify the path, or an object following properties:
-   * - `path`
-   * - `stringify`
-   * - `parse`
-   *
-   * The path specified will be prepended to the paths of the screens in the group.
-   * The `parse` and `stringify` properties will be merged.
-   *
-   * @example
-   * ```js
-   * linking: {
-   *   path: 'users/:id',
-   *   parse: {
-   *     id: (id) => parseInt(id, 10),
-   *   }
-   * },
-   * ```
-   */
-  linking?: LinkingForGroup;
-  /**
    * Static navigation config or Component to render for the screen.
    */
   screens: StaticConfigScreens<
@@ -754,10 +733,6 @@ export function createComponentForStaticConfig<
   return NavigatorComponent;
 }
 
-type LinkingForGroup =
-  | Pick<PathConfig<any>, 'path' | 'stringify' | 'parse'>
-  | string;
-
 type TreeForPathConfig = {
   config: ConfigForPathConfig;
 };
@@ -767,7 +742,6 @@ type ConfigForPathConfig = {
   screens?: Record<string, ScreenForPathConfig>;
   groups?: {
     [key: string]: {
-      linking?: LinkingForGroup;
       screens: Record<string, ScreenForPathConfig>;
     };
   };
@@ -847,7 +821,6 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
 
     const createPathConfigForScreens = (
       screens: Record<string, ScreenForPathConfig>,
-      groupLinking: LinkingForGroup | undefined,
       initialRouteName: string | undefined
     ) => {
       return Object.fromEntries(
@@ -867,25 +840,9 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
           })
           .map(([key, item]) => {
             const screenConfig: PathConfig<{}> = {};
-            const groupPath =
-              typeof groupLinking === 'string'
-                ? groupLinking
-                : groupLinking?.path;
 
-            const normalizePath = (path: string, exact?: boolean) => {
-              const normalizePart = (part: string) =>
-                part.replace(/^\/+|\/+$/g, '');
-
-              if (exact) {
-                return normalizePart(path);
-              }
-
-              return [groupPath, path]
-                .filter((part): part is string => part != null && part !== '')
-                .map(normalizePart)
-                .filter(Boolean)
-                .join('/');
-            };
+            const normalizePath = (path: string) =>
+              path.replace(/^\/+|\/+$/g, '');
 
             if ('linking' in item && item.linking !== undefined) {
               if (typeof item.linking === 'string') {
@@ -905,10 +862,7 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
             }
 
             if (typeof screenConfig.path === 'string') {
-              screenConfig.path = normalizePath(
-                screenConfig.path,
-                screenConfig.exact
-              );
+              screenConfig.path = normalizePath(screenConfig.path);
             }
 
             if (screenConfig.alias != null) {
@@ -917,29 +871,9 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
                   return normalizePath(alias);
                 }
 
-                const groupParse =
-                  typeof groupLinking === 'string'
-                    ? undefined
-                    : groupLinking?.parse;
-                const hasGroupParams =
-                  groupParse != null &&
-                  Object.keys(groupParse).some((name) =>
-                    alias.path
-                      .split('/')
-                      .some((part) => part.startsWith(`:${name}`))
-                  );
-
                 return {
                   ...alias,
-                  ...(hasGroupParams
-                    ? {
-                        parse: {
-                          ...groupParse,
-                          ...alias.parse,
-                        },
-                      }
-                    : {}),
-                  path: normalizePath(alias.path, alias.exact),
+                  path: normalizePath(alias.path),
                 };
               });
             }
@@ -950,11 +884,6 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
               'screens' in screenConfig && screenConfig.screens != null;
             const hasDisabledLinking =
               'linking' in item && item.linking === null;
-            const hasNestedStaticConfig =
-              'config' in item ||
-              ('screen' in item &&
-                'config' in item.screen &&
-                (item.screen.config.screens || item.screen.config.groups));
             const childOptions =
               'initialRouteName' in screenConfig &&
               typeof screenConfig.initialRouteName === 'string'
@@ -971,15 +900,6 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
               throw new Error(
                 `Couldn't find a screen named '${childOptions.initialRouteName}' to use as 'initialRouteName'.`
               );
-            }
-
-            if (
-              hasNestedStaticConfig &&
-              screenConfig.path == null &&
-              groupPath != null &&
-              !hasDisabledLinking
-            ) {
-              screenConfig.path = normalizePath('');
             }
 
             const skipInitialDetectionInChild =
@@ -1049,7 +969,6 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
                 }
               } else {
                 if (
-                  !groupPath &&
                   !skipInitialDetection &&
                   allowAutoEmptyPath &&
                   (initialRouteName == null || key === initialRouteName) &&
@@ -1065,47 +984,6 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
                     .replace(/^-/, '')
                     .toLowerCase()
                 );
-              }
-            }
-
-            const groupOptionKeys =
-              typeof groupLinking === 'string'
-                ? []
-                : Object.keys({
-                    ...groupLinking?.parse,
-                    ...groupLinking?.stringify,
-                  });
-            const hasAliasWithGroupParams =
-              groupOptionKeys.length > 0 &&
-              screenConfig.alias?.some((alias) => {
-                if (typeof alias !== 'string') {
-                  return false;
-                }
-
-                return groupOptionKeys.some((name) =>
-                  alias.split('/').some((part) => part.startsWith(`:${name}`))
-                );
-              });
-            const shouldUseGroupOptions =
-              typeof groupLinking !== 'string' &&
-              groupLinking != null &&
-              screenConfig.path != null &&
-              screenConfig.path !== '' &&
-              (!screenConfig.exact || hasAliasWithGroupParams);
-
-            if (shouldUseGroupOptions) {
-              if (groupLinking.parse != null) {
-                screenConfig.parse = {
-                  ...groupLinking.parse,
-                  ...screenConfig.parse,
-                };
-              }
-
-              if (groupLinking.stringify != null && !screenConfig.exact) {
-                screenConfig.stringify = {
-                  ...groupLinking.stringify,
-                  ...screenConfig.stringify,
-                };
               }
             }
 
@@ -1125,7 +1003,6 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
           screens,
           createPathConfigForScreens(
             t.config.screens,
-            undefined,
             o?.initialRouteName ?? t.config.initialRouteName
           )
         );
@@ -1137,7 +1014,6 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
             screens,
             createPathConfigForScreens(
               group.screens,
-              group.linking,
               o?.initialRouteName ?? t.config.initialRouteName
             )
           );
