@@ -42,8 +42,8 @@ import type {
 } from '../types';
 import { BottomTabAnimationContext } from '../utils/BottomTabAnimationContext';
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
-import { useDeferredRouteKeys } from '../utils/useDeferredRouteKeys';
 import { useTabBarPosition } from '../utils/useTabBarPosition';
+import { Deferred } from './Deferred';
 import { ScreenContent } from './ScreenContent';
 
 type Props = BottomTabNavigationConfig & {
@@ -133,12 +133,6 @@ export function BottomTabViewNative({
   if (!loaded.includes(focusedRouteKey)) {
     setLoaded([...loaded, focusedRouteKey]);
   }
-
-  const rendered = useDeferredRouteKeys({
-    state,
-    descriptors,
-    eager: true,
-  });
 
   const [nativeState, dispatch] = React.useReducer(reducer, {
     lastTransition: null,
@@ -637,10 +631,10 @@ export function BottomTabViewNative({
                 overrideScrollViewContentInsetAdjustmentBehavior,
               }}
             >
-              {!isFocused &&
-              !isPreloaded &&
-              !loaded.includes(route.key) &&
-              (lazy || !rendered.includes(route.key)) ? null : (
+              <Deferred
+                lazy={lazy}
+                visible={isFocused || isPreloaded || loaded.includes(route.key)}
+              >
                 <ActivityView
                   key={route.key}
                   mode={isFocused ? 'normal' : isActive ? 'inert' : 'paused'}
@@ -668,7 +662,7 @@ export function BottomTabViewNative({
                     </AnimatedScreenContent>
                   </ScreenContent>
                 </ActivityView>
-              )}
+              </Deferred>
             </Tabs.Screen>
           );
         })}

@@ -34,9 +34,9 @@ import { BottomTabAnimationContext } from '../utils/BottomTabAnimationContext';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
-import { useDeferredRouteKeys } from '../utils/useDeferredRouteKeys';
 import { useTabBarPosition } from '../utils/useTabBarPosition';
 import { BottomTabBar, getTabBarHeight } from './BottomTabBar';
+import { Deferred } from './Deferred';
 import { ScreenContent } from './ScreenContent';
 
 type Props = BottomTabNavigationConfig & {
@@ -87,11 +87,6 @@ export function BottomTabViewCustom({
   if (!loaded.includes(focusedRouteKey)) {
     setLoaded([...loaded, focusedRouteKey]);
   }
-
-  const rendered = useDeferredRouteKeys({
-    state,
-    descriptors,
-  });
 
   const [lastUpdate, setLastUpdate] = React.useState<{
     current: string;
@@ -275,16 +270,6 @@ export function BottomTabViewCustom({
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
-          if (
-            !isFocused &&
-            !isPreloaded &&
-            !loaded.includes(route.key) &&
-            (lazy || !rendered.includes(route.key))
-          ) {
-            // Don't render an unfocused screen before it is loaded, preloaded, or scheduled to render.
-            return null;
-          }
-
           const animationEnabled = hasAnimation(descriptor.options);
 
           const content = (
@@ -324,14 +309,22 @@ export function BottomTabViewCustom({
             (lazy === false && !loaded.includes(route.key));
 
           return (
-            <ActivityView
+            <Deferred
               key={route.key}
-              mode={isFocused ? 'normal' : isActive ? 'inert' : 'paused'}
-              visible={isFocused || isAnimatingRoute}
-              style={{ ...StyleSheet.absoluteFill, zIndex: isFocused ? 0 : -1 }}
+              lazy={lazy}
+              visible={isFocused || isPreloaded || loaded.includes(route.key)}
             >
-              {content}
-            </ActivityView>
+              <ActivityView
+                mode={isFocused ? 'normal' : isActive ? 'inert' : 'paused'}
+                visible={isFocused || isAnimatingRoute}
+                style={{
+                  ...StyleSheet.absoluteFill,
+                  zIndex: isFocused ? 0 : -1,
+                }}
+              >
+                {content}
+              </ActivityView>
+            </Deferred>
           );
         })}
       </Container>
