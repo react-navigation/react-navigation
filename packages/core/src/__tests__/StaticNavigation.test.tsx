@@ -966,7 +966,7 @@ test('returns undefined if there is no linking configuration', () => {
         options: {
           testId: 'settings',
         },
-        linking: undefined,
+        linking: null,
       },
     },
     groups: {
@@ -1034,7 +1034,7 @@ test('automatically generates paths if auto is specified', () => {
         screens: {
           Login: {
             screen: TestScreen,
-            linking: undefined,
+            linking: null,
           },
           Register: {
             screen: TestScreen,
@@ -1243,7 +1243,7 @@ test('use initialRouteName for the automatic home screen', () => {
         screens: {
           Login: {
             screen: TestScreen,
-            linking: undefined,
+            linking: null,
           },
           Register: {
             screen: TestScreen,
@@ -1463,6 +1463,65 @@ test('handles config with only groups', () => {
 `);
 });
 
+test('uses initialRouteName for the automatic home screen across groups', () => {
+  const Auth = createTestNavigator({
+    screens: {
+      Login: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    initialRouteName: 'Profile',
+    groups: {
+      Guest: {
+        screens: {
+          Auth: {
+            screen: Auth,
+          },
+          SignIn: {
+            screen: TestScreen,
+          },
+        },
+      },
+      User: {
+        screens: {
+          Profile: {
+            screen: TestScreen,
+          },
+          Settings: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Auth": {
+        "screens": {
+          "Login": {
+            "path": "login",
+          },
+        },
+      },
+      "Profile": {
+        "path": "",
+      },
+      "Settings": {
+        "path": "settings",
+      },
+      "SignIn": {
+        "path": "sign-in",
+      },
+    }
+  `);
+});
+
 test("doesn't generate empty path if initialRouteName already has a path", () => {
   const Nested = createTestNavigator({
     initialRouteName: 'Second',
@@ -1529,6 +1588,173 @@ test("doesn't generate empty path if initialRouteName already has a path", () =>
   },
 }
 `);
+});
+
+test("doesn't generate duplicate empty path if initialRouteName has empty path", () => {
+  const Root = createTestNavigator({
+    initialRouteName: 'Home',
+    screens: {
+      Home: {
+        screen: TestScreen,
+        linking: '',
+      },
+      Profile: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Home": {
+        "path": "",
+      },
+      "Profile": {
+        "path": "profile",
+      },
+    }
+  `);
+});
+
+test('throws if linking.initialRouteName is not in nested static navigation', () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Feed: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: Nested,
+        linking: {
+          path: '',
+          initialRouteName: 'Missing',
+        },
+      },
+    },
+  });
+
+  expect(() => {
+    createPathConfigForStaticNavigation(Root, {}, true);
+  }).toThrow(
+    "Couldn't find a screen named 'Missing' to use as 'initialRouteName'."
+  );
+});
+
+test("doesn't let nested initialRouteName with path suppress automatic home screen", () => {
+  const Nested = createTestNavigator({
+    initialRouteName: 'Second',
+    screens: {
+      First: {
+        screen: TestScreen,
+      },
+      Second: {
+        screen: TestScreen,
+        linking: {
+          path: 'second',
+        },
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+      },
+      Nested: {
+        screen: Nested,
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Home": {
+        "path": "",
+      },
+      "Nested": {
+        "screens": {
+          "First": {
+            "path": "first",
+          },
+          "Second": {
+            "path": "second",
+          },
+        },
+      },
+    }
+  `);
+});
+
+test("doesn't generate duplicate empty path in nested navigator without initialRouteName", () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Index: {
+        screen: TestScreen,
+        linking: '',
+      },
+      Details: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: Nested,
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Home": {
+        "screens": {
+          "Details": {
+            "path": "details",
+          },
+          "Index": {
+            "path": "",
+          },
+        },
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/details', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Home',
+        state: {
+          routes: [
+            {
+              name: 'Details',
+              path: '/details',
+            },
+          ],
+        },
+      },
+    ],
+  });
 });
 
 test("doesn't generate empty path if it's already present", () => {
@@ -1671,4 +1897,237 @@ test("doesn't skip initial screen detection if parent has empty path", () => {
   },
 }
 `);
+});
+
+test('throws if exact is specified without a path', () => {
+  const Root = {
+    config: {
+      screens: {
+        Home: {
+          screen: TestScreen,
+          linking: {
+            exact: true,
+          },
+        },
+      },
+    },
+    getComponent: () => TestScreen,
+  };
+
+  expect(() => {
+    createPathConfigForStaticNavigation(Root, {});
+  }).toThrow(
+    "A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. `path: ''`."
+  );
+});
+
+test('normalizes leading and trailing slashes in paths and aliases', () => {
+  const Root = createTestNavigator({
+    screens: {
+      Profile: {
+        screen: TestScreen,
+        linking: {
+          path: '/profile/',
+          alias: [
+            '/me/',
+            {
+              path: '/u/:id/',
+              parse: {
+                id: Number,
+              },
+            },
+          ],
+        },
+      },
+    },
+    groups: {
+      Admin: {
+        screens: {
+          Dashboard: {
+            screen: TestScreen,
+            linking: '/admin/dashboard/',
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Dashboard": {
+        "path": "admin/dashboard",
+      },
+      "Profile": {
+        "alias": [
+          "me",
+          {
+            "parse": {
+              "id": [Function],
+            },
+            "path": "u/:id",
+          },
+        ],
+        "path": "profile",
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/me', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Profile',
+        path: '/me',
+      },
+    ],
+  });
+
+  expect(getStateFromPath('/u/42', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Profile',
+        params: { id: 42 },
+        path: '/u/42',
+      },
+    ],
+  });
+
+  expect(getStateFromPath('/admin/dashboard', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Dashboard',
+        path: '/admin/dashboard',
+      },
+    ],
+  });
+});
+
+test('uses linking.initialRouteName for nested static navigation', () => {
+  const Nested = createTestNavigator({
+    initialRouteName: 'Feed',
+    screens: {
+      Feed: {
+        screen: TestScreen,
+      },
+      Notifications: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: Nested,
+        linking: {
+          path: '',
+          initialRouteName: 'Notifications',
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Home": {
+        "initialRouteName": "Notifications",
+        "path": "",
+        "screens": {
+          "Feed": {
+            "path": "feed",
+          },
+          "Notifications": {
+            "path": "",
+          },
+        },
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Home',
+        state: {
+          routes: [
+            {
+              name: 'Notifications',
+              path: '',
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test('preserves linking.screens for nested static navigation', () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Feed: {
+        screen: TestScreen,
+      },
+      Profile: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: Nested,
+        linking: {
+          path: '',
+          screens: {
+            Feed: 'start',
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Home": {
+        "path": "",
+        "screens": {
+          "Feed": "start",
+        },
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/start', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Home',
+        state: {
+          routes: [
+            {
+              name: 'Feed',
+              path: '/start',
+            },
+          ],
+        },
+      },
+    ],
+  });
 });
