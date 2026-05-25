@@ -943,7 +943,7 @@ test('returns undefined if there is no linking configuration', () => {
         options: {
           testId: 'settings',
         },
-        linking: undefined,
+        linking: null,
       },
     },
     groups: {
@@ -1011,7 +1011,7 @@ test('automatically generates paths if auto is specified', () => {
         screens: {
           Login: {
             screen: TestScreen,
-            linking: undefined,
+            linking: null,
           },
           Register: {
             screen: TestScreen,
@@ -1222,7 +1222,7 @@ test('use initialRouteName for the automatic home screen', () => {
         screens: {
           Login: {
             screen: TestScreen,
-            linking: undefined,
+            linking: null,
           },
           Register: {
             screen: TestScreen,
@@ -1444,6 +1444,65 @@ test('handles config with only groups', () => {
   `);
 });
 
+test('uses initialRouteName for the automatic home screen across groups', () => {
+  const Auth = createTestNavigator({
+    screens: {
+      Login: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    initialRouteName: 'Profile',
+    groups: {
+      Guest: {
+        screens: {
+          Auth: {
+            screen: Auth,
+          },
+          SignIn: {
+            screen: TestScreen,
+          },
+        },
+      },
+      User: {
+        screens: {
+          Profile: {
+            screen: TestScreen,
+          },
+          Settings: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Auth": {
+        "screens": {
+          "Login": {
+            "path": "login",
+          },
+        },
+      },
+      "Profile": {
+        "path": "",
+      },
+      "Settings": {
+        "path": "settings",
+      },
+      "SignIn": {
+        "path": "sign-in",
+      },
+    }
+  `);
+});
+
 test("doesn't generate empty path if initialRouteName already has a path", () => {
   const Nested = createTestNavigator({
     initialRouteName: 'Second',
@@ -1510,6 +1569,173 @@ test("doesn't generate empty path if initialRouteName already has a path", () =>
       },
     }
   `);
+});
+
+test("doesn't generate duplicate empty path if initialRouteName has empty path", () => {
+  const Root = createTestNavigator({
+    initialRouteName: 'Home',
+    screens: {
+      Home: {
+        screen: TestScreen,
+        linking: '',
+      },
+      Profile: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Home": {
+        "path": "",
+      },
+      "Profile": {
+        "path": "profile",
+      },
+    }
+  `);
+});
+
+test('throws if linking.initialRouteName is not in nested static navigation', () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Feed: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: Nested,
+        linking: {
+          path: '',
+          initialRouteName: 'Missing',
+        },
+      },
+    },
+  });
+
+  expect(() => {
+    createPathConfigForStaticNavigation(Root, {}, true);
+  }).toThrow(
+    "Couldn't find a screen named 'Missing' to use as 'initialRouteName'."
+  );
+});
+
+test("doesn't let nested initialRouteName with path suppress automatic home screen", () => {
+  const Nested = createTestNavigator({
+    initialRouteName: 'Second',
+    screens: {
+      First: {
+        screen: TestScreen,
+      },
+      Second: {
+        screen: TestScreen,
+        linking: {
+          path: 'second',
+        },
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+      },
+      Nested: {
+        screen: Nested,
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Home": {
+        "path": "",
+      },
+      "Nested": {
+        "screens": {
+          "First": {
+            "path": "first",
+          },
+          "Second": {
+            "path": "second",
+          },
+        },
+      },
+    }
+  `);
+});
+
+test("doesn't generate duplicate empty path in nested navigator without initialRouteName", () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Index: {
+        screen: TestScreen,
+        linking: '',
+      },
+      Details: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: Nested,
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Home": {
+        "screens": {
+          "Details": {
+            "path": "details",
+          },
+          "Index": {
+            "path": "",
+          },
+        },
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/details', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Home',
+        state: {
+          routes: [
+            {
+              name: 'Details',
+              path: '/details',
+            },
+          ],
+        },
+      },
+    ],
+  });
 });
 
 test("doesn't generate empty path if it's already present", () => {
@@ -1740,6 +1966,10 @@ test('adds group linking with object configuration', () => {
 
   const screens = createPathConfigForStaticNavigation(Root, {});
 
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
   expect(screens).toMatchInlineSnapshot(`
     {
       "Profile": {
@@ -1832,6 +2062,105 @@ test('handles group linking with nested navigators', () => {
   `);
 });
 
+test('handles group linking with nested navigators without screen linking', () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Feed: {
+        screen: TestScreen,
+      },
+      Profile: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    groups: {
+      User: {
+        linking: {
+          path: 'users/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        screens: {
+          Tabs: {
+            screen: Nested,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Tabs": {
+        "parse": {
+          "id": [Function],
+        },
+        "path": "users/:id",
+        "screens": {
+          "Feed": {
+            "path": "feed",
+          },
+          "Profile": {
+            "path": "profile",
+          },
+        },
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/users/42/feed', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Tabs',
+        params: { id: 42 },
+        state: {
+          routes: [
+            {
+              name: 'Feed',
+              path: '/users/42/feed',
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test("doesn't add group linking to nested navigators with linking disabled", () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Feed: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    groups: {
+      User: {
+        linking: 'users',
+        screens: {
+          Tabs: {
+            screen: Nested,
+            linking: null,
+          },
+        },
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Root, {}, true)).toBeUndefined();
+});
+
 test('handles group linking with auto path generation', () => {
   const Root = createTestNavigator({
     groups: {
@@ -1873,6 +2202,422 @@ test('handles group linking with auto path generation', () => {
       },
     }
   `);
+});
+
+test("doesn't generate empty path for initialRouteName inside group with path", () => {
+  const Root = createTestNavigator({
+    initialRouteName: 'Profile',
+    groups: {
+      User: {
+        linking: 'users',
+        screens: {
+          Profile: {
+            screen: TestScreen,
+          },
+          Settings: {
+            screen: TestScreen,
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Profile": {
+        "path": "users/profile",
+      },
+      "Settings": {
+        "path": "users/settings",
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/', { screens })).toBeUndefined();
+  expect(getStateFromPath('/users/profile', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Profile',
+        path: '/users/profile',
+      },
+    ],
+  });
+});
+
+test('handles exact paths and aliases with group linking', () => {
+  const Root = createTestNavigator({
+    groups: {
+      Admin: {
+        linking: 'admin',
+        screens: {
+          Login: {
+            screen: TestScreen,
+            linking: {
+              path: 'login',
+              exact: true,
+              alias: [
+                'auth',
+                {
+                  path: 'signin',
+                  exact: true,
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Login": {
+        "alias": [
+          "admin/auth",
+          {
+            "exact": true,
+            "path": "signin",
+          },
+        ],
+        "exact": true,
+        "path": "login",
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/login', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Login',
+        path: '/login',
+      },
+    ],
+  });
+
+  expect(getStateFromPath('/signin', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Login',
+        path: '/signin',
+      },
+    ],
+  });
+
+  expect(getStateFromPath('/admin/auth', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Login',
+        path: '/admin/auth',
+      },
+    ],
+  });
+
+  expect(getStateFromPath('/admin/login', { screens })).toBeUndefined();
+});
+
+test('throws if exact is specified without a path', () => {
+  const Root = {
+    config: {
+      screens: {
+        Home: {
+          screen: TestScreen,
+          linking: {
+            exact: true,
+          },
+        },
+      },
+    },
+    getComponent: () => TestScreen,
+  };
+
+  expect(() => {
+    createPathConfigForStaticNavigation(Root, {});
+  }).toThrow(
+    "A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. `path: ''`."
+  );
+});
+
+test('handles string aliases with group params on exact screens', () => {
+  const Root = createTestNavigator({
+    groups: {
+      User: {
+        linking: {
+          path: 'users/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        screens: {
+          Profile: {
+            screen: TestScreen,
+            linking: {
+              path: 'profile',
+              exact: true,
+              alias: ['me'],
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Profile": {
+        "alias": [
+          "users/:id/me",
+        ],
+        "exact": true,
+        "parse": {
+          "id": [Function],
+        },
+        "path": "profile",
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/users/42/me', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Profile',
+        params: { id: 42 },
+        path: '/users/42/me',
+      },
+    ],
+  });
+});
+
+test("doesn't add screen parse for exact object aliases with group params", () => {
+  const Root = createTestNavigator({
+    groups: {
+      User: {
+        linking: {
+          path: 'users/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        screens: {
+          Profile: {
+            screen: TestScreen,
+            linking: {
+              path: 'profile',
+              exact: true,
+              alias: [
+                {
+                  path: 'users/:id/me',
+                  exact: true,
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Profile": {
+        "alias": [
+          {
+            "exact": true,
+            "parse": {
+              "id": [Function],
+            },
+            "path": "users/:id/me",
+          },
+        ],
+        "exact": true,
+        "path": "profile",
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/users/42/me', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Profile',
+        params: { id: 42 },
+        path: '/users/42/me',
+      },
+    ],
+  });
+});
+
+test('handles exact aliases with group params', () => {
+  const Root = createTestNavigator({
+    groups: {
+      User: {
+        linking: {
+          path: 'users/:id',
+          parse: {
+            id: Number,
+          },
+        },
+        screens: {
+          Profile: {
+            screen: TestScreen,
+            linking: {
+              path: 'profile',
+              exact: true,
+              alias: [
+                {
+                  path: 'users/:id/me',
+                  exact: true,
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Profile": {
+        "alias": [
+          {
+            "exact": true,
+            "parse": {
+              "id": [Function],
+            },
+            "path": "users/:id/me",
+          },
+        ],
+        "exact": true,
+        "path": "profile",
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/users/42/me', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Profile',
+        params: { id: 42 },
+        path: '/users/42/me',
+      },
+    ],
+  });
+});
+
+test('normalizes leading and trailing slashes in paths and aliases', () => {
+  const Root = createTestNavigator({
+    screens: {
+      Profile: {
+        screen: TestScreen,
+        linking: {
+          path: '/profile/',
+          alias: [
+            '/me/',
+            {
+              path: '/u/:id/',
+              parse: {
+                id: Number,
+              },
+            },
+          ],
+        },
+      },
+    },
+    groups: {
+      Admin: {
+        linking: 'admin/',
+        screens: {
+          Dashboard: {
+            screen: TestScreen,
+            linking: '/dashboard/',
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Dashboard": {
+        "path": "admin/dashboard",
+      },
+      "Profile": {
+        "alias": [
+          "me",
+          {
+            "parse": {
+              "id": [Function],
+            },
+            "path": "u/:id",
+          },
+        ],
+        "path": "profile",
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/me', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Profile',
+        path: '/me',
+      },
+    ],
+  });
+
+  expect(getStateFromPath('/u/42', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Profile',
+        params: { id: 42 },
+        path: '/u/42',
+      },
+    ],
+  });
+
+  expect(getStateFromPath('/admin/dashboard', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Dashboard',
+        path: '/admin/dashboard',
+      },
+    ],
+  });
 });
 
 test('handles group linking with empty path prefix', () => {
@@ -1927,6 +2672,262 @@ test('handles group linking with empty path prefix', () => {
   `);
 });
 
+test('uses linking.initialRouteName for nested static navigation', () => {
+  const Nested = createTestNavigator({
+    initialRouteName: 'Feed',
+    screens: {
+      Feed: {
+        screen: TestScreen,
+      },
+      Notifications: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: Nested,
+        linking: {
+          path: '',
+          initialRouteName: 'Notifications',
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Home": {
+        "initialRouteName": "Notifications",
+        "path": "",
+        "screens": {
+          "Feed": {
+            "path": "feed",
+          },
+          "Notifications": {
+            "path": "",
+          },
+        },
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Home',
+        state: {
+          routes: [
+            {
+              name: 'Notifications',
+              path: '',
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test('preserves linking.screens for nested static navigation', () => {
+  const Nested = createTestNavigator({
+    screens: {
+      Feed: {
+        screen: TestScreen,
+      },
+      Profile: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: Nested,
+        linking: {
+          path: '',
+          screens: {
+            Feed: 'start',
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {}, true);
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Home": {
+        "path": "",
+        "screens": {
+          "Feed": "start",
+        },
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/start', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Home',
+        state: {
+          routes: [
+            {
+              name: 'Feed',
+              path: '/start',
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test("doesn't add screens with only group parse or stringify", () => {
+  const Root = createTestNavigator({
+    groups: {
+      Root: {
+        linking: {
+          parse: {
+            tab: String,
+          },
+          stringify: {
+            tab: String,
+          },
+        },
+        screens: {
+          Home: {
+            screen: TestScreen,
+            linking: '',
+          },
+        },
+      },
+      User: {
+        linking: {
+          path: 'users/:id',
+          parse: {
+            id: Number,
+          },
+          stringify: {
+            id: String,
+          },
+        },
+        screens: {
+          Profile: {
+            screen: TestScreen,
+          },
+          Settings: {
+            screen: TestScreen,
+            linking: 'settings',
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Home": {
+        "path": "",
+      },
+      "Settings": {
+        "parse": {
+          "id": [Function],
+        },
+        "path": "users/:id/settings",
+        "stringify": {
+          "id": [Function],
+        },
+      },
+    }
+  `);
+});
+
+test('adds group linking to screen aliases', () => {
+  const Root = createTestNavigator({
+    groups: {
+      User: {
+        linking: 'users',
+        screens: {
+          Profile: {
+            screen: TestScreen,
+            linking: {
+              path: 'profile',
+              alias: [
+                'me',
+                {
+                  path: 'u/:id',
+                  parse: {
+                    id: Number,
+                  },
+                },
+              ],
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Root, {});
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(screens).toMatchInlineSnapshot(`
+    {
+      "Profile": {
+        "alias": [
+          "users/me",
+          {
+            "parse": {
+              "id": [Function],
+            },
+            "path": "users/u/:id",
+          },
+        ],
+        "path": "users/profile",
+      },
+    }
+  `);
+
+  expect(getStateFromPath('/users/me', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Profile',
+        path: '/users/me',
+      },
+    ],
+  });
+
+  expect(getStateFromPath('/users/u/42', { screens })).toEqual({
+    routes: [
+      {
+        name: 'Profile',
+        params: { id: 42 },
+        path: '/users/u/42',
+      },
+    ],
+  });
+});
+
 test('merges parse and stringify options from group and screen linking', () => {
   const Root = createTestNavigator({
     groups: {
@@ -1952,7 +2953,7 @@ test('merges parse and stringify options from group and screen linking', () => {
                 sharedParam: (val: string) => val + '_override',
               },
               stringify: {
-                tab: (tab: string) => tab.toUpperCase(),
+                tab: (tab) => String(tab).toUpperCase(),
               },
             },
           },
