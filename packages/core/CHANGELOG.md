@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.17...@react-navigation/core@8.0.0-alpha.18) (2026-05-25)
+
+### Bug Fixes
+
+* fix static screen params for Record-based configsi ([#13119](https://github.com/react-navigation/react-navigation/issues/13119)) ([2196988](https://github.com/react-navigation/react-navigation/commit/2196988e44a90aaa70dfa244b52d660dbaec89eb)) - by @satya164
+
+### Features
+
+* rework server rendering API ([#13118](https://github.com/react-navigation/react-navigation/issues/13118)) ([9cba5d5](https://github.com/react-navigation/react-navigation/commit/9cba5d5bb8d11f3b6c3dc7266a020be0451c985c)) - by @satya164
+
 # [8.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.16...@react-navigation/core@8.0.0-alpha.17) (2026-05-19)
 
 ### Bug Fixes

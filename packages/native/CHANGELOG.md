@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.26...@react-navigation/native@8.0.0-alpha.27) (2026-05-25)
+
+### Features
+
+* rework server rendering API ([#13118](https://github.com/react-navigation/react-navigation/issues/13118)) ([9cba5d5](https://github.com/react-navigation/react-navigation/commit/9cba5d5bb8d11f3b6c3dc7266a020be0451c985c)) - by @satya164
+
 # [8.0.0-alpha.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.25...@react-navigation/native@8.0.0-alpha.26) (2026-05-19)
 
 **Note:** Version bump only for package @react-navigation/native
