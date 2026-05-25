@@ -34,6 +34,7 @@ import { BottomTabAnimationContext } from '../utils/BottomTabAnimationContext';
 import { BottomTabBarHeightCallbackContext } from '../utils/BottomTabBarHeightCallbackContext';
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
 import { useAnimatedHashMap } from '../utils/useAnimatedHashMap';
+import { useDeferredRouteKeys } from '../utils/useDeferredRouteKeys';
 import { useTabBarPosition } from '../utils/useTabBarPosition';
 import { BottomTabBar, getTabBarHeight } from './BottomTabBar';
 import { ScreenContent } from './ScreenContent';
@@ -86,6 +87,11 @@ export function BottomTabViewCustom({
   if (!loaded.includes(focusedRouteKey)) {
     setLoaded([...loaded, focusedRouteKey]);
   }
+
+  const rendered = useDeferredRouteKeys({
+    state,
+    descriptors,
+  });
 
   const [lastUpdate, setLastUpdate] = React.useState<{
     current: string;
@@ -270,12 +276,12 @@ export function BottomTabViewCustom({
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
           if (
-            lazy &&
-            !loaded.includes(route.key) &&
             !isFocused &&
-            !isPreloaded
+            !isPreloaded &&
+            !loaded.includes(route.key) &&
+            (lazy || !rendered.includes(route.key))
           ) {
-            // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
+            // Don't render an unfocused screen before it is loaded, preloaded, or scheduled to render.
             return null;
           }
 
