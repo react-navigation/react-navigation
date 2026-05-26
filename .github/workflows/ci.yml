@@ -36,7 +36,9 @@ jobs:
         run: yarn lint
 
       - name: Typecheck files
-        run: yarn typecheck
+        run: |
+          yarn typecheck
+          yarn typecheck:declarations
 
   unit-test:
     runs-on: ubuntu-latest
