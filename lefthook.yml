@@ -6,7 +6,10 @@ pre-commit:
       run: yarn lint {staged_files}
     types:
       glob: "*.{json,js,ts,tsx}"
-      run: yarn tsc --noEmit
+      run: yarn typecheck
+    declarations:
+      glob: "*.{json,js,ts,tsx}"
+      run: yarn typecheck:declarations
     test:
       glob: "*.{json,js,ts,tsx}"
       run: yarn test
