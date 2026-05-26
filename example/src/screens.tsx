@@ -34,6 +34,8 @@ import { StackPreloadFlow } from './Screens/StackPreloadFlow';
 import { StackPreventRemove } from './Screens/StackPreventRemove';
 import { StackRetain } from './Screens/StackRetain';
 import { StackTransparentModal } from './Screens/StackTransparentModal';
+import { MyStackDynamic } from './Screens/StandardNavigator/MyStackDynamic';
+import { MyStackStatic } from './Screens/StandardNavigator/MyStackStatic';
 import { StaticConfig as StaticConfigScreen } from './Screens/StaticConfig';
 import { BottomTabsShowcase } from './Showcase/BottomTabsShowcase';
 import { DrawerShowcase } from './Showcase/DrawerShowcase';
@@ -82,6 +84,8 @@ export const SCREENS = {
   MaterialTopTabsShowcase,
   NativeStackShowcase,
   StackShowcase,
+  MyStackStatic,
+  MyStackDynamic,
 } as const satisfies {
   [key: string]:
     | (React.ComponentType<{ route: any }> & {
