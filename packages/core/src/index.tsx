@@ -21,10 +21,12 @@ export { PreventRemoveProvider } from './PreventRemoveProvider';
 export {
   createComponentForStaticNavigationDeprecated as createComponentForStaticNavigation,
   createPathConfigForStaticNavigation,
+  createScreenFactory,
   type StaticConfig,
   type StaticConfigGroup,
   type StaticConfigScreens,
   type StaticNavigation,
+  type StaticScreenFactory,
   type StaticScreenProps,
 } from './StaticNavigation';
 export { ThemeContext } from './theming/ThemeContext';

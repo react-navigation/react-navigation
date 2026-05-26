@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  createBottomTabNavigator,
+  createBottomTabScreen,
+} from '@react-navigation/bottom-tabs';
 import {
   createStaticNavigation,
   type NavigationContainerRef,
@@ -12,9 +15,13 @@ import {
   type StaticScreenProps,
   type Theme,
 } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {
+  createNativeStackNavigator,
+  createNativeStackScreen,
+} from '@react-navigation/native-stack';
 import {
   createStackNavigator,
+  createStackScreen,
   type StackNavigationOptions,
   type StackNavigationProp,
 } from '@react-navigation/stack';
@@ -704,4 +711,275 @@ switch (route.name) {
   expectTypeOf(Stack).not.toHaveProperty('with');
 
   expectTypeOf(Stack.config).toEqualTypeOf<typeof config>();
+}
+
+/**
+ * createXScreen: infer screen options and enforce initialParams
+ */
+createBottomTabNavigator({
+  screens: {
+    Test: createBottomTabScreen({
+      screen: (_: StaticScreenProps<{ foo: number }>) => null,
+      initialParams: {
+        // @ts-expect-error
+        foo: 'test',
+      },
+    }),
+  },
+});
+
+/**
+ * createXScreen: infer types from typed screen component
+ */
+createStackNavigator({
+  screens: {
+    Profile: createStackScreen({
+      screen: (
+        _: StaticScreenProps<{ userId: string; filter?: 'recent' | 'popular' }>
+      ) => null,
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.name).toMatchTypeOf<string>();
+        expectTypeOf(route.params).toMatchTypeOf<{
+          userId: string;
+          filter?: 'recent' | 'popular';
+        }>();
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+
+        return {
+          headerTitle: route.params.userId,
+        };
+      },
+      listeners: ({ route, navigation }) => {
+        expectTypeOf(route.params).toMatchTypeOf<{
+          userId: string;
+          filter?: 'recent' | 'popular';
+        }>();
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+
+        return {};
+      },
+      layout: ({ route, navigation, children }) => {
+        expectTypeOf(route.params).toMatchTypeOf<{
+          userId: string;
+          filter?: 'recent' | 'popular';
+        }>();
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).toMatchTypeOf<{
+          userId: string;
+          filter?: 'recent' | 'popular';
+        }>();
+
+        return params.userId;
+      },
+      initialParams: {
+        filter: 'recent',
+        // @ts-expect-error
+        userId: 3,
+      },
+    }),
+  },
+});
+
+/**
+ * createXScreen: handle screen component with optional params
+ */
+createStackNavigator({
+  screens: {
+    Details: createStackScreen({
+      screen: (
+        _: StaticScreenProps<{ itemId: number; info: string } | undefined>
+      ) => null,
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.name).toMatchTypeOf<string>();
+        expectTypeOf(route.params).toMatchTypeOf<
+          { itemId: number; info: string } | undefined
+        >();
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+
+        return {};
+      },
+      listeners: ({ route, navigation }) => {
+        expectTypeOf(route.params).toMatchTypeOf<
+          { itemId: number; info: string } | undefined
+        >();
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+
+        return {};
+      },
+      layout: ({ route, navigation, children }) => {
+        expectTypeOf(route.params).toMatchTypeOf<
+          { itemId: number; info: string } | undefined
+        >();
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).toMatchTypeOf<
+          { itemId: number; info: string } | undefined
+        >();
+
+        return params?.itemId.toString();
+      },
+      initialParams: {
+        itemId: 1,
+        info: 'Item 1',
+      },
+    }),
+  },
+});
+
+/**
+ * createXScreen: handle screen component without typed route prop
+ */
+createStackNavigator({
+  screens: {
+    Settings: createStackScreen({
+      screen: () => null,
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.name).toMatchTypeOf<string>();
+        expectTypeOf(route.params).toMatchTypeOf<undefined>();
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+
+        return {};
+      },
+      listeners: ({ route, navigation }) => {
+        expectTypeOf(route.params).toMatchTypeOf<undefined>();
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+
+        return {};
+      },
+      layout: ({ route, navigation, children }) => {
+        expectTypeOf(route.params).toMatchTypeOf<undefined>();
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'stack'>();
+
+        return <>{children}</>;
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).toMatchTypeOf<undefined>();
+
+        return 'static-id';
+      },
+    }),
+  },
+});
+
+/**
+ * createXScreen: handle screen which is a nested navigator
+ */
+createBottomTabNavigator({
+  screens: {
+    User: createBottomTabScreen({
+      screen: createStackNavigator({
+        screens: {
+          Profile: (_: StaticScreenProps<{ userId: string }>) => null,
+        },
+      }),
+      options: ({ route, navigation }) => {
+        expectTypeOf(route.name).toMatchTypeOf<string>();
+        expectTypeOf(route.params).toMatchTypeOf<
+          NavigatorScreenParams<{ Profile: { userId: string } }> | undefined
+        >();
+        expectTypeOf(navigation.getState().type).toMatchTypeOf<'tab'>();
+
+        return {};
+      },
+      getId: ({ params }) => {
+        expectTypeOf(params).toMatchTypeOf<
+          NavigatorScreenParams<{ Profile: { userId: string } }> | undefined
+        >();
+
+        return 'static-id';
+      },
+    }),
+  },
+});
+
+/**
+ * createXScreen: infer params for a widened screen map without producing a
+ * complex union
+ */
+{
+  const screens = {
+    S0: () => null,
+    S1: () => null,
+    S2: () => null,
+    S3: () => null,
+    S4: () => null,
+    S5: () => null,
+    S6: () => null,
+    S7: () => null,
+    S8: () => null,
+    S9: () => null,
+    S10: () => null,
+    S11: () => null,
+    S12: () => null,
+    S13: () => null,
+    S14: () => null,
+    S15: () => null,
+    S16: () => null,
+    S17: () => null,
+    S18: () => null,
+    S19: () => null,
+    S20: () => null,
+    S21: () => null,
+    S22: () => null,
+    S23: () => null,
+    S24: () => null,
+    S25: () => null,
+    S26: () => null,
+    S27: () => null,
+    S28: () => null,
+    S29: () => null,
+    S30: () => null,
+    S31: () => null,
+    S32: () => null,
+    S33: () => null,
+    S34: () => null,
+    S35: () => null,
+    S36: () => null,
+    S37: () => null,
+    S38: () => null,
+    S39: () => null,
+    S40: () => null,
+    S41: () => null,
+    S42: () => null,
+    S43: () => null,
+    S44: () => null,
+    S45: () => null,
+    S46: () => null,
+    S47: () => null,
+    S48: () => null,
+    S49: () => null,
+  };
+
+  type ScreenId = keyof typeof screens;
+
+  const fromEntries = <K extends PropertyKey, V>(entries: [K, V][]) =>
+    Object.fromEntries(entries) as Record<K, V>;
+
+  const ManyScreensStack = createNativeStackNavigator({
+    screens: {
+      ...fromEntries(
+        (Object.keys(screens) as ScreenId[]).map((id) => [
+          id,
+          createNativeStackScreen({ screen: screens[id] }),
+        ])
+      ),
+    },
+  });
+
+  const ManyScreensNavigation = createStaticNavigation(ManyScreensStack);
+
+  <ManyScreensNavigation />;
+
+  type ManyScreensParamList = StaticParamList<typeof ManyScreensStack>;
+
+  expectTypeOf<ManyScreensParamList>().toMatchTypeOf<
+    Record<ScreenId, undefined>
+  >();
 }

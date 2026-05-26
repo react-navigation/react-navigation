@@ -1,5 +1,6 @@
 import {
   createNavigatorFactory,
+  createScreenFactory,
   type NavigatorTypeBagBase,
   type ParamListBase,
   StackActions,
@@ -92,25 +93,36 @@ function NativeBottomTabNavigator({
   );
 }
 
+export type NativeBottomTabTypeBag<
+  ParamList extends ParamListBase = ParamListBase,
+  NavigatorID extends string | undefined = string | undefined,
+> = {
+  ParamList: ParamList;
+  NavigatorID: NavigatorID;
+  State: TabNavigationState<ParamList>;
+  ScreenOptions: NativeBottomTabNavigationOptions;
+  EventMap: NativeBottomTabNavigationEventMap;
+  NavigationList: {
+    [RouteName in keyof ParamList]: NativeBottomTabNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  };
+  Navigator: typeof NativeBottomTabNavigator;
+};
+
 export function createNativeBottomTabNavigator<
   const ParamList extends ParamListBase,
   const NavigatorID extends string | undefined = string | undefined,
-  const TypeBag extends NavigatorTypeBagBase = {
-    ParamList: ParamList;
-    NavigatorID: NavigatorID;
-    State: TabNavigationState<ParamList>;
-    ScreenOptions: NativeBottomTabNavigationOptions;
-    EventMap: NativeBottomTabNavigationEventMap;
-    NavigationList: {
-      [RouteName in keyof ParamList]: NativeBottomTabNavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
-    };
-    Navigator: typeof NativeBottomTabNavigator;
-  },
+  const TypeBag extends NavigatorTypeBagBase = NativeBottomTabTypeBag<
+    ParamList,
+    NavigatorID
+  >,
   const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(config?: Config): TypedNavigator<TypeBag, Config> {
   return createNavigatorFactory(NativeBottomTabNavigator)(config);
 }
+
+export const createNativeBottomTabScreen =
+  createScreenFactory<NativeBottomTabTypeBag>();

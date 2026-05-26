@@ -1,5 +1,6 @@
 import {
   createNavigatorFactory,
+  createScreenFactory,
   type EventArg,
   NavigationMetaContext,
   type NavigatorTypeBagBase,
@@ -99,25 +100,36 @@ function NativeStackNavigator({
   );
 }
 
+export type NativeStackTypeBag<
+  ParamList extends ParamListBase = ParamListBase,
+  NavigatorID extends string | undefined = string | undefined,
+> = {
+  ParamList: ParamList;
+  NavigatorID: NavigatorID;
+  State: StackNavigationState<ParamList>;
+  ScreenOptions: NativeStackNavigationOptions;
+  EventMap: NativeStackNavigationEventMap;
+  NavigationList: {
+    [RouteName in keyof ParamList]: NativeStackNavigationProp<
+      ParamList,
+      RouteName,
+      NavigatorID
+    >;
+  };
+  Navigator: typeof NativeStackNavigator;
+};
+
 export function createNativeStackNavigator<
   const ParamList extends ParamListBase,
   const NavigatorID extends string | undefined = string | undefined,
-  const TypeBag extends NavigatorTypeBagBase = {
-    ParamList: ParamList;
-    NavigatorID: NavigatorID;
-    State: StackNavigationState<ParamList>;
-    ScreenOptions: NativeStackNavigationOptions;
-    EventMap: NativeStackNavigationEventMap;
-    NavigationList: {
-      [RouteName in keyof ParamList]: NativeStackNavigationProp<
-        ParamList,
-        RouteName,
-        NavigatorID
-      >;
-    };
-    Navigator: typeof NativeStackNavigator;
-  },
+  const TypeBag extends NavigatorTypeBagBase = NativeStackTypeBag<
+    ParamList,
+    NavigatorID
+  >,
   const Config extends StaticConfig<TypeBag> = StaticConfig<TypeBag>,
 >(config?: Config): TypedNavigator<TypeBag, Config> {
   return createNavigatorFactory(NativeStackNavigator)(config);
 }
+
+export const createNativeStackScreen =
+  createScreenFactory<NativeStackTypeBag>();

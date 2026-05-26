@@ -6,12 +6,14 @@ import type {
   DefaultNavigatorOptions,
   EventMapBase,
   NavigationListBase,
+  NavigatorScreenParams,
   NavigatorTypeBagBase,
   PathConfig,
   PathConfigMap,
   RouteConfigComponent,
   RouteConfigProps,
   RouteGroupConfig,
+  StaticParamList,
 } from './types';
 import { useRoute } from './useRoute';
 
@@ -33,6 +35,88 @@ type StaticRouteConfig<
   Navigation
 > &
   RouteConfigComponent<ParamList, RouteName>;
+
+declare const StaticScreenConfigSymbol: unique symbol;
+
+type StaticScreenConfigBrand = {
+  readonly [StaticScreenConfigSymbol]: true;
+};
+
+type UnknownToUndefined<T> = unknown extends T ? undefined : T;
+
+type ParamsForStaticScreenComponent<T> =
+  T extends React.ComponentType<{ route: { params: infer P } }>
+    ? UnknownToUndefined<P>
+    : undefined;
+
+type ParamsForStaticScreen<T> =
+  T extends StaticNavigation<any, any, any>
+    ? NavigatorScreenParams<StaticParamList<T>> | undefined
+    : ParamsForStaticScreenComponent<T>;
+
+type ParamListForStaticScreenConfig<Params> = {
+  Screen: Params extends object | undefined ? Params : never;
+};
+
+type StaticScreenConfigLinking =
+  | PathConfig<ParamListBase>
+  | string
+  | null
+  | undefined;
+
+type StaticScreenConfigScreen =
+  | React.ComponentType<any>
+  | StaticNavigation<any, any, any>;
+
+type StaticScreenConfig<
+  Screen extends StaticScreenConfigScreen,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  Navigation,
+  Params = ParamsForStaticScreen<Screen>,
+> = Omit<
+  StaticRouteConfig<
+    ParamListForStaticScreenConfig<Params>,
+    'Screen',
+    State,
+    ScreenOptions,
+    EventMap,
+    Navigation
+  >,
+  'name' | 'component' | 'getComponent' | 'children'
+> & {
+  /**
+   * Callback to determine whether the screen should be rendered or not.
+   * This can be useful for conditional rendering of screens,
+   * e.g. - if you want to render a different screen for logged in users.
+   *
+   * You can use a custom hook to use custom logic to determine the return value.
+   *
+   * @example
+   * ```js
+   * if: useIsLoggedIn
+   * ```
+   */
+  if?: () => boolean;
+  /**
+   * Linking config for the screen.
+   * This can be a string to specify the path, or an object with more options.
+   *
+   * @example
+   * ```js
+   * linking: {
+   *   path: 'profile/:id',
+   *   exact: true,
+   * },
+   * ```
+   */
+  linking?: StaticScreenConfigLinking;
+  /**
+   * Static navigation config or Component to render for the screen.
+   */
+  screen: Screen;
+};
 
 export type StaticConfigScreens<
   ParamList extends ParamListBase,
@@ -85,7 +169,13 @@ export type StaticConfigScreens<
          * Static navigation config or Component to render for the screen.
          */
         screen: StaticNavigation<any, any, any> | React.ComponentType<any>;
-      });
+      })
+    | StaticScreenConfigBranded;
+};
+
+type StaticScreenConfigBranded = StaticScreenConfigBrand & {
+  screen: StaticScreenConfigScreen;
+  if?: () => boolean;
 };
 
 export type StaticConfigGroup<
@@ -228,6 +318,34 @@ export type StaticNavigation<NavigatorProps, GroupProps, ScreenProps> =
     Group: React.ComponentType<GroupProps>;
     Screen: React.ComponentType<ScreenProps>;
   };
+
+export type StaticScreenFactory<Bag extends NavigatorTypeBagBase> = <
+  const Screen extends StaticScreenConfigScreen,
+>(
+  config: StaticScreenConfig<
+    Screen,
+    Bag['State'],
+    Bag['ScreenOptions'],
+    Bag['EventMap'],
+    Bag['NavigationList'][keyof Bag['ParamList']]
+  >
+) => StaticScreenConfig<
+  Screen,
+  Bag['State'],
+  Bag['ScreenOptions'],
+  Bag['EventMap'],
+  Bag['NavigationList'][keyof Bag['ParamList']]
+> &
+  StaticScreenConfigBrand;
+
+/**
+ * Helper to create a typed `createXScreen` for static configuration.
+ */
+export function createScreenFactory<
+  TypeBag extends NavigatorTypeBagBase,
+>(): StaticScreenFactory<TypeBag> {
+  return ((config: unknown) => config) as never;
+}
 
 const MemoizedScreen = React.memo(
   <T extends React.ComponentType<any>>({ component }: { component: T }) => {

@@ -6,7 +6,11 @@ import * as TransitionSpecs from './TransitionConfigs/TransitionSpecs';
 /**
  * Navigators
  */
-export { createStackNavigator } from './navigators/createStackNavigator';
+export {
+  createStackNavigator,
+  createStackScreen,
+  type StackTypeBag,
+} from './navigators/createStackNavigator';
 
 /**
  * Views

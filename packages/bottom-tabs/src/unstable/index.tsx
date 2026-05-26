@@ -1,7 +1,11 @@
 /**
  * Navigators
  */
-export { createNativeBottomTabNavigator } from './createNativeBottomTabNavigator';
+export {
+  createNativeBottomTabNavigator,
+  createNativeBottomTabScreen,
+  type NativeBottomTabTypeBag,
+} from './createNativeBottomTabNavigator';
 
 /**
  * Views
