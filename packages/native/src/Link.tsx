@@ -60,13 +60,22 @@ export function Link<
     }
   };
 
-  return React.createElement(Text, {
+  const filteredProps = {
     ...props,
     ...rest,
     ...Platform.select({
       web: { onClick: onPress } as any,
       default: { onPress },
     }),
+  };
+
+  // Remove aria-selected if role is link
+  if (filteredProps.role === 'link') {
+    delete filteredProps['aria-selected'];
+  }
+
+  return React.createElement(Text, {
+    ...filteredProps,
     style: [{ color: colors.primary }, fonts.regular, style],
   });
 }
