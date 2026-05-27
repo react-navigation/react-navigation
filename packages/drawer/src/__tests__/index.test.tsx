@@ -8,10 +8,14 @@ import {
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import { useEffect } from 'react';
-import { Button, View } from 'react-native';
+import { Button, Platform, View } from 'react-native';
 import { setUpTests } from 'react-native-reanimated';
 
-import { createDrawerNavigator, type DrawerScreenProps } from '../index';
+import {
+  createDrawerNavigator,
+  DrawerItem,
+  type DrawerScreenProps,
+} from '../index';
 
 setUpTests();
 
@@ -29,6 +33,26 @@ afterEach(() => {
 jest.mock('react-native-worklets', () =>
   require('react-native-worklets/src/mock')
 );
+
+test('does not pass selected accessibility state to drawer links on web', () => {
+  jest.replaceProperty(Platform, 'OS', 'web');
+
+  const { getByTestId } = render(
+    <DrawerItem
+      focused
+      href="/profile"
+      label="Profile"
+      onPress={jest.fn()}
+      testID="drawer-item"
+    />,
+    { wrapper: NavigationContainer }
+  );
+
+  expect(
+    getByTestId('drawer-item').props.accessibilityState.selected
+  ).toBeUndefined();
+  expect(getByTestId('drawer-item').props['aria-selected']).toBeUndefined();
+});
 
 test('renders a drawer navigator with screens', async () => {
   const Test = ({ route, navigation }: DrawerScreenProps<DrawerParamList>) => (
