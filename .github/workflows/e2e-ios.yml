@@ -18,12 +18,8 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      MAESTRO_VERSION: 2.2.0
-      MAESTRO_ZIP_SHA256: 6de501d2e8adf2d60f4b6b3174dc4b5e393f2f2617245d350a659627dccb0922
-      MAESTRO_CLI_NO_ANALYTICS: 1
-      MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
-      JAVA_DISTRIBUTION: 'zulu'
-      JAVA_VERSION: '17'
+      MAESTRO_RUNNER_VERSION: 1.1.14
+      MAESTRO_RUNNER_SHA256: 97b5dff764ea75cd8fbfdd22701bc128e77e701cf497599a904ae98956c37e7e
       SIMULATOR_NAME: iPhone 17 Pro
       USE_CCACHE: 1
       CCACHE_COMPILERCHECK: content
@@ -54,27 +50,30 @@ jobs:
         with:
           xcode-version: '26.3'
 
-      - name: Install Maestro
+      - name: Install maestro-runner
         run: |
-          maestro_dir="$HOME/.maestro"
-          maestro_tmp_folder="${RUNNER_TEMP:-/tmp}/maestro"
-          maestro_zip_file="$maestro_tmp_folder/maestro.zip"
-          maestro_url="https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
+          maestro_runner_dir="$HOME/.maestro-runner"
+          maestro_runner_tmp_folder="${RUNNER_TEMP:-/tmp}/maestro-runner"
+          maestro_runner_archive="$maestro_runner_tmp_folder/maestro-runner.tar.gz"
+          maestro_runner_url="https://open.devicelab.dev/download/maestro-runner/${MAESTRO_RUNNER_VERSION}/maestro-runner-${MAESTRO_RUNNER_VERSION}-darwin-arm64.tar.gz"
 
-          mkdir -p "$maestro_dir" "$maestro_tmp_folder"
-          curl -fsSL "$maestro_url" -o "$maestro_zip_file"
-          printf '%s  %s\n' "$MAESTRO_ZIP_SHA256" "$maestro_zip_file" | shasum -a 256 -c -
+          mkdir -p "$maestro_runner_dir" "$maestro_runner_tmp_folder"
+          curl -fsSL "$maestro_runner_url" -o "$maestro_runner_archive"
+          printf '%s  %s\n' "$MAESTRO_RUNNER_SHA256" "$maestro_runner_archive" | shasum -a 256 -c -
 
-          unzip -q "$maestro_zip_file" -d "$maestro_tmp_folder"
-          rm -rf "${maestro_dir:?}/bin" "${maestro_dir:?}/lib"
-          cp -R "$maestro_tmp_folder/maestro/." "$maestro_dir"
+          tar -xzf "$maestro_runner_archive" -C "$maestro_runner_tmp_folder"
+          rm -rf "${maestro_runner_dir:?}/bin" "${maestro_runner_dir:?}/drivers"
+          cp -R "$maestro_runner_tmp_folder/maestro-runner/." "$maestro_runner_dir"
 
-          echo "$maestro_dir/bin" >> "$GITHUB_PATH"
+          echo "$maestro_runner_dir/bin" >> "$GITHUB_PATH"
 
-      - name: Install macOS dependencies
-        run: |
-          brew tap facebook/fb
-          brew install facebook/fb/idb-companion ccache
+      - name: Cache WebDriverAgent
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: example/drivers/ios/WebDriverAgent
+          key: webdriveragent-${{ runner.os }}-${{ env.MAESTRO_RUNNER_VERSION }}
+          restore-keys: |
+            webdriveragent-${{ runner.os }}-
 
       - name: Cache CocoaPods
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -105,6 +104,11 @@ jobs:
           key: ios-ccache-${{ runner.os }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
           restore-keys: |
             ios-ccache-${{ runner.os }}-
+
+      - name: Install ccache
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
+        run: |
+          brew install ccache
 
       - name: Set ccache directory
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -138,12 +142,6 @@ jobs:
         with:
           path: ios-debug-build/
           key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
-
-      - name: Setup JDK
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
-        with:
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          java-version: ${{ env.JAVA_VERSION }}
 
       - name: Start Metro bundler
         run: yarn --cwd example start &
@@ -182,7 +180,7 @@ jobs:
         run: |
           xcrun simctl spawn booted log stream --style syslog > ~/maestro-simulator.log 2>&1 & # Start capturing simulator logs in the background
           xcrun simctl install booted ../ios-debug-build/ios-debug.app
-          yarn run e2e:native --platform ios
+          yarn run e2e:native --platform ios --flatten --retry 3
         working-directory: example
 
       - name: Shutdown simulator
