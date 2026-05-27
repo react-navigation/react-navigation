@@ -79,8 +79,8 @@ test('throws if multiple instances of useLinking are used', () => {
   const options = { prefixes: [] };
 
   function Sample() {
-    useLinking(ref, options, () => {});
-    useLinking(ref, options, () => {});
+    useLinking(ref, options);
+    useLinking(ref, options);
     return null;
   }
 
@@ -98,12 +98,12 @@ test('throws if multiple instances of useLinking are used', () => {
   element?.unmount();
 
   function A() {
-    useLinking(ref, options, () => {});
+    useLinking(ref, options);
     return null;
   }
 
   function B() {
-    useLinking(ref, options, () => {});
+    useLinking(ref, options);
     return null;
   }
 
@@ -122,7 +122,7 @@ test('throws if multiple instances of useLinking are used', () => {
   element?.unmount();
 
   function Sample2() {
-    useLinking(ref, options, () => {});
+    useLinking(ref, options);
     return null;
   }
 

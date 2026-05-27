@@ -55,8 +55,7 @@ export function useLinking(
     },
     getStateFromPath = getStateFromPathDefault,
     getActionFromState = getActionFromStateDefault,
-  }: Options,
-  onUnhandledLinking: (lastUnhandledLining: string | undefined) => void
+  }: Options
 ) {
   const independent = useNavigationIndependentTree();
 
@@ -152,15 +151,8 @@ export function useLinking(
           return url.then((url) => {
             const state = getStateFromURL(url);
 
-            if (typeof url === 'string') {
-              // If the link were handled, it gets cleared in NavigationContainer
-              onUnhandledLinking(extractPathFromURL(prefixes, url));
-            }
-
             return state;
           });
-        } else {
-          onUnhandledLinking(extractPathFromURL(prefixes, url));
         }
       }
 
@@ -177,7 +169,7 @@ export function useLinking(
     };
 
     return thenable as PromiseLike<ResultState | undefined>;
-  }, [getStateFromURL, onUnhandledLinking, prefixes]);
+  }, [getStateFromURL]);
 
   React.useEffect(() => {
     const listener = (url: string) => {
@@ -189,9 +181,6 @@ export function useLinking(
       const state = navigation ? getStateFromURL(url) : undefined;
 
       if (navigation && state) {
-        // If the link were handled, it gets cleared in NavigationContainer
-        onUnhandledLinking(extractPathFromURL(prefixes, url));
-
         const action = getActionFromStateRef.current(state, configRef.current);
 
         if (action !== undefined) {
@@ -215,7 +204,7 @@ export function useLinking(
     };
 
     return subscribe(listener);
-  }, [enabled, getStateFromURL, onUnhandledLinking, prefixes, ref, subscribe]);
+  }, [enabled, getStateFromURL, ref, subscribe]);
 
   return {
     getInitialState,
