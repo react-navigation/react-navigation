@@ -31,49 +31,53 @@ import type {
   ValidPathPattern,
 } from './utilities';
 
+type ScreenComponentParams<T> = [T] extends [
+  React.ComponentType<{ route: { params: infer Params } }>,
+]
+  ? Params
+  : undefined;
+
 type ParamsForScreenComponent<T> = [T] extends [(...args: any[]) => any]
-  ? HasArguments<T> extends true
-    ? [T] extends [React.ComponentType<{ route: { params: infer Params } }>]
-      ? Params
-      : undefined
+  ? // Don't infer params from a parameterless function component
+    // It'd infer `unknown` - but we want `undefined` if no params are accepted
+    HasArguments<T> extends true
+    ? ScreenComponentParams<T>
     : undefined
-  : [T] extends [React.ComponentType<{ route: { params: infer Params } }>]
-    ? Params
-    : undefined;
+  : ScreenComponentParams<T>;
 
 // If every nested route's params include `undefined`, the nested navigator
 // itself can be omitted. Otherwise, require `NavigatorScreenParams`.
 type ParamsForNestedNavigator<
   T extends { config: any },
   ParamList extends {} = StaticParamList<T>,
+  Params = NavigatorScreenParams<ParamList>,
 > = {
-  // Exclude routes with optional params so the resulting union only contains route names with required params.
-  // If there are no routes with required params, the resulting union will be `never`.
+  // Map each route to `never` when params are optional, or name when params are required
+  // If every route has optional params, the resulting union is `never`
   [RouteName in keyof ParamList]-?: undefined extends ParamList[RouteName]
     ? never
     : RouteName;
 }[keyof ParamList] extends never
-  ? NavigatorScreenParams<ParamList> | undefined
-  : NavigatorScreenParams<ParamList>;
+  ? Params | undefined
+  : Params;
 
-type ParamsForScreen<T> =
-  // Nested navigator in screen property
-  T extends { screen: infer Screen }
-    ? ParamsForScreenInner<Screen>
-    : // Direct nested navigator
-      T extends { config: any }
-      ? ParamsForNestedNavigator<T>
-      : ParamsForScreenComponent<T>;
-
-// `screen` can be a union when users build their screens map from a
-// `Record<K, V>`. A naked `T extends ...` conditional would distribute over
-// every screen in that union, creating a large params union for each route.
-// Wrapping `T` in a tuple checks the union as a whole and avoids that fanout.
-type ParamsForScreenInner<T> = [T] extends [{ config: any }]
+// If the screens were constructed from a `Record<K, V>`,
+// the screen value (`T`) may be a union.
+// A naked `T extends ...` conditional would distribute over every screen in the union,
+// creating a large params union per route.
+// Wrapping `T` in a tuple checks the union as a whole instead of distributing,
+// https://www.typescriptlang.org/docs/handbook/2/conditional-types.html#distributive-conditional-types
+type ParamsForScreen<T> = [T] extends [{ config: any }]
   ? ParamsForNestedNavigator<T>
   : [T] extends [React.ComponentType<any>]
     ? ParamsForScreenComponent<T>
     : undefined;
+
+// Unlike `ParamsForScreen`, we want to distribute for `Record<string, Component | StaticNavigation>`
+// This creates union like:
+// `C extends C ? ParamsForScreen<C> : never) | (S extends S ? ParamsForScreen<S> : never)`
+// `= ParamsForScreen<C> | ParamsForScreen<S>`
+type ParamsForScreenEntry<T> = T extends T ? ParamsForScreen<T> : never;
 
 // Only infer params from linking if it's a pattern (i.e., contains ':')
 // or if parse is present for query params.
@@ -85,30 +89,25 @@ type ShouldInferFromLinking<Linking> = Linking extends
   ? true
   : false;
 
-type MergeLinkingAndScreenParams<LinkingParams, ScreenParams> =
-  undefined extends ScreenParams
-    ? FlatType<LinkingParams>
-    : FlatType<LinkingParams & ScreenParams>;
-
 /**
- * Inferred params type based on both linking config and screen.
- * - When linking is undefined: infers params from screen
- * - When screen is a nested navigator: merges path params with navigator screen params
- * - Otherwise: merges path params with screen component params
+ * Params type derived from both linking and screen.
+ *
+ * - Linking has no extractable params (no ':' in path, no `parse`): returns
+ *   screen params alone.
+ * - Linking has params + screen is a nested navigator: intersects path params
+ *   with the navigator's screen params.
+ * - Linking has params + screen is a component without route params: returns
+ *   path params alone (avoids `LP & undefined = never`).
+ * - Linking has params + screen has route params: intersects them.
  */
-type ParamsForConfig<Linking, Screen> = ParamsForConfigInternal<
-  Linking,
-  Screen,
-  ParamsForScreenInner<Screen>
->;
-
-type ParamsForConfigInternal<Linking, Screen, SP> = undefined extends Linking
-  ? SP
-  : ShouldInferFromLinking<Linking> extends true
+type ParamsForConfig<Linking, Screen, Params = ParamsForScreen<Screen>> =
+  ShouldInferFromLinking<Linking> extends true
     ? [Screen] extends [{ config: any }]
-      ? FlatType<InferParamsFromLinking<Linking>> & SP
-      : MergeLinkingAndScreenParams<InferParamsFromLinking<Linking>, SP>
-    : SP;
+      ? FlatType<InferParamsFromLinking<Linking>> & Params
+      : undefined extends Params
+        ? FlatType<InferParamsFromLinking<Linking>>
+        : FlatType<InferParamsFromLinking<Linking> & Params>
+    : Params;
 
 type ParamListForScreens<Screens> = {
   [Key in KeysOf<Screens>]: Screens[Key] extends StaticScreenConfig<
@@ -117,10 +116,11 @@ type ParamListForScreens<Screens> = {
     any,
     any,
     any,
+    any,
     any
   >
     ? ParamsForConfig<Linking, Screen>
-    : ParamsForScreen<Screens[Key]>;
+    : ParamsForScreenEntry<Screens[Key]>;
 };
 
 type ParamListForGroups<
@@ -139,24 +139,22 @@ type ParamListForGroups<
   ? ParamListForScreens<UnionToIntersection<Screens>>
   : {};
 
-type RouteType<Params> = Readonly<
+type RouteType<Params, P = AnyToUnknown<Params>> = Readonly<
   FlatType<
-    Omit<Route<string, AnyToUnknown<Params>>, 'params'> &
-      Readonly<
-        undefined extends Params
-          ? {
-              /**
-               * Params for this route
-               */
-              params?: AnyToUnknown<Params>;
-            }
-          : {
-              /**
-               * Params for this route
-               */
-              params: AnyToUnknown<Params>;
-            }
-      >
+    Omit<Route<string, P>, 'params'> &
+      (undefined extends Params
+        ? {
+            /**
+             * Params for this route
+             */
+            params?: P;
+          }
+        : {
+            /**
+             * Params for this route
+             */
+            params: P;
+          })
   >
 >;
 
@@ -397,11 +395,10 @@ type StaticConfigScreens<
   in out NavigationList extends NavigationListBase<ParamList>,
 > = {
   [RouteName in keyof ParamList]:
-    | React.ComponentType<any>
-    | StaticNavigation<any>
+    | StaticScreenConfigScreen
     | StaticScreenConfig<
         StaticScreenConfigLinking,
-        StaticNavigation<any> | React.ComponentType<any>,
+        StaticScreenConfigScreen,
         State,
         ScreenOptions,
         EventMap,
@@ -454,6 +451,22 @@ type StaticConfigInternal<
   EventMap extends EventMapBase,
   NavigationList extends NavigationListBase<ParamList>,
   Navigator extends React.ComponentType<any>,
+  Screens = StaticConfigScreens<
+    ParamList,
+    State,
+    ScreenOptions,
+    EventMap,
+    NavigationList
+  >,
+  Groups = {
+    [key: string]: StaticConfigGroup<
+      ParamList,
+      State,
+      ScreenOptions,
+      EventMap,
+      NavigationList
+    >;
+  },
 > = Omit<
   Omit<
     React.ComponentProps<Navigator>,
@@ -473,49 +486,21 @@ type StaticConfigInternal<
         /**
          * Screens to render in the navigator and their configuration.
          */
-        screens: StaticConfigScreens<
-          ParamList,
-          State,
-          ScreenOptions,
-          EventMap,
-          NavigationList
-        >;
+        screens: Screens;
         /**
          * Groups of screens to render in the navigator and their configuration.
          */
-        groups?: {
-          [key: string]: StaticConfigGroup<
-            ParamList,
-            State,
-            ScreenOptions,
-            EventMap,
-            NavigationList
-          >;
-        };
+        groups?: Groups;
       }
     | {
         /**
          * Screens to render in the navigator and their configuration.
          */
-        screens?: StaticConfigScreens<
-          ParamList,
-          State,
-          ScreenOptions,
-          EventMap,
-          NavigationList
-        >;
+        screens?: Screens;
         /**
          * Groups of screens to render in the navigator and their configuration.
          */
-        groups: {
-          [key: string]: StaticConfigGroup<
-            ParamList,
-            State,
-            ScreenOptions,
-            EventMap,
-            NavigationList
-          >;
-        };
+        groups: Groups;
       }
   );
 
@@ -740,11 +725,7 @@ type TreeForPathConfig = {
 type ConfigForPathConfig = {
   initialRouteName?: string;
   screens?: Record<string, ScreenForPathConfig>;
-  groups?: {
-    [key: string]: {
-      screens: Record<string, ScreenForPathConfig>;
-    };
-  };
+  groups?: Record<string, { screens: Record<string, ScreenForPathConfig> }>;
 };
 
 type LinkingForPathConfig =
@@ -757,11 +738,12 @@ type LinkingForPathConfig =
   | null
   | undefined;
 
+type ScreenValueForPathConfig = React.ComponentType<{}> | TreeForPathConfig;
+
 type ScreenForPathConfig =
-  | React.ComponentType<{}>
-  | TreeForPathConfig
+  | ScreenValueForPathConfig
   | {
-      screen: React.ComponentType<{}> | TreeForPathConfig;
+      screen: ScreenValueForPathConfig;
       linking?: LinkingForPathConfig;
     };
 
