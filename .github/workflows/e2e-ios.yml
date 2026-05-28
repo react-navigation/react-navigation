@@ -50,6 +50,21 @@ jobs:
         with:
           xcode-version: '26.3'
 
+      - name: Resolve Xcode cache key
+        id: xcode-cache-key
+        run: |
+          XCODE_VERSION="$(xcodebuild -version | tr '\n' ' ' | sed -E 's/[[:space:]]+/ /g; s/[[:space:]]$//')"
+          XCODE_KEY="$(echo "$XCODE_VERSION" | tr ' ' '-' | tr -cd '[:alnum:]._-')"
+          echo "key=$XCODE_KEY" >> "$GITHUB_OUTPUT"
+
+      - name: Cache agent-device iOS runner
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
+        with:
+          path: ~/.agent-device/ios-runner/derived
+          key: agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-${{ hashFiles('node_modules/agent-device/package.json', 'node_modules/agent-device/ios-runner/**') }}
+          restore-keys: |
+            agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-
+
       - name: Install macOS dependencies
         run: |
           brew install ccache
