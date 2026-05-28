@@ -160,5 +160,6 @@ jobs:
           path: |
             example/agent-device-artifacts/**/*
             example/agent-device-state/**/*.log
+            ~/.agent-device/**/*.log
           include-hidden-files: true
           overwrite: true
