@@ -37,8 +37,6 @@ await fs.mkdir(new URL('agent-device-state/', cwd), { recursive: true });
 const args = [
   agentDeviceBin,
   'test',
-  '--state-dir',
-  'agent-device-state',
   '--maestro',
   '-e',
   `APP_ID=${appId}`,
@@ -67,6 +65,10 @@ process.stdout.write(`Running agent-device with args: ${args.join(' ')}\n`);
 
 const result = spawnSync(process.execPath, args, {
   cwd,
+  env: {
+    ...process.env,
+    AGENT_DEVICE_STATE_DIR: 'agent-device-state',
+  },
   stdio: ['ignore', 'inherit', 'inherit'],
 });
 
