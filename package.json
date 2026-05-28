@@ -40,7 +40,7 @@
     "@react-native/jest-preset": "^0.85.3",
     "@types/babel__core": "^7.20.5",
     "@types/semver": "^7.7.1",
-    "agent-device": "0.16.0",
+    "agent-device": "0.16.1",
     "commitlint": "^21.0.1",
     "eslint": "^9.39.4",
     "eslint-config-satya164": "^5.1.8",
