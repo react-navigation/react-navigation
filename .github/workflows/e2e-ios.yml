@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  maestro-ios:
+  agent-device-ios:
     runs-on: macos-latest
     timeout-minutes: 60
     permissions:
@@ -18,10 +18,6 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      MAESTRO_VERSION: 2.2.0
-      MAESTRO_ZIP_SHA256: 6de501d2e8adf2d60f4b6b3174dc4b5e393f2f2617245d350a659627dccb0922
-      MAESTRO_CLI_NO_ANALYTICS: 1
-      MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
       JAVA_DISTRIBUTION: 'zulu'
       JAVA_VERSION: '17'
       SIMULATOR_NAME: iPhone 17 Pro
@@ -54,27 +50,9 @@ jobs:
         with:
           xcode-version: '26.3'
 
-      - name: Install Maestro
-        run: |
-          maestro_dir="$HOME/.maestro"
-          maestro_tmp_folder="${RUNNER_TEMP:-/tmp}/maestro"
-          maestro_zip_file="$maestro_tmp_folder/maestro.zip"
-          maestro_url="https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
-
-          mkdir -p "$maestro_dir" "$maestro_tmp_folder"
-          curl -fsSL "$maestro_url" -o "$maestro_zip_file"
-          printf '%s  %s\n' "$MAESTRO_ZIP_SHA256" "$maestro_zip_file" | shasum -a 256 -c -
-
-          unzip -q "$maestro_zip_file" -d "$maestro_tmp_folder"
-          rm -rf "${maestro_dir:?}/bin" "${maestro_dir:?}/lib"
-          cp -R "$maestro_tmp_folder/maestro/." "$maestro_dir"
-
-          echo "$maestro_dir/bin" >> "$GITHUB_PATH"
-
       - name: Install macOS dependencies
         run: |
-          brew tap facebook/fb
-          brew install facebook/fb/idb-companion ccache
+          brew install ccache
 
       - name: Cache CocoaPods
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -178,9 +156,9 @@ jobs:
             sleep 2
           done
 
-      - name: Run Maestro tests
+      - name: Run agent-device tests
         run: |
-          xcrun simctl spawn booted log stream --style syslog > ~/maestro-simulator.log 2>&1 & # Start capturing simulator logs in the background
+          xcrun simctl spawn booted log stream --style syslog > ~/agent-device-simulator.log 2>&1 & # Start capturing simulator logs in the background
           xcrun simctl install booted ../ios-debug-build/ios-debug.app
           pnpm e2e:native --platform ios
         working-directory: example
@@ -193,8 +171,8 @@ jobs:
         if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: maestro-debug-output-ios
-          path: example/maestro-debug-output/**/*
+          name: agent-device-artifacts-ios
+          path: example/agent-device-artifacts/**/*
           include-hidden-files: true
           overwrite: true
 
@@ -202,10 +180,10 @@ jobs:
         if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: maestro-simulator-output
+          name: agent-device-simulator-output
           path: |
             ~/Library/Logs/CoreSimulator/*
-            ~/Library/Logs/maestro/xctest_runner_logs/*
-            ~/maestro-simulator.log
+            ~/.agent-device/**/*.log
+            ~/agent-device-simulator.log
           include-hidden-files: true
           overwrite: true

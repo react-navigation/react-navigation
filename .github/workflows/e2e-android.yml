@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  maestro-android:
+  agent-device-android:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
@@ -18,10 +18,6 @@ jobs:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      MAESTRO_VERSION: 2.2.0
-      MAESTRO_ZIP_SHA256: 6de501d2e8adf2d60f4b6b3174dc4b5e393f2f2617245d350a659627dccb0922
-      MAESTRO_CLI_NO_ANALYTICS: 1
-      MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
       JAVA_DISTRIBUTION: 'zulu'
       JAVA_VERSION: '17'
       ANDROID_HOME: /usr/local/lib/android/sdk
@@ -61,23 +57,6 @@ jobs:
           remove-haskell: 'true'
           remove-codeql: 'true'
           remove-docker-images: 'true'
-
-      - name: Install Maestro
-        run: |
-          maestro_dir="$HOME/.maestro"
-          maestro_tmp_folder="${RUNNER_TEMP:-/tmp}/maestro"
-          maestro_zip_file="$maestro_tmp_folder/maestro.zip"
-          maestro_url="https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
-
-          mkdir -p "$maestro_dir" "$maestro_tmp_folder"
-          curl -fsSL "$maestro_url" -o "$maestro_zip_file"
-          printf '%s  %s\n' "$MAESTRO_ZIP_SHA256" "$maestro_zip_file" | shasum -a 256 -c -
-
-          unzip -q "$maestro_zip_file" -d "$maestro_tmp_folder"
-          rm -rf "${maestro_dir:?}/bin" "${maestro_dir:?}/lib"
-          cp -R "$maestro_tmp_folder/maestro/." "$maestro_dir"
-
-          echo "$maestro_dir/bin" >> "$GITHUB_PATH"
 
       - name: Install AVD dependencies
         run: |
@@ -162,7 +141,7 @@ jobs:
             sleep 2
           done
 
-      - name: Run Maestro tests
+      - name: Run agent-device tests
         run: |
           adb install android-debug-build/android-debug.apk
           cd example
@@ -176,7 +155,7 @@ jobs:
         if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: maestro-debug-output-android
-          path: example/maestro-debug-output/**/*
+          name: agent-device-artifacts-android
+          path: example/agent-device-artifacts/**/*
           include-hidden-files: true
           overwrite: true
