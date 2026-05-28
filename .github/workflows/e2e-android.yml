@@ -144,6 +144,7 @@ jobs:
       - name: Run agent-device tests
         run: |
           adb install android-debug-build/android-debug.apk
+          adb reverse tcp:8081 tcp:8081
           cd example
           yarn run e2e:native --platform android
 
@@ -156,6 +157,8 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: agent-device-artifacts-android
-          path: example/agent-device-artifacts/**/*
+          path: |
+            example/agent-device-artifacts/**/*
+            example/agent-device-state/**/*.log
           include-hidden-files: true
           overwrite: true

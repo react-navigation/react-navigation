@@ -172,7 +172,9 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: agent-device-artifacts-ios
-          path: example/agent-device-artifacts/**/*
+          path: |
+            example/agent-device-artifacts/**/*
+            example/agent-device-state/**/*.log
           include-hidden-files: true
           overwrite: true
 
@@ -183,6 +185,7 @@ jobs:
           name: agent-device-simulator-output
           path: |
             ~/Library/Logs/CoreSimulator/*
+            example/agent-device-state/**/*.log
             ~/.agent-device/**/*.log
             ~/agent-device-simulator.log
           include-hidden-files: true
