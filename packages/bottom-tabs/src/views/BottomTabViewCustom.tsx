@@ -57,7 +57,7 @@ const NAMED_TRANSITIONS_PRESETS = {
   },
 } as const;
 
-const useNativeDriver = Platform.OS !== 'web';
+const useNativeDriver = Platform.OS === 'android';
 
 const hasAnimation = (options: BottomTabNavigationOptions) => {
   const { animation, transitionSpec } = options;
