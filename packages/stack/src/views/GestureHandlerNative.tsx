@@ -1,23 +1,37 @@
 import * as React from 'react';
 import {
-  PanGestureHandler as PanGestureHandlerNative,
-  type PanGestureHandlerProperties,
+  GestureDetector as GestureDetectorNative,
+  type PanGesture,
+  usePanGesture,
 } from 'react-native-gesture-handler';
 
-import { GestureHandlerRefContext } from '../utils/GestureHandlerRefContext';
+import { GestureHandlerContext } from '../utils/GestureHandlerContext';
 
-export function PanGestureHandler(props: PanGestureHandlerProperties) {
-  const gestureRef = React.useRef<PanGestureHandlerNative>(null);
+export function GestureDetector({
+  gesture,
+  children,
+}: {
+  gesture: PanGesture | undefined;
+  children: React.ReactNode;
+}) {
+  if (gesture == null) {
+    throw new Error(
+      'The provided gesture is undefined. A valid gesture must be passed to the GestureDetector on native platforms.'
+    );
+  }
 
   return (
-    <GestureHandlerRefContext.Provider value={gestureRef}>
-      <PanGestureHandlerNative {...props} ref={gestureRef} />
-    </GestureHandlerRefContext.Provider>
+    <GestureHandlerContext.Provider value={gesture}>
+      <GestureDetectorNative gesture={gesture}>
+        {children}
+      </GestureDetectorNative>
+    </GestureHandlerContext.Provider>
   );
 }
 
-export type { PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
-export {
-  GestureHandlerRootView,
-  State as GestureState,
+export { usePanGesture };
+export type {
+  PanGesture,
+  PanGestureActiveEvent,
 } from 'react-native-gesture-handler';
+export { GestureHandlerRootView } from 'react-native-gesture-handler';

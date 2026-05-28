@@ -1,7 +1,9 @@
-export type { PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
+export type {
+  PanGesture,
+  PanGestureConfig,
+} from 'react-native-gesture-handler';
 export {
-  Gesture,
   GestureDetector,
   GestureHandlerRootView,
-  State as GestureState,
+  usePanGesture,
 } from 'react-native-gesture-handler';

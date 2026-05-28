@@ -1,4 +1,5 @@
 import type { LocaleDirection } from '@react-navigation/native';
+import type { PanGestureConfig } from 'react-native-gesture-handler';
 
 import type { GestureDirection, Layout } from '../types';
 import { getInvertedMultiplier } from './getInvertedMultiplier';
@@ -19,7 +20,7 @@ export const gestureActivationCriteria = ({
   gestureDirection: GestureDirection;
   gestureResponseDistance?: number | undefined;
   layout: Layout;
-}) => {
+}): PanGestureConfig => {
   const enableTrackpadTwoFingerGesture = true;
 
   const distance =
@@ -30,17 +31,20 @@ export const gestureActivationCriteria = ({
         ? GESTURE_RESPONSE_DISTANCE_VERTICAL
         : GESTURE_RESPONSE_DISTANCE_HORIZONTAL;
 
+  const failOffsetX: [number, number] = [-15, 15];
+  const failOffsetY: [number, number] = [-20, 20];
+
   if (gestureDirection === 'vertical') {
     return {
-      maxDeltaX: 15,
-      minOffsetY: 5,
+      failOffsetX,
+      activeOffsetY: 5,
       hitSlop: { bottom: -layout.height + distance },
       enableTrackpadTwoFingerGesture,
     };
   } else if (gestureDirection === 'vertical-inverted') {
     return {
-      maxDeltaX: 15,
-      minOffsetY: -5,
+      failOffsetX,
+      activeOffsetY: -5,
       hitSlop: { top: -layout.height + distance },
       enableTrackpadTwoFingerGesture,
     };
@@ -53,15 +57,15 @@ export const gestureActivationCriteria = ({
 
     if (invertedMultiplier === 1) {
       return {
-        minOffsetX: 5,
-        maxDeltaY: 20,
+        activeOffsetX: 5,
+        failOffsetY,
         hitSlop: { right: hitSlop },
         enableTrackpadTwoFingerGesture,
       };
     } else {
       return {
-        minOffsetX: -5,
-        maxDeltaY: 20,
+        activeOffsetX: -5,
+        failOffsetY,
         hitSlop: { left: hitSlop },
         enableTrackpadTwoFingerGesture,
       };

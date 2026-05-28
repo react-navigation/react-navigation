@@ -5,6 +5,7 @@
     "customConditions": ["source"],
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "erasableSyntaxOnly": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
     "lib": ["esnext", "dom"],

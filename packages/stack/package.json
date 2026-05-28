@@ -57,7 +57,7 @@
     "react": "19.2.0",
     "react-native": "0.83.6",
     "react-native-builder-bob": "^0.41.0",
-    "react-native-gesture-handler": "~2.30.0",
+    "react-native-gesture-handler": "^3.0.0",
     "react-native-safe-area-context": "~5.6.2",
     "react-native-screens": "^4.25.2",
     "react-test-renderer": "19.2.0",
@@ -67,7 +67,7 @@
     "@react-navigation/native": "workspace:^",
     "react": ">= 19.2.0",
     "react-native": "*",
-    "react-native-gesture-handler": ">= 2.0.0",
+    "react-native-gesture-handler": ">= 3.0.0",
     "react-native-safe-area-context": ">= 5.5.0",
     "react-native-screens": ">= 4.25.0"
   },
