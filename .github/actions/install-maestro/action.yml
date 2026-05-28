@@ -1,0 +1,31 @@
+name: Install Maestro
+description: Install the Maestro CLI and verify the downloaded archive checksum
+
+inputs:
+  version:
+    description: Maestro CLI version
+    required: true
+  zip-sha256:
+    description: Expected SHA-256 checksum for the Maestro zip archive
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install Maestro
+      run: |
+        maestro_dir="$HOME/.maestro"
+        maestro_tmp_folder="${RUNNER_TEMP:-/tmp}/maestro"
+        maestro_zip_file="$maestro_tmp_folder/maestro.zip"
+        maestro_url="https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${{ inputs.version }}/maestro.zip"
+
+        mkdir -p "$maestro_dir" "$maestro_tmp_folder"
+        curl -fsSL "$maestro_url" -o "$maestro_zip_file"
+        printf '%s  %s\n' "${{ inputs.zip-sha256 }}" "$maestro_zip_file" | shasum -a 256 -c -
+
+        unzip -q "$maestro_zip_file" -d "$maestro_tmp_folder"
+        rm -rf "${maestro_dir:?}/bin" "${maestro_dir:?}/lib"
+        cp -R "$maestro_tmp_folder/maestro/." "$maestro_dir"
+
+        echo "$maestro_dir/bin" >> "$GITHUB_PATH"
+      shell: bash
