@@ -38,7 +38,6 @@ await fs.mkdir(new URL('agent-device-artifacts/', cwd), { recursive: true });
 const args = [
   agentDeviceBin,
   'test',
-  ...flows,
   '--maestro',
   '-e',
   `APP_ID=${appId}`,
@@ -60,6 +59,8 @@ if (ci) {
     'agent-device-artifacts/junit.xml'
   );
 }
+
+args.push(...flows);
 
 process.stdout.write(`Running agent-device with args: ${args.join(' ')}\n`);
 
