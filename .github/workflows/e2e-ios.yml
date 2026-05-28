@@ -10,12 +10,7 @@ on:
     - cron: '0 4 * * *'
 
 env:
-  JAVA_DISTRIBUTION: 'zulu'
-  JAVA_VERSION: '17'
-  SIMULATOR_NAME: iPhone 17 Pro
   XCODE_VERSION: '26.3'
-  USE_CCACHE: 1
-  CCACHE_COMPILERCHECK: content
 
 jobs:
   build-ios:
@@ -23,11 +18,12 @@ jobs:
     timeout-minutes: 60
     permissions:
       contents: read
-    outputs:
-      debug-build-artifact: ${{ steps.debug-build-metadata.outputs.artifact-name }}
     concurrency:
-      group: ${{ github.workflow_ref }}-${{ github.ref }}-ios-build
+      group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
+    env:
+      USE_CCACHE: 1
+      CCACHE_COMPILERCHECK: content
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -47,18 +43,12 @@ jobs:
           echo "fingerprint=$FINGERPRINT" >> "$GITHUB_OUTPUT"
         working-directory: example
 
-      - name: Set debug build metadata
-        id: debug-build-metadata
-        run: |
-          echo "cache-key=ios-debug-build-v1-${{ runner.os }}-xcode${{ env.XCODE_VERSION }}-iphonesimulator-${{ steps.calculate-fingerprint.outputs.fingerprint }}" >> "$GITHUB_OUTPUT"
-          echo "artifact-name=ios-debug-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}" >> "$GITHUB_OUTPUT"
-
       - name: Restore debug build from cache
         id: restore-debug-build
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: ios-debug-build/
-          key: ${{ steps.debug-build-metadata.outputs.cache-key }}
+          key: ios-debug-build-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
 
       - name: Use appropriate Xcode version
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -87,9 +77,9 @@ jobs:
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: example/ios/build
-          key: ios-deriveddata-${{ runner.os }}-xcode${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+          key: ios-deriveddata-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
           restore-keys: |
-            ios-deriveddata-${{ runner.os }}-xcode${{ env.XCODE_VERSION }}-
+            ios-deriveddata-${{ runner.os }}-${{ env.XCODE_VERSION }}-
             ios-deriveddata-${{ runner.os }}-
 
       - name: Cache ccache
@@ -97,9 +87,9 @@ jobs:
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: ~/.ccache
-          key: ios-ccache-${{ runner.os }}-xcode${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+          key: ios-ccache-${{ runner.os }}-${{ env.XCODE_VERSION }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
           restore-keys: |
-            ios-ccache-${{ runner.os }}-xcode${{ env.XCODE_VERSION }}-
+            ios-ccache-${{ runner.os }}-${{ env.XCODE_VERSION }}-
             ios-ccache-${{ runner.os }}-
 
       - name: Set ccache directory
@@ -141,7 +131,7 @@ jobs:
       - name: Upload debug build artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: ${{ steps.debug-build-metadata.outputs.artifact-name }}
+          name: ios-debug-build
           path: ios-debug-build/ios-debug.app.tgz
           if-no-files-found: error
           retention-days: 1
@@ -151,11 +141,12 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 60
     permissions:
-      checks: read
       contents: read
     concurrency:
-      group: ${{ github.workflow_ref }}-${{ github.ref }}-ios-test
+      group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
+    env:
+      SIMULATOR_NAME: iPhone 17 Pro
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -170,7 +161,7 @@ jobs:
       - name: Download debug build artifact
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
-          name: ${{ needs.build-ios.outputs.debug-build-artifact }}
+          name: ios-debug-build
           path: ios-debug-build
 
       - name: Unpack debug build artifact
@@ -191,14 +182,8 @@ jobs:
       - name: Cache agent-device iOS runner
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
-          path: ~/.agent-device/ios-runner/derived
-          key: agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-${{ hashFiles('node_modules/agent-device/package.json', 'node_modules/agent-device/ios-runner/**') }}
-
-      - name: Setup JDK
-        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
-        with:
-          distribution: ${{ env.JAVA_DISTRIBUTION }}
-          java-version: ${{ env.JAVA_VERSION }}
+          path: ~/.agent-device/apple-runner/derived
+          key: agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-${{ hashFiles('node_modules/agent-device/package.json') }}
 
       - name: Start Metro bundler
         run: pnpm --dir example start &
@@ -265,11 +250,11 @@ jobs:
           AGENT_DEVICE_E2E_TIMEOUT_MS=240000 pnpm e2e:native --platform ios
         working-directory: example
 
-      - name: Store E2E timing output
+      - name: Store E2E output
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: e2e-timing-ios
+          name: e2e-output-ios
           path: example/agent-device-artifacts/**/*
           include-hidden-files: true
           overwrite: true
@@ -283,9 +268,7 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: e2e-artifacts-ios
-          path: |
-            example/agent-device-artifacts/**/*
-            example/agent-device-state/**/*.log
+          path: example/agent-device-state/**/*.log
           include-hidden-files: true
           overwrite: true
 
@@ -297,6 +280,5 @@ jobs:
           path: |
             ~/.agent-device/**/*.log
             ~/agent-device-simulator.log
-            example/agent-device-state/**/*.log
           include-hidden-files: true
           overwrite: true

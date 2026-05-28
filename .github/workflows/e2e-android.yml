@@ -15,10 +15,6 @@ env:
   ANDROID_HOME: /usr/local/lib/android/sdk
   ANDROID_USER_HOME: /home/runner/.android
   API_LEVEL: 34
-  AVD_NAME: e2e_emulator
-  EMULATOR_PROFILE: pixel_5
-  EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096 -cores 2 -memory 4096'
-  ORG_GRADLE_PROJECT_reactNativeArchitectures: x86_64
 
 jobs:
   build-android:
@@ -26,11 +22,11 @@ jobs:
     timeout-minutes: 60
     permissions:
       contents: read
-    outputs:
-      debug-build-artifact: ${{ steps.debug-build-metadata.outputs.artifact-name }}
     concurrency:
-      group: ${{ github.workflow_ref }}-${{ github.ref }}-android-build
+      group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
+    env:
+      ORG_GRADLE_PROJECT_reactNativeArchitectures: x86_64
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -50,18 +46,12 @@ jobs:
           echo "fingerprint=$FINGERPRINT" >> "$GITHUB_OUTPUT"
         working-directory: example
 
-      - name: Set debug build metadata
-        id: debug-build-metadata
-        run: |
-          echo "cache-key=android-debug-build-v1-${{ runner.os }}-api${{ env.API_LEVEL }}-${{ env.ORG_GRADLE_PROJECT_reactNativeArchitectures }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}" >> "$GITHUB_OUTPUT"
-          echo "artifact-name=android-debug-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}" >> "$GITHUB_OUTPUT"
-
       - name: Restore debug build from cache
         id: restore-debug-build
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: android-debug-build/
-          key: ${{ steps.debug-build-metadata.outputs.cache-key }}
+          key: android-debug-build-${{ runner.os }}-${{ env.API_LEVEL }}-${{ env.ORG_GRADLE_PROJECT_reactNativeArchitectures }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
 
       - name: Maximize build space
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -114,7 +104,7 @@ jobs:
       - name: Upload debug build artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: ${{ steps.debug-build-metadata.outputs.artifact-name }}
+          name: android-debug-build
           path: android-debug-build/android-debug.apk
           if-no-files-found: error
           retention-days: 1
@@ -124,11 +114,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
-      checks: read
       contents: read
     concurrency:
-      group: ${{ github.workflow_ref }}-${{ github.ref }}-android-test
+      group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
+    env:
+      AVD_NAME: e2e_emulator
+      EMULATOR_PROFILE: pixel_5
+      EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096 -cores 2 -memory 4096'
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -143,7 +136,7 @@ jobs:
       - name: Download debug build artifact
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
-          name: ${{ needs.build-android.outputs.debug-build-artifact }}
+          name: android-debug-build
           path: android-debug-build
 
       - name: Install AVD dependencies
@@ -168,7 +161,7 @@ jobs:
       - name: Install Android SDK components
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install emulator "platform-tools" "platforms;android-${{ env.API_LEVEL }}" "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install emulator "platform-tools" "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
 
       - name: Enable KVM
         run: |
@@ -204,11 +197,11 @@ jobs:
           cd example
           pnpm e2e:native --platform android
 
-      - name: Store timing output
+      - name: Store E2E output
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: e2e-timing-android
+          name: e2e-output-android
           path: example/agent-device-artifacts/**/*
           include-hidden-files: true
           overwrite: true
@@ -223,7 +216,6 @@ jobs:
         with:
           name: e2e-artifacts-android
           path: |
-            example/agent-device-artifacts/**/*
             example/agent-device-state/**/*.log
             ~/.agent-device/**/*.log
           include-hidden-files: true
