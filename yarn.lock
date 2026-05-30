@@ -4487,6 +4487,7 @@ __metadata:
     react-native-web: "npm:~0.21.2"
     react-native-worklets: "npm:0.7.4"
     react-test-renderer: "npm:19.2.0"
+    standard-navigation: "npm:^0.0.5"
     typescript: "npm:^6.0.3"
     valibot: "npm:^1.4.1"
     vite: "npm:^7.3.3"
@@ -4567,6 +4568,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.41.0"
     react-test-renderer: "npm:19.2.0"
     sf-symbols-typescript: "npm:^2.2.0"
+    standard-navigation: "npm:^0.0.5"
     typescript: "npm:^6.0.3"
     use-latest-callback: "npm:^0.3.4"
   peerDependencies:
@@ -14200,6 +14202,13 @@ __metadata:
   dependencies:
     type-fest: "npm:^0.7.1"
   checksum: 10c0/4633d9afe8cd2f6c7fb2cebdee3cc8de7fd5f6f9736645fd08c0f66872a303061ce9cc0ccf46f4216dc94a7941b56e331012398dc0024dc25e46b5eb5d4ff018
+  languageName: node
+  linkType: hard
+
+"standard-navigation@npm:^0.0.5":
+  version: 0.0.5
+  resolution: "standard-navigation@npm:0.0.5"
+  checksum: 10c0/b8904d9d53077493db71bcdebc6d0e1a0df94f61e128060d9cf101b50d62f89ee5fff62b1ba9fc48aa3bbcf11bf556138022d650417a46cb269c0e10d7426428
   languageName: node
   linkType: hard
 
