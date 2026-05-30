@@ -5660,14 +5660,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"agent-device@npm:0.16.4":
-  version: 0.16.4
-  resolution: "agent-device@npm:0.16.4"
+"agent-device@npm:0.16.5":
+  version: 0.16.5
+  resolution: "agent-device@npm:0.16.5"
   dependencies:
     yaml: "npm:^2.9.0"
   bin:
     agent-device: bin/agent-device.mjs
-  checksum: 10c0/7de383b195c000c3f8987852c64b09e69d11c7c119c9daf8b45fdda3dc2db655b3cdfcf6e7986493f472c696d8e432f35a641634755d05718e401a789f872288
+  checksum: 10c0/b6ae029816bafff199cb0cc6e1ab4c5e0c275d7cc03da9a85a964a2e7c40c8172428781f1806abf03344df8041a91b4a1ec9553ed124a3e829ffc629b1ef5d22
   languageName: node
   linkType: hard
 
@@ -13540,7 +13540,7 @@ __metadata:
     "@react-native/jest-preset": "npm:^0.85.3"
     "@types/babel__core": "npm:^7.20.5"
     "@types/semver": "npm:^7.7.1"
-    agent-device: "npm:0.16.4"
+    agent-device: "npm:0.16.5"
     commitlint: "npm:^21.0.1"
     eslint: "npm:^9.39.4"
     eslint-config-satya164: "npm:^5.1.8"
