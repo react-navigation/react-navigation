@@ -148,6 +148,15 @@ jobs:
           cd example
           yarn run e2e:native --platform android
 
+      - name: Store agent-device timing output
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: agent-device-timing-android
+          path: example/agent-device-artifacts/**/*
+          include-hidden-files: true
+          overwrite: true
+
       - name: Kill emulator
         if: always()
         run: adb emu kill || true
