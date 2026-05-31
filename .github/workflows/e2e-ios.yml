@@ -173,10 +173,22 @@ jobs:
 
       - name: Run agent-device tests
         run: |
-          xcrun simctl spawn booted log stream --style syslog > ~/agent-device-simulator.log 2>&1 & # Start capturing simulator logs in the background
+          echo "Starting simulator log stream..."
+          xcrun simctl spawn booted log stream --style syslog > ~/agent-device-simulator.log 2>&1 &
+          echo "Installing debug app..."
           xcrun simctl install booted ../ios-debug-build/ios-debug.app
+          echo "Running native e2e tests..."
           pnpm e2e:native --platform ios
         working-directory: example
+
+      - name: Store agent-device timing output
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: agent-device-timing-ios
+          path: example/agent-device-artifacts/**/*
+          include-hidden-files: true
+          overwrite: true
 
       - name: Shutdown simulator
         if: always()
@@ -199,9 +211,8 @@ jobs:
         with:
           name: agent-device-simulator-output
           path: |
-            ~/Library/Logs/CoreSimulator/*
-            example/agent-device-state/**/*.log
             ~/.agent-device/**/*.log
             ~/agent-device-simulator.log
+            example/agent-device-state/**/*.log
           include-hidden-files: true
           overwrite: true

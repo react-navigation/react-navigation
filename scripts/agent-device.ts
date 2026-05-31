@@ -30,6 +30,7 @@ if (!appId) {
 
 const scheme = `${config.expo?.scheme}://`;
 const ci = process.env.CI === 'true' || process.env.CI === '1';
+const ciTimeoutMs = process.env.AGENT_DEVICE_E2E_TIMEOUT_MS ?? '120000';
 
 await fs.mkdir(new URL('agent-device-artifacts/', cwd), { recursive: true });
 await fs.mkdir(new URL('agent-device-state/', cwd), { recursive: true });
@@ -52,6 +53,9 @@ if (platform) {
 
 if (ci) {
   args.push(
+    '--debug',
+    '--timeout',
+    ciTimeoutMs,
     '--retries',
     '3',
     '--report-junit',
