@@ -30,11 +30,15 @@ export function CardContent({ enabled, layout, style, ...rest }: Props) {
     // the DOM with the current height of the window.
     // See https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
     const isFullHeight = height === layout.height;
+    const isTouchDevice = navigator.maxTouchPoints > 0;
+    const isSameWidth = width === layout.width;
+    const isExactMatch = isSameWidth && isFullHeight;
+    const shouldApplyViewportFix = isTouchDevice && enabled && isSameWidth;
     const id = '__react-navigation-stack-mobile-chrome-viewport-fix';
 
     let unsubscribe: (() => void) | undefined;
 
-    if (isFullHeight && navigator.maxTouchPoints > 0) {
+    if (shouldApplyViewportFix) {
       const style =
         document.getElementById(id) ?? document.createElement('style');
 
@@ -67,10 +71,22 @@ export function CardContent({ enabled, layout, style, ...rest }: Props) {
     }
 
     // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
-    setFill(width === layout.width && height === layout.height);
+    setFill(() => {
+      if (!enabled) {
+        return false;
+      }
+
+      if (isTouchDevice) {
+        // Keep page mode stable on touch devices while width remains unchanged to
+        // avoid transient re-layout flips to `overflow:hidden` card mode.
+        return isSameWidth;
+      }
+
+      return isExactMatch;
+    });
 
     return unsubscribe;
-  }, [layout.height, layout.width]);
+  }, [enabled, layout.height, layout.width]);
 
   return (
     <View
