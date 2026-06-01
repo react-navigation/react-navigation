@@ -1,9 +1,14 @@
 import { expect, test } from '@jest/globals';
-import { NavigationRouteContext } from '@react-navigation/core';
-import { render } from '@testing-library/react-native';
+import {
+  createNavigationContainerRef,
+  NavigationRouteContext,
+  type NavigatorScreenParams,
+} from '@react-navigation/core';
+import { act, render } from '@testing-library/react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { NavigationContainer } from '../NavigationContainer';
+import type { LinkingOptions } from '../types';
 import { useLinkBuilder } from '../useLinkBuilder';
 
 const config = {
@@ -463,6 +468,136 @@ test('throws for invalid hrefs', () => {
       <Root />
     </NavigationContainer>
   );
+});
+
+test('builds action for shared path in the current tab', async () => {
+  type HomeStackParamList = {
+    Home: undefined;
+    Profile: { id: string };
+  };
+
+  type SearchStackParamList = {
+    Search: undefined;
+    Profile: { id: string };
+  };
+
+  type RootStackParamList = {
+    HomeBranch: NavigatorScreenParams<HomeStackParamList>;
+    SearchBranch: NavigatorScreenParams<SearchStackParamList>;
+  };
+
+  const linking: LinkingOptions<RootStackParamList> = {
+    config: {
+      screens: {
+        HomeBranch: {
+          initialRouteName: 'Home',
+          screens: {
+            Home: '',
+            Profile: {
+              path: 'profile/:id',
+              shared: true,
+            },
+          },
+        },
+        SearchBranch: {
+          initialRouteName: 'Search',
+          screens: {
+            Search: 'search',
+            Profile: {
+              path: 'profile/:id',
+              shared: true,
+            },
+          },
+        },
+      },
+    },
+    getInitialURL() {
+      return null;
+    },
+  };
+
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
+  const Test = () => {
+    buildAction = useLinkBuilder().buildAction;
+    return null;
+  };
+
+  const RootStack = createStackNavigator<RootStackParamList>();
+  const HomeStack = createStackNavigator<HomeStackParamList>();
+  const SearchStack = createStackNavigator<SearchStackParamList>();
+
+  const navigation = createNavigationContainerRef<RootStackParamList>();
+
+  render(
+    <NavigationContainer
+      ref={navigation}
+      linking={linking}
+      initialState={{
+        routes: [
+          {
+            name: 'SearchBranch',
+            state: {
+              routes: [{ name: 'Search' }],
+            },
+          },
+        ],
+      }}
+    >
+      <RootStack.Navigator>
+        <RootStack.Screen name="HomeBranch">
+          {() => (
+            <HomeStack.Navigator>
+              <HomeStack.Screen name="Home">{() => null}</HomeStack.Screen>
+              <HomeStack.Screen name="Profile">{() => null}</HomeStack.Screen>
+            </HomeStack.Navigator>
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="SearchBranch">
+          {() => (
+            <SearchStack.Navigator>
+              <SearchStack.Screen name="Search" component={Test} />
+              <SearchStack.Screen name="Profile">
+                {() => null}
+              </SearchStack.Screen>
+            </SearchStack.Navigator>
+          )}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(buildAction?.('/profile/123')).toEqual({
+    type: 'NAVIGATE',
+    payload: {
+      name: 'SearchBranch',
+      params: {
+        initial: false,
+        screen: 'Profile',
+        params: { id: '123' },
+        path: '/profile/123',
+      },
+      pop: true,
+    },
+  });
+
+  act(() => {
+    navigation.navigate('HomeBranch', { screen: 'Home' });
+  });
+
+  expect(buildAction?.('/profile/123')).toEqual({
+    type: 'NAVIGATE',
+    payload: {
+      name: 'HomeBranch',
+      params: {
+        initial: false,
+        screen: 'Profile',
+        params: { id: '123' },
+        path: '/profile/123',
+      },
+      pop: true,
+    },
+  });
 });
 
 test('throws if no prefixes are defined', () => {

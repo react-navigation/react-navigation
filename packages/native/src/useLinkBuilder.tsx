@@ -3,6 +3,7 @@ import {
   findFocusedRoute,
   getActionFromState,
   getPathFromState,
+  NavigationContainerRefContext,
   NavigationHelpersContext,
   NavigationRouteContext,
   useStateForPath,
@@ -109,6 +110,7 @@ export function useBuildHref() {
  * Helper to build a navigation action from a href based on the linking options.
  */
 export function useBuildAction() {
+  const navigation = React.use(NavigationContainerRefContext);
   const { options } = React.use(LinkingContext);
 
   const getActionFromStateHelper =
@@ -116,7 +118,7 @@ export function useBuildAction() {
 
   const buildAction = React.useCallback(
     (href: string) => {
-      const state = getStateFromHref(href, options);
+      const state = getStateFromHref(href, options, navigation?.getRootState());
 
       if (state) {
         const action = getActionFromStateHelper(state, options?.config);
@@ -128,7 +130,7 @@ export function useBuildAction() {
         );
       }
     },
-    [options, getActionFromStateHelper]
+    [navigation, options, getActionFromStateHelper]
   );
 
   return buildAction;

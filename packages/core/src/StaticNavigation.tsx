@@ -6,6 +6,11 @@ import type {
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
+import {
+  combinePatternParts,
+  getPatternParts,
+  type PatternPart,
+} from './getPatternParts';
 import type {
   DefaultNavigatorOptions,
   EventMapBase,
@@ -198,6 +203,21 @@ type StaticScreenConfigLinkingAlias = {
    * ```
    */
   stringify?: Record<string, (value: unknown) => string>;
+  /**
+   * Whether this path can resolve to multiple routes.
+   * Both routes should specify `shared: true` for this to work.
+   *
+   * When automatic path generation is enabled,
+   * screens using the same path pattern and the same screen component
+   * or navigator will be automatically marked as shared.
+   * Explicitly specifying the option overrides the automatic detection.
+   *
+   * This is useful when same screen used in multiple navigators,
+   * e.g. tabs with stacks containing profile screen in each stack.
+   *
+   * The path defined first will be the canonical path.
+   */
+  shared?: boolean;
 };
 
 export type StaticScreenConfigLinking =
@@ -747,6 +767,86 @@ type ScreenForPathConfig =
       linking?: LinkingForPathConfig;
     };
 
+type PathConfigMapForStaticNavigation = Record<
+  string,
+  string | PathConfigForStaticNavigation | undefined
+>;
+
+type PathConfigForStaticNavigation = Omit<
+  PathConfig<ParamListBase>,
+  'screens'
+> & {
+  initialRouteName?: string | undefined;
+  screens?: PathConfigMapForStaticNavigation | undefined;
+};
+
+// Mark screens that resolve to the same pattern and same component or navigator
+const markSharedPathConfigs = (
+  screens: PathConfigMapForStaticNavigation,
+  sources: WeakMap<PathConfigForStaticNavigation, ScreenValueForPathConfig>,
+  blocked: WeakSet<PathConfigForStaticNavigation>
+) => {
+  const candidates = new Map<string, PathConfigForStaticNavigation[]>();
+
+  const collect = (
+    screens: PathConfigMapForStaticNavigation,
+    parentParts: PatternPart[],
+    disabled: boolean
+  ) => {
+    for (const config of Object.values(screens)) {
+      if (config == null || typeof config === 'string') {
+        continue;
+      }
+
+      const parts =
+        typeof config.path === 'string'
+          ? combinePatternParts(
+              parentParts,
+              getPatternParts(config.path),
+              config.exact
+            )
+          : parentParts;
+
+      if (sources.has(config) && typeof config.path === 'string') {
+        if (disabled) {
+          blocked.add(config);
+        }
+
+        const pattern = parts.map((part) => part.segment).join('/');
+        const entries = candidates.get(pattern) ?? [];
+
+        entries.push(config);
+        candidates.set(pattern, entries);
+      }
+
+      if (config.screens) {
+        collect(config.screens, parts, disabled || config.shared === false);
+      }
+    }
+  };
+
+  collect(screens, [], false);
+
+  for (const entries of candidates.values()) {
+    for (const entry of entries) {
+      const source = sources.get(entry);
+
+      if (
+        entry.shared === undefined &&
+        !blocked.has(entry) &&
+        entries.some(
+          (candidate) =>
+            candidate !== entry &&
+            !blocked.has(candidate) &&
+            sources.get(candidate) === source
+        )
+      ) {
+        entry.shared = true;
+      }
+    }
+  }
+};
+
 /**
  * Create a path config object from a static navigation config for deep linking.
  *
@@ -776,6 +876,12 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
   let initialScreenHasPath: boolean = false;
   let initialScreenConfig: PathConfig<{}> | undefined;
   let hasEmptyPath = false;
+
+  const blocked = new WeakSet<PathConfigForStaticNavigation>();
+  const sources = new WeakMap<
+    PathConfigForStaticNavigation,
+    ScreenValueForPathConfig
+  >();
 
   const createPathConfigForTree = (
     t: TreeForPathConfig,
@@ -821,7 +927,12 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
             return 0;
           })
           .map(([key, item]) => {
-            const screenConfig: PathConfig<{}> = {};
+            const screenConfig: PathConfigForStaticNavigation = {};
+
+            sources.set(
+              screenConfig,
+              typeof item === 'object' && 'screen' in item ? item.screen : item
+            );
 
             const normalizePath = (path: string) =>
               path.replace(/^\/+|\/+$/g, '');
@@ -833,7 +944,7 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
                 item.linking != null &&
                 typeof item.linking === 'object'
               ) {
-                Object.assign(screenConfig, item.linking);
+                Object.assign(screenConfig, { ...item.linking });
               }
             }
 
@@ -918,7 +1029,6 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
             }
 
             if (screens) {
-              // @ts-expect-error - we can't type this properly
               screenConfig.screens = screens;
             }
 
@@ -975,7 +1085,7 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
       );
     };
 
-    const screens = {};
+    const screens: PathConfigMapForStaticNavigation = {};
 
     // Loop through the config to find screens and groups
     // So we add the screens and groups in the same order as they are defined
@@ -1016,5 +1126,11 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
     initialScreenConfig.path = '';
   }
 
-  return screens;
+  if (!screens) {
+    return undefined;
+  }
+
+  markSharedPathConfigs(screens, sources, blocked);
+
+  return screens as PathConfigMap<ParamList>;
 }
