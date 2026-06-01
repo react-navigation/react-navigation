@@ -10,47 +10,33 @@ name: Tab View - Custom Tab Bar
     text: 'Marissa Castillo'
 - tapOn:
     id: 'albums'
-- extendedWaitUntil:
-    visible:
-      id: 'album-0'
-    timeout: 2000
+- assertVisible:
+    id: 'album-0'
 - tapOn:
     id: 'article'
-- extendedWaitUntil:
-    visible:
-      text: 'What is Lorem Ipsum?'
-    timeout: 2000
+- assertVisible:
+    text: 'What is Lorem Ipsum?'
 - tapOn:
     id: 'chat'
     delay: 500
-- extendedWaitUntil:
-    visible:
-      text: 'make me a sandwich'
-    timeout: 2000
+- assertVisible:
+    text: 'make me a sandwich'
 - tapOn:
     id: 'contacts'
-- extendedWaitUntil:
-    visible:
-      text: 'Marissa Castillo'
-    timeout: 2000
+- assertVisible:
+    text: 'Marissa Castillo'
 - swipe:
     direction: LEFT
     duration: 300
-- extendedWaitUntil:
-    visible:
-      id: 'album-0'
-    timeout: 2000
+- assertVisible:
+    id: 'album-0'
 - swipe:
     direction: LEFT
     duration: 300
-- extendedWaitUntil:
-    visible:
-      text: 'What is Lorem Ipsum?'
-    timeout: 2000
+- assertVisible:
+    text: 'What is Lorem Ipsum?'
 - swipe:
     direction: RIGHT
     duration: 300
-- extendedWaitUntil:
-    visible:
-      id: 'album-0'
-    timeout: 2000
+- assertVisible:
+    id: 'album-0'

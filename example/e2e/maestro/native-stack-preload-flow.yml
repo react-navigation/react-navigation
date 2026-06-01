@@ -10,9 +10,7 @@ name: Native Stack - Preload Flow
     text: 'Details is not preloaded yet.'
 - tapOn:
     text: 'Preload Details'
-- extendedWaitUntil:
-    timeout: 5000
-    visible: 'Details is preloaded!'
+- assertVisible: 'Details is preloaded!'
 - tapOn:
     text: 'Navigate to Details'
 - assertVisible:
