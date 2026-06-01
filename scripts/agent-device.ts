@@ -53,7 +53,7 @@ if (platform) {
 
 if (ci) {
   args.push(
-    '--debug',
+    '--verbose',
     '--timeout',
     ciTimeoutMs,
     '--retries',
