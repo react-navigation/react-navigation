@@ -171,12 +171,27 @@ jobs:
             sleep 2
           done
 
+      - name: Install iOS debug app
+        run: |
+          echo "Installing debug app..."
+          xcrun simctl install booted ../ios-debug-build/ios-debug.app
+        working-directory: example
+
+      - name: Prepare agent-device iOS runner
+        timeout-minutes: 15
+        run: |
+          mkdir -p agent-device-artifacts agent-device-state
+          echo "Preparing agent-device iOS runner..."
+          AGENT_DEVICE_STATE_DIR=agent-device-state node ../node_modules/agent-device/bin/agent-device.mjs \
+            --platform ios \
+            --verbose \
+            snapshot > agent-device-artifacts/ios-prewarm-snapshot.txt
+        working-directory: example
+
       - name: Run agent-device tests
         run: |
           echo "Starting simulator log stream..."
           xcrun simctl spawn booted log stream --style syslog > ~/agent-device-simulator.log 2>&1 &
-          echo "Installing debug app..."
-          xcrun simctl install booted ../ios-debug-build/ios-debug.app
           echo "Running native e2e tests..."
           pnpm e2e:native --platform ios
         working-directory: example
