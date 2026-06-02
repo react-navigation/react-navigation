@@ -182,7 +182,9 @@ jobs:
         run: |
           mkdir -p agent-device-artifacts agent-device-state
           echo "Preparing agent-device iOS runner..."
-          AGENT_DEVICE_STATE_DIR=agent-device-state node ../node_modules/agent-device/bin/agent-device.mjs \
+          AGENT_DEVICE_DAEMON_TIMEOUT_MS=240000 \
+            AGENT_DEVICE_STATE_DIR=agent-device-state \
+            node ../node_modules/agent-device/bin/agent-device.mjs \
             --platform ios \
             --verbose \
             snapshot > agent-device-artifacts/ios-prewarm-snapshot.txt
