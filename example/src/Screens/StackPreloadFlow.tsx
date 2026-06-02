@@ -63,18 +63,10 @@ const HomeScreen = () => {
   const timerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
-    const resetPreloadState = () => {
+    return navigation.addListener('blur', () => {
       clearTimeout(timerRef.current);
       setIsReady(false);
-    };
-
-    const unsubscribeBlur = navigation.addListener('blur', resetPreloadState);
-    const unsubscribeFocus = navigation.addListener('focus', resetPreloadState);
-
-    return () => {
-      unsubscribeBlur();
-      unsubscribeFocus();
-    };
+    });
   }, [navigation]);
 
   return (

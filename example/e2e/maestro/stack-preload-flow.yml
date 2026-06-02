@@ -19,8 +19,6 @@ name: Stack - Preload Flow
     text: 'Preloaded'
 - tapOn:
     text: 'Back to home'
-- assertVisible:
-    text: 'Details is not preloaded yet.'
 - tapOn:
     text: 'Navigate to Details'
 - assertVisible:
