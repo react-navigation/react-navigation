@@ -78,7 +78,7 @@ const HomeScreen = () => {
         onPress={() => {
           timerRef.current = setTimeout(() => {
             setIsReady(true);
-          }, 5000);
+          }, 2000);
 
           navigation.preload('NativeStackPreloadFlowDetails');
         }}

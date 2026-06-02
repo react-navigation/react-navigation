@@ -66,7 +66,7 @@ const HomeScreen = () => {
         onPress={() => {
           setTimeout(() => {
             setIsReady(true);
-          }, 5000);
+          }, 2000);
 
           navigation.preload('BottomTabsPreloadFlowDetails');
         }}
