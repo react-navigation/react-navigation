@@ -20,7 +20,7 @@ name: Stack - Header Customization
     text: 'What is Lorem Ipsum?'
 - tapOn:
     text: 'Pop screen'
-- tapOn:
+- assertVisible:
     text: 'Albums'
 - tapOn:
     text: 'Pop by 2'
