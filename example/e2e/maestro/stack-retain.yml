@@ -28,6 +28,8 @@ name: Stack - Retain
     text: '📌'
 - tapOn:
     text: 'Unretain'
+- assertVisible:
+    text: 'Retain'
 - tapOn:
     id: 'Go back'
 - tapOn:

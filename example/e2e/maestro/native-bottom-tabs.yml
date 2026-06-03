@@ -14,8 +14,18 @@ name: Native Bottom Tabs - Basic
     text: 'Navigate to feed'
 - assertVisible:
     text: 'Feed'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - waitForAnimationToEnd
 - tapOn:
     text: 'Albums'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - waitForAnimationToEnd
 - assertVisible:
     text: 'Albums'
 - tapOn:
@@ -24,9 +34,19 @@ name: Native Bottom Tabs - Basic
     text: 'Marissa Castillo'
 - tapOn:
     text: 'Albums'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - waitForAnimationToEnd
 - assertVisible:
     text: 'Albums'
 - tapOn:
     text: 'Article'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - waitForAnimationToEnd
 - assertVisible:
     text: 'Article by Babel fish'

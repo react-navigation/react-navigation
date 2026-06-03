@@ -8,6 +8,11 @@ name: Native Bottom Tabs - Custom Tab Bar
       TEXT: 'What is Lorem Ipsum?'
 - tapOn:
     id: 'albums'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - waitForAnimationToEnd
 - assertVisible:
     text: 'Albums'
 - tapOn:
@@ -16,13 +21,28 @@ name: Native Bottom Tabs - Custom Tab Bar
     text: 'Marissa Castillo'
 - tapOn:
     id: 'albums'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - waitForAnimationToEnd
 - assertVisible:
     text: 'Albums'
 - tapOn:
     id: 'contacts'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - waitForAnimationToEnd
 - assertVisible:
     text: 'Marissa Castillo'
 - tapOn:
     id: 'article'
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - waitForAnimationToEnd
 - assertVisible:
     text: 'What is Lorem Ipsum?'
