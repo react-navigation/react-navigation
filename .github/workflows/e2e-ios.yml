@@ -177,11 +177,16 @@ jobs:
           xcrun simctl install booted ../ios-debug-build/ios-debug.app
         working-directory: example
 
+      - name: Start simulator log stream
+        run: |
+          echo "Starting simulator log stream..."
+          xcrun simctl spawn booted log stream --style syslog > ~/agent-device-simulator.log 2>&1 &
+
       - name: Prepare agent-device iOS runner
         timeout-minutes: 15
         run: |
           mkdir -p agent-device-artifacts agent-device-state
-          printf 'context platform=ios timeout=240000\nsnapshot -i\n' > agent-device-artifacts/ios-prewarm.ad
+          printf 'context platform=ios timeout=240000\nclose org.reactnavigation.playground\nopen org.reactnavigation.playground rne://simple-stack\nsnapshot -i\n' > agent-device-artifacts/ios-prewarm.ad
           echo "Preparing agent-device iOS runner..."
           AGENT_DEVICE_STATE_DIR=agent-device-state \
             node ../node_modules/agent-device/bin/agent-device.mjs \
@@ -194,8 +199,6 @@ jobs:
 
       - name: Run agent-device tests
         run: |
-          echo "Starting simulator log stream..."
-          xcrun simctl spawn booted log stream --style syslog > ~/agent-device-simulator.log 2>&1 &
           echo "Running native e2e tests..."
           AGENT_DEVICE_E2E_TIMEOUT_MS=240000 pnpm e2e:native --platform ios
         working-directory: example
