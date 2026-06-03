@@ -780,7 +780,7 @@ export function useNavigationBuilder<
 
       // Reset so that StrictMode's second mount re-propagates state correctly.
       // Without this, the guard above sees the same reference and skips setState,
-      // causing deep link state to be lost after cleanup wipes the container state.
+      // causing the initial state to be lost after cleanup wipes the container state.
       lastNotifiedStateRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

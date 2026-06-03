@@ -616,6 +616,51 @@ test('cleans up state when the navigator unmounts', () => {
   expect(onStateChange).toHaveBeenLastCalledWith(undefined);
 });
 
+test('preserves initial state when navigator mount is delayed in StrictMode', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {descriptors[state.routes[state.index].key].render()}
+      </NavigationContent>
+    );
+  };
+
+  const TestScreen = ({ route }: any): any => `[${route.name}]`;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ condition }: { condition: boolean }) => (
+    <React.StrictMode>
+      <BaseNavigationContainer
+        ref={navigation}
+        initialState={{
+          index: 1,
+          routes: [{ name: 'foo' }, { name: 'bar' }],
+        }}
+      >
+        {condition ? (
+          <TestNavigator>
+            <Screen name="foo" component={TestScreen} />
+            <Screen name="bar" component={TestScreen} />
+          </TestNavigator>
+        ) : null}
+      </BaseNavigationContainer>
+    </React.StrictMode>
+  );
+
+  const root = await renderAsync(<Test condition={false} />);
+
+  await root.rerenderAsync(<Test condition />);
+
+  expect(root).toMatchInlineSnapshot(`"[bar]"`);
+  expect(navigation.getCurrentRoute()?.name).toBe('bar');
+});
+
 test('preserves state after rendered in `<Activity mode="hidden">`', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
