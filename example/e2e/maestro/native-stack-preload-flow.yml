@@ -14,9 +14,9 @@ name: Native Stack - Preload Flow
 - tapOn:
     text: 'Navigate to Details'
 - assertVisible:
-    text: 'Loaded!'
-- assertVisible:
     text: 'Preloaded'
+- assertVisible:
+    text: 'Loaded!'
 - tapOn:
     text: 'Back to home'
 - tapOn:
