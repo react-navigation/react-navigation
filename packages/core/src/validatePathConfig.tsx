@@ -15,6 +15,7 @@ export function validatePathConfig(config: unknown, root = true) {
           exact: 'boolean',
           stringify: 'object',
           parse: 'object',
+          shared: 'boolean',
         }),
   };
 

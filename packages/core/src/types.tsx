@@ -1357,6 +1357,17 @@ type PathConfigAlias<Params> = {
    * ```
    */
   parse?: ParseConfig<Params> | undefined;
+  /**
+   * Whether this path can resolve to multiple routes.
+   * Both routes should specify `shared: true` for this to work.
+   * By default, a path can only resolve to one route.
+   *
+   * This is useful when same screen used in multiple navigators,
+   * e.g. tabs with stacks containing profile screen in each stack.
+   *
+   * The path defined first will be the canonical path.
+   */
+  shared?: boolean | undefined;
 };
 
 export type PathConfig<Params> = FlatType<

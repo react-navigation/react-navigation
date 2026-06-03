@@ -302,7 +302,11 @@ export function useLinking<ParamList extends ParamListBase>(
       let state: ResultState | undefined;
 
       try {
-        state = getStateFromPathRef.current(path, configRef.current);
+        state = getStateFromPathRef.current(
+          path,
+          configRef.current,
+          navigation.getRootState()
+        );
       } catch (e) {
         console.error(e);
 

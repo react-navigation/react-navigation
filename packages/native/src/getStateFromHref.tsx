@@ -1,11 +1,16 @@
-import { getStateFromPath, type ParamListBase } from '@react-navigation/core';
+import {
+  getStateFromPath,
+  type NavigationState,
+  type ParamListBase,
+} from '@react-navigation/core';
 
 import { extractPathFromURL } from './extractPathFromURL';
 import type { LinkingOptions } from './types';
 
 export function getStateFromHref(
   href: string,
-  options: LinkingOptions<ParamListBase> | undefined
+  options: LinkingOptions<ParamListBase> | undefined,
+  previous: NavigationState | undefined
 ): ReturnType<typeof getStateFromPath> {
   const {
     prefixes,
@@ -40,7 +45,7 @@ export function getStateFromHref(
     );
   }
 
-  const state = getStateFromPathHelper(path, config);
+  const state = getStateFromPathHelper(path, config, previous);
 
   return state;
 }

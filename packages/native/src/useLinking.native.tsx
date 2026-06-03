@@ -2,6 +2,7 @@ import {
   getActionFromState as getActionFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
   type NavigationContainerRef,
+  type NavigationState,
   type ParamListBase,
   useNavigationIndependentTree,
 } from '@react-navigation/core';
@@ -115,18 +116,22 @@ export function useLinking<ParamList extends ParamListBase>(
   });
 
   const getStateFromURL = React.useCallback(
-    (url: string | null | undefined) => {
+    (url: string | null | undefined, previous: NavigationState | undefined) => {
       if (!url) {
         return undefined;
       }
 
       try {
-        return getStateFromHref(url, {
-          prefixes: prefixesRef.current,
-          filter: filterRef.current,
-          config: configRef.current,
-          getStateFromPath: getStateFromPathRef.current,
-        });
+        return getStateFromHref(
+          url,
+          {
+            prefixes: prefixesRef.current,
+            filter: filterRef.current,
+            config: configRef.current,
+            getStateFromPath: getStateFromPathRef.current,
+          },
+          previous
+        );
       } catch (e) {
         return undefined;
       }
@@ -143,14 +148,14 @@ export function useLinking<ParamList extends ParamListBase>(
       if (url != null) {
         if (typeof url !== 'string') {
           return url.then((url) => {
-            const state = getStateFromURL(url);
+            const state = getStateFromURL(url, undefined);
 
             return state;
           });
         }
       }
 
-      state = getStateFromURL(url);
+      state = getStateFromURL(url, undefined);
     }
 
     const thenable: Thenable<ResultState | undefined> = {
@@ -169,7 +174,9 @@ export function useLinking<ParamList extends ParamListBase>(
       }
 
       const navigation = ref.current;
-      const state = navigation ? getStateFromURL(url) : undefined;
+      const state = navigation
+        ? getStateFromURL(url, navigation.getRootState())
+        : undefined;
 
       if (navigation) {
         REACT_NAVIGATION_DEVTOOLS.get(navigation)?.listeners.forEach(

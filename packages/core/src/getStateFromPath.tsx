@@ -8,7 +8,11 @@ import queryString from 'query-string';
 
 import { arrayStartsWith } from './arrayStartsWith';
 import { findFocusedRoute } from './findFocusedRoute';
-import { getPatternParts, type PatternPart } from './getPatternParts';
+import {
+  combinePatternParts,
+  getPatternParts,
+  type PatternPart,
+} from './getPatternParts';
 import { isArrayEqual } from './isArrayEqual';
 import type { PathConfig, PathConfigMap } from './types';
 import type {
@@ -31,6 +35,7 @@ type ParseConfig = Record<string, ParseConfigValue | undefined>;
 
 type RouteConfig = {
   screen: string;
+  order: number;
   regex?: RegExp | undefined;
   segments: string[];
   params: { screen: string; name?: string | undefined; index: number }[];
@@ -38,6 +43,7 @@ type RouteConfig = {
   parse?: ParseConfig | undefined;
   explicitParamNames?: Set<string> | undefined;
   hasNestedScreens: boolean;
+  shared: boolean;
 };
 
 type InitialRouteConfig = {
@@ -55,10 +61,13 @@ type ParsedRoute = {
   params?: Record<string, unknown> | undefined;
 };
 
+type RoutePatternPart = PatternPart & { screen: string };
+
 type ConfigResources = {
   initialRoutes: InitialRouteConfig[];
   configs: RouteConfig[];
   configsByScreen: Record<string, RouteConfig[]>;
+  configsByPattern: Record<string, RouteConfig[]>;
 };
 
 const INVALID_SCHEMA_RESULT_ERROR =
@@ -142,12 +151,27 @@ const getValidationResult = (
  */
 export function getStateFromPath<ParamList extends {}>(
   path: string,
-  options?: Options<ParamList>
+  options?: Options<ParamList>,
+  previous?: NavigationState
 ): ResultState | undefined {
-  const { initialRoutes, configs, configsByScreen } =
+  const { initialRoutes, configs, configsByScreen, configsByPattern } =
     getConfigResources(options);
 
   const screens = options?.screens;
+
+  // When a matched config is shared, the same pattern can resolve to multiple branches
+  // pick the one that best matches the current navigation state
+  const resolveSharedConfig = (config: RouteConfig) => {
+    if (config.shared) {
+      const candidates = configsByPattern[config.segments.join('/')];
+
+      if (candidates) {
+        return selectSharedConfig(config, candidates, previous, initialRoutes);
+      }
+    }
+
+    return config;
+  };
 
   let remaining = path
     .replace(/\/+/g, '/') // Replace multiple slash (//) with single ones
@@ -203,11 +227,13 @@ export function getStateFromPath<ParamList extends {}>(
     const match = configs.find((config) => config.segments.join('/') === '');
 
     if (match) {
+      const config = resolveSharedConfig(match);
+
       return createNestedStateObject(
         path,
-        match.routeNames.map((name) => ({ name })),
+        config.routeNames.map((name) => ({ name })),
         initialRoutes,
-        match
+        config
       );
     }
 
@@ -223,7 +249,29 @@ export function getStateFromPath<ParamList extends {}>(
       continue;
     }
 
-    const state = createNestedStateObject(path, routes, initialRoutes, config);
+    let selectedConfig = resolveSharedConfig(config);
+    let selectedRoutes = routes;
+
+    if (selectedConfig !== config) {
+      const rematchedRoutes = matchAgainstConfig(
+        remaining,
+        selectedConfig,
+        configsByScreen
+      );
+
+      if (rematchedRoutes === undefined) {
+        selectedConfig = config;
+      } else {
+        selectedRoutes = rematchedRoutes;
+      }
+    }
+
+    const state = createNestedStateObject(
+      path,
+      selectedRoutes,
+      initialRoutes,
+      selectedConfig
+    );
 
     if (state !== undefined) {
       return state;
@@ -265,15 +313,18 @@ function prepareConfigResources(options?: Options<{}>) {
   checkForDuplicatedConfigs(configs);
 
   const configsByScreen: Record<string, RouteConfig[]> = {};
+  const configsByPattern: Record<string, RouteConfig[]> = {};
 
   for (const c of configs) {
     (configsByScreen[c.screen] ??= []).push(c);
+    (configsByPattern[c.segments.join('/')] ??= []).push(c);
   }
 
   return {
     initialRoutes,
     configs,
     configsByScreen,
+    configsByPattern,
   };
 }
 
@@ -301,6 +352,7 @@ function getSortedNormalizedConfigs(
         createNormalizedConfigs(key, screens, initialRoutes, [], [], [])
       )
     )
+    .map((config, order) => ({ ...config, order }))
     .sort((a, b) => {
       // Sort config from most specific to least specific:
       // - more segments
@@ -399,13 +451,13 @@ function checkForDuplicatedConfigs(configs: RouteConfig[]) {
           ? b.every((it, i) => a[i] === it)
           : a.every((it, i) => b[i] === it);
 
-      if (!intersects) {
+      if (!intersects && (!acc[pattern].shared || !config.shared)) {
         throw new Error(
           `Found conflicting screens with the same pattern. The pattern '${
             pattern
           }' resolves to both '${a.join(' > ')}' and '${b.join(
             ' > '
-          )}'. Patterns must be unique and cannot resolve to more than one screen.`
+          )}'. Patterns must be unique and cannot resolve to more than one screen unless shared: true is specified.`
         );
       }
     }
@@ -434,10 +486,14 @@ const matchAgainstConfig = (
   let validationFailed = false;
   const matchedRoutes: ParsedRoute[] = [];
 
-  for (const routeName of config.routeNames) {
-    // Check matching name AND pattern in case same screen is used at different levels in config
-    const routeConfig = configsByScreen[routeName]?.find((c) =>
-      arrayStartsWith(config.segments, c.segments)
+  for (const [index, routeName] of config.routeNames.entries()) {
+    // Check matching name, route names and pattern in case same screen is used
+    // at different levels or branches in config
+    const routeConfig = configsByScreen[routeName]?.find(
+      (c) =>
+        index === c.routeNames.length - 1 &&
+        arrayStartsWith(config.routeNames, c.routeNames) &&
+        arrayStartsWith(config.segments, c.segments)
     );
 
     let params: Record<string, unknown> | undefined;
@@ -523,7 +579,7 @@ const createNormalizedConfigs = (
   screen: string,
   routeConfig: Record<string, string | PathConfig<{}>>,
   initials: InitialRouteConfig[],
-  paths: { screen: string; path: string }[],
+  parts: RoutePatternPart[],
   parentScreens: string[],
   routeNames: string[]
 ): RouteConfig[] => {
@@ -536,22 +592,28 @@ const createNormalizedConfigs = (
   const config = routeConfig[screen];
 
   if (typeof config === 'string') {
-    paths.push({ screen, path: config });
-    configs.push(createConfigItem(screen, [...routeNames], [...paths]));
+    const configParts = combinePatternParts(
+      parts,
+      getPatternParts(config).map((part) => ({ ...part, screen }))
+    );
+
+    configs.push(createConfigItem(screen, [...routeNames], configParts));
   } else if (typeof config === 'object') {
     // if an object is specified as the value (e.g. Foo: { ... }),
     // it can have `path` property and
     // it could have `screens` prop which has nested configs
     const nestedScreens = 'screens' in config ? config.screens : undefined;
     const hasNestedScreens = !!nestedScreens;
+    const currentParts =
+      typeof config.path === 'string'
+        ? combinePatternParts(
+            parts,
+            getPatternParts(config.path).map((part) => ({ ...part, screen })),
+            config.exact
+          )
+        : parts;
 
     if (typeof config.path === 'string') {
-      if (config.exact && config.path == null) {
-        throw new Error(
-          `Screen '${screen}' doesn't specify a 'path'. A 'path' needs to be specified when specifying 'exact: true'. If you don't want this screen in the URL, specify it as empty string, e.g. \`path: ''\`.`
-        );
-      }
-
       // We should add alias configs after the main config
       // So unless they are more specific, main config will be matched first
       const aliasConfigs = [];
@@ -563,9 +625,13 @@ const createNormalizedConfigs = (
               createConfigItem(
                 screen,
                 [...routeNames],
-                [...paths, { screen, path: alias }],
+                combinePatternParts(
+                  parts,
+                  getPatternParts(alias).map((part) => ({ ...part, screen }))
+                ),
                 config.parse,
-                hasNestedScreens
+                hasNestedScreens,
+                false
               )
             );
           } else if (typeof alias === 'object') {
@@ -573,31 +639,31 @@ const createNormalizedConfigs = (
               createConfigItem(
                 screen,
                 [...routeNames],
-                alias.exact
-                  ? [{ screen, path: alias.path }]
-                  : [...paths, { screen, path: alias.path }],
+                combinePatternParts(
+                  parts,
+                  getPatternParts(alias.path).map((part) => ({
+                    ...part,
+                    screen,
+                  })),
+                  alias.exact
+                ),
                 alias.parse,
-                hasNestedScreens
+                hasNestedScreens,
+                alias.shared === true
               )
             );
           }
         }
       }
 
-      if (config.exact) {
-        // If it's an exact path, we don't need to keep track of the parent screens
-        // So we can clear it
-        paths.length = 0;
-      }
-
-      paths.push({ screen, path: config.path });
       configs.push(
         createConfigItem(
           screen,
           [...routeNames],
-          [...paths],
+          currentParts,
           config.parse,
-          hasNestedScreens
+          hasNestedScreens,
+          config.shared === true
         )
       );
 
@@ -631,7 +697,7 @@ const createNormalizedConfigs = (
           nestedConfig,
           nestedScreens as Record<string, string | PathConfig<{}>>,
           initials,
-          [...paths],
+          currentParts,
           [...parentScreens],
           routeNames
         );
@@ -649,17 +715,11 @@ const createNormalizedConfigs = (
 const createConfigItem = (
   screen: string,
   routeNames: string[],
-  paths: { screen: string; path: string }[],
+  parts: RoutePatternPart[],
   parse?: ParseConfig,
-  hasNestedScreens = false
+  hasNestedScreens = false,
+  shared = false
 ): RouteConfig => {
-  const parts: (PatternPart & { screen: string })[] = [];
-
-  // Parse the path string into parts for easier matching
-  for (const { screen, path } of paths) {
-    parts.push(...getPatternParts(path).map((part) => ({ ...part, screen })));
-  }
-
   const regex = parts.length
     ? new RegExp(
         `^(${parts
@@ -691,6 +751,7 @@ const createConfigItem = (
 
   return {
     screen,
+    order: 0,
     regex,
     segments,
     params,
@@ -698,7 +759,83 @@ const createConfigItem = (
     parse,
     explicitParamNames: getExplicitParamNames(parse),
     hasNestedScreens,
+    shared,
   };
+};
+
+const selectSharedConfig = (
+  match: RouteConfig,
+  candidates: RouteConfig[],
+  previous: NavigationState | PartialState<NavigationState> | undefined,
+  initialRoutes: InitialRouteConfig[]
+) => {
+  // Walk the previous state down to the focused leaf to get the active route path
+  const focusedRouteNames: string[] = [];
+
+  let current = previous;
+
+  while (current?.routes.length) {
+    const index =
+      typeof current.index === 'number'
+        ? current.index
+        : current.routes.length - 1;
+
+    const route = current.routes[index];
+
+    focusedRouteNames.push(route.name);
+    current = route.state;
+  }
+
+  // Rank a candidate by how far it aligns with the focused path, then by
+  // how many of its levels match a configured initial route
+  const score = (routeNames: string[]) => {
+    let focused = 0;
+
+    while (
+      routeNames[focused] !== undefined &&
+      routeNames[focused] === focusedRouteNames[focused]
+    ) {
+      focused++;
+    }
+
+    let initial = 0;
+
+    for (const config of initialRoutes) {
+      if (
+        arrayStartsWith(routeNames, config.parentScreens) &&
+        routeNames[config.parentScreens.length] === config.initialRouteName
+      ) {
+        initial++;
+      }
+    }
+
+    return { focused, initial };
+  };
+
+  let selected = match;
+  let best = { focused: -1, initial: -1 };
+
+  for (const candidate of candidates) {
+    if (!candidate.shared) {
+      continue;
+    }
+
+    const { focused, initial } = score(candidate.routeNames);
+
+    const better =
+      focused !== best.focused
+        ? focused > best.focused
+        : initial !== best.initial
+          ? initial > best.initial
+          : candidate.order < selected.order;
+
+    if (better) {
+      selected = candidate;
+      best = { focused, initial };
+    }
+  }
+
+  return selected;
 };
 
 // Try to find an initial route connected with the one passed

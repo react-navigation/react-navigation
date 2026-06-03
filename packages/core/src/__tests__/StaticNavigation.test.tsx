@@ -992,6 +992,542 @@ test('returns undefined if there is no linking configuration', () => {
   expect(screens).toBeUndefined();
 });
 
+test('marks a reused screen with the same explicit path as shared', () => {
+  const Profile = {
+    screen: TestScreen,
+    linking: 'profile/:id',
+  };
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+      },
+      Profile,
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Search: {
+        screen: TestScreen,
+        linking: 'search',
+      },
+      Profile,
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      screens: {
+        Home: {
+          path: '',
+        },
+        Profile: {
+          path: 'profile/:id',
+          shared: true,
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+          shared: true,
+        },
+        Search: {
+          path: 'search',
+        },
+      },
+    },
+  });
+});
+
+test('marks a reused screen with the same generated path as shared', () => {
+  const Profile = {
+    screen: TestScreen,
+  };
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+      },
+      Profile,
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Search: {
+        screen: TestScreen,
+        linking: 'search',
+      },
+      Profile,
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      screens: {
+        Home: {
+          path: '',
+        },
+        Profile: {
+          path: 'profile',
+          shared: true,
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile',
+          shared: true,
+        },
+        Search: {
+          path: 'search',
+        },
+      },
+    },
+  });
+});
+
+test('marks the same component with the same explicit path as shared', () => {
+  const HomeStack = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+      },
+      Profile: {
+        screen: TestScreen,
+        linking: 'profile/:id',
+      },
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Search: {
+        screen: TestScreen,
+        linking: 'search',
+      },
+      Profile: {
+        screen: TestScreen,
+        linking: 'profile/:id',
+      },
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      screens: {
+        Home: {
+          path: '',
+        },
+        Profile: {
+          path: 'profile/:id',
+          shared: true,
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+          shared: true,
+        },
+        Search: {
+          path: 'search',
+        },
+      },
+    },
+  });
+});
+
+test('marks the same component with the same generated path as shared', () => {
+  const HomeStack = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+      },
+      Profile: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Search: {
+        screen: TestScreen,
+        linking: 'search',
+      },
+      Profile: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      screens: {
+        Home: {
+          path: '',
+        },
+        Profile: {
+          path: 'profile',
+          shared: true,
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile',
+          shared: true,
+        },
+        Search: {
+          path: 'search',
+        },
+      },
+    },
+  });
+});
+
+test("doesn't mark a reused screen with different paths as shared", () => {
+  const Profile = {
+    screen: TestScreen,
+    linking: 'profile/:id',
+  };
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Profile,
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Profile,
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+        linking: 'search',
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {})).toEqual({
+    HomeTab: {
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+        },
+      },
+    },
+    SearchTab: {
+      path: 'search',
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+        },
+      },
+    },
+  });
+});
+
+test('preserves explicit shared option in static linking', () => {
+  const Stack = createTestNavigator({
+    screens: {
+      Profile: {
+        screen: TestScreen,
+        linking: {
+          path: 'profile/:id',
+          shared: true,
+        },
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Stack, {})).toEqual({
+    Profile: {
+      path: 'profile/:id',
+      shared: true,
+    },
+  });
+});
+
+test("doesn't override explicit shared: false", () => {
+  const Profile = {
+    screen: TestScreen,
+    linking: {
+      path: 'profile/:id',
+      shared: false,
+    },
+  };
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+      },
+      Profile,
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Search: {
+        screen: TestScreen,
+        linking: 'search',
+      },
+      Profile,
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      screens: {
+        Home: {
+          path: '',
+        },
+        Profile: {
+          path: 'profile/:id',
+          shared: false,
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+          shared: false,
+        },
+        Search: {
+          path: 'search',
+        },
+      },
+    },
+  });
+});
+
+test("doesn't mark screens under a parent with shared: false as shared", () => {
+  const Profile = {
+    screen: TestScreen,
+    linking: 'profile/:id',
+  };
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Profile,
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Profile,
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+        linking: {
+          path: '',
+          shared: false,
+        },
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      path: '',
+      shared: false,
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+        },
+      },
+    },
+  });
+});
+
+test('preserves explicit shared option under a parent with shared: false', () => {
+  const Profile = {
+    screen: TestScreen,
+    linking: {
+      path: 'profile/:id',
+      shared: true,
+    },
+  };
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Profile,
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Profile,
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+        linking: {
+          path: '',
+          shared: false,
+        },
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      path: '',
+      shared: false,
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+          shared: true,
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+          shared: true,
+        },
+      },
+    },
+  });
+});
+
+test("doesn't mark different components with the same path as shared", () => {
+  const OtherScreen = () => null;
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Profile: {
+        screen: TestScreen,
+        linking: 'profile/:id',
+      },
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Profile: {
+        screen: OtherScreen,
+        linking: 'profile/:id',
+      },
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Tabs, {});
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(() => getStateFromPath('/profile/123', { screens })).toThrow(
+    `Found conflicting screens with the same pattern. The pattern 'profile/:id' resolves to both 'SearchTab > Profile' and 'HomeTab > Profile'. Patterns must be unique and cannot resolve to more than one screen unless shared: true is specified.`
+  );
+});
+
 test('automatically generates paths if auto is specified', () => {
   const NestedA = createTestNavigator({
     screens: {

@@ -124,3 +124,11 @@ export function getPatternParts(path: string): PatternPart[] {
 
   return parts;
 }
+
+export function combinePatternParts<T extends PatternPart>(
+  parentParts: T[],
+  parts: T[],
+  exact = false
+): T[] {
+  return exact ? parts : [...parentParts, ...parts];
+}

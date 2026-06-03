@@ -3,8 +3,8 @@ import {
   createBottomTabNavigator,
   createBottomTabScreen,
 } from '@react-navigation/bottom-tabs';
-import { type Icon, Text } from '@react-navigation/elements';
-import { useNavigation, useTheme } from '@react-navigation/native';
+import { type Icon, PlatformPressable, Text } from '@react-navigation/elements';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   createNativeStackScreen,
@@ -160,6 +160,7 @@ const SEARCH_RESULT_COVER_SIZE = 48;
 
 const AlbumsScreen = () => {
   const { colors, fonts } = useTheme();
+  const navigation = useNavigation('AlbumsHome');
   const dimensions = useWindowDimensions();
   const availableWidth = dimensions.width - SPACING_M * 2;
   const numColumns = Math.max(1, Math.floor(availableWidth / 150));
@@ -171,12 +172,14 @@ const AlbumsScreen = () => {
       contentContainerStyle={styles.albumGridContent}
     >
       {ALBUMS.map((item) => (
-        <View
+        <PlatformPressable
           key={item.id}
+          onPress={() => navigation.navigate('AlbumDetails', { id: item.id })}
           style={[
             styles.albumGridItem,
             Platform.OS !== 'web' && { width: itemSize },
           ]}
+          testID={item.id === '1' ? 'open-album-albums' : undefined}
         >
           <Image
             source={item.cover}
@@ -196,7 +199,7 @@ const AlbumsScreen = () => {
               {item.artist}
             </Text>
           </View>
-        </View>
+        </PlatformPressable>
       ))}
     </ScrollView>
   );
@@ -204,6 +207,8 @@ const AlbumsScreen = () => {
 
 const ForYouScreen = () => {
   const { colors, fonts } = useTheme();
+  const navigation = useNavigation('ForYouHome');
+
   const featured = ALBUMS[2];
 
   return (
@@ -211,7 +216,11 @@ const ForYouScreen = () => {
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={styles.forYouContent}
     >
-      <View style={styles.featuredCard}>
+      <PlatformPressable
+        onPress={() => navigation.navigate('AlbumDetails', { id: featured.id })}
+        style={styles.featuredCard}
+        testID="open-album-for-you"
+      >
         <Image source={featured.cover} style={styles.featuredImage} />
 
         <View style={styles.featuredOverlay}>
@@ -225,7 +234,7 @@ const ForYouScreen = () => {
             {featured.artist}
           </Text>
         </View>
-      </View>
+      </PlatformPressable>
 
       {FOR_YOU_SECTIONS.map((section) => (
         <View key={section.title} style={styles.section}>
@@ -238,7 +247,12 @@ const ForYouScreen = () => {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.horizontalList}
             renderItem={({ item }) => (
-              <View style={styles.horizontalItem}>
+              <PlatformPressable
+                onPress={() =>
+                  navigation.navigate('AlbumDetails', { id: item.id })
+                }
+                style={styles.horizontalItem}
+              >
                 <Image source={item.cover} style={styles.horizontalCover} />
 
                 <Text
@@ -254,7 +268,7 @@ const ForYouScreen = () => {
                 >
                   {item.artist}
                 </Text>
-              </View>
+              </PlatformPressable>
             )}
           />
         </View>
@@ -265,13 +279,19 @@ const ForYouScreen = () => {
 
 const RadioScreen = () => {
   const { colors, fonts } = useTheme();
+  const insets = useSafeAreaInsets();
 
   return (
     <FlatList
       data={STATIONS}
       keyExtractor={(item) => item.id}
       contentInsetAdjustmentBehavior="automatic"
-      contentContainerStyle={styles.stationList}
+      contentContainerStyle={[
+        styles.stationList,
+        Platform.OS === 'android'
+          ? { paddingTop: insets.top, paddingBottom: insets.bottom }
+          : null,
+      ]}
       ItemSeparatorComponent={() => (
         <View style={[styles.separator, { backgroundColor: colors.border }]} />
       )}
@@ -380,7 +400,12 @@ const SearchScreenContent = () => {
                   />
                 )}
 
-                <View style={styles.searchResultRow}>
+                <PlatformPressable
+                  onPress={() =>
+                    navigation.navigate('AlbumDetails', { id: item.id })
+                  }
+                  style={styles.searchResultRow}
+                >
                   <Image source={item.cover} style={styles.searchResultCover} />
 
                   <View style={styles.searchResultInfo}>
@@ -397,7 +422,7 @@ const SearchScreenContent = () => {
                       {item.artist}
                     </Text>
                   </View>
-                </View>
+                </PlatformPressable>
               </React.Fragment>
             ))}
           </View>
@@ -437,6 +462,64 @@ const SearchScreenContent = () => {
   );
 };
 
+const AlbumDetailsScreen = () => {
+  const { colors, fonts } = useTheme();
+
+  const route = useRoute('AlbumDetails');
+
+  const album = ALBUMS.find((item) => item.id === route.params.id) ?? ALBUMS[0];
+
+  return (
+    <ScrollView
+      contentInsetAdjustmentBehavior="automatic"
+      contentContainerStyle={styles.albumDetailsContent}
+    >
+      <Image source={album.cover} style={styles.albumDetailsCover} />
+
+      <Text style={[styles.albumDetailsTitle, fonts.heavy]}>{album.title}</Text>
+      <Text style={[styles.albumDetailsArtist, { color: colors.text }]}>
+        {album.artist}
+      </Text>
+    </ScrollView>
+  );
+};
+
+const AlbumDetails = createNativeStackScreen({
+  screen: AlbumDetailsScreen,
+  linking: 'album/:id',
+  options: ({ route }) => ({
+    title: ALBUMS.find((a) => a.id === route.params.id)?.title ?? 'Album',
+  }),
+});
+
+const AlbumsStack = createNativeStackNavigator({
+  initialRouteName: 'AlbumsHome',
+  screens: {
+    AlbumsHome: createNativeStackScreen({
+      screen: AlbumsScreen,
+      options: {
+        title: 'Albums',
+        headerLargeTitleEnabled: true,
+      },
+    }),
+    AlbumDetails,
+  },
+});
+
+const ForYouStack = createNativeStackNavigator({
+  initialRouteName: 'ForYouHome',
+  screens: {
+    ForYouHome: createNativeStackScreen({
+      screen: ForYouScreen,
+      options: {
+        title: 'For You',
+        headerLargeTitleEnabled: true,
+      },
+    }),
+    AlbumDetails,
+  },
+});
+
 const SearchStack = createNativeStackNavigator({
   screens: {
     SearchHome: createNativeStackScreen({
@@ -446,6 +529,7 @@ const SearchStack = createNativeStackNavigator({
         headerLargeTitleEnabled: true,
       },
     }),
+    AlbumDetails,
   },
 });
 
@@ -496,37 +580,16 @@ const NowPlayingBar = ({ placement }: { placement: 'inline' | 'regular' }) => {
   );
 };
 
-const SafeAreaLayout = ({ children }: { children: React.ReactNode }) => {
-  const insets = useSafeAreaInsets();
-
-  return (
-    <View
-      style={{
-        flex: 1,
-        paddingTop: insets.top,
-        paddingBottom: insets.bottom,
-      }}
-    >
-      {children}
-    </View>
-  );
-};
-
 const BottomTabsShowcaseNavigator = createBottomTabNavigator({
-  screenLayout: ({ children }) =>
-    Platform.OS === 'android' ? (
-      <SafeAreaLayout>{children}</SafeAreaLayout>
-    ) : (
-      children
-    ),
   screenOptions: {
     bottomAccessory: ({ placement }) => <NowPlayingBar placement={placement} />,
   },
   screens: {
     Albums: createBottomTabScreen({
-      screen: AlbumsScreen,
+      screen: AlbumsStack,
       options: {
         title: 'Albums',
+        tabBarButtonTestID: 'showcase-bottom-tabs-albums',
         tabBarIcon: Platform.select<Icon>({
           ios: { type: 'sfSymbol', name: 'rectangle.stack' },
           android: { type: 'materialSymbol', name: 'library_music' },
@@ -537,9 +600,10 @@ const BottomTabsShowcaseNavigator = createBottomTabNavigator({
     }),
 
     ForYou: createBottomTabScreen({
-      screen: ForYouScreen,
+      screen: ForYouStack,
       options: {
         title: 'For You',
+        tabBarButtonTestID: 'showcase-bottom-tabs-for-you',
         tabBarIcon: Platform.select<Icon>({
           ios: { type: 'sfSymbol', name: 'play.circle' },
           android: { type: 'materialSymbol', name: 'play_circle' },
@@ -553,6 +617,7 @@ const BottomTabsShowcaseNavigator = createBottomTabNavigator({
       screen: RadioScreen,
       options: {
         title: 'Radio',
+        tabBarButtonTestID: 'showcase-bottom-tabs-radio',
         tabBarIcon: Platform.select<Icon>({
           ios: { type: 'sfSymbol', name: 'dot.radiowaves.left.and.right' },
           android: { type: 'materialSymbol', name: 'cell_tower' },
@@ -567,6 +632,7 @@ const BottomTabsShowcaseNavigator = createBottomTabNavigator({
       layout: ({ children }) => children,
       options: {
         tabBarSystemItem: 'search',
+        tabBarButtonTestID: 'showcase-bottom-tabs-search',
         tabBarIcon: Platform.select<Icon>({
           ios: { type: 'sfSymbol', name: 'magnifyingglass' },
           android: { type: 'materialSymbol', name: 'search' },
@@ -812,7 +878,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
   },
-
+  albumDetailsContent: {
+    alignItems: 'center',
+    padding: SPACING_L,
+  },
+  albumDetailsCover: {
+    width: 240,
+    height: 240,
+    borderRadius: BORDER_RADIUS,
+    borderCurve: 'continuous',
+    marginTop: SPACING_XL * 2,
+    marginBottom: SPACING_L,
+  },
+  albumDetailsTitle: {
+    fontSize: 28,
+    textAlign: 'center',
+  },
+  albumDetailsArtist: {
+    fontSize: 16,
+    marginTop: SPACING_XS,
+    marginBottom: SPACING_L,
+    opacity: 0.7,
+  },
   nowPlaying: {
     flexDirection: 'row',
     alignItems: 'center',

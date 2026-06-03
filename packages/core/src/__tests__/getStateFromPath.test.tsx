@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals';
-import type { InitialState } from '@react-navigation/routers';
+import type { InitialState, NavigationState } from '@react-navigation/routers';
 import { produce } from 'immer';
 import * as v from 'valibot';
 import { z } from 'zod';
@@ -2532,7 +2532,7 @@ test('throws if two screens map to the same pattern', () => {
       },
     })
   ).toThrow(
-    "Found conflicting screens with the same pattern. The pattern 'bar/:id/baz' resolves to both 'Foo > Bax' and 'Foo > Bar > Baz'. Patterns must be unique and cannot resolve to more than one screen."
+    "Found conflicting screens with the same pattern. The pattern 'bar/:id/baz' resolves to both 'Foo > Bax' and 'Foo > Bar > Baz'. Patterns must be unique and cannot resolve to more than one screen unless shared: true is specified."
   );
 
   expect(() =>
@@ -2720,6 +2720,7 @@ You can only specify the following properties:
 - exact (boolean)
 - stringify (object)
 - parse (object)
+- shared (boolean)
 
 If you want to specify configuration for screens, you need to specify them under a 'screens' property.
 
@@ -4013,5 +4014,630 @@ test('throws if screen has alias but no path', () => {
     })
   ).toThrow(
     `Screen 'Foo' doesn't specify a 'path'. A 'path' needs to be specified in order to use 'alias'.`
+  );
+});
+
+test('resolves shared paths to the initial tab or current tab', () => {
+  const config = {
+    screens: {
+      Tabs: {
+        initialRouteName: 'HomeTab',
+        screens: {
+          HomeTab: {
+            initialRouteName: 'Home',
+            screens: {
+              Home: '',
+              Profile: {
+                path: 'profile/:id',
+                shared: true,
+              },
+            },
+          },
+          SearchTab: {
+            initialRouteName: 'Search',
+            screens: {
+              Search: 'search',
+              Profile: {
+                path: 'profile/:id',
+                shared: true,
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('/profile/123', config)).toEqual({
+    routes: [
+      {
+        name: 'Tabs',
+        state: {
+          routes: [
+            {
+              name: 'HomeTab',
+              state: {
+                index: 1,
+                routes: [
+                  { name: 'Home' },
+                  {
+                    name: 'Profile',
+                    params: { id: '123' },
+                    path: '/profile/123',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  });
+
+  const previous: NavigationState = {
+    index: 0,
+    key: 'root',
+    routeNames: ['Tabs'],
+    stale: false,
+    type: 'test',
+    routes: [
+      {
+        key: 'tabs',
+        name: 'Tabs',
+        state: {
+          index: 1,
+          key: 'tabs-state',
+          routeNames: ['HomeTab', 'SearchTab'],
+          stale: false,
+          type: 'test',
+          routes: [
+            { key: 'home-tab', name: 'HomeTab' },
+            {
+              key: 'search-tab',
+              name: 'SearchTab',
+              state: {
+                index: 0,
+                key: 'search-state',
+                routeNames: ['Search'],
+                stale: false,
+                type: 'test',
+                routes: [{ key: 'search', name: 'Search' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const state = getStateFromPath<object>('/profile/123', config, previous);
+
+  expect(state).toEqual({
+    routes: [
+      {
+        name: 'Tabs',
+        state: {
+          index: 1,
+          routes: [
+            { name: 'HomeTab' },
+            {
+              name: 'SearchTab',
+              state: {
+                index: 1,
+                routes: [
+                  { name: 'Search' },
+                  {
+                    name: 'Profile',
+                    params: { id: '123' },
+                    path: '/profile/123',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  });
+
+  expect(getPathFromState<object>(state!, config)).toBe('/profile/123');
+});
+
+test('uses parse config from the selected shared screen', () => {
+  const config = {
+    screens: {
+      Tabs: {
+        initialRouteName: 'HomeTab',
+        screens: {
+          HomeTab: {
+            initialRouteName: 'Home',
+            screens: {
+              Home: '',
+              Profile: {
+                path: 'profile/:id',
+                shared: true,
+                parse: {
+                  id: (value: string) => `home:${value}`,
+                },
+              },
+            },
+          },
+          SearchTab: {
+            initialRouteName: 'Search',
+            screens: {
+              Search: 'search',
+              Profile: {
+                path: 'profile/:id',
+                shared: true,
+                parse: {
+                  id: (value: string) => `search:${value}`,
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('/profile/123', config)).toEqual({
+    routes: [
+      {
+        name: 'Tabs',
+        state: {
+          routes: [
+            {
+              name: 'HomeTab',
+              state: {
+                index: 1,
+                routes: [
+                  { name: 'Home' },
+                  {
+                    name: 'Profile',
+                    params: { id: 'home:123' },
+                    path: '/profile/123',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  });
+
+  const previous: NavigationState = {
+    index: 0,
+    key: 'root',
+    routeNames: ['Tabs'],
+    stale: false,
+    type: 'test',
+    routes: [
+      {
+        key: 'tabs',
+        name: 'Tabs',
+        state: {
+          index: 1,
+          key: 'tabs-state',
+          routeNames: ['HomeTab', 'SearchTab'],
+          stale: false,
+          type: 'test',
+          routes: [
+            { key: 'home-tab', name: 'HomeTab' },
+            {
+              key: 'search-tab',
+              name: 'SearchTab',
+              state: {
+                index: 0,
+                key: 'search-state',
+                routeNames: ['Search'],
+                stale: false,
+                type: 'test',
+                routes: [{ key: 'search', name: 'Search' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>('/profile/123', config, previous)).toEqual({
+    routes: [
+      {
+        name: 'Tabs',
+        state: {
+          index: 1,
+          routes: [
+            { name: 'HomeTab' },
+            {
+              name: 'SearchTab',
+              state: {
+                index: 1,
+                routes: [
+                  { name: 'Search' },
+                  {
+                    name: 'Profile',
+                    params: { id: 'search:123' },
+                    path: '/profile/123',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test("uses the initial tab for shared paths when the current tab doesn't contain the screen", () => {
+  const config = {
+    screens: {
+      Tabs: {
+        initialRouteName: 'HomeTab',
+        screens: {
+          HomeTab: {
+            initialRouteName: 'Home',
+            screens: {
+              Home: '',
+              Profile: {
+                path: 'profile/:id',
+                shared: true,
+              },
+            },
+          },
+          OtherTab: {
+            screens: {
+              Other: 'other',
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const previous: NavigationState = {
+    index: 0,
+    key: 'root',
+    routeNames: ['Tabs'],
+    stale: false,
+    type: 'test',
+    routes: [
+      {
+        key: 'tabs',
+        name: 'Tabs',
+        state: {
+          index: 0,
+          key: 'tabs-state',
+          routeNames: ['OtherTab'],
+          stale: false,
+          type: 'test',
+          routes: [
+            {
+              key: 'other-tab',
+              name: 'OtherTab',
+              state: {
+                index: 0,
+                key: 'other-state',
+                routeNames: ['Other'],
+                stale: false,
+                type: 'test',
+                routes: [{ key: 'other', name: 'Other' }],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>('/profile/123', config, previous)).toEqual({
+    routes: [
+      {
+        name: 'Tabs',
+        state: {
+          routes: [
+            {
+              name: 'HomeTab',
+              state: {
+                index: 1,
+                routes: [
+                  { name: 'Home' },
+                  {
+                    name: 'Profile',
+                    params: { id: '123' },
+                    path: '/profile/123',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test('uses the first shared screen in the config when no tab is preferred', () => {
+  const config = {
+    screens: {
+      Tabs: {
+        screens: {
+          HomeTab: {
+            screens: {
+              Profile: {
+                path: 'profile/:id',
+                shared: true,
+              },
+            },
+          },
+          SearchTab: {
+            screens: {
+              Profile: {
+                path: 'profile/:id',
+                shared: true,
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>('/profile/123', config)).toEqual({
+    routes: [
+      {
+        name: 'Tabs',
+        state: {
+          routes: [
+            {
+              name: 'HomeTab',
+              state: {
+                routes: [
+                  {
+                    name: 'Profile',
+                    params: { id: '123' },
+                    path: '/profile/123',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test('resolves nested shared paths in the current tab', () => {
+  const config = {
+    screens: {
+      Tabs: {
+        initialRouteName: 'HomeTab',
+        screens: {
+          HomeTab: {
+            initialRouteName: 'Home',
+            screens: {
+              Home: '',
+              Post: {
+                path: 'post/:id',
+                shared: true,
+                screens: {
+                  Comments: {
+                    path: 'comments',
+                    shared: true,
+                  },
+                },
+              },
+            },
+          },
+          SearchTab: {
+            initialRouteName: 'Search',
+            screens: {
+              Search: 'search',
+              Post: {
+                path: 'post/:id',
+                shared: true,
+                screens: {
+                  Comments: {
+                    path: 'comments',
+                    shared: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const previous: NavigationState = {
+    index: 0,
+    key: 'root',
+    routeNames: ['Tabs'],
+    stale: false,
+    type: 'test',
+    routes: [
+      {
+        key: 'tabs',
+        name: 'Tabs',
+        state: {
+          index: 1,
+          key: 'tabs-state',
+          routeNames: ['HomeTab', 'SearchTab'],
+          stale: false,
+          type: 'test',
+          routes: [
+            { key: 'home-tab', name: 'HomeTab' },
+            {
+              key: 'search-tab',
+              name: 'SearchTab',
+              state: {
+                index: 0,
+                key: 'search-state',
+                routeNames: ['Post'],
+                stale: false,
+                type: 'test',
+                routes: [
+                  {
+                    key: 'post',
+                    name: 'Post',
+                    params: { id: '9' },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(
+    getStateFromPath<object>('/post/9/comments', config, previous)
+  ).toEqual({
+    routes: [
+      {
+        name: 'Tabs',
+        state: {
+          index: 1,
+          routes: [
+            { name: 'HomeTab' },
+            {
+              name: 'SearchTab',
+              state: {
+                index: 1,
+                routes: [
+                  { name: 'Search' },
+                  {
+                    name: 'Post',
+                    params: { id: '9' },
+                    state: {
+                      routes: [
+                        {
+                          name: 'Comments',
+                          path: '/post/9/comments',
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test('resolves shared alias paths in the current tab', () => {
+  const config = {
+    screens: {
+      Tabs: {
+        initialRouteName: 'HomeTab',
+        screens: {
+          HomeTab: {
+            screens: {
+              Profile: {
+                path: 'home-profile/:id',
+                alias: [{ path: 'u/:id', shared: true }],
+              },
+            },
+          },
+          SearchTab: {
+            screens: {
+              Profile: {
+                path: 'search-profile/:id',
+                alias: [{ path: 'u/:id', shared: true }],
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+
+  const previous: NavigationState = {
+    index: 0,
+    key: 'root',
+    routeNames: ['Tabs'],
+    stale: false,
+    type: 'test',
+    routes: [
+      {
+        key: 'tabs',
+        name: 'Tabs',
+        state: {
+          index: 0,
+          key: 'tabs-state',
+          routeNames: ['HomeTab', 'SearchTab'],
+          stale: false,
+          type: 'test',
+          routes: [{ key: 'search-tab', name: 'SearchTab' }],
+        },
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>('/u/123', config, previous)).toEqual({
+    routes: [
+      {
+        name: 'Tabs',
+        state: {
+          index: 1,
+          routes: [
+            { name: 'HomeTab' },
+            {
+              name: 'SearchTab',
+              state: {
+                routes: [
+                  {
+                    name: 'Profile',
+                    params: { id: '123' },
+                    path: '/u/123',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test("doesn't treat alias paths as shared unless the alias is marked as shared", () => {
+  expect(() =>
+    getStateFromPath<object>('/u/123', {
+      screens: {
+        Tabs: {
+          screens: {
+            HomeTab: {
+              screens: {
+                Profile: {
+                  path: 'home-profile/:id',
+                  shared: true,
+                  alias: [{ path: 'u/:id' }],
+                },
+              },
+            },
+            SearchTab: {
+              screens: {
+                Profile: {
+                  path: 'search-profile/:id',
+                  shared: true,
+                  alias: [{ path: 'u/:id' }],
+                },
+              },
+            },
+          },
+        },
+      },
+    })
+  ).toThrow(
+    `Found conflicting screens with the same pattern. The pattern 'u/:id' resolves to both 'Tabs > HomeTab > Profile' and 'Tabs > SearchTab > Profile'. Patterns must be unique and cannot resolve to more than one screen unless shared: true is specified.`
   );
 });
