@@ -10,14 +10,22 @@ name: Drawer - Master Detail
     text: 'Feed'
 - assertVisible:
     text: 'Feed'
+- waitForAnimationToEnd
 - tapOn:
     text: 'Go back'
+- waitForAnimationToEnd
+- assertVisible:
+    text: 'Pages'
 - tapOn:
     text: 'Albums'
 - assertVisible:
     text: 'Albums'
+- waitForAnimationToEnd
 - tapOn:
     text: 'Go back'
+- waitForAnimationToEnd
+- assertVisible:
+    text: 'Pages'
 - tapOn:
     text: 'Article'
 - assertVisible:
