@@ -10,38 +10,14 @@ name: Drawer - Master Detail
     text: 'Feed'
 - assertVisible:
     text: 'Feed'
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - tapOn:
     text: 'Go back'
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
-- assertVisible:
-    text: 'Pages'
 - tapOn:
     text: 'Albums'
 - assertVisible:
     text: 'Albums'
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - tapOn:
     text: 'Go back'
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
-- assertVisible:
-    text: 'Pages'
 - tapOn:
     text: 'Article'
 - assertVisible:
