@@ -183,6 +183,7 @@ jobs:
           mkdir -p agent-device-artifacts agent-device-state
           printf 'context platform=ios timeout=240000\nsnapshot -i\n' > agent-device-artifacts/ios-prewarm.ad
           echo "Preparing agent-device iOS runner..."
+          AGENT_DEVICE_DAEMON_TIMEOUT_MS=240000 \
           AGENT_DEVICE_STATE_DIR=agent-device-state \
             node ../node_modules/agent-device/bin/agent-device.mjs \
             replay agent-device-artifacts/ios-prewarm.ad \
@@ -196,7 +197,7 @@ jobs:
           echo "Starting simulator log stream..."
           xcrun simctl spawn booted log stream --style syslog > ~/agent-device-simulator.log 2>&1 &
           echo "Running native e2e tests..."
-          AGENT_DEVICE_E2E_TIMEOUT_MS=240000 pnpm e2e:native --platform ios
+          AGENT_DEVICE_DAEMON_TIMEOUT_MS=240000 AGENT_DEVICE_E2E_TIMEOUT_MS=240000 pnpm e2e:native --platform ios
         working-directory: example
 
       - name: Store agent-device timing output
