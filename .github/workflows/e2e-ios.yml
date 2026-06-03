@@ -58,6 +58,7 @@ jobs:
           echo "key=$XCODE_KEY" >> "$GITHUB_OUTPUT"
 
       - name: Cache agent-device iOS runner
+        id: agent-device-ios-runner-cache
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: ~/.agent-device/ios-runner/derived
@@ -183,6 +184,7 @@ jobs:
           xcrun simctl spawn booted log stream --style syslog > ~/agent-device-simulator.log 2>&1 &
 
       - name: Prepare agent-device iOS runner
+        if: steps.agent-device-ios-runner-cache.outputs.cache-hit != 'true'
         timeout-minutes: 20
         run: |
           mkdir -p agent-device-artifacts agent-device-state
