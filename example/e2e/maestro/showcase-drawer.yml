@@ -8,33 +8,13 @@ name: Showcase - Drawer
       TEXT: 'Total Balance'
 - tapOn:
     id: 'showcase-drawer-toggle'
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - tapOn:
     id: 'showcase-drawer-budgets'
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - assertVisible:
     text: 'Monthly Budget'
 - tapOn:
     id: 'showcase-drawer-toggle'
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - tapOn:
     id: 'showcase-drawer-accounts'
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - assertVisible:
     text: 'Main Checking'

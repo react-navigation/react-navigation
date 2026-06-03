@@ -1,46 +1,11 @@
 appId: ${APP_ID}
 ---
 - stopApp
-- runFlow:
-    when:
-      platform: Android
+- retry:
+    maxRetries: 3
     commands:
-      - launchApp:
-          clearState: true
-      - waitForAnimationToEnd
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - retry:
-          maxRetries: 3
-          commands:
-            - openLink:
-                link: ${APP_SCHEME}${LINK}
-            - extendedWaitUntil:
-                visible: ${TEXT}
-                timeout: 10000
-- runFlow:
-    when:
-      platform: iOS
-    commands:
-      - retry:
-          maxRetries: 3
-          commands:
-            - openLink:
-                link: ${APP_SCHEME}${LINK}
-            - extendedWaitUntil:
-                visible: ${TEXT}
-                timeout: 60000
-- runFlow:
-    when:
-      platform: Web
-    commands:
-      - retry:
-          maxRetries: 3
-          commands:
-            - openLink:
-                link: ${APP_SCHEME}${LINK}
-            - extendedWaitUntil:
-                visible: ${TEXT}
-                timeout: 60000
+      - openLink:
+          link: ${APP_SCHEME}${LINK}
+      - extendedWaitUntil:
+          visible: ${TEXT}
+          timeout: 60000

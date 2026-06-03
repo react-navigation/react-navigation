@@ -9,70 +9,35 @@ name: Showcase - Material Top Tabs
 - swipe:
     direction: LEFT
     duration: 300
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - assertVisible:
     text: 'Morning Favorites'
 - swipe:
     direction: LEFT
     duration: 300
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - assertVisible:
     text: 'Light & Fresh'
 - swipe:
     direction: LEFT
     duration: 300
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - assertVisible:
     text: 'Crowd Pleasers'
 - swipe:
     direction: LEFT
     duration: 300
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - assertVisible:
     text: 'Lemon Tart with Meringue'
 - swipe:
     direction: LEFT
     duration: 300
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - assertVisible:
     text: 'Lavender Honey Latte'
 - swipe:
     direction: LEFT
     duration: 300
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - assertVisible:
     text: 'Pan-Seared Salmon with Dill Sauce'
 - swipe:
     direction: LEFT
     duration: 300
-- runFlow:
-    when:
-      platform: Android
-    commands:
-      - waitForAnimationToEnd
 - assertVisible:
     text: "What's in Season"
