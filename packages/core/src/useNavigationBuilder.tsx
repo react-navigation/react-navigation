@@ -781,6 +781,11 @@ export function useNavigationBuilder<
         setCurrentState(undefined);
         stateCleanupRef.current = true;
       }
+
+      // Reset so that StrictMode's second mount re-propagates state correctly.
+      // Without this, the guard above sees the same reference and skips setState,
+      // causing the initial state to be lost after cleanup wipes the container state.
+      lastNotifiedStateRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
