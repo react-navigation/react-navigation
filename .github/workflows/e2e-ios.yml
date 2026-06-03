@@ -186,15 +186,14 @@ jobs:
         timeout-minutes: 15
         run: |
           mkdir -p agent-device-artifacts agent-device-state
-          printf 'context platform=ios timeout=240000\nopen org.reactnavigation.playground rne://simple-stack\nsnapshot -i\n' > agent-device-artifacts/ios-prewarm.ad
           echo "Preparing agent-device iOS runner..."
-          AGENT_DEVICE_STATE_DIR=agent-device-state \
-            node ../node_modules/agent-device/bin/agent-device.mjs \
-            test \
+          node ../node_modules/agent-device/bin/agent-device.mjs \
+            prepare ios-runner \
             --timeout 240000 \
             --platform ios \
+            --state-dir agent-device-state \
             --verbose \
-            agent-device-artifacts/ios-prewarm.ad > agent-device-artifacts/ios-prewarm-snapshot.txt
+            > agent-device-artifacts/ios-prepare.txt
         working-directory: example
 
       - name: Run agent-device tests
