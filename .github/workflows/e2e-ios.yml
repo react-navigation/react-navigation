@@ -183,13 +183,13 @@ jobs:
           xcrun simctl spawn booted log stream --style syslog > ~/agent-device-simulator.log 2>&1 &
 
       - name: Prepare agent-device iOS runner
-        timeout-minutes: 15
+        timeout-minutes: 20
         run: |
           mkdir -p agent-device-artifacts agent-device-state
           echo "Preparing agent-device iOS runner..."
           node ../node_modules/agent-device/bin/agent-device.mjs \
             prepare ios-runner \
-            --timeout 240000 \
+            --timeout 600000 \
             --platform ios \
             --state-dir agent-device-state \
             --verbose \
