@@ -13,6 +13,8 @@ import type {
   RootParamList,
 } from './types';
 
+type RootNavigation = GenericNavigation<RootParamList>;
+
 /**
  * Hook to access the navigation prop of the parent screen anywhere.
  *
@@ -21,7 +23,7 @@ import type {
  *
  * @returns Navigation prop of the parent screen.
  */
-export function useNavigation(): GenericNavigation<RootParamList>;
+export function useNavigation(): RootNavigation;
 export function useNavigation<
   const Navigator = RootNavigator,
 >(): NavigationListForNavigator<Navigator>[keyof NavigationListForNavigator<Navigator>];
