@@ -984,9 +984,12 @@ export type GenericNavigation<ParamList extends {}> = Omit<
 export type RouteForName<
   ParamList extends {},
   RouteName extends string,
-> = string extends RouteName
-  ? ParamListRoute<ParamList>
-  : Extract<ParamListRoute<ParamList>, { name: RouteName }>;
+> = RouteForNameInternal<RouteName, ParamListRoute<ParamList>>;
+
+type RouteForNameInternal<
+  RouteName extends string,
+  Routes,
+> = string extends RouteName ? Routes : Extract<Routes, { name: RouteName }>;
 
 type ParamListRoute<ParamList extends {}> = {
   [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
