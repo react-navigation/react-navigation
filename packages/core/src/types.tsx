@@ -1077,30 +1077,29 @@ type NavigationListForStaticConfig<ParentList, Navigator> = Navigator extends {
       NavigationListForGroups<ParentList, Config['groups']>
   : {};
 
-type NavigationListForScreens<ParentList, Screens> =
-  Screens extends Record<string, any>
-    ? UnionToIntersection<
-        {
-          // Only check screens with static config to avoid overly-complex types
-          // Otherwise TypeScript fails to load the types due to complexity
-          [K in keyof Screens]: Screens[K] extends { config: any }
+type NavigationListForScreens<ParentList, Screens> = Screens extends {}
+  ? UnionToIntersection<
+      {
+        // Only check screens with static config to avoid overly-complex types
+        // Otherwise TypeScript fails to load the types due to complexity
+        [K in keyof Screens]: Screens[K] extends { config: any }
+          ? ParentList extends Record<K, any>
+            ? NavigationListWithComposite<
+                ParentList[K],
+                NavigationListForNested<Screens[K]>
+              >
+            : never
+          : Screens[K] extends { screen: { config: any } }
             ? ParentList extends Record<K, any>
               ? NavigationListWithComposite<
                   ParentList[K],
-                  NavigationListForNested<Screens[K]>
+                  NavigationListForNested<Screens[K]['screen']>
                 >
               : never
-            : Screens[K] extends { screen: { config: any } }
-              ? ParentList extends Record<K, any>
-                ? NavigationListWithComposite<
-                    ParentList[K],
-                    NavigationListForNested<Screens[K]['screen']>
-                  >
-                : never
-              : never;
-        }[keyof Screens]
-      >
-    : {};
+            : never;
+      }[keyof Screens]
+    >
+  : {};
 
 type NavigationListForGroups<ParentList, Groups> = Groups extends {}
   ? UnionToIntersection<
