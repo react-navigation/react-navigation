@@ -1056,24 +1056,38 @@ export type NavigationListForNested<
 
 type NavigationListForNestedInternal<
   Navigator,
-  NavigationList = NavigationListForNavigator<Navigator>,
+  Parent = undefined,
+  NavigatorList extends Record<string, any> =
+    NavigationListForNavigator<Navigator>,
+  // This navigator's own routes, each composed with the accumulated parent.
+  // It's threaded into the recursion as the parent for nested navigators so
+  // each route is composed with its ancestors exactly once, instead of
+  // re-wrapping the whole descendant list at every level (which is quadratic
+  // in the nesting depth).
+  ComposedList = ComposeNavigationList<NavigatorList, Parent>,
 > = Navigator extends {
   readonly config: {
     readonly screens?: infer Screens;
     readonly groups?: infer Groups;
   };
 }
-  ? NavigationList &
-      NavigationListForScreens<NavigationList, Screens> &
-      NavigationListForGroups<NavigationList, Groups>
-  : NavigationList;
+  ? ComposedList &
+      NavigationListForScreens<ComposedList, Screens> &
+      NavigationListForGroups<ComposedList, Groups>
+  : ComposedList;
 
-type NavigationListWithComposite<
-  in out Parent extends NavigationProp<any, any, any, any, any>,
-  in out NavigatorList extends Record<string, any>,
-> = {
-  [K in keyof NavigatorList]: CompositeNavigationProp<NavigatorList[K], Parent>;
-};
+// Compose every entry in a navigator's list with the accumulated parent.
+// When there's no parent (root navigator), the list is returned as-is so the
+// common shallow case doesn't pay for a redundant mapped type.
+type ComposeNavigationList<NavigatorList extends Record<string, any>, Parent> =
+  Parent extends NavigationProp<any, any, any, any, any>
+    ? {
+        [K in keyof NavigatorList]: CompositeNavigationProp<
+          NavigatorList[K],
+          Parent
+        >;
+      }
+    : NavigatorList;
 
 type NavigationListForScreens<ParentList, Screens> = Screens extends {}
   ? UnionToIntersection<
@@ -1082,16 +1096,13 @@ type NavigationListForScreens<ParentList, Screens> = Screens extends {}
         // Otherwise TypeScript fails to load the types due to complexity
         [K in keyof Screens]: Screens[K] extends { config: any }
           ? ParentList extends Record<K, any>
-            ? NavigationListWithComposite<
-                ParentList[K],
-                NavigationListForNestedInternal<Screens[K]>
-              >
+            ? NavigationListForNestedInternal<Screens[K], ParentList[K]>
             : never
           : Screens[K] extends { screen: { config: any } }
             ? ParentList extends Record<K, any>
-              ? NavigationListWithComposite<
-                  ParentList[K],
-                  NavigationListForNestedInternal<Screens[K]['screen']>
+              ? NavigationListForNestedInternal<
+                  Screens[K]['screen'],
+                  ParentList[K]
                 >
               : never
             : never;
