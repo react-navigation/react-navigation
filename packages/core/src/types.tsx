@@ -1041,17 +1041,17 @@ type BasicNavigationList<
 >;
 
 export type NavigationListForNavigator<Navigator> =
-  Navigator extends PrivateValueStore<[any, infer NavigationList, any]>
-    ? NavigationList
-    : {};
+  Navigator extends PrivateValueStore<infer Value> ? Value[1] : {};
 
 export type NavigationListForNested<
   Navigator,
   NavigationList = NavigationListForNestedInternal<Navigator>,
 > =
-  Navigator extends PrivateValueStore<[infer ParamList extends {}, any, any]>
-    ? NavigationList &
-        BasicNavigationList<ParamList, keyof NavigationList, undefined>
+  Navigator extends PrivateValueStore<[infer ParamList, any, any]>
+    ? ParamList extends {}
+      ? NavigationList &
+          BasicNavigationList<ParamList, keyof NavigationList, undefined>
+      : NavigationList
     : NavigationList;
 
 type NavigationListForNestedInternal<
