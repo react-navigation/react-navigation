@@ -1047,22 +1047,20 @@ export type NavigationListForNavigator<Navigator> =
 
 export type NavigationListForNested<Navigator> = FlatType<
   NavigationListForNestedInternal<Navigator> &
-    (Navigator extends TypedNavigator<infer Bag, any>
-      ? BasicNavigationList<
-          Bag['ParamList'],
-          keyof NavigationListForNestedInternal<Navigator>,
-          undefined
-        >
-      : Navigator extends PrivateValueStore<[infer ParamList, any, any]>
-        ? ParamList extends {}
-          ? BasicNavigationList<
-              ParamList,
-              keyof NavigationListForNestedInternal<Navigator>,
-              undefined
-            >
-          : {}
-        : {})
+    BasicNavigationListForNavigator<
+      Navigator,
+      keyof NavigationListForNestedInternal<Navigator>
+    >
 >;
+
+type BasicNavigationListForNavigator<Navigator, ExcludedRouteNames> =
+  Navigator extends TypedNavigator<infer Bag, any>
+    ? BasicNavigationList<Bag['ParamList'], ExcludedRouteNames, undefined>
+    : Navigator extends PrivateValueStore<[infer ParamList, any, any]>
+      ? ParamList extends {}
+        ? BasicNavigationList<ParamList, ExcludedRouteNames, undefined>
+        : {}
+      : {};
 
 type NavigationListForNestedInternal<Navigator> =
   NavigationListForNavigator<Navigator> extends infer NavigationList
