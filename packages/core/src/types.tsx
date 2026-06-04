@@ -1075,13 +1075,13 @@ type NavigationListWithComposite<
 };
 
 type NavigationListForStaticConfig<ParentList, Navigator> = Navigator extends {
-  readonly config: {
+  readonly config: infer Config extends {
     screens?: any;
     groups?: any;
   };
 }
-  ? NavigationListForScreens<ParentList, Navigator['config']['screens']> &
-      NavigationListForGroups<ParentList, Navigator['config']['groups']>
+  ? NavigationListForScreens<ParentList, Config['screens']> &
+      NavigationListForGroups<ParentList, Config['groups']>
   : {};
 
 type NavigationListForScreens<ParentList, Screens> =
