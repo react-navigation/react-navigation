@@ -1084,14 +1084,14 @@ type NavigationListForScreens<ParentList, Screens> = Screens extends {}
           ? ParentList extends Record<K, any>
             ? NavigationListWithComposite<
                 ParentList[K],
-                NavigationListForNested<Screens[K]>
+                NavigationListForNestedInternal<Screens[K]>
               >
             : never
           : Screens[K] extends { screen: { config: any } }
             ? ParentList extends Record<K, any>
               ? NavigationListWithComposite<
                   ParentList[K],
-                  NavigationListForNested<Screens[K]['screen']>
+                  NavigationListForNestedInternal<Screens[K]['screen']>
                 >
               : never
             : never;
