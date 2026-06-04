@@ -56,7 +56,7 @@ export interface Theme {}
 
 export type RootParamList =
   RootNavigator extends PrivateValueStore<
-    [infer ParamList extends {}, any, any]
+    [infer ParamList extends {}, any, any, any]
   >
     ? ParamList
     : {};
@@ -273,7 +273,7 @@ export type EventEmitter<in out EventMap extends EventMapBase> = {
   >;
 };
 
-export class PrivateValueStore<T extends [any, any, any]> {
+export class PrivateValueStore<T extends [any, any, any, any]> {
   /**
    * UGLY HACK! DO NOT USE THE TYPE!!!
    *
@@ -408,7 +408,7 @@ type NavigationHelpersCommon<
    * So don't use it in `render`.
    */
   getState(): State;
-} & PrivateValueStore<[ParamList, unknown, unknown]>;
+} & PrivateValueStore<[ParamList, unknown, unknown, unknown]>;
 
 type ParamType<
   ParamList extends {},
@@ -525,7 +525,7 @@ export type NavigationProp<
 } & NavigationHelpersRoute<ParamList, RouteName> &
   ActionHelpers &
   EventConsumer<EventMap & EventMapCore<State>> &
-  PrivateValueStore<[ParamList, RouteName, EventMap]>;
+  PrivateValueStore<[ParamList, RouteName, EventMap, ActionHelpers]>;
 
 export type RouteProp<
   in out ParamList extends ParamListBase,
@@ -559,29 +559,42 @@ type CompositeNavigationPropInternal<
   ParamList extends {},
   RouteName extends keyof ParamList,
   EventMap extends EventMapBase,
-> = Omit<A & B, keyof NavigationProp<any, any, any, any, any>> &
-  Omit<
-    NavigationProp<
-      ParamList,
-      RouteName,
-      StateOfNavigationProp<A>,
-      ScreenOptionsOfNavigationProp<A>,
-      EventMap
-    >,
-    'getParent'
-  > & {
-    getParent: A['getParent'] & B['getParent'];
-  } & // Mapped types don't preserve protected members
-  // So `Omit` drops `PrivateValueStore`'s `protected` brand
-  // We add it back so this can be used for type inference
-  PrivateValueStore<[ParamList, RouteName, EventMap]>;
+> = // Action helpers are read from the private brand (4th slot) instead of
+  // `Omit<A & B, keyof NavigationProp>`, which had to walk the whole (possibly
+  // deeply composed) member set of `A & B` to drop the standard members.
+  ActionHelpersOfNavigationProp<A> &
+    ActionHelpersOfNavigationProp<B> &
+    Omit<
+      NavigationProp<
+        ParamList,
+        RouteName,
+        StateOfNavigationProp<A>,
+        ScreenOptionsOfNavigationProp<A>,
+        EventMap
+      >,
+      'getParent'
+    > & {
+      getParent: A['getParent'] & B['getParent'];
+    } & // Mapped types don't preserve protected members
+    // So `Omit` drops `PrivateValueStore`'s `protected` brand
+    // We add it back so this can be used for type inference
+    PrivateValueStore<
+      [
+        ParamList,
+        RouteName,
+        EventMap,
+        ActionHelpersOfNavigationProp<A> & ActionHelpersOfNavigationProp<B>,
+      ]
+    >;
 
 type PrivateValueOfNavigationProp<T> =
-  T extends PrivateValueStore<infer Value> ? Value : [never, unknown, {}];
+  T extends PrivateValueStore<infer Value> ? Value : [never, unknown, {}, {}];
 
 type ParamListOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[0];
 
 type RouteNameOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[1];
+
+type ActionHelpersOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[3];
 
 type StateOfNavigationProp<T> = T extends {
   getState: () => infer State extends NavigationState;
@@ -1047,7 +1060,7 @@ export type NavigationListForNested<
   Navigator,
   NavigationList = NavigationListForNestedInternal<Navigator>,
 > =
-  Navigator extends PrivateValueStore<[infer ParamList, any, any]>
+  Navigator extends PrivateValueStore<[infer ParamList, any, any, any]>
     ? ParamList extends {}
       ? NavigationList &
           BasicNavigationList<ParamList, keyof NavigationList, undefined>
@@ -1215,7 +1228,9 @@ type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
 type TypedNavigatorStaticDecorated<Bag extends NavigatorTypeBagBase, Config> = {
   getComponent: () => React.ComponentType<{}>;
   config: Config;
-} & PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
+} & PrivateValueStore<
+  [Bag['ParamList'], Bag['NavigationList'], unknown, unknown]
+>;
 
 type TypedNavigatorStatic<
   in out Bag extends NavigatorTypeBagBase,
@@ -1243,7 +1258,9 @@ export type TypedNavigator<
       Bag['Navigator']
     >
   : TypedNavigatorStatic<Bag, Config>) &
-  PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
+  PrivateValueStore<
+    [Bag['ParamList'], Bag['NavigationList'], unknown, unknown]
+  >;
 
 type TypedNavigatorInternal<
   in out ParamList extends ParamListBase,
