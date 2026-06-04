@@ -1018,11 +1018,13 @@ type BasicNavigationList<
       ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<
           infer T
         >
-        ? BasicNavigationList<
-            T,
-            ExcludedRouteNames,
-            NavigationProp<ParamList, RouteName>
-          >
+        ? keyof T extends ExcludedRouteNames
+          ? {}
+          : BasicNavigationList<
+              T,
+              ExcludedRouteNames,
+              NavigationProp<ParamList, RouteName>
+            >
         : {}
       : {}) &
       (RouteName extends ExcludedRouteNames
@@ -1063,11 +1065,9 @@ export type NavigationListForNested<Navigator> = FlatType<
 >;
 
 type NavigationListForNestedInternal<Navigator> =
-  NavigationListForNavigator<Navigator> &
-    NavigationListForStaticConfig<
-      NavigationListForNavigator<Navigator>,
-      Navigator
-    >;
+  NavigationListForNavigator<Navigator> extends infer NavigationList
+    ? NavigationList & NavigationListForStaticConfig<NavigationList, Navigator>
+    : never;
 
 type NavigationListWithComposite<
   in out Parent extends NavigationProp<any, any, any, any, any>,
