@@ -1083,19 +1083,21 @@ type NavigationListForScreens<ParentList, Screens> =
         {
           // Only check screens with static config to avoid overly-complex types
           // Otherwise TypeScript fails to load the types due to complexity
-          [K in keyof Screens]: ParentList extends Record<K, any>
-            ? Screens[K] extends { config: any }
+          [K in keyof Screens]: Screens[K] extends { config: any }
+            ? ParentList extends Record<K, any>
               ? NavigationListWithComposite<
                   ParentList[K],
                   NavigationListForNested<Screens[K]>
                 >
-              : Screens[K] extends { screen: { config: any } }
+              : never
+            : Screens[K] extends { screen: { config: any } }
+              ? ParentList extends Record<K, any>
                 ? NavigationListWithComposite<
                     ParentList[K],
                     NavigationListForNested<Screens[K]['screen']>
                   >
                 : never
-            : never;
+              : never;
         }[keyof Screens]
       >
     : {};
