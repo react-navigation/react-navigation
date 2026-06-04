@@ -1045,12 +1045,12 @@ export type NavigationListForNavigator<Navigator> =
     ? NavigationList
     : {};
 
-export type NavigationListForNested<Navigator> = FlatType<
-  NavigationListForNestedInternal<Navigator> &
-    BasicNavigationListForNavigator<
-      Navigator,
-      keyof NavigationListForNestedInternal<Navigator>
-    >
+export type NavigationListForNested<
+  Navigator,
+  NavigationList = NavigationListForNestedInternal<Navigator>,
+> = FlatType<
+  NavigationList &
+    BasicNavigationListForNavigator<Navigator, keyof NavigationList>
 >;
 
 type BasicNavigationListForNavigator<Navigator, ExcludedRouteNames> =
@@ -1058,10 +1058,10 @@ type BasicNavigationListForNavigator<Navigator, ExcludedRouteNames> =
     ? BasicNavigationList<ParamList, ExcludedRouteNames, undefined>
     : {};
 
-type NavigationListForNestedInternal<Navigator> =
-  NavigationListForNavigator<Navigator> extends infer NavigationList
-    ? NavigationList & NavigationListForStaticConfig<NavigationList, Navigator>
-    : never;
+type NavigationListForNestedInternal<
+  Navigator,
+  NavigationList = NavigationListForNavigator<Navigator>,
+> = NavigationList & NavigationListForStaticConfig<NavigationList, Navigator>;
 
 type NavigationListWithComposite<
   in out Parent extends NavigationProp<any, any, any, any, any>,
