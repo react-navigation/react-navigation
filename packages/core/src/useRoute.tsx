@@ -25,7 +25,7 @@ export function useRoute<
   const RouteName extends string = string,
 >(
   name: RouteName & AllRouteNames<ParamList>
-): RouteForName<ParamList, RouteName & AllRouteNames<ParamList>>;
+): RouteForName<ParamList, RouteName>;
 export function useRoute<
   const ParamList extends {} = RootParamList,
 >(): {} extends ParamList
