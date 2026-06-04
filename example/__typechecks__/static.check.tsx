@@ -19,6 +19,7 @@ import {
   type StaticScreenProps,
   type Theme,
   useNavigation,
+  useNavigationState,
 } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
@@ -405,6 +406,21 @@ expectTypeOf<
 expectTypeOf<keyof NavigationListForNested<typeof RootStack>>().toEqualTypeOf<
   RooStackRouteName | 'Groups' | 'Chat'
 >();
+
+function StaticNavigatorHookTypeChecks() {
+  // @ts-expect-error
+  useNavigation<typeof RootStack>('Invalid');
+
+  // @ts-expect-error
+  useNavigationState<unknown, typeof RootStack, 'Invalid'>(
+    'Invalid',
+    (state) => state
+  );
+
+  return null;
+}
+
+<StaticNavigatorHookTypeChecks />;
 
 /**
  * Infer screen names from config
