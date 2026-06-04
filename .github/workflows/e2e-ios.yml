@@ -193,6 +193,7 @@ jobs:
             --platform ios \
             --state-dir agent-device-state \
             --verbose \
+            --no-record \
             > agent-device-artifacts/ios-prepare.txt
         working-directory: example
 
