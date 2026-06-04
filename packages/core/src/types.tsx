@@ -576,13 +576,12 @@ type CompositeNavigationPropInternal<
   // We add it back so this can be used for type inference
   PrivateValueStore<[ParamList, RouteName, EventMap]>;
 
-type ParamListOfNavigationProp<T> =
-  T extends PrivateValueStore<[infer ParamList, any, any]> ? ParamList : never;
+type PrivateValueOfNavigationProp<T> =
+  T extends PrivateValueStore<infer Value> ? Value : [never, unknown, {}];
 
-type RouteNameOfNavigationProp<T> =
-  T extends PrivateValueStore<[any, infer RouteName, any]>
-    ? RouteName
-    : unknown;
+type ParamListOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[0];
+
+type RouteNameOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[1];
 
 type StateOfNavigationProp<T> = T extends {
   getState: () => infer State extends NavigationState;
@@ -596,8 +595,7 @@ type ScreenOptionsOfNavigationProp<T> = T extends {
   ? ScreenOptions
   : {};
 
-type EventMapOfNavigationProp<T> =
-  T extends PrivateValueStore<[any, any, infer EventMap]> ? EventMap : {};
+type EventMapOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[2];
 
 export type CompositeScreenProps<
   in out A extends {
