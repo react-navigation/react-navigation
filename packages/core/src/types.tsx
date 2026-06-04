@@ -1101,8 +1101,8 @@ type NavigationListForScreens<ParentList, Screens> =
                     ParentList[K],
                     NavigationListForNested<Screens[K]['screen']>
                   >
-                : {}
-            : {};
+                : never
+            : never;
         }[keyof Screens]
       >
     : {};
