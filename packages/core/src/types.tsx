@@ -1000,11 +1000,10 @@ type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
 
 type BasicNavigationComposite<
   Navigation extends NavigationProp<any, any, any, any, any>,
-  Parent,
-> =
-  Parent extends NavigationProp<any, any, any, any, any>
-    ? CompositeNavigationProp<Navigation, Parent>
-    : Navigation;
+  Parent extends NavigationProp<any, any, any, any, any> | undefined,
+> = Parent extends undefined
+  ? Navigation
+  : CompositeNavigationProp<Navigation, NonNullable<Parent>>;
 
 type BasicNavigationList<
   ParamList extends {},
