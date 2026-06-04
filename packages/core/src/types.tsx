@@ -1054,12 +1054,12 @@ export type NavigationListForNested<Navigator> = FlatType<
 >;
 
 type BasicNavigationListForNavigator<Navigator, ExcludedRouteNames> =
-  Navigator extends TypedNavigator<infer Bag, any>
-    ? BasicNavigationList<Bag['ParamList'], ExcludedRouteNames, undefined>
-    : Navigator extends PrivateValueStore<[infer ParamList, any, any]>
-      ? ParamList extends {}
-        ? BasicNavigationList<ParamList, ExcludedRouteNames, undefined>
-        : {}
+  Navigator extends PrivateValueStore<[infer ParamList, any, any]>
+    ? ParamList extends {}
+      ? BasicNavigationList<ParamList, ExcludedRouteNames, undefined>
+      : {}
+    : Navigator extends TypedNavigator<infer Bag, any>
+      ? BasicNavigationList<Bag['ParamList'], ExcludedRouteNames, undefined>
       : {};
 
 type NavigationListForNestedInternal<Navigator> =
