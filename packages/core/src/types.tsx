@@ -1039,10 +1039,10 @@ type BasicNavigationList<
 >;
 
 export type NavigationListForNavigator<Navigator> =
-  Navigator extends TypedNavigator<infer Bag, any>
-    ? Bag['NavigationList']
-    : Navigator extends PrivateValueStore<[any, infer NavigationList, any]>
-      ? NavigationList
+  Navigator extends PrivateValueStore<[any, infer NavigationList, any]>
+    ? NavigationList
+    : Navigator extends TypedNavigator<infer Bag, any>
+      ? Bag['NavigationList']
       : {};
 
 export type NavigationListForNested<Navigator> = FlatType<
