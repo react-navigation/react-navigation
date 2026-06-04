@@ -490,6 +490,150 @@ navigation.navigate('Home', { screen: 'Groups', params: { id: '123' } });
 navigation.navigate('Home', { screen: 'Chat' });
 
 /**
+ * Deeply nested static config (stack > tabs > stack > stack).
+ * Models a typical media app to exercise composite navigation props across
+ * several levels of nesting.
+ */
+{
+  const PlayerStack = createStackNavigator({
+    screens: {
+      NowPlaying: () => null,
+      Queue: () => null,
+      Lyrics: (_: StaticScreenProps<{ trackId: string }>) => null,
+    },
+  });
+
+  const HomeStack = createStackNavigator({
+    screens: {
+      Feed: () => null,
+      Album: (_: StaticScreenProps<{ albumId: string }>) => null,
+      Player: PlayerStack,
+    },
+  });
+
+  const LibraryStack = createStackNavigator({
+    screens: {
+      Library: () => null,
+      Playlist: (_: StaticScreenProps<{ playlistId: string }>) => null,
+    },
+  });
+
+  const AppTabs = createBottomTabNavigator({
+    screens: {
+      HomeTab: HomeStack,
+      LibraryTab: LibraryStack,
+      Account: () => null,
+    },
+  });
+
+  const AppStack = createStackNavigator({
+    screens: {
+      Main: AppTabs,
+      Login: () => null,
+      Settings: (_: StaticScreenProps<{ section: 'general' | 'privacy' }>) =>
+        null,
+    },
+  });
+
+  createStaticNavigation(AppStack);
+
+  expectTypeOf<keyof NavigationListForNested<typeof AppStack>>().toEqualTypeOf<
+    | 'Main'
+    | 'Login'
+    | 'Settings'
+    | 'HomeTab'
+    | 'LibraryTab'
+    | 'Account'
+    | 'Feed'
+    | 'Album'
+    | 'Player'
+    | 'Library'
+    | 'Playlist'
+    | 'NowPlaying'
+    | 'Queue'
+    | 'Lyrics'
+  >();
+
+  /**
+   * A route nested four levels deep resolves to the full composite chain
+   */
+  expectTypeOf<
+    NavigationListForNested<typeof AppStack>['Lyrics']
+  >().toEqualTypeOf<
+    CompositeNavigationProp<
+      StackNavigationProp<StaticParamList<typeof PlayerStack>, 'Lyrics'>,
+      CompositeNavigationProp<
+        StackNavigationProp<StaticParamList<typeof HomeStack>, 'Player'>,
+        CompositeNavigationProp<
+          BottomTabNavigationProp<StaticParamList<typeof AppTabs>, 'HomeTab'>,
+          StackNavigationProp<StaticParamList<typeof AppStack>, 'Main'>
+        >
+      >
+    >
+  >();
+
+  /**
+   * A route nested three levels deep also resolves to its composite chain
+   */
+  expectTypeOf<
+    NavigationListForNested<typeof AppStack>['Playlist']
+  >().toEqualTypeOf<
+    CompositeNavigationProp<
+      StackNavigationProp<StaticParamList<typeof LibraryStack>, 'Playlist'>,
+      CompositeNavigationProp<
+        BottomTabNavigationProp<StaticParamList<typeof AppTabs>, 'LibraryTab'>,
+        StackNavigationProp<StaticParamList<typeof AppStack>, 'Main'>
+      >
+    >
+  >();
+
+  // Navigate to nested screens through the full hierarchy
+  function NestedNavigateChecks(
+    navigation: NavigationProp<StaticParamList<typeof AppStack>>
+  ) {
+    navigation.navigate('Login');
+    navigation.navigate('Settings', { section: 'general' });
+    navigation.navigate('Main', { screen: 'Account' });
+    navigation.navigate('Main', {
+      screen: 'HomeTab',
+      params: { screen: 'Album', params: { albumId: 'album-1' } },
+    });
+    navigation.navigate('Main', {
+      screen: 'HomeTab',
+      params: {
+        screen: 'Player',
+        params: { screen: 'Lyrics', params: { trackId: 'track-1' } },
+      },
+    });
+    navigation.navigate('Main', {
+      screen: 'HomeTab',
+      params: {
+        screen: 'Player',
+        // @ts-expect-error - trackId is required for the Lyrics screen
+        params: { screen: 'Lyrics' },
+      },
+    });
+  }
+
+  void NestedNavigateChecks;
+
+  function MediaAppScreen() {
+    // Exercises NavigationListForNested for a deeply nested route
+    const player = useNavigation<typeof AppStack>('NowPlaying');
+    void player;
+
+    useNavigationState<number, typeof AppStack, 'Lyrics'>(
+      'Lyrics',
+      (state) => state.index
+    );
+
+    return null;
+  }
+
+  <MediaAppScreen />;
+}
+
+/**
  * Infer navigator config options
  */
 createBottomTabNavigator({
