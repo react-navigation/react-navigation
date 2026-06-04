@@ -1048,18 +1048,25 @@ export type NavigationListForNavigator<Navigator> =
 export type NavigationListForNested<
   Navigator,
   NavigationList = NavigationListForNestedInternal<Navigator>,
-> = NavigationList &
-  BasicNavigationListForNavigator<Navigator, keyof NavigationList>;
-
-type BasicNavigationListForNavigator<Navigator, ExcludedRouteNames> =
+> =
   Navigator extends PrivateValueStore<[infer ParamList extends {}, any, any]>
-    ? BasicNavigationList<ParamList, ExcludedRouteNames, undefined>
-    : {};
+    ? NavigationList &
+        BasicNavigationList<ParamList, keyof NavigationList, undefined>
+    : NavigationList;
 
 type NavigationListForNestedInternal<
   Navigator,
   NavigationList = NavigationListForNavigator<Navigator>,
-> = NavigationList & NavigationListForStaticConfig<NavigationList, Navigator>;
+> = Navigator extends {
+  readonly config: {
+    readonly screens?: infer Screens;
+    readonly groups?: infer Groups;
+  };
+}
+  ? NavigationList &
+      NavigationListForScreens<NavigationList, Screens> &
+      NavigationListForGroups<NavigationList, Groups>
+  : NavigationList;
 
 type NavigationListWithComposite<
   in out Parent extends NavigationProp<any, any, any, any, any>,
@@ -1067,16 +1074,6 @@ type NavigationListWithComposite<
 > = {
   [K in keyof NavigatorList]: CompositeNavigationProp<NavigatorList[K], Parent>;
 };
-
-type NavigationListForStaticConfig<ParentList, Navigator> = Navigator extends {
-  readonly config: {
-    readonly screens?: infer Screens;
-    readonly groups?: infer Groups;
-  };
-}
-  ? NavigationListForScreens<ParentList, Screens> &
-      NavigationListForGroups<ParentList, Groups>
-  : {};
 
 type NavigationListForScreens<ParentList, Screens> = Screens extends {}
   ? UnionToIntersection<
