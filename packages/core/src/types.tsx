@@ -1048,10 +1048,8 @@ export type NavigationListForNavigator<Navigator> =
 export type NavigationListForNested<
   Navigator,
   NavigationList = NavigationListForNestedInternal<Navigator>,
-> = FlatType<
-  NavigationList &
-    BasicNavigationListForNavigator<Navigator, keyof NavigationList>
->;
+> = NavigationList &
+  BasicNavigationListForNavigator<Navigator, keyof NavigationList>;
 
 type BasicNavigationListForNavigator<Navigator, ExcludedRouteNames> =
   Navigator extends PrivateValueStore<[infer ParamList extends {}, any, any]>
@@ -1071,13 +1069,13 @@ type NavigationListWithComposite<
 };
 
 type NavigationListForStaticConfig<ParentList, Navigator> = Navigator extends {
-  readonly config: infer Config extends {
-    screens?: any;
-    groups?: any;
+  readonly config: {
+    readonly screens?: infer Screens;
+    readonly groups?: infer Groups;
   };
 }
-  ? NavigationListForScreens<ParentList, Config['screens']> &
-      NavigationListForGroups<ParentList, Config['groups']>
+  ? NavigationListForScreens<ParentList, Screens> &
+      NavigationListForGroups<ParentList, Groups>
   : {};
 
 type NavigationListForScreens<ParentList, Screens> = Screens extends {}
