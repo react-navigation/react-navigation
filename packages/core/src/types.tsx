@@ -1103,13 +1103,12 @@ type NavigationListForScreens<ParentList, Screens> =
     : {};
 
 type NavigationListForGroups<ParentList, Groups> =
-  Groups extends Record<string, { screens: any }>
+  Groups extends Record<string, any>
     ? UnionToIntersection<
         {
-          [K in keyof Groups]: NavigationListForScreens<
-            ParentList,
-            Groups[K]['screens']
-          >;
+          [K in keyof Groups]: Groups[K] extends { screens: any }
+            ? NavigationListForScreens<ParentList, Groups[K]['screens']>
+            : never;
         }[keyof Groups]
       >
     : {};
