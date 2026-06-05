@@ -53,10 +53,10 @@ const TestNavigator = (props: TestNavigatorProps) => {
           return (
             <div
               key={route.key}
-              className={descriptor.options?.className}
-              data-testid={descriptor.options?.testId}
+              className={descriptor?.options?.className}
+              data-testid={descriptor?.options?.testId}
             >
-              {descriptor.render()}
+              {descriptor?.render()}
             </div>
           );
         })}

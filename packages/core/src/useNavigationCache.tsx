@@ -23,8 +23,8 @@ type Options<
     Partial<NavigationProp<ParamListBase, string, any, any, any>>;
   setOptions: (
     cb: (
-      options: Record<string, ScreenOptions>
-    ) => Record<string, ScreenOptions>
+      options: Record<string, Partial<ScreenOptions> | undefined>
+    ) => Record<string, Partial<ScreenOptions> | undefined>
   ) => void;
   router: Router<State, NavigationAction>;
   emitter: NavigationEventEmitter<EventMap>;
@@ -174,7 +174,7 @@ export function useNavigationCache<
 
           return parentNavigationHelpers;
         },
-        setOptions: (options: object) => {
+        setOptions: (options: Partial<ScreenOptions>) => {
           setOptions((o) => ({
             ...o,
             [route.key]: { ...o[route.key], ...options },
@@ -183,7 +183,7 @@ export function useNavigationCache<
         isFocused: () => {
           const state = rest.getState();
 
-          if (state.routes[state.index].key !== route.key) {
+          if (state.routes[state.index]?.key !== route.key) {
             return false;
           }
 

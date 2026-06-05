@@ -68,7 +68,13 @@ export const CustomIndicator = () => {
       inputRange: inputRange,
       outputRange: inputRange.map((x) => {
         const i = Math.round(x);
-        return offsets[i] * (direction === 'rtl' ? -1 : 1);
+        const offset = offsets[i];
+
+        if (offset == null) {
+          throw new Error(`Couldn't find an offset at index ${i}.`);
+        }
+
+        return offset * (direction === 'rtl' ? -1 : 1);
       }),
     });
 

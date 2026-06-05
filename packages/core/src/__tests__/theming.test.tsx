@@ -17,7 +17,7 @@ test('can get current theme with useTheme', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -59,7 +59,7 @@ test("throws if theme isn't passed to BaseNavigationContainer", async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -94,8 +94,13 @@ test('throws if useTheme is used without BaseNavigationContainer', async () => {
 test('passes theme to options prop', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const route = state.routes[0];
 
-    expect(descriptors[state.routes[0].key].options).toEqual({
+    if (route == null) {
+      throw new Error('No route found.');
+    }
+
+    expect(descriptors[route.key]?.options).toEqual({
       title: 'tomato',
     });
 
@@ -125,12 +130,18 @@ test('passes theme to options prop', async () => {
 test('passes theme to screenOptions prop', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const firstRoute = state.routes[0];
+    const secondRoute = state.routes[1];
 
-    expect(descriptors[state.routes[0].key].options).toEqual({
+    if (firstRoute == null || secondRoute == null) {
+      throw new Error("Couldn't find routes.");
+    }
+
+    expect(descriptors[firstRoute.key]?.options).toEqual({
       title: 'tomato',
     });
 
-    expect(descriptors[state.routes[1].key].options).toEqual({
+    expect(descriptors[secondRoute.key]?.options).toEqual({
       title: 'tomato',
     });
 

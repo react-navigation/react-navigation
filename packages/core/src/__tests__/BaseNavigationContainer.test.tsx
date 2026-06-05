@@ -128,7 +128,7 @@ test('handle dispatching with ref', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -189,7 +189,7 @@ test('handle resetting state with ref', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -284,10 +284,14 @@ test('handles getRootState', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -350,7 +354,7 @@ test('emits ready event when the container is ready with synchronous content', a
     );
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -385,7 +389,7 @@ test('emits ready event when the container is ready with asynchronous content', 
     );
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -428,7 +432,7 @@ test('emits state events when the state changes', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -459,7 +463,7 @@ test('emits state events when the state changes', async () => {
   });
 
   expect(listener).toHaveBeenCalledTimes(1);
-  expect(listener.mock.calls[0][0].data.state).toEqual({
+  expect(listener.mock.calls[0]?.[0]?.data.state).toEqual({
     type: 'test',
     stale: false,
     index: 1,
@@ -477,7 +481,7 @@ test('emits state events when the state changes', async () => {
   });
 
   expect(listener).toHaveBeenCalledTimes(2);
-  expect(listener.mock.calls[1][0].data.state).toEqual({
+  expect(listener.mock.calls[1]?.[0]?.data.state).toEqual({
     type: 'test',
     stale: false,
     index: 2,
@@ -502,7 +506,7 @@ test('emits state events when new navigator mounts', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -580,7 +584,7 @@ test('emits state events when new navigator mounts', async () => {
   };
 
   expect(listener).toHaveBeenCalledTimes(1);
-  expect(listener.mock.calls[0][0].data.state).toEqual(resultState);
+  expect(listener.mock.calls[0]?.[0]?.data.state).toEqual(resultState);
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenLastCalledWith(resultState);
@@ -595,7 +599,7 @@ test('emits option events when options change with tab router', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -638,7 +642,7 @@ test('emits option events when options change with tab router', async () => {
   });
 
   expect(listener).toHaveBeenCalledTimes(1);
-  expect(listener.mock.calls[0][0].data.options).toEqual({ y: 2 });
+  expect(listener.mock.calls[0]?.[0]?.data.options).toEqual({ y: 2 });
   expect(ref.current?.getCurrentOptions()).toEqual({ y: 2 });
 
   ref.current?.removeListener('options', listener);
@@ -653,7 +657,7 @@ test('emits option events when options change with tab router', async () => {
   });
 
   expect(listener2).toHaveBeenCalledTimes(1);
-  expect(listener2.mock.calls[0][0].data.options).toEqual({ g: 5 });
+  expect(listener2.mock.calls[0]?.[0]?.data.options).toEqual({ g: 5 });
   expect(ref.current?.getCurrentOptions()).toEqual({ g: 5 });
 
   await act(() => {
@@ -661,7 +665,7 @@ test('emits option events when options change with tab router', async () => {
   });
 
   expect(listener2).toHaveBeenCalledTimes(2);
-  expect(listener2.mock.calls[1][0].data.options).toEqual({ h: 9 });
+  expect(listener2.mock.calls[1]?.[0]?.data.options).toEqual({ h: 9 });
   expect(ref.current?.getCurrentOptions()).toEqual({ h: 9 });
 });
 
@@ -674,7 +678,7 @@ test('emits option events when options change with stack router', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -717,7 +721,7 @@ test('emits option events when options change with stack router', async () => {
   });
 
   expect(listener).toHaveBeenCalledTimes(1);
-  expect(listener.mock.calls[0][0].data.options).toEqual({ y: 2 });
+  expect(listener.mock.calls[0]?.[0]?.data.options).toEqual({ y: 2 });
   expect(ref.current?.getCurrentOptions()).toEqual({ y: 2 });
 
   ref.current?.removeListener('options', listener);
@@ -732,7 +736,7 @@ test('emits option events when options change with stack router', async () => {
   });
 
   expect(listener2).toHaveBeenCalledTimes(1);
-  expect(listener2.mock.calls[0][0].data.options).toEqual({ g: 5 });
+  expect(listener2.mock.calls[0]?.[0]?.data.options).toEqual({ g: 5 });
   expect(ref.current?.getCurrentOptions()).toEqual({ g: 5 });
 
   await act(() => {
@@ -740,7 +744,7 @@ test('emits option events when options change with stack router', async () => {
   });
 
   expect(listener2).toHaveBeenCalledTimes(2);
-  expect(listener2.mock.calls[1][0].data.options).toEqual({ h: 9 });
+  expect(listener2.mock.calls[1]?.[0]?.data.options).toEqual({ h: 9 });
   expect(ref.current?.getCurrentOptions()).toEqual({ h: 9 });
 });
 
@@ -759,7 +763,7 @@ test('throws if there is no navigator rendered', async () => {
 
   ref.current?.dispatch({ type: 'WHATEVER' });
 
-  expect(spy.mock.calls[0][0]).toMatch(
+  expect(spy.mock.calls[0]?.[0]).toMatch(
     "The 'navigation' object hasn't been initialized yet."
   );
 
@@ -777,10 +781,14 @@ test("throws if the ref hasn't finished initializing", async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -790,7 +798,7 @@ test("throws if the ref hasn't finished initializing", async () => {
 
       ref.dispatch({ type: 'WHATEVER' });
 
-      expect(spy.mock.calls[0][0]).toMatch(
+      expect(spy.mock.calls[0]?.[0]).toMatch(
         "The 'navigation' object hasn't been initialized yet."
       );
 
@@ -844,10 +852,14 @@ test('handles action dispatched on the ref after navigator is rendered', async (
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -892,10 +904,14 @@ test('fires onReady after navigator is rendered', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -936,7 +952,7 @@ test('invokes the unhandled action listener with the unhandled action', async ()
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -972,7 +988,7 @@ test('works with state change events in independent nested container', async () 
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -1035,10 +1051,14 @@ test('warns for duplicate route names nested inside each other', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -1062,7 +1082,7 @@ test('warns for duplicate route names nested inside each other', async () => {
     </BaseNavigationContainer>
   );
 
-  expect(spy.mock.calls[0][0]).toMatch(
+  expect(spy.mock.calls[0]?.[0]).toMatch(
     'Found screens with the same name nested inside one another.'
   );
 
@@ -1088,7 +1108,7 @@ test('warns for duplicate route names nested inside each other', async () => {
     </BaseNavigationContainer>
   );
 
-  expect(spy.mock.calls[1][0]).toMatch(
+  expect(spy.mock.calls[1]?.[0]).toMatch(
     'Found screens with the same name nested inside one another.'
   );
 

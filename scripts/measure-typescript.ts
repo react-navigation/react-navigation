@@ -15,7 +15,9 @@ const BENCHMARK = { depth: 10, width: 100 };
 
 // Every navigator type in the repo, paired with its screen-config helper and
 // package. Levels cycle through them so the benchmark exercises all of them.
-const NAVIGATORS = [
+type NavigatorConfig = [navigator: string, screen: string, pkg: string];
+
+const NAVIGATORS: NavigatorConfig[] = [
   ['createNativeStackNavigator', 'createNativeStackScreen', 'native-stack'],
   ['createStackNavigator', 'createStackScreen', 'stack'],
   ['createBottomTabNavigator', 'createBottomTabScreen', 'bottom-tabs'],
@@ -147,7 +149,13 @@ function parseMetrics(output: string): Metrics {
       );
     }
 
-    return match[1];
+    const value = match[1];
+
+    if (value == null) {
+      throw new Error(`Could not parse "${label}" from tsc output.`);
+    }
+
+    return value;
   };
 
   const asNumber = (value: string) =>
@@ -167,10 +175,23 @@ function parseMetrics(output: string): Metrics {
 function median(values: number[]): number {
   const sorted = [...values].sort((a, b) => a - b);
   const middle = Math.floor(sorted.length / 2);
+  const current = sorted[middle];
 
-  return sorted.length % 2 === 0
-    ? (sorted[middle - 1] + sorted[middle]) / 2
-    : sorted[middle];
+  if (current == null) {
+    throw new Error(`Couldn't find a median value at index ${middle}.`);
+  }
+
+  if (sorted.length % 2 === 1) {
+    return current;
+  }
+
+  const previous = sorted[middle - 1];
+
+  if (previous == null) {
+    throw new Error(`Couldn't find a median value at index ${middle - 1}.`);
+  }
+
+  return (previous + current) / 2;
 }
 
 function summarizeValues(
@@ -223,7 +244,13 @@ function generateBenchmark(): void {
 
   // Build from the deepest level up so each level can nest the previous one.
   for (let level = BENCHMARK.depth - 1; level >= 0; level--) {
-    const [navigator, screen] = NAVIGATORS[level % NAVIGATORS.length];
+    const config = NAVIGATORS[level % NAVIGATORS.length];
+
+    if (config == null) {
+      throw new Error(`Couldn't find a navigator config for level ${level}.`);
+    }
+
+    const [navigator, screen] = config;
     const entries: string[] = [];
 
     for (let i = 0; i < BENCHMARK.width; i++) {
@@ -317,7 +344,15 @@ function measure(label: string): Measurement {
     removeBenchmark();
   }
 
-  const first = (values: number[]) => values[0];
+  const first = (values: number[]) => {
+    const value = values[0];
+
+    if (value == null) {
+      throw new Error("Couldn't find a first metric value.");
+    }
+
+    return value;
+  };
   const min = (values: number[]) => Math.min(...values);
 
   const types = summarizeValues(
@@ -461,8 +496,24 @@ function printSummary(base: Measurement, current: Measurement): void {
     ],
   ];
 
-  const widths = rows[0].map((_, column) =>
-    Math.max(...rows.map((row) => row[column].length))
+  const headerRow = rows[0];
+
+  if (headerRow == null) {
+    throw new Error("Couldn't find table header row.");
+  }
+
+  const widths = headerRow.map((_, column) =>
+    Math.max(
+      ...rows.map((row) => {
+        const cell = row[column];
+
+        if (cell == null) {
+          throw new Error(`Couldn't find a cell at column ${column}.`);
+        }
+
+        return cell.length;
+      })
+    )
   );
 
   const separator = `+${widths.map((w) => '-'.repeat(w + 2)).join('+')}+`;
@@ -472,10 +523,16 @@ function printSummary(base: Measurement, current: Measurement): void {
   rows.forEach((row, index) => {
     const line = row
       .map((cell, column) => {
+        const width = widths[column];
+
+        if (width == null) {
+          throw new Error(`Couldn't find a table width at column ${column}.`);
+        }
+
         const padded =
           column === 0 || index === 0
-            ? cell.padEnd(widths[column])
-            : cell.padStart(widths[column]);
+            ? cell.padEnd(width)
+            : cell.padStart(width);
 
         return ` ${padded} `;
       })

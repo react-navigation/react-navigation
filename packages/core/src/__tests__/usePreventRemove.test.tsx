@@ -35,7 +35,7 @@ test("prevents removing a screen with 'usePreventRemove' hook", async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -149,7 +149,7 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -265,7 +265,7 @@ test("doesn't prevent retaining a screen in inactive routes", async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -318,7 +318,7 @@ test("should have no effect when 'usePreventRemove' hook is set to false", async
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -422,7 +422,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -600,7 +600,7 @@ test("prevents removing a hidden screen with 'usePreventRemove' hook", async () 
             key={route.key}
             mode={index === state.index ? 'visible' : 'hidden'}
           >
-            {descriptors[route.key].render()}
+            {descriptors[route.key]?.render()}
           </React.Activity>
         ))}
       </NavigationContent>
@@ -654,7 +654,7 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", asyn
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -832,7 +832,7 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", async
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -992,7 +992,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };

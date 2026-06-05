@@ -132,7 +132,7 @@ export function useOnAction<State extends NavigationState>({
         for (let i = actionListeners.length - 1; i >= 0; i--) {
           const listener = actionListeners[i];
 
-          if (listener(action, visitedNavigators)) {
+          if (listener?.(action, visitedNavigators)) {
             return true;
           }
         }

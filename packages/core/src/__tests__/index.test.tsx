@@ -41,10 +41,14 @@ test('initializes state for a navigator on navigation', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -103,10 +107,14 @@ test("doesn't crash when initialState is null", async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -131,10 +139,14 @@ test('throws for incorrect initialRouteName', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -174,10 +186,14 @@ test('rehydrates state for a navigator on navigation', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -234,10 +250,14 @@ test("doesn't rehydrate state if the type of state didn't match router", async (
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -303,10 +323,14 @@ test('initializes state for nested screens in React.Fragment', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -357,10 +381,14 @@ test('initializes state for nested screens in Group', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -411,10 +439,14 @@ test('initializes state for nested navigator on navigation', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -480,10 +512,14 @@ test("doesn't update state if nothing changed", async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -517,10 +553,14 @@ test("doesn't update state if action wasn't handled", async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -565,10 +605,14 @@ test('cleans up state when the navigator unmounts', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -624,10 +668,14 @@ test('preserves initial state when navigator mount is delayed in StrictMode', as
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -675,10 +723,16 @@ test('preserves state after rendered in `<Activity mode="hidden">`', async () =>
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
       <NavigationContent>
         <Text>{state.routes.map((route) => route.name).join(', ')}</Text>
-        {descriptors[state.routes[state.index].key].render()}
+        {descriptors[route.key]?.render()}
       </NavigationContent>
     );
   };
@@ -767,10 +821,16 @@ test('handles container ref methods in hidden trees', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
       <NavigationContent>
         <Text>{state.routes.map((route) => route.name).join(', ')}</Text>
-        {descriptors[state.routes[state.index].key].render()}
+        {descriptors[route.key]?.render()}
       </NavigationContent>
     );
   };
@@ -840,7 +900,7 @@ test('preserves child state after switching parent screens rendered in `<Activit
             key={route.key}
             mode={index === state.index ? 'visible' : 'hidden'}
           >
-            {descriptors[route.key].render()}
+            {descriptors[route.key]?.render()}
           </React.Activity>
         ))}
       </NavigationContent>
@@ -853,10 +913,16 @@ test('preserves child state after switching parent screens rendered in `<Activit
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
       <NavigationContent>
         <Text>{state.routes.map((route) => route.name).join(', ')}</Text>
-        {descriptors[state.routes[state.index].key].render()}
+        {descriptors[route.key]?.render()}
       </NavigationContent>
     );
   };
@@ -1010,10 +1076,14 @@ test('allows state updates by dispatching a function returning an action', async
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -1066,10 +1136,14 @@ test('re-initializes state once for conditional rendering', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -1079,10 +1153,14 @@ test('re-initializes state once for conditional rendering', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -1146,10 +1224,14 @@ test('updates route params with setParams', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -1210,10 +1292,14 @@ test('updates route params with setParams applied to parent', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -1344,10 +1430,14 @@ test('navigates to nested child in a navigator', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -1482,10 +1572,14 @@ test('navigates to nested child in a navigator with initial: false', async () =>
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -1840,7 +1934,7 @@ test('preserves navigation state changes for preloaded screens', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -1851,10 +1945,14 @@ test('preserves navigation state changes for preloaded screens', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -1934,7 +2032,7 @@ test('includes child state for preloaded screens in root state', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -1945,10 +2043,14 @@ test('includes child state for preloaded screens in root state', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -1999,10 +2101,14 @@ test('resets to nested child in a navigator', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -2119,10 +2225,14 @@ test('resets state of a nested child in a navigator', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -2327,10 +2437,14 @@ test('resets state for navigator which has screen from params', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -2439,10 +2553,14 @@ test('clears params for nested navigator after initial mount', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -2529,10 +2647,14 @@ test('does not clear params if there is no nested navigator', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -2583,10 +2705,14 @@ test('restores previously discarded state when route names change after initial 
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -2655,10 +2781,14 @@ test('restores previously discarded state when route names change after navigati
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -2758,10 +2888,14 @@ test('restores previously discarded state when route names change after navigati
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -2924,10 +3058,14 @@ test('restores previously discarded state when route names change after navigati
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -3077,10 +3215,14 @@ test('overrides router with router prop', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -3173,10 +3315,14 @@ test('gets immediate parent with getParent()', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -3233,10 +3379,14 @@ test('gets parent with a route name with getParent(routeName)', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -3293,10 +3443,14 @@ test('gets self with a route name with getParent(routeName)', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -3353,10 +3507,14 @@ test('returns undefined when route name is not found with getParent(routeName)',
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -3400,10 +3558,14 @@ test('gives access to internal state', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -3930,10 +4092,14 @@ test('returns currently focused route with getCurrentRoute', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -3975,10 +4141,14 @@ test("returns focused screen's options with getCurrentOptions when focused scree
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -4030,10 +4200,14 @@ test('returns focused screen options with getCurrentOptions from navigators in h
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -4087,10 +4261,14 @@ test("returns focused screen's options with getCurrentOptions when focused scree
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -4147,10 +4325,14 @@ test("returns focused screen's options with getCurrentOptions when focused scree
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -4212,7 +4394,7 @@ test("returns focused screen's options with getCurrentOptions when all screens a
 
     return (
       <NavigationContent>
-        <>{state.routes.map((route) => descriptors[route.key].render())}</>
+        <>{state.routes.map((route) => descriptors[route.key]?.render())}</>
       </NavigationContent>
     );
   };
@@ -4267,7 +4449,7 @@ test("returns focused screen's options with getCurrentOptions when all screens a
 
     return (
       <NavigationContent>
-        <>{state.routes.map((route) => descriptors[route.key].render())}</>
+        <>{state.routes.map((route) => descriptors[route.key]?.render())}</>
       </NavigationContent>
     );
   };
@@ -4327,7 +4509,7 @@ test("returns focused screen's options with getCurrentOptions when all screens a
 
     return (
       <NavigationContent>
-        <>{state.routes.map((route) => descriptors[route.key].render())}</>
+        <>{state.routes.map((route) => descriptors[route.key]?.render())}</>
       </NavigationContent>
     );
   };
@@ -4388,10 +4570,14 @@ test('does not throw if while getting current options with no options defined', 
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -4438,7 +4624,13 @@ test('does not throw if while getting current options with empty container', asy
 test('shows stale content instead of fallback with startTransition for setParams', async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
-    return descriptors[state.routes[state.index].key].render();
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return descriptors[route.key]?.render();
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();

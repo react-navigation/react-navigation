@@ -130,13 +130,24 @@ export function TabBarIndicator<T extends Route>({
     // This makes the animation feel snappier
     // Especially on Android where the pager animation is slow
     if (jumpRange) {
+      const fromValue = values[jumpRange.from];
+      const toValue = values[jumpRange.to];
+
+      if (fromValue == null) {
+        throw new Error(`Couldn't find a value at index ${jumpRange.from}.`);
+      }
+
+      if (toValue == null) {
+        throw new Error(`Couldn't find a value at index ${jumpRange.to}.`);
+      }
+
       const inputRange =
         jumpRange.from > jumpRange.to
           ? [jumpRange.to, jumpRange.to + 1, jumpRange.from]
           : [jumpRange.from, jumpRange.to - 1, jumpRange.to];
 
       const outputRange = inputRange.map((i) =>
-        i === jumpRange.from ? values[jumpRange.from] : values[jumpRange.to]
+        i === jumpRange.from ? fromValue : toValue
       );
 
       return position.interpolate({
@@ -161,14 +172,34 @@ export function TabBarIndicator<T extends Route>({
       const start = values[i];
       const end = values[i + 1];
 
+      if (start == null) {
+        throw new Error(`Couldn't find a value at index ${i}.`);
+      }
+
+      if (end == null) {
+        throw new Error(`Couldn't find a value at index ${i + 1}.`);
+      }
+
       for (let j = 0; j < samples.length - 1; j++) {
+        const sample = samples[j];
+
+        if (sample == null) {
+          throw new Error(`Couldn't find an easing sample at index ${j}.`);
+        }
+
         inputRange.push(i + j / EASING_SAMPLE_COUNT);
-        outputRange.push(start + (end - start) * samples[j]);
+        outputRange.push(start + (end - start) * sample);
       }
     }
 
+    const last = values[values.length - 1];
+
+    if (last == null) {
+      throw new Error(`Couldn't find a value at index ${values.length - 1}.`);
+    }
+
     inputRange.push(values.length - 1);
-    outputRange.push(values[values.length - 1]);
+    outputRange.push(last);
 
     return position.interpolate({
       inputRange,
@@ -183,7 +214,15 @@ export function TabBarIndicator<T extends Route>({
   let rightCapStyle: ViewStyle;
   let rightFillStyle: ViewStyle;
 
-  const rightEdges = widths.map((w, i) => offsets[i] + w);
+  const rightEdges = widths.map((w, i) => {
+    const offset = offsets[i];
+
+    if (offset == null) {
+      throw new Error(`Couldn't find an offset at index ${i}.`);
+    }
+
+    return offset + w;
+  });
 
   const [lastIndex, setLastIndex] = React.useState(navigationState.index);
   const [jumpRange, setJumpRange] = React.useState<{
@@ -326,7 +365,11 @@ export function TabBarIndicator<T extends Route>({
   // So we show the indicator when we have widths till focused tab
   const indicatorVisible = widths
     .slice(0, navigationState.index + 1)
-    .every((w, i) => w > 0 && offsets[i] >= 0);
+    .every((w, i) => {
+      const offset = offsets[i];
+
+      return w > 0 && offset != null && offset >= 0;
+    });
 
   /**
    * We render the indicator in multiple pieces

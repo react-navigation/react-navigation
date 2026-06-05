@@ -23,7 +23,7 @@ test('gets the current navigation state', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -31,7 +31,7 @@ test('gets the current navigation state', async () => {
   const Test = () => {
     const index = useNavigationState((state) => state.index);
     const params = useNavigationState(
-      (state) => state.routes[state.index].params
+      (state) => state.routes[state.index]?.params
     );
 
     return (
@@ -108,7 +108,7 @@ test('gets the current navigation state with selector', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -171,7 +171,7 @@ test('gets the correct value if selector changes', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -208,7 +208,7 @@ test('gets the correct value if selector changes', async () => {
   `);
 
   await root.rerender(
-    <App selector={(state) => state.routes[state.index].name} />
+    <App selector={(state) => state.routes[state.index]?.name} />
   );
 
   expect(root).toMatchInlineSnapshot(`
@@ -227,7 +227,7 @@ test('gets the current navigation state at navigator level', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -355,7 +355,7 @@ test('gets navigation state for current route name', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -366,12 +366,12 @@ test('gets navigation state for current route name', async () => {
     const routeName = useNavigationState(
       // @ts-expect-error for test purposes
       'child',
-      (state: any) => state.routes[state.index].name
+      (state: any) => state.routes[state.index]?.name
     );
     const params = useNavigationState(
       // @ts-expect-error for test purposes
       'child',
-      (state: any) => state.routes[state.index].params
+      (state: any) => state.routes[state.index]?.params
     );
 
     return (
@@ -453,7 +453,7 @@ test('gets navigation state for parent route name', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -464,12 +464,12 @@ test('gets navigation state for parent route name', async () => {
     const routeName = useNavigationState(
       // @ts-expect-error for test purposes
       'parent',
-      (state: any) => state.routes[state.index].name
+      (state: any) => state.routes[state.index]?.name
     );
     const params = useNavigationState(
       // @ts-expect-error for test purposes
       'child',
-      (state: any) => state.routes[state.index].params
+      (state: any) => state.routes[state.index]?.params
     );
 
     return (
@@ -550,7 +550,7 @@ test('gets navigation state for grandparent route name', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -564,12 +564,12 @@ test('gets navigation state for grandparent route name', async () => {
     const routeName = useNavigationState(
       // @ts-expect-error for test purposes
       'grandparent',
-      (state: any) => state.routes[state.index].name
+      (state: any) => state.routes[state.index]?.name
     );
     const params = useNavigationState(
       // @ts-expect-error for test purposes
       'grandparent',
-      (state: any) => state.routes[state.index].params
+      (state: any) => state.routes[state.index]?.params
     );
 
     return (

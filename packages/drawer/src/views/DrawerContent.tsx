@@ -8,8 +8,12 @@ export function DrawerContent({
   ...rest
 }: DrawerContentComponentProps) {
   const focusedRoute = state.routes[state.index];
-  const focusedDescriptor = descriptors[focusedRoute.key];
-  const focusedOptions = focusedDescriptor.options;
+
+  if (focusedRoute == null) {
+    throw new Error(`Couldn't find a route at index ${state.index}.`);
+  }
+
+  const focusedOptions = descriptors[focusedRoute.key]?.options ?? {};
 
   const { drawerContentStyle, drawerContentContainerStyle } = focusedOptions;
 

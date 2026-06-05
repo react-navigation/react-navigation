@@ -23,8 +23,12 @@ export function DrawerItemList({ state, navigation, descriptors }: Props) {
   const { buildHref } = useLinkBuilder();
 
   const focusedRoute = state.routes[state.index];
-  const focusedDescriptor = descriptors[focusedRoute.key];
-  const focusedOptions = focusedDescriptor.options;
+
+  if (focusedRoute == null) {
+    throw new Error(`Couldn't find a route at index ${state.index}.`);
+  }
+
+  const focusedOptions = descriptors[focusedRoute.key]?.options ?? {};
 
   const {
     drawerActiveTintColor,
@@ -34,6 +38,12 @@ export function DrawerItemList({ state, navigation, descriptors }: Props) {
   } = focusedOptions;
 
   return state.routes.map((route, i) => {
+    const descriptor = descriptors[route.key];
+
+    if (descriptor == null) {
+      throw new Error(`Couldn't find a descriptor for route '${route.key}'.`);
+    }
+
     const focused = i === state.index;
 
     const onPress = () => {
@@ -61,7 +71,7 @@ export function DrawerItemList({ state, navigation, descriptors }: Props) {
       drawerItemStyle,
       drawerItemTestID,
       drawerAllowFontScaling,
-    } = descriptors[route.key].options;
+    } = descriptor.options;
 
     return (
       <DrawerItem

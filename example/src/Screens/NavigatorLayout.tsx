@@ -130,6 +130,14 @@ function BreadcrumbLayout({
         contentContainerStyle={[styles.breadcrumbs, { paddingTop: insets.top }]}
       >
         {state.routes.map((route, i, self) => {
+          const descriptor = descriptors[route.key];
+
+          if (descriptor == null) {
+            throw new Error(
+              `Couldn't find a descriptor for route '${route.key}'.`
+            );
+          }
+
           return (
             <React.Fragment key={route.key}>
               <Pressable
@@ -144,7 +152,7 @@ function BreadcrumbLayout({
                 }}
               >
                 <Text style={[styles.title, { color: colors.text }]}>
-                  {getHeaderTitle(descriptors[route.key].options, route.name)}
+                  {getHeaderTitle(descriptor.options, route.name)}
                 </Text>
               </Pressable>
               {self.length - 1 !== i ? (

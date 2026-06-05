@@ -378,22 +378,25 @@ function getSortedNormalizedConfigs(
       }
 
       for (let i = 0; i < Math.max(a.segments.length, b.segments.length); i++) {
+        const aSegment = a.segments[i];
+        const bSegment = b.segments[i];
+
         // if b is longer, b gets higher priority
-        if (a.segments[i] == null) {
+        if (aSegment == null) {
           return 1;
         }
 
         // if a is longer, a gets higher priority
-        if (b.segments[i] == null) {
+        if (bSegment == null) {
           return -1;
         }
 
-        const aWildCard = a.segments[i] === '*';
-        const bWildCard = b.segments[i] === '*';
-        const aParam = a.segments[i].startsWith(':');
-        const bParam = b.segments[i].startsWith(':');
-        const aRegex = aParam && a.segments[i].includes('(');
-        const bRegex = bParam && b.segments[i].includes('(');
+        const aWildCard = aSegment === '*';
+        const bWildCard = bSegment === '*';
+        const aParam = aSegment.startsWith(':');
+        const bParam = bSegment.startsWith(':');
+        const aRegex = aParam && aSegment.includes('(');
+        const bRegex = bParam && bSegment.includes('(');
 
         // if both are wildcard or regex, we compare next component
         if ((aWildCard && bWildCard) || (aRegex && bRegex)) {
@@ -782,6 +785,10 @@ const selectSharedConfig = (
 
     const route = current.routes[index];
 
+    if (route == null) {
+      break;
+    }
+
     focusedRouteNames.push(route.name);
     current = route.state;
   }
@@ -848,7 +855,14 @@ const findInitialRoute = (
     if (parentScreens.length === config.parentScreens.length) {
       let sameParents = true;
       for (let i = 0; i < parentScreens.length; i++) {
-        if (parentScreens[i].localeCompare(config.parentScreens[i]) !== 0) {
+        const parentScreen = parentScreens[i];
+        const configParentScreen = config.parentScreens[i];
+
+        if (
+          parentScreen == null ||
+          configParentScreen == null ||
+          parentScreen.localeCompare(configParentScreen) !== 0
+        ) {
           sameParents = false;
           break;
         }
@@ -901,7 +915,12 @@ const createNestedStateObject = (
   initialRoutes: InitialRouteConfig[],
   routeConfig?: RouteConfig
 ): InitialState | undefined => {
-  let route = routes.shift() as ParsedRoute;
+  let route = routes.shift();
+
+  if (route == null) {
+    return undefined;
+  }
+
   const parentScreens: string[] = [];
 
   let initialRoute = findInitialRoute(route.name, parentScreens, initialRoutes);
@@ -917,29 +936,48 @@ const createNestedStateObject = (
   if (routes.length > 0) {
     let nestedState = state;
 
-    while ((route = routes.shift() as ParsedRoute)) {
+    let nextRoute = routes.shift();
+
+    while (nextRoute != null) {
+      route = nextRoute;
       initialRoute = findInitialRoute(route.name, parentScreens, initialRoutes);
 
       const nestedStateIndex =
         nestedState.index || nestedState.routes.length - 1;
+      const nestedRoute = nestedState.routes[nestedStateIndex];
 
-      nestedState.routes[nestedStateIndex].state = createStateObject(
+      if (nestedRoute == null) {
+        throw new Error(`Couldn't find a route at index ${nestedStateIndex}.`);
+      }
+
+      nestedRoute.state = createStateObject(
         initialRoute,
         route,
         routes.length === 0
       );
 
       if (routes.length > 0) {
-        nestedState = nestedState.routes[nestedStateIndex]
-          .state as InitialState;
+        if (nestedRoute.state == null) {
+          throw new Error(
+            `Couldn't find nested state for route '${route.name}'.`
+          );
+        }
+
+        nestedState = nestedRoute.state;
       }
 
       parentScreens.push(route.name);
+      nextRoute = routes.shift();
     }
   }
 
-  route = findFocusedRoute(state) as ParsedRoute;
-  route.path = path.replace(/\/$/, '');
+  const focusedRoute = findFocusedRoute(state);
+
+  if (focusedRoute == null) {
+    return undefined;
+  }
+
+  focusedRoute.path = path.replace(/\/$/, '');
 
   const pathParamNames = new Set(
     routeConfig?.params
@@ -956,7 +994,7 @@ const createNestedStateObject = (
     pathParamNames,
     routeConfig?.explicitParamNames,
     routeConfig?.hasNestedScreens,
-    route.params
+    focusedRoute.params
   );
 
   if (!queryParams.valid) {
@@ -964,7 +1002,7 @@ const createNestedStateObject = (
   }
 
   if (queryParams.params) {
-    route.params = { ...route.params, ...queryParams.params };
+    focusedRoute.params = { ...focusedRoute.params, ...queryParams.params };
   }
 
   return state;
@@ -976,12 +1014,12 @@ const parseQueryParams = (
   pathParamNames: Set<string> = new Set(),
   explicitParamNames?: Set<string>,
   hasNestedScreens = false,
-  routeParams?: Record<string, unknown>
+  routeParams?: object
 ):
   | { valid: true; params?: Record<string, unknown> | undefined }
   | { valid: false } => {
   const query = path.split('?')[1];
-  const params: Record<string, unknown> = queryString.parse(query);
+  const params: Record<string, unknown> = query ? queryString.parse(query) : {};
 
   // Path params should always win over same-named query params.
   for (const name of pathParamNames) {
@@ -1049,7 +1087,9 @@ const parseQueryParams = (
     hasNestedScreens &&
     !explicitParamNames?.has('screen') &&
     (typeof params.screen === 'string' ||
-      typeof routeParams?.screen === 'string')
+      (routeParams != null &&
+        'screen' in routeParams &&
+        typeof routeParams.screen === 'string'))
   ) {
     for (const name of NESTED_SCREEN_PARAM_NAMES) {
       if (!explicitParamNames?.has(name)) {

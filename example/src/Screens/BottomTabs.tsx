@@ -146,7 +146,7 @@ export function BottomTabs(
                     },
                     (index) => {
                       if (index != null) {
-                        setVariant(variants[index]);
+                        setVariant(variants[index] || variants[0]);
                       }
                     }
                   );
@@ -172,7 +172,7 @@ export function BottomTabs(
                     },
                     (index) => {
                       if (index != null) {
-                        setAnimation(animations[index]);
+                        setAnimation(animations[index] || animations[0]);
                       }
                     }
                   );

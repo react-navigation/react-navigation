@@ -143,8 +143,14 @@ const getComputedTabWidth = ({
   index: number;
   routes: Route[];
 }) => {
+  const route = routes[index];
+
+  if (route == null) {
+    throw new Error(`Couldn't find a route at index ${index}.`);
+  }
+
   if (flattenedTabWidth === 'auto') {
-    return tabWidths[routes[index].key] || 0;
+    return tabWidths[route.key] || 0;
   }
 
   switch (typeof flattenedTabWidth) {
@@ -160,7 +166,7 @@ const getComputedTabWidth = ({
   }
 
   if (scrollEnabled) {
-    return tabWidths[routes[index].key] || TAB_MIN_WIDTH;
+    return tabWidths[route.key] || TAB_MIN_WIDTH;
   }
 
   const gapTotalWidth = (gap ?? 0) * (routes.length - 1);
@@ -591,22 +597,29 @@ export function TabBar<T extends Route>({
     })
   );
 
-  const customIndicatorWidths = routes.map((_, i) =>
-    calculateSize(flattenedIndicatorStyle?.width, tabWidthByIndex[i])
-  );
+  const indicatorBaseWidths = tabWidthByIndex.map((tabWidth, i) => {
+    const customIndicatorWidth = calculateSize(
+      flattenedIndicatorStyle?.width,
+      tabWidth
+    );
 
-  const indicatorBaseWidths = routes.map((_, i) => {
-    if (customIndicatorWidths[i] != null) {
-      return customIndicatorWidths[i];
+    if (customIndicatorWidth != null) {
+      return customIndicatorWidth;
     }
 
     if (variant === 'primary') {
-      const labelWidth = labelWidths[routes[i].key];
+      const route = routes[i];
+
+      if (route == null) {
+        throw new Error(`Couldn't find a route at index ${i}.`);
+      }
+
+      const labelWidth = labelWidths[route.key];
 
       return labelWidth ? Math.max(PRIMARY_INDICATOR_MIN_WIDTH, labelWidth) : 0;
     }
 
-    return tabWidthByIndex[i];
+    return tabWidth;
   });
 
   const indicatorMargins = indicatorBaseWidths.map((width) => {
@@ -643,30 +656,49 @@ export function TabBar<T extends Route>({
       return 0;
     }
 
-    return Math.max(
-      0,
-      width - indicatorMargins[i].left - indicatorMargins[i].right
-    );
+    const margin = indicatorMargins[i];
+
+    if (margin == null) {
+      throw new Error(`Couldn't find an indicator margin at index ${i}.`);
+    }
+
+    return Math.max(0, width - margin.left - margin.right);
   });
 
-  const indicatorOffsets = routes.map((_, i) => {
+  const indicatorOffsets = tabWidthByIndex.map((tabWidth, i) => {
     const precedingTabsWidth = tabWidthByIndex
       .slice(0, i)
       .reduce((sum, width) => sum + width, 0);
 
     const tabStart = precedingTabsWidth + gap * i;
+    const customIndicatorWidth = calculateSize(
+      flattenedIndicatorStyle?.width,
+      tabWidth
+    );
+
+    const margin = indicatorMargins[i];
+
+    if (margin == null) {
+      throw new Error(`Couldn't find an indicator margin at index ${i}.`);
+    }
+
+    const indicatorBaseWidth = indicatorBaseWidths[i];
+
+    if (indicatorBaseWidth == null) {
+      throw new Error(`Couldn't find an indicator width at index ${i}.`);
+    }
 
     const shouldCenterIndicator =
       variant === 'primary' ||
-      (customIndicatorWidths[i] != null &&
+      (customIndicatorWidth != null &&
         (flattenedIndicatorStyle?.margin === 'auto' ||
           flattenedIndicatorStyle?.marginHorizontal === 'auto'));
 
     const baseOffset = shouldCenterIndicator
-      ? (tabWidthByIndex[i] - indicatorBaseWidths[i]) / 2
+      ? (tabWidth - indicatorBaseWidth) / 2
       : 0;
 
-    return tabStart + baseOffset + indicatorMargins[i].left;
+    return tabStart + baseOffset + margin.left;
   });
 
   return (

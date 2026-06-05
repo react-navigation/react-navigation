@@ -25,7 +25,7 @@ test('renders correct focus state', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -86,10 +86,14 @@ test('returns correct focus state after conditional rendering', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
