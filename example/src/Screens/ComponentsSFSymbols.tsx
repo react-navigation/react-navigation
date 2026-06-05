@@ -253,7 +253,7 @@ export function ComponentsSFSymbols(_: StaticScreenProps<{}>) {
   const [renderingMode, setRenderingMode] =
     React.useState<SFSymbolRenderingMode>('monochrome');
   const [variableValue, setVariableValue] =
-    React.useState<SFSymbolVariableValue>(0.5);
+    React.useState<SFSymbolVariableValue>(1);
   const [variableValueMode, setVariableValueMode] =
     React.useState<SFSymbolVariableValueMode>('automatic');
   const [colorRenderingMode, setColorRenderingMode] =
@@ -610,7 +610,6 @@ export function ComponentsSFSymbols(_: StaticScreenProps<{}>) {
           <SFSymbolPreview
             name={getPreviewSymbol(previewIndex)}
             nextName={getPreviewSymbol(previewIndex + 1)}
-            color={colors.text}
             weight={weight}
             scale={scale}
             renderingMode={renderingMode}
@@ -713,7 +712,6 @@ const SFSymbolRow = React.memo(function SFSymbolRow({
 function SFSymbolPreview({
   name,
   nextName,
-  color,
   weight,
   scale,
   renderingMode,
@@ -727,7 +725,6 @@ function SFSymbolPreview({
 }: {
   name: SFSymbolProps['name'];
   nextName: SFSymbolProps['name'];
-  color: NonNullable<SFSymbolProps['color']>;
   weight: SFSymbolWeight;
   scale: SFSymbolScale;
   renderingMode: SFSymbolRenderingMode;
@@ -750,7 +747,6 @@ function SFSymbolPreview({
         <SFSymbol
           name={name}
           size={48}
-          color={color}
           weight={weight}
           scale={scale}
           renderingMode={renderingMode}
@@ -773,7 +769,7 @@ function SFSymbolPreview({
           {nextName}
         </Text>
       </View>
-      <SFSymbol name="arrow.triangle.2.circlepath" size={18} color={color} />
+      <SFSymbol name="arrow.triangle.2.circlepath" size={18} />
     </Pressable>
   );
 }
