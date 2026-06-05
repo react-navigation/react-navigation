@@ -439,6 +439,7 @@ export function BottomTabViewNative({
         onTabSelectionRejected={onTabSelectionRejected}
         onTabSelectionPrevented={onTabSelectionPrevented}
         tabBarHidden={hasCustomTabBar || shouldHideTabBar}
+        nativeContainerStyle={{ backgroundColor }}
         colorScheme={dark ? 'dark' : 'light'}
         ios={{
           bottomAccessory: bottomAccessory
