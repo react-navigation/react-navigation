@@ -14,7 +14,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('gets navigation prop from context', () => {
+test('gets navigation prop from context', async () => {
   expect.assertions(2);
 
   const TestNavigator = (props: any): any => {
@@ -42,7 +42,7 @@ test('gets navigation prop from context', () => {
     return null;
   };
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={Test} />
@@ -51,7 +51,7 @@ test('gets navigation prop from context', () => {
   );
 });
 
-test("gets navigation's parent from context", () => {
+test("gets navigation's parent from context", async () => {
   expect.assertions(6);
 
   const TestNavigator = (props: any): any => {
@@ -91,7 +91,7 @@ test("gets navigation's parent from context", () => {
     return null;
   };
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo">
@@ -112,7 +112,7 @@ test("gets navigation's parent from context", () => {
   );
 });
 
-test('gets navigation from container from context', () => {
+test('gets navigation from container from context', async () => {
   expect.assertions(3);
 
   const TestNavigator = (props: any): any => {
@@ -143,7 +143,7 @@ test('gets navigation from container from context', () => {
     return null;
   };
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <Test />
       <TestNavigator>
@@ -153,7 +153,7 @@ test('gets navigation from container from context', () => {
   );
 });
 
-test('gets navigation by route name', () => {
+test('gets navigation by route name', async () => {
   expect.assertions(8);
 
   const TestNavigator = (props: any): any => {
@@ -210,7 +210,7 @@ test('gets navigation by route name', () => {
     return null;
   };
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo">
@@ -232,7 +232,7 @@ test('gets navigation by route name', () => {
   );
 });
 
-test('gets navigation in preloaded screen', () => {
+test('gets navigation in preloaded screen', async () => {
   expect.assertions(4);
 
   const TestNavigator = (props: any): any => {
@@ -276,7 +276,7 @@ test('gets navigation in preloaded screen', () => {
 
   const ref = createNavigationContainerRef();
 
-  render(
+  await render(
     <BaseNavigationContainer ref={ref}>
       <TestNavigator>
         <Screen name="foo">
@@ -291,13 +291,13 @@ test('gets navigation in preloaded screen', () => {
     </BaseNavigationContainer>
   );
 
-  act(() => {
+  await act(() => {
     // @ts-expect-error - types not configured for test
     ref.preload('baz');
   });
 });
 
-test('throws if called outside a navigation context', () => {
+test('throws if called outside a navigation context', async () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -309,5 +309,5 @@ test('throws if called outside a navigation context', () => {
     return null;
   };
 
-  render(<Test />);
+  await render(<Test />);
 });

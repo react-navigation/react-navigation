@@ -11,7 +11,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('gets route prop from context', () => {
+test('gets route prop from context', async () => {
   expect.assertions(2);
 
   const TestNavigator = (props: any): any => {
@@ -35,7 +35,7 @@ test('gets route prop from context', () => {
     return null;
   };
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={Test} initialParams={{ x: 1 }} />
@@ -44,7 +44,7 @@ test('gets route prop from context', () => {
   );
 });
 
-test('throws if not used in a screen', () => {
+test('throws if not used in a screen', async () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -56,10 +56,10 @@ test('throws if not used in a screen', () => {
     return null;
   };
 
-  render(<Test />);
+  await render(<Test />);
 });
 
-test("throws if provided route name doesn't match current route name", () => {
+test("throws if provided route name doesn't match current route name", async () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
@@ -84,7 +84,7 @@ test("throws if provided route name doesn't match current route name", () => {
     return null;
   };
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={Test} initialParams={{ x: 1 }} />
@@ -93,7 +93,7 @@ test("throws if provided route name doesn't match current route name", () => {
   );
 });
 
-test('returns route for the current route when name matches', () => {
+test('returns route for the current route when name matches', async () => {
   expect.assertions(2);
 
   const TestNavigator = (props: any): any => {
@@ -118,7 +118,7 @@ test('returns route for the current route when name matches', () => {
     return null;
   };
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={Test} initialParams={{ x: 1 }} />
@@ -127,7 +127,7 @@ test('returns route for the current route when name matches', () => {
   );
 });
 
-test('returns route for parent screen when nested', () => {
+test('returns route for parent screen when nested', async () => {
   expect.assertions(3);
 
   const ParentNavigator = (props: any): any => {
@@ -173,7 +173,7 @@ test('returns route for parent screen when nested', () => {
     </ChildNavigator>
   );
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <ParentNavigator>
         <Screen
@@ -186,7 +186,7 @@ test('returns route for parent screen when nested', () => {
   );
 });
 
-test('throws error for non-existent route name', () => {
+test('throws error for non-existent route name', async () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
@@ -213,7 +213,7 @@ test('throws error for non-existent route name', () => {
     return null;
   };
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={Test} />
@@ -222,7 +222,7 @@ test('throws error for non-existent route name', () => {
   );
 });
 
-test('throws error on accessing a child route from the parent', () => {
+test('throws error on accessing a child route from the parent', async () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
@@ -253,14 +253,14 @@ test('throws error on accessing a child route from the parent', () => {
     );
   };
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <Test />
     </BaseNavigationContainer>
   );
 });
 
-test('throws error on accessing a sibling route', () => {
+test('throws error on accessing a sibling route', async () => {
   expect.assertions(1);
 
   const TestNavigator = (props: any): any => {
@@ -287,7 +287,7 @@ test('throws error on accessing a sibling route', () => {
     return null;
   };
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={Test} />

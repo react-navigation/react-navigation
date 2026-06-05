@@ -4,7 +4,7 @@ import {
   StackActions,
   TabActions,
 } from '@react-navigation/core';
-import { fireEvent, render } from '@testing-library/react-native';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
@@ -15,7 +15,7 @@ type RootParamList = { Foo: undefined; Bar: { id: string } };
 
 jest.replaceProperty(Platform, 'OS', 'web');
 
-test('renders link with href on web', () => {
+test('renders link with href on web', async () => {
   const config = {
     config: {
       screens: {
@@ -42,7 +42,7 @@ test('renders link with href on web', () => {
     return <Link<any> screen="Foo">Go to Foo</Link>;
   };
 
-  const { getByText, toJSON } = render(
+  const { toJSON } = await render(
     <NavigationContainer linking={config}>
       <Stack.Navigator>
         <Stack.Screen name="Foo" component={FooScreen} />
@@ -75,12 +75,12 @@ test('renders link with href on web', () => {
 
   const event = {
     defaultPrevented: false,
-    preventDefault() {
-      event.defaultPrevented = true;
+    preventDefault(this: { defaultPrevented: boolean }) {
+      this.defaultPrevented = true;
     },
   };
 
-  fireEvent.press(getByText('Go to Bar'), event);
+  await fireEvent.press(screen.getByText('Go to Bar'), event);
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
@@ -105,7 +105,7 @@ test('renders link with href on web', () => {
 `);
 });
 
-test("doesn't navigate if default was prevented", () => {
+test("doesn't navigate if default was prevented", async () => {
   const config = {
     config: {
       screens: {
@@ -136,7 +136,7 @@ test("doesn't navigate if default was prevented", () => {
     return <Link<any> screen="Foo">Go to Foo</Link>;
   };
 
-  const { getByText, toJSON } = render(
+  const { toJSON } = await render(
     <NavigationContainer linking={config}>
       <Stack.Navigator>
         <Stack.Screen name="Foo" component={FooScreen} />
@@ -169,12 +169,12 @@ test("doesn't navigate if default was prevented", () => {
 
   const event = {
     defaultPrevented: false,
-    preventDefault() {
-      event.defaultPrevented = true;
+    preventDefault(this: { defaultPrevented: boolean }) {
+      this.defaultPrevented = true;
     },
   };
 
-  fireEvent.press(getByText('Go to Bar'), event);
+  await fireEvent.press(screen.getByText('Go to Bar'), event);
 
   expect(toJSON()).toMatchInlineSnapshot(`
 <Text
@@ -207,7 +207,7 @@ test.each([
   ['TabActions.jumpTo', TabActions.jumpTo],
 ])(
   'renders link with href from %s when only action is specified',
-  (_, actionCreator) => {
+  async (_, actionCreator) => {
     const config = {
       config: {
         screens: {
@@ -232,7 +232,7 @@ test.each([
       return <Link<any> screen="Foo">Go to Foo</Link>;
     };
 
-    const { toJSON } = render(
+    const { toJSON } = await render(
       <NavigationContainer linking={config}>
         <Stack.Navigator>
           <Stack.Screen name="Foo" component={FooScreen} />
@@ -265,7 +265,7 @@ test.each([
   }
 );
 
-test('does not render link with href from action when no linking config is present', () => {
+test('does not render link with href from action when no linking config is present', async () => {
   const Stack = createStackNavigator<RootParamList>();
 
   const FooScreen = () => {
@@ -280,7 +280,7 @@ test('does not render link with href from action when no linking config is prese
     return <Link<any> screen="Foo">Go to Foo</Link>;
   };
 
-  const { toJSON } = render(
+  const { toJSON } = await render(
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Foo" component={FooScreen} />
@@ -311,7 +311,7 @@ test('does not render link with href from action when no linking config is prese
 `);
 });
 
-test('does not render link with href from action when screen is not in linking config', () => {
+test('does not render link with href from action when screen is not in linking config', async () => {
   const config = {
     config: {
       screens: {
@@ -337,7 +337,7 @@ test('does not render link with href from action when screen is not in linking c
     return <Link<any> screen="Foo">Go to Foo</Link>;
   };
 
-  const { toJSON } = render(
+  const { toJSON } = await render(
     <NavigationContainer linking={config}>
       <Stack.Navigator>
         <Stack.Screen name="Foo" component={FooScreen} />

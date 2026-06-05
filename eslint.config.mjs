@@ -73,6 +73,28 @@ export default defineConfig([
     },
   },
   {
+    files: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/*.test.{js,jsx,ts,tsx}'],
+
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            '@react-navigation/*/*',
+            '!@react-navigation/native/server',
+          ],
+
+          paths: [
+            {
+              name: '@react-navigation/core',
+              message: 'Import from `@react-navigation/native` instead.',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['packages/{native,devtools}/src/**'],
 
     rules: {

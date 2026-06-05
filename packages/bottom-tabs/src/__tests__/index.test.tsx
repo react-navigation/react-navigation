@@ -1,10 +1,9 @@
 import { afterEach, expect, jest, test } from '@jest/globals';
-import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
   NavigationContainer,
 } from '@react-navigation/native';
-import { act, fireEvent, render } from '@testing-library/react-native';
+import { act, render, screen, userEvent } from '@testing-library/react-native';
 import { useEffect } from 'react';
 import {
   type EmitterSubscription,
@@ -12,6 +11,7 @@ import {
   type KeyboardEventListener,
   type KeyboardEventName,
   Platform,
+  Text,
   View,
 } from 'react-native';
 
@@ -36,8 +36,9 @@ test('renders a bottom tab navigator with screens', async () => {
   );
 
   const Tab = createBottomTabNavigator<BottomTabParamList>();
+  const user = userEvent.setup();
 
-  const { queryByText, getAllByRole, getByRole } = render(
+  await render(
     <NavigationContainer>
       <Tab.Navigator implementation="custom">
         <Tab.Screen name="A" component={Test} />
@@ -46,16 +47,16 @@ test('renders a bottom tab navigator with screens', async () => {
     </NavigationContainer>
   );
 
-  expect(queryByText('Screen A')).not.toBeNull();
-  expect(queryByText('Screen B')).toBeNull();
+  expect(screen.getByText('Screen A')).not.toBeNull();
+  expect(screen.queryByText('Screen B')).toBeNull();
 
   expect(
-    getAllByRole('button', { name: /(A|B), (selected|unselected)/ })
+    screen.getAllByRole('button', { name: /(A|B), (selected|unselected)/ })
   ).toHaveLength(2);
 
-  fireEvent.press(getByRole('button', { name: 'B, unselected' }), {});
+  await user.press(screen.getByRole('button', { name: 'B, unselected' }));
 
-  expect(queryByText('Screen B')).not.toBeNull();
+  expect(screen.getByText('Screen B')).not.toBeNull();
 });
 
 test('handles screens preloading', async () => {
@@ -63,7 +64,7 @@ test('handles screens preloading', async () => {
 
   const navigation = createNavigationContainerRef<BottomTabParamList>();
 
-  const { queryByText } = render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Tab.Navigator implementation="custom">
         <Tab.Screen name="A">{() => null}</Tab.Screen>
@@ -72,10 +73,14 @@ test('handles screens preloading', async () => {
     </NavigationContainer>
   );
 
-  expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
-  act(() => navigation.preload('B'));
   expect(
-    queryByText('Screen B', { includeHiddenElements: true })
+    screen.queryByText('Screen B', { includeHiddenElements: true })
+  ).toBeNull();
+
+  await act(() => navigation.preload('B'));
+
+  expect(
+    screen.getByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
 });
 
@@ -105,8 +110,9 @@ test('tab bar cannot be tapped when hidden', async () => {
   );
 
   const Tab = createBottomTabNavigator<BottomTabParamList>();
+  const user = userEvent.setup();
 
-  const { queryByText, getByRole } = render(
+  await render(
     <NavigationContainer>
       <Tab.Navigator
         implementation="custom"
@@ -120,15 +126,15 @@ test('tab bar cannot be tapped when hidden', async () => {
     </NavigationContainer>
   );
 
-  expect(queryByText('Screen B')).toBeNull();
+  expect(screen.queryByText('Screen B')).toBeNull();
 
-  fireEvent.press(getByRole('button', { name: 'B, unselected' }), {});
+  await user.press(screen.getByRole('button', { name: 'B, unselected' }));
 
-  act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
 
-  expect(queryByText('Screen B')).not.toBeNull();
+  expect(screen.getByText('Screen B')).not.toBeNull();
 
-  act(() => {
+  await act(() => {
     // Show the keyboard to hide the tab bar
     listeners.keyboardWillShow.forEach((listener) =>
       // @ts-expect-error: mock event
@@ -136,22 +142,22 @@ test('tab bar cannot be tapped when hidden', async () => {
     );
   });
 
-  fireEvent.press(getByRole('button', { name: 'A, unselected' }), {});
+  await user.press(screen.getByRole('button', { name: 'A, unselected' }));
 
-  act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
 
-  expect(queryByText('Screen A')).toBeNull();
-  expect(queryByText('Screen B')).not.toBeNull();
+  expect(screen.queryByText('Screen A')).toBeNull();
+  expect(screen.getByText('Screen B')).not.toBeNull();
 
   spy.mockRestore();
 });
 
-test('tab bars render appropriate hrefs on web', () => {
+test('tab bars render appropriate hrefs on web', async () => {
   jest.replaceProperty(Platform, 'OS', 'web');
 
   const Tab = createBottomTabNavigator<BottomTabParamList>();
 
-  const { getByText } = render(
+  await render(
     <NavigationContainer
       linking={{
         config: {
@@ -174,11 +180,11 @@ test('tab bars render appropriate hrefs on web', () => {
     </NavigationContainer>
   );
 
-  expect(getByText('/root/first')).not.toBeNull();
-  expect(getByText('/root/second')).not.toBeNull();
+  expect(screen.getByText('/root/first')).not.toBeNull();
+  expect(screen.getByText('/root/second')).not.toBeNull();
 });
 
-test('inactiveBehavior="none" keeps effects active when switching tabs', () => {
+test('inactiveBehavior="none" keeps effects active when switching tabs', async () => {
   let effectActive = false;
 
   const ScreenA = () => {
@@ -194,7 +200,7 @@ test('inactiveBehavior="none" keeps effects active when switching tabs', () => {
   const Tab = createBottomTabNavigator<BottomTabParamList>();
   const navigation = createNavigationContainerRef<BottomTabParamList>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Tab.Navigator implementation="custom">
         <Tab.Screen
@@ -209,12 +215,12 @@ test('inactiveBehavior="none" keeps effects active when switching tabs', () => {
 
   expect(effectActive).toBe(true);
 
-  act(() => navigation.navigate('B'));
+  await act(() => navigation.navigate('B'));
 
   expect(effectActive).toBe(true);
 });
 
-test('default inactiveBehavior="pause" unmounts effects when switching tabs', () => {
+test('default inactiveBehavior="pause" unmounts effects when switching tabs', async () => {
   let effectActive = false;
 
   const ScreenA = () => {
@@ -230,7 +236,7 @@ test('default inactiveBehavior="pause" unmounts effects when switching tabs', ()
   const Tab = createBottomTabNavigator<BottomTabParamList>();
   const navigation = createNavigationContainerRef<BottomTabParamList>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Tab.Navigator implementation="custom">
         <Tab.Screen name="A" component={ScreenA} />
@@ -241,17 +247,17 @@ test('default inactiveBehavior="pause" unmounts effects when switching tabs', ()
 
   expect(effectActive).toBe(true);
 
-  act(() => navigation.navigate('B'));
+  await act(() => navigation.navigate('B'));
 
   expect(effectActive).toBe(true);
 
-  act(() => jest.runAllTimers());
-  act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
 
   expect(effectActive).toBe(false);
 });
 
-test('preloading a screen runs effects', () => {
+test('preloading a screen runs effects', async () => {
   let effectActive = false;
 
   const ScreenB = () => {
@@ -267,7 +273,7 @@ test('preloading a screen runs effects', () => {
   const Tab = createBottomTabNavigator<BottomTabParamList>();
   const navigation = createNavigationContainerRef<BottomTabParamList>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Tab.Navigator implementation="custom">
         <Tab.Screen name="A">{() => null}</Tab.Screen>
@@ -278,12 +284,12 @@ test('preloading a screen runs effects', () => {
 
   expect(effectActive).toBe(false);
 
-  act(() => navigation.preload('B'));
+  await act(() => navigation.preload('B'));
 
   expect(effectActive).toBe(true);
 });
 
-test('lazy=false pre-renders screen with effects active, pauses after first visit', () => {
+test('lazy=false pre-renders screen with effects active, pauses after first visit', async () => {
   let effectActive = false;
 
   const ScreenB = () => {
@@ -299,7 +305,7 @@ test('lazy=false pre-renders screen with effects active, pauses after first visi
   const Tab = createBottomTabNavigator<BottomTabParamList>();
   const navigation = createNavigationContainerRef<BottomTabParamList>();
 
-  const { queryByText } = render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Tab.Navigator implementation="custom">
         <Tab.Screen name="A">{() => null}</Tab.Screen>
@@ -309,18 +315,18 @@ test('lazy=false pre-renders screen with effects active, pauses after first visi
   );
 
   expect(
-    queryByText('Screen B', { includeHiddenElements: true })
+    screen.getByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
 
   expect(effectActive).toBe(true);
 
-  act(() => navigation.navigate('B'));
-  act(() => navigation.navigate('A'));
+  await act(() => navigation.navigate('B'));
+  await act(() => navigation.navigate('A'));
 
   expect(effectActive).toBe(true);
 
-  act(() => jest.runAllTimers());
-  act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
 
   expect(effectActive).toBe(false);
 });

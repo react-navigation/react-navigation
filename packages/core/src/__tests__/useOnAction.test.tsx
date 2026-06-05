@@ -33,7 +33,7 @@ beforeEach(() => {
   require('nanoid/non-secure').__key = 0;
 });
 
-test("lets parent handle the action if child didn't", () => {
+test("lets parent handle the action if child didn't", async () => {
   function CurrentRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const ParentRouter: Router<
@@ -93,7 +93,7 @@ test("lets parent handle the action if child didn't", () => {
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <BaseNavigationContainer onStateChange={onStateChange}>
       <ParentNavigator initialRouteName="baz">
         <Screen name="foo">{() => null}</Screen>
@@ -124,7 +124,7 @@ test("lets parent handle the action if child didn't", () => {
   });
 });
 
-test('action goes to hidden nested navigator if target is specified', () => {
+test('action goes to hidden nested navigator if target is specified', async () => {
   const ParentNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -160,7 +160,7 @@ test('action goes to hidden nested navigator if target is specified', () => {
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  render(
+  await render(
     <BaseNavigationContainer ref={navigation}>
       <ParentNavigator>
         <Screen name="parent-a">
@@ -178,9 +178,9 @@ test('action goes to hidden nested navigator if target is specified', () => {
 
   const childKey = navigation.getRootState().routes[0].state?.key;
 
-  act(() => navigation.navigate('parent-b'));
+  await act(() => navigation.navigate('parent-b'));
 
-  act(() =>
+  await act(() =>
     navigation.dispatch({
       ...CommonActions.navigate('child-b'),
       target: childKey,
@@ -214,7 +214,7 @@ test('action goes to hidden nested navigator if target is specified', () => {
   });
 });
 
-test('action goes to correct parent navigator if target is specified', () => {
+test('action goes to correct parent navigator if target is specified', async () => {
   function CurrentTestRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const TestRouter: Router<
@@ -311,7 +311,7 @@ test('action goes to correct parent navigator if target is specified', () => {
     </BaseNavigationContainer>
   );
 
-  render(element).update(element);
+  await render(element);
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -342,7 +342,7 @@ test('action goes to correct parent navigator if target is specified', () => {
   });
 });
 
-test('action goes to correct child navigator if target is specified', () => {
+test('action goes to correct child navigator if target is specified', async () => {
   function CurrentTestRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const TestRouter: Router<
@@ -434,9 +434,9 @@ test('action goes to correct child navigator if target is specified', () => {
     </BaseNavigationContainer>
   );
 
-  render(element).update(element);
+  await render(element);
 
-  act(() => {
+  await act(() => {
     ref.dispatch({ type: 'REVERSE', target: '1' });
   });
 
@@ -469,7 +469,7 @@ test('action goes to correct child navigator if target is specified', () => {
   });
 });
 
-test("action doesn't bubble if target is specified", () => {
+test("action doesn't bubble if target is specified", async () => {
   const CurrentParentRouter = MockRouter;
 
   function CurrentChildRouter(options: DefaultRouterOptions) {
@@ -553,12 +553,12 @@ test("action doesn't bubble if target is specified", () => {
     </BaseNavigationContainer>
   );
 
-  render(element).update(element);
+  await render(element);
 
   expect(onStateChange).not.toHaveBeenCalled();
 });
 
-test('logs error if no navigator handled the action', () => {
+test('logs error if no navigator handled the action', async () => {
   const TestRouter = MockRouter;
 
   const TestNavigator = (props: any) => {
@@ -623,7 +623,7 @@ test('logs error if no navigator handled the action', () => {
 
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-  render(element).update(element);
+  await render(element);
 
   expect(spy).toHaveBeenCalledTimes(1);
   expect(spy).toHaveBeenCalledWith(
@@ -635,7 +635,7 @@ test('logs error if no navigator handled the action', () => {
   spy.mockRestore();
 });
 
-test("prevents removing a screen with 'beforeRemove' event", () => {
+test("prevents removing a screen with 'beforeRemove' event", async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -688,9 +688,9 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
-  act(() => ref.current?.navigate('bar'));
+  await act(() => ref.current?.navigate('bar'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -706,7 +706,7 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
     type: 'stack',
   });
 
-  act(() => ref.current?.navigate('baz'));
+  await act(() => ref.current?.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -726,7 +726,7 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
     type: 'stack',
   });
 
-  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onBeforeRemove).toHaveBeenCalledTimes(1);
@@ -747,7 +747,7 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
 
   shouldPrevent = false;
 
-  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -763,8 +763,8 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
   shouldPrevent = true;
   shouldContinue = true;
 
-  act(() => ref.current?.navigate('bar'));
-  act(() => ref.current?.navigate('foo'));
+  await act(() => ref.current?.navigate('bar'));
+  await act(() => ref.current?.navigate('foo'));
 
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -778,7 +778,7 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
   });
 });
 
-test("prevents removing a child screen with 'beforeRemove' event", () => {
+test("prevents removing a child screen with 'beforeRemove' event", async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -838,9 +838,9 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
-  act(() => ref.current?.navigate('bar'));
+  await act(() => ref.current?.navigate('bar'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -856,7 +856,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
     type: 'stack',
   });
 
-  act(() => ref.current?.navigate('baz'));
+  await act(() => ref.current?.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -885,7 +885,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
     type: 'stack',
   });
 
-  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onBeforeRemove).toHaveBeenCalledTimes(1);
@@ -918,7 +918,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
 
   shouldPrevent = false;
 
-  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -934,8 +934,8 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
   shouldPrevent = true;
   shouldContinue = true;
 
-  act(() => ref.current?.navigate('bar'));
-  act(() => ref.current?.navigate('foo'));
+  await act(() => ref.current?.navigate('bar'));
+  await act(() => ref.current?.navigate('foo'));
 
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -949,7 +949,7 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
   });
 });
 
-test("prevents removing a grand child screen with 'beforeRemove' event", () => {
+test("prevents removing a grand child screen with 'beforeRemove' event", async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -1014,9 +1014,9 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
-  act(() => ref.current?.navigate('bar'));
+  await act(() => ref.current?.navigate('bar'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1032,7 +1032,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
     type: 'stack',
   });
 
-  act(() => ref.current?.navigate('baz'));
+  await act(() => ref.current?.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1075,7 +1075,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
     type: 'stack',
   });
 
-  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onBeforeRemove).toHaveBeenCalledTimes(1);
@@ -1122,7 +1122,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
 
   shouldPrevent = false;
 
-  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1138,8 +1138,8 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
   shouldPrevent = true;
   shouldContinue = true;
 
-  act(() => ref.current?.navigate('bar'));
-  act(() => ref.current?.navigate('foo'));
+  await act(() => ref.current?.navigate('bar'));
+  await act(() => ref.current?.navigate('foo'));
 
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1153,7 +1153,7 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
   });
 });
 
-test("prevents removing by multiple screens with 'beforeRemove' event", () => {
+test("prevents removing by multiple screens with 'beforeRemove' event", async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -1225,9 +1225,9 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
-  act(() => {
+  await act(() => {
     ref.current?.navigate('bar');
     ref.current?.navigate('baz');
     ref.current?.navigate('bax');
@@ -1277,7 +1277,7 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith(preventedState);
 
-  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onBeforeRemove.lex).toHaveBeenCalledTimes(1);
@@ -1286,7 +1286,7 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
 
   shouldPrevent.lex = false;
 
-  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onBeforeRemove.baz).toHaveBeenCalledTimes(1);
@@ -1295,7 +1295,7 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
 
   shouldPrevent.baz = false;
 
-  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onBeforeRemove.bar).toHaveBeenCalledTimes(1);
@@ -1304,7 +1304,7 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
 
   shouldPrevent.bar = false;
 
-  act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1318,7 +1318,7 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
   });
 });
 
-test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'", () => {
+test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'", async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -1378,9 +1378,9 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
-  act(() => ref.current?.navigate('baz'));
+  await act(() => ref.current?.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1408,7 +1408,7 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
     type: 'stack',
   });
 
-  act(() => {
+  await act(() => {
     const state = {
       index: 0,
       key: 'stack-2',
@@ -1452,7 +1452,7 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
 
   shouldPrevent = false;
 
-  act(() => {
+  await act(() => {
     const state = {
       index: 0,
       key: 'stack-2',

@@ -30,7 +30,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('throws when getState is accessed without a container', () => {
+test('throws when getState is accessed without a container', async () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -44,12 +44,12 @@ test('throws when getState is accessed without a container', () => {
 
   const element = <Test />;
 
-  expect(() => render(element).update(element)).toThrow(
+  await expect(render(element)).rejects.toThrow(
     "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
   );
 });
 
-test('throws when setState is accessed without a container', () => {
+test('throws when setState is accessed without a container', async () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -63,13 +63,13 @@ test('throws when setState is accessed without a container', () => {
 
   const element = <Test />;
 
-  expect(() => render(element).update(element)).toThrow(
+  await expect(render(element)).rejects.toThrow(
     "Couldn't find a navigation context. Have you wrapped your app with 'NavigationContainer'?"
   );
 });
 
-test('throws when nesting containers', () => {
-  expect(() =>
+test('throws when nesting containers', async () => {
+  await expect(
     render(
       <BaseNavigationContainer>
         <BaseNavigationContainer>
@@ -77,11 +77,11 @@ test('throws when nesting containers', () => {
         </BaseNavigationContainer>
       </BaseNavigationContainer>
     )
-  ).toThrow(
+  ).rejects.toThrow(
     "Looks like you have nested a 'NavigationContainer' inside another."
   );
 
-  expect(() =>
+  await expect(
     render(
       <BaseNavigationContainer>
         <NavigationIndependentTree>
@@ -91,12 +91,10 @@ test('throws when nesting containers', () => {
         </NavigationIndependentTree>
       </BaseNavigationContainer>
     )
-  ).not.toThrow(
-    "Looks like you have nested a 'NavigationContainer' inside another."
-  );
+  ).resolves.toBeDefined();
 });
 
-test('handle dispatching with ref', () => {
+test('handle dispatching with ref', async () => {
   function CurrentRootRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const RootRouter: Router<
@@ -162,9 +160,9 @@ test('handle dispatching with ref', () => {
     </BaseNavigationContainer>
   );
 
-  render(element).update(element);
+  await render(element);
 
-  act(() => {
+  await act(() => {
     ref.current?.dispatch({ type: 'REVERSE' });
   });
 
@@ -182,7 +180,7 @@ test('handle dispatching with ref', () => {
   });
 });
 
-test('handle resetting state with ref', () => {
+test('handle resetting state with ref', async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -225,7 +223,7 @@ test('handle resetting state with ref', () => {
     </BaseNavigationContainer>
   );
 
-  render(element).update(element);
+  await render(element);
 
   const state = {
     index: 1,
@@ -247,7 +245,7 @@ test('handle resetting state with ref', () => {
     ],
   };
 
-  act(() => {
+  await act(() => {
     ref.current?.resetRoot(state);
   });
 
@@ -279,7 +277,7 @@ test('handle resetting state with ref', () => {
   });
 });
 
-test('handles getRootState', () => {
+test('handles getRootState', async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -311,7 +309,7 @@ test('handles getRootState', () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   let state;
   if (ref.current) {
@@ -344,7 +342,7 @@ test('handles getRootState', () => {
   });
 });
 
-test('emits ready event when the container is ready with synchronous content', () => {
+test('emits ready event when the container is ready with synchronous content', async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -367,7 +365,7 @@ test('emits ready event when the container is ready with synchronous content', (
 
   expect(listener).not.toHaveBeenCalled();
 
-  render(
+  await render(
     <BaseNavigationContainer ref={ref}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
@@ -400,7 +398,7 @@ test('emits ready event when the container is ready with asynchronous content', 
     listener(ref.isReady(), ref.getCurrentRoute()?.name);
   });
 
-  const wrapper = render(
+  const wrapper = await render(
     <BaseNavigationContainer ref={ref}>{null}</BaseNavigationContainer>
   );
 
@@ -408,7 +406,7 @@ test('emits ready event when the container is ready with asynchronous content', 
 
   await Promise.resolve();
 
-  wrapper.update(
+  await wrapper.rerender(
     <BaseNavigationContainer ref={ref}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
@@ -421,7 +419,7 @@ test('emits ready event when the container is ready with asynchronous content', 
   expect(listener).toHaveBeenCalledWith(true, 'foo');
 });
 
-test('emits state events when the state changes', () => {
+test('emits state events when the state changes', async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -447,7 +445,7 @@ test('emits state events when the state changes', () => {
     </BaseNavigationContainer>
   );
 
-  render(element).update(element);
+  await render(element);
 
   const listener =
     jest.fn<EventListenerCallback<NavigationContainerEventMap, 'state'>>();
@@ -456,7 +454,7 @@ test('emits state events when the state changes', () => {
 
   expect(listener).not.toHaveBeenCalled();
 
-  act(() => {
+  await act(() => {
     ref.current?.navigate('bar');
   });
 
@@ -474,7 +472,7 @@ test('emits state events when the state changes', () => {
     ],
   });
 
-  act(() => {
+  await act(() => {
     ref.current?.navigate('baz', { answer: 42 });
   });
 
@@ -493,7 +491,7 @@ test('emits state events when the state changes', () => {
   });
 });
 
-test('emits state events when new navigator mounts', () => {
+test('emits state events when new navigator mounts', async () => {
   jest.useFakeTimers();
 
   const TestNavigator = (props: any) => {
@@ -541,7 +539,7 @@ test('emits state events when new navigator mounts', () => {
     </BaseNavigationContainer>
   );
 
-  render(element).update(element);
+  await render(element);
 
   const listener =
     jest.fn<EventListenerCallback<NavigationContainerEventMap, 'state'>>();
@@ -551,7 +549,7 @@ test('emits state events when new navigator mounts', () => {
   expect(listener).not.toHaveBeenCalled();
   expect(onStateChange).not.toHaveBeenCalled();
 
-  act(() => {
+  await act(() => {
     jest.runAllTimers();
   });
 
@@ -588,7 +586,7 @@ test('emits state events when new navigator mounts', () => {
   expect(onStateChange).toHaveBeenLastCalledWith(resultState);
 });
 
-test('emits option events when options change with tab router', () => {
+test('emits option events when options change with tab router', async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       TabRouter,
@@ -632,10 +630,10 @@ test('emits option events when options change with tab router', () => {
   const listener =
     jest.fn<EventListenerCallback<NavigationContainerEventMap, 'options'>>();
 
-  render(element).update(element);
+  await render(element);
   ref.current?.addListener('options', listener);
 
-  act(() => {
+  await act(() => {
     ref.current?.navigate('bar');
   });
 
@@ -650,7 +648,7 @@ test('emits option events when options change with tab router', () => {
 
   ref.current?.addListener('options', listener2);
 
-  act(() => {
+  await act(() => {
     ref.current?.navigate('baz');
   });
 
@@ -658,7 +656,7 @@ test('emits option events when options change with tab router', () => {
   expect(listener2.mock.calls[0][0].data.options).toEqual({ g: 5 });
   expect(ref.current?.getCurrentOptions()).toEqual({ g: 5 });
 
-  act(() => {
+  await act(() => {
     ref.current?.navigate('quxx');
   });
 
@@ -667,7 +665,7 @@ test('emits option events when options change with tab router', () => {
   expect(ref.current?.getCurrentOptions()).toEqual({ h: 9 });
 });
 
-test('emits option events when options change with stack router', () => {
+test('emits option events when options change with stack router', async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -711,10 +709,10 @@ test('emits option events when options change with stack router', () => {
   const listener =
     jest.fn<EventListenerCallback<NavigationContainerEventMap, 'options'>>();
 
-  render(element).update(element);
+  await render(element);
   ref.current?.addListener('options', listener);
 
-  act(() => {
+  await act(() => {
     ref.current?.navigate('bar');
   });
 
@@ -729,7 +727,7 @@ test('emits option events when options change with stack router', () => {
 
   ref.current?.addListener('options', listener2);
 
-  act(() => {
+  await act(() => {
     ref.current?.navigate('baz');
   });
 
@@ -737,7 +735,7 @@ test('emits option events when options change with stack router', () => {
   expect(listener2.mock.calls[0][0].data.options).toEqual({ g: 5 });
   expect(ref.current?.getCurrentOptions()).toEqual({ g: 5 });
 
-  act(() => {
+  await act(() => {
     ref.current?.navigate('quxx');
   });
 
@@ -746,7 +744,7 @@ test('emits option events when options change with stack router', () => {
   expect(ref.current?.getCurrentOptions()).toEqual({ h: 9 });
 });
 
-test('throws if there is no navigator rendered', () => {
+test('throws if there is no navigator rendered', async () => {
   expect.assertions(1);
 
   const ref = createNavigationContainerRef<ParamListBase>();
@@ -755,7 +753,7 @@ test('throws if there is no navigator rendered', () => {
     <BaseNavigationContainer ref={ref}>{null}</BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -768,7 +766,7 @@ test('throws if there is no navigator rendered', () => {
   spy.mockRestore();
 });
 
-test("throws if the ref hasn't finished initializing", () => {
+test("throws if the ref hasn't finished initializing", async () => {
   expect.assertions(1);
 
   const ref = createNavigationContainerRef<ParamListBase>();
@@ -810,10 +808,10 @@ test("throws if the ref hasn't finished initializing", () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 });
 
-test('handles action dispatched on the ref after navigator is rendered', () => {
+test('handles action dispatched on the ref after navigator is rendered', async () => {
   function CurrentRouter(options: DefaultRouterOptions) {
     const CurrentMockRouter = MockRouter(options);
     const RootRouter: Router<
@@ -870,7 +868,7 @@ test('handles action dispatched on the ref after navigator is rendered', () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
@@ -885,7 +883,7 @@ test('handles action dispatched on the ref after navigator is rendered', () => {
   });
 });
 
-test('fires onReady after navigator is rendered', () => {
+test('fires onReady after navigator is rendered', async () => {
   const ref = createNavigationContainerRef<ParamListBase>();
 
   const TestNavigator = (props: any) => {
@@ -909,12 +907,12 @@ test('fires onReady after navigator is rendered', () => {
     </BaseNavigationContainer>
   );
 
-  const root = render(element);
+  const root = await render(element);
 
   expect(onReady).not.toHaveBeenCalled();
   expect(ref.current?.isReady()).toBe(false);
 
-  root.rerender(
+  await root.rerender(
     <BaseNavigationContainer ref={ref} onReady={onReady}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
@@ -926,7 +924,7 @@ test('fires onReady after navigator is rendered', () => {
   expect(ref.current?.isReady()).toBe(true);
 });
 
-test('invokes the unhandled action listener with the unhandled action', () => {
+test('invokes the unhandled action listener with the unhandled action', async () => {
   const ref = createNavigationContainerRef<ParamListBase>();
   const fn = jest.fn();
 
@@ -945,7 +943,7 @@ test('invokes the unhandled action listener with the unhandled action', () => {
 
   const TestScreen = () => <></>;
 
-  render(
+  await render(
     <BaseNavigationContainer ref={ref} onUnhandledAction={fn}>
       <TestNavigator>
         <Screen name="foo" component={TestScreen} />
@@ -954,8 +952,8 @@ test('invokes the unhandled action listener with the unhandled action', () => {
     </BaseNavigationContainer>
   );
 
-  act(() => ref.current!.navigate('bar'));
-  act(() => ref.current!.navigate('baz'));
+  await act(() => ref.current!.navigate('bar'));
+  await act(() => ref.current!.navigate('baz'));
 
   expect(fn).toHaveBeenCalledWith({
     payload: {
@@ -965,7 +963,7 @@ test('invokes the unhandled action listener with the unhandled action', () => {
   });
 });
 
-test('works with state change events in independent nested container', () => {
+test('works with state change events in independent nested container', async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -983,7 +981,7 @@ test('works with state change events in independent nested container', () => {
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo">
@@ -1003,7 +1001,7 @@ test('works with state change events in independent nested container', () => {
     </BaseNavigationContainer>
   );
 
-  act(() => ref.current?.navigate('lex'));
+  await act(() => ref.current?.navigate('lex'));
 
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
@@ -1030,7 +1028,7 @@ test('works with state change events in independent nested container', () => {
   });
 });
 
-test('warns for duplicate route names nested inside each other', () => {
+test('warns for duplicate route names nested inside each other', async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -1048,7 +1046,7 @@ test('warns for duplicate route names nested inside each other', () => {
 
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo">
@@ -1068,7 +1066,7 @@ test('warns for duplicate route names nested inside each other', () => {
     'Found screens with the same name nested inside one another.'
   );
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="qux">
@@ -1094,7 +1092,7 @@ test('warns for duplicate route names nested inside each other', () => {
     'Found screens with the same name nested inside one another.'
   );
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator initialRouteName="bar">
         <Screen name="foo" component={TestScreen} />

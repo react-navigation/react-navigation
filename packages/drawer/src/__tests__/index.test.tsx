@@ -1,14 +1,13 @@
 import 'react-native-gesture-handler/jestSetup';
 
 import { afterEach, expect, jest, test } from '@jest/globals';
-import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
   NavigationContainer,
 } from '@react-navigation/native';
-import { act, fireEvent, render } from '@testing-library/react-native';
+import { act, render, screen, userEvent } from '@testing-library/react-native';
 import { useEffect } from 'react';
-import { Button, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 import { setUpTests } from 'react-native-reanimated';
 
 import { createDrawerNavigator, type DrawerScreenProps } from '../index';
@@ -40,8 +39,9 @@ test('renders a drawer navigator with screens', async () => {
   );
 
   const Drawer = createDrawerNavigator<DrawerParamList>();
+  const user = userEvent.setup();
 
-  const { findByText, queryByText } = render(
+  await render(
     <NavigationContainer>
       <Drawer.Navigator>
         <Drawer.Screen name="A" component={Test} />
@@ -50,12 +50,12 @@ test('renders a drawer navigator with screens', async () => {
     </NavigationContainer>
   );
 
-  expect(queryByText('Screen A')).not.toBeNull();
-  expect(queryByText('Screen B')).toBeNull();
+  expect(screen.getByText('Screen A')).not.toBeNull();
+  expect(screen.queryByText('Screen B')).toBeNull();
 
-  fireEvent(await findByText('Go to B'), 'press');
+  await user.press(screen.getByRole('button', { name: 'Go to B' }));
 
-  expect(queryByText('Screen B')).not.toBeNull();
+  expect(screen.getByText('Screen B')).not.toBeNull();
 });
 
 test('handles screens preloading', async () => {
@@ -63,7 +63,7 @@ test('handles screens preloading', async () => {
 
   const navigation = createNavigationContainerRef<DrawerParamList>();
 
-  const { queryByText } = render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Drawer.Navigator>
         <Drawer.Screen name="A">{() => null}</Drawer.Screen>
@@ -72,14 +72,18 @@ test('handles screens preloading', async () => {
     </NavigationContainer>
   );
 
-  expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
-  act(() => navigation.preload('B'));
   expect(
-    queryByText('Screen B', { includeHiddenElements: true })
+    screen.queryByText('Screen B', { includeHiddenElements: true })
+  ).toBeNull();
+
+  await act(() => navigation.preload('B'));
+
+  expect(
+    screen.getByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
 });
 
-test('inactiveBehavior="none" keeps effects active when navigating away', () => {
+test('inactiveBehavior="none" keeps effects active when navigating away', async () => {
   let effectActive = false;
 
   const ScreenB = () => {
@@ -95,7 +99,7 @@ test('inactiveBehavior="none" keeps effects active when navigating away', () => 
   const Drawer = createDrawerNavigator<DrawerParamList>();
   const navigation = createNavigationContainerRef<DrawerParamList>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Drawer.Navigator>
         <Drawer.Screen name="A">{() => null}</Drawer.Screen>
@@ -108,16 +112,16 @@ test('inactiveBehavior="none" keeps effects active when navigating away', () => 
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('B'));
+  await act(() => navigation.navigate('B'));
 
   expect(effectActive).toBe(true);
 
-  act(() => navigation.navigate('A'));
+  await act(() => navigation.navigate('A'));
 
   expect(effectActive).toBe(true);
 });
 
-test('default inactiveBehavior="pause" unmounts effects when navigating away', () => {
+test('default inactiveBehavior="pause" unmounts effects when navigating away', async () => {
   let effectActive = false;
 
   const ScreenB = () => {
@@ -133,7 +137,7 @@ test('default inactiveBehavior="pause" unmounts effects when navigating away', (
   const Drawer = createDrawerNavigator<DrawerParamList>();
   const navigation = createNavigationContainerRef<DrawerParamList>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Drawer.Navigator>
         <Drawer.Screen name="A">{() => null}</Drawer.Screen>
@@ -142,21 +146,21 @@ test('default inactiveBehavior="pause" unmounts effects when navigating away', (
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('B'));
+  await act(() => navigation.navigate('B'));
 
   expect(effectActive).toBe(true);
 
-  act(() => navigation.navigate('A'));
+  await act(() => navigation.navigate('A'));
 
   expect(effectActive).toBe(true);
 
-  act(() => jest.runAllTimers());
-  act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
 
   expect(effectActive).toBe(false);
 });
 
-test('preloading a screen runs effects', () => {
+test('preloading a screen runs effects', async () => {
   let effectActive = false;
 
   const ScreenB = () => {
@@ -172,7 +176,7 @@ test('preloading a screen runs effects', () => {
   const Drawer = createDrawerNavigator<DrawerParamList>();
   const navigation = createNavigationContainerRef<DrawerParamList>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Drawer.Navigator>
         <Drawer.Screen name="A">{() => null}</Drawer.Screen>
@@ -183,12 +187,12 @@ test('preloading a screen runs effects', () => {
 
   expect(effectActive).toBe(false);
 
-  act(() => navigation.preload('B'));
+  await act(() => navigation.preload('B'));
 
   expect(effectActive).toBe(true);
 });
 
-test('lazy=false pre-renders screen with effects active, pauses after first visit', () => {
+test('lazy=false pre-renders screen with effects active, pauses after first visit', async () => {
   let effectActive = false;
 
   const ScreenB = () => {
@@ -204,7 +208,7 @@ test('lazy=false pre-renders screen with effects active, pauses after first visi
   const Drawer = createDrawerNavigator<DrawerParamList>();
   const navigation = createNavigationContainerRef<DrawerParamList>();
 
-  const { queryByText } = render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Drawer.Navigator>
         <Drawer.Screen name="A">{() => null}</Drawer.Screen>
@@ -215,18 +219,18 @@ test('lazy=false pre-renders screen with effects active, pauses after first visi
 
   // Pre-rendered before any navigation
   expect(
-    queryByText('Screen B', { includeHiddenElements: true })
+    screen.getByText('Screen B', { includeHiddenElements: true })
   ).not.toBeNull();
 
   expect(effectActive).toBe(true);
 
-  act(() => navigation.navigate('B'));
-  act(() => navigation.navigate('A'));
+  await act(() => navigation.navigate('B'));
+  await act(() => navigation.navigate('A'));
 
   expect(effectActive).toBe(true);
 
-  act(() => jest.runAllTimers());
-  act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
 
   // After first focus and navigating away, effects are paused
   expect(effectActive).toBe(false);

@@ -6,25 +6,32 @@ import {
   jest,
   test,
 } from '@jest/globals';
-import { fireEvent, render } from '@testing-library/react-native';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  userEvent,
+} from '@testing-library/react-native';
 import { Platform, View } from 'react-native';
 
 import { PlatformPressable } from '../PlatformPressable';
 
 jest.useFakeTimers();
 
-test('triggers onPress on press event', () => {
+test('triggers onPress on press event', async () => {
   const onPress = jest.fn();
+  const user = userEvent.setup();
 
-  const { getByTestId } = render(
+  await render(
     <PlatformPressable onPress={onPress} testID="pressable">
       <View />
     </PlatformPressable>
   );
 
-  fireEvent.press(getByTestId('pressable'));
+  await user.press(screen.getByTestId('pressable'));
 
-  jest.runAllTimers();
+  await act(() => jest.runAllTimers());
 
   expect(onPress).toHaveBeenCalled();
 });
@@ -38,39 +45,39 @@ describe('web', () => {
     jest.restoreAllMocks();
   });
 
-  test('triggers press on left click', () => {
+  test('triggers press on left click', async () => {
     const onPress = jest.fn();
     const preventDefault = jest.fn();
 
-    const { getByTestId } = render(
+    await render(
       <PlatformPressable onPress={onPress} testID="pressable" href={'/'}>
         <View />
       </PlatformPressable>
     );
 
-    fireEvent.press(getByTestId('pressable'), {
+    await fireEvent.press(screen.getByTestId('pressable'), {
       button: 0,
       preventDefault,
     });
 
-    jest.runAllTimers();
+    await act(() => jest.runAllTimers());
 
     expect(preventDefault).toHaveBeenCalled();
     expect(onPress).toHaveBeenCalled();
   });
 
-  test('ignores press non-left clicks', () => {
+  test('ignores press non-left clicks', async () => {
     const onPress = jest.fn();
 
-    const { getByTestId } = render(
+    await render(
       <PlatformPressable onPress={onPress} testID="pressable" href={'/'}>
         <View />
       </PlatformPressable>
     );
 
-    fireEvent.press(getByTestId('pressable'), { button: 1 });
+    await fireEvent.press(screen.getByTestId('pressable'), { button: 1 });
 
-    jest.runAllTimers();
+    await act(() => jest.runAllTimers());
 
     expect(onPress).not.toHaveBeenCalled();
   });

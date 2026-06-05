@@ -1,16 +1,15 @@
 import 'react-native-gesture-handler/jestSetup';
 
 import { expect, jest, test } from '@jest/globals';
-import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
   NavigationContainer,
   useFocusEffect,
   useIsFocused,
 } from '@react-navigation/native';
-import { act, fireEvent, render } from '@testing-library/react-native';
+import { act, render, screen, userEvent } from '@testing-library/react-native';
 import * as React from 'react';
-import { Button, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 
 import { createStackNavigator, type StackScreenProps } from '../index';
 
@@ -36,8 +35,9 @@ test('renders a stack navigator with screens', async () => {
   );
 
   const Stack = createStackNavigator<StackParamList>();
+  const user = userEvent.setup();
 
-  const { getByText, queryByText } = render(
+  await render(
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="A" component={Test} />
@@ -46,14 +46,14 @@ test('renders a stack navigator with screens', async () => {
     </NavigationContainer>
   );
 
-  expect(queryByText('Screen A')).not.toBeNull();
-  expect(queryByText('Screen B')).toBeNull();
+  expect(screen.getByText('Screen A')).not.toBeNull();
+  expect(screen.queryByText('Screen B')).toBeNull();
 
-  fireEvent.press(getByText('Go to B'));
+  await user.press(screen.getByRole('button', { name: 'Go to B' }));
 
-  act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
 
-  expect(queryByText('Screen B')).not.toBeNull();
+  expect(screen.getByText('Screen B')).not.toBeNull();
 });
 
 test("doesn't show back button on the first screen", async () => {
@@ -62,8 +62,9 @@ test("doesn't show back button on the first screen", async () => {
   );
 
   const Stack = createStackNavigator<StackParamList>();
+  const user = userEvent.setup();
 
-  const { getByText, queryByRole } = render(
+  await render(
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="A" component={Test} />
@@ -72,11 +73,11 @@ test("doesn't show back button on the first screen", async () => {
     </NavigationContainer>
   );
 
-  expect(queryByRole('button', { name: 'Go back' })).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Go back' })).toBeNull();
 
-  fireEvent.press(getByText('Go to B'));
+  await user.press(screen.getByRole('button', { name: 'Go to B' }));
 
-  expect(queryByRole('button', { name: 'A, back' })).not.toBeNull();
+  expect(screen.getByRole('button', { name: 'A, back' })).not.toBeNull();
 });
 
 test('fires transition events on navigation', async () => {
@@ -102,8 +103,9 @@ test('fires transition events on navigation', async () => {
   };
 
   const Stack = createStackNavigator<StackParamList>();
+  const user = userEvent.setup();
 
-  const { getByText } = render(
+  await render(
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="A" component={FirstScreen} />
@@ -115,9 +117,9 @@ test('fires transition events on navigation', async () => {
   expect(onTransitionStart).not.toHaveBeenCalled();
   expect(onTransitionEnd).not.toHaveBeenCalled();
 
-  fireEvent.press(getByText('Go to B'));
+  await user.press(screen.getByRole('button', { name: 'Go to B' }));
 
-  act(() => jest.advanceTimersByTime(1));
+  await act(() => jest.advanceTimersByTime(1));
 
   expect(onTransitionStart).toHaveBeenCalledTimes(1);
   expect(onTransitionStart).toHaveBeenCalledWith(
@@ -126,7 +128,7 @@ test('fires transition events on navigation', async () => {
 
   expect(onTransitionEnd).not.toHaveBeenCalled();
 
-  act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
 
   expect(onTransitionStart).toHaveBeenCalledTimes(1);
   expect(onTransitionEnd).toHaveBeenCalledTimes(1);
@@ -134,7 +136,7 @@ test('fires transition events on navigation', async () => {
     expect.objectContaining({ data: { closing: false } })
   );
 
-  fireEvent.press(getByText('Go back'));
+  await user.press(screen.getByRole('button', { name: 'Go back' }));
 
   expect(onTransitionStart).toHaveBeenCalledTimes(2);
   expect(onTransitionStart).toHaveBeenCalledWith(
@@ -143,7 +145,7 @@ test('fires transition events on navigation', async () => {
 
   expect(onTransitionEnd).toHaveBeenCalledTimes(1);
 
-  act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
 
   expect(onTransitionEnd).toHaveBeenCalledTimes(2);
   expect(onTransitionEnd).toHaveBeenCalledWith(
@@ -162,7 +164,7 @@ test('handles screens preloading', async () => {
     return <Text>Screen B ({isFocused ? 'focused' : 'unfocused'})</Text>;
   };
 
-  const { queryByText } = render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Stack.Navigator>
         <Stack.Screen name="A">{() => null}</Stack.Screen>
@@ -171,20 +173,22 @@ test('handles screens preloading', async () => {
     </NavigationContainer>
   );
 
-  expect(queryByText('Screen B', { includeHiddenElements: true })).toBeNull();
+  expect(
+    screen.queryByText('Screen B', { includeHiddenElements: true })
+  ).toBeNull();
 
-  act(() => navigation.preload('B'));
+  await act(() => navigation.preload('B'));
 
   expect(
-    queryByText('Screen B (unfocused)', { includeHiddenElements: true })
+    screen.getByText('Screen B (unfocused)', { includeHiddenElements: true })
   ).not.toBeNull();
 
-  act(() => navigation.navigate('B'));
+  await act(() => navigation.navigate('B'));
 
-  expect(queryByText('Screen B (focused)')).not.toBeNull();
+  expect(screen.getByText('Screen B (focused)')).not.toBeNull();
 });
 
-test('runs focus effect on focus change on preloaded route', () => {
+test('runs focus effect on focus change on preloaded route', async () => {
   const focusEffect = jest.fn();
   const focusEffectCleanup = jest.fn();
 
@@ -204,7 +208,7 @@ test('runs focus effect on focus change on preloaded route', () => {
 
   const navigation = createNavigationContainerRef<StackParamList>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Stack.Navigator>
         <Stack.Screen name="A">{() => null}</Stack.Screen>
@@ -216,24 +220,24 @@ test('runs focus effect on focus change on preloaded route', () => {
   expect(focusEffect).not.toHaveBeenCalled();
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
-  act(() => navigation.preload('A'));
-  act(() => navigation.preload('B'));
+  await act(() => navigation.preload('A'));
+  await act(() => navigation.preload('B'));
 
   expect(focusEffect).not.toHaveBeenCalled();
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
-  act(() => navigation.navigate('B'));
+  await act(() => navigation.navigate('B'));
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
-  act(() => navigation.navigate('A'));
+  await act(() => navigation.navigate('A'));
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
-test('renders correct focus state with preloading', () => {
+test('renders correct focus state with preloading', async () => {
   const Test = () => {
     const isFocused = useIsFocused();
 
@@ -249,7 +253,7 @@ test('renders correct focus state with preloading', () => {
 
   const navigation = React.createRef<any>();
 
-  const { queryByText } = render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Stack.Navigator>
         <Stack.Screen name="A">{() => null}</Stack.Screen>
@@ -259,31 +263,33 @@ test('renders correct focus state with preloading', () => {
   );
 
   expect(
-    queryByText('Test Screen', { includeHiddenElements: true })
+    screen.queryByText('Test Screen', { includeHiddenElements: true })
   ).toBeNull();
 
-  act(() => navigation.current.preload('B'));
+  await act(() => navigation.current.preload('B'));
 
   expect(
-    queryByText('Test Screen', { includeHiddenElements: true })
+    screen.getByText('Test Screen', { includeHiddenElements: true })
   ).not.toBeNull();
 
   expect(
-    queryByText('unfocused', { includeHiddenElements: true })
+    screen.getByText('unfocused', { includeHiddenElements: true })
   ).not.toBeNull();
 
-  act(() => navigation.current.navigate('B'));
+  await act(() => navigation.current.navigate('B'));
 
   expect(
-    queryByText('focused', { includeHiddenElements: true })
+    screen.getByText('focused', { includeHiddenElements: true })
   ).not.toBeNull();
 
-  act(() => navigation.current.navigate('A'));
+  await act(() => navigation.current.navigate('A'));
 
-  expect(queryByText('focused', { includeHiddenElements: true })).toBeNull();
+  expect(
+    screen.queryByText('focused', { includeHiddenElements: true })
+  ).toBeNull();
 });
 
-test('handles preloading screens with nested navigators', () => {
+test('handles preloading screens with nested navigators', async () => {
   const Stack = createStackNavigator<StackParamList>();
   const NestedStack = createStackNavigator<NestedStackParamList>();
 
@@ -301,7 +307,7 @@ test('handles preloading screens with nested navigators', () => {
 
   const navigation = createNavigationContainerRef<StackParamList>();
 
-  const { queryByText } = render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Stack.Navigator>
         <Stack.Screen name="A">{() => null}</Stack.Screen>
@@ -310,20 +316,22 @@ test('handles preloading screens with nested navigators', () => {
     </NavigationContainer>
   );
 
-  expect(queryByText('Screen C', { includeHiddenElements: true })).toBeNull();
+  expect(
+    screen.queryByText('Screen C', { includeHiddenElements: true })
+  ).toBeNull();
 
-  act(() => navigation.preload('B'));
+  await act(() => navigation.preload('B'));
 
   expect(
-    queryByText('Screen C (unfocused)', { includeHiddenElements: true })
+    screen.getByText('Screen C (unfocused)', { includeHiddenElements: true })
   ).not.toBeNull();
 
-  act(() => navigation.navigate('B'));
+  await act(() => navigation.navigate('B'));
 
-  expect(queryByText('Screen C (focused)')).not.toBeNull();
+  expect(screen.getByText('Screen C (focused)')).not.toBeNull();
 });
 
-test('inactiveBehavior="none" keeps effects active when navigating away', () => {
+test('inactiveBehavior="none" keeps effects active when navigating away', async () => {
   let effectActive = false;
 
   const ScreenA = () => {
@@ -339,7 +347,7 @@ test('inactiveBehavior="none" keeps effects active when navigating away', () => 
   const Stack = createStackNavigator<StackParamList>();
   const navigation = createNavigationContainerRef<StackParamList>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Stack.Navigator>
         <Stack.Screen
@@ -354,13 +362,13 @@ test('inactiveBehavior="none" keeps effects active when navigating away', () => 
 
   expect(effectActive).toBe(true);
 
-  act(() => navigation.navigate('B'));
-  act(() => jest.runAllTimers());
+  await act(() => navigation.navigate('B'));
+  await act(() => jest.runAllTimers());
 
   expect(effectActive).toBe(true);
 });
 
-test('default inactiveBehavior="pause" unmounts effects except last 2 screens', () => {
+test('default inactiveBehavior="pause" unmounts effects except last 2 screens', async () => {
   let effectActiveA = false;
   let effectActiveB = false;
 
@@ -387,7 +395,7 @@ test('default inactiveBehavior="pause" unmounts effects except last 2 screens', 
   const Stack = createStackNavigator<StackParamList>();
   const navigation = createNavigationContainerRef<StackParamList>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Stack.Navigator>
         <Stack.Screen name="A" component={ScreenA} />
@@ -399,28 +407,28 @@ test('default inactiveBehavior="pause" unmounts effects except last 2 screens', 
 
   expect(effectActiveA).toBe(true);
 
-  act(() => navigation.navigate('B'));
+  await act(() => navigation.navigate('B'));
 
   expect(effectActiveA).toBe(true);
   expect(effectActiveB).toBe(true);
 
-  act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
 
   expect(effectActiveA).toBe(true);
   expect(effectActiveB).toBe(true);
 
-  act(() => navigation.navigate('C'));
+  await act(() => navigation.navigate('C'));
 
   expect(effectActiveA).toBe(true);
   expect(effectActiveB).toBe(true);
 
-  act(() => jest.runAllTimers());
+  await act(() => jest.runAllTimers());
 
   expect(effectActiveA).toBe(false);
   expect(effectActiveB).toBe(true);
 });
 
-test('preloading a screen runs effects', () => {
+test('preloading a screen runs effects', async () => {
   let effectActive = false;
 
   const ScreenB = () => {
@@ -436,7 +444,7 @@ test('preloading a screen runs effects', () => {
   const Stack = createStackNavigator<StackParamList>();
   const navigation = createNavigationContainerRef<StackParamList>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation}>
       <Stack.Navigator>
         <Stack.Screen name="A">{() => null}</Stack.Screen>
@@ -447,7 +455,7 @@ test('preloading a screen runs effects', () => {
 
   expect(effectActive).toBe(false);
 
-  act(() => navigation.preload('B'));
+  await act(() => navigation.preload('B'));
 
   expect(effectActive).toBe(true);
 });
@@ -473,8 +481,9 @@ test('renders back button in the nested stack', async () => {
   );
 
   const StackB = createStackNavigator<StackParamList>();
+  const user = userEvent.setup();
 
-  const { getByText, queryByRole } = render(
+  await render(
     <NavigationContainer>
       <StackB.Navigator screenOptions={{ headerShown: false }}>
         <StackB.Screen name="A" component={StackAScreen} />
@@ -483,9 +492,9 @@ test('renders back button in the nested stack', async () => {
     </NavigationContainer>
   );
 
-  expect(queryByRole('button', { name: 'Go back' })).toBeNull();
+  expect(screen.queryByRole('button', { name: 'Go back' })).toBeNull();
 
-  fireEvent.press(getByText('Go to B'));
+  await user.press(screen.getByRole('button', { name: 'Go to B' }));
 
-  expect(queryByRole('button', { name: 'A, back' })).not.toBeNull();
+  expect(screen.getByRole('button', { name: 'A, back' })).not.toBeNull();
 });

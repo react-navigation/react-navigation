@@ -2,6 +2,7 @@ import { beforeEach, expect, test } from '@jest/globals';
 import type { NavigationState } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
+import { Text } from 'react-native';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { Screen } from '../Screen';
@@ -13,7 +14,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('gets the current navigation state', () => {
+test('gets the current navigation state', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -35,15 +36,15 @@ test('gets the current navigation state', () => {
 
     return (
       <>
-        {index}
-        {JSON.stringify(params)}
+        <Text>{index}</Text>
+        <Text>{JSON.stringify(params)}</Text>
       </>
     );
   };
 
   const navigation = React.createRef<any>();
 
-  const element = render(
+  const element = await render(
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="first" component={Test} />
@@ -53,27 +54,52 @@ test('gets the current navigation state', () => {
     </BaseNavigationContainer>
   );
 
-  expect(element).toMatchInlineSnapshot(`"0"`);
+  expect(element).toMatchInlineSnapshot(`
+    <>
+      <Text>
+        0
+      </Text>
+      <Text />
+    </>
+  `);
 
-  act(() => navigation.current.navigate('second'));
-
-  expect(element).toMatchInlineSnapshot(`"1"`);
-
-  act(() => navigation.current.navigate('third'));
-
-  expect(element).toMatchInlineSnapshot(`"2"`);
-
-  act(() => navigation.current.navigate('second', { answer: 42 }));
+  await act(() => navigation.current.navigate('second'));
 
   expect(element).toMatchInlineSnapshot(`
-[
-  "1",
-  "{"answer":42}",
-]
-`);
+    <>
+      <Text>
+        1
+      </Text>
+      <Text />
+    </>
+  `);
+
+  await act(() => navigation.current.navigate('third'));
+
+  expect(element).toMatchInlineSnapshot(`
+    <>
+      <Text>
+        2
+      </Text>
+      <Text />
+    </>
+  `);
+
+  await act(() => navigation.current.navigate('second', { answer: 42 }));
+
+  expect(element).toMatchInlineSnapshot(`
+    <>
+      <Text>
+        1
+      </Text>
+      <Text>
+        {"answer":42}
+      </Text>
+    </>
+  `);
 });
 
-test('gets the current navigation state with selector', () => {
+test('gets the current navigation state with selector', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -90,12 +116,12 @@ test('gets the current navigation state with selector', () => {
   const Test = () => {
     const index = useNavigationState((state) => state.index);
 
-    return <>{index}</>;
+    return <Text>{index}</Text>;
   };
 
   const navigation = React.createRef<any>();
 
-  const root = render(
+  const root = await render(
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="first" component={Test} />
@@ -105,22 +131,38 @@ test('gets the current navigation state with selector', () => {
     </BaseNavigationContainer>
   );
 
-  expect(root).toMatchInlineSnapshot(`"0"`);
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      0
+    </Text>
+  `);
 
-  act(() => navigation.current.navigate('second'));
+  await act(() => navigation.current.navigate('second'));
 
-  expect(root).toMatchInlineSnapshot(`"1"`);
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      1
+    </Text>
+  `);
 
-  act(() => navigation.current.navigate('third'));
+  await act(() => navigation.current.navigate('third'));
 
-  expect(root).toMatchInlineSnapshot(`"2"`);
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      2
+    </Text>
+  `);
 
-  act(() => navigation.current.navigate('second'));
+  await act(() => navigation.current.navigate('second'));
 
-  expect(root).toMatchInlineSnapshot(`"1"`);
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      1
+    </Text>
+  `);
 });
 
-test('gets the correct value if selector changes', () => {
+test('gets the correct value if selector changes', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -140,7 +182,7 @@ test('gets the correct value if selector changes', () => {
     const selector = React.use(SelectorContext);
     const result = useNavigationState(selector);
 
-    return <>{result}</>;
+    return <Text>{String(result)}</Text>;
   };
 
   const App = ({ selector }: { selector: (state: NavigationState) => any }) => {
@@ -157,16 +199,26 @@ test('gets the correct value if selector changes', () => {
     );
   };
 
-  const root = render(<App selector={(state) => state.index} />);
+  const root = await render(<App selector={(state) => state.index} />);
 
-  expect(root).toMatchInlineSnapshot(`"0"`);
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      0
+    </Text>
+  `);
 
-  root.update(<App selector={(state) => state.routes[state.index].name} />);
+  await root.rerender(
+    <App selector={(state) => state.routes[state.index].name} />
+  );
 
-  expect(root).toMatchInlineSnapshot(`"first"`);
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      first
+    </Text>
+  `);
 });
 
-test('gets the current navigation state at navigator level', () => {
+test('gets the current navigation state at navigator level', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -184,12 +236,12 @@ test('gets the current navigation state at navigator level', () => {
     const index = useNavigationState((state) => state.index);
     const routes = useNavigationState((state) => state.routes);
 
-    return JSON.stringify({ index, routes }, null, 2);
+    return <Text>{JSON.stringify({ index, routes }, null, 2)}</Text>;
   };
 
   const navigation = React.createRef<any>();
 
-  const root = render(
+  const root = await render(
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator layout={() => <Test />}>
         <Screen name="first">{() => null}</Screen>
@@ -200,93 +252,101 @@ test('gets the current navigation state at navigator level', () => {
   );
 
   expect(root).toMatchInlineSnapshot(`
-"{
-  "index": 0,
-  "routes": [
-    {
-      "name": "first",
-      "key": "first"
-    },
-    {
-      "name": "second",
-      "key": "second"
-    },
-    {
-      "name": "third",
-      "key": "third"
+    <Text>
+      {
+      "index": 0,
+      "routes": [
+        {
+          "name": "first",
+          "key": "first"
+        },
+        {
+          "name": "second",
+          "key": "second"
+        },
+        {
+          "name": "third",
+          "key": "third"
+        }
+      ]
     }
-  ]
-}"
-`);
+    </Text>
+  `);
 
-  act(() => navigation.current.navigate('second'));
+  await act(() => navigation.current.navigate('second'));
 
   expect(root).toMatchInlineSnapshot(`
-"{
-  "index": 1,
-  "routes": [
-    {
-      "name": "first",
-      "key": "first"
-    },
-    {
-      "name": "second",
-      "key": "second"
-    },
-    {
-      "name": "third",
-      "key": "third"
+    <Text>
+      {
+      "index": 1,
+      "routes": [
+        {
+          "name": "first",
+          "key": "first"
+        },
+        {
+          "name": "second",
+          "key": "second"
+        },
+        {
+          "name": "third",
+          "key": "third"
+        }
+      ]
     }
-  ]
-}"
-`);
+    </Text>
+  `);
 
-  act(() => navigation.current.navigate('third'));
+  await act(() => navigation.current.navigate('third'));
 
   expect(root).toMatchInlineSnapshot(`
-"{
-  "index": 2,
-  "routes": [
-    {
-      "name": "first",
-      "key": "first"
-    },
-    {
-      "name": "second",
-      "key": "second"
-    },
-    {
-      "name": "third",
-      "key": "third"
+    <Text>
+      {
+      "index": 2,
+      "routes": [
+        {
+          "name": "first",
+          "key": "first"
+        },
+        {
+          "name": "second",
+          "key": "second"
+        },
+        {
+          "name": "third",
+          "key": "third"
+        }
+      ]
     }
-  ]
-}"
-`);
+    </Text>
+  `);
 
-  act(() => navigation.current.navigate('second'));
+  await act(() => navigation.current.navigate('second'));
 
   expect(root).toMatchInlineSnapshot(`
-"{
-  "index": 1,
-  "routes": [
-    {
-      "name": "first",
-      "key": "first"
-    },
-    {
-      "name": "second",
-      "key": "second"
-    },
-    {
-      "name": "third",
-      "key": "third"
+    <Text>
+      {
+      "index": 1,
+      "routes": [
+        {
+          "name": "first",
+          "key": "first"
+        },
+        {
+          "name": "second",
+          "key": "second"
+        },
+        {
+          "name": "third",
+          "key": "third"
+        }
+      ]
     }
-  ]
-}"
-`);
+    </Text>
+  `);
 });
 
-test('gets navigation state for current route name', () => {
+test('gets navigation state for current route name', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -316,16 +376,16 @@ test('gets navigation state for current route name', () => {
 
     return (
       <>
-        {index}
-        {routeName}
-        {JSON.stringify(params)}
+        <Text>{String(index)}</Text>
+        <Text>{String(routeName)}</Text>
+        <Text>{JSON.stringify(params)}</Text>
       </>
     );
   };
 
   const navigation = React.createRef<any>();
 
-  const root = render(
+  const root = await render(
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="parent">
@@ -342,33 +402,49 @@ test('gets navigation state for current route name', () => {
   );
 
   expect(root).toMatchInlineSnapshot(`
-[
-  "0",
-  "child",
-]
+<>
+  <Text>
+    0
+  </Text>
+  <Text>
+    child
+  </Text>
+  <Text />
+</>
 `);
 
-  act(() => navigation.current.navigate('child', { answer: 42 }));
+  await act(() => navigation.current.navigate('child', { answer: 42 }));
 
   expect(root).toMatchInlineSnapshot(`
-[
-  "0",
-  "child",
-  "{"answer":42}",
-]
+<>
+  <Text>
+    0
+  </Text>
+  <Text>
+    child
+  </Text>
+  <Text>
+    {"answer":42}
+  </Text>
+</>
 `);
 
-  act(() => navigation.current.navigate('second'));
+  await act(() => navigation.current.navigate('second'));
 
   expect(root).toMatchInlineSnapshot(`
-[
-  "1",
-  "second",
-]
+<>
+  <Text>
+    1
+  </Text>
+  <Text>
+    second
+  </Text>
+  <Text />
+</>
 `);
 });
 
-test('gets navigation state for parent route name', () => {
+test('gets navigation state for parent route name', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -398,16 +474,16 @@ test('gets navigation state for parent route name', () => {
 
     return (
       <>
-        {index}
-        {routeName}
-        {JSON.stringify(params)}
+        <Text>{String(index)}</Text>
+        <Text>{String(routeName)}</Text>
+        <Text>{JSON.stringify(params)}</Text>
       </>
     );
   };
 
   const navigation = React.createRef<any>();
 
-  const root = render(
+  const root = await render(
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="parent">
@@ -425,32 +501,47 @@ test('gets navigation state for parent route name', () => {
   );
 
   expect(root).toMatchInlineSnapshot(`
-[
-  "0",
-  "parent",
-]
+<>
+  <Text>
+    0
+  </Text>
+  <Text>
+    parent
+  </Text>
+  <Text />
+</>
 `);
 
-  act(() => navigation.current.navigate('parent', { answer: 42 }));
+  await act(() => navigation.current.navigate('parent', { answer: 42 }));
 
   expect(root).toMatchInlineSnapshot(`
-[
-  "0",
-  "parent",
-]
+<>
+  <Text>
+    0
+  </Text>
+  <Text>
+    parent
+  </Text>
+  <Text />
+</>
 `);
 
-  act(() => navigation.current.navigate('other'));
+  await act(() => navigation.current.navigate('other'));
 
   expect(root).toMatchInlineSnapshot(`
-[
-  "1",
-  "other",
-]
+<>
+  <Text>
+    1
+  </Text>
+  <Text>
+    other
+  </Text>
+  <Text />
+</>
 `);
 });
 
-test('gets navigation state for grandparent route name', () => {
+test('gets navigation state for grandparent route name', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -483,16 +574,16 @@ test('gets navigation state for grandparent route name', () => {
 
     return (
       <>
-        {index}
-        {routeName}
-        {JSON.stringify(params)}
+        <Text>{String(index)}</Text>
+        <Text>{String(routeName)}</Text>
+        <Text>{JSON.stringify(params)}</Text>
       </>
     );
   };
 
   const navigation = React.createRef<any>();
 
-  const root = render(
+  const root = await render(
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="grandparent">
@@ -516,28 +607,44 @@ test('gets navigation state for grandparent route name', () => {
   );
 
   expect(root).toMatchInlineSnapshot(`
-[
-  "0",
-  "grandparent",
-]
+<>
+  <Text>
+    0
+  </Text>
+  <Text>
+    grandparent
+  </Text>
+  <Text />
+</>
 `);
 
-  act(() => navigation.current.navigate('grandparent', { answer: 42 }));
+  await act(() => navigation.current.navigate('grandparent', { answer: 42 }));
 
   expect(root).toMatchInlineSnapshot(`
-[
-  "0",
-  "grandparent",
-  "{"answer":42}",
-]
+<>
+  <Text>
+    0
+  </Text>
+  <Text>
+    grandparent
+  </Text>
+  <Text>
+    {"answer":42}
+  </Text>
+</>
 `);
 
-  act(() => navigation.current.navigate('fourth'));
+  await act(() => navigation.current.navigate('fourth'));
 
   expect(root).toMatchInlineSnapshot(`
-[
-  "1",
-  "fourth",
-]
+<>
+  <Text>
+    1
+  </Text>
+  <Text>
+    fourth
+  </Text>
+  <Text />
+</>
 `);
 });

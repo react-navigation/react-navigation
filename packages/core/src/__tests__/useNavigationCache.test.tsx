@@ -13,7 +13,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('preserves reference for navigation objects', () => {
+test('preserves reference for navigation objects', async () => {
   expect.assertions(2);
 
   const state = {
@@ -60,12 +60,12 @@ test('preserves reference for navigation objects', () => {
     return null;
   };
 
-  const root = render(<Test />);
+  const root = await render(<Test />);
 
-  root.update(<Test />);
+  await root.rerender(<Test />);
 });
 
-test('returns correct value for isFocused', () => {
+test('returns correct value for isFocused', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -87,7 +87,7 @@ test('returns correct value for isFocused', () => {
     return null;
   };
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="first">{() => null}</Screen>
@@ -99,20 +99,20 @@ test('returns correct value for isFocused', () => {
 
   expect(navigation.isFocused()).toBe(false);
 
-  act(() => navigation.navigate('second'));
+  await act(() => navigation.navigate('second'));
 
   expect(navigation.isFocused()).toBe(true);
 
-  act(() => navigation.navigate('third'));
+  await act(() => navigation.navigate('third'));
 
   expect(navigation.isFocused()).toBe(false);
 
-  act(() => navigation.navigate('second'));
+  await act(() => navigation.navigate('second'));
 
   expect(navigation.isFocused()).toBe(true);
 });
 
-test('returns correct value for isFocused after changing screens', () => {
+test('returns correct value for isFocused after changing screens', async () => {
   const TestRouter = (
     options: Parameters<typeof MockRouter>[0]
   ): ReturnType<typeof MockRouter> => {
@@ -161,7 +161,7 @@ test('returns correct value for isFocused after changing screens', () => {
     return null;
   };
 
-  const root = render(
+  const root = await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="first">{() => null}</Screen>
@@ -173,7 +173,7 @@ test('returns correct value for isFocused after changing screens', () => {
 
   expect(navigation.isFocused()).toBe(false);
 
-  root.update(
+  await root.rerender(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="first">{() => null}</Screen>
@@ -185,7 +185,7 @@ test('returns correct value for isFocused after changing screens', () => {
 
   expect(navigation.isFocused()).toBe(true);
 
-  root.update(
+  await root.rerender(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="first">{() => null}</Screen>
@@ -198,7 +198,7 @@ test('returns correct value for isFocused after changing screens', () => {
 
   expect(navigation.isFocused()).toBe(true);
 
-  root.update(
+  await root.rerender(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="first">{() => null}</Screen>

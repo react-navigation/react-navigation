@@ -1,6 +1,7 @@
 import { expect, test } from '@jest/globals';
 import type { ParamListBase } from '@react-navigation/routers';
 import { act, render, screen } from '@testing-library/react-native';
+import { Text } from 'react-native';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
@@ -11,7 +12,7 @@ import { useRoute } from '../useRoute';
 import { useStateForPath } from '../useStateForPath';
 import { MockRouter } from './__fixtures__/MockRouter';
 
-test('gets focused route state at root', () => {
+test('gets focused route state at root', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -31,15 +32,15 @@ test('gets focused route state at root', () => {
 
     return (
       <>
-        {route.name}
-        {JSON.stringify(state)}
+        <Text>{route.name}</Text>
+        <Text>{JSON.stringify(state)}</Text>
       </>
     );
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  render(
+  await render(
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="bar" component={TestScreen} />
@@ -49,27 +50,43 @@ test('gets focused route state at root', () => {
   );
 
   expect(screen).toMatchInlineSnapshot(`
-    [
-      "bar",
-      "{"routes":[{"key":"bar","name":"bar"}]}",
-      "xux",
-      "{"routes":[{"key":"xux","name":"xux"}]}",
-    ]
-  `);
+<>
+  <Text>
+    bar
+  </Text>
+  <Text>
+    {"routes":[{"key":"bar","name":"bar"}]}
+  </Text>
+  <Text>
+    xux
+  </Text>
+  <Text>
+    {"routes":[{"key":"xux","name":"xux"}]}
+  </Text>
+</>
+`);
 
-  act(() => navigation.navigate('xux'));
+  await act(() => navigation.navigate('xux'));
 
   expect(screen).toMatchInlineSnapshot(`
-    [
-      "bar",
-      "{"routes":[{"key":"bar","name":"bar"}]}",
-      "xux",
-      "{"routes":[{"key":"xux","name":"xux"}]}",
-    ]
-  `);
+<>
+  <Text>
+    bar
+  </Text>
+  <Text>
+    {"routes":[{"key":"bar","name":"bar"}]}
+  </Text>
+  <Text>
+    xux
+  </Text>
+  <Text>
+    {"routes":[{"key":"xux","name":"xux"}]}
+  </Text>
+</>
+`);
 });
 
-test('gets focused route state in nested navigator', () => {
+test('gets focused route state in nested navigator', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -89,15 +106,15 @@ test('gets focused route state in nested navigator', () => {
 
     return (
       <>
-        {route.name}
-        {JSON.stringify(state)}
+        <Text>{route.name}</Text>
+        <Text>{JSON.stringify(state)}</Text>
       </>
     );
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  render(
+  await render(
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="bar">
@@ -114,70 +131,130 @@ test('gets focused route state in nested navigator', () => {
   );
 
   expect(screen).toMatchInlineSnapshot(`
-    [
-      "bar-a",
-      "{"routes":[{"key":"bar","name":"bar","state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
-      "bar-b",
-      "{"routes":[{"key":"bar","name":"bar","state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
-      "xux",
-      "{"routes":[{"key":"xux","name":"xux"}]}",
-    ]
-  `);
+<>
+  <Text>
+    bar-a
+  </Text>
+  <Text>
+    {"routes":[{"key":"bar","name":"bar","state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
+  </Text>
+  <Text>
+    bar-b
+  </Text>
+  <Text>
+    {"routes":[{"key":"bar","name":"bar","state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
+  </Text>
+  <Text>
+    xux
+  </Text>
+  <Text>
+    {"routes":[{"key":"xux","name":"xux"}]}
+  </Text>
+</>
+`);
 
-  act(() => navigation.navigate('bar', { answer: 42 }));
-
-  expect(screen).toMatchInlineSnapshot(`
-    [
-      "bar-a",
-      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
-      "bar-b",
-      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
-      "xux",
-      "{"routes":[{"key":"xux","name":"xux"}]}",
-    ]
-  `);
-
-  act(() => navigation.navigate('bar', { screen: 'bar-b' }));
-
-  expect(screen).toMatchInlineSnapshot(`
-    [
-      "bar-a",
-      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
-      "bar-b",
-      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
-      "xux",
-      "{"routes":[{"key":"xux","name":"xux"}]}",
-    ]
-  `);
-
-  act(() => navigation.navigate('xux'));
+  await act(() => navigation.navigate('bar', { answer: 42 }));
 
   expect(screen).toMatchInlineSnapshot(`
-    [
-      "bar-a",
-      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
-      "bar-b",
-      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
-      "xux",
-      "{"routes":[{"key":"xux","name":"xux"}]}",
-    ]
-  `);
+<>
+  <Text>
+    bar-a
+  </Text>
+  <Text>
+    {"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
+  </Text>
+  <Text>
+    bar-b
+  </Text>
+  <Text>
+    {"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
+  </Text>
+  <Text>
+    xux
+  </Text>
+  <Text>
+    {"routes":[{"key":"xux","name":"xux"}]}
+  </Text>
+</>
+`);
 
-  act(() => navigation.navigate('xux', { fruit: 'apple' }));
+  await act(() => navigation.navigate('bar', { screen: 'bar-b' }));
 
   expect(screen).toMatchInlineSnapshot(`
-    [
-      "bar-a",
-      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}",
-      "bar-b",
-      "{"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}",
-      "xux",
-      "{"routes":[{"key":"xux","name":"xux","params":{"fruit":"apple"}}]}",
-    ]
-  `);
+<>
+  <Text>
+    bar-a
+  </Text>
+  <Text>
+    {"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
+  </Text>
+  <Text>
+    bar-b
+  </Text>
+  <Text>
+    {"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
+  </Text>
+  <Text>
+    xux
+  </Text>
+  <Text>
+    {"routes":[{"key":"xux","name":"xux"}]}
+  </Text>
+</>
+`);
+
+  await act(() => navigation.navigate('xux'));
+
+  expect(screen).toMatchInlineSnapshot(`
+<>
+  <Text>
+    bar-a
+  </Text>
+  <Text>
+    {"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
+  </Text>
+  <Text>
+    bar-b
+  </Text>
+  <Text>
+    {"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
+  </Text>
+  <Text>
+    xux
+  </Text>
+  <Text>
+    {"routes":[{"key":"xux","name":"xux"}]}
+  </Text>
+</>
+`);
+
+  await act(() => navigation.navigate('xux', { fruit: 'apple' }));
+
+  expect(screen).toMatchInlineSnapshot(`
+<>
+  <Text>
+    bar-a
+  </Text>
+  <Text>
+    {"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
+  </Text>
+  <Text>
+    bar-b
+  </Text>
+  <Text>
+    {"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
+  </Text>
+  <Text>
+    xux
+  </Text>
+  <Text>
+    {"routes":[{"key":"xux","name":"xux","params":{"fruit":"apple"}}]}
+  </Text>
+</>
+`);
 });
 
-test('gets path in each screen', () => {
+test('gets path in each screen', async () => {
   const usePath = () => {
     const state = useStateForPath();
 
@@ -217,12 +294,12 @@ test('gets path in each screen', () => {
     const route = useRoute();
     const path = usePath();
 
-    return <>{`${route.name}: ${path}`}</>;
+    return <Text>{`${route.name}: ${path}`}</Text>;
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  render(
+  await render(
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="bar">
@@ -242,55 +319,95 @@ test('gets path in each screen', () => {
   );
 
   expect(screen).toMatchInlineSnapshot(`
-    [
-      "bar: /mybar",
-      "bar-a: /mybar/a",
-      "bar-b: /mybar/b",
-      "xux: /myxux",
-    ]
-  `);
+<>
+  <Text>
+    bar: /mybar
+  </Text>
+  <Text>
+    bar-a: /mybar/a
+  </Text>
+  <Text>
+    bar-b: /mybar/b
+  </Text>
+  <Text>
+    xux: /myxux
+  </Text>
+</>
+`);
 
-  act(() => navigation.navigate('bar', { answer: 42 }));
-
-  expect(screen).toMatchInlineSnapshot(`
-    [
-      "bar: /mybar/42",
-      "bar-a: /mybar/42/a",
-      "bar-b: /mybar/42/b",
-      "xux: /myxux",
-    ]
-  `);
-
-  act(() => navigation.navigate('bar', { screen: 'bar-b' }));
+  await act(() => navigation.navigate('bar', { answer: 42 }));
 
   expect(screen).toMatchInlineSnapshot(`
-    [
-      "bar: /mybar/42/b",
-      "bar-a: /mybar/42/a",
-      "bar-b: /mybar/42/b",
-      "xux: /myxux",
-    ]
-  `);
+<>
+  <Text>
+    bar: /mybar/42
+  </Text>
+  <Text>
+    bar-a: /mybar/42/a
+  </Text>
+  <Text>
+    bar-b: /mybar/42/b
+  </Text>
+  <Text>
+    xux: /myxux
+  </Text>
+</>
+`);
 
-  act(() => navigation.navigate('xux'));
-
-  expect(screen).toMatchInlineSnapshot(`
-    [
-      "bar: /mybar/42/b",
-      "bar-a: /mybar/42/a",
-      "bar-b: /mybar/42/b",
-      "xux: /myxux",
-    ]
-  `);
-
-  act(() => navigation.navigate('xux', { fruit: 'apple' }));
+  await act(() => navigation.navigate('bar', { screen: 'bar-b' }));
 
   expect(screen).toMatchInlineSnapshot(`
-    [
-      "bar: /mybar/42/b",
-      "bar-a: /mybar/42/a",
-      "bar-b: /mybar/42/b",
-      "xux: /myxux?fruit=apple",
-    ]
-  `);
+<>
+  <Text>
+    bar: /mybar/42/b
+  </Text>
+  <Text>
+    bar-a: /mybar/42/a
+  </Text>
+  <Text>
+    bar-b: /mybar/42/b
+  </Text>
+  <Text>
+    xux: /myxux
+  </Text>
+</>
+`);
+
+  await act(() => navigation.navigate('xux'));
+
+  expect(screen).toMatchInlineSnapshot(`
+<>
+  <Text>
+    bar: /mybar/42/b
+  </Text>
+  <Text>
+    bar-a: /mybar/42/a
+  </Text>
+  <Text>
+    bar-b: /mybar/42/b
+  </Text>
+  <Text>
+    xux: /myxux
+  </Text>
+</>
+`);
+
+  await act(() => navigation.navigate('xux', { fruit: 'apple' }));
+
+  expect(screen).toMatchInlineSnapshot(`
+<>
+  <Text>
+    bar: /mybar/42/b
+  </Text>
+  <Text>
+    bar-a: /mybar/42/a
+  </Text>
+  <Text>
+    bar-b: /mybar/42/b
+  </Text>
+  <Text>
+    xux: /myxux?fruit=apple
+  </Text>
+</>
+`);
 });

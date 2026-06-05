@@ -8,6 +8,7 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, render, waitFor } from '@testing-library/react-native';
+import { Text } from 'react-native';
 
 import { window } from '../__stubs__/window';
 import { NavigationContainer } from '../NavigationContainer';
@@ -56,8 +57,11 @@ test('integrates with the history API', async () => {
   const Stack = createStackNavigator();
   const Tab = createTabNavigator();
 
-  const TestScreen = ({ route }: any): any =>
-    `${route.name} ${JSON.stringify(route.params)}`;
+  const TestScreen = ({ route }: any): any => (
+    <Text>
+      {route.name} {JSON.stringify(route.params)}
+    </Text>
+  );
 
   const linking = {
     config: {
@@ -79,7 +83,7 @@ test('integrates with the history API', async () => {
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation} linking={linking}>
       <Tab.Navigator>
         <Tab.Screen name="Home">
@@ -99,46 +103,46 @@ test('integrates with the history API', async () => {
 
   expect(window.location.pathname).toBe('/feed');
 
-  act(() => navigation.current?.navigate('Profile', { user: 'jane' }));
+  await act(() => navigation.current?.navigate('Profile', { user: 'jane' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => navigation.current?.navigate('Updates'));
+  await act(() => navigation.current?.navigate('Updates'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/updates'));
 
-  act(() => navigation.current?.goBack());
+  await act(() => navigation.current?.goBack());
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => {
+  await act(() => {
     window.history.back();
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
-  act(() => {
+  await act(() => {
     window.history.forward();
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => navigation.current?.navigate('Settings'));
+  await act(() => navigation.current?.navigate('Settings'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/edit'));
 
-  act(() => {
+  await act(() => {
     window.history.go(-2);
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
-  act(() => navigation.current?.navigate('Settings'));
-  act(() => navigation.current?.navigate('Chat'));
+  await act(() => navigation.current?.navigate('Settings'));
+  await act(() => navigation.current?.navigate('Chat'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/chat'));
 
-  act(() => navigation.current?.navigate('Home'));
+  await act(() => navigation.current?.navigate('Home'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/edit'));
 });
