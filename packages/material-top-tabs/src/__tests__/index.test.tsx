@@ -1,9 +1,8 @@
 import { expect, jest, test } from '@jest/globals';
-import { Text } from '@react-navigation/elements';
 import { NavigationContainer } from '@react-navigation/native';
-import { fireEvent, render } from '@testing-library/react-native';
+import { render, screen, userEvent } from '@testing-library/react-native';
 import * as React from 'react';
-import { Button, View } from 'react-native';
+import { Button, Text, View } from 'react-native';
 
 import {
   createMaterialTopTabNavigator,
@@ -42,8 +41,9 @@ test('renders a material top tab navigator with screens', async () => {
   );
 
   const Tab = createMaterialTopTabNavigator<TopTabParamList>();
+  const user = userEvent.setup();
 
-  const { findByText, queryByText } = render(
+  await render(
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="A" component={Test} />
@@ -52,10 +52,10 @@ test('renders a material top tab navigator with screens', async () => {
     </NavigationContainer>
   );
 
-  expect(queryByText('Screen A')).not.toBeNull();
-  expect(queryByText('Screen B')).toBeNull();
+  expect(screen.getByText('Screen A')).not.toBeNull();
+  expect(screen.queryByText('Screen B')).toBeNull();
 
-  fireEvent(await findByText('Go to B'), 'press');
+  await user.press(screen.getByRole('button', { name: 'Go to B' }));
 
-  expect(queryByText('Screen B')).not.toBeNull();
+  expect(screen.getByText('Screen B')).not.toBeNull();
 });

@@ -2,6 +2,7 @@ import { beforeEach, expect, test } from '@jest/globals';
 import { type ParamListBase } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
+import { Text } from 'react-native';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
@@ -15,7 +16,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('renders correct focus state', () => {
+test('renders correct focus state', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -32,14 +33,12 @@ test('renders correct focus state', () => {
   const Test = () => {
     const isFocused = useIsFocused();
 
-    return (
-      <React.Fragment>{isFocused ? 'focused' : 'unfocused'}</React.Fragment>
-    );
+    return <Text>{isFocused ? 'focused' : 'unfocused'}</Text>;
   };
 
   const navigation = React.createRef<any>();
 
-  const root = render(
+  const root = await render(
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="first">{() => null}</Screen>
@@ -49,22 +48,38 @@ test('renders correct focus state', () => {
     </BaseNavigationContainer>
   );
 
-  expect(root).toMatchInlineSnapshot(`"unfocused"`);
+  expect(root).toMatchInlineSnapshot(`
+<Text>
+  unfocused
+</Text>
+`);
 
-  act(() => navigation.current.navigate('second'));
+  await act(() => navigation.current.navigate('second'));
 
-  expect(root).toMatchInlineSnapshot(`"focused"`);
+  expect(root).toMatchInlineSnapshot(`
+<Text>
+  focused
+</Text>
+`);
 
-  act(() => navigation.current.navigate('third'));
+  await act(() => navigation.current.navigate('third'));
 
-  expect(root).toMatchInlineSnapshot(`"unfocused"`);
+  expect(root).toMatchInlineSnapshot(`
+<Text>
+  unfocused
+</Text>
+`);
 
-  act(() => navigation.current.navigate('second'));
+  await act(() => navigation.current.navigate('second'));
 
-  expect(root).toMatchInlineSnapshot(`"focused"`);
+  expect(root).toMatchInlineSnapshot(`
+<Text>
+  focused
+</Text>
+`);
 });
 
-test('returns correct focus state after conditional rendering', () => {
+test('returns correct focus state after conditional rendering', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -85,7 +100,9 @@ test('returns correct focus state after conditional rendering', () => {
     // Ensure that there is no tearing
     expect(isFocused).toBe(true);
 
-    return `${route.name}, ${isFocused ? 'focused' : 'not-focused'}`;
+    return (
+      <Text>{`${route.name}, ${isFocused ? 'focused' : 'not-focused'}`}</Text>
+    );
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -110,11 +127,19 @@ test('returns correct focus state after conditional rendering', () => {
     );
   };
 
-  const element = render(<Test />);
+  const element = await render(<Test />);
 
-  expect(element).toMatchInlineSnapshot(`"foo, focused"`);
+  expect(element).toMatchInlineSnapshot(`
+<Text>
+  foo, focused
+</Text>
+`);
 
-  act(() => update(true));
+  await act(() => update(true));
 
-  expect(element).toMatchInlineSnapshot(`"bar, focused"`);
+  expect(element).toMatchInlineSnapshot(`
+<Text>
+  bar, focused
+</Text>
+`);
 });

@@ -19,7 +19,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('fires focus and blur events in root navigator', () => {
+test('fires focus and blur events in root navigator', async () => {
   function TestNavigator({ ref, ...props }: any): any {
     const { state, navigation, descriptors, NavigationContent } =
       useNavigationBuilder(MockRouter, props);
@@ -86,7 +86,7 @@ test('fires focus and blur events in root navigator', () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(firstFocusCallback).toHaveBeenCalledTimes(1);
   expect(firstBlurCallback).toHaveBeenCalledTimes(0);
@@ -97,12 +97,12 @@ test('fires focus and blur events in root navigator', () => {
   expect(fourthFocusCallback).toHaveBeenCalledTimes(0);
   expect(fourthBlurCallback).toHaveBeenCalledTimes(0);
 
-  act(() => navigation.current.navigate('second'));
+  await act(() => navigation.current.navigate('second'));
 
   expect(firstBlurCallback).toHaveBeenCalledTimes(1);
   expect(secondFocusCallback).toHaveBeenCalledTimes(1);
 
-  act(() => navigation.current.navigate('fourth'));
+  await act(() => navigation.current.navigate('fourth'));
 
   expect(firstFocusCallback).toHaveBeenCalledTimes(1);
   expect(firstBlurCallback).toHaveBeenCalledTimes(1);
@@ -114,7 +114,7 @@ test('fires focus and blur events in root navigator', () => {
   expect(fourthBlurCallback).toHaveBeenCalledTimes(0);
 });
 
-test('fires focus event after blur', () => {
+test('fires focus event after blur', async () => {
   function TestNavigator({ ref, ...props }: any): any {
     const { state, navigation, descriptors, NavigationContent } =
       useNavigationBuilder(MockRouter, props);
@@ -156,11 +156,11 @@ test('fires focus event after blur', () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(callback.mock.calls).toEqual([['first', 'focus']]);
 
-  act(() => navigation.current.navigate('second'));
+  await act(() => navigation.current.navigate('second'));
 
   expect(callback.mock.calls).toEqual([
     ['first', 'focus'],
@@ -168,7 +168,7 @@ test('fires focus event after blur', () => {
     ['second', 'focus'],
   ]);
 
-  act(() => navigation.current.navigate('first'));
+  await act(() => navigation.current.navigate('first'));
 
   expect(callback.mock.calls).toEqual([
     ['first', 'focus'],
@@ -179,7 +179,7 @@ test('fires focus event after blur', () => {
   ]);
 });
 
-test('fires focus and blur events in nested navigator', () => {
+test('fires focus and blur events in nested navigator', async () => {
   function TestNavigator({ ref, ...props }: any): any {
     const { state, navigation, descriptors, NavigationContent } =
       useNavigationBuilder(MockRouter, props);
@@ -259,14 +259,14 @@ test('fires focus and blur events in nested navigator', () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(firstFocusCallback).toHaveBeenCalledTimes(1);
   expect(secondFocusCallback).toHaveBeenCalledTimes(0);
   expect(thirdFocusCallback).toHaveBeenCalledTimes(0);
   expect(fourthFocusCallback).toHaveBeenCalledTimes(0);
 
-  act(() => child.current.navigate('fourth'));
+  await act(() => child.current.navigate('fourth'));
 
   expect(firstFocusCallback).toHaveBeenCalledTimes(1);
 
@@ -274,36 +274,36 @@ test('fires focus and blur events in nested navigator', () => {
   expect(fourthFocusCallback).toHaveBeenCalledTimes(2);
   expect(thirdFocusCallback).toHaveBeenCalledTimes(0);
 
-  act(() => parent.current.navigate('second'));
+  await act(() => parent.current.navigate('second'));
 
   expect(thirdFocusCallback).toHaveBeenCalledTimes(0);
   expect(secondFocusCallback).toHaveBeenCalledTimes(1);
   expect(fourthBlurCallback).toHaveBeenCalledTimes(1);
 
-  act(() => parent.current.navigate('nested'));
+  await act(() => parent.current.navigate('nested'));
 
   expect(firstBlurCallback).toHaveBeenCalledTimes(1);
   expect(secondBlurCallback).toHaveBeenCalledTimes(1);
   expect(thirdFocusCallback).toHaveBeenCalledTimes(0);
   expect(fourthFocusCallback).toHaveBeenCalledTimes(3);
 
-  act(() => parent.current.navigate('nested', { screen: 'third' }));
+  await act(() => parent.current.navigate('nested', { screen: 'third' }));
 
   expect(fourthBlurCallback).toHaveBeenCalledTimes(2);
   expect(thirdFocusCallback).toHaveBeenCalledTimes(1);
 
-  act(() => parent.current.navigate('first'));
+  await act(() => parent.current.navigate('first'));
 
   expect(firstFocusCallback).toHaveBeenCalledTimes(2);
   expect(thirdBlurCallback).toHaveBeenCalledTimes(2);
 
-  act(() => parent.current.navigate('nested', { screen: 'fourth' }));
+  await act(() => parent.current.navigate('nested', { screen: 'fourth' }));
 
   expect(fourthFocusCallback).toHaveBeenCalledTimes(4);
   expect(thirdBlurCallback).toHaveBeenCalledTimes(2);
   expect(firstBlurCallback).toHaveBeenCalledTimes(2);
 
-  act(() => parent.current.navigate('nested', { screen: 'third' }));
+  await act(() => parent.current.navigate('nested', { screen: 'third' }));
 
   expect(thirdFocusCallback).toHaveBeenCalledTimes(2);
   expect(fourthBlurCallback).toHaveBeenCalledTimes(3);
@@ -439,9 +439,9 @@ test('fires blur event when a route is removed with a delay', async () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
-  act(() =>
+  await act(() =>
     navigation.current.push({
       name: 'second',
       key: 'second',
@@ -450,12 +450,12 @@ test('fires blur event when a route is removed with a delay', async () => {
 
   expect(blurCallback).toHaveBeenCalledTimes(0);
 
-  act(() => navigation.current.pop());
+  await act(() => navigation.current.pop());
 
   expect(blurCallback).toHaveBeenCalledTimes(1);
 });
 
-test('fires custom events added with addListener', () => {
+test('fires custom events added with addListener', async () => {
   const eventName = 'someSuperCoolEvent';
 
   function TestNavigator({ ref, ...props }: any): any {
@@ -501,7 +501,7 @@ test('fires custom events added with addListener', () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(firstCallback).toHaveBeenCalledTimes(0);
   expect(secondCallback).toHaveBeenCalledTimes(0);
@@ -510,7 +510,7 @@ test('fires custom events added with addListener', () => {
   const target =
     ref.current.state.routes[ref.current.state.routes.length - 1].key;
 
-  act(() => {
+  await act(() => {
     ref.current.navigation.emit({
       type: eventName,
       target,
@@ -527,7 +527,7 @@ test('fires custom events added with addListener', () => {
   expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBeUndefined();
   expect(thirdCallback.mock.calls[0][0].preventDefault).toBeUndefined();
 
-  act(() => {
+  await act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
@@ -540,7 +540,7 @@ test('fires custom events added with addListener', () => {
   expect(thirdCallback).toHaveBeenCalledTimes(2);
 });
 
-test('fires custom events for preloaded routes', () => {
+test('fires custom events for preloaded routes', async () => {
   const eventName = 'someSuperCoolEvent';
 
   function TestNavigator({ ref, ...props }: any): any {
@@ -573,7 +573,7 @@ test('fires custom events for preloaded routes', () => {
   const ref = React.createRef<any>();
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  render(
+  await render(
     <BaseNavigationContainer ref={navigation}>
       <TestNavigator ref={ref}>
         <Screen name="first">{() => null}</Screen>
@@ -582,7 +582,7 @@ test('fires custom events for preloaded routes', () => {
     </BaseNavigationContainer>
   );
 
-  act(() => navigation.dispatch(CommonActions.preload('second')));
+  await act(() => navigation.dispatch(CommonActions.preload('second')));
 
   const target = ref.current.state.routes[1].key;
 
@@ -615,7 +615,7 @@ test('fires custom events for preloaded routes', () => {
   );
 });
 
-test("doesn't call same listener multiple times with addListener", () => {
+test("doesn't call same listener multiple times with addListener", async () => {
   const eventName = 'someSuperCoolEvent';
 
   function TestNavigator({ ref, ...props }: any): any {
@@ -657,18 +657,18 @@ test("doesn't call same listener multiple times with addListener", () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(callback).toHaveBeenCalledTimes(0);
 
-  act(() => {
+  await act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
   expect(callback).toHaveBeenCalledTimes(1);
 });
 
-test('fires custom events added with listeners prop', () => {
+test('fires custom events added with listeners prop', async () => {
   const eventName = 'someSuperCoolEvent';
 
   const TestNavigator = ({ ref, ...props }: any): any => {
@@ -710,7 +710,7 @@ test('fires custom events added with listeners prop', () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(firstCallback).toHaveBeenCalledTimes(0);
   expect(secondCallback).toHaveBeenCalledTimes(0);
@@ -719,7 +719,7 @@ test('fires custom events added with listeners prop', () => {
   const target =
     ref.current.state.routes[ref.current.state.routes.length - 1].key;
 
-  act(() => {
+  await act(() => {
     ref.current.navigation.emit({
       type: eventName,
       target,
@@ -736,7 +736,7 @@ test('fires custom events added with listeners prop', () => {
   expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBeUndefined();
   expect(thirdCallback.mock.calls[0][0].preventDefault).toBeUndefined();
 
-  act(() => {
+  await act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
@@ -747,7 +747,7 @@ test('fires custom events added with listeners prop', () => {
   expect(thirdCallback).toHaveBeenCalledTimes(1);
 });
 
-test("doesn't call same listener multiple times with listeners", () => {
+test("doesn't call same listener multiple times with listeners", async () => {
   const eventName = 'someSuperCoolEvent';
 
   const TestNavigator = ({ ref, ...props }: any): any => {
@@ -787,18 +787,18 @@ test("doesn't call same listener multiple times with listeners", () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(callback).toHaveBeenCalledTimes(0);
 
-  act(() => {
+  await act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
   expect(callback).toHaveBeenCalledTimes(1);
 });
 
-test('fires listeners when callback is provided for listeners prop', () => {
+test('fires listeners when callback is provided for listeners prop', async () => {
   const eventName = 'someSuperCoolEvent';
 
   const TestNavigator = ({ ref, ...props }: any): any => {
@@ -846,7 +846,7 @@ test('fires listeners when callback is provided for listeners prop', () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(firstCallback).toHaveBeenCalledTimes(0);
   expect(secondCallback).toHaveBeenCalledTimes(0);
@@ -855,7 +855,7 @@ test('fires listeners when callback is provided for listeners prop', () => {
   const target =
     ref.current.state.routes[ref.current.state.routes.length - 1].key;
 
-  act(() => {
+  await act(() => {
     ref.current.navigation.emit({
       type: eventName,
       target,
@@ -872,7 +872,7 @@ test('fires listeners when callback is provided for listeners prop', () => {
   expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBeUndefined();
   expect(thirdCallback.mock.calls[0][0].preventDefault).toBeUndefined();
 
-  act(() => {
+  await act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
@@ -883,7 +883,7 @@ test('fires listeners when callback is provided for listeners prop', () => {
   expect(thirdCallback).toHaveBeenCalledTimes(1);
 });
 
-test('has option to prevent default', () => {
+test('has option to prevent default', async () => {
   expect.assertions(5);
 
   const eventName = 'someSuperCoolEvent';
@@ -934,9 +934,9 @@ test('has option to prevent default', () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
-  act(() => {
+  await act(() => {
     ref.current.navigation.emit({
       type: eventName,
       data: 42,
@@ -945,7 +945,7 @@ test('has option to prevent default', () => {
   });
 });
 
-test('removes only one listener when unsubscribe is called multiple times', () => {
+test('removes only one listener when unsubscribe is called multiple times', async () => {
   const eventName = 'someSuperCoolEvent';
 
   function TestNavigator({ ref, ...props }: any): any {
@@ -990,12 +990,12 @@ test('removes only one listener when unsubscribe is called multiple times', () =
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(firstCallback).toHaveBeenCalledTimes(0);
   expect(secondCallback).toHaveBeenCalledTimes(0);
 
-  act(() => {
+  await act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 

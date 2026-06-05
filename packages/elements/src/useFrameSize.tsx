@@ -177,6 +177,10 @@ function FrameSizeListenerWeb({
       return;
     }
 
+    if (typeof elementRef.current.getBoundingClientRect !== 'function') {
+      return;
+    }
+
     const rect = elementRef.current.getBoundingClientRect();
 
     onChange({

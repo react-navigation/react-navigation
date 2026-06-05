@@ -72,7 +72,6 @@
     "npm-run-all2": "^9.0.1",
     "react-native-builder-bob": "^0.41.0",
     "react-native-monorepo-config": "^0.3.3",
-    "react-test-renderer": "19.2.0",
     "typescript": "^6.0.3",
     "valibot": "^1.4.1",
     "vite": "^7.3.3",
