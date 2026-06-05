@@ -62,8 +62,6 @@ jobs:
         with:
           path: ~/.agent-device/ios-runner/derived
           key: agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-${{ hashFiles('node_modules/agent-device/package.json', 'node_modules/agent-device/ios-runner/**') }}
-          restore-keys: |
-            agent-device-ios-runner-${{ runner.os }}-${{ steps.xcode-cache-key.outputs.key }}-
 
       - name: Install macOS dependencies
         run: |
