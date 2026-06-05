@@ -424,8 +424,6 @@ if (!jsonOutput) {
   process.stdout.write('Measuring CURRENT (working tree)...\n');
 }
 
-const current = measure('current');
-
 const stashLabel = `measure-typescript ${new Date().toISOString()}`;
 
 let stashed = false;
@@ -470,6 +468,8 @@ process.on('SIGINT', () => {
 
   process.exit(130);
 });
+
+const current = measure('current');
 
 if (hasChanges) {
   git([
