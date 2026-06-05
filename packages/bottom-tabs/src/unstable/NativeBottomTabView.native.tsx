@@ -323,6 +323,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
         onTabSelectionRejected={onTabSelectionRejected}
         onTabSelectionPrevented={onTabSelectionPrevented}
         tabBarHidden={shouldHideTabBar}
+        nativeContainerStyle={{ backgroundColor: colors.background }}
         colorScheme={dark ? 'dark' : 'light'}
         ios={{
           bottomAccessory: bottomAccessory
