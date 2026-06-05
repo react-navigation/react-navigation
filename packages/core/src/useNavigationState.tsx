@@ -15,6 +15,8 @@ type NavigationStateListener = {
   subscribe: (callback: () => void) => () => void;
 };
 
+type UseNavigationForName = (name: string) => NavigationProp<ParamListBase>;
+
 type NavigationStateForNested<
   Navigator,
   RouteName extends keyof NavigationListForNested<Navigator>,
@@ -53,9 +55,7 @@ export function useNavigationState(...args: unknown[]): unknown {
     // `useNavigation` uses `use` internally, so it's fine to call it conditionally
     // Cast to a non-generic signature to skip overload resolution - otherwise TS
     // eagerly expands `NavigationListForNested<RootNavigator>` at this call site.
-    navigation = (
-      useNavigation as (name: string) => NavigationProp<ParamListBase>
-    )(args[0]);
+    navigation = (useNavigation as UseNavigationForName)(args[0]);
     selector = args[1];
   } else {
     selector = args[0];

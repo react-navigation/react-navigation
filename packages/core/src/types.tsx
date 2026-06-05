@@ -55,10 +55,10 @@ export interface RootNavigator {}
 export interface Theme {}
 
 export type RootParamList =
-  RootNavigator extends PrivateValueStore<[infer ParamList, any, any]>
-    ? ParamList extends {}
-      ? ParamList
-      : {}
+  RootNavigator extends PrivateValueStore<
+    [infer ParamList extends {}, any, any, any]
+  >
+    ? ParamList
     : {};
 
 export type DefaultNavigatorOptions<
@@ -273,7 +273,7 @@ export type EventEmitter<in out EventMap extends EventMapBase> = {
   >;
 };
 
-export class PrivateValueStore<T extends [any, any, any]> {
+export class PrivateValueStore<T extends [any, any, any, any]> {
   /**
    * UGLY HACK! DO NOT USE THE TYPE!!!
    *
@@ -408,7 +408,7 @@ type NavigationHelpersCommon<
    * So don't use it in `render`.
    */
   getState(): State;
-} & PrivateValueStore<[ParamList, unknown, unknown]>;
+} & PrivateValueStore<[ParamList, unknown, unknown, unknown]>;
 
 type ParamType<
   ParamList extends {},
@@ -525,7 +525,7 @@ export type NavigationProp<
 } & NavigationHelpersRoute<ParamList, RouteName> &
   ActionHelpers &
   EventConsumer<EventMap & EventMapCore<State>> &
-  PrivateValueStore<[ParamList, RouteName, EventMap]>;
+  PrivateValueStore<[ParamList, RouteName, EventMap, ActionHelpers]>;
 
 export type RouteProp<
   in out ParamList extends ParamListBase,
@@ -559,30 +559,42 @@ type CompositeNavigationPropInternal<
   ParamList extends {},
   RouteName extends keyof ParamList,
   EventMap extends EventMapBase,
-> = Omit<A & B, keyof NavigationProp<any, any, any, any, any>> &
-  Omit<
-    NavigationProp<
-      ParamList,
-      RouteName,
-      StateOfNavigationProp<A>,
-      ScreenOptionsOfNavigationProp<A>,
-      EventMap
-    >,
-    'getParent'
-  > & {
-    getParent: A['getParent'] & B['getParent'];
-  } & // Mapped types don't preserve protected members
-  // So `Omit` drops `PrivateValueStore`'s `protected` brand
-  // We add it back so this can be used for type inference
-  PrivateValueStore<[ParamList, RouteName, EventMap]>;
+> = // Action helpers are read from the private brand (4th slot) instead of
+  // `Omit<A & B, keyof NavigationProp>`, which had to walk the whole (possibly
+  // deeply composed) member set of `A & B` to drop the standard members.
+  ActionHelpersOfNavigationProp<A> &
+    ActionHelpersOfNavigationProp<B> &
+    Omit<
+      NavigationProp<
+        ParamList,
+        RouteName,
+        StateOfNavigationProp<A>,
+        ScreenOptionsOfNavigationProp<A>,
+        EventMap
+      >,
+      'getParent'
+    > & {
+      getParent: A['getParent'] & B['getParent'];
+    } & // Mapped types don't preserve protected members
+    // So `Omit` drops `PrivateValueStore`'s `protected` brand
+    // We add it back so this can be used for type inference
+    PrivateValueStore<
+      [
+        ParamList,
+        RouteName,
+        EventMap,
+        ActionHelpersOfNavigationProp<A> & ActionHelpersOfNavigationProp<B>,
+      ]
+    >;
 
-type ParamListOfNavigationProp<T> =
-  T extends PrivateValueStore<[infer ParamList, any, any]> ? ParamList : never;
+type PrivateValueOfNavigationProp<T> =
+  T extends PrivateValueStore<infer Value> ? Value : [never, unknown, {}, {}];
 
-type RouteNameOfNavigationProp<T> =
-  T extends PrivateValueStore<[any, infer RouteName, any]>
-    ? RouteName
-    : unknown;
+type ParamListOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[0];
+
+type RouteNameOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[1];
+
+type ActionHelpersOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[3];
 
 type StateOfNavigationProp<T> = T extends {
   getState: () => infer State extends NavigationState;
@@ -596,8 +608,7 @@ type ScreenOptionsOfNavigationProp<T> = T extends {
   ? ScreenOptions
   : {};
 
-type EventMapOfNavigationProp<T> =
-  T extends PrivateValueStore<[any, any, infer EventMap]> ? EventMap : {};
+type EventMapOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[2];
 
 export type CompositeScreenProps<
   in out A extends {
@@ -986,7 +997,12 @@ export type GenericNavigation<ParamList extends {}> = Omit<
 export type RouteForName<
   ParamList extends {},
   RouteName extends string,
-> = Extract<ParamListRoute<ParamList>, { name: RouteName }>;
+> = RouteForNameInternal<RouteName, ParamListRoute<ParamList>>;
+
+type RouteForNameInternal<
+  RouteName extends string,
+  Routes,
+> = string extends RouteName ? Routes : Extract<Routes, { name: RouteName }>;
 
 type ParamListRoute<ParamList extends {}> = {
   [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
@@ -1002,11 +1018,10 @@ type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
 
 type BasicNavigationComposite<
   Navigation extends NavigationProp<any, any, any, any, any>,
-  Parent,
-> =
-  Parent extends NavigationProp<any, any, any, any, any>
-    ? CompositeNavigationProp<Navigation, Parent>
-    : Navigation;
+  Parent extends NavigationProp<any, any, any, any, any> | undefined,
+> = Parent extends undefined
+  ? Navigation
+  : CompositeNavigationProp<Navigation, NonNullable<Parent>>;
 
 type BasicNavigationList<
   ParamList extends {},
@@ -1018,11 +1033,13 @@ type BasicNavigationList<
       ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<
           infer T
         >
-        ? BasicNavigationList<
-            T,
-            ExcludedRouteNames,
-            NavigationProp<ParamList, RouteName>
-          >
+        ? keyof T extends ExcludedRouteNames
+          ? {}
+          : BasicNavigationList<
+              T,
+              ExcludedRouteNames,
+              NavigationProp<ParamList, RouteName>
+            >
         : {}
       : {}) &
       (RouteName extends ExcludedRouteNames
@@ -1037,86 +1054,83 @@ type BasicNavigationList<
 >;
 
 export type NavigationListForNavigator<Navigator> =
-  Navigator extends TypedNavigator<infer Bag, any>
-    ? Bag['NavigationList']
-    : Navigator extends PrivateValueStore<[any, infer NavigationList, any]>
-      ? NavigationList
-      : {};
+  Navigator extends PrivateValueStore<infer Value> ? Value[1] : {};
 
-export type NavigationListForNested<Navigator> = FlatType<
-  NavigationListForNestedInternal<Navigator> &
-    (Navigator extends TypedNavigator<infer Bag, any>
-      ? BasicNavigationList<
-          Bag['ParamList'],
-          keyof NavigationListForNestedInternal<Navigator>,
-          undefined
-        >
-      : Navigator extends PrivateValueStore<[infer ParamList, any, any]>
-        ? ParamList extends {}
-          ? BasicNavigationList<
-              ParamList,
-              keyof NavigationListForNestedInternal<Navigator>,
-              undefined
-            >
-          : {}
-        : {})
->;
+export type NavigationListForNested<Navigator> =
+  NavigationListForNestedInternal<Navigator> extends infer NavigationList
+    ? Navigator extends PrivateValueStore<[infer ParamList, any, any, any]>
+      ? ParamList extends {}
+        ? NavigationList &
+            BasicNavigationList<ParamList, keyof NavigationList, undefined>
+        : NavigationList
+      : NavigationList
+    : never;
 
-type NavigationListForNestedInternal<Navigator> =
-  NavigationListForNavigator<Navigator> &
-    NavigationListForStaticConfig<
-      NavigationListForNavigator<Navigator>,
-      Navigator
-    >;
-
-type NavigationListWithComposite<
-  in out Parent extends NavigationProp<any, any, any, any, any>,
-  in out NavigatorList extends Record<string, any>,
-> = {
-  [K in keyof NavigatorList]: CompositeNavigationProp<NavigatorList[K], Parent>;
-};
-
-type NavigationListForStaticConfig<ParentList, Navigator> = Navigator extends {
+type NavigationListForNestedInternal<
+  Navigator,
+  Parent = undefined,
+  NavigatorList extends Record<string, any> =
+    NavigationListForNavigator<Navigator>,
+  // This navigator's own routes, each composed with the accumulated parent.
+  // It's threaded into the recursion as the parent for nested navigators so
+  // each route is composed with its ancestors exactly once, instead of
+  // re-wrapping the whole descendant list at every level (which is quadratic
+  // in the nesting depth).
+  ComposedList = ComposeNavigationList<NavigatorList, Parent>,
+> = Navigator extends {
   readonly config: {
-    screens?: any;
-    groups?: any;
+    readonly screens?: infer Screens;
+    readonly groups?: infer Groups;
   };
 }
-  ? NavigationListForScreens<ParentList, Navigator['config']['screens']> &
-      NavigationListForGroups<ParentList, Navigator['config']['groups']>
+  ? ComposedList &
+      NavigationListForScreens<ComposedList, Screens> &
+      NavigationListForGroups<ComposedList, Groups>
+  : ComposedList;
+
+// Compose every entry in a navigator's list with the accumulated parent.
+// When there's no parent (root navigator), the list is returned as-is so the
+// common shallow case doesn't pay for a redundant mapped type.
+type ComposeNavigationList<NavigatorList extends Record<string, any>, Parent> =
+  Parent extends NavigationProp<any, any, any, any, any>
+    ? {
+        [K in keyof NavigatorList]: CompositeNavigationProp<
+          NavigatorList[K],
+          Parent
+        >;
+      }
+    : NavigatorList;
+
+type NavigationListForScreens<ParentList, Screens> = Screens extends {}
+  ? UnionToIntersection<
+      {
+        // Only check screens with static config to avoid overly-complex types
+        // Otherwise TypeScript fails to load the types due to complexity
+        [K in keyof Screens]: Screens[K] extends { config: any }
+          ? ParentList extends Record<K, any>
+            ? NavigationListForNestedInternal<Screens[K], ParentList[K]>
+            : never
+          : Screens[K] extends { screen: { config: any } }
+            ? ParentList extends Record<K, any>
+              ? NavigationListForNestedInternal<
+                  Screens[K]['screen'],
+                  ParentList[K]
+                >
+              : never
+            : never;
+      }[keyof Screens]
+    >
   : {};
 
-type NavigationListForScreens<ParentList, Screens> = UnionToIntersection<
-  {
-    // Only check screens with static config to avoid overly-complex types
-    // Otherwise TypeScript fails to load the types due to complexity
-    [K in keyof Screens]: ParentList extends Record<K, any>
-      ? Screens[K] extends { config: any }
-        ? NavigationListWithComposite<
-            ParentList[K],
-            NavigationListForNested<Screens[K]>
-          >
-        : Screens[K] extends { screen: { config: any } }
-          ? NavigationListWithComposite<
-              ParentList[K],
-              NavigationListForNested<Screens[K]['screen']>
-            >
-          : {}
-      : {};
-  }[keyof Screens]
->;
-
-type NavigationListForGroups<ParentList, Groups> =
-  Groups extends Record<string, { screens: any }>
-    ? UnionToIntersection<
-        {
-          [K in keyof Groups]: NavigationListForScreens<
-            ParentList,
-            Groups[K]['screens']
-          >;
-        }[keyof Groups]
-      >
-    : {};
+type NavigationListForGroups<ParentList, Groups> = Groups extends {}
+  ? UnionToIntersection<
+      {
+        [K in keyof Groups]: Groups[K] extends { screens: any }
+          ? NavigationListForScreens<ParentList, Groups[K]['screens']>
+          : never;
+      }[keyof Groups]
+    >
+  : {};
 
 export type NavigationContainerRef<ParamList extends {}> = Omit<
   NavigationHelpers<ParamList>,
@@ -1213,7 +1227,9 @@ type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
 type TypedNavigatorStaticDecorated<Bag extends NavigatorTypeBagBase, Config> = {
   getComponent: () => React.ComponentType<{}>;
   config: Config;
-} & PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
+} & PrivateValueStore<
+  [Bag['ParamList'], Bag['NavigationList'], unknown, unknown]
+>;
 
 type TypedNavigatorStatic<
   in out Bag extends NavigatorTypeBagBase,
@@ -1241,7 +1257,9 @@ export type TypedNavigator<
       Bag['Navigator']
     >
   : TypedNavigatorStatic<Bag, Config>) &
-  PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
+  PrivateValueStore<
+    [Bag['ParamList'], Bag['NavigationList'], unknown, unknown]
+  >;
 
 type TypedNavigatorInternal<
   in out ParamList extends ParamListBase,

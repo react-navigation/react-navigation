@@ -22,8 +22,10 @@ type AllRouteNames<ParamList extends {}> = RouteForName<
  */
 export function useRoute<
   const ParamList extends {} = RootParamList,
-  const RouteName extends AllRouteNames<ParamList> = AllRouteNames<ParamList>,
->(name: RouteName): RouteForName<ParamList, RouteName>;
+  const RouteName extends string = string,
+>(
+  name: RouteName & AllRouteNames<ParamList>
+): RouteForName<ParamList, RouteName>;
 export function useRoute<
   const ParamList extends {} = RootParamList,
 >(): {} extends ParamList

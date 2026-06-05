@@ -1157,6 +1157,9 @@ useNavigation('Invalid');
   expectTypeOf(routeNames).toEqualTypeOf<(keyof BottomTabParamList)[]>();
 }
 
+// @ts-expect-error
+useNavigationState('Invalid', (state) => state.index);
+
 /**
  * Check for `linking` prop type validation based on ParamList
  */

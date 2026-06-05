@@ -13,6 +13,8 @@ import type {
   RootParamList,
 } from './types';
 
+type RootNavigation = GenericNavigation<RootParamList>;
+
 /**
  * Hook to access the navigation prop of the parent screen anywhere.
  *
@@ -21,15 +23,17 @@ import type {
  *
  * @returns Navigation prop of the parent screen.
  */
-export function useNavigation(): GenericNavigation<RootParamList>;
+export function useNavigation(): RootNavigation;
 export function useNavigation<
   const Navigator = RootNavigator,
 >(): NavigationListForNavigator<Navigator>[keyof NavigationListForNavigator<Navigator>];
 export function useNavigation<
   const Navigator = RootNavigator,
-  const RouteName extends keyof NavigationListForNested<Navigator> =
-    keyof NavigationListForNested<Navigator>,
->(name: RouteName): NavigationListForNested<Navigator>[RouteName];
+  const RouteName extends string = string,
+>(
+  name: RouteName & keyof NavigationListForNested<Navigator>
+): NavigationListForNested<Navigator>[RouteName &
+  keyof NavigationListForNested<Navigator>];
 export function useNavigation(name?: string): unknown {
   const root = React.use(NavigationContainerRefContext);
   const navigation = React.use(NavigationContext);
