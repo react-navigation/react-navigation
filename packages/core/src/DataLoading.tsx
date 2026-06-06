@@ -134,7 +134,10 @@ export function getLoaderForStateChange(
   const nested =
     'config' in item
       ? item
-      : 'screen' in item && 'config' in item.screen
+      : 'screen' in item &&
+          // Nested navigators cannot be defined as a getter
+          Object.getOwnPropertyDescriptor(item, 'screen')?.get == null &&
+          'config' in item.screen
         ? item.screen
         : undefined;
 
