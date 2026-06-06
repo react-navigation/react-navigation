@@ -408,7 +408,7 @@ type NavigationHelpersCommon<
    * So don't use it in `render`.
    */
   getState(): State;
-} & PrivateValueStore<[ParamList, unknown, unknown, unknown]>;
+};
 
 type ParamType<
   ParamList extends {},
@@ -456,7 +456,8 @@ export type NavigationHelpers<
   EventMap extends EventMapBase = {},
 > = NavigationHelpersCommon<ParamList> &
   EventEmitter<EventMap> &
-  NavigationHelpersRoute<ParamList, keyof ParamList>;
+  NavigationHelpersRoute<ParamList, keyof ParamList> &
+  PrivateValueStore<[ParamList, unknown, unknown, unknown]>;
 
 export type NavigationContainerProps = {
   /**
@@ -489,14 +490,17 @@ export type NavigationContainerProps = {
   children: React.ReactNode;
 };
 
-export type NavigationProp<
+// Everything in `NavigationProp` except `getParent` and the private brand.
+// The composite navigation prop intersects this directly, so it doesn't have
+// to walk `NavigationProp`'s members with `Omit` to drop `getParent`/the brand.
+type NavigationPropBase<
   ParamList extends {},
   RouteName extends keyof ParamList = KeyOf<ParamList>,
   State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {},
   ActionHelpers extends Record<string, (...args: any) => void> = {},
-> = Omit<NavigationHelpersCommon<ParamList, State>, 'getParent'> & {
+> = NavigationHelpersCommon<ParamList, State> & {
   /**
    * Update the options for the route.
    * The options object will be shallow merged with default options object.
@@ -504,6 +508,25 @@ export type NavigationProp<
    * @param options Partial options object for the current screen.
    */
   setOptions(options: Partial<ScreenOptions>): void;
+} & NavigationHelpersRoute<ParamList, RouteName> &
+  ActionHelpers &
+  EventConsumer<EventMap & EventMapCore<State>>;
+
+export type NavigationProp<
+  ParamList extends {},
+  RouteName extends keyof ParamList = KeyOf<ParamList>,
+  State extends NavigationState = NavigationState<ParamList>,
+  ScreenOptions extends {} = {},
+  EventMap extends EventMapBase = {},
+  ActionHelpers extends Record<string, (...args: any) => void> = {},
+> = NavigationPropBase<
+  ParamList,
+  RouteName,
+  State,
+  ScreenOptions,
+  EventMap,
+  ActionHelpers
+> & {
   /**
    * Returns the navigation prop of the parent screen.
    * If a route name is provided, the navigation prop from the parent screen with matching route name (including current) will be returned.
@@ -522,10 +545,7 @@ export type NavigationProp<
     ActionHelpers
   >;
   getParent(): NavigationProp<ParamListBase> | undefined;
-} & NavigationHelpersRoute<ParamList, RouteName> &
-  ActionHelpers &
-  EventConsumer<EventMap & EventMapCore<State>> &
-  PrivateValueStore<[ParamList, RouteName, EventMap, ActionHelpers]>;
+} & PrivateValueStore<[ParamList, RouteName, EventMap, ActionHelpers]>;
 
 export type RouteProp<
   in out ParamList extends ParamListBase,
@@ -564,21 +584,17 @@ type CompositeNavigationPropInternal<
   // deeply composed) member set of `A & B` to drop the standard members.
   ActionHelpersOfNavigationProp<A> &
     ActionHelpersOfNavigationProp<B> &
-    Omit<
-      NavigationProp<
-        ParamList,
-        RouteName,
-        StateOfNavigationProp<A>,
-        ScreenOptionsOfNavigationProp<A>,
-        EventMap
-      >,
-      'getParent'
+    // Intersect the brand-free base directly instead of `Omit`-ing `getParent`
+    // off a full `NavigationProp`, so we skip a mapped-type pass per composite.
+    NavigationPropBase<
+      ParamList,
+      RouteName,
+      StateOfNavigationProp<A>,
+      ScreenOptionsOfNavigationProp<A>,
+      EventMap
     > & {
       getParent: A['getParent'] & B['getParent'];
-    } & // Mapped types don't preserve protected members
-    // So `Omit` drops `PrivateValueStore`'s `protected` brand
-    // We add it back so this can be used for type inference
-    PrivateValueStore<
+    } & PrivateValueStore<
       [
         ParamList,
         RouteName,
@@ -1107,11 +1123,11 @@ type NavigationListForScreens<ParentList, Screens> = Screens extends {}
         // Only check screens with static config to avoid overly-complex types
         // Otherwise TypeScript fails to load the types due to complexity
         [K in keyof Screens]: Screens[K] extends { config: any }
-          ? ParentList extends Record<K, any>
+          ? K extends keyof ParentList
             ? NavigationListForNestedInternal<Screens[K], ParentList[K]>
             : never
           : Screens[K] extends { screen: { config: any } }
-            ? ParentList extends Record<K, any>
+            ? K extends keyof ParentList
               ? NavigationListForNestedInternal<
                   Screens[K]['screen'],
                   ParentList[K]
