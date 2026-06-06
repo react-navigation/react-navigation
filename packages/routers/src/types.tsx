@@ -86,21 +86,19 @@ export type Route<
      * History of param changes for this route.
      */
     history?: { type: 'params'; params: object }[] | undefined;
-  } & Readonly<
-    undefined extends Params
-      ? {
-          /**
-           * Params for this route
-           */
-          params?: Readonly<Params> | undefined;
-        }
-      : {
-          /**
-           * Params for this route
-           */
-          params: Readonly<Params>;
-        }
-  >
+  } & (undefined extends Params
+    ? {
+        /**
+         * Params for this route
+         */
+        params?: Readonly<Params> | undefined;
+      }
+    : {
+        /**
+         * Params for this route
+         */
+        params: Readonly<Params>;
+      })
 >;
 
 export type ParamListBase = Record<string, object | undefined>;
