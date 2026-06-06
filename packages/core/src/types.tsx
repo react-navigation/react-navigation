@@ -408,7 +408,7 @@ type NavigationHelpersCommon<
    * So don't use it in `render`.
    */
   getState(): State;
-} & PrivateValueStore<[ParamList, unknown, unknown, unknown]>;
+};
 
 type ParamType<
   ParamList extends {},
@@ -456,7 +456,8 @@ export type NavigationHelpers<
   EventMap extends EventMapBase = {},
 > = NavigationHelpersCommon<ParamList> &
   EventEmitter<EventMap> &
-  NavigationHelpersRoute<ParamList, keyof ParamList>;
+  NavigationHelpersRoute<ParamList, keyof ParamList> &
+  PrivateValueStore<[ParamList, unknown, unknown, unknown]>;
 
 export type NavigationContainerProps = {
   /**
@@ -496,7 +497,7 @@ export type NavigationProp<
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {},
   ActionHelpers extends Record<string, (...args: any) => void> = {},
-> = Omit<NavigationHelpersCommon<ParamList, State>, 'getParent'> & {
+> = NavigationHelpersCommon<ParamList, State> & {
   /**
    * Update the options for the route.
    * The options object will be shallow merged with default options object.
