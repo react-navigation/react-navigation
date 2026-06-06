@@ -1,8 +1,4 @@
-import type {
-  NavigationState,
-  ParamListBase,
-  Route,
-} from '@react-navigation/routers';
+import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
@@ -145,22 +141,24 @@ type ParamListForGroups<
   : {};
 
 type RouteType<Params, P = AnyToUnknown<Params>> = Readonly<
-  FlatType<
-    Omit<Route<string, P>, 'params'> &
-      (undefined extends Params
-        ? {
-            /**
-             * Params for this route
-             */
-            params?: P;
-          }
-        : {
-            /**
-             * Params for this route
-             */
-            params: P;
-          })
-  >
+  {
+    key: string;
+    name: string;
+    path?: string | undefined;
+    history?: { type: 'params'; params: object }[] | undefined;
+  } & (undefined extends Params
+    ? {
+        /**
+         * Params for this route
+         */
+        params?: P;
+      }
+    : {
+        /**
+         * Params for this route
+         */
+        params: P;
+      })
 >;
 
 type StaticScreenConfigLinkingAlias = {
