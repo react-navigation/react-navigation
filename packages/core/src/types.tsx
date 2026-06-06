@@ -490,7 +490,10 @@ export type NavigationContainerProps = {
   children: React.ReactNode;
 };
 
-export type NavigationProp<
+// Everything in `NavigationProp` except `getParent` and the private brand.
+// The composite navigation prop intersects this directly, so it doesn't have
+// to walk `NavigationProp`'s members with `Omit` to drop `getParent`/the brand.
+type NavigationPropBase<
   ParamList extends {},
   RouteName extends keyof ParamList = KeyOf<ParamList>,
   State extends NavigationState = NavigationState<ParamList>,
@@ -505,6 +508,25 @@ export type NavigationProp<
    * @param options Partial options object for the current screen.
    */
   setOptions(options: Partial<ScreenOptions>): void;
+} & NavigationHelpersRoute<ParamList, RouteName> &
+  ActionHelpers &
+  EventConsumer<EventMap & EventMapCore<State>>;
+
+export type NavigationProp<
+  ParamList extends {},
+  RouteName extends keyof ParamList = KeyOf<ParamList>,
+  State extends NavigationState = NavigationState<ParamList>,
+  ScreenOptions extends {} = {},
+  EventMap extends EventMapBase = {},
+  ActionHelpers extends Record<string, (...args: any) => void> = {},
+> = NavigationPropBase<
+  ParamList,
+  RouteName,
+  State,
+  ScreenOptions,
+  EventMap,
+  ActionHelpers
+> & {
   /**
    * Returns the navigation prop of the parent screen.
    * If a route name is provided, the navigation prop from the parent screen with matching route name (including current) will be returned.
@@ -523,10 +545,7 @@ export type NavigationProp<
     ActionHelpers
   >;
   getParent(): NavigationProp<ParamListBase> | undefined;
-} & NavigationHelpersRoute<ParamList, RouteName> &
-  ActionHelpers &
-  EventConsumer<EventMap & EventMapCore<State>> &
-  PrivateValueStore<[ParamList, RouteName, EventMap, ActionHelpers]>;
+} & PrivateValueStore<[ParamList, RouteName, EventMap, ActionHelpers]>;
 
 export type RouteProp<
   in out ParamList extends ParamListBase,
@@ -565,21 +584,17 @@ type CompositeNavigationPropInternal<
   // deeply composed) member set of `A & B` to drop the standard members.
   ActionHelpersOfNavigationProp<A> &
     ActionHelpersOfNavigationProp<B> &
-    Omit<
-      NavigationProp<
-        ParamList,
-        RouteName,
-        StateOfNavigationProp<A>,
-        ScreenOptionsOfNavigationProp<A>,
-        EventMap
-      >,
-      'getParent'
+    // Intersect the brand-free base directly instead of `Omit`-ing `getParent`
+    // off a full `NavigationProp`, so we skip a mapped-type pass per composite.
+    NavigationPropBase<
+      ParamList,
+      RouteName,
+      StateOfNavigationProp<A>,
+      ScreenOptionsOfNavigationProp<A>,
+      EventMap
     > & {
       getParent: A['getParent'] & B['getParent'];
-    } & // Mapped types don't preserve protected members
-    // So `Omit` drops `PrivateValueStore`'s `protected` brand
-    // We add it back so this can be used for type inference
-    PrivateValueStore<
+    } & PrivateValueStore<
       [
         ParamList,
         RouteName,
