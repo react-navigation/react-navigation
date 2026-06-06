@@ -128,6 +128,7 @@ export function DrawerItem(props: Props) {
     pressOpacity = 1,
     testID,
     accessibilityLabel,
+    accessibilityState,
     ...rest
   } = props;
 
@@ -208,7 +209,8 @@ export function DrawerItem(props: Props) {
         onPress={onPress}
         role="button"
         aria-label={accessibilityLabel}
-        aria-selected={focused}
+        aria-selected={href ? undefined : focused}
+        accessibilityState={accessibilityState}
         pressColor={pressColor}
         pressOpacity={pressOpacity}
         hoverEffect={typeof color === 'string' ? { color } : undefined}
