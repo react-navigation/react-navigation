@@ -121,17 +121,23 @@ export type ExtractParamsType<Params, Parse> = {
         ? R
         : Params[K]
     : Params[K];
-} & {
-  /**
-   * Optional param types not in path pattern (for query params)
-   */
-  [K in QueryParamOptionalKeys<Params, Parse>]?: QueryParamValue<Parse[K]>;
-} & {
-  /**
-   * Required param types not in path pattern (for query params)
-   */
-  [K in QueryParamRequiredKeys<Params, Parse>]: QueryParamValue<Parse[K]>;
-};
+} & // Query params are the parse keys not present in the path pattern. When there
+  // are none (the common case), skip building the query param mapped types.
+  ([Exclude<keyof Parse, keyof Params>] extends [never]
+    ? {}
+    : {
+        /**
+         * Optional param types not in path pattern (for query params)
+         */
+        [K in QueryParamOptionalKeys<Params, Parse>]?: QueryParamValue<
+          Parse[K]
+        >;
+      } & {
+        /**
+         * Required param types not in path pattern (for query params)
+         */
+        [K in QueryParamRequiredKeys<Params, Parse>]: QueryParamValue<Parse[K]>;
+      });
 
 type QueryParamValue<ParseValue> =
   ParseValue extends StandardSchemaV1<unknown, infer R>
