@@ -30,7 +30,7 @@ test('integrates with the history API', async () => {
       <NavigationContent>
         {state.routes.map((route, i) => (
           <div key={route.key} aria-current={state.index === i || undefined}>
-            {descriptors[route.key].render()}
+            {descriptors[route.key]?.render()}
           </div>
         ))}
       </NavigationContent>
@@ -47,7 +47,7 @@ test('integrates with the history API', async () => {
       <NavigationContent>
         {state.routes.map((route, i) => (
           <div key={route.key} aria-current={state.index === i || undefined}>
-            {descriptors[route.key].render()}
+            {descriptors[route.key]?.render()}
           </div>
         ))}
       </NavigationContent>

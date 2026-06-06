@@ -25,6 +25,7 @@ import type {
   DrawerHeaderProps,
   DrawerNavigationConfig,
   DrawerNavigationHelpers,
+  DrawerNavigationOptions,
   DrawerNavigationProp,
 } from '../types';
 import { addCancelListener } from '../utils/addCancelListener';
@@ -56,7 +57,16 @@ function DrawerViewBase({
 }: Props) {
   const { direction } = useLocale();
 
-  const focusedRouteKey = state.routes[state.index].key;
+  const focusedRoute = state.routes[state.index];
+
+  if (focusedRoute == null) {
+    throw new Error(`Couldn't find a route at index ${state.index}.`);
+  }
+
+  const focusedRouteKey = focusedRoute.key;
+  const focusedOptions: DrawerNavigationOptions =
+    descriptors[focusedRouteKey]?.options ?? {};
+
   const {
     drawerHideStatusBarOnOpen,
     drawerPosition = direction === 'rtl' ? 'right' : 'left',
@@ -72,7 +82,7 @@ function DrawerViewBase({
     swipeMinDistance,
     overlayStyle,
     overlayAccessibilityLabel,
-  } = descriptors[focusedRouteKey].options;
+  } = focusedOptions;
 
   const [loaded, setLoaded] = React.useState([focusedRouteKey]);
 
@@ -210,6 +220,13 @@ function DrawerViewBase({
       <Container style={styles.content}>
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
+
+          if (descriptor == null) {
+            throw new Error(
+              `Couldn't find a descriptor for route '${route.key}'.`
+            );
+          }
+
           const { lazy = true } = descriptor.options;
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);

@@ -33,15 +33,16 @@ test('sets options with options prop as an object', async () => {
       { title?: string },
       any
     >(MockRouter, props);
-    const { render, options } = descriptors[state.routes[state.index].key];
+    const route = state.routes[state.index];
+    const descriptor = route == null ? undefined : descriptors[route.key];
 
     return (
       <NavigationContent>
         <main>
           <h1>
-            <Text>{options.title}</Text>
+            <Text>{descriptor?.options.title}</Text>
           </h1>
-          <div>{render()}</div>
+          <div>{descriptor?.render()}</div>
         </main>
       </NavigationContent>
     );
@@ -87,15 +88,16 @@ test('sets options with options prop as a fuction', async () => {
       { title?: string },
       any
     >(MockRouter, props);
-    const { render, options } = descriptors[state.routes[state.index].key];
+    const route = state.routes[state.index];
+    const descriptor = route == null ? undefined : descriptors[route.key];
 
     return (
       <NavigationContent>
         <main>
           <h1>
-            <Text>{options.title}</Text>
+            <Text>{descriptor?.options.title}</Text>
           </h1>
-          <div>{render()}</div>
+          <div>{descriptor?.render()}</div>
         </main>
       </NavigationContent>
     );
@@ -146,14 +148,14 @@ test('sets options with screenOptions prop as an object', async () => {
     return (
       <NavigationContent>
         {state.routes.map((route) => {
-          const { render, options } = descriptors[route.key];
+          const descriptor = descriptors[route.key];
 
           return (
             <main key={route.key}>
               <h1>
-                <Text>{options.title}</Text>
+                <Text>{descriptor?.options.title}</Text>
               </h1>
-              <div>{render()}</div>
+              <div>{descriptor?.render()}</div>
             </main>
           );
         })}
@@ -217,14 +219,14 @@ test('sets options with screenOptions prop as a fuction', async () => {
     return (
       <NavigationContent>
         {state.routes.map((route) => {
-          const { render, options } = descriptors[route.key];
+          const descriptor = descriptors[route.key];
 
           return (
             <main key={route.key}>
               <h1>
-                <Text>{options.title}</Text>
+                <Text>{descriptor?.options.title}</Text>
               </h1>
-              <div>{render()}</div>
+              <div>{descriptor?.render()}</div>
             </main>
           );
         })}
@@ -299,15 +301,16 @@ test('sets initial options with setOptions', async () => {
       },
       any
     >(MockRouter, props);
-    const { render, options } = descriptors[state.routes[state.index].key];
+    const route = state.routes[state.index];
+    const descriptor = route == null ? undefined : descriptors[route.key];
 
     return (
       <NavigationContent>
         <main>
-          <h1 color={options.color}>
-            <Text>{options.title}</Text>
+          <h1 color={descriptor?.options.color}>
+            <Text>{descriptor?.options.title}</Text>
           </h1>
-          <div>{render()}</div>
+          <div>{descriptor?.render()}</div>
         </main>
       </NavigationContent>
     );
@@ -361,21 +364,22 @@ test('updates options with setOptions', async () => {
       any,
       any
     >(MockRouter, props);
-    const { render, options } = descriptors[state.routes[state.index].key];
+    const route = state.routes[state.index];
+    const descriptor = route == null ? undefined : descriptors[route.key];
 
     return (
       <NavigationContent>
         <main>
-          <h1 color={options.color}>
-            <Text>{options.title}</Text>
+          <h1 color={descriptor?.options.color}>
+            <Text>{descriptor?.options.title}</Text>
           </h1>
           <p>
-            <Text>{options.description}</Text>
+            <Text>{descriptor?.options.description}</Text>
           </p>
           <caption>
-            <Text>{options.author}</Text>
+            <Text>{descriptor?.options.author}</Text>
           </caption>
-          <div>{render()}</div>
+          <div>{descriptor?.render()}</div>
         </main>
       </NavigationContent>
     );
@@ -453,9 +457,10 @@ test('renders layout defined for the screen', async () => {
       any,
       any
     >(MockRouter, props);
-    const { render } = descriptors[state.routes[state.index].key];
+    const route = state.routes[state.index];
+    const descriptor = route == null ? undefined : descriptors[route.key];
 
-    return <NavigationContent>{render()}</NavigationContent>;
+    return <NavigationContent>{descriptor?.render()}</NavigationContent>;
   };
 
   const TestScreen = () => {
@@ -499,9 +504,10 @@ test('renders layout defined for the group', async () => {
       any,
       any
     >(MockRouter, props);
-    const { render } = descriptors[state.routes[state.index].key];
+    const route = state.routes[state.index];
+    const descriptor = route == null ? undefined : descriptors[route.key];
 
-    return <NavigationContent>{render()}</NavigationContent>;
+    return <NavigationContent>{descriptor?.render()}</NavigationContent>;
   };
 
   const TestScreen = () => {
@@ -541,9 +547,10 @@ test('renders layout defined for the navigator', async () => {
       any,
       any
     >(MockRouter, props);
-    const { render } = descriptors[state.routes[state.index].key];
+    const route = state.routes[state.index];
+    const descriptor = route == null ? undefined : descriptors[route.key];
 
-    return <NavigationContent>{render()}</NavigationContent>;
+    return <NavigationContent>{descriptor?.render()}</NavigationContent>;
   };
 
   const TestScreen = () => {
@@ -581,15 +588,16 @@ test("returns correct value for canGoBack when it's not overridden", async () =>
       { title?: string },
       any
     >(MockRouter, props);
-    const { render, options } = descriptors[state.routes[state.index].key];
+    const route = state.routes[state.index];
+    const descriptor = route == null ? undefined : descriptors[route.key];
 
     return (
       <NavigationContent>
         <main>
           <h1>
-            <Text>{options.title}</Text>
+            <Text>{descriptor?.options.title}</Text>
           </h1>
-          <div>{render()}</div>
+          <div>{descriptor?.render()}</div>
         </main>
       </NavigationContent>
     );
@@ -649,10 +657,14 @@ test(`returns false for canGoBack when current router doesn't handle GO_BACK`, a
       any
     >(TestRouter, props);
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -704,10 +716,14 @@ test('returns true for canGoBack when current router handles GO_BACK', async () 
       { title?: string },
       any
     >(ParentRouter, props);
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -720,10 +736,14 @@ test('returns true for canGoBack when current router handles GO_BACK', async () 
       any
     >(MockRouter, props);
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -781,10 +801,14 @@ test('returns true for canGoBack when parent router handles GO_BACK', async () =
       { title?: string },
       any
     >(OverrodeRouter, props);
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -797,10 +821,14 @@ test('returns true for canGoBack when parent router handles GO_BACK', async () =
       any
     >(MockRouter, props);
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 

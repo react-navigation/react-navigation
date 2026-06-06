@@ -1,8 +1,4 @@
-import type {
-  NavigationState,
-  PartialState,
-  Route,
-} from '@react-navigation/routers';
+import type { NavigationState, PartialState } from '@react-navigation/routers';
 import queryString from 'query-string';
 
 import { getPatternParts, type PatternPart } from './getPatternParts';
@@ -33,6 +29,10 @@ const getActiveRoute = (
     typeof state.index === 'number'
       ? state.routes[state.index]
       : state.routes[state.routes.length - 1];
+
+  if (route == null) {
+    throw new Error(`Couldn't find the active route.`);
+  }
 
   if (route.state) {
     return getActiveRoute(route.state);
@@ -66,13 +66,15 @@ const getTransformedState = (
 ): Omit<PartialState<NavigationState>, 'stale'> => {
   const routes = state.routes.map(
     (route): Omit<PartialState<NavigationState>, 'stale'>['routes'][number] => {
+      const config = configs?.[route.name];
+
       if (
         route.state ||
-        (configs?.[route.name]?.screens &&
+        (config?.screens &&
           route.params &&
           (('screen' in route.params &&
             typeof route.params.screen === 'string' &&
-            configs[route.name].screens?.[route.params.screen]) ||
+            config.screens[route.params.screen]) ||
             'state' in route.params))
       ) {
         const nestedState: State | undefined =
@@ -152,10 +154,16 @@ export function getPathFromState<ParamList extends {}>(
   const allParams: Record<string, string> = {};
 
   while (current) {
-    let index = typeof current.index === 'number' ? current.index : 0;
-    let route = current.routes[index] as Route<string> & {
-      state?: State;
-    };
+    let index: number = typeof current.index === 'number' ? current.index : 0;
+
+    const initialRoute: State['routes'][number] | undefined =
+      current.routes[index];
+
+    if (initialRoute == null) {
+      throw new Error(`Couldn't find a route at index ${index}.`);
+    }
+
+    let route: State['routes'][number] = initialRoute;
 
     let parts: PatternPart[] | undefined;
 
@@ -169,13 +177,19 @@ export function getPathFromState<ParamList extends {}>(
 
     let hasNext = true;
 
-    while (route.name in currentOptions && hasNext) {
-      parts = currentOptions[route.name].parts;
+    while (hasNext) {
+      const config = currentOptions[route.name];
+
+      if (config == null) {
+        break;
+      }
+
+      parts = config.parts;
 
       nestedRouteNames.push(route.name);
 
       if (route.params) {
-        const options = currentOptions[route.name];
+        const options = config;
 
         const currentParams = Object.fromEntries(
           Object.entries(route.params)
@@ -225,7 +239,7 @@ export function getPathFromState<ParamList extends {}>(
       }
 
       // If there is no `screens` property or no nested state, we return pattern
-      if (!currentOptions[route.name].screens || route.state === undefined) {
+      if (!config.screens || route.state == null) {
         hasNext = false;
       } else {
         index =
@@ -233,12 +247,18 @@ export function getPathFromState<ParamList extends {}>(
             ? route.state.index
             : route.state.routes.length - 1;
 
-        const nextRoute = route.state.routes[index];
-        const nestedConfig = currentOptions[route.name].screens;
+        const nextRoute: State['routes'][number] | undefined =
+          route.state.routes[index];
+
+        if (nextRoute == null) {
+          throw new Error(`Couldn't find a route at index ${index}.`);
+        }
+
+        const nestedConfig = config.screens;
 
         // if there is config for next route name, we go deeper
-        if (nestedConfig && nextRoute.name in nestedConfig) {
-          route = nextRoute as Route<string> & { state?: State };
+        if (nextRoute.name in nestedConfig) {
+          route = nextRoute;
           currentOptions = nestedConfig;
         } else {
           // If not, there is no sense in going deeper in config
@@ -247,7 +267,7 @@ export function getPathFromState<ParamList extends {}>(
       }
     }
 
-    if (currentOptions[route.name] !== undefined) {
+    if (currentOptions[route.name] != null) {
       path += parts
         ?.map(({ segment, param, optional }) => {
           // We don't know what to show for wildcard patterns

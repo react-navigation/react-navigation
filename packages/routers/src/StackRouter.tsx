@@ -289,6 +289,12 @@ export function StackRouter(options: StackRouterOptions) {
           ? options.initialRouteName
           : routeNames[0];
 
+      if (initialRouteName == null) {
+        throw new Error(
+          "Couldn't initialize the stack navigator. Have you defined any screens?"
+        );
+      }
+
       return {
         stale: false,
         type: 'stack',
@@ -332,6 +338,12 @@ export function StackRouter(options: StackRouterOptions) {
           options.initialRouteName !== undefined
             ? options.initialRouteName
             : routeNames[0];
+
+        if (initialRouteName == null) {
+          throw new Error(
+            "Couldn't initialize the stack navigator. Have you defined any screens?"
+          );
+        }
 
         routes.push({
           key: `${initialRouteName}-${nanoid()}`,
@@ -388,6 +400,12 @@ export function StackRouter(options: StackRouterOptions) {
           routeNames.includes(options.initialRouteName)
             ? options.initialRouteName
             : routeNames[0];
+
+        if (initialRouteName == null) {
+          throw new Error(
+            "Couldn't initialize the stack navigator. Have you defined any screens?"
+          );
+        }
 
         routes.push({
           key: `${initialRouteName}-${nanoid()}`,
@@ -498,6 +516,10 @@ export function StackRouter(options: StackRouterOptions) {
           if (action.type === 'NAVIGATE') {
             const currentRoute = routes[state.index];
 
+            if (currentRoute == null) {
+              throw new Error(`Couldn't find a route at index ${state.index}.`);
+            }
+
             if (id !== undefined) {
               if (
                 currentRoute.name === action.payload.name &&
@@ -507,6 +529,10 @@ export function StackRouter(options: StackRouterOptions) {
               } else if (action.payload.pop) {
                 for (let i = routes.length - 1; i >= 0; i--) {
                   const r = routes[i];
+
+                  if (r == null) {
+                    throw new Error(`Couldn't find a route at index ${i}.`);
+                  }
 
                   if (r.name !== action.payload.name) {
                     continue;
@@ -519,13 +545,21 @@ export function StackRouter(options: StackRouterOptions) {
 
                   if (r.history?.length) {
                     for (let j = r.history.length - 1; j >= 0; j--) {
+                      const historyEntry = r.history[j];
+
+                      if (historyEntry == null) {
+                        throw new Error(
+                          `Couldn't find a route history entry at index ${j}.`
+                        );
+                      }
+
                       if (
-                        r.history[j].type === 'params' &&
-                        id === getId?.({ params: r.history[j].params })
+                        historyEntry.type === 'params' &&
+                        id === getId?.({ params: historyEntry.params })
                       ) {
                         route = {
                           ...r,
-                          params: r.history[j].params,
+                          params: historyEntry.params,
                           history: r.history.slice(0, j),
                         };
                         break;
@@ -632,14 +666,20 @@ export function StackRouter(options: StackRouterOptions) {
             ];
           }
 
+          const lastRoute = nextRoutes[nextRoutes.length - 1];
+
+          if (lastRoute == null) {
+            throw new Error(
+              `Couldn't find a route at index ${nextRoutes.length - 1}.`
+            );
+          }
+
           return retainRoutes(
             state,
             getStateWithRoutes(
               state,
               nextRoutes,
-              preloadedRoutes.filter(
-                (route) => nextRoutes[nextRoutes.length - 1].key !== route.key
-              )
+              preloadedRoutes.filter((route) => lastRoute.key !== route.key)
             )
           );
         }
@@ -655,6 +695,10 @@ export function StackRouter(options: StackRouterOptions) {
           }
 
           let route = routes[currentIndex];
+
+          if (route == null) {
+            throw new Error(`Couldn't find a route at index ${currentIndex}.`);
+          }
 
           /**
            * When popping entries,
@@ -699,7 +743,16 @@ export function StackRouter(options: StackRouterOptions) {
 
                 count = count - removed;
                 currentIndex = nextRoutes.length - 1;
-                route = nextRoutes[currentIndex];
+
+                const currentRoute = nextRoutes[currentIndex];
+
+                if (currentRoute == null) {
+                  throw new Error(
+                    `Couldn't find a route at index ${currentIndex}.`
+                  );
+                }
+
+                route = currentRoute;
               }
             }
 
@@ -711,6 +764,10 @@ export function StackRouter(options: StackRouterOptions) {
 
         case 'POP_TO_TOP': {
           let route = routes[0];
+
+          if (route == null) {
+            throw new Error("Couldn't find a route at index 0.");
+          }
 
           if (state.index > 0 || route.history?.length) {
             if (route.history?.length) {
@@ -751,6 +808,10 @@ export function StackRouter(options: StackRouterOptions) {
             for (let i = currentIndex; i >= 0; i--) {
               const r = routes[i];
 
+              if (r == null) {
+                throw new Error(`Couldn't find a route at index ${i}.`);
+              }
+
               if (r.name !== action.payload.name) {
                 continue;
               }
@@ -762,9 +823,17 @@ export function StackRouter(options: StackRouterOptions) {
 
               if (r.history?.length) {
                 for (let j = r.history.length - 1; j >= 0; j--) {
+                  const historyEntry = r.history[j];
+
+                  if (historyEntry == null) {
+                    throw new Error(
+                      `Couldn't find a route history entry at index ${j}.`
+                    );
+                  }
+
                   if (
-                    r.history[j].type === 'params' &&
-                    id === getId?.({ params: r.history[j].params })
+                    historyEntry.type === 'params' &&
+                    id === getId?.({ params: historyEntry.params })
                   ) {
                     index = i;
                     historyIndex = j;
@@ -777,11 +846,29 @@ export function StackRouter(options: StackRouterOptions) {
                 }
               }
             }
-          } else if (routes[currentIndex].name === action.payload.name) {
-            index = currentIndex;
           } else {
+            const currentRoute = routes[currentIndex];
+
+            if (currentRoute == null) {
+              throw new Error(
+                `Couldn't find a route at index ${currentIndex}.`
+              );
+            }
+
+            if (currentRoute.name === action.payload.name) {
+              index = currentIndex;
+            }
+          }
+
+          if (id == null && index === -1) {
             for (let i = currentIndex; i >= 0; i--) {
-              if (routes[i].name === action.payload.name) {
+              const route = routes[i];
+
+              if (route == null) {
+                throw new Error(`Couldn't find a route at index ${i}.`);
+              }
+
+              if (route.name === action.payload.name) {
                 index = i;
                 break;
               }
@@ -821,11 +908,23 @@ export function StackRouter(options: StackRouterOptions) {
 
           const route = routes[index];
 
+          if (route == null) {
+            throw new Error(`Couldn't find a route at index ${index}.`);
+          }
+
           let baseParams = route.params;
           let history = route.history;
 
           if (historyIndex !== undefined && route.history) {
-            baseParams = route.history[historyIndex].params;
+            const historyEntry = route.history[historyIndex];
+
+            if (historyEntry == null) {
+              throw new Error(
+                `Couldn't find a route history entry at index ${historyIndex}.`
+              );
+            }
+
+            baseParams = historyEntry.params;
             history = route.history.slice(0, historyIndex);
           }
 
@@ -851,13 +950,19 @@ export function StackRouter(options: StackRouterOptions) {
               ...routes.slice(0, index),
               params !== baseParams || historyIndex !== undefined
                 ? { ...route, params, history }
-                : routes[index],
+                : route,
             ])
           );
         }
 
-        case 'GO_BACK':
-          if (state.index > 0 || routes[state.index].history?.length) {
+        case 'GO_BACK': {
+          const route = routes[state.index];
+
+          if (route == null) {
+            throw new Error(`Couldn't find a route at index ${state.index}.`);
+          }
+
+          if (state.index > 0 || route.history?.length) {
             return router.getStateForAction(
               state,
               {
@@ -871,9 +976,16 @@ export function StackRouter(options: StackRouterOptions) {
           }
 
           return null;
+        }
 
         case 'RETAIN': {
-          const routeKey = action.source ?? routes[state.index].key;
+          const route = routes[state.index];
+
+          if (route == null) {
+            throw new Error(`Couldn't find a route at index ${state.index}.`);
+          }
+
+          const routeKey = action.source ?? route.key;
 
           if (!state.routes.some((route) => route.key === routeKey)) {
             return null;

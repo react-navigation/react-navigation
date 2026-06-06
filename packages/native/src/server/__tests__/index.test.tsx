@@ -110,7 +110,7 @@ test('renders correct state with location', async () => {
     return (
       <NavigationContent>
         {state.routes.map((route) => (
-          <div key={route.key}>{descriptors[route.key].render()}</div>
+          <div key={route.key}>{descriptors[route.key]?.render()}</div>
         ))}
       </NavigationContent>
     );
@@ -197,7 +197,7 @@ test('waits for async screens before onAllReady', async () => {
     return (
       <NavigationContent>
         {state.routes.map((route) => (
-          <div key={route.key}>{descriptors[route.key].render()}</div>
+          <div key={route.key}>{descriptors[route.key]?.render()}</div>
         ))}
       </NavigationContent>
     );

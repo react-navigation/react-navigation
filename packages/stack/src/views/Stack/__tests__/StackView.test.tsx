@@ -79,7 +79,7 @@ const createState = (
   openingRouteKeys: [],
   closingRouteKeys: [],
   replacingRouteKeys: [],
-  descriptors: {},
+  descriptors: createDescriptors(routes),
   ...overrides,
 });
 
@@ -247,7 +247,6 @@ describe('StackView.getDerivedStateFromProps', () => {
           openingRouteKeys: ['B'],
           descriptors: {
             ...oldDescriptors,
-            [routeA.key]: oldDescriptors[routeA.key],
           },
         },
         [routeA, routeB]
@@ -281,6 +280,11 @@ describe('StackView.getDerivedStateFromProps', () => {
       const routeB = createRoute('B');
       const propsDescriptors = createDescriptors([routeA]);
       const stateDescriptorB = createDescriptors([routeB])[routeB.key];
+
+      if (stateDescriptorB == null) {
+        throw new Error("Couldn't find a descriptor for route B.");
+      }
+
       const props = {
         ...createProps([routeA]),
         descriptors: propsDescriptors,

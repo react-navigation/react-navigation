@@ -80,7 +80,14 @@ export function BottomTabViewCustom({
   descriptors,
 }: Props) {
   const { routes } = state;
-  const focusedRouteKey = routes[state.index].key;
+  const focusedRoute = routes[state.index];
+
+  if (focusedRoute == null) {
+    throw new Error(`Couldn't find a route at index ${state.index}.`);
+  }
+
+  const focusedRouteKey = focusedRoute.key;
+  const focusedOptions = descriptors[focusedRouteKey]?.options;
 
   const [loaded, setLoaded] = React.useState([focusedRouteKey]);
 
@@ -142,7 +149,15 @@ export function BottomTabViewCustom({
 
       const animations = state.routes
         .map((route, index) => {
-          const { options } = descriptors[route.key];
+          const descriptor = descriptors[route.key];
+
+          if (descriptor == null) {
+            throw new Error(
+              `Couldn't find a descriptor for route '${route.key}'.`
+            );
+          }
+
+          const { options } = descriptor;
           const {
             animation = 'none',
             transitionSpec = NAMED_TRANSITIONS_PRESETS[animation]
@@ -162,7 +177,15 @@ export function BottomTabViewCustom({
           const toValue =
             index === state.index ? 0 : index >= state.index ? 1 : -1;
 
-          return Animated[spec.animation](tabAnims[route.key], {
+          const tabAnimation = tabAnims[route.key];
+
+          if (tabAnimation == null) {
+            throw new Error(
+              `Couldn't find an animation for route '${route.key}'.`
+            );
+          }
+
+          return Animated[spec.animation](tabAnimation, {
             ...spec.config,
             toValue,
             useNativeDriver,
@@ -219,7 +242,7 @@ export function BottomTabViewCustom({
       descriptors,
       dimensions: SafeAreaProviderCompat.initialMetrics.frame,
       insets: SafeAreaProviderCompat.initialMetrics.insets,
-      style: descriptors[focusedRouteKey].options.tabBarStyle,
+      style: focusedOptions?.tabBarStyle,
     })
   );
 
@@ -236,9 +259,7 @@ export function BottomTabViewCustom({
     </BottomTabBarHeightCallbackContext.Provider>
   );
 
-  const tabBarPosition = useTabBarPosition(
-    descriptors[focusedRouteKey].options
-  );
+  const tabBarPosition = useTabBarPosition(focusedOptions ?? {});
 
   return (
     <SafeAreaProviderCompat
@@ -256,6 +277,12 @@ export function BottomTabViewCustom({
         {routes.map((route, index) => {
           const descriptor = descriptors[route.key];
 
+          if (descriptor == null) {
+            throw new Error(
+              `Couldn't find a descriptor for route '${route.key}'.`
+            );
+          }
+
           const { navigation, options, render } = descriptor;
 
           const {
@@ -271,11 +298,18 @@ export function BottomTabViewCustom({
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 
           const animationEnabled = hasAnimation(descriptor.options);
+          const tabAnimation = tabAnims[route.key];
+
+          if (tabAnimation == null) {
+            throw new Error(
+              `Couldn't find an animation for route '${route.key}'.`
+            );
+          }
 
           const content = (
             <AnimatedScreenContent
               key={route.key}
-              progress={tabAnims[route.key]}
+              progress={tabAnimation}
               animationEnabled={animationEnabled}
               sceneStyleInterpolator={sceneStyleInterpolator}
               style={[StyleSheet.absoluteFill, customSceneStyle]}

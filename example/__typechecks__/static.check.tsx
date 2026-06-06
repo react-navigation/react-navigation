@@ -425,9 +425,9 @@ function StaticNavigatorHookTypeChecks() {
 /**
  * Infer screen names from config
  */
-expectTypeOf(
-  navigation.getState().routes[0].name
-).toEqualTypeOf<RooStackRouteName>();
+expectTypeOf(navigation.getState().routes[0]?.name).toEqualTypeOf<
+  RooStackRouteName | undefined
+>();
 
 /**
  * Infer params from component props

@@ -2,9 +2,7 @@ import type {
   CommonActions,
   NavigationState,
   ParamListBase,
-  PartialRoute,
   PartialState,
-  Route,
 } from '@react-navigation/routers';
 
 import type { NavigatorScreenParams, PathConfig, PathConfigMap } from './types';
@@ -60,13 +58,21 @@ export function getActionFromState(
     return undefined;
   }
 
+  const firstRoute = routes[0];
+
+  if (firstRoute == null) {
+    return undefined;
+  }
+
+  const secondRoute = routes[1];
+
   if (
     !(
-      (routes.length === 1 && routes[0].key === undefined) ||
+      (routes.length === 1 && firstRoute.key == null) ||
       (routes.length === 2 &&
-        routes[0].key === undefined &&
-        routes[0].name === normalizedConfig?.initialRouteName &&
-        routes[1].key === undefined)
+        firstRoute.key == null &&
+        firstRoute.name === normalizedConfig?.initialRouteName &&
+        secondRoute?.key == null)
     )
   ) {
     return {
@@ -77,20 +83,20 @@ export function getActionFromState(
 
   const route = state.routes[state.index ?? state.routes.length - 1];
 
-  let current: PartialState<NavigationState> | undefined = route?.state;
-  let config: ConfigItem | undefined = normalizedConfig?.screens?.[route?.name];
+  if (route == null) {
+    return undefined;
+  }
+
+  let current: PartialState<NavigationState> | undefined = route.state;
+  let config: ConfigItem | undefined = normalizedConfig?.screens?.[route.name];
   let params = { ...route.params } as NavigatorScreenParams<ParamListBase>;
 
-  const payload:
-    | {
-        name: string;
-        params: NavigatorScreenParams<ParamListBase>;
-        path?: string | undefined;
-        pop?: boolean | undefined;
-      }
-    | undefined = route
-    ? { name: route.name, path: route.path, params }
-    : undefined;
+  const payload: {
+    name: string;
+    params: NavigatorScreenParams<ParamListBase>;
+    path?: string | undefined;
+    pop?: boolean | undefined;
+  } = { name: route.name, path: route.path, params };
 
   // If the screen contains a navigator, pop other screens to navigate to it
   // This avoid pushing multiple instances of navigators onto a stack
@@ -106,7 +112,7 @@ export function getActionFromState(
   // There are 2 ways we can detect if a screen contains a navigator:
   // - The route contains nested state in `route.state`
   // - Nested screens are defined in the config
-  if (payload && config?.screens && Object.keys(config.screens).length) {
+  if (config?.screens && Object.keys(config.screens).length) {
     payload.pop = true;
   }
 
@@ -120,8 +126,19 @@ export function getActionFromState(
         ? current.routes.slice(0, current.index + 1)
         : current.routes;
 
-    const route: Route<string> | PartialRoute<Route<string>> =
-      routes[routes.length - 1];
+    const route = routes[routes.length - 1];
+
+    if (route == null) {
+      return undefined;
+    }
+
+    const firstRoute = routes[0];
+
+    if (firstRoute == null) {
+      return undefined;
+    }
+
+    const secondRoute = routes[1];
 
     // Explicitly set to override existing value when merging params
     Object.assign(params, {
@@ -131,14 +148,14 @@ export function getActionFromState(
       state: undefined,
     });
 
-    if (routes.length === 1 && routes[0].key === undefined) {
+    if (routes.length === 1 && firstRoute.key == null) {
       params.initial = true;
       params.screen = route.name;
     } else if (
       routes.length === 2 &&
-      routes[0].key === undefined &&
-      routes[0].name === config?.initialRouteName &&
-      routes[1].key === undefined
+      firstRoute.key == null &&
+      firstRoute.name === config?.initialRouteName &&
+      secondRoute?.key == null
     ) {
       params.initial = false;
       params.screen = route.name;
@@ -164,12 +181,8 @@ export function getActionFromState(
     }
   }
 
-  if (payload?.params.screen || payload?.params.state) {
+  if (payload.params.screen || payload.params.state) {
     payload.pop = true;
-  }
-
-  if (!payload) {
-    return;
   }
 
   // Try to construct payload for a `NAVIGATE` action from the state

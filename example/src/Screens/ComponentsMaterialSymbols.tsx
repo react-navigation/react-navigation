@@ -98,7 +98,7 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
       renderItem={({ item }) => (
         <MaterialSymbolRow items={item} image={image} />
       )}
-      keyExtractor={(item) => item[0]}
+      keyExtractor={(item) => item.join(',')}
       contentContainerStyle={{
         backgroundColor: colors.background,
         paddingLeft: insets.left,

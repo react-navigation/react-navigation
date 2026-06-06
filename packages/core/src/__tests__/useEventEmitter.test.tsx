@@ -28,7 +28,7 @@ test('fires focus and blur events in root navigator', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   }
@@ -123,7 +123,7 @@ test('fires focus event after blur', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   }
@@ -188,7 +188,7 @@ test('fires focus and blur events in nested navigator', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   }
@@ -409,7 +409,7 @@ test('fires blur event when a route is removed with a delay', async () => {
     return (
       <NavigationContent>
         {previous.routes.map((route: any) =>
-          previous.descriptors[route.key].render()
+          previous.descriptors[route.key]?.render()
         )}
       </NavigationContent>
     );
@@ -469,7 +469,7 @@ test('fires custom events added with addListener', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   }
@@ -508,7 +508,7 @@ test('fires custom events added with addListener', async () => {
   expect(thirdCallback).toHaveBeenCalledTimes(0);
 
   const target =
-    ref.current.state.routes[ref.current.state.routes.length - 1].key;
+    ref.current.state.routes[ref.current.state.routes.length - 1]?.key;
 
   await act(() => {
     ref.current.navigation.emit({
@@ -521,19 +521,19 @@ test('fires custom events added with addListener', async () => {
   expect(firstCallback).toHaveBeenCalledTimes(0);
   expect(secondCallback).toHaveBeenCalledTimes(0);
   expect(thirdCallback).toHaveBeenCalledTimes(1);
-  expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
-  expect(thirdCallback.mock.calls[0][0].data).toBe(42);
-  expect(thirdCallback.mock.calls[0][0].target).toBe(target);
-  expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBeUndefined();
-  expect(thirdCallback.mock.calls[0][0].preventDefault).toBeUndefined();
+  expect(thirdCallback.mock.calls[0]?.[0]?.type).toBe('someSuperCoolEvent');
+  expect(thirdCallback.mock.calls[0]?.[0]?.data).toBe(42);
+  expect(thirdCallback.mock.calls[0]?.[0]?.target).toBe(target);
+  expect(thirdCallback.mock.calls[0]?.[0]?.defaultPrevented).toBeUndefined();
+  expect(thirdCallback.mock.calls[0]?.[0]?.preventDefault).toBeUndefined();
 
   await act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
-  expect(firstCallback.mock.calls[0][0].target).toBeUndefined();
-  expect(secondCallback.mock.calls[0][0].target).toBeUndefined();
-  expect(thirdCallback.mock.calls[1][0].target).toBeUndefined();
+  expect(firstCallback.mock.calls[0]?.[0]?.target).toBeUndefined();
+  expect(secondCallback.mock.calls[0]?.[0]?.target).toBeUndefined();
+  expect(thirdCallback.mock.calls[1]?.[0]?.target).toBeUndefined();
 
   expect(firstCallback).toHaveBeenCalledTimes(1);
   expect(secondCallback).toHaveBeenCalledTimes(1);
@@ -554,7 +554,7 @@ test('fires custom events for preloaded routes', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   }
@@ -584,7 +584,7 @@ test('fires custom events for preloaded routes', async () => {
 
   await act(() => navigation.dispatch(CommonActions.preload('second')));
 
-  const target = ref.current.state.routes[1].key;
+  const target = ref.current.state.routes[1]?.key;
 
   ref.current.navigation.emit({
     type: eventName,
@@ -629,7 +629,7 @@ test("doesn't call same listener multiple times with addListener", async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   }
@@ -717,7 +717,7 @@ test('fires custom events added with listeners prop', async () => {
   expect(thirdCallback).toHaveBeenCalledTimes(0);
 
   const target =
-    ref.current.state.routes[ref.current.state.routes.length - 1].key;
+    ref.current.state.routes[ref.current.state.routes.length - 1]?.key;
 
   await act(() => {
     ref.current.navigation.emit({
@@ -730,17 +730,17 @@ test('fires custom events added with listeners prop', async () => {
   expect(firstCallback).toHaveBeenCalledTimes(0);
   expect(secondCallback).toHaveBeenCalledTimes(0);
   expect(thirdCallback).toHaveBeenCalledTimes(1);
-  expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
-  expect(thirdCallback.mock.calls[0][0].data).toBe(42);
-  expect(thirdCallback.mock.calls[0][0].target).toBe(target);
-  expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBeUndefined();
-  expect(thirdCallback.mock.calls[0][0].preventDefault).toBeUndefined();
+  expect(thirdCallback.mock.calls[0]?.[0]?.type).toBe('someSuperCoolEvent');
+  expect(thirdCallback.mock.calls[0]?.[0]?.data).toBe(42);
+  expect(thirdCallback.mock.calls[0]?.[0]?.target).toBe(target);
+  expect(thirdCallback.mock.calls[0]?.[0]?.defaultPrevented).toBeUndefined();
+  expect(thirdCallback.mock.calls[0]?.[0]?.preventDefault).toBeUndefined();
 
   await act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
-  expect(firstCallback.mock.calls[0][0].target).toBeUndefined();
+  expect(firstCallback.mock.calls[0]?.[0]?.target).toBeUndefined();
 
   expect(firstCallback).toHaveBeenCalledTimes(1);
   expect(secondCallback).toHaveBeenCalledTimes(0);
@@ -853,7 +853,7 @@ test('fires listeners when callback is provided for listeners prop', async () =>
   expect(thirdCallback).toHaveBeenCalledTimes(0);
 
   const target =
-    ref.current.state.routes[ref.current.state.routes.length - 1].key;
+    ref.current.state.routes[ref.current.state.routes.length - 1]?.key;
 
   await act(() => {
     ref.current.navigation.emit({
@@ -866,17 +866,17 @@ test('fires listeners when callback is provided for listeners prop', async () =>
   expect(firstCallback).toHaveBeenCalledTimes(0);
   expect(secondCallback).toHaveBeenCalledTimes(0);
   expect(thirdCallback).toHaveBeenCalledTimes(1);
-  expect(thirdCallback.mock.calls[0][0].type).toBe('someSuperCoolEvent');
-  expect(thirdCallback.mock.calls[0][0].data).toBe(42);
-  expect(thirdCallback.mock.calls[0][0].target).toBe(target);
-  expect(thirdCallback.mock.calls[0][0].defaultPrevented).toBeUndefined();
-  expect(thirdCallback.mock.calls[0][0].preventDefault).toBeUndefined();
+  expect(thirdCallback.mock.calls[0]?.[0]?.type).toBe('someSuperCoolEvent');
+  expect(thirdCallback.mock.calls[0]?.[0]?.data).toBe(42);
+  expect(thirdCallback.mock.calls[0]?.[0]?.target).toBe(target);
+  expect(thirdCallback.mock.calls[0]?.[0]?.defaultPrevented).toBeUndefined();
+  expect(thirdCallback.mock.calls[0]?.[0]?.preventDefault).toBeUndefined();
 
   await act(() => {
     ref.current.navigation.emit({ type: eventName });
   });
 
-  expect(firstCallback.mock.calls[0][0].target).toBeUndefined();
+  expect(firstCallback.mock.calls[0]?.[0]?.target).toBeUndefined();
 
   expect(firstCallback).toHaveBeenCalledTimes(1);
   expect(secondCallback).toHaveBeenCalledTimes(0);
@@ -899,7 +899,7 @@ test('has option to prevent default', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   }
@@ -959,7 +959,7 @@ test('removes only one listener when unsubscribe is called multiple times', asyn
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   }

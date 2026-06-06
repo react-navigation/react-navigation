@@ -91,10 +91,16 @@ const getRouteHistory = (
   backBehavior: BackBehavior,
   initialRouteName: string | undefined
 ) => {
+  const route = routes[index];
+
+  if (route == null) {
+    throw new Error(`Couldn't find a route at index ${index}.`);
+  }
+
   const history = [
     {
       type: TYPE_ROUTE,
-      key: routes[index].key,
+      key: route.key,
     },
   ];
 
@@ -103,17 +109,29 @@ const getRouteHistory = (
   switch (backBehavior) {
     case 'order':
       for (let i = index; i > 0; i--) {
+        const route = routes[i - 1];
+
+        if (route == null) {
+          throw new Error(`Couldn't find a route at index ${i - 1}.`);
+        }
+
         history.unshift({
           type: TYPE_ROUTE,
-          key: routes[i - 1].key,
+          key: route.key,
         });
       }
       break;
     case 'firstRoute':
       if (index !== 0) {
+        const route = routes[0];
+
+        if (route == null) {
+          throw new Error("Couldn't find a route at index 0.");
+        }
+
         history.unshift({
           type: TYPE_ROUTE,
-          key: routes[0].key,
+          key: route.key,
         });
       }
       break;
@@ -124,9 +142,17 @@ const getRouteHistory = (
       initialRouteIndex = initialRouteIndex === -1 ? 0 : initialRouteIndex;
 
       if (index !== initialRouteIndex) {
+        const route = routes[initialRouteIndex];
+
+        if (route == null) {
+          throw new Error(
+            `Couldn't find a route at index ${initialRouteIndex}.`
+          );
+        }
+
         history.unshift({
           type: TYPE_ROUTE,
-          key: routes[initialRouteIndex].key,
+          key: route.key,
         });
       }
       break;
@@ -149,6 +175,10 @@ const changeIndex = (
 
   if (backBehavior === 'history' || backBehavior === 'fullHistory') {
     const currentRoute = state.routes[index];
+
+    if (currentRoute == null) {
+      throw new Error(`Couldn't find a route at index ${index}.`);
+    }
 
     if (backBehavior === 'history') {
       // Remove the existing key from the history to de-duplicate it
@@ -266,8 +296,9 @@ export function TabRouter({
         } as Route<string>;
       });
 
+      const currentRoute = state.routes[state.index ?? 0];
       const index = Math.min(
-        Math.max(routeNames.indexOf(state.routes[state?.index ?? 0]?.name), 0),
+        Math.max(currentRoute ? routeNames.indexOf(currentRoute.name) : 0, 0),
         routes.length - 1
       );
 
@@ -311,10 +342,13 @@ export function TabRouter({
           }
       );
 
-      const index = Math.max(
-        0,
-        routeNames.indexOf(state.routes[state.index].name)
-      );
+      const currentRoute = state.routes[state.index];
+
+      if (currentRoute == null) {
+        throw new Error(`Couldn't find a route at index ${state.index}.`);
+      }
+
+      const index = Math.max(0, routeNames.indexOf(currentRoute.name));
 
       let history = state.history.filter(
         // Type will always be 'route' for tabs, but could be different in a router extending this (e.g. drawer)
@@ -414,16 +448,28 @@ export function TabRouter({
             initialRouteName
           );
 
+          const updatedRoute = updatedState.routes[updatedState.index];
+
+          if (updatedRoute == null) {
+            throw new Error(
+              `Couldn't find a route at index ${updatedState.index}.`
+            );
+          }
+
           return {
             ...updatedState,
             preloadedRouteKeys: updatedState.preloadedRouteKeys.filter(
-              (key) => key !== state.routes[updatedState.index].key
+              (key) => key !== updatedRoute.key
             ),
           };
         }
 
         case 'GO_BACK': {
           const focusedRoute = state.routes[state.index];
+
+          if (focusedRoute == null) {
+            throw new Error(`Couldn't find a route at index ${state.index}.`);
+          }
 
           if (state.history.length === 1 && !focusedRoute.history?.length) {
             return null;
@@ -453,7 +499,12 @@ export function TabRouter({
           }
 
           const previousHistoryItem = state.history[state.history.length - 2];
-          const previousKey = previousHistoryItem?.key;
+
+          if (previousHistoryItem == null) {
+            return null;
+          }
+
+          const previousKey = previousHistoryItem.key;
           const index = state.routes.findLastIndex(
             (route) => route.key === previousKey
           );
@@ -464,13 +515,19 @@ export function TabRouter({
 
           let routes = state.routes;
 
+          const previousRoute = routes[index];
+
+          if (previousRoute == null) {
+            throw new Error(`Couldn't find a route at index ${index}.`);
+          }
+
           if (
             backBehavior === 'fullHistory' &&
-            routes[index].params !== previousHistoryItem.params
+            previousRoute.params !== previousHistoryItem.params
           ) {
             routes = [...state.routes];
             routes[index] = {
-              ...routes[index],
+              ...previousRoute,
               params: previousHistoryItem.params,
             };
           }
@@ -479,7 +536,7 @@ export function TabRouter({
             ...state,
             routes,
             preloadedRouteKeys: state.preloadedRouteKeys.filter(
-              (key) => key !== state.routes[index].key
+              (key) => key !== previousRoute.key
             ),
             history: state.history.slice(0, -1),
             index,
@@ -496,6 +553,10 @@ export function TabRouter({
           }
 
           const route = state.routes[routeIndex];
+
+          if (route == null) {
+            throw new Error(`Couldn't find a route at index ${routeIndex}.`);
+          }
 
           const getId = routeGetIdList[route.name];
 

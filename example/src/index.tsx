@@ -210,9 +210,11 @@ function Examples() {
           }[]
         >((acc, name) => {
           const screen = SCREENS[name];
-          const [group, title] = screen.title.includes(' - ')
+          const [group = 'Misc', title = screen.title] = screen.title.includes(
+            ' - '
+          )
             ? screen.title.split(' - ')
-            : ['Misc', screen.title];
+            : [];
 
           const term = filter.toLowerCase();
 
@@ -229,8 +231,10 @@ function Examples() {
             (item) => 'group' in item && item.group === group
           );
 
-          if (index !== -1 && 'group' in acc[index]) {
-            acc[index].items.push({ name, title });
+          const item = acc[index];
+
+          if (item != null) {
+            item.items.push({ name, title });
           } else {
             acc.push({
               group,

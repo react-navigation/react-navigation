@@ -113,12 +113,16 @@ const NAMED_TRANSITIONS_PRESETS = {
   }),
 } as const satisfies Record<StackAnimationName, TransitionPreset>;
 
-const FALLBACK_DESCRIPTOR = Object.freeze({ options: {} });
-
 const HIDDEN_HEADER_HEIGHT = { measured: false, value: 0 };
 
 const getInterpolationIndex = (scenes: Scene[], index: number) => {
-  const { cardStyleInterpolator } = scenes[index].descriptor.options;
+  const scene = scenes[index];
+
+  if (scene == null) {
+    throw new Error(`Couldn't find a scene at index ${index}.`);
+  }
+
+  const { cardStyleInterpolator } = scene.descriptor.options;
 
   // Start from current card and count backwards the number of cards with same interpolation
   let interpolationIndex = 0;
@@ -347,27 +351,36 @@ export class CardStack extends React.Component<Props, State> {
       const oldScene = state.scenes[index];
 
       const currentGesture = gestures[route.key];
+
+      if (currentGesture == null) {
+        throw new Error(`Couldn't find a gesture for route '${route.key}'.`);
+      }
+
       const previousGesture = previousRoute
         ? gestures[previousRoute.key]
         : undefined;
       const nextGesture = nextRoute ? gestures[nextRoute.key] : undefined;
 
       const descriptor =
-        props.descriptors[route.key] ||
-        state.descriptors[route.key] ||
-        (oldScene ? oldScene.descriptor : FALLBACK_DESCRIPTOR);
+        props.descriptors[route.key] ??
+        state.descriptors[route.key] ??
+        oldScene?.descriptor;
 
-      const nextOptions =
-        nextRoute &&
-        (props.descriptors[nextRoute?.key] || state.descriptors[nextRoute?.key])
-          ?.options;
+      if (descriptor == null) {
+        throw new Error(`Couldn't find a descriptor for route '${route.key}'.`);
+      }
 
-      const previousOptions =
-        previousRoute &&
-        (
-          props.descriptors[previousRoute?.key] ||
-          state.descriptors[previousRoute?.key]
-        )?.options;
+      const nextOptions = nextRoute
+        ? (props.descriptors[nextRoute.key] ?? state.descriptors[nextRoute.key])
+            ?.options
+        : undefined;
+
+      const previousOptions = previousRoute
+        ? (
+            props.descriptors[previousRoute.key] ??
+            state.descriptors[previousRoute.key]
+          )?.options
+        : undefined;
 
       // When a screen is not the last, it should use next screen's transition config
       // Many transitions also animate the previous screen, so using 2 different transitions doesn't look right
@@ -582,7 +595,13 @@ export class CardStack extends React.Component<Props, State> {
   private getFocusedRoute = () => {
     const { state } = this.props;
 
-    return state.routes[state.index];
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      throw new Error(`Couldn't find a route at index ${state.index}.`);
+    }
+
+    return route;
   };
 
   private getPreviousScene = ({ route }: { route: Route<string> }) => {
@@ -627,6 +646,10 @@ export class CardStack extends React.Component<Props, State> {
     const allRoutes = getAllRoutes(routes, state);
 
     const focusedRoute = state.routes[state.index];
+
+    if (focusedRoute == null) {
+      throw new Error(`Couldn't find a route at index ${state.index}.`);
+    }
 
     // Render only two top-most active headers as a workaround for
     // https://github.com/react-navigation/react-navigation/issues/12456.
@@ -682,6 +705,19 @@ export class CardStack extends React.Component<Props, State> {
             const gesture = gestures[route.key];
             const scene = scenes[index];
 
+            if (gesture == null) {
+              throw new Error(
+                `Couldn't find a gesture for route '${route.key}'.`
+              );
+            }
+
+            if (scene == null) {
+              throw new Error(`Couldn't find a scene at index ${index}.`);
+            }
+
+            const nextScene = scenes[index + 1];
+            const nextRoute = self[index + 1];
+
             const {
               inactiveBehavior = 'pause',
               animation,
@@ -712,15 +748,12 @@ export class CardStack extends React.Component<Props, State> {
               getAnimationEnabled(animation) ||
               // Also check next screen's animation,
               // As it will result in both screens being visible
-              (scenes[index + 1]
-                ? getAnimationEnabled(
-                    scenes[index + 1].descriptor.options.animation
-                  )
+              (nextScene
+                ? getAnimationEnabled(nextScene.descriptor.options.animation)
                 : false);
 
             const isNextScreenTransparent =
-              scenes[index + 1]?.descriptor.options.presentation ===
-              'transparentModal';
+              nextScene?.descriptor.options.presentation === 'transparentModal';
 
             const isRemoving =
               replacingRouteKeys.includes(route.key) ||
@@ -728,9 +761,10 @@ export class CardStack extends React.Component<Props, State> {
 
             const isFocusing =
               openingRouteKeys.includes(route.key) ||
-              [...closingRouteKeys, ...replacingRouteKeys].includes(
-                self[index + 1]?.key
-              );
+              (nextRoute != null &&
+                [...closingRouteKeys, ...replacingRouteKeys].includes(
+                  nextRoute.key
+                ));
 
             const isInactive = isInactiveRoute(route, this.props.routes);
             const isRetained = state.retainedRouteKeys?.includes(route.key);

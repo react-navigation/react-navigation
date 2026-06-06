@@ -146,6 +146,10 @@ const FOR_YOU_SECTIONS = [
 
 const NOW_PLAYING = ALBUMS[0];
 
+if (NOW_PLAYING == null) {
+  throw new Error("Couldn't find the now playing album.");
+}
+
 const SPACING_XS = 4;
 const SPACING_S = 8;
 const SPACING_M = 12;
@@ -210,6 +214,10 @@ const ForYouScreen = () => {
   const navigation = useNavigation('ForYouHome');
 
   const featured = ALBUMS[2];
+
+  if (featured == null) {
+    throw new Error("Couldn't find the featured album.");
+  }
 
   return (
     <ScrollView
@@ -467,7 +475,8 @@ const AlbumDetailsScreen = () => {
 
   const route = useRoute('AlbumDetails');
 
-  const album = ALBUMS.find((item) => item.id === route.params.id) ?? ALBUMS[0];
+  const album =
+    ALBUMS.find((item) => item.id === route.params.id) ?? NOW_PLAYING;
 
   return (
     <ScrollView

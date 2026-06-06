@@ -57,8 +57,11 @@ const shouldUseHorizontalLabels = ({
 }: Options & {
   dimensions: { height: number; width: number };
 }) => {
-  const { tabBarLabelPosition } =
-    descriptors[state.routes[state.index].key].options;
+  const focusedRoute = state.routes[state.index];
+  const tabBarLabelPosition =
+    focusedRoute == null
+      ? undefined
+      : descriptors[focusedRoute.key]?.options.tabBarLabelPosition;
 
   if (tabBarLabelPosition) {
     switch (tabBarLabelPosition) {
@@ -72,8 +75,9 @@ const shouldUseHorizontalLabels = ({
   if (dimensions.width >= 768) {
     // Screen size matches a tablet
     const maxTabWidth = state.routes.reduce((acc, route) => {
-      const { tabBarItemStyle } = descriptors[route.key].options;
-      const flattenedStyle = StyleSheet.flatten(tabBarItemStyle);
+      const flattenedStyle = StyleSheet.flatten(
+        descriptors[route.key]?.options.tabBarItemStyle
+      );
 
       if (flattenedStyle) {
         if (typeof flattenedStyle.width === 'number') {
@@ -97,8 +101,9 @@ const isCompact = ({
   descriptors,
   dimensions,
 }: Options & { dimensions: { height: number; width: number } }): boolean => {
+  const focusedRoute = state.routes[state.index];
   const { tabBarPosition, tabBarVariant } =
-    descriptors[state.routes[state.index].key].options;
+    focusedRoute == null ? {} : (descriptors[focusedRoute.key]?.options ?? {});
 
   if (
     tabBarPosition === 'left' ||
@@ -138,7 +143,11 @@ export const getTabBarHeight = ({
   dimensions: { height: number; width: number };
   style: Animated.WithAnimatedValue<StyleProp<ViewStyle>> | undefined;
 }) => {
-  const { tabBarPosition } = descriptors[state.routes[state.index].key].options;
+  const focusedRoute = state.routes[state.index];
+  const tabBarPosition =
+    focusedRoute == null
+      ? undefined
+      : descriptors[focusedRoute.key]?.options.tabBarPosition;
 
   const flattenedStyle = StyleSheet.flatten(style);
   const customHeight =
@@ -165,7 +174,19 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
   const { buildHref } = useLinkBuilder();
 
   const focusedRoute = state.routes[state.index];
+
+  if (focusedRoute == null) {
+    throw new Error(`Couldn't find a route at index ${state.index}.`);
+  }
+
   const focusedDescriptor = descriptors[focusedRoute.key];
+
+  if (focusedDescriptor == null) {
+    throw new Error(
+      `Couldn't find a descriptor for route '${focusedRoute.key}'.`
+    );
+  }
+
   const focusedOptions = focusedDescriptor.options;
 
   const {
@@ -406,7 +427,15 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
       >
         {routes.map((route, index) => {
           const focused = index === state.index;
-          const { options } = descriptors[route.key];
+          const descriptor = descriptors[route.key];
+
+          if (descriptor == null) {
+            throw new Error(
+              `Couldn't find a descriptor for route '${route.key}'.`
+            );
+          }
+
+          const { options } = descriptor;
 
           const onPress = () => {
             const event = navigation.emit({
@@ -454,13 +483,13 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
           return (
             <NavigationProvider
               key={route.key}
-              navigation={descriptors[route.key].navigation}
+              navigation={descriptor.navigation}
               route={route}
             >
               <BottomTabItem
                 href={buildHref(route.name, route.params)}
                 route={route}
-                descriptor={descriptors[route.key]}
+                descriptor={descriptor}
                 focused={focused}
                 horizontal={hasHorizontalLabels}
                 compact={compact}

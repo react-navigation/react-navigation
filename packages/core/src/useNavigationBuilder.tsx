@@ -498,7 +498,7 @@ export function useNavigationBuilder<
     const initialRouteParamList = routeNames.reduce<
       Record<string, object | undefined>
     >((acc, curr) => {
-      const { initialParams } = screens[curr].props;
+      const { initialParams } = screens[curr]?.props ?? {};
       const initialParamsFromParams =
         route?.params?.state == null &&
         route?.params?.initial !== false &&
@@ -834,11 +834,17 @@ export function useNavigationBuilder<
     }
 
     const hasPerScreenListeners = routeNames.some(
-      (name) => screens[name].props.listeners != null
+      (name) => screens[name]?.props.listeners != null
     );
 
     if (screenListeners != null || hasPerScreenListeners) {
-      const navigation = descriptors[route.key].navigation;
+      const descriptor = descriptors[route.key];
+
+      if (descriptor == null) {
+        throw new Error(`Couldn't find a descriptor for route '${route.key}'.`);
+      }
+
+      const navigation = descriptor.navigation;
 
       const listeners = ([] as (((e: any) => void) | undefined)[])
         .concat(
@@ -846,7 +852,7 @@ export function useNavigationBuilder<
           ...[
             screenListeners,
             ...routeNames.map((name) => {
-              const { listeners } = screens[name].props;
+              const { listeners } = screens[name]?.props ?? {};
               return listeners;
             }),
           ].map((listeners) => {
@@ -992,6 +998,12 @@ export function useNavigationBuilder<
   });
 
   const NavigationContent = useComponent((children: React.ReactNode) => {
+    const focusedRoute = state.routes[state.index];
+
+    if (focusedRoute == null) {
+      throw new Error(`Couldn't find a route at index ${state.index}.`);
+    }
+
     const element =
       layout != null
         ? layout({
@@ -1006,9 +1018,7 @@ export function useNavigationBuilder<
       <NavigationMetaContext.Provider value={undefined}>
         <NavigationHelpersContext.Provider value={navigation}>
           <NavigationStateListenerProvider state={state}>
-            <FocusedRouteKeyContext.Provider
-              value={state.routes[state.index].key}
-            >
+            <FocusedRouteKeyContext.Provider value={focusedRoute.key}>
               <PreventRemoveProvider>{element}</PreventRemoveProvider>
             </FocusedRouteKeyContext.Provider>
           </NavigationStateListenerProvider>

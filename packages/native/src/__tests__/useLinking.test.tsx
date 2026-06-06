@@ -46,7 +46,7 @@ const createStackNavigator = createNavigatorFactory((props: any) => {
     <NavigationContent>
       {state.routes.map((route, i) => (
         <div key={route.key} aria-current={state.index === i || undefined}>
-          {descriptors[route.key].render()}
+          {descriptors[route.key]?.render()}
         </div>
       ))}
     </NavigationContent>
@@ -63,7 +63,7 @@ const createTabNavigator = createNavigatorFactory((props: any) => {
     <NavigationContent>
       {state.routes.map((route, i) => (
         <div key={route.key} aria-current={state.index === i || undefined}>
-          {descriptors[route.key].render()}
+          {descriptors[route.key]?.render()}
         </div>
       ))}
     </NavigationContent>
@@ -122,7 +122,7 @@ test('throws if multiple instances of useLinking are used', async () => {
   );
 
   expect(spy).toHaveBeenCalledTimes(2);
-  expect(spy.mock.calls[1][0]).toMatch(
+  expect(spy.mock.calls[1]?.[0]).toMatch(
     'Looks like you have configured linking in multiple places.'
   );
 
@@ -245,7 +245,7 @@ test('dispatches GO_BACK when browser back pops the last stack route', async () 
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
   expect(state.routes.length).toBe(1);
-  expect(state.routes[0].name).toBe('Home');
+  expect(state.routes[0]?.name).toBe('Home');
 });
 
 test('dispatches GO_BACK on each sequential browser back', async () => {
@@ -374,7 +374,7 @@ test('dispatches RESET when browser back goes to non-adjacent stack state', asyn
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
   expect(state.routes.length).toBe(1);
-  expect(state.routes[0].name).toBe('Home');
+  expect(state.routes[0]?.name).toBe('Home');
 });
 
 test('handles browser forward after going back', async () => {
@@ -427,7 +427,7 @@ test('handles browser forward after going back', async () => {
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
   expect(state.index).toBe(1);
-  expect(state.routes[1].name).toBe('Profile');
+  expect(state.routes[1]?.name).toBe('Profile');
 });
 
 test('syncs path with browser history across back and forward', async () => {
@@ -609,7 +609,7 @@ test('replaces browser history on resetRoot', async () => {
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
   expect(state.routes.length).toBe(1);
-  expect(state.routes[0].name).toBe('Settings');
+  expect(state.routes[0]?.name).toBe('Settings');
 
   await act(() => window.history.back());
 
@@ -668,7 +668,7 @@ test('truncates forward history when navigating from a mid-history position', as
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
   expect(state.routes.length).toBe(1);
-  expect(state.routes[0].name).toBe('Home');
+  expect(state.routes[0]?.name).toBe('Home');
 });
 
 test('dispatches GO_BACK when browser back pops the last tab history entry', async () => {
@@ -725,7 +725,7 @@ test('dispatches GO_BACK when browser back pops the last tab history entry', asy
 
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
-  expect(state.routes[state.index].name).toBe('Home');
+  expect(state.routes[state.index]?.name).toBe('Home');
 });
 
 test('dispatches GO_BACK when browser back pops route history on a tab screen', async () => {
@@ -1298,7 +1298,7 @@ test('dispatches RESET when browser back restores older nested state under the s
 
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
-  expect(state.routes[0].state).toMatchObject({
+  expect(state.routes[0]?.state).toMatchObject({
     index: 0,
   });
 });

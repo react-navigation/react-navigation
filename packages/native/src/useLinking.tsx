@@ -56,6 +56,10 @@ const findMatchingState = <T extends NavigationState>(
   const aRoute = a.routes[a.index];
   const bRoute = b.routes[b.index];
 
+  if (aRoute == null || bRoute == null) {
+    return [a, b];
+  }
+
   const aChildState = aRoute.state as T | undefined;
   const bChildState = bRoute.state as T | undefined;
 
@@ -88,6 +92,11 @@ const isPoppingLastEntry = (
 ): boolean => {
   const currentRoute = current.routes[current.index];
   const recordRoute = record.routes[record.index];
+
+  if (currentRoute == null || recordRoute == null) {
+    return false;
+  }
+
   const currentRouteHistory = currentRoute.history;
   const recordRouteHistory = recordRoute.history ?? [];
 
@@ -106,7 +115,11 @@ const isPoppingLastEntry = (
   const recordRoutes = getRoutesUntilIndex(record);
 
   if (currentRoutes.length === recordRoutes.length + 1) {
-    return recordRoutes.every((route, i) => route.key === currentRoutes[i].key);
+    return recordRoutes.every((route, i) => {
+      const currentRoute = currentRoutes[i];
+
+      return currentRoute != null && route.key === currentRoute.key;
+    });
   }
 
   return false;

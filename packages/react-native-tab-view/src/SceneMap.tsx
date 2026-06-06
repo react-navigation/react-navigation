@@ -18,13 +18,21 @@ const SceneComponent = React.memo(
 SceneComponent.displayName = 'SceneComponent';
 
 export function SceneMap<T>(scenes: { [key: string]: React.ComponentType<T> }) {
-  return ({ route, jumpTo, position }: SceneProps) => (
-    <SceneComponent
-      key={route.key}
-      component={scenes[route.key]}
-      route={route}
-      jumpTo={jumpTo}
-      position={position}
-    />
-  );
+  return ({ route, jumpTo, position }: SceneProps) => {
+    const component = scenes[route.key];
+
+    if (component == null) {
+      throw new Error(`Couldn't find a scene for route '${route.key}'.`);
+    }
+
+    return (
+      <SceneComponent
+        key={route.key}
+        component={component}
+        route={route}
+        jumpTo={jumpTo}
+        position={position}
+      />
+    );
+  };
 }

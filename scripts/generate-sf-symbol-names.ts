@@ -17,7 +17,13 @@ const symbols = new Set<string>();
 let match;
 
 while ((match = symbolRegex.exec(types)) !== null) {
-  symbols.add(match[1]);
+  const symbol = match[1];
+
+  if (symbol == null) {
+    throw new Error("Couldn't parse SF Symbol name.");
+  }
+
+  symbols.add(symbol);
 }
 
 process.stdout.write(`Found ${symbols.size} SF Symbol names\n`);

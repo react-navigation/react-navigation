@@ -21,7 +21,7 @@ test('runs focus effect on focus change', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -81,10 +81,14 @@ test('runs focus effect on deps change', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -132,7 +136,7 @@ test('runs focus effect when initial state is given', async () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -189,10 +193,14 @@ test('runs focus effect when only focused route is rendered', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -239,10 +247,14 @@ test('runs cleanup when component is unmounted', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -288,10 +300,14 @@ test('prints error when a dependency array is passed', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -314,7 +330,7 @@ test('prints error when a dependency array is passed', async () => {
 
   await render(<App />);
 
-  expect(spy.mock.calls[0][0]).toMatch(
+  expect(spy.mock.calls[0]?.[0]).toMatch(
     "You passed a second argument to 'useFocusEffect', but it only accepts one argument."
   );
 
@@ -328,10 +344,14 @@ test('prints error when the effect returns a value', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -354,7 +374,7 @@ test('prints error when the effect returns a value', async () => {
 
   await render(<App />);
 
-  expect(spy.mock.calls[0][0]).toMatch(
+  expect(spy.mock.calls[0]?.[0]).toMatch(
     "An effect function must not return anything besides a function, which is used for clean-up. You returned '42'."
   );
 
@@ -368,10 +388,14 @@ test('prints error when the effect returns null', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -394,7 +418,7 @@ test('prints error when the effect returns null', async () => {
 
   await render(<App />);
 
-  expect(spy.mock.calls[0][0]).toMatch(
+  expect(spy.mock.calls[0]?.[0]).toMatch(
     "An effect function must not return anything besides a function, which is used for clean-up. You returned 'null'. If your effect does not require clean-up, return 'undefined' (or nothing)."
   );
 
@@ -408,10 +432,14 @@ test('prints error when the effect is an async function', async () => {
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -434,7 +462,7 @@ test('prints error when the effect is an async function', async () => {
 
   await render(<App />);
 
-  expect(spy.mock.calls[0][0]).toMatch(
+  expect(spy.mock.calls[0]?.[0]).toMatch(
     "An effect function must not return anything besides a function, which is used for clean-up.\n\nIt looks like you wrote 'useFocusEffect(async () => ...)' or returned a Promise."
   );
 

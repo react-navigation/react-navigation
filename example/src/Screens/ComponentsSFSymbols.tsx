@@ -639,7 +639,7 @@ export function ComponentsSFSymbols(_: StaticScreenProps<{}>) {
           contentTransition={selectedContentTransition}
         />
       )}
-      keyExtractor={(item) => item[0]}
+      keyExtractor={(item) => item.join(',')}
       contentContainerStyle={{
         backgroundColor: colors.background,
         paddingLeft: insets.left,

@@ -25,7 +25,7 @@ export function extractPathFromURL(prefixes: LinkingPrefix[], url: string) {
       );
     }
 
-    const [originAndPath, ...searchParams] = url.split('?');
+    const [originAndPath = '', ...searchParams] = url.split('?');
 
     if (prefixRegex.test(originAndPath)) {
       const result = originAndPath

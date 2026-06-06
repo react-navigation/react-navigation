@@ -60,10 +60,16 @@ export function MockRouter(options: DefaultRouterOptions) {
         );
 
       if (routes.length === 0) {
+        const initialRouteName = routeNames[0];
+
+        if (initialRouteName == null) {
+          throw new Error("Couldn't find an initial route name.");
+        }
+
         routes.push({
-          name: routeNames[0],
-          key: `${routeNames[0]}-${MockRouterKey.current++}`,
-          params: routeParamList[routeNames[0]],
+          name: initialRouteName,
+          key: `${initialRouteName}-${MockRouterKey.current++}`,
+          params: routeParamList[initialRouteName],
         });
       }
 
@@ -96,9 +102,15 @@ export function MockRouter(options: DefaultRouterOptions) {
       );
 
       if (routes.length === 0) {
+        const initialRouteName = routeNames[0];
+
+        if (initialRouteName == null) {
+          throw new Error("Couldn't find an initial route name.");
+        }
+
         routes.push({
-          name: routeNames[0],
-          key: `${routeNames[0]}-${MockRouterKey.current++}`,
+          name: initialRouteName,
+          key: `${initialRouteName}-${MockRouterKey.current++}`,
         });
       }
 
