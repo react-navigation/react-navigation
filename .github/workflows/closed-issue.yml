@@ -10,7 +10,7 @@ permissions:
 jobs:
   closed-issue:
     runs-on: ubuntu-latest
-    if: ${{ github.event.issue.state == 'closed' }}
+    if: ${{ github.event.issue.state == 'closed' && !github.event.issue.pull_request }}
     steps:
       - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
         with:
