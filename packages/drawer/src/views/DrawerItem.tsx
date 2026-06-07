@@ -3,6 +3,7 @@ import { type Route, useTheme } from '@react-navigation/native';
 import Color from 'color';
 import * as React from 'react';
 import {
+  Platform,
   type StyleProp,
   StyleSheet,
   type TextStyle,
@@ -141,7 +142,10 @@ export function DrawerItem(props: Props) {
         onPress={onPress}
         role="button"
         aria-label={accessibilityLabel}
-        aria-selected={focused}
+        aria-current={
+          Platform.OS === 'web' ? (focused ? 'page' : undefined) : undefined
+        }
+        aria-selected={Platform.OS === 'web' ? undefined : focused}
         pressColor={pressColor}
         pressOpacity={pressOpacity}
         hoverEffect={{ color }}
