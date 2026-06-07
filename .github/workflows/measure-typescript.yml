@@ -1,4 +1,4 @@
-name: TypeScript Performance
+name: TypeScript Benchmark
 
 on:
   pull_request:
@@ -39,7 +39,7 @@ jobs:
         run: |
           {
             echo 'report<<EOF'
-            node scripts/measure-typescript.ts "origin/${{ github.base_ref }}" --runs 5 --json
+            node scripts/measure-typescript.ts "origin/${{ github.base_ref }}" --runs 5
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
@@ -56,57 +56,17 @@ jobs:
         with:
           script: |
             const MARKER = '<!-- ts-perf-report -->';
-            const ROWS = [
-              { key: 'types', label: 'Types' },
-              { key: 'instantiations', label: 'Instantiations' },
-              { key: 'memoryKB', label: 'Memory (MB)', transform: (v) => Math.round(v / 1024) },
-              { key: 'checkTimeSec', label: 'Check time (s)', fraction: 2 },
-              { key: 'totalTimeSec', label: 'Total time (s)', fraction: 2 },
-            ];
-            const SERVER_ROWS = [
-              { key: 'openCheckMs', label: 'Open + first check' },
-              { key: 'hoverMs', label: 'Hover' },
-              { key: 'completionMs', label: 'Completion' },
-              { key: 'recheckMs', label: 'Re-check after edit' },
-            ];
 
-            const report = JSON.parse(process.env.REPORT);
+            const output = process.env.REPORT ?? '';
+            const noticeable = output.includes('Detected a noticeable performance change');
+            const report = output.split('\n---\n')[1]?.trim();
 
-            const text = (value) => String(value).replaceAll('`', '\\`').replaceAll('\n', ' ');
-            const num = (value, fraction = 0) =>
-              value.toLocaleString('en-US', { maximumFractionDigits: fraction, minimumFractionDigits: fraction });
+            if (!report) {
+              core.setFailed('Could not find the performance report in the script output.');
+              return;
+            }
 
-            const delta = (value) => {
-              if (value === null) return '—';
-              const sign = value > 0 ? '+' : '';
-              return `${sign}${value.toFixed(1)}%`;
-            };
-
-            const tableRows = ROWS.map(({ key, label, transform, fraction }) => {
-              const m = report.metrics[key];
-              const baseValue = transform ? transform(m.base) : m.base;
-              const currValue = transform ? transform(m.current) : m.current;
-              return `| ${label} | ${num(baseValue, fraction)} | ${num(currValue, fraction)} | ${delta(m.delta)} |`;
-            }).join('\n');
-
-            const serverRows = SERVER_ROWS.map(({ key, label }) => {
-              const m = report.server[key];
-              const d = m.base < 1 ? '—' : delta(m.delta);
-              return `| ${label} | ${num(m.base, 1)} | ${num(m.current, 1)} | ${d} |`;
-            }).join('\n');
-
-            const body = `${MARKER}\n## TypeScript performance impact\n\n` +
-              `Baseline: \`${text(report.baseline.ref)}\` (\`${text(report.baseline.sha).slice(0, 10)}\`) · ` +
-              `Current: \`${text(report.current.sha).slice(0, 10)}\` · ` +
-              `${num(report.runs)} run${report.runs === 1 ? '' : 's'}\n\n` +
-              `### tsc type-check\n\n` +
-              `| Metric | Baseline | Current | Δ |\n` +
-              `| --- | ---: | ---: | ---: |\n` +
-              tableRows + '\n\n' +
-              `### tsserver latency\n\n` +
-              `| Operation | Baseline | Current | Δ |\n` +
-              `| --- | ---: | ---: | ---: |\n` +
-              serverRows + '\n';
+            const body = `${MARKER}\n${report}\n`;
 
             core.info(body);
 
@@ -118,7 +78,7 @@ jobs:
 
             const existing = comments.find((c) => c.body?.startsWith(MARKER));
 
-            if (report.noticeable !== true) {
+            if (!noticeable) {
               if (existing) {
                 await github.rest.issues.deleteComment({
                   owner: context.repo.owner,

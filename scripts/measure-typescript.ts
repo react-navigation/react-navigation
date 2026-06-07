@@ -30,18 +30,18 @@ const benchmarkFile = new URL(
 type Metrics = {
   types: number;
   instantiations: number;
-  memoryKB: number;
-  checkTimeSec: number;
-  totalTimeSec: number;
+  memory: number;
+  checkTime: number;
+  totalTime: number;
 };
 
 type MetricOutliers = { [Key in keyof Metrics]: number[] };
 
 type ServerMetrics = {
-  openCheckMs: number;
-  hoverMs: number;
-  completionMs: number;
-  recheckMs: number;
+  openCheck: number;
+  hover: number;
+  completion: number;
+  recheck: number;
 };
 
 type Measurement = {
@@ -53,11 +53,13 @@ type Measurement = {
 const NOTICEABLE_THRESHOLDS = {
   types: 1,
   instantiations: 1,
-  memoryKB: 5,
-  checkTimeSec: 10,
+  memory: 5,
+  checkTime: 10,
 };
 
 const OUTLIER_THRESHOLD = 1.4826 * 10;
+
+const REPORT_DELIMITER = '---';
 
 const HELP = `Usage: node scripts/measure-typescript.ts [baseline-ref] [--runs N] [--json]
 
@@ -108,6 +110,12 @@ if (!Number.isFinite(runs) || runs < 1) {
   process.exit(1);
 }
 
+function log(message: string): void {
+  if (!jsonOutput) {
+    process.stdout.write(`${message}\n`);
+  }
+}
+
 function git(args: string[]): string {
   return execFileSync('git', args, {
     cwd: root,
@@ -116,9 +124,11 @@ function git(args: string[]): string {
 }
 
 function yarnInstall(): void {
+  log('Installing dependencies...');
+
   execSync('yarn install', {
     cwd: root,
-    stdio: jsonOutput ? 'ignore' : 'inherit',
+    stdio: ['ignore', 'ignore', 'inherit'],
   });
 }
 
@@ -147,9 +157,9 @@ function parseMetrics(output: string): Metrics {
   return {
     types: read('Types', /Types:\s+(\d[\d,]*)/),
     instantiations: read('Instantiations', /Instantiations:\s+(\d[\d,]*)/),
-    memoryKB: read('Memory used', /Memory used:\s+(\d[\d,]*)K/),
-    checkTimeSec: read('Check time', /Check time:\s+([\d.]+)s/),
-    totalTimeSec: read('Total time', /Total time:\s+([\d.]+)s/),
+    memory: read('Memory used', /Memory used:\s+(\d[\d,]*)K/),
+    checkTime: read('Check time', /Check time:\s+([\d.]+)s/) * 1000,
+    totalTime: read('Total time', /Total time:\s+([\d.]+)s/) * 1000,
   };
 }
 
@@ -175,7 +185,7 @@ function median(values: number[]): number {
   return (previous + current) / 2;
 }
 
-function summarizeValues(values: number[], select: 'first' | 'min') {
+function summarizeValues(values: number[]) {
   const middle = median(values);
   const mad = median(values.map((value) => Math.abs(value - middle)));
 
@@ -189,14 +199,9 @@ function summarizeValues(values: number[], select: 'first' | 'min') {
       : [];
   const kept = values.filter((value) => !outliers.includes(value));
   const selected = kept.length > 0 ? kept : values;
-  const first = selected[0];
-
-  if (first == null) {
-    throw new Error("Couldn't find a metric value.");
-  }
 
   return {
-    value: select === 'first' ? first : Math.min(...selected),
+    value: Math.min(...selected),
     outliers,
   };
 }
@@ -424,15 +429,15 @@ async function measureServer(): Promise<ServerMetrics> {
       setTimeout(resolve, 500);
     });
 
-    const openCheckMs = await time('semanticDiagnosticsSync', {
+    const openCheck = await time('semanticDiagnosticsSync', {
       file: benchmarkFilePath,
     });
-    const hoverMs = await time('quickinfo', {
+    const hover = await time('quickinfo', {
       file: benchmarkFilePath,
       line: hoverLine,
       offset: hoverOffset,
     });
-    const completionMs = await time('completionInfo', {
+    const completion = await time('completionInfo', {
       file: benchmarkFilePath,
       line: hoverLine,
       offset: hoverOffset,
@@ -447,17 +452,17 @@ async function measureServer(): Promise<ServerMetrics> {
       endOffset: 1,
       insertString: ' ',
     });
-    const recheckMs = await time('semanticDiagnosticsSync', {
+    const recheck = await time('semanticDiagnosticsSync', {
       file: benchmarkFilePath,
     });
 
-    return { openCheckMs, hoverMs, completionMs, recheckMs };
+    return { openCheck, hover, completion, recheck };
   } finally {
     server.kill();
   }
 }
 
-async function measure(label: string): Promise<Measurement> {
+async function measure(): Promise<Measurement> {
   const results: Metrics[] = [];
   const serverResults: ServerMetrics[] = [];
 
@@ -465,72 +470,58 @@ async function measure(label: string): Promise<Measurement> {
 
   try {
     for (let i = 0; i < runs; i++) {
-      if (!jsonOutput) {
-        process.stdout.write(`  ${label} tsc run ${i + 1}/${runs}...\n`);
-      }
+      log(`  tsc run ${i + 1}/${runs}...`);
       results.push(runTsc());
     }
 
     for (let i = 0; i < runs; i++) {
-      if (!jsonOutput) {
-        process.stdout.write(`  ${label} tsserver run ${i + 1}/${runs}...\n`);
-      }
+      log(`  tsserver run ${i + 1}/${runs}...`);
       serverResults.push(await measureServer());
     }
+
+    log('');
   } finally {
     removeBenchmark();
   }
 
-  const types = summarizeValues(
-    results.map((r) => r.types),
-    'first'
-  );
-  const instantiations = summarizeValues(
-    results.map((r) => r.instantiations),
-    'first'
-  );
-  const memoryKB = summarizeValues(
-    results.map((r) => r.memoryKB),
-    'min'
-  );
-  const checkTimeSec = summarizeValues(
-    results.map((r) => r.checkTimeSec),
-    'min'
-  );
-  const totalTimeSec = summarizeValues(
-    results.map((r) => r.totalTimeSec),
-    'min'
-  );
+  const types = summarizeValues(results.map((r) => r.types));
+  const instantiations = summarizeValues(results.map((r) => r.instantiations));
+  const memory = summarizeValues(results.map((r) => r.memory));
+  const checkTime = summarizeValues(results.map((r) => r.checkTime));
+  const totalTime = summarizeValues(results.map((r) => r.totalTime));
 
   const serverValue = (select: (metrics: ServerMetrics) => number) =>
-    summarizeValues(serverResults.map(select), 'min').value;
+    summarizeValues(serverResults.map(select)).value;
 
   return {
     metrics: {
       types: types.value,
       instantiations: instantiations.value,
-      memoryKB: memoryKB.value,
-      checkTimeSec: checkTimeSec.value,
-      totalTimeSec: totalTimeSec.value,
+      memory: memory.value,
+      checkTime: checkTime.value,
+      totalTime: totalTime.value,
     },
     outliers: {
       types: types.outliers,
       instantiations: instantiations.outliers,
-      memoryKB: memoryKB.outliers,
-      checkTimeSec: checkTimeSec.outliers,
-      totalTimeSec: totalTimeSec.outliers,
+      memory: memory.outliers,
+      checkTime: checkTime.outliers,
+      totalTime: totalTime.outliers,
     },
     server: {
-      openCheckMs: serverValue((m) => m.openCheckMs),
-      hoverMs: serverValue((m) => m.hoverMs),
-      completionMs: serverValue((m) => m.completionMs),
-      recheckMs: serverValue((m) => m.recheckMs),
+      openCheck: serverValue((m) => m.openCheck),
+      hover: serverValue((m) => m.hover),
+      completion: serverValue((m) => m.completion),
+      recheck: serverValue((m) => m.recheck),
     },
   };
 }
 
-function format(value: number): string {
-  return value.toLocaleString('en-US', { maximumFractionDigits: 2 });
+function num(value: number, fraction = 0): string {
+  return value.toLocaleString('en-US', {
+    minimumFractionDigits: fraction,
+    maximumFractionDigits: fraction,
+  });
 }
 
 function delta(current: number, base: number): string {
@@ -542,6 +533,21 @@ function delta(current: number, base: number): string {
   const sign = change > 0 ? '+' : '';
 
   return `${sign}${change.toFixed(1)}%`;
+}
+
+function isNoticeable(base: Metrics, current: Metrics): boolean {
+  const change = (baseValue: number, currentValue: number) =>
+    baseValue === 0
+      ? 0
+      : Math.abs(((currentValue - baseValue) / baseValue) * 100);
+
+  return (
+    change(base.types, current.types) >= NOTICEABLE_THRESHOLDS.types ||
+    change(base.instantiations, current.instantiations) >=
+      NOTICEABLE_THRESHOLDS.instantiations ||
+    change(base.memory, current.memory) >= NOTICEABLE_THRESHOLDS.memory ||
+    change(base.checkTime, current.checkTime) >= NOTICEABLE_THRESHOLDS.checkTime
+  );
 }
 
 function toReport(base: Measurement, current: Measurement) {
@@ -561,24 +567,16 @@ function toReport(base: Measurement, current: Measurement) {
       baseMetrics.instantiations,
       currentMetrics.instantiations
     ),
-    memoryKB: metric(baseMetrics.memoryKB, currentMetrics.memoryKB),
-    checkTimeSec: metric(baseMetrics.checkTimeSec, currentMetrics.checkTimeSec),
-    totalTimeSec: metric(baseMetrics.totalTimeSec, currentMetrics.totalTimeSec),
+    memory: metric(baseMetrics.memory, currentMetrics.memory),
+    checkTime: metric(baseMetrics.checkTime, currentMetrics.checkTime),
+    totalTime: metric(baseMetrics.totalTime, currentMetrics.totalTime),
   };
 
-  const noticeable =
-    Math.abs(metrics.types.delta ?? 0) >= NOTICEABLE_THRESHOLDS.types ||
-    Math.abs(metrics.instantiations.delta ?? 0) >=
-      NOTICEABLE_THRESHOLDS.instantiations ||
-    Math.abs(metrics.memoryKB.delta ?? 0) >= NOTICEABLE_THRESHOLDS.memoryKB ||
-    Math.abs(metrics.checkTimeSec.delta ?? 0) >=
-      NOTICEABLE_THRESHOLDS.checkTimeSec;
-
   const server = {
-    openCheckMs: metric(base.server.openCheckMs, current.server.openCheckMs),
-    hoverMs: metric(base.server.hoverMs, current.server.hoverMs),
-    completionMs: metric(base.server.completionMs, current.server.completionMs),
-    recheckMs: metric(base.server.recheckMs, current.server.recheckMs),
+    openCheck: metric(base.server.openCheck, current.server.openCheck),
+    hover: metric(base.server.hover, current.server.hover),
+    completion: metric(base.server.completion, current.server.completion),
+    recheck: metric(base.server.recheck, current.server.recheck),
   };
 
   return {
@@ -589,7 +587,7 @@ function toReport(base: Measurement, current: Measurement) {
       hasUncommittedChanges: hasChanges,
     },
     runs,
-    noticeable,
+    noticeable: isNoticeable(baseMetrics, currentMetrics),
     metrics,
     server,
     outliers: {
@@ -607,111 +605,138 @@ function printSummary(base: Measurement, current: Measurement): void {
     ['Metric', 'Baseline', 'Current', 'Δ'],
     [
       'Types',
-      format(baseMetrics.types),
-      format(currentMetrics.types),
+      num(baseMetrics.types),
+      num(currentMetrics.types),
       delta(currentMetrics.types, baseMetrics.types),
     ],
     [
       'Instantiations',
-      format(baseMetrics.instantiations),
-      format(currentMetrics.instantiations),
+      num(baseMetrics.instantiations),
+      num(currentMetrics.instantiations),
       delta(currentMetrics.instantiations, baseMetrics.instantiations),
     ],
     [
-      'Memory (MB)',
-      format(Math.round(baseMetrics.memoryKB / 1024)),
-      format(Math.round(currentMetrics.memoryKB / 1024)),
-      delta(currentMetrics.memoryKB, baseMetrics.memoryKB),
+      'Memory',
+      `${num(Math.round(baseMetrics.memory / 1024))} MB`,
+      `${num(Math.round(currentMetrics.memory / 1024))} MB`,
+      delta(currentMetrics.memory, baseMetrics.memory),
     ],
     [
-      'Check time (s)',
-      baseMetrics.checkTimeSec.toFixed(2),
-      currentMetrics.checkTimeSec.toFixed(2),
-      delta(currentMetrics.checkTimeSec, baseMetrics.checkTimeSec),
+      'Check time',
+      `${num(baseMetrics.checkTime / 1000, 2)} s`,
+      `${num(currentMetrics.checkTime / 1000, 2)} s`,
+      delta(currentMetrics.checkTime, baseMetrics.checkTime),
     ],
     [
-      'Total time (s)',
-      baseMetrics.totalTimeSec.toFixed(2),
-      currentMetrics.totalTimeSec.toFixed(2),
-      delta(currentMetrics.totalTimeSec, baseMetrics.totalTimeSec),
+      'Total time',
+      `${num(baseMetrics.totalTime / 1000, 2)} s`,
+      `${num(currentMetrics.totalTime / 1000, 2)} s`,
+      delta(currentMetrics.totalTime, baseMetrics.totalTime),
     ],
   ];
 
-  process.stdout.write('\ntsc type-check:\n');
+  const meta =
+    `Baseline: ${baseline} (${baselineSha.slice(0, 10)})\n` +
+    `Current:  ${currentBranch === 'HEAD' ? currentSha.slice(0, 10) : currentBranch} (${currentSha.slice(0, 10)})${hasChanges ? ' + uncommitted changes' : ''}\n` +
+    `Runs:     ${runs}`;
 
+  process.stdout.write(`\n${REPORT_DELIMITER}\n\n`);
+  process.stdout.write('## TypeScript performance impact\n\n');
+  process.stdout.write(`${meta}\n\n`);
+  process.stdout.write('### tsc type-check\n\n');
   printTable(rows);
+  printServerSummary(base.server, current.server);
+  process.stdout.write(`\n${REPORT_DELIMITER}\n`);
 
   printOutliers('Baseline', base.outliers);
   printOutliers('Current', current.outliers);
 
-  printServerSummary(base.server, current.server);
+  const verdict = isNoticeable(baseMetrics, currentMetrics)
+    ? 'Detected a noticeable performance change.'
+    : 'No noticeable performance change to report.';
+
+  process.stdout.write(`\n${verdict}\n`);
 }
 
 function printTable(rows: string[][]): void {
-  const headerRow = rows[0];
+  const header = rows[0];
 
-  if (headerRow == null) {
+  if (header == null) {
     throw new Error("Couldn't find table header row.");
   }
 
-  const widths = headerRow.map((_, column) =>
-    Math.max(...rows.map((row) => row[column]?.length ?? 0))
+  const widths = header.map((_, column) =>
+    Math.max(3, ...rows.map((row) => row[column]?.length ?? 0))
   );
 
-  const separator = `+${widths.map((w) => '-'.repeat(w + 2)).join('+')}+`;
+  const line = (cells: string[]) =>
+    `| ${cells
+      .map((cell, column) =>
+        column === 0
+          ? cell.padEnd(widths[column] ?? 0)
+          : cell.padStart(widths[column] ?? 0)
+      )
+      .join(' | ')} |`;
 
-  process.stdout.write(`\n${separator}\n`);
+  const alignment = widths.map((width, column) =>
+    column === 0 ? '-'.repeat(width) : `${'-'.repeat(width - 1)}:`
+  );
 
-  rows.forEach((row, index) => {
-    const line = row
-      .map((cell, column) => {
-        const width = widths[column] ?? 0;
+  process.stdout.write(`${line(header)}\n| ${alignment.join(' | ')} |\n`);
 
-        const padded =
-          column === 0 || index === 0
-            ? cell.padEnd(width)
-            : cell.padStart(width);
-
-        return ` ${padded} `;
-      })
-      .join('|');
-
-    process.stdout.write(`|${line}|\n`);
-
-    if (index === 0) {
-      process.stdout.write(`${separator}\n`);
-    }
+  rows.slice(1).forEach((row) => {
+    process.stdout.write(`${line(row)}\n`);
   });
-
-  process.stdout.write(`${separator}\n`);
 }
 
 function printServerSummary(base: ServerMetrics, current: ServerMetrics): void {
-  const row = (name: string, baseValue: number, currentValue: number) => [
-    name,
-    baseValue.toFixed(1),
-    currentValue.toFixed(1),
-    baseValue < 1 ? '—' : delta(currentValue, baseValue),
-  ];
+  const row = (
+    name: string,
+    baseValue: number,
+    currentValue: number,
+    unit: 'ms' | 's'
+  ) => {
+    const scale = unit === 's' ? 1000 : 1;
+    const fraction = unit === 's' ? 2 : 1;
 
-  process.stdout.write('\ntsserver latency:\n');
+    return [
+      name,
+      `${num(baseValue / scale, fraction)} ${unit}`,
+      `${num(currentValue / scale, fraction)} ${unit}`,
+      baseValue < 1 ? '—' : delta(currentValue, baseValue),
+    ];
+  };
+
+  process.stdout.write('\n### tsserver latency\n\n');
 
   printTable([
-    ['Operation (ms)', 'Baseline', 'Current', 'Δ'],
-    row('Open + first check', base.openCheckMs, current.openCheckMs),
-    row('Hover', base.hoverMs, current.hoverMs),
-    row('Completion', base.completionMs, current.completionMs),
-    row('Re-check after edit', base.recheckMs, current.recheckMs),
+    ['Operation', 'Baseline', 'Current', 'Δ'],
+    row('Open + first check', base.openCheck, current.openCheck, 's'),
+    row('Hover', base.hover, current.hover, 'ms'),
+    row('Completion', base.completion, current.completion, 'ms'),
+    row('Re-check after edit', base.recheck, current.recheck, 's'),
   ]);
 }
 
 function printOutliers(label: string, outliers: MetricOutliers): void {
-  const rows: { name: string; values: number[] }[] = [
-    { name: 'Types', values: outliers.types },
-    { name: 'Instantiations', values: outliers.instantiations },
-    { name: 'Memory (KB)', values: outliers.memoryKB },
-    { name: 'Check time (s)', values: outliers.checkTimeSec },
-    { name: 'Total time (s)', values: outliers.totalTimeSec },
+  const rows = [
+    { name: 'Types', values: outliers.types.map((v) => num(v)) },
+    {
+      name: 'Instantiations',
+      values: outliers.instantiations.map((v) => num(v)),
+    },
+    {
+      name: 'Memory',
+      values: outliers.memory.map((v) => `${num(Math.round(v / 1024))} MB`),
+    },
+    {
+      name: 'Check time',
+      values: outliers.checkTime.map((v) => `${num(v / 1000, 2)} s`),
+    },
+    {
+      name: 'Total time',
+      values: outliers.totalTime.map((v) => `${num(v / 1000, 2)} s`),
+    },
   ].filter((row) => row.values.length > 0);
 
   if (rows.length === 0) {
@@ -721,7 +746,7 @@ function printOutliers(label: string, outliers: MetricOutliers): void {
   process.stdout.write(`\nRemoved ${label.toLowerCase()} outliers:\n`);
 
   rows.forEach(({ name, values }) => {
-    process.stdout.write(`  ${name}: ${values.map(format).join(', ')}\n`);
+    process.stdout.write(`  ${name}: ${values.join(', ')}\n`);
   });
 }
 
@@ -744,21 +769,15 @@ if (baselineSha === currentSha && !hasChanges) {
   process.exit(1);
 }
 
-if (!jsonOutput) {
-  process.stdout.write(
-    `Baseline: ${baseline} (${baselineSha.slice(0, 10)})\n` +
-      `Current:  ${currentBranch === 'HEAD' ? currentSha.slice(0, 10) : currentBranch} (${currentSha.slice(0, 10)})${hasChanges ? ' + uncommitted changes' : ''}\n` +
-      `Runs per side: ${runs}\n\n`
-  );
-
-  process.stdout.write('Measuring CURRENT (working tree)...\n');
-}
+log('Measuring CURRENT (working tree)...');
 
 const stashLabel = `measure-typescript ${new Date().toISOString()}`;
 
 let stashed = false;
 
 function restore(): void {
+  log('Restoring your working tree...');
+
   try {
     const ref = currentBranch === 'HEAD' ? currentSha : currentBranch;
 
@@ -800,9 +819,11 @@ process.on('SIGINT', () => {
 });
 
 async function run(): Promise<void> {
-  const current = await measure('current');
+  const current = await measure();
 
   if (hasChanges) {
+    log('Stashing your uncommitted changes...');
+
     git([
       'stash',
       'push',
@@ -816,15 +837,15 @@ async function run(): Promise<void> {
   }
 
   try {
+    log(`Checking out baseline (${baseline})...`);
+
     git(['checkout', '--quiet', baselineSha]);
 
     yarnInstall();
 
-    if (!jsonOutput) {
-      process.stdout.write(`\nMeasuring BASELINE (${baseline})...\n`);
-    }
+    log(`\nMeasuring BASELINE (${baseline})...`);
 
-    const base = await measure('baseline');
+    const base = await measure();
 
     restore();
 
