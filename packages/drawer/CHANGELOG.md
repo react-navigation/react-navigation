@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.11.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.10.3...@react-navigation/drawer@7.11.0) (2026-06-07)
+
+### Bug Fixes
+
+* use aria-current for drawer links on web ([aa1fd10](https://github.com/react-navigation/react-navigation/commit/aa1fd10f20f6146981edd5ee390672c4e4a10494)), closes [#9418](https://github.com/react-navigation/react-navigation/issues/9418) [#13138](https://github.com/react-navigation/react-navigation/issues/13138) [#13112](https://github.com/react-navigation/react-navigation/issues/13112) - by @
+
+### Features
+
+* add createXScreen helpers to navigators ([8b7c2d7](https://github.com/react-navigation/react-navigation/commit/8b7c2d7ae29b4e86b047d231ef35d9704809cab3)) - by @satya164
+
 ## [7.10.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.10.2...@react-navigation/drawer@7.10.3) (2026-05-25)
 
 **Note:** Version bump only for package @react-navigation/drawer

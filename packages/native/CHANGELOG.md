@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.2.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.2.5...@react-navigation/native@7.2.6) (2026-06-07)
+
+### Bug Fixes
+
+* add a workaround for false positive with multiple linking error ([301b3a1](https://github.com/react-navigation/react-navigation/commit/301b3a1071a67c7bff68ee6bc28a3e783c60252f)) - by @satya164
+
 ## [7.2.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.2.4...@react-navigation/native@7.2.5) (2026-05-25)
 
 **Note:** Version bump only for package @react-navigation/native

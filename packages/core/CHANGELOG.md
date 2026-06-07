@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.18.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.17.5...@react-navigation/core@7.18.0) (2026-06-07)
+
+### Bug Fixes
+
+* fix initial state getting dropped if root navigator render is delayed in StrictMode ([#13121](https://github.com/react-navigation/react-navigation/issues/13121)) ([2c250c7](https://github.com/react-navigation/react-navigation/commit/2c250c7e8c85d0765b32371ff96554bea7b5c6b4)), closes [#12985](https://github.com/react-navigation/react-navigation/issues/12985) [#13025](https://github.com/react-navigation/react-navigation/issues/13025) - by @Jasleen-Kaur96
+
+### Features
+
+* add createXScreen helpers to navigators ([8b7c2d7](https://github.com/react-navigation/react-navigation/commit/8b7c2d7ae29b4e86b047d231ef35d9704809cab3)) - by @satya164
+
 ## [7.17.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.17.4...@react-navigation/core@7.17.5) (2026-05-25)
 
 ### Bug Fixes

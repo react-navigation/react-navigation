@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.17.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.16.2...@react-navigation/bottom-tabs@7.17.0) (2026-06-07)
+
+### Bug Fixes
+
+* flash while switching native bottom tabs with lazy ([#13133](https://github.com/react-navigation/react-navigation/issues/13133)) ([0ae1adb](https://github.com/react-navigation/react-navigation/commit/0ae1adbdf073abb97c7bbb5e6df1350bee3b3e13)), closes [#13132](https://github.com/react-navigation/react-navigation/issues/13132) - by @dylancom
+
+### Features
+
+* add createXScreen helpers to navigators ([8b7c2d7](https://github.com/react-navigation/react-navigation/commit/8b7c2d7ae29b4e86b047d231ef35d9704809cab3)) - by @satya164
+
 ## [7.16.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.16.1...@react-navigation/bottom-tabs@7.16.2) (2026-05-25)
 
 ### Bug Fixes

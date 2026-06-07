@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.5.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.4.28...@react-navigation/material-top-tabs@7.5.0) (2026-06-07)
+
+### Features
+
+* add createXScreen helpers to navigators ([8b7c2d7](https://github.com/react-navigation/react-navigation/commit/8b7c2d7ae29b4e86b047d231ef35d9704809cab3)) - by @satya164
+
 ## [7.4.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.4.27...@react-navigation/material-top-tabs@7.4.28) (2026-05-25)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs
