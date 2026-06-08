@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.34...@react-navigation/native-stack@8.0.0-alpha.35) (2026-06-08)
+
+**Note:** Version bump only for package @react-navigation/native-stack
+
 # [8.0.0-alpha.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.33...@react-navigation/native-stack@8.0.0-alpha.34) (2026-05-25)
 
 **Note:** Version bump only for package @react-navigation/native-stack

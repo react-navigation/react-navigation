@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.19...@react-navigation/core@8.0.0-alpha.20) (2026-06-08)
+
+### Bug Fixes
+
+* fix initial state getting dropped if root navigator render is delayed in StrictMode ([#13121](https://github.com/react-navigation/react-navigation/issues/13121)) ([7a9c5b9](https://github.com/react-navigation/react-navigation/commit/7a9c5b9c3bbb76774a0e01599f5a5a95e695f8cc)), closes [#12985](https://github.com/react-navigation/react-navigation/issues/12985) [#13025](https://github.com/react-navigation/react-navigation/issues/13025) - by @Jasleen-Kaur96
+* remove support for linking at group level ([06e5928](https://github.com/react-navigation/react-navigation/commit/06e5928e5e0f552796f0823d9b965617fb411dc0)) - by @satya164
+
+### Features
+
+* add support for shared URLs in linking config ([#13131](https://github.com/react-navigation/react-navigation/issues/13131)) ([42bad76](https://github.com/react-navigation/react-navigation/commit/42bad76636c20f8c52b91785a933a60eed6250c8)) - by @satya164
+
 # [8.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.18...@react-navigation/core@8.0.0-alpha.19) (2026-05-25)
 
 ### Bug Fixes

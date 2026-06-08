@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.36...@react-navigation/stack@8.0.0-alpha.37) (2026-06-08)
+
+### Features
+
+* migrate stack and drawer to gesture handler 3 ([#13104](https://github.com/react-navigation/react-navigation/issues/13104)) ([6104e1d](https://github.com/react-navigation/react-navigation/commit/6104e1de050916a84ef5062967e3bdebe88575cf)) - by @satya164
+
 # [8.0.0-alpha.36](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.35...@react-navigation/stack@8.0.0-alpha.36) (2026-05-25)
 
 **Note:** Version bump only for package @react-navigation/stack

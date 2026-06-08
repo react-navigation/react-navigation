@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.28...@react-navigation/native@8.0.0-alpha.29) (2026-06-08)
+
+### Features
+
+* add standard navigation compatibility ([#13124](https://github.com/react-navigation/react-navigation/issues/13124)) ([ef2a900](https://github.com/react-navigation/react-navigation/commit/ef2a900c530eff05c0a976b2c3280368b00dda9d)) - by @satya164
+* add support for shared URLs in linking config ([#13131](https://github.com/react-navigation/react-navigation/issues/13131)) ([42bad76](https://github.com/react-navigation/react-navigation/commit/42bad76636c20f8c52b91785a933a60eed6250c8)) - by @satya164
+
 # [8.0.0-alpha.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.27...@react-navigation/native@8.0.0-alpha.28) (2026-05-25)
 
 **Note:** Version bump only for package @react-navigation/native
