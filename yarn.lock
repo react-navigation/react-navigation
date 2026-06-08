@@ -4283,7 +4283,7 @@ __metadata:
     del-cli: "npm:^7.0.0"
     react: "npm:19.2.0"
     react-native: "npm:0.83.6"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     react-native-safe-area-context: "npm:~5.6.2"
     react-native-screens: "npm:^4.25.2"
     test-renderer: "npm:1.2.0"
@@ -4316,7 +4316,7 @@ __metadata:
     react: "npm:19.2.0"
     react-is: "npm:^19.2.6"
     react-native: "npm:0.83.6"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     test-renderer: "npm:1.2.0"
     typescript: "npm:^6.0.3"
     use-latest-callback: "npm:^0.3.4"
@@ -4338,7 +4338,7 @@ __metadata:
     fast-deep-equal: "npm:^3.1.3"
     nanoid: "npm:^5.1.11"
     react: "npm:19.2.0"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     stacktrace-parser: "npm:^0.1.11"
     typescript: "npm:^6.0.3"
   peerDependencies:
@@ -4358,7 +4358,7 @@ __metadata:
     del-cli: "npm:^7.0.0"
     react: "npm:19.2.0"
     react-native: "npm:0.83.6"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     react-native-drawer-layout: "workspace:^"
     react-native-gesture-handler: "npm:^3.0.0"
     react-native-reanimated: "npm:~4.2.1"
@@ -4393,7 +4393,7 @@ __metadata:
     del-cli: "npm:^7.0.0"
     react: "npm:19.2.0"
     react-native: "npm:0.83.6"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     react-native-screens: "npm:^4.25.2"
     sf-symbols-typescript: "npm:^2.2.0"
     test-renderer: "npm:1.2.0"
@@ -4459,7 +4459,7 @@ __metadata:
     react: "npm:19.2.0"
     react-dom: "npm:19.2.0"
     react-native: "npm:0.83.6"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     react-native-drawer-layout: "workspace:^"
     react-native-gesture-handler: "npm:^3.0.0"
     react-native-monorepo-config: "npm:^0.3.5"
@@ -4493,7 +4493,7 @@ __metadata:
     del-cli: "npm:^7.0.0"
     react: "npm:19.2.0"
     react-native: "npm:0.83.6"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     react-native-pager-view: "npm:^8.0.0"
     react-native-safe-area-context: "npm:~5.6.2"
     react-native-tab-view: "workspace:^"
@@ -4520,7 +4520,7 @@ __metadata:
     del-cli: "npm:^7.0.0"
     react: "npm:19.2.0"
     react-native: "npm:0.83.6"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     react-native-screens: "npm:^4.25.2"
     test-renderer: "npm:1.2.0"
     typescript: "npm:^6.0.3"
@@ -4549,7 +4549,7 @@ __metadata:
     react: "npm:19.2.0"
     react-dom: "npm:19.2.0"
     react-native: "npm:0.83.6"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     sf-symbols-typescript: "npm:^2.2.0"
     standard-navigation: "npm:^0.0.7"
     test-renderer: "npm:1.2.0"
@@ -4568,7 +4568,7 @@ __metadata:
     "@jest/globals": "npm:^29.7.0"
     del-cli: "npm:^7.0.0"
     nanoid: "npm:^5.1.11"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     typescript: "npm:^6.0.3"
   languageName: unknown
   linkType: soft
@@ -4585,7 +4585,7 @@ __metadata:
     del-cli: "npm:^7.0.0"
     react: "npm:19.2.0"
     react-native: "npm:0.83.6"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     react-native-gesture-handler: "npm:^3.0.0"
     react-native-safe-area-context: "npm:~5.6.2"
     react-native-screens: "npm:^4.25.2"
@@ -12806,9 +12806,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-builder-bob@npm:^0.42.0":
-  version: 0.42.0
-  resolution: "react-native-builder-bob@npm:0.42.0"
+"react-native-builder-bob@npm:^0.42.1":
+  version: 0.42.1
+  resolution: "react-native-builder-bob@npm:0.42.1"
   dependencies:
     "@babel/core": "npm:^7.29.0"
     "@babel/plugin-transform-flow-strip-types": "npm:^7.27.1"
@@ -12835,7 +12835,7 @@ __metadata:
     yargs: "npm:^18.0.0"
   bin:
     bob: bin/bob
-  checksum: 10c0/90f8e728acbccc7a4ddf26a2590ca19aa5c5304f8f01807dd550e4f39f1c8fbd2268414459b43ab5eacd0e3ff54fbb01bd1d1bb7695f1c45ce57b3a2e3a8b85b
+  checksum: 10c0/9d4eb9097eef8e204ffb1ab8c861e90c8b8b6bfc5f4cb86388d1015322fb205c3c8a08db19cd6803f2505ebba9311a7186949e2023f434d097c6e026e7fd013f
   languageName: node
   linkType: hard
 
@@ -12846,7 +12846,7 @@ __metadata:
     del-cli: "npm:^7.0.0"
     react: "npm:19.2.0"
     react-native: "npm:0.83.6"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     react-native-reanimated: "npm:~4.2.1"
     react-native-worklets: "npm:0.7.4"
     typescript: "npm:^6.0.3"
@@ -12980,7 +12980,7 @@ __metadata:
     del-cli: "npm:^7.0.0"
     react: "npm:19.2.0"
     react-native: "npm:0.83.6"
-    react-native-builder-bob: "npm:^0.42.0"
+    react-native-builder-bob: "npm:^0.42.1"
     react-native-pager-view: "npm:^8.0.0"
     test-renderer: "npm:1.2.0"
     typescript: "npm:^6.0.3"

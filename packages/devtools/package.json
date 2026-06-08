@@ -52,7 +52,7 @@
     "@types/react": "~19.2.17",
     "del-cli": "^7.0.0",
     "react": "19.2.0",
-    "react-native-builder-bob": "^0.42.0",
+    "react-native-builder-bob": "^0.42.1",
     "typescript": "^6.0.3"
   },
   "peerDependencies": {

@@ -78,7 +78,7 @@
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-native": "0.83.6",
-    "react-native-builder-bob": "^0.42.0",
+    "react-native-builder-bob": "^0.42.1",
     "test-renderer": "1.2.0",
     "typescript": "^6.0.3"
   },
