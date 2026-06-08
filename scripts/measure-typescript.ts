@@ -211,11 +211,27 @@ function runTsc(): Metrics {
     force: true,
   });
 
-  const output = execSync('yarn tsc --noEmit --extendedDiagnostics', {
-    cwd: root,
-    encoding: 'utf-8',
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
+  let output: string;
+
+  try {
+    output = execSync('yarn tsc --noEmit --extendedDiagnostics', {
+      cwd: root,
+      encoding: 'utf-8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+  } catch (error) {
+    if (typeof error === 'object' && error != null) {
+      if ('stdout' in error && typeof error.stdout === 'string') {
+        process.stdout.write(error.stdout);
+      }
+
+      if ('stderr' in error && typeof error.stderr === 'string') {
+        process.stderr.write(error.stderr);
+      }
+    }
+
+    throw error;
+  }
 
   return parseMetrics(output);
 }
