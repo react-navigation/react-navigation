@@ -58,7 +58,7 @@
     "mock-require-assets": "^0.0.3",
     "nodemon": "^3.1.10",
     "npm-run-all2": "^8.0.4",
-    "react-native-builder-bob": "^0.42.0",
+    "react-native-builder-bob": "^0.42.1",
     "react-native-monorepo-config": "^0.3.5",
     "react-test-renderer": "19.1.0",
     "serve": "^14.2.5",
