@@ -52,16 +52,16 @@
     "use-sync-external-store": "^1.6.0"
   },
   "devDependencies": {
-    "@callstack/liquid-glass": "^0.7.1",
+    "@callstack/liquid-glass": "^0.8.0",
     "@jest/globals": "^29.7.0",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^14.0.0",
-    "@types/react": "~19.2.15",
+    "@types/react": "~19.2.17",
     "@types/use-sync-external-store": "^1.5.0",
     "del-cli": "^7.0.0",
     "react": "19.2.0",
     "react-native": "0.83.6",
-    "react-native-builder-bob": "^0.41.0",
+    "react-native-builder-bob": "^0.42.0",
     "react-native-screens": "^4.25.2",
     "test-renderer": "1.2.0",
     "typescript": "^6.0.3"
