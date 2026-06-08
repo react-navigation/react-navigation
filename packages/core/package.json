@@ -58,7 +58,7 @@
     "del-cli": "^6.0.0",
     "immer": "^10.1.1",
     "react": "19.1.0",
-    "react-native-builder-bob": "^0.40.17",
+    "react-native-builder-bob": "^0.42.0",
     "react-test-renderer": "19.1.0",
     "typescript": "^5.9.2"
   },
