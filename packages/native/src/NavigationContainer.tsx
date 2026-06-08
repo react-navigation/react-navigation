@@ -249,7 +249,9 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
   if (!isStateReady) {
     return (
       <LocaleDirContext.Provider value={direction}>
-        <ThemeProvider value={theme}>{fallback}</ThemeProvider>
+        <LinkingContext.Provider value={linkingConfig}>
+          <ThemeProvider value={theme}>{fallback}</ThemeProvider>
+        </LinkingContext.Provider>
       </LocaleDirContext.Provider>
     );
   }
