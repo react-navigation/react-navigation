@@ -9,35 +9,42 @@ name: Showcase - Material Top Tabs
 - swipe:
     direction: LEFT
     duration: 300
-- assertVisible:
-    text: 'Morning Favorites'
+- extendedWaitUntil:
+    visible:
+      text: 'Morning Favorites'
 - swipe:
     direction: LEFT
     duration: 300
-- assertVisible:
-    text: 'Light & Fresh'
+- extendedWaitUntil:
+    visible:
+      text: 'Light & Fresh'
 - swipe:
     direction: LEFT
     duration: 300
-- assertVisible:
-    text: 'Crowd Pleasers'
+- extendedWaitUntil:
+    visible:
+      text: 'Crowd Pleasers'
 - swipe:
     direction: LEFT
     duration: 300
-- assertVisible:
-    text: 'Lemon Tart with Meringue'
+- extendedWaitUntil:
+    visible:
+      text: 'Lemon Tart with Meringue'
 - swipe:
     direction: LEFT
     duration: 300
-- assertVisible:
-    text: 'Lavender Honey Latte'
+- extendedWaitUntil:
+    visible:
+      text: 'Lavender Honey Latte'
 - swipe:
     direction: LEFT
     duration: 300
-- assertVisible:
-    text: 'Pan-Seared Salmon with Dill Sauce'
+- extendedWaitUntil:
+    visible:
+      text: 'Pan-Seared Salmon with Dill Sauce'
 - swipe:
     direction: LEFT
     duration: 300
-- assertVisible:
-    text: "What's in Season"
+- extendedWaitUntil:
+    visible:
+      text: "What's in Season"

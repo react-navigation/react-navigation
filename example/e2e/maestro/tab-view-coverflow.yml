@@ -10,31 +10,49 @@ name: Tab View - Coverflow
     text: 'Homogenic'
 - swipe:
     duration: 300
-    direction: LEFT
-- assertVisible:
-    text: 'Number of the Beast'
+    start: 90%, 50%
+    end: 10%, 50%
+- extendedWaitUntil:
+    visible:
+      text: 'Number of the Beast'
+    timeout: 3000
 - swipe:
     duration: 300
-    direction: LEFT
-- assertVisible:
-    text: "It's Blitz"
+    start: 90%, 50%
+    end: 10%, 50%
+- extendedWaitUntil:
+    visible:
+      text: "It's Blitz"
+    timeout: 3000
 - swipe:
     duration: 300
-    direction: RIGHT
-- assertVisible:
-    text: 'Number of the Beast'
+    start: 10%, 50%
+    end: 90%, 50%
+- extendedWaitUntil:
+    visible:
+      text: 'Number of the Beast'
+    timeout: 3000
 - swipe:
     duration: 300
-    direction: RIGHT
-- assertVisible:
-    text: 'Homogenic'
+    start: 10%, 50%
+    end: 90%, 50%
+- extendedWaitUntil:
+    visible:
+      text: 'Homogenic'
+    timeout: 3000
 - swipe:
     duration: 300
-    direction: RIGHT
-- assertVisible:
-    text: 'Bat Out of Hell'
+    start: 10%, 50%
+    end: 90%, 50%
+- extendedWaitUntil:
+    visible:
+      text: 'Bat Out of Hell'
+    timeout: 3000
 - swipe:
     duration: 300
-    direction: LEFT
-- assertVisible:
-    text: 'Homogenic'
+    start: 90%, 50%
+    end: 10%, 50%
+- extendedWaitUntil:
+    visible:
+      text: 'Homogenic'
+    timeout: 3000

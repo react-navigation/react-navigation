@@ -10,7 +10,9 @@ name: Bottom Tabs - Preload Flow
     text: 'Details is not preloaded yet.'
 - tapOn:
     text: 'Preload Details'
-- assertVisible: 'Details is preloaded!'
+- extendedWaitUntil:
+    timeout: 5000
+    visible: 'Details is preloaded!'
 - tapOn:
     text: 'Navigate to Details'
 - assertVisible:

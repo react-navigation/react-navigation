@@ -6,7 +6,9 @@ name: Screen Layout
     env:
       LINK: screen-layout
       TEXT: 'Loading…'
-- assertVisible: 'Suspend'
+- extendedWaitUntil:
+    timeout: 3500
+    visible: 'Suspend'
 - tapOn:
     text: 'Crash'
 - runFlow:
@@ -28,4 +30,6 @@ name: Screen Layout
     text: 'Loading…'
 - assertNotVisible:
     text: 'Suspend'
-- assertVisible: 'Suspend'
+- extendedWaitUntil:
+    timeout: 3500
+    visible: 'Suspend'

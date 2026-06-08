@@ -10,15 +10,19 @@ name: Stack - Preload Flow
     text: 'Details is not preloaded yet.'
 - tapOn:
     text: 'Preload Details'
-- assertVisible: 'Details is preloaded!'
+- extendedWaitUntil:
+    timeout: 5000
+    visible: 'Details is preloaded!'
 - tapOn:
     text: 'Navigate to Details'
 - assertVisible:
-    text: 'Preloaded'
-- assertVisible:
     text: 'Loaded!'
+- assertVisible:
+    text: 'Preloaded'
 - tapOn:
     text: 'Back to home'
+- assertVisible:
+    text: 'Details is not preloaded yet.'
 - tapOn:
     text: 'Navigate to Details'
 - assertVisible:

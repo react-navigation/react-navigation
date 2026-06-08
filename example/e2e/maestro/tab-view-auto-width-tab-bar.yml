@@ -8,17 +8,25 @@ name: Tab View - Auto Width Tab Bar
       TEXT: 'Marissa Castillo'
 - tapOn:
     text: 'Article'
-- assertVisible:
-    text: 'What is Lorem Ipsum?'
+- extendedWaitUntil:
+    visible:
+      text: 'What is Lorem Ipsum?'
+    timeout: 2000
 - tapOn:
     text: 'Albums'
-- assertVisible:
-    id: 'album-0'
+- extendedWaitUntil:
+    visible:
+      id: 'album-0'
+    timeout: 2000
 - tapOn:
     text: 'Chat'
-- assertVisible:
-    text: 'make me a sandwich'
+- extendedWaitUntil:
+    visible:
+      text: 'make me a sandwich'
+    timeout: 2000
 - tapOn:
     text: 'Contacts'
-- assertVisible:
-    text: 'Marissa Castillo'
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 2000

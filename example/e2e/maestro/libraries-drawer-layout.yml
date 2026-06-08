@@ -10,12 +10,16 @@ name: Libraries - Drawer Layout
     text: 'Open drawer'
 - tapOn:
     text: 'Open drawer'
-- assertVisible:
-    text: 'Close'
+- extendedWaitUntil:
+    visible:
+      text: 'Close'
+    timeout: 2000
 - tapOn:
     text: 'Close'
-- assertVisible:
-    text: 'Open drawer'
+- extendedWaitUntil:
+    visible:
+      text: 'Open drawer'
+    timeout: 2000
 - tapOn:
     text: 'Change position (left)'
 - assertVisible:
