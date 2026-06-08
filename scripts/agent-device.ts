@@ -55,7 +55,12 @@ const args = [
 if (platform) {
   args.push('--platform', platform);
 } else if (deviceIds) {
-  args.push('--device', deviceIds.join(','), '--shard-all', String(deviceIds.length));
+  args.push(
+    '--device',
+    deviceIds.join(','),
+    '--shard-all',
+    String(deviceIds.length)
+  );
 }
 
 if (ci) {
