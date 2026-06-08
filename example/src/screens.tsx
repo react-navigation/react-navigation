@@ -27,6 +27,8 @@ import { StackHeaderCustomization } from './Screens/StackHeaderCustomization';
 import { StackPreloadFlow } from './Screens/StackPreloadFlow';
 import { StackPreventRemove } from './Screens/StackPreventRemove';
 import { StackTransparent } from './Screens/StackTransparent';
+import { MyStackDynamic } from './Screens/StandardNavigator/MyStackDynamic';
+import { MyStackStatic } from './Screens/StandardNavigator/MyStackStatic';
 import { StaticScreen } from './Screens/Static';
 import { TabPreloadFlow } from './Screens/TabPreloadFlow';
 import { TabView } from './Screens/TabView';
@@ -59,6 +61,8 @@ export const SCREENS = {
   StackPreloadFlow,
   TabPreloadFlow,
   NativeStackPreloadFlow,
+  StandardStaticNavigation: MyStackStatic,
+  StandardDynamicNavigation: MyStackDynamic,
 } as const satisfies {
   [key: string]: React.ComponentType<{}> & {
     title: string;
