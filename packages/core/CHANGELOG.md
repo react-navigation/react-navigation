@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.19.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.18.0...@react-navigation/core@7.19.0) (2026-06-08)
+
+### Features
+
+* add standard navigation compatibility ([#13122](https://github.com/react-navigation/react-navigation/issues/13122)) ([1c26703](https://github.com/react-navigation/react-navigation/commit/1c267038540b0796f6ab811ac9cf31fa3c939ed6)) - by @satya164
+
 # [7.18.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.17.5...@react-navigation/core@7.18.0) (2026-06-07)
 
 ### Bug Fixes

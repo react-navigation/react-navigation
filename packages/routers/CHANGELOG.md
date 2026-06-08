@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.5.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.5.5...@react-navigation/routers@7.5.6) (2026-06-08)
+
+**Note:** Version bump only for package @react-navigation/routers
+
 ## [7.5.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.5.4...@react-navigation/routers@7.5.5) (2026-05-08)
 
 ### Bug Fixes
