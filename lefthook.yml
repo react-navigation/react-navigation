@@ -2,19 +2,22 @@ pre-commit:
   parallel: true
   commands:
     lint:
-      glob: "*.{js,ts,tsx}"
+      glob: '*.{js,ts,tsx}'
       run: yarn lint {staged_files}
     types:
-      glob: "*.{json,js,ts,tsx}"
+      glob: '*.{json,js,ts,tsx}'
       run: yarn typecheck
-    declarations:
-      glob: "*.{json,js,ts,tsx}"
+    types-standalone:
+      glob: '*.{json,js,ts,tsx}'
+      run: yarn typecheck:standalone
+    types-declarations:
+      glob: '*.{json,js,ts,tsx}'
       run: yarn typecheck:declarations
     test:
-      glob: "*.{json,js,ts,tsx}"
+      glob: '*.{json,js,ts,tsx}'
       run: yarn test
     dependencies:
-      glob: "{package.json,yarn.lock}"
+      glob: '{package.json,yarn.lock}'
       run: yarn versions check
 commit-msg:
   parallel: true
