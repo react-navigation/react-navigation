@@ -238,7 +238,11 @@ function runTsc(): Metrics {
 
 function generateBenchmark(): void {
   const navigators: string[] = [];
-  const screens: string[] = [];
+  const screens: { name: string; level: number; index: number }[] = [];
+
+  const letters = 'abcdefghijklmnopqrstuvwxyz';
+  const paramName = (level: number, index: number) =>
+    `${letters[level % letters.length]}${letters[index % letters.length]}`;
 
   // Build from the deepest level up so each level can nest the previous one.
   for (let level = BENCHMARK.depth - 1; level >= 0; level--) {
@@ -253,16 +257,17 @@ function generateBenchmark(): void {
 
     for (let i = 0; i < BENCHMARK.width; i++) {
       const name = `Screen${level}_${i}`;
+      const param = paramName(level, i);
 
       entries.push(`    ${name}: ${screen}({
       screen: () => null,
       linking: {
-        path: '${name.toLowerCase()}/:id',
-        parse: { id: (value) => Number(value) },
+        path: '${name.toLowerCase()}/:${param}',
+        parse: { ${param}: (value) => Number(value) },
       },
-      options: ({ route }) => ({ title: 'Item ' + route.params.id }),
+      options: ({ route }) => ({ title: 'Item ' + route.params.${param} }),
     }),`);
-      screens.push(name);
+      screens.push({ name, level, index: i });
     }
 
     if (level < BENCHMARK.depth - 1) {
@@ -274,9 +279,14 @@ function generateBenchmark(): void {
     );
   }
 
-  const consumers = screens.map(
-    (name) => `function Use${name}() {
-  const navigation = useNavigation<typeof Nav0>('${name}');
+  const consumers = screens.map(({ name, level, index }) => {
+    const siblingIndex = (index + 1) % BENCHMARK.width;
+    const sibling = `Screen${level}_${siblingIndex}`;
+    const siblingParam = paramName(level, siblingIndex);
+
+    return `function Use${name}() {
+  const navigation = useNavigation<typeof Nav0, '${name}'>('${name}');
+  navigation.navigate('${sibling}', { ${siblingParam}: 1 });
   const route = useRoute<RootParamList, '${name}'>('${name}');
   const value = useNavigationState<number, typeof Nav0, '${name}'>(
     '${name}',
@@ -284,8 +294,8 @@ function generateBenchmark(): void {
   );
   return { navigation, route, value };
 }
-void Use${name};`
-  );
+void Use${name};`;
+  });
 
   const imports = NAVIGATORS.map(
     ([navigator, screen, pkg]) =>

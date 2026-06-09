@@ -17,6 +17,7 @@
   "scripts": {
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "typecheck": "tsc --noEmit",
+    "typecheck:standalone": "tsc --project example/__typechecks__/standalone --noEmit",
     "typecheck:declarations": "tsc --declaration --emitDeclarationOnly --composite false --outDir /tmp/react-navigation-typescript-dts",
     "test": "jest",
     "clean": "lerna run clean",

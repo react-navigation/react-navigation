@@ -15,6 +15,7 @@ import {
   type NavigatorScreenParams,
   type RouteProp,
   type ScreenLayoutArgs,
+  type StackNavigationState,
   type StaticParamList,
   type StaticScreenProps,
   type Theme,
@@ -618,14 +619,63 @@ navigation.navigate('Home', { screen: 'Chat' });
   void NestedNavigateChecks;
 
   function MediaAppScreen() {
-    // Exercises NavigationListForNested for a deeply nested route
-    const player = useNavigation<typeof AppStack>('NowPlaying');
-    void player;
+    const navigation = useNavigation<typeof AppStack, 'NowPlaying'>(
+      'NowPlaying'
+    );
 
-    useNavigationState<number, typeof AppStack, 'Lyrics'>(
+    expectTypeOf(navigation).toEqualTypeOf<
+      CompositeNavigationProp<
+        StackNavigationProp<StaticParamList<typeof PlayerStack>, 'NowPlaying'>,
+        CompositeNavigationProp<
+          StackNavigationProp<StaticParamList<typeof HomeStack>, 'Player'>,
+          CompositeNavigationProp<
+            BottomTabNavigationProp<StaticParamList<typeof AppTabs>, 'HomeTab'>,
+            StackNavigationProp<StaticParamList<typeof AppStack>, 'Main'>
+          >
+        >
+      >
+    >();
+
+    expectTypeOf(navigation.getState()).toEqualTypeOf<
+      StackNavigationState<StaticParamList<typeof PlayerStack>>
+    >();
+
+    navigation.navigate('Queue');
+    navigation.navigate('Lyrics', { trackId: 'track-1' });
+    navigation.navigate('Album', { albumId: 'album-1' });
+    navigation.navigate('LibraryTab', {
+      screen: 'Playlist',
+      params: { playlistId: 'playlist-1' },
+    });
+    navigation.navigate('Settings', { section: 'privacy' });
+
+    // @ts-expect-error: trackId is required for the Lyrics screen.
+    navigation.navigate('Lyrics');
+
+    // @ts-expect-error: albumId is required for the Album screen.
+    navigation.navigate('Album');
+
+    // @ts-expect-error: section must be a valid Settings section.
+    navigation.navigate('Settings', { section: 'account' });
+
+    const lyricsIndex = useNavigationState<number, typeof AppStack, 'Lyrics'>(
       'Lyrics',
       (state) => state.index
     );
+
+    expectTypeOf(lyricsIndex).toEqualTypeOf<number>();
+
+    const state = useNavigationState<
+      StackNavigationState<StaticParamList<typeof PlayerStack>>,
+      typeof AppStack,
+      'Lyrics'
+    >('Lyrics', (state) => state);
+
+    expectTypeOf(state.type).toEqualTypeOf<'stack'>();
+
+    expectTypeOf(state.routeNames).toEqualTypeOf<
+      (keyof StaticParamList<typeof PlayerStack>)[]
+    >();
 
     return null;
   }
