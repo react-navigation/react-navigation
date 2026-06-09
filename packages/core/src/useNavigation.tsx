@@ -31,7 +31,7 @@ export function useNavigation<
   const Navigator = RootNavigator,
   const List = NavigationListForNested<Navigator>,
   const RouteName extends keyof NavigationListForNested<Navigator> = keyof NavigationListForNested<Navigator>,
->(name: RouteName): List[RouteName];
+>(name: RouteName): NavigationListForNested<Navigator>[RouteName];
 export function useNavigation(name?: string): unknown {
   const root = React.use(NavigationContainerRefContext);
   const navigation = React.use(NavigationContext);
