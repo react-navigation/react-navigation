@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.32...@react-navigation/elements@3.0.0-alpha.33) (2026-06-09)
+
+### Bug Fixes
+
+* gracefully handle multiple versions of elements for useFrameSize ([4f62f5b](https://github.com/react-navigation/react-navigation/commit/4f62f5be14edfeb907a2b70ed6dd49c37140b517)) - by @
+
 # [3.0.0-alpha.32](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.31...@react-navigation/elements@3.0.0-alpha.32) (2026-06-08)
 
 **Note:** Version bump only for package @react-navigation/elements
