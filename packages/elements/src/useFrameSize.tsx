@@ -3,6 +3,8 @@ import { type LayoutChangeEvent, Platform, View } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 
+import { getNamedContext } from './getNamedContext';
+
 type Frame = {
   width: number;
   height: number;
@@ -18,7 +20,8 @@ type FrameContextType = {
   subscribeThrottled: (listener: Listener) => RemoveListener;
 };
 
-const FrameContext = React.createContext<FrameContextType | undefined>(
+const FrameContext = getNamedContext<FrameContextType | undefined>(
+  'FrameContext',
   undefined
 );
 
