@@ -1,6 +1,7 @@
 import type {
   NavigationAction,
   NavigationState,
+  PartialState,
 } from '@react-navigation/routers';
 import * as React from 'react';
 
@@ -23,16 +24,19 @@ const VISITED_ROUTE_KEYS = Symbol('VISITED_ROUTE_KEYS');
 export const shouldPreventRemove = (
   emitter: NavigationEventEmitter<EventMapCore<any>>,
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>,
-  currentRoutes: { key: string }[],
-  nextRoutes: { key?: string | undefined }[],
+  currentRoutes: {
+    key: string;
+    state?: NavigationState | PartialState<NavigationState>;
+  }[],
+  nextRoutes: {
+    key?: string | undefined;
+    state?: NavigationState | PartialState<NavigationState>;
+  }[],
   action: NavigationAction
 ) => {
-  const nextRouteKeys = nextRoutes.map((route) => route.key);
-
-  // Call these in reverse order so last screens handle the event first
-  const removedRoutes = currentRoutes
-    .filter((route) => !nextRouteKeys.includes(route.key))
-    .reverse();
+  const nextRoutesByKey = new Map(
+    nextRoutes.map((route) => [route.key, route])
+  );
 
   const visitedRouteKeys: Set<string> =
     // @ts-expect-error: add this property to mark that we've already emitted this action
@@ -43,30 +47,47 @@ export const shouldPreventRemove = (
     [VISITED_ROUTE_KEYS]: visitedRouteKeys,
   };
 
-  for (const route of removedRoutes) {
-    if (visitedRouteKeys.has(route.key)) {
-      // Skip if we've already emitted this action for this screen
-      continue;
-    }
+  // Call these in reverse order so last screens handle the event first
+  for (const route of [...currentRoutes].reverse()) {
+    const nextRoute = nextRoutesByKey.get(route.key);
 
-    // First, we need to check if any child screens want to prevent it
-    const isPrevented = beforeRemoveListeners[route.key]?.(beforeRemoveAction);
+    if (nextRoute === undefined) {
+      if (visitedRouteKeys.has(route.key)) {
+        // Skip if we've already emitted this action for this screen
+        continue;
+      }
 
-    if (isPrevented) {
-      return true;
-    }
+      // The route is removed
+      // First, we need to check if any child screens want to prevent it
+      const isPrevented =
+        beforeRemoveListeners[route.key]?.(beforeRemoveAction);
 
-    visitedRouteKeys.add(route.key);
+      if (isPrevented) {
+        return true;
+      }
 
-    const event = emitter.emit({
-      type: 'beforeRemove',
-      target: route.key,
-      data: { action: beforeRemoveAction },
-      canPreventDefault: true,
-    });
+      visitedRouteKeys.add(route.key);
 
-    if (event.defaultPrevented) {
-      return true;
+      const event = emitter.emit({
+        type: 'beforeRemove',
+        target: route.key,
+        data: { action: beforeRemoveAction },
+        canPreventDefault: true,
+      });
+
+      if (event.defaultPrevented) {
+        return true;
+      }
+    } else if (action.type === 'RESET' && nextRoute.state !== route.state) {
+      // A `RESET` can remove screens in nested navigators only, so propagate the check down when the route's nested state changed
+      const isPrevented = beforeRemoveListeners[route.key]?.(
+        beforeRemoveAction,
+        nextRoute.state
+      );
+
+      if (isPrevented) {
+        return true;
+      }
     }
   }
 
@@ -84,17 +105,22 @@ export function useOnPreventRemove({
 
   React.useInsertionEffect(() => {
     if (routeKey) {
-      return addKeyedListener?.('beforeRemove', routeKey, (action) => {
-        const state = getState();
+      return addKeyedListener?.(
+        'beforeRemove',
+        routeKey,
+        (action, nextState) => {
+          const state = getState();
 
-        return shouldPreventRemove(
-          emitter,
-          beforeRemoveListeners,
-          state.routes,
-          [],
-          action
-        );
-      });
+          // No next state means the route itself was removed, so all of its current routes count as removed
+          return shouldPreventRemove(
+            emitter,
+            beforeRemoveListeners,
+            state.routes,
+            nextState?.routes ?? [],
+            action
+          );
+        }
+      );
     }
   }, [addKeyedListener, beforeRemoveListeners, emitter, getState, routeKey]);
 }

@@ -2,6 +2,7 @@ import type {
   NavigationAction,
   NavigationState,
   ParamListBase,
+  PartialState,
 } from '@react-navigation/routers';
 import * as React from 'react';
 
@@ -46,7 +47,14 @@ export type FocusedNavigationListener = <T>(
 
 export type GetStateListener = () => NavigationState;
 
-export type ChildBeforeRemoveListener = (action: NavigationAction) => boolean;
+/**
+ * Called for any action that may remove the child's screens; `nextState` is passed
+ * only for a key-preserving `RESET`, and when undefined all routes count as removed.
+ */
+export type ChildBeforeRemoveListener = (
+  action: NavigationAction,
+  nextState?: NavigationState | PartialState<NavigationState>
+) => boolean;
 
 /**
  * Context which holds the required helpers needed to build nested navigators.
