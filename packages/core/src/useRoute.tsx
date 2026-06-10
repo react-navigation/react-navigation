@@ -35,12 +35,12 @@ type AllNestedRouteNames<ParamLists> =
  */
 export function useRoute<
   const ParamList extends {} = RootParamList,
-  const RouteName extends string = string,
->(
-  // `NoInfer` so `RouteName` is inferred from the name as a literal,
-  // instead of TS matching it against the union and inferring nothing
-  name: RouteName & NoInfer<AllRouteNames<ParamList>>
-): RouteForName<ParamList, RouteName>;
+  // The `& string` reduces the constraint to a plain union of names,
+  // so errors for invalid names list the valid names
+  // instead of showing the unresolved `AllRouteNames` type
+  const RouteName extends AllRouteNames<ParamList> & string =
+    AllRouteNames<ParamList> & string,
+>(name: RouteName): RouteForName<ParamList, RouteName>;
 export function useRoute<
   const ParamList extends {} = RootParamList,
 >(): {} extends ParamList
