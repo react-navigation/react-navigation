@@ -287,8 +287,6 @@ export class PrivateValueStore<T extends [any, any, any, any]> {
   protected ''?: T;
 }
 
-// Hoisted to a top-level alias so it's not re-instantiated
-// for every param list and route name `navigate` is called with
 type NavigateOptions = {
   merge?: boolean | undefined;
   pop?: boolean | undefined;
@@ -1015,26 +1013,29 @@ export type RouteForName<
   ParamList extends {},
   RouteName extends string,
 > = string extends RouteName
-  ? ParamListRoute<ParamList>
+  ? // RouteName is a not a literal but `string`
+    // Return union of all possible routes in the tree
+    ParamListRoute<ParamList>
   : RouteForNameInternal<ParamList, RouteName>;
 
-// Look up the route for a name by checking the keys at each level of the tree
-// and recursing into the param lists of nested navigators.
-// This avoids building a union of all routes in the tree and scanning it for
-// every name, which doesn't scale on large trees with many lookups.
+// Look up route object by checking each level and recursing into the nested param lists
+// This avoids building a union of all routes, which doesn't scale on large trees
 type RouteForNameInternal<ParamList extends {}, RouteName extends string> =
   | (RouteName extends infer Name extends KeyOf<ParamList>
       ? RouteProp<ParamList, Name>
       : never)
   | RouteForNameNested<NestedParamLists<ParamList>, RouteName>;
 
-// Distributes over the union of nested param lists
-type RouteForNameNested<
-  ParamLists,
-  RouteName extends string,
-> = ParamLists extends infer ParamList extends {}
-  ? RouteForNameInternal<ParamList, RouteName>
-  : never;
+type RouteForNameNested<ParamLists, RouteName extends string> =
+  // Distributes over the union of nested param lists
+  // e.g. if ParamLists is A | B
+  // TypeScript evaluates the branch once per member (A, then B)
+  // and unions the outcomes
+  // The infer ParamList extends {} just captures the current member
+  // and re-asserts the {} constraint that RouteForNameInternal requires
+  ParamLists extends infer ParamList extends {}
+    ? RouteForNameInternal<ParamList, RouteName>
+    : never;
 
 /**
  * Union of param lists of the nested navigators in a param list.

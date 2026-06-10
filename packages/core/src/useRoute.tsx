@@ -22,8 +22,8 @@ type AllRouteNames<ParamList extends {}> =
   | KeyOf<ParamList>
   | AllNestedRouteNames<NestedParamLists<ParamList>>;
 
-// Distributes over the union of nested param lists
 type AllNestedRouteNames<ParamLists> =
+  // Distributes over the union of nested param lists
   ParamLists extends infer ParamList extends {}
     ? AllRouteNames<ParamList>
     : never;
@@ -37,7 +37,6 @@ export function useRoute<
   const ParamList extends {} = RootParamList,
   // The `& string` reduces the constraint to a plain union of names,
   // so errors for invalid names list the valid names
-  // instead of showing the unresolved `AllRouteNames` type
   const RouteName extends AllRouteNames<ParamList> & string =
     AllRouteNames<ParamList> & string,
 >(name: RouteName): RouteForName<ParamList, RouteName>;

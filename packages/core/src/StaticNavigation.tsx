@@ -140,7 +140,6 @@ type ParamListForGroups<
   ? ParamListForScreens<UnionToIntersection<Screens>>
   : {};
 
-// Hoisted to a top-level alias so it's not re-instantiated for every screen
 type RouteTypeBase = {
   key: string;
   name: string;
