@@ -5,15 +5,28 @@ import {
   NamedRouteContextListContext,
   NavigationRouteContext,
 } from './NavigationProvider';
-import type { RootParamList, RouteForName, RouteProp } from './types';
+import type {
+  NestedParamLists,
+  RootParamList,
+  RouteForName,
+  RouteProp,
+} from './types';
+import type { KeyOf } from './utilities';
 
 /**
  * Get all possible route names from a param list and its nested navigators.
+ * Recurses into the param lists directly instead of using `RouteForName`,
+ * So the route objects don't need to be built just to get the names.
  */
-type AllRouteNames<ParamList extends {}> = RouteForName<
-  ParamList,
-  string
->['name'];
+type AllRouteNames<ParamList extends {}> =
+  | KeyOf<ParamList>
+  | AllNestedRouteNames<NestedParamLists<ParamList>>;
+
+// Distributes over the union of nested param lists
+type AllNestedRouteNames<ParamLists> =
+  ParamLists extends infer ParamList extends {}
+    ? AllRouteNames<ParamList>
+    : never;
 
 /**
  * Hook to access the route prop of the parent screen anywhere.
@@ -24,7 +37,9 @@ export function useRoute<
   const ParamList extends {} = RootParamList,
   const RouteName extends string = string,
 >(
-  name: RouteName & AllRouteNames<ParamList>
+  // `NoInfer` so `RouteName` is inferred from the name as a literal,
+  // instead of TS matching it against the union and inferring nothing
+  name: RouteName & NoInfer<AllRouteNames<ParamList>>
 ): RouteForName<ParamList, RouteName>;
 export function useRoute<
   const ParamList extends {} = RootParamList,

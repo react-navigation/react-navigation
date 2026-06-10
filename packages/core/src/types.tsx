@@ -1039,7 +1039,7 @@ type RouteForNameNested<
 /**
  * Union of param lists of the nested navigators in a param list.
  */
-type NestedParamLists<ParamList extends {}> = {
+export type NestedParamLists<ParamList extends {}> = {
   [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
     ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<infer T>
       ? T
