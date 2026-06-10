@@ -140,25 +140,29 @@ type ParamListForGroups<
   ? ParamListForScreens<UnionToIntersection<Screens>>
   : {};
 
+// Hoisted to a top-level alias so it's not re-instantiated for every screen
+type RouteTypeBase = {
+  key: string;
+  name: string;
+  path?: string | undefined;
+  history?: { type: 'params'; params: object }[] | undefined;
+};
+
 type RouteType<Params, P = AnyToUnknown<Params>> = Readonly<
-  {
-    key: string;
-    name: string;
-    path?: string | undefined;
-    history?: { type: 'params'; params: object }[] | undefined;
-  } & (undefined extends Params
-    ? {
-        /**
-         * Params for this route
-         */
-        params?: P;
-      }
-    : {
-        /**
-         * Params for this route
-         */
-        params: P;
-      })
+  RouteTypeBase &
+    (undefined extends Params
+      ? {
+          /**
+           * Params for this route
+           */
+          params?: P;
+        }
+      : {
+          /**
+           * Params for this route
+           */
+          params: P;
+        })
 >;
 
 type StaticScreenConfigLinkingAlias = {

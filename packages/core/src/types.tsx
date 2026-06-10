@@ -287,6 +287,13 @@ export class PrivateValueStore<T extends [any, any, any, any]> {
   protected ''?: T;
 }
 
+// Hoisted to a top-level alias so it's not re-instantiated
+// for every param list and route name `navigate` is called with
+type NavigateOptions = {
+  merge?: boolean | undefined;
+  pop?: boolean | undefined;
+};
+
 type NavigationHelpersCommon<
   ParamList extends ParamListBase,
   State extends NavigationState = NavigationState,
@@ -321,18 +328,12 @@ type NavigationHelpersCommon<
         ? [
             screen: RouteName,
             params?: ParamList[RouteName],
-            options?: {
-              merge?: boolean | undefined;
-              pop?: boolean | undefined;
-            },
+            options?: NavigateOptions,
           ]
         : [
             screen: RouteName,
             params: ParamList[RouteName],
-            options?: {
-              merge?: boolean | undefined;
-              pop?: boolean | undefined;
-            },
+            options?: NavigateOptions,
           ]
       : never
   ): void;
@@ -1013,12 +1014,38 @@ export type GenericNavigation<ParamList extends {}> = Omit<
 export type RouteForName<
   ParamList extends {},
   RouteName extends string,
-> = RouteForNameInternal<RouteName, ParamListRoute<ParamList>>;
+> = string extends RouteName
+  ? ParamListRoute<ParamList>
+  : RouteForNameInternal<ParamList, RouteName>;
 
-type RouteForNameInternal<
+// Look up the route for a name by checking the keys at each level of the tree
+// and recursing into the param lists of nested navigators.
+// This avoids building a union of all routes in the tree and scanning it for
+// every name, which doesn't scale on large trees with many lookups.
+type RouteForNameInternal<ParamList extends {}, RouteName extends string> =
+  | (RouteName extends infer Name extends KeyOf<ParamList>
+      ? RouteProp<ParamList, Name>
+      : never)
+  | RouteForNameNested<NestedParamLists<ParamList>, RouteName>;
+
+// Distributes over the union of nested param lists
+type RouteForNameNested<
+  ParamLists,
   RouteName extends string,
-  Routes,
-> = string extends RouteName ? Routes : Extract<Routes, { name: RouteName }>;
+> = ParamLists extends infer ParamList extends {}
+  ? RouteForNameInternal<ParamList, RouteName>
+  : never;
+
+/**
+ * Union of param lists of the nested navigators in a param list.
+ */
+type NestedParamLists<ParamList extends {}> = {
+  [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
+    ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<infer T>
+      ? T
+      : never
+    : never;
+}[keyof ParamList];
 
 type ParamListRoute<ParamList extends {}> = {
   [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
