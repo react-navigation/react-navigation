@@ -893,6 +893,21 @@ useLinkProps({
   Home
 </Button>;
 
+type LinkFeedStackParamList = {
+  ArticleList: undefined;
+  ArticleDetails: { id: string };
+};
+
+type LinkHomeTabParamList = {
+  Feed: NavigatorScreenParams<LinkFeedStackParamList> | undefined;
+  Profile: { id: string };
+};
+
+type LinkRootParamList = {
+  Home: NavigatorScreenParams<LinkHomeTabParamList>;
+  Settings: undefined;
+};
+
 declare const action: NavigationAction;
 
 /* Union, optional, and empty params */
@@ -1027,7 +1042,154 @@ useLinkProps<LinkUnionParamsParamList>({
   Search
 </Button>;
 
+/* Nested targets */
+useLinkProps<LinkRootParamList>({
+  in: 'Home',
+  screen: 'Settings',
+});
+useLinkProps<LinkRootParamList>({
+  in: 'Feed',
+  screen: 'Profile',
+  params: { id: '42' },
+});
+useLinkProps<LinkRootParamList>({
+  in: 'ArticleList',
+  screen: 'ArticleDetails',
+  params: { id: '42' },
+  action: action,
+  href: '/article/42',
+});
+
+// @ts-expect-error
+useLinkProps<LinkRootParamList>({ in: 'Missing', screen: 'Settings' });
+// @ts-expect-error
+useLinkProps<LinkRootParamList>({ in: 'Home', screen: 'Missing' });
+// @ts-expect-error
+useLinkProps<LinkRootParamList>({ in: 'Feed', screen: 'ArticleDetails' });
+// @ts-expect-error
+useLinkProps<LinkRootParamList>({ in: 'ArticleList', screen: 'Settings' });
+// @ts-expect-error
+useLinkProps<LinkRootParamList>({
+  in: 'ArticleList',
+  screen: 'ArticleDetails',
+});
+useLinkProps<LinkRootParamList>({
+  in: 'ArticleList',
+  screen: 'ArticleDetails',
+  // @ts-expect-error
+  params: { id: 42 },
+});
+// @ts-expect-error
+useLinkProps<LinkRootParamList>({
+  in: 'ArticleList',
+  action: action,
+});
+// @ts-expect-error
+useLinkProps<LinkRootParamList>({ in: 'ArticleList' });
+
+<Link<LinkRootParamList> in="Home" screen="Settings">
+  Settings
+</Link>;
+<Link<LinkRootParamList> in="Feed" screen="Profile" params={{ id: '42' }}>
+  Profile
+</Link>;
+<Link<LinkRootParamList>
+  in="ArticleList"
+  screen="ArticleDetails"
+  params={{ id: '42' }}
+  action={action}
+  href="/article/42"
+>
+  Article
+</Link>;
+
+// @ts-expect-error
+<Link<LinkRootParamList> in="Missing" screen="Settings">
+  Settings
+</Link>;
+// @ts-expect-error
+<Link<LinkRootParamList> in="Home" screen="Missing">
+  Missing
+</Link>;
+// @ts-expect-error
+<Link<LinkRootParamList> in="Feed" screen="ArticleDetails">
+  Article
+</Link>;
+// @ts-expect-error
+<Link<LinkRootParamList> in="ArticleList" screen="ArticleDetails">
+  Article
+</Link>;
+<Link<LinkRootParamList>
+  in="ArticleList"
+  screen="ArticleDetails"
+  // @ts-expect-error
+  params={{ id: 42 }}
+>
+  Article
+</Link>;
+// @ts-expect-error
+<Link<LinkRootParamList> in="ArticleList" action={action}>
+  Article
+</Link>;
+// @ts-expect-error
+<Link<LinkRootParamList> in="ArticleList">Article</Link>;
+
+<Button<LinkRootParamList> in="Home" screen="Settings">
+  Settings
+</Button>;
+<Button<LinkRootParamList> in="Feed" screen="Profile" params={{ id: '42' }}>
+  Profile
+</Button>;
+<Button<LinkRootParamList>
+  in="ArticleList"
+  screen="ArticleDetails"
+  params={{ id: '42' }}
+  action={action}
+  href="/article/42"
+>
+  Article
+</Button>;
+
+// @ts-expect-error
+<Button<LinkRootParamList> in="Missing" screen="Settings">
+  Settings
+</Button>;
+// @ts-expect-error
+<Button<LinkRootParamList> in="Home" screen="Missing">
+  Missing
+</Button>;
+// @ts-expect-error
+<Button<LinkRootParamList> in="Feed" screen="ArticleDetails">
+  Article
+</Button>;
+// @ts-expect-error
+<Button<LinkRootParamList> in="ArticleList" screen="ArticleDetails">
+  Article
+</Button>;
+<Button<LinkRootParamList>
+  in="ArticleList"
+  screen="ArticleDetails"
+  // @ts-expect-error
+  params={{ id: 42 }}
+>
+  Article
+</Button>;
+// @ts-expect-error
+<Button<LinkRootParamList> in="ArticleList" action={action}>
+  Article
+</Button>;
+// @ts-expect-error
+<Button<LinkRootParamList> in="ArticleList">Article</Button>;
+
 /* Generic param lists and route names */
+useLinkProps<ParamListBase>({ in: 'Parent', screen: 'Target' });
+<Link<ParamListBase> in="Parent" screen="Target">
+  Target
+</Link>;
+<Button<ParamListBase> in="Parent" screen="Target">
+  Target
+</Button>;
+
 type LinkMixedKeyParamList = {
   Screen: undefined;
   0: undefined;
@@ -1049,12 +1211,8 @@ useLinkProps<LinkUnionParamsParamList, 'Search'>({
   screen: 'Search',
   params: { query: '42' },
 });
-useLinkProps<LinkUnionParamsParamList, 'Search'>({
-  // @ts-expect-error RouteName is restricted to Search.
-  screen: 'Filters',
-  // @ts-expect-error Params must match Search.
-  params: { sort: 'asc' },
-});
+// @ts-expect-error
+useLinkProps<LinkUnionParamsParamList, 'Search'>({ screen: 'Filters' });
 
 <Link<LinkUnionParamsParamList, 'Search'>
   screen="Search"
@@ -1062,14 +1220,8 @@ useLinkProps<LinkUnionParamsParamList, 'Search'>({
 >
   Search
 </Link>;
-<Link<LinkUnionParamsParamList, 'Search'>
-  // @ts-expect-error RouteName is restricted to Search.
-  screen="Filters"
-  // @ts-expect-error Params must match Search.
-  params={{ sort: 'asc' }}
->
-  Filters
-</Link>;
+// @ts-expect-error
+<Link<LinkUnionParamsParamList, 'Search'> screen="Filters">Filters</Link>;
 
 <Button<LinkUnionParamsParamList, 'Search'>
   screen="Search"
@@ -1077,14 +1229,8 @@ useLinkProps<LinkUnionParamsParamList, 'Search'>({
 >
   Search
 </Button>;
-<Button<LinkUnionParamsParamList, 'Search'>
-  // @ts-expect-error RouteName is restricted to Search.
-  screen="Filters"
-  // @ts-expect-error Params must match Search.
-  params={{ sort: 'asc' }}
->
-  Filters
-</Button>;
+// @ts-expect-error
+<Button<LinkUnionParamsParamList, 'Search'> screen="Filters">Filters</Button>;
 
 /**
  * Check for ParamsForRoute

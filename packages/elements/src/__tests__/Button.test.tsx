@@ -122,6 +122,30 @@ const App = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
+test('renders an href and navigates within the navigator specified by in', async () => {
+  const user = userEvent.setup();
+
+  await render(
+    <App>
+      <Button<RootStackParamList>
+        in="ArticleList"
+        screen="ArticleDetails"
+        params={{ id: '42' }}
+      >
+        Article
+      </Button>
+    </App>
+  );
+
+  const button = screen.getByRole('link', { name: 'Article' });
+
+  expect(button).toHaveProp('href', '/home/articles/42');
+
+  await user.press(button);
+
+  expect(await screen.findByText('Article Details Screen')).toBeOnTheScreen();
+});
+
 test('calls onPress for a plain button', async () => {
   const user = userEvent.setup();
   const onPress = jest.fn();
@@ -162,8 +186,10 @@ test('does not call onPress or navigate when disabled', async () => {
 
   await render(
     <App>
-      <Button
-        action={StackActions.push('ArticleDetails', { id: '42' })}
+      <Button<RootStackParamList>
+        in="ArticleList"
+        screen="ArticleDetails"
+        params={{ id: '42' }}
         disabled
         onPress={onPress}
       >

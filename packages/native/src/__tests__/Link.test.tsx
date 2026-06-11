@@ -796,6 +796,322 @@ test('navigates through multiple nested screens again with the same params objec
   expect(navigation.getCurrentRoute()?.name).toBe('LeafSecond');
 });
 
+test('renders hrefs with in for current, parent, and root navigators', async () => {
+  type FeedStackParamList = {
+    ArticleList: undefined;
+    ArticleDetails: { id: string };
+  };
+
+  type HomeTabParamList = {
+    Feed: NavigatorScreenParams<FeedStackParamList>;
+    Profile: { id: string };
+  };
+
+  type RootStackParamList = {
+    Home: NavigatorScreenParams<HomeTabParamList>;
+    Settings: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootStackParamList>();
+  const HomeTabs = createStackNavigator<HomeTabParamList>();
+  const FeedStack = createStackNavigator<FeedStackParamList>();
+
+  const config = {
+    config: {
+      screens: {
+        Home: {
+          path: 'home',
+          screens: {
+            Feed: {
+              path: 'feed',
+              screens: {
+                ArticleList: 'articles',
+                ArticleDetails: 'articles/:id',
+              },
+            },
+            Profile: 'profile/:id',
+          },
+        },
+        Settings: 'settings',
+      },
+    },
+    getInitialURL() {
+      return null;
+    },
+  };
+
+  const ArticleListScreen = () => {
+    return (
+      <>
+        <Link<RootStackParamList>
+          in="ArticleList"
+          screen="ArticleDetails"
+          params={{ id: '1' }}
+        >
+          Article
+        </Link>
+        <Link<RootStackParamList>
+          in="Feed"
+          screen="Profile"
+          params={{ id: '2' }}
+        >
+          Profile
+        </Link>
+        <Link<RootStackParamList> in="Home" screen="Settings">
+          Settings
+        </Link>
+        <Link<RootStackParamList> screen="Settings">Root Settings</Link>
+      </>
+    );
+  };
+
+  const FeedScreen = () => {
+    return (
+      <FeedStack.Navigator>
+        <FeedStack.Screen name="ArticleList" component={ArticleListScreen} />
+        <FeedStack.Screen name="ArticleDetails">
+          {() => <>Article Details</>}
+        </FeedStack.Screen>
+      </FeedStack.Navigator>
+    );
+  };
+
+  const HomeScreen = () => {
+    return (
+      <HomeTabs.Navigator>
+        <HomeTabs.Screen name="Feed" component={FeedScreen} />
+        <HomeTabs.Screen name="Profile">{() => <>Profile</>}</HomeTabs.Screen>
+      </HomeTabs.Navigator>
+    );
+  };
+
+  await render(
+    <NavigationContainer linking={config}>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Home" component={HomeScreen} />
+        <RootStack.Screen name="Settings">
+          {() => <Text>Settings Screen</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(screen.getByRole('link', { name: 'Article' })).toHaveProp(
+    'href',
+    '/home/feed/articles/1'
+  );
+  expect(screen.getByRole('link', { name: 'Profile' })).toHaveProp(
+    'href',
+    '/home/profile/2'
+  );
+  expect(screen.getByRole('link', { name: 'Settings' })).toHaveProp(
+    'href',
+    '/settings'
+  );
+  expect(screen.getByRole('link', { name: 'Root Settings' })).toHaveProp(
+    'href',
+    '/settings'
+  );
+});
+
+test('updates href when focused route params change', async () => {
+  const user = userEvent.setup();
+
+  type HomeTabParamList = {
+    Feed: undefined;
+    Profile: undefined;
+  };
+
+  type RootStackParamList = {
+    Home: NavigatorScreenParams<HomeTabParamList> & { section: string };
+  };
+
+  const RootStack = createStackNavigator<RootStackParamList>();
+  const HomeTabs = createStackNavigator<HomeTabParamList>();
+
+  await render(
+    <NavigationContainer<RootStackParamList>
+      linking={{
+        config: {
+          screens: {
+            Home: {
+              path: 'home/:section',
+              screens: {
+                Feed: 'feed',
+                Profile: 'profile',
+              },
+            },
+          },
+        },
+        getInitialURL() {
+          return null;
+        },
+      }}
+    >
+      <RootStack.Navigator>
+        <RootStack.Screen
+          name="Home"
+          initialParams={{ section: 'one', screen: 'Feed' }}
+        >
+          {({ navigation }) => (
+            <HomeTabs.Navigator>
+              <HomeTabs.Screen name="Feed">
+                {() => (
+                  <>
+                    <Link<RootStackParamList> in="Feed" screen="Profile">
+                      Go to Profile
+                    </Link>
+                    <Text
+                      role="button"
+                      onPress={() => navigation.setParams({ section: 'two' })}
+                    >
+                      Change section
+                    </Text>
+                  </>
+                )}
+              </HomeTabs.Screen>
+              <HomeTabs.Screen name="Profile">{() => null}</HomeTabs.Screen>
+            </HomeTabs.Navigator>
+          )}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  const link = screen.getByRole('link', { name: 'Go to Profile' });
+
+  expect(link).toHaveProp('href', '/home/one/profile');
+
+  await user.press(screen.getByRole('button', { name: 'Change section' }));
+
+  expect(link).toHaveProp('href', '/home/two/profile');
+});
+
+test('navigates with in for a root navigator', async () => {
+  const user = userEvent.setup();
+
+  type RootStackParamList = {
+    Home: undefined;
+    Settings: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootStackParamList>();
+
+  const HomeScreen = () => {
+    return (
+      <Link<RootStackParamList> in="Home" screen="Settings">
+        Settings
+      </Link>
+    );
+  };
+
+  await render(
+    <NavigationContainer>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Home" component={HomeScreen} />
+        <RootStack.Screen name="Settings">
+          {() => <Text>Settings Screen</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  await user.press(screen.getByRole('link', { name: 'Settings' }));
+
+  expect(await screen.findByText('Settings Screen')).toBeOnTheScreen();
+});
+
+test('navigates with in for an intermediate navigator', async () => {
+  const user = userEvent.setup();
+
+  type HomeTabParamList = {
+    Feed: undefined;
+    Profile: { id: string };
+  };
+
+  type RootStackParamList = {
+    Home: NavigatorScreenParams<HomeTabParamList>;
+  };
+
+  const RootStack = createStackNavigator<RootStackParamList>();
+  const HomeTabs = createStackNavigator<HomeTabParamList>();
+
+  const FeedScreen = () => (
+    <Link<RootStackParamList> in="Feed" screen="Profile" params={{ id: '42' }}>
+      Go to Profile
+    </Link>
+  );
+
+  const HomeScreen = () => (
+    <HomeTabs.Navigator>
+      <HomeTabs.Screen name="Feed" component={FeedScreen} />
+      <HomeTabs.Screen name="Profile">
+        {() => <Text>Profile Screen</Text>}
+      </HomeTabs.Screen>
+    </HomeTabs.Navigator>
+  );
+
+  await render(
+    <NavigationContainer>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Home" component={HomeScreen} />
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  await user.press(screen.getByRole('link', { name: 'Go to Profile' }));
+
+  expect(await screen.findByText('Profile Screen')).toBeOnTheScreen();
+});
+
+test('navigates to root when in is not specified', async () => {
+  const user = userEvent.setup();
+
+  type ArticleStackParamList = {
+    Article: undefined;
+    Settings: undefined;
+  };
+
+  type RootStackParamList = {
+    Articles: NavigatorScreenParams<ArticleStackParamList>;
+    Settings: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootStackParamList>();
+  const ArticleStack = createStackNavigator<ArticleStackParamList>();
+
+  const ArticleScreen = () => {
+    return <Link<RootStackParamList> screen="Settings">Settings</Link>;
+  };
+
+  const ArticlesScreen = () => {
+    return (
+      <ArticleStack.Navigator>
+        <ArticleStack.Screen name="Article" component={ArticleScreen} />
+        <ArticleStack.Screen name="Settings">
+          {() => <Text>Nested Settings Screen</Text>}
+        </ArticleStack.Screen>
+      </ArticleStack.Navigator>
+    );
+  };
+
+  await render(
+    <NavigationContainer>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Articles" component={ArticlesScreen} />
+        <RootStack.Screen name="Settings">
+          {() => <Text>Settings Screen</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  await user.press(screen.getByRole('link', { name: 'Settings' }));
+
+  expect(await screen.findByText('Settings Screen')).toBeOnTheScreen();
+  expect(screen.queryByText('Nested Settings Screen')).not.toBeOnTheScreen();
+});
+
 test('uses the container ref when rendered outside a navigator', async () => {
   const user = userEvent.setup();
 
@@ -822,6 +1138,58 @@ test('uses the container ref when rendered outside a navigator', async () => {
   await user.press(screen.getByRole('link', { name: 'Go to Bar' }));
 
   expect(await screen.findByText('Bar Screen')).toBeOnTheScreen();
+});
+
+test('dispatches custom actions on current navigation when in is not specified', async () => {
+  const user = userEvent.setup();
+
+  type ArticleStackParamList = {
+    Article: undefined;
+    Settings: undefined;
+  };
+
+  type RootStackParamList = {
+    Articles: NavigatorScreenParams<ArticleStackParamList>;
+    Settings: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootStackParamList>();
+  const ArticleStack = createStackNavigator<ArticleStackParamList>();
+
+  const ArticleScreen = () => {
+    return (
+      <Link<RootStackParamList> action={StackActions.replace('Settings')}>
+        Settings
+      </Link>
+    );
+  };
+
+  const ArticlesScreen = () => {
+    return (
+      <ArticleStack.Navigator>
+        <ArticleStack.Screen name="Article" component={ArticleScreen} />
+        <ArticleStack.Screen name="Settings">
+          {() => <Text>Nested Settings Screen</Text>}
+        </ArticleStack.Screen>
+      </ArticleStack.Navigator>
+    );
+  };
+
+  await render(
+    <NavigationContainer>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Articles" component={ArticlesScreen} />
+        <RootStack.Screen name="Settings">
+          {() => <Text>Root Settings Screen</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  await user.press(screen.getByRole('link', { name: 'Settings' }));
+
+  expect(await screen.findByText('Nested Settings Screen')).toBeOnTheScreen();
+  expect(screen.queryByText('Root Settings Screen')).not.toBeOnTheScreen();
 });
 
 test('dispatches custom actions on the nearest navigator from outside screens', async () => {
@@ -877,10 +1245,185 @@ test('dispatches custom actions on the nearest navigator from outside screens', 
   expect(screen.queryByText('Root Settings Screen')).not.toBeOnTheScreen();
 });
 
+test('uses in to dispatch an action when screen is specified', async () => {
+  const user = userEvent.setup();
+
+  type ArticleStackParamList = {
+    Article: undefined;
+  };
+
+  type RootStackParamList = {
+    Articles: NavigatorScreenParams<ArticleStackParamList>;
+    Settings: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootStackParamList>();
+  const ArticleStack = createStackNavigator<ArticleStackParamList>();
+
+  const ArticlesScreen = () => (
+    <ArticleStack.Navigator>
+      <ArticleStack.Screen name="Article">
+        {() => (
+          <Link<RootStackParamList>
+            in="Articles"
+            screen="Settings"
+            action={StackActions.replace('Settings')}
+          >
+            Settings
+          </Link>
+        )}
+      </ArticleStack.Screen>
+    </ArticleStack.Navigator>
+  );
+
+  await render(
+    <NavigationContainer<RootStackParamList>
+      linking={{
+        config: {
+          screens: {
+            Articles: {
+              path: 'articles',
+              screens: {
+                Article: 'article',
+              },
+            },
+            Settings: 'settings',
+          },
+        },
+      }}
+    >
+      <RootStack.Navigator>
+        <RootStack.Screen name="Articles" component={ArticlesScreen} />
+        <RootStack.Screen name="Settings">
+          {() => <Text>Root Settings Screen</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  const link = screen.getByRole('link', { name: 'Settings' });
+
+  expect(link).toHaveProp('href', '/settings');
+
+  await user.press(link);
+
+  expect(await screen.findByText('Root Settings Screen')).toBeOnTheScreen();
+});
+
+test('throws while rendering when in does not match current or parent screens', async () => {
+  type RootStackParamList = {
+    Home: undefined;
+    Settings: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootStackParamList>();
+
+  const HomeScreen = () => {
+    return (
+      <Link<RootStackParamList>
+        // @ts-expect-error Testing runtime error for invalid parent screen.
+        in="Missing"
+        screen="Settings"
+      >
+        Settings
+      </Link>
+    );
+  };
+
+  await expect(
+    render(
+      <NavigationContainer>
+        <RootStack.Navigator>
+          <RootStack.Screen name="Home" component={HomeScreen} />
+          <RootStack.Screen name="Settings">
+            {() => <Text>Settings Screen</Text>}
+          </RootStack.Screen>
+        </RootStack.Navigator>
+      </NavigationContainer>
+    )
+  ).rejects.toThrow(
+    "Couldn't find a navigation object for 'Missing' in current or any parent screens. Is your component inside the correct screen?"
+  );
+});
+
 test('throws while rendering outside a navigation container', async () => {
   await expect(
     render(<Link<RootParamList> screen="Foo">Foo</Link>)
   ).rejects.toThrow(
     "Couldn't find a navigation object. Is your component inside NavigationContainer?"
   );
+});
+
+test('resolves in to the closest matching screen for href and navigation', async () => {
+  const user = userEvent.setup();
+
+  type NestedStackParamList = {
+    Home: undefined;
+    Details: { id: string };
+  };
+
+  type RootStackParamList = {
+    Home: NavigatorScreenParams<NestedStackParamList>;
+    Details: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootStackParamList>();
+  const NestedStack = createStackNavigator<NestedStackParamList>();
+
+  const config = {
+    config: {
+      screens: {
+        Home: {
+          path: 'home',
+          screens: {
+            Home: '',
+            Details: 'details/:id',
+          },
+        },
+        Details: 'details',
+      },
+    },
+    getInitialURL() {
+      return null;
+    },
+  };
+
+  const NestedHomeScreen = () => {
+    return (
+      <Link<RootStackParamList> in="Home" screen="Details" params={{ id: '1' }}>
+        Go to Details
+      </Link>
+    );
+  };
+
+  const HomeScreen = () => {
+    return (
+      <NestedStack.Navigator>
+        <NestedStack.Screen name="Home" component={NestedHomeScreen} />
+        <NestedStack.Screen name="Details">
+          {() => <Text>Nested Details Screen</Text>}
+        </NestedStack.Screen>
+      </NestedStack.Navigator>
+    );
+  };
+
+  await render(
+    <NavigationContainer linking={config}>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Home" component={HomeScreen} />
+        <RootStack.Screen name="Details">
+          {() => <Text>Root Details Screen</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  const link = screen.getByRole('link', { name: 'Go to Details' });
+
+  expect(link).toHaveProp('href', '/home/details/1');
+
+  await user.press(link);
+
+  expect(await screen.findByText('Nested Details Screen')).toBeOnTheScreen();
+  expect(screen.queryByText('Root Details Screen')).not.toBeOnTheScreen();
 });
