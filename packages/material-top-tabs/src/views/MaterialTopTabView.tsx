@@ -63,7 +63,7 @@ export function MaterialTopTabView({
         const route = state.routes[index];
 
         navigation.dispatch({
-          ...CommonActions.navigate(route),
+          ...CommonActions.navigate(route.name, route.params),
           target: state.key,
         });
       }}

@@ -5,6 +5,7 @@ import {
   type NavigationState,
   type ParamListBase,
   type Router,
+  StackRouter,
 } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
@@ -1069,6 +1070,157 @@ test('navigates to nested child in a navigator', () => {
 
   expect(element).toMatchInlineSnapshot(
     `"[bar-a, {"lol":"why","whoa":"test"}]"`
+  );
+});
+
+test('passes path to nested child navigation from route params', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar">
+          {() => (
+            <TestNavigator>
+              <Screen name="bar-a" component={TestScreen} />
+              <Screen name="bar-b" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  act(() =>
+    navigation.navigate('bar', {
+      screen: 'bar-b',
+      path: '/bar/b',
+      initial: false,
+    })
+  );
+
+  expect(navigation.getRootState()).toEqual(
+    expect.objectContaining({
+      index: 1,
+      routes: [
+        expect.objectContaining({ name: 'foo' }),
+        expect.objectContaining({
+          name: 'bar',
+          state: expect.objectContaining({
+            index: 1,
+            routes: [
+              expect.objectContaining({ name: 'bar-a' }),
+              expect.objectContaining({
+                name: 'bar-b',
+                path: '/bar/b',
+              }),
+            ],
+          }),
+        }),
+      ],
+    })
+  );
+});
+
+test('passes merge and pop to nested child navigation from route params', () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Screen name="bar">
+          {() => (
+            <TestNavigator>
+              <Screen
+                name="bar-a"
+                component={TestScreen}
+                initialParams={{ color: 'tomato' }}
+              />
+              <Screen name="bar-b" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  act(() =>
+    navigation.navigate('bar', {
+      screen: 'bar-b',
+      params: { step: 1 },
+      initial: false,
+    })
+  );
+
+  act(() =>
+    navigation.navigate('bar', {
+      screen: 'bar-a',
+      params: { answer: 42 },
+      initial: false,
+      merge: true,
+      pop: true,
+    })
+  );
+
+  expect(navigation.getRootState()).toEqual(
+    expect.objectContaining({
+      index: 1,
+      routes: [
+        expect.objectContaining({ name: 'foo' }),
+        expect.objectContaining({
+          name: 'bar',
+          state: expect.objectContaining({
+            index: 0,
+            routes: [
+              expect.objectContaining({
+                name: 'bar-a',
+                params: { answer: 42, color: 'tomato' },
+              }),
+            ],
+          }),
+        }),
+      ],
+    })
   );
 });
 

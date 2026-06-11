@@ -1877,10 +1877,13 @@ test('adds path on navigate if provided', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        path: '/foo/bar',
-      }),
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'bar',
+          path: '/foo/bar',
+        },
+      },
       options
     )
   ).toEqual({
@@ -1921,11 +1924,14 @@ test('adds path on navigate if provided', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { fruit: 'orange' },
-        path: '/foo/baz',
-      }),
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'bar',
+          params: { fruit: 'orange' },
+          path: '/foo/baz',
+        },
+      },
       options
     )
   ).toEqual({
@@ -1976,7 +1982,7 @@ test("doesn't remove existing path on navigate if not provided", () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      CommonActions.navigate({ name: 'bar' }),
+      CommonActions.navigate('bar'),
       options
     )
   ).toEqual({
@@ -2144,8 +2150,7 @@ test('merges params on navigate to an existing screen if merge: true', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      CommonActions.navigate({
-        name: 'bar',
+      CommonActions.navigate('bar', undefined, {
         merge: true,
       }),
       options
@@ -2184,11 +2189,13 @@ test('merges params on navigate to an existing screen if merge: true', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { fruit: 'orange' },
-        merge: true,
-      }),
+      CommonActions.navigate(
+        'bar',
+        { fruit: 'orange' },
+        {
+          merge: true,
+        }
+      ),
       options
     )
   ).toEqual({

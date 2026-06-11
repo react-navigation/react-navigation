@@ -90,6 +90,9 @@ export function navigate(
   }
 ): Action;
 
+/**
+ * @deprecated Use `navigate(name, params, options)` instead.
+ */
 export function navigate(options: {
   name: string;
   params?: object;
@@ -125,6 +128,10 @@ export function navigate(...args: any): Action {
         'You need to specify a name when calling navigate with an object as the argument. See https://reactnavigation.org/docs/navigation-actions#navigate for usage.'
       );
     }
+
+    console.warn(
+      `Passing an object as the argument to 'navigate' is deprecated. Use 'navigate(name, params, options)' instead.`
+    );
 
     return { type: 'NAVIGATE', payload };
   }

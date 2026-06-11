@@ -647,11 +647,7 @@ test('goes back to matching screen for navigate if pop: true', () => {
           { key: 'bar', name: 'bar' },
         ],
       },
-      CommonActions.navigate({
-        name: 'qux',
-        params: { answer: 42 },
-        pop: true,
-      }),
+      CommonActions.navigate('qux', { answer: 42 }, { pop: true }),
       options
     )
   ).toEqual({
@@ -686,11 +682,7 @@ test('goes back to matching screen for navigate if pop: true', () => {
           { key: 'bar', name: 'bar' },
         ],
       },
-      CommonActions.navigate({
-        name: 'baz',
-        params: { answer: 42 },
-        pop: true,
-      }),
+      CommonActions.navigate('baz', { answer: 42 }, { pop: true }),
       options
     )
   ).toEqual({
@@ -717,11 +709,7 @@ test('goes back to matching screen for navigate if pop: true', () => {
           { key: 'bar', name: 'bar', params: { answer: 42 } },
         ],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { answer: 96 },
-        pop: true,
-      }),
+      CommonActions.navigate('bar', { answer: 96 }, { pop: true }),
       options
     )
   ).toEqual({
@@ -763,11 +751,7 @@ test('goes back to matching ID for navigate if pop: true', () => {
           { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
         ],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { foo: 'a' },
-        pop: true,
-      }),
+      CommonActions.navigate('bar', { foo: 'a' }, { pop: true }),
       options
     )
   ).toEqual({
@@ -799,11 +783,7 @@ test('goes back to matching ID for navigate if pop: true', () => {
           { key: 'bar-c', name: 'bar', params: { foo: 'c' } },
         ],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { foo: 'b' },
-        pop: true,
-      }),
+      CommonActions.navigate('bar', { foo: 'b' }, { pop: true }),
       options
     )
   ).toEqual({
@@ -1911,10 +1891,13 @@ test('adds path on navigate if provided', () => {
         ],
       },
 
-      CommonActions.navigate({
-        name: 'bar',
-        path: '/foo/bar',
-      }),
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'bar',
+          path: '/foo/bar',
+        },
+      },
       options
     )
   ).toEqual({
@@ -1944,11 +1927,14 @@ test('adds path on navigate if provided', () => {
           { key: 'bar', name: 'bar', params: { answer: 42 }, path: '/foo/bar' },
         ],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { fruit: 'orange' },
-        path: '/foo/baz',
-      }),
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'bar',
+          params: { fruit: 'orange' },
+          path: '/foo/baz',
+        },
+      },
       options
     )
   ).toEqual({
@@ -1980,10 +1966,13 @@ test('adds path on navigate if provided', () => {
         routeNames: ['baz', 'bar', 'qux'],
         routes: [{ key: 'bar', name: 'bar', params: { answer: 42 } }],
       },
-      CommonActions.navigate({
-        name: 'baz',
-        path: '/foo/bar',
-      }),
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'baz',
+          path: '/foo/bar',
+        },
+      },
       options
     )
   ).toEqual({
@@ -2027,10 +2016,7 @@ test("doesn't remove existing path on navigate if not provided", () => {
         ],
       },
 
-      CommonActions.navigate({
-        name: 'bar',
-        params: { answer: 42 },
-      }),
+      CommonActions.navigate('bar', { answer: 42 }),
       options
     )
   ).toEqual({

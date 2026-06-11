@@ -427,6 +427,8 @@ type NavigationHelpersCommon<
   /**
    * Navigate to a route in current navigation tree.
    *
+   * @deprecated Use `navigate(name, params, options)` instead.
+   *
    * @param options.name Name of the route to navigate to.
    * @param [options.params] Params object for the route.
    * @param [options.path] Path to associate the route with (e.g. for deep links).
