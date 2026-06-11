@@ -337,27 +337,6 @@ type NavigationHelpersCommon<
   ): void;
 
   /**
-   * Navigate to a route in current navigation tree.
-   *
-   * @param options.name Name of the route to navigate to.
-   * @param [options.params] Params object for the route.
-   * @param [options.path] Path to associate the route with (e.g. for deep links).
-   * @param [options.merge] Whether to merge the params onto the route. Defaults to `false`.
-   * @param [options.pop] Whether to pop routes in a stack to go back to the matching route. Defaults to `false`.
-   */
-  navigate<RouteName extends keyof ParamList>(
-    options: RouteName extends unknown
-      ? {
-          name: RouteName;
-          params: ParamList[RouteName];
-          path?: string | undefined;
-          merge?: boolean | undefined;
-          pop?: boolean | undefined;
-        }
-      : never
-  ): void;
-
-  /**
    * Preloads the route in current navigation tree.
    *
    * @param screen Name of the route to preload.
