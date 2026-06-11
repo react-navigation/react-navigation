@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.39](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.38...@react-navigation/drawer@8.0.0-alpha.39) (2026-06-11)
+
+### Bug Fixes
+
+* remove unused dimensions prop from drawer ([bd357ed](https://github.com/react-navigation/react-navigation/commit/bd357edc5a8f8741d42083374323bbffcfd5e620)) - by @satya164
+
+### Features
+
+* remove overload from navigate action ([#13150](https://github.com/react-navigation/react-navigation/issues/13150)) ([a876c49](https://github.com/react-navigation/react-navigation/commit/a876c49b411a79d4614d26195829019c90ada992)) - by @satya164
+
 # [8.0.0-alpha.38](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.37...@react-navigation/drawer@8.0.0-alpha.38) (2026-06-10)
 
 **Note:** Version bump only for package @react-navigation/drawer
