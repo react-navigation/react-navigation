@@ -313,7 +313,6 @@ export type DrawerDescriptor = Descriptor<
 export type DrawerDescriptorMap = Record<string, DrawerDescriptor>;
 
 export type DrawerProps = {
-  dimensions: { width: number; height: number };
   drawerPosition: 'left' | 'right';
   drawerStyle?: StyleProp<ViewStyle>;
   drawerType: 'front' | 'back' | 'slide' | 'permanent';
