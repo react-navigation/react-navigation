@@ -764,6 +764,100 @@ useLinkProps({
   Home
 </Button>;
 
+type LinkFeedStackParamList = {
+  ArticleList: undefined;
+  ArticleDetails: { id: string };
+};
+
+type LinkHomeTabParamList = {
+  Feed: NavigatorScreenParams<LinkFeedStackParamList>;
+  Profile: { id: string };
+};
+
+type LinkRootParamList = {
+  Home: NavigatorScreenParams<LinkHomeTabParamList>;
+  Settings: undefined;
+};
+
+useLinkProps<LinkRootParamList>({
+  in: 'Home',
+  screen: 'Settings',
+});
+useLinkProps<LinkRootParamList>({
+  in: 'Feed',
+  screen: 'Profile',
+  params: { id: '42' },
+});
+useLinkProps<LinkRootParamList>({
+  in: 'ArticleList',
+  screen: 'ArticleDetails',
+  params: { id: '42' },
+});
+
+// @ts-expect-error
+useLinkProps<LinkRootParamList>({ in: 'Missing', screen: 'Settings' });
+// @ts-expect-error
+useLinkProps<LinkRootParamList>({ in: 'Home', screen: 'Missing' });
+// @ts-expect-error
+useLinkProps<LinkRootParamList>({ in: 'Feed', screen: 'ArticleDetails' });
+// @ts-expect-error
+useLinkProps<LinkRootParamList>({ in: 'ArticleList', screen: 'Settings' });
+// @ts-expect-error
+useLinkProps<LinkRootParamList>({
+  in: 'ArticleList',
+  screen: 'ArticleDetails',
+});
+useLinkProps<LinkRootParamList>({
+  in: 'ArticleList',
+  screen: 'ArticleDetails',
+  // @ts-expect-error
+  params: { id: 42 },
+});
+
+<Link<LinkRootParamList> in="Home" screen="Settings">
+  Settings
+</Link>;
+<Link<LinkRootParamList>
+  in="ArticleList"
+  screen="ArticleDetails"
+  params={{ id: '42' }}
+>
+  Article
+</Link>;
+
+// @ts-expect-error
+<Link<LinkRootParamList> in="Missing" screen="Settings">
+  Settings
+</Link>;
+// @ts-expect-error
+<Link<LinkRootParamList> in="Feed" screen="ArticleDetails">
+  Article
+</Link>;
+// @ts-expect-error
+<Link<LinkRootParamList> in="ArticleList" screen="ArticleDetails">
+  Article
+</Link>;
+
+<Button<LinkRootParamList> in="Home" screen="Settings">
+  Settings
+</Button>;
+<Button<LinkRootParamList>
+  in="ArticleList"
+  screen="ArticleDetails"
+  params={{ id: '42' }}
+>
+  Article
+</Button>;
+
+// @ts-expect-error
+<Button<LinkRootParamList> in="Missing" screen="Settings">
+  Settings
+</Button>;
+// @ts-expect-error
+<Button<LinkRootParamList> in="Feed" screen="ArticleDetails">
+  Article
+</Button>;
+
 /**
  * Check for ParamsForRoute
  */

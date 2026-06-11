@@ -11,8 +11,11 @@ import { type LinkProps, useLinkProps } from './useLinkProps';
 
 type Props<
   ParamList extends {} = RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList,
-> = LinkProps<ParamList, RouteName> &
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
+> = LinkProps<NoInfer<ParamList>, RouteName> &
   Omit<TextProps, 'disabled'> & {
     target?: string;
     onPress?: (
@@ -26,6 +29,7 @@ type Props<
  * Component to render link to another screen using a path.
  * Uses an anchor tag on the web.
  *
+ * @param props.in Name of the current or parent screen whose navigator contains the target screen.
  * @param props.screen Name of the screen to navigate to (e.g. `'Feeds'`).
  * @param props.params Params to pass to the screen to navigate to (e.g. `{ sort: 'hot' }`).
  * @param props.href Optional absolute path to use for the href (e.g. `/feeds/hot`).
@@ -34,18 +38,24 @@ type Props<
  */
 export function Link<
   const ParamList extends {} = RootParamList,
-  const RouteName extends keyof ParamList = keyof ParamList,
->({
-  screen,
-  params,
-  action,
-  href,
-  style,
-  ...rest
-}: Props<ParamList, RouteName>) {
+  const RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
+>(props: Props<ParamList, RouteName>) {
+  // prettier-ignore
+  // @ts-expect-error: TypeScript doesn't preserve common optional properties across this generic union.
+  const { in: parent, screen, params, action, href, disabled, style, ...rest } = props;
+
   const { colors, fonts } = useTheme();
-  // @ts-expect-error: This is already type-checked by the prop types
-  const props = useLinkProps<ParamList>({ screen, params, action, href });
+  const linkProps =
+    screen === undefined
+      ? { action, href }
+      : parent === undefined
+        ? { screen, params, action, href }
+        : { in: parent, screen, params, action, href };
+
+  const link = useLinkProps(linkProps);
 
   const onPress = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
@@ -56,17 +66,18 @@ export function Link<
 
     // Let user prevent default behavior
     if (!e.defaultPrevented) {
-      props.onPress(e);
+      link.onPress(e);
     }
   };
 
   return React.createElement(Text, {
-    ...props,
+    ...link,
     ...rest,
     ...Platform.select({
-      web: { onClick: onPress } as any,
+      web: { onClick: onPress },
       default: { onPress },
     }),
+    disabled: disabled ?? undefined,
     style: [{ color: colors.primary }, fonts.regular, style],
   });
 }
