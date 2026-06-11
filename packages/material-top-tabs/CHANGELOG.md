@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.5.2...@react-navigation/material-top-tabs@7.6.0) (2026-06-11)
+
+### Features
+
+* deprecate navigate object overload ([66b5164](https://github.com/react-navigation/react-navigation/commit/66b51644aea06cd4f43bc1db866d37ec66f8b2a6)) - by @satya164
+
 ## [7.5.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@7.5.1...@react-navigation/material-top-tabs@7.5.2) (2026-06-09)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

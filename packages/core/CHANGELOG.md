@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.20.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.19.0...@react-navigation/core@7.20.0) (2026-06-11)
+
+### Features
+
+* deprecate navigate object overload ([66b5164](https://github.com/react-navigation/react-navigation/commit/66b51644aea06cd4f43bc1db866d37ec66f8b2a6)) - by @satya164
+
 # [7.19.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.18.0...@react-navigation/core@7.19.0) (2026-06-08)
 
 ### Features
