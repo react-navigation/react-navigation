@@ -24,7 +24,6 @@ import { NativeStackHeaderCustomization } from './Screens/NativeStackHeaderCusto
 import { NativeStackPreloadFlow } from './Screens/NativeStackPreloadFlow';
 import { NativeStackPreventRemove } from './Screens/NativeStackPreventRemove';
 import { NavigatorLayout } from './Screens/NavigatorLayout';
-import { NestedStackPreventRemove } from './Screens/NestedStackPreventRemove';
 import { ScreenLayout } from './Screens/ScreenLayout';
 import { StackBasic } from './Screens/StackBasic';
 import { StackCardModal } from './Screens/StackCardModal';
@@ -58,7 +57,6 @@ export const SCREENS = {
   StackModal,
   StackPreloadFlow,
   StackPreventRemove,
-  NestedStackPreventRemove,
   StackTransparentModal,
   NativeBottomTabs,
   NativeBottomTabsCustomTabBar,

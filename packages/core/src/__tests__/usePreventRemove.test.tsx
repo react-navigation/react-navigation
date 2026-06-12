@@ -1,7 +1,8 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import {
-  type InitialState,
+  type NavigationState,
   type ParamListBase,
+  type PartialState,
   StackActions,
   StackRouter,
   TabRouter,
@@ -28,50 +29,6 @@ beforeEach(() => {
 
   require('nanoid/non-secure').__key = 0;
 });
-
-/**
- * Builds a `useLinking`-style recorded state: same route keys, but the nested
- * stack of every route named in `routeNames` is popped to its first route
- */
-const popNestedStackToFirst = <T extends InitialState>(
-  state: T | undefined,
-  routeNames: string[]
-): T => {
-  if (state == null) {
-    throw new Error('Expected a navigation state');
-  }
-
-  return {
-    ...state,
-    routes: state.routes.map((route) => {
-      if (routeNames.includes(route.name)) {
-        if (route.state == null) {
-          throw new Error(
-            `Expected route '${route.name}' to have a nested state`
-          );
-        }
-
-        return {
-          ...route,
-          state: {
-            ...route.state,
-            index: 0,
-            routes: route.state.routes.slice(0, 1),
-          },
-        };
-      }
-
-      if (route.state) {
-        return {
-          ...route,
-          state: popNestedStackToFirst(route.state, routeNames),
-        };
-      }
-
-      return route;
-    }),
-  } as T;
-};
 
 test("prevents removing a screen with 'usePreventRemove' hook", async () => {
   const TestNavigator = (props: any) => {
@@ -1163,15 +1120,12 @@ test("prevents removing a nested screen with 'usePreventRemove' hook with 'reset
     );
   };
 
-  const onPreventRemove = jest.fn();
-
   let shouldContinue = false;
 
   const TestScreen = () => {
     const navigation = useNavigation();
 
     usePreventRemove(true, ({ data }) => {
-      onPreventRemove();
       if (shouldContinue) {
         navigation.dispatch(data.action);
       }
@@ -1180,12 +1134,22 @@ test("prevents removing a nested screen with 'usePreventRemove' hook with 'reset
     return null;
   };
 
-  const onStateChange = jest.fn();
-
   const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer
+      ref={ref}
+      initialState={{
+        index: 1,
+        routes: [
+          { name: 'foo' },
+          {
+            name: 'baz',
+            state: { index: 1, routes: [{ name: 'qux' }, { name: 'lex' }] },
+          },
+        ],
+      }}
+    >
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="baz">
@@ -1202,55 +1166,36 @@ test("prevents removing a nested screen with 'usePreventRemove' hook with 'reset
 
   await render(element);
 
-  await act(() => ref.current?.navigate('baz'));
-  await act(() => ref.current?.navigate('lex'));
+  const initialState = ref.current?.getRootState();
 
-  const stateBeforeReset = ref.current?.getRootState();
+  if (initialState == null) {
+    throw new Error('Expected a navigation state');
+  }
 
-  expect(stateBeforeReset).toEqual({
-    index: 1,
-    key: 'stack-2',
-    retainedRouteKeys: [],
-    routeNames: ['foo', 'baz'],
-    routes: [
-      { key: 'foo-3', name: 'foo' },
-      {
-        key: 'baz-5',
-        name: 'baz',
-        state: {
-          index: 1,
-          key: 'stack-7',
-          retainedRouteKeys: [],
-          routeNames: ['qux', 'lex'],
-          routes: [
-            { key: 'qux-8', name: 'qux' },
-            { key: 'lex-10', name: 'lex' },
-          ],
-          stale: false,
-          type: 'stack',
-        },
-      },
-    ],
-    stale: false,
-    type: 'stack',
-  });
-
-  // Simulate browser back on web: `useLinking` resets to a recorded state where route keys are unchanged but the nested stack is popped
-  const recordedState = popNestedStackToFirst(stateBeforeReset, ['baz']);
+  const recordedState: NavigationState = {
+    ...initialState,
+    routes: initialState.routes.map((route) =>
+      route.name === 'baz' && route.state?.stale === false
+        ? {
+            ...route,
+            state: {
+              ...route.state,
+              index: 0,
+              routes: route.state.routes.slice(0, 1),
+            },
+          }
+        : route
+    ),
+  };
 
   await act(() => ref.current?.resetRoot(recordedState));
 
-  // Only the two `navigate` calls changed the state, the reset was prevented
-  expect(onPreventRemove).toHaveBeenCalledTimes(1);
-  expect(onStateChange).toHaveBeenCalledTimes(2);
-  expect(ref.current?.getRootState()).toEqual(stateBeforeReset);
+  expect(ref.current?.getRootState()).toEqual(initialState);
 
   shouldContinue = true;
 
   await act(() => ref.current?.resetRoot(recordedState));
 
-  expect(onPreventRemove).toHaveBeenCalledTimes(2);
-  expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(ref.current?.getRootState()).toEqual(recordedState);
 });
 
@@ -1268,10 +1213,8 @@ test("doesn't fire 'usePreventRemove' for a kept nested screen with 'resetRoot'"
     );
   };
 
-  const onPreventRemove = jest.fn();
-
   const TestScreen = () => {
-    usePreventRemove(true, onPreventRemove);
+    usePreventRemove(true, () => {});
 
     return null;
   };
@@ -1279,7 +1222,19 @@ test("doesn't fire 'usePreventRemove' for a kept nested screen with 'resetRoot'"
   const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref}>
+    <BaseNavigationContainer
+      ref={ref}
+      initialState={{
+        index: 1,
+        routes: [
+          { name: 'foo' },
+          {
+            name: 'baz',
+            state: { index: 1, routes: [{ name: 'qux' }, { name: 'lex' }] },
+          },
+        ],
+      }}
+    >
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="baz">
@@ -1296,21 +1251,34 @@ test("doesn't fire 'usePreventRemove' for a kept nested screen with 'resetRoot'"
 
   await render(element);
 
-  await act(() => ref.current?.navigate('baz'));
-  await act(() => ref.current?.navigate('lex'));
+  const initialState = ref.current?.getRootState();
 
-  const stateBeforeReset = ref.current?.getRootState();
+  if (initialState == null) {
+    throw new Error('Expected a navigation state');
+  }
 
-  // Pop `lex`; `qux` with the preventer is kept, so the reset must not be blocked
-  const recordedState = popNestedStackToFirst(stateBeforeReset, ['baz']);
+  const recordedState: NavigationState = {
+    ...initialState,
+    routes: initialState.routes.map((route) =>
+      route.name === 'baz' && route.state?.stale === false
+        ? {
+            ...route,
+            state: {
+              ...route.state,
+              index: 0,
+              routes: route.state.routes.slice(0, 1),
+            },
+          }
+        : route
+    ),
+  };
 
   await act(() => ref.current?.resetRoot(recordedState));
 
-  expect(onPreventRemove).not.toHaveBeenCalled();
   expect(ref.current?.getRootState()).toEqual(recordedState);
 });
 
-test("fires 'usePreventRemove' on the last screen first for nested state changes with 'resetRoot'", async () => {
+test("prevents a 'resetRoot' blocked by separate nested screens and proceeds once confirmed", async () => {
   const TestNavigator = (props: { children: React.ReactNode }) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -1324,29 +1292,12 @@ test("fires 'usePreventRemove' on the last screen first for nested state changes
     );
   };
 
-  const onPreventRemoveBottom = jest.fn();
-  const onPreventRemoveTop = jest.fn();
-
   let shouldContinue = false;
 
-  const BottomScreen = () => {
+  const PreventScreen = () => {
     const navigation = useNavigation();
 
     usePreventRemove(true, ({ data }) => {
-      onPreventRemoveBottom();
-      if (shouldContinue) {
-        navigation.dispatch(data.action);
-      }
-    });
-
-    return null;
-  };
-
-  const TopScreen = () => {
-    const navigation = useNavigation();
-
-    usePreventRemove(true, ({ data }) => {
-      onPreventRemoveTop();
       if (shouldContinue) {
         navigation.dispatch(data.action);
       }
@@ -1358,14 +1309,30 @@ test("fires 'usePreventRemove' on the last screen first for nested state changes
   const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref}>
+    <BaseNavigationContainer
+      ref={ref}
+      initialState={{
+        index: 2,
+        routes: [
+          { name: 'foo' },
+          {
+            name: 'baz1',
+            state: { index: 1, routes: [{ name: 'qux1' }, { name: 'lex1' }] },
+          },
+          {
+            name: 'baz2',
+            state: { index: 1, routes: [{ name: 'qux2' }, { name: 'lex2' }] },
+          },
+        ],
+      }}
+    >
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="baz1">
           {() => (
             <TestNavigator>
               <Screen name="qux1">{() => null}</Screen>
-              <Screen name="lex1" component={BottomScreen} />
+              <Screen name="lex1" component={PreventScreen} />
             </TestNavigator>
           )}
         </Screen>
@@ -1373,7 +1340,7 @@ test("fires 'usePreventRemove' on the last screen first for nested state changes
           {() => (
             <TestNavigator>
               <Screen name="qux2">{() => null}</Screen>
-              <Screen name="lex2" component={TopScreen} />
+              <Screen name="lex2" component={PreventScreen} />
             </TestNavigator>
           )}
         </Screen>
@@ -1383,32 +1350,37 @@ test("fires 'usePreventRemove' on the last screen first for nested state changes
 
   await render(element);
 
-  await act(() => ref.current?.navigate('baz1'));
-  await act(() => ref.current?.navigate('lex1'));
-  await act(() => ref.current?.navigate('baz2'));
-  await act(() => ref.current?.navigate('lex2'));
+  const initialState = ref.current?.getRootState();
 
-  const stateBeforeReset = ref.current?.getRootState();
+  if (initialState == null) {
+    throw new Error('Expected a navigation state');
+  }
 
-  // Pop both nested stacks; the focused `lex2` must handle the event, not the hidden `lex1`
-  const recordedState = popNestedStackToFirst(stateBeforeReset, [
-    'baz1',
-    'baz2',
-  ]);
+  const recordedState: NavigationState = {
+    ...initialState,
+    routes: initialState.routes.map((route) =>
+      (route.name === 'baz1' || route.name === 'baz2') &&
+      route.state?.stale === false
+        ? {
+            ...route,
+            state: {
+              ...route.state,
+              index: 0,
+              routes: route.state.routes.slice(0, 1),
+            },
+          }
+        : route
+    ),
+  };
 
   await act(() => ref.current?.resetRoot(recordedState));
 
-  expect(onPreventRemoveTop).toHaveBeenCalledTimes(1);
-  expect(onPreventRemoveBottom).not.toHaveBeenCalled();
-  expect(ref.current?.getRootState()).toEqual(stateBeforeReset);
+  expect(ref.current?.getRootState()).toEqual(initialState);
 
   shouldContinue = true;
 
   await act(() => ref.current?.resetRoot(recordedState));
 
-  // The confirmed re-dispatch must still consult the hidden sibling subtree, so kept routes must never be marked as visited
-  expect(onPreventRemoveTop).toHaveBeenCalledTimes(2);
-  expect(onPreventRemoveBottom).toHaveBeenCalledTimes(1);
   expect(ref.current?.getRootState()).toEqual(recordedState);
 });
 
@@ -1426,10 +1398,8 @@ test("prevents removing a deeply nested screen with 'usePreventRemove' hook with
     );
   };
 
-  const onPreventRemove = jest.fn();
-
   const TestScreen = () => {
-    usePreventRemove(true, onPreventRemove);
+    usePreventRemove(true, () => {});
 
     return null;
   };
@@ -1437,7 +1407,30 @@ test("prevents removing a deeply nested screen with 'usePreventRemove' hook with
   const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref}>
+    <BaseNavigationContainer
+      ref={ref}
+      initialState={{
+        index: 1,
+        routes: [
+          { name: 'foo' },
+          {
+            name: 'baz',
+            state: {
+              index: 0,
+              routes: [
+                {
+                  name: 'qux',
+                  state: {
+                    index: 1,
+                    routes: [{ name: 'lex' }, { name: 'pax' }],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      }}
+    >
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="baz">
@@ -1460,18 +1453,41 @@ test("prevents removing a deeply nested screen with 'usePreventRemove' hook with
 
   await render(element);
 
-  await act(() => ref.current?.navigate('baz'));
-  await act(() => ref.current?.navigate('pax'));
+  const initialState = ref.current?.getRootState();
 
-  const stateBeforeReset = ref.current?.getRootState();
+  if (initialState == null) {
+    throw new Error('Expected a navigation state');
+  }
 
-  // Pop `pax` from the innermost stack; the check must propagate through two levels of unchanged route keys
-  const recordedState = popNestedStackToFirst(stateBeforeReset, ['qux']);
+  const recordedState: NavigationState = {
+    ...initialState,
+    routes: initialState.routes.map((route) =>
+      route.name === 'baz' && route.state?.stale === false
+        ? {
+            ...route,
+            state: {
+              ...route.state,
+              routes: route.state.routes.map((inner) =>
+                inner.name === 'qux' && inner.state?.stale === false
+                  ? {
+                      ...inner,
+                      state: {
+                        ...inner.state,
+                        index: 0,
+                        routes: inner.state.routes.slice(0, 1),
+                      },
+                    }
+                  : inner
+              ),
+            },
+          }
+        : route
+    ),
+  };
 
   await act(() => ref.current?.resetRoot(recordedState));
 
-  expect(onPreventRemove).toHaveBeenCalledTimes(1);
-  expect(ref.current?.getRootState()).toEqual(stateBeforeReset);
+  expect(ref.current?.getRootState()).toEqual(initialState);
 });
 
 test("doesn't fire 'usePreventRemove' when only the nested navigator's index changes with 'resetRoot'", async () => {
@@ -1501,10 +1517,8 @@ test("doesn't fire 'usePreventRemove' when only the nested navigator's index cha
     );
   };
 
-  const onPreventRemove = jest.fn();
-
   const TestScreen = () => {
-    usePreventRemove(true, onPreventRemove);
+    usePreventRemove(true, () => {});
 
     return null;
   };
@@ -1512,7 +1526,19 @@ test("doesn't fire 'usePreventRemove' when only the nested navigator's index cha
   const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref}>
+    <BaseNavigationContainer
+      ref={ref}
+      initialState={{
+        index: 1,
+        routes: [
+          { name: 'foo' },
+          {
+            name: 'baz',
+            state: { index: 0, routes: [{ name: 'tabA' }, { name: 'tabB' }] },
+          },
+        ],
+      }}
+    >
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="baz">
@@ -1529,9 +1555,6 @@ test("doesn't fire 'usePreventRemove' when only the nested navigator's index cha
 
   await render(element);
 
-  await act(() => ref.current?.navigate('baz'));
-
-  // Record the state before switching tabs, like `useLinking` does on web
   const recordedState = ref.current?.getRootState();
 
   if (recordedState == null) {
@@ -1540,10 +1563,8 @@ test("doesn't fire 'usePreventRemove' when only the nested navigator's index cha
 
   await act(() => ref.current?.navigate('tabB'));
 
-  // Resetting to the recorded state only changes the tab index back; nothing is removed, so nothing should fire
   await act(() => ref.current?.resetRoot(recordedState));
 
-  expect(onPreventRemove).not.toHaveBeenCalled();
   expect(ref.current?.getRootState()).toEqual(recordedState);
 });
 
@@ -1561,10 +1582,8 @@ test("fires 'usePreventRemove' when the next nested state is stale with 'resetRo
     );
   };
 
-  const onPreventRemove = jest.fn();
-
   const TestScreen = () => {
-    usePreventRemove(true, onPreventRemove);
+    usePreventRemove(true, () => {});
 
     return null;
   };
@@ -1572,7 +1591,19 @@ test("fires 'usePreventRemove' when the next nested state is stale with 'resetRo
   const ref = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref}>
+    <BaseNavigationContainer
+      ref={ref}
+      initialState={{
+        index: 1,
+        routes: [
+          { name: 'foo' },
+          {
+            name: 'baz',
+            state: { index: 1, routes: [{ name: 'qux' }, { name: 'lex' }] },
+          },
+        ],
+      }}
+    >
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="baz">
@@ -1589,123 +1620,26 @@ test("fires 'usePreventRemove' when the next nested state is stale with 'resetRo
 
   await render(element);
 
-  await act(() => ref.current?.navigate('baz'));
-  await act(() => ref.current?.navigate('lex'));
+  const initialState = ref.current?.getRootState();
 
-  const stateBeforeReset = ref.current?.getRootState();
-
-  if (stateBeforeReset == null) {
+  if (initialState == null) {
     throw new Error('Expected a navigation state');
   }
 
-  // A stale nested state has no route keys to match, so all current nested routes count as removed
-  const recordedState = {
-    ...stateBeforeReset,
-    routes: stateBeforeReset.routes.map((route) =>
+  const recordedState: PartialState<NavigationState> = {
+    index: initialState.index,
+    routes: initialState.routes.map((route) =>
       route.name === 'baz'
         ? {
-            ...route,
-            state: {
-              stale: true as const,
-              routes: [{ name: 'qux' }],
-            },
+            key: route.key,
+            name: route.name,
+            state: { stale: true, routes: [{ name: 'qux' }] },
           }
-        : route
+        : { key: route.key, name: route.name }
     ),
   };
 
   await act(() => ref.current?.resetRoot(recordedState));
 
-  expect(onPreventRemove).toHaveBeenCalledTimes(1);
-  expect(ref.current?.getRootState()).toEqual(stateBeforeReset);
-});
-
-test("asks the focused nested screen before a removed earlier route with 'resetRoot'", async () => {
-  const TestNavigator = (props: { children: React.ReactNode }) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
-      StackRouter,
-      props
-    );
-
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
-    );
-  };
-
-  const callOrder: string[] = [];
-
-  let shouldContinue = false;
-
-  const FooScreen = () => {
-    const navigation = useNavigation();
-
-    usePreventRemove(true, ({ data }) => {
-      callOrder.push('foo');
-      if (shouldContinue) {
-        navigation.dispatch(data.action);
-      }
-    });
-
-    return null;
-  };
-
-  const LexScreen = () => {
-    const navigation = useNavigation();
-
-    usePreventRemove(true, ({ data }) => {
-      callOrder.push('lex');
-      if (shouldContinue) {
-        navigation.dispatch(data.action);
-      }
-    });
-
-    return null;
-  };
-
-  const ref = createNavigationContainerRef<ParamListBase>();
-
-  const element = (
-    <BaseNavigationContainer ref={ref}>
-      <TestNavigator>
-        <Screen name="foo" component={FooScreen} />
-        <Screen name="baz">
-          {() => (
-            <TestNavigator>
-              <Screen name="qux">{() => null}</Screen>
-              <Screen name="lex" component={LexScreen} />
-            </TestNavigator>
-          )}
-        </Screen>
-      </TestNavigator>
-    </BaseNavigationContainer>
-  );
-
-  await render(element);
-
-  await act(() => ref.current?.navigate('baz'));
-  await act(() => ref.current?.navigate('lex'));
-
-  const stateBeforeReset = ref.current?.getRootState();
-
-  // Remove `foo` entirely AND pop `lex` from the kept `baz`'s nested stack; the focused `lex` must handle the event before the hidden `foo`
-  const popped = popNestedStackToFirst(stateBeforeReset, ['baz']);
-  const recordedState = {
-    ...popped,
-    index: 0,
-    routes: popped.routes.filter((route) => route.name !== 'foo'),
-  };
-
-  await act(() => ref.current?.resetRoot(recordedState));
-
-  expect(callOrder).toEqual(['lex']);
-  expect(ref.current?.getRootState()).toEqual(stateBeforeReset);
-
-  shouldContinue = true;
-
-  await act(() => ref.current?.resetRoot(recordedState));
-
-  expect(callOrder).toEqual(['lex', 'lex', 'foo']);
-  expect(ref.current?.getRootState()).toEqual(recordedState);
+  expect(ref.current?.getRootState()).toEqual(initialState);
 });

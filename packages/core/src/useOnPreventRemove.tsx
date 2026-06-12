@@ -2,6 +2,8 @@ import type {
   NavigationAction,
   NavigationState,
   PartialState,
+  Router,
+  RouterConfigOptions,
 } from '@react-navigation/routers';
 import * as React from 'react';
 
@@ -17,6 +19,8 @@ type Options = {
   getState: () => NavigationState;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
+  router: Router<NavigationState, NavigationAction>;
+  routerConfigOptions: RouterConfigOptions;
 };
 
 const VISITED_ROUTE_KEYS = Symbol('VISITED_ROUTE_KEYS');
@@ -78,8 +82,8 @@ export const shouldPreventRemove = (
       if (event.defaultPrevented) {
         return true;
       }
-    } else if (action.type === 'RESET' && nextRoute.state !== route.state) {
-      // A `RESET` can remove screens in nested navigators only, so propagate the check down when the route's nested state changed
+    } else if (nextRoute.state !== route.state) {
+      // The route is kept but its nested state changed, so propagate the check into the nested navigator
       const isPrevented = beforeRemoveListeners[route.key]?.(
         beforeRemoveAction,
         nextRoute.state
@@ -98,10 +102,19 @@ export function useOnPreventRemove({
   getState,
   emitter,
   beforeRemoveListeners,
+  router,
+  routerConfigOptions,
 }: Options) {
   const { addKeyedListener } = React.use(NavigationBuilderContext);
   const route = React.use(NavigationRouteContext);
   const routeKey = route?.key;
+
+  const routerConfigOptionsRef =
+    React.useRef<RouterConfigOptions>(routerConfigOptions);
+
+  React.useEffect(() => {
+    routerConfigOptionsRef.current = routerConfigOptions;
+  });
 
   React.useInsertionEffect(() => {
     if (routeKey) {
@@ -111,16 +124,37 @@ export function useOnPreventRemove({
         (action, nextState) => {
           const state = getState();
 
-          // No next state means the route itself was removed, so all of its current routes count as removed
+          // A partial next state has keyless routes; rehydrate it so keys match before diffing.
+          // No next state means the route itself was removed, so all of its routes count as removed.
+          let nextRoutes:
+            | typeof state.routes
+            | PartialState<NavigationState>['routes'] = [];
+
+          if (nextState != null) {
+            nextRoutes = nextState.routes.some((route) => route.key == null)
+              ? router.getRehydratedState(
+                  nextState,
+                  routerConfigOptionsRef.current
+                ).routes
+              : nextState.routes;
+          }
+
           return shouldPreventRemove(
             emitter,
             beforeRemoveListeners,
             state.routes,
-            nextState?.routes ?? [],
+            nextRoutes,
             action
           );
         }
       );
     }
-  }, [addKeyedListener, beforeRemoveListeners, emitter, getState, routeKey]);
+  }, [
+    addKeyedListener,
+    beforeRemoveListeners,
+    emitter,
+    getState,
+    router,
+    routeKey,
+  ]);
 }

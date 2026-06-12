@@ -158,6 +158,8 @@ export function useOnAction<State extends NavigationState>({
     getState,
     emitter,
     beforeRemoveListeners,
+    router,
+    routerConfigOptions,
   });
 
   React.useInsertionEffect(
