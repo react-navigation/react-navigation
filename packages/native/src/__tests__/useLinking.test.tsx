@@ -190,6 +190,141 @@ test('pushes a browser history entry for each forward navigation', async () => {
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 });
 
+test('restores the previous hash when navigation.goBack is called', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  await act(() => window.setHash('#bio'));
+
+  await waitFor(() => expect(window.location.hash).toBe('#bio'));
+
+  await act(() => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  await act(() => window.setHash('#panel'));
+
+  await waitFor(() => expect(window.location.hash).toBe('#panel'));
+
+  await act(() => navigation.goBack());
+
+  await waitFor(() => {
+    expect(window.location.pathname).toBe('/profile');
+    expect(window.location.hash).toBe('#bio');
+  });
+});
+
+test('browser back between hash-only entries does not reset navigation state', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+  const onStateChange = jest.fn();
+
+  await render(
+    <NavigationContainer
+      ref={navigation}
+      linking={linking}
+      onStateChange={onStateChange}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  onStateChange.mockClear();
+
+  await act(() => window.setHash('#one'));
+
+  await waitFor(() => expect(window.location.hash).toBe('#one'));
+
+  await act(() => window.setHash('#two'));
+
+  await waitFor(() => expect(window.location.hash).toBe('#two'));
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.hash).toBe('#one'));
+
+  expect(window.location.pathname).toBe('/profile');
+  expect(onStateChange).not.toHaveBeenCalled();
+});
+
+test('preserves hash from route path on programmatic navigation', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() =>
+    navigation.dispatch({
+      type: 'NAVIGATE',
+      payload: { name: 'Profile', path: '/profile#bio' },
+    })
+  );
+
+  await waitFor(() => {
+    expect(window.location.pathname).toBe('/profile');
+    expect(window.location.hash).toBe('#bio');
+  });
+});
+
 test('dispatches GO_BACK when browser back pops the last stack route', async () => {
   const Stack = createStackNavigator();
 

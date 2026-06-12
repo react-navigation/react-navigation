@@ -12,13 +12,31 @@ type HistoryRecord = {
 
 const getPathWithoutHash = (path: string) => path.split('#')[0] ?? '';
 
+const getCurrentPath = () =>
+  window.location.pathname + window.location.search + window.location.hash;
+
 export function createMemoryHistory() {
   let index = 0;
   let items: HistoryRecord[] = [];
+  let lastPopStatePath: string | undefined;
 
   // Pending callbacks for `history.go(n)`
   // We might modify the callback stored if it was interrupted, so we have a ref to identify it
   const pending: { ref: unknown; cb: (interrupted?: boolean) => void }[] = [];
+
+  const getIndexFromState = () => {
+    // We store an id in the state instead of an index
+    // Index could get out of sync with in-memory values if page reloads
+    const id = window.history.state?.id;
+
+    if (id) {
+      const index = items.findIndex((item) => item.id === id);
+
+      return index > -1 ? index : 0;
+    }
+
+    return 0;
+  };
 
   const interrupt = () => {
     // If another history operation was performed we need to interrupt existing ones
@@ -30,19 +48,31 @@ export function createMemoryHistory() {
     });
   };
 
+  const syncCurrentHashEntry = () => {
+    const path = getCurrentPath();
+    const currentIndex = getIndexFromState();
+    const item = items[currentIndex];
+
+    if (
+      item &&
+      item.path !== path &&
+      getPathWithoutHash(item.path) === getPathWithoutHash(path)
+    ) {
+      const id = nanoid();
+
+      items = items.slice(0, currentIndex + 1);
+      items.push({ path, state: item.state, id });
+      index = items.length - 1;
+
+      window.history.replaceState({ id }, '', path);
+    } else {
+      index = currentIndex;
+    }
+  };
+
   const history = {
     get index(): number {
-      // We store an id in the state instead of an index
-      // Index could get out of sync with in-memory values if page reloads
-      const id = window.history.state?.id;
-
-      if (id) {
-        const index = items.findIndex((item) => item.id === id);
-
-        return index > -1 ? index : 0;
-      }
-
-      return 0;
+      return getIndexFromState();
     },
 
     get(index: number) {
@@ -50,6 +80,8 @@ export function createMemoryHistory() {
     },
 
     backIndex({ path }: { path: string }) {
+      syncCurrentHashEntry();
+
       const pathWithoutHash = getPathWithoutHash(path);
 
       // We need to find the index from the element before current to get closest path to go back to
@@ -60,7 +92,7 @@ export function createMemoryHistory() {
           continue;
         }
 
-        if (item.path === pathWithoutHash) {
+        if (getPathWithoutHash(item.path) === pathWithoutHash) {
           return i;
         }
       }
@@ -70,15 +102,15 @@ export function createMemoryHistory() {
 
     push({ path, state }: { path: string; state: NavigationState }) {
       interrupt();
+      syncCurrentHashEntry();
 
       const id = nanoid();
-      const pathWithoutHash = getPathWithoutHash(path);
 
       // When a new entry is pushed, all the existing entries after index will be inaccessible
       // So we remove any existing entries after the current index to clean them up
       items = items.slice(0, index + 1);
 
-      items.push({ path: pathWithoutHash, state, id });
+      items.push({ path, state, id });
       index = items.length - 1;
 
       // We pass empty string for title because it's ignored in all browsers except safari
@@ -90,6 +122,7 @@ export function createMemoryHistory() {
 
     replace({ path, state }: { path: string; state: NavigationState }) {
       interrupt();
+      syncCurrentHashEntry();
 
       const id = window.history.state?.id ?? nanoid();
       const pathWithoutHash = getPathWithoutHash(path);
@@ -97,7 +130,7 @@ export function createMemoryHistory() {
       // Need to keep the hash part of the path if there was no previous history entry
       // or the previous history entry had the same path
       let pathWithHash = path;
-      const hash = pathWithHash.includes('#') ? '' : location.hash;
+      const hash = pathWithHash.includes('#') ? '' : window.location.hash;
 
       if (!items.length || items.findIndex((item) => item.id === id) < 0) {
         // There are two scenarios for creating an array with only one history record:
@@ -108,16 +141,16 @@ export function createMemoryHistory() {
         //   So we need to push the entry as there's nothing to replace
 
         pathWithHash = pathWithHash + hash;
-        items = [{ path: pathWithoutHash, state, id }];
+        items = [{ path: pathWithHash, state, id }];
         index = 0;
       } else {
         const item = items[index];
 
-        if (item?.path === pathWithoutHash) {
+        if (item && getPathWithoutHash(item.path) === pathWithoutHash) {
           pathWithHash = pathWithHash + hash;
         }
 
-        items[index] = { path: pathWithoutHash, state, id };
+        items[index] = { path: pathWithHash, state, id };
       }
 
       window.history.replaceState({ id }, '', pathWithHash);
@@ -130,6 +163,7 @@ export function createMemoryHistory() {
     // This method differs from `history.go(n)` in the sense that it'll go back as many steps it can.
     go(n: number) {
       interrupt();
+      syncCurrentHashEntry();
 
       // To guard against unexpected navigation out of the app we will assume that browser history is only as deep as the length of our memory
       // history. If we don't have an item to navigate to then update our index and navigate as far as we can without taking the user out of the app.
@@ -223,18 +257,45 @@ export function createMemoryHistory() {
         // Fix createMemoryHistory.index variable's value
         // as it may go out of sync when navigating in the browser.
         index = this.index;
+        lastPopStatePath = getCurrentPath();
+
+        setTimeout(() => {
+          if (lastPopStatePath === getCurrentPath()) {
+            lastPopStatePath = undefined;
+          }
+        }, 0);
 
         if (pending.length) {
           // This was triggered by `history.go(n)`, we shouldn't call the listener
           return;
         }
 
+        syncCurrentHashEntry();
         listener();
       };
 
-      window.addEventListener('popstate', onPopState);
+      const onHashChange = () => {
+        if (pending.length) {
+          return;
+        }
 
-      return () => window.removeEventListener('popstate', onPopState);
+        const path = getCurrentPath();
+
+        if (lastPopStatePath !== path) {
+          syncCurrentHashEntry();
+          listener();
+        }
+
+        lastPopStatePath = undefined;
+      };
+
+      window.addEventListener('popstate', onPopState);
+      window.addEventListener('hashchange', onHashChange);
+
+      return () => {
+        window.removeEventListener('popstate', onPopState);
+        window.removeEventListener('hashchange', onHashChange);
+      };
     },
   };
 

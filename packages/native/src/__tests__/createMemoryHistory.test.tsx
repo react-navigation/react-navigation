@@ -23,6 +23,22 @@ beforeEach(() => {
   });
 });
 
+const createMockState = (path: string): NavigationState => ({
+  key: 'stack-123',
+  index: 0,
+  routeNames: ['One'],
+  routes: [
+    {
+      name: 'One',
+      path,
+      key: 'One-23',
+      params: undefined,
+    },
+  ],
+  type: 'stack',
+  stale: false,
+});
+
 test('finds previous entries without matching hash fragments', () => {
   const createState = (path: string): NavigationState => ({
     key: 'stack-123',
@@ -92,6 +108,60 @@ test('keeps current hash when replacing the same path', () => {
 
   expect(window.location.pathname).toBe('/route-one');
   expect(window.location.hash).toBe('#section');
+});
+
+test('stores hashes separately for each entry', () => {
+  const history = createMemoryHistory();
+
+  history.push({
+    path: '/route-one#section',
+    state: createMockState('/route-one'),
+  });
+
+  history.push({
+    path: '/route-one#details',
+    state: createMockState('/route-one'),
+  });
+
+  expect(history.get(0)?.path).toBe('/route-one#section');
+  expect(history.get(1)?.path).toBe('/route-one#details');
+});
+
+test('tracks hash-only changes as separate entries', () => {
+  jest.useFakeTimers();
+
+  const state = createMockState('/route-one');
+  const history = createMemoryHistory();
+  const listener = jest.fn();
+
+  history.replace({ path: '/route-one', state });
+  history.listen(listener);
+
+  window.setHash('#section');
+
+  jest.runAllTimers();
+
+  expect(history.index).toBe(1);
+  expect(history.get(1)?.path).toBe('/route-one#section');
+  expect(history.get(1)?.state).toBe(state);
+  expect(listener).toHaveBeenCalledTimes(1);
+
+  window.setHash('#details');
+
+  jest.runAllTimers();
+
+  expect(history.index).toBe(2);
+  expect(history.get(2)?.path).toBe('/route-one#details');
+
+  window.history.back();
+
+  jest.runAllTimers();
+
+  expect(history.index).toBe(1);
+  expect(window.location.hash).toBe('#section');
+  expect(history.get(2)?.path).toBe('/route-one#details');
+
+  jest.useRealTimers();
 });
 
 test('will not attempt to navigate beyond whatever browser history it is possible to know about', () => {

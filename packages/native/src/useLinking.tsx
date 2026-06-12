@@ -18,6 +18,8 @@ import type { Thenable } from './useThenable';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
+const getPathWithoutHash = (path: string) => path.split('#')[0] ?? '';
+
 const getRoutesUntilIndex = (state: NavigationState) =>
   state.routes.slice(0, state.index + 1);
 
@@ -274,21 +276,27 @@ export function useLinking<ParamList extends ParamListBase>(
 
       const { location } = window;
 
-      const path = location.pathname + location.search;
+      const fullPath = location.pathname + location.search + location.hash;
+      const path = getPathWithoutHash(fullPath);
       const index = history.index;
 
       const previousIndex = previousIndexRef.current ?? 0;
 
       previousIndexRef.current = index;
-      pendingPopStatePathRef.current = path;
+      pendingPopStatePathRef.current = fullPath;
 
       // When browser back/forward is clicked, we first need to check if state object for this index exists
       // If it does we'll reset to that state object
       // Otherwise, we'll handle it like a regular deep link
       const record = history.get(index);
 
-      if (record?.path === path && record?.state) {
+      if (record?.path === fullPath && record?.state) {
         const currentState = navigation.getRootState();
+
+        if (isEqual(currentState, record.state)) {
+          pendingPopStatePathRef.current = undefined;
+          return;
+        }
 
         const [currentFocused, recordFocused] = findMatchingState(
           currentState,
@@ -348,7 +356,7 @@ export function useLinking<ParamList extends ParamListBase>(
               // Ignore any errors from deep linking.
               // This could happen in case of malformed links, navigation object not being initialized etc.
               console.warn(
-                `An error occurred when trying to handle the link '${path}': ${
+                `An error occurred when trying to handle the link '${fullPath}': ${
                   typeof e === 'object' && e != null && 'message' in e
                     ? e.message
                     : e
@@ -386,7 +394,7 @@ export function useLinking<ParamList extends ParamListBase>(
 
         try {
           stateForPath = getStateFromPathRef.current(
-            route.path,
+            getPathWithoutHash(route.path),
             configRef.current
           );
         } catch (e) {
@@ -422,9 +430,10 @@ export function useLinking<ParamList extends ParamListBase>(
         route &&
         'key' in previousRoute &&
         'key' in route &&
-        previousRoute.key === route.key
+        previousRoute.key === route.key &&
+        !path.includes('#')
       ) {
-        path = path + location.hash;
+        path = path + window.location.hash;
       }
 
       return path;
@@ -465,7 +474,12 @@ export function useLinking<ParamList extends ParamListBase>(
 
       const pendingPath = pendingPopStatePathRef.current;
       const route = findFocusedRoute(state);
-      const path = getPathForRoute(route, state);
+      const generatedPath = getPathForRoute(route, state);
+      const path =
+        pendingPath &&
+        getPathWithoutHash(generatedPath) === getPathWithoutHash(pendingPath)
+          ? pendingPath
+          : generatedPath;
 
       previousStateRef.current = state;
       pendingPopStatePathRef.current = undefined;
