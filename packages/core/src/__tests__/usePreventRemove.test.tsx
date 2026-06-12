@@ -4,7 +4,9 @@ import {
   type ParamListBase,
   type PartialState,
   StackActions,
+  type StackNavigationState,
   StackRouter,
+  type TabNavigationState,
   TabRouter,
 } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
@@ -1166,26 +1168,53 @@ test("prevents removing a nested screen with 'usePreventRemove' hook with 'reset
 
   await render(element);
 
-  const initialState = ref.current?.getRootState();
+  const initialBazState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-9',
+    index: 1,
+    routeNames: ['qux', 'lex'],
+    routes: [
+      { name: 'qux', key: 'qux-7' },
+      { name: 'lex', key: 'lex-8' },
+    ],
+    retainedRouteKeys: [],
+  };
 
-  if (initialState == null) {
-    throw new Error('Expected a navigation state');
-  }
+  const initialState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-4',
+    index: 1,
+    routeNames: ['foo', 'baz'],
+    routes: [
+      { name: 'foo', key: 'foo-2' },
+      { name: 'baz', key: 'baz-3', state: initialBazState },
+    ],
+    retainedRouteKeys: [],
+  };
 
-  const recordedState: NavigationState = {
-    ...initialState,
-    routes: initialState.routes.map((route) =>
-      route.name === 'baz' && route.state?.stale === false
-        ? {
-            ...route,
-            state: {
-              ...route.state,
-              index: 0,
-              routes: route.state.routes.slice(0, 1),
-            },
-          }
-        : route
-    ),
+  const recordedBazState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-9',
+    index: 0,
+    routeNames: ['qux', 'lex'],
+    routes: [{ name: 'qux', key: 'qux-7' }],
+    retainedRouteKeys: [],
+  };
+
+  const recordedState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-4',
+    index: 1,
+    routeNames: ['foo', 'baz'],
+    routes: [
+      { name: 'foo', key: 'foo-2' },
+      { name: 'baz', key: 'baz-3', state: recordedBazState },
+    ],
+    retainedRouteKeys: [],
   };
 
   await act(() => ref.current?.resetRoot(recordedState));
@@ -1199,7 +1228,7 @@ test("prevents removing a nested screen with 'usePreventRemove' hook with 'reset
   expect(ref.current?.getRootState()).toEqual(recordedState);
 });
 
-test("doesn't fire 'usePreventRemove' for a kept nested screen with 'resetRoot'", async () => {
+test("doesn't prevent 'resetRoot' when the nested screen with 'usePreventRemove' hook is kept", async () => {
   const TestNavigator = (props: { children: React.ReactNode }) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -1251,26 +1280,27 @@ test("doesn't fire 'usePreventRemove' for a kept nested screen with 'resetRoot'"
 
   await render(element);
 
-  const initialState = ref.current?.getRootState();
+  const recordedBazState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-9',
+    index: 0,
+    routeNames: ['qux', 'lex'],
+    routes: [{ name: 'qux', key: 'qux-7' }],
+    retainedRouteKeys: [],
+  };
 
-  if (initialState == null) {
-    throw new Error('Expected a navigation state');
-  }
-
-  const recordedState: NavigationState = {
-    ...initialState,
-    routes: initialState.routes.map((route) =>
-      route.name === 'baz' && route.state?.stale === false
-        ? {
-            ...route,
-            state: {
-              ...route.state,
-              index: 0,
-              routes: route.state.routes.slice(0, 1),
-            },
-          }
-        : route
-    ),
+  const recordedState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-4',
+    index: 1,
+    routeNames: ['foo', 'baz'],
+    routes: [
+      { name: 'foo', key: 'foo-2' },
+      { name: 'baz', key: 'baz-3', state: recordedBazState },
+    ],
+    retainedRouteKeys: [],
   };
 
   await act(() => ref.current?.resetRoot(recordedState));
@@ -1278,7 +1308,7 @@ test("doesn't fire 'usePreventRemove' for a kept nested screen with 'resetRoot'"
   expect(ref.current?.getRootState()).toEqual(recordedState);
 });
 
-test("prevents a 'resetRoot' blocked by separate nested screens and proceeds once confirmed", async () => {
+test("prevents removing by multiple nested screens with 'usePreventRemove' hook with 'resetRoot'", async () => {
   const TestNavigator = (props: { children: React.ReactNode }) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -1350,27 +1380,78 @@ test("prevents a 'resetRoot' blocked by separate nested screens and proceeds onc
 
   await render(element);
 
-  const initialState = ref.current?.getRootState();
+  const initialBaz1State: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-10',
+    index: 1,
+    routeNames: ['qux1', 'lex1'],
+    routes: [
+      { name: 'qux1', key: 'qux1-8' },
+      { name: 'lex1', key: 'lex1-9' },
+    ],
+    retainedRouteKeys: [],
+  };
 
-  if (initialState == null) {
-    throw new Error('Expected a navigation state');
-  }
+  const initialBaz2State: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-16',
+    index: 1,
+    routeNames: ['qux2', 'lex2'],
+    routes: [
+      { name: 'qux2', key: 'qux2-14' },
+      { name: 'lex2', key: 'lex2-15' },
+    ],
+    retainedRouteKeys: [],
+  };
 
-  const recordedState: NavigationState = {
-    ...initialState,
-    routes: initialState.routes.map((route) =>
-      (route.name === 'baz1' || route.name === 'baz2') &&
-      route.state?.stale === false
-        ? {
-            ...route,
-            state: {
-              ...route.state,
-              index: 0,
-              routes: route.state.routes.slice(0, 1),
-            },
-          }
-        : route
-    ),
+  const initialState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-5',
+    index: 2,
+    routeNames: ['foo', 'baz1', 'baz2'],
+    routes: [
+      { name: 'foo', key: 'foo-2' },
+      { name: 'baz1', key: 'baz1-3', state: initialBaz1State },
+      { name: 'baz2', key: 'baz2-4', state: initialBaz2State },
+    ],
+    retainedRouteKeys: [],
+  };
+
+  const recordedBaz1State: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-10',
+    index: 0,
+    routeNames: ['qux1', 'lex1'],
+    routes: [{ name: 'qux1', key: 'qux1-8' }],
+    retainedRouteKeys: [],
+  };
+
+  const recordedBaz2State: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-16',
+    index: 0,
+    routeNames: ['qux2', 'lex2'],
+    routes: [{ name: 'qux2', key: 'qux2-14' }],
+    retainedRouteKeys: [],
+  };
+
+  const recordedState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-5',
+    index: 2,
+    routeNames: ['foo', 'baz1', 'baz2'],
+    routes: [
+      { name: 'foo', key: 'foo-2' },
+      { name: 'baz1', key: 'baz1-3', state: recordedBaz1State },
+      { name: 'baz2', key: 'baz2-4', state: recordedBaz2State },
+    ],
+    retainedRouteKeys: [],
   };
 
   await act(() => ref.current?.resetRoot(recordedState));
@@ -1384,7 +1465,7 @@ test("prevents a 'resetRoot' blocked by separate nested screens and proceeds onc
   expect(ref.current?.getRootState()).toEqual(recordedState);
 });
 
-test("prevents removing a deeply nested screen with 'usePreventRemove' hook with 'resetRoot' when route keys are unchanged", async () => {
+test("prevents removing a grand child screen with 'usePreventRemove' hook with 'resetRoot' when route keys are unchanged", async () => {
   const TestNavigator = (props: { children: React.ReactNode }) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -1453,36 +1534,73 @@ test("prevents removing a deeply nested screen with 'usePreventRemove' hook with
 
   await render(element);
 
-  const initialState = ref.current?.getRootState();
+  const initialQuxState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-13',
+    index: 1,
+    routeNames: ['lex', 'pax'],
+    routes: [
+      { name: 'lex', key: 'lex-11' },
+      { name: 'pax', key: 'pax-12' },
+    ],
+    retainedRouteKeys: [],
+  };
 
-  if (initialState == null) {
-    throw new Error('Expected a navigation state');
-  }
+  const initialBazState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-8',
+    index: 0,
+    routeNames: ['qux'],
+    routes: [{ name: 'qux', key: 'qux-7', state: initialQuxState }],
+    retainedRouteKeys: [],
+  };
 
-  const recordedState: NavigationState = {
-    ...initialState,
-    routes: initialState.routes.map((route) =>
-      route.name === 'baz' && route.state?.stale === false
-        ? {
-            ...route,
-            state: {
-              ...route.state,
-              routes: route.state.routes.map((inner) =>
-                inner.name === 'qux' && inner.state?.stale === false
-                  ? {
-                      ...inner,
-                      state: {
-                        ...inner.state,
-                        index: 0,
-                        routes: inner.state.routes.slice(0, 1),
-                      },
-                    }
-                  : inner
-              ),
-            },
-          }
-        : route
-    ),
+  const initialState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-4',
+    index: 1,
+    routeNames: ['foo', 'baz'],
+    routes: [
+      { name: 'foo', key: 'foo-2' },
+      { name: 'baz', key: 'baz-3', state: initialBazState },
+    ],
+    retainedRouteKeys: [],
+  };
+
+  const recordedQuxState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-13',
+    index: 0,
+    routeNames: ['lex', 'pax'],
+    routes: [{ name: 'lex', key: 'lex-11' }],
+    retainedRouteKeys: [],
+  };
+
+  const recordedBazState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-8',
+    index: 0,
+    routeNames: ['qux'],
+    routes: [{ name: 'qux', key: 'qux-7', state: recordedQuxState }],
+    retainedRouteKeys: [],
+  };
+
+  const recordedState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-4',
+    index: 1,
+    routeNames: ['foo', 'baz'],
+    routes: [
+      { name: 'foo', key: 'foo-2' },
+      { name: 'baz', key: 'baz-3', state: recordedBazState },
+    ],
+    retainedRouteKeys: [],
   };
 
   await act(() => ref.current?.resetRoot(recordedState));
@@ -1490,7 +1608,7 @@ test("prevents removing a deeply nested screen with 'usePreventRemove' hook with
   expect(ref.current?.getRootState()).toEqual(initialState);
 });
 
-test("doesn't fire 'usePreventRemove' when only the nested navigator's index changes with 'resetRoot'", async () => {
+test("doesn't prevent changing the nested navigator's index with 'resetRoot'", async () => {
   const TestNavigator = (props: { children: React.ReactNode }) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -1555,11 +1673,32 @@ test("doesn't fire 'usePreventRemove' when only the nested navigator's index cha
 
   await render(element);
 
-  const recordedState = ref.current?.getRootState();
+  const recordedBazState: TabNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'tab',
+    key: 'tab-9',
+    index: 0,
+    routeNames: ['tabA', 'tabB'],
+    history: [{ type: 'route', key: 'tabA-7' }],
+    routes: [
+      { name: 'tabA', key: 'tabA-7' },
+      { name: 'tabB', key: 'tabB-8' },
+    ],
+    preloadedRouteKeys: [],
+  };
 
-  if (recordedState == null) {
-    throw new Error('Expected a navigation state');
-  }
+  const recordedState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-4',
+    index: 1,
+    routeNames: ['foo', 'baz'],
+    routes: [
+      { name: 'foo', key: 'foo-2' },
+      { name: 'baz', key: 'baz-3', state: recordedBazState },
+    ],
+    retainedRouteKeys: [],
+  };
 
   await act(() => ref.current?.navigate('tabB'));
 
@@ -1568,7 +1707,7 @@ test("doesn't fire 'usePreventRemove' when only the nested navigator's index cha
   expect(ref.current?.getRootState()).toEqual(recordedState);
 });
 
-test("fires 'usePreventRemove' when the next nested state is stale with 'resetRoot'", async () => {
+test("prevents removing a nested screen with 'usePreventRemove' hook with a stale 'resetRoot' state", async () => {
   const TestNavigator = (props: { children: React.ReactNode }) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -1620,23 +1759,42 @@ test("fires 'usePreventRemove' when the next nested state is stale with 'resetRo
 
   await render(element);
 
-  const initialState = ref.current?.getRootState();
+  const initialBazState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-9',
+    index: 1,
+    routeNames: ['qux', 'lex'],
+    routes: [
+      { name: 'qux', key: 'qux-7' },
+      { name: 'lex', key: 'lex-8' },
+    ],
+    retainedRouteKeys: [],
+  };
 
-  if (initialState == null) {
-    throw new Error('Expected a navigation state');
-  }
+  const initialState: StackNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'stack',
+    key: 'stack-4',
+    index: 1,
+    routeNames: ['foo', 'baz'],
+    routes: [
+      { name: 'foo', key: 'foo-2' },
+      { name: 'baz', key: 'baz-3', state: initialBazState },
+    ],
+    retainedRouteKeys: [],
+  };
 
   const recordedState: PartialState<NavigationState> = {
-    index: initialState.index,
-    routes: initialState.routes.map((route) =>
-      route.name === 'baz'
-        ? {
-            key: route.key,
-            name: route.name,
-            state: { stale: true, routes: [{ name: 'qux' }] },
-          }
-        : { key: route.key, name: route.name }
-    ),
+    index: 1,
+    routes: [
+      { name: 'foo', key: 'foo-2' },
+      {
+        name: 'baz',
+        key: 'baz-3',
+        state: { stale: true, routes: [{ name: 'qux' }] },
+      },
+    ],
   };
 
   await act(() => ref.current?.resetRoot(recordedState));

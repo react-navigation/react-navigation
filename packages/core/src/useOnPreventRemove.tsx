@@ -2,7 +2,6 @@ import type {
   NavigationAction,
   NavigationState,
   PartialState,
-  Router,
   RouterConfigOptions,
 } from '@react-navigation/routers';
 import * as React from 'react';
@@ -19,11 +18,30 @@ type Options = {
   getState: () => NavigationState;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
-  router: Router<NavigationState, NavigationAction>;
-  routerConfigOptions: RouterConfigOptions;
+  routerConfigOptionsRef: React.RefObject<RouterConfigOptions>;
 };
 
 const VISITED_ROUTE_KEYS = Symbol('VISITED_ROUTE_KEYS');
+
+/**
+ * Returns the next state's routes for diffing against the current routes by key; no next state
+ * means the route itself was removed. A stale state isn't rehydrated yet — dropping unknown names
+ * mirrors rehydration's effect on keys, and keyless routes can never match a current route anyway.
+ */
+export const getRoutesToCompare = (
+  nextState: NavigationState | PartialState<NavigationState> | undefined,
+  routeNames: string[]
+) => {
+  if (nextState == null) {
+    return [];
+  }
+
+  if (nextState.stale === false) {
+    return nextState.routes;
+  }
+
+  return nextState.routes.filter((route) => routeNames.includes(route.name));
+};
 
 export const shouldPreventRemove = (
   emitter: NavigationEventEmitter<EventMapCore<any>>,
@@ -102,19 +120,11 @@ export function useOnPreventRemove({
   getState,
   emitter,
   beforeRemoveListeners,
-  router,
-  routerConfigOptions,
+  routerConfigOptionsRef,
 }: Options) {
   const { addKeyedListener } = React.use(NavigationBuilderContext);
   const route = React.use(NavigationRouteContext);
   const routeKey = route?.key;
-
-  const routerConfigOptionsRef =
-    React.useRef<RouterConfigOptions>(routerConfigOptions);
-
-  React.useEffect(() => {
-    routerConfigOptionsRef.current = routerConfigOptions;
-  });
 
   React.useInsertionEffect(() => {
     if (routeKey) {
@@ -124,26 +134,14 @@ export function useOnPreventRemove({
         (action, nextState) => {
           const state = getState();
 
-          // A partial next state has keyless routes; rehydrate it so keys match before diffing.
-          // No next state means the route itself was removed, so all of its routes count as removed.
-          let nextRoutes:
-            | typeof state.routes
-            | PartialState<NavigationState>['routes'] = [];
-
-          if (nextState != null) {
-            nextRoutes = nextState.routes.some((route) => route.key == null)
-              ? router.getRehydratedState(
-                  nextState,
-                  routerConfigOptionsRef.current
-                ).routes
-              : nextState.routes;
-          }
-
           return shouldPreventRemove(
             emitter,
             beforeRemoveListeners,
             state.routes,
-            nextRoutes,
+            getRoutesToCompare(
+              nextState,
+              routerConfigOptionsRef.current.routeNames
+            ),
             action
           );
         }
@@ -154,7 +152,7 @@ export function useOnPreventRemove({
     beforeRemoveListeners,
     emitter,
     getState,
-    router,
     routeKey,
+    routerConfigOptionsRef,
   ]);
 }
