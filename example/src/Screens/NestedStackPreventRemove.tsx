@@ -1,11 +1,21 @@
 import { Button } from '@react-navigation/elements';
-import { useNavigation, useTheme } from '@react-navigation/native';
+import {
+  CommonActions,
+  useNavigation,
+  useTheme,
+} from '@react-navigation/native';
 import {
   createStackNavigator,
   createStackScreen,
 } from '@react-navigation/stack';
 import * as React from 'react';
-import { Platform, ScrollView, StyleSheet, TextInput } from 'react-native';
+import {
+  Alert,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+} from 'react-native';
 
 const Step1Screen = () => {
   const navigation = useNavigation('Step1');
@@ -35,12 +45,22 @@ const FormScreen = () => {
 
         e.preventDefault();
 
-        const discard = confirm(
-          'You have unsaved changes. Discard them and leave the screen?'
-        );
+        const message =
+          'You have unsaved changes. Discard them and leave the screen?';
 
-        if (discard) {
-          navigation.dispatch(e.data.action);
+        if (Platform.OS === 'web') {
+          if (confirm(message)) {
+            navigation.dispatch(e.data.action);
+          }
+        } else {
+          Alert.alert('Discard changes?', message, [
+            { text: "Don't leave", style: 'cancel', onPress: () => {} },
+            {
+              text: 'Discard',
+              style: 'destructive',
+              onPress: () => navigation.dispatch(e.data.action),
+            },
+          ]);
         }
       }),
     [hasUnsavedChanges, navigation]
@@ -69,19 +89,47 @@ const FormScreen = () => {
 };
 
 const Step3Screen = () => {
+  const navigation = useNavigation('Step3');
+
+  const removeForm = () => {
+    if (Platform.OS === 'web') {
+      // Two entries back (not one) forces `useLinking`'s `resetRoot` instead of `goBack`
+      window.history.go(-2);
+      return;
+    }
+
+    // No browser history on native: reproduce the `resetRoot` shape directly (what deep links and
+    // state restoration produce) — keep this nested stack's route key, pop it back to the first screen.
+    const parent = navigation.getParent();
+    const parentState = parent?.getState();
+
+    if (!parent || !parentState) {
+      return;
+    }
+
+    parent.dispatch(
+      CommonActions.reset({
+        ...parentState,
+        routes: parentState.routes.map((route, index) => {
+          const nested = route.state;
+
+          if (index !== parentState.index || !nested) {
+            return route;
+          }
+
+          return {
+            ...route,
+            state: { ...nested, index: 0, routes: nested.routes.slice(0, 1) },
+          };
+        }),
+      })
+    );
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.content}>
-      <Button
-        variant="tinted"
-        color="tomato"
-        onPress={() => {
-          if (Platform.OS === 'web') {
-            // Jump back past the dirty `Form` so it's removed by a nested-state `resetRoot`
-            window.history.go(-2);
-          }
-        }}
-      >
-        Jump back 2 entries (browser)
+      <Button variant="tinted" color="tomato" onPress={removeForm}>
+        Go back past Form
       </Button>
     </ScrollView>
   );
