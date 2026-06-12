@@ -187,15 +187,18 @@ export type InferParse<T> = T extends { parse: infer P } ? P : {};
 
 export type InferParamsFromLinking<T> = T extends {
   path: infer P extends string;
+  parse: infer Parse;
 }
-  ? UndefinedIfAllOptional<
-      ExtractParamsType<ExtractParamStrings<P>, InferParse<T>>
-    >
-  : T extends string
-    ? UndefinedIfAllOptional<
-        ExtractParamsType<ExtractParamStrings<T>, undefined>
-      >
-    : undefined;
+  ? UndefinedIfAllOptional<ExtractParamsType<ExtractParamStrings<P>, Parse>>
+  : T extends {
+        path: infer P extends string;
+      }
+    ? UndefinedIfAllOptional<ExtractParamsType<ExtractParamStrings<P>, {}>>
+    : T extends string
+      ? UndefinedIfAllOptional<
+          ExtractParamsType<ExtractParamStrings<T>, undefined>
+        >
+      : undefined;
 
 /**
  * Infer the params type from a screen component or nested navigator.
