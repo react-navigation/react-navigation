@@ -83,12 +83,13 @@ type ParamsForScreenEntry<T> = T extends T ? ParamsForScreen<T> : never;
 // Only infer params from linking if it's a pattern (i.e., contains ':')
 // or if parse is present for query params.
 // This avoids inferring non-literals like 'string' without parse.
-type ShouldInferFromLinking<Linking> = Linking extends
-  | ValidPathPattern
-  | { path: ValidPathPattern }
-  | { parse: Record<string, unknown> }
+type ShouldInferFromLinking<Linking> = Linking extends {
+  parse: Record<string, unknown>;
+}
   ? true
-  : false;
+  : Linking extends ValidPathPattern | { path: ValidPathPattern }
+    ? true
+    : false;
 
 /**
  * Params type derived from both linking and screen.
