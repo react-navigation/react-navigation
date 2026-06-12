@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.38](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.37...@react-navigation/bottom-tabs@8.0.0-alpha.38) (2026-06-11)
+
+### Features
+
+* remove overload from navigate action ([#13150](https://github.com/react-navigation/react-navigation/issues/13150)) ([a876c49](https://github.com/react-navigation/react-navigation/commit/a876c49b411a79d4614d26195829019c90ada992)) - by @satya164
+
+# [8.0.0-alpha.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.36...@react-navigation/bottom-tabs@8.0.0-alpha.37) (2026-06-10)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
 # [8.0.0-alpha.36](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.35...@react-navigation/bottom-tabs@8.0.0-alpha.36) (2026-06-09)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

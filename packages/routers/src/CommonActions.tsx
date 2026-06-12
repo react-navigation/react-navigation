@@ -86,40 +86,16 @@ export function navigate(
         pop?: boolean | undefined;
       }
     | undefined
-): Action;
-
-export function navigate(options: {
-  name: string;
-  params?: object | undefined;
-  path?: string | undefined;
-  merge?: boolean | undefined;
-  pop?: boolean | undefined;
-}): Action;
-
-export function navigate(...args: any): Action {
-  if (typeof args[0] === 'string') {
-    const [name, params, options] = args;
-
-    return {
-      type: 'NAVIGATE',
-      payload: {
-        name,
-        params,
-        merge: options?.merge,
-        pop: options?.pop,
-      },
-    };
-  } else {
-    const payload = args[0] || {};
-
-    if (!('name' in payload)) {
-      throw new Error(
-        'You need to specify a name when calling navigate with an object as the argument. See https://reactnavigation.org/docs/navigation-actions#navigate for usage.'
-      );
-    }
-
-    return { type: 'NAVIGATE', payload };
-  }
+): Action {
+  return {
+    type: 'NAVIGATE',
+    payload: {
+      name,
+      params,
+      merge: options?.merge,
+      pop: options?.pop,
+    },
+  };
 }
 
 export function reset(state: ResetState) {

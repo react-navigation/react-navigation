@@ -450,7 +450,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
               options.tabBarSelectionEnabled !== false
             ) {
               navigation.dispatch({
-                ...CommonActions.navigate(route),
+                ...CommonActions.navigate(route.name, route.params),
                 target: state.key,
               });
             }

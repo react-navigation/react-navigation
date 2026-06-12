@@ -287,6 +287,11 @@ export class PrivateValueStore<T extends [any, any, any, any]> {
   protected ''?: T;
 }
 
+type NavigateOptions = {
+  merge?: boolean | undefined;
+  pop?: boolean | undefined;
+};
+
 type NavigationHelpersCommon<
   ParamList extends ParamListBase,
   State extends NavigationState = NavigationState,
@@ -321,40 +326,13 @@ type NavigationHelpersCommon<
         ? [
             screen: RouteName,
             params?: ParamList[RouteName],
-            options?: {
-              merge?: boolean | undefined;
-              pop?: boolean | undefined;
-            },
+            options?: NavigateOptions,
           ]
         : [
             screen: RouteName,
             params: ParamList[RouteName],
-            options?: {
-              merge?: boolean | undefined;
-              pop?: boolean | undefined;
-            },
+            options?: NavigateOptions,
           ]
-      : never
-  ): void;
-
-  /**
-   * Navigate to a route in current navigation tree.
-   *
-   * @param options.name Name of the route to navigate to.
-   * @param [options.params] Params object for the route.
-   * @param [options.path] Path to associate the route with (e.g. for deep links).
-   * @param [options.merge] Whether to merge the params onto the route. Defaults to `false`.
-   * @param [options.pop] Whether to pop routes in a stack to go back to the matching route. Defaults to `false`.
-   */
-  navigate<RouteName extends keyof ParamList>(
-    options: RouteName extends unknown
-      ? {
-          name: RouteName;
-          params: ParamList[RouteName];
-          path?: string | undefined;
-          merge?: boolean | undefined;
-          pop?: boolean | undefined;
-        }
       : never
   ): void;
 
@@ -1013,12 +991,41 @@ export type GenericNavigation<ParamList extends {}> = Omit<
 export type RouteForName<
   ParamList extends {},
   RouteName extends string,
-> = RouteForNameInternal<RouteName, ParamListRoute<ParamList>>;
+> = string extends RouteName
+  ? // RouteName is a not a literal but `string`
+    // Return union of all possible routes in the tree
+    ParamListRoute<ParamList>
+  : RouteForNameInternal<ParamList, RouteName>;
 
-type RouteForNameInternal<
-  RouteName extends string,
-  Routes,
-> = string extends RouteName ? Routes : Extract<Routes, { name: RouteName }>;
+// Look up route object by checking each level and recursing into the nested param lists
+// This avoids building a union of all routes, which doesn't scale on large trees
+type RouteForNameInternal<ParamList extends {}, RouteName extends string> =
+  | (RouteName extends infer Name extends KeyOf<ParamList>
+      ? RouteProp<ParamList, Name>
+      : never)
+  | RouteForNameNested<NestedParamLists<ParamList>, RouteName>;
+
+type RouteForNameNested<ParamLists, RouteName extends string> =
+  // Distributes over the union of nested param lists
+  // e.g. if ParamLists is A | B
+  // TypeScript evaluates the branch once per member (A, then B)
+  // and unions the outcomes
+  // The infer ParamList extends {} just captures the current member
+  // and re-asserts the {} constraint that RouteForNameInternal requires
+  ParamLists extends infer ParamList extends {}
+    ? RouteForNameInternal<ParamList, RouteName>
+    : never;
+
+/**
+ * Union of param lists of the nested navigators in a param list.
+ */
+export type NestedParamLists<ParamList extends {}> = {
+  [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
+    ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<infer T>
+      ? T
+      : never
+    : never;
+}[keyof ParamList];
 
 type ParamListRoute<ParamList extends {}> = {
   [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]

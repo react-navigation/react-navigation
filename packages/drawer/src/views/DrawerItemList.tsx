@@ -57,7 +57,7 @@ export function DrawerItemList({ state, navigation, descriptors }: Props) {
         navigation.dispatch({
           ...(focused
             ? DrawerActions.closeDrawer()
-            : CommonActions.navigate(route)),
+            : CommonActions.navigate(route.name, route.params)),
           target: state.key,
         });
       }
