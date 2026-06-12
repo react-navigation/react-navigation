@@ -76,9 +76,7 @@ const Step3Screen = () => {
         color="tomato"
         onPress={() => {
           if (Platform.OS === 'web') {
-            // Jump back two history entries at once. This removes the middle (dirty) `Form`
-            // screen via `useLinking`'s `resetRoot`, which keeps the host route key and only
-            // changes its nested state — the case `beforeRemove` previously missed.
+            // Jump back past the dirty `Form` so it's removed by a nested-state `resetRoot`
             window.history.go(-2);
           }
         }}
