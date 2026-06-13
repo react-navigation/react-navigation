@@ -179,11 +179,9 @@ export type InferParamsFromLinking<T> = T extends {
   : T extends {
         path: infer P extends string;
       }
-    ? UndefinedIfAllOptional<ExtractParamsType<ExtractParamStrings<P>, {}>>
+    ? UndefinedIfAllOptional<ExtractParamStrings<P>>
     : T extends string
-      ? UndefinedIfAllOptional<
-          ExtractParamsType<ExtractParamStrings<T>, undefined>
-        >
+      ? UndefinedIfAllOptional<ExtractParamStrings<T>>
       : undefined;
 
 /**
