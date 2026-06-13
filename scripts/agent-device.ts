@@ -31,6 +31,7 @@ if (!appId) {
 const scheme = `${config.expo?.scheme}://`;
 const ci = process.env.CI === 'true' || process.env.CI === '1';
 const ciTimeoutMs = process.env.AGENT_DEVICE_E2E_TIMEOUT_MS ?? '240000';
+const ciRetries = process.env.AGENT_DEVICE_E2E_RETRIES ?? '3';
 const testInputs = (process.env.AGENT_DEVICE_E2E_INPUTS ?? 'e2e/maestro')
   .split(/\s+/)
   .filter(Boolean);
@@ -72,7 +73,7 @@ if (ci) {
     '--timeout',
     ciTimeoutMs,
     '--retries',
-    '3',
+    ciRetries,
     '--report-junit',
     'agent-device-artifacts/junit.xml'
   );

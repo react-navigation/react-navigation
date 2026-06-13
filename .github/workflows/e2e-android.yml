@@ -149,7 +149,7 @@ jobs:
       - name: Run Maestro tests
         env:
           AGENT_DEVICE_E2E_INPUTS: e2e/maestro/material-top-tabs.yml
-          AGENT_DEVICE_E2E_RECORD_VIDEO: 'true'
+          AGENT_DEVICE_E2E_RETRIES: '0'
         run: |
           adb install android-debug-build/android-debug.apk
           adb reverse tcp:8081 tcp:8081
