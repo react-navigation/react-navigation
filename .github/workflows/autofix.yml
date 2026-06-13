@@ -10,7 +10,6 @@ permissions:
 
 jobs:
   autofix:
-    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

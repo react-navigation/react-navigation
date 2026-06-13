@@ -9,7 +9,6 @@ on:
 
 jobs:
   maestro-ios:
-    if: false
     runs-on: macos-latest
     timeout-minutes: 60
     permissions:

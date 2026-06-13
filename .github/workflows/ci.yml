@@ -12,7 +12,6 @@ permissions:
 
 jobs:
   dependencies:
-    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,7 +24,6 @@ jobs:
         run: pnpm versions check
 
   lint:
-    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -45,7 +43,6 @@ jobs:
           pnpm typecheck:declarations
 
   unit-test:
-    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -61,7 +58,6 @@ jobs:
         uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2
 
   build:
-    if: false
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
