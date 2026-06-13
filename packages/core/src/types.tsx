@@ -1000,8 +1000,8 @@ export type RouteForName<
 // Look up route object by checking each level and recursing into the nested param lists
 // This avoids building a union of all routes, which doesn't scale on large trees
 type RouteForNameInternal<ParamList extends {}, RouteName extends string> =
-  | (RouteName extends infer Name extends KeyOf<ParamList>
-      ? RouteProp<ParamList, Name>
+  | (RouteName extends KeyOf<ParamList>
+      ? RouteProp<ParamList, RouteName>
       : never)
   | RouteForNameNested<NestedParamLists<ParamList>, RouteName>;
 
