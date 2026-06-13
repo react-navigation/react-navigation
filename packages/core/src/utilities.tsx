@@ -25,8 +25,6 @@ export type UnionToIntersection<U> = (
   ? I
   : never;
 
-export type UnknownToUndefined<T> = unknown extends T ? undefined : T;
-
 /**
  * Exclude undefined from a type.
  * Similar to NonNullable but only excludes undefined, not null.
@@ -172,13 +170,6 @@ type QueryParamRequiredKeys<Params, Parse> = Exclude<
   Exclude<keyof Parse, keyof Params>,
   QueryParamOptionalKeys<Params, Parse>
 >;
-
-/**
- * Infer the path string from a linking config.
- */
-export type InferPath<T> = T extends { path: infer P extends string }
-  ? P
-  : never;
 
 export type InferParamsFromLinking<T> = T extends {
   path: infer P extends string;
