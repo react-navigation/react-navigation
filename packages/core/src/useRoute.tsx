@@ -22,11 +22,9 @@ type AllRouteNames<ParamList extends {}> =
   | KeyOf<ParamList>
   | AllNestedRouteNames<NestedParamLists<ParamList>>;
 
-type AllNestedRouteNames<ParamLists> =
-  // Distributes over the union of nested param lists
-  ParamLists extends infer ParamList extends {}
-    ? AllRouteNames<ParamList>
-    : never;
+type AllNestedRouteNames<ParamLists> = ParamLists extends {}
+  ? AllRouteNames<ParamLists>
+  : never;
 
 /**
  * Hook to access the route prop of the parent screen anywhere.

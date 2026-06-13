@@ -1000,8 +1000,8 @@ export type RouteForName<
 // Look up route object by checking each level and recursing into the nested param lists
 // This avoids building a union of all routes, which doesn't scale on large trees
 type RouteForNameInternal<ParamList extends {}, RouteName extends string> =
-  | (RouteName extends infer Name extends KeyOf<ParamList>
-      ? RouteProp<ParamList, Name>
+  | (RouteName extends KeyOf<ParamList>
+      ? RouteProp<ParamList, RouteName>
       : never)
   | RouteForNameNested<NestedParamLists<ParamList>, RouteName>;
 
@@ -1010,11 +1010,7 @@ type RouteForNameNested<ParamLists, RouteName extends string> =
   // e.g. if ParamLists is A | B
   // TypeScript evaluates the branch once per member (A, then B)
   // and unions the outcomes
-  // The infer ParamList extends {} just captures the current member
-  // and re-asserts the {} constraint that RouteForNameInternal requires
-  ParamLists extends infer ParamList extends {}
-    ? RouteForNameInternal<ParamList, RouteName>
-    : never;
+  ParamLists extends {} ? RouteForNameInternal<ParamLists, RouteName> : never;
 
 /**
  * Union of param lists of the nested navigators in a param list.

@@ -25,8 +25,6 @@ export type UnionToIntersection<U> = (
   ? I
   : never;
 
-export type UnknownToUndefined<T> = unknown extends T ? undefined : T;
-
 /**
  * Exclude undefined from a type.
  * Similar to NonNullable but only excludes undefined, not null.
@@ -173,46 +171,15 @@ type QueryParamRequiredKeys<Params, Parse> = Exclude<
   QueryParamOptionalKeys<Params, Parse>
 >;
 
-/**
- * Infer the path string from a linking config.
- */
-export type InferPath<T> = T extends { path: infer P extends string }
-  ? P
-  : never;
-
-/**
- * Infer the parse functions from a linking config.
- */
-export type InferParse<T> = T extends { parse: infer P } ? P : {};
-
 export type InferParamsFromLinking<T> = T extends {
   path: infer P extends string;
+  parse: infer Parse;
 }
-  ? UndefinedIfAllOptional<
-      ExtractParamsType<ExtractParamStrings<P>, InferParse<T>>
-    >
-  : T extends string
-    ? UndefinedIfAllOptional<
-        ExtractParamsType<ExtractParamStrings<T>, undefined>
-      >
-    : undefined;
-
-/**
- * Infer the params type from a screen component or nested navigator.
- */
-export type InferScreenParams<T> =
-  T extends React.ComponentType<{ route: { params: infer P } }>
-    ? P
-    : T extends { config: { screens: infer Screens } }
-      ? import('./types').NavigatorScreenParams<{
-          [K in keyof Screens]: Screens[K] extends React.ComponentType<{
-            route: { params: infer P };
-          }>
-            ? P
-            : Screens[K] extends { screen: infer S }
-              ? S extends React.ComponentType<{ route: { params: infer P } }>
-                ? P
-                : undefined
-              : undefined;
-        }>
+  ? UndefinedIfAllOptional<ExtractParamsType<ExtractParamStrings<P>, Parse>>
+  : T extends {
+        path: infer P extends string;
+      }
+    ? UndefinedIfAllOptional<ExtractParamStrings<P>>
+    : T extends string
+      ? UndefinedIfAllOptional<ExtractParamStrings<T>>
       : undefined;
