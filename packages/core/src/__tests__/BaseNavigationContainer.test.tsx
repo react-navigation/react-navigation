@@ -16,7 +16,9 @@ import { NavigationIndependentTree } from '../NavigationIndependentTree';
 import { NavigationStateContext } from '../NavigationStateContext';
 import { Screen } from '../Screen';
 import type {
+  DefaultNavigatorOptions,
   EventListenerCallback,
+  EventMapBase,
   NavigationContainerEventMap,
 } from '../types';
 import { useNavigationBuilder } from '../useNavigationBuilder';
@@ -29,6 +31,14 @@ import {
 beforeEach(() => {
   MockRouterKey.current = 0;
 });
+
+type TestNavigatorProps = DefaultNavigatorOptions<
+  ParamListBase,
+  NavigationState,
+  {},
+  EventMapBase,
+  unknown
+>;
 
 test('throws when getState is accessed without a container', async () => {
   expect.assertions(1);
@@ -275,6 +285,38 @@ test('handle resetting state with ref', async () => {
     stale: false,
     type: 'test',
   });
+});
+
+test('returns whether the root navigation can go back', async () => {
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const TestNavigator = (props: TestNavigatorProps) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  await render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(ref.current?.canGoBack()).toBe(false);
+
+  await act(() => ref.current?.navigate('bar'));
+
+  expect(ref.current?.canGoBack()).toBe(true);
 });
 
 test('handles getRootState', async () => {
@@ -749,7 +791,7 @@ test('emits option events when options change with stack router', async () => {
 });
 
 test('throws if there is no navigator rendered', async () => {
-  expect.assertions(1);
+  expect.assertions(5);
 
   const ref = createNavigationContainerRef<ParamListBase>();
 
@@ -762,9 +804,163 @@ test('throws if there is no navigator rendered', async () => {
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
   ref.current?.dispatch({ type: 'WHATEVER' });
+  ref.current?.resetRoot({ routes: [] });
 
   expect(spy.mock.calls[0]?.[0]).toMatch(
     "The 'navigation' object hasn't been initialized yet."
+  );
+  expect(spy.mock.calls[1]?.[0]).toMatch(
+    "The 'navigation' object hasn't been initialized yet."
+  );
+
+  expect(ref.current?.canGoBack()).toBe(false);
+  expect(ref.current?.getCurrentRoute()).toBeUndefined();
+  expect(ref.current?.isFocused()).toBe(true);
+
+  spy.mockRestore();
+});
+
+test('warns for non-serializable values in navigation state', async () => {
+  const TestNavigator = (props: TestNavigatorProps) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  await render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" initialParams={{ callback: () => null }}>
+          {() => null}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(spy.mock.calls[0]?.[0]).toMatch(
+    'Non-serializable values were found in the navigation state.'
+  );
+  expect(spy.mock.calls[0]?.[0]).toMatch('foo > params.callback');
+
+  spy.mockRestore();
+});
+
+test('warns for unhandled go back action', async () => {
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const TestNavigator = (props: TestNavigatorProps) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  await render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => ref.current?.goBack());
+
+  expect(spy.mock.calls[0]?.[0]).toMatch(
+    "The action 'GO_BACK' was not handled by any navigator."
+  );
+  expect(spy.mock.calls[0]?.[0]).toMatch('Is there any screen to go back to?');
+
+  spy.mockRestore();
+});
+
+test('warns for unhandled navigate action without a screen name', async () => {
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const TestNavigator = (props: TestNavigatorProps) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  await render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => ref.current?.dispatch({ type: 'NAVIGATE', payload: {} }));
+
+  expect(spy.mock.calls[0]?.[0]).toMatch(
+    "The action 'NAVIGATE' with payload {} was not handled by any navigator."
+  );
+  expect(spy.mock.calls[0]?.[0]).toMatch(
+    'You need to pass the name of the screen to navigate to.'
+  );
+
+  spy.mockRestore();
+});
+
+test('warns for unhandled drawer actions', async () => {
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const TestNavigator = (props: TestNavigatorProps) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  await render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => ref.current?.dispatch({ type: 'OPEN_DRAWER' }));
+
+  expect(spy.mock.calls[0]?.[0]).toMatch(
+    "The action 'OPEN_DRAWER' was not handled by any navigator."
+  );
+  expect(spy.mock.calls[0]?.[0]).toMatch(
+    'Is your screen inside a Drawer navigator?'
   );
 
   spy.mockRestore();

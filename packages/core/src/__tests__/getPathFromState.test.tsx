@@ -2152,3 +2152,21 @@ test('prioritizes route.state over params.state', () => {
 
   expect(getPathFromState<object>(state, config)).toBe('/foo/baz');
 });
+
+test('throws when a screen sets exact without a path', () => {
+  const state = {
+    routes: [{ name: 'Foo' }],
+  };
+
+  const config = {
+    screens: {
+      Foo: {
+        exact: true,
+      },
+    },
+  };
+
+  expect(() => getPathFromState<object>(state, config)).toThrow(
+    "A 'path' needs to be specified when specifying 'exact: true'."
+  );
+});

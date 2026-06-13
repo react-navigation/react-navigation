@@ -16,6 +16,21 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
+test("throws if focus state isn't available", async () => {
+  expect.assertions(1);
+
+  const Test = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    expect(() => useIsFocused()).toThrow(
+      "Couldn't determine focus state. Is your component inside a screen in a navigator?"
+    );
+
+    return null;
+  };
+
+  await render(<Test />);
+});
+
 test('renders correct focus state', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
