@@ -1,4 +1,4 @@
-import { expect, test } from '@jest/globals';
+import { expect, jest, test } from '@jest/globals';
 import type {
   DefaultRouterOptions,
   NavigationState,
@@ -9,6 +9,7 @@ import * as React from 'react';
 import { Text } from 'react-native';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
+import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { createNavigatorFactory } from '../createNavigatorFactory';
 import { getStateFromPath } from '../getStateFromPath';
 import { createPathConfigForStaticNavigation } from '../StaticNavigation';
@@ -376,6 +377,21 @@ test('handles non-function screens', async () => {
       </BaseNavigationContainer>
     )
   ).resolves.toBeDefined();
+});
+
+test('throws when static screen config has no screen property', () => {
+  expect(() =>
+    createTestNavigator({
+      screens: {
+        // @ts-expect-error: intentionally invalid config
+        Profile: {
+          options: {
+            title: 'Profile',
+          },
+        },
+      },
+    })
+  ).toThrow("Couldn't find a 'screen' property for the screen 'Profile'.");
 });
 
 test("throws if screens or groups property isn't specified", () => {
@@ -761,12 +777,18 @@ test('renders wrapped navigator and merges options callback and options object p
 `);
 });
 
-test('renders wrapped navigator and merges options callbacks', async () => {
+test('renders wrapped navigator and merges options and listeners callbacks', async () => {
+  const configFocusListener = jest.fn();
+  const navigatorBlurListener = jest.fn();
+
   const Root = createTestNavigator({
     initialRouteName: 'Feed',
     screenOptions: ({ route }) => ({
       className: `${route.name}-config-class`,
       testId: `config-${route.name}`,
+    }),
+    screenListeners: () => ({
+      focus: configFocusListener,
     }),
     screens: {
       Feed: TestScreen,
@@ -781,6 +803,9 @@ test('renders wrapped navigator and merges options callbacks', async () => {
           screenOptions={({ route }) => ({
             testId: `navigator-${route.name}`,
           })}
+          screenListeners={() => ({
+            blur: navigatorBlurListener,
+          })}
         />
       </section>
     );
@@ -790,8 +815,10 @@ test('renders wrapped navigator and merges options callbacks', async () => {
 
   const RootComponent = Root.getComponent();
 
+  const ref = createNavigationContainerRef<ParamListBase>();
+
   const element = await render(
-    <BaseNavigationContainer>
+    <BaseNavigationContainer ref={ref}>
       <RootComponent />
     </BaseNavigationContainer>
   );
@@ -832,6 +859,11 @@ test('renders wrapped navigator and merges options callbacks', async () => {
   </main>
 </section>
 `);
+
+  await act(() => ref.current?.navigate('Feed'));
+
+  expect(configFocusListener).toHaveBeenCalled();
+  expect(navigatorBlurListener).toHaveBeenCalled();
 });
 
 test('creates linking configuration for static config', () => {
@@ -2218,6 +2250,27 @@ test('throws if linking.initialRouteName is not in nested static navigation', ()
   expect(() => {
     createPathConfigForStaticNavigation(Root, {}, true);
   }).toThrow(
+    "Couldn't find a screen named 'Missing' to use as 'initialRouteName'."
+  );
+});
+
+test('throws if explicit static linking screens do not contain initialRouteName', () => {
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+        linking: {
+          path: '',
+          screens: {
+            Feed: 'feed',
+          },
+          initialRouteName: 'Missing',
+        },
+      },
+    },
+  });
+
+  expect(() => createPathConfigForStaticNavigation(Root, {}, true)).toThrow(
     "Couldn't find a screen named 'Missing' to use as 'initialRouteName'."
   );
 });

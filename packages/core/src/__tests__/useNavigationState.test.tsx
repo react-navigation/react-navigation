@@ -541,6 +541,58 @@ test('gets navigation state for parent route name', async () => {
 `);
 });
 
+test('throws when used outside a navigator', async () => {
+  expect.assertions(1);
+
+  const Test = () => {
+    expect(() =>
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useNavigationState((state) => state.index)
+    ).toThrow(
+      "Couldn't get the navigation state. Is your component inside a navigator?"
+    );
+
+    return null;
+  };
+
+  await render(<Test />);
+});
+
+test('throws when a selector is not provided', async () => {
+  expect.assertions(1);
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const Test = () => {
+    expect(() =>
+      // @ts-expect-error a selector is required, testing the runtime guard
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      useNavigationState()
+    ).toThrow('A selector function must be provided (got undefined).');
+
+    return null;
+  };
+
+  await render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="first" component={Test} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+});
+
 test('gets navigation state for grandparent route name', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(

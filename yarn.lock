@@ -4332,6 +4332,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@react-navigation/devtools@workspace:packages/devtools"
   dependencies:
+    "@jest/globals": "npm:^29.7.0"
     "@react-navigation/core": "workspace:^"
     "@types/react": "npm:~19.2.17"
     del-cli: "npm:^7.0.0"

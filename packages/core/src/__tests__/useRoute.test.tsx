@@ -44,6 +44,21 @@ test('gets route prop from context', async () => {
   );
 });
 
+test('throws if route is not available', async () => {
+  expect.assertions(1);
+
+  const Test = () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    expect(() => useRoute()).toThrow(
+      "Couldn't find a route object. Is your component inside a screen in a navigator?"
+    );
+
+    return null;
+  };
+
+  await render(<Test />);
+});
+
 test('throws if not used in a screen', async () => {
   expect.assertions(1);
 
