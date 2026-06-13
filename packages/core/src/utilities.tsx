@@ -180,11 +180,6 @@ export type InferPath<T> = T extends { path: infer P extends string }
   ? P
   : never;
 
-/**
- * Infer the parse functions from a linking config.
- */
-export type InferParse<T> = T extends { parse: infer P } ? P : {};
-
 export type InferParamsFromLinking<T> = T extends {
   path: infer P extends string;
   parse: infer Parse;
