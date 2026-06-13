@@ -183,23 +183,3 @@ export type InferParamsFromLinking<T> = T extends {
     : T extends string
       ? UndefinedIfAllOptional<ExtractParamStrings<T>>
       : undefined;
-
-/**
- * Infer the params type from a screen component or nested navigator.
- */
-export type InferScreenParams<T> =
-  T extends React.ComponentType<{ route: { params: infer P } }>
-    ? P
-    : T extends { config: { screens: infer Screens } }
-      ? import('./types').NavigatorScreenParams<{
-          [K in keyof Screens]: Screens[K] extends React.ComponentType<{
-            route: { params: infer P };
-          }>
-            ? P
-            : Screens[K] extends { screen: infer S }
-              ? S extends React.ComponentType<{ route: { params: infer P } }>
-                ? P
-                : undefined
-              : undefined;
-        }>
-      : undefined;
