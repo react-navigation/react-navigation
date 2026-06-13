@@ -1010,11 +1010,7 @@ type RouteForNameNested<ParamLists, RouteName extends string> =
   // e.g. if ParamLists is A | B
   // TypeScript evaluates the branch once per member (A, then B)
   // and unions the outcomes
-  // The infer ParamList extends {} just captures the current member
-  // and re-asserts the {} constraint that RouteForNameInternal requires
-  ParamLists extends infer ParamList extends {}
-    ? RouteForNameInternal<ParamList, RouteName>
-    : never;
+  ParamLists extends {} ? RouteForNameInternal<ParamLists, RouteName> : never;
 
 /**
  * Union of param lists of the nested navigators in a param list.
