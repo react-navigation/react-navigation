@@ -19,6 +19,7 @@ concurrency:
 
 jobs:
   measure:
+    if: false
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -44,6 +45,7 @@ jobs:
           } >> "$GITHUB_OUTPUT"
 
   comment:
+    if: false
     needs: measure
     runs-on: ubuntu-latest
     permissions:

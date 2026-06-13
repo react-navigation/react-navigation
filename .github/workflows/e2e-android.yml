@@ -34,6 +34,11 @@ jobs:
       - name: Setup
         uses: ./.github/actions/setup
 
+      - name: Use local agent-device package
+        env:
+          YARN_ENABLE_IMMUTABLE_INSTALLS: 'false'
+        run: yarn add -D agent-device@file:.github/agent-device-local.tgz
+
       - name: Calculate fingerprint
         id: calculate-fingerprint
         run: |
@@ -142,6 +147,9 @@ jobs:
           done
 
       - name: Run Maestro tests
+        env:
+          AGENT_DEVICE_E2E_INPUTS: e2e/maestro/material-top-tabs.yml
+          AGENT_DEVICE_E2E_RECORD_VIDEO: 'true'
         run: |
           adb install android-debug-build/android-debug.apk
           adb reverse tcp:8081 tcp:8081

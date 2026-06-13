@@ -31,6 +31,9 @@ if (!appId) {
 const scheme = `${config.expo?.scheme}://`;
 const ci = process.env.CI === 'true' || process.env.CI === '1';
 const ciTimeoutMs = process.env.AGENT_DEVICE_E2E_TIMEOUT_MS ?? '240000';
+const testInputs = (process.env.AGENT_DEVICE_E2E_INPUTS ?? 'e2e/maestro')
+  .split(/\s+/)
+  .filter(Boolean);
 const deviceIds = platform ? undefined : getConnectedDeviceIds();
 
 if (!platform && !deviceIds?.length) {
@@ -75,7 +78,11 @@ if (ci) {
   );
 }
 
-args.push('e2e/maestro');
+if (process.env.AGENT_DEVICE_E2E_RECORD_VIDEO === 'true') {
+  args.push('--record-video');
+}
+
+args.push(...testInputs);
 
 process.stdout.write(`Running agent-device with args: ${args.join(' ')}\n`);
 
