@@ -14,11 +14,7 @@ import {
 } from './NavigationBuilderContext';
 import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
-import {
-  getRoutesToCompare,
-  shouldPreventRemove,
-  useOnPreventRemove,
-} from './useOnPreventRemove';
+import { shouldPreventRemove, useOnPreventRemove } from './useOnPreventRemove';
 
 type Options<State extends NavigationState> = {
   router: Router<State, NavigationAction>;
@@ -99,10 +95,7 @@ export function useOnAction<State extends NavigationState>({
               emitter,
               beforeRemoveListeners,
               state.routes,
-              getRoutesToCompare(
-                result,
-                routerConfigOptionsRef.current.routeNames
-              ),
+              result.routes,
               action
             );
 
@@ -165,7 +158,6 @@ export function useOnAction<State extends NavigationState>({
     getState,
     emitter,
     beforeRemoveListeners,
-    routerConfigOptionsRef,
   });
 
   React.useInsertionEffect(

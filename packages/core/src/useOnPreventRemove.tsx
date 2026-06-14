@@ -1,8 +1,9 @@
 import type {
   NavigationAction,
+  NavigationRoute,
   NavigationState,
-  PartialState,
-  RouterConfigOptions,
+  ParamListBase,
+  PartialRoute,
 } from '@react-navigation/routers';
 import * as React from 'react';
 
@@ -18,46 +19,24 @@ type Options = {
   getState: () => NavigationState;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
-  routerConfigOptionsRef: React.RefObject<RouterConfigOptions>;
 };
 
 const VISITED_ROUTE_KEYS = Symbol('VISITED_ROUTE_KEYS');
 
-/**
- * Returns the next state's routes for diffing against the current routes by key; no next state
- * means the route itself was removed. A stale state isn't rehydrated yet — dropping unknown names
- * mirrors rehydration's effect on keys, and keyless routes can never match a current route anyway.
- */
-export const getRoutesToCompare = (
-  nextState: NavigationState | PartialState<NavigationState> | undefined,
-  routeNames: string[]
-) => {
-  if (nextState == null) {
-    return [];
-  }
-
-  if (nextState.stale === false) {
-    return nextState.routes;
-  }
-
-  return nextState.routes.filter((route) => routeNames.includes(route.name));
-};
-
 export const shouldPreventRemove = (
   emitter: NavigationEventEmitter<EventMapCore<any>>,
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>,
-  currentRoutes: {
-    key: string;
-    state?: NavigationState | PartialState<NavigationState>;
-  }[],
-  nextRoutes: {
-    key?: string | undefined;
-    state?: NavigationState | PartialState<NavigationState>;
-  }[],
+  currentRoutes: NavigationRoute<ParamListBase, string>[],
+  nextRoutes: (
+    | NavigationRoute<ParamListBase, string>
+    | PartialRoute<NavigationRoute<ParamListBase, string>>
+  )[],
   action: NavigationAction
 ) => {
   const nextRoutesByKey = new Map(
-    nextRoutes.map((route) => [route.key, route])
+    nextRoutes
+      .map((route) => [route.key, route] as const)
+      .filter(([, route]) => route.key != null)
   );
 
   const visitedRouteKeys: Set<string> =
@@ -70,19 +49,21 @@ export const shouldPreventRemove = (
   };
 
   // Call these in reverse order so last screens handle the event first
-  for (const route of [...currentRoutes].reverse()) {
-    const nextRoute = nextRoutesByKey.get(route.key);
+  const reversedCurrentRoutes = [...currentRoutes].reverse();
 
-    if (nextRoute === undefined) {
-      if (visitedRouteKeys.has(route.key)) {
-        // Skip if we've already emitted this action for this screen
-        continue;
-      }
+  for (const route of reversedCurrentRoutes) {
+    if (visitedRouteKeys.has(route.key)) {
+      // Skip if we've already emitted this action for this screen
+      continue;
+    }
 
-      // The route is removed
+    if (!nextRoutesByKey.has(route.key)) {
+      // The route is not in next state, so it's being removed
       // First, we need to check if any child screens want to prevent it
-      const isPrevented =
-        beforeRemoveListeners[route.key]?.(beforeRemoveAction);
+      const isPrevented = beforeRemoveListeners[route.key]?.(
+        beforeRemoveAction,
+        undefined
+      );
 
       if (isPrevented) {
         return true;
@@ -100,15 +81,19 @@ export const shouldPreventRemove = (
       if (event.defaultPrevented) {
         return true;
       }
-    } else if (nextRoute.state !== route.state) {
+    } else {
       // The route is kept but its nested state changed, so propagate the check into the nested navigator
-      const isPrevented = beforeRemoveListeners[route.key]?.(
-        beforeRemoveAction,
-        nextRoute.state
-      );
+      const nextRoute = nextRoutesByKey.get(route.key);
 
-      if (isPrevented) {
-        return true;
+      if (route.state != null && route.state !== nextRoute?.state) {
+        const isPrevented = beforeRemoveListeners[route.key]?.(
+          beforeRemoveAction,
+          nextRoute?.state
+        );
+
+        if (isPrevented) {
+          return true;
+        }
       }
     }
   }
@@ -120,7 +105,6 @@ export function useOnPreventRemove({
   getState,
   emitter,
   beforeRemoveListeners,
-  routerConfigOptionsRef,
 }: Options) {
   const { addKeyedListener } = React.use(NavigationBuilderContext);
   const route = React.use(NavigationRouteContext);
@@ -138,21 +122,11 @@ export function useOnPreventRemove({
             emitter,
             beforeRemoveListeners,
             state.routes,
-            getRoutesToCompare(
-              nextState,
-              routerConfigOptionsRef.current.routeNames
-            ),
+            nextState?.routes ?? [],
             action
           );
         }
       );
     }
-  }, [
-    addKeyedListener,
-    beforeRemoveListeners,
-    emitter,
-    getState,
-    routeKey,
-    routerConfigOptionsRef,
-  ]);
+  }, [addKeyedListener, beforeRemoveListeners, emitter, getState, routeKey]);
 }

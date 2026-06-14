@@ -47,13 +47,9 @@ export type FocusedNavigationListener = <T>(
 
 export type GetStateListener = () => NavigationState;
 
-/**
- * Called for any action that may remove the child's screens; `nextState` is the kept route's
- * next nested state, or undefined when the route itself is removed.
- */
 export type ChildBeforeRemoveListener = (
   action: NavigationAction,
-  nextState?: NavigationState | PartialState<NavigationState>
+  nextState: NavigationState | PartialState<NavigationState> | undefined
 ) => boolean;
 
 /**
