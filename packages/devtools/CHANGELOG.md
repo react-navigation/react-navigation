@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.1.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.62...@react-navigation/devtools@7.1.0) (2026-06-14)
+
+### Features
+
+* add an __unsafe_event__ event to container ref ([d22044d](https://github.com/react-navigation/react-navigation/commit/d22044d849a984b61a28282a575e54b3ea4b88a7)) - by @satya164
+
 ## [7.0.62](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@7.0.61...@react-navigation/devtools@7.0.62) (2026-06-11)
 
 **Note:** Version bump only for package @react-navigation/devtools

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.21.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.20.0...@react-navigation/core@7.21.0) (2026-06-14)
+
+### Features
+
+* add an __unsafe_event__ event to container ref ([d22044d](https://github.com/react-navigation/react-navigation/commit/d22044d849a984b61a28282a575e54b3ea4b88a7)) - by @satya164
+
 # [7.20.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.19.0...@react-navigation/core@7.20.0) (2026-06-11)
 
 ### Features
