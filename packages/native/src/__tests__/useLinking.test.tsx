@@ -9,6 +9,7 @@ import {
   StackRouter,
   TabRouter,
   useNavigationBuilder,
+  usePreventRemove,
 } from '@react-navigation/core';
 import {
   act,
@@ -246,6 +247,80 @@ test('dispatches GO_BACK when browser back pops the last stack route', async () 
 
   expect(state.routes.length).toBe(1);
   expect(state.routes[0]?.name).toBe('Home');
+});
+
+test("rolls back browser history when 'beforeRemove' prevents browser back", async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const onPreventRemove = jest.fn();
+
+  const ProfileScreen = ({
+    preventRemove,
+    route,
+  }: {
+    preventRemove: boolean;
+    route: any;
+  }): any => {
+    usePreventRemove(preventRemove, onPreventRemove);
+
+    return (
+      <Text>
+        {route.name} {JSON.stringify(route.params)}
+      </Text>
+    );
+  };
+
+  const Container = ({ preventRemove }: { preventRemove: boolean }) => (
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile">
+          {(props) => (
+            <ProfileScreen {...props} preventRemove={preventRemove} />
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  const root = await render(<Container preventRemove={true} />);
+
+  await act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(onPreventRemove).toHaveBeenCalledTimes(1));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  expect(navigation.getRootState().routes).toEqual(
+    expect.arrayContaining([expect.objectContaining({ name: 'Profile' })])
+  );
+
+  await root.rerender(<Container preventRemove={false} />);
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(onPreventRemove).toHaveBeenCalledTimes(1);
+
+  expect(navigation.getRootState().routes).toEqual([
+    expect.objectContaining({ name: 'Home' }),
+  ]);
 });
 
 test('dispatches GO_BACK on each sequential browser back', async () => {

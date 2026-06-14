@@ -1,4 +1,5 @@
 import {
+  CommonActions,
   findFocusedRoute,
   getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
@@ -282,6 +283,57 @@ export function useLinking<ParamList extends ParamListBase>(
       previousIndexRef.current = index;
       pendingPopStatePathRef.current = path;
 
+      const rollbackHistory = () => {
+        const delta = previousIndex - index;
+
+        if (delta === 0) {
+          return;
+        }
+
+        pendingPopStatePathRef.current = undefined;
+
+        // eslint-disable-next-line promise/always-return
+        history.go(delta)?.then(() => {
+          previousIndexRef.current = history.index;
+        });
+      };
+
+      const rollbackHistoryIfPrevented = (callback: () => void) => {
+        let beforeRemovePrevented = false;
+
+        const state = navigation.getRootState();
+
+        const unsubscribe = navigation.addListener('__unsafe_event__', (e) => {
+          if (
+            e.data.type === 'beforeRemove' &&
+            e.data.defaultPrevented === true
+          ) {
+            beforeRemovePrevented = true;
+          }
+        });
+
+        try {
+          callback();
+        } finally {
+          unsubscribe();
+        }
+
+        if (
+          beforeRemovePrevented &&
+          isEqual(navigation.getRootState(), state)
+        ) {
+          rollbackHistory();
+        }
+      };
+
+      const dispatch = (action: Parameters<typeof navigation.dispatch>[0]) => {
+        rollbackHistoryIfPrevented(() => navigation.dispatch(action));
+      };
+
+      const resetRoot = (state: Parameters<typeof navigation.resetRoot>[0]) => {
+        rollbackHistoryIfPrevented(() => navigation.resetRoot(state));
+      };
+
       // When browser back/forward is clicked, we first need to check if state object for this index exists
       // If it does we'll reset to that state object
       // Otherwise, we'll handle it like a regular deep link
@@ -304,9 +356,9 @@ export function useLinking<ParamList extends ParamListBase>(
           // If we detect that the state change is popping the last entry
           // Dispatch a back action instead of resetting to the state
           // This makes sure changes to history state since the entry was added don't get lost
-          navigation.goBack();
+          dispatch(CommonActions.goBack());
         } else {
-          navigation.resetRoot(record.state);
+          resetRoot(record.state);
         }
 
         return;
@@ -343,7 +395,7 @@ export function useLinking<ParamList extends ParamListBase>(
 
           if (action !== undefined) {
             try {
-              navigation.dispatch(action);
+              dispatch(action);
             } catch (e) {
               // Ignore any errors from deep linking.
               // This could happen in case of malformed links, navigation object not being initialized etc.
@@ -356,14 +408,14 @@ export function useLinking<ParamList extends ParamListBase>(
               );
             }
           } else {
-            navigation.resetRoot(state);
+            resetRoot(state);
           }
         } else {
-          navigation.resetRoot(state);
+          resetRoot(state);
         }
       } else {
         // if current path didn't return any state, we should revert to initial state
-        navigation.resetRoot(state);
+        resetRoot(state);
       }
     });
   }, [enabled, history, ref, validateRoutesNotExistInRootState]);
