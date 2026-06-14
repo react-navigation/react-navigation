@@ -1,5 +1,6 @@
 import type {
   NavigationAction,
+  NavigationContainerEventMap,
   NavigationContainerRef,
   NavigationState,
 } from '@react-navigation/core';
@@ -35,9 +36,16 @@ type ActionData = {
   stack: string | undefined;
 };
 
+type EventData = {
+  type: 'event';
+  event: NavigationContainerEventMap['__unsafe_event__']['data'];
+};
+
+type ResultData = InitData | ActionData | EventData;
+
 export function useDevToolsBase(
   ref: React.RefObject<NavigationContainerRef<any> | null>,
-  callback: (result: InitData | ActionData) => void
+  callback: (result: ResultData) => void
 ) {
   const lastStateRef = React.useRef<NavigationState | undefined>(undefined);
   const lastActionRef = React.useRef<
@@ -106,7 +114,7 @@ export function useDevToolsBase(
 
   const pendingPromiseRef = React.useRef<Promise<void>>(Promise.resolve());
 
-  const send = React.useCallback((data: ActionData) => {
+  const send = React.useCallback((data: ResultData) => {
     // We need to make sure that our callbacks executed in the same order
     // So we add check if the last promise is settled before sending the next one
     pendingPromiseRef.current = pendingPromiseRef.current
@@ -115,7 +123,7 @@ export function useDevToolsBase(
       })
       .then(async () => {
         // eslint-disable-next-line promise/always-return
-        if (data.stack) {
+        if ('stack' in data && data.stack) {
           let stack: string | undefined;
 
           try {
@@ -135,6 +143,7 @@ export function useDevToolsBase(
     let timer: any;
     let unsubscribeAction: (() => void) | undefined;
     let unsubscribeState: (() => void) | undefined;
+    let unsubscribeEvent: (() => void) | undefined;
 
     const initialize = async () => {
       if (!ref.current) {
@@ -169,6 +178,13 @@ export function useDevToolsBase(
         } else {
           lastActionRef.current = e.data;
         }
+      });
+
+      unsubscribeEvent = navigation.addListener('__unsafe_event__', (e) => {
+        send({
+          type: 'event',
+          event: e.data,
+        });
       });
 
       unsubscribeState = navigation.addListener('state', (e) => {
@@ -206,6 +222,7 @@ export function useDevToolsBase(
 
     return () => {
       unsubscribeAction?.();
+      unsubscribeEvent?.();
       unsubscribeState?.();
       clearTimeout(timer);
     };

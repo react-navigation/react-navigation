@@ -238,6 +238,15 @@ export const BaseNavigationContainer = React.forwardRef(
       }
     );
 
+    const onEmitEvent = useLatestCallback(
+      (event: NavigationContainerEventMap['__unsafe_event__']['data']) => {
+        emitter.emit({
+          type: '__unsafe_event__',
+          data: event,
+        });
+      }
+    );
+
     const lastEmittedOptionsRef = React.useRef<object | undefined>(undefined);
 
     const onOptionsChange = useLatestCallback((options: object) => {
@@ -260,6 +269,7 @@ export const BaseNavigationContainer = React.forwardRef(
         addListener,
         addKeyedListener,
         onDispatchAction,
+        onEmitEvent,
         onOptionsChange,
         scheduleUpdate,
         flushUpdates,
@@ -269,6 +279,7 @@ export const BaseNavigationContainer = React.forwardRef(
         addListener,
         addKeyedListener,
         onDispatchAction,
+        onEmitEvent,
         onOptionsChange,
         scheduleUpdate,
         flushUpdates,

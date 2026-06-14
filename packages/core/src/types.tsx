@@ -968,6 +968,35 @@ export type NavigationContainerEventMap = {
       stack: string | undefined;
     };
   };
+  /**
+   * Event that fires when an event is emitted.
+   * Only intended for debugging purposes, don't use it for app logic.
+   * This event will be emitted after all listeners have been called.
+   */
+  __unsafe_event__: {
+    data: {
+      /**
+       * The type of the event that was emitted.
+       */
+      type: string;
+      /**
+       * The data object passed when emitting the event.
+       */
+      data?: unknown;
+      /**
+       * The key of the target route which received the event.
+       */
+      target?: string | undefined;
+      /**
+       * Whether `event.preventDefault()` was called on this event.
+       */
+      defaultPrevented?: boolean | undefined;
+      /**
+       * Prevent the default action which happens on this event.
+       */
+      preventDefault?: (() => void) | undefined;
+    };
+  };
 };
 
 type NotUndefined<T> = T extends undefined ? never : T;

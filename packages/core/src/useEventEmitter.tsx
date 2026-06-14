@@ -13,12 +13,15 @@ type Listeners = ((e: any) => void)[];
  * Hook to manage the event system used by the navigator to notify screens of various events.
  */
 export function useEventEmitter<T extends Record<string, any>>(
-  listen?: (e: any) => void
+  listen?: (e: any) => void,
+  onPostEmit?: (e: any) => void
 ): NavigationEventEmitter<T> {
   const listenRef = React.useRef(listen);
+  const onPostEmitRef = React.useRef(onPostEmit);
 
   React.useEffect(() => {
     listenRef.current = listen;
+    onPostEmitRef.current = onPostEmit;
   });
 
   const listeners = React.useRef<Record<string, Record<string, Listeners>>>(
@@ -126,6 +129,8 @@ export function useEventEmitter<T extends Record<string, any>>(
       listenRef.current?.(event);
 
       callbacks?.forEach((cb) => cb(event));
+
+      onPostEmitRef.current?.(event);
 
       return event as any;
     },

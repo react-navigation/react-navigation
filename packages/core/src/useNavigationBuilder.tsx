@@ -20,6 +20,7 @@ import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
 import { isRecordEqual } from './isRecordEqual';
+import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationMetaContext } from './NavigationMetaContext';
 import { NavigationRouteContext } from './NavigationProvider';
@@ -816,9 +817,10 @@ export function useNavigationBuilder<
     );
   });
 
+  const { onEmitEvent } = React.useContext(NavigationBuilderContext);
+
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
     const routeNames = [];
-
     let route: Route<string> | undefined;
 
     if (e.target) {
@@ -873,7 +875,7 @@ export function useNavigationBuilder<
 
       listeners.forEach((listener) => listener?.(e));
     }
-  });
+  }, onEmitEvent);
 
   useFocusEvents({ state, emitter });
 
