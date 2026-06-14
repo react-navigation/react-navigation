@@ -912,15 +912,19 @@ export type NavigationContainerEventMap = {
       /**
        * The data object passed when emitting the event.
        */
-      data: unknown;
+      data?: unknown;
       /**
        * The key of the target route which received the event.
        */
-      target: string | undefined;
+      target?: string | undefined;
       /**
        * Whether `event.preventDefault()` was called on this event.
        */
-      defaultPrevented: boolean | undefined;
+      defaultPrevented?: boolean | undefined;
+      /**
+       * Prevent the default action which happens on this event.
+       */
+      preventDefault?: (() => void) | undefined;
     };
   };
 };

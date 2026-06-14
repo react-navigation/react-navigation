@@ -4,6 +4,7 @@ import {
   type NavigationState,
   type ParamListBase,
   type Router,
+  StackActions,
   StackRouter,
   TabRouter,
 } from '@react-navigation/routers';
@@ -630,6 +631,76 @@ test('emits state events when new navigator mounts', async () => {
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenLastCalledWith(resultState);
+});
+
+test("emits '__unsafe_event__' after all listeners are called", async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const calls: string[] = [];
+
+  const TestScreen = (props: any) => {
+    React.useEffect(
+      () =>
+        props.navigation.addListener('beforeRemove', (e: any) => {
+          calls.push('navigation listener');
+          e.preventDefault();
+        }),
+      [props.navigation]
+    );
+
+    return null;
+  };
+
+  const unsafeEventListener = jest.fn<
+    EventListenerCallback<NavigationContainerEventMap, '__unsafe_event__'>
+  >((e) => {
+    calls.push('unsafe event');
+
+    expect(e.data.type).toBe('beforeRemove');
+    expect(e.data.defaultPrevented).toBe(true);
+  });
+
+  await render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator initialRouteName="bar">
+        <Screen name="foo">{() => null}</Screen>
+        <Screen
+          name="bar"
+          component={TestScreen}
+          listeners={{
+            beforeRemove: () => {
+              calls.push('screen listener');
+            },
+          }}
+        />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  ref.current?.addListener('__unsafe_event__', unsafeEventListener);
+
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+
+  expect(unsafeEventListener).toHaveBeenCalledTimes(1);
+
+  expect(calls).toEqual([
+    'screen listener',
+    'navigation listener',
+    'unsafe event',
+  ]);
 });
 
 test('emits option events when options change with tab router', async () => {

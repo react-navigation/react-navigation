@@ -1,5 +1,6 @@
 import type {
   NavigationAction,
+  NavigationContainerEventMap,
   NavigationContainerRef,
   NavigationState,
   PartialState,
@@ -31,12 +32,7 @@ type ActionData = {
 
 type EventData = {
   type: 'event';
-  event: {
-    type: string;
-    defaultPrevented: boolean | undefined;
-    target: string | undefined;
-    data: unknown;
-  };
+  event: NavigationContainerEventMap['__unsafe_event__']['data'];
 };
 
 type DeepLinkData = {
