@@ -2,6 +2,7 @@ import type {
   NavigationAction,
   NavigationState,
   ParamListBase,
+  PartialState,
 } from '@react-navigation/routers';
 import * as React from 'react';
 
@@ -46,7 +47,10 @@ export type FocusedNavigationListener = <T>(
 
 export type GetStateListener = () => NavigationState;
 
-export type ChildBeforeRemoveListener = (action: NavigationAction) => boolean;
+export type ChildBeforeRemoveListener = (
+  action: NavigationAction,
+  nextState: NavigationState | PartialState<NavigationState> | undefined
+) => boolean;
 
 /**
  * Context which holds the required helpers needed to build nested navigators.
