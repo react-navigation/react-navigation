@@ -44,7 +44,7 @@
     "@types/babel__core": "^7.20.5",
     "@types/node": "^24.13.2",
     "@types/semver": "^7.7.1",
-    "agent-device": "0.17.4",
+    "agent-device": "0.17.5",
     "commitlint": "^21.0.2",
     "eslint": "^9.39.4",
     "eslint-config-satya164": "^5.1.8",
