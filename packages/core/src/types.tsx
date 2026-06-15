@@ -11,6 +11,7 @@ import type {
 import type * as React from 'react';
 
 import type {
+  ExtractParamStrings,
   FlatType,
   KeyOf,
   NotUndefined,
@@ -1020,19 +1021,28 @@ type RouteForNameNested<ParamLists, RouteName extends string> =
  * Union of param lists of the nested navigators in a param list.
  */
 export type NestedParamLists<ParamList extends {}> = {
-  [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
-    ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<infer T>
-      ? T
-      : never
-    : never;
+  [RouteName in keyof ParamList]: ParamListForNestedNavigator<
+    ParamList[RouteName]
+  >;
 }[keyof ParamList];
 
+type ParamListForNestedNavigator<Params> =
+  NavigatorScreenParams<{}> extends Params
+    ? NotUndefined<Params> extends NavigatorScreenParams<
+        infer ParamList extends {}
+      >
+      ? ParamList
+      : never
+    : never;
+
 type ParamListRoute<ParamList extends {}> = {
-  [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
-    ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<infer T>
-      ? ParamListRoute<T> | RouteProp<ParamList, RouteName>
-      : RouteProp<ParamList, RouteName>
-    : RouteProp<ParamList, RouteName>;
+  [RouteName in keyof ParamList]: [
+    ParamListForNestedNavigator<ParamList[RouteName]>,
+  ] extends [infer T extends {}]
+    ? [T] extends [never]
+      ? RouteProp<ParamList, RouteName>
+      : ParamListRoute<T> | RouteProp<ParamList, RouteName>
+    : never;
 }[keyof ParamList];
 
 type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
@@ -1052,19 +1062,19 @@ type BasicNavigationList<
   Parent extends NavigationProp<any, any, any, any, any> | undefined,
 > = UnionToIntersection<
   {
-    [RouteName in keyof ParamList]: (NavigatorScreenParams<{}> extends ParamList[RouteName]
-      ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<
-          infer T
-        >
-        ? keyof T extends ExcludedRouteNames
+    [RouteName in keyof ParamList]: ([
+      ParamListForNestedNavigator<ParamList[RouteName]>,
+    ] extends [infer T extends {}]
+      ? [T] extends [never]
+        ? {}
+        : keyof T extends ExcludedRouteNames
           ? {}
           : BasicNavigationList<
               T,
               ExcludedRouteNames,
               NavigationProp<ParamList, RouteName>
             >
-        : {}
-      : {}) &
+      : never) &
       (RouteName extends ExcludedRouteNames
         ? {}
         : {
@@ -1450,3 +1460,84 @@ export type PathConfigMap<ParamList extends {}> = {
     | PathConfig<ParamList[RouteName]>
     | undefined;
 };
+
+type PathParamKeys<Path extends string> = string extends Path
+  ? never
+  : KeyOf<ExtractParamStrings<Path>>;
+
+type ParamKeys<Params> = [NotUndefined<Params>] extends [never]
+  ? never
+  : object extends NotUndefined<Params>
+    ? string
+    : NotUndefined<Params> extends {}
+      ? KeyOf<NotUndefined<Params>>
+      : never;
+
+type InvalidPathParamError<InvalidParams extends string, ValidParams> = {
+  readonly 'Invalid path params': InvalidParams;
+  readonly 'Valid route params': ValidParams;
+};
+
+type ValidatePathParams<Params, Path extends string> =
+  Exclude<PathParamKeys<Path>, ParamKeys<Params>> extends infer InvalidParams
+    ? [InvalidParams] extends [never]
+      ? unknown
+      : InvalidPathParamError<Extract<InvalidParams, string>, ParamKeys<Params>>
+    : never;
+
+type ValidatePath<Params, Path extends string> = Path &
+  ValidatePathParams<Params, Path>;
+
+type ValidatePathProperty<Params, Config> = Config extends {
+  path: infer Path extends string;
+}
+  ? { path: ValidatePath<Params, Path> }
+  : unknown;
+
+type ValidateAlias<Params, Alias> = Alias extends string
+  ? ValidatePathParams<Params, Alias>
+  : ValidatePathProperty<Params, Alias>;
+
+type ValidateAliases<Params, Config> = Config extends {
+  alias: infer Alias extends readonly unknown[];
+}
+  ? {
+      alias: {
+        [Key in keyof Alias]: Alias[Key] & ValidateAlias<Params, Alias[Key]>;
+      };
+    }
+  : unknown;
+
+type ValidateNestedScreens<
+  Params,
+  Config,
+  ChildParamList extends {} = ParamListForNestedNavigator<Params>,
+> = [ChildParamList] extends [never]
+  ? unknown
+  : Config extends { screens: infer Screens }
+    ? { screens: ValidatePathConfigMap<ChildParamList, Screens> }
+    : unknown;
+
+type ValidatePathConfig<Params, Config> = Config extends string
+  ? ValidatePathParams<Params, Config>
+  : Config extends object
+    ? ValidatePathProperty<Params, Config> &
+        ValidateAliases<Params, Config> &
+        ValidateNestedScreens<Params, Config>
+    : unknown;
+
+type ValidatePathConfigMap<ParamList extends {}, Config> = {
+  [RouteName in keyof Config]: RouteName extends keyof ParamList
+    ? Config[RouteName] &
+        ValidatePathConfig<ParamList[RouteName], Config[RouteName]>
+    : never;
+};
+
+export type ValidateLinkingPathConfig<
+  ParamList extends {},
+  Config,
+> = Config extends { screens: infer Screens }
+  ? ValidatePathProperty<undefined, Config> & {
+      screens: ValidatePathConfigMap<ParamList, Screens>;
+    }
+  : ValidatePathProperty<undefined, Config>;

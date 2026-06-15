@@ -1,3 +1,4 @@
+export { createLinkingConfig } from './createLinkingConfig';
 export {
   createStandardNavigationFactories,
   type StandardNavigationTypeBagBase,

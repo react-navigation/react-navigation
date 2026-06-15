@@ -14,6 +14,7 @@ import { Button } from '@react-navigation/elements';
 import {
   type CompositeNavigationProp,
   type CompositeScreenProps,
+  createLinkingConfig,
   type DrawerNavigationState,
   type GenericNavigation,
   Link,
@@ -90,6 +91,30 @@ type HomeDrawerScreenProps<T extends keyof HomeDrawerParamList> =
 type FeedTabParamList = {
   Popular: { filter: 'day' | 'week' | 'month' };
   Latest: undefined;
+};
+
+type DeepRootParamList = {
+  First: NavigatorScreenParams<DeepFirstParamList>;
+};
+
+type DeepFirstParamList = {
+  Second: NavigatorScreenParams<DeepSecondParamList>;
+};
+
+type DeepSecondParamList = {
+  Third: NavigatorScreenParams<DeepThirdParamList>;
+};
+
+type DeepThirdParamList = {
+  Fourth: NavigatorScreenParams<DeepFourthParamList>;
+};
+
+type DeepFourthParamList = {
+  Fifth: NavigatorScreenParams<DeepFifthParamList>;
+};
+
+type DeepFifthParamList = {
+  Details: { id: string; filter?: string };
 };
 
 type FeedTabScreenProps<T extends keyof FeedTabParamList> =
@@ -1189,6 +1214,208 @@ useNavigationState('Invalid', (state) => state.index);
 
   <NavigationContainer linking={linking}>{null}</NavigationContainer>;
 }
+
+{
+  const linking = createLinkingConfig({
+    prefixes: ['myapp://'],
+    config: {
+      path: 'app',
+      screens: {
+        Home: {
+          screens: {
+            Feed: {
+              screens: {
+                Popular: 'popular/:filter',
+                Latest: 'latest',
+              },
+            },
+            Account: 'account',
+          },
+        },
+        PostDetails: {
+          path: 'post/:id/:section?',
+          alias: ['p/:id', { path: 'legacy/post/:id/:section?' }],
+          parse: {
+            id: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string>();
+              return value;
+            },
+          },
+          stringify: {
+            id: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string>();
+              return value;
+            },
+            section: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string | undefined>();
+              return value ?? '';
+            },
+          },
+        },
+        Settings: 'settings/:path',
+        Login: 'login',
+        NotFound: '*',
+      },
+    },
+  }) satisfies LinkingOptions<RootStackParamList>;
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking: LinkingOptions<RootStackParamList> = createLinkingConfig({
+    prefixes: ['myapp://'],
+    config: {
+      screens: {
+        PostDetails: 'post/:id',
+      },
+    },
+  });
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+{
+  const linking = createLinkingConfig({
+    config: {
+      screens: {
+        First: {
+          screens: {
+            Second: {
+              screens: {
+                Third: {
+                  screens: {
+                    Fourth: {
+                      screens: {
+                        Fifth: {
+                          screens: {
+                            Details: 'details/:id/:filter?',
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  }) satisfies LinkingOptions<DeepRootParamList>;
+
+  <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+createLinkingConfig({
+  config: {
+    screens: {
+      First: {
+        screens: {
+          Second: {
+            screens: {
+              Third: {
+                screens: {
+                  Fourth: {
+                    screens: {
+                      Fifth: {
+                        screens: {
+                          // @ts-expect-error
+                          Details: 'details/:missing',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+}) satisfies LinkingOptions<DeepRootParamList>;
+
+createLinkingConfig({
+  config: {
+    // @ts-expect-error
+    path: 'app/:id',
+    screens: {},
+  },
+}) satisfies LinkingOptions<RootStackParamList>;
+
+createLinkingConfig({
+  config: {
+    screens: {
+      // @ts-expect-error
+      InvalidScreen: 'invalid',
+    },
+  },
+}) satisfies LinkingOptions<RootStackParamList>;
+
+createLinkingConfig({
+  config: {
+    screens: {
+      // @ts-expect-error
+      PostDetails: 'post/:missing',
+    },
+  },
+}) satisfies LinkingOptions<RootStackParamList>;
+
+createLinkingConfig({
+  config: {
+    screens: {
+      PostDetails: {
+        // @ts-expect-error
+        path: 'post/:id/:missing',
+      },
+    },
+  },
+}) satisfies LinkingOptions<RootStackParamList>;
+
+createLinkingConfig({
+  config: {
+    screens: {
+      PostDetails: {
+        path: 'post/:id',
+        alias: [
+          'p/:id',
+          {
+            // @ts-expect-error
+            path: 'legacy/:missing',
+          },
+        ],
+      },
+    },
+  },
+}) satisfies LinkingOptions<RootStackParamList>;
+
+createLinkingConfig({
+  config: {
+    screens: {
+      Home: {
+        screens: {
+          Feed: {
+            screens: {
+              Popular: 'popular/:filter',
+              // @ts-expect-error
+              Latest: 'latest/:id',
+            },
+          },
+        },
+      },
+    },
+  },
+}) satisfies LinkingOptions<RootStackParamList>;
+
+createLinkingConfig({
+  config: {
+    screens: {
+      // @ts-expect-error
+      Login: 'login/:id',
+    },
+  },
+}) satisfies LinkingOptions<RootStackParamList>;
 
 {
   const linking: LinkingOptions<RootStackParamList> = {
