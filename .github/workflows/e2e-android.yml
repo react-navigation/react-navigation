@@ -7,30 +7,32 @@ on:
     branches:
       - main
 
+env:
+  MAESTRO_VERSION: 2.2.0
+  MAESTRO_ZIP_SHA256: 6de501d2e8adf2d60f4b6b3174dc4b5e393f2f2617245d350a659627dccb0922
+  MAESTRO_CLI_NO_ANALYTICS: 1
+  MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
+  JAVA_DISTRIBUTION: 'zulu'
+  JAVA_VERSION: '17'
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  ANDROID_USER_HOME: /home/runner/.android
+  API_LEVEL: 34
+  AVD_NAME: e2e_emulator
+  EMULATOR_PROFILE: pixel_5
+  EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096 -cores 2 -memory 4096'
+  ORG_GRADLE_PROJECT_reactNativeArchitectures: x86_64
+
 jobs:
-  maestro-android:
+  build-android:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
-      checks: read
       contents: read
+    outputs:
+      debug-build-artifact: ${{ steps.debug-build-metadata.outputs.artifact-name }}
     concurrency:
-      group: ${{ github.workflow_ref }}-${{ github.ref }}
+      group: ${{ github.workflow_ref }}-${{ github.ref }}-android-build
       cancel-in-progress: true
-    env:
-      MAESTRO_VERSION: 2.2.0
-      MAESTRO_ZIP_SHA256: 6de501d2e8adf2d60f4b6b3174dc4b5e393f2f2617245d350a659627dccb0922
-      MAESTRO_CLI_NO_ANALYTICS: 1
-      MAESTRO_DRIVER_STARTUP_TIMEOUT: 600000
-      JAVA_DISTRIBUTION: 'zulu'
-      JAVA_VERSION: '17'
-      ANDROID_HOME: /usr/local/lib/android/sdk
-      ANDROID_USER_HOME: /home/runner/.android
-      API_LEVEL: 34
-      AVD_NAME: e2e_emulator
-      EMULATOR_PROFILE: pixel_5
-      EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096 -cores 2 -memory 4096'
-      ORG_GRADLE_PROJECT_reactNativeArchitectures: x86_64
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
@@ -40,18 +42,22 @@ jobs:
 
       - name: Calculate fingerprint
         id: calculate-fingerprint
+        uses: ./.github/actions/calculate-expo-fingerprint
+        with:
+          platform: android
+
+      - name: Set debug build metadata
+        id: debug-build-metadata
         run: |
-          FINGERPRINT=$(npx expo-updates fingerprint:generate --platform android | jq -r '.hash')
-          echo "Fingerprint for Android: $FINGERPRINT"
-          echo "fingerprint=$FINGERPRINT" >> "$GITHUB_OUTPUT"
-        working-directory: example
+          echo "cache-key=android-debug-build-v1-${{ runner.os }}-api${{ env.API_LEVEL }}-${{ env.ORG_GRADLE_PROJECT_reactNativeArchitectures }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}" >> "$GITHUB_OUTPUT"
+          echo "artifact-name=android-debug-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}" >> "$GITHUB_OUTPUT"
 
       - name: Restore debug build from cache
         id: restore-debug-build
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: android-debug-build/
-          key: android-debug-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+          key: ${{ steps.debug-build-metadata.outputs.cache-key }}
 
       - name: Maximize build space
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -62,29 +68,8 @@ jobs:
           remove-codeql: 'true'
           remove-docker-images: 'true'
 
-      - name: Install Maestro
-        run: |
-          maestro_dir="$HOME/.maestro"
-          maestro_tmp_folder="${RUNNER_TEMP:-/tmp}/maestro"
-          maestro_zip_file="$maestro_tmp_folder/maestro.zip"
-          maestro_url="https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
-
-          mkdir -p "$maestro_dir" "$maestro_tmp_folder"
-          curl -fsSL "$maestro_url" -o "$maestro_zip_file"
-          printf '%s  %s\n' "$MAESTRO_ZIP_SHA256" "$maestro_zip_file" | shasum -a 256 -c -
-
-          unzip -q "$maestro_zip_file" -d "$maestro_tmp_folder"
-          rm -rf "${maestro_dir:?}/bin" "${maestro_dir:?}/lib"
-          cp -R "$maestro_tmp_folder/maestro/." "$maestro_dir"
-
-          echo "$maestro_dir/bin" >> "$GITHUB_PATH"
-
-      - name: Install AVD dependencies
-        run: |
-          sudo apt update
-          sudo apt-get install -y libpulse0 libgl1 libxkbfile1
-
       - name: Setup JDK
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
@@ -121,6 +106,54 @@ jobs:
         with:
           path: android-debug-build/
           key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
+
+      - name: Upload debug build artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: ${{ steps.debug-build-metadata.outputs.artifact-name }}
+          path: android-debug-build/android-debug.apk
+          if-no-files-found: error
+          retention-days: 1
+
+  maestro-android:
+    needs: build-android
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      checks: read
+      contents: read
+    concurrency:
+      group: ${{ github.workflow_ref }}-${{ github.ref }}-android-test
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Download debug build artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: ${{ needs.build-android.outputs.debug-build-artifact }}
+          path: android-debug-build
+
+      - name: Install Maestro
+        uses: ./.github/actions/install-maestro
+        with:
+          version: ${{ env.MAESTRO_VERSION }}
+          zip-sha256: ${{ env.MAESTRO_ZIP_SHA256 }}
+
+      - name: Install AVD dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y libpulse0 libgl1 libxkbfile1
+
+      - name: Setup JDK
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+        with:
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
 
       - name: Setup Android SDK
         run: |

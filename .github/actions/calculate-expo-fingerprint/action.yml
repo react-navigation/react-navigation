@@ -1,0 +1,24 @@
+name: Calculate Expo fingerprint
+description: Calculate an Expo native fingerprint for the example app
+
+inputs:
+  platform:
+    description: Native platform to fingerprint
+    required: true
+
+outputs:
+  fingerprint:
+    description: Expo native fingerprint hash
+    value: ${{ steps.calculate-fingerprint.outputs.fingerprint }}
+
+runs:
+  using: composite
+  steps:
+    - name: Calculate fingerprint
+      id: calculate-fingerprint
+      run: |
+        FINGERPRINT=$(npx expo-updates fingerprint:generate --platform "${{ inputs.platform }}" | jq -r '.hash')
+        echo "Fingerprint for ${{ inputs.platform }}: $FINGERPRINT"
+        echo "fingerprint=$FINGERPRINT" >> "$GITHUB_OUTPUT"
+      working-directory: example
+      shell: bash
