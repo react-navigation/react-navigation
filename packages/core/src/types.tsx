@@ -1461,37 +1461,54 @@ export type PathConfigMap<ParamList extends {}> = {
     | undefined;
 };
 
+/**
+ * The types below validate that the params used in a `path` string actually
+ * exist in the screen's params. Each `Validate*` type returns an overlay that is
+ * intersected with the user's config: `unknown` when the path is valid (a no-op
+ * in an intersection) or an object describing the error when it isn't. The error
+ * object can't be satisfied by the user's value, so the type error surfaces the
+ * message described by its keys.
+ */
+
 type PathParamKeys<Path extends string> = string extends Path
   ? never
   : KeyOf<ExtractParamStrings<Path>>;
 
-type ParamKeys<Params> = [NotUndefined<Params>] extends [never]
+type ParamKeys<Params, P = NotUndefined<Params>> = [P] extends [never]
   ? never
-  : object extends NotUndefined<Params>
+  : object extends P
     ? string
-    : NotUndefined<Params> extends {}
-      ? KeyOf<NotUndefined<Params>>
-      : never;
+    : [ParamListForNestedNavigator<Params>] extends [never]
+      ? P extends {}
+        ? KeyOf<P>
+        : never
+      : // A navigator's params (NavigatorScreenParams) hold its nested state, not
+        // user params, so its path can't reference any - define the param on a
+        // screen instead.
+        never;
 
-type InvalidPathParamError<InvalidParams extends string, ValidParams> = {
-  readonly 'Invalid path params': InvalidParams;
-  readonly 'Valid route params': ValidParams;
-};
-
-type ValidatePathParams<Params, Path extends string> =
-  Exclude<PathParamKeys<Path>, ParamKeys<Params>> extends infer InvalidParams
+type ValidatePathParams<
+  Params,
+  Path extends string,
+  ValidParams extends string = ParamKeys<Params>,
+> =
+  Exclude<PathParamKeys<Path>, ValidParams> extends infer InvalidParams extends
+    string
     ? [InvalidParams] extends [never]
       ? unknown
-      : InvalidPathParamError<Extract<InvalidParams, string>, ParamKeys<Params>>
+      : {
+          [Key in `Path param ":${InvalidParams}" is not defined in the params of this screen`]: [
+            ValidParams,
+          ] extends [never]
+            ? 'This screen does not accept any params'
+            : `Valid params: ${ValidParams}`;
+        }
     : never;
-
-type ValidatePath<Params, Path extends string> = Path &
-  ValidatePathParams<Params, Path>;
 
 type ValidatePathProperty<Params, Config> = Config extends {
   path: infer Path extends string;
 }
-  ? { path: ValidatePath<Params, Path> }
+  ? { path: Path & ValidatePathParams<Params, Path> }
   : unknown;
 
 type ValidateAlias<Params, Alias> = Alias extends string
@@ -1518,7 +1535,7 @@ type ValidateNestedScreens<
     ? { screens: ValidatePathConfigMap<ChildParamList, Screens> }
     : unknown;
 
-type ValidatePathConfig<Params, Config> = Config extends string
+export type ValidatePathConfig<Params, Config> = Config extends string
   ? ValidatePathParams<Params, Config>
   : Config extends object
     ? ValidatePathProperty<Params, Config> &
@@ -1526,18 +1543,9 @@ type ValidatePathConfig<Params, Config> = Config extends string
         ValidateNestedScreens<Params, Config>
     : unknown;
 
-type ValidatePathConfigMap<ParamList extends {}, Config> = {
+export type ValidatePathConfigMap<ParamList extends {}, Config> = {
   [RouteName in keyof Config]: RouteName extends keyof ParamList
     ? Config[RouteName] &
         ValidatePathConfig<ParamList[RouteName], Config[RouteName]>
     : never;
 };
-
-export type ValidateLinkingPathConfig<
-  ParamList extends {},
-  Config,
-> = Config extends { screens: infer Screens }
-  ? ValidatePathProperty<undefined, Config> & {
-      screens: ValidatePathConfigMap<ParamList, Screens>;
-    }
-  : ValidatePathProperty<undefined, Config>;

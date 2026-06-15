@@ -73,7 +73,8 @@ export type {
   ScreenListeners,
   Theme,
   TypedNavigator,
-  ValidateLinkingPathConfig,
+  ValidatePathConfig,
+  ValidatePathConfigMap,
 } from './types';
 export { PrivateValueStore } from './types';
 export { useFocusEffect } from './useFocusEffect';

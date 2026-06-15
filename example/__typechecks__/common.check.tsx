@@ -94,27 +94,20 @@ type FeedTabParamList = {
 };
 
 type DeepRootParamList = {
-  First: NavigatorScreenParams<DeepFirstParamList>;
-};
-
-type DeepFirstParamList = {
-  Second: NavigatorScreenParams<DeepSecondParamList>;
-};
-
-type DeepSecondParamList = {
-  Third: NavigatorScreenParams<DeepThirdParamList>;
-};
-
-type DeepThirdParamList = {
-  Fourth: NavigatorScreenParams<DeepFourthParamList>;
-};
-
-type DeepFourthParamList = {
-  Fifth: NavigatorScreenParams<DeepFifthParamList>;
-};
-
-type DeepFifthParamList = {
-  Details: { id: string; filter?: string };
+  Org: NavigatorScreenParams<{
+    OrgSettings: { section?: string };
+    Workspace: NavigatorScreenParams<{
+      Member: { memberId: string };
+      Project: NavigatorScreenParams<{
+        Milestone: { milestoneId: string };
+        Board: NavigatorScreenParams<{
+          Card: NavigatorScreenParams<{
+            Comment: { cardId: string; commentId?: string };
+          }>;
+        }>;
+      }>;
+    }>;
+  }>;
 };
 
 type FeedTabScreenProps<T extends keyof FeedTabParamList> =
@@ -1278,18 +1271,27 @@ useNavigationState('Invalid', (state) => state.index);
 {
   const linking = createLinkingConfig({
     config: {
+      path: 'app',
       screens: {
-        First: {
+        Org: {
+          path: 'org',
           screens: {
-            Second: {
+            OrgSettings: 'settings/:section?',
+            Workspace: {
+              path: 'workspace',
               screens: {
-                Third: {
+                Member: 'member/:memberId',
+                Project: {
+                  path: 'project',
                   screens: {
-                    Fourth: {
+                    Milestone: 'milestone/:milestoneId',
+                    Board: {
+                      path: 'board',
                       screens: {
-                        Fifth: {
+                        Card: {
+                          path: 'card',
                           screens: {
-                            Details: 'details/:id/:filter?',
+                            Comment: 'comment/:cardId/:commentId?',
                           },
                         },
                       },
@@ -1310,18 +1312,74 @@ useNavigationState('Invalid', (state) => state.index);
 createLinkingConfig({
   config: {
     screens: {
-      First: {
+      // @ts-expect-error
+      PostDetails: 'post/:missing',
+      Settings: {
+        // @ts-expect-error
+        path: 'settings/:missing',
+      },
+      // @ts-expect-error
+      Login: 'login/:id',
+    },
+  },
+}) satisfies LinkingOptions<RootStackParamList>;
+
+createLinkingConfig({
+  config: {
+    screens: {
+      // @ts-expect-error
+      InvalidScreen: 'invalid',
+    },
+  },
+}) satisfies LinkingOptions<RootStackParamList>;
+
+createLinkingConfig({
+  config: {
+    // @ts-expect-error
+    path: 'app/:id',
+    screens: {},
+  },
+}) satisfies LinkingOptions<RootStackParamList>;
+
+createLinkingConfig({
+  config: {
+    screens: {
+      PostDetails: {
+        path: 'post/:id',
+        alias: [
+          // @ts-expect-error
+          'p/:missing',
+          {
+            // @ts-expect-error
+            path: 'legacy/:wrong',
+          },
+        ],
+      },
+    },
+  },
+}) satisfies LinkingOptions<RootStackParamList>;
+
+createLinkingConfig({
+  config: {
+    path: 'app',
+    screens: {
+      Org: {
+        path: 'org',
         screens: {
-          Second: {
+          Workspace: {
+            path: 'workspace',
             screens: {
-              Third: {
+              Project: {
+                path: 'project',
                 screens: {
-                  Fourth: {
+                  Board: {
+                    path: 'board',
                     screens: {
-                      Fifth: {
+                      Card: {
+                        path: 'card',
                         screens: {
                           // @ts-expect-error
-                          Details: 'details/:missing',
+                          Comment: 'comment/:cardId/:missing/:wrong',
                         },
                       },
                     },
@@ -1338,81 +1396,18 @@ createLinkingConfig({
 
 createLinkingConfig({
   config: {
-    // @ts-expect-error
-    path: 'app/:id',
-    screens: {},
-  },
-}) satisfies LinkingOptions<RootStackParamList>;
-
-createLinkingConfig({
-  config: {
-    screens: {
-      // @ts-expect-error
-      InvalidScreen: 'invalid',
-    },
-  },
-}) satisfies LinkingOptions<RootStackParamList>;
-
-createLinkingConfig({
-  config: {
-    screens: {
-      // @ts-expect-error
-      PostDetails: 'post/:missing',
-    },
-  },
-}) satisfies LinkingOptions<RootStackParamList>;
-
-createLinkingConfig({
-  config: {
-    screens: {
-      PostDetails: {
-        // @ts-expect-error
-        path: 'post/:id/:missing',
-      },
-    },
-  },
-}) satisfies LinkingOptions<RootStackParamList>;
-
-createLinkingConfig({
-  config: {
-    screens: {
-      PostDetails: {
-        path: 'post/:id',
-        alias: [
-          'p/:id',
-          {
-            // @ts-expect-error
-            path: 'legacy/:missing',
-          },
-        ],
-      },
-    },
-  },
-}) satisfies LinkingOptions<RootStackParamList>;
-
-createLinkingConfig({
-  config: {
     screens: {
       Home: {
+        // @ts-expect-error
+        path: 'home/:id',
         screens: {
           Feed: {
             screens: {
               Popular: 'popular/:filter',
-              // @ts-expect-error
-              Latest: 'latest/:id',
             },
           },
         },
       },
-    },
-  },
-}) satisfies LinkingOptions<RootStackParamList>;
-
-createLinkingConfig({
-  config: {
-    screens: {
-      // @ts-expect-error
-      Login: 'login/:id',
     },
   },
 }) satisfies LinkingOptions<RootStackParamList>;
