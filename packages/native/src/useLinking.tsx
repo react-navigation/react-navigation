@@ -299,29 +299,38 @@ export function useLinking<ParamList extends ParamListBase>(
       };
 
       const rollbackHistoryIfPrevented = (callback: () => void) => {
-        let beforeRemovePrevented = false;
+        let removePrevented = false;
+        let actionChangedState = false;
 
-        const state = navigation.getRootState();
-
-        const unsubscribe = navigation.addListener('__unsafe_event__', (e) => {
-          if (
-            e.data.type === 'beforeRemove' &&
-            e.data.defaultPrevented === true
-          ) {
-            beforeRemovePrevented = true;
+        const unsubscribeEvent = navigation.addListener(
+          '__unsafe_event__',
+          (e) => {
+            if (e.data.type === 'beforeRemove' && e.data.defaultPrevented) {
+              removePrevented = true;
+            }
           }
-        });
+        );
+
+        // After preventing remove, user may synchronously continue navigation
+        // This is common when showing a confirmation dialog
+        // If this action produces an update, we don't want to rollback the history
+        const unsubscribeAction = navigation.addListener(
+          '__unsafe_action__',
+          (e) => {
+            if (!e.data.noop) {
+              actionChangedState = true;
+            }
+          }
+        );
 
         try {
           callback();
         } finally {
-          unsubscribe();
+          unsubscribeEvent();
+          unsubscribeAction();
         }
 
-        if (
-          beforeRemovePrevented &&
-          isEqual(navigation.getRootState(), state)
-        ) {
+        if (removePrevented && !actionChangedState) {
           rollbackHistory();
         }
       };
