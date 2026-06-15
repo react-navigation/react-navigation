@@ -633,7 +633,7 @@ test('emits state events when new navigator mounts', async () => {
   expect(onStateChange).toHaveBeenLastCalledWith(resultState);
 });
 
-test("emits '__unsafe_event__' after all listeners are called", async () => {
+test("emits '__unsafe_action__' with noop false when action updates state", async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -648,6 +648,231 @@ test("emits '__unsafe_event__' after all listeners are called", async () => {
   };
 
   const ref = createNavigationContainerRef<ParamListBase>();
+
+  const events: NavigationContainerEventMap['__unsafe_action__']['data'][] = [];
+
+  await render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  ref.current?.addListener('__unsafe_action__', (e) => {
+    events.push(e.data);
+  });
+
+  await act(() => ref.current?.navigate('bar'));
+
+  expect(events).toEqual([
+    expect.objectContaining({
+      action: expect.objectContaining({ type: 'NAVIGATE' }),
+      noop: false,
+    }),
+  ]);
+});
+
+test("emits '__unsafe_action__' with noop true when action is handled without changing state", async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const events: NavigationContainerEventMap['__unsafe_action__']['data'][] = [];
+
+  await render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  ref.current?.addListener('__unsafe_action__', (e) => {
+    events.push(e.data);
+  });
+
+  const target = ref.current?.getRootState().key;
+
+  await act(() =>
+    ref.current?.dispatch({
+      type: 'UNKNOWN',
+      target,
+    })
+  );
+
+  expect(events).toEqual([
+    expect.objectContaining({
+      action: expect.objectContaining({ type: 'UNKNOWN' }),
+      noop: true,
+    }),
+  ]);
+});
+
+test("doesn't emit '__unsafe_action__' when action isn't handled", async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const listener =
+    jest.fn<
+      EventListenerCallback<NavigationContainerEventMap, '__unsafe_action__'>
+    >();
+
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  await render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  ref.current?.addListener('__unsafe_action__', listener);
+
+  await act(() =>
+    ref.current?.dispatch({
+      type: 'UNKNOWN',
+    })
+  );
+
+  expect(listener).not.toHaveBeenCalled();
+
+  expect(spy).toHaveBeenCalledTimes(1);
+  expect(spy.mock.calls[0]?.[0]).toMatch(
+    "The action 'UNKNOWN' was not handled by any navigator."
+  );
+
+  spy.mockRestore();
+});
+
+test("emits '__unsafe_action__' with noop false when beforeRemove doesn't prevent removal", async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const events: string[] = [];
+
+  const actionEvents: NavigationContainerEventMap['__unsafe_action__']['data'][] =
+    [];
+  const beforeRemoveEvents: NavigationContainerEventMap['__unsafe_event__']['data'][] =
+    [];
+
+  const TestScreen = (props: any) => {
+    React.useEffect(
+      () =>
+        props.navigation.addListener('beforeRemove', () => {
+          events.push('beforeRemove listener');
+        }),
+      [props.navigation]
+    );
+
+    return null;
+  };
+
+  await render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator initialRouteName="bar">
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  ref.current?.addListener('__unsafe_event__', (e) => {
+    if (e.data.type === 'beforeRemove') {
+      events.push('unsafe event');
+      beforeRemoveEvents.push(e.data);
+    }
+  });
+
+  ref.current?.addListener('__unsafe_action__', (e) => {
+    events.push('unsafe action');
+    actionEvents.push(e.data);
+  });
+
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+
+  expect(events).toEqual([
+    'beforeRemove listener',
+    'unsafe event',
+    'unsafe action',
+  ]);
+
+  expect(beforeRemoveEvents).toEqual([
+    expect.objectContaining({
+      type: 'beforeRemove',
+      defaultPrevented: false,
+    }),
+  ]);
+
+  expect(actionEvents).toEqual([
+    expect.objectContaining({
+      action: expect.objectContaining({ type: 'POP_TO' }),
+      noop: false,
+    }),
+  ]);
+
+  expect(ref.current?.getRootState().routes).toEqual([
+    expect.objectContaining({ name: 'foo' }),
+  ]);
+});
+
+test("emits '__unsafe_event__' before noop true '__unsafe_action__' when beforeRemove prevents removal", async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const actionEvents: NavigationContainerEventMap['__unsafe_action__']['data'][] =
+    [];
 
   const calls: string[] = [];
 
@@ -673,6 +898,13 @@ test("emits '__unsafe_event__' after all listeners are called", async () => {
     expect(e.data.defaultPrevented).toBe(true);
   });
 
+  const unsafeActionListener = jest.fn<
+    EventListenerCallback<NavigationContainerEventMap, '__unsafe_action__'>
+  >((e) => {
+    calls.push('unsafe action');
+    actionEvents.push(e.data);
+  });
+
   await render(
     <BaseNavigationContainer ref={ref}>
       <TestNavigator initialRouteName="bar">
@@ -691,15 +923,29 @@ test("emits '__unsafe_event__' after all listeners are called", async () => {
   );
 
   ref.current?.addListener('__unsafe_event__', unsafeEventListener);
+  ref.current?.addListener('__unsafe_action__', unsafeActionListener);
 
   await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
 
   expect(unsafeEventListener).toHaveBeenCalledTimes(1);
+  expect(unsafeActionListener).toHaveBeenCalledTimes(1);
 
   expect(calls).toEqual([
     'screen listener',
     'navigation listener',
     'unsafe event',
+    'unsafe action',
+  ]);
+
+  expect(actionEvents).toEqual([
+    expect.objectContaining({
+      action: expect.objectContaining({ type: 'POP_TO' }),
+      noop: true,
+    }),
+  ]);
+
+  expect(ref.current?.getRootState().routes).toEqual([
+    expect.objectContaining({ name: 'bar' }),
   ]);
 });
 

@@ -88,8 +88,6 @@ export function useOnAction<State extends NavigationState>({
           result === null && action.target === state.key ? state : result;
 
         if (result !== null) {
-          onDispatchAction(action, state === result);
-
           if (state !== result) {
             const isPrevented = shouldPreventRemove(
               emitter,
@@ -100,10 +98,16 @@ export function useOnAction<State extends NavigationState>({
             );
 
             if (isPrevented) {
+              onDispatchAction(action, true);
+
               return true;
             }
 
+            onDispatchAction(action, false);
+
             setState(result);
+          } else {
+            onDispatchAction(action, true);
           }
 
           if (onRouteFocusParent !== undefined) {
