@@ -1,0 +1,10 @@
+{
+  "extends": "../../../../tsconfig",
+  "compilerOptions": {
+    "composite": false,
+    "incremental": false,
+    "noEmit": true
+  },
+  "include": ["."],
+  "exclude": []
+}

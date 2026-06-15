@@ -1,7 +1,11 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  type BottomTabNavigationOptions,
+  createBottomTabNavigator,
+} from '@react-navigation/bottom-tabs';
 import {
   createMaterialTopTabNavigator,
   createMaterialTopTabScreen,
+  type MaterialTopTabNavigationOptions,
 } from '@react-navigation/material-top-tabs';
 import {
   createStaticNavigation,
@@ -12,6 +16,7 @@ import {
 import {
   createNativeStackNavigator,
   createNativeStackScreen,
+  type NativeStackNavigationOptions,
 } from '@react-navigation/native-stack';
 import { expectTypeOf } from 'expect-type';
 
@@ -152,7 +157,7 @@ const OrdersStack = createNativeStackNavigator({
 
 const InboxStack = createNativeStackNavigator({
   screens: {
-    Inbox: createNativeStackScreen({
+    InboxHome: createNativeStackScreen({
       screen: Empty,
       linking: { path: 'inbox' },
     }),
@@ -218,23 +223,210 @@ export const ProductListScreen = () => {
 
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
 
+  expectTypeOf(navigation.getState().routeNames).toEqualTypeOf<
+    ('ProductList' | 'ProductDetails' | 'ProductReviews' | 'ProductGallery')[]
+  >();
+
+  // Navigate within the same navigator
   navigation.push('ProductDetails', { productId: 1 });
   navigation.push('ProductReviews', { productId: 1, page: 2 });
+  navigation.push('ProductGallery', { productId: 1, index: 0 });
 
-  // @ts-expect-error - DealDetails is in a different navigator.
+  // @ts-expect-error - productId is required.
+  navigation.push('ProductDetails');
+
+  // @ts-expect-error - productId must be a number.
+  navigation.push('ProductDetails', { productId: '1' });
+
+  // @ts-expect-error - DealDetails is in a sibling navigator, not reachable by name.
   navigation.push('DealDetails', { dealId: 1 });
 
-  const detailsRoute = useRoute('ProductDetails');
+  // Navigate to routes in ancestor navigators via the composite
+  navigation.navigate('Checkout', { cartId: 'c1' });
+  navigation.navigate('Account', { userId: 'u1' });
+  navigation.navigate('SignIn', { redirectTo: '/home' });
 
-  expectTypeOf(detailsRoute.params.productId).toEqualTypeOf<number>();
+  // Navigate into a sibling navigator through the nested params
+  navigation.navigate('Main', {
+    screen: 'Shop',
+    params: { screen: 'Search', params: { screen: 'SearchHome' } },
+  });
 
-  const checkoutRoute = useRoute('Checkout');
+  expectTypeOf(navigation.setParams).parameter(0).toEqualTypeOf<undefined>();
 
-  expectTypeOf(checkoutRoute.params.cartId).toEqualTypeOf<string>();
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<NativeStackNavigationOptions>>();
 
-  const type = useNavigationState('ProductList', (state) => state.type);
+  expectTypeOf(navigation.getParent)
+    .parameter(0)
+    .toEqualTypeOf<
+      'ProductList' | 'Featured' | 'Categories' | 'Shop' | 'Main' | undefined
+    >();
 
-  expectTypeOf(type).toEqualTypeOf<'stack'>();
+  return null;
+};
+
+/**
+ * Material top tabs nested four navigators deep.
+ */
+export const FeaturedTabScreen = () => {
+  const navigation = useNavigation('Featured');
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+
+  expectTypeOf(navigation.jumpTo).toBeFunction();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<MaterialTopTabNavigationOptions>>();
+
+  return null;
+};
+
+/**
+ * Native stack nested three navigators deep, navigating through leaves.
+ */
+export const CartScreen = () => {
+  const navigation = useNavigation('Cart');
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+  navigation.push('Checkout', { cartId: 'c1' });
+  navigation.push('PromoCode', { code: 'SALE' });
+
+  // @ts-expect-error - cartId is required.
+  navigation.push('Checkout');
+
+  expectTypeOf(navigation.setParams).parameter(0).toEqualTypeOf<undefined>();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<NativeStackNavigationOptions>>();
+
+  return null;
+};
+
+/**
+ * Bottom tabs nested one navigator deep.
+ */
+export const AccountScreen = () => {
+  const navigation = useNavigation('Account');
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
+
+  expectTypeOf(navigation.jumpTo)
+    .parameter(0)
+    .toEqualTypeOf<'Shop' | 'Orders' | 'Inbox' | 'Account'>();
+
+  expectTypeOf(navigation.setParams)
+    .parameter(0)
+    .toEqualTypeOf<Partial<{ userId: string }>>();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<BottomTabNavigationOptions>>();
+
+  return null;
+};
+
+/**
+ * Root navigator.
+ */
+export const SignInScreen = () => {
+  const navigation = useNavigation('SignIn');
+
+  expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+  navigation.navigate('SignIn', { redirectTo: '/home' });
+  navigation.navigate('Paywall', { plan: 'monthly' });
+  navigation.navigate('EditProfile', { userId: 'u1' });
+
+  // @ts-expect-error - plan must be a valid option.
+  navigation.navigate('Paywall', { plan: 'weekly' });
+
+  expectTypeOf(navigation.setParams)
+    .parameter(0)
+    .toEqualTypeOf<Partial<{ redirectTo: string }>>();
+
+  expectTypeOf(navigation.setOptions)
+    .parameter(0)
+    .toEqualTypeOf<Partial<NativeStackNavigationOptions>>();
+
+  return null;
+};
+
+/**
+ * `useRoute` recovers params for routes at every nesting level.
+ */
+export const RouteParamsChecks = () => {
+  expectTypeOf(useRoute('ProductList').params).toEqualTypeOf<undefined>();
+
+  expectTypeOf(useRoute('ProductDetails').params).toEqualTypeOf<
+    Readonly<{ productId: number }>
+  >();
+
+  expectTypeOf(useRoute('SearchResults').params).toEqualTypeOf<
+    Readonly<{ query: string; sort: 'price' | 'rating' }>
+  >();
+
+  expectTypeOf(useRoute('Checkout').params).toEqualTypeOf<
+    Readonly<{ cartId: string }>
+  >();
+
+  expectTypeOf(useRoute('TrackShipment').params).toEqualTypeOf<
+    Readonly<{ orderId: string; carrier: string }>
+  >();
+
+  expectTypeOf(useRoute('Account').params).toEqualTypeOf<
+    Readonly<{ userId: string }>
+  >();
+
+  expectTypeOf(useRoute('SignIn').params).toEqualTypeOf<
+    Readonly<{ redirectTo: string }>
+  >();
+
+  // @ts-expect-error - not a route in the app.
+  useRoute('Invalid');
+
+  return null;
+};
+
+/**
+ * `useNavigationState` resolves state for routes at every nesting level.
+ */
+export const NavigationStateChecks = () => {
+  expectTypeOf(
+    useNavigationState('ProductList', (state) => state.type)
+  ).toEqualTypeOf<'stack'>();
+
+  expectTypeOf(
+    useNavigationState('Featured', (state) => state.type)
+  ).toEqualTypeOf<'tab'>();
+
+  expectTypeOf(
+    useNavigationState('Account', (state) => state.type)
+  ).toEqualTypeOf<'tab'>();
+
+  expectTypeOf(
+    useNavigationState('SignIn', (state) => state.index)
+  ).toEqualTypeOf<number>();
+
+  expectTypeOf(
+    useNavigationState('ProductList', (state) => state.routeNames)
+  ).toEqualTypeOf<
+    ('ProductList' | 'ProductDetails' | 'ProductReviews' | 'ProductGallery')[]
+  >();
+
+  // @ts-expect-error - not a route in the app.
+  useNavigationState('Invalid', (state) => state.index);
+
+  return null;
+};
+
+export const InvalidRouteCheck = () => {
+  // @ts-expect-error - not a route in the app.
+  useNavigation('Invalid');
 
   return null;
 };

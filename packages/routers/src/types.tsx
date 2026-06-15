@@ -32,7 +32,7 @@ export type NavigationState<ParamList extends ParamListBase = ParamListBase> =
      */
     routes: NavigationRoute<ParamList, keyof ParamList>[];
     /**
-     * Custom type for the state, whether it's for tab, stack, drawer etc.
+     * The type of the state, i.e., whether it's for tab, stack, drawer etc.
      * During rehydration, the state will be discarded if type doesn't match with router type.
      * It can also be used to detect the type of the navigator we're dealing with.
      */

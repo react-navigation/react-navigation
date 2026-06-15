@@ -274,6 +274,10 @@ function generateBenchmark(): void {
       entries.push(`    Nested${level}: Nav${level + 1},`);
     }
 
+    if (level === 0) {
+      entries.push(`    DynamicStaticParent: DynamicStaticParent,`);
+    }
+
     navigators.push(
       `const Nav${level} = ${navigator}({\n  screens: {\n${entries.join('\n')}\n  },\n});`
     );
@@ -297,6 +301,136 @@ function generateBenchmark(): void {
 void Use${name};`;
   });
 
+  const dynamicBenchmark = `const DynamicStaticLeaf = createNativeStackNavigator({
+  screens: {
+    DynamicStaticLeafHome: createNativeStackScreen({
+      screen: () => null,
+      linking: { path: 'dynamic-static-leaf' },
+    }),
+    DynamicStaticLeafDetails: createNativeStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'dynamic-static-leaf/:dsl',
+        parse: { dsl: (value) => Number(value) },
+      },
+      options: ({ route }) => ({ title: 'Static leaf ' + route.params.dsl }),
+    }),
+  },
+});
+
+const DynamicStaticParent = createNativeStackNavigator({
+  screens: {
+    DynamicStaticParentHome: createNativeStackScreen({
+      screen: () => null,
+      linking: { path: 'dynamic-static-parent' },
+    }),
+    DynamicStaticParentToLeaf: DynamicStaticLeaf,
+  },
+});
+
+type DynamicParamListLeaf = {
+  DynamicParamListLeafHome: undefined;
+  DynamicParamListLeafDetails: { dpl: number };
+};
+
+type DynamicParamListBranch = {
+  DynamicParamListOwn: { dpo: number };
+  DynamicParamListToParamList: NavigatorScreenParams<DynamicParamListLeaf>;
+  DynamicParamListToStaticNavigator: NavigatorScreenParams<typeof DynamicStaticLeaf>;
+};
+
+type DynamicRootParamList = {
+  DynamicRootHome: undefined;
+  DynamicNavigatorToParamList: NavigatorScreenParams<DynamicParamListBranch>;
+  DynamicNavigatorToStaticNavigator: NavigatorScreenParams<typeof DynamicStaticParent>;
+};
+
+const DynamicRootNavigator = createNativeStackNavigator<
+  DynamicRootParamList,
+  {
+    DynamicNavigatorToStaticNavigator: typeof DynamicStaticParent;
+  }
+>();`;
+
+  const dynamicConsumers = `function UseDynamicParamListToParamList() {
+  const navigation = useNavigation<
+    typeof DynamicRootNavigator,
+    'DynamicParamListLeafDetails'
+  >('DynamicParamListLeafDetails');
+  navigation.navigate('DynamicParamListLeafHome');
+  navigation.navigate('DynamicParamListLeafDetails', { dpl: 1 });
+  navigation.navigate('DynamicParamListOwn', { dpo: 1 });
+  navigation.navigate('DynamicRootHome');
+  const route = useRoute<DynamicRootParamList, 'DynamicParamListLeafDetails'>(
+    'DynamicParamListLeafDetails'
+  );
+  const value = useNavigationState<
+    number,
+    typeof DynamicRootNavigator,
+    'DynamicParamListLeafDetails'
+  >('DynamicParamListLeafDetails', (state) => state.index);
+  return { navigation, route, value };
+}
+void UseDynamicParamListToParamList;
+
+function UseDynamicParamListToNavigator() {
+  const navigation = useNavigation<
+    typeof DynamicRootNavigator,
+    'DynamicStaticLeafDetails'
+  >('DynamicStaticLeafDetails');
+  navigation.push('DynamicStaticLeafHome');
+  navigation.push('DynamicStaticLeafDetails', { dsl: 1 });
+  navigation.navigate('DynamicParamListOwn', { dpo: 1 });
+  navigation.navigate('DynamicRootHome');
+  const route = useRoute<DynamicRootParamList, 'DynamicStaticLeafDetails'>(
+    'DynamicStaticLeafDetails'
+  );
+  const value = useNavigationState<
+    number,
+    typeof DynamicRootNavigator,
+    'DynamicStaticLeafDetails'
+  >('DynamicStaticLeafDetails', (state) => state.index);
+  return { navigation, route, value };
+}
+void UseDynamicParamListToNavigator;
+
+function UseDynamicNavigatorToParamList() {
+  const navigation = useNavigation<
+    typeof DynamicRootNavigator,
+    'DynamicParamListOwn'
+  >('DynamicParamListOwn');
+  navigation.navigate('DynamicParamListOwn', { dpo: 1 });
+  navigation.navigate('DynamicRootHome');
+  const route = useRoute<DynamicRootParamList, 'DynamicParamListOwn'>(
+    'DynamicParamListOwn'
+  );
+  const value = useNavigationState<
+    number,
+    typeof DynamicRootNavigator,
+    'DynamicParamListOwn'
+  >('DynamicParamListOwn', (state) => state.index);
+  return { navigation, route, value };
+}
+void UseDynamicNavigatorToParamList;
+
+function UseStaticParentToStaticChild() {
+  const navigation = useNavigation<typeof Nav0, 'DynamicStaticParentHome'>(
+    'DynamicStaticParentHome'
+  );
+  navigation.navigate('DynamicStaticParentToLeaf', {
+    screen: 'DynamicStaticLeafHome',
+  });
+  const route = useRoute<RootParamList, 'DynamicStaticParentHome'>(
+    'DynamicStaticParentHome'
+  );
+  const value = useNavigationState<number, typeof Nav0, 'DynamicStaticParentHome'>(
+    'DynamicStaticParentHome',
+    (state) => state.index
+  );
+  return { navigation, route, value };
+}
+void UseStaticParentToStaticChild;`;
+
   const imports = NAVIGATORS.map(
     ([navigator, screen, pkg]) =>
       `import { ${navigator}, ${screen} } from '@react-navigation/${pkg}';`
@@ -308,12 +442,15 @@ void Use${name};`;
 // Generated by scripts/measure-typescript.ts -- do not edit or commit.
 import {
   createStaticNavigation,
+  type NavigatorScreenParams,
   useNavigation,
   useNavigationState,
   useRoute,
   type StaticParamList,
 } from '@react-navigation/native';
 ${imports}
+
+${dynamicBenchmark}
 
 ${navigators.join('\n\n')}
 
@@ -322,6 +459,8 @@ createStaticNavigation(Nav0);
 type RootParamList = StaticParamList<typeof Nav0>;
 
 ${consumers.join('\n\n')}
+
+${dynamicConsumers}
 `
   );
 }
