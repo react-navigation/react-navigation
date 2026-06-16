@@ -2,10 +2,9 @@ import groovy.json.JsonSlurper
 
 buildscript {
   ext.ReactNavigation = [
-    kotlinVersion: "2.0.21",
+    kotlinVersion: "2.1.20",
     minSdkVersion: 24,
-    compileSdkVersion: 36,
-    targetSdkVersion: 36
+    compileSdkVersion: 36
   ]
 
   ext.getExtOrDefault = { prop ->
@@ -41,7 +40,6 @@ android {
 
   defaultConfig {
     minSdkVersion getExtOrDefault("minSdkVersion")
-    targetSdkVersion getExtOrDefault("targetSdkVersion")
   }
 
   buildTypes {
@@ -55,8 +53,8 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_17
+    targetCompatibility JavaVersion.VERSION_17
   }
 }
 
