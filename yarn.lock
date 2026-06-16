@@ -4463,7 +4463,7 @@ __metadata:
     react-native-builder-bob: "npm:^0.42.1"
     react-native-drawer-layout: "workspace:^"
     react-native-gesture-handler: "npm:^3.0.0"
-    react-native-monorepo-config: "npm:^0.3.5"
+    react-native-monorepo-config: "npm:^0.4.0"
     react-native-pager-view: "npm:^8.0.0"
     react-native-reanimated: "npm:~4.2.1"
     react-native-safe-area-context: "npm:~5.6.2"
@@ -12904,13 +12904,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-monorepo-config@npm:^0.3.5":
-  version: 0.3.5
-  resolution: "react-native-monorepo-config@npm:0.3.5"
+"react-native-monorepo-config@npm:^0.4.0":
+  version: 0.4.0
+  resolution: "react-native-monorepo-config@npm:0.4.0"
   dependencies:
     escape-string-regexp: "npm:^5.0.0"
     fast-glob: "npm:^3.3.3"
-  checksum: 10c0/e0343807046c16d5fb5999b966e0a70fd8a757d658f58f10bee830485fa600ffb8de9100dea1cdead36a639c3e18a0f697b35e22a5564cb74e437d8aeca30d87
+  checksum: 10c0/62e6e2ab859a2e0e5a4028b9f018043a803bfd35c62017a0ca834fc0ff389b5f9cca82c3bf5332d30644e9488e6144ebb0a94965c918d64fce5dbabe094163f8
   languageName: node
   linkType: hard
 

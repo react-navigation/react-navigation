@@ -1,6 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
+const condition = '@react-navigation/source';
 const packages = path.resolve(__dirname, '..', '..', 'packages');
 
 const alias = Object.fromEntries(
@@ -11,10 +12,10 @@ const alias = Object.fromEntries(
     .flatMap(([dir, pak]) =>
       Object.entries(pak.exports || {})
         .reverse()
-        .filter(([, value]) => value.source != null)
+        .filter(([, value]) => value[condition] != null)
         .map(([key, value]) => [
           path.join(pak.name, key),
-          path.resolve(packages, dir, value.source),
+          path.resolve(packages, dir, value[condition]),
         ])
     )
 );

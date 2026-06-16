@@ -21,7 +21,7 @@
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
-      "source": "./src/index.tsx",
+      "@react-navigation/source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "production": "./lib/module/index.production.js",
       "development": "./lib/module/index.development.js",

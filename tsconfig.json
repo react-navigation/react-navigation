@@ -2,7 +2,7 @@
   "compilerOptions": {
     "composite": true,
     "noEmit": true,
-    "customConditions": ["source"],
+    "customConditions": ["@react-navigation/source"],
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
     "erasableSyntaxOnly": true,

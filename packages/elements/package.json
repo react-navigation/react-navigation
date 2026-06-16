@@ -22,12 +22,12 @@
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
-      "source": "./src/index.tsx",
+      "@react-navigation/source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
     "./internal": {
-      "source": "./src/internal.tsx",
+      "@react-navigation/source": "./src/internal.tsx",
       "types": "./lib/typescript/src/internal.d.ts",
       "default": "./lib/module/internal.js"
     },

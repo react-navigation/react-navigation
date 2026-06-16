@@ -20,6 +20,7 @@ const packages = pack.workspaces.flatMap((workspace) =>
 export default defineConfig((env) =>
   mergeConfig(config(env), {
     resolve: {
+      conditions: ['@react-navigation/source'],
       dedupe: [
         ...new Set(
           packages.flatMap((pack) => Object.keys(pack.peerDependencies ?? {}))

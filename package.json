@@ -58,7 +58,7 @@
       "customExportConditions": [
         "require",
         "react-native",
-        "source"
+        "@react-navigation/source"
       ]
     },
     "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
