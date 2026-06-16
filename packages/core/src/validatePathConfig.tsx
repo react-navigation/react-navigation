@@ -1,24 +1,39 @@
-const formatToList = (items: Record<string, string>) =>
-  Object.entries(items)
-    .map(([key, value]) => `- ${key} (${value})`)
-    .join('\n');
+const ROOT_VALIDATION_LIST = [
+  '- path (string)',
+  '- initialRouteName (string)',
+  '- screens (object)',
+].join('\n');
+
+const NESTED_VALIDATION_LIST = [
+  ROOT_VALIDATION_LIST,
+  '- alias (array)',
+  '- exact (boolean)',
+  '- stringify (object)',
+  '- parse (object)',
+  '- shared (boolean)',
+].join('\n');
+
+const getValidationType = (key: string, root: boolean) => {
+  switch (key) {
+    case 'path':
+    case 'initialRouteName':
+      return 'string';
+    case 'screens':
+      return 'object';
+    case 'alias':
+      return root ? undefined : 'array';
+    case 'exact':
+    case 'shared':
+      return root ? undefined : 'boolean';
+    case 'stringify':
+    case 'parse':
+      return root ? undefined : 'object';
+    default:
+      return undefined;
+  }
+};
 
 export function validatePathConfig(config: unknown, root = true) {
-  const validation = {
-    path: 'string',
-    initialRouteName: 'string',
-    screens: 'object',
-    ...(root
-      ? null
-      : {
-          alias: 'array',
-          exact: 'boolean',
-          stringify: 'object',
-          parse: 'object',
-          shared: 'boolean',
-        }),
-  };
-
   if (typeof config !== 'object' || config === null) {
     throw new Error(
       `Expected the configuration to be an object, but got ${JSON.stringify(
@@ -27,58 +42,70 @@ export function validatePathConfig(config: unknown, root = true) {
     );
   }
 
-  const validationErrors = Object.fromEntries(
-    Object.keys(config)
-      .map((key) => {
-        if (key in validation) {
-          const type = validation[key as keyof typeof validation];
-          // @ts-expect-error: we know the key exists
-          const value = config[key];
+  const pathConfig = config as Record<string, unknown>;
+  let validationErrors: string[] | undefined;
 
-          if (value !== undefined) {
-            if (type === 'array') {
-              if (!Array.isArray(value)) {
-                return [key, `expected 'Array', got '${typeof value}'`];
-              }
-            } else if (typeof value !== type) {
-              return [key, `expected '${type}', got '${typeof value}'`];
-            }
-          }
-        } else {
-          return [key, 'extraneous'];
-        }
+  for (const key in pathConfig) {
+    const type = getValidationType(key, root);
 
-        return null;
-      })
-      .filter(Boolean) as [string, string][]
-  );
+    if (type === undefined) {
+      (validationErrors ??= []).push(`- ${key} (extraneous)`);
+      continue;
+    }
 
-  if (Object.keys(validationErrors).length) {
+    const value = pathConfig[key];
+
+    if (value === undefined) {
+      continue;
+    }
+
+    if (type === 'array') {
+      if (!Array.isArray(value)) {
+        (validationErrors ??= []).push(
+          `- ${key} (expected 'Array', got '${typeof value}')`
+        );
+      }
+    } else if (typeof value !== type) {
+      (validationErrors ??= []).push(
+        `- ${key} (expected '${type}', got '${typeof value}')`
+      );
+    }
+  }
+
+  if (validationErrors) {
     throw new Error(
-      `Found invalid properties in the configuration:\n${formatToList(
-        validationErrors
-      )}\n\nYou can only specify the following properties:\n${formatToList(
-        validation
-      )}\n\nIf you want to specify configuration for screens, you need to specify them under a 'screens' property.\n\nSee https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration.`
+      `Found invalid properties in the configuration:\n${validationErrors.join(
+        '\n'
+      )}\n\nYou can only specify the following properties:\n${
+        root ? ROOT_VALIDATION_LIST : NESTED_VALIDATION_LIST
+      }\n\nIf you want to specify configuration for screens, you need to specify them under a 'screens' property.\n\nSee https://reactnavigation.org/docs/configuring-links for more details on how to specify a linking configuration.`
     );
   }
+
+  const path = pathConfig.path;
 
   if (
     root &&
-    'path' in config &&
-    typeof config.path === 'string' &&
-    config.path.includes(':')
+    'path' in pathConfig &&
+    typeof path === 'string' &&
+    path.includes(':')
   ) {
     throw new Error(
-      `Found invalid path '${config.path}'. The 'path' in the top-level configuration cannot contain patterns for params.`
+      `Found invalid path '${path}'. The 'path' in the top-level configuration cannot contain patterns for params.`
     );
   }
 
-  if ('screens' in config && config.screens) {
-    Object.entries(config.screens).forEach(([_, value]) => {
+  const screens = pathConfig.screens;
+
+  if (screens && typeof screens === 'object') {
+    const screenConfig = screens as Record<string, unknown>;
+
+    for (const name in screenConfig) {
+      const value = screenConfig[name];
+
       if (typeof value !== 'string') {
         validatePathConfig(value, false);
       }
-    });
+    }
   }
 }
