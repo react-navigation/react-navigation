@@ -7,8 +7,9 @@ import config from '../example/app.json' with { type: 'json' };
 
 const root = new URL('..', import.meta.url);
 const cwd = new URL('example/', root);
+
 const agentDeviceBin = fileURLToPath(
-  new URL('../node_modules/agent-device/bin/agent-device.mjs', import.meta.url)
+  new URL('node_modules/agent-device/bin/agent-device.mjs', root)
 );
 
 const platformIndex = process.argv.indexOf('--platform');
@@ -99,6 +100,7 @@ function getConnectedDeviceIds(): string[] {
     ) as {
       devices: Record<string, { state: string; udid: string }[]>;
     };
+
     const iosIds = Object.values(data.devices)
       .flat()
       .filter((device) => device.state === 'Booted')

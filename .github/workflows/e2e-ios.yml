@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  maestro-ios:
+  e2e-ios:
     runs-on: macos-latest
     timeout-minutes: 60
     permissions:
@@ -195,17 +195,17 @@ jobs:
             > agent-device-artifacts/ios-prepare.txt
         working-directory: example
 
-      - name: Run Maestro tests
+      - name: Run E2E tests
         run: |
           echo "Running native e2e tests..."
           AGENT_DEVICE_E2E_TIMEOUT_MS=240000 pnpm e2e:native --platform ios
         working-directory: example
 
-      - name: Store Maestro timing output
+      - name: Store E2E timing output
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: maestro-timing-ios
+          name: e2e-timing-ios
           path: example/agent-device-artifacts/**/*
           include-hidden-files: true
           overwrite: true
@@ -218,7 +218,7 @@ jobs:
         if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: maestro-artifacts-ios
+          name: e2e-artifacts-ios
           path: |
             example/agent-device-artifacts/**/*
             example/agent-device-state/**/*.log
@@ -229,7 +229,7 @@ jobs:
         if: failure() || cancelled()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: agent-device-simulator-output
+          name: e2e-simulator-output
           path: |
             ~/.agent-device/**/*.log
             ~/agent-device-simulator.log

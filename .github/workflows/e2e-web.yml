@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  playwright:
+  e2e-web:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     concurrency:
@@ -52,5 +52,5 @@ jobs:
           path: ~/.cache/ms-playwright
           key: ${{ steps.playwright-cache.outputs.cache-primary-key }}
 
-      - name: Run e2e tests
+      - name: Run E2E tests
         run: pnpm example e2e:web --retries=3
