@@ -21,7 +21,7 @@
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
-      "source": "./src/index.tsx",
+      "@react-navigation/source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
@@ -51,7 +51,7 @@
     "del-cli": "^7.0.0",
     "react": "19.2.0",
     "react-native": "0.83.6",
-    "react-native-builder-bob": "^0.42.1",
+    "react-native-builder-bob": "^0.43.0",
     "react-native-safe-area-context": "~5.6.2",
     "react-native-screens": "^4.25.2",
     "test-renderer": "1.2.0",

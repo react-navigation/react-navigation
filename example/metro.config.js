@@ -6,6 +6,7 @@ const { getDefaultConfig } = require('@expo/metro-config');
 const defaultConfig = withMetroConfig(getDefaultConfig(__dirname), {
   root: path.resolve(__dirname, '..'),
   dirname: __dirname,
+  conditions: ['@react-navigation/source'],
 });
 
 /** @type {import('metro-config').MetroConfig} */

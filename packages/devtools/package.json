@@ -21,7 +21,7 @@
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
-      "source": "./src/index.tsx",
+      "@react-navigation/source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "production": "./lib/module/index.production.js",
       "development": "./lib/module/index.development.js",
@@ -53,7 +53,7 @@
     "@types/react": "~19.2.17",
     "del-cli": "^7.0.0",
     "react": "19.2.0",
-    "react-native-builder-bob": "^0.42.1",
+    "react-native-builder-bob": "^0.43.0",
     "typescript": "^6.0.3"
   },
   "peerDependencies": {
