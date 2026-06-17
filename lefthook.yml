@@ -7,10 +7,13 @@ pre-commit:
     types:
       glob: '*.{json,js,ts,tsx}'
       run: yarn typecheck
-    types-standalone:
+    types:standalone:static:
       glob: '*.{json,js,ts,tsx}'
-      run: yarn typecheck:standalone
-    types-declarations:
+      run: yarn typecheck:standalone:static
+    types:standalone:dynamic:
+      glob: '*.{json,js,ts,tsx}'
+      run: yarn typecheck:standalone:dynamic
+    types:declarations:
       glob: '*.{json,js,ts,tsx}'
       run: yarn typecheck:declarations
     test:

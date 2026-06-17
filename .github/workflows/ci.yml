@@ -38,7 +38,8 @@ jobs:
       - name: Typecheck files
         run: |
           yarn typecheck
-          yarn typecheck:standalone
+          yarn typecheck:standalone:static
+          yarn typecheck:standalone:dynamic
           yarn typecheck:declarations
 
   unit-test:
