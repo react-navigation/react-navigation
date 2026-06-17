@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  e2e-web:
+  playwright:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     concurrency:

@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  e2e-ios:
+  maestro-ios:
     runs-on: macos-latest
     timeout-minutes: 60
     permissions:

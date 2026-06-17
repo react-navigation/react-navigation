@@ -8,7 +8,7 @@ on:
       - main
 
 jobs:
-  e2e-android:
+  maestro-android:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
