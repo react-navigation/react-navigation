@@ -1,20 +1,24 @@
+import type {
+  LiquidGlassContainerViewProps,
+  LiquidGlassViewProps,
+} from '@callstack/liquid-glass';
 import { Animated, View } from 'react-native';
 
-type CallstackLiquidGlass = typeof import('@callstack/liquid-glass');
+type AnimatedLiquidGlassViewProps =
+  Animated.AnimatedProps<LiquidGlassViewProps>;
 
-export const LiquidGlassView: CallstackLiquidGlass['LiquidGlassView'] = View;
+type AnimatedLiquidGlassContainerViewProps =
+  Animated.AnimatedProps<LiquidGlassContainerViewProps>;
 
-export const LiquidGlassContainerView: CallstackLiquidGlass['LiquidGlassContainerView'] =
+export const LiquidGlassView: React.ComponentType<LiquidGlassViewProps> = View;
+
+export const LiquidGlassContainerView: React.ComponentType<LiquidGlassContainerViewProps> =
   View;
 
-// @ts-expect-error: this is fine
-export const AnimatedLiquidGlassView: Animated.AnimatedComponent<
-  typeof LiquidGlassView
-> = Animated.View;
+export const AnimatedLiquidGlassView: React.ComponentType<AnimatedLiquidGlassViewProps> =
+  Animated.View;
 
-// @ts-expect-error: this is fine
-export const AnimatedLiquidGlassContainerView: Animated.AnimatedComponent<
-  typeof LiquidGlassContainerView
-> = Animated.View;
+export const AnimatedLiquidGlassContainerView: React.ComponentType<AnimatedLiquidGlassContainerViewProps> =
+  Animated.View;
 
 export const isLiquidGlassSupported = false;

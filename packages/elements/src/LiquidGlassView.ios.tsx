@@ -1,14 +1,20 @@
+import type {
+  LiquidGlassContainerViewProps,
+  LiquidGlassViewProps,
+} from '@callstack/liquid-glass';
 import { Animated, View } from 'react-native';
 
-type CallstackLiquidGlass = typeof import('@callstack/liquid-glass');
+type AnimatedLiquidGlassViewProps =
+  Animated.AnimatedProps<LiquidGlassViewProps>;
+
+type AnimatedLiquidGlassContainerViewProps =
+  Animated.AnimatedProps<LiquidGlassContainerViewProps>;
 
 let isLiquidGlassSupported: boolean,
-  LiquidGlassView: CallstackLiquidGlass['LiquidGlassView'],
-  LiquidGlassContainerView: CallstackLiquidGlass['LiquidGlassContainerView'],
-  AnimatedLiquidGlassView: Animated.AnimatedComponent<typeof LiquidGlassView>,
-  AnimatedLiquidGlassContainerView: Animated.AnimatedComponent<
-    typeof LiquidGlassContainerView
-  >;
+  LiquidGlassView: React.ComponentType<LiquidGlassViewProps>,
+  LiquidGlassContainerView: React.ComponentType<LiquidGlassContainerViewProps>,
+  AnimatedLiquidGlassView: React.ComponentType<AnimatedLiquidGlassViewProps>,
+  AnimatedLiquidGlassContainerView: React.ComponentType<AnimatedLiquidGlassContainerViewProps>;
 
 try {
   // Add try/catch to support usage even if it's not installed, since it's optional.
@@ -24,9 +30,8 @@ try {
 } catch (e) {
   isLiquidGlassSupported = false;
   LiquidGlassView = View;
-  // @ts-expect-error: this is fine
+  LiquidGlassContainerView = View;
   AnimatedLiquidGlassView = Animated.View;
-  // @ts-expect-error: this is fine
   AnimatedLiquidGlassContainerView = Animated.View;
 }
 

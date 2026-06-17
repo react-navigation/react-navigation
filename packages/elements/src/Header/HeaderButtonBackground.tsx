@@ -1,14 +1,11 @@
 import { Animated, StyleSheet } from 'react-native';
 
-import { LiquidGlassView } from '../LiquidGlassView';
+import { AnimatedLiquidGlassView } from '../LiquidGlassView';
 import { BUTTON_SIZE } from './HeaderButton';
 
 type Props = React.ComponentProps<typeof Animated.View> & {
   plain?: boolean;
 };
-
-const AnimatedLiquidGlassView =
-  Animated.createAnimatedComponent(LiquidGlassView);
 
 export function HeaderButtonBackground({ plain, style, ...rest }: Props) {
   if (plain) {
