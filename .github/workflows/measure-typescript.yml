@@ -9,7 +9,7 @@ on:
       - '**/*.tsx'
       - '**/tsconfig*.json'
       - '**/package.json'
-      - 'yarn.lock'
+      - 'pnpm-lock.yaml'
       - 'scripts/measure-typescript.ts'
       - '.github/workflows/measure-typescript.yml'
 

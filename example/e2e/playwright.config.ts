@@ -30,14 +30,14 @@ export default defineConfig({
   webServer: [
     {
       cwd: path.join(__dirname, '..'),
-      command: `yarn web --port ${PORT}`,
+      command: `pnpm web --port ${PORT}`,
       url: `http://localhost:${PORT}`,
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
     },
     {
       cwd: path.join(__dirname, '..'),
-      command: 'yarn server',
+      command: 'pnpm server',
       url: 'http://localhost:3275',
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,

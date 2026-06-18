@@ -637,6 +637,6 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
 type RootStackType = typeof Stack;
 
-declare module '@react-navigation/core' {
+declare module '@react-navigation/native' {
   interface RootNavigator extends RootStackType {}
 }

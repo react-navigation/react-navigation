@@ -3,27 +3,27 @@ pre-commit:
   commands:
     lint:
       glob: '*.{js,ts,tsx}'
-      run: yarn lint {staged_files}
+      run: pnpm lint {staged_files}
     types:
       glob: '*.{json,js,ts,tsx}'
-      run: yarn typecheck
+      run: pnpm typecheck
     types:standalone:static:
       glob: '*.{json,js,ts,tsx}'
-      run: yarn typecheck:standalone:static
+      run: pnpm typecheck:standalone:static
     types:standalone:dynamic:
       glob: '*.{json,js,ts,tsx}'
-      run: yarn typecheck:standalone:dynamic
+      run: pnpm typecheck:standalone:dynamic
     types:declarations:
       glob: '*.{json,js,ts,tsx}'
-      run: yarn typecheck:declarations
+      run: pnpm typecheck:declarations
     test:
       glob: '*.{json,js,ts,tsx}'
-      run: yarn test
+      run: pnpm test
     dependencies:
-      glob: '{package.json,yarn.lock}'
-      run: yarn versions check
+      glob: '{package.json,pnpm-lock.yaml}'
+      run: pnpm versions check
 commit-msg:
   parallel: true
   commands:
     commitlint:
-      run: yarn commitlint --edit
+      run: pnpm commitlint --edit

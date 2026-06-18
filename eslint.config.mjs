@@ -13,7 +13,7 @@ export default defineConfig([
     '**/dist/',
     '**/lib/',
     '**/.expo/',
-    '**/.yarn/',
+    '**/.pnpm-store/',
     '**/.vscode/',
   ]),
 

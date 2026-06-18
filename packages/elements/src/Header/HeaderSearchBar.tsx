@@ -126,8 +126,10 @@ export function HeaderSearchBar({
     if (Platform.OS === 'web') {
       document?.body?.addEventListener?.('keyup', onKeyup);
     } else {
+      // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
       backHandlerSubscription = BackHandler.addEventListener(
         'hardwareBackPress',
+        // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
         () => {
           cancelSearch();
           return true;

@@ -84,7 +84,8 @@ const parsed = (() => {
       allowPositionals: true,
     });
   } catch (error) {
-    process.stderr.write(`${String(error)}\n\n${HELP}`);
+    console.error(error);
+    process.stderr.write(`\n${HELP}`);
     process.exit(1);
   }
 })();
@@ -116,6 +117,20 @@ function log(message: string): void {
   }
 }
 
+function printErrorLogs(error: unknown): void {
+  if (typeof error !== 'object' || error == null) {
+    return;
+  }
+
+  if ('stdout' in error && typeof error.stdout === 'string') {
+    process.stdout.write(error.stdout);
+  }
+
+  if ('stderr' in error && typeof error.stderr === 'string') {
+    process.stderr.write(error.stderr);
+  }
+}
+
 function git(args: string[]): string {
   return execFileSync('git', args, {
     cwd: root,
@@ -123,10 +138,10 @@ function git(args: string[]): string {
   }).trim();
 }
 
-function yarnInstall(): void {
+function pnpmInstall(): void {
   log('Installing dependencies...');
 
-  execSync('yarn install', {
+  execSync('pnpm install --config.confirmModulesPurge=false', {
     cwd: root,
     stdio: ['ignore', 'ignore', 'inherit'],
   });
@@ -214,22 +229,13 @@ function runTsc(): Metrics {
   let output: string;
 
   try {
-    output = execSync('yarn tsc --noEmit --extendedDiagnostics', {
+    output = execSync('pnpm exec tsc --noEmit --extendedDiagnostics', {
       cwd: root,
       encoding: 'utf-8',
       stdio: ['ignore', 'pipe', 'pipe'],
     });
   } catch (error) {
-    if (typeof error === 'object' && error != null) {
-      if ('stdout' in error && typeof error.stdout === 'string') {
-        process.stdout.write(error.stdout);
-      }
-
-      if ('stderr' in error && typeof error.stderr === 'string') {
-        process.stderr.write(error.stderr);
-      }
-    }
-
+    printErrorLogs(error);
     throw error;
   }
 
@@ -947,12 +953,11 @@ function restore(): void {
     const ref = currentBranch === 'HEAD' ? currentSha : currentBranch;
 
     git(['checkout', '--quiet', ref]);
-  } catch (error) {
+  } catch {
     process.stderr.write(
       `\nFailed to restore original checkout (${currentBranch}). ` +
         `Recover manually with:\n  git checkout ${currentBranch}\n` +
-        (stashed ? `  git stash pop\n` : '') +
-        `${String(error)}\n`
+        (stashed ? `  git stash pop\n` : '')
     );
 
     return;
@@ -963,15 +968,14 @@ function restore(): void {
       git(['stash', 'pop', '--quiet']);
 
       stashed = false;
-    } catch (error) {
+    } catch {
       process.stderr.write(
-        `\nFailed to restore stashed changes. Recover with:\n  git stash pop\n` +
-          `${String(error)}\n`
+        `\nFailed to restore stashed changes. Recover with:\n  git stash pop\n`
       );
     }
   }
 
-  yarnInstall();
+  pnpmInstall();
 }
 
 process.on('SIGINT', () => {
@@ -1006,7 +1010,7 @@ async function run(): Promise<void> {
 
     git(['checkout', '--quiet', baselineSha]);
 
-    yarnInstall();
+    pnpmInstall();
 
     log(`\nMeasuring BASELINE (${baseline})...`);
 
@@ -1028,6 +1032,6 @@ async function run(): Promise<void> {
 }
 
 run().catch((error) => {
-  process.stderr.write(`${String(error)}\n`);
+  console.error(error);
   process.exit(1);
 });
