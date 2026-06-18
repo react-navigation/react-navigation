@@ -391,7 +391,7 @@ function Card({
     ]
   );
 
-  const { containerStyle, cardStyle, overlayStyle, shadowStyle } =
+  const { containerStyle, cardStyle, overlayStyle, dimStyle, shadowStyle } =
     React.useMemo(
       () => styleInterpolator(interpolationProps),
       [styleInterpolator, interpolationProps]
@@ -576,6 +576,7 @@ function Card({
             >
               {children}
             </CardContent>
+            {dimStyle ? <Animated.View style={[styles.dim, dimStyle]} /> : null}
           </Animated.View>
         </GestureDetector>
       </Animated.View>
@@ -592,6 +593,11 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
+    backgroundColor: '#000',
+    pointerEvents: 'none',
+  },
+  dim: {
+    ...StyleSheet.absoluteFill,
     backgroundColor: '#000',
     pointerEvents: 'none',
   },

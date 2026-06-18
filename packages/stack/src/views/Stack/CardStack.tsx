@@ -142,9 +142,11 @@ const getInterpolationIndex = (scenes: Scene[], index: number) => {
 };
 
 const getIsModalPresentation = (
+  presentation: StackNavigationOptions['presentation'],
   cardStyleInterpolator: StackCardStyleInterpolator
 ) => {
   return (
+    presentation === 'modal' ||
     cardStyleInterpolator === forModalPresentationIOS ||
     // Handle custom modal presentation interpolators as well
     cardStyleInterpolator.name === 'forModalPresentationIOS'
@@ -160,8 +162,13 @@ const getIsModal = (
     return true;
   }
 
-  const { cardStyleInterpolator } = scene.descriptor.options;
-  const isModalPresentation = getIsModalPresentation(cardStyleInterpolator);
+  const { presentation, cardStyleInterpolator } = scene.descriptor.options;
+
+  const isModalPresentation = getIsModalPresentation(
+    presentation,
+    cardStyleInterpolator
+  );
+
   const isModal = isModalPresentation && interpolationIndex !== 0;
 
   return isModal;
@@ -424,7 +431,10 @@ export class CardStack extends React.Component<Props, State> {
         headerStyleInterpolator = transitionPreset.headerStyleInterpolator,
         cardOverlayEnabled = (Platform.OS !== 'ios' &&
           optionsForTransitionConfig.presentation !== 'transparentModal') ||
-          getIsModalPresentation(cardStyleInterpolator),
+          getIsModalPresentation(
+            optionsForTransitionConfig.presentation,
+            cardStyleInterpolator
+          ),
       } = optionsForTransitionConfig;
 
       const headerMode: StackHeaderMode =
@@ -434,7 +444,10 @@ export class CardStack extends React.Component<Props, State> {
           optionsForTransitionConfig.presentation === 'transparentModal' ||
           nextOptions?.presentation === 'modal' ||
           nextOptions?.presentation === 'transparentModal' ||
-          getIsModalPresentation(cardStyleInterpolator)
+          getIsModalPresentation(
+            optionsForTransitionConfig.presentation,
+            cardStyleInterpolator
+          )
         ) &&
         Platform.OS === 'ios' &&
         descriptor.options.header === undefined
@@ -744,6 +757,16 @@ export class CardStack extends React.Component<Props, State> {
               isParentModal
             );
 
+            const isNextScreenModal =
+              nextScene != null &&
+              getIsModalPresentation(
+                nextScene.descriptor.options.presentation,
+                nextScene.descriptor.options.cardStyleInterpolator
+              );
+
+            const isNextScreenTransparent =
+              nextScene?.descriptor.options.presentation === 'transparentModal';
+
             const isAnimationEnabled =
               getAnimationEnabled(animation) ||
               // Also check next screen's animation,
@@ -751,9 +774,6 @@ export class CardStack extends React.Component<Props, State> {
               (nextScene
                 ? getAnimationEnabled(nextScene.descriptor.options.animation)
                 : false);
-
-            const isNextScreenTransparent =
-              nextScene?.descriptor.options.presentation === 'transparentModal';
 
             const isRemoving =
               replacingRouteKeys.includes(route.key) ||
@@ -776,11 +796,16 @@ export class CardStack extends React.Component<Props, State> {
             // Keep animating and the last two rendered routes visible for smoother transitions
             const isVisible =
               focused ||
-              isNextScreenTransparent ||
               // React native destroys the view when hidden
               // So we keep retained screens visible
               // This makes sure any videos being played don't stop etc.
               isRetained ||
+              // Modal presentation on iOS has multiple screens visible at the same time
+              // The base of the modal run renders the dim, which is always persistent
+              // On iPadOS, the base screen is visible while modal is in a smaller area on top
+              // The top edge of the last 2 screens can be seen animating behind the modal
+              isNextScreenModal ||
+              isNextScreenTransparent ||
               // We only need to keep other screens visible when animation is enabled
               (isAnimationEnabled &&
                 (isFocusing ||
