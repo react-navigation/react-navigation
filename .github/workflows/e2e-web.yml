@@ -28,7 +28,9 @@ jobs:
 
       - name: Get Playwright version
         id: playwright
-        run: echo "VERSION=$(node --print "require('@playwright/test/package.json').version")" >> "$GITHUB_OUTPUT"
+        run: |
+          VERSION=$(pnpm example exec node --print "require('@playwright/test/package.json').version")
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Restore Playwright
         id: playwright-cache
@@ -41,7 +43,7 @@ jobs:
             ${{ runner.os }}-playwright-
 
       - name: Install Playwright
-        run: npx playwright install --with-deps
+        run: pnpm example exec playwright install --with-deps
 
       - name: Cache Playwright
         if: steps.playwright-cache.outputs.cache-hit != 'true'
@@ -51,4 +53,4 @@ jobs:
           key: ${{ steps.playwright-cache.outputs.cache-primary-key }}
 
       - name: Run e2e tests
-        run: yarn example e2e:web --retries=3
+        run: pnpm example e2e:web --retries=3

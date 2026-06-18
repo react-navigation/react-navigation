@@ -212,7 +212,7 @@ const RootStack = createNativeStackNavigator({
 
 createStaticNavigation(RootStack);
 
-declare module '@react-navigation/core' {
+declare module '@react-navigation/native' {
   interface RootNavigator extends RootStackType {}
 }
 

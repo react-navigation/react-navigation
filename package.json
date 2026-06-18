@@ -26,12 +26,12 @@
     "publish": "lerna publish",
     "release": "run-s build publish",
     "versions": "node scripts/dependency-versions.mjs",
-    "example": "yarn workspace @react-navigation/example"
+    "example": "pnpm --filter @react-navigation/example"
   },
   "engines": {
     "node": ">= 24.13.0"
   },
-  "packageManager": "yarn@4.10.3",
+  "packageManager": "pnpm@11.8.0",
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@commitlint/config-conventional": "^21.0.2",
@@ -42,6 +42,7 @@
     "@react-native/babel-preset": "0.85.3",
     "@react-native/jest-preset": "^0.85.3",
     "@types/babel__core": "^7.20.5",
+    "@types/node": "^24.13.2",
     "@types/semver": "^7.7.1",
     "commitlint": "^21.0.2",
     "eslint": "^9.39.4",
@@ -67,7 +68,8 @@
       "<rootDir>/jest/setup.js"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|immer)/)"
+      "node_modules/(?!\\.pnpm|(@react-navigation|react-native-drawer-layout|react-native-tab-view|(jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|immer)/)",
+      "node_modules/.pnpm/(?!(?:@react-navigation\\+[^@]+|react-native-drawer-layout|react-native-tab-view|@react-native\\+[^@]+|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|immer)@)"
     ]
   },
   "prettier": {

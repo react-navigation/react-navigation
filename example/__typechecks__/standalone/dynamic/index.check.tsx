@@ -150,7 +150,7 @@ export const navigators = {
   RootStack,
 };
 
-declare module '@react-navigation/core' {
+declare module '@react-navigation/native' {
   interface RootNavigator extends RootStackType {}
 }
 

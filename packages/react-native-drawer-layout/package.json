@@ -45,6 +45,7 @@
     "use-latest-callback": "^0.3.4"
   },
   "devDependencies": {
+    "@types/react": "~19.2.17",
     "del-cli": "^7.0.0",
     "react": "19.2.0",
     "react-native": "0.83.6",

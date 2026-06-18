@@ -1,6 +1,6 @@
 const path = require('path');
 const { withMetroConfig } = require('react-native-monorepo-config');
-// eslint-disable-next-line import-x/no-extraneous-dependencies
+
 const { getDefaultConfig } = require('@expo/metro-config');
 
 const defaultConfig = withMetroConfig(getDefaultConfig(__dirname), {

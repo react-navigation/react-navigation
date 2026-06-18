@@ -167,6 +167,7 @@ export function Drawer({
     // Measure the layout again on screen rotation
     let handle: number | undefined;
 
+    // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
     const subscription = Dimensions.addEventListener('change', () => {
       // The measurement is not accurate without the delay
       handle = requestAnimationFrame(() => {

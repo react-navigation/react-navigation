@@ -1,0 +1,8 @@
+packages:
+  - packages/*
+  - example
+allowBuilds:
+  '@evilmartians/lefthook': true
+  core-js: false
+  esbuild: false
+  unrs-resolver: false

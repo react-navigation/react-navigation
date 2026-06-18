@@ -14,71 +14,71 @@ If you don't know where to start, check the ones with the label [`good first iss
 
 ## Development workflow
 
-The project uses a monorepo structure for the packages managed by [yarn workspaces](https://yarnpkg.com/lang/en/docs/workspaces/) and [lerna](https://lerna.js.org). To get started with the project, run `yarn` in the root directory to install the required dependencies for each package:
+The project uses a monorepo structure for the packages managed by [pnpm workspaces](https://pnpm.io/workspaces) and [lerna](https://lerna.js.org). To get started with the project, run `pnpm install` in the root directory to install the required dependencies for each package:
 
 ```sh
-yarn
+pnpm install
 ```
 
 While developing, you can run the [example app](/example/) with [Expo](https://expo.dev/) to test your changes:
 
 ```sh
-yarn example start
+pnpm example start
 ```
 
 Make sure your code passes TypeScript and ESLint. Run the following to verify:
 
 ```sh
-yarn typecheck
-yarn lint
+pnpm typecheck
+pnpm lint
 ```
 
 To fix formatting errors, run the following:
 
 ```sh
-yarn lint --fix
+pnpm lint --fix
 ```
 
 Remember to add tests for your change if possible. Run the unit tests by:
 
 ```sh
-yarn test
+pnpm test
 ```
 
 Before running tests configure Playwright with:
 
 ```sh
-npx playwright install
+pnpm exec playwright install
 ```
 
 Run the e2e tests by:
 
 ```sh
-yarn example e2e:web --ui
+pnpm example e2e:web --ui
 ```
 
 By default, this will use the local dev server for the app. If you want to test a production build, first build the [example app](/example/) for web:
 
 ```sh
-yarn example expo export --platform web
+pnpm example exec expo export --platform web
 ```
 
 Then run the tests with the `CI` environment variable:
 
 ```sh
-CI=1 yarn example e2e:web
+CI=1 pnpm example e2e:web
 ```
 
 Before running Maestro tests:
 
 - Install it following the instructions [here](https://maestro.mobile.dev/getting-started/installing-maestro).
 - Start the Emulator or Simulator and install the Expo Go app.
-- Start the Metro server with `yarn example start`.
+- Start the Metro server with `pnpm example start`.
 
 Then run the Maestro tests by:
 
 ```sh
-yarn example e2e:native
+pnpm example e2e:native
 ```
 
 ### Commit message convention
@@ -106,11 +106,11 @@ Our pre-commit hooks verify that the linter and tests pass when committing.
 
 The `package.json` file contains various scripts for common tasks:
 
-- `yarn install`: setup project by installing all dependencies and pods.
-- `yarn typecheck`: type-check files with TypeScript.
-- `yarn lint`: lint files with ESLint.
-- `yarn test`: run unit tests with Jest.
-- `yarn example start`: run the example app with Expo.
+- `pnpm install`: setup project by installing all dependencies and pods.
+- `pnpm typecheck`: type-check files with TypeScript.
+- `pnpm lint`: lint files with ESLint.
+- `pnpm test`: run unit tests with Jest.
+- `pnpm example start`: run the example app with Expo.
 
 ### Sending a pull request
 
@@ -129,7 +129,7 @@ When you're sending a pull request:
 Maintainers with write access to the GitHub repo and the npm organization can publish new versions. To publish a new version, first, you need to export a `GH_TOKEN` environment variable as mentioned [here](https://github.com/lerna-lite/lerna-lite/blob/main/packages/version/README.md#remote-client-auth-tokens). Then run:
 
 ```sh
-yarn release
+pnpm release
 ```
 
 This will automatically bump the version and publish the packages. It'll also publish the changelogs on GitHub for each package.
@@ -140,7 +140,7 @@ When releasing a pre-release version, we need to:
 - Run the following command:
 
 ```sh
-yarn lerna publish --conventional-commits --conventional-prerelease --preid alpha
+pnpm lerna publish --conventional-commits --conventional-prerelease --preid alpha
 ```
 
 When releasing a stable version, we need to:
@@ -149,5 +149,5 @@ When releasing a stable version, we need to:
 - Run the following command:
 
 ```sh
-yarn lerna publish --conventional-commits --conventional-graduate
+pnpm lerna publish --conventional-commits --conventional-graduate
 ```

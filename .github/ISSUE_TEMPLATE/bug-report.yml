@@ -99,6 +99,6 @@ body:
         | react-native                           |
         | expo                                   |
         | node                                   |
-        | npm or yarn                            |
+        | npm or pnpm                            |
     validations:
       required: true

@@ -19,7 +19,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Fix lint issues
-        run: yarn lint --fix
+        run: pnpm lint --fix
 
       - name: Autofix
         uses: autofix-ci/action@c5b2d67aa2274e7b5a18224e8171550871fc7e4a
