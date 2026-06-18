@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.42](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.41...@react-navigation/stack@8.0.0-alpha.42) (2026-06-18)
+
+### Bug Fixes
+
+* fix modal detection being incorrect on Android ([9b67671](https://github.com/react-navigation/react-navigation/commit/9b6767182f7dc474609d0e5bfa9c944c227e2264)) - by @satya164
+
+### Features
+
+* align modal presentation style for stack on with iOS 27 ([22e1bb4](https://github.com/react-navigation/react-navigation/commit/22e1bb4a8de9f96a0a12e3e0146fce95a14a5e64)) - by @satya164
+
 # [8.0.0-alpha.41](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.40...@react-navigation/stack@8.0.0-alpha.41) (2026-06-11)
 
 **Note:** Version bump only for package @react-navigation/stack

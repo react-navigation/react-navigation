@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.32...@react-navigation/native@8.0.0-alpha.33) (2026-06-18)
+
+### Bug Fixes
+
+* rollback history if update was prevented ([4a81df8](https://github.com/react-navigation/react-navigation/commit/4a81df877a96481c4d837835cf5dc43749a00a59)) - by @satya164
+
+### Features
+
+* update material symbol fonts ([cfdef21](https://github.com/react-navigation/react-navigation/commit/cfdef21a2d6c829336de83bd0ac819e5639b7452)) - by @satya164
+
 # [8.0.0-alpha.32](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.31...@react-navigation/native@8.0.0-alpha.32) (2026-06-11)
 
 **Note:** Version bump only for package @react-navigation/native

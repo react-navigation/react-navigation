@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@8.0.0-alpha.24...@react-navigation/devtools@8.0.0-alpha.25) (2026-06-18)
+
+### Bug Fixes
+
+* ensure __unsafe_event__ is called after all listeners ([735b8b9](https://github.com/react-navigation/react-navigation/commit/735b8b92693c03973e6e55d5dc6267441cbf9f0b)) - by @satya164
+
 # [8.0.0-alpha.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/devtools@8.0.0-alpha.23...@react-navigation/devtools@8.0.0-alpha.24) (2026-06-11)
 
 **Note:** Version bump only for package @react-navigation/devtools

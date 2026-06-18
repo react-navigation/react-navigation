@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.23...@react-navigation/core@8.0.0-alpha.24) (2026-06-18)
+
+### Bug Fixes
+
+* account for prevent remove in __unsafe_event__ ([840e340](https://github.com/react-navigation/react-navigation/commit/840e340195bf9fe9d22136174b1a13eb2ea0ed65)) - by @satya164
+* emit `beforeRemove` for nested routes removed by reset ([#13153](https://github.com/react-navigation/react-navigation/issues/13153)) ([60a484b](https://github.com/react-navigation/react-navigation/commit/60a484b558d1de3f8435c6509a00218df85c4d5a)) - by @TaduJR
+* ensure __unsafe_event__ is called after all listeners ([735b8b9](https://github.com/react-navigation/react-navigation/commit/735b8b92693c03973e6e55d5dc6267441cbf9f0b)) - by @satya164
+
+### Features
+
+* let dynamic navigators specify child navigator types ([#13160](https://github.com/react-navigation/react-navigation/issues/13160)) ([5f29675](https://github.com/react-navigation/react-navigation/commit/5f29675f6c3882cbfaf834ca95762ef196601d05)) - by @satya164
+
 # [8.0.0-alpha.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.22...@react-navigation/core@8.0.0-alpha.23) (2026-06-11)
 
 ### Features

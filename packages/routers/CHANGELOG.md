@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.12...@react-navigation/routers@8.0.0-alpha.13) (2026-06-18)
+
+### Features
+
+* let dynamic navigators specify child navigator types ([#13160](https://github.com/react-navigation/react-navigation/issues/13160)) ([5f29675](https://github.com/react-navigation/react-navigation/commit/5f29675f6c3882cbfaf834ca95762ef196601d05)) - by @satya164
+
 # [8.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.11...@react-navigation/routers@8.0.0-alpha.12) (2026-06-11)
 
 ### Features

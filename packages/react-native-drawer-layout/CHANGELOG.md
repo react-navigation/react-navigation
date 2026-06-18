@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.11...react-native-drawer-layout@5.0.0-alpha.12) (2026-06-18)
+
+**Note:** Version bump only for package react-native-drawer-layout
+
 # [5.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.10...react-native-drawer-layout@5.0.0-alpha.11) (2026-06-08)
 
 ### Features
