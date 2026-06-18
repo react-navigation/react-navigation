@@ -61,22 +61,31 @@ type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
 
 type ButtonLinkProps<
   ParamList extends {} = RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList,
-> = LinkProps<ParamList, RouteName> & ButtonBaseProps;
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
+> = LinkProps<NoInfer<ParamList>, RouteName> & ButtonBaseProps;
 
 const BUTTON_RADIUS = 40;
 const ICON_SIZE = 14;
 
 export function Button<
   ParamList extends {} = RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList,
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
 >(props: ButtonLinkProps<ParamList, RouteName>): React.JSX.Element;
 
 export function Button(props: ButtonBaseProps): React.JSX.Element;
 
 export function Button<
   ParamList extends {} = RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList,
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
 >(props: ButtonBaseProps | ButtonLinkProps<ParamList, RouteName>) {
   if ('screen' in props || 'action' in props) {
     // @ts-expect-error: This is already type-checked by the prop types
@@ -88,28 +97,37 @@ export function Button<
 
 function ButtonLink<
   const ParamList extends {} = RootParamList,
-  const RouteName extends keyof ParamList = keyof ParamList,
->({
-  screen,
-  params,
-  action,
-  href,
-  onPress,
-  ...rest
-}: ButtonLinkProps<ParamList, RouteName>) {
-  // @ts-expect-error: This is already type-checked by the prop types
-  const props = useLinkProps({ screen, params, action, href });
+  const RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
+>(props: ButtonLinkProps<ParamList, RouteName>) {
+  // @ts-expect-error: TypeScript doesn't preserve common optional properties across this generic union.
+  const { in: parent, screen, params, action, href, onPress, ...rest } = props;
 
-  return (
-    <ButtonBase
-      {...rest}
-      {...props}
-      onPress={(e) => {
-        onPress?.(e);
-        props.onPress?.(e);
-      }}
-    />
+  const linkProps =
+    screen === undefined
+      ? { action, href }
+      : parent === undefined
+        ? { screen, params, action, href }
+        : { in: parent, screen, params, action, href };
+
+  const link = useLinkProps(linkProps);
+  const handlePress = React.useCallback<
+    NonNullable<ButtonBaseProps['onPress']>
+  >(
+    (e) => {
+      onPress?.(e);
+      link.onPress?.(e);
+    },
+    [link, onPress]
   );
+
+  return React.createElement(ButtonBase, {
+    ...rest,
+    ...link,
+    onPress: handlePress,
+  });
 }
 
 function ButtonBase({
