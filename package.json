@@ -52,7 +52,8 @@
     "npm-run-all2": "^9.0.1",
     "prettier": "^3.8.3",
     "semver": "^7.8.2",
-    "typescript": "^6.0.3"
+    "typescript": "npm:@typescript/typescript6@^6.0.0",
+    "typescript7": "npm:typescript@^7.0.1-rc"
   },
   "jest": {
     "preset": "@react-native/jest-preset",

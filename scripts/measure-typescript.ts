@@ -1,10 +1,12 @@
 import { execFileSync, execSync, spawn } from 'node:child_process';
 import * as fs from 'node:fs';
+import { createRequire } from 'node:module';
 import process from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
 import { parseArgs } from 'node:util';
 
 const root = new URL('..', import.meta.url);
+const require = createRequire(import.meta.url);
 
 const BENCHMARK = { depth: 10, width: 100 };
 
@@ -63,9 +65,8 @@ const REPORT_DELIMITER = '---';
 
 const HELP = `Usage: node scripts/measure-typescript.ts [baseline-ref] [--runs N] [--json]
 
-Compares \`tsc --noEmit --extendedDiagnostics\` metrics, plus editor-style
-\`tsserver\` latencies (open, hover, completion, re-check after edit), between
-the current working tree and a baseline git ref.
+Compares \`tsc\` diagnostics metrics, plus editor-style
+\`tsserver\` latencies (open, hover, completion, re-check after edit), between the current working tree and a baseline git ref.
 
 Arguments:
   baseline-ref   Git branch, tag, or commit (default: main)
@@ -481,12 +482,15 @@ type ServerMessage = {
 };
 
 async function measureServer(): Promise<ServerMetrics> {
-  const tsserver = new URL('node_modules/typescript/lib/tsserver.js', root);
-  const tsserverPath = fileURLToPath(tsserver);
+  const typescriptPackage = fs.realpathSync(
+    require.resolve('typescript/package.json')
+  );
+  const typescriptRequire = createRequire(typescriptPackage);
+  const tsserverPath = typescriptRequire.resolve('typescript/lib/tsserver.js');
   const benchmarkFilePath = fileURLToPath(benchmarkFile);
   const rootPath = fileURLToPath(root);
 
-  if (!fs.existsSync(tsserver)) {
+  if (!fs.existsSync(tsserverPath)) {
     throw new Error(`Couldn't find tsserver at ${tsserverPath}.`);
   }
 
