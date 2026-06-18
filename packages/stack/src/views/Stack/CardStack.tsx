@@ -142,18 +142,16 @@ const getInterpolationIndex = (scenes: Scene[], index: number) => {
 };
 
 const getIsModalPresentation = (
-  presentation: StackNavigationOptions['presentation'],
   cardStyleInterpolator: StackCardStyleInterpolator
 ) => {
   return (
-    presentation === 'modal' ||
     cardStyleInterpolator === forModalPresentationIOS ||
     // Handle custom modal presentation interpolators as well
     cardStyleInterpolator.name === 'forModalPresentationIOS'
   );
 };
 
-const getIsModal = (
+const getIsInModalPresentation = (
   scene: Scene,
   interpolationIndex: number,
   isParentModal: boolean
@@ -162,13 +160,9 @@ const getIsModal = (
     return true;
   }
 
-  const { presentation, cardStyleInterpolator } = scene.descriptor.options;
+  const { cardStyleInterpolator } = scene.descriptor.options;
 
-  const isModalPresentation = getIsModalPresentation(
-    presentation,
-    cardStyleInterpolator
-  );
-
+  const isModalPresentation = getIsModalPresentation(cardStyleInterpolator);
   const isModal = isModalPresentation && interpolationIndex !== 0;
 
   return isModal;
@@ -196,7 +190,11 @@ const getHeaderHeights = (
         : undefined;
 
     const interpolationIndex = getInterpolationIndex(scenes, index);
-    const isModal = getIsModal(curr, interpolationIndex, isParentModal);
+    const isModal = getIsInModalPresentation(
+      curr,
+      interpolationIndex,
+      isParentModal
+    );
 
     if (typeof height === 'number') {
       acc[curr.route.key] = { measured: true, value: height };
@@ -431,10 +429,7 @@ export class CardStack extends React.Component<Props, State> {
         headerStyleInterpolator = transitionPreset.headerStyleInterpolator,
         cardOverlayEnabled = (Platform.OS !== 'ios' &&
           optionsForTransitionConfig.presentation !== 'transparentModal') ||
-          getIsModalPresentation(
-            optionsForTransitionConfig.presentation,
-            cardStyleInterpolator
-          ),
+          getIsModalPresentation(cardStyleInterpolator),
       } = optionsForTransitionConfig;
 
       const headerMode: StackHeaderMode =
@@ -444,10 +439,7 @@ export class CardStack extends React.Component<Props, State> {
           optionsForTransitionConfig.presentation === 'transparentModal' ||
           nextOptions?.presentation === 'modal' ||
           nextOptions?.presentation === 'transparentModal' ||
-          getIsModalPresentation(
-            optionsForTransitionConfig.presentation,
-            cardStyleInterpolator
-          )
+          getIsModalPresentation(cardStyleInterpolator)
         ) &&
         Platform.OS === 'ios' &&
         descriptor.options.header === undefined
@@ -751,18 +743,24 @@ export class CardStack extends React.Component<Props, State> {
 
             // Start from current card and count backwards the number of cards with same interpolation
             const interpolationIndex = getInterpolationIndex(scenes, index);
-            const isModal = getIsModal(
+            const isInModalPresentation = getIsInModalPresentation(
               scene,
               interpolationIndex,
               isParentModal
             );
 
+            const isModal =
+              scene.descriptor.options.presentation === 'modal' ||
+              getIsModalPresentation(
+                scene.descriptor.options.cardStyleInterpolator
+              );
+
             const isNextScreenModal =
               nextScene != null &&
-              getIsModalPresentation(
-                nextScene.descriptor.options.presentation,
-                nextScene.descriptor.options.cardStyleInterpolator
-              );
+              (nextScene.descriptor.options.presentation === 'modal' ||
+                getIsModalPresentation(
+                  nextScene.descriptor.options.cardStyleInterpolator
+                ));
 
             const isNextScreenTransparent =
               nextScene?.descriptor.options.presentation === 'transparentModal';
@@ -800,12 +798,12 @@ export class CardStack extends React.Component<Props, State> {
               // So we keep retained screens visible
               // This makes sure any videos being played don't stop etc.
               isRetained ||
-              // Modal presentation on iOS has multiple screens visible at the same time
-              // The base of the modal run renders the dim, which is always persistent
-              // On iPadOS, the base screen is visible while modal is in a smaller area on top
-              // The top edge of the last 2 screens can be seen animating behind the modal
-              isNextScreenModal ||
               isNextScreenTransparent ||
+              // Modal presentation on iOS has multiple screens visible at the same time
+              // The base screen before the modals renders the dim, which is always persistent
+              // On iPadOS, the base screen is visible while modal is in a smaller area on top
+              // The top edge of the last 3 screens can be seen animating behind the modal
+              (isNextScreenModal && (!isModal || index >= routes.length - 3)) ||
               // We only need to keep other screens visible when animation is enabled
               (isAnimationEnabled &&
                 (isFocusing ||
@@ -868,7 +866,7 @@ export class CardStack extends React.Component<Props, State> {
                 <CardContainer
                   index={index}
                   interpolationIndex={interpolationIndex}
-                  modal={isModal}
+                  modal={isInModalPresentation}
                   active={isTopmost}
                   focused={focused}
                   opening={openingRouteKeys.includes(route.key)}
