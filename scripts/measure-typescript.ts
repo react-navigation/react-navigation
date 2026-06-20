@@ -77,7 +77,7 @@ const parsed = (() => {
   try {
     return parseArgs({
       options: {
-        runs: { type: 'string', default: '7' },
+        runs: { type: 'string', default: '5' },
         json: { type: 'boolean', default: false },
         help: { type: 'boolean', short: 'h', default: false },
       },

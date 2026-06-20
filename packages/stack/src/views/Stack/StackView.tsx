@@ -347,7 +347,7 @@ export class StackView extends React.Component<Props, State> {
     };
   }
 
-  state: State = {
+  override state: State = {
     routes: [],
     previousState: undefined,
     openingRouteKeys: [],
@@ -508,7 +508,7 @@ export class StackView extends React.Component<Props, State> {
     });
   };
 
-  render() {
+  override render() {
     const {
       state,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

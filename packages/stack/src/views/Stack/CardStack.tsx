@@ -626,7 +626,7 @@ export class CardStack extends React.Component<Props, State> {
     return undefined;
   };
 
-  render() {
+  override render() {
     const {
       insets,
       state,

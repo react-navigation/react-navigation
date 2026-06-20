@@ -79,9 +79,9 @@ class ErrorBoundary extends React.Component<
     return { hasError: true };
   }
 
-  state = { hasError: false };
+  override state = { hasError: false };
 
-  render() {
+  override render() {
     if (this.state.hasError) {
       return (
         <View style={styles.fallback}>

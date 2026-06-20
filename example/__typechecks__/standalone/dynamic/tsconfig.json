@@ -2,6 +2,7 @@
   "extends": "../../../../tsconfig",
   "compilerOptions": {
     "composite": false,
+    "declaration": true,
     "incremental": false,
     "noEmit": true
   },

@@ -39,7 +39,7 @@ jobs:
         run: |
           {
             echo 'report<<EOF'
-            node scripts/measure-typescript.ts "origin/${{ github.base_ref }}" --runs 5
+            node scripts/measure-typescript.ts "origin/${{ github.base_ref }}"
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
