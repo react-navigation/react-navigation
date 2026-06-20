@@ -154,13 +154,13 @@ type RouteType<Params, P = AnyToUnknown<Params>> = Readonly<
           /**
            * Params for this route
            */
-          params?: P;
+          params?: P extends object ? Readonly<P> : P;
         }
       : {
           /**
            * Params for this route
            */
-          params: P;
+          params: Readonly<P>;
         })
 >;
 
@@ -356,7 +356,9 @@ export type StaticScreenConfig<
    * getId: ({ params }) => params?.userId,
    * ```
    */
-  getId?: (props: { params: AnyToUnknown<Params> }) => string | undefined;
+  getId?: (props: {
+    params: AnyToUnknown<Params extends object ? Readonly<Params> : Params>;
+  }) => string | undefined;
 
   /**
    * Linking config for the screen.
@@ -510,7 +512,7 @@ export type StaticScreenProps<
   in out T extends Record<string, unknown> | undefined,
 > = {
   route: {
-    params: T;
+    readonly params: T;
   };
 };
 

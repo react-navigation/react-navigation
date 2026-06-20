@@ -1063,10 +1063,12 @@ createStackNavigator({
       ) => null,
       options: ({ route, navigation }) => {
         expectTypeOf(route.name).toEqualTypeOf<string>();
-        expectTypeOf(route.params).toEqualTypeOf<{
-          userId: string;
-          filter?: 'recent' | 'popular';
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            userId: string;
+            filter?: 'recent' | 'popular';
+          }>
+        >();
 
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
 
@@ -1075,30 +1077,36 @@ createStackNavigator({
         };
       },
       listeners: ({ route, navigation }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          userId: string;
-          filter?: 'recent' | 'popular';
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            userId: string;
+            filter?: 'recent' | 'popular';
+          }>
+        >();
 
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
 
         return {};
       },
       layout: ({ route, navigation, children }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          userId: string;
-          filter?: 'recent' | 'popular';
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            userId: string;
+            filter?: 'recent' | 'popular';
+          }>
+        >();
 
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
 
         return <>{children}</>;
       },
       getId: ({ params }) => {
-        expectTypeOf(params).toEqualTypeOf<{
-          userId: string;
-          filter?: 'recent' | 'popular';
-        }>();
+        expectTypeOf(params).toEqualTypeOf<
+          Readonly<{
+            userId: string;
+            filter?: 'recent' | 'popular';
+          }>
+        >();
 
         return params.userId;
       },
@@ -1123,10 +1131,10 @@ createStackNavigator({
       options: ({ route, navigation }) => {
         expectTypeOf(route.name).toEqualTypeOf<string>();
         expectTypeOf(route.params).toEqualTypeOf<
-          | {
+          | Readonly<{
               itemId: number;
               info: string;
-            }
+            }>
           | undefined
         >();
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
@@ -1135,10 +1143,10 @@ createStackNavigator({
       },
       listeners: ({ route, navigation }) => {
         expectTypeOf(route.params).toEqualTypeOf<
-          | {
+          | Readonly<{
               itemId: number;
               info: string;
-            }
+            }>
           | undefined
         >();
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
@@ -1147,10 +1155,10 @@ createStackNavigator({
       },
       layout: ({ route, navigation, children }) => {
         expectTypeOf(route.params).toEqualTypeOf<
-          | {
+          | Readonly<{
               itemId: number;
               info: string;
-            }
+            }>
           | undefined
         >();
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
@@ -1159,10 +1167,10 @@ createStackNavigator({
       },
       getId: ({ params }) => {
         expectTypeOf(params).toEqualTypeOf<
-          | {
+          | Readonly<{
               itemId: number;
               info: string;
-            }
+            }>
           | undefined
         >();
 
@@ -1225,11 +1233,13 @@ createBottomTabNavigator({
       options: ({ route, navigation }) => {
         expectTypeOf(route.name).toEqualTypeOf<string>();
         expectTypeOf(route.params).toEqualTypeOf<
-          NavigatorScreenParams<{
-            Profile: {
-              userId: string;
-            };
-          }>
+          Readonly<
+            NavigatorScreenParams<{
+              Profile: {
+                userId: string;
+              };
+            }>
+          >
         >();
 
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
@@ -1238,11 +1248,13 @@ createBottomTabNavigator({
       },
       listeners: ({ route, navigation }) => {
         expectTypeOf(route.params).toEqualTypeOf<
-          NavigatorScreenParams<{
-            Profile: {
-              userId: string;
-            };
-          }>
+          Readonly<
+            NavigatorScreenParams<{
+              Profile: {
+                userId: string;
+              };
+            }>
+          >
         >();
 
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
@@ -1251,11 +1263,13 @@ createBottomTabNavigator({
       },
       layout: ({ route, navigation, children }) => {
         expectTypeOf(route.params).toEqualTypeOf<
-          NavigatorScreenParams<{
-            Profile: {
-              userId: string;
-            };
-          }>
+          Readonly<
+            NavigatorScreenParams<{
+              Profile: {
+                userId: string;
+              };
+            }>
+          >
         >();
 
         expectTypeOf(navigation.getState().type).toEqualTypeOf<'tab'>();
@@ -1264,11 +1278,13 @@ createBottomTabNavigator({
       },
       getId: ({ params }) => {
         expectTypeOf(params).toEqualTypeOf<
-          NavigatorScreenParams<{
-            Profile: {
-              userId: string;
-            };
-          }>
+          Readonly<
+            NavigatorScreenParams<{
+              Profile: {
+                userId: string;
+              };
+            }>
+          >
         >();
 
         return 'static-id';
@@ -1525,10 +1541,12 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          id: number;
-          coords: [number, number];
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            id: number;
+            coords: [number, number];
+          }>
+        >();
 
         return {};
       },
@@ -1550,10 +1568,12 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          id: number;
-          coords: [number, number];
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            id: number;
+            coords: [number, number];
+          }>
+        >();
 
         return {};
       },
@@ -1573,10 +1593,12 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          id: number;
-          coords: [number, number];
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            id: number;
+            coords: [number, number];
+          }>
+        >();
 
         return {};
       },
@@ -1608,10 +1630,12 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          id: number;
-          coords: [number, number];
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            id: number;
+            coords: [number, number];
+          }>
+        >();
 
         return {};
       },
@@ -1644,10 +1668,12 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          id: number;
-          coords: [number, number];
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            id: number;
+            coords: [number, number];
+          }>
+        >();
 
         return {};
       },
@@ -1679,10 +1705,12 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          id: number;
-          coords: [number, number];
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            id: number;
+            coords: [number, number];
+          }>
+        >();
 
         return {};
       },
@@ -1697,10 +1725,12 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          id: number;
-          query?: 'new' | 'top';
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            id: number;
+            query?: 'new' | 'top';
+          }>
+        >();
 
         return {};
       },
@@ -1715,9 +1745,9 @@ createStackNavigator({
       },
       options: ({ route }) => {
         expectTypeOf(route.params).toEqualTypeOf<
-          | {
+          | Readonly<{
               query?: 'new' | 'top';
-            }
+            }>
           | undefined
         >();
 
@@ -1734,10 +1764,12 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          id: number;
-          query?: string | undefined;
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            id: number;
+            query?: string | undefined;
+          }>
+        >();
 
         return {};
       },
@@ -1752,10 +1784,12 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          id: number;
-          query: string;
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            id: number;
+            query: string;
+          }>
+        >();
 
         return {};
       },
@@ -1769,9 +1803,11 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          query: string;
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            query: string;
+          }>
+        >();
 
         return {};
       },
@@ -1786,9 +1822,9 @@ createStackNavigator({
       },
       options: ({ route }) => {
         expectTypeOf(route.params).toEqualTypeOf<
-          | {
+          | Readonly<{
               query?: string | undefined;
-            }
+            }>
           | undefined
         >();
 
@@ -1805,10 +1841,10 @@ createStackNavigator({
       },
       options: ({ route }) => {
         expectTypeOf(route.params).toEqualTypeOf<
-          | {
+          | Readonly<{
               id?: string;
               query?: 'new' | 'top';
-            }
+            }>
           | undefined
         >();
 
@@ -1825,10 +1861,10 @@ createStackNavigator({
       },
       options: ({ route }) => {
         expectTypeOf(route.params).toEqualTypeOf<
-          | {
+          | Readonly<{
               id?: string;
               query?: string | undefined;
-            }
+            }>
           | undefined
         >();
 
@@ -1844,9 +1880,11 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          query: string;
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            query: string;
+          }>
+        >();
 
         return {};
       },
@@ -1868,9 +1906,11 @@ createStackNavigator({
         },
       },
       options: ({ route }) => {
-        expectTypeOf(route.params).toEqualTypeOf<{
-          id: string | undefined;
-        }>();
+        expectTypeOf(route.params).toEqualTypeOf<
+          Readonly<{
+            id: string | undefined;
+          }>
+        >();
 
         return {};
       },
@@ -1885,9 +1925,9 @@ createStackNavigator({
       },
       options: ({ route }) => {
         expectTypeOf(route.params).toEqualTypeOf<
-          | {
+          | Readonly<{
               id?: string;
-            }
+            }>
           | undefined
         >();
 
@@ -1928,10 +1968,12 @@ createStackNavigator({
           },
         },
         options: ({ route }) => {
-          expectTypeOf(route.params).toEqualTypeOf<{
-            userId: number;
-            postId: string;
-          }>();
+          expectTypeOf(route.params).toEqualTypeOf<
+            Readonly<{
+              userId: number;
+              postId: string;
+            }>
+          >();
 
           return {};
         },
@@ -1942,10 +1984,12 @@ createStackNavigator({
       Settings: createStackScreen({
         screen: (_: StaticScreenProps<{ name: string; age: number }>) => null,
         options: ({ route }) => {
-          expectTypeOf(route.params).toEqualTypeOf<{
-            name: string;
-            age: number;
-          }>();
+          expectTypeOf(route.params).toEqualTypeOf<
+            Readonly<{
+              name: string;
+              age: number;
+            }>
+          >();
 
           return {};
         },
@@ -1964,10 +2008,12 @@ createStackNavigator({
           path: 'user/dashboard',
         },
         options: ({ route }) => {
-          expectTypeOf(route.params).toEqualTypeOf<{
-            userId: string;
-            section: 'posts' | 'comments';
-          }>();
+          expectTypeOf(route.params).toEqualTypeOf<
+            Readonly<{
+              userId: string;
+              section: 'posts' | 'comments';
+            }>
+          >();
 
           return {};
         },
@@ -1981,9 +2027,11 @@ createStackNavigator({
           path: 'settings/:userId',
         },
         options: ({ route }) => {
-          expectTypeOf(route.params).toEqualTypeOf<{
-            userId: string;
-          }>();
+          expectTypeOf(route.params).toEqualTypeOf<
+            Readonly<{
+              userId: string;
+            }>
+          >();
 
           return {};
         },
@@ -1997,9 +2045,11 @@ createStackNavigator({
           path: 'help/:topic',
         },
         options: ({ route }) => {
-          expectTypeOf(route.params).toEqualTypeOf<{
-            topic: string;
-          }>();
+          expectTypeOf(route.params).toEqualTypeOf<
+            Readonly<{
+              topic: string;
+            }>
+          >();
 
           return {};
         },
@@ -2017,10 +2067,12 @@ createStackNavigator({
           },
         },
         options: ({ route }) => {
-          expectTypeOf(route.params).toEqualTypeOf<{
-            userId?: number;
-            filter: string;
-          }>();
+          expectTypeOf(route.params).toEqualTypeOf<
+            Readonly<{
+              userId?: number;
+              filter: string;
+            }>
+          >();
 
           return {};
         },
@@ -2034,11 +2086,13 @@ createStackNavigator({
           path: 'item/:id([0-9]+)/:slug([a-z-]+)/:category',
         },
         options: ({ route }) => {
-          expectTypeOf(route.params).toEqualTypeOf<{
-            id: string;
-            slug: string;
-            category: string;
-          }>();
+          expectTypeOf(route.params).toEqualTypeOf<
+            Readonly<{
+              id: string;
+              slug: string;
+              category: string;
+            }>
+          >();
 
           return {};
         },
@@ -2056,10 +2110,12 @@ createStackNavigator({
           },
         },
         options: ({ route }) => {
-          expectTypeOf(route.params).toEqualTypeOf<{
-            itemId: string;
-            infoType: 'summary' | 'full';
-          }>();
+          expectTypeOf(route.params).toEqualTypeOf<
+            Readonly<{
+              itemId: string;
+              infoType: 'summary' | 'full';
+            }>
+          >();
 
           return {};
         },
@@ -2078,10 +2134,12 @@ createStackNavigator({
           },
         },
         options: ({ route }) => {
-          expectTypeOf(route.params).toEqualTypeOf<{
-            itemId: string;
-            currency?: 'USD' | 'EUR';
-          }>();
+          expectTypeOf(route.params).toEqualTypeOf<
+            Readonly<{
+              itemId: string;
+              currency?: 'USD' | 'EUR';
+            }>
+          >();
 
           return {};
         },
@@ -2093,9 +2151,11 @@ createStackNavigator({
         screen: (_: StaticScreenProps<{ detailId: string }>) => null,
         linking: 'details/:detailId',
         options: ({ route }) => {
-          expectTypeOf(route.params).toEqualTypeOf<{
-            detailId: string;
-          }>();
+          expectTypeOf(route.params).toEqualTypeOf<
+            Readonly<{
+              detailId: string;
+            }>
+          >();
 
           return {};
         },
@@ -2129,14 +2189,16 @@ createStackNavigator({
         }),
         options: ({ route }) => {
           expectTypeOf(route.params).toEqualTypeOf<
-            NavigatorScreenParams<{
-              Overview: {
-                period: string;
-              };
-              Stats: {
-                chartType: 'bar' | 'line';
-              };
-            }>
+            Readonly<
+              NavigatorScreenParams<{
+                Overview: {
+                  period: string;
+                };
+                Stats: {
+                  chartType: 'bar' | 'line';
+                };
+              }>
+            >
           >();
 
           return {};
@@ -2160,14 +2222,16 @@ createStackNavigator({
         },
         options: ({ route }) => {
           expectTypeOf(route.params).toEqualTypeOf<
-            { section?: string | undefined } & NavigatorScreenParams<{
-              Overview: {
-                period: string;
-              };
-              Stats: {
-                chartType: 'bar' | 'line';
-              };
-            }>
+            Readonly<
+              { section?: string | undefined } & NavigatorScreenParams<{
+                Overview: {
+                  period: string;
+                };
+                Stats: {
+                  chartType: 'bar' | 'line';
+                };
+              }>
+            >
           >();
 
           return {};
@@ -2191,14 +2255,16 @@ createStackNavigator({
         },
         options: ({ route }) => {
           expectTypeOf(route.params).toEqualTypeOf<
-            { id: string; section?: string } & NavigatorScreenParams<{
-              Summary: {
-                period: string;
-              };
-              Stats: {
-                chartType: 'bar' | 'line';
-              };
-            }>
+            Readonly<
+              { id: string; section?: string } & NavigatorScreenParams<{
+                Summary: {
+                  period: string;
+                };
+                Stats: {
+                  chartType: 'bar' | 'line';
+                };
+              }>
+            >
           >();
 
           return {};
@@ -2214,9 +2280,11 @@ createStackNavigator({
         },
         options: ({ route }) => {
           expectTypeOf(route.params).toEqualTypeOf<
-            | ({
-                section?: string;
-              } & NavigatorScreenParams<SupportTabsParamList>)
+            | Readonly<
+                {
+                  section?: string;
+                } & NavigatorScreenParams<SupportTabsParamList>
+              >
             | undefined
           >();
 
@@ -2340,9 +2408,11 @@ createStackScreen({
   screen: () => null,
   linking: ':start',
   options: ({ route }) => {
-    expectTypeOf(route.params).toEqualTypeOf<{
-      start: string;
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        start: string;
+      }>
+    >();
 
     return {};
   },
@@ -2352,9 +2422,11 @@ createStackScreen({
   screen: () => null,
   linking: '/:start',
   options: ({ route }) => {
-    expectTypeOf(route.params).toEqualTypeOf<{
-      start: string;
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        start: string;
+      }>
+    >();
 
     return {};
   },
@@ -2365,9 +2437,9 @@ createStackScreen({
   linking: '/:start?',
   options: ({ route }) => {
     expectTypeOf(route.params).toEqualTypeOf<
-      | {
+      | Readonly<{
           start?: string;
-        }
+        }>
       | undefined
     >();
 
@@ -2379,9 +2451,11 @@ createStackScreen({
   screen: () => null,
   linking: 'middle/:part/end',
   options: ({ route }) => {
-    expectTypeOf(route.params).toEqualTypeOf<{
-      part: string;
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        part: string;
+      }>
+    >();
 
     return {};
   },
@@ -2391,9 +2465,11 @@ createStackScreen({
   screen: () => null,
   linking: 'end/:finish',
   options: ({ route }) => {
-    expectTypeOf(route.params).toEqualTypeOf<{
-      finish: string;
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        finish: string;
+      }>
+    >();
 
     return {};
   },
@@ -2404,9 +2480,9 @@ createStackScreen({
   linking: 'static/:optional?/path',
   options: ({ route }) => {
     expectTypeOf(route.params).toEqualTypeOf<
-      | {
+      | Readonly<{
           optional?: string;
-        }
+        }>
       | undefined
     >();
 
@@ -2418,11 +2494,13 @@ createStackScreen({
   screen: () => null,
   linking: ':first/:second?/static/:third?/path',
   options: ({ route }) => {
-    expectTypeOf(route.params).toEqualTypeOf<{
-      first: string;
-      second?: string;
-      third?: string;
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        first: string;
+        second?: string;
+        third?: string;
+      }>
+    >();
 
     return {};
   },
@@ -2432,9 +2510,11 @@ createStackScreen({
   screen: () => null,
   linking: 'static/path/:withRegex([0-9]+)',
   options: ({ route }) => {
-    expectTypeOf(route.params).toEqualTypeOf<{
-      withRegex: string;
-    }>();
+    expectTypeOf(route.params).toEqualTypeOf<
+      Readonly<{
+        withRegex: string;
+      }>
+    >();
 
     return {};
   },
@@ -2445,9 +2525,9 @@ createStackScreen({
   linking: 'static/:optionalRegex([a-z]+)?/path',
   options: ({ route }) => {
     expectTypeOf(route.params).toEqualTypeOf<
-      | {
+      | Readonly<{
           optionalRegex?: string;
-        }
+        }>
       | undefined
     >();
 
