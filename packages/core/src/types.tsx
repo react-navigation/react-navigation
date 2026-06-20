@@ -429,7 +429,7 @@ type NavigationHelpersCommon<
 
 type ParamType<
   ParamList extends {},
-  RouteName extends keyof ParamList | unknown,
+  RouteName,
   IsPartial extends boolean = false,
 > = RouteName extends keyof ParamList
   ? ParamList[RouteName] extends undefined
@@ -1147,27 +1147,18 @@ type NavigationListForScreenParams<
   RouteName extends keyof ParamList,
   ExcludedRouteNames,
   Parent extends NavigationProp<any, any, any, any, any> | undefined,
-> =
-  T extends PrivateValueStore<[any, any, any, any]>
-    ? T extends NavigatorLike
-      ? NavigationListForNestedInternal<
-          T,
-          GenericNavigationComposite<ParamList, RouteName, Parent>
-        >
-      : NavigationListForParamListScreenParams<
-          T,
-          ParamList,
-          RouteName,
-          ExcludedRouteNames,
-          Parent
-        >
-    : NavigationListForParamListScreenParams<
-        T,
-        ParamList,
-        RouteName,
-        ExcludedRouteNames,
-        Parent
-      >;
+> = T extends PrivateValueStore<[any, any, any, any]> & NavigatorLike
+  ? NavigationListForNestedInternal<
+      T,
+      GenericNavigationComposite<ParamList, RouteName, Parent>
+    >
+  : NavigationListForParamListScreenParams<
+      T,
+      ParamList,
+      RouteName,
+      ExcludedRouteNames,
+      Parent
+    >;
 
 type NavigationListForParamListScreenParams<
   T extends {},
@@ -1435,18 +1426,35 @@ export type NavigatorTypeBagFor<
   ParamList extends {},
 > = TypeBag & { ParamList: ParamList };
 
+export type NavigatorProps<
+  ParamList extends ParamListBase,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  Navigation,
+  Navigator extends React.ComponentType<any>,
+> = Omit<
+  React.ComponentProps<Navigator>,
+  keyof DefaultNavigatorOptions<any, any, any, any, any>
+> &
+  DefaultNavigatorOptions<
+    ParamList,
+    State,
+    ScreenOptions,
+    EventMap,
+    Navigation
+  >;
+
 type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
   React.ComponentType<
     Omit<
-      React.ComponentProps<
-        TypedNavigatorInternal<
-          Bag['ParamList'],
-          Bag['State'],
-          Bag['ScreenOptions'],
-          Bag['EventMap'],
-          Bag['NavigationList'],
-          Bag['Navigator']
-        >['Navigator']
+      NavigatorProps<
+        Bag['ParamList'],
+        Bag['State'],
+        Bag['ScreenOptions'],
+        Bag['EventMap'],
+        Bag['NavigationList'][keyof Bag['ParamList']],
+        Bag['Navigator']
       >,
       'children'
     >
@@ -1502,17 +1510,14 @@ type TypedNavigatorInternal<
    * Navigator component which manages the child screens.
    */
   Navigator: React.ComponentType<
-    Omit<
-      React.ComponentProps<Navigator>,
-      keyof DefaultNavigatorOptions<any, any, any, any, any>
-    > &
-      DefaultNavigatorOptions<
-        ParamList,
-        State,
-        ScreenOptions,
-        EventMap,
-        NavigationList[keyof ParamList]
-      >
+    NavigatorProps<
+      ParamList,
+      State,
+      ScreenOptions,
+      EventMap,
+      NavigationList[keyof ParamList],
+      Navigator
+    >
   >;
   /**
    * Component used for grouping multiple route configuration.

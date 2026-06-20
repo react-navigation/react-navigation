@@ -8,9 +8,9 @@ import {
   type PatternPart,
 } from './getPatternParts';
 import type {
-  DefaultNavigatorOptions,
   EventMapBase,
   NavigationListBase,
+  NavigatorProps,
   NavigatorScreenParams,
   NavigatorTypeBagBase,
   NavigatorTypeBagFor,
@@ -132,15 +132,7 @@ type ParamListForScreens<Screens> = {
     : ParamsForScreenEntry<Screens[Key]>;
 };
 
-type ParamListForGroups<
-  Groups extends
-    | Readonly<{
-        [key: string]: {
-          screens: {};
-        };
-      }>
-    | undefined,
-> = Groups extends {
+type ParamListForGroups<Groups> = Groups extends {
   [key: string]: {
     screens: infer Screens;
   };
@@ -229,23 +221,25 @@ type StaticScreenConfigLinkingAlias = {
   shared?: boolean;
 };
 
+type StaticScreenConfigLinkingExtras = {
+  /**
+   * Additional path alias that will be matched to the same screen.
+   */
+  alias?: (string | StaticScreenConfigLinkingAlias)[];
+  /**
+   * Name of the initial route to use for the nested navigator when the path matches.
+   */
+  initialRouteName?: string | undefined;
+  /**
+   * Path configuration for child screens in the nested navigator.
+   * Only supported when the screen renders a navigator with dynamic API.
+   */
+  screens?: PathConfigMap<ParamListBase> | undefined;
+};
+
 export type StaticScreenConfigLinking =
   | string
-  | (StaticScreenConfigLinkingAlias & {
-      /**
-       * Additional path alias that will be matched to the same screen.
-       */
-      alias?: (string | StaticScreenConfigLinkingAlias)[];
-      /**
-       * Name of the initial route to use for the nested navigator when the path matches.
-       */
-      initialRouteName?: string | undefined;
-      /**
-       * Path configuration for child screens in the nested navigator.
-       * Only supported when the screen renders a navigator with dynamic API.
-       */
-      screens?: PathConfigMap<ParamListBase> | undefined;
-    })
+  | (StaticScreenConfigLinkingAlias & StaticScreenConfigLinkingExtras)
   | null
   | undefined;
 
@@ -398,14 +392,7 @@ export type StaticScreenFactory<in out Bag extends NavigatorTypeBagBase> = <
     Bag['EventMap'],
     Bag['NavigationList'][keyof Bag['ParamList']]
   >
-) => StaticScreenConfig<
-  Linking,
-  Screen,
-  Bag['State'],
-  Bag['ScreenOptions'],
-  Bag['EventMap'],
-  Bag['NavigationList'][keyof Bag['ParamList']]
->;
+) => typeof config;
 
 /**
  * Helper to create a typed `createXScreen` for static configuration.
@@ -463,51 +450,33 @@ type StaticConfigGroup<
   >;
 };
 
-export type StaticConfig<Bag extends NavigatorTypeBagBase> =
-  StaticConfigInternal<
+export type StaticConfig<
+  Bag extends NavigatorTypeBagBase,
+  Screens = StaticConfigScreens<
     Bag['ParamList'],
     Bag['State'],
     Bag['ScreenOptions'],
     Bag['EventMap'],
-    Bag['NavigationList'],
-    Bag['Navigator']
-  >;
-
-type StaticConfigInternal<
-  ParamList extends ParamListBase,
-  State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase,
-  NavigationList extends NavigationListBase<ParamList>,
-  Navigator extends React.ComponentType<any>,
-  Screens = StaticConfigScreens<
-    ParamList,
-    State,
-    ScreenOptions,
-    EventMap,
-    NavigationList
+    Bag['NavigationList']
   >,
   Groups = {
     [key: string]: StaticConfigGroup<
-      ParamList,
-      State,
-      ScreenOptions,
-      EventMap,
-      NavigationList
+      Bag['ParamList'],
+      Bag['State'],
+      Bag['ScreenOptions'],
+      Bag['EventMap'],
+      Bag['NavigationList']
     >;
   },
 > = Omit<
-  Omit<
-    React.ComponentProps<Navigator>,
-    keyof DefaultNavigatorOptions<any, any, any, any, any>
-  > &
-    DefaultNavigatorOptions<
-      ParamList,
-      State,
-      ScreenOptions,
-      EventMap,
-      NavigationList[keyof ParamList]
-    >,
+  NavigatorProps<
+    Bag['ParamList'],
+    Bag['State'],
+    Bag['ScreenOptions'],
+    Bag['EventMap'],
+    Bag['NavigationList'][keyof Bag['ParamList']],
+    Bag['Navigator']
+  >,
   'screens' | 'children'
 > &
   (
@@ -759,11 +728,7 @@ type ConfigForPathConfig = {
 
 type LinkingForPathConfig =
   | string
-  | (Partial<StaticScreenConfigLinkingAlias> & {
-      alias?: (string | StaticScreenConfigLinkingAlias)[];
-      initialRouteName?: string | undefined;
-      screens?: PathConfigMap<ParamListBase> | undefined;
-    })
+  | (Partial<StaticScreenConfigLinkingAlias> & StaticScreenConfigLinkingExtras)
   | null
   | undefined;
 
