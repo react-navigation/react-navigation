@@ -4227,7 +4227,8 @@ test("doesn't throw if children is null", async () => {
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={React.Fragment}>
-          {null as any}
+          {/* @ts-expect-error: test only */}
+          {null}
         </Screen>
       </TestNavigator>
     </BaseNavigationContainer>

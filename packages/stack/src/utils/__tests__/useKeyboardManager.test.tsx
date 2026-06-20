@@ -174,7 +174,7 @@ describe('useKeyboardManager', () => {
   describe('input focus on unfocused screen', () => {
     test('blurs focused input in an unfocused screen when keyboard is shown', async () => {
       const listeners: Partial<
-        Record<KeyboardEventName, KeyboardEventListener[]>
+        Record<KeyboardEventName, KeyboardEventListener[] | undefined>
       > = {};
 
       const addListenerSpy = jest

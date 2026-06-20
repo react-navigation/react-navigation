@@ -586,7 +586,7 @@ const EmptyState = () => {
 };
 
 const DinoCard = React.memo(
-  ({ item, width }: { item: Dino; width?: number }) => {
+  ({ item, width }: { item: Dino; width?: number | undefined }) => {
     const { colors, fonts } = useTheme();
     const navigation = useNavigation('Catalog');
 

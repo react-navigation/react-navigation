@@ -16,7 +16,11 @@ export function ComponentsHeaders(_: StaticScreenProps<{}>) {
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
-  const headerRight = ({ tintColor }: { tintColor?: ColorValue }) => (
+  const headerRight = ({
+    tintColor,
+  }: {
+    tintColor?: ColorValue | undefined;
+  }) => (
     <>
       <HeaderButton>
         <MaterialCommunityIcons

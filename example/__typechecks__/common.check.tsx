@@ -101,11 +101,11 @@ type FeedTabScreenProps<T extends keyof FeedTabParamList> =
 const Stack = createStackNavigator<RootStackParamList>();
 
 expectTypeOf(Stack.Navigator).parameter(0).toMatchObjectType<{
-  initialRouteName?: keyof RootStackParamList;
+  initialRouteName?: keyof RootStackParamList | undefined;
 }>();
 
 expectTypeOf(Stack.Screen).parameter(0).toExtend<{
-  name?: keyof RootStackParamList;
+  name?: keyof RootStackParamList | undefined;
 }>();
 
 export const PostDetailsScreen = ({
