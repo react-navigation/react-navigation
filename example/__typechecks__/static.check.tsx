@@ -1787,7 +1787,7 @@ createStackNavigator({
       options: ({ route }) => {
         expectTypeOf(route.params).toEqualTypeOf<
           | {
-              query?: string;
+              query?: string | undefined;
             }
           | undefined
         >();
@@ -1901,6 +1901,17 @@ createStackNavigator({
  * Type tests for param inference from linking config
  */
 {
+  const SupportTabs = createBottomTabNavigator({
+    screens: {
+      Faq: () => null,
+      Contact: createBottomTabScreen({
+        screen: () => null,
+      }),
+    },
+  });
+
+  type SupportTabsParamList = StaticParamList<typeof SupportTabs>;
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const TestNavigator = createStackNavigator({
     screens: {
@@ -2149,7 +2160,7 @@ createStackNavigator({
         },
         options: ({ route }) => {
           expectTypeOf(route.params).toEqualTypeOf<
-            { section?: string } & NavigatorScreenParams<{
+            { section?: string | undefined } & NavigatorScreenParams<{
               Overview: {
                 period: string;
               };
@@ -2157,6 +2168,56 @@ createStackNavigator({
                 chartType: 'bar' | 'line';
               };
             }>
+          >();
+
+          return {};
+        },
+      }),
+      /**
+       * Merge required and optional path params from nested navigator and path
+       */
+      ProductReviews: createStackScreen({
+        screen: createBottomTabNavigator({
+          screens: {
+            Summary: (_: StaticScreenProps<{ period: string }>) => null,
+            Stats: createBottomTabScreen({
+              screen: (_: StaticScreenProps<{ chartType: 'bar' | 'line' }>) =>
+                null,
+            }),
+          },
+        }),
+        linking: {
+          path: 'products/:id/reviews/:section?',
+        },
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<
+            { id: string; section?: string } & NavigatorScreenParams<{
+              Summary: {
+                period: string;
+              };
+              Stats: {
+                chartType: 'bar' | 'line';
+              };
+            }>
+          >();
+
+          return {};
+        },
+      }),
+      /**
+       * Preserve route optionality from optional nested navigator and path
+       */
+      SupportCenter: createStackScreen({
+        screen: SupportTabs,
+        linking: {
+          path: 'support/:section?',
+        },
+        options: ({ route }) => {
+          expectTypeOf(route.params).toEqualTypeOf<
+            | ({
+                section?: string;
+              } & NavigatorScreenParams<SupportTabsParamList>)
+            | undefined
           >();
 
           return {};
@@ -2225,6 +2286,20 @@ createStackNavigator({
         chartType: 'bar' | 'line';
       };
     }>;
+    ProductReviews: {
+      id: string;
+      section?: string;
+    } & NavigatorScreenParams<{
+      Summary: {
+        period: string;
+      };
+      Stats: {
+        chartType: 'bar' | 'line';
+      };
+    }>;
+    SupportCenter:
+      | ({ section?: string } & NavigatorScreenParams<SupportTabsParamList>)
+      | undefined;
   }>();
 }
 
@@ -2409,7 +2484,7 @@ createStackScreen({
   const StackComponent = Stack.getComponent();
 
   expectTypeOf<React.ComponentProps<typeof StackComponent>>().toExtend<{
-    initialRouteName?: 'Profile' | 'Settings';
+    initialRouteName?: 'Profile' | 'Settings' | undefined;
   }>();
 }
 
@@ -2446,22 +2521,25 @@ createStackScreen({
   const StackComponent = Stack.getComponent();
 
   expectTypeOf<React.ComponentProps<typeof StackComponent>>().toExtend<{
-    initialRouteName?: 'Home' | 'Profile';
-    screenLayout?: (
-      props: ScreenLayoutArgs<
-        FooParamList,
-        keyof FooParamList,
-        StackNavigationOptions,
-        FooNavigation
-      >
-    ) => React.ReactElement;
+    initialRouteName?: 'Home' | 'Profile' | undefined;
+    screenLayout?:
+      | ((
+          props: ScreenLayoutArgs<
+            FooParamList,
+            keyof FooParamList,
+            StackNavigationOptions,
+            FooNavigation
+          >
+        ) => React.ReactElement)
+      | undefined;
     screenOptions?:
       | StackNavigationOptions
       | ((props: {
           route: RouteProp<FooParamList, keyof FooParamList>;
           navigation: FooNavigation;
           theme: Theme;
-        }) => StackNavigationOptions);
+        }) => StackNavigationOptions)
+      | undefined;
   }>();
 
   const Dashboard = () => {
@@ -2533,22 +2611,25 @@ createStackScreen({
 
   const Stack = createStackNavigator(config).with(({ Navigator }) => {
     expectTypeOf<React.ComponentProps<typeof Navigator>>().toExtend<{
-      initialRouteName?: keyof FooParamList;
-      screenLayout?: (
-        props: ScreenLayoutArgs<
-          FooParamList,
-          keyof FooParamList,
-          StackNavigationOptions,
-          FooNavigation
-        >
-      ) => React.ReactElement;
+      initialRouteName?: keyof FooParamList | undefined;
+      screenLayout?:
+        | ((
+            props: ScreenLayoutArgs<
+              FooParamList,
+              keyof FooParamList,
+              StackNavigationOptions,
+              FooNavigation
+            >
+          ) => React.ReactElement)
+        | undefined;
       screenOptions?:
         | StackNavigationOptions
         | ((props: {
             route: RouteProp<FooParamList, keyof FooParamList>;
             navigation: FooNavigation;
             theme: Theme;
-          }) => StackNavigationOptions);
+          }) => StackNavigationOptions)
+        | undefined;
     }>();
 
     return <Navigator />;

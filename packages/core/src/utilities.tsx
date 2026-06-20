@@ -37,6 +37,23 @@ export type RequiredKeys<T extends object> = {
   [K in keyof T]-?: {} extends Pick<T, K> ? never : K;
 }[keyof T];
 
+type OptionalKeys<T extends object> = Exclude<keyof T, RequiredKeys<T>>;
+
+/**
+ * Remove `| undefined` from the object type,
+ * and adjust the optionality of the keys based on the original type.
+ */
+export type NotUndefinedObject<
+  T extends object | undefined,
+  O extends object = NotUndefined<T>,
+> = undefined extends T
+  ? {
+      [K in RequiredKeys<O>]: O[K];
+    } & {
+      [K in OptionalKeys<O>]?: O[K] | undefined;
+    }
+  : T;
+
 export type UndefinedIfAllOptional<T> = T extends object
   ? RequiredKeys<T> extends never
     ? T | undefined

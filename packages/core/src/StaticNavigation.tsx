@@ -27,6 +27,7 @@ import type {
   HasArguments,
   InferParamsFromLinking,
   KeysOf,
+  NotUndefinedObject,
   StandardSchemaV1,
   UnionToIntersection,
   ValidPathPattern,
@@ -105,7 +106,13 @@ type ShouldInferFromLinking<Linking> = Linking extends {
 type ParamsForConfig<Linking, Screen, Params = ParamsForScreen<Screen>> =
   ShouldInferFromLinking<Linking> extends true
     ? [Screen] extends [{ config: any }]
-      ? FlatType<InferParamsFromLinking<Linking>> & Params
+      ? undefined extends Params
+        ? FlatType<InferParamsFromLinking<Linking>> & Params
+        : // Optional linking params make the whole route params type optional when intersected.
+          // e.g. `({...} | undefined) & NavigatorScreenParams<{...}>` adds `| undefined` to the whole type.
+          // But if nested navigator had required params, it should still be required.
+          // So we remove `| undefined` from linking params before intersecting with nested navigator params.
+          FlatType<NotUndefinedObject<InferParamsFromLinking<Linking>>> & Params
       : undefined extends Params
         ? FlatType<InferParamsFromLinking<Linking>>
         : FlatType<InferParamsFromLinking<Linking> & Params>
