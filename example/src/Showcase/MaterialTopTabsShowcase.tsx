@@ -380,7 +380,13 @@ const Badge = ({ count }: { count: number }) => {
   );
 };
 
-const RecipeCard = ({ item, width }: { item: Recipe; width?: number }) => {
+const RecipeCard = ({
+  item,
+  width,
+}: {
+  item: Recipe;
+  width?: number | undefined;
+}) => {
   const { colors, fonts } = useTheme();
 
   return (

@@ -15,15 +15,15 @@ export type LinkProps<
   RouteName extends keyof ParamList = keyof ParamList,
 > =
   | ({
-      href?: string;
-      action?: NavigationAction;
+      href?: string | undefined;
+      action?: NavigationAction | undefined;
     } & (RouteName extends unknown
       ? undefined extends ParamList[RouteName]
-        ? { screen: RouteName; params?: ParamList[RouteName] }
+        ? { screen: RouteName; params?: ParamList[RouteName] | undefined }
         : { screen: RouteName; params: ParamList[RouteName] }
       : never))
   | {
-      href?: string;
+      href?: string | undefined;
       action: NavigationAction;
       screen?: undefined;
       params?: undefined;

@@ -108,7 +108,7 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
   /**
    * Ref object which refers to the navigation object containing helper methods.
    */
-  ref?: React.Ref<NavigationContainerRef<ParamList>>;
+  ref?: React.Ref<NavigationContainerRef<ParamList>> | undefined;
 };
 
 const RESTORE_STATE_ERROR =

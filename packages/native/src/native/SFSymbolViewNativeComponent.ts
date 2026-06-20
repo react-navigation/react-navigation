@@ -10,16 +10,16 @@ import {
 export interface NativeProps extends ViewProps {
   name: string;
   size: CodegenTypes.Float;
-  color?: ColorValue;
+  color?: ColorValue | undefined;
   weight: CodegenTypes.Int32;
   scale: string;
   variableValue: CodegenTypes.Float;
   variableValueMode: string;
   colorRenderingMode: string;
   renderingMode: string;
-  colorPrimary?: ColorValue;
-  colorSecondary?: ColorValue;
-  colorTertiary?: ColorValue;
+  colorPrimary?: ColorValue | undefined;
+  colorSecondary?: ColorValue | undefined;
+  colorTertiary?: ColorValue | undefined;
   effect: string;
   effectRepeat: string;
   effectRepeatCount: CodegenTypes.Int32;

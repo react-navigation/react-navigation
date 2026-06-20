@@ -32,7 +32,7 @@ export type Props = Omit<PressableProps, 'style' | 'onPress'> & {
       ) => void)
     | undefined;
   children: React.ReactNode;
-  ref?: React.Ref<React.ComponentRef<typeof AnimatedPressable>>;
+  ref?: React.Ref<React.ComponentRef<typeof AnimatedPressable>> | undefined;
 };
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -130,7 +130,7 @@ export function PlatformPressable({
 
   return (
     <AnimatedPressable
-      ref={ref}
+      ref={ref ?? null}
       accessible
       disabled={disabled}
       focusable={focusable}

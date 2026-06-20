@@ -724,16 +724,16 @@ export type RouteConfigComponent<
        * React component to render for this screen.
        */
       component: ScreenComponentType<ParamList, RouteName>;
-      getComponent?: never | undefined;
-      children?: never | undefined;
+      getComponent?: never;
+      children?: never;
     }
   | {
       /**
        * Lazily get a React component to render for this screen.
        */
       getComponent: () => ScreenComponentType<ParamList, RouteName>;
-      component?: never | undefined;
-      children?: never | undefined;
+      component?: never;
+      children?: never;
     }
   | {
       /**
@@ -743,8 +743,8 @@ export type RouteConfigComponent<
         route: RouteProp<ParamList, RouteName>;
         navigation: any;
       }) => React.ReactNode;
-      component?: never | undefined;
-      getComponent?: never | undefined;
+      component?: never;
+      getComponent?: never;
     };
 
 export type RouteConfigProps<
@@ -1632,7 +1632,12 @@ type PathConfigAlias<Params> = {
 };
 
 export type PathConfig<Params> = FlatType<
-  Partial<PathConfigAlias<Params>> & {
+  Partial<Omit<PathConfigAlias<Params>, 'path'>> & {
+    /**
+     * Path string to match against.
+     * e.g. `/users/:id` will match `/users/1` and extract `id` param as `1`.
+     */
+    path?: string | undefined;
     /**
      * An object mapping the param name to a function which converts the param value to a string.
      * By default, all params are converted to strings using `String(value)`.

@@ -60,9 +60,9 @@ type TabSelectionPreventedEvent = {
 };
 
 type PlatformIcon = {
-  ios?: PlatformIconIOS;
-  android?: PlatformIconAndroid;
-  shared?: PlatformIconShared;
+  ios?: PlatformIconIOS | undefined;
+  android?: PlatformIconAndroid | undefined;
+  shared?: PlatformIconShared | undefined;
 };
 
 type ConfirmedState = {
