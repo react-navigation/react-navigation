@@ -37,7 +37,6 @@ import {
 } from './types';
 import { UnhandledActionContext } from './UnhandledActionContext';
 import { useChildListeners } from './useChildListeners';
-import { useClientLayoutEffect } from './useClientLayoutEffect';
 import { useComponent } from './useComponent';
 import { useCurrentRender } from './useCurrentRender';
 import { type ScreenConfigWithParent, useDescriptors } from './useDescriptors';
@@ -794,19 +793,6 @@ export function useNavigationBuilder<
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // In some cases (e.g. route names change), internal state might have changed
-  // But it hasn't been committed yet, so hasn't propagated to the sync external store
-  // During this time, we need to return the internal state in `getState`
-  // Otherwise it can result in inconsistent state during render in children
-  // To avoid this, we use a ref for render phase, and immediately clear it on commit
-  const stateRef = React.useRef<State | null>(state);
-
-  stateRef.current = state;
-
-  useClientLayoutEffect(() => {
-    stateRef.current = null;
-  });
-
   const getState = useLatestCallback((): State => {
     const currentState = getCurrentState();
 
@@ -955,9 +941,9 @@ export function useNavigationBuilder<
     onAction,
     onUnhandledAction,
     getState,
+    state,
     emitter,
     router,
-    stateRef,
   });
 
   useFocusedListenersChildrenAdapter({
