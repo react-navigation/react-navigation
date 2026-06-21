@@ -1,4 +1,4 @@
-import { expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import { NavigationContainer } from '@react-navigation/native';
 import { render, screen, userEvent } from '@testing-library/react-native';
 import * as React from 'react';
@@ -26,6 +26,15 @@ jest.mock('react-native-pager-view', () => {
       return <View>{this.props.children}</View>;
     }
   };
+});
+
+beforeEach(() => {
+  jest.useFakeTimers();
+});
+
+afterEach(() => {
+  jest.runOnlyPendingTimers();
+  jest.useRealTimers();
 });
 
 test('renders a material top tab navigator with screens', async () => {

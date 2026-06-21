@@ -1,4 +1,4 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -30,11 +30,18 @@ jest.mock('../useLinking', () => require('../useLinking.tsx'));
 let window: typeof import('../__stubs__/window').window;
 
 beforeEach(() => {
+  jest.useFakeTimers();
+
   jest.isolateModules(() => {
     window = require('../__stubs__/window').window;
   });
 
   Object.assign(global, window);
+});
+
+afterEach(() => {
+  jest.runOnlyPendingTimers();
+  jest.useRealTimers();
 });
 
 const createStackNavigator = createNavigatorFactory((props: any) => {
@@ -78,8 +85,6 @@ const TestScreen = ({ route }: any): any => (
 );
 
 test('throws if multiple instances of useLinking are used', async () => {
-  jest.useFakeTimers();
-
   const ref = createNavigationContainerRef<ParamListBase>();
   const options = { enabled: true };
 
@@ -145,8 +150,6 @@ test('throws if multiple instances of useLinking are used', async () => {
   expect(spy).toHaveBeenCalledTimes(2);
 
   await element?.unmount();
-
-  jest.useRealTimers();
 });
 
 test('pushes a browser history entry for each forward navigation', async () => {

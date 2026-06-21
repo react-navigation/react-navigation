@@ -1,4 +1,11 @@
-import { afterEach, describe, expect, jest, test } from '@jest/globals';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from '@jest/globals';
 import { useHeaderHeight } from '@react-navigation/elements';
 import { NavigationContainer } from '@react-navigation/native';
 import {
@@ -23,7 +30,13 @@ type NestedStackParamList = {
   C: undefined;
 };
 
+beforeEach(() => {
+  jest.useFakeTimers();
+});
+
 afterEach(() => {
+  jest.runOnlyPendingTimers();
+  jest.useRealTimers();
   jest.restoreAllMocks();
 });
 
@@ -40,7 +53,6 @@ test('renders a native-stack navigator with screens', async () => {
   );
 
   const Stack = createNativeStackNavigator<StackParamList>();
-
   const user = userEvent.setup();
 
   await render(
@@ -70,6 +82,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -91,7 +104,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -99,6 +114,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -120,7 +136,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(44);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(44);
   });
 
@@ -128,6 +146,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -149,7 +168,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -157,6 +178,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -184,7 +206,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(44);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(56);
   });
 
@@ -192,6 +216,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -226,7 +251,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(44);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(56);
   });
 
@@ -234,6 +261,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -268,7 +296,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -276,6 +306,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -301,7 +332,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(0);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(44);
   });
 
@@ -309,6 +342,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -334,7 +368,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(0);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -342,6 +378,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -367,7 +404,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(0);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -375,6 +414,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -403,7 +443,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(44);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(44);
   });
 
@@ -411,6 +453,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -443,7 +486,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(44);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(44);
   });
 
@@ -451,6 +496,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -479,7 +525,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(0);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(0);
   });
 
@@ -487,6 +535,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -515,7 +564,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -523,6 +574,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -555,7 +607,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -563,6 +617,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -591,7 +646,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(0);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(0);
   });
 
@@ -599,6 +656,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -627,7 +685,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -635,6 +695,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -667,7 +728,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -675,6 +738,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -703,7 +767,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(0);
-    await user.press(await screen.findByRole('button', { name: /go to b/i }));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(0);
   });
 });
