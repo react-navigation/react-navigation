@@ -51,11 +51,13 @@
     "jest": "~29.7.0",
     "npm-run-all2": "^9.0.1",
     "prettier": "^3.8.3",
+    "prettier-2": "npm:prettier@^2.8.8",
     "semver": "^7.8.2",
     "typescript": "^6.0.3"
   },
   "jest": {
     "preset": "@react-native/jest-preset",
+    "prettierPath": "prettier-2",
     "testEnvironmentOptions": {
       "customExportConditions": [
         "require",
