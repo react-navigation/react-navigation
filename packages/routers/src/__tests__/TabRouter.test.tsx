@@ -1778,6 +1778,162 @@ test('preserves params in history with backBehavior: fullHistory', () => {
   expect(state.routes[1]?.params).toEqual({ value: 'first' });
 });
 
+test('pops to matching route history on navigate with backBehavior: fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState({
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  });
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('baz', { value: 'first' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('qux', { value: 'second' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('baz', { value: 'updated' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('baz', undefined, { pop: true }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.index).toBe(1);
+  expect(state.routes[1]?.params).toBeUndefined();
+  expect(state.history).toEqual([
+    { type: 'route', key: 'bar-1' },
+    { type: 'route', key: 'baz-2', params: undefined },
+  ]);
+});
+
+test("doesn't pop route history on navigate with backBehavior: fullHistory if there is no match", () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        index: 2,
+        key: 'tab-test',
+        routeNames: ['bar', 'baz', 'qux'],
+        preloadedRouteKeys: [],
+        routes: [
+          { key: 'bar-0', name: 'bar' },
+          { key: 'baz-0', name: 'baz' },
+          { key: 'qux-0', name: 'qux' },
+        ],
+        history: [
+          { type: 'route', key: 'bar-0' },
+          { type: 'route', key: 'qux-0' },
+        ],
+        stale: false,
+        type: 'tab',
+      },
+      CommonActions.navigate('baz', undefined, { pop: true }),
+      options
+    )
+  ).toEqual({
+    index: 1,
+    key: 'tab-test',
+    routeNames: ['bar', 'baz', 'qux'],
+    preloadedRouteKeys: [],
+    routes: [
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-0', name: 'baz' },
+      { key: 'qux-0', name: 'qux' },
+    ],
+    history: [
+      { type: 'route', key: 'bar-0' },
+      { type: 'route', key: 'qux-0' },
+      { type: 'route', key: 'baz-0', params: undefined },
+    ],
+    stale: false,
+    type: 'tab',
+  });
+});
+
+test('merges params when popping to route history with backBehavior: fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState({
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  });
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('baz', { color: 'red', value: 'first' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('qux'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate(
+      'baz',
+      { value: 'next' },
+      {
+        merge: true,
+        pop: true,
+      }
+    ),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.index).toBe(1);
+  expect(state.routes[1]?.params).toEqual({
+    color: 'red',
+    value: 'next',
+  });
+  expect(state.history).toEqual([
+    { type: 'route', key: 'bar-1' },
+    {
+      type: 'route',
+      key: 'baz-2',
+      params: { color: 'red', value: 'next' },
+    },
+  ]);
+});
+
 test('updates route key history on focus change with backBehavior: fullHistory', () => {
   const router = TabRouter({ backBehavior: 'fullHistory' });
 

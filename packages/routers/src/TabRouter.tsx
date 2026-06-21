@@ -395,6 +395,32 @@ export function TabRouter({
             return null;
           }
 
+          let popIndex = -1;
+
+          if (
+            action.type === 'NAVIGATE' &&
+            action.payload.pop &&
+            backBehavior === 'fullHistory' &&
+            index !== state.index
+          ) {
+            const route = state.routes[index];
+
+            if (route == null) {
+              throw new Error(`Couldn't find a route at index ${index}.`);
+            }
+
+            const getId = routeGetIdList[route.name];
+
+            const currentId = getId?.({ params: route.params });
+            const nextId = getId?.({ params: action.payload.params });
+
+            if (currentId === nextId) {
+              popIndex = state.history.findLastIndex(
+                (it) => it.type === 'route' && it.key === route.key
+              );
+            }
+          }
+
           const updatedState = changeIndex(
             {
               ...state,
@@ -456,8 +482,21 @@ export function TabRouter({
             );
           }
 
+          const history =
+            popIndex === -1
+              ? updatedState.history
+              : [
+                  ...state.history.slice(0, popIndex),
+                  {
+                    type: TYPE_ROUTE,
+                    key: updatedRoute.key,
+                    params: updatedRoute.params,
+                  },
+                ];
+
           return {
             ...updatedState,
+            history,
             preloadedRouteKeys: updatedState.preloadedRouteKeys.filter(
               (key) => key !== updatedRoute.key
             ),
