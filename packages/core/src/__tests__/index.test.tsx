@@ -4775,14 +4775,20 @@ test('does not throw if while getting current options with empty container', asy
 
 test('shows stale content instead of fallback with startTransition for setParams', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
     const route = state.routes[state.index];
 
     if (route == null) {
       return null;
     }
 
-    return descriptors[route.key]?.render();
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -4799,6 +4805,7 @@ test('shows stale content instead of fallback with startTransition for setParams
 
   const TestScreen = (props: any) => {
     const contentId = props.route.params?.contentId ?? 0;
+
     return (
       <React.Suspense fallback={<Text>[fallback]</Text>}>
         <Content contentId={contentId} />

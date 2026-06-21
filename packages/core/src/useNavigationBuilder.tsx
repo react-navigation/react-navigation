@@ -798,7 +798,7 @@ export function useNavigationBuilder<
 
   stateRef.current = state;
 
-  React.useLayoutEffect(() => {
+  React.useInsertionEffect(() => {
     stateRef.current = null;
   });
 
@@ -1013,7 +1013,10 @@ export function useNavigationBuilder<
     return (
       <NavigationMetaContext.Provider value={undefined}>
         <NavigationHelpersContext.Provider value={navigation}>
-          <NavigationStateListenerProvider state={state}>
+          <NavigationStateListenerProvider
+            state={state}
+            getState={navigation.getState}
+          >
             <FocusedRouteKeyContext.Provider value={focusedRoute.key}>
               <PreventRemoveProvider>{element}</PreventRemoveProvider>
             </FocusedRouteKeyContext.Provider>

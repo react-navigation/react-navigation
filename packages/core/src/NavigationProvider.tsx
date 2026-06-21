@@ -4,6 +4,7 @@ import * as React from 'react';
 import type { NavigationProp } from './types';
 import { FocusedRouteKeyContext, IsFocusedContext } from './useIsFocused';
 import { useLazyValue } from './useLazyValue';
+import { NamedNavigationStateListenerProvider } from './useNavigationState';
 
 /**
  * Context which holds the route prop for a screen.
@@ -61,18 +62,20 @@ export function NavigationProvider({ route, navigation, children }: Props) {
       : false;
 
   return (
-    <NamedRouteContextListContext.Provider value={NamedRouteContextList}>
-      <NamedRouteContext.Provider value={route}>
-        <NavigationRouteContext.Provider value={route}>
-          <NavigationContext.Provider value={navigation}>
-            <IsFocusedContext.Provider value={isFocused}>
-              <NavigationRouteNameContext.Provider value={route.name}>
-                {children}
-              </NavigationRouteNameContext.Provider>
-            </IsFocusedContext.Provider>
-          </NavigationContext.Provider>
-        </NavigationRouteContext.Provider>
-      </NamedRouteContext.Provider>
-    </NamedRouteContextListContext.Provider>
+    <NamedNavigationStateListenerProvider name={route.name}>
+      <NamedRouteContextListContext.Provider value={NamedRouteContextList}>
+        <NamedRouteContext.Provider value={route}>
+          <NavigationRouteContext.Provider value={route}>
+            <NavigationContext.Provider value={navigation}>
+              <IsFocusedContext.Provider value={isFocused}>
+                <NavigationRouteNameContext.Provider value={route.name}>
+                  {children}
+                </NavigationRouteNameContext.Provider>
+              </IsFocusedContext.Provider>
+            </NavigationContext.Provider>
+          </NavigationRouteContext.Provider>
+        </NamedRouteContext.Provider>
+      </NamedRouteContextListContext.Provider>
+    </NamedNavigationStateListenerProvider>
   );
 }

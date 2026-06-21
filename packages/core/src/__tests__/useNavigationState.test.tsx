@@ -402,46 +402,46 @@ test('gets navigation state for current route name', async () => {
   );
 
   expect(root).toMatchInlineSnapshot(`
-<>
-  <Text>
-    0
-  </Text>
-  <Text>
-    child
-  </Text>
-  <Text />
-</>
-`);
+    <>
+      <Text>
+        0
+      </Text>
+      <Text>
+        child
+      </Text>
+      <Text />
+    </>
+  `);
 
   await act(() => navigation.current.navigate('child', { answer: 42 }));
 
   expect(root).toMatchInlineSnapshot(`
-<>
-  <Text>
-    0
-  </Text>
-  <Text>
-    child
-  </Text>
-  <Text>
-    {"answer":42}
-  </Text>
-</>
-`);
+    <>
+      <Text>
+        0
+      </Text>
+      <Text>
+        child
+      </Text>
+      <Text>
+        {"answer":42}
+      </Text>
+    </>
+  `);
 
   await act(() => navigation.current.navigate('second'));
 
   expect(root).toMatchInlineSnapshot(`
-<>
-  <Text>
-    1
-  </Text>
-  <Text>
-    second
-  </Text>
-  <Text />
-</>
-`);
+    <>
+      <Text>
+        1
+      </Text>
+      <Text>
+        second
+      </Text>
+      <Text />
+    </>
+  `);
 });
 
 test('gets navigation state for parent route name', async () => {
@@ -501,44 +501,44 @@ test('gets navigation state for parent route name', async () => {
   );
 
   expect(root).toMatchInlineSnapshot(`
-<>
-  <Text>
-    0
-  </Text>
-  <Text>
-    parent
-  </Text>
-  <Text />
-</>
-`);
+    <>
+      <Text>
+        0
+      </Text>
+      <Text>
+        parent
+      </Text>
+      <Text />
+    </>
+  `);
 
   await act(() => navigation.current.navigate('parent', { answer: 42 }));
 
   expect(root).toMatchInlineSnapshot(`
-<>
-  <Text>
-    0
-  </Text>
-  <Text>
-    parent
-  </Text>
-  <Text />
-</>
-`);
+    <>
+      <Text>
+        0
+      </Text>
+      <Text>
+        parent
+      </Text>
+      <Text />
+    </>
+  `);
 
   await act(() => navigation.current.navigate('other'));
 
   expect(root).toMatchInlineSnapshot(`
-<>
-  <Text>
-    1
-  </Text>
-  <Text>
-    other
-  </Text>
-  <Text />
-</>
-`);
+    <>
+      <Text>
+        1
+      </Text>
+      <Text>
+        other
+      </Text>
+      <Text />
+    </>
+  `);
 });
 
 test('throws when used outside a navigator', async () => {
@@ -659,44 +659,93 @@ test('gets navigation state for grandparent route name', async () => {
   );
 
   expect(root).toMatchInlineSnapshot(`
-<>
-  <Text>
-    0
-  </Text>
-  <Text>
-    grandparent
-  </Text>
-  <Text />
-</>
-`);
+    <>
+      <Text>
+        0
+      </Text>
+      <Text>
+        grandparent
+      </Text>
+      <Text />
+    </>
+  `);
 
   await act(() => navigation.current.navigate('grandparent', { answer: 42 }));
 
   expect(root).toMatchInlineSnapshot(`
-<>
-  <Text>
-    0
-  </Text>
-  <Text>
-    grandparent
-  </Text>
-  <Text>
-    {"answer":42}
-  </Text>
-</>
-`);
+    <>
+      <Text>
+        0
+      </Text>
+      <Text>
+        grandparent
+      </Text>
+      <Text>
+        {"answer":42}
+      </Text>
+    </>
+  `);
 
   await act(() => navigation.current.navigate('fourth'));
 
   expect(root).toMatchInlineSnapshot(`
-<>
-  <Text>
-    1
-  </Text>
-  <Text>
-    fourth
-  </Text>
-  <Text />
-</>
-`);
+    <>
+      <Text>
+        1
+      </Text>
+      <Text>
+        fourth
+      </Text>
+      <Text />
+    </>
+  `);
+});
+
+test('returns the latest state on the initial render of a screen', async () => {
+  const FirstScreen = () => null;
+
+  const SecondScreen = () => {
+    // Freeze the value from the first render to catch a stale initial read
+    const [index] = React.useState(
+      useNavigationState((state: NavigationState) => state.index)
+    );
+
+    return <Text>{index}</Text>;
+  };
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = React.createRef<any>();
+
+  const element = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="first" component={FirstScreen} />
+        <Screen name="second" component={SecondScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => navigation.current.navigate('second'));
+
+  expect(element).toMatchInlineSnapshot(`
+    <Text>
+      1
+    </Text>
+  `);
 });
