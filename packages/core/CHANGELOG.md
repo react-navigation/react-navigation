@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.21.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.1...@react-navigation/core@7.21.2) (2026-06-23)
+
+### Bug Fixes
+
+* handle non-capturing groups in path regex ([1fe7b3e](https://github.com/react-navigation/react-navigation/commit/1fe7b3e159b3d70cfbe959836b86bf0c963ecc84)) - by @
+
 ## [7.21.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.0...@react-navigation/core@7.21.1) (2026-06-15)
 
 ### Bug Fixes
