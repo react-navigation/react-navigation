@@ -158,7 +158,7 @@ export function getPathFromState<ParamList extends {}>(
     );
   }
 
-  if (options) {
+  if (process.env.NODE_ENV !== 'production' && options) {
     validatePathConfig(options);
   }
 

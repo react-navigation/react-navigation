@@ -309,7 +309,7 @@ function getConfigResources<ParamList extends {}>(
 }
 
 function prepareConfigResources(options?: Options<{}>) {
-  if (options) {
+  if (process.env.NODE_ENV !== 'production' && options) {
     validatePathConfig(options);
   }
 
