@@ -248,7 +248,21 @@ export function getStateFromPath<ParamList extends {}>(
 
   // We match the whole path against the regex instead of segments
   // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
+  const firstDecodedSegment = decodedSegments[0];
+  const firstRawSegment = remaining.split('/')[0];
+
   for (const config of configs) {
+    // Regex matching is expensive, so skip configs that can't match this path.
+    if (
+      !canMatchFirstSegment(
+        config.segments[0],
+        firstDecodedSegment,
+        firstRawSegment
+      )
+    ) {
+      continue;
+    }
+
     const routes = matchAgainstConfig(remaining, config, configsByScreen);
 
     if (routes === undefined) {
@@ -286,6 +300,26 @@ export function getStateFromPath<ParamList extends {}>(
 
   return undefined;
 }
+
+const canMatchFirstSegment = (
+  configSegment: string | undefined,
+  decodedSegment: string | undefined,
+  rawSegment: string | undefined
+) => {
+  if (decodedSegment === undefined) {
+    return true;
+  }
+
+  if (configSegment === undefined) {
+    return false;
+  }
+
+  if (configSegment === '*' || configSegment.startsWith(':')) {
+    return true;
+  }
+
+  return configSegment === decodedSegment || configSegment === rawSegment;
+};
 
 /**
  * Reference to the last used config resources. This is used to avoid recomputing the config resources when the options are the same.
