@@ -51,25 +51,27 @@ export function getActionFromState(
     normalizedConfig = {};
   }
 
-  const routes =
-    state.index != null ? state.routes.slice(0, state.index + 1) : state.routes;
+  const routesLength =
+    state.index == null || state.index >= state.routes.length
+      ? state.routes.length
+      : state.index + 1;
 
-  if (routes.length === 0) {
+  if (routesLength === 0) {
     return undefined;
   }
 
-  const firstRoute = routes[0];
+  const firstRoute = state.routes[0];
 
   if (firstRoute == null) {
     return undefined;
   }
 
-  const secondRoute = routes[1];
+  const secondRoute = state.routes[1];
 
   if (
     !(
-      (routes.length === 1 && firstRoute.key == null) ||
-      (routes.length === 2 &&
+      (routesLength === 1 && firstRoute.key == null) ||
+      (routesLength === 2 &&
         firstRoute.key == null &&
         firstRoute.name === normalizedConfig?.initialRouteName &&
         secondRoute?.key == null)
@@ -121,24 +123,24 @@ export function getActionFromState(
       return undefined;
     }
 
-    const routes =
-      current.index != null
-        ? current.routes.slice(0, current.index + 1)
-        : current.routes;
+    const routesLength =
+      current.index == null || current.index >= current.routes.length
+        ? current.routes.length
+        : current.index + 1;
 
-    const route = routes[routes.length - 1];
+    const route = current.routes[routesLength - 1];
 
     if (route == null) {
       return undefined;
     }
 
-    const firstRoute = routes[0];
+    const firstRoute = current.routes[0];
 
     if (firstRoute == null) {
       return undefined;
     }
 
-    const secondRoute = routes[1];
+    const secondRoute = current.routes[1];
 
     // Explicitly set to override existing value when merging params
     Object.assign(params, {
@@ -148,11 +150,11 @@ export function getActionFromState(
       state: undefined,
     });
 
-    if (routes.length === 1 && firstRoute.key == null) {
+    if (routesLength === 1 && firstRoute.key == null) {
       params.initial = true;
       params.screen = route.name;
     } else if (
-      routes.length === 2 &&
+      routesLength === 2 &&
       firstRoute.key == null &&
       firstRoute.name === config?.initialRouteName &&
       secondRoute?.key == null
