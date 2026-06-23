@@ -1,16 +1,18 @@
-type Result =
-  | { serializable: true }
-  | {
-      serializable: false;
-      location: (string | number)[];
-      reason: string;
-    };
+type Success = { serializable: true };
+
+type Failure = {
+  serializable: false;
+  location: (string | number)[];
+  reason: string;
+};
+
+type Result = Success | Failure;
 
 const checkSerializableWithoutCircularReference = (
   o: { [key: string]: any },
   seen: Set<any>,
   location: (string | number)[]
-): Result => {
+): Failure | undefined => {
   if (
     o === undefined ||
     o === null ||
@@ -18,7 +20,7 @@ const checkSerializableWithoutCircularReference = (
     typeof o === 'number' ||
     typeof o === 'string'
   ) {
-    return { serializable: true };
+    return undefined;
   }
 
   if (
@@ -52,7 +54,7 @@ const checkSerializableWithoutCircularReference = (
       );
       location.pop();
 
-      if (!childResult.serializable) {
+      if (childResult) {
         seen.delete(o);
         return childResult;
       }
@@ -67,7 +69,7 @@ const checkSerializableWithoutCircularReference = (
       );
       location.pop();
 
-      if (!childResult.serializable) {
+      if (childResult) {
         seen.delete(o);
         return childResult;
       }
@@ -76,9 +78,13 @@ const checkSerializableWithoutCircularReference = (
 
   seen.delete(o);
 
-  return { serializable: true };
+  return undefined;
 };
 
-export function checkSerializable(o: { [key: string]: any }) {
-  return checkSerializableWithoutCircularReference(o, new Set<any>(), []);
+export function checkSerializable(o: { [key: string]: any }): Result {
+  return (
+    checkSerializableWithoutCircularReference(o, new Set<any>(), []) ?? {
+      serializable: true,
+    }
+  );
 }
