@@ -1,10 +1,7 @@
 import * as React from 'react';
 
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
-import {
-  NavigationContext,
-  NavigationRouteNameContext,
-} from './NavigationProvider';
+import { NavigationContext } from './NavigationProvider';
 import type {
   GenericNavigation,
   NavigationListForNavigator,
@@ -46,23 +43,7 @@ export function useNavigation(name?: string): unknown {
     return navigation ?? root;
   }
 
-  const routeName = React.use(NavigationRouteNameContext);
-
-  // Generally, this condition isn't needed as `getParent(name)` works for current screen
-  // However, it'll throw if the hook is used in a preloaded screen
-  if (routeName === name) {
-    if (navigation === undefined) {
-      throw new Error(
-        `Couldn't find a navigation object for '${name}'. This is not expected.`
-      );
-    }
-
-    return navigation;
-  }
-
-  // We get parent first so that `getParent(name)` is not called in preloaded screens
-  // It's ok since `getParent` also works for current screen, so parent is not skipped
-  const parent = navigation?.getParent()?.getParent(name);
+  const parent = navigation?.getParent(name);
 
   if (parent === undefined) {
     throw new Error(

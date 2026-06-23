@@ -5,7 +5,6 @@ import {
   NamedRouteContextListContext,
   NavigationContext,
   NavigationRouteContext,
-  NavigationRouteNameContext,
 } from './NavigationProvider';
 import { IsFocusedContext } from './useIsFocused';
 import { NamedNavigationStateListenerListContext } from './useNavigationState';
@@ -25,11 +24,9 @@ export function NavigationIndependentTree({
         <NavigationRouteContext.Provider value={undefined}>
           <NavigationContext.Provider value={undefined}>
             <IsFocusedContext.Provider value={undefined}>
-              <NavigationRouteNameContext.Provider value={undefined}>
-                <NavigationIndependentTreeContext.Provider value={true}>
-                  {children}
-                </NavigationIndependentTreeContext.Provider>
-              </NavigationRouteNameContext.Provider>
+              <NavigationIndependentTreeContext.Provider value={true}>
+                {children}
+              </NavigationIndependentTreeContext.Provider>
             </IsFocusedContext.Provider>
           </NavigationContext.Provider>
         </NavigationRouteContext.Provider>

@@ -20,10 +20,6 @@ export const NavigationContext = React.createContext<
   NavigationProp<ParamListBase> | undefined
 >(undefined);
 
-export const NavigationRouteNameContext = React.createContext<
-  string | undefined
->(undefined);
-
 type Props = {
   route: Route<string>;
   navigation: NavigationProp<ParamListBase>;
@@ -68,9 +64,7 @@ export function NavigationProvider({ route, navigation, children }: Props) {
           <NavigationRouteContext.Provider value={route}>
             <NavigationContext.Provider value={navigation}>
               <IsFocusedContext.Provider value={isFocused}>
-                <NavigationRouteNameContext.Provider value={route.name}>
-                  {children}
-                </NavigationRouteNameContext.Provider>
+                {children}
               </IsFocusedContext.Provider>
             </NavigationContext.Provider>
           </NavigationRouteContext.Provider>
