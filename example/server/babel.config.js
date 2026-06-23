@@ -29,7 +29,7 @@ module.exports = {
         root: ['..'],
         extensions: ['.tsx', '.ts', '.js', '.json'],
         alias: {
-          'react-native': 'react-native-web',
+          'react-native': require.resolve('react-native-web'),
           ...alias,
         },
       },
