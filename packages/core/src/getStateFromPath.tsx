@@ -168,6 +168,7 @@ export function getStateFromPath<ParamList extends {}>(
   // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
   const { routes, config } = matchAgainstConfigs(
     remaining,
+    decodedSegments,
     configs,
     configsByScreen
   );
@@ -364,16 +365,29 @@ function checkForDuplicatedConfigs(configs: RouteConfig[]) {
 
 const matchAgainstConfigs = (
   remaining: string,
+  decodedSegments: string[],
   configs: RouteConfig[],
   configsByScreen: Record<string, RouteConfig[]>
 ) => {
   let routes: ParsedRoute[] | undefined;
   let remainingPath = remaining;
   let matchingConfig: RouteConfig | undefined;
+  const firstDecodedSegment = decodedSegments[0];
+  const firstRawSegment = remainingPath.split('/')[0];
 
   // Go through all configs, and see if the next path segment matches our regex
   for (const config of configs) {
     if (!config.regex) {
+      continue;
+    }
+
+    if (
+      !canMatchFirstSegment(
+        config.segments[0],
+        firstDecodedSegment,
+        firstRawSegment
+      )
+    ) {
       continue;
     }
 
@@ -440,6 +454,26 @@ const matchAgainstConfigs = (
   }
 
   return { routes, remainingPath, config: matchingConfig };
+};
+
+const canMatchFirstSegment = (
+  configSegment: string | undefined,
+  decodedSegment: string | undefined,
+  rawSegment: string | undefined
+) => {
+  if (decodedSegment === undefined) {
+    return true;
+  }
+
+  if (configSegment === undefined) {
+    return false;
+  }
+
+  if (configSegment === '*' || configSegment.startsWith(':')) {
+    return true;
+  }
+
+  return configSegment === decodedSegment || configSegment === rawSegment;
 };
 
 const createNormalizedConfigs = (

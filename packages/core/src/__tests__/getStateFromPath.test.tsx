@@ -2309,6 +2309,35 @@ test('matches wildcard patterns at root', () => {
   ).toEqual(changePath(state, '/404'));
 });
 
+test('matches param and wildcard patterns after unrelated static first segments', () => {
+  const config = {
+    screens: {
+      Foo: 'foo/:id',
+      Bar: 'bar/:id',
+      Dynamic: ':section/:id',
+      NotFound: '*',
+    },
+  };
+
+  expect(getStateFromPath<object>('/bar/42', config)).toEqual({
+    routes: [{ name: 'Bar', params: { id: '42' }, path: '/bar/42' }],
+  });
+
+  expect(getStateFromPath<object>('/baz/42', config)).toEqual({
+    routes: [
+      {
+        name: 'Dynamic',
+        params: { section: 'baz', id: '42' },
+        path: '/baz/42',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('/foo/42/extra', config)).toEqual({
+    routes: [{ name: 'NotFound', path: '/foo/42/extra' }],
+  });
+});
+
 test('matches wildcard patterns at nested level', () => {
   const path = '/bar/42/whatever/baz/initt';
   const config = {
