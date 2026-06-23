@@ -134,6 +134,37 @@ test('converts stack state with preloaded routes to path from focused route', ()
   expect(getPathFromState<object>(state, config)).toBe('/bar/42');
 });
 
+test('ignores nested params in inactive routes', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Bar: 'bar',
+        },
+      },
+      Baz: 'baz',
+    },
+  };
+
+  const state = {
+    type: 'tab',
+    key: 'tab-test',
+    index: 1,
+    routeNames: ['Foo', 'Baz'],
+    routes: [
+      {
+        key: 'Foo-test',
+        name: 'Foo',
+        params: { screen: 'Bar' },
+      },
+      { key: 'Baz-test', name: 'Baz' },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/baz');
+});
+
 test('prepends trailing slash to path', () => {
   expect(
     getPathFromState<object>({

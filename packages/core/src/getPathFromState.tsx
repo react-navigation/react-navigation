@@ -40,7 +40,12 @@ const encodePathParam = (value: string) => {
 };
 
 const getActiveRoute = (
-  state: State
+  state: State,
+  configs: Record<string, ConfigItem> | undefined,
+  getRouteState: (
+    route: State['routes'][number],
+    config: ConfigItem | undefined
+  ) => State | undefined
 ): { name: string; params?: object | undefined } => {
   const route =
     typeof state.index === 'number'
@@ -51,8 +56,11 @@ const getActiveRoute = (
     throw new Error(`Couldn't find the active route.`);
   }
 
-  if (route.state) {
-    return getActiveRoute(route.state);
+  const config = configs?.[route.name];
+  const routeState = getRouteState(route, config);
+
+  if (routeState) {
+    return getActiveRoute(routeState, config?.screens, getRouteState);
   }
 
   return route;
@@ -75,48 +83,6 @@ const getNormalizedConfigs = (options?: Options<{}>) => {
   cachedNormalizedConfigs.set(options.screens, normalizedConfigs);
 
   return normalizedConfigs;
-};
-
-const getTransformedState = (
-  state: State,
-  configs: Record<string, ConfigItem> | undefined
-): Omit<PartialState<NavigationState>, 'stale'> => {
-  const routes = state.routes.map(
-    (route): Omit<PartialState<NavigationState>, 'stale'>['routes'][number] => {
-      const config = configs?.[route.name];
-
-      if (
-        route.state ||
-        (config?.screens &&
-          route.params &&
-          (('screen' in route.params &&
-            typeof route.params.screen === 'string' &&
-            config.screens[route.params.screen]) ||
-            'state' in route.params))
-      ) {
-        const nestedState: State | undefined =
-          route.state ?? getStateFromRouteParams(route.params);
-
-        if (nestedState) {
-          return {
-            ...route,
-            state: getTransformedState(
-              nestedState,
-              configs?.[route.name]?.screens
-            ),
-          };
-        }
-      }
-
-      // @ts-expect-error route.state is handled in previous condition
-      return route;
-    }
-  );
-
-  return {
-    ...state,
-    routes,
-  };
 };
 
 /**
@@ -163,10 +129,44 @@ export function getPathFromState<ParamList extends {}>(
   }
 
   const configs = getNormalizedConfigs(options);
-  const transformedState = getTransformedState(state, configs);
+  const cachedRouteStates = new Map<object, State | undefined>();
+
+  const getRouteState = (
+    route: State['routes'][number],
+    config: ConfigItem | undefined
+  ) => {
+    if (route.state) {
+      return route.state;
+    }
+
+    const hasScreenParams =
+      route.params &&
+      'screen' in route.params &&
+      typeof route.params.screen === 'string' &&
+      config?.screens?.[route.params.screen];
+
+    const hasStateParams =
+      route.params && 'state' in route.params && config?.screens;
+
+    if (
+      !route.params ||
+      !config?.screens ||
+      (!hasScreenParams && !hasStateParams)
+    ) {
+      return undefined;
+    }
+
+    if (!cachedRouteStates.has(route)) {
+      cachedRouteStates.set(route, getStateFromRouteParams(route.params));
+    }
+
+    return cachedRouteStates.get(route);
+  };
+
+  const focusedRoute = getActiveRoute(state, configs, getRouteState);
 
   let path = '/';
-  let current: State | undefined = transformedState;
+  let current: State | undefined = state;
 
   const allParams: Record<string, string> = {};
 
@@ -186,8 +186,6 @@ export function getPathFromState<ParamList extends {}>(
 
     let focusedParams: Record<string, string> | undefined;
     let currentOptions = configs;
-
-    const focusedRoute = getActiveRoute(transformedState);
 
     // Keep all the route names that appeared during going deeper in config in case the pattern is resolved to undefined
     const nestedRouteNames = [];
@@ -262,16 +260,18 @@ export function getPathFromState<ParamList extends {}>(
       }
 
       // If there is no `screens` property or no nested state, we return pattern
-      if (!config.screens || route.state == null) {
+      const routeState = getRouteState(route, config);
+
+      if (!config.screens || routeState == null) {
         hasNext = false;
       } else {
         index =
-          typeof route.state.index === 'number'
-            ? route.state.index
-            : route.state.routes.length - 1;
+          typeof routeState.index === 'number'
+            ? routeState.index
+            : routeState.routes.length - 1;
 
         const nextRoute: State['routes'][number] | undefined =
-          route.state.routes[index];
+          routeState.routes[index];
 
         if (nextRoute == null) {
           throw new Error(`Couldn't find a route at index ${index}.`);
@@ -289,6 +289,8 @@ export function getPathFromState<ParamList extends {}>(
         }
       }
     }
+
+    const routeState = getRouteState(route, currentOptions[route.name]);
 
     if (currentOptions[route.name] != null) {
       if (parts) {
@@ -345,7 +347,7 @@ export function getPathFromState<ParamList extends {}>(
       }
     }
 
-    if (route.state) {
+    if (routeState) {
       path += '/';
     } else if (focusedParams) {
       const query = queryString.stringify(focusedParams, { sort: false });
@@ -355,7 +357,7 @@ export function getPathFromState<ParamList extends {}>(
       }
     }
 
-    current = route.state;
+    current = routeState;
   }
 
   // Include the root path if specified
