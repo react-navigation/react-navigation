@@ -76,8 +76,14 @@ export function DrawerToggleButton({
           resizeMode="contain"
           source={drawerIcon.source}
           fadeDuration={0}
-          tintColor={tintColor}
-          style={styles.icon}
+          tintColor={drawerIcon.tinted === false ? undefined : tintColor}
+          style={[
+            styles.icon,
+            {
+              width: drawerIcon.width ?? ICON_SIZE,
+              height: drawerIcon.height ?? ICON_SIZE,
+            },
+          ]}
         />
       )}
     </HeaderButton>

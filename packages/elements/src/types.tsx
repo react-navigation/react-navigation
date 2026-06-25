@@ -36,6 +36,11 @@ type IconImage = {
    * Defaults to `true`.
    */
   tinted?: boolean;
+  /**
+   * Width / height (in dp) for non-square images. Defaults to the consumer size.
+   */
+  width?: number;
+  height?: number;
 };
 
 type IconSfSymbol = {
