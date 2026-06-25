@@ -61,7 +61,8 @@
     "react-native-pager-view": "^8.0.0",
     "react-native-safe-area-context": "~5.6.2",
     "test-renderer": "1.2.0",
-    "typescript": "^6.0.3"
+    "typescript": "npm:@typescript/typescript6@^6.0.0",
+    "typescript7": "npm:typescript@^7.0.1-rc"
   },
   "peerDependencies": {
     "@react-navigation/native": "workspace:^",
