@@ -26,10 +26,11 @@ type RouteConfig = {
   screen: string;
   regex?: RegExp;
   segments: string[];
-  params: { screen: string; name?: string; index: number }[];
+  params: { screen: string; name: string; index: number }[];
   routeNames: string[];
   parse?: ParseConfig;
   explicitParamNames?: Set<string>;
+  pathParamNames: Set<string>;
   hasNestedScreens: boolean;
 };
 
@@ -122,23 +123,21 @@ export function getStateFromPath<ParamList extends {}>(
     remaining = remaining.replace(normalizedPrefix, '');
   }
 
-  const decodedSegments: string[] = [];
-
-  for (const segment of remaining.split('/')) {
-    if (!segment) {
-      continue;
-    }
-
-    try {
-      decodedSegments.push(decodeURIComponent(segment));
-    } catch {
-      return undefined;
-    }
-  }
-
   if (screens === undefined) {
     // When no config is specified, use the path segments as route names
-    const routes = decodedSegments.map((name) => ({ name }));
+    const routes: ParsedRoute[] = [];
+
+    for (const segment of remaining.split('/')) {
+      if (!segment) {
+        continue;
+      }
+
+      try {
+        routes.push({ name: decodeURIComponent(segment) });
+      } catch {
+        return undefined;
+      }
+    }
 
     if (routes.length) {
       return createNestedStateObject(path, routes, initialRoutes);
@@ -166,9 +165,21 @@ export function getStateFromPath<ParamList extends {}>(
 
   // We match the whole path against the regex instead of segments
   // This makes sure matches such as wildcard will catch any unmatched routes, even if nested
+  const firstRawSegment = remaining.split('/')[0];
+
+  let firstDecodedSegment: string | undefined;
+
+  try {
+    firstDecodedSegment =
+      firstRawSegment != null ? decodeURIComponent(firstRawSegment) : undefined;
+  } catch {
+    firstDecodedSegment = undefined;
+  }
+
   const { routes, config } = matchAgainstConfigs(
     remaining,
-    decodedSegments,
+    firstDecodedSegment,
+    firstRawSegment,
     configs,
     configsByScreen
   );
@@ -209,12 +220,17 @@ function prepareConfigResources(options?: Options<{}>) {
   const initialRoutes = getInitialRoutes(options);
   const configs = getSortedNormalizedConfigs(initialRoutes, options?.screens);
 
-  checkForDuplicatedConfigs(configs);
-
   const configsByScreen: Record<string, RouteConfig[]> = {};
+  const configsByPattern = new Map<string, RouteConfig>();
 
   for (const c of configs) {
     (configsByScreen[c.screen] ??= []).push(c);
+
+    const pattern = c.segments.join('/');
+    const existing = configsByPattern.get(pattern);
+
+    checkForDuplicatedConfigs(existing, c, pattern);
+    configsByPattern.set(pattern, c);
   }
 
   return {
@@ -330,50 +346,45 @@ function getSortedNormalizedConfigs(
     });
 }
 
-function checkForDuplicatedConfigs(configs: RouteConfig[]) {
-  // Check for duplicate patterns in the config
-  configs.reduce<Record<string, RouteConfig>>((acc, config) => {
-    const pattern = config.segments.join('/');
+// Throw if two configs resolve to the same pattern but conflicting screens
+function checkForDuplicatedConfigs(
+  existing: RouteConfig | undefined,
+  config: RouteConfig,
+  pattern: string
+) {
+  if (!existing) {
+    return;
+  }
 
-    if (acc[pattern]) {
-      const a = acc[pattern].routeNames;
-      const b = config.routeNames;
+  const a = existing.routeNames;
+  const b = config.routeNames;
 
-      // It's not a problem if the path string omitted from a inner most screen
-      // For example, it's ok if a path resolves to `A > B > C` or `A > B`
-      const intersects =
-        a.length > b.length
-          ? b.every((it, i) => a[i] === it)
-          : a.every((it, i) => b[i] === it);
+  // It's not a problem if the path string omitted from a inner most screen
+  // For example, it's ok if a path resolves to `A > B > C` or `A > B`
+  const intersects =
+    a.length > b.length ? arrayStartsWith(a, b) : arrayStartsWith(b, a);
 
-      if (!intersects) {
-        throw new Error(
-          `Found conflicting screens with the same pattern. The pattern '${
-            pattern
-          }' resolves to both '${a.join(' > ')}' and '${b.join(
-            ' > '
-          )}'. Patterns must be unique and cannot resolve to more than one screen.`
-        );
-      }
-    }
-
-    return Object.assign(acc, {
-      [pattern]: config,
-    });
-  }, {});
+  if (!intersects) {
+    throw new Error(
+      `Found conflicting screens with the same pattern. The pattern '${
+        pattern
+      }' resolves to both '${a.join(' > ')}' and '${b.join(
+        ' > '
+      )}'. Patterns must be unique and cannot resolve to more than one screen.`
+    );
+  }
 }
 
 const matchAgainstConfigs = (
   remaining: string,
-  decodedSegments: string[],
+  firstDecodedSegment: string | undefined,
+  firstRawSegment: string | undefined,
   configs: RouteConfig[],
   configsByScreen: Record<string, RouteConfig[]>
 ) => {
   let routes: ParsedRoute[] | undefined;
   let remainingPath = remaining;
   let matchingConfig: RouteConfig | undefined;
-  const firstDecodedSegment = decodedSegments[0];
-  const firstRawSegment = remainingPath.split('/')[0];
 
   // Go through all configs, and see if the next path segment matches our regex
   for (const config of configs) {
@@ -395,8 +406,8 @@ const matchAgainstConfigs = (
 
     // If our regex matches, we need to extract params from the path
     if (match) {
-      routes = [];
-      matchingConfig = config;
+      const matchedRoutes: ParsedRoute[] = [];
+      let hasInvalidParam = false;
 
       for (const routeName of config.routeNames) {
         // Check matching name AND pattern in case same screen is used at different levels in config
@@ -409,13 +420,12 @@ const matchAgainstConfigs = (
         if (routeConfig && match.groups) {
           const paramEntries: [string, unknown][] = [];
 
-          for (const [key, value] of Object.entries(match.groups)) {
-            const index = Number(key.replace('param_', ''));
-            const param = routeConfig.params.find((it) => it.index === index);
-
-            if (param?.screen !== routeName || !param.name) {
+          for (const param of routeConfig.params) {
+            if (param.screen !== routeName) {
               continue;
             }
+
+            const value = match.groups[`param_${param.index}`];
 
             if (value == null) {
               paramEntries.push([param.name, undefined]);
@@ -427,12 +437,17 @@ const matchAgainstConfigs = (
             try {
               decoded = decodeURIComponent(value);
             } catch {
-              return { routes: undefined, remainingPath };
+              hasInvalidParam = true;
+              break;
             }
 
             const parser = routeConfig.parse?.[param.name];
 
             paramEntries.push([param.name, parser ? parser(decoded) : decoded]);
+          }
+
+          if (hasInvalidParam) {
+            break;
           }
 
           if (paramEntries.length) {
@@ -441,12 +456,18 @@ const matchAgainstConfigs = (
         }
 
         if (params && Object.keys(params).length) {
-          routes.push({ name: routeName, params });
+          matchedRoutes.push({ name: routeName, params });
         } else {
-          routes.push({ name: routeName });
+          matchedRoutes.push({ name: routeName });
         }
       }
 
+      if (hasInvalidParam) {
+        continue;
+      }
+
+      routes = matchedRoutes;
+      matchingConfig = config;
       remainingPath = remainingPath.replace(match[0], '');
 
       break;
@@ -610,8 +631,10 @@ const createConfigItem = (
   const parts: (PatternPart & { screen: string })[] = [];
 
   // Parse the path string into parts for easier matching
-  for (const { screen, path } of paths) {
-    parts.push(...getPatternParts(path).map((part) => ({ ...part, screen })));
+  for (const { screen: pathScreen, path } of paths) {
+    parts.push(
+      ...getPatternParts(path).map((part) => ({ ...part, screen: pathScreen }))
+    );
   }
 
   const regex = parts.length
@@ -631,17 +654,24 @@ const createConfigItem = (
     : undefined;
 
   const segments = parts.map((it) => it.segment);
-  const params = parts
-    .map((it, i) =>
-      it.param
-        ? {
-            index: i,
-            screen: it.screen,
-            name: it.param,
-          }
-        : null
-    )
-    .filter((it) => it != null);
+  const params: RouteConfig['params'] = [];
+  const pathParamNames = new Set<string>();
+
+  for (const [index, part] of parts.entries()) {
+    if (!part.param) {
+      continue;
+    }
+
+    params.push({
+      index,
+      screen: part.screen,
+      name: part.param,
+    });
+
+    if (part.screen === screen) {
+      pathParamNames.add(part.param);
+    }
+  }
 
   return {
     screen,
@@ -651,6 +681,7 @@ const createConfigItem = (
     routeNames,
     parse,
     explicitParamNames: getExplicitParamNames(parse),
+    pathParamNames,
     hasNestedScreens,
   };
 };
@@ -761,6 +792,7 @@ const createNestedStateObject = (
   const params = parseQueryParams(
     path,
     routeConfig?.parse,
+    routeConfig?.pathParamNames,
     routeConfig?.explicitParamNames,
     routeConfig?.hasNestedScreens,
     route.params
@@ -776,12 +808,18 @@ const createNestedStateObject = (
 const parseQueryParams = (
   path: string,
   parseConfig?: ParseConfig,
+  pathParamNames: Set<string> = new Set(),
   explicitParamNames?: Set<string>,
   hasNestedScreens = false,
   routeParams?: Record<string, unknown>
 ) => {
   const query = path.split('?')[1];
   const params: Record<string, unknown> = queryString.parse(query);
+
+  for (const name of pathParamNames) {
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete params[name];
+  }
 
   if (parseConfig) {
     Object.keys(params).forEach((name) => {
