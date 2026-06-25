@@ -1,4 +1,7 @@
-import type { MaterialSymbolProps } from '@react-navigation/native';
+import type {
+  MaterialSymbolProps,
+  SFSymbolProps,
+} from '@react-navigation/native';
 import * as React from 'react';
 import type {
   Animated,
@@ -10,7 +13,6 @@ import type {
   TextStyle,
   ViewStyle,
 } from 'react-native';
-import type { SFSymbol } from 'sf-symbols-typescript';
 
 import type { BlurEffectType } from './getBlurBackgroundColor';
 
@@ -46,7 +48,7 @@ type IconSfSymbol = {
   /**
    * Name of the SF Symbol to use as the icon.
    */
-  name: SFSymbol;
+  name: SFSymbolProps['name'];
   /**
    * How to color the symbol.
    * - `monochrome`: Single color, using the tint color.

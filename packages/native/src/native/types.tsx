@@ -1,6 +1,6 @@
 import type { ColorValue } from 'react-native';
 
-import type { LocaleDirection } from '../types';
+import type { LocaleDirection, SFSymbolNames } from '../types';
 import type { FONT_WEIGHTS } from './constants';
 import type { MaterialSymbolName } from './MaterialSymbolData';
 
@@ -406,7 +406,9 @@ export type SFSymbolOptions = {
   /**
    * The name of the SF Symbol to display.
    */
-  name: import('sf-symbols-typescript').SFSymbol;
+  name:
+    | import('sf-symbols-typescript').SFSymbol
+    | Extract<keyof SFSymbolNames, string>;
   /**
    * The size of the symbol.
    *
