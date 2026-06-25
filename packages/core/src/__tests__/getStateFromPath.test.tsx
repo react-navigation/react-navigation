@@ -33,6 +33,48 @@ test('returns undefined for malformed encoded path param', () => {
   expect(getStateFromPath<object>('foo/%E0%A4%A', config)).toBeUndefined();
 });
 
+test('matches malformed encoded path against wildcard', () => {
+  const path = 'foo/%E0%A4%A';
+  const config = {
+    screens: {
+      Foo: 'foo/:id',
+      404: '*',
+    },
+  };
+
+  const state = {
+    routes: [{ name: '404', path }],
+  };
+
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+});
+
+test('matches malformed encoded first segment against wildcard', () => {
+  const path = '%E0%A4%A/bar';
+  const config = {
+    screens: {
+      Foo: 'foo/:id',
+      404: '*',
+    },
+  };
+
+  const state = {
+    routes: [{ name: '404', path }],
+  };
+
+  expect(getStateFromPath<object>(path, config)).toEqual(state);
+});
+
+test('returns undefined for malformed encoded first segment without wildcard', () => {
+  const config = {
+    screens: {
+      Foo: 'foo/:id',
+    },
+  };
+
+  expect(getStateFromPath<object>('%E0%A4%A/bar', config)).toBeUndefined();
+});
+
 test('converts path string to initial state', () => {
   const path = 'foo/bar/baz%20qux?author=jane%20%26%20co&valid=true';
   const state = {
