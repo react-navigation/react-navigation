@@ -6,3 +6,5 @@ allowBuilds:
   core-js: false
   esbuild: false
   unrs-resolver: false
+minimumReleaseAgeExclude:
+  - agent-device@0.18.0
