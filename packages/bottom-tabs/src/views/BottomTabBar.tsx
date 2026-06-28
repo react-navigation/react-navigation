@@ -480,6 +480,10 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
                   : `${label}, ${focused ? 'selected' : 'unselected'}`
                 : undefined;
 
+          // `tabBarIconSize` is only supported on Android, same as the native bar
+          const iconSize =
+            Platform.OS === 'android' ? options.tabBarIconSize : undefined;
+
           return (
             <NavigationProvider
               key={route.key}
@@ -512,6 +516,7 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
                 label={label}
                 labelVisibilityMode={tabBarLabelVisibilityMode}
                 labelStyle={options.tabBarLabelStyle}
+                iconSize={iconSize}
                 iconStyle={options.tabBarIconStyle}
                 style={[
                   sidebar

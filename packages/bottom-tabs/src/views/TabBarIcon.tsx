@@ -16,6 +16,10 @@ export type TabBarIconProps = {
   route: Route<string>;
   variant: 'uikit' | 'material';
   size: 'compact' | 'regular';
+  /**
+   * Explicit icon size (in dp) overriding the default for the variant/size.
+   */
+  iconSize?: number | undefined;
   badge?: string | number | undefined;
   badgeStyle?: StyleProp<TextStyle> | undefined;
   activeOpacity: number;
@@ -49,6 +53,7 @@ export function TabBarIcon({
   route: _,
   variant,
   size,
+  iconSize: iconSizeOverride,
   badge,
   badgeStyle,
   activeOpacity,
@@ -60,11 +65,22 @@ export function TabBarIcon({
   style,
 }: TabBarIconProps) {
   const iconSize =
-    variant === 'material'
+    iconSizeOverride ??
+    (variant === 'material'
       ? ICON_SIZE_MATERIAL
       : size === 'compact'
         ? ICON_SIZE_SQUARE_COMPACT
-        : ICON_SIZE_SQUARE;
+        : ICON_SIZE_SQUARE);
+
+  // Grow only the container's width to fit a wider icon (e.g. a logo); height
+  // stays the default so icons stay vertically aligned across tabs.
+  const sizedImage =
+    typeof icon === 'object' && icon != null && 'type' in icon
+      ? icon.type === 'image'
+        ? icon
+        : null
+      : null;
+  const boxWidth = sizedImage?.width ?? iconSizeOverride;
 
   // We render the icon twice at the same position on top of each other:
   // active and inactive one, so we can fade between them.
@@ -76,6 +92,7 @@ export function TabBarIcon({
           : size === 'compact'
             ? styles.wrapperUikitCompact
             : styles.wrapperUikit,
+        boxWidth != null && { width: boxWidth },
         style,
       ]}
     >
@@ -144,6 +161,7 @@ function renderIcon({
         return (
           <Image
             source={iconValue.source}
+            resizeMode="contain"
             style={{
               width: iconValue.width ?? size,
               height: iconValue.height ?? size,
