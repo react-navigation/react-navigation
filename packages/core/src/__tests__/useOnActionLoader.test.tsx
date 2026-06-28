@@ -1,8 +1,8 @@
 import { expect, jest, test } from '@jest/globals';
 import type { ParamListBase } from '@react-navigation/routers';
 import { CommonActions } from '@react-navigation/routers';
-import { act, render, waitFor } from '@testing-library/react-native';
-import type { ComponentType } from 'react';
+import { act, render } from '@testing-library/react-native';
+import * as React from 'react';
 import { Text } from 'react-native';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
@@ -18,36 +18,17 @@ const TestNavigator = (props: any) => {
     props
   );
 
-  return (
-    <NavigationContent>
-      {(() => {
-        const route = state.routes[state.index];
-        const descriptor = route ? descriptors[route.key] : undefined;
+  const route = state.routes[state.index];
+  const descriptor = route ? descriptors[route.key] : undefined;
 
-        if (descriptor == null) {
-          throw new Error('Missing descriptor for focused route.');
-        }
+  if (descriptor == null) {
+    throw new Error('Missing descriptor for focused route.');
+  }
 
-        return descriptor.render();
-      })()}
-    </NavigationContent>
-  );
+  return <NavigationContent>{descriptor.render()}</NavigationContent>;
 };
 
 const createTestNavigator = createNavigatorFactory(TestNavigator);
-
-async function renderWithNavigation(
-  Component: ComponentType,
-  navigation: ReturnType<typeof createNavigationContainerRef<ParamListBase>>
-) {
-  await render(
-    <BaseNavigationContainer ref={navigation}>
-      <Component />
-    </BaseNavigationContainer>
-  );
-
-  await waitFor(() => expect(navigation.isReady()).toBe(true));
-}
 
 const TestScreen = ({ route }: any) => {
   const isFocused = useIsFocused();
@@ -61,13 +42,7 @@ const TestScreen = ({ route }: any) => {
 };
 
 test('fires loader when an action navigates to a screen with UNSTABLE_loader', async () => {
-  const fn = jest.fn(
-    async (_options: {
-      name: string;
-      params: unknown;
-      signal: AbortSignal;
-    }) => {}
-  );
+  const fn = jest.fn(async (_options: { name: string; params: unknown }) => {});
 
   const Root = createTestNavigator({
     screens: {
@@ -82,7 +57,11 @@ test('fires loader when an action navigates to a screen with UNSTABLE_loader', a
   const Component = Root.getComponent();
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  await renderWithNavigation(Component, navigation);
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
 
   expect(fn).toHaveBeenCalledTimes(0);
 
@@ -94,18 +73,11 @@ test('fires loader when an action navigates to a screen with UNSTABLE_loader', a
   expect(fn).toHaveBeenCalledWith({
     name: 'Detail',
     params: { id: '42' },
-    signal: expect.any(AbortSignal),
   });
 });
 
 test('does not fire any loader when navigating to a screen without UNSTABLE_loader', async () => {
-  const fn = jest.fn(
-    async (_options: {
-      name: string;
-      params: unknown;
-      signal: AbortSignal;
-    }) => {}
-  );
+  const fn = jest.fn(async (_options: { name: string; params: unknown }) => {});
 
   const Root = createTestNavigator({
     screens: {
@@ -120,15 +92,19 @@ test('does not fire any loader when navigating to a screen without UNSTABLE_load
   const Component = Root.getComponent();
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  await renderWithNavigation(Component, navigation);
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
 
-  await waitFor(() => expect(fn).toHaveBeenCalledTimes(1));
+  expect(fn).toHaveBeenCalledTimes(0);
 
   await act(async () => {
     navigation.dispatch(CommonActions.navigate('Detail'));
   });
 
-  expect(fn).toHaveBeenCalledTimes(1);
+  expect(fn).toHaveBeenCalledTimes(0);
 });
 
 test('commits state immediately even when the loader is still pending', async () => {
@@ -149,7 +125,11 @@ test('commits state immediately even when the loader is still pending', async ()
   const Component = Root.getComponent();
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  await renderWithNavigation(Component, navigation);
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
 
   await act(async () => {
     navigation.dispatch(CommonActions.navigate('Detail'));
@@ -159,103 +139,12 @@ test('commits state immediately even when the loader is still pending', async ()
   expect(navigation.getCurrentRoute()?.name).toBe('Detail');
 });
 
-test('a second dispatch aborts the first loader signal', async () => {
-  const signals: AbortSignal[] = [];
-  const loader = jest.fn(async ({ signal }: { signal: AbortSignal }) => {
-    signals.push(signal);
-    return new Promise<void>(() => {});
-  });
-
-  const Root = createTestNavigator({
-    screens: {
-      Home: TestScreen,
-      A: { screen: TestScreen, UNSTABLE_loader: loader },
-      B: { screen: TestScreen, UNSTABLE_loader: loader },
-    },
-  });
-
-  const Component = Root.getComponent();
-  const navigation = createNavigationContainerRef<ParamListBase>();
-
-  await renderWithNavigation(Component, navigation);
-
-  await act(async () => {
-    navigation.dispatch(CommonActions.navigate('A'));
-  });
-  expect(signals).toHaveLength(1);
-
-  const firstSignal = signals[0];
-
-  if (firstSignal == null) {
-    throw new Error('Expected first loader signal.');
-  }
-
-  expect(firstSignal.aborted).toBe(false);
-
-  await act(async () => {
-    navigation.dispatch(CommonActions.navigate('B'));
-  });
-  expect(signals).toHaveLength(2);
-
-  const secondSignal = signals[1];
-
-  if (secondSignal == null) {
-    throw new Error('Expected second loader signal.');
-  }
-
-  expect(firstSignal.aborted).toBe(true);
-  expect(secondSignal.aborted).toBe(false);
-});
-
-test('fires the initial focused route loader on mount', async () => {
-  const fn = jest.fn(
-    async (_options: {
-      name: string;
-      params: unknown;
-      signal: AbortSignal;
-    }) => {}
-  );
-
-  const Root = createTestNavigator({
-    screens: {
-      Home: {
-        screen: TestScreen,
-        UNSTABLE_loader: fn,
-      },
-      Detail: TestScreen,
-    },
-  });
-
-  const Component = Root.getComponent();
-
-  await render(
-    <BaseNavigationContainer>
-      <Component />
-    </BaseNavigationContainer>
-  );
-
-  await waitFor(() => expect(fn).toHaveBeenCalledTimes(1));
-  expect(fn).toHaveBeenCalledWith({
-    name: 'Home',
-    params: undefined,
-    signal: expect.any(AbortSignal),
-  });
-});
-
-test('composes parent and nested loaders on dispatch', async () => {
+test('composes parent and initial child loaders on dispatch', async () => {
   const parentFn = jest.fn(
-    async (_options: {
-      name: string;
-      params: unknown;
-      signal: AbortSignal;
-    }) => {}
+    async (_options: { name: string; params: unknown }) => {}
   );
   const childFn = jest.fn(
-    async (_options: {
-      name: string;
-      params: unknown;
-      signal: AbortSignal;
-    }) => {}
+    async (_options: { name: string; params: unknown }) => {}
   );
 
   const Child = createTestNavigator({
@@ -280,12 +169,62 @@ test('composes parent and nested loaders on dispatch', async () => {
   const Component = Root.getComponent();
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  await renderWithNavigation(Component, navigation);
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
 
   await act(async () => {
-    navigation.dispatch(CommonActions.navigate('Nested', { screen: 'Albums' }));
+    navigation.dispatch(CommonActions.navigate('Nested'));
   });
 
   expect(parentFn).toHaveBeenCalledTimes(1);
   expect(childFn).toHaveBeenCalledTimes(1);
+});
+
+test('uses a parent Suspense boundary when the screen layout does not provide one', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+  const loader = jest.fn(async () => {
+    await promise;
+  });
+
+  const DetailScreen = () => {
+    React.use(promise);
+
+    return <Text>Detail</Text>;
+  };
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+      Detail: {
+        screen: DetailScreen,
+        UNSTABLE_loader: loader,
+      },
+    },
+  });
+
+  const Component = Root.getComponent();
+  const navigation = createNavigationContainerRef<ParamListBase>();
+  const root = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Component />
+      </React.Suspense>
+    </BaseNavigationContainer>
+  );
+
+  await act(async () => {
+    navigation.dispatch(CommonActions.navigate('Detail'));
+  });
+
+  expect(loader).toHaveBeenCalledTimes(1);
+  expect(root.getByText('Loading')).toBeTruthy();
+
+  await act(async () => {
+    resolve();
+  });
+
+  expect(root.getByText('Detail')).toBeTruthy();
 });

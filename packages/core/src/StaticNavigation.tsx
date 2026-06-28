@@ -380,17 +380,17 @@ export type StaticScreenConfig<
   navigationKey?: string;
 
   /**
-   * Loader function to be called when the screen is focused. This can be used to load data before the screen is rendered.
+   * Loader function to start loading data when the screen is focused.
+   * The navigation state is committed immediately, so this is intended to seed a cache that the screen reads during render.
    *
    * @example
    * ```js
-   * UNSTABLE_loader: ({ params, signal }) => loadProfile(params.id, { signal }),
+   * UNSTABLE_loader: ({ params }) => loadProfile(params.id),
    * ```
    */
   UNSTABLE_loader?: (options: {
     name: string;
     params: AnyToUnknown<Params>;
-    signal: AbortSignal;
   }) => Promise<void>;
 };
 
@@ -713,29 +713,7 @@ export function createComponentForStaticConfig<
           })
         : { ...rest.screenListeners, ...props.screenListeners };
 
-    const parent = React.use(StaticNavigationContext);
-    const abortControllerRef = React.useRef<AbortController | null>(null);
-    const isOutermost = parent == null;
-
-    React.useEffect(() => {
-      if (!isOutermost) {
-        return undefined;
-      }
-
-      return () => {
-        abortControllerRef.current?.abort();
-        abortControllerRef.current = null;
-      };
-    }, [isOutermost]);
-
-    const value = React.useMemo(
-      () => ({
-        tree,
-        abortControllerRef: parent?.abortControllerRef ?? abortControllerRef,
-        isOutermost,
-      }),
-      [parent, isOutermost]
-    );
+    const value = React.useMemo(() => ({ tree }), []);
 
     return (
       <StaticNavigationContext.Provider value={value}>

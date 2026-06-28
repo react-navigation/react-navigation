@@ -106,23 +106,15 @@ export function useOnAction<State extends NavigationState>({
 
               return true;
             }
+
             const loader = staticContext
               ? UNSTABLE_getLoaderForState(staticContext.tree, result)
               : undefined;
 
             onDispatchAction(action, false);
 
-            if (loader && staticContext) {
-              staticContext.abortControllerRef.current?.abort();
-              const controller = new AbortController();
-              staticContext.abortControllerRef.current = controller;
-              loader(controller.signal).catch(() => {});
-              React.startTransition(() => {
-                setState(result);
-              });
-            } else {
-              setState(result);
-            }
+            loader?.();
+            setState(result);
           } else {
             onDispatchAction(action, true);
           }
