@@ -94,6 +94,86 @@ test('shows the fallback when navigating to a suspending screen without a transi
   `);
 });
 
+test('shows the fallback when navigating to a lazy screen without a transition', async () => {
+  const { promise, resolve } = Promise.withResolvers<{
+    default: React.ComponentType;
+  }>();
+
+  const ScreenA = () => <Text>[screen-a]</Text>;
+  const ScreenB = () => <Text>[screen-b]</Text>;
+
+  const LazyScreenB = React.lazy(() => promise);
+
+  const LazyNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const root = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <React.Suspense fallback={<Text>[fallback]</Text>}>
+        <LazyNavigator>
+          <Screen name="A" component={ScreenA} />
+          <Screen name="B" component={LazyScreenB} />
+        </LazyNavigator>
+      </React.Suspense>
+    </BaseNavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-a]
+    </Text>
+  `);
+
+  await act(async () => {
+    navigation.navigate('B');
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <>
+      <Text
+        style={
+          {
+            "display": "none",
+          }
+        }
+      >
+        [screen-a]
+      </Text>
+      <Text>
+        [fallback]
+      </Text>
+    </>
+  `);
+
+  await act(async () => {
+    resolve({
+      default: ScreenB,
+    });
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-b]
+    </Text>
+  `);
+});
+
 test('keeps the previous screen visible when navigating with a transition', async () => {
   const { promise, resolve } = Promise.withResolvers<void>();
 
@@ -137,6 +217,77 @@ test('keeps the previous screen visible when navigating with a transition', asyn
   `);
 
   await act(async () => resolve());
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-b]
+    </Text>
+  `);
+});
+
+test('keeps the previous screen visible when navigating to a lazy screen with a transition', async () => {
+  const { promise, resolve } = Promise.withResolvers<{
+    default: React.ComponentType;
+  }>();
+
+  const ScreenA = () => <Text>[screen-a]</Text>;
+  const ScreenB = () => <Text>[screen-b]</Text>;
+
+  const LazyScreenB = React.lazy(() => promise);
+
+  const LazyNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const root = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <React.Suspense fallback={<Text>[fallback]</Text>}>
+        <LazyNavigator>
+          <Screen name="A" component={ScreenA} />
+          <Screen name="B" component={LazyScreenB} />
+        </LazyNavigator>
+      </React.Suspense>
+    </BaseNavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-a]
+    </Text>
+  `);
+
+  await act(async () => {
+    React.startTransition(() => {
+      navigation.navigate('B');
+    });
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-a]
+    </Text>
+  `);
+
+  await act(async () => {
+    resolve({
+      default: ScreenB,
+    });
+  });
 
   expect(root).toMatchInlineSnapshot(`
     <Text>
