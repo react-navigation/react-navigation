@@ -36,7 +36,7 @@ beforeEach(() => {
     window = require('../__stubs__/window').window;
   });
 
-  Object.assign(global, window);
+  Object.defineProperties(global, Object.getOwnPropertyDescriptors(window));
 });
 
 afterEach(() => {
@@ -638,6 +638,138 @@ test('replaces browser history when params change without route change', async (
   await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
+});
+
+test('preserves browser hash when params change without route change', async () => {
+  const createStackNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route, i) => (
+          <div key={route.key} aria-current={state.index === i || undefined}>
+            {descriptors[route.key]?.render()}
+          </div>
+        ))}
+      </NavigationContent>
+    );
+  });
+
+  const Stack = createStackNavigator();
+
+  const TestScreen = ({ route }: any): any => (
+    <Text>
+      {route.name} {JSON.stringify(route.params)}
+    </Text>
+  );
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: ':user',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('Profile', { user: 'jane' }));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/jane'));
+
+  window.history.replaceState(window.history.state, '', '/jane#details');
+
+  await act(() =>
+    navigation.dispatch(CommonActions.setParams({ user: 'john' }))
+  );
+
+  await waitFor(() => {
+    expect(window.location.pathname).toBe('/john');
+    expect(window.location.hash).toBe('#details');
+  });
+});
+
+test("doesn't reset state when URL parses to routes not in root navigator", async () => {
+  const createStackNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route, i) => (
+          <div key={route.key} aria-current={state.index === i || undefined}>
+            {descriptors[route.key]?.render()}
+          </div>
+        ))}
+      </NavigationContent>
+    );
+  });
+
+  const Stack = createStackNavigator();
+
+  const TestScreen = ({ route }: any): any => (
+    <Text>
+      {route.name} {JSON.stringify(route.params)}
+    </Text>
+  );
+
+  const linking = {
+    getStateFromPath() {
+      return {
+        routes: [{ name: 'Missing' }],
+      };
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const onStateChange = jest.fn();
+
+  await render(
+    <NavigationContainer
+      ref={navigation}
+      linking={linking}
+      onStateChange={onStateChange}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  expect(window.location.pathname).toBe('/Home');
+
+  window.history.pushState(null, '', '/missing');
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/Home'));
+
+  onStateChange.mockClear();
+
+  await act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/missing'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  expect(onStateChange).not.toHaveBeenCalled();
 });
 
 test('replaces browser history on resetRoot', async () => {
