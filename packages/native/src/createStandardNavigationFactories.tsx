@@ -57,9 +57,11 @@ type StandardNavigationTypeBagFor<
   TypeBag extends StandardNavigationTypeBagBase,
   ParamList extends ParamListBase,
   NavigatorID extends string | undefined = string | undefined,
+  NavigatorProps extends object = {},
 > = TypeBag & {
   ParamList: ParamList;
   NavigatorID: NavigatorID;
+  Navigator: React.ComponentType<NavigatorProps>;
 };
 
 type StandardNavigation<TypeBag extends StandardNavigationTypeBagBase> =
@@ -73,40 +75,61 @@ type StandardNavigation<TypeBag extends StandardNavigationTypeBagBase> =
 
 type StandardNavigationPropsMapper<
   TypeBag extends StandardNavigationTypeBagBase,
-  NavigatorProps extends object,
+  MapperProps extends object,
 > = (props: {
   state: StandardNavigationTypeBagFor<TypeBag, ParamListBase>['State'];
   navigation: StandardNavigation<TypeBag>;
-}) => Partial<NavigatorProps>;
+}) => MapperProps;
 
 type StandardNavigationDefaultBag<
   TypeBag extends StandardNavigationTypeBagBase,
-> = StandardNavigationTypeBagFor<TypeBag, ParamListBase, string | undefined>;
+  NavigatorProps extends object,
+> = StandardNavigationTypeBagFor<
+  TypeBag,
+  ParamListBase,
+  string | undefined,
+  NavigatorProps
+>;
 
 type StandardNavigationFactories<
   TypeBag extends StandardNavigationTypeBagBase,
+  NavigatorProps extends object,
 > = {
-  createNavigator: StandardNavigationCreateNavigator<TypeBag>;
-  createScreen: StaticScreenFactory<StandardNavigationDefaultBag<TypeBag>>;
+  createNavigator: StandardNavigationCreateNavigator<TypeBag, NavigatorProps>;
+  createScreen: StaticScreenFactory<
+    StandardNavigationDefaultBag<TypeBag, NavigatorProps>
+  >;
 };
 
 export type StandardNavigationCreateNavigator<
   TypeBag extends StandardNavigationTypeBagBase,
+  NavigatorProps extends object,
 > = {
   <
     const ParamList extends ParamListBase,
     const NavigatorID extends string | undefined = string | undefined,
   >(): TypedNavigator<
-    StandardNavigationTypeBagFor<TypeBag, ParamList, NavigatorID>,
+    StandardNavigationTypeBagFor<
+      TypeBag,
+      ParamList,
+      NavigatorID,
+      NavigatorProps
+    >,
     undefined
   >;
-  <const Config extends StaticConfig<StandardNavigationDefaultBag<TypeBag>>>(
-    config: Config & StaticConfig<StandardNavigationDefaultBag<TypeBag>>
+  <
+    const Config extends StaticConfig<
+      StandardNavigationDefaultBag<TypeBag, NavigatorProps>
+    >,
+  >(
+    config: Config &
+      StaticConfig<StandardNavigationDefaultBag<TypeBag, NavigatorProps>>
   ): TypedNavigator<
     StandardNavigationTypeBagFor<
       TypeBag,
       StaticParamList<{ config: Config }> & ParamListBase,
-      string | undefined
+      string | undefined,
+      NavigatorProps
     >,
     Config
   >;
@@ -134,12 +157,13 @@ export interface StandardNavigationTypeBagBase extends NavigatorTypeBagBase {
 export function createStandardNavigationFactories<
   TypeBag extends StandardNavigationTypeBagBase,
   NavigatorProps extends object = {},
+  MapperProps extends object = {},
 >(
   navigator: ReturnType<
     typeof createStandardNavigator<
       TypeBag['ScreenOptions'],
       StandardEventMap<TypeBag['EventMap']>,
-      NavigatorProps
+      NavigatorProps & MapperProps
     >
   >,
   router: RouterFactory<
@@ -147,8 +171,8 @@ export function createStandardNavigationFactories<
     NavigationAction,
     TypeBag['RouterOptions']
   >,
-  mapper?: StandardNavigationPropsMapper<TypeBag, NavigatorProps>
-): StandardNavigationFactories<TypeBag> {
+  mapper?: StandardNavigationPropsMapper<TypeBag, MapperProps>
+): StandardNavigationFactories<TypeBag, NavigatorProps> {
   const { type, version, NavigatorContent } = navigator;
 
   if (type !== 'standard') {
@@ -170,7 +194,7 @@ export function createStandardNavigationFactories<
   >;
 
   function StandardNavigationNavigator(
-    props: StandardNavigationNavigatorProps<TypeBag>
+    props: StandardNavigationNavigatorProps<TypeBag> & NavigatorProps
   ) {
     const builder = useNavigationBuilder<
       Bag['State'],
@@ -269,7 +293,7 @@ export function createStandardNavigationFactories<
     return (
       <builder.NavigationContent>
         <NavigatorContent
-          {...(rest as NavigatorProps)}
+          {...(rest as NavigatorProps & MapperProps)}
           {...mapped}
           state={state}
           descriptors={descriptors}
@@ -282,10 +306,12 @@ export function createStandardNavigationFactories<
 
   const createNavigator = createNavigatorFactory(
     StandardNavigationNavigator
-  ) as StandardNavigationCreateNavigator<TypeBag>;
+  ) as StandardNavigationCreateNavigator<TypeBag, NavigatorProps>;
 
   const createScreen =
-    createScreenFactory<StandardNavigationDefaultBag<TypeBag>>();
+    createScreenFactory<
+      StandardNavigationDefaultBag<TypeBag, NavigatorProps>
+    >();
 
   return {
     createNavigator,

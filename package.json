@@ -55,7 +55,7 @@
       "<rootDir>/jest/setup.js"
     ],
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context)/)"
+      "node_modules/(?!((jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|standard-navigation)/)"
     ],
     "moduleNameMapper": {
       "@react-navigation/([^/]+)": "<rootDir>/packages/$1/src",
