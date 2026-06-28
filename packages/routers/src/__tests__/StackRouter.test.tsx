@@ -2635,6 +2635,31 @@ test('moves retained routes to inactive routes on goBack', () => {
   });
 });
 
+test("doesn't go back from the first route", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        retainedRouteKeys: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [{ key: 'baz', name: 'baz' }],
+      },
+      CommonActions.goBack(),
+      options
+    )
+  ).toBeNull();
+});
+
 test('handles goBack action with route.history on a single route', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
@@ -4049,6 +4074,31 @@ test('adds preloaded route with preload', () => {
       { key: 'bar-1', name: 'bar', params: { color: 'test' } },
     ],
   });
+});
+
+test("doesn't preload nonexistent screen", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        retainedRouteKeys: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [{ key: 'baz', name: 'baz' }],
+      },
+      CommonActions.preload('far', { answer: 42 }),
+      options
+    )
+  ).toBeNull();
 });
 
 test('adds preloaded route with preload when an active route has the same ID', () => {

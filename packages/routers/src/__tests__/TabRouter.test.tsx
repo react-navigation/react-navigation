@@ -278,6 +278,42 @@ test("doesn't rehydrate state if it's not stale", () => {
   ).toBe(state);
 });
 
+test('removes invalid preloaded route keys on rehydration', () => {
+  const router = TabRouter({});
+
+  expect(
+    router.getRehydratedState(
+      {
+        index: 0,
+        routes: [
+          { key: 'bar-0', name: 'bar' },
+          { key: 'baz-0', name: 'baz' },
+          { key: 'qux-0', name: 'qux' },
+        ],
+        preloadedRouteKeys: ['baz-0', 'missing'],
+      },
+      {
+        routeNames: ['bar', 'baz', 'qux'],
+        routeParamList: {},
+        routeGetIdList: {},
+      }
+    )
+  ).toEqual({
+    index: 0,
+    key: 'tab-1',
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-0', name: 'baz' },
+      { key: 'qux-0', name: 'qux' },
+    ],
+    history: [{ type: 'route', key: 'bar-0' }],
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['baz-0'],
+  });
+});
+
 test('restores correct history on rehydrating with backBehavior: order', () => {
   const router = TabRouter({ backBehavior: 'order' });
 
@@ -2333,6 +2369,36 @@ test('adds route key to preloadedRouteKeys with preload', () => {
     ],
     history: [{ type: 'route', key: 'baz' }],
   });
+});
+
+test("doesn't preload nonexistent screen", () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        preloadedRouteKeys: [],
+        key: 'root',
+        index: 0,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+          { key: 'qux', name: 'qux' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      CommonActions.preload('far', { answer: 42 }),
+      options
+    )
+  ).toBeNull();
 });
 
 test('updates an existing route with preload when the ID changes', () => {
