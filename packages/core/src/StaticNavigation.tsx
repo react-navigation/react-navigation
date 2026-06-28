@@ -377,6 +377,19 @@ export type StaticScreenConfig<
    * Optional key for this screen.
    */
   navigationKey?: string;
+
+  /**
+   * Loader function to be called when the screen is focused. This can be used to load data before the screen is rendered.
+   *
+   * @example
+   * ```js
+   * UNSTABLE_loader: ({ params }) => loadProfile(params.id),
+   * ```
+   */
+  UNSTABLE_loader?: (options: {
+    name: string;
+    params: AnyToUnknown<Params>;
+  }) => Promise<void>;
 };
 
 export type StaticScreenFactory<in out Bag extends NavigatorTypeBagBase> = <
@@ -715,7 +728,7 @@ export function createComponentForStaticConfig<
   return NavigatorComponent;
 }
 
-type TreeForPathConfig = {
+export type TreeForPathConfig = {
   config: ConfigForPathConfig;
 };
 
@@ -737,8 +750,12 @@ type ScreenForPathConfig =
   | ScreenValueForPathConfig
   | {
       screen: ScreenValueForPathConfig;
+      initialParams?: object;
       linking?: LinkingForPathConfig;
+      UNSTABLE_loader?: unknown;
     };
+
+export type StaticScreenPathConfig = ScreenForPathConfig;
 
 type PathConfigMapForStaticNavigation = Record<
   string,
