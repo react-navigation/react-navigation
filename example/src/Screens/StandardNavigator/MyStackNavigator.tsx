@@ -24,66 +24,90 @@ export type MyStackEventMap = {
 };
 
 export type MyStackNavigatorProps = {
-  preloadedCount: number;
+  variant: 'compact' | 'regular';
   style?: StyleProp<ViewStyle>;
+};
+
+export type MyStackMapperProps = {
+  preloadedCount: number;
 };
 
 export const MyStackNavigator = createStandardNavigator<
   MyStackOptions,
   MyStackEventMap,
-  MyStackNavigatorProps
->(({ state, descriptors, actions, emitter, preloadedCount, style }) => {
-  const insets = useSafeAreaInsets();
-  const countRef = React.useRef(0);
+  MyStackNavigatorProps & MyStackMapperProps
+>(
+  ({
+    state,
+    descriptors,
+    actions,
+    emitter,
+    preloadedCount,
+    style,
+    variant,
+  }) => {
+    const insets = useSafeAreaInsets();
+    const countRef = React.useRef(0);
 
-  return (
-    <View style={[styles.container, style]}>
-      {state.routes.map((route) => {
-        const isFocused = route.key === state.routes[state.index]?.key;
-        const descriptor = descriptors[route.key];
+    return (
+      <View style={[styles.container, style]}>
+        {state.routes.map((route) => {
+          const isFocused = route.key === state.routes[state.index]?.key;
+          const descriptor = descriptors[route.key];
 
-        return (
-          <View
-            key={route.key}
-            style={[styles.screen, { display: isFocused ? 'flex' : 'none' }]}
-          >
-            <View style={[{ height: insets.top }, styles.inset]} />
-            <View style={styles.header}>
-              {state.index > 0 ? (
-                <Pressable onPress={() => actions.back()} style={styles.button}>
-                  <Text style={styles.label}>👈</Text>
-                </Pressable>
-              ) : null}
-              <Text style={styles.title}>
-                {descriptor?.options.title ?? route.name}
-              </Text>
-              <View style={styles.right}>
-                {preloadedCount > 0 ? <Text>⌛ ({preloadedCount})</Text> : null}
-                {descriptor?.options.rightButtonTitle ? (
+          return (
+            <View
+              key={route.key}
+              style={[styles.screen, { display: isFocused ? 'flex' : 'none' }]}
+            >
+              <View style={[{ height: insets.top }, styles.inset]} />
+              <View
+                style={[
+                  styles.header,
+                  variant === 'compact' && styles.headerCompact,
+                ]}
+              >
+                {state.index > 0 ? (
                   <Pressable
-                    onPress={() => {
-                      emitter.emit({
-                        type: 'rightButtonPress',
-                        data: { count: ++countRef.current },
-                        canPreventDefault: true,
-                      });
-                    }}
+                    onPress={() => actions.back()}
                     style={styles.button}
                   >
-                    <Text style={styles.label}>
-                      {descriptor.options.rightButtonTitle}
-                    </Text>
+                    <Text style={styles.label}>👈</Text>
                   </Pressable>
                 ) : null}
+                <Text style={styles.title}>
+                  {descriptor?.options.title ?? route.name}
+                </Text>
+                <View style={styles.right}>
+                  {preloadedCount > 0 ? (
+                    <Text>⌛ ({preloadedCount})</Text>
+                  ) : null}
+                  {descriptor?.options.rightButtonTitle ? (
+                    <Pressable
+                      onPress={() => {
+                        emitter.emit({
+                          type: 'rightButtonPress',
+                          data: { count: ++countRef.current },
+                          canPreventDefault: true,
+                        });
+                      }}
+                      style={styles.button}
+                    >
+                      <Text style={styles.label}>
+                        {descriptor.options.rightButtonTitle}
+                      </Text>
+                    </Pressable>
+                  ) : null}
+                </View>
               </View>
+              {descriptor?.render()}
             </View>
-            {descriptor?.render()}
-          </View>
-        );
-      })}
-    </View>
-  );
-});
+          );
+        })}
+      </View>
+    );
+  }
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -105,6 +129,9 @@ const styles = StyleSheet.create({
     height: 56,
     paddingHorizontal: 12,
     backgroundColor: 'tomato',
+  },
+  headerCompact: {
+    height: 44,
   },
   title: {
     fontSize: 16,

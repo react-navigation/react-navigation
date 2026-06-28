@@ -16,6 +16,7 @@ import {
   type MyStackTypeBag,
 } from './createMyStackNavigator';
 import {
+  type MyStackMapperProps,
   MyStackNavigator,
   type MyStackNavigatorProps,
   type MyStackOptions,
@@ -153,11 +154,13 @@ import { MyStack } from './MyStackStatic';
    * Static navigator accepts `screenOptions` typed as `MyStackOptions` (object form)
    */
   createMyStackNavigator({
+    variant: 'regular',
     screens: { StandardStaticHome: TypeCheckProfileScreen },
     screenOptions: { title: 'Default title' },
   });
 
   createMyStackNavigator({
+    variant: 'regular',
     screens: { StandardStaticHome: TypeCheckProfileScreen },
     screenOptions: {
       // @ts-expect-error `subtitle` isn't a valid option for MyStack.
@@ -169,6 +172,7 @@ import { MyStack } from './MyStackStatic';
    * Static navigator accepts `screenOptions` (function form)
    */
   createMyStackNavigator({
+    variant: 'regular',
     screens: { StandardStaticHome: TypeCheckProfileScreen },
     screenOptions: ({ navigation }) => {
       expectTypeOf(navigation.setOptions)
@@ -183,6 +187,7 @@ import { MyStack } from './MyStackStatic';
    * Static navigator accepts `screenListeners` for custom events (object form)
    */
   createMyStackNavigator({
+    variant: 'regular',
     screens: { StandardStaticHome: TypeCheckProfileScreen },
     screenListeners: {
       rightButtonPress: (event) => {
@@ -197,6 +202,7 @@ import { MyStack } from './MyStackStatic';
    * Static navigator accepts `screenListeners` for custom events (function form)
    */
   createMyStackNavigator({
+    variant: 'regular',
     screens: { StandardStaticHome: TypeCheckProfileScreen },
     screenListeners: ({ navigation }) => {
       expectTypeOf(navigation.setOptions)
@@ -212,6 +218,16 @@ import { MyStack } from './MyStackStatic';
       };
     },
   });
+
+  /**
+   * Required navigator props must be provided in the static config
+   */
+  createMyStackNavigator(
+    // @ts-expect-error `variant` is a required navigator prop
+    {
+      screens: { StandardStaticHome: TypeCheckProfileScreen },
+    }
+  );
 
   /**
    * Dynamic factory: `createMyStackNavigator<ParamList>()`
@@ -235,6 +251,20 @@ import { MyStack } from './MyStackStatic';
   expectTypeOf(DynamicMyStack.Screen).parameter(0).toExtend<{
     name?: keyof DynamicMyStackParamList;
   }>();
+
+  /**
+   * Navigator component exposes the consumer props: required `variant`, optional `style`
+   */
+  expectTypeOf<
+    Pick<DynamicMyStackNavigatorProps, keyof MyStackNavigatorProps>
+  >().toEqualTypeOf<MyStackNavigatorProps>();
+
+  /**
+   * Mapper-supplied props are not exposed on the navigator component
+   */
+  expectTypeOf<DynamicMyStackNavigatorProps>().not.toHaveProperty(
+    'preloadedCount'
+  );
 
   /**
    * Dynamic `<Navigator>` `screenOptions` accepts `MyStackOptions` (object + function form)
@@ -353,6 +383,7 @@ import { MyStack } from './MyStackStatic';
 
   const dynamicNavigator = (
     <DynamicMyStack.Navigator
+      variant="regular"
       initialRouteName="DynamicHome"
       screenOptions={dynamicScreenOptionsFn}
       screenListeners={dynamicScreenListeners}
@@ -371,20 +402,24 @@ import { MyStack } from './MyStackStatic';
   );
 
   /**
-   * `createStandardNavigationFactories` validates mapper return against `NavigatorProps`
+   * `createStandardNavigationFactories` validates mapper return against `MapperProps`
    */
-  createStandardNavigationFactories<MyStackTypeBag, MyStackNavigatorProps>(
-    MyStackNavigator,
-    StackRouter,
-    ({ state }) => ({
-      preloadedCount: state.routes.slice(state.index + 1).length,
-    })
-  );
+  createStandardNavigationFactories<
+    MyStackTypeBag,
+    MyStackNavigatorProps,
+    MyStackMapperProps
+  >(MyStackNavigator, StackRouter, ({ state }) => ({
+    preloadedCount: state.routes.slice(state.index + 1).length,
+  }));
 
-  createStandardNavigationFactories<MyStackTypeBag, MyStackNavigatorProps>(
+  createStandardNavigationFactories<
+    MyStackTypeBag,
+    MyStackNavigatorProps,
+    MyStackMapperProps
+  >(
     MyStackNavigator,
     StackRouter,
-    // @ts-expect-error Mapped props must be keys from MyStackNavigatorProps.
+    // @ts-expect-error Mapped props must be keys from MyStackMapperProps.
     () => ({ label: 'Invalid mapped prop' })
   );
 
