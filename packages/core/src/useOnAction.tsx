@@ -13,7 +13,7 @@ import {
   type ChildBeforeRemoveListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
-import { StaticNavigationContext } from './StaticNavigationContext';
+import { StaticTreeContext } from './StaticTreeContext';
 import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 import { shouldPreventRemove, useOnPreventRemove } from './useOnPreventRemove';
@@ -55,7 +55,7 @@ export function useOnAction<State extends NavigationState>({
     onDispatchAction,
   } = React.use(NavigationBuilderContext);
 
-  const staticContext = React.use(StaticNavigationContext);
+  const tree = React.use(StaticTreeContext);
 
   const routerConfigOptionsRef =
     React.useRef<RouterConfigOptions>(routerConfigOptions);
@@ -107,8 +107,8 @@ export function useOnAction<State extends NavigationState>({
               return true;
             }
 
-            const loader = staticContext
-              ? UNSTABLE_getLoaderForState(staticContext.tree, result)
+            const loader = tree
+              ? UNSTABLE_getLoaderForState(tree, result)
               : undefined;
 
             onDispatchAction(action, false);
@@ -164,7 +164,7 @@ export function useOnAction<State extends NavigationState>({
       onRouteFocusParent,
       router,
       setState,
-      staticContext,
+      tree,
     ]
   );
 
