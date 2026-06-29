@@ -92,6 +92,7 @@ function DetailsScreen() {
 }
 
 export const MyStack = createMyStackNavigator({
+  variant: 'regular',
   screenListeners: {
     rightButtonPress: (event) => {
       alert(`Right button pressed (${event.data.count})`);

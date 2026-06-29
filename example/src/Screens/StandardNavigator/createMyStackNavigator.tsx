@@ -12,6 +12,7 @@ import {
 
 import {
   type MyStackEventMap,
+  type MyStackMapperProps,
   MyStackNavigator,
   type MyStackNavigatorProps,
   type MyStackOptions,
@@ -48,10 +49,10 @@ export interface MyStackTypeBag extends StandardNavigationTypeBagBase {
 export const {
   createNavigator: createMyStackNavigator,
   createScreen: createMyStackScreen,
-} = createStandardNavigationFactories<MyStackTypeBag, MyStackNavigatorProps>(
-  MyStackNavigator,
-  StackRouter,
-  ({ state }) => ({
-    preloadedCount: state.routes.slice(state.index + 1).length,
-  })
-);
+} = createStandardNavigationFactories<
+  MyStackTypeBag,
+  MyStackNavigatorProps,
+  MyStackMapperProps
+>(MyStackNavigator, StackRouter, ({ state }) => ({
+  preloadedCount: state.routes.slice(state.index + 1).length,
+}));

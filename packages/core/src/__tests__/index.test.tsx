@@ -1,4 +1,4 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   CommonActions,
   type NavigationAction,
@@ -21,6 +21,10 @@ import { MockRouter, MockRouterKey } from './__fixtures__/MockRouter';
 
 beforeEach(() => {
   MockRouterKey.current = 0;
+});
+
+afterEach(() => {
+  jest.resetAllMocks();
 });
 
 test('initializes state for a navigator on navigation', async () => {
@@ -583,8 +587,6 @@ test("doesn't update state if action wasn't handled", async () => {
       "The action 'INVALID' was not handled by any navigator."
     )
   );
-
-  spy.mockRestore();
 });
 
 test('cleans up state when the navigator unmounts', async () => {
@@ -2982,8 +2984,6 @@ test('restores previously discarded state when route names change after navigati
     )
   );
 
-  spy.mockRestore();
-
   expect(onStateChange).toHaveBeenCalledTimes(0);
   expect(root).toMatchInlineSnapshot(`
     <Text>
@@ -3110,8 +3110,6 @@ test('restores previously discarded state when route names change after navigati
       'The action \'NAVIGATE\' with payload {"name":"qux"} was not handled by any navigator.'
     )
   );
-
-  spy.mockRestore();
 
   expect(onStateChange).toHaveBeenCalledTimes(0);
   expect(navigation.getRootState()).toEqual({
@@ -3783,6 +3781,64 @@ test('preserves order of screens in state with numeric names', async () => {
   expect(navigation.getRootState().routeNames).toEqual(['4', '7', '1']);
 });
 
+test('removes route when screen navigationKey changes', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ navigationKey }: { navigationKey: string }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo" component={TestScreen} />
+        <Screen
+          name="bar"
+          navigationKey={navigationKey}
+          component={TestScreen}
+        />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<Test navigationKey="a" />);
+
+  await act(() => navigation.navigate('bar'));
+
+  expect(root).toMatchInlineSnapshot(`
+<Text>
+  [
+  bar
+  ]
+</Text>
+`);
+
+  await root.rerender(<Test navigationKey="b" />);
+
+  expect(root).toMatchInlineSnapshot(`
+<Text>
+  [
+  foo
+  ]
+</Text>
+`);
+});
+
 test("throws if navigator doesn't have any screens", async () => {
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);
@@ -3897,7 +3953,8 @@ test('throws when undefined component is a direct children', async () => {
 
   const Undefined = undefined;
 
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  jest.spyOn(console, 'error').mockImplementation(() => {});
+
   const element = (
     <BaseNavigationContainer>
       <TestNavigator>
@@ -3906,8 +3963,6 @@ test('throws when undefined component is a direct children', async () => {
       </TestNavigator>
     </BaseNavigationContainer>
   );
-
-  spy.mockRestore();
 
   await expect(render(element)).rejects.toThrow(
     "A navigator can only contain 'Screen', 'Group' or 'React.Fragment' as its direct children (found 'undefined' for the screen 'foo')"
@@ -4059,6 +4114,46 @@ test('throws if invalid name is passed to Screen', async () => {
   );
 });
 
+test('throws if invalid navigationKey is passed to Screen', async () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" navigationKey="" component={React.Fragment} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await expect(render(element)).rejects.toThrow(
+    `Got an invalid 'navigationKey' prop ("") for the screen 'foo'. It must be a non-empty string or 'undefined'.`
+  );
+});
+
+test('throws if invalid navigationKey is passed to Group', async () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const element = (
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Group navigationKey="">
+          <Screen name="foo" component={React.Fragment} />
+        </Group>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await expect(render(element)).rejects.toThrow(
+    `Got an invalid 'navigationKey' prop ("") for the group. It must be a non-empty string or 'undefined'.`
+  );
+});
+
 test('throws if both children and component are passed', async () => {
   const TestNavigator = (props: any) => {
     useNavigationBuilder(MockRouter, props);
@@ -4164,6 +4259,54 @@ test('throws descriptive error for invalid screen component', async () => {
 
   await expect(render(element)).rejects.toThrow(
     "Got an invalid value for 'component' prop for the screen 'foo'. It must be a valid React Component."
+  );
+});
+
+test('warns for inline function passed as screen component', async () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  await render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={() => null} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(warn).toHaveBeenCalledWith(
+    expect.stringContaining(
+      "Looks like you're passing an inline function for 'component' prop for the screen 'foo'"
+    )
+  );
+});
+
+test('warns for lower case screen component name', async () => {
+  const TestNavigator = (props: any) => {
+    useNavigationBuilder(MockRouter, props);
+    return null;
+  };
+
+  const fooScreen = () => null;
+
+  const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  await render(
+    <BaseNavigationContainer>
+      <TestNavigator>
+        <Screen name="foo" component={fooScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(warn).toHaveBeenCalledWith(
+    expect.stringContaining(
+      "Got a component with the name 'fooScreen' for the screen 'foo'"
+    )
   );
 });
 

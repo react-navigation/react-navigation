@@ -14,6 +14,8 @@ import { Button } from '@react-navigation/elements';
 import {
   type CompositeNavigationProp,
   type CompositeScreenProps,
+  createNavigatorFactory,
+  type DefaultNavigatorOptions,
   type DrawerNavigationState,
   type GenericNavigation,
   Link,
@@ -26,11 +28,13 @@ import {
   type NavigationRoute,
   type NavigationState,
   type NavigatorScreenParams,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type RootParamList,
   type Route,
   type RouteForName,
   type RouteProp,
+  type StackActionHelpers,
   type StackNavigationState,
   type Theme,
   useLinkProps,
@@ -1380,4 +1384,39 @@ useNavigationState('Invalid', (state) => state.index);
   };
 
   <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+/**
+ * Check for required props on the navigator
+ */
+{
+  const MyNavigator = (
+    _props: {
+      variant: 'compact' | 'regular';
+    } & DefaultNavigatorOptions<
+      ParamListBase,
+      StackNavigationState<ParamListBase>,
+      {},
+      {},
+      unknown
+    >
+  ) => null;
+
+  interface MyTypeBag extends NavigatorTypeBagBase {
+    State: StackNavigationState<this['ParamList']>;
+    ActionHelpers: StackActionHelpers<this['ParamList']>;
+    Navigator: typeof MyNavigator;
+  }
+
+  const createMyNavigator = createNavigatorFactory<MyTypeBag>(MyNavigator);
+
+  const MyStack = createMyNavigator<{ Home: undefined }>();
+
+  void MyStack;
+
+  expectTypeOf<
+    Pick<React.ComponentProps<typeof MyStack.Navigator>, 'variant'>
+  >().toEqualTypeOf<{
+    variant: 'compact' | 'regular';
+  }>();
 }

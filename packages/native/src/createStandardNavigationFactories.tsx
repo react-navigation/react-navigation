@@ -60,12 +60,13 @@ type StandardNavigationMapperProps<
 export function createStandardNavigationFactories<
   TypeBag extends StandardNavigationTypeBagBase,
   NavigatorProps extends object = {},
+  MapperProps extends object = {},
 >(
   navigator: ReturnType<
     typeof createStandardNavigator<
       TypeBag['ScreenOptions'],
       StandardEventMap<TypeBag['EventMap']>,
-      NavigatorProps
+      NavigatorProps & MapperProps
     >
   >,
   router: RouterFactory<
@@ -73,9 +74,7 @@ export function createStandardNavigationFactories<
     NavigationAction,
     TypeBag['RouterOptions']
   >,
-  mapper?: (
-    props: StandardNavigationMapperProps<TypeBag>
-  ) => Partial<NavigatorProps>
+  mapper?: (props: StandardNavigationMapperProps<TypeBag>) => MapperProps
 ) {
   const { type, version, NavigatorContent } = navigator;
 
@@ -194,7 +193,7 @@ export function createStandardNavigationFactories<
     return (
       <builder.NavigationContent>
         <NavigatorContent
-          {...(rest as NavigatorProps)}
+          {...(rest as NavigatorProps & MapperProps)}
           {...mapped}
           state={state}
           descriptors={descriptors}
@@ -205,9 +204,11 @@ export function createStandardNavigationFactories<
     );
   }
 
-  const createNavigator = createNavigatorFactory<TypeBag>(
-    StandardNavigationNavigator
-  );
+  const createNavigator = createNavigatorFactory<
+    TypeBag & {
+      Navigator: React.ComponentType<NavigatorProps>;
+    }
+  >(StandardNavigationNavigator);
 
   const createScreen = createScreenFactory<TypeBag>();
 
