@@ -480,6 +480,7 @@ export function BottomTabViewNative({
             tabBarSelectionEnabled,
             tabBarBadgeStyle,
             tabBarIcon,
+            tabBarIconSize,
             tabBarBadge,
             tabBarSystemItem,
             tabBarBlurEffect = dark ? 'systemMaterialDark' : 'systemMaterial',
@@ -593,6 +594,7 @@ export function BottomTabViewNative({
               android={{
                 icon: icon?.android ?? icon?.shared,
                 selectedIcon: selectedIcon?.android ?? selectedIcon?.shared,
+                drawableIconSize: tabBarIconSize,
                 standardAppearance: {
                   tabBarBackgroundColor:
                     tabBarBackgroundColor ?? backgroundColor,
@@ -604,6 +606,10 @@ export function BottomTabViewNative({
                   tabBarItemActiveIndicatorColor: activeIndicatorColor,
                   tabBarItemActiveIndicatorEnabled:
                     currentOptions?.tabBarActiveIndicatorEnabled,
+                  tabBarItemActiveIndicatorWidth:
+                    currentOptions?.tabBarActiveIndicatorWidth,
+                  tabBarItemActiveIndicatorHeight:
+                    currentOptions?.tabBarActiveIndicatorHeight,
                   tabBarItemTitleFontFamily: fontFamily,
                   tabBarItemTitleFontWeight: fontWeight,
                   tabBarItemTitleSmallLabelFontSize: fontSize,
@@ -746,7 +752,16 @@ function getPlatformIcon(icon: Icon): PlatformIcon {
         },
         shared: undefined,
       };
-    case 'image':
+    case 'image': {
+      // A `{ uri: 'name' }` source maps to an Android drawable by name.
+      const drawableName =
+        typeof icon.source === 'object' &&
+        icon.source != null &&
+        !Array.isArray(icon.source) &&
+        typeof icon.source.uri === 'string'
+          ? icon.source.uri
+          : undefined;
+
       return {
         ios:
           icon.tinted === false
@@ -758,12 +773,20 @@ function getPlatformIcon(icon: Icon): PlatformIcon {
                 type: 'templateSource',
                 templateSource: icon.source,
               },
-        android: undefined,
+        android:
+          drawableName != null
+            ? {
+                type: 'drawableResource',
+                name: drawableName,
+                tinted: icon.tinted,
+              }
+            : undefined,
         shared: {
           type: 'imageSource',
           imageSource: icon.source,
         },
       };
+    }
     default: {
       const _exhaustiveCheck: never = icon;
 
