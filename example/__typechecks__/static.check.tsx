@@ -8,13 +8,18 @@ import {
 } from '@react-navigation/bottom-tabs';
 import {
   type CompositeNavigationProp,
+  createNavigatorFactory,
   createStaticNavigation,
+  type DefaultNavigatorOptions,
   type NavigationContainerRef,
   type NavigationListForNested,
   type NavigationProp,
   type NavigatorScreenParams,
+  type NavigatorTypeBagBase,
+  type ParamListBase,
   type RouteProp,
   type ScreenLayoutArgs,
+  type StackActionHelpers,
   type StackNavigationState,
   type StaticParamList,
   type StaticScreenProps,
@@ -2718,4 +2723,69 @@ createStackScreen({
   expectTypeOf(Stack).not.toHaveProperty('with');
 
   expectTypeOf(Stack.config).toEqualTypeOf<typeof config>();
+}
+
+/**
+ * Check for required props on the navigator
+ */
+{
+  const MyNavigator = (
+    _props: {
+      variant: 'compact' | 'regular';
+    } & DefaultNavigatorOptions<
+      ParamListBase,
+      StackNavigationState<ParamListBase>,
+      {},
+      {},
+      unknown
+    >
+  ) => null;
+
+  interface MyTypeBag extends NavigatorTypeBagBase {
+    State: StackNavigationState<this['ParamList']>;
+    ActionHelpers: StackActionHelpers<this['ParamList']>;
+    Navigator: typeof MyNavigator;
+  }
+
+  const createMyNavigator = createNavigatorFactory<MyTypeBag>(MyNavigator);
+
+  expectTypeOf<
+    Pick<Parameters<typeof createMyNavigator>[0], 'variant'>
+  >().toEqualTypeOf<{
+    variant: 'compact' | 'regular';
+  }>();
+
+  const Stack = createMyNavigator({
+    variant: 'compact',
+    screens: {
+      Home: () => null,
+    },
+  });
+
+  const StackComponent = Stack.getComponent();
+
+  expectTypeOf<
+    Pick<React.ComponentProps<typeof StackComponent>, 'variant'>
+  >().toEqualTypeOf<{
+    variant?: 'compact' | 'regular';
+  }>();
+
+  void StackComponent;
+
+  const DecoratedStack = createMyNavigator({
+    variant: 'compact',
+    screens: {
+      Home: () => null,
+    },
+  }).with(({ Navigator }) => {
+    expectTypeOf<
+      Pick<React.ComponentProps<typeof Navigator>, 'variant'>
+    >().toEqualTypeOf<{
+      variant?: 'compact' | 'regular';
+    }>();
+
+    return <Navigator />;
+  });
+
+  expectTypeOf(DecoratedStack).not.toHaveProperty('with');
 }

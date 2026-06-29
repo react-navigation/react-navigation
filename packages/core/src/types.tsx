@@ -1445,18 +1445,20 @@ export type NavigatorProps<
     Navigation
   >;
 
-type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
+type TypedNavigatorStaticComponent<Bag extends NavigatorTypeBagBase> =
   React.ComponentType<
-    Omit<
-      NavigatorProps<
-        Bag['ParamList'],
-        Bag['State'],
-        Bag['ScreenOptions'],
-        Bag['EventMap'],
-        Bag['NavigationList'][keyof Bag['ParamList']],
-        Bag['Navigator']
-      >,
-      'children'
+    Partial<
+      Omit<
+        NavigatorProps<
+          Bag['ParamList'],
+          Bag['State'],
+          Bag['ScreenOptions'],
+          Bag['EventMap'],
+          Bag['NavigationList'][keyof Bag['ParamList']],
+          Bag['Navigator']
+        >,
+        'children'
+      >
     >
   >;
 
@@ -1474,10 +1476,10 @@ type TypedNavigatorStatic<
   config: Config;
   with: (
     Component: React.ComponentType<{
-      Navigator: TypedNavigatorComponent<Bag>;
+      Navigator: TypedNavigatorStaticComponent<Bag>;
     }>
   ) => TypedNavigatorStaticDecorated<Bag, Config>;
-  getComponent: () => TypedNavigatorComponent<Bag>;
+  getComponent: () => TypedNavigatorStaticComponent<Bag>;
 };
 
 export type TypedNavigator<
