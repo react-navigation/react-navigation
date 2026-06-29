@@ -7,7 +7,7 @@ import {
   getPatternParts,
   type PatternPart,
 } from './getPatternParts';
-import { StaticNavigationContext } from './StaticNavigationContext';
+import { StaticTreeContext } from './StaticTreeContext';
 import type {
   EventMapBase,
   NavigationListBase,
@@ -383,8 +383,7 @@ export type StaticScreenConfig<
   navigationKey?: string;
 
   /**
-   * Loader function to start loading data when the screen is focused.
-   * The navigation state is committed immediately, so this is intended to seed a cache that the screen reads during render.
+   * Loader function to start loading data when the screen is navigated to.
    *
    * @example
    * ```js
@@ -716,10 +715,8 @@ export function createComponentForStaticConfig<
           })
         : { ...rest.screenListeners, ...props.screenListeners };
 
-    const value = React.useMemo(() => ({ tree }), []);
-
     return (
-      <StaticNavigationContext.Provider value={value}>
+      <StaticTreeContext.Provider value={tree}>
         <Navigator
           {...rest}
           {...props}
@@ -728,7 +725,7 @@ export function createComponentForStaticConfig<
         >
           {children}
         </Navigator>
-      </StaticNavigationContext.Provider>
+      </StaticTreeContext.Provider>
     );
   };
 

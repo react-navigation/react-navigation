@@ -55,6 +55,7 @@ test('fires loader when an action navigates to a screen with UNSTABLE_loader', a
   });
 
   const Component = Root.getComponent();
+
   const navigation = createNavigationContainerRef<ParamListBase>();
 
   await render(
@@ -65,7 +66,7 @@ test('fires loader when an action navigates to a screen with UNSTABLE_loader', a
 
   expect(fn).toHaveBeenCalledTimes(0);
 
-  await act(async () => {
+  await act(() => {
     navigation.dispatch(CommonActions.navigate('Detail', { id: '42' }));
   });
 
@@ -90,6 +91,7 @@ test('does not fire any loader when navigating to a screen without UNSTABLE_load
   });
 
   const Component = Root.getComponent();
+
   const navigation = createNavigationContainerRef<ParamListBase>();
 
   await render(
@@ -100,7 +102,7 @@ test('does not fire any loader when navigating to a screen without UNSTABLE_load
 
   expect(fn).toHaveBeenCalledTimes(0);
 
-  await act(async () => {
+  await act(() => {
     navigation.dispatch(CommonActions.navigate('Detail'));
   });
 
@@ -123,6 +125,7 @@ test('commits state immediately even when the loader is still pending', async ()
   });
 
   const Component = Root.getComponent();
+
   const navigation = createNavigationContainerRef<ParamListBase>();
 
   await render(
@@ -131,7 +134,7 @@ test('commits state immediately even when the loader is still pending', async ()
     </BaseNavigationContainer>
   );
 
-  await act(async () => {
+  await act(() => {
     navigation.dispatch(CommonActions.navigate('Detail'));
   });
 
@@ -143,6 +146,7 @@ test('composes parent and initial child loaders on dispatch', async () => {
   const parentFn = jest.fn(
     async (_options: { name: string; params: unknown }) => {}
   );
+
   const childFn = jest.fn(
     async (_options: { name: string; params: unknown }) => {}
   );
@@ -167,6 +171,7 @@ test('composes parent and initial child loaders on dispatch', async () => {
   });
 
   const Component = Root.getComponent();
+
   const navigation = createNavigationContainerRef<ParamListBase>();
 
   await render(
@@ -175,7 +180,7 @@ test('composes parent and initial child loaders on dispatch', async () => {
     </BaseNavigationContainer>
   );
 
-  await act(async () => {
+  await act(() => {
     navigation.dispatch(CommonActions.navigate('Nested'));
   });
 
@@ -183,7 +188,62 @@ test('composes parent and initial child loaders on dispatch', async () => {
   expect(childFn).toHaveBeenCalledTimes(1);
 });
 
-test('uses a parent Suspense boundary when the screen layout does not provide one', async () => {
+test('uses the Suspense boundary in screen layout when present', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+  const loader = jest.fn(async () => {
+    await promise;
+  });
+
+  const DetailScreen = () => {
+    React.use(promise);
+
+    return <Text>Detail</Text>;
+  };
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+      Detail: {
+        screen: DetailScreen,
+        UNSTABLE_loader: loader,
+        layout: ({ children }) => (
+          <React.Suspense fallback={<Text>ScreenLoading</Text>}>
+            {children}
+          </React.Suspense>
+        ),
+      },
+    },
+  });
+
+  const Component = Root.getComponent();
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const root = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Component />
+      </React.Suspense>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => {
+    navigation.dispatch(CommonActions.navigate('Detail'));
+  });
+
+  expect(loader).toHaveBeenCalledTimes(1);
+
+  expect(root.getByText('ScreenLoading')).toBeTruthy();
+  expect(root.queryByText('Loading')).toBeNull();
+
+  await act(() => {
+    resolve();
+  });
+
+  expect(root.getByText('Detail')).toBeTruthy();
+});
+
+test("uses the parent Suspense boundary if screen layout doesn't have one", async () => {
   const { promise, resolve } = Promise.withResolvers<void>();
   const loader = jest.fn(async () => {
     await promise;
@@ -206,7 +266,9 @@ test('uses a parent Suspense boundary when the screen layout does not provide on
   });
 
   const Component = Root.getComponent();
+
   const navigation = createNavigationContainerRef<ParamListBase>();
+
   const root = await render(
     <BaseNavigationContainer ref={navigation}>
       <React.Suspense fallback={<Text>Loading</Text>}>
@@ -215,14 +277,14 @@ test('uses a parent Suspense boundary when the screen layout does not provide on
     </BaseNavigationContainer>
   );
 
-  await act(async () => {
+  await act(() => {
     navigation.dispatch(CommonActions.navigate('Detail'));
   });
 
   expect(loader).toHaveBeenCalledTimes(1);
   expect(root.getByText('Loading')).toBeTruthy();
 
-  await act(async () => {
+  await act(() => {
     resolve();
   });
 
