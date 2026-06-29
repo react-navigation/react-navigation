@@ -6,7 +6,7 @@ import {
   createNativeStackNavigator,
   createNativeStackScreen,
 } from '@react-navigation/native-stack';
-import { useSuspenseQuery } from '@tanstack/react-query';
+import { useSuspenseQueries, useSuspenseQuery } from '@tanstack/react-query';
 import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -37,7 +37,7 @@ const pokemon = [
       'A strange seed was planted on its back at birth. The plant sprouts and grows with this Pokemon.',
   },
   {
-    id: 4,
+    id: 2,
     name: 'Charmander',
     category: 'Lizard Pokemon',
     height: '0.6 m',
@@ -47,7 +47,7 @@ const pokemon = [
       'The flame on its tail shows the strength of its life-force. If it is weak, the flame also burns weakly.',
   },
   {
-    id: 7,
+    id: 3,
     name: 'Squirtle',
     category: 'Tiny Turtle Pokemon',
     height: '0.5 m',
@@ -66,7 +66,7 @@ const pokemonQuery = (id: number) => ({
         () => {
           if (shouldFailNextLoad) {
             shouldFailNextLoad = false;
-            reject(new Error('The Pokemon storage system is offline.'));
+            reject(new Error('Failed to load Pokemon.'));
           } else {
             const match = pokemon.find((item) => item.id === id);
 
@@ -77,7 +77,7 @@ const pokemonQuery = (id: number) => ({
             }
           }
         },
-        id === 4 ? 1000 : 250
+        id === 1 ? 10 : id === 2 ? 50 : 1000
       );
     }),
 });
@@ -96,7 +96,7 @@ function PokedexScreen() {
             variant="filled"
             onPress={() => {
               React.startTransition(() => {
-                navigation.navigate('Detail', { id: item.id });
+                navigation.navigate('PokemonDetail', { id: item.id });
               });
             }}
             style={styles.button}
@@ -124,8 +124,9 @@ function PokedexScreen() {
   );
 }
 
-function DetailScreen() {
-  const route = useRoute('Detail');
+function PokemonDetailScreen() {
+  const route = useRoute('PokemonDetail');
+
   const { data } = useSuspenseQuery(pokemonQuery(route.params.id));
 
   return (
@@ -142,37 +143,72 @@ function DetailScreen() {
   );
 }
 
-function LoadingFallback() {
-  return (
-    <View style={styles.content}>
-      <Text style={styles.description}>Loading Pokemon...</Text>
-    </View>
-  );
-}
+function PokemonTeamScreen() {
+  const data = useSuspenseQueries({
+    queries: pokemon.map((item) => pokemonQuery(item.id)),
+  });
 
-function TeamScreen() {
   return (
     <View style={styles.content}>
       <Text style={styles.heading}>Current Team</Text>
       <Text style={styles.description}>
-        Bulbasaur, Charmander, and Squirtle are ready for the next gym battle.
+        {data.map((item) => item.data.name).join(', ')}
       </Text>
     </View>
   );
 }
 
+function PokemonBattleScreen() {
+  const data = useSuspenseQueries({
+    queries: pokemon.map((item) => pokemonQuery(item.id)),
+  });
+
+  return (
+    <View style={styles.content}>
+      <Text style={styles.heading}>Battle</Text>
+      <Text style={styles.description}>
+        {data.map((item) => item.data.name).join(' vs ')}
+      </Text>
+    </View>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <View style={styles.content}>
+      <Text style={styles.description}>Loading…</Text>
+    </View>
+  );
+}
+
 const LoaderTabs = createBottomTabNavigator({
+  screenOptions: {
+    lazy: true,
+  },
   screens: {
-    LoaderHome: {
+    PokemonList: {
       screen: PokedexScreen,
       options: {
         title: 'Pokedex',
       },
     },
-    Team: {
-      screen: TeamScreen,
+    PokemonTeam: {
+      screen: PokemonTeamScreen,
       options: {
         title: 'Team',
+      },
+    },
+    PokemonBattle: {
+      screen: PokemonBattleScreen,
+      layout: ({ children }) => (
+        <ErrorBoundary>
+          <React.Suspense fallback={<LoadingFallback />}>
+            {children}
+          </React.Suspense>
+        </ErrorBoundary>
+      ),
+      options: {
+        title: 'Battle',
       },
     },
   },
@@ -183,7 +219,7 @@ const LoaderStack = createNativeStackNavigator({
     <ErrorBoundary
       onReset={() => {
         if (
-          route.name === 'Detail' &&
+          route.name === 'PokemonDetail' &&
           route.params != null &&
           'id' in route.params &&
           typeof route.params.id === 'number'
@@ -202,8 +238,8 @@ const LoaderStack = createNativeStackNavigator({
     Pokedex: {
       screen: LoaderTabs,
     },
-    Detail: createNativeStackScreen({
-      screen: DetailScreen,
+    PokemonDetail: createNativeStackScreen({
+      screen: PokemonDetailScreen,
       linking: {
         path: 'pokemon/:id',
         parse: {
