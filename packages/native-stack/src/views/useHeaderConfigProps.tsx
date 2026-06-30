@@ -190,9 +190,6 @@ const getMenuItem = (
 };
 
 export function useHeaderConfigProps({
-  disableHeaderBottomInsetApplication,
-  disableHeaderLeftInsetApplication,
-  disableHeaderRightInsetApplication,
   headerBackIcon,
   headerBackImageSource,
   headerBackButtonDisplayMode,
@@ -222,6 +219,7 @@ export function useHeaderConfigProps({
   headerBack,
   route,
   title,
+  unstable_headerInsets,
   unstable_headerLeftItems: headerLeftItems,
   unstable_headerRightItems: headerRightItems,
 }: Props): ScreenStackHeaderConfigProps {
@@ -530,10 +528,22 @@ export function useHeaderConfigProps({
     titleFontSize,
     titleFontWeight: String(titleFontWeight),
     topInsetEnabled: headerTopInsetEnabled,
-    disableTopInsetApplication: !headerTopInsetEnabled,
-    disableLeftInsetApplication: !!disableHeaderLeftInsetApplication,
-    disableRightInsetApplication: !!disableHeaderRightInsetApplication,
-    disableBottomInsetApplication: !!disableHeaderBottomInsetApplication,
+    disableTopInsetApplication:
+      unstable_headerInsets?.top !== undefined
+        ? !unstable_headerInsets.top
+        : !headerTopInsetEnabled,
+    disableLeftInsetApplication:
+      unstable_headerInsets?.left !== undefined
+        ? !unstable_headerInsets.left
+        : undefined,
+    disableRightInsetApplication:
+      unstable_headerInsets?.right !== undefined
+        ? !unstable_headerInsets.right
+        : undefined,
+    disableBottomInsetApplication:
+      unstable_headerInsets?.bottom !== undefined
+        ? !unstable_headerInsets.bottom
+        : undefined,
     translucent: translucent === true,
     children,
     headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),

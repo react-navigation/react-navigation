@@ -428,41 +428,24 @@ export type NativeStackNavigationOptions = {
    */
   headerBackButtonDisplayMode?: ScreenStackHeaderConfigProps['backButtonDisplayMode'];
   /**
-   * When set to `true`, disables left inset handling for this header and all headers in its
-   * subtree.
+   * Unstable API to control which edges of the native header should apply window insets.
    *
-   * The opt-out propagates down the subtree: once an ancestor header sets this to `true`,
-   * setting it back to `false` on a descendant header does not re-enable the inset.
+   * When an edge is set to `false`, it disables inset handling for that edge in this header
+   * and all headers in its subtree.
    *
-   * @default false
+   * The opt-out propagates down the subtree: once an ancestor header sets an edge to `false`,
+   * setting it back to `true` on a descendant header does not re-enable the inset.
    *
-   * @platform android
-   */
-  disableHeaderLeftInsetApplication?: boolean;
-  /**
-   * When set to `true`, disables right inset handling for this header and all headers in its
-   * subtree.
-   *
-   * The opt-out propagates down the subtree: once an ancestor header sets this to `true`,
-   * setting it back to `false` on a descendant header does not re-enable the inset.
-   *
-   * @default false
+   * @default true
    *
    * @platform android
    */
-  disableHeaderRightInsetApplication?: boolean;
-  /**
-   * When set to `true`, disables bottom inset handling for this header and all headers in its
-   * subtree.
-   *
-   * The opt-out propagates down the subtree: once an ancestor header sets this to `true`,
-   * setting it back to `false` on a descendant header does not re-enable the inset.
-   *
-   * @default false
-   *
-   * @platform android
-   */
-  disableHeaderBottomInsetApplication?: boolean;
+  unstable_headerInsets?: {
+    top?: boolean;
+    left?: boolean;
+    right?: boolean;
+    bottom?: boolean;
+  };
   /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
