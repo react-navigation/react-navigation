@@ -437,7 +437,7 @@ test('uses the Suspense boundary in screen layout when present', async () => {
   expect(root.getByText('Detail')).toBeTruthy();
 });
 
-test("uses the parent Suspense boundary if screen layout doesn't have one", async () => {
+test('holds the previous screen when the loader screen relies on a parent boundary', async () => {
   const { promise, resolve } = Promise.withResolvers<void>();
   const loader = jest.fn(async () => {
     await promise;
@@ -476,7 +476,8 @@ test("uses the parent Suspense boundary if screen layout doesn't have one", asyn
   });
 
   expect(loader).toHaveBeenCalledTimes(1);
-  expect(root.getByText('Loading')).toBeTruthy();
+  expect(root.queryByText('Loading')).toBeNull();
+  expect(root.getByText('Screen:Home(focused)')).toBeTruthy();
 
   await act(() => {
     resolve();
