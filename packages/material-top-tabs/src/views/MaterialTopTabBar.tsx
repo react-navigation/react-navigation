@@ -7,7 +7,7 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import React from 'react';
+import * as React from 'react';
 import { type ColorValue, Image, StyleSheet } from 'react-native';
 import { type Route, TabBar, type TabDescriptor } from 'react-native-tab-view';
 

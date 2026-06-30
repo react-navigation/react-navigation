@@ -6,7 +6,7 @@ import {
   SFSymbol,
   useTheme,
 } from '@react-navigation/native';
-import React from 'react';
+import * as React from 'react';
 import {
   type ColorValue,
   Image,
