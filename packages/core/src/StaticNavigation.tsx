@@ -53,7 +53,7 @@ type ParamsForStaticScreen<T> =
     : ParamsForStaticScreenComponent<T>;
 
 type ParamListForStaticScreenConfig<Params> = {
-  Screen: Params extends object | undefined ? Params : never;
+  [key: string]: Params extends object | undefined ? Params : never;
 };
 
 type StaticScreenConfigLinking =
@@ -76,7 +76,7 @@ type StaticScreenConfig<
 > = Omit<
   StaticRouteConfig<
     ParamListForStaticScreenConfig<Params>,
-    'Screen',
+    string,
     State,
     ScreenOptions,
     EventMap,

@@ -1103,21 +1103,23 @@ export type NavigatorTypeBag<
   Navigator: Navigator;
 };
 
-type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
+type TypedNavigatorStaticComponent<Bag extends NavigatorTypeBagBase> =
   React.ComponentType<
-    Omit<
-      React.ComponentProps<
-        TypedNavigatorInternal<
-          Bag['ParamList'],
-          Bag['NavigatorID'],
-          Bag['State'],
-          Bag['ScreenOptions'],
-          Bag['EventMap'],
-          Bag['NavigationList'],
-          Bag['Navigator']
-        >['Navigator']
-      >,
-      'children'
+    Partial<
+      Omit<
+        React.ComponentProps<
+          TypedNavigatorInternal<
+            Bag['ParamList'],
+            Bag['NavigatorID'],
+            Bag['State'],
+            Bag['ScreenOptions'],
+            Bag['EventMap'],
+            Bag['NavigationList'],
+            Bag['Navigator']
+          >['Navigator']
+        >,
+        'children'
+      >
     >
   >;
 
@@ -1152,10 +1154,10 @@ type TypedNavigatorStatic<
   config: Config;
   with: (
     Component: React.ComponentType<{
-      Navigator: TypedNavigatorComponent<Bag>;
+      Navigator: TypedNavigatorStaticComponent<Bag>;
     }>
   ) => TypedNavigatorStaticDecorated<Bag, Config>;
-  getComponent: () => TypedNavigatorComponent<Bag>;
+  getComponent: () => TypedNavigatorStaticComponent<Bag>;
 } & PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
 
 export type TypedNavigator<
