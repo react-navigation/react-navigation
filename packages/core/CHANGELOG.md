@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.21.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.2...@react-navigation/core@7.21.3) (2026-06-30)
+
+### Bug Fixes
+
+* properly handle required props for navigators ([52d7e66](https://github.com/react-navigation/react-navigation/commit/52d7e66024b50777178f449ba5a957c443155788)) - by @satya164
+* treat malformed URL as unmatched and simplify ([aed3f68](https://github.com/react-navigation/react-navigation/commit/aed3f688995c9bc9cfca981b4b9d27fee55e8faa)) - by @satya164
+
 ## [7.21.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.1...@react-navigation/core@7.21.2) (2026-06-23)
 
 ### Bug Fixes
