@@ -190,6 +190,9 @@ const getMenuItem = (
 };
 
 export function useHeaderConfigProps({
+  disableHeaderBottomInsetApplication,
+  disableHeaderLeftInsetApplication,
+  disableHeaderRightInsetApplication,
   headerBackIcon,
   headerBackImageSource,
   headerBackButtonDisplayMode,
@@ -528,6 +531,9 @@ export function useHeaderConfigProps({
     titleFontWeight: String(titleFontWeight),
     topInsetEnabled: headerTopInsetEnabled,
     disableTopInsetApplication: !headerTopInsetEnabled,
+    disableLeftInsetApplication: !!disableHeaderLeftInsetApplication,
+    disableRightInsetApplication: !!disableHeaderRightInsetApplication,
+    disableBottomInsetApplication: !!disableHeaderBottomInsetApplication,
     translucent: translucent === true,
     children,
     headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),

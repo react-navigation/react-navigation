@@ -428,6 +428,42 @@ export type NativeStackNavigationOptions = {
    */
   headerBackButtonDisplayMode?: ScreenStackHeaderConfigProps['backButtonDisplayMode'];
   /**
+   * When set to `true`, disables left inset handling for this header and all headers in its
+   * subtree.
+   *
+   * The opt-out propagates down the subtree: once an ancestor header sets this to `true`,
+   * setting it back to `false` on a descendant header does not re-enable the inset.
+   *
+   * @default false
+   *
+   * @platform android
+   */
+  disableHeaderLeftInsetApplication?: boolean;
+  /**
+   * When set to `true`, disables right inset handling for this header and all headers in its
+   * subtree.
+   *
+   * The opt-out propagates down the subtree: once an ancestor header sets this to `true`,
+   * setting it back to `false` on a descendant header does not re-enable the inset.
+   *
+   * @default false
+   *
+   * @platform android
+   */
+  disableHeaderRightInsetApplication?: boolean;
+  /**
+   * When set to `true`, disables bottom inset handling for this header and all headers in its
+   * subtree.
+   *
+   * The opt-out propagates down the subtree: once an ancestor header sets this to `true`,
+   * setting it back to `false` on a descendant header does not re-enable the inset.
+   *
+   * @default false
+   *
+   * @platform android
+   */
+  disableHeaderBottomInsetApplication?: boolean;
+  /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
    * @platform ios
