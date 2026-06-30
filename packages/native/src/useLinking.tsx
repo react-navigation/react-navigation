@@ -131,10 +131,12 @@ const isPoppingLastEntry = (
  */
 export const series = (cb: () => Promise<void>) => {
   let queue = Promise.resolve();
+
   const callback = () => {
     // eslint-disable-next-line promise/no-callback-in-promise
     queue = queue.then(cb);
   };
+
   return callback;
 };
 
@@ -509,7 +511,7 @@ export function useLinking<ParamList extends ParamListBase>(
       }
     }
 
-    const onStateChange = async () => {
+    const onUpdate = async () => {
       const navigation = ref.current;
 
       if (!navigation || !enabled) {
@@ -521,6 +523,13 @@ export function useLinking<ParamList extends ParamListBase>(
 
       // root state may not available, for example when root navigators switch inside the container
       if (!state) {
+        return;
+      }
+
+      // Skip if the state hasn't changed since we last synced it
+      // This avoids redundant work when the committed `state` event fires
+      // after we already synced from `__unsafe_action__`
+      if (previousState === state) {
         return;
       }
 
@@ -595,10 +604,30 @@ export function useLinking<ParamList extends ParamListBase>(
       previousIndexRef.current = history.index;
     };
 
-    // We debounce onStateChange coz we don't want multiple state changes to be handled at one time
+    // We debounce onUpdate coz we don't want multiple state changes to be handled at one time
     // This could happen since `history.go(n)` is asynchronous
     // If `pushState` or `replaceState` were called before `history.go(n)` completes, it'll mess stuff up
-    return ref.current?.addListener('state', series(onStateChange));
+    const handleUpdate = series(onUpdate);
+
+    // We sync history on `__unsafe_action__` which fires synchronously on dispatch
+    // The committed `state` event can be deferred or skipped with transitions when a
+    // navigation interrupts an in-flight one, which would drop history entries
+    const unsubscribeAction = ref.current?.addListener(
+      '__unsafe_action__',
+      (e) => {
+        if (!e.data.noop) {
+          handleUpdate();
+        }
+      }
+    );
+
+    // We still listen to `state` for changes that don't go through dispatch, e.g. conditional rendering
+    const unsubscribeState = ref.current?.addListener('state', handleUpdate);
+
+    return () => {
+      unsubscribeAction?.();
+      unsubscribeState?.();
+    };
   }, [enabled, history, ref]);
 
   return {

@@ -54,11 +54,13 @@ export function DrawerItemList({ state, navigation, descriptors }: Props) {
       });
 
       if (!event.defaultPrevented) {
-        navigation.dispatch({
-          ...(focused
-            ? DrawerActions.closeDrawer()
-            : CommonActions.navigate(route.name, route.params)),
-          target: state.key,
+        React.startTransition(() => {
+          navigation.dispatch({
+            ...(focused
+              ? DrawerActions.closeDrawer()
+              : CommonActions.navigate(route.name, route.params)),
+            target: state.key,
+          });
         });
       }
     };
