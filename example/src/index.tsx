@@ -29,7 +29,6 @@ import {
   createStackNavigator,
   type StackNavigationOptions,
 } from '@react-navigation/stack';
-import { QueryClientProvider } from '@tanstack/react-query';
 import { reloadAppAsync } from 'expo';
 import { createURL } from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
@@ -46,7 +45,6 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { queryClient } from './queryClient';
 import { SCREENS } from './screens';
 import { NotFound } from './Screens/NotFound';
 import { Divider } from './Shared/Divider';
@@ -591,11 +589,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
         AsyncStorage.removeItem(NAVIGATION_PERSISTENCE_KEY);
       }}
     >
-      <QueryClientProvider client={queryClient}>
-        <ActionSheetProvider>
-          <>{children}</>
-        </ActionSheetProvider>
-      </QueryClientProvider>
+      <ActionSheetProvider>
+        <>{children}</>
+      </ActionSheetProvider>
     </ErrorBoundary>
   );
 };
