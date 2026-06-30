@@ -1,6 +1,9 @@
 import type {
   NavigationAction,
+  NavigationRoute,
   NavigationState,
+  ParamListBase,
+  PartialRoute,
   PartialState,
   Router,
   RouterConfigOptions,
@@ -27,6 +30,40 @@ type Options<State extends NavigationState> = {
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
+};
+
+type MaybePartialRoute =
+  | NavigationRoute<ParamListBase, string>
+  | PartialRoute<NavigationRoute<ParamListBase, string>>;
+
+const didFocusedRouteChange = (
+  currentState: NavigationState | PartialState<NavigationState>,
+  nextState: NavigationState | PartialState<NavigationState>
+) => {
+  let currentFocusedRoute: MaybePartialRoute | undefined =
+    currentState.routes[currentState.index ?? 0];
+
+  let nextFocusedRoute: MaybePartialRoute | undefined =
+    nextState.routes[nextState.index ?? 0];
+
+  let changed = currentFocusedRoute?.key !== nextFocusedRoute?.key;
+
+  while (
+    !changed &&
+    currentFocusedRoute?.state != null &&
+    nextFocusedRoute?.state != null &&
+    currentFocusedRoute.state !== nextFocusedRoute.state
+  ) {
+    currentFocusedRoute =
+      currentFocusedRoute.state.routes[currentFocusedRoute.state.index ?? 0];
+
+    nextFocusedRoute =
+      nextFocusedRoute.state.routes[nextFocusedRoute.state.index ?? 0];
+
+    changed = currentFocusedRoute?.key !== nextFocusedRoute?.key;
+  }
+
+  return changed;
 };
 
 /**
@@ -107,13 +144,14 @@ export function useOnAction<State extends NavigationState>({
               return true;
             }
 
-            const loader = tree
-              ? UNSTABLE_getLoaderForState(tree, result)
-              : undefined;
-
             onDispatchAction(action, false);
 
-            loader?.();
+            if (tree && didFocusedRouteChange(state, result)) {
+              const loader = UNSTABLE_getLoaderForState(tree, result);
+
+              loader?.();
+            }
+
             setState(result);
           } else {
             onDispatchAction(action, true);
