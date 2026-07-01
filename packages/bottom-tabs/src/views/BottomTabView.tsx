@@ -161,8 +161,8 @@ export function BottomTabView(props: Props) {
             });
           })
           .filter(Boolean) as Animated.CompositeAnimation[]
-      ).start(({ finished }) => {
-        if (finished && popToTopAction) {
+      ).start(() => {
+        if (popToTopAction) {
           navigation.dispatch(popToTopAction);
         }
 
