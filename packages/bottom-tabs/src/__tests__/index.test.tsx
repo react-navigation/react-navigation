@@ -3,14 +3,13 @@ import {
   createNavigationContainerRef,
   createNavigatorFactory,
   NavigationContainer,
-  type ParamListBase,
+  type NavigatorScreenParams,
   StackRouter,
   useNavigationBuilder,
 } from '@react-navigation/native';
 import { act, render, screen, userEvent } from '@testing-library/react-native';
 import { useEffect } from 'react';
 import {
-  Animated,
   type EmitterSubscription,
   Keyboard,
   type KeyboardEventListener,
@@ -336,29 +335,7 @@ test('lazy=false pre-renders screen with effects active, pauses after first visi
   expect(effectActive).toBe(false);
 });
 
-test('popToTopOnBlur dispatches even when tab transition animation is interrupted', () => {
-  // Regression test for #12512.
-  //
-  // BottomTabViewCustom dispatches popToTopAction from
-  // Animated.parallel(...).start(cb). In real apps a parent re-render
-  // during a tab switch causes the effect to re-run and start a second
-  // Animated.parallel that preempts the first, so the first callback
-  // fires with `finished: false` and the action would be silently
-  // dropped if the dispatch were gated on `finished`.
-  //
-  // We simulate that race deterministically by mocking Animated.parallel
-  // so its start() callback always fires with `finished: false`.
-  jest.spyOn(Animated, 'parallel').mockImplementation(
-    () =>
-      ({
-        start: (cb?: (info: { finished: boolean }) => void) =>
-          cb?.({ finished: false }),
-        stop: jest.fn(),
-        reset: jest.fn(),
-      }) as ReturnType<typeof Animated.parallel>
-  );
-
-  // Minimal stub stack navigator — bottom-tabs has no stack dependency.
+test('pops nested stack to top on blur even when tab transition animation is interrupted', async () => {
   const createStackNavigator = createNavigatorFactory(
     (props: Parameters<typeof useNavigationBuilder>[1]) => {
       const { state, descriptors, NavigationContent } = useNavigationBuilder(
@@ -368,14 +345,31 @@ test('popToTopOnBlur dispatches even when tab transition animation is interrupte
 
       return (
         <NavigationContent>
-          {descriptors[state.routes[state.index].key].render()}
+          {state.routes.map((route) => {
+            const descriptor = descriptors[route.key];
+
+            if (descriptor == null) {
+              throw new Error(
+                `Couldn't find a descriptor for route '${route.key}'.`
+              );
+            }
+
+            return descriptor.render();
+          })}
         </NavigationContent>
       );
     }
   );
 
   type NestedParamList = { Root: undefined; Detail: undefined };
-  const Stack = createStackNavigator<ParamListBase>();
+
+  type TabParamList = {
+    A: NavigatorScreenParams<NestedParamList>;
+    B: undefined;
+    C: undefined;
+  };
+
+  const Stack = createStackNavigator<NestedParamList>();
 
   const NestedStack = () => (
     <Stack.Navigator>
@@ -384,44 +378,64 @@ test('popToTopOnBlur dispatches even when tab transition animation is interrupte
     </Stack.Navigator>
   );
 
-  const Tab = createBottomTabNavigator<BottomTabParamList>();
-  const navigation = createNavigationContainerRef<BottomTabParamList>();
+  const Tab = createBottomTabNavigator<TabParamList>();
+  const navigation = createNavigationContainerRef<TabParamList>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation}>
-      <Tab.Navigator implementation="custom">
+      <Tab.Navigator
+        implementation="custom"
+        screenOptions={{ animation: 'fade' }}
+      >
         <Tab.Screen
           name="A"
           component={NestedStack}
           options={{ popToTopOnBlur: true }}
         />
         <Tab.Screen name="B">{() => null}</Tab.Screen>
+        <Tab.Screen name="C">{() => null}</Tab.Screen>
       </Tab.Navigator>
     </NavigationContainer>
   );
 
-  // Push 'Detail' onto Tab A's nested stack.
-  act(() =>
+  await act(() =>
     navigation.navigate('A', {
       screen: 'Detail',
-    } as never)
+    })
   );
 
-  const stackBefore = navigation
-    .getRootState()
-    .routes.find((r) => r.name === 'A')?.state as
-    | { routes: { name: keyof NestedParamList }[] }
-    | undefined;
-  expect(stackBefore?.routes.map((r) => r.name)).toEqual(['Root', 'Detail']);
+  expect(navigation.getRootState()).toEqual(
+    expect.objectContaining({
+      routes: expect.arrayContaining([
+        expect.objectContaining({
+          name: 'A',
+          state: expect.objectContaining({
+            routes: [
+              expect.objectContaining({ name: 'Root' }),
+              expect.objectContaining({ name: 'Detail' }),
+            ],
+          }),
+        }),
+      ]),
+    })
+  );
 
-  // Blur Tab A — the dispatch must still happen even though the mocked
-  // Animated.parallel reports `finished: false`.
-  act(() => navigation.navigate('B'));
+  await act(() => navigation.navigate('B'));
 
-  const stackAfter = navigation
-    .getRootState()
-    .routes.find((r) => r.name === 'A')?.state as
-    | { routes: { name: keyof NestedParamList }[] }
-    | undefined;
-  expect(stackAfter?.routes.map((r) => r.name)).toEqual(['Root']);
+  await act(() => jest.advanceTimersByTime(1));
+
+  await act(() => navigation.navigate('C'));
+
+  expect(navigation.getRootState()).toEqual(
+    expect.objectContaining({
+      routes: expect.arrayContaining([
+        expect.objectContaining({
+          name: 'A',
+          state: expect.objectContaining({
+            routes: [expect.objectContaining({ name: 'Root' })],
+          }),
+        }),
+      ]),
+    })
+  );
 });
