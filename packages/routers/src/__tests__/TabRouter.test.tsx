@@ -278,6 +278,42 @@ test("doesn't rehydrate state if it's not stale", () => {
   ).toBe(state);
 });
 
+test('removes invalid preloaded route keys on rehydration', () => {
+  const router = TabRouter({});
+
+  expect(
+    router.getRehydratedState(
+      {
+        index: 0,
+        routes: [
+          { key: 'bar-0', name: 'bar' },
+          { key: 'baz-0', name: 'baz' },
+          { key: 'qux-0', name: 'qux' },
+        ],
+        preloadedRouteKeys: ['baz-0', 'missing'],
+      },
+      {
+        routeNames: ['bar', 'baz', 'qux'],
+        routeParamList: {},
+        routeGetIdList: {},
+      }
+    )
+  ).toEqual({
+    index: 0,
+    key: 'tab-1',
+    routeNames: ['bar', 'baz', 'qux'],
+    routes: [
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-0', name: 'baz' },
+      { key: 'qux-0', name: 'qux' },
+    ],
+    history: [{ type: 'route', key: 'bar-0' }],
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['baz-0'],
+  });
+});
+
 test('restores correct history on rehydrating with backBehavior: order', () => {
   const router = TabRouter({ backBehavior: 'order' });
 
@@ -1738,8 +1774,8 @@ test('preserves params in history with backBehavior: fullHistory', () => {
     options
   ) as TabNavigationState<ParamListBase>;
 
-  expect(state.routes[1].params).toEqual({ value: 'first' });
-  expect(state.history[1].params).toEqual({ value: 'first' });
+  expect(state.routes[1]?.params).toEqual({ value: 'first' });
+  expect(state.history[1]?.params).toEqual({ value: 'first' });
 
   state = router.getStateForAction(
     state,
@@ -1747,8 +1783,8 @@ test('preserves params in history with backBehavior: fullHistory', () => {
     options
   ) as TabNavigationState<ParamListBase>;
 
-  expect(state.routes[2].params).toEqual({ value: 'second' });
-  expect(state.history[2].params).toEqual({ value: 'second' });
+  expect(state.routes[2]?.params).toEqual({ value: 'second' });
+  expect(state.history[2]?.params).toEqual({ value: 'second' });
 
   state = router.getStateForAction(
     state,
@@ -1756,8 +1792,8 @@ test('preserves params in history with backBehavior: fullHistory', () => {
     options
   ) as TabNavigationState<ParamListBase>;
 
-  expect(state.routes[1].params).toEqual({ value: 'updated' });
-  expect(state.history[3].params).toEqual({ value: 'updated' });
+  expect(state.routes[1]?.params).toEqual({ value: 'updated' });
+  expect(state.history[3]?.params).toEqual({ value: 'updated' });
 
   state = router.getStateForAction(
     state,
@@ -1766,7 +1802,7 @@ test('preserves params in history with backBehavior: fullHistory', () => {
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.index).toBe(2);
-  expect(state.routes[2].params).toEqual({ value: 'second' });
+  expect(state.routes[2]?.params).toEqual({ value: 'second' });
 
   state = router.getStateForAction(
     state,
@@ -1775,7 +1811,7 @@ test('preserves params in history with backBehavior: fullHistory', () => {
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.index).toBe(1);
-  expect(state.routes[1].params).toEqual({ value: 'first' });
+  expect(state.routes[1]?.params).toEqual({ value: 'first' });
 });
 
 test('updates route key history on focus change with backBehavior: fullHistory', () => {
@@ -1867,10 +1903,13 @@ test('adds path on navigate if provided', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        path: '/foo/bar',
-      }),
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'bar',
+          path: '/foo/bar',
+        },
+      },
       options
     )
   ).toEqual({
@@ -1911,11 +1950,14 @@ test('adds path on navigate if provided', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { fruit: 'orange' },
-        path: '/foo/baz',
-      }),
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'bar',
+          params: { fruit: 'orange' },
+          path: '/foo/baz',
+        },
+      },
       options
     )
   ).toEqual({
@@ -1966,7 +2008,7 @@ test("doesn't remove existing path on navigate if not provided", () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      CommonActions.navigate({ name: 'bar' }),
+      CommonActions.navigate('bar'),
       options
     )
   ).toEqual({
@@ -2134,8 +2176,7 @@ test('merges params on navigate to an existing screen if merge: true', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      CommonActions.navigate({
-        name: 'bar',
+      CommonActions.navigate('bar', undefined, {
         merge: true,
       }),
       options
@@ -2174,11 +2215,13 @@ test('merges params on navigate to an existing screen if merge: true', () => {
         ],
         history: [{ type: 'route', key: 'baz' }],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { fruit: 'orange' },
-        merge: true,
-      }),
+      CommonActions.navigate(
+        'bar',
+        { fruit: 'orange' },
+        {
+          merge: true,
+        }
+      ),
       options
     )
   ).toEqual({
@@ -2326,6 +2369,36 @@ test('adds route key to preloadedRouteKeys with preload', () => {
     ],
     history: [{ type: 'route', key: 'baz' }],
   });
+});
+
+test("doesn't preload nonexistent screen", () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        preloadedRouteKeys: [],
+        key: 'root',
+        index: 0,
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+          { key: 'qux', name: 'qux' },
+        ],
+        history: [{ type: 'route', key: 'baz' }],
+      },
+      CommonActions.preload('far', { answer: 42 }),
+      options
+    )
+  ).toBeNull();
 });
 
 test('updates an existing route with preload when the ID changes', () => {
@@ -2936,8 +3009,8 @@ test('handles goBack with multiple route history entries', () => {
     options
   ) as TabNavigationState<ParamListBase>;
 
-  expect(state.routes[1].params).toEqual({ user: 'bob', age: 35 });
-  expect(state.routes[1].history).toEqual([
+  expect(state.routes[1]?.params).toEqual({ user: 'bob', age: 35 });
+  expect(state.routes[1]?.history).toEqual([
     { type: 'params', params: { user: 'john', age: 25 } },
     { type: 'params', params: { user: 'jane', age: 30 } },
   ]);

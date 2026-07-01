@@ -1,9 +1,14 @@
 import { expect, test } from '@jest/globals';
-import { NavigationRouteContext } from '@react-navigation/core';
-import { render } from '@testing-library/react-native';
+import {
+  createNavigationContainerRef,
+  NavigationRouteContext,
+  type NavigatorScreenParams,
+} from '@react-navigation/core';
+import { act, render } from '@testing-library/react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { NavigationContainer } from '../NavigationContainer';
+import type { LinkingOptions } from '../types';
 import { useLinkBuilder } from '../useLinkBuilder';
 
 const config = {
@@ -22,7 +27,7 @@ const config = {
   },
 };
 
-test('builds href outside of a navigator', () => {
+test('builds href outside of a navigator', async () => {
   expect.assertions(1);
 
   const Root = () => {
@@ -35,14 +40,14 @@ test('builds href outside of a navigator', () => {
     return null;
   };
 
-  render(
+  await render(
     <NavigationContainer linking={config}>
       <Root />
     </NavigationContainer>
   );
 });
 
-test('builds href in navigator layout', () => {
+test('builds href in navigator layout', async () => {
   expect.assertions(1);
 
   const Test = ({ children }: { children: React.ReactNode }) => {
@@ -57,7 +62,7 @@ test('builds href in navigator layout', () => {
 
   const Stack = createStackNavigator<{ Foo: undefined }>();
 
-  render(
+  await render(
     <NavigationContainer linking={config}>
       <Stack.Navigator layout={({ children }) => <Test>{children}</Test>}>
         <Stack.Screen name="Foo">{() => null}</Stack.Screen>
@@ -66,7 +71,7 @@ test('builds href in navigator layout', () => {
   );
 });
 
-test('builds href in route context', () => {
+test('builds href in route context', async () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -81,7 +86,7 @@ test('builds href in route context', () => {
 
   const Stack = createStackNavigator<{ Foo: undefined }>();
 
-  render(
+  await render(
     <NavigationContainer linking={config}>
       <Stack.Navigator
         layout={({ state }) => (
@@ -98,7 +103,7 @@ test('builds href in route context', () => {
   );
 });
 
-test('builds href in stack navigator screen', () => {
+test('builds href in stack navigator screen', async () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -113,7 +118,7 @@ test('builds href in stack navigator screen', () => {
 
   const StackA = createStackNavigator<{ Foo: undefined }>();
 
-  render(
+  await render(
     <NavigationContainer linking={config}>
       <StackA.Navigator>
         <StackA.Screen name="Foo" component={Test} />
@@ -122,7 +127,7 @@ test('builds href in stack navigator screen', () => {
   );
 });
 
-test('builds href in nested navigator layout', () => {
+test('builds href in nested navigator layout', async () => {
   expect.assertions(1);
 
   const Test = ({ children }: { children: React.ReactNode }) => {
@@ -138,7 +143,7 @@ test('builds href in nested navigator layout', () => {
   const StackA = createStackNavigator<{ Foo: undefined }>();
   const StackB = createStackNavigator<{ Bar: { id: string } }>();
 
-  render(
+  await render(
     <NavigationContainer linking={config}>
       <StackA.Navigator>
         <StackA.Screen name="Foo">
@@ -155,7 +160,7 @@ test('builds href in nested navigator layout', () => {
   );
 });
 
-test('builds href in nested route context', () => {
+test('builds href in nested route context', async () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -171,7 +176,7 @@ test('builds href in nested route context', () => {
   const StackA = createStackNavigator<{ Foo: undefined }>();
   const StackB = createStackNavigator<{ Bar: { id: string } }>();
 
-  render(
+  await render(
     <NavigationContainer linking={config}>
       <StackA.Navigator>
         <StackA.Screen name="Foo">
@@ -194,7 +199,7 @@ test('builds href in nested route context', () => {
   );
 });
 
-test('builds href in nested navigator screen', () => {
+test('builds href in nested navigator screen', async () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -210,7 +215,7 @@ test('builds href in nested navigator screen', () => {
   const StackA = createStackNavigator<{ Foo: undefined }>();
   const StackB = createStackNavigator<{ Bar: { id: string } }>();
 
-  render(
+  await render(
     <NavigationContainer linking={config}>
       <StackA.Navigator>
         <StackA.Screen name="Foo">
@@ -225,7 +230,7 @@ test('builds href in nested navigator screen', () => {
   );
 });
 
-test('builds action from href outside of a navigator', () => {
+test('builds action from href outside of a navigator', async () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -246,14 +251,14 @@ test('builds action from href outside of a navigator', () => {
     return null;
   };
 
-  render(
+  await render(
     <NavigationContainer linking={config}>
       <Test />
     </NavigationContainer>
   );
 });
 
-test('builds action from href in navigator screen', () => {
+test('builds action from href in navigator screen', async () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -276,7 +281,7 @@ test('builds action from href in navigator screen', () => {
 
   const Stack = createStackNavigator<{ Foo: undefined }>();
 
-  render(
+  await render(
     <NavigationContainer linking={config}>
       <Stack.Navigator>
         <Stack.Screen name="Foo" component={Test} />
@@ -285,7 +290,7 @@ test('builds action from href in navigator screen', () => {
   );
 });
 
-test('builds action from href in nested navigator', () => {
+test('builds action from href in nested navigator', async () => {
   expect.assertions(1);
 
   const Test = () => {
@@ -313,7 +318,7 @@ test('builds action from href in nested navigator', () => {
   const StackA = createStackNavigator<{ Foo: undefined }>();
   const StackB = createStackNavigator<{ Bar: { id: string } }>();
 
-  render(
+  await render(
     <NavigationContainer linking={config}>
       <StackA.Navigator>
         <StackA.Screen name="Foo">
@@ -328,7 +333,7 @@ test('builds action from href in nested navigator', () => {
   );
 });
 
-test('builds action from href for URL with scheme and host', () => {
+test('builds action from href for URL with scheme and host', async () => {
   expect.assertions(2);
 
   const Root = () => {
@@ -365,14 +370,14 @@ test('builds action from href for URL with scheme and host', () => {
     return null;
   };
 
-  render(
+  await render(
     <NavigationContainer linking={config}>
       <Root />
     </NavigationContainer>
   );
 });
 
-test('builds action from href for URL with custom prefixes', () => {
+test('builds action from href for URL with custom prefixes', async () => {
   // expect.assertions(2);
 
   const Root = () => {
@@ -433,7 +438,7 @@ test('builds action from href for URL with custom prefixes', () => {
     return null;
   };
 
-  render(
+  await render(
     <NavigationContainer
       linking={{
         ...config,
@@ -445,7 +450,7 @@ test('builds action from href for URL with custom prefixes', () => {
   );
 });
 
-test('throws for invalid hrefs', () => {
+test('throws for invalid hrefs', async () => {
   // expect.assertions(2);
 
   const Root = () => {
@@ -458,14 +463,144 @@ test('throws for invalid hrefs', () => {
     return null;
   };
 
-  render(
+  await render(
     <NavigationContainer linking={config}>
       <Root />
     </NavigationContainer>
   );
 });
 
-test('throws if no prefixes are defined', () => {
+test('builds action for shared path in the current tab', async () => {
+  type HomeStackParamList = {
+    Home: undefined;
+    Profile: { id: string };
+  };
+
+  type SearchStackParamList = {
+    Search: undefined;
+    Profile: { id: string };
+  };
+
+  type RootStackParamList = {
+    HomeBranch: NavigatorScreenParams<HomeStackParamList>;
+    SearchBranch: NavigatorScreenParams<SearchStackParamList>;
+  };
+
+  const linking: LinkingOptions<RootStackParamList> = {
+    config: {
+      screens: {
+        HomeBranch: {
+          initialRouteName: 'Home',
+          screens: {
+            Home: '',
+            Profile: {
+              path: 'profile/:id',
+              shared: true,
+            },
+          },
+        },
+        SearchBranch: {
+          initialRouteName: 'Search',
+          screens: {
+            Search: 'search',
+            Profile: {
+              path: 'profile/:id',
+              shared: true,
+            },
+          },
+        },
+      },
+    },
+    getInitialURL() {
+      return null;
+    },
+  };
+
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
+  const Test = () => {
+    buildAction = useLinkBuilder().buildAction;
+    return null;
+  };
+
+  const RootStack = createStackNavigator<RootStackParamList>();
+  const HomeStack = createStackNavigator<HomeStackParamList>();
+  const SearchStack = createStackNavigator<SearchStackParamList>();
+
+  const navigation = createNavigationContainerRef<RootStackParamList>();
+
+  await render(
+    <NavigationContainer
+      ref={navigation}
+      linking={linking}
+      initialState={{
+        routes: [
+          {
+            name: 'SearchBranch',
+            state: {
+              routes: [{ name: 'Search' }],
+            },
+          },
+        ],
+      }}
+    >
+      <RootStack.Navigator>
+        <RootStack.Screen name="HomeBranch">
+          {() => (
+            <HomeStack.Navigator>
+              <HomeStack.Screen name="Home">{() => null}</HomeStack.Screen>
+              <HomeStack.Screen name="Profile">{() => null}</HomeStack.Screen>
+            </HomeStack.Navigator>
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="SearchBranch">
+          {() => (
+            <SearchStack.Navigator>
+              <SearchStack.Screen name="Search" component={Test} />
+              <SearchStack.Screen name="Profile">
+                {() => null}
+              </SearchStack.Screen>
+            </SearchStack.Navigator>
+          )}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(buildAction?.('/profile/123')).toEqual({
+    type: 'NAVIGATE',
+    payload: {
+      name: 'SearchBranch',
+      params: {
+        initial: false,
+        screen: 'Profile',
+        params: { id: '123' },
+        path: '/profile/123',
+      },
+      pop: true,
+    },
+  });
+
+  await act(() => {
+    navigation.navigate('HomeBranch', { screen: 'Home' });
+  });
+
+  expect(buildAction?.('/profile/123')).toEqual({
+    type: 'NAVIGATE',
+    payload: {
+      name: 'HomeBranch',
+      params: {
+        initial: false,
+        screen: 'Profile',
+        params: { id: '123' },
+        path: '/profile/123',
+      },
+      pop: true,
+    },
+  });
+});
+
+test('throws if no prefixes are defined', async () => {
   expect.assertions(3);
 
   const Root = () => {
@@ -486,7 +621,7 @@ test('throws if no prefixes are defined', () => {
     return null;
   };
 
-  render(
+  await render(
     <NavigationContainer
       linking={{
         ...config,
@@ -498,7 +633,7 @@ test('throws if no prefixes are defined', () => {
   );
 });
 
-test('throws for hrefs that do not match the filter', () => {
+test('throws for hrefs that do not match the filter', async () => {
   expect.assertions(2);
 
   const Root = () => {
@@ -515,7 +650,7 @@ test('throws for hrefs that do not match the filter', () => {
     return null;
   };
 
-  render(
+  await render(
     <NavigationContainer
       linking={{
         ...config,

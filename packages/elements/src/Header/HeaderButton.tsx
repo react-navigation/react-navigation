@@ -5,7 +5,7 @@ import { PlatformPressable } from '../PlatformPressable';
 import type { HeaderButtonProps } from '../types';
 
 type Props = HeaderButtonProps & {
-  ref?: React.Ref<React.ComponentRef<typeof PlatformPressable>>;
+  ref?: React.Ref<React.ComponentRef<typeof PlatformPressable>> | undefined;
 };
 
 export function HeaderButton({

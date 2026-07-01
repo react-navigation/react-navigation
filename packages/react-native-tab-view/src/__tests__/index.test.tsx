@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, jest, test } from '@jest/globals';
-import { act, render, userEvent } from '@testing-library/react-native';
+import { act, render, screen, userEvent } from '@testing-library/react-native';
 import * as React from 'react';
 import { Platform, View } from 'react-native';
 
@@ -89,44 +89,44 @@ describe.each([{ type: 'ios' as const }, { type: 'web' as const }])(
       jest.replaceProperty(Platform, 'OS', type);
     });
 
-    test('renders using the scene for the initial index', () => {
-      const { getByTestId, queryByTestId } = render(<Test />);
+    test('renders using the scene for the initial index', async () => {
+      await render(<Test />);
 
-      act(() => jest.runAllTimers());
+      await act(() => jest.runAllTimers());
 
-      expect(getByTestId('route1')).toBeTruthy();
-      expect(queryByTestId('route2')).toBeNull();
+      expect(screen.getByTestId('route1')).toBeTruthy();
+      expect(screen.queryByTestId('route2')).toBeNull();
     });
 
     test('switches tabs on tab press in the tab bar', async () => {
       const user = userEvent.setup();
 
-      const { getByTestId, getByLabelText } = render(<Test />);
+      await render(<Test />);
 
-      act(() => jest.runAllTimers());
+      await act(() => jest.runAllTimers());
 
-      expect(getByTestId('route1')).toBeTruthy();
+      expect(screen.getByTestId('route1')).toBeTruthy();
 
-      await user.press(getByLabelText('Second'));
+      await user.press(screen.getByLabelText('Second'));
 
-      act(() => jest.runAllTimers());
+      await act(() => jest.runAllTimers());
 
-      expect(getByTestId('route2')).toBeTruthy();
+      expect(screen.getByTestId('route2')).toBeTruthy();
     });
 
     test('calls onTabSelect when tab is selected', async () => {
       const user = userEvent.setup();
       const onTabSelect = jest.fn();
 
-      const { getByLabelText } = render(<Test onTabSelect={onTabSelect} />);
+      await render(<Test onTabSelect={onTabSelect} />);
 
-      act(() => jest.runAllTimers());
+      await act(() => jest.runAllTimers());
 
       expect(onTabSelect).not.toHaveBeenCalled();
 
-      await user.press(getByLabelText('Second'));
+      await user.press(screen.getByLabelText('Second'));
 
-      act(() => jest.runAllTimers());
+      await act(() => jest.runAllTimers());
 
       expect(onTabSelect).toHaveBeenCalledTimes(1);
       expect(onTabSelect).toHaveBeenCalledWith({ index: 1 });

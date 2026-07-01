@@ -1060,11 +1060,13 @@ test('goes back to matching screen for navigate if pop: true', () => {
           { key: 'bar', name: 'bar' },
         ],
       },
-      CommonActions.navigate({
-        name: 'qux',
-        params: { answer: 42 },
-        pop: true,
-      }),
+      CommonActions.navigate(
+        'qux',
+        { answer: 42 },
+        {
+          pop: true,
+        }
+      ),
       options
     )
   ).toEqual({
@@ -1099,11 +1101,13 @@ test('goes back to matching screen for navigate if pop: true', () => {
           { key: 'bar', name: 'bar' },
         ],
       },
-      CommonActions.navigate({
-        name: 'baz',
-        params: { answer: 42 },
-        pop: true,
-      }),
+      CommonActions.navigate(
+        'baz',
+        { answer: 42 },
+        {
+          pop: true,
+        }
+      ),
       options
     )
   ).toEqual({
@@ -1130,11 +1134,13 @@ test('goes back to matching screen for navigate if pop: true', () => {
           { key: 'bar', name: 'bar', params: { answer: 42 } },
         ],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { answer: 96 },
-        pop: true,
-      }),
+      CommonActions.navigate(
+        'bar',
+        { answer: 96 },
+        {
+          pop: true,
+        }
+      ),
       options
     )
   ).toEqual({
@@ -1174,11 +1180,13 @@ test('navigates to a preloaded route with navigate if pop: true', () => {
           { key: 'qux-preload', name: 'qux' },
         ],
       },
-      CommonActions.navigate({
-        name: 'qux',
-        params: { answer: 42 },
-        pop: true,
-      }),
+      CommonActions.navigate(
+        'qux',
+        { answer: 42 },
+        {
+          pop: true,
+        }
+      ),
       options
     )
   ).toEqual({
@@ -1219,11 +1227,13 @@ test('navigates to a retained route with navigate if pop: true', () => {
           { key: 'qux-retained', name: 'qux' },
         ],
       },
-      CommonActions.navigate({
-        name: 'qux',
-        params: { answer: 42 },
-        pop: true,
-      }),
+      CommonActions.navigate(
+        'qux',
+        { answer: 42 },
+        {
+          pop: true,
+        }
+      ),
       options
     )
   ).toEqual({
@@ -1264,8 +1274,7 @@ test('moves retained routes to inactive routes when navigate with pop removes th
           { key: 'qux', name: 'qux' },
         ],
       },
-      CommonActions.navigate({
-        name: 'bar',
+      CommonActions.navigate('bar', undefined, {
         pop: true,
       }),
       options
@@ -1310,11 +1319,13 @@ test('goes back to matching ID for navigate if pop: true', () => {
           { key: 'bar-test', name: 'bar', params: { foo: 'a' } },
         ],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { foo: 'a' },
-        pop: true,
-      }),
+      CommonActions.navigate(
+        'bar',
+        { foo: 'a' },
+        {
+          pop: true,
+        }
+      ),
       options
     )
   ).toEqual({
@@ -1346,11 +1357,13 @@ test('goes back to matching ID for navigate if pop: true', () => {
           { key: 'bar-c', name: 'bar', params: { foo: 'c' } },
         ],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { foo: 'b' },
-        pop: true,
-      }),
+      CommonActions.navigate(
+        'bar',
+        { foo: 'b' },
+        {
+          pop: true,
+        }
+      ),
       options
     )
   ).toEqual({
@@ -1400,11 +1413,13 @@ test('goes back to matching ID in route history for navigate if pop: true', () =
           },
         ],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { foo: 'b' },
-        pop: true,
-      }),
+      CommonActions.navigate(
+        'bar',
+        { foo: 'b' },
+        {
+          pop: true,
+        }
+      ),
       options
     )
   ).toEqual({
@@ -1447,11 +1462,13 @@ test('goes back to matching ID in route history for navigate if pop: true', () =
           },
         ],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { foo: 'a' },
-        pop: true,
-      }),
+      CommonActions.navigate(
+        'bar',
+        { foo: 'a' },
+        {
+          pop: true,
+        }
+      ),
       options
     )
   ).toEqual({
@@ -2618,6 +2635,31 @@ test('moves retained routes to inactive routes on goBack', () => {
   });
 });
 
+test("doesn't go back from the first route", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        retainedRouteKeys: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [{ key: 'baz', name: 'baz' }],
+      },
+      CommonActions.goBack(),
+      options
+    )
+  ).toBeNull();
+});
+
 test('handles goBack action with route.history on a single route', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
@@ -3206,10 +3248,13 @@ test('adds path on navigate if provided', () => {
         ],
       },
 
-      CommonActions.navigate({
-        name: 'bar',
-        path: '/foo/bar',
-      }),
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'bar',
+          path: '/foo/bar',
+        },
+      },
       options
     )
   ).toEqual({
@@ -3239,11 +3284,14 @@ test('adds path on navigate if provided', () => {
           { key: 'bar', name: 'bar', params: { answer: 42 }, path: '/foo/bar' },
         ],
       },
-      CommonActions.navigate({
-        name: 'bar',
-        params: { fruit: 'orange' },
-        path: '/foo/baz',
-      }),
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'bar',
+          params: { fruit: 'orange' },
+          path: '/foo/baz',
+        },
+      },
       options
     )
   ).toEqual({
@@ -3275,10 +3323,13 @@ test('adds path on navigate if provided', () => {
         routeNames: ['baz', 'bar', 'qux'],
         routes: [{ key: 'bar', name: 'bar', params: { answer: 42 } }],
       },
-      CommonActions.navigate({
-        name: 'baz',
-        path: '/foo/bar',
-      }),
+      {
+        type: 'NAVIGATE',
+        payload: {
+          name: 'baz',
+          path: '/foo/bar',
+        },
+      },
       options
     )
   ).toEqual({
@@ -3322,10 +3373,7 @@ test("doesn't remove existing path on navigate if not provided", () => {
         ],
       },
 
-      CommonActions.navigate({
-        name: 'bar',
-        params: { answer: 42 },
-      }),
+      CommonActions.navigate('bar', { answer: 42 }),
       options
     )
   ).toEqual({
@@ -4026,6 +4074,31 @@ test('adds preloaded route with preload', () => {
       { key: 'bar-1', name: 'bar', params: { color: 'test' } },
     ],
   });
+});
+
+test("doesn't preload nonexistent screen", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        retainedRouteKeys: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [{ key: 'baz', name: 'baz' }],
+      },
+      CommonActions.preload('far', { answer: 42 }),
+      options
+    )
+  ).toBeNull();
 });
 
 test('adds preloaded route with preload when an active route has the same ID', () => {

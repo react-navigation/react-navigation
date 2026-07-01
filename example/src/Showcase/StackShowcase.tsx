@@ -440,6 +440,17 @@ const DINOS: Dino[] = [
   },
 ];
 
+const FALLBACK_DINO = DINOS[0];
+const FEATURED_DINO = DINOS[9];
+
+if (FALLBACK_DINO == null) {
+  throw new Error("Couldn't find the fallback exhibit item.");
+}
+
+if (FEATURED_DINO == null) {
+  throw new Error("Couldn't find the featured exhibit item.");
+}
+
 const PERIOD_DESCRIPTIONS: Record<Period, string> = {
   Triassic:
     'The Triassic marks the early rise of dinosaurs after the Permian extinction, with lightly built hunters and the first large plant-eaters.',
@@ -514,18 +525,20 @@ const DetailStat = ({
 
 const CatalogHero = () => {
   const { colors, fonts } = useTheme();
-  const featured = DINOS[9];
 
   return (
     <View style={[styles.heroCard, { backgroundColor: colors.card }]}>
       <View
         style={[
           StyleSheet.absoluteFill,
-          { backgroundColor: PERIOD_COLORS[featured.period], opacity: 0.16 },
+          {
+            backgroundColor: PERIOD_COLORS[FEATURED_DINO.period],
+            opacity: 0.16,
+          },
         ]}
       />
       <Image
-        source={featured.image}
+        source={FEATURED_DINO.image}
         style={styles.fillImage}
         resizeMode="cover"
       />
@@ -533,7 +546,7 @@ const CatalogHero = () => {
 
       <View style={styles.heroHeaderRow}>
         <Text style={[styles.heroEyebrow, fonts.medium]}>Exhibit guide</Text>
-        <PeriodBadge period={featured.period} />
+        <PeriodBadge period={FEATURED_DINO.period} />
       </View>
 
       <View style={styles.heroCopy}>
@@ -573,7 +586,7 @@ const EmptyState = () => {
 };
 
 const DinoCard = React.memo(
-  ({ item, width }: { item: Dino; width?: number }) => {
+  ({ item, width }: { item: Dino; width?: number | undefined }) => {
     const { colors, fonts } = useTheme();
     const navigation = useNavigation('Catalog');
 
@@ -709,7 +722,8 @@ const DinoDetailScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
   const { colors, fonts } = useTheme();
   const navigation = useNavigation('DinoDetail');
   const dino =
-    DINOS.find((candidate) => candidate.id === route.params.id) ?? DINOS[0];
+    DINOS.find((candidate) => candidate.id === route.params.id) ??
+    FALLBACK_DINO;
   const detailStats: { icon: IconName; label: string; value: string }[] = [
     { icon: DIET_ICONS[dino.diet], label: 'Diet', value: dino.diet },
     { icon: 'ruler', label: 'Length', value: dino.length },
@@ -778,7 +792,8 @@ const ImageViewerScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
   const navigation = useNavigation('ImageViewer');
   const insets = useSafeAreaInsets();
   const dino =
-    DINOS.find((candidate) => candidate.id === route.params.id) ?? DINOS[0];
+    DINOS.find((candidate) => candidate.id === route.params.id) ??
+    FALLBACK_DINO;
   const { current } = useCardAnimation();
 
   return (

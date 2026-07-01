@@ -58,7 +58,21 @@ export function MaterialTopTabView({
     });
   };
 
-  const focusedOptions = descriptors[state.routes[state.index].key].options;
+  const focusedRoute = state.routes[state.index];
+
+  if (focusedRoute == null) {
+    throw new Error(`Couldn't find a route at index ${state.index}.`);
+  }
+
+  const focusedDescriptor = descriptors[focusedRoute.key];
+
+  if (focusedDescriptor == null) {
+    throw new Error(
+      `Couldn't find a descriptor for route '${focusedRoute.key}'.`
+    );
+  }
+
+  const focusedOptions = focusedDescriptor.options;
 
   return (
     <TabView
@@ -66,28 +80,42 @@ export function MaterialTopTabView({
       onIndexChange={(index) => {
         const route = state.routes[index];
 
+        if (route == null) {
+          throw new Error(`Couldn't find a route at index ${index}.`);
+        }
+
         navigation.dispatch({
-          ...CommonActions.navigate(route),
+          ...CommonActions.navigate(route.name, route.params),
           target: state.key,
         });
       }}
-      renderScene={({ route, position }) => (
-        <SceneContent
-          focused={route.key === state.routes[state.index].key}
-          preloaded={state.preloadedRouteKeys.includes(route.key)}
-          position={position}
-          options={descriptors[route.key].options}
-        >
-          {descriptors[route.key].render()}
-        </SceneContent>
-      )}
+      renderScene={({ route, position }) => {
+        const descriptor = descriptors[route.key];
+
+        if (descriptor == null) {
+          throw new Error(
+            `Couldn't find a descriptor for route '${route.key}'.`
+          );
+        }
+
+        return (
+          <SceneContent
+            focused={route.key === focusedRoute.key}
+            preloaded={state.preloadedRouteKeys.includes(route.key)}
+            position={position}
+            options={descriptor.options}
+          >
+            {descriptor.render()}
+          </SceneContent>
+        );
+      }}
       navigationState={state}
       renderTabBar={renderTabBar}
       renderLazyPlaceholder={({ route }) =>
-        descriptors[route.key].options.lazyPlaceholder?.() ?? null
+        descriptors[route.key]?.options.lazyPlaceholder?.() ?? null
       }
       lazy={({ route }) =>
-        descriptors[route.key].options.lazy === true &&
+        descriptors[route.key]?.options.lazy === true &&
         !state.preloadedRouteKeys.includes(route.key)
       }
       lazyPreloadDistance={focusedOptions.lazyPreloadDistance}

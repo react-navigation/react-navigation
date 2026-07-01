@@ -1,6 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import { render } from '@testing-library/react-native';
+import { Text } from 'react-native';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
@@ -12,7 +13,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('adds the listener even if container is mounted later', () => {
+test('adds the listener even if container is mounted later', async () => {
   const ref = createNavigationContainerRef<ParamListBase>();
   const listener = jest.fn();
 
@@ -26,13 +27,16 @@ test('adds the listener even if container is mounted later', () => {
       { title?: string },
       any
     >(MockRouter, props);
-    const { render, options } = descriptors[state.routes[state.index].key];
+    const route = state.routes[state.index];
+    const descriptor = route == null ? undefined : descriptors[route.key];
 
     return (
       <NavigationContent>
         <main>
-          <h1>{options.title}</h1>
-          <div>{render()}</div>
+          <h1>
+            <Text>{descriptor?.options.title}</Text>
+          </h1>
+          <div>{descriptor?.render()}</div>
         </main>
       </NavigationContent>
     );
@@ -47,7 +51,7 @@ test('adds the listener even if container is mounted later', () => {
     </BaseNavigationContainer>
   );
 
-  render(element).update(element);
+  await render(element);
 
   expect(listener).toHaveBeenCalledTimes(1);
 });

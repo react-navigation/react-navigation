@@ -125,10 +125,16 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     (
       action: NavigationAction | ((state: NavigationState) => NavigationAction)
     ) => {
-      if (listeners.focus[0] == null) {
+      const listener = listeners.focus[0];
+
+      if (listener == null) {
         console.error(NOT_INITIALIZED_ERROR);
       } else {
-        listeners.focus[0]((navigation) => navigation.dispatch(action));
+        listener((navigation) =>
+          React.startTransition(() => {
+            navigation.dispatch(action);
+          })
+        );
       }
     }
   );
@@ -152,11 +158,12 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
   const resetRoot = useLatestCallback(
     (state: PartialState<NavigationState> | NavigationState) => {
       const target = state?.key ?? keyedListeners.getState.root?.().key;
+      const listener = listeners.focus[0];
 
-      if (target == null) {
+      if (target == null || listener == null) {
         console.error(NOT_INITIALIZED_ERROR);
       } else {
-        listeners.focus[0]((navigation) =>
+        listener((navigation) =>
           navigation.dispatch({
             ...CommonActions.reset(state),
             target,
@@ -194,6 +201,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
         acc[name] = (...args: any[]) =>
           // @ts-expect-error: this is ok
           dispatch(CommonActions[name](...args));
+
         return acc;
       }, {}),
       ...emitter.create('root'),
@@ -341,6 +349,10 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
           for (let i = 0; i < location.length; i++) {
             const curr = location[i];
             const prev = location[i - 1];
+
+            if (curr == null) {
+              continue;
+            }
 
             pointer = pointer[curr];
 

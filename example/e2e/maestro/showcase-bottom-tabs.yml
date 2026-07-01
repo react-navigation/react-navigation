@@ -6,15 +6,89 @@ name: Showcase - Bottom Tabs
     env:
       LINK: bottom-tabs-showcase
       TEXT: 'Midnight Waves'
+- runFlow:
+    when:
+      # Android doesn't expose selected state
+      true: ${maestro.platform == 'web' || maestro.platform == 'ios'}
+    commands:
+      - assertVisible:
+          text: 'Albums'
+          selected: true
+- tapOn:
+    id: 'open-album-albums'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'web' || maestro.platform == 'ios'}
+    commands:
+      - assertVisible:
+          text: 'Albums'
+          selected: true
+- assertVisible:
+    text: 'Midnight Waves'
+- assertVisible:
+    text: 'Luna Echo'
 - tapOn:
     text: '.*For You.*'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'web' || maestro.platform == 'ios'}
+    commands:
+      - assertVisible:
+          text: 'For You'
+          selected: true
+- tapOn:
+    id: 'open-album-for-you'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'web' || maestro.platform == 'ios'}
+    commands:
+      - assertVisible:
+          text: 'For You'
+          selected: true
 - assertVisible:
-    text: 'Featured'
+    text: 'Quiet Hours'
+- assertVisible:
+    text: 'Amber Field'
 - tapOn:
     text: 'Radio'
 - assertVisible:
     text: 'Velvet FM'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'web' || maestro.platform == 'ios'}
+    commands:
+      - assertVisible:
+          text: 'Radio'
+          selected: true
 - tapOn:
-    text: 'Search'
+    text: '.*For You.*'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'web' || maestro.platform == 'ios'}
+    commands:
+      - assertVisible:
+          text: 'For You'
+          selected: true
 - assertVisible:
-    text: 'Browse Categories'
+    text: 'Quiet Hours'
+- openLink:
+    link: ${APP_SCHEME}bottom-tabs-showcase/album/12
+- runFlow:
+    when:
+      # On Web, opening a link results in fresh page load
+      platform: web
+    commands:
+      - assertVisible:
+          text: 'Albums'
+          selected: true
+- runFlow:
+    when:
+      platform: ios
+    commands:
+      - assertVisible:
+          text: 'For You'
+          selected: true
+- assertVisible:
+    text: 'Signal Lost'
+- assertVisible:
+    text: 'Pixel Drift'

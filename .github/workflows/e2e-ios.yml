@@ -37,7 +37,7 @@ jobs:
       - name: Calculate fingerprint
         id: calculate-fingerprint
         run: |
-          FINGERPRINT=$(npx expo-updates fingerprint:generate --platform ios | jq -r '.hash')
+          FINGERPRINT=$(pnpm exec expo-updates fingerprint:generate --platform ios | jq -r '.hash')
           echo "Fingerprint for iOS: $FINGERPRINT"
           echo "fingerprint=$FINGERPRINT" >> "$GITHUB_OUTPUT"
         working-directory: example
@@ -114,7 +114,7 @@ jobs:
       - name: Build iOS App
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
         run: |
-          yarn expo prebuild --platform ios
+          pnpm expo prebuild --platform ios
           xcodebuild ONLY_ACTIVE_ARCH=YES \
             -workspace ios/ReactNavigationExample.xcworkspace \
             -UseNewBuildSystem=YES \
@@ -146,7 +146,7 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
 
       - name: Start Metro bundler
-        run: yarn --cwd example start &
+        run: pnpm --dir example start &
 
       - name: Boot iOS Simulator
         timeout-minutes: 5
@@ -182,7 +182,7 @@ jobs:
         run: |
           xcrun simctl spawn booted log stream --style syslog > ~/maestro-simulator.log 2>&1 & # Start capturing simulator logs in the background
           xcrun simctl install booted ../ios-debug-build/ios-debug.app
-          yarn run e2e:native --platform ios
+          pnpm e2e:native --platform ios
         working-directory: example
 
       - name: Shutdown simulator

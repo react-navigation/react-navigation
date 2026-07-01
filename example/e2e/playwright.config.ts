@@ -10,7 +10,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  ...(process.env.CI ? { workers: 1 } : null),
   projects: [
     {
       name: 'Chromium',
@@ -30,14 +30,14 @@ export default defineConfig({
   webServer: [
     {
       cwd: path.join(__dirname, '..'),
-      command: `yarn web --port ${PORT}`,
+      command: `pnpm web --port ${PORT}`,
       url: `http://localhost:${PORT}`,
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,
     },
     {
       cwd: path.join(__dirname, '..'),
-      command: 'yarn server',
+      command: 'pnpm server',
       url: 'http://localhost:3275',
       timeout: 120 * 1000,
       reuseExistingServer: !process.env.CI,

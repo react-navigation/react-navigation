@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.38](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.37...@react-navigation/material-top-tabs@8.0.0-alpha.38) (2026-06-18)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.36...@react-navigation/material-top-tabs@8.0.0-alpha.37) (2026-06-11)
+
+### Features
+
+* remove overload from navigate action ([#13150](https://github.com/react-navigation/react-navigation/issues/13150)) ([a876c49](https://github.com/react-navigation/react-navigation/commit/a876c49b411a79d4614d26195829019c90ada992)) - by @satya164
+
+# [8.0.0-alpha.36](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.35...@react-navigation/material-top-tabs@8.0.0-alpha.36) (2026-06-10)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.34...@react-navigation/material-top-tabs@8.0.0-alpha.35) (2026-06-09)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.33...@react-navigation/material-top-tabs@8.0.0-alpha.34) (2026-06-09)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
+# [8.0.0-alpha.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.32...@react-navigation/material-top-tabs@8.0.0-alpha.33) (2026-06-08)
+
+### Features
+
+* migrate stack and drawer to gesture handler 3 ([#13104](https://github.com/react-navigation/react-navigation/issues/13104)) ([6104e1d](https://github.com/react-navigation/react-navigation/commit/6104e1de050916a84ef5062967e3bdebe88575cf)) - by @satya164
+
 # [8.0.0-alpha.32](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.31...@react-navigation/material-top-tabs@8.0.0-alpha.32) (2026-05-25)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.10...react-native-tab-view@5.0.0-alpha.11) (2026-06-18)
+
+**Note:** Version bump only for package react-native-tab-view
+
+# [5.0.0-alpha.10](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.9...react-native-tab-view@5.0.0-alpha.10) (2026-06-08)
+
+### Features
+
+* migrate stack and drawer to gesture handler 3 ([#13104](https://github.com/react-navigation/react-navigation/issues/13104)) ([6104e1d](https://github.com/react-navigation/react-navigation/commit/6104e1de050916a84ef5062967e3bdebe88575cf)) - by @satya164
+
 # [5.0.0-alpha.9](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.8...react-native-tab-view@5.0.0-alpha.9) (2026-05-19)
 
 ### Bug Fixes

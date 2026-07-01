@@ -498,7 +498,7 @@ export function useNavigationBuilder<
     const initialRouteParamList = routeNames.reduce<
       Record<string, object | undefined>
     >((acc, curr) => {
-      const { initialParams } = screens[curr].props;
+      const { initialParams } = screens[curr]?.props ?? {};
       const initialParamsFromParams =
         route?.params?.state == null &&
         route?.params?.initial !== false &&
@@ -687,13 +687,16 @@ export function useNavigationBuilder<
         }
       } else {
         // If the route was updated with new screen name and/or params, we should navigate there
-        action = CommonActions.navigate({
-          name: route.params.screen,
-          params: route.params.params,
-          path: route.params.path,
-          merge: route.params.merge,
-          pop: route.params.pop,
-        });
+        action = {
+          type: 'NAVIGATE',
+          payload: {
+            name: route.params.screen,
+            params: route.params.params,
+            path: route.params.path,
+            merge: route.params.merge,
+            pop: route.params.pop,
+          },
+        } as const;
       }
     }
 
@@ -777,22 +780,14 @@ export function useNavigationBuilder<
         setCurrentState(undefined);
         stateCleanupRef.current = true;
       }
+
+      // Reset so that StrictMode's second mount re-propagates state correctly.
+      // Without this, the guard above sees the same reference and skips setState,
+      // causing the initial state to be lost after cleanup wipes the container state.
+      lastNotifiedStateRef.current = null;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // In some cases (e.g. route names change), internal state might have changed
-  // But it hasn't been committed yet, so hasn't propagated to the sync external store
-  // During this time, we need to return the internal state in `getState`
-  // Otherwise it can result in inconsistent state during render in children
-  // To avoid this, we use a ref for render phase, and immediately clear it on commit
-  const stateRef = React.useRef<State | null>(state);
-
-  stateRef.current = state;
-
-  React.useLayoutEffect(() => {
-    stateRef.current = null;
-  });
 
   const getState = useLatestCallback((): State => {
     const currentState = getCurrentState();
@@ -829,11 +824,17 @@ export function useNavigationBuilder<
     }
 
     const hasPerScreenListeners = routeNames.some(
-      (name) => screens[name].props.listeners != null
+      (name) => screens[name]?.props.listeners != null
     );
 
     if (screenListeners != null || hasPerScreenListeners) {
-      const navigation = descriptors[route.key].navigation;
+      const descriptor = descriptors[route.key];
+
+      if (descriptor == null) {
+        throw new Error(`Couldn't find a descriptor for route '${route.key}'.`);
+      }
+
+      const navigation = descriptor.navigation;
 
       const listeners = ([] as (((e: any) => void) | undefined)[])
         .concat(
@@ -841,7 +842,7 @@ export function useNavigationBuilder<
           ...[
             screenListeners,
             ...routeNames.map((name) => {
-              const { listeners } = screens[name].props;
+              const { listeners } = screens[name]?.props ?? {};
               return listeners;
             }),
           ].map((listeners) => {
@@ -863,14 +864,7 @@ export function useNavigationBuilder<
 
       listeners.forEach((listener) => listener?.(e));
     }
-
-    onEmitEvent({
-      type: e.type,
-      data: e.data,
-      target: e.target,
-      defaultPrevented: e.defaultPrevented,
-    });
-  });
+  }, onEmitEvent);
 
   useFocusEvents({ state, emitter });
 
@@ -949,9 +943,9 @@ export function useNavigationBuilder<
     onAction,
     onUnhandledAction,
     getState,
+    state,
     emitter,
     router,
-    stateRef,
   });
 
   useFocusedListenersChildrenAdapter({
@@ -987,6 +981,12 @@ export function useNavigationBuilder<
   });
 
   const NavigationContent = useComponent((children: React.ReactNode) => {
+    const focusedRoute = state.routes[state.index];
+
+    if (focusedRoute == null) {
+      throw new Error(`Couldn't find a route at index ${state.index}.`);
+    }
+
     const element =
       layout != null
         ? layout({
@@ -1000,10 +1000,11 @@ export function useNavigationBuilder<
     return (
       <NavigationMetaContext.Provider value={undefined}>
         <NavigationHelpersContext.Provider value={navigation}>
-          <NavigationStateListenerProvider state={state}>
-            <FocusedRouteKeyContext.Provider
-              value={state.routes[state.index].key}
-            >
+          <NavigationStateListenerProvider
+            state={state}
+            getState={navigation.getState}
+          >
+            <FocusedRouteKeyContext.Provider value={focusedRoute.key}>
               <PreventRemoveProvider>{element}</PreventRemoveProvider>
             </FocusedRouteKeyContext.Provider>
           </NavigationStateListenerProvider>

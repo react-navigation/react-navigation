@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.23...@react-navigation/core@8.0.0-alpha.24) (2026-06-18)
+
+### Bug Fixes
+
+* account for prevent remove in __unsafe_event__ ([840e340](https://github.com/react-navigation/react-navigation/commit/840e340195bf9fe9d22136174b1a13eb2ea0ed65)) - by @satya164
+* emit `beforeRemove` for nested routes removed by reset ([#13153](https://github.com/react-navigation/react-navigation/issues/13153)) ([60a484b](https://github.com/react-navigation/react-navigation/commit/60a484b558d1de3f8435c6509a00218df85c4d5a)) - by @TaduJR
+* ensure __unsafe_event__ is called after all listeners ([735b8b9](https://github.com/react-navigation/react-navigation/commit/735b8b92693c03973e6e55d5dc6267441cbf9f0b)) - by @satya164
+
+### Features
+
+* let dynamic navigators specify child navigator types ([#13160](https://github.com/react-navigation/react-navigation/issues/13160)) ([5f29675](https://github.com/react-navigation/react-navigation/commit/5f29675f6c3882cbfaf834ca95762ef196601d05)) - by @satya164
+
+# [8.0.0-alpha.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.22...@react-navigation/core@8.0.0-alpha.23) (2026-06-11)
+
+### Features
+
+* remove overload from navigate action ([#13150](https://github.com/react-navigation/react-navigation/issues/13150)) ([a876c49](https://github.com/react-navigation/react-navigation/commit/a876c49b411a79d4614d26195829019c90ada992)) - by @satya164
+
+# [8.0.0-alpha.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.21...@react-navigation/core@8.0.0-alpha.22) (2026-06-10)
+
+**Note:** Version bump only for package @react-navigation/core
+
+# [8.0.0-alpha.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.20...@react-navigation/core@8.0.0-alpha.21) (2026-06-09)
+
+### Bug Fixes
+
+* fix useNavigation(name) degrading navigation type on large trees ([#13145](https://github.com/react-navigation/react-navigation/issues/13145)) ([70e181f](https://github.com/react-navigation/react-navigation/commit/70e181ffa9891388cc353a0cd5f3cca33897d790)) - by @Bram-dc
+
+# [8.0.0-alpha.20](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.19...@react-navigation/core@8.0.0-alpha.20) (2026-06-08)
+
+### Bug Fixes
+
+* fix initial state getting dropped if root navigator render is delayed in StrictMode ([#13121](https://github.com/react-navigation/react-navigation/issues/13121)) ([7a9c5b9](https://github.com/react-navigation/react-navigation/commit/7a9c5b9c3bbb76774a0e01599f5a5a95e695f8cc)), closes [#12985](https://github.com/react-navigation/react-navigation/issues/12985) [#13025](https://github.com/react-navigation/react-navigation/issues/13025) - by @Jasleen-Kaur96
+* remove support for linking at group level ([06e5928](https://github.com/react-navigation/react-navigation/commit/06e5928e5e0f552796f0823d9b965617fb411dc0)) - by @satya164
+
+### Features
+
+* add support for shared URLs in linking config ([#13131](https://github.com/react-navigation/react-navigation/issues/13131)) ([42bad76](https://github.com/react-navigation/react-navigation/commit/42bad76636c20f8c52b91785a933a60eed6250c8)) - by @satya164
+
 # [8.0.0-alpha.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.18...@react-navigation/core@8.0.0-alpha.19) (2026-05-25)
 
 ### Bug Fixes

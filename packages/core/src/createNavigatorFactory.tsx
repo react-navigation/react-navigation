@@ -11,15 +11,36 @@ import {
 import type {
   NavigatorTypeBagBase,
   NavigatorTypeBagFor,
+  NestedNavigatorsForParamList,
   TypedNavigator,
 } from './types';
 import type { KeysOf } from './utilities';
 
+type ValidNavigatorNesting<
+  ParamList extends ParamListBase,
+  Nesting,
+> = Nesting extends Partial<Record<keyof ParamList, unknown>> &
+  Record<Exclude<keyof Nesting, keyof ParamList>, never>
+  ? Nesting
+  : never;
+
 export type TypedNavigatorFactory<in out TypeBag extends NavigatorTypeBagBase> =
   {
-    <const ParamList extends ParamListBase>(): TypedNavigator<
+    <
+      const ParamList extends ParamListBase,
+      const Nesting extends Partial<Record<keyof ParamList, unknown>> &
+        // Extra keys satisfy the structural constraint via width subtyping,
+        // Force any key in `Nesting` that isn't in the param list to `never`.
+        // So typos in the nesting config will cause an error.
+        Record<Exclude<keyof Nesting, keyof ParamList>, never> =
+        ValidNavigatorNesting<
+          ParamList,
+          NestedNavigatorsForParamList<ParamList>
+        >,
+    >(): TypedNavigator<
       NavigatorTypeBagFor<TypeBag, ParamList>,
-      undefined
+      undefined,
+      Nesting
     >;
     <
       const Config extends StaticConfig<

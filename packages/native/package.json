@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/native",
   "description": "React Native integration for React Navigation",
-  "version": "8.0.0-alpha.28",
+  "version": "8.0.0-alpha.33",
   "keywords": [
     "react-native",
     "react-navigation",
@@ -22,12 +22,12 @@
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
-      "source": "./src/index.tsx",
+      "@react-navigation/source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
     "./server": {
-      "source": "./src/server/index.tsx",
+      "@react-navigation/source": "./src/server/index.tsx",
       "types": "./lib/typescript/src/server/index.d.ts",
       "default": "./lib/module/server/index.js"
     },
@@ -67,18 +67,20 @@
     "fast-deep-equal": "^3.1.3",
     "nanoid": "^5.1.11",
     "sf-symbols-typescript": "^2.2.0",
+    "standard-navigation": "^0.0.7",
     "use-latest-callback": "^0.3.4"
   },
   "devDependencies": {
     "@jest/globals": "^29.7.0",
-    "@testing-library/react-native": "^13.3.3",
-    "@types/react": "~19.2.15",
+    "@testing-library/react-native": "^14.0.0",
+    "@types/react": "~19.2.17",
+    "@types/react-dom": "~19.2.3",
     "del-cli": "^7.0.0",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "react-native": "0.83.6",
-    "react-native-builder-bob": "^0.41.0",
-    "react-test-renderer": "19.2.0",
+    "react-native-builder-bob": "^0.43.0",
+    "test-renderer": "1.2.0",
     "typescript": "^6.0.3"
   },
   "peerDependencies": {

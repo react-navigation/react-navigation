@@ -36,7 +36,9 @@ export function useLogger(
   const valueColor = '#1E88E5';
 
   useDevToolsBase(ref, (result) => {
-    const log = [[`${result.type} `, 'color: gray; font-weight: lighter']];
+    const log: [string, string][] = [
+      [`${result.type} `, 'color: gray; font-weight: lighter'],
+    ];
 
     if (result.type === 'link') {
       log.push([`${result.url} `, `color: ${valueColor}; font-weight: bold`]);
@@ -83,7 +85,7 @@ export function useLogger(
           ['{ ', 'color: gray; font-weight: lighter'],
           ...Object.entries(payload)
             .map(([key, value], i, self) => {
-              const pair = [
+              const pair: [string, string][] = [
                 [key, `color: ${keyColor}; font-weight: normal`],
                 [': ', 'color: gray; font-weight: lighter'],
                 [
@@ -104,7 +106,7 @@ export function useLogger(
       }
     }
 
-    const params = log.reduce(
+    const params = log.reduce<[string, ...string[]]>(
       (acc, [text, style]) => {
         acc[0] += `%c${text}`;
         acc.push(style);

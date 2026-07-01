@@ -9,8 +9,10 @@ type ColorType = {
   string(): string;
 };
 
+type ColorParts = [number, number, number, number];
+
 type ParsedColor = {
-  parts: number[];
+  parts: ColorParts;
   type: (typeof COLOR_TYPES)[number];
 };
 
@@ -40,9 +42,10 @@ Color.foreground = (color: ColorValue): ColorValue => {
       typeof value.resource_paths[0] === 'string'
     ) {
       const name = value.resource_paths[0].replace('@android:color/', '');
+      const foreground = ANDROID_COLOR_MAP[name];
 
-      if (name in ANDROID_COLOR_MAP) {
-        return PlatformColor(`@android:color/${ANDROID_COLOR_MAP[name]}`);
+      if (foreground != null) {
+        return PlatformColor(`@android:color/${foreground}`);
       }
     }
 
@@ -56,8 +59,9 @@ Color.foreground = (color: ColorValue): ColorValue => {
     ) {
       const name = value.semantic[0];
 
-      if (name in IOS_COLOR_MAP) {
-        const foreground = IOS_COLOR_MAP[name];
+      const foreground = IOS_COLOR_MAP[name];
+
+      if (foreground != null) {
         return foreground === 'white' || foreground === 'black'
           ? foreground
           : PlatformColor(foreground);
@@ -105,7 +109,7 @@ function build(parsed: ParsedColor): ColorType {
       return clamp(parsed.parts[3], 0, 1);
     }
 
-    const newParts = parsed.parts.slice();
+    const newParts: ColorParts = [...parsed.parts];
 
     newParts[3] = amount;
 
@@ -113,7 +117,7 @@ function build(parsed: ParsedColor): ColorType {
   }
 
   function fade(amount: number): ColorType {
-    const newParts = parsed.parts.slice();
+    const newParts: ColorParts = [...parsed.parts];
 
     newParts[3] = parsed.parts[3] * (1 - amount);
 
@@ -139,17 +143,23 @@ function parse(color: string): ParsedColor | undefined {
   const named = NAMED_COLORS[color.toLowerCase()];
 
   if (named) {
-    return { type: 'rgb', parts: [...named, 1] };
+    return { type: 'rgb', parts: [named[0], named[1], named[2], 1] };
   }
 
   const hex = color.match(/^#([\da-f]+)$/i);
 
   if (hex) {
+    const hexValue = hex[1];
+
+    if (hexValue == null) {
+      return undefined;
+    }
+
     // Normalize 3-digit (#rgb) and 4-digit (#rgba) hex to 6-digit (#rrggbb) and 8-digit (#rrggbbaa)
     const digits =
-      hex[1].length === 3 || hex[1].length === 4
-        ? Array.from(hex[1], (d) => d + d).join('')
-        : hex[1];
+      hexValue.length === 3 || hexValue.length === 4
+        ? Array.from(hexValue, (d) => d + d).join('')
+        : hexValue;
 
     if (digits.length !== 6 && digits.length !== 8) {
       return undefined;
@@ -173,8 +183,14 @@ function parse(color: string): ParsedColor | undefined {
   }
 
   // Get the color function name (e.g., "rgb", "hsl", "lab", etc.) and the color values
-  const fnName = matched[1].toLowerCase();
+  const matchedName = matched[1];
   const argStr = matched[2];
+
+  if (matchedName == null || argStr == null) {
+    return undefined;
+  }
+
+  const fnName = matchedName.toLowerCase();
 
   const type =
     fnName === 'rgba'
@@ -206,7 +222,14 @@ function parse(color: string): ParsedColor | undefined {
 
   const percent = (max: number) => (value: string) => parsePercent(value, max);
 
-  const parsers = {
+  const parsers: Record<
+    ParsedColor['type'],
+    [
+      (value: string) => number,
+      (value: string) => number,
+      (value: string) => number,
+    ]
+  > = {
     rgb: [percent(255), percent(255), percent(255)],
     hsl: [parseAngle, percent(100), percent(100)],
     hwb: [parseAngle, percent(100), percent(100)],
@@ -217,13 +240,19 @@ function parse(color: string): ParsedColor | undefined {
   };
 
   try {
-    const parts = parsers[type].map((parseChannel, index) =>
-      parseChannel(tokens[index])
-    );
+    const [first, second, third] = tokens;
 
-    const a = alphaStr === undefined ? 1 : parseAlpha(alphaStr);
+    if (first == null || second == null || third == null) {
+      return undefined;
+    }
 
-    parts.push(a);
+    const parser = parsers[type];
+    const parts: ColorParts = [
+      parser[0](first),
+      parser[1](second),
+      parser[2](third),
+      alphaStr == null ? 1 : parseAlpha(alphaStr),
+    ];
 
     return { type, parts };
   } catch {
@@ -315,7 +344,7 @@ function stringify(color: ParsedColor): string {
 
 function darken(color: ParsedColor, amount: number): ColorType {
   const factor = 1 - amount;
-  const parts = color.parts.slice();
+  const parts: ColorParts = [...color.parts];
 
   switch (color.type) {
     case 'lab':

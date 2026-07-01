@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.32...@react-navigation/native@8.0.0-alpha.33) (2026-06-18)
+
+### Bug Fixes
+
+* rollback history if update was prevented ([4a81df8](https://github.com/react-navigation/react-navigation/commit/4a81df877a96481c4d837835cf5dc43749a00a59)) - by @satya164
+
+### Features
+
+* update material symbol fonts ([cfdef21](https://github.com/react-navigation/react-navigation/commit/cfdef21a2d6c829336de83bd0ac819e5639b7452)) - by @satya164
+
+# [8.0.0-alpha.32](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.31...@react-navigation/native@8.0.0-alpha.32) (2026-06-11)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [8.0.0-alpha.31](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.30...@react-navigation/native@8.0.0-alpha.31) (2026-06-10)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [8.0.0-alpha.30](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.29...@react-navigation/native@8.0.0-alpha.30) (2026-06-09)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [8.0.0-alpha.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.28...@react-navigation/native@8.0.0-alpha.29) (2026-06-08)
+
+### Features
+
+* add standard navigation compatibility ([#13124](https://github.com/react-navigation/react-navigation/issues/13124)) ([ef2a900](https://github.com/react-navigation/react-navigation/commit/ef2a900c530eff05c0a976b2c3280368b00dda9d)) - by @satya164
+* add support for shared URLs in linking config ([#13131](https://github.com/react-navigation/react-navigation/issues/13131)) ([42bad76](https://github.com/react-navigation/react-navigation/commit/42bad76636c20f8c52b91785a933a60eed6250c8)) - by @satya164
+
 # [8.0.0-alpha.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.27...@react-navigation/native@8.0.0-alpha.28) (2026-05-25)
 
 **Note:** Version bump only for package @react-navigation/native

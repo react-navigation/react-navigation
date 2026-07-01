@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.39](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.38...@react-navigation/bottom-tabs@8.0.0-alpha.39) (2026-06-18)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [8.0.0-alpha.38](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.37...@react-navigation/bottom-tabs@8.0.0-alpha.38) (2026-06-11)
+
+### Features
+
+* remove overload from navigate action ([#13150](https://github.com/react-navigation/react-navigation/issues/13150)) ([a876c49](https://github.com/react-navigation/react-navigation/commit/a876c49b411a79d4614d26195829019c90ada992)) - by @satya164
+
+# [8.0.0-alpha.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.36...@react-navigation/bottom-tabs@8.0.0-alpha.37) (2026-06-10)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [8.0.0-alpha.36](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.35...@react-navigation/bottom-tabs@8.0.0-alpha.36) (2026-06-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [8.0.0-alpha.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.34...@react-navigation/bottom-tabs@8.0.0-alpha.35) (2026-06-09)
+
+**Note:** Version bump only for package @react-navigation/bottom-tabs
+
+# [8.0.0-alpha.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.33...@react-navigation/bottom-tabs@8.0.0-alpha.34) (2026-06-08)
+
+### Bug Fixes
+
+* default lazy to true for native tabs ([00c433c](https://github.com/react-navigation/react-navigation/commit/00c433ca91d5317aa416b6cd3816e7aa17bdb814)) - by @satya164
+* flash while switching native bottom tabs with lazy ([#13133](https://github.com/react-navigation/react-navigation/issues/13133)) ([ac66d20](https://github.com/react-navigation/react-navigation/commit/ac66d203de430addc0273bbbec0bb80e2d732fe6)), closes [#13132](https://github.com/react-navigation/react-navigation/issues/13132) - by @dylancom
+
 # [8.0.0-alpha.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.32...@react-navigation/bottom-tabs@8.0.0-alpha.33) (2026-05-25)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

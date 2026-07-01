@@ -10,21 +10,34 @@ import {
 export interface NativeProps extends ViewProps {
   name: string;
   size: CodegenTypes.Float;
-  color?: ColorValue;
+  color?: ColorValue | undefined;
   weight: CodegenTypes.Int32;
   scale: string;
-  mode: string;
-  colorPrimary?: ColorValue;
-  colorSecondary?: ColorValue;
-  colorTertiary?: ColorValue;
-  animation: string;
-  animationRepeating: boolean;
-  animationRepeatCount: CodegenTypes.Int32;
-  animationSpeed: CodegenTypes.Float;
-  animationWholeSymbol: boolean;
-  animationDirection: string;
-  animationReversing: boolean;
-  animationCumulative: boolean;
+  variableValue: CodegenTypes.Float;
+  variableValueMode: string;
+  colorRenderingMode: string;
+  renderingMode: string;
+  colorPrimary?: ColorValue | undefined;
+  colorSecondary?: ColorValue | undefined;
+  colorTertiary?: ColorValue | undefined;
+  effect: string;
+  effectRepeat: string;
+  effectRepeatCount: CodegenTypes.Int32;
+  effectRepeatDelay: CodegenTypes.Float;
+  effectSpeed: CodegenTypes.Float;
+  effectScope: string;
+  effectDirection: string;
+  effectVariant: string;
+  effectAngle: CodegenTypes.Float;
+  effectReversing: boolean;
+  effectCumulative: boolean;
+  effectInactiveLayers: string;
+  effectDrawDirection: string;
+  contentTransition: string;
+  contentTransitionSpeed: CodegenTypes.Float;
+  contentTransitionVariant: string;
+  contentTransitionScope: string;
+  contentTransitionMagic: boolean;
 }
 
 export default codegenNativeComponent<NativeProps>(

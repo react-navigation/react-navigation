@@ -2,16 +2,21 @@
   "compilerOptions": {
     "composite": true,
     "noEmit": true,
-    "customConditions": ["source"],
+    "customConditions": ["@react-navigation/source"],
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
+    "erasableSyntaxOnly": true,
+    "exactOptionalPropertyTypes": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react-jsx",
     "lib": ["esnext", "dom"],
     "module": "preserve",
     "moduleResolution": "bundler",
     "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
     "noImplicitReturns": true,
+    "noUncheckedIndexedAccess": true,
+    "noUncheckedSideEffectImports": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "resolveJsonModule": true,
@@ -22,5 +27,5 @@
     "types": ["node"],
     "verbatimModuleSyntax": true
   },
-  "exclude": ["packages/*/lib"]
+  "exclude": ["packages/*/lib", "example/__typechecks__/standalone"]
 }

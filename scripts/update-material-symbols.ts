@@ -68,6 +68,12 @@ for (const variant of VARIANTS) {
 
     const fontUrl = fontUrlMatch[1];
 
+    if (fontUrl == null) {
+      throw new Error(
+        `Could not find font URL in CSS for ${variant} ${weight}`
+      );
+    }
+
     process.stdout.write(' done.\n');
 
     const ttfDest = new URL(`MaterialSymbols${variant}_${weight}.ttf`, assets);

@@ -7,7 +7,7 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import React from 'react';
+import * as React from 'react';
 import { type ColorValue, Image, StyleSheet } from 'react-native';
 import { type Route, TabBar, type TabDescriptor } from 'react-native-tab-view';
 
@@ -49,7 +49,13 @@ export function MaterialTopTabBar({
   const { direction } = useLocale();
   const { buildHref } = useLinkBuilder();
 
-  const focusedOptions = descriptors[state.routes[state.index].key].options;
+  const focusedRoute = state.routes[state.index];
+
+  if (focusedRoute == null) {
+    throw new Error(`Couldn't find a route at index ${state.index}.`);
+  }
+
+  const focusedOptions = descriptors[focusedRoute.key]?.options ?? {};
   const tabBarVariant = focusedOptions.tabBarVariant ?? 'primary';
 
   const activeColor: ColorValue =
@@ -70,7 +76,7 @@ export function MaterialTopTabBar({
 
   const tabBarOptions = Object.fromEntries(
     state.routes.map((route) => {
-      const { options } = descriptors[route.key];
+      const options = descriptors[route.key]?.options ?? {};
 
       const {
         title,
@@ -165,7 +171,7 @@ export function MaterialTopTabBar({
               : typeof tabBarLabel === 'function'
                 ? ({ labelText, color }: MaterialLabelProps) =>
                     tabBarLabel({
-                      focused: state.routes[state.index].key === route.key,
+                      focused: focusedRoute.key === route.key,
                       color,
                       children: labelText ?? route.name,
                     })

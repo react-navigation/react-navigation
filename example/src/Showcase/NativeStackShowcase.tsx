@@ -170,6 +170,12 @@ const PLACES: Place[] = [
   },
 ];
 
+const FEATURED_PLACE = PLACES[0];
+
+if (FEATURED_PLACE == null) {
+  throw new Error("Couldn't find the featured place.");
+}
+
 type Road = {
   top?: DimensionValue;
   left?: DimensionValue;
@@ -219,7 +225,6 @@ const getPlaceItemTestID = (placeId: string) =>
 const MapScreen = () => {
   const { colors, fonts } = useTheme();
   const navigation = useNavigation('Map');
-  const place = PLACES[0];
 
   return (
     <View style={[styles.mapContainer, { backgroundColor: colors.card }]}>
@@ -269,7 +274,7 @@ const MapScreen = () => {
       <Pressable
         style={styles.pinContainer}
         onPress={() =>
-          navigation.navigate('LocationDetails', { placeId: place.id })
+          navigation.navigate('LocationDetails', { placeId: FEATURED_PLACE.id })
         }
       >
         <View style={[styles.pinDot, { backgroundColor: colors.primary }]} />
@@ -282,7 +287,7 @@ const MapScreen = () => {
           ]}
           numberOfLines={1}
         >
-          {place.name}
+          {FEATURED_PLACE.name}
         </Text>
       </Pressable>
     </View>
@@ -297,7 +302,9 @@ const PlaceItem = React.memo(({ item }: { item: Place }) => {
     <Pressable
       testID={getPlaceItemTestID(item.id)}
       style={styles.placeItem}
-      onPress={() => navigation.goBack()}
+      onPress={() =>
+        navigation.navigate('LocationDetails', { placeId: item.id })
+      }
     >
       <Image source={item.image} style={styles.placeImage} />
 
@@ -384,7 +391,8 @@ const LocationDetailsScreen = ({
   route,
 }: StaticScreenProps<{ placeId: string }>) => {
   const { colors, fonts } = useTheme();
-  const place = PLACES.find((p) => p.id === route.params.placeId) ?? PLACES[0];
+  const place =
+    PLACES.find((item) => item.id === route.params.placeId) ?? FEATURED_PLACE;
 
   return (
     <ScrollView

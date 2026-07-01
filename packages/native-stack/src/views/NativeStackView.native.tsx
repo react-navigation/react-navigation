@@ -486,6 +486,13 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
       <ScreenStack style={styles.container}>
         {state.routes.map((route, index) => {
           const descriptor = descriptors[route.key];
+
+          if (descriptor == null) {
+            throw new Error(
+              `Couldn't find a descriptor for route '${route.key}'.`
+            );
+          }
+
           const isFocused = state.index === index;
           const previousKey = activeRoutes[index - 1]?.key;
           const nextKey = activeRoutes[index + 1]?.key;

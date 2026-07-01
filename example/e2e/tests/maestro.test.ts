@@ -1,4 +1,4 @@
-import { expect, type Page, test } from '@playwright/test';
+import { expect, type Locator, type Page, test } from '@playwright/test';
 import fs from 'fs';
 import path from 'path';
 import { parseAllDocuments } from 'yaml';
@@ -143,7 +143,12 @@ async function runStep(page: Page, step: any) {
 
       const locator = query(page, step.tapOn);
 
-      await locator.filter({ visible: true }).last().dispatchEvent('click');
+      const target = locator.filter({ visible: true }).last();
+
+      const handle = await target.elementHandle();
+      await handle?.waitForElementState('stable');
+
+      await target.dispatchEvent('click');
 
       break;
     }
@@ -387,7 +392,14 @@ function evaluateCondition(condition: boolean | string) {
   }
 }
 
-function query(page: Page, by: string | { text: string } | { id: string }) {
+type QueryBy =
+  | string
+  | { text: string; selected?: boolean }
+  | { id: string; selected?: boolean };
+
+function query(page: Page, by: QueryBy) {
+  let locator: Locator;
+
   if (typeof by === 'string' || 'text' in by) {
     const text = typeof by === 'string' ? by : by.text;
     const isRegex = text.includes('.*');
@@ -397,12 +409,18 @@ function query(page: Page, by: string | { text: string } | { id: string }) {
       isRegex ? undefined : { exact: true },
     ] as const;
 
-    return page.getByLabel(...args).or(page.getByText(...args));
+    locator = page.getByLabel(...args).or(page.getByText(...args));
+  } else if ('id' in by) {
+    locator = page.getByTestId(by.id);
+  } else {
+    throw new Error(`Unknown step format: ${JSON.stringify(by)}`);
   }
 
-  if ('id' in by) {
-    return page.getByTestId(by.id);
+  if (typeof by !== 'string' && typeof by.selected === 'boolean') {
+    return locator.locator(
+      `xpath=ancestor-or-self::*[@aria-selected="${by.selected}"]`
+    );
   }
 
-  throw new Error(`Unknown step format: ${JSON.stringify(by)}`);
+  return locator;
 }

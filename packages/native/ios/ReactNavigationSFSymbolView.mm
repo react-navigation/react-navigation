@@ -47,15 +47,28 @@ static ReactNavigationSFSymbolViewImplProps *convertProps(const Props::Shared &p
     swiftProps.color = RCTUIColorFromSharedColor(viewProps.color);
     swiftProps.weight = viewProps.weight;
     swiftProps.scale = RCTNSStringFromString(viewProps.scale);
-    swiftProps.mode = RCTNSStringFromString(viewProps.mode);
-    swiftProps.animation = RCTNSStringFromString(viewProps.animation);
-    swiftProps.animationRepeating = viewProps.animationRepeating;
-    swiftProps.animationRepeatCount = viewProps.animationRepeatCount;
-    swiftProps.animationSpeed = viewProps.animationSpeed;
-    swiftProps.animationWholeSymbol = viewProps.animationWholeSymbol;
-    swiftProps.animationDirection = RCTNSStringFromString(viewProps.animationDirection);
-    swiftProps.animationReversing = viewProps.animationReversing;
-    swiftProps.animationCumulative = viewProps.animationCumulative;
+    swiftProps.variableValue = viewProps.variableValue;
+    swiftProps.variableValueMode = RCTNSStringFromString(viewProps.variableValueMode);
+    swiftProps.colorRenderingMode = RCTNSStringFromString(viewProps.colorRenderingMode);
+    swiftProps.renderingMode = RCTNSStringFromString(viewProps.renderingMode);
+    swiftProps.effect = RCTNSStringFromString(viewProps.effect);
+    swiftProps.effectRepeat = RCTNSStringFromString(viewProps.effectRepeat);
+    swiftProps.effectRepeatCount = viewProps.effectRepeatCount;
+    swiftProps.effectRepeatDelay = viewProps.effectRepeatDelay;
+    swiftProps.effectSpeed = viewProps.effectSpeed;
+    swiftProps.effectScope = RCTNSStringFromString(viewProps.effectScope);
+    swiftProps.effectDirection = RCTNSStringFromString(viewProps.effectDirection);
+    swiftProps.effectVariant = RCTNSStringFromString(viewProps.effectVariant);
+    swiftProps.effectAngle = viewProps.effectAngle;
+    swiftProps.effectReversing = viewProps.effectReversing;
+    swiftProps.effectCumulative = viewProps.effectCumulative;
+    swiftProps.effectInactiveLayers = RCTNSStringFromString(viewProps.effectInactiveLayers);
+    swiftProps.effectDrawDirection = RCTNSStringFromString(viewProps.effectDrawDirection);
+    swiftProps.contentTransition = RCTNSStringFromString(viewProps.contentTransition);
+    swiftProps.contentTransitionSpeed = viewProps.contentTransitionSpeed;
+    swiftProps.contentTransitionVariant = RCTNSStringFromString(viewProps.contentTransitionVariant);
+    swiftProps.contentTransitionScope = RCTNSStringFromString(viewProps.contentTransitionScope);
+    swiftProps.contentTransitionMagic = viewProps.contentTransitionMagic;
 
     if (viewProps.colorPrimary) {
         swiftProps.colorPrimary = RCTUIColorFromSharedColor(viewProps.colorPrimary);

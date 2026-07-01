@@ -1,4 +1,4 @@
-name: TypeScript Performance
+name: TypeScript Benchmark
 
 on:
   pull_request:
@@ -9,7 +9,7 @@ on:
       - '**/*.tsx'
       - '**/tsconfig*.json'
       - '**/package.json'
-      - 'yarn.lock'
+      - 'pnpm-lock.yaml'
       - 'scripts/measure-typescript.ts'
       - '.github/workflows/measure-typescript.yml'
 
@@ -39,7 +39,7 @@ jobs:
         run: |
           {
             echo 'report<<EOF'
-            node scripts/measure-typescript.ts "origin/${{ github.base_ref }}" --runs 5 --json
+            node scripts/measure-typescript.ts "origin/${{ github.base_ref }}"
             echo 'EOF'
           } >> "$GITHUB_OUTPUT"
 
@@ -56,54 +56,19 @@ jobs:
         with:
           script: |
             const MARKER = '<!-- ts-perf-report -->';
-            const ROWS = [
-              { key: 'types', label: 'Types' },
-              { key: 'instantiations', label: 'Instantiations' },
-              { key: 'memoryKB', label: 'Memory (MB)', transform: (v) => Math.round(v / 1024) },
-              { key: 'checkTimeSec', label: 'Check time (s)', fraction: 2 },
-              { key: 'totalTimeSec', label: 'Total time (s)', fraction: 2 },
-            ];
 
-            const report = JSON.parse(process.env.REPORT);
+            const output = process.env.REPORT ?? '';
+            const noticeable = output.includes('Detected a noticeable performance change');
+            const report = output.split('\n---\n')[1]?.trim();
 
-            const metrics = report.metrics ?? {};
-
-            const text = (value) => String(value ?? '').replaceAll('`', '\\`').replaceAll('\n', ' ');
-            const value = (input) => Number.isFinite(Number(input)) ? Number(input) : 0;
-
-            const num = (v, fraction = 0) =>
-              value(v).toLocaleString('en-US', { maximumFractionDigits: fraction, minimumFractionDigits: fraction });
-
-            const delta = (v) => {
-              if (v === null) return '—';
-              const n = value(v);
-              const sign = n > 0 ? '+' : '';
-              return `${sign}${n.toFixed(1)}%`;
-            };
-
-            const tableRows = ROWS.map(({ key, label, transform, fraction }) => {
-              const m = metrics[key] ?? {};
-              const base = value(m.base);
-              const curr = value(m.current);
-              const baseValue = transform ? transform(base) : base;
-              const currValue = transform ? transform(curr) : curr;
-              return `| ${label} | ${num(baseValue, fraction)} | ${num(currValue, fraction)} | ${delta(m.delta)} |`;
-            }).join('\n');
-
-            const body = `${MARKER}\n## TypeScript performance impact\n\n` +
-              `Baseline: \`${text(report.baseline?.ref)}\` (\`${text(report.baseline?.sha).slice(0, 10)}\`) · ` +
-              `Current: \`${text(report.current?.sha).slice(0, 10)}\` · ` +
-              `${num(report.runs)} run${value(report.runs) === 1 ? '' : 's'}\n\n` +
-              `| Metric | Baseline | Current | Δ |\n` +
-              `| --- | ---: | ---: | ---: |\n` +
-              tableRows + '\n';
-
-            core.info(body);
-
-            if (report.noticeable !== true) {
-              core.info('No noticeable change - skipping PR comment.');
+            if (!report) {
+              core.setFailed('Could not find the performance report in the script output.');
               return;
             }
+
+            const body = `${MARKER}\n${report}\n`;
+
+            core.info(body);
 
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
@@ -112,6 +77,19 @@ jobs:
             });
 
             const existing = comments.find((c) => c.body?.startsWith(MARKER));
+
+            if (!noticeable) {
+              if (existing) {
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: existing.id,
+                });
+              }
+
+              core.info('No noticeable change - skipping PR comment.');
+              return;
+            }
 
             if (existing) {
               await github.rest.issues.updateComment({

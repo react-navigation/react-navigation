@@ -76,39 +76,65 @@ function isInternalBytecodeSourceUrl(sourceUrl: string): boolean {
 function parseLine(line: string): HermesStackEntry | undefined {
   const asFrame = line.match(RE_FRAME);
   if (asFrame) {
+    const functionName = asFrame[1];
+
+    if (functionName == null) {
+      return undefined;
+    }
+
+    if (asFrame[2] === 'native') {
+      return {
+        type: 'FRAME',
+        functionName,
+        location: { type: 'NATIVE' },
+      };
+    }
+
+    const sourceUrl = asFrame[4];
+    const line1Based = asFrame[5];
+    const columnOrOffset = asFrame[6];
+
+    if (sourceUrl == null || line1Based == null || columnOrOffset == null) {
+      return undefined;
+    }
+
     return {
       type: 'FRAME',
-      functionName: asFrame[1],
+      functionName,
       location:
-        asFrame[2] === 'native'
-          ? { type: 'NATIVE' }
-          : asFrame[3] === 'address at '
-            ? isInternalBytecodeSourceUrl(asFrame[4])
-              ? {
-                  type: 'INTERNAL_BYTECODE',
-                  sourceUrl: asFrame[4],
-                  line1Based: Number.parseInt(asFrame[5], 10),
-                  virtualOffset0Based: Number.parseInt(asFrame[6], 10),
-                }
-              : {
-                  type: 'BYTECODE',
-                  sourceUrl: asFrame[4],
-                  line1Based: Number.parseInt(asFrame[5], 10),
-                  virtualOffset0Based: Number.parseInt(asFrame[6], 10),
-                }
+        asFrame[3] === 'address at '
+          ? isInternalBytecodeSourceUrl(sourceUrl)
+            ? {
+                type: 'INTERNAL_BYTECODE',
+                sourceUrl,
+                line1Based: Number.parseInt(line1Based, 10),
+                virtualOffset0Based: Number.parseInt(columnOrOffset, 10),
+              }
             : {
-                type: 'SOURCE',
-                sourceUrl: asFrame[4],
-                line1Based: Number.parseInt(asFrame[5], 10),
-                column1Based: Number.parseInt(asFrame[6], 10),
-              },
+                type: 'BYTECODE',
+                sourceUrl,
+                line1Based: Number.parseInt(line1Based, 10),
+                virtualOffset0Based: Number.parseInt(columnOrOffset, 10),
+              }
+          : {
+              type: 'SOURCE',
+              sourceUrl,
+              line1Based: Number.parseInt(line1Based, 10),
+              column1Based: Number.parseInt(columnOrOffset, 10),
+            },
     };
   }
   const asSkipped = line.match(RE_SKIPPED);
   if (asSkipped) {
+    const count = asSkipped[1];
+
+    if (count == null) {
+      return undefined;
+    }
+
     return {
       type: 'SKIPPED',
-      count: Number.parseInt(asSkipped[1], 10),
+      count: Number.parseInt(count, 10),
     };
   }
   return undefined;

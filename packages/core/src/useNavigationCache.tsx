@@ -23,8 +23,8 @@ type Options<
     Partial<NavigationProp<ParamListBase, string, any, any, any>>;
   setOptions: (
     cb: (
-      options: Record<string, ScreenOptions>
-    ) => Record<string, ScreenOptions>
+      options: Record<string, Partial<ScreenOptions> | undefined>
+    ) => Record<string, Partial<ScreenOptions> | undefined>
   ) => void;
   router: Router<State, NavigationAction>;
   emitter: NavigationEventEmitter<EventMap>;
@@ -96,22 +96,10 @@ export function useNavigationCache<
   >((acc, route) => {
     const previous = cache.current[route.key];
 
-    type Thunk =
-      | NavigationAction
-      | ((state: State) => NavigationAction | null | undefined);
-
     if (previous) {
       // If a cached navigation object already exists, reuse it
       acc[route.key] = previous;
     } else {
-      const dispatch = (thunk: Thunk) => {
-        const action = typeof thunk === 'function' ? thunk(getState()) : thunk;
-
-        if (action != null) {
-          navigation.dispatch({ source: route.key, ...action });
-        }
-      };
-
       const withStack = (callback: () => void) => {
         let isStackSet = false;
 
@@ -134,6 +122,23 @@ export function useNavigationCache<
         }
       };
 
+      const dispatch = (
+        thunk:
+          | NavigationAction
+          | ((state: State) => NavigationAction | null | undefined)
+      ) => {
+        withStack(() =>
+          React.startTransition(() => {
+            const action =
+              typeof thunk === 'function' ? thunk(getState()) : thunk;
+
+            if (action != null) {
+              navigation.dispatch({ source: route.key, ...action });
+            }
+          })
+        );
+      };
+
       const actions = {
         ...router.actionCreators,
         ...CommonActions,
@@ -142,10 +147,8 @@ export function useNavigationCache<
       const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
         (acc, name) => {
           acc[name] = (...args: any) =>
-            withStack(() =>
-              // @ts-expect-error: name is a valid key, but TypeScript is dumb
-              dispatch(actions[name](...args))
-            );
+            // @ts-expect-error: name is a valid key, but TypeScript is dumb
+            dispatch(actions[name](...args));
 
           return acc;
         },
@@ -160,7 +163,7 @@ export function useNavigationCache<
         ...helpers,
         // FIXME: too much work to fix the types for now
         ...(emitter.create(route.key) as any),
-        dispatch: (thunk: Thunk) => withStack(() => dispatch(thunk)),
+        dispatch,
         getParent: (routeName) => {
           if (routeName === route.name) {
             // If the passed route name is the same as the current route's name,
@@ -174,7 +177,7 @@ export function useNavigationCache<
 
           return parentNavigationHelpers;
         },
-        setOptions: (options: object) => {
+        setOptions: (options: Partial<ScreenOptions>) => {
           setOptions((o) => ({
             ...o,
             [route.key]: { ...o[route.key], ...options },
@@ -183,7 +186,7 @@ export function useNavigationCache<
         isFocused: () => {
           const state = rest.getState();
 
-          if (state.routes[state.index].key !== route.key) {
+          if (state.routes[state.index]?.key !== route.key) {
             return false;
           }
 

@@ -88,8 +88,6 @@ export function useOnAction<State extends NavigationState>({
           result === null && action.target === state.key ? state : result;
 
         if (result !== null) {
-          onDispatchAction(action, state === result);
-
           if (state !== result) {
             const isPrevented = shouldPreventRemove(
               emitter,
@@ -100,10 +98,16 @@ export function useOnAction<State extends NavigationState>({
             );
 
             if (isPrevented) {
+              onDispatchAction(action, true);
+
               return true;
             }
 
+            onDispatchAction(action, false);
+
             setState(result);
+          } else {
+            onDispatchAction(action, true);
           }
 
           if (onRouteFocusParent !== undefined) {
@@ -132,7 +136,7 @@ export function useOnAction<State extends NavigationState>({
         for (let i = actionListeners.length - 1; i >= 0; i--) {
           const listener = actionListeners[i];
 
-          if (listener(action, visitedNavigators)) {
+          if (listener?.(action, visitedNavigators)) {
             return true;
           }
         }

@@ -512,6 +512,10 @@ export type StackCardInterpolatedStyle = {
    */
   overlayStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
+   * Interpolated style for dim on top of the card content.
+   */
+  dimStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
+  /**
    * Interpolated style representing the card shadow.
    */
   shadowStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;

@@ -51,7 +51,15 @@ export function NativeStackView({ state, descriptors }: Props) {
           ? descriptors[previousKey]
           : undefined;
         const nextDescriptor = nextKey ? descriptors[nextKey] : undefined;
-        const { options, navigation, render } = descriptors[route.key];
+        const descriptor = descriptors[route.key];
+
+        if (descriptor == null) {
+          throw new Error(
+            `Couldn't find a descriptor for route '${route.key}'.`
+          );
+        }
+
+        const { options, navigation, render } = descriptor;
 
         const headerBack = previousDescriptor
           ? {

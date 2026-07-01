@@ -39,6 +39,7 @@ import type {
   BottomTabDescriptorMap,
   BottomTabNavigationConfig,
   BottomTabNavigationHelpers,
+  BottomTabNavigationOptions,
 } from '../types';
 import { BottomTabAnimationContext } from '../utils/BottomTabAnimationContext';
 import { BottomTabBarHeightContext } from '../utils/BottomTabBarHeightContext';
@@ -59,9 +60,9 @@ type TabSelectionPreventedEvent = {
 };
 
 type PlatformIcon = {
-  ios?: PlatformIconIOS;
-  android?: PlatformIconAndroid;
-  shared?: PlatformIconShared;
+  ios?: PlatformIconIOS | undefined;
+  android?: PlatformIconAndroid | undefined;
+  shared?: PlatformIconShared | undefined;
 };
 
 type ConfirmedState = {
@@ -126,7 +127,13 @@ export function BottomTabViewNative({
 }: Props) {
   const { dark, colors, fonts } = useTheme();
 
-  const focusedRouteKey = state.routes[state.index].key;
+  const focusedRoute = state.routes[state.index];
+
+  if (focusedRoute == null) {
+    throw new Error(`Couldn't find a route at index ${state.index}.`);
+  }
+
+  const focusedRouteKey = focusedRoute.key;
 
   const [loaded, setLoaded] = React.useState([focusedRouteKey]);
 
@@ -303,7 +310,8 @@ export function BottomTabViewNative({
     });
   };
 
-  const currentOptions = descriptors[state.routes[state.index].key]?.options;
+  const currentOptions: BottomTabNavigationOptions =
+    descriptors[focusedRouteKey]?.options ?? {};
 
   const {
     fontFamily = Platform.select({
@@ -439,6 +447,7 @@ export function BottomTabViewNative({
         onTabSelectionRejected={onTabSelectionRejected}
         onTabSelectionPrevented={onTabSelectionPrevented}
         tabBarHidden={hasCustomTabBar || shouldHideTabBar}
+        nativeContainerStyle={{ backgroundColor }}
         colorScheme={dark ? 'dark' : 'light'}
         ios={{
           bottomAccessory: bottomAccessory
@@ -451,7 +460,15 @@ export function BottomTabViewNative({
         }}
       >
         {state.routes.map((route, index) => {
-          const { options, render, navigation } = descriptors[route.key];
+          const descriptor = descriptors[route.key];
+
+          if (descriptor == null) {
+            throw new Error(
+              `Couldn't find a descriptor for route '${route.key}'.`
+            );
+          }
+
+          const { options, render, navigation } = descriptor;
           const isFocused = state.index === index;
           const isPreloaded = state.preloadedRouteKeys.includes(route.key);
 

@@ -1072,3 +1072,195 @@ test('gets navigate action with pop if config has nested screens at nested level
     type: 'NAVIGATE',
   });
 });
+
+test('gets navigate action for a screen after the initial screen', () => {
+  const state = {
+    routes: [
+      {
+        name: 'HomeBranch',
+        state: {
+          index: 1,
+          routes: [
+            { name: 'Home' },
+            {
+              name: 'Profile',
+              params: { id: '123' },
+              path: '/profile/123',
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const config = {
+    initialRouteName: 'HomeBranch',
+    screens: {
+      HomeBranch: {
+        initialRouteName: 'Home',
+        screens: {
+          Home: {},
+          Profile: {},
+        },
+      },
+      SearchBranch: {
+        initialRouteName: 'Search',
+        screens: {
+          Search: {},
+          Profile: {},
+        },
+      },
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      name: 'HomeBranch',
+      params: {
+        initial: false,
+        screen: 'Profile',
+        path: '/profile/123',
+        params: { id: '123' },
+      },
+      pop: true,
+    },
+    type: 'NAVIGATE',
+  });
+});
+
+test('gets navigate action for a screen in the current top-level route', () => {
+  const state = {
+    index: 1,
+    routes: [
+      { name: 'HomeBranch' },
+      {
+        name: 'SearchBranch',
+        state: {
+          index: 1,
+          routes: [
+            { name: 'Search' },
+            {
+              name: 'Profile',
+              params: { id: '123' },
+              path: '/profile/123',
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const config = {
+    initialRouteName: 'HomeBranch',
+    screens: {
+      HomeBranch: {
+        initialRouteName: 'Home',
+        screens: {
+          Home: {},
+          Profile: {},
+        },
+      },
+      SearchBranch: {
+        initialRouteName: 'Search',
+        screens: {
+          Search: {},
+          Profile: {},
+        },
+      },
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      name: 'SearchBranch',
+      params: {
+        initial: false,
+        screen: 'Profile',
+        path: '/profile/123',
+        params: { id: '123' },
+      },
+      pop: true,
+    },
+    type: 'NAVIGATE',
+  });
+});
+
+test('gets navigate action for a child screen in the current top-level route', () => {
+  const state = {
+    index: 1,
+    routes: [
+      { name: 'HomeBranch' },
+      {
+        name: 'SearchBranch',
+        state: {
+          index: 1,
+          routes: [
+            { name: 'Search' },
+            {
+              name: 'Post',
+              params: { id: '9' },
+              state: {
+                routes: [
+                  {
+                    name: 'Comments',
+                    params: { commentId: 'latest' },
+                    path: '/post/9/comments/latest',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const config = {
+    initialRouteName: 'HomeBranch',
+    screens: {
+      HomeBranch: {
+        initialRouteName: 'Home',
+        screens: {
+          Home: {},
+          Post: {
+            screens: {
+              Comments: {},
+            },
+          },
+        },
+      },
+      SearchBranch: {
+        initialRouteName: 'Search',
+        screens: {
+          Search: {},
+          Post: {
+            screens: {
+              Comments: {},
+            },
+          },
+        },
+      },
+    },
+  };
+
+  expect(getActionFromState(state, config)).toEqual({
+    payload: {
+      name: 'SearchBranch',
+      params: {
+        initial: false,
+        screen: 'Post',
+        pop: true,
+        params: {
+          id: '9',
+          initial: true,
+          screen: 'Comments',
+          pop: true,
+          path: '/post/9/comments/latest',
+          params: { commentId: 'latest' },
+        },
+      },
+      pop: true,
+    },
+    type: 'NAVIGATE',
+  });
+});

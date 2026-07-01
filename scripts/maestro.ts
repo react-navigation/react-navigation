@@ -118,7 +118,7 @@ async function getConnectedDeviceIds(): Promise<string[]> {
       .toString()
       .split('\n')
       .slice(1)
-      .map((line) => line.split('\t')[0].trim())
+      .map((line) => line.split('\t')[0]?.trim() ?? '')
       .filter((id) => id.length > 0);
 
     ids.push(...androidIds);

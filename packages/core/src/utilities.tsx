@@ -25,8 +25,6 @@ export type UnionToIntersection<U> = (
   ? I
   : never;
 
-export type UnknownToUndefined<T> = unknown extends T ? undefined : T;
-
 /**
  * Exclude undefined from a type.
  * Similar to NonNullable but only excludes undefined, not null.
@@ -38,6 +36,23 @@ export type AnyToUnknown<T> = 0 extends 1 & T ? unknown : T;
 export type RequiredKeys<T extends object> = {
   [K in keyof T]-?: {} extends Pick<T, K> ? never : K;
 }[keyof T];
+
+type OptionalKeys<T extends object> = Exclude<keyof T, RequiredKeys<T>>;
+
+/**
+ * Remove `| undefined` from the object type,
+ * and adjust the optionality of the keys based on the original type.
+ */
+export type NotUndefinedObject<
+  T extends object | undefined,
+  O extends object = NotUndefined<T>,
+> = undefined extends T
+  ? {
+      [K in RequiredKeys<O>]: O[K];
+    } & {
+      [K in OptionalKeys<O>]?: O[K] | undefined;
+    }
+  : T;
 
 export type UndefinedIfAllOptional<T> = T extends object
   ? RequiredKeys<T> extends never
@@ -121,17 +136,23 @@ export type ExtractParamsType<Params, Parse> = {
         ? R
         : Params[K]
     : Params[K];
-} & {
-  /**
-   * Optional param types not in path pattern (for query params)
-   */
-  [K in QueryParamOptionalKeys<Params, Parse>]?: QueryParamValue<Parse[K]>;
-} & {
-  /**
-   * Required param types not in path pattern (for query params)
-   */
-  [K in QueryParamRequiredKeys<Params, Parse>]: QueryParamValue<Parse[K]>;
-};
+} & // Query params are the parse keys not present in the path pattern. When there
+  // are none (the common case), skip building the query param mapped types.
+  ([Exclude<keyof Parse, keyof Params>] extends [never]
+    ? {}
+    : {
+        /**
+         * Optional param types not in path pattern (for query params)
+         */
+        [K in QueryParamOptionalKeys<Params, Parse>]?: QueryParamValue<
+          Parse[K]
+        >;
+      } & {
+        /**
+         * Required param types not in path pattern (for query params)
+         */
+        [K in QueryParamRequiredKeys<Params, Parse>]: QueryParamValue<Parse[K]>;
+      });
 
 type QueryParamValue<ParseValue> =
   ParseValue extends StandardSchemaV1<unknown, infer R>
@@ -167,46 +188,15 @@ type QueryParamRequiredKeys<Params, Parse> = Exclude<
   QueryParamOptionalKeys<Params, Parse>
 >;
 
-/**
- * Infer the path string from a linking config.
- */
-export type InferPath<T> = T extends { path: infer P extends string }
-  ? P
-  : never;
-
-/**
- * Infer the parse functions from a linking config.
- */
-export type InferParse<T> = T extends { parse: infer P } ? P : {};
-
 export type InferParamsFromLinking<T> = T extends {
   path: infer P extends string;
+  parse: infer Parse;
 }
-  ? UndefinedIfAllOptional<
-      ExtractParamsType<ExtractParamStrings<P>, InferParse<T>>
-    >
-  : T extends string
-    ? UndefinedIfAllOptional<
-        ExtractParamsType<ExtractParamStrings<T>, undefined>
-      >
-    : undefined;
-
-/**
- * Infer the params type from a screen component or nested navigator.
- */
-export type InferScreenParams<T> =
-  T extends React.ComponentType<{ route: { params: infer P } }>
-    ? P
-    : T extends { config: { screens: infer Screens } }
-      ? import('./types').NavigatorScreenParams<{
-          [K in keyof Screens]: Screens[K] extends React.ComponentType<{
-            route: { params: infer P };
-          }>
-            ? P
-            : Screens[K] extends { screen: infer S }
-              ? S extends React.ComponentType<{ route: { params: infer P } }>
-                ? P
-                : undefined
-              : undefined;
-        }>
+  ? UndefinedIfAllOptional<ExtractParamsType<ExtractParamStrings<P>, Parse>>
+  : T extends {
+        path: infer P extends string;
+      }
+    ? UndefinedIfAllOptional<ExtractParamStrings<P>>
+    : T extends string
+      ? UndefinedIfAllOptional<ExtractParamStrings<T>>
       : undefined;

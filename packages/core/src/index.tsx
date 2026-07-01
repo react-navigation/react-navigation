@@ -35,7 +35,47 @@ export {
 export { ThemeContext } from './theming/ThemeContext';
 export { ThemeProvider } from './theming/ThemeProvider';
 export { useTheme } from './theming/useTheme';
-export * from './types';
+export type {
+  CompositeNavigationProp,
+  CompositeScreenProps,
+  DefaultNavigatorOptions,
+  Descriptor,
+  EventArg,
+  EventConsumer,
+  EventEmitter,
+  EventListenerCallback,
+  EventMapBase,
+  EventMapCore,
+  GenericNavigation,
+  NavigationContainerEventMap,
+  NavigationContainerProps,
+  NavigationContainerRef,
+  NavigationContainerRefWithCurrent,
+  NavigationHelpers,
+  NavigationListBase,
+  NavigationListForNavigator,
+  NavigationListForNested,
+  NavigationProp,
+  NavigatorScreenParams,
+  NavigatorTypeBagBase,
+  NavigatorTypeBagFor,
+  NestedNavigatorsForParamList,
+  PathConfig,
+  PathConfigMap,
+  RootNavigator,
+  RootParamList,
+  RouteConfig,
+  RouteConfigComponent,
+  RouteConfigProps,
+  RouteForName,
+  RouteGroupConfig,
+  RouteProp,
+  ScreenLayoutArgs,
+  ScreenListeners,
+  Theme,
+  TypedNavigator,
+} from './types';
+export { PrivateValueStore } from './types';
 export { useFocusEffect } from './useFocusEffect';
 export { IsFocusedContext, useIsFocused } from './useIsFocused';
 export { useNavigation } from './useNavigation';

@@ -1,23 +1,34 @@
 import * as React from 'react';
 import { View } from 'react-native';
-import type { PanGestureHandlerProperties } from 'react-native-gesture-handler';
+import type {
+  PanGesture,
+  PanGestureConfig,
+} from 'react-native-gesture-handler';
 
-const Dummy: any = ({ children }: { children: React.ReactNode }) => (
-  <>{children}</>
-);
+import { GestureHandlerContext } from '../utils/GestureHandlerContext';
 
-export const PanGestureHandler =
-  Dummy as React.ComponentType<PanGestureHandlerProperties>;
+export function GestureDetector({
+  gesture,
+  children,
+}: {
+  gesture: PanGesture | undefined;
+  children: React.ReactNode;
+}) {
+  return (
+    <GestureHandlerContext.Provider value={gesture ?? null}>
+      {children}
+    </GestureHandlerContext.Provider>
+  );
+}
+
+// eslint-disable-next-line @eslint-react/hooks-extra/no-unnecessary-use-prefix, @eslint-react/hooks-extra/ensure-custom-hooks-using-other-hooks
+export function usePanGesture(_config: PanGestureConfig) {
+  return undefined;
+}
 
 export const GestureHandlerRootView = View;
 
-export const GestureState = {
-  UNDETERMINED: 0,
-  FAILED: 1,
-  BEGAN: 2,
-  CANCELLED: 3,
-  ACTIVE: 4,
-  END: 5,
-};
-
-export type { PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
+export type {
+  PanGesture,
+  PanGestureActiveEvent,
+} from 'react-native-gesture-handler';

@@ -293,6 +293,10 @@ export function PanResponderAdapter({
             const route = routes[i];
             const focused = i === index;
 
+            if (route == null) {
+              throw new Error(`Couldn't find a route at index ${i}.`);
+            }
+
             if (!layout.width && !focused) {
               return null;
             }

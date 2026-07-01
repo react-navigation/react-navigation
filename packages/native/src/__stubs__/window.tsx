@@ -35,6 +35,11 @@ const history = {
       ) {
         index += n;
         const entry = entries[index];
+
+        if (entry == null) {
+          throw new Error(`Couldn't find a history entry at index ${index}.`);
+        }
+
         location = new URL(entry.href);
         currentState = entry.state;
         listeners.forEach((cb) => cb());

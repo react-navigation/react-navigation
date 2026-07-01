@@ -1,13 +1,16 @@
-import { expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
   createNavigatorFactory,
+  type NavigationState,
   type ParamListBase,
+  type PartialState,
   StackRouter,
   TabRouter,
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, render, waitFor } from '@testing-library/react-native';
+import { Text } from 'react-native';
 
 import { window } from '../__stubs__/window';
 import { NavigationContainer } from '../NavigationContainer';
@@ -17,6 +20,15 @@ Object.assign(global, window);
 // We want to use the web version of useLinking
 // eslint-disable-next-line import-x/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
+
+beforeEach(() => {
+  jest.useFakeTimers();
+});
+
+afterEach(() => {
+  jest.runOnlyPendingTimers();
+  jest.useRealTimers();
+});
 
 test('integrates with the history API', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
@@ -29,7 +41,7 @@ test('integrates with the history API', async () => {
       <NavigationContent>
         {state.routes.map((route, i) => (
           <div key={route.key} aria-current={state.index === i || undefined}>
-            {descriptors[route.key].render()}
+            {descriptors[route.key]?.render()}
           </div>
         ))}
       </NavigationContent>
@@ -46,7 +58,7 @@ test('integrates with the history API', async () => {
       <NavigationContent>
         {state.routes.map((route, i) => (
           <div key={route.key} aria-current={state.index === i || undefined}>
-            {descriptors[route.key].render()}
+            {descriptors[route.key]?.render()}
           </div>
         ))}
       </NavigationContent>
@@ -56,8 +68,11 @@ test('integrates with the history API', async () => {
   const Stack = createStackNavigator();
   const Tab = createTabNavigator();
 
-  const TestScreen = ({ route }: any): any =>
-    `${route.name} ${JSON.stringify(route.params)}`;
+  const TestScreen = ({ route }: any): any => (
+    <Text>
+      {route.name} {JSON.stringify(route.params)}
+    </Text>
+  );
 
   const linking = {
     config: {
@@ -79,7 +94,7 @@ test('integrates with the history API', async () => {
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation} linking={linking}>
       <Tab.Navigator>
         <Tab.Screen name="Home">
@@ -99,46 +114,299 @@ test('integrates with the history API', async () => {
 
   expect(window.location.pathname).toBe('/feed');
 
-  act(() => navigation.current?.navigate('Profile', { user: 'jane' }));
+  await act(() => navigation.current?.navigate('Profile', { user: 'jane' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => navigation.current?.navigate('Updates'));
+  await act(() => navigation.current?.navigate('Updates'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/updates'));
 
-  act(() => navigation.current?.goBack());
+  await act(() => navigation.current?.goBack());
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => {
+  await act(() => {
     window.history.back();
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
-  act(() => {
+  await act(() => {
     window.history.forward();
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => navigation.current?.navigate('Settings'));
+  await act(() => navigation.current?.navigate('Settings'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/edit'));
 
-  act(() => {
+  await act(() => {
     window.history.go(-2);
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
-  act(() => navigation.current?.navigate('Settings'));
-  act(() => navigation.current?.navigate('Chat'));
+  await act(() => navigation.current?.navigate('Settings'));
+  await act(() => navigation.current?.navigate('Chat'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/chat'));
 
-  act(() => navigation.current?.navigate('Home'));
+  await act(() => navigation.current?.navigate('Home'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/edit'));
+});
+
+test('renders fallback before state is restored asynchronously', async () => {
+  const createStackNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    return (
+      <NavigationContent>
+        {route ? descriptors[route.key]?.render() : null}
+      </NavigationContent>
+    );
+  });
+
+  const Stack = createStackNavigator();
+
+  const TestScreen = ({ route }: any): any => (
+    <Text>
+      {route.name}
+      {JSON.stringify(route.params)}
+    </Text>
+  );
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const { promise, resolve } =
+    Promise.withResolvers<PartialState<NavigationState>>();
+
+  const root = await render(
+    <NavigationContainer
+      ref={navigation}
+      fallback={<Text>Loading</Text>}
+      persistor={{
+        persist: jest.fn(),
+        restore: () => promise,
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      Loading
+    </Text>
+  `);
+
+  await act(() => {
+    resolve({
+      routes: [{ name: 'Profile', params: { user: 'jane' } }],
+    });
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      Profile
+      {"user":"jane"}
+    </Text>
+  `);
+
+  expect(navigation.getCurrentRoute()).toMatchObject({
+    name: 'Profile',
+    params: { user: 'jane' },
+  });
+});
+
+test('renders navigation tree immediately when state is restored synchronously', async () => {
+  const createStackNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    return (
+      <NavigationContent>
+        {route ? descriptors[route.key]?.render() : null}
+      </NavigationContent>
+    );
+  });
+
+  const Stack = createStackNavigator();
+
+  const TestScreen = ({ route }: any): any => (
+    <Text>
+      {route.name}
+      {JSON.stringify(route.params)}
+    </Text>
+  );
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const root = await render(
+    <NavigationContainer
+      ref={navigation}
+      fallback={<Text>Loading</Text>}
+      persistor={{
+        persist: jest.fn(),
+        restore: () => ({
+          routes: [{ name: 'Profile', params: { user: 'jane' } }],
+        }),
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      Profile
+      {"user":"jane"}
+    </Text>
+  `);
+
+  expect(navigation.getCurrentRoute()).toMatchObject({
+    name: 'Profile',
+    params: { user: 'jane' },
+  });
+});
+
+test('renders normally when state restoration throws', async () => {
+  const createStackNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    return (
+      <NavigationContent>
+        {route ? descriptors[route.key]?.render() : null}
+      </NavigationContent>
+    );
+  });
+
+  const Stack = createStackNavigator();
+
+  const TestScreen = ({ route }: any): any => (
+    <Text>
+      {route.name}
+      {JSON.stringify(route.params)}
+    </Text>
+  );
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  const root = await render(
+    <NavigationContainer
+      ref={navigation}
+      persistor={{
+        persist: jest.fn(),
+        restore() {
+          throw new Error('Failed');
+        },
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      Home
+    </Text>
+  `);
+
+  await waitFor(() => {
+    expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  });
+
+  expect(spy).toHaveBeenCalledWith(
+    'Failed to restore navigation state. The state will be initialized based on the navigation tree.',
+    expect.any(Error)
+  );
+});
+
+test('renders normally when state restoration rejects', async () => {
+  const createStackNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    return (
+      <NavigationContent>
+        {route ? descriptors[route.key]?.render() : null}
+      </NavigationContent>
+    );
+  });
+
+  const Stack = createStackNavigator();
+
+  const TestScreen = ({ route }: any): any => (
+    <Text>
+      {route.name}
+      {JSON.stringify(route.params)}
+    </Text>
+  );
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  const root = await render(
+    <NavigationContainer
+      ref={navigation}
+      persistor={{
+        persist: jest.fn(),
+        restore() {
+          return Promise.reject(new Error('Failed'));
+        },
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      Home
+    </Text>
+  `);
+
+  await waitFor(() => {
+    expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  });
+
+  expect(spy).toHaveBeenCalledWith(
+    'Failed to restore navigation state. The state will be initialized based on the navigation tree.',
+    expect.any(Error)
+  );
 });

@@ -19,9 +19,9 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
   onAction: (action: NavigationAction) => boolean;
   onUnhandledAction: (action: NavigationAction) => void;
   getState: () => State;
+  state: State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
-  stateRef: React.RefObject<State | null>;
 };
 
 /**
@@ -37,11 +37,25 @@ export function useNavigationHelpers<
   onAction,
   onUnhandledAction,
   getState,
+  state,
   emitter,
   router,
-  stateRef,
 }: Options<State, Action>) {
   const parentNavigationHelpers = React.use(NavigationContext);
+
+  // In some cases (e.g. route names change), internal state might have changed
+  // But it hasn't been committed yet, so hasn't propagated to any listeners
+  // During this time, we need to return the internal state in `getState`
+  // Otherwise it can return an inconsistent state during render in children
+  // This may affect hooks like `useNavigationState` that need to read the state during render
+  // To avoid this, we use a ref for render phase, and immediately clear it on commit
+  const stateRef = React.useRef<State | null>(state);
+
+  stateRef.current = state;
+
+  React.useInsertionEffect(() => {
+    stateRef.current = null;
+  });
 
   return React.useMemo(() => {
     const dispatch = (op: Action | ((state: State) => Action)) => {
@@ -88,10 +102,7 @@ export function useNavigationHelpers<
       },
       getState: (): State => {
         // FIXME: Workaround for when the state is read during render
-        // By this time, we haven't committed the new state yet
-        // Without this `useSyncExternalStore` will keep reading the old state
-        // This may result in `useNavigationState` or `useIsFocused` returning wrong values
-        // Apart from `useSyncExternalStore`, `getState` should never be called during render
+        // Apart from subscriptions, `getState` should never be called during render
         if (stateRef.current != null) {
           return stateRef.current;
         }

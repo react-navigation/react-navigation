@@ -8,7 +8,7 @@ import { useTheme } from '../theming/useTheme';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import { MockRouter } from './__fixtures__/MockRouter';
 
-test('can get current theme with useTheme', () => {
+test('can get current theme with useTheme', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -17,7 +17,7 @@ test('can get current theme with useTheme', () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -41,7 +41,7 @@ test('can get current theme with useTheme', () => {
     },
   };
 
-  render(
+  await render(
     <BaseNavigationContainer theme={theme}>
       <TestNavigator>
         <Screen name="foo" component={Test} />
@@ -50,7 +50,7 @@ test('can get current theme with useTheme', () => {
   );
 });
 
-test("throws if theme isn't passed to BaseNavigationContainer", () => {
+test("throws if theme isn't passed to BaseNavigationContainer", async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -59,7 +59,7 @@ test("throws if theme isn't passed to BaseNavigationContainer", () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -71,7 +71,7 @@ test("throws if theme isn't passed to BaseNavigationContainer", () => {
     return null;
   };
 
-  render(
+  await render(
     <BaseNavigationContainer>
       <TestNavigator>
         <Screen name="foo" component={Test} />
@@ -80,7 +80,7 @@ test("throws if theme isn't passed to BaseNavigationContainer", () => {
   );
 });
 
-test('throws if useTheme is used without BaseNavigationContainer', () => {
+test('throws if useTheme is used without BaseNavigationContainer', async () => {
   const Test = () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     expect(() => useTheme()).toThrow("Couldn't find a theme");
@@ -88,14 +88,19 @@ test('throws if useTheme is used without BaseNavigationContainer', () => {
     return null;
   };
 
-  render(<Test />);
+  await render(<Test />);
 });
 
-test('passes theme to options prop', () => {
+test('passes theme to options prop', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const route = state.routes[0];
 
-    expect(descriptors[state.routes[0].key].options).toEqual({
+    if (route == null) {
+      throw new Error('No route found.');
+    }
+
+    expect(descriptors[route.key]?.options).toEqual({
       title: 'tomato',
     });
 
@@ -109,7 +114,7 @@ test('passes theme to options prop', () => {
     },
   };
 
-  render(
+  await render(
     <BaseNavigationContainer theme={theme}>
       <TestNavigator>
         <Screen
@@ -122,15 +127,21 @@ test('passes theme to options prop', () => {
   );
 });
 
-test('passes theme to screenOptions prop', () => {
+test('passes theme to screenOptions prop', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors } = useNavigationBuilder(MockRouter, props);
+    const firstRoute = state.routes[0];
+    const secondRoute = state.routes[1];
 
-    expect(descriptors[state.routes[0].key].options).toEqual({
+    if (firstRoute == null || secondRoute == null) {
+      throw new Error("Couldn't find routes.");
+    }
+
+    expect(descriptors[firstRoute.key]?.options).toEqual({
       title: 'tomato',
     });
 
-    expect(descriptors[state.routes[1].key].options).toEqual({
+    expect(descriptors[secondRoute.key]?.options).toEqual({
       title: 'tomato',
     });
 
@@ -144,7 +155,7 @@ test('passes theme to screenOptions prop', () => {
     },
   };
 
-  render(
+  await render(
     <BaseNavigationContainer theme={theme}>
       <TestNavigator
         screenOptions={({ theme }: any) => ({ title: theme.colors.primary })}

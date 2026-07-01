@@ -28,6 +28,30 @@ test('splits a path into parts', () => {
   ]);
 });
 
+test('splits a path with non-capturing regex groups into parts', () => {
+  const path = '/users/:id(\\d+)/posts/:slug([a-z]+(?:-[a-z]+)*)/:tab?';
+
+  expect(getPatternParts(path)).toEqual([
+    { segment: 'users' },
+    {
+      segment: ':id(\\d+)',
+      param: 'id',
+      regex: '\\d+',
+    },
+    { segment: 'posts' },
+    {
+      segment: ':slug([a-z]+(?:-[a-z]+)*)',
+      param: 'slug',
+      regex: '[a-z]+(?:-[a-z]+)*',
+    },
+    {
+      segment: ':tab?',
+      param: 'tab',
+      optional: true,
+    },
+  ]);
+});
+
 test('thrown an error if duplicate params are found', () => {
   const path = '/users/:id/profile/:id';
 

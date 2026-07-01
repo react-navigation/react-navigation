@@ -26,8 +26,8 @@ type Props = {
 
 describe('useKeyboardManager', () => {
   describe('onPageChangeConfirm', () => {
-    test('calls onPageChangeCancel when closing is false', () => {
-      const { result } = renderHook(
+    test('calls onPageChangeCancel when closing is false', async () => {
+      const { result } = await renderHook(
         (props: Props) => useKeyboardManager(props),
         { initialProps: { enabled: true, focused: true, contentRef } }
       );
@@ -39,8 +39,8 @@ describe('useKeyboardManager', () => {
         .spyOn(TextInput.State, 'currentlyFocusedInput')
         .mockReturnValue(input);
 
-      act(() => result.current.onPageChangeStart());
-      act(() =>
+      await act(() => result.current.onPageChangeStart());
+      await act(() =>
         result.current.onPageChangeConfirm({
           gesture: false,
           active: true,
@@ -51,15 +51,15 @@ describe('useKeyboardManager', () => {
       expect(blurMock).toHaveBeenCalledTimes(1);
     });
 
-    test('dismisses keyboard when closing without gesture', () => {
+    test('dismisses keyboard when closing without gesture', async () => {
       const dismissSpy = jest.spyOn(Keyboard, 'dismiss');
 
-      const { result } = renderHook(
+      const { result } = await renderHook(
         (props: Props) => useKeyboardManager(props),
         { initialProps: { enabled: true, focused: true, contentRef } }
       );
 
-      act(() =>
+      await act(() =>
         result.current.onPageChangeConfirm({
           gesture: false,
           active: false,
@@ -72,8 +72,8 @@ describe('useKeyboardManager', () => {
       dismissSpy.mockRestore();
     });
 
-    test('blurs previously focused input when closing with gesture and active', () => {
-      const { result } = renderHook(
+    test('blurs previously focused input when closing with gesture and active', async () => {
+      const { result } = await renderHook(
         (props: Props) => useKeyboardManager(props),
         { initialProps: { enabled: true, focused: true, contentRef } }
       );
@@ -85,11 +85,11 @@ describe('useKeyboardManager', () => {
         .spyOn(TextInput.State, 'currentlyFocusedInput')
         .mockReturnValue(input);
 
-      act(() => result.current.onPageChangeStart());
+      await act(() => result.current.onPageChangeStart());
 
       blurMock.mockClear();
 
-      act(() =>
+      await act(() =>
         result.current.onPageChangeConfirm({
           gesture: true,
           active: true,
@@ -102,68 +102,68 @@ describe('useKeyboardManager', () => {
   });
 
   describe('useLayoutEffect keyboard dismiss on focus loss', () => {
-    test('dismisses keyboard when focused transitions from true to false', () => {
+    test('dismisses keyboard when focused transitions from true to false', async () => {
       const dismissSpy = jest.spyOn(Keyboard, 'dismiss');
 
-      const { rerender } = renderHook(
+      const { rerender } = await renderHook(
         (props: Props) => useKeyboardManager(props),
         { initialProps: { enabled: true, focused: true, contentRef } }
       );
 
       dismissSpy.mockClear();
 
-      rerender({ enabled: false, focused: false, contentRef });
+      await rerender({ enabled: false, focused: false, contentRef });
 
       expect(dismissSpy).toHaveBeenCalled();
 
       dismissSpy.mockRestore();
     });
 
-    test('does not dismiss keyboard when focused stays false', () => {
+    test('does not dismiss keyboard when focused stays false', async () => {
       const dismissSpy = jest.spyOn(Keyboard, 'dismiss');
 
-      const { rerender } = renderHook(
+      const { rerender } = await renderHook(
         (props: Props) => useKeyboardManager(props),
         { initialProps: { enabled: false, focused: false, contentRef } }
       );
 
       dismissSpy.mockClear();
 
-      rerender({ enabled: false, focused: false, contentRef });
+      await rerender({ enabled: false, focused: false, contentRef });
 
       expect(dismissSpy).not.toHaveBeenCalled();
 
       dismissSpy.mockRestore();
     });
 
-    test('does not dismiss keyboard when only enabled changes without focus changing', () => {
+    test('does not dismiss keyboard when only enabled changes without focus changing', async () => {
       const dismissSpy = jest.spyOn(Keyboard, 'dismiss');
 
-      const { rerender } = renderHook(
+      const { rerender } = await renderHook(
         (props: Props) => useKeyboardManager(props),
         { initialProps: { enabled: true, focused: true, contentRef } }
       );
 
       dismissSpy.mockClear();
 
-      rerender({ enabled: false, focused: true, contentRef });
+      await rerender({ enabled: false, focused: true, contentRef });
 
       expect(dismissSpy).not.toHaveBeenCalled();
 
       dismissSpy.mockRestore();
     });
 
-    test('does not dismiss keyboard when losing focus while disabled', () => {
+    test('does not dismiss keyboard when losing focus while disabled', async () => {
       const dismissSpy = jest.spyOn(Keyboard, 'dismiss');
 
-      const { rerender } = renderHook(
+      const { rerender } = await renderHook(
         (props: Props) => useKeyboardManager(props),
         { initialProps: { enabled: false, focused: true, contentRef } }
       );
 
       dismissSpy.mockClear();
 
-      rerender({ enabled: false, focused: false, contentRef });
+      await rerender({ enabled: false, focused: false, contentRef });
 
       expect(dismissSpy).not.toHaveBeenCalled();
 
@@ -172,9 +172,9 @@ describe('useKeyboardManager', () => {
   });
 
   describe('input focus on unfocused screen', () => {
-    test('blurs focused input in an unfocused screen when keyboard is shown', () => {
+    test('blurs focused input in an unfocused screen when keyboard is shown', async () => {
       const listeners: Partial<
-        Record<KeyboardEventName, KeyboardEventListener[]>
+        Record<KeyboardEventName, KeyboardEventListener[] | undefined>
       > = {};
 
       const addListenerSpy = jest
@@ -203,11 +203,11 @@ describe('useKeyboardManager', () => {
         .spyOn(TextInput.State, 'currentlyFocusedInput')
         .mockReturnValue(input);
 
-      renderHook((props: Props) => useKeyboardManager(props), {
+      await renderHook((props: Props) => useKeyboardManager(props), {
         initialProps: { enabled: true, focused: false, contentRef },
       });
 
-      act(() => {
+      await act(() => {
         listeners.keyboardDidShow?.forEach((listener) =>
           listener({} as Parameters<KeyboardEventListener>[0])
         );

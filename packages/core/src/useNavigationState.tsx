@@ -1,14 +1,8 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
-import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
 
-import type {
-  NavigationListForNested,
-  NavigationProp,
-  RootNavigator,
-} from './types';
-import { useNavigation } from './useNavigation';
+import type { NavigationListForNested, RootNavigator } from './types';
 
 type NavigationStateListener = {
   getState: () => NavigationState<ParamListBase>;
@@ -45,54 +39,7 @@ export function useNavigationState<T>(
   selector: (state: NavigationState<ParamListBase>) => T
 ): T;
 export function useNavigationState(...args: unknown[]): unknown {
-  let navigation: NavigationProp<ParamListBase> | undefined,
-    stateListener: NavigationStateListener | undefined,
-    selector;
-
-  if (typeof args[0] === 'string') {
-    // `useNavigation` uses `use` internally, so it's fine to call it conditionally
-    // Cast to a non-generic signature to skip overload resolution - otherwise TS
-    // eagerly expands `NavigationListForNested<RootNavigator>` at this call site.
-    navigation = (
-      useNavigation as (name: string) => NavigationProp<ParamListBase>
-    )(args[0]);
-    selector = args[1];
-  } else {
-    selector = args[0];
-  }
-
-  if (navigation == null) {
-    stateListener = React.use(NavigationStateListenerContext);
-
-    if (stateListener == null) {
-      throw new Error(
-        "Couldn't get the navigation state. Is your component inside a navigator?"
-      );
-    }
-  }
-
-  const subscribe = React.useCallback(
-    (callback: () => void) => {
-      if (navigation) {
-        return navigation.addListener('state', callback);
-      } else if (stateListener) {
-        return stateListener.subscribe(callback);
-      } else {
-        throw new Error(
-          "Couldn't subscribe to navigation state changes. This is not expected."
-        );
-      }
-    },
-    [navigation, stateListener]
-  );
-
-  const getSnapshot = navigation
-    ? navigation.getState
-    : stateListener?.getState;
-
-  if (getSnapshot == null) {
-    throw new Error("Couldn't get the navigation state. This is not expected.");
-  }
+  const selector = typeof args[0] === 'string' ? args[1] : args[0];
 
   if (typeof selector !== 'function') {
     throw new Error(
@@ -100,28 +47,75 @@ export function useNavigationState(...args: unknown[]): unknown {
     );
   }
 
-  const value = useSyncExternalStoreWithSelector(
-    subscribe,
-    getSnapshot,
-    getSnapshot,
-    // @ts-expect-error we can't infer the type here
-    selector
-  );
+  // @ts-expect-error: the public overloads guarantee the selector's type, but
+  // the `unknown[]` implementation signature can't express it
+  const select: (state: NavigationState<ParamListBase>) => unknown = selector;
 
-  return value;
+  let listener: NavigationStateListener | undefined;
+
+  if (typeof args[0] === 'string') {
+    const name = args[0];
+    const listeners = React.use(NamedNavigationStateListenerListContext);
+
+    listener = listeners?.[name];
+
+    if (listener == null) {
+      throw new Error(
+        `Couldn't find a navigator for the route '${name}' in any of the parent screens. Is your component inside the correct screen?`
+      );
+    }
+  } else {
+    listener = React.use(NavigationStateListenerContext);
+
+    if (listener == null) {
+      throw new Error(
+        "Couldn't get the navigation state. Is your component inside a navigator?"
+      );
+    }
+  }
+
+  const { getState, subscribe } = listener;
+
+  const [, forceUpdate] = React.useReducer((count: number) => count + 1, 0);
+
+  const selected = select(getState());
+
+  const selectionRef = React.useRef({ select, selected });
+
+  React.useLayoutEffect(() => {
+    selectionRef.current = { select, selected };
+  });
+
+  React.useEffect(() => {
+    const checkForUpdates = () => {
+      const selection = selectionRef.current;
+
+      if (!Object.is(selection.selected, selection.select(getState()))) {
+        forceUpdate();
+      }
+    };
+
+    const unsubscribe = subscribe(checkForUpdates);
+
+    // The state may have changed between the render and the subscription
+    checkForUpdates();
+
+    return unsubscribe;
+  }, [getState, subscribe]);
+
+  return selected;
 }
 
 export function NavigationStateListenerProvider({
   state,
+  getState,
   children,
 }: {
   state: NavigationState<ParamListBase>;
+  getState: () => NavigationState<ParamListBase>;
   children: React.ReactNode;
 }) {
   const listeners = React.useRef<(() => void)[]>([]);
-  const stateRef = React.useRef(state);
-
-  const getState = useLatestCallback(() => stateRef.current);
 
   const subscribe = useLatestCallback((callback: () => void) => {
     listeners.current.push(callback);
@@ -131,8 +125,8 @@ export function NavigationStateListenerProvider({
     };
   });
 
+  // Notify subscribers once the new state has committed
   React.useLayoutEffect(() => {
-    stateRef.current = state;
     listeners.current.forEach((callback) => callback());
   }, [state]);
 
@@ -151,6 +145,42 @@ export function NavigationStateListenerProvider({
   );
 }
 
+export function NamedNavigationStateListenerProvider({
+  name,
+  children,
+}: {
+  name: string;
+  children: React.ReactNode;
+}) {
+  const listener = React.use(NavigationStateListenerContext);
+
+  if (listener == null) {
+    throw new Error(
+      "Couldn't find a navigation state listener. This is likely because the navigator doesn't render its content under 'NavigationContent'."
+    );
+  }
+
+  const parents = React.use(NamedNavigationStateListenerListContext);
+
+  const listeners = React.useMemo(
+    () => ({
+      ...parents,
+      [name]: listener,
+    }),
+    [listener, name, parents]
+  );
+
+  return (
+    <NamedNavigationStateListenerListContext.Provider value={listeners}>
+      {children}
+    </NamedNavigationStateListenerListContext.Provider>
+  );
+}
+
 const NavigationStateListenerContext = React.createContext<
   NavigationStateListener | undefined
+>(undefined);
+
+export const NamedNavigationStateListenerListContext = React.createContext<
+  Record<string, NavigationStateListener> | undefined
 >(undefined);

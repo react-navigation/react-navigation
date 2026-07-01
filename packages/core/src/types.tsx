@@ -55,10 +55,10 @@ export interface RootNavigator {}
 export interface Theme {}
 
 export type RootParamList =
-  RootNavigator extends PrivateValueStore<[infer ParamList, any, any]>
-    ? ParamList extends {}
-      ? ParamList
-      : {}
+  RootNavigator extends PrivateValueStore<
+    [infer ParamList extends {}, any, any, any]
+  >
+    ? ParamList
     : {};
 
 export type DefaultNavigatorOptions<
@@ -273,7 +273,7 @@ export type EventEmitter<in out EventMap extends EventMapBase> = {
   >;
 };
 
-export class PrivateValueStore<T extends [any, any, any]> {
+export class PrivateValueStore<T extends [any, any, any, any]> {
   /**
    * UGLY HACK! DO NOT USE THE TYPE!!!
    *
@@ -286,6 +286,50 @@ export class PrivateValueStore<T extends [any, any, any]> {
    */
   protected ''?: T;
 }
+
+type NavigatorLike =
+  | {
+      Navigator: React.ComponentType<any>;
+      Screen: unknown;
+      Group: unknown;
+    }
+  | {
+      config: unknown;
+      getComponent: () => React.ComponentType<any>;
+    };
+
+type ParamListForNavigator<T extends {}> = T extends NavigatorLike
+  ? T extends PrivateValueStore<[infer ParamList extends {}, any, any, any]>
+    ? ParamList
+    : T
+  : T;
+
+// Remove `undefined` before checking for nested navigator params.
+// If nothing remains, avoid matching `never` against `NavigatorScreenParams`
+type NestedNavigatorForScreenParams<T, Params = NotUndefined<T>> = [
+  Params,
+] extends [never]
+  ? never
+  : Params extends NavigatorScreenParams<infer Navigator>
+    ? Navigator extends PrivateValueStore<[any, any, any, any]>
+      ? Navigator extends NavigatorLike
+        ? Navigator
+        : never
+      : never
+    : never;
+
+export type NestedNavigatorsForParamList<ParamList extends {}> = {
+  [RouteName in keyof ParamList as NestedNavigatorForScreenParams<
+    ParamList[RouteName]
+  > extends never
+    ? never
+    : RouteName]: NestedNavigatorForScreenParams<ParamList[RouteName]>;
+};
+
+type NavigateOptions = {
+  merge?: boolean | undefined;
+  pop?: boolean | undefined;
+};
 
 type NavigationHelpersCommon<
   ParamList extends ParamListBase,
@@ -321,40 +365,13 @@ type NavigationHelpersCommon<
         ? [
             screen: RouteName,
             params?: ParamList[RouteName],
-            options?: {
-              merge?: boolean | undefined;
-              pop?: boolean | undefined;
-            },
+            options?: NavigateOptions,
           ]
         : [
             screen: RouteName,
             params: ParamList[RouteName],
-            options?: {
-              merge?: boolean | undefined;
-              pop?: boolean | undefined;
-            },
+            options?: NavigateOptions,
           ]
-      : never
-  ): void;
-
-  /**
-   * Navigate to a route in current navigation tree.
-   *
-   * @param options.name Name of the route to navigate to.
-   * @param [options.params] Params object for the route.
-   * @param [options.path] Path to associate the route with (e.g. for deep links).
-   * @param [options.merge] Whether to merge the params onto the route. Defaults to `false`.
-   * @param [options.pop] Whether to pop routes in a stack to go back to the matching route. Defaults to `false`.
-   */
-  navigate<RouteName extends keyof ParamList>(
-    options: RouteName extends unknown
-      ? {
-          name: RouteName;
-          params: ParamList[RouteName];
-          path?: string | undefined;
-          merge?: boolean | undefined;
-          pop?: boolean | undefined;
-        }
       : never
   ): void;
 
@@ -408,11 +425,11 @@ type NavigationHelpersCommon<
    * So don't use it in `render`.
    */
   getState(): State;
-} & PrivateValueStore<[ParamList, unknown, unknown]>;
+};
 
 type ParamType<
   ParamList extends {},
-  RouteName extends keyof ParamList | unknown,
+  RouteName,
   IsPartial extends boolean = false,
 > = RouteName extends keyof ParamList
   ? ParamList[RouteName] extends undefined
@@ -456,7 +473,8 @@ export type NavigationHelpers<
   EventMap extends EventMapBase = {},
 > = NavigationHelpersCommon<ParamList> &
   EventEmitter<EventMap> &
-  NavigationHelpersRoute<ParamList, keyof ParamList>;
+  NavigationHelpersRoute<ParamList, keyof ParamList> &
+  PrivateValueStore<[ParamList, unknown, unknown, unknown]>;
 
 export type NavigationContainerProps = {
   /**
@@ -489,14 +507,17 @@ export type NavigationContainerProps = {
   children: React.ReactNode;
 };
 
-export type NavigationProp<
+// Everything in `NavigationProp` except `getParent` and the private brand.
+// The composite navigation prop intersects this directly, so it doesn't have
+// to walk `NavigationProp`'s members with `Omit` to drop `getParent`/the brand.
+type NavigationPropBase<
   ParamList extends {},
   RouteName extends keyof ParamList = KeyOf<ParamList>,
   State extends NavigationState = NavigationState<ParamList>,
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {},
   ActionHelpers extends Record<string, (...args: any) => void> = {},
-> = Omit<NavigationHelpersCommon<ParamList, State>, 'getParent'> & {
+> = NavigationHelpersCommon<ParamList, State> & {
   /**
    * Update the options for the route.
    * The options object will be shallow merged with default options object.
@@ -504,6 +525,25 @@ export type NavigationProp<
    * @param options Partial options object for the current screen.
    */
   setOptions(options: Partial<ScreenOptions>): void;
+} & NavigationHelpersRoute<ParamList, RouteName> &
+  ActionHelpers &
+  EventConsumer<EventMap & EventMapCore<State>>;
+
+export type NavigationProp<
+  ParamList extends {},
+  RouteName extends keyof ParamList = KeyOf<ParamList>,
+  State extends NavigationState = NavigationState<ParamList>,
+  ScreenOptions extends {} = {},
+  EventMap extends EventMapBase = {},
+  ActionHelpers extends Record<string, (...args: any) => void> = {},
+> = NavigationPropBase<
+  ParamList,
+  RouteName,
+  State,
+  ScreenOptions,
+  EventMap,
+  ActionHelpers
+> & {
   /**
    * Returns the navigation prop of the parent screen.
    * If a route name is provided, the navigation prop from the parent screen with matching route name (including current) will be returned.
@@ -522,10 +562,7 @@ export type NavigationProp<
     ActionHelpers
   >;
   getParent(): NavigationProp<ParamListBase> | undefined;
-} & NavigationHelpersRoute<ParamList, RouteName> &
-  ActionHelpers &
-  EventConsumer<EventMap & EventMapCore<State>> &
-  PrivateValueStore<[ParamList, RouteName, EventMap]>;
+} & PrivateValueStore<[ParamList, RouteName, EventMap, ActionHelpers]>;
 
 export type RouteProp<
   in out ParamList extends ParamListBase,
@@ -559,30 +596,38 @@ type CompositeNavigationPropInternal<
   ParamList extends {},
   RouteName extends keyof ParamList,
   EventMap extends EventMapBase,
-> = Omit<A & B, keyof NavigationProp<any, any, any, any, any>> &
-  Omit<
-    NavigationProp<
+> = // Action helpers are read from the private brand (4th slot) instead of
+  // `Omit<A & B, keyof NavigationProp>`, which had to walk the whole (possibly
+  // deeply composed) member set of `A & B` to drop the standard members.
+  ActionHelpersOfNavigationProp<A> &
+    ActionHelpersOfNavigationProp<B> &
+    // Intersect the brand-free base directly instead of `Omit`-ing `getParent`
+    // off a full `NavigationProp`, so we skip a mapped-type pass per composite.
+    NavigationPropBase<
       ParamList,
       RouteName,
       StateOfNavigationProp<A>,
       ScreenOptionsOfNavigationProp<A>,
       EventMap
-    >,
-    'getParent'
-  > & {
-    getParent: A['getParent'] & B['getParent'];
-  } & // Mapped types don't preserve protected members
-  // So `Omit` drops `PrivateValueStore`'s `protected` brand
-  // We add it back so this can be used for type inference
-  PrivateValueStore<[ParamList, RouteName, EventMap]>;
+    > & {
+      getParent: A['getParent'] & B['getParent'];
+    } & PrivateValueStore<
+      [
+        ParamList,
+        RouteName,
+        EventMap,
+        ActionHelpersOfNavigationProp<A> & ActionHelpersOfNavigationProp<B>,
+      ]
+    >;
 
-type ParamListOfNavigationProp<T> =
-  T extends PrivateValueStore<[infer ParamList, any, any]> ? ParamList : never;
+type PrivateValueOfNavigationProp<T> =
+  T extends PrivateValueStore<infer Value> ? Value : [never, unknown, {}, {}];
 
-type RouteNameOfNavigationProp<T> =
-  T extends PrivateValueStore<[any, infer RouteName, any]>
-    ? RouteName
-    : unknown;
+type ParamListOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[0];
+
+type RouteNameOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[1];
+
+type ActionHelpersOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[3];
 
 type StateOfNavigationProp<T> = T extends {
   getState: () => infer State extends NavigationState;
@@ -596,8 +641,7 @@ type ScreenOptionsOfNavigationProp<T> = T extends {
   ? ScreenOptions
   : {};
 
-type EventMapOfNavigationProp<T> =
-  T extends PrivateValueStore<[any, any, infer EventMap]> ? EventMap : {};
+type EventMapOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[2];
 
 export type CompositeScreenProps<
   in out A extends {
@@ -680,16 +724,16 @@ export type RouteConfigComponent<
        * React component to render for this screen.
        */
       component: ScreenComponentType<ParamList, RouteName>;
-      getComponent?: never | undefined;
-      children?: never | undefined;
+      getComponent?: never;
+      children?: never;
     }
   | {
       /**
        * Lazily get a React component to render for this screen.
        */
       getComponent: () => ScreenComponentType<ParamList, RouteName>;
-      component?: never | undefined;
-      children?: never | undefined;
+      component?: never;
+      children?: never;
     }
   | {
       /**
@@ -699,8 +743,8 @@ export type RouteConfigComponent<
         route: RouteProp<ParamList, RouteName>;
         navigation: any;
       }) => React.ReactNode;
-      component?: never | undefined;
-      getComponent?: never | undefined;
+      component?: never;
+      getComponent?: never;
     };
 
 export type RouteConfigProps<
@@ -907,15 +951,19 @@ export type NavigationContainerEventMap = {
       /**
        * The data object passed when emitting the event.
        */
-      data: unknown;
+      data?: unknown;
       /**
        * The key of the target route which received the event.
        */
-      target: string | undefined;
+      target?: string | undefined;
       /**
        * Whether `event.preventDefault()` was called on this event.
        */
-      defaultPrevented: boolean | undefined;
+      defaultPrevented?: boolean | undefined;
+      /**
+       * Prevent the default action which happens on this event.
+       */
+      preventDefault?: (() => void) | undefined;
     };
   };
 };
@@ -986,12 +1034,44 @@ export type GenericNavigation<ParamList extends {}> = Omit<
 export type RouteForName<
   ParamList extends {},
   RouteName extends string,
-> = Extract<ParamListRoute<ParamList>, { name: RouteName }>;
+> = string extends RouteName
+  ? // RouteName is a not a literal but `string`
+    // Return union of all possible routes in the tree
+    ParamListRoute<ParamList>
+  : RouteForNameInternal<ParamList, RouteName>;
+
+// Look up route object by checking each level and recursing into the nested param lists
+// This avoids building a union of all routes, which doesn't scale on large trees
+type RouteForNameInternal<ParamList extends {}, RouteName extends string> =
+  | (RouteName extends KeyOf<ParamList>
+      ? RouteProp<ParamList, RouteName>
+      : never)
+  | RouteForNameNested<NestedParamLists<ParamList>, RouteName>;
+
+type RouteForNameNested<ParamLists, RouteName extends string> =
+  // Distributes over the union of nested param lists
+  // e.g. if ParamLists is A | B
+  // TypeScript evaluates the branch once per member (A, then B)
+  // and unions the outcomes
+  ParamLists extends {} ? RouteForNameInternal<ParamLists, RouteName> : never;
+
+/**
+ * Union of param lists of the nested navigators in a param list.
+ */
+export type NestedParamLists<ParamList extends {}> = {
+  [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
+    ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<infer T>
+      ? ParamListForNavigator<T>
+      : never
+    : never;
+}[keyof ParamList];
 
 type ParamListRoute<ParamList extends {}> = {
   [RouteName in keyof ParamList]: NavigatorScreenParams<{}> extends ParamList[RouteName]
     ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<infer T>
-      ? ParamListRoute<T> | RouteProp<ParamList, RouteName>
+      ?
+          | ParamListRoute<ParamListForNavigator<T>>
+          | RouteProp<ParamList, RouteName>
       : RouteProp<ParamList, RouteName>
     : RouteProp<ParamList, RouteName>;
 }[keyof ParamList];
@@ -1002,11 +1082,10 @@ type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
 
 type BasicNavigationComposite<
   Navigation extends NavigationProp<any, any, any, any, any>,
-  Parent,
-> =
-  Parent extends NavigationProp<any, any, any, any, any>
-    ? CompositeNavigationProp<Navigation, Parent>
-    : Navigation;
+  Parent extends NavigationProp<any, any, any, any, any> | undefined,
+> = Parent extends undefined
+  ? Navigation
+  : CompositeNavigationProp<Navigation, NonNullable<Parent>>;
 
 type BasicNavigationList<
   ParamList extends {},
@@ -1018,11 +1097,15 @@ type BasicNavigationList<
       ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<
           infer T
         >
-        ? BasicNavigationList<
-            T,
-            ExcludedRouteNames,
-            NavigationProp<ParamList, RouteName>
-          >
+        ? ParamListForNavigator<T> extends infer NestedParamList extends {}
+          ? keyof NestedParamList extends ExcludedRouteNames
+            ? {}
+            : BasicNavigationList<
+                NestedParamList,
+                ExcludedRouteNames,
+                NavigationProp<ParamList, RouteName>
+              >
+          : {}
         : {}
       : {}) &
       (RouteName extends ExcludedRouteNames
@@ -1036,87 +1119,237 @@ type BasicNavigationList<
   }[keyof ParamList]
 >;
 
-export type NavigationListForNavigator<Navigator> =
-  Navigator extends TypedNavigator<infer Bag, any>
-    ? Bag['NavigationList']
-    : Navigator extends PrivateValueStore<[any, infer NavigationList, any]>
-      ? NavigationList
-      : {};
-
-export type NavigationListForNested<Navigator> = FlatType<
-  NavigationListForNestedInternal<Navigator> &
-    (Navigator extends TypedNavigator<infer Bag, any>
-      ? BasicNavigationList<
-          Bag['ParamList'],
-          keyof NavigationListForNestedInternal<Navigator>,
-          undefined
-        >
-      : Navigator extends PrivateValueStore<[infer ParamList, any, any]>
-        ? ParamList extends {}
-          ? BasicNavigationList<
-              ParamList,
-              keyof NavigationListForNestedInternal<Navigator>,
-              undefined
-            >
-          : {}
-        : {})
->;
-
-type NavigationListForNestedInternal<Navigator> =
-  NavigationListForNavigator<Navigator> &
-    NavigationListForStaticConfig<
-      NavigationListForNavigator<Navigator>,
-      Navigator
-    >;
-
-type NavigationListWithComposite<
-  in out Parent extends NavigationProp<any, any, any, any, any>,
-  in out NavigatorList extends Record<string, any>,
-> = {
-  [K in keyof NavigatorList]: CompositeNavigationProp<NavigatorList[K], Parent>;
+type InheritedParentParams<ParentParamList, ParamList> = {
+  [K in keyof ParentParamList as K extends keyof ParamList
+    ? never
+    : string extends K
+      ? never
+      : K]: ParentParamList[K];
 };
 
-type NavigationListForStaticConfig<ParentList, Navigator> = Navigator extends {
-  readonly config: {
-    screens?: any;
-    groups?: any;
-  };
-}
-  ? NavigationListForScreens<ParentList, Navigator['config']['screens']> &
-      NavigationListForGroups<ParentList, Navigator['config']['groups']>
-  : {};
+type GenericNavigationComposite<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+  Parent,
+> =
+  Parent extends NavigationProp<any, any, any, any, any>
+    ? ParamListOfNavigationProp<Parent> extends infer ParentParamList
+      ? NavigationProp<
+          ParamList & InheritedParentParams<ParentParamList, ParamList>,
+          RouteName
+        > & { getParent: Parent['getParent'] }
+      : never
+    : NavigationProp<ParamList, RouteName>;
 
-type NavigationListForScreens<ParentList, Screens> = UnionToIntersection<
-  {
-    // Only check screens with static config to avoid overly-complex types
-    // Otherwise TypeScript fails to load the types due to complexity
-    [K in keyof Screens]: ParentList extends Record<K, any>
-      ? Screens[K] extends { config: any }
-        ? NavigationListWithComposite<
-            ParentList[K],
-            NavigationListForNested<Screens[K]>
-          >
-        : Screens[K] extends { screen: { config: any } }
-          ? NavigationListWithComposite<
-              ParentList[K],
-              NavigationListForNested<Screens[K]['screen']>
-            >
-          : {}
-      : {};
-  }[keyof Screens]
->;
+type NavigationListForScreenParams<
+  T extends {},
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+  ExcludedRouteNames,
+  Parent extends NavigationProp<any, any, any, any, any> | undefined,
+> = T extends PrivateValueStore<[any, any, any, any]> & NavigatorLike
+  ? NavigationListForNestedInternal<
+      T,
+      GenericNavigationComposite<ParamList, RouteName, Parent>
+    >
+  : NavigationListForParamListScreenParams<
+      T,
+      ParamList,
+      RouteName,
+      ExcludedRouteNames,
+      Parent
+    >;
 
-type NavigationListForGroups<ParentList, Groups> =
-  Groups extends Record<string, { screens: any }>
-    ? UnionToIntersection<
-        {
-          [K in keyof Groups]: NavigationListForScreens<
-            ParentList,
-            Groups[K]['screens']
-          >;
-        }[keyof Groups]
+type NavigationListForParamListScreenParams<
+  T extends {},
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList,
+  ExcludedRouteNames,
+  Parent extends NavigationProp<any, any, any, any, any> | undefined,
+> =
+  // `T` is only ever a plain param list here, since navigators are routed to
+  // `NavigationListForNestedInternal` by `NavigationListForScreenParams`.
+  // So there's no navigator to unwrap with `ParamListForNavigator`.
+  T extends ParamListBase
+    ? BasicNavigationListForParamList<
+        T,
+        ExcludedRouteNames,
+        GenericNavigationComposite<ParamList, RouteName, Parent>
       >
     : {};
+
+type BasicNavigationListForParamList<
+  ParamList extends ParamListBase,
+  ExcludedRouteNames,
+  Parent extends NavigationProp<any, any, any, any, any> | undefined,
+> = UnionToIntersection<
+  {
+    [RouteName in keyof ParamList]: (NavigatorScreenParams<{}> extends ParamList[RouteName]
+      ? NotUndefined<ParamList[RouteName]> extends NavigatorScreenParams<
+          infer T
+        >
+        ? NavigationListForScreenParams<
+            T,
+            ParamList,
+            RouteName,
+            ExcludedRouteNames,
+            Parent
+          >
+        : {}
+      : {}) &
+      (RouteName extends ExcludedRouteNames
+        ? {}
+        : {
+            [Key in RouteName]: GenericNavigationComposite<
+              ParamList,
+              RouteName,
+              Parent
+            >;
+          });
+  }[keyof ParamList]
+>;
+
+export type NavigationListForNavigator<Navigator> =
+  Navigator extends PrivateValueStore<infer Value> ? Value[1] : {};
+
+export type NavigationListForNested<Navigator> =
+  NavigationListForNestedInternal<Navigator> extends infer NavigationList
+    ? Navigator extends PrivateValueStore<[infer ParamList, any, any, any]>
+      ? ParamList extends {}
+        ? NavigationList &
+            BasicNavigationList<ParamList, keyof NavigationList, undefined>
+        : NavigationList
+      : NavigationList
+    : never;
+
+type NavigationListForNestedInternal<
+  Navigator,
+  Parent = undefined,
+  NavigatorList extends Record<string, any> =
+    NavigationListForNavigator<Navigator>,
+  Navigators = NestedNavigatorsOf<Navigator>,
+  // This navigator's own routes, each composed with the accumulated parent.
+  // It's threaded into the recursion as the parent for nested navigators so
+  // each route is composed with its ancestors exactly once, instead of
+  // re-wrapping the whole descendant list at every level (which is quadratic
+  // in the nesting depth).
+  ComposedList = ComposeNavigationList<NavigatorList, Parent>,
+> = (Navigator extends {
+  readonly config: {
+    readonly screens?: infer Screens;
+    readonly groups?: infer Groups;
+  };
+}
+  ? ComposedList &
+      NavigationListForScreens<ComposedList, Screens> &
+      NavigationListForGroups<ComposedList, Groups>
+  : ComposedList) &
+  NavigationListForNestedNavigators<ComposedList, Navigators> &
+  NavigationListForDynamicNestedParamLists<Navigator, ComposedList, Navigators>;
+
+type NavigationListForDynamicNestedParamLists<
+  Navigator,
+  ParentList,
+  Navigators,
+> = Navigator extends { readonly config: unknown }
+  ? {}
+  : Navigator extends PrivateValueStore<[infer ParamList, any, any, any]>
+    ? NavigationListForNestedParamLists<ParentList, ParamList, Navigators>
+    : {};
+
+// Map of route name to nested navigator type
+// inferred from `NavigatorScreenParams<typeof Navigator>`
+type NestedNavigatorsOf<Navigator> =
+  Navigator extends PrivateValueStore<[any, any, any, infer Nesting]>
+    ? Nesting extends Record<string, any>
+      ? Nesting
+      : {}
+    : {};
+
+// Like `NavigationListForScreens`, but reads nested navigators from the brand
+// map instead of a static config.
+type NavigationListForNestedNavigators<ParentList, Navigators> =
+  UnionToIntersection<
+    {
+      [K in keyof Navigators]: K extends keyof ParentList
+        ? NavigationListForNestedInternal<Navigators[K], ParentList[K]>
+        : {};
+    }[keyof Navigators]
+  >;
+
+// Fallback for dynamic nested routes declared through NavigatorScreenParams<ParamList>.
+// Param-list branches expose generic navigation props, while nested navigator
+// entries still recover their concrete navigator props.
+type NavigationListForNestedParamLists<ParentList, ParamList, Navigators> =
+  ParentList extends Record<string, any>
+    ? ParamList extends ParamListBase
+      ? UnionToIntersection<
+          {
+            [K in keyof ParamList]: K extends keyof Navigators
+              ? {}
+              : K extends keyof ParentList
+                ? NavigatorScreenParams<{}> extends ParamList[K]
+                  ? NotUndefined<ParamList[K]> extends NavigatorScreenParams<
+                      infer T
+                    >
+                    ? NavigationListForScreenParams<
+                        T,
+                        ParamList,
+                        K,
+                        keyof ParentList,
+                        ParentList[K]
+                      >
+                    : {}
+                  : {}
+                : {};
+          }[keyof ParamList]
+        >
+      : {}
+    : {};
+
+// Compose every entry in a navigator's list with the accumulated parent.
+// When there's no parent (root navigator), the list is returned as-is so the
+// common shallow case doesn't pay for a redundant mapped type.
+type ComposeNavigationList<NavigatorList extends Record<string, any>, Parent> =
+  Parent extends NavigationProp<any, any, any, any, any>
+    ? {
+        [K in keyof NavigatorList]: CompositeNavigationProp<
+          NavigatorList[K],
+          Parent
+        >;
+      }
+    : NavigatorList;
+
+type NavigationListForScreens<ParentList, Screens> = Screens extends {}
+  ? UnionToIntersection<
+      {
+        // Only check screens with static config to avoid overly-complex types
+        // Otherwise TypeScript fails to load the types due to complexity
+        [K in keyof Screens]: Screens[K] extends { config: any }
+          ? K extends keyof ParentList
+            ? NavigationListForNestedInternal<Screens[K], ParentList[K]>
+            : never
+          : Screens[K] extends { screen: { config: any } }
+            ? K extends keyof ParentList
+              ? NavigationListForNestedInternal<
+                  Screens[K]['screen'],
+                  ParentList[K]
+                >
+              : never
+            : never;
+      }[keyof Screens]
+    >
+  : {};
+
+type NavigationListForGroups<ParentList, Groups> = Groups extends {}
+  ? UnionToIntersection<
+      {
+        [K in keyof Groups]: Groups[K] extends { screens: any }
+          ? NavigationListForScreens<ParentList, Groups[K]['screens']>
+          : never;
+      }[keyof Groups]
+    >
+  : {};
 
 export type NavigationContainerRef<ParamList extends {}> = Omit<
   NavigationHelpers<ParamList>,
@@ -1193,27 +1426,48 @@ export type NavigatorTypeBagFor<
   ParamList extends {},
 > = TypeBag & { ParamList: ParamList };
 
-type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
+export type NavigatorProps<
+  ParamList extends ParamListBase,
+  State extends NavigationState,
+  ScreenOptions extends {},
+  EventMap extends EventMapBase,
+  Navigation,
+  Navigator extends React.ComponentType<any>,
+> = Omit<
+  React.ComponentProps<Navigator>,
+  keyof DefaultNavigatorOptions<any, any, any, any, any>
+> &
+  DefaultNavigatorOptions<
+    ParamList,
+    State,
+    ScreenOptions,
+    EventMap,
+    Navigation
+  >;
+
+type TypedNavigatorStaticComponent<Bag extends NavigatorTypeBagBase> =
   React.ComponentType<
-    Omit<
-      React.ComponentProps<
-        TypedNavigatorInternal<
+    Partial<
+      Omit<
+        NavigatorProps<
           Bag['ParamList'],
           Bag['State'],
           Bag['ScreenOptions'],
           Bag['EventMap'],
-          Bag['NavigationList'],
+          Bag['NavigationList'][keyof Bag['ParamList']],
           Bag['Navigator']
-        >['Navigator']
-      >,
-      'children'
+        >,
+        'children'
+      >
     >
   >;
 
 type TypedNavigatorStaticDecorated<Bag extends NavigatorTypeBagBase, Config> = {
   getComponent: () => React.ComponentType<{}>;
   config: Config;
-} & PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
+} & PrivateValueStore<
+  [Bag['ParamList'], Bag['NavigationList'], unknown, unknown]
+>;
 
 type TypedNavigatorStatic<
   in out Bag extends NavigatorTypeBagBase,
@@ -1222,15 +1476,16 @@ type TypedNavigatorStatic<
   config: Config;
   with: (
     Component: React.ComponentType<{
-      Navigator: TypedNavigatorComponent<Bag>;
+      Navigator: TypedNavigatorStaticComponent<Bag>;
     }>
   ) => TypedNavigatorStaticDecorated<Bag, Config>;
-  getComponent: () => TypedNavigatorComponent<Bag>;
+  getComponent: () => TypedNavigatorStaticComponent<Bag>;
 };
 
 export type TypedNavigator<
   Bag extends NavigatorTypeBagBase,
   Config = unknown,
+  Nesting = unknown,
 > = (undefined extends Config
   ? TypedNavigatorInternal<
       Bag['ParamList'],
@@ -1241,7 +1496,9 @@ export type TypedNavigator<
       Bag['Navigator']
     >
   : TypedNavigatorStatic<Bag, Config>) &
-  PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
+  PrivateValueStore<
+    [Bag['ParamList'], Bag['NavigationList'], unknown, Nesting]
+  >;
 
 type TypedNavigatorInternal<
   in out ParamList extends ParamListBase,
@@ -1255,17 +1512,14 @@ type TypedNavigatorInternal<
    * Navigator component which manages the child screens.
    */
   Navigator: React.ComponentType<
-    Omit<
-      React.ComponentProps<Navigator>,
-      keyof DefaultNavigatorOptions<any, any, any, any, any>
-    > &
-      DefaultNavigatorOptions<
-        ParamList,
-        State,
-        ScreenOptions,
-        EventMap,
-        NavigationList[keyof ParamList]
-      >
+    NavigatorProps<
+      ParamList,
+      State,
+      ScreenOptions,
+      EventMap,
+      NavigationList[keyof ParamList],
+      Navigator
+    >
   >;
   /**
    * Component used for grouping multiple route configuration.
@@ -1288,7 +1542,17 @@ type TypedNavigatorInternal<
   ) => null;
 };
 
-export type NavigatorScreenParams<ParamList extends {}> =
+declare const NavigatorScreenParamsSymbol: unique symbol;
+
+type NavigatorScreenParamsBrand<T extends {}> = {
+  // Preserve the original generic for inference without affecting assignability.
+  // - The symbol key hides the property from normal object usage
+  // - The actual type is intersected for inference
+  // - The `any` makes the property effectively `any` for assignability
+  readonly [NavigatorScreenParamsSymbol]?: any & { readonly type: T };
+};
+
+type NavigatorScreenParamsForParamList<ParamList extends {}> =
   | {
       screen?: never;
       params?: never;
@@ -1322,6 +1586,10 @@ export type NavigatorScreenParams<ParamList extends {}> =
             state?: never;
           };
     }[keyof ParamList];
+
+export type NavigatorScreenParams<ParamList extends {}> =
+  NavigatorScreenParamsForParamList<ParamListForNavigator<ParamList>> &
+    NavigatorScreenParamsBrand<ParamList>;
 
 type ParseConfig<Params> = {
   [K in keyof Params]?:
@@ -1357,10 +1625,26 @@ type PathConfigAlias<Params> = {
    * ```
    */
   parse?: ParseConfig<Params> | undefined;
+  /**
+   * Whether this path can resolve to multiple routes.
+   * Both routes should specify `shared: true` for this to work.
+   * By default, a path can only resolve to one route.
+   *
+   * This is useful when same screen used in multiple navigators,
+   * e.g. tabs with stacks containing profile screen in each stack.
+   *
+   * The path defined first will be the canonical path.
+   */
+  shared?: boolean | undefined;
 };
 
 export type PathConfig<Params> = FlatType<
-  Partial<PathConfigAlias<Params>> & {
+  Partial<Omit<PathConfigAlias<Params>, 'path'>> & {
+    /**
+     * Path string to match against.
+     * e.g. `/users/:id` will match `/users/1` and extract `id` param as `1`.
+     */
+    path?: string | undefined;
     /**
      * An object mapping the param name to a function which converts the param value to a string.
      * By default, all params are converted to strings using `String(value)`.
@@ -1379,16 +1663,20 @@ export type PathConfig<Params> = FlatType<
      */
     alias?: (string | PathConfigAlias<Params>)[] | undefined;
   } & (NonNullable<Params> extends NavigatorScreenParams<infer ParamList>
-      ? {
-          /**
-           * Path configuration for child screens.
-           */
-          screens?: PathConfigMap<ParamList> | undefined;
-          /**
-           * Name of the initial route to use for the navigator when the path matches.
-           */
-          initialRouteName?: Extract<keyof ParamList, string> | undefined;
-        }
+      ? ParamListForNavigator<ParamList> extends infer ChildParamList extends {}
+        ? {
+            /**
+             * Path configuration for child screens.
+             */
+            screens?: PathConfigMap<ChildParamList> | undefined;
+            /**
+             * Name of the initial route to use for the navigator when the path matches.
+             */
+            initialRouteName?:
+              | Extract<keyof ChildParamList, string>
+              | undefined;
+          }
+        : {}
       : {})
 >;
 

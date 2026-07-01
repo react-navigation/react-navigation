@@ -12,7 +12,7 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 });
 
-test('runs focus effect on focus change', () => {
+test('runs focus effect on focus change', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -21,7 +21,7 @@ test('runs focus effect on focus change', () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -53,38 +53,42 @@ test('runs focus effect on focus change', () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(focusEffect).not.toHaveBeenCalled();
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
-  act(() => navigation.current.navigate('second'));
+  await act(() => navigation.current.navigate('second'));
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
-  act(() => navigation.current.navigate('third'));
+  await act(() => navigation.current.navigate('third'));
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 
-  act(() => navigation.current.navigate('second'));
+  await act(() => navigation.current.navigate('second'));
 
   expect(focusEffect).toHaveBeenCalledTimes(2);
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
-test('runs focus effect on deps change', () => {
+test('runs focus effect on deps change', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -112,18 +116,18 @@ test('runs focus effect on deps change', () => {
     </BaseNavigationContainer>
   );
 
-  const root = render(<App count={1} />);
+  const root = await render(<App count={1} />);
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
-  root.update(<App count={2} />);
+  await root.rerender(<App count={2} />);
 
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
   expect(focusEffect).toHaveBeenCalledTimes(2);
 });
 
-test('runs focus effect when initial state is given', () => {
+test('runs focus effect when initial state is given', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -132,7 +136,7 @@ test('runs focus effect when initial state is given', () => {
 
     return (
       <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
+        {state.routes.map((route) => descriptors[route.key]?.render())}
       </NavigationContent>
     );
   };
@@ -171,28 +175,32 @@ test('runs focus effect when initial state is given', () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
-  act(() => navigation.current.navigate('first'));
+  await act(() => navigation.current.navigate('first'));
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
-test('runs focus effect when only focused route is rendered', () => {
+test('runs focus effect when only focused route is rendered', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -221,28 +229,32 @@ test('runs focus effect when only focused route is rendered', () => {
     </BaseNavigationContainer>
   );
 
-  render(element);
+  await render(element);
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
-  act(() => navigation.current.navigate('second'));
+  await act(() => navigation.current.navigate('second'));
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
-test('runs cleanup when component is unmounted', () => {
+test('runs cleanup when component is unmounted', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -270,28 +282,32 @@ test('runs cleanup when component is unmounted', () => {
     </BaseNavigationContainer>
   );
 
-  const root = render(<App mounted />);
+  const root = await render(<App mounted />);
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
-  root.update(<App mounted={false} />);
+  await root.rerender(<App mounted={false} />);
 
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
 
-test('prints error when a dependency array is passed', () => {
+test('prints error when a dependency array is passed', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -312,26 +328,30 @@ test('prints error when a dependency array is passed', () => {
 
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-  render(<App />);
+  await render(<App />);
 
-  expect(spy.mock.calls[0][0]).toMatch(
+  expect(spy.mock.calls[0]?.[0]).toMatch(
     "You passed a second argument to 'useFocusEffect', but it only accepts one argument."
   );
 
   spy.mockRestore();
 });
 
-test('prints error when the effect returns a value', () => {
+test('prints error when the effect returns a value', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -352,26 +372,30 @@ test('prints error when the effect returns a value', () => {
 
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-  render(<App />);
+  await render(<App />);
 
-  expect(spy.mock.calls[0][0]).toMatch(
+  expect(spy.mock.calls[0]?.[0]).toMatch(
     "An effect function must not return anything besides a function, which is used for clean-up. You returned '42'."
   );
 
   spy.mockRestore();
 });
 
-test('prints error when the effect returns null', () => {
+test('prints error when the effect returns null', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -392,26 +416,30 @@ test('prints error when the effect returns null', () => {
 
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-  render(<App />);
+  await render(<App />);
 
-  expect(spy.mock.calls[0][0]).toMatch(
+  expect(spy.mock.calls[0]?.[0]).toMatch(
     "An effect function must not return anything besides a function, which is used for clean-up. You returned 'null'. If your effect does not require clean-up, return 'undefined' (or nothing)."
   );
 
   spy.mockRestore();
 });
 
-test('prints error when the effect is an async function', () => {
+test('prints error when the effect is an async function', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
       props
     );
 
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
     return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
     );
   };
 
@@ -432,9 +460,9 @@ test('prints error when the effect is an async function', () => {
 
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-  render(<App />);
+  await render(<App />);
 
-  expect(spy.mock.calls[0][0]).toMatch(
+  expect(spy.mock.calls[0]?.[0]).toMatch(
     "An effect function must not return anything besides a function, which is used for clean-up.\n\nIt looks like you wrote 'useFocusEffect(async () => ...)' or returned a Promise."
   );
 

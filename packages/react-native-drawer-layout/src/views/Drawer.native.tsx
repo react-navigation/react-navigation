@@ -25,10 +25,10 @@ import { DrawerGestureContext } from '../utils/DrawerGestureContext';
 import { DrawerProgressContext } from '../utils/DrawerProgressContext';
 import { getDrawerWidthNative } from '../utils/getDrawerWidth';
 import {
-  Gesture,
   GestureDetector,
   GestureHandlerRootView,
-  GestureState,
+  type PanGestureConfig,
+  usePanGesture,
 } from './GestureHandler';
 import { Overlay } from './Overlay';
 
@@ -167,6 +167,7 @@ export function Drawer({
     // Measure the layout again on screen rotation
     let handle: number | undefined;
 
+    // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
     const subscription = Dimensions.addEventListener('change', () => {
       // The measurement is not accurate without the delay
       handle = requestAnimationFrame(() => {
@@ -196,7 +197,7 @@ export function Drawer({
 
   const touchStartX = useSharedValue(0);
   const touchX = useSharedValue(0);
-  const gestureState = useSharedValue<GestureState>(GestureState.UNDETERMINED);
+  const isGestureActive = useSharedValue(false);
 
   const onAnimationStart = useLatestCallback((open: boolean) => {
     onTransitionStart?.(!open);
@@ -236,15 +237,24 @@ export function Drawer({
         scheduleOnRN(onAnimationStart, open);
       }
 
+      // Ignore velocity that opposes the spring direction.
+      // Otherwise overshootClamping makes the spring snap instantly.
+      const isSameDirection =
+        velocity !== undefined &&
+        ((toValue > translationX.get() && velocity > 0) ||
+          (toValue < translationX.get() && velocity < 0));
+
+      const effectiveVelocity = isSameDirection ? velocity : 0;
+
       animatingTo.set(open ? 'open' : 'close');
       translationX.set(
         withSpring(
           toValue,
           {
-            velocity,
-            stiffness: 1000,
-            damping: 500,
-            mass: 3,
+            velocity: effectiveVelocity,
+            stiffness: 500,
+            damping: 40,
+            mass: 1,
             overshootClamping: true,
             reduceMotion: ReduceMotion.Never,
           },
@@ -281,34 +291,36 @@ export function Drawer({
 
   const startX = useSharedValue(0);
 
-  const pan = React.useMemo(() => {
-    let panGesture = Gesture?.Pan()
-      .onBegin((event) => {
+  const panGestureConfig = React.useMemo(() => {
+    const config: PanGestureConfig = {
+      onBegin: (event) => {
         'worklet';
 
         startX.set(translationX.get());
-        gestureState.set(event.state);
         touchStartX.set(event.x);
-      })
-      .onStart(() => {
+      },
+      onActivate: () => {
         'worklet';
 
+        isGestureActive.set(true);
         scheduleOnRN(onGestureBegin);
-      })
-      .onChange((event) => {
+      },
+      onUpdate: (event) => {
         'worklet';
 
         touchX.set(event.x);
         translationX.set(startX.get() + event.translationX);
-        gestureState.set(event.state);
-      })
-      .onEnd((event, success) => {
+      },
+      onDeactivate: (event) => {
         'worklet';
 
-        gestureState.set(event.state);
+        isGestureActive.set(false);
 
-        if (!success) {
+        if (event.canceled) {
+          toggleDrawer(open, event.velocityX);
           scheduleOnRN(onGestureAbort);
+
+          return;
         }
 
         const nextOpen =
@@ -326,23 +338,20 @@ export function Drawer({
 
         toggleDrawer(nextOpen, event.velocityX);
         scheduleOnRN(onGestureFinish);
-      })
-      .activeOffsetX([-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET])
-      .failOffsetY([-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET])
-      .hitSlop(hitSlop)
-      .enabled(drawerType !== 'permanent' && swipeEnabled);
+      },
+      activeOffsetX: [-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET],
+      failOffsetY: [-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET],
+      hitSlop,
+      enabled: drawerType !== 'permanent' && swipeEnabled,
+    };
 
-    if (panGesture && configureGestureHandler) {
-      panGesture = configureGestureHandler(panGesture);
-    }
-
-    return panGesture;
+    return configureGestureHandler?.(config) ?? config;
   }, [
     configureGestureHandler,
     drawerPosition,
     drawerType,
-    gestureState,
     hitSlop,
+    isGestureActive,
     onGestureBegin,
     onGestureAbort,
     onGestureFinish,
@@ -356,6 +365,8 @@ export function Drawer({
     touchX,
     translationX,
   ]);
+
+  const pan = usePanGesture(panGestureConfig);
 
   const translateX = useDerivedValue(() => {
     const drawerWidth = getDrawerWidthNative({
@@ -389,7 +400,7 @@ export function Drawer({
     //
     // This is used only when drawerType is "front"
     const touchDistance =
-      drawerType === 'front' && gestureState.get() === GestureState.ACTIVE
+      drawerType === 'front' && isGestureActive.get()
         ? minmax(
             drawerPosition === 'left'
               ? touchStartX.get() - drawerWidth

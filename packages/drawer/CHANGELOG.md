@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.40](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.39...@react-navigation/drawer@8.0.0-alpha.40) (2026-06-18)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+# [8.0.0-alpha.39](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.38...@react-navigation/drawer@8.0.0-alpha.39) (2026-06-11)
+
+### Bug Fixes
+
+* remove unused dimensions prop from drawer ([bd357ed](https://github.com/react-navigation/react-navigation/commit/bd357edc5a8f8741d42083374323bbffcfd5e620)) - by @satya164
+
+### Features
+
+* remove overload from navigate action ([#13150](https://github.com/react-navigation/react-navigation/issues/13150)) ([a876c49](https://github.com/react-navigation/react-navigation/commit/a876c49b411a79d4614d26195829019c90ada992)) - by @satya164
+
+# [8.0.0-alpha.38](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.37...@react-navigation/drawer@8.0.0-alpha.38) (2026-06-10)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+# [8.0.0-alpha.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.36...@react-navigation/drawer@8.0.0-alpha.37) (2026-06-09)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+# [8.0.0-alpha.36](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.35...@react-navigation/drawer@8.0.0-alpha.36) (2026-06-09)
+
+**Note:** Version bump only for package @react-navigation/drawer
+
+# [8.0.0-alpha.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.34...@react-navigation/drawer@8.0.0-alpha.35) (2026-06-08)
+
+### Bug Fixes
+
+* use aria-current for drawer links on web ([cb1c4cc](https://github.com/react-navigation/react-navigation/commit/cb1c4cc20381e60bbd475465ce28fec94f99435d)), closes [#9418](https://github.com/react-navigation/react-navigation/issues/9418) [#13138](https://github.com/react-navigation/react-navigation/issues/13138) [#13112](https://github.com/react-navigation/react-navigation/issues/13112) - by @satya164
+
+### Features
+
+* migrate stack and drawer to gesture handler 3 ([#13104](https://github.com/react-navigation/react-navigation/issues/13104)) ([6104e1d](https://github.com/react-navigation/react-navigation/commit/6104e1de050916a84ef5062967e3bdebe88575cf)) - by @satya164
+
 # [8.0.0-alpha.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.33...@react-navigation/drawer@8.0.0-alpha.34) (2026-05-25)
 
 **Note:** Version bump only for package @react-navigation/drawer

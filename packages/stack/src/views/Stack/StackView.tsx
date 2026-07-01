@@ -64,10 +64,20 @@ export class StackView extends React.Component<Props, State> {
   ) {
     const allRoutes = props.state.routes;
     const previousRoutes = state.previousState?.routes ?? [];
-    const previousFocusedRoute = state.previousState
-      ? state.previousState.routes[state.previousState.index]
-      : undefined;
+    const previousFocusedRoute =
+      state.previousState?.routes[state.previousState.index];
     const nextFocusedRouteFromState = props.state.routes[props.state.index];
+
+    if (state.previousState && previousFocusedRoute == null) {
+      throw new Error(
+        `Couldn't find a route at index ${state.previousState.index}.`
+      );
+    }
+
+    if (nextFocusedRouteFromState == null) {
+      throw new Error(`Couldn't find a route at index ${props.state.index}.`);
+    }
+
     const activeRoutes = props.state.routes.slice(0, props.state.index + 1);
 
     // If there was no change in routes, we don't need to compute anything
@@ -118,7 +128,7 @@ export class StackView extends React.Component<Props, State> {
           {}
         );
 
-        routes = routes.map((route) => map[route.key] || route);
+        routes = routes.map((route) => map[route.key] ?? route);
       }
 
       const routeKeys = new Set(routes.map((route) => route.key));
@@ -126,8 +136,16 @@ export class StackView extends React.Component<Props, State> {
         ...routes,
         ...props.state.routes.filter((route) => !routeKeys.has(route.key)),
       ].reduce<StackDescriptorMap>((acc, route) => {
-        acc[route.key] =
-          props.descriptors[route.key] || state.descriptors[route.key];
+        const descriptor =
+          props.descriptors[route.key] ?? state.descriptors[route.key];
+
+        if (descriptor == null) {
+          throw new Error(
+            `Couldn't find a descriptor for route '${route.key}'.`
+          );
+        }
+
+        acc[route.key] = descriptor;
 
         return acc;
       }, {});
@@ -157,16 +175,22 @@ export class StackView extends React.Component<Props, State> {
     // Get previous focused route from previous active routes
     const nextFocusedRoute = activeRoutes[activeRoutes.length - 1];
 
+    if (nextFocusedRoute == null) {
+      throw new Error(
+        `Couldn't find a route at index ${activeRoutes.length - 1}.`
+      );
+    }
+
     const isAnimationEnabled = (key: string) => {
-      const descriptor = props.descriptors[key] || state.descriptors[key];
+      const descriptor = props.descriptors[key] ?? state.descriptors[key];
 
       return getAnimationEnabled(descriptor?.options.animation);
     };
 
     const getAnimationTypeForReplace = (key: string) => {
-      const descriptor = props.descriptors[key] || state.descriptors[key];
+      const descriptor = props.descriptors[key] ?? state.descriptors[key];
 
-      return descriptor.options.animationTypeForReplace ?? 'push';
+      return descriptor?.options.animationTypeForReplace ?? 'push';
     };
 
     let routes = activeRoutes;
@@ -301,8 +325,14 @@ export class StackView extends React.Component<Props, State> {
       ...routes,
       ...props.state.routes.filter((route) => !routeKeys.has(route.key)),
     ].reduce<StackDescriptorMap>((acc, route) => {
-      acc[route.key] =
-        props.descriptors[route.key] || state.descriptors[route.key];
+      const descriptor =
+        props.descriptors[route.key] ?? state.descriptors[route.key];
+
+      if (descriptor == null) {
+        throw new Error(`Couldn't find a descriptor for route '${route.key}'.`);
+      }
+
+      acc[route.key] = descriptor;
 
       return acc;
     }, {});
@@ -317,7 +347,7 @@ export class StackView extends React.Component<Props, State> {
     };
   }
 
-  state: State = {
+  override state: State = {
     routes: [],
     previousState: undefined,
     openingRouteKeys: [],
@@ -478,7 +508,7 @@ export class StackView extends React.Component<Props, State> {
     });
   };
 
-  render() {
+  override render() {
     const {
       state,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

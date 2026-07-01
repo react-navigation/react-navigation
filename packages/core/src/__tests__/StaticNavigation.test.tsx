@@ -1,4 +1,4 @@
-import { expect, test } from '@jest/globals';
+import { expect, jest, test } from '@jest/globals';
 import type {
   DefaultRouterOptions,
   NavigationState,
@@ -6,8 +6,10 @@ import type {
 } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
+import { Text } from 'react-native';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
+import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { createNavigatorFactory } from '../createNavigatorFactory';
 import { getStateFromPath } from '../getStateFromPath';
 import { createPathConfigForStaticNavigation } from '../StaticNavigation';
@@ -52,10 +54,10 @@ const TestNavigator = (props: TestNavigatorProps) => {
           return (
             <div
               key={route.key}
-              className={descriptor.options?.className}
-              data-testid={descriptor.options?.testId}
+              className={descriptor?.options?.className}
+              data-testid={descriptor?.options?.testId}
             >
-              {descriptor.render()}
+              {descriptor?.render()}
             </div>
           );
         })}
@@ -76,14 +78,14 @@ const TestScreen = ({ route }: any) => {
   const isFocused = useIsFocused();
 
   return (
-    <>
+    <Text>
       Screen:{route.name}
       {isFocused ? '(focused)' : null}
-    </>
+    </Text>
   );
 };
 
-test('renders the specified nested navigator configuration', () => {
+test('renders the specified nested navigator configuration', async () => {
   const Nested = createTestNavigator({
     screens: {
       Profile: TestScreen,
@@ -116,42 +118,48 @@ test('renders the specified nested navigator configuration', () => {
 
   const RootComponent = Root.getComponent();
 
-  const element = render(
+  const element = await render(
     <BaseNavigationContainer>
       <RootComponent />
     </BaseNavigationContainer>
   );
 
   expect(element).toMatchInlineSnapshot(`
+<main>
+  <div
+    className="root-screen"
+  >
+    <Text>
+      Screen:
+      Home
+    </Text>
+  </div>
+  <div
+    className="root-screen"
+  >
     <main>
-      <div
-        className="root-screen"
-      >
-        Screen:
-        Home
+      <div>
+        <Text>
+          Screen:
+          Profile
+          (focused)
+        </Text>
       </div>
       <div
-        className="root-screen"
+        data-testid="settings"
       >
-        <main>
-          <div>
-            Screen:
-            Profile
-            (focused)
-          </div>
-          <div
-            data-testid="settings"
-          >
-            Screen:
-            Settings
-          </div>
-        </main>
+        <Text>
+          Screen:
+          Settings
+        </Text>
       </div>
     </main>
-  `);
+  </div>
+</main>
+`);
 });
 
-test('renders the specified nested navigator configuration with groups', () => {
+test('renders the specified nested navigator configuration with groups', async () => {
   const Nested = createTestNavigator({
     screens: {
       Profile: TestScreen,
@@ -200,45 +208,53 @@ test('renders the specified nested navigator configuration with groups', () => {
 
   const RootComponent = Root.getComponent();
 
-  const element = render(
+  const element = await render(
     <BaseNavigationContainer>
       <RootComponent />
     </BaseNavigationContainer>
   );
 
   expect(element).toMatchInlineSnapshot(`
+<main>
+  <div>
+    <Text>
+      Screen:
+      Home
+    </Text>
+  </div>
+  <div
+    className="main-screen"
+  >
     <main>
       <div>
-        Screen:
-        Home
+        <Text>
+          Screen:
+          Profile
+          (focused)
+        </Text>
       </div>
-      <div
-        className="main-screen"
-      >
-        <main>
-          <div>
-            Screen:
-            Profile
-            (focused)
-          </div>
-          <div>
-            Screen:
-            Settings
-          </div>
-        </main>
-      </div>
-      <div
-        className="main-screen"
-        data-testid="feed"
-      >
-        Screen:
-        Feed
+      <div>
+        <Text>
+          Screen:
+          Settings
+        </Text>
       </div>
     </main>
-  `);
+  </div>
+  <div
+    className="main-screen"
+    data-testid="feed"
+  >
+    <Text>
+      Screen:
+      Feed
+    </Text>
+  </div>
+</main>
+`);
 });
 
-test('handles conditional groups with nested if hooks', () => {
+test('handles conditional groups with nested if hooks', async () => {
   const useShowNested = () => {
     return React.useSyncExternalStore(
       (subscriber) => {
@@ -295,66 +311,87 @@ test('handles conditional groups with nested if hooks', () => {
     </BaseNavigationContainer>
   );
 
-  const root = render(element);
+  const root = await render(element);
 
   expect(root).toMatchInlineSnapshot(`
-    <main>
-      <div>
-        Screen:
-        Profile
-        (focused)
-      </div>
-      <div>
-        Screen:
-        Settings
-      </div>
-      <div>
-        Screen:
-        Feed
-      </div>
-    </main>
-  `);
+<main>
+  <div>
+    <Text>
+      Screen:
+      Profile
+      (focused)
+    </Text>
+  </div>
+  <div>
+    <Text>
+      Screen:
+      Settings
+    </Text>
+  </div>
+  <div>
+    <Text>
+      Screen:
+      Feed
+    </Text>
+  </div>
+</main>
+`);
 
-  act(() => {
+  await act(() => {
     showNested = false;
     onUpdate?.();
   });
 
-  root.rerender(element);
-
   expect(root).toMatchInlineSnapshot(`
-    <main>
-      <div>
-        Screen:
-        Feed
-        (focused)
-      </div>
-    </main>
-  `);
+<main>
+  <div>
+    <Text>
+      Screen:
+      Feed
+      (focused)
+    </Text>
+  </div>
+</main>
+`);
 });
 
-test('handles non-function screens', () => {
-  expect(() => {
-    // eslint-disable-next-line @eslint-react/no-useless-forward-ref, @eslint-react/ensure-forward-ref-using-ref, @eslint-react/no-missing-component-display-name
-    const TestScreen = React.forwardRef(() => null);
+test('handles non-function screens', async () => {
+  // eslint-disable-next-line @eslint-react/no-useless-forward-ref, @eslint-react/ensure-forward-ref-using-ref, @eslint-react/no-missing-component-display-name
+  const TestScreen = React.forwardRef(() => null);
 
-    const Root = createTestNavigator({
-      screens: {
-        Home: TestScreen,
-        Settings: {
-          screen: TestScreen,
-        },
+  const Root = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+      Settings: {
+        screen: TestScreen,
       },
-    });
+    },
+  });
 
-    const RootComponent = Root.getComponent();
+  const RootComponent = Root.getComponent();
 
+  await expect(
     render(
       <BaseNavigationContainer>
         <RootComponent />
       </BaseNavigationContainer>
-    );
-  }).not.toThrow();
+    )
+  ).resolves.toBeDefined();
+});
+
+test('throws when static screen config has no screen property', () => {
+  expect(() =>
+    createTestNavigator({
+      screens: {
+        // @ts-expect-error: intentionally invalid config
+        Profile: {
+          options: {
+            title: 'Profile',
+          },
+        },
+      },
+    })
+  ).toThrow("Couldn't find a 'screen' property for the screen 'Profile'.");
 });
 
 test("throws if screens or groups property isn't specified", () => {
@@ -385,7 +422,7 @@ test('throws if no screens are specified', () => {
   }).toThrow("Couldn't find any screens in the 'screens' or 'groups' property");
 });
 
-test('renders the initial screen based on the order of screens', () => {
+test('renders the initial screen based on the order of screens', async () => {
   const A = createTestNavigator({
     screens: {
       Home: TestScreen,
@@ -402,24 +439,28 @@ test('renders the initial screen based on the order of screens', () => {
   const AComponent = A.getComponent();
 
   expect(
-    render(
+    await render(
       <BaseNavigationContainer>
         <AComponent />
       </BaseNavigationContainer>
     )
   ).toMatchInlineSnapshot(`
-    <main>
-      <div>
-        Screen:
-        Home
-        (focused)
-      </div>
-      <div>
-        Screen:
-        Help
-      </div>
-    </main>
-  `);
+<main>
+  <div>
+    <Text>
+      Screen:
+      Home
+      (focused)
+    </Text>
+  </div>
+  <div>
+    <Text>
+      Screen:
+      Help
+    </Text>
+  </div>
+</main>
+`);
 
   const B = createTestNavigator({
     groups: {
@@ -437,27 +478,31 @@ test('renders the initial screen based on the order of screens', () => {
   const BComponent = B.getComponent();
 
   expect(
-    render(
+    await render(
       <BaseNavigationContainer>
         <BComponent />
       </BaseNavigationContainer>
     )
   ).toMatchInlineSnapshot(`
-    <main>
-      <div>
-        Screen:
-        Help
-        (focused)
-      </div>
-      <div>
-        Screen:
-        Home
-      </div>
-    </main>
-  `);
+<main>
+  <div>
+    <Text>
+      Screen:
+      Help
+      (focused)
+    </Text>
+  </div>
+  <div>
+    <Text>
+      Screen:
+      Home
+    </Text>
+  </div>
+</main>
+`);
 });
 
-test('passes additional props and options to the navigator component', () => {
+test('passes additional props and options to the navigator component', async () => {
   const Root = createTestNavigator({
     initialRouteName: 'Feed',
     screenOptions: {
@@ -473,7 +518,7 @@ test('passes additional props and options to the navigator component', () => {
   const RootComponent = Root.getComponent();
 
   expect(
-    render(
+    await render(
       <BaseNavigationContainer>
         <RootComponent
           initialRouteName="Profile"
@@ -482,34 +527,40 @@ test('passes additional props and options to the navigator component', () => {
       </BaseNavigationContainer>
     )
   ).toMatchInlineSnapshot(`
-    <main>
-      <div
-        className="root-screen"
-        data-testid="my-test-id"
-      >
-        Screen:
-        Home
-      </div>
-      <div
-        className="root-screen"
-        data-testid="my-test-id"
-      >
-        Screen:
-        Feed
-      </div>
-      <div
-        className="root-screen"
-        data-testid="my-test-id"
-      >
-        Screen:
-        Profile
-        (focused)
-      </div>
-    </main>
-  `);
+<main>
+  <div
+    className="root-screen"
+    data-testid="my-test-id"
+  >
+    <Text>
+      Screen:
+      Home
+    </Text>
+  </div>
+  <div
+    className="root-screen"
+    data-testid="my-test-id"
+  >
+    <Text>
+      Screen:
+      Feed
+    </Text>
+  </div>
+  <div
+    className="root-screen"
+    data-testid="my-test-id"
+  >
+    <Text>
+      Screen:
+      Profile
+      (focused)
+    </Text>
+  </div>
+</main>
+`);
 });
 
-test('renders wrapped navigator and merges options objects', () => {
+test('renders wrapped navigator and merges options objects', async () => {
   const Root = createTestNavigator({
     initialRouteName: 'Feed',
     screenOptions: {
@@ -536,45 +587,51 @@ test('renders wrapped navigator and merges options objects', () => {
 
   const RootComponent = Root.getComponent();
 
-  const element = render(
+  const element = await render(
     <BaseNavigationContainer>
       <RootComponent />
     </BaseNavigationContainer>
   );
 
   expect(element).toMatchInlineSnapshot(`
-    <section
-      data-testid="root-wrapper"
+<section
+  data-testid="root-wrapper"
+>
+  <main>
+    <div
+      className="config-class"
+      data-testid="navigator-test-id"
     >
-      <main>
-        <div
-          className="config-class"
-          data-testid="navigator-test-id"
-        >
-          Screen:
-          Feed
-        </div>
-        <div
-          className="config-class"
-          data-testid="navigator-test-id"
-        >
-          Screen:
-          Profile
-          (focused)
-        </div>
-        <div
-          className="config-class"
-          data-testid="navigator-test-id"
-        >
-          Screen:
-          Settings
-        </div>
-      </main>
-    </section>
-  `);
+      <Text>
+        Screen:
+        Feed
+      </Text>
+    </div>
+    <div
+      className="config-class"
+      data-testid="navigator-test-id"
+    >
+      <Text>
+        Screen:
+        Profile
+        (focused)
+      </Text>
+    </div>
+    <div
+      className="config-class"
+      data-testid="navigator-test-id"
+    >
+      <Text>
+        Screen:
+        Settings
+      </Text>
+    </div>
+  </main>
+</section>
+`);
 });
 
-test('renders wrapped navigator and merges options object and options callback prop', () => {
+test('renders wrapped navigator and merges options object and options callback prop', async () => {
   const Root = createTestNavigator({
     initialRouteName: 'Feed',
     screenOptions: {
@@ -603,45 +660,51 @@ test('renders wrapped navigator and merges options object and options callback p
 
   const RootComponent = Root.getComponent();
 
-  const element = render(
+  const element = await render(
     <BaseNavigationContainer>
       <RootComponent />
     </BaseNavigationContainer>
   );
 
   expect(element).toMatchInlineSnapshot(`
-    <section
-      data-testid="root-wrapper"
+<section
+  data-testid="root-wrapper"
+>
+  <main>
+    <div
+      className="config-class"
+      data-testid="navigator-Feed"
     >
-      <main>
-        <div
-          className="config-class"
-          data-testid="navigator-Feed"
-        >
-          Screen:
-          Feed
-        </div>
-        <div
-          className="config-class"
-          data-testid="navigator-Profile"
-        >
-          Screen:
-          Profile
-          (focused)
-        </div>
-        <div
-          className="config-class"
-          data-testid="navigator-Settings"
-        >
-          Screen:
-          Settings
-        </div>
-      </main>
-    </section>
-  `);
+      <Text>
+        Screen:
+        Feed
+      </Text>
+    </div>
+    <div
+      className="config-class"
+      data-testid="navigator-Profile"
+    >
+      <Text>
+        Screen:
+        Profile
+        (focused)
+      </Text>
+    </div>
+    <div
+      className="config-class"
+      data-testid="navigator-Settings"
+    >
+      <Text>
+        Screen:
+        Settings
+      </Text>
+    </div>
+  </main>
+</section>
+`);
 });
 
-test('renders wrapped navigator and merges options callback and options object prop', () => {
+test('renders wrapped navigator and merges options callback and options object prop', async () => {
   const Root = createTestNavigator({
     initialRouteName: 'Feed',
     screenOptions: ({ route }) => {
@@ -670,50 +733,62 @@ test('renders wrapped navigator and merges options callback and options object p
 
   const RootComponent = Root.getComponent();
 
-  const element = render(
+  const element = await render(
     <BaseNavigationContainer>
       <RootComponent />
     </BaseNavigationContainer>
   );
 
   expect(element).toMatchInlineSnapshot(`
-    <section
-      data-testid="root-wrapper"
+<section
+  data-testid="root-wrapper"
+>
+  <main>
+    <div
+      className="Feed-config-class"
+      data-testid="navigator-test-id"
     >
-      <main>
-        <div
-          className="Feed-config-class"
-          data-testid="navigator-test-id"
-        >
-          Screen:
-          Feed
-        </div>
-        <div
-          className="Profile-config-class"
-          data-testid="navigator-test-id"
-        >
-          Screen:
-          Profile
-          (focused)
-        </div>
-        <div
-          className="Settings-config-class"
-          data-testid="navigator-test-id"
-        >
-          Screen:
-          Settings
-        </div>
-      </main>
-    </section>
-  `);
+      <Text>
+        Screen:
+        Feed
+      </Text>
+    </div>
+    <div
+      className="Profile-config-class"
+      data-testid="navigator-test-id"
+    >
+      <Text>
+        Screen:
+        Profile
+        (focused)
+      </Text>
+    </div>
+    <div
+      className="Settings-config-class"
+      data-testid="navigator-test-id"
+    >
+      <Text>
+        Screen:
+        Settings
+      </Text>
+    </div>
+  </main>
+</section>
+`);
 });
 
-test('renders wrapped navigator and merges options callbacks', () => {
+test('renders wrapped navigator and merges options and listeners callbacks', async () => {
+  const configFocusListener = jest.fn();
+  const navigatorBlurListener = jest.fn();
+
   const Root = createTestNavigator({
     initialRouteName: 'Feed',
     screenOptions: ({ route }) => ({
       className: `${route.name}-config-class`,
       testId: `config-${route.name}`,
+    }),
+    screenListeners: () => ({
+      focus: configFocusListener,
     }),
     screens: {
       Feed: TestScreen,
@@ -728,6 +803,9 @@ test('renders wrapped navigator and merges options callbacks', () => {
           screenOptions={({ route }) => ({
             testId: `navigator-${route.name}`,
           })}
+          screenListeners={() => ({
+            blur: navigatorBlurListener,
+          })}
         />
       </section>
     );
@@ -737,42 +815,55 @@ test('renders wrapped navigator and merges options callbacks', () => {
 
   const RootComponent = Root.getComponent();
 
-  const element = render(
-    <BaseNavigationContainer>
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const element = await render(
+    <BaseNavigationContainer ref={ref}>
       <RootComponent />
     </BaseNavigationContainer>
   );
 
   expect(element).toMatchInlineSnapshot(`
-    <section
-      data-testid="root-wrapper"
+<section
+  data-testid="root-wrapper"
+>
+  <main>
+    <div
+      className="Feed-config-class"
+      data-testid="navigator-Feed"
     >
-      <main>
-        <div
-          className="Feed-config-class"
-          data-testid="navigator-Feed"
-        >
-          Screen:
-          Feed
-        </div>
-        <div
-          className="Profile-config-class"
-          data-testid="navigator-Profile"
-        >
-          Screen:
-          Profile
-          (focused)
-        </div>
-        <div
-          className="Settings-config-class"
-          data-testid="navigator-Settings"
-        >
-          Screen:
-          Settings
-        </div>
-      </main>
-    </section>
-  `);
+      <Text>
+        Screen:
+        Feed
+      </Text>
+    </div>
+    <div
+      className="Profile-config-class"
+      data-testid="navigator-Profile"
+    >
+      <Text>
+        Screen:
+        Profile
+        (focused)
+      </Text>
+    </div>
+    <div
+      className="Settings-config-class"
+      data-testid="navigator-Settings"
+    >
+      <Text>
+        Screen:
+        Settings
+      </Text>
+    </div>
+  </main>
+</section>
+`);
+
+  await act(() => ref.current?.navigate('Feed'));
+
+  expect(configFocusListener).toHaveBeenCalled();
+  expect(navigatorBlurListener).toHaveBeenCalled();
 });
 
 test('creates linking configuration for static config', () => {
@@ -990,6 +1081,542 @@ test('returns undefined if there is no linking configuration', () => {
   const screens = createPathConfigForStaticNavigation(Root, {});
 
   expect(screens).toBeUndefined();
+});
+
+test('marks a reused screen with the same explicit path as shared', () => {
+  const Profile = {
+    screen: TestScreen,
+    linking: 'profile/:id',
+  };
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+      },
+      Profile,
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Search: {
+        screen: TestScreen,
+        linking: 'search',
+      },
+      Profile,
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      screens: {
+        Home: {
+          path: '',
+        },
+        Profile: {
+          path: 'profile/:id',
+          shared: true,
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+          shared: true,
+        },
+        Search: {
+          path: 'search',
+        },
+      },
+    },
+  });
+});
+
+test('marks a reused screen with the same generated path as shared', () => {
+  const Profile = {
+    screen: TestScreen,
+  };
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+      },
+      Profile,
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Search: {
+        screen: TestScreen,
+        linking: 'search',
+      },
+      Profile,
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      screens: {
+        Home: {
+          path: '',
+        },
+        Profile: {
+          path: 'profile',
+          shared: true,
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile',
+          shared: true,
+        },
+        Search: {
+          path: 'search',
+        },
+      },
+    },
+  });
+});
+
+test('marks the same component with the same explicit path as shared', () => {
+  const HomeStack = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+      },
+      Profile: {
+        screen: TestScreen,
+        linking: 'profile/:id',
+      },
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Search: {
+        screen: TestScreen,
+        linking: 'search',
+      },
+      Profile: {
+        screen: TestScreen,
+        linking: 'profile/:id',
+      },
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      screens: {
+        Home: {
+          path: '',
+        },
+        Profile: {
+          path: 'profile/:id',
+          shared: true,
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+          shared: true,
+        },
+        Search: {
+          path: 'search',
+        },
+      },
+    },
+  });
+});
+
+test('marks the same component with the same generated path as shared', () => {
+  const HomeStack = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+      },
+      Profile: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Search: {
+        screen: TestScreen,
+        linking: 'search',
+      },
+      Profile: {
+        screen: TestScreen,
+      },
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      screens: {
+        Home: {
+          path: '',
+        },
+        Profile: {
+          path: 'profile',
+          shared: true,
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile',
+          shared: true,
+        },
+        Search: {
+          path: 'search',
+        },
+      },
+    },
+  });
+});
+
+test("doesn't mark a reused screen with different paths as shared", () => {
+  const Profile = {
+    screen: TestScreen,
+    linking: 'profile/:id',
+  };
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Profile,
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Profile,
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+        linking: 'search',
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {})).toEqual({
+    HomeTab: {
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+        },
+      },
+    },
+    SearchTab: {
+      path: 'search',
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+        },
+      },
+    },
+  });
+});
+
+test('preserves explicit shared option in static linking', () => {
+  const Stack = createTestNavigator({
+    screens: {
+      Profile: {
+        screen: TestScreen,
+        linking: {
+          path: 'profile/:id',
+          shared: true,
+        },
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Stack, {})).toEqual({
+    Profile: {
+      path: 'profile/:id',
+      shared: true,
+    },
+  });
+});
+
+test("doesn't override explicit shared: false", () => {
+  const Profile = {
+    screen: TestScreen,
+    linking: {
+      path: 'profile/:id',
+      shared: false,
+    },
+  };
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+      },
+      Profile,
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Search: {
+        screen: TestScreen,
+        linking: 'search',
+      },
+      Profile,
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      screens: {
+        Home: {
+          path: '',
+        },
+        Profile: {
+          path: 'profile/:id',
+          shared: false,
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+          shared: false,
+        },
+        Search: {
+          path: 'search',
+        },
+      },
+    },
+  });
+});
+
+test("doesn't mark screens under a parent with shared: false as shared", () => {
+  const Profile = {
+    screen: TestScreen,
+    linking: 'profile/:id',
+  };
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Profile,
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Profile,
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+        linking: {
+          path: '',
+          shared: false,
+        },
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      path: '',
+      shared: false,
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+        },
+      },
+    },
+  });
+});
+
+test('preserves explicit shared option under a parent with shared: false', () => {
+  const Profile = {
+    screen: TestScreen,
+    linking: {
+      path: 'profile/:id',
+      shared: true,
+    },
+  };
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Profile,
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Profile,
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+        linking: {
+          path: '',
+          shared: false,
+        },
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Tabs, {}, true)).toEqual({
+    HomeTab: {
+      path: '',
+      shared: false,
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+          shared: true,
+        },
+      },
+    },
+    SearchTab: {
+      screens: {
+        Profile: {
+          path: 'profile/:id',
+          shared: true,
+        },
+      },
+    },
+  });
+});
+
+test("doesn't mark different components with the same path as shared", () => {
+  const OtherScreen = () => null;
+
+  const HomeStack = createTestNavigator({
+    screens: {
+      Profile: {
+        screen: TestScreen,
+        linking: 'profile/:id',
+      },
+    },
+  });
+
+  const SearchStack = createTestNavigator({
+    screens: {
+      Profile: {
+        screen: OtherScreen,
+        linking: 'profile/:id',
+      },
+    },
+  });
+
+  const Tabs = createTestNavigator({
+    screens: {
+      HomeTab: {
+        screen: HomeStack,
+      },
+      SearchTab: {
+        screen: SearchStack,
+      },
+    },
+  });
+
+  const screens = createPathConfigForStaticNavigation(Tabs, {});
+
+  if (screens == null) {
+    throw new Error('Expected screens to be defined');
+  }
+
+  expect(() => getStateFromPath('/profile/123', { screens })).toThrow(
+    `Found conflicting screens with the same pattern. The pattern 'profile/:id' resolves to both 'SearchTab > Profile' and 'HomeTab > Profile'. Patterns must be unique and cannot resolve to more than one screen unless shared: true is specified.`
+  );
 });
 
 test('automatically generates paths if auto is specified', () => {
@@ -1623,6 +2250,27 @@ test('throws if linking.initialRouteName is not in nested static navigation', ()
   expect(() => {
     createPathConfigForStaticNavigation(Root, {}, true);
   }).toThrow(
+    "Couldn't find a screen named 'Missing' to use as 'initialRouteName'."
+  );
+});
+
+test('throws if explicit static linking screens do not contain initialRouteName', () => {
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+        linking: {
+          path: '',
+          screens: {
+            Feed: 'feed',
+          },
+          initialRouteName: 'Missing',
+        },
+      },
+    },
+  });
+
+  expect(() => createPathConfigForStaticNavigation(Root, {}, true)).toThrow(
     "Couldn't find a screen named 'Missing' to use as 'initialRouteName'."
   );
 });

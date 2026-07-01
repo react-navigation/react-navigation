@@ -1,4 +1,4 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -9,13 +9,15 @@ import {
   StackRouter,
   TabRouter,
   useNavigationBuilder,
+  usePreventRemove,
 } from '@react-navigation/core';
 import {
   act,
   render,
-  type RenderAPI,
+  type RenderResult,
   waitFor,
 } from '@testing-library/react-native';
+import { Text } from 'react-native';
 
 import { NavigationContainer } from '../NavigationContainer';
 import { useLinking } from '../useLinking';
@@ -28,11 +30,18 @@ jest.mock('../useLinking', () => require('../useLinking.tsx'));
 let window: typeof import('../__stubs__/window').window;
 
 beforeEach(() => {
+  jest.useFakeTimers();
+
   jest.isolateModules(() => {
     window = require('../__stubs__/window').window;
   });
 
-  Object.assign(global, window);
+  Object.defineProperties(global, Object.getOwnPropertyDescriptors(window));
+});
+
+afterEach(() => {
+  jest.runOnlyPendingTimers();
+  jest.useRealTimers();
 });
 
 const createStackNavigator = createNavigatorFactory((props: any) => {
@@ -45,7 +54,7 @@ const createStackNavigator = createNavigatorFactory((props: any) => {
     <NavigationContent>
       {state.routes.map((route, i) => (
         <div key={route.key} aria-current={state.index === i || undefined}>
-          {descriptors[route.key].render()}
+          {descriptors[route.key]?.render()}
         </div>
       ))}
     </NavigationContent>
@@ -62,19 +71,20 @@ const createTabNavigator = createNavigatorFactory((props: any) => {
     <NavigationContent>
       {state.routes.map((route, i) => (
         <div key={route.key} aria-current={state.index === i || undefined}>
-          {descriptors[route.key].render()}
+          {descriptors[route.key]?.render()}
         </div>
       ))}
     </NavigationContent>
   );
 });
 
-const TestScreen = ({ route }: any): any =>
-  `${route.name} ${JSON.stringify(route.params)}`;
+const TestScreen = ({ route }: any): any => (
+  <Text>
+    {route.name} {JSON.stringify(route.params)}
+  </Text>
+);
 
-test('throws if multiple instances of useLinking are used', () => {
-  jest.useFakeTimers();
-
+test('throws if multiple instances of useLinking are used', async () => {
   const ref = createNavigationContainerRef<ParamListBase>();
   const options = { enabled: true };
 
@@ -86,11 +96,11 @@ test('throws if multiple instances of useLinking are used', () => {
 
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-  let element: RenderAPI | undefined;
+  let element: RenderResult | undefined;
 
-  element = render(<Sample />);
+  element = await render(<Sample />);
 
-  jest.runAllTimers();
+  await act(() => jest.runAllTimers());
 
   expect(spy).toHaveBeenLastCalledWith(
     expect.stringMatching(
@@ -98,7 +108,7 @@ test('throws if multiple instances of useLinking are used', () => {
     )
   );
 
-  element?.unmount();
+  await element?.unmount();
 
   function A() {
     useLinking(ref, options);
@@ -110,7 +120,7 @@ test('throws if multiple instances of useLinking are used', () => {
     return null;
   }
 
-  element = render(
+  element = await render(
     <>
       <A />
       <B />
@@ -118,11 +128,11 @@ test('throws if multiple instances of useLinking are used', () => {
   );
 
   expect(spy).toHaveBeenCalledTimes(2);
-  expect(spy.mock.calls[1][0]).toMatch(
+  expect(spy.mock.calls[1]?.[0]).toMatch(
     'Looks like you have configured linking in multiple places.'
   );
 
-  element?.unmount();
+  await element?.unmount();
 
   function Sample2() {
     useLinking(ref, options);
@@ -131,15 +141,15 @@ test('throws if multiple instances of useLinking are used', () => {
 
   const wrapper2 = <Sample2 />;
 
-  render(wrapper2).unmount();
+  const rendered = await render(wrapper2);
 
-  element = render(wrapper2);
+  await rendered.unmount();
+
+  element = await render(wrapper2);
 
   expect(spy).toHaveBeenCalledTimes(2);
 
-  element?.unmount();
-
-  jest.useRealTimers();
+  await element?.unmount();
 });
 
 test('pushes a browser history entry for each forward navigation', async () => {
@@ -157,7 +167,7 @@ test('pushes a browser history entry for each forward navigation', async () => {
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation} linking={linking}>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={TestScreen} />
@@ -167,19 +177,19 @@ test('pushes a browser history entry for each forward navigation', async () => {
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('Profile'));
+  await act(() => navigation.navigate('Profile'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
-  act(() => navigation.navigate('Settings'));
+  await act(() => navigation.navigate('Settings'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/settings'));
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 });
@@ -206,7 +216,7 @@ test('dispatches GO_BACK when browser back pops the last stack route', async () 
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <NavigationContainer
       ref={navigation}
       linking={linking}
@@ -221,14 +231,14 @@ test('dispatches GO_BACK when browser back pops the last stack route', async () 
 
   expect(window.location.pathname).toBe('/');
 
-  act(() => navigation.navigate('Profile', { user: 'john' }));
+  await act(() => navigation.navigate('Profile', { user: 'john' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
   actions.length = 0;
   onStateChange.mockClear();
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 
@@ -239,7 +249,81 @@ test('dispatches GO_BACK when browser back pops the last stack route', async () 
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
   expect(state.routes.length).toBe(1);
-  expect(state.routes[0].name).toBe('Home');
+  expect(state.routes[0]?.name).toBe('Home');
+});
+
+test("rolls back browser history when 'beforeRemove' prevents browser back", async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const onPreventRemove = jest.fn();
+
+  const ProfileScreen = ({
+    preventRemove,
+    route,
+  }: {
+    preventRemove: boolean;
+    route: any;
+  }): any => {
+    usePreventRemove(preventRemove, onPreventRemove);
+
+    return (
+      <Text>
+        {route.name} {JSON.stringify(route.params)}
+      </Text>
+    );
+  };
+
+  const Container = ({ preventRemove }: { preventRemove: boolean }) => (
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile">
+          {(props) => (
+            <ProfileScreen {...props} preventRemove={preventRemove} />
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  const root = await render(<Container preventRemove={true} />);
+
+  await act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(onPreventRemove).toHaveBeenCalledTimes(1));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  expect(navigation.getRootState().routes).toEqual(
+    expect.arrayContaining([expect.objectContaining({ name: 'Profile' })])
+  );
+
+  await root.rerender(<Container preventRemove={false} />);
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(onPreventRemove).toHaveBeenCalledTimes(1);
+
+  expect(navigation.getRootState().routes).toEqual([
+    expect.objectContaining({ name: 'Home' }),
+  ]);
 });
 
 test('dispatches GO_BACK on each sequential browser back', async () => {
@@ -264,7 +348,7 @@ test('dispatches GO_BACK on each sequential browser back', async () => {
     actions.push(e.data.action);
   });
 
-  render(
+  await render(
     <NavigationContainer ref={navigation} linking={linking}>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={TestScreen} />
@@ -275,29 +359,29 @@ test('dispatches GO_BACK on each sequential browser back', async () => {
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('A'));
+  await act(() => navigation.navigate('A'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/a'));
 
-  act(() => navigation.navigate('B'));
+  await act(() => navigation.navigate('B'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/b'));
 
-  act(() => navigation.navigate('C'));
+  await act(() => navigation.navigate('C'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/c'));
 
   actions.length = 0;
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/b'));
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/a'));
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 
@@ -327,7 +411,7 @@ test('dispatches RESET when browser back goes to non-adjacent stack state', asyn
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <NavigationContainer
       ref={navigation}
       linking={linking}
@@ -343,18 +427,18 @@ test('dispatches RESET when browser back goes to non-adjacent stack state', asyn
 
   expect(window.location.pathname).toBe('/');
 
-  act(() => navigation.navigate('Profile', { user: 'john' }));
+  await act(() => navigation.navigate('Profile', { user: 'john' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
-  act(() => navigation.navigate('Settings'));
+  await act(() => navigation.navigate('Settings'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/settings'));
 
   actions.length = 0;
   onStateChange.mockClear();
 
-  act(() => window.history.go(-2));
+  await act(() => window.history.go(-2));
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 
@@ -368,7 +452,7 @@ test('dispatches RESET when browser back goes to non-adjacent stack state', asyn
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
   expect(state.routes.length).toBe(1);
-  expect(state.routes[0].name).toBe('Home');
+  expect(state.routes[0]?.name).toBe('Home');
 });
 
 test('handles browser forward after going back', async () => {
@@ -387,7 +471,7 @@ test('handles browser forward after going back', async () => {
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <NavigationContainer
       ref={navigation}
       linking={linking}
@@ -402,11 +486,11 @@ test('handles browser forward after going back', async () => {
 
   expect(window.location.pathname).toBe('/');
 
-  act(() => navigation.navigate('Profile'));
+  await act(() => navigation.navigate('Profile'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 
@@ -414,14 +498,14 @@ test('handles browser forward after going back', async () => {
 
   onStateChange.mockClear();
 
-  act(() => window.history.forward());
+  await act(() => window.history.forward());
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
   expect(state.index).toBe(1);
-  expect(state.routes[1].name).toBe('Profile');
+  expect(state.routes[1]?.name).toBe('Profile');
 });
 
 test('syncs path with browser history across back and forward', async () => {
@@ -439,7 +523,7 @@ test('syncs path with browser history across back and forward', async () => {
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation} linking={linking}>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={TestScreen} />
@@ -451,27 +535,27 @@ test('syncs path with browser history across back and forward', async () => {
 
   expect(window.location.pathname).toBe('/');
 
-  act(() => navigation.navigate('Profile', { user: 'jane' }));
+  await act(() => navigation.navigate('Profile', { user: 'jane' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => navigation.navigate('Settings'));
+  await act(() => navigation.navigate('Settings'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/settings'));
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 
-  act(() => window.history.forward());
+  await act(() => window.history.forward());
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => window.history.forward());
+  await act(() => window.history.forward());
 
   await waitFor(() => expect(window.location.pathname).toBe('/settings'));
 });
@@ -491,7 +575,7 @@ test('syncs browser history when programmatic goBack is called', async () => {
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation} linking={linking}>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={TestScreen} />
@@ -501,19 +585,19 @@ test('syncs browser history when programmatic goBack is called', async () => {
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('Profile'));
+  await act(() => navigation.navigate('Profile'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
-  act(() => navigation.navigate('Settings'));
+  await act(() => navigation.navigate('Settings'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/settings'));
 
-  act(() => navigation.goBack());
+  await act(() => navigation.goBack());
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
-  act(() => window.history.forward());
+  await act(() => window.history.forward());
 
   await waitFor(() => expect(window.location.pathname).toBe('/settings'));
 });
@@ -532,7 +616,7 @@ test('replaces browser history when params change without route change', async (
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  render(
+  await render(
     <NavigationContainer ref={navigation} linking={linking}>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={TestScreen} />
@@ -541,17 +625,151 @@ test('replaces browser history when params change without route change', async (
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('Profile', { user: 'jane' }));
+  await act(() => navigation.navigate('Profile', { user: 'jane' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => navigation.dispatch(CommonActions.setParams({ user: 'john' })));
+  await act(() =>
+    navigation.dispatch(CommonActions.setParams({ user: 'john' }))
+  );
 
   await waitFor(() => expect(window.location.pathname).toBe('/john'));
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
+});
+
+test('preserves browser hash when params change without route change', async () => {
+  const createStackNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route, i) => (
+          <div key={route.key} aria-current={state.index === i || undefined}>
+            {descriptors[route.key]?.render()}
+          </div>
+        ))}
+      </NavigationContent>
+    );
+  });
+
+  const Stack = createStackNavigator();
+
+  const TestScreen = ({ route }: any): any => (
+    <Text>
+      {route.name} {JSON.stringify(route.params)}
+    </Text>
+  );
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: ':user',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('Profile', { user: 'jane' }));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/jane'));
+
+  window.history.replaceState(window.history.state, '', '/jane#details');
+
+  await act(() =>
+    navigation.dispatch(CommonActions.setParams({ user: 'john' }))
+  );
+
+  await waitFor(() => {
+    expect(window.location.pathname).toBe('/john');
+    expect(window.location.hash).toBe('#details');
+  });
+});
+
+test("doesn't reset state when URL parses to routes not in root navigator", async () => {
+  const createStackNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route, i) => (
+          <div key={route.key} aria-current={state.index === i || undefined}>
+            {descriptors[route.key]?.render()}
+          </div>
+        ))}
+      </NavigationContent>
+    );
+  });
+
+  const Stack = createStackNavigator();
+
+  const TestScreen = ({ route }: any): any => (
+    <Text>
+      {route.name} {JSON.stringify(route.params)}
+    </Text>
+  );
+
+  const linking = {
+    getStateFromPath() {
+      return {
+        routes: [{ name: 'Missing' }],
+      };
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const onStateChange = jest.fn();
+
+  await render(
+    <NavigationContainer
+      ref={navigation}
+      linking={linking}
+      onStateChange={onStateChange}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  expect(window.location.pathname).toBe('/Home');
+
+  window.history.pushState(null, '', '/missing');
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/Home'));
+
+  onStateChange.mockClear();
+
+  await act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/missing'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  expect(onStateChange).not.toHaveBeenCalled();
 });
 
 test('replaces browser history on resetRoot', async () => {
@@ -571,7 +789,7 @@ test('replaces browser history on resetRoot', async () => {
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <NavigationContainer
       ref={navigation}
       linking={linking}
@@ -585,11 +803,11 @@ test('replaces browser history on resetRoot', async () => {
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('Profile'));
+  await act(() => navigation.navigate('Profile'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
-  act(() =>
+  await act(() =>
     navigation.resetRoot({
       index: 0,
       routes: [{ name: 'Settings' }],
@@ -601,9 +819,9 @@ test('replaces browser history on resetRoot', async () => {
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
   expect(state.routes.length).toBe(1);
-  expect(state.routes[0].name).toBe('Settings');
+  expect(state.routes[0]?.name).toBe('Settings');
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 });
@@ -625,7 +843,7 @@ test('truncates forward history when navigating from a mid-history position', as
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <NavigationContainer
       ref={navigation}
       linking={linking}
@@ -639,28 +857,28 @@ test('truncates forward history when navigating from a mid-history position', as
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('Profile'));
+  await act(() => navigation.navigate('Profile'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 
-  act(() => navigation.navigate('Settings'));
+  await act(() => navigation.navigate('Settings'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/settings'));
 
   onStateChange.mockClear();
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
   expect(state.routes.length).toBe(1);
-  expect(state.routes[0].name).toBe('Home');
+  expect(state.routes[0]?.name).toBe('Home');
 });
 
 test('dispatches GO_BACK when browser back pops the last tab history entry', async () => {
@@ -685,7 +903,7 @@ test('dispatches GO_BACK when browser back pops the last tab history entry', asy
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <NavigationContainer
       ref={navigation}
       linking={linking}
@@ -700,14 +918,14 @@ test('dispatches GO_BACK when browser back pops the last tab history entry', asy
 
   expect(window.location.pathname).toBe('/');
 
-  act(() => navigation.navigate('Profile'));
+  await act(() => navigation.navigate('Profile'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
   actions.length = 0;
   onStateChange.mockClear();
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 
@@ -717,7 +935,7 @@ test('dispatches GO_BACK when browser back pops the last tab history entry', asy
 
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
-  expect(state.routes[state.index].name).toBe('Home');
+  expect(state.routes[state.index]?.name).toBe('Home');
 });
 
 test('dispatches GO_BACK when browser back pops route history on a tab screen', async () => {
@@ -742,7 +960,7 @@ test('dispatches GO_BACK when browser back pops route history on a tab screen', 
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <NavigationContainer
       ref={navigation}
       linking={linking}
@@ -755,18 +973,20 @@ test('dispatches GO_BACK when browser back pops route history on a tab screen', 
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('Profile', { user: 'jane' }));
+  await act(() => navigation.navigate('Profile', { user: 'jane' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => navigation.dispatch(CommonActions.pushParams({ user: 'john' })));
+  await act(() =>
+    navigation.dispatch(CommonActions.pushParams({ user: 'john' }))
+  );
 
   await waitFor(() => expect(window.location.pathname).toBe('/john'));
 
   actions.length = 0;
   onStateChange.mockClear();
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
@@ -807,7 +1027,7 @@ test('dispatches RESET when browser history jumps multiple route history entries
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <NavigationContainer
       ref={navigation}
       linking={linking}
@@ -820,22 +1040,26 @@ test('dispatches RESET when browser history jumps multiple route history entries
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('Profile', { user: 'jane' }));
+  await act(() => navigation.navigate('Profile', { user: 'jane' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => navigation.dispatch(CommonActions.pushParams({ user: 'john' })));
+  await act(() =>
+    navigation.dispatch(CommonActions.pushParams({ user: 'john' }))
+  );
 
   await waitFor(() => expect(window.location.pathname).toBe('/john'));
 
-  act(() => navigation.dispatch(CommonActions.pushParams({ user: 'kate' })));
+  await act(() =>
+    navigation.dispatch(CommonActions.pushParams({ user: 'kate' }))
+  );
 
   await waitFor(() => expect(window.location.pathname).toBe('/kate'));
 
   actions.length = 0;
   onStateChange.mockClear();
 
-  act(() => window.history.go(-2));
+  await act(() => window.history.go(-2));
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
@@ -877,7 +1101,7 @@ test('dispatches RESET when browser back changes route while current tab route h
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <NavigationContainer
       ref={navigation}
       linking={linking}
@@ -891,26 +1115,28 @@ test('dispatches RESET when browser back changes route while current tab route h
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('Profile', { user: 'jane' }));
+  await act(() => navigation.navigate('Profile', { user: 'jane' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => navigation.dispatch(CommonActions.pushParams({ user: 'john' })));
+  await act(() =>
+    navigation.dispatch(CommonActions.pushParams({ user: 'john' }))
+  );
 
   await waitFor(() => expect(window.location.pathname).toBe('/john'));
 
-  act(() => navigation.navigate('Settings'));
+  await act(() => navigation.navigate('Settings'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/settings'));
 
-  act(() => navigation.navigate('Profile', { user: 'john' }));
+  await act(() => navigation.navigate('Profile', { user: 'john' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/john'));
 
   actions.length = 0;
   onStateChange.mockClear();
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/settings'));
 
@@ -952,7 +1178,7 @@ test('dispatches GO_BACK when browser back restores the previous fullHistory tab
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <NavigationContainer
       ref={navigation}
       linking={linking}
@@ -966,24 +1192,24 @@ test('dispatches GO_BACK when browser back restores the previous fullHistory tab
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('Profile', { user: 'first' }));
+  await act(() => navigation.navigate('Profile', { user: 'first' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/first'));
 
-  act(() => navigation.navigate('Settings', { section: 'security' }));
+  await act(() => navigation.navigate('Settings', { section: 'security' }));
 
   await waitFor(() => {
     expect(window.location.pathname).toBe('/settings/security');
   });
 
-  act(() => navigation.navigate('Profile', { user: 'updated' }));
+  await act(() => navigation.navigate('Profile', { user: 'updated' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/updated'));
 
   actions.length = 0;
   onStateChange.mockClear();
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => {
     expect(window.location.pathname).toBe('/settings/security');
@@ -1027,7 +1253,7 @@ test('dispatches RESET when browser history jumps multiple fullHistory tab entri
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <NavigationContainer
       ref={navigation}
       linking={linking}
@@ -1041,24 +1267,24 @@ test('dispatches RESET when browser history jumps multiple fullHistory tab entri
     </NavigationContainer>
   );
 
-  act(() => navigation.navigate('Profile', { user: 'first' }));
+  await act(() => navigation.navigate('Profile', { user: 'first' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/first'));
 
-  act(() => navigation.navigate('Settings', { section: 'security' }));
+  await act(() => navigation.navigate('Settings', { section: 'security' }));
 
   await waitFor(() => {
     expect(window.location.pathname).toBe('/settings/security');
   });
 
-  act(() => navigation.navigate('Profile', { user: 'updated' }));
+  await act(() => navigation.navigate('Profile', { user: 'updated' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/updated'));
 
   actions.length = 0;
   onStateChange.mockClear();
 
-  act(() => window.history.go(-2));
+  await act(() => window.history.go(-2));
 
   await waitFor(() => expect(window.location.pathname).toBe('/first'));
 
@@ -1105,7 +1331,7 @@ test('dispatches GO_BACK for stack inside tab when popping last stack route', as
     actions.push(e.data.action);
   });
 
-  render(
+  await render(
     <NavigationContainer ref={navigation} linking={linking}>
       <Tab.Navigator>
         <Tab.Screen name="Home">
@@ -1123,13 +1349,13 @@ test('dispatches GO_BACK for stack inside tab when popping last stack route', as
 
   expect(window.location.pathname).toBe('/feed');
 
-  act(() => navigation.navigate('Profile'));
+  await act(() => navigation.navigate('Profile'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
   actions.length = 0;
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
@@ -1166,7 +1392,7 @@ test('dispatches GO_BACK for inner stack pop when outer tab history is non-empty
     actions.push(e.data.action);
   });
 
-  render(
+  await render(
     <NavigationContainer ref={navigation} linking={linking}>
       <Tab.Navigator>
         <Tab.Screen name="Home">
@@ -1184,21 +1410,21 @@ test('dispatches GO_BACK for inner stack pop when outer tab history is non-empty
 
   expect(window.location.pathname).toBe('/feed');
 
-  act(() => navigation.navigate('Chat'));
+  await act(() => navigation.navigate('Chat'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/chat'));
 
-  act(() => navigation.navigate('Home'));
+  await act(() => navigation.navigate('Home'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
-  act(() => navigation.navigate('Profile'));
+  await act(() => navigation.navigate('Profile'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
   actions.length = 0;
 
-  act(() => window.history.back());
+  await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
@@ -1236,7 +1462,7 @@ test('dispatches RESET when browser back restores older nested state under the s
 
   const onStateChange = jest.fn();
 
-  render(
+  await render(
     <NavigationContainer
       ref={navigation}
       linking={linking}
@@ -1258,18 +1484,18 @@ test('dispatches RESET when browser back restores older nested state under the s
 
   expect(window.location.pathname).toBe('/');
 
-  act(() => navigation.navigate('Profile'));
+  await act(() => navigation.navigate('Profile'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
-  act(() => navigation.navigate('Details'));
+  await act(() => navigation.navigate('Details'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/details'));
 
   actions.length = 0;
   onStateChange.mockClear();
 
-  act(() => window.history.go(-2));
+  await act(() => window.history.go(-2));
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 
@@ -1282,7 +1508,7 @@ test('dispatches RESET when browser back restores older nested state under the s
 
   const state = onStateChange.mock.calls.at(-1)?.[0] as NavigationState;
 
-  expect(state.routes[0].state).toMatchObject({
+  expect(state.routes[0]?.state).toMatchObject({
     index: 0,
   });
 });

@@ -21,7 +21,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Verify dependency versions
-        run: yarn versions check
+        run: pnpm versions check
 
   lint:
     runs-on: ubuntu-latest
@@ -33,10 +33,14 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Lint files
-        run: yarn lint
+        run: pnpm lint
 
       - name: Typecheck files
-        run: yarn typecheck
+        run: |
+          pnpm typecheck
+          pnpm typecheck:standalone:static
+          pnpm typecheck:standalone:dynamic
+          pnpm typecheck:declarations
 
   unit-test:
     runs-on: ubuntu-latest
@@ -48,7 +52,7 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Run unit tests
-        run: yarn test --maxWorkers=2 --coverage
+        run: pnpm test --maxWorkers=2 --coverage
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2
@@ -63,13 +67,13 @@ jobs:
         uses: ./.github/actions/setup
 
       - name: Build packages in the monorepo
-        run: yarn lerna run prepack
+        run: pnpm lerna run prepack
 
       - name: Verify types are correct
-        run: yarn typecheck
+        run: pnpm typecheck
 
       - name: Bundle example JavaScript with Metro
-        run: yarn example expo export --platform all
+        run: pnpm example exec expo export --platform all
 
       - name: Bundle example JavaScript with Vite
-        run: yarn example web build
+        run: pnpm example web build

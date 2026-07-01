@@ -138,6 +138,50 @@ export function forModalPresentationIOS({
 
   const isFirst = index === 0;
 
+  if (Platform.OS !== 'ios' || parseInt(Platform.Version, 10) >= 26) {
+    const scaleValue = screen.width ? 1 - (topOffset * 3) / screen.width : 1;
+    const recede = ((screen.height - statusBarHeight) * (1 - scaleValue)) / 2;
+
+    const translateY = multiply(
+      progress.interpolate({
+        inputRange: [0, 1, 2],
+        outputRange: [
+          screen.height,
+          // The front modal rests below the one behind it to reveal a peek.
+          index > 1 ? topOffset : 0,
+          isFirst ? 0 : -recede,
+        ],
+      }),
+      inverted
+    );
+
+    const scale = isFirst
+      ? 1
+      : progress.interpolate({
+          inputRange: [0, 1, 2],
+          outputRange: [1, 1, scaleValue],
+        });
+
+    const dimOpacity = progress.interpolate({
+      inputRange: [0, 1, 2],
+      outputRange: [0, 0, isFirst ? 0.2 : 0.12],
+    });
+
+    const borderRadius = isFirst ? 0 : 38;
+
+    return {
+      cardStyle: {
+        overflow: 'hidden',
+        borderCurve: 'continuous',
+        borderTopLeftRadius: borderRadius,
+        borderTopRightRadius: borderRadius,
+        marginTop: isFirst ? 0 : statusBarHeight,
+        transform: [{ translateY }, { scale }],
+      },
+      dimStyle: { opacity: dimOpacity },
+    };
+  }
+
   const translateY = multiply(
     progress.interpolate({
       inputRange: [0, 1, 2],

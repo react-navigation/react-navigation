@@ -9,7 +9,7 @@ import * as React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { Container } from './Container';
+import { Container, type Props as ContainerProps } from './Container';
 import { getDefaultHeaderHeight } from './Header/getDefaultHeaderHeight';
 import { HeaderHeightContext } from './Header/HeaderHeightContext';
 import { HeaderShownContext } from './Header/HeaderShownContext';
@@ -24,7 +24,7 @@ type Props = {
   headerShown?: boolean | undefined;
   headerStatusBarHeight?: number | undefined;
   headerTransparent?: boolean | undefined;
-  style?: React.ComponentProps<typeof Container>['style'] | undefined;
+  style?: ContainerProps['style'] | undefined;
   children: React.ReactNode;
 };
 

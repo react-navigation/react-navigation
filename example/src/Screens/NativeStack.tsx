@@ -5,16 +5,11 @@ import {
   Text,
   useHeaderHeight,
 } from '@react-navigation/elements';
-import {
-  type NavigatorScreenParams,
-  type PathConfig,
-  type StaticScreenProps,
-  useTheme,
-} from '@react-navigation/native';
+import { useNavigation, useRoute, useTheme } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
+  createNativeStackScreen,
   type NativeStackHeaderItem,
-  type NativeStackScreenProps,
   useAnimatedHeaderHeight,
 } from '@react-navigation/native-stack';
 import * as React from 'react';
@@ -36,28 +31,12 @@ import { Article } from '../Shared/Article';
 import { Contacts } from '../Shared/Contacts';
 import { NewsFeed } from '../Shared/NewsFeed';
 
-export type NativeStackParamList = {
-  Article: { author?: string } | undefined;
-  NewsFeed: { date: number };
-  Contacts: undefined;
-  Albums: undefined;
-};
-
-const linking = {
-  screens: {
-    Article: COMMON_LINKING_CONFIG.Article,
-    NewsFeed: COMMON_LINKING_CONFIG.NewsFeed,
-    Contacts: 'contacts',
-    Albums: 'albums',
-  },
-} satisfies PathConfig<NavigatorScreenParams<NativeStackParamList>>;
-
 const scrollEnabled = Platform.select({ web: true, default: false });
 
-const ArticleScreen = ({
-  navigation,
-  route,
-}: NativeStackScreenProps<NativeStackParamList, 'Article'>) => {
+const ArticleScreen = () => {
+  const navigation = useNavigation('Article');
+  const route = useRoute('Article');
+
   return (
     <View style={styles.container}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
@@ -98,10 +77,10 @@ const ArticleScreen = ({
   );
 };
 
-const NewsFeedScreen = ({
-  route,
-  navigation,
-}: NativeStackScreenProps<NativeStackParamList, 'NewsFeed'>) => {
+const NewsFeedScreen = () => {
+  const route = useRoute('NewsFeed');
+  const navigation = useNavigation('NewsFeed');
+
   return (
     <View style={styles.container}>
       <ScrollView contentInsetAdjustmentBehavior="automatic">
@@ -123,9 +102,9 @@ const NewsFeedScreen = ({
   );
 };
 
-const ContactsScreen = ({
-  navigation,
-}: NativeStackScreenProps<NativeStackParamList, 'Contacts'>) => {
+const ContactsScreen = () => {
+  const navigation = useNavigation('Contacts');
+
   const [query, setQuery] = React.useState('');
 
   React.useLayoutEffect(() => {
@@ -158,9 +137,9 @@ const ContactsScreen = ({
   );
 };
 
-const AlbumsScreen = ({
-  navigation,
-}: NativeStackScreenProps<NativeStackParamList, 'Albums'>) => {
+const AlbumsScreen = () => {
+  const navigation = useNavigation('Albums');
+
   const headerHeight = useHeaderHeight();
 
   return (
@@ -208,274 +187,264 @@ const HeaderHeightView = ({ hasOffset }: { hasOffset: boolean }) => {
   );
 };
 
-const Stack = createNativeStackNavigator<NativeStackParamList>();
+const NativeStackNavigator = createNativeStackNavigator({
+  screens: {
+    Article: createNativeStackScreen({
+      screen: ArticleScreen,
+      options: ({ route, navigation }) => {
+        const leftItems: NativeStackHeaderItem[] = [
+          {
+            type: 'button',
+            label: 'Back',
+            onPress: () => navigation.goBack(),
+          },
+        ];
 
-export function NativeStack(
-  _: StaticScreenProps<NavigatorScreenParams<NativeStackParamList>>
-) {
-  const { colors } = useTheme();
-
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Article"
-        component={ArticleScreen}
-        options={({ route, navigation }) => {
-          const leftItems: NativeStackHeaderItem[] = [
-            {
-              type: 'button',
-              label: 'Back',
-              onPress: () => navigation.goBack(),
+        const rightItems: NativeStackHeaderItem[] = [
+          {
+            type: 'button',
+            label: 'Follow',
+            icon: {
+              type: 'image',
+              source: userRoundPlus,
             },
-          ];
-
-          const rightItems: NativeStackHeaderItem[] = [
-            {
-              type: 'button',
-              label: 'Follow',
-              icon: {
-                type: 'image',
-                source: userRoundPlus,
-              },
-              onPress: () => Alert.alert('Follow button pressed'),
+            onPress: () => Alert.alert('Follow button pressed'),
+          },
+          {
+            type: 'button',
+            label: 'Favorite',
+            icon: {
+              type: 'sfSymbol',
+              name: 'heart',
             },
-            {
-              type: 'button',
-              label: 'Favorite',
-              icon: {
-                type: 'sfSymbol',
-                name: 'heart',
-              },
-              onPress: () => Alert.alert('Favorite button pressed'),
+            onPress: () => Alert.alert('Favorite button pressed'),
+          },
+          {
+            type: 'menu',
+            label: 'Options',
+            icon: {
+              type: 'sfSymbol',
+              name: 'ellipsis',
             },
-            {
-              type: 'menu',
-              label: 'Options',
-              icon: {
-                type: 'sfSymbol',
-                name: 'ellipsis',
-              },
-              badge: {
-                value: 3,
-              },
-              menu: {
-                title: 'Article options',
-                items: [
-                  {
-                    type: 'action',
-                    label: 'Share',
-                    icon: {
-                      type: 'sfSymbol',
-                      name: 'square.and.arrow.up',
-                    },
-                    onPress: () => Alert.alert('Share pressed'),
-                  },
-                  {
-                    type: 'action',
-                    label: 'Delete',
-                    icon: {
-                      type: 'sfSymbol',
-                      name: 'trash',
-                    },
-                    destructive: true,
-                    onPress: () => Alert.alert('Delete pressed'),
-                  },
-                  {
-                    type: 'action',
-                    label: 'Report',
-                    icon: {
-                      type: 'sfSymbol',
-                      name: 'flag',
-                    },
-                    destructive: true,
-                    onPress: () => Alert.alert('Report pressed'),
-                  },
-                  {
-                    type: 'action',
-                    label: 'Message',
-                    icon: {
-                      type: 'image',
-                      source: Platform.select({
-                        // Avoid calling `Image.resolveAssetSource` on Web to prevent crash
-                        get ios() {
-                          return {
-                            ...Image.resolveAssetSource(messageCircle),
-                            scale:
-                              Image.resolveAssetSource(messageCircle).scale *
-                              1.4,
-                          };
-                        },
-                        default: messageCircle,
-                      }),
-                    },
-                    onPress: () => Alert.alert('Message pressed'),
-                  },
-                  {
-                    type: 'submenu',
-                    label: 'View history',
-                    icon: {
-                      type: 'sfSymbol',
-                      name: 'clock',
-                    },
-                    items: [
-                      {
-                        type: 'action',
-                        label: 'Version 1.0',
-                        icon: {
-                          type: 'sfSymbol',
-                          name: 'checkmark',
-                        },
-                        onPress: () => Alert.alert('View version 1.0'),
-                      },
-                      {
-                        type: 'action',
-                        label: 'Version 0.9',
-                        onPress: () => Alert.alert('View version 0.9'),
-                      },
-                    ],
-                  },
-                  {
-                    label: 'Theme',
-                    inline: true,
-                    destructive: true,
-                    icon: { type: 'sfSymbol', name: 'star' },
-                    type: 'submenu',
-                    items: [
-                      {
-                        label: 'Auto',
-                        state: 'mixed',
-                        type: 'action',
-                        description: 'Adapts to system settings',
-                        onPress: () => Alert.alert('Sub Action 1 pressed'),
-                        destructive: true,
-                        keepsMenuPresented: true,
-                        discoverabilityLabel: 'Sub Action 1',
-                      },
-                      {
-                        label: 'Light',
-                        type: 'action',
-                        onPress: () => Alert.alert('Light theme selected'),
-                      },
-                      {
-                        label: 'Dark',
-                        type: 'action',
-                        onPress: () => Alert.alert('Dark theme selected'),
-                      },
-                    ],
-                  },
-                  {
-                    label: 'Text Size',
-                    inline: true,
-                    layout: 'palette',
-                    destructive: true,
-                    type: 'submenu',
-                    items: [
-                      {
-                        label: 'Small',
-                        icon: {
-                          type: 'sfSymbol',
-                          name: 'textformat.size.smaller',
-                        },
-                        type: 'action',
-                        onPress: () => Alert.alert('Small text selected'),
-                      },
-                      {
-                        label: 'Medium',
-                        state: 'on',
-                        icon: { type: 'sfSymbol', name: 'textformat.size' },
-                        type: 'action',
-                        onPress: () => Alert.alert('Medium text selected'),
-                      },
-                      {
-                        label: 'Large',
-                        icon: {
-                          type: 'sfSymbol',
-                          name: 'textformat.size.larger',
-                        },
-                        type: 'action',
-                        onPress: () => Alert.alert('Large text selected'),
-                      },
-                    ],
-                  },
-                ],
-              },
+            badge: {
+              value: 3,
             },
-            {
-              type: 'custom',
-              element: (
-                <HeaderButton onPress={() => Alert.alert('Info pressed')}>
-                  <MaterialCommunityIcons
-                    name="information-outline"
-                    size={28}
-                  />
-                </HeaderButton>
-              ),
+            menu: {
+              title: 'Article options',
+              items: [
+                {
+                  type: 'action',
+                  label: 'Share',
+                  icon: {
+                    type: 'sfSymbol',
+                    name: 'square.and.arrow.up',
+                  },
+                  onPress: () => Alert.alert('Share pressed'),
+                },
+                {
+                  type: 'action',
+                  label: 'Delete',
+                  icon: {
+                    type: 'sfSymbol',
+                    name: 'trash',
+                  },
+                  destructive: true,
+                  onPress: () => Alert.alert('Delete pressed'),
+                },
+                {
+                  type: 'action',
+                  label: 'Report',
+                  icon: {
+                    type: 'sfSymbol',
+                    name: 'flag',
+                  },
+                  destructive: true,
+                  onPress: () => Alert.alert('Report pressed'),
+                },
+                {
+                  type: 'action',
+                  label: 'Message',
+                  icon: {
+                    type: 'image',
+                    source: Platform.select({
+                      // Avoid calling `Image.resolveAssetSource` on Web to prevent crash
+                      get ios() {
+                        return {
+                          ...Image.resolveAssetSource(messageCircle),
+                          scale:
+                            Image.resolveAssetSource(messageCircle).scale * 1.4,
+                        };
+                      },
+                      default: messageCircle,
+                    }),
+                  },
+                  onPress: () => Alert.alert('Message pressed'),
+                },
+                {
+                  type: 'submenu',
+                  label: 'View history',
+                  icon: {
+                    type: 'sfSymbol',
+                    name: 'clock',
+                  },
+                  items: [
+                    {
+                      type: 'action',
+                      label: 'Version 1.0',
+                      icon: {
+                        type: 'sfSymbol',
+                        name: 'checkmark',
+                      },
+                      onPress: () => Alert.alert('View version 1.0'),
+                    },
+                    {
+                      type: 'action',
+                      label: 'Version 0.9',
+                      onPress: () => Alert.alert('View version 0.9'),
+                    },
+                  ],
+                },
+                {
+                  label: 'Theme',
+                  inline: true,
+                  destructive: true,
+                  icon: { type: 'sfSymbol', name: 'star' },
+                  type: 'submenu',
+                  items: [
+                    {
+                      label: 'Auto',
+                      state: 'mixed',
+                      type: 'action',
+                      description: 'Adapts to system settings',
+                      onPress: () => Alert.alert('Sub Action 1 pressed'),
+                      destructive: true,
+                      keepsMenuPresented: true,
+                      discoverabilityLabel: 'Sub Action 1',
+                    },
+                    {
+                      label: 'Light',
+                      type: 'action',
+                      onPress: () => Alert.alert('Light theme selected'),
+                    },
+                    {
+                      label: 'Dark',
+                      type: 'action',
+                      onPress: () => Alert.alert('Dark theme selected'),
+                    },
+                  ],
+                },
+                {
+                  label: 'Text Size',
+                  inline: true,
+                  layout: 'palette',
+                  destructive: true,
+                  type: 'submenu',
+                  items: [
+                    {
+                      label: 'Small',
+                      icon: {
+                        type: 'sfSymbol',
+                        name: 'textformat.size.smaller',
+                      },
+                      type: 'action',
+                      onPress: () => Alert.alert('Small text selected'),
+                    },
+                    {
+                      label: 'Medium',
+                      state: 'on',
+                      icon: { type: 'sfSymbol', name: 'textformat.size' },
+                      type: 'action',
+                      onPress: () => Alert.alert('Medium text selected'),
+                    },
+                    {
+                      label: 'Large',
+                      icon: {
+                        type: 'sfSymbol',
+                        name: 'textformat.size.larger',
+                      },
+                      type: 'action',
+                      onPress: () => Alert.alert('Large text selected'),
+                    },
+                  ],
+                },
+              ],
             },
-          ];
-
-          return {
-            title: `Article by ${route.params?.author ?? 'Unknown'}`,
-            headerLargeTitleEnabled: true,
-            headerLargeTitleShadowVisible: false,
-            headerRight: ({ tintColor }) => (
-              <HeaderButton
-                onPress={() => Alert.alert('Favorite button pressed')}
-              >
-                <MaterialCommunityIcons
-                  name="heart"
-                  size={24}
-                  color={tintColor}
-                />
+          },
+          {
+            type: 'custom',
+            element: (
+              <HeaderButton onPress={() => Alert.alert('Info pressed')}>
+                <MaterialCommunityIcons name="information-outline" size={28} />
               </HeaderButton>
             ),
-            unstable_headerLeftItems: () => leftItems,
-            unstable_headerRightItems: () => rightItems,
-          };
-        }}
-        initialParams={{ author: 'Gandalf' }}
-      />
-      <Stack.Screen
-        name="NewsFeed"
-        component={NewsFeedScreen}
-        options={{
-          title: 'Feed',
-          fullScreenGestureEnabled: true,
-        }}
-      />
-      <Stack.Screen
-        name="Contacts"
-        component={ContactsScreen}
-        options={{
-          headerSearchBarOptions: {
-            placeholder: 'Filter contacts',
           },
-        }}
-      />
-      <Stack.Screen
-        name="Albums"
-        component={AlbumsScreen}
-        options={{
-          title: 'Albums',
-          presentation: 'modal',
-          headerTransparent: true,
-          headerBlurEffect: 'light',
-          headerStyle: {
-            backgroundColor: Platform.select({
-              // Add a background color since Android doesn't support blur effect
-              android: colors.card,
-              default: 'transparent',
-            }),
-          },
-        }}
-      />
-    </Stack.Navigator>
-  );
-}
+        ];
 
-NativeStack.title = 'Native Stack - Basic';
-NativeStack.linking = linking;
-NativeStack.options = {
-  gestureEnabled: false,
+        return {
+          title: `Article by ${route.params?.author ?? 'Unknown'}`,
+          headerLargeTitleEnabled: true,
+          headerLargeTitleShadowVisible: false,
+          headerRight: ({ tintColor }) => (
+            <HeaderButton
+              onPress={() => Alert.alert('Favorite button pressed')}
+            >
+              <MaterialCommunityIcons
+                name="heart"
+                size={24}
+                color={tintColor}
+              />
+            </HeaderButton>
+          ),
+          unstable_headerLeftItems: () => leftItems,
+          unstable_headerRightItems: () => rightItems,
+        };
+      },
+      initialParams: { author: 'Gandalf' },
+      linking: COMMON_LINKING_CONFIG.Article,
+    }),
+    NewsFeed: createNativeStackScreen({
+      screen: NewsFeedScreen,
+      options: {
+        title: 'Feed',
+        fullScreenGestureEnabled: true,
+      },
+      linking: COMMON_LINKING_CONFIG.NewsFeed,
+    }),
+    Contacts: createNativeStackScreen({
+      screen: ContactsScreen,
+      options: {
+        headerSearchBarOptions: {
+          placeholder: 'Filter contacts',
+        },
+      },
+      linking: 'contacts',
+    }),
+    Albums: createNativeStackScreen({
+      screen: AlbumsScreen,
+      options: ({ theme }) => ({
+        title: 'Albums',
+        presentation: 'modal',
+        headerTransparent: true,
+        headerBlurEffect: 'light',
+        headerStyle: {
+          backgroundColor: Platform.select({
+            // Add a background color since Android doesn't support blur effect
+            android: theme.colors.card,
+            default: 'transparent',
+          }),
+        },
+      }),
+      linking: 'albums',
+    }),
+  },
+});
+
+export const NativeStack = {
+  screen: NativeStackNavigator,
+  title: 'Native Stack - Basic',
+  options: {
+    gestureEnabled: false,
+  },
 };
 
 const styles = StyleSheet.create({

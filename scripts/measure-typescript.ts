@@ -1,34 +1,71 @@
-import { execFileSync, execSync } from 'node:child_process';
+import { execFileSync, execSync, spawn } from 'node:child_process';
 import * as fs from 'node:fs';
 import process from 'node:process';
 import { fileURLToPath, URL } from 'node:url';
 import { parseArgs } from 'node:util';
 
-const root = fileURLToPath(new URL('..', import.meta.url));
+const root = new URL('..', import.meta.url);
+
+const BENCHMARK = { depth: 10, width: 100 };
+
+type NavigatorConfig = [navigator: string, screen: string, pkg: string];
+
+const NAVIGATORS: NavigatorConfig[] = [
+  ['createNativeStackNavigator', 'createNativeStackScreen', 'native-stack'],
+  ['createStackNavigator', 'createStackScreen', 'stack'],
+  ['createBottomTabNavigator', 'createBottomTabScreen', 'bottom-tabs'],
+  ['createDrawerNavigator', 'createDrawerScreen', 'drawer'],
+  [
+    'createMaterialTopTabNavigator',
+    'createMaterialTopTabScreen',
+    'material-top-tabs',
+  ],
+];
+
+const benchmarkFile = new URL(
+  'example/__typechecks__/_generated-benchmark.tsx',
+  root
+);
 
 type Metrics = {
   types: number;
   instantiations: number;
-  memoryKB: number;
-  checkTimeSec: number;
-  totalTimeSec: number;
+  memory: number;
+  checkTime: number;
+  totalTime: number;
 };
 
-// Minimum |Δ%| for a metric to count as a noticeable change.
-// - Types/Instantiations are deterministic, so 1% flags any real type-graph change.
-// - Memory has GC/allocator jitter across runs.
-// - Check time has 2-3x natural variance on CI runners.
+type MetricOutliers = { [Key in keyof Metrics]: number[] };
+
+type ServerMetrics = {
+  openCheck: number;
+  hover: number;
+  completion: number;
+  recheck: number;
+};
+
+type Measurement = {
+  metrics: Metrics;
+  outliers: MetricOutliers;
+  server: ServerMetrics;
+};
+
 const NOTICEABLE_THRESHOLDS = {
   types: 1,
   instantiations: 1,
-  memoryKB: 5,
-  checkTimeSec: 10,
-} as const;
+  memory: 5,
+  checkTime: 10,
+};
+
+const OUTLIER_THRESHOLD = 1.4826 * 10;
+
+const REPORT_DELIMITER = '---';
 
 const HELP = `Usage: node scripts/measure-typescript.ts [baseline-ref] [--runs N] [--json]
 
-Compares \`tsc --noEmit --extendedDiagnostics\` metrics between the
-current working tree and a baseline git ref.
+Compares \`tsc --noEmit --extendedDiagnostics\` metrics, plus editor-style
+\`tsserver\` latencies (open, hover, completion, re-check after edit), between
+the current working tree and a baseline git ref.
 
 Arguments:
   baseline-ref   Git branch, tag, or commit (default: main)
@@ -36,21 +73,22 @@ Arguments:
   --json         Output a machine-readable JSON report instead of a table
 `;
 
-let parsed;
-
-try {
-  parsed = parseArgs({
-    options: {
-      runs: { type: 'string', default: '5' },
-      json: { type: 'boolean', default: false },
-      help: { type: 'boolean', short: 'h', default: false },
-    },
-    allowPositionals: true,
-  });
-} catch (error) {
-  process.stderr.write(`${(error as Error).message}\n\n${HELP}`);
-  process.exit(1);
-}
+const parsed = (() => {
+  try {
+    return parseArgs({
+      options: {
+        runs: { type: 'string', default: '5' },
+        json: { type: 'boolean', default: false },
+        help: { type: 'boolean', short: 'h', default: false },
+      },
+      allowPositionals: true,
+    });
+  } catch (error) {
+    console.error(error);
+    process.stderr.write(`\n${HELP}`);
+    process.exit(1);
+  }
+})();
 
 if (parsed.values.help) {
   process.stdout.write(HELP);
@@ -73,6 +111,26 @@ if (!Number.isFinite(runs) || runs < 1) {
   process.exit(1);
 }
 
+function log(message: string): void {
+  if (!jsonOutput) {
+    process.stdout.write(`${message}\n`);
+  }
+}
+
+function printErrorLogs(error: unknown): void {
+  if (typeof error !== 'object' || error == null) {
+    return;
+  }
+
+  if ('stdout' in error && typeof error.stdout === 'string') {
+    process.stdout.write(error.stdout);
+  }
+
+  if ('stderr' in error && typeof error.stderr === 'string') {
+    process.stderr.write(error.stderr);
+  }
+}
+
 function git(args: string[]): string {
   return execFileSync('git', args, {
     cwd: root,
@@ -80,10 +138,12 @@ function git(args: string[]): string {
   }).trim();
 }
 
-function yarnInstall(): void {
-  execSync('yarn install', {
+function pnpmInstall(): void {
+  log('Installing dependencies...');
+
+  execSync('pnpm install --config.confirmModulesPurge=false', {
     cwd: root,
-    stdio: jsonOutput ? 'ignore' : 'inherit',
+    stdio: ['ignore', 'ignore', 'inherit'],
   });
 }
 
@@ -97,71 +157,542 @@ function resolveRef(ref: string): string {
 }
 
 function parseMetrics(output: string): Metrics {
-  const read = (pattern: RegExp, label: string): string => {
-    const match = output.match(pattern);
+  const read = (label: string, pattern: RegExp): number => {
+    const value = output.match(pattern)?.[1]?.replace(/,/g, '');
 
-    if (!match) {
+    if (value == null) {
       throw new Error(
         `Could not parse "${label}" from tsc output. Is --extendedDiagnostics supported by this tsc version?`
       );
     }
 
-    return match[1];
+    return Number.parseFloat(value);
   };
 
-  const asNumber = (value: string) =>
-    Number.parseFloat(value.replace(/,/g, ''));
+  return {
+    types: read('Types', /Types:\s+(\d[\d,]*)/),
+    instantiations: read('Instantiations', /Instantiations:\s+(\d[\d,]*)/),
+    memory: read('Memory used', /Memory used:\s+(\d[\d,]*)K/),
+    checkTime: read('Check time', /Check time:\s+([\d.]+)s/) * 1000,
+    totalTime: read('Total time', /Total time:\s+([\d.]+)s/) * 1000,
+  };
+}
+
+function median(values: number[]): number {
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  const current = sorted[middle];
+
+  if (current == null) {
+    throw new Error(`Couldn't find a median value at index ${middle}.`);
+  }
+
+  if (sorted.length % 2 === 1) {
+    return current;
+  }
+
+  const previous = sorted[middle - 1];
+
+  if (previous == null) {
+    throw new Error(`Couldn't find a median value at index ${middle - 1}.`);
+  }
+
+  return (previous + current) / 2;
+}
+
+function summarizeValues(values: number[]) {
+  const middle = median(values);
+  const mad = median(values.map((value) => Math.abs(value - middle)));
+
+  const outliers =
+    values.length > 1
+      ? values.filter(
+          (value) =>
+            Math.abs((value - middle) / (mad > 0 ? mad : Number.EPSILON)) >
+            OUTLIER_THRESHOLD
+        )
+      : [];
+  const kept = values.filter((value) => !outliers.includes(value));
+  const selected = kept.length > 0 ? kept : values;
 
   return {
-    types: asNumber(read(/Types:\s+(\d[\d,]*)/, 'Types')),
-    instantiations: asNumber(
-      read(/Instantiations:\s+(\d[\d,]*)/, 'Instantiations')
-    ),
-    memoryKB: asNumber(read(/Memory used:\s+(\d[\d,]*)K/, 'Memory used')),
-    checkTimeSec: asNumber(read(/Check time:\s+([\d.]+)s/, 'Check time')),
-    totalTimeSec: asNumber(read(/Total time:\s+([\d.]+)s/, 'Total time')),
+    value: Math.min(...selected),
+    outliers,
   };
 }
 
 function runTsc(): Metrics {
-  const buildInfo = new URL('tsconfig.tsbuildinfo', `file://${root}/`);
+  fs.rmSync(new URL('tsconfig.tsbuildinfo', root), {
+    force: true,
+  });
+
+  let output: string;
 
   try {
-    fs.rmSync(fileURLToPath(buildInfo));
-  } catch {
-    // Ignore if the file doesn't exist
+    output = execSync('pnpm exec tsc --noEmit --extendedDiagnostics', {
+      cwd: root,
+      encoding: 'utf-8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+  } catch (error) {
+    printErrorLogs(error);
+    throw error;
   }
-
-  const output = execSync('yarn tsc --noEmit --extendedDiagnostics', {
-    cwd: root,
-    encoding: 'utf-8',
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
 
   return parseMetrics(output);
 }
 
-function measure(label: string): Metrics {
-  const results: Metrics[] = [];
+function generateBenchmark(): void {
+  const navigators: string[] = [];
+  const screens: { name: string; level: number; index: number }[] = [];
 
-  for (let i = 0; i < runs; i++) {
-    if (!jsonOutput) {
-      process.stdout.write(`  ${label} run ${i + 1}/${runs}...\n`);
+  const letters = 'abcdefghijklmnopqrstuvwxyz';
+  const paramName = (level: number, index: number) =>
+    `${letters[level % letters.length]}${letters[index % letters.length]}`;
+
+  // Build from the deepest level up so each level can nest the previous one.
+  for (let level = BENCHMARK.depth - 1; level >= 0; level--) {
+    const config = NAVIGATORS[level % NAVIGATORS.length];
+
+    if (config == null) {
+      throw new Error(`Couldn't find a navigator config for level ${level}.`);
     }
-    results.push(runTsc());
+
+    const [navigator, screen] = config;
+    const entries: string[] = [];
+
+    for (let i = 0; i < BENCHMARK.width; i++) {
+      const name = `Screen${level}_${i}`;
+      const param = paramName(level, i);
+
+      entries.push(`    ${name}: ${screen}({
+      screen: () => null,
+      linking: {
+        path: '${name.toLowerCase()}/:${param}',
+        parse: { ${param}: (value) => Number(value) },
+      },
+      options: ({ route }) => ({ title: 'Item ' + route.params.${param} }),
+    }),`);
+      screens.push({ name, level, index: i });
+    }
+
+    if (level < BENCHMARK.depth - 1) {
+      entries.push(`    Nested${level}: Nav${level + 1},`);
+    }
+
+    if (level === 0) {
+      entries.push(`    DynamicStaticParent: DynamicStaticParent,`);
+    }
+
+    navigators.push(
+      `const Nav${level} = ${navigator}({\n  screens: {\n${entries.join('\n')}\n  },\n});`
+    );
   }
 
+  const consumers = screens.map(({ name, level, index }) => {
+    const siblingIndex = (index + 1) % BENCHMARK.width;
+    const sibling = `Screen${level}_${siblingIndex}`;
+    const siblingParam = paramName(level, siblingIndex);
+
+    return `function Use${name}() {
+  const navigation = useNavigation<typeof Nav0, '${name}'>('${name}');
+  navigation.navigate('${sibling}', { ${siblingParam}: 1 });
+  const route = useRoute<RootParamList, '${name}'>('${name}');
+  const value = useNavigationState<number, typeof Nav0, '${name}'>(
+    '${name}',
+    (state) => state.index
+  );
+  return { navigation, route, value };
+}
+void Use${name};`;
+  });
+
+  const dynamicBenchmark = `const DynamicStaticLeaf = createNativeStackNavigator({
+  screens: {
+    DynamicStaticLeafHome: createNativeStackScreen({
+      screen: () => null,
+      linking: { path: 'dynamic-static-leaf' },
+    }),
+    DynamicStaticLeafDetails: createNativeStackScreen({
+      screen: () => null,
+      linking: {
+        path: 'dynamic-static-leaf/:dsl',
+        parse: { dsl: (value) => Number(value) },
+      },
+      options: ({ route }) => ({ title: 'Static leaf ' + route.params.dsl }),
+    }),
+  },
+});
+
+const DynamicStaticParent = createNativeStackNavigator({
+  screens: {
+    DynamicStaticParentHome: createNativeStackScreen({
+      screen: () => null,
+      linking: { path: 'dynamic-static-parent' },
+    }),
+    DynamicStaticParentToLeaf: DynamicStaticLeaf,
+  },
+});
+
+type DynamicParamListLeaf = {
+  DynamicParamListLeafHome: undefined;
+  DynamicParamListLeafDetails: { dpl: number };
+};
+
+type DynamicParamListBranch = {
+  DynamicParamListOwn: { dpo: number };
+  DynamicParamListToParamList: NavigatorScreenParams<DynamicParamListLeaf>;
+  DynamicParamListToStaticNavigator: NavigatorScreenParams<typeof DynamicStaticLeaf>;
+};
+
+type DynamicRootParamList = {
+  DynamicRootHome: undefined;
+  DynamicNavigatorToParamList: NavigatorScreenParams<DynamicParamListBranch>;
+  DynamicNavigatorToStaticNavigator: NavigatorScreenParams<typeof DynamicStaticParent>;
+};
+
+const DynamicRootNavigator = createNativeStackNavigator<
+  DynamicRootParamList,
+  {
+    DynamicNavigatorToStaticNavigator: typeof DynamicStaticParent;
+  }
+>();`;
+
+  const dynamicConsumers = `function UseDynamicParamListToParamList() {
+  const navigation = useNavigation<
+    typeof DynamicRootNavigator,
+    'DynamicParamListLeafDetails'
+  >('DynamicParamListLeafDetails');
+  navigation.navigate('DynamicParamListLeafHome');
+  navigation.navigate('DynamicParamListLeafDetails', { dpl: 1 });
+  navigation.navigate('DynamicParamListOwn', { dpo: 1 });
+  navigation.navigate('DynamicRootHome');
+  const route = useRoute<DynamicRootParamList, 'DynamicParamListLeafDetails'>(
+    'DynamicParamListLeafDetails'
+  );
+  const value = useNavigationState<
+    number,
+    typeof DynamicRootNavigator,
+    'DynamicParamListLeafDetails'
+  >('DynamicParamListLeafDetails', (state) => state.index);
+  return { navigation, route, value };
+}
+void UseDynamicParamListToParamList;
+
+function UseDynamicParamListToNavigator() {
+  const navigation = useNavigation<
+    typeof DynamicRootNavigator,
+    'DynamicStaticLeafDetails'
+  >('DynamicStaticLeafDetails');
+  navigation.push('DynamicStaticLeafHome');
+  navigation.push('DynamicStaticLeafDetails', { dsl: 1 });
+  navigation.navigate('DynamicParamListOwn', { dpo: 1 });
+  navigation.navigate('DynamicRootHome');
+  const route = useRoute<DynamicRootParamList, 'DynamicStaticLeafDetails'>(
+    'DynamicStaticLeafDetails'
+  );
+  const value = useNavigationState<
+    number,
+    typeof DynamicRootNavigator,
+    'DynamicStaticLeafDetails'
+  >('DynamicStaticLeafDetails', (state) => state.index);
+  return { navigation, route, value };
+}
+void UseDynamicParamListToNavigator;
+
+function UseDynamicNavigatorToParamList() {
+  const navigation = useNavigation<
+    typeof DynamicRootNavigator,
+    'DynamicParamListOwn'
+  >('DynamicParamListOwn');
+  navigation.navigate('DynamicParamListOwn', { dpo: 1 });
+  navigation.navigate('DynamicRootHome');
+  const route = useRoute<DynamicRootParamList, 'DynamicParamListOwn'>(
+    'DynamicParamListOwn'
+  );
+  const value = useNavigationState<
+    number,
+    typeof DynamicRootNavigator,
+    'DynamicParamListOwn'
+  >('DynamicParamListOwn', (state) => state.index);
+  return { navigation, route, value };
+}
+void UseDynamicNavigatorToParamList;
+
+function UseStaticParentToStaticChild() {
+  const navigation = useNavigation<typeof Nav0, 'DynamicStaticParentHome'>(
+    'DynamicStaticParentHome'
+  );
+  navigation.navigate('DynamicStaticParentToLeaf', {
+    screen: 'DynamicStaticLeafHome',
+  });
+  const route = useRoute<RootParamList, 'DynamicStaticParentHome'>(
+    'DynamicStaticParentHome'
+  );
+  const value = useNavigationState<number, typeof Nav0, 'DynamicStaticParentHome'>(
+    'DynamicStaticParentHome',
+    (state) => state.index
+  );
+  return { navigation, route, value };
+}
+void UseStaticParentToStaticChild;`;
+
+  const imports = NAVIGATORS.map(
+    ([navigator, screen, pkg]) =>
+      `import { ${navigator}, ${screen} } from '@react-navigation/${pkg}';`
+  ).join('\n');
+
+  fs.writeFileSync(
+    benchmarkFile,
+    `/* eslint-disable */
+// Generated by scripts/measure-typescript.ts -- do not edit or commit.
+import {
+  createStaticNavigation,
+  type NavigatorScreenParams,
+  useNavigation,
+  useNavigationState,
+  useRoute,
+  type StaticParamList,
+} from '@react-navigation/native';
+${imports}
+
+${dynamicBenchmark}
+
+${navigators.join('\n\n')}
+
+createStaticNavigation(Nav0);
+
+type RootParamList = StaticParamList<typeof Nav0>;
+
+${consumers.join('\n\n')}
+
+${dynamicConsumers}
+`
+  );
+}
+
+function removeBenchmark(): void {
+  fs.rmSync(benchmarkFile, { force: true });
+}
+
+type ServerMessage = {
+  type?: string;
+  request_seq?: number;
+};
+
+async function measureServer(): Promise<ServerMetrics> {
+  const tsserver = new URL('node_modules/typescript/lib/tsserver.js', root);
+  const tsserverPath = fileURLToPath(tsserver);
+  const benchmarkFilePath = fileURLToPath(benchmarkFile);
+  const rootPath = fileURLToPath(root);
+
+  if (!fs.existsSync(tsserver)) {
+    throw new Error(`Couldn't find tsserver at ${tsserverPath}.`);
+  }
+
+  const lines = fs.readFileSync(benchmarkFile, 'utf-8').split('\n');
+  const hoverText = lines.find((line) =>
+    line.includes('const route = useRoute')
+  );
+  const editIndex = lines.findIndex((line) => line.startsWith('const Nav0 '));
+
+  if (hoverText == null || editIndex === -1) {
+    throw new Error(
+      "Couldn't find the tsserver anchors in the generated benchmark. " +
+        'The benchmark generator and measureServer have drifted apart.'
+    );
+  }
+
+  const hoverLine = lines.indexOf(hoverText) + 1;
+  const hoverOffset = hoverText.indexOf('route') + 1;
+  const editLine = editIndex + 1;
+
+  const server = spawn(
+    'node',
+    [tsserverPath, '--disableAutomaticTypingAcquisition'],
+    { cwd: root }
+  );
+
+  const pending = new Map<number, (message: ServerMessage) => void>();
+  let buffer = Buffer.alloc(0);
+
+  server.stdout.on('data', (chunk: Buffer) => {
+    buffer = Buffer.concat([buffer, chunk]);
+
+    for (;;) {
+      const headerEnd = buffer.indexOf('\r\n\r\n');
+
+      if (headerEnd === -1) {
+        break;
+      }
+
+      const header = buffer.subarray(0, headerEnd).toString();
+      const length = Number(header.match(/Content-Length: (\d+)/)?.[1]);
+
+      if (Number.isNaN(length)) {
+        buffer = buffer.subarray(headerEnd + 4);
+        continue;
+      }
+
+      const start = headerEnd + 4;
+      const end = start + length;
+
+      if (buffer.length < end) {
+        break;
+      }
+
+      const message: ServerMessage = JSON.parse(
+        buffer.subarray(start, end).toString()
+      );
+
+      buffer = buffer.subarray(end);
+
+      if (message.type === 'response' && message.request_seq != null) {
+        const resolve = pending.get(message.request_seq);
+
+        if (resolve) {
+          pending.delete(message.request_seq);
+          resolve(message);
+        }
+      }
+    }
+  });
+
+  let seq = 0;
+
+  const send = (command: string, args: object): number => {
+    seq += 1;
+    server.stdin.write(
+      `${JSON.stringify({ seq, type: 'request', command, arguments: args })}\n`
+    );
+    return seq;
+  };
+
+  const request = (command: string, args: object): Promise<ServerMessage> => {
+    const current = send(command, args);
+
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        pending.delete(current);
+        reject(new Error(`tsserver timed out waiting for '${command}'.`));
+      }, 180000);
+
+      pending.set(current, (message) => {
+        clearTimeout(timer);
+        resolve(message);
+      });
+    });
+  };
+
+  const time = async (command: string, args: object): Promise<number> => {
+    const start = performance.now();
+    await request(command, args);
+    return performance.now() - start;
+  };
+
+  try {
+    send('open', {
+      file: benchmarkFilePath,
+      projectRootPath: rootPath.replace(/\/$/, ''),
+    });
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, 500);
+    });
+
+    const openCheck = await time('semanticDiagnosticsSync', {
+      file: benchmarkFilePath,
+    });
+    const hover = await time('quickinfo', {
+      file: benchmarkFilePath,
+      line: hoverLine,
+      offset: hoverOffset,
+    });
+    const completion = await time('completionInfo', {
+      file: benchmarkFilePath,
+      line: hoverLine,
+      offset: hoverOffset,
+      triggerKind: 1,
+    });
+
+    send('change', {
+      file: benchmarkFilePath,
+      line: editLine,
+      offset: 1,
+      endLine: editLine,
+      endOffset: 1,
+      insertString: ' ',
+    });
+    const recheck = await time('semanticDiagnosticsSync', {
+      file: benchmarkFilePath,
+    });
+
+    return { openCheck, hover, completion, recheck };
+  } finally {
+    server.kill();
+  }
+}
+
+async function measure(): Promise<Measurement> {
+  const results: Metrics[] = [];
+  const serverResults: ServerMetrics[] = [];
+
+  generateBenchmark();
+
+  try {
+    for (let i = 0; i < runs; i++) {
+      log(`  tsc run ${i + 1}/${runs}...`);
+      results.push(runTsc());
+    }
+
+    for (let i = 0; i < runs; i++) {
+      log(`  tsserver run ${i + 1}/${runs}...`);
+      serverResults.push(await measureServer());
+    }
+
+    log('');
+  } finally {
+    removeBenchmark();
+  }
+
+  const types = summarizeValues(results.map((r) => r.types));
+  const instantiations = summarizeValues(results.map((r) => r.instantiations));
+  const memory = summarizeValues(results.map((r) => r.memory));
+  const checkTime = summarizeValues(results.map((r) => r.checkTime));
+  const totalTime = summarizeValues(results.map((r) => r.totalTime));
+
+  const serverValue = (select: (metrics: ServerMetrics) => number) =>
+    summarizeValues(serverResults.map(select)).value;
+
   return {
-    types: results[0].types,
-    instantiations: results[0].instantiations,
-    memoryKB: Math.min(...results.map((r) => r.memoryKB)),
-    checkTimeSec: Math.min(...results.map((r) => r.checkTimeSec)),
-    totalTimeSec: Math.min(...results.map((r) => r.totalTimeSec)),
+    metrics: {
+      types: types.value,
+      instantiations: instantiations.value,
+      memory: memory.value,
+      checkTime: checkTime.value,
+      totalTime: totalTime.value,
+    },
+    outliers: {
+      types: types.outliers,
+      instantiations: instantiations.outliers,
+      memory: memory.outliers,
+      checkTime: checkTime.outliers,
+      totalTime: totalTime.outliers,
+    },
+    server: {
+      openCheck: serverValue((m) => m.openCheck),
+      hover: serverValue((m) => m.hover),
+      completion: serverValue((m) => m.completion),
+      recheck: serverValue((m) => m.recheck),
+    },
   };
 }
 
-function format(value: number): string {
-  return value.toLocaleString('en-US', { maximumFractionDigits: 2 });
+function num(value: number, fraction = 0): string {
+  return value.toLocaleString('en-US', {
+    minimumFractionDigits: fraction,
+    maximumFractionDigits: fraction,
+  });
 }
 
 function delta(current: number, base: number): string {
@@ -175,7 +706,22 @@ function delta(current: number, base: number): string {
   return `${sign}${change.toFixed(1)}%`;
 }
 
-function toReport(base: Metrics, current: Metrics) {
+function isNoticeable(base: Metrics, current: Metrics): boolean {
+  const change = (baseValue: number, currentValue: number) =>
+    baseValue === 0
+      ? 0
+      : Math.abs(((currentValue - baseValue) / baseValue) * 100);
+
+  return (
+    change(base.types, current.types) >= NOTICEABLE_THRESHOLDS.types ||
+    change(base.instantiations, current.instantiations) >=
+      NOTICEABLE_THRESHOLDS.instantiations ||
+    change(base.memory, current.memory) >= NOTICEABLE_THRESHOLDS.memory ||
+    change(base.checkTime, current.checkTime) >= NOTICEABLE_THRESHOLDS.checkTime
+  );
+}
+
+function toReport(base: Measurement, current: Measurement) {
   const metric = (baseValue: number, currentValue: number) => ({
     base: baseValue,
     current: currentValue,
@@ -183,19 +729,26 @@ function toReport(base: Metrics, current: Metrics) {
       baseValue === 0 ? null : ((currentValue - baseValue) / baseValue) * 100,
   });
 
+  const baseMetrics = base.metrics;
+  const currentMetrics = current.metrics;
+
   const metrics = {
-    types: metric(base.types, current.types),
-    instantiations: metric(base.instantiations, current.instantiations),
-    memoryKB: metric(base.memoryKB, current.memoryKB),
-    checkTimeSec: metric(base.checkTimeSec, current.checkTimeSec),
-    totalTimeSec: metric(base.totalTimeSec, current.totalTimeSec),
+    types: metric(baseMetrics.types, currentMetrics.types),
+    instantiations: metric(
+      baseMetrics.instantiations,
+      currentMetrics.instantiations
+    ),
+    memory: metric(baseMetrics.memory, currentMetrics.memory),
+    checkTime: metric(baseMetrics.checkTime, currentMetrics.checkTime),
+    totalTime: metric(baseMetrics.totalTime, currentMetrics.totalTime),
   };
 
-  const noticeable = Object.entries(NOTICEABLE_THRESHOLDS).some(
-    ([key, threshold]) =>
-      Math.abs(metrics[key as keyof typeof NOTICEABLE_THRESHOLDS].delta ?? 0) >=
-      threshold
-  );
+  const server = {
+    openCheck: metric(base.server.openCheck, current.server.openCheck),
+    hover: metric(base.server.hover, current.server.hover),
+    completion: metric(base.server.completion, current.server.completion),
+    recheck: metric(base.server.recheck, current.server.recheck),
+  };
 
   return {
     baseline: { ref: baseline, sha: baselineSha },
@@ -205,78 +758,167 @@ function toReport(base: Metrics, current: Metrics) {
       hasUncommittedChanges: hasChanges,
     },
     runs,
-    noticeable,
+    noticeable: isNoticeable(baseMetrics, currentMetrics),
     metrics,
+    server,
+    outliers: {
+      baseline: base.outliers,
+      current: current.outliers,
+    },
   };
 }
 
-function printJson(base: Metrics, current: Metrics): void {
-  process.stdout.write(`${JSON.stringify(toReport(base, current), null, 2)}\n`);
-}
+function printSummary(base: Measurement, current: Measurement): void {
+  const baseMetrics = base.metrics;
+  const currentMetrics = current.metrics;
 
-function printSummary(base: Metrics, current: Metrics): void {
   const rows: string[][] = [
     ['Metric', 'Baseline', 'Current', 'Δ'],
     [
       'Types',
-      format(base.types),
-      format(current.types),
-      delta(current.types, base.types),
+      num(baseMetrics.types),
+      num(currentMetrics.types),
+      delta(currentMetrics.types, baseMetrics.types),
     ],
     [
       'Instantiations',
-      format(base.instantiations),
-      format(current.instantiations),
-      delta(current.instantiations, base.instantiations),
+      num(baseMetrics.instantiations),
+      num(currentMetrics.instantiations),
+      delta(currentMetrics.instantiations, baseMetrics.instantiations),
     ],
     [
-      'Memory (MB)',
-      format(Math.round(base.memoryKB / 1024)),
-      format(Math.round(current.memoryKB / 1024)),
-      delta(current.memoryKB, base.memoryKB),
+      'Memory',
+      `${num(Math.round(baseMetrics.memory / 1024))} MB`,
+      `${num(Math.round(currentMetrics.memory / 1024))} MB`,
+      delta(currentMetrics.memory, baseMetrics.memory),
     ],
     [
-      'Check time (s)',
-      base.checkTimeSec.toFixed(2),
-      current.checkTimeSec.toFixed(2),
-      delta(current.checkTimeSec, base.checkTimeSec),
+      'Check time',
+      `${num(baseMetrics.checkTime / 1000, 2)} s`,
+      `${num(currentMetrics.checkTime / 1000, 2)} s`,
+      delta(currentMetrics.checkTime, baseMetrics.checkTime),
     ],
     [
-      'Total time (s)',
-      base.totalTimeSec.toFixed(2),
-      current.totalTimeSec.toFixed(2),
-      delta(current.totalTimeSec, base.totalTimeSec),
+      'Total time',
+      `${num(baseMetrics.totalTime / 1000, 2)} s`,
+      `${num(currentMetrics.totalTime / 1000, 2)} s`,
+      delta(currentMetrics.totalTime, baseMetrics.totalTime),
     ],
   ];
 
-  const widths = rows[0].map((_, column) =>
-    Math.max(...rows.map((row) => row[column].length))
+  const meta =
+    `Baseline: ${baseline} (${baselineSha.slice(0, 10)})\n` +
+    `Current:  ${currentBranch === 'HEAD' ? currentSha.slice(0, 10) : currentBranch} (${currentSha.slice(0, 10)})${hasChanges ? ' + uncommitted changes' : ''}\n` +
+    `Runs:     ${runs}`;
+
+  process.stdout.write(`\n${REPORT_DELIMITER}\n\n`);
+  process.stdout.write('## TypeScript performance impact\n\n');
+  process.stdout.write(`${meta}\n\n`);
+  process.stdout.write('### tsc type-check\n\n');
+  printTable(rows);
+  printServerSummary(base.server, current.server);
+  process.stdout.write(`\n${REPORT_DELIMITER}\n`);
+
+  printOutliers('Baseline', base.outliers);
+  printOutliers('Current', current.outliers);
+
+  const verdict = isNoticeable(baseMetrics, currentMetrics)
+    ? 'Detected a noticeable performance change.'
+    : 'No noticeable performance change to report.';
+
+  process.stdout.write(`\n${verdict}\n`);
+}
+
+function printTable(rows: string[][]): void {
+  const header = rows[0];
+
+  if (header == null) {
+    throw new Error("Couldn't find table header row.");
+  }
+
+  const widths = header.map((_, column) =>
+    Math.max(3, ...rows.map((row) => row[column]?.length ?? 0))
   );
 
-  const separator = `+${widths.map((w) => '-'.repeat(w + 2)).join('+')}+`;
+  const line = (cells: string[]) =>
+    `| ${cells
+      .map((cell, column) =>
+        column === 0
+          ? cell.padEnd(widths[column] ?? 0)
+          : cell.padStart(widths[column] ?? 0)
+      )
+      .join(' | ')} |`;
 
-  process.stdout.write(`\n${separator}\n`);
+  const alignment = widths.map((width, column) =>
+    column === 0 ? '-'.repeat(width) : `${'-'.repeat(width - 1)}:`
+  );
 
-  rows.forEach((row, index) => {
-    const line = row
-      .map((cell, column) => {
-        const padded =
-          column === 0 || index === 0
-            ? cell.padEnd(widths[column])
-            : cell.padStart(widths[column]);
+  process.stdout.write(`${line(header)}\n| ${alignment.join(' | ')} |\n`);
 
-        return ` ${padded} `;
-      })
-      .join('|');
-
-    process.stdout.write(`|${line}|\n`);
-
-    if (index === 0) {
-      process.stdout.write(`${separator}\n`);
-    }
+  rows.slice(1).forEach((row) => {
+    process.stdout.write(`${line(row)}\n`);
   });
+}
 
-  process.stdout.write(`${separator}\n`);
+function printServerSummary(base: ServerMetrics, current: ServerMetrics): void {
+  const row = (
+    name: string,
+    baseValue: number,
+    currentValue: number,
+    unit: 'ms' | 's'
+  ) => {
+    const scale = unit === 's' ? 1000 : 1;
+    const fraction = unit === 's' ? 2 : 1;
+
+    return [
+      name,
+      `${num(baseValue / scale, fraction)} ${unit}`,
+      `${num(currentValue / scale, fraction)} ${unit}`,
+      baseValue < 1 ? '—' : delta(currentValue, baseValue),
+    ];
+  };
+
+  process.stdout.write('\n### tsserver latency\n\n');
+
+  printTable([
+    ['Operation', 'Baseline', 'Current', 'Δ'],
+    row('Open + first check', base.openCheck, current.openCheck, 's'),
+    row('Hover', base.hover, current.hover, 'ms'),
+    row('Completion', base.completion, current.completion, 'ms'),
+    row('Re-check after edit', base.recheck, current.recheck, 's'),
+  ]);
+}
+
+function printOutliers(label: string, outliers: MetricOutliers): void {
+  const rows = [
+    { name: 'Types', values: outliers.types.map((v) => num(v)) },
+    {
+      name: 'Instantiations',
+      values: outliers.instantiations.map((v) => num(v)),
+    },
+    {
+      name: 'Memory',
+      values: outliers.memory.map((v) => `${num(Math.round(v / 1024))} MB`),
+    },
+    {
+      name: 'Check time',
+      values: outliers.checkTime.map((v) => `${num(v / 1000, 2)} s`),
+    },
+    {
+      name: 'Total time',
+      values: outliers.totalTime.map((v) => `${num(v / 1000, 2)} s`),
+    },
+  ].filter((row) => row.values.length > 0);
+
+  if (rows.length === 0) {
+    return;
+  }
+
+  process.stdout.write(`\nRemoved ${label.toLowerCase()} outliers:\n`);
+
+  rows.forEach(({ name, values }) => {
+    process.stdout.write(`  ${name}: ${values.join(', ')}\n`);
+  });
 }
 
 if (git(['rev-parse', '--is-inside-work-tree']) !== 'true') {
@@ -298,34 +940,24 @@ if (baselineSha === currentSha && !hasChanges) {
   process.exit(1);
 }
 
-if (!jsonOutput) {
-  process.stdout.write(
-    `Monorepo: ${root}\n` +
-      `Baseline: ${baseline} (${baselineSha.slice(0, 10)})\n` +
-      `Current:  ${currentBranch === 'HEAD' ? currentSha.slice(0, 10) : currentBranch} (${currentSha.slice(0, 10)})${hasChanges ? ' + uncommitted changes' : ''}\n` +
-      `Runs per side: ${runs}\n\n`
-  );
-
-  process.stdout.write('Measuring CURRENT (working tree)...\n');
-}
-
-const current = measure('current');
+log('Measuring CURRENT (working tree)...');
 
 const stashLabel = `measure-typescript ${new Date().toISOString()}`;
 
 let stashed = false;
 
 function restore(): void {
+  log('Restoring your working tree...');
+
   try {
     const ref = currentBranch === 'HEAD' ? currentSha : currentBranch;
 
     git(['checkout', '--quiet', ref]);
-  } catch (error) {
+  } catch {
     process.stderr.write(
       `\nFailed to restore original checkout (${currentBranch}). ` +
         `Recover manually with:\n  git checkout ${currentBranch}\n` +
-        (stashed ? `  git stash pop\n` : '') +
-        `Underlying error: ${(error as Error).message}\n`
+        (stashed ? `  git stash pop\n` : '')
     );
 
     return;
@@ -336,57 +968,70 @@ function restore(): void {
       git(['stash', 'pop', '--quiet']);
 
       stashed = false;
-    } catch (error) {
+    } catch {
       process.stderr.write(
-        `\nFailed to restore stashed changes. Recover with:\n  git stash pop\n` +
-          `Underlying error: ${(error as Error).message}\n`
+        `\nFailed to restore stashed changes. Recover with:\n  git stash pop\n`
       );
     }
   }
 
-  yarnInstall();
+  pnpmInstall();
 }
 
 process.on('SIGINT', () => {
   process.stderr.write('\nInterrupted — restoring original state...\n');
 
+  removeBenchmark();
   restore();
 
   process.exit(130);
 });
 
-if (hasChanges) {
-  git([
-    'stash',
-    'push',
-    '--quiet',
-    '--include-untracked',
-    '--message',
-    stashLabel,
-  ]);
+async function run(): Promise<void> {
+  const current = await measure();
 
-  stashed = true;
-}
+  if (hasChanges) {
+    log('Stashing your uncommitted changes...');
 
-try {
-  git(['checkout', '--quiet', baselineSha]);
+    git([
+      'stash',
+      'push',
+      '--quiet',
+      '--include-untracked',
+      '--message',
+      stashLabel,
+    ]);
 
-  yarnInstall();
-
-  if (!jsonOutput) {
-    process.stdout.write(`\nMeasuring BASELINE (${baseline})...\n`);
+    stashed = true;
   }
 
-  const base = measure('baseline');
+  try {
+    log(`Checking out baseline (${baseline})...`);
 
-  restore();
+    git(['checkout', '--quiet', baselineSha]);
 
-  if (jsonOutput) {
-    printJson(base, current);
-  } else {
-    printSummary(base, current);
+    pnpmInstall();
+
+    log(`\nMeasuring BASELINE (${baseline})...`);
+
+    const base = await measure();
+
+    restore();
+
+    if (jsonOutput) {
+      process.stdout.write(
+        `${JSON.stringify(toReport(base, current), null, 2)}\n`
+      );
+    } else {
+      printSummary(base, current);
+    }
+  } catch (error) {
+    restore();
+    throw error;
   }
-} catch (error) {
-  restore();
-  throw error;
 }
+
+run().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

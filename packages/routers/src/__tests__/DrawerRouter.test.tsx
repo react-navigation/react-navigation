@@ -909,6 +909,149 @@ test('closes drawer on focus change with backBehavior: fullHistory', () => {
   });
 });
 
+test('opens drawer with defaultStatus open by removing drawer history entry', () => {
+  const router = DrawerRouter({ defaultStatus: 'open' });
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: DrawerNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'drawer',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar'],
+    preloadedRouteKeys: [],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
+    history: [
+      { type: 'route', key: 'bar' },
+      { type: 'drawer', status: 'closed' },
+    ],
+    default: 'open',
+  };
+
+  expect(
+    router.getStateForAction(state, DrawerActions.openDrawer(), options)
+  ).toEqual({
+    ...state,
+    history: [{ type: 'route', key: 'bar' }],
+  });
+});
+
+test('closes drawer with defaultStatus open by adding drawer history entry', () => {
+  const router = DrawerRouter({ defaultStatus: 'open' });
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: DrawerNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'drawer',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar'],
+    preloadedRouteKeys: [],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
+    history: [{ type: 'route', key: 'bar' }],
+    default: 'open',
+  };
+
+  expect(
+    router.getStateForAction(state, DrawerActions.closeDrawer(), options)
+  ).toEqual({
+    ...state,
+    history: [
+      { type: 'route', key: 'bar' },
+      { type: 'drawer', status: 'closed' },
+    ],
+  });
+});
+
+test('toggles drawer with defaultStatus open', () => {
+  const router = DrawerRouter({ defaultStatus: 'open' });
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const open: DrawerNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'drawer',
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar'],
+    preloadedRouteKeys: [],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
+    history: [{ type: 'route', key: 'bar' }],
+    default: 'open',
+  };
+
+  const closed: DrawerNavigationState<ParamListBase> = {
+    ...open,
+    history: [
+      { type: 'route', key: 'bar' },
+      { type: 'drawer', status: 'closed' },
+    ],
+  };
+
+  expect(
+    router.getStateForAction(open, DrawerActions.toggleDrawer(), options)
+  ).toEqual(closed);
+
+  expect(
+    router.getStateForAction(closed, DrawerActions.toggleDrawer(), options)
+  ).toEqual(open);
+});
+
+test('go back removes route history entry when the drawer is closed', () => {
+  const router = DrawerRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: DrawerNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'drawer',
+    key: 'root',
+    index: 1,
+    routeNames: ['bar', 'baz'],
+    preloadedRouteKeys: [],
+    routes: [
+      { key: 'bar-0', name: 'bar' },
+      { key: 'baz-0', name: 'baz' },
+    ],
+    history: [
+      { type: 'route', key: 'bar-0' },
+      { type: 'route', key: 'baz-0' },
+    ],
+    default: 'closed',
+  };
+
+  expect(
+    router.getStateForAction(state, CommonActions.goBack(), options)
+  ).toEqual({
+    ...state,
+    history: [{ type: 'route', key: 'bar-0' }],
+    index: 0,
+  });
+});
+
 test('go back closes drawer if it is open', () => {
   const router = DrawerRouter({});
   const options: RouterConfigOptions = {
@@ -937,7 +1080,7 @@ test('go back closes drawer if it is open', () => {
           { type: 'drawer', status: 'open' },
           { type: 'route', key: 'baz-0' },
         ],
-        default: 'open',
+        default: 'closed',
         stale: false,
         type: 'drawer',
       },
@@ -959,7 +1102,7 @@ test('go back closes drawer if it is open', () => {
       { key: 'qux-0', name: 'qux' },
     ],
     history: [{ type: 'route', key: 'baz-0' }],
-    default: 'open',
+    default: 'closed',
     stale: false,
     type: 'drawer',
   });

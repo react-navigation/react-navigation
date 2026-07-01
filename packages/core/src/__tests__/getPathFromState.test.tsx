@@ -134,6 +134,37 @@ test('converts stack state with preloaded routes to path from focused route', ()
   expect(getPathFromState<object>(state, config)).toBe('/bar/42');
 });
 
+test('ignores nested params in inactive routes', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Bar: 'bar',
+        },
+      },
+      Baz: 'baz',
+    },
+  };
+
+  const state = {
+    type: 'tab',
+    key: 'tab-test',
+    index: 1,
+    routeNames: ['Foo', 'Baz'],
+    routes: [
+      {
+        key: 'Foo-test',
+        name: 'Foo',
+        params: { screen: 'Bar' },
+      },
+      { key: 'Baz-test', name: 'Baz' },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/baz');
+});
+
 test('prepends trailing slash to path', () => {
   expect(
     getPathFromState<object>({
@@ -2151,4 +2182,22 @@ test('prioritizes route.state over params.state', () => {
   };
 
   expect(getPathFromState<object>(state, config)).toBe('/foo/baz');
+});
+
+test('throws when a screen sets exact without a path', () => {
+  const state = {
+    routes: [{ name: 'Foo' }],
+  };
+
+  const config = {
+    screens: {
+      Foo: {
+        exact: true,
+      },
+    },
+  };
+
+  expect(() => getPathFromState<object>(state, config)).toThrow(
+    "A 'path' needs to be specified when specifying 'exact: true'."
+  );
 });

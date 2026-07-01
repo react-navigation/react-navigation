@@ -1,4 +1,4 @@
-import { expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
   createNavigatorFactory,
@@ -8,6 +8,7 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, render, waitFor } from '@testing-library/react-native';
+import { Text } from 'react-native';
 
 import { window } from '../__stubs__/window';
 import { createStaticNavigation } from '../createStaticNavigation';
@@ -17,6 +18,15 @@ Object.assign(global, window);
 // We want to use the web version of useLinking
 // eslint-disable-next-line import-x/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
+
+beforeEach(() => {
+  jest.useFakeTimers();
+});
+
+afterEach(() => {
+  jest.runOnlyPendingTimers();
+  jest.useRealTimers();
+});
 
 test('integrates with the history API', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
@@ -29,7 +39,7 @@ test('integrates with the history API', async () => {
       <NavigationContent>
         {state.routes.map((route, i) => (
           <div key={route.key} aria-current={state.index === i || undefined}>
-            {descriptors[route.key].render()}
+            {descriptors[route.key]?.render()}
           </div>
         ))}
       </NavigationContent>
@@ -46,15 +56,18 @@ test('integrates with the history API', async () => {
       <NavigationContent>
         {state.routes.map((route, i) => (
           <div key={route.key} aria-current={state.index === i || undefined}>
-            {descriptors[route.key].render()}
+            {descriptors[route.key]?.render()}
           </div>
         ))}
       </NavigationContent>
     );
   });
 
-  const TestScreen = ({ route }: any): any =>
-    `${route.name} ${JSON.stringify(route.params)}`;
+  const TestScreen = ({ route }: any): any => (
+    <Text>
+      {route.name} {JSON.stringify(route.params)}
+    </Text>
+  );
 
   const Stack = createStackNavigator({
     initialRouteName: 'Feed',
@@ -92,7 +105,7 @@ test('integrates with the history API', async () => {
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  render(
+  await render(
     <Navigation
       ref={navigation}
       linking={{
@@ -103,51 +116,51 @@ test('integrates with the history API', async () => {
 
   expect(window.location.pathname).toBe('/feed');
 
-  act(() => navigation.current?.navigate('Profile', { user: 'jane' }));
+  await act(() => navigation.current?.navigate('Profile', { user: 'jane' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => navigation.current?.navigate('Updates'));
+  await act(() => navigation.current?.navigate('Updates'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/updates'));
 
-  act(() => navigation.current?.goBack());
+  await act(() => navigation.current?.goBack());
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => {
+  await act(() => {
     window.history.back();
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
-  act(() => {
+  await act(() => {
     window.history.forward();
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  act(() => navigation.current?.navigate('Settings'));
+  await act(() => navigation.current?.navigate('Settings'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/edit'));
 
-  act(() => {
+  await act(() => {
     window.history.go(-2);
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
-  act(() => navigation.current?.navigate('Settings'));
-  act(() => navigation.current?.navigate('Chat'));
+  await act(() => navigation.current?.navigate('Settings'));
+  await act(() => navigation.current?.navigate('Chat'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/chat'));
 
-  act(() => navigation.current?.navigate('Home'));
+  await act(() => navigation.current?.navigate('Home'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/edit'));
 });
 
-test("throws if linking is enabled but there's no linking configuration", () => {
+test("throws if linking is enabled but there's no linking configuration", async () => {
   const createTestNavigator = createNavigatorFactory(() => null);
 
   const TestScreen = () => null;
@@ -181,17 +194,17 @@ test("throws if linking is enabled but there's no linking configuration", () => 
 
   const Navigation = createStaticNavigation(Tab);
 
-  expect(() => {
-    render(<Navigation linking={{ enabled: true }} />);
-  }).toThrow(
+  await expect(
+    render(<Navigation linking={{ enabled: true }} />)
+  ).rejects.toThrow(
     'Linking is enabled but no linking configuration was found for the screens.'
   );
 
-  expect(() => {
-    render(<Navigation linking={{ enabled: false }} />);
-  }).not.toThrow();
+  await expect(
+    render(<Navigation linking={{ enabled: false }} />)
+  ).resolves.toBeDefined();
 
-  expect(() => {
-    render(<Navigation linking={{ enabled: 'auto' }} />);
-  }).not.toThrow();
+  await expect(
+    render(<Navigation linking={{ enabled: 'auto' }} />)
+  ).resolves.toBeDefined();
 });

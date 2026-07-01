@@ -111,9 +111,11 @@ export function LibrariesDrawerLayout(_: StaticScreenProps<Params>) {
                 },
                 (index) => {
                   if (index != null) {
-                    navigation.setParams({
-                      type: DRAWER_TYPES[index],
-                    });
+                    const type = DRAWER_TYPES[index];
+
+                    if (type != null) {
+                      navigation.setParams({ type });
+                    }
                   }
                 }
               )

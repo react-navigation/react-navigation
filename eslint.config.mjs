@@ -13,7 +13,7 @@ export default defineConfig([
     '**/dist/',
     '**/lib/',
     '**/.expo/',
-    '**/.yarn/',
+    '**/.pnpm-store/',
     '**/.vscode/',
   ]),
 
@@ -68,6 +68,28 @@ export default defineConfig([
         {
           additionalHooks:
             '(useIsomorphicLayoutEffect|useAnimatedStyle|useAnimatedProps)',
+        },
+      ],
+    },
+  },
+  {
+    files: ['**/__tests__/**/*.{js,jsx,ts,tsx}', '**/*.test.{js,jsx,ts,tsx}'],
+
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            '@react-navigation/*/*',
+            '!@react-navigation/native/server',
+          ],
+
+          paths: [
+            {
+              name: '@react-navigation/core',
+              message: 'Import from `@react-navigation/native` instead.',
+            },
+          ],
         },
       ],
     },

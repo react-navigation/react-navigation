@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/routers",
   "description": "Routers to help build custom navigators",
-  "version": "8.0.0-alpha.10",
+  "version": "8.0.0-alpha.13",
   "keywords": [
     "react",
     "react-native",
@@ -21,7 +21,7 @@
   "types": "./lib/typescript/src/index.d.ts",
   "exports": {
     ".": {
-      "source": "./src/index.tsx",
+      "@react-navigation/source": "./src/index.tsx",
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
@@ -46,7 +46,7 @@
   "devDependencies": {
     "@jest/globals": "^29.7.0",
     "del-cli": "^7.0.0",
-    "react-native-builder-bob": "^0.41.0",
+    "react-native-builder-bob": "^0.43.0",
     "typescript": "^6.0.3"
   },
   "react-native-builder-bob": {

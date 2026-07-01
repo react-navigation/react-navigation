@@ -52,8 +52,8 @@ export function getPatternParts(path: string): PatternPart[] {
         if (regexInnerParens) {
           // The ')' is part of the regex if we're already inside one
           regexInnerParens--;
-          current.regex += char;
         } else {
+          current.regex += char;
           isRegex = false;
           isParam = false;
         }
@@ -62,7 +62,7 @@ export function getPatternParts(path: string): PatternPart[] {
           `Encountered ')' without preceding '(' in path: ${path}`
         );
       }
-    } else if (char === '?') {
+    } else if (char === '?' && !isRegex) {
       if (current.param) {
         isParam = false;
 
@@ -123,4 +123,12 @@ export function getPatternParts(path: string): PatternPart[] {
   }
 
   return parts;
+}
+
+export function combinePatternParts<T extends PatternPart>(
+  parentParts: T[],
+  parts: T[],
+  exact = false
+): T[] {
+  return exact ? parts : [...parentParts, ...parts];
 }

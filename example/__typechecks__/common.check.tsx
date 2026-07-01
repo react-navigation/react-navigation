@@ -14,6 +14,8 @@ import { Button } from '@react-navigation/elements';
 import {
   type CompositeNavigationProp,
   type CompositeScreenProps,
+  createNavigatorFactory,
+  type DefaultNavigatorOptions,
   type DrawerNavigationState,
   type GenericNavigation,
   Link,
@@ -26,11 +28,13 @@ import {
   type NavigationRoute,
   type NavigationState,
   type NavigatorScreenParams,
+  type NavigatorTypeBagBase,
   type ParamListBase,
   type RootParamList,
   type Route,
   type RouteForName,
   type RouteProp,
+  type StackActionHelpers,
   type StackNavigationState,
   type Theme,
   useLinkProps,
@@ -101,11 +105,11 @@ type FeedTabScreenProps<T extends keyof FeedTabParamList> =
 const Stack = createStackNavigator<RootStackParamList>();
 
 expectTypeOf(Stack.Navigator).parameter(0).toMatchObjectType<{
-  initialRouteName?: keyof RootStackParamList;
+  initialRouteName?: keyof RootStackParamList | undefined;
 }>();
 
 expectTypeOf(Stack.Screen).parameter(0).toExtend<{
-  name?: keyof RootStackParamList;
+  name?: keyof RootStackParamList | undefined;
 }>();
 
 export const PostDetailsScreen = ({
@@ -1157,6 +1161,9 @@ useNavigation('Invalid');
   expectTypeOf(routeNames).toEqualTypeOf<(keyof BottomTabParamList)[]>();
 }
 
+// @ts-expect-error
+useNavigationState('Invalid', (state) => state.index);
+
 /**
  * Check for `linking` prop type validation based on ParamList
  */
@@ -1377,4 +1384,39 @@ useNavigation('Invalid');
   };
 
   <NavigationContainer linking={linking}>{null}</NavigationContainer>;
+}
+
+/**
+ * Check for required props on the navigator
+ */
+{
+  const MyNavigator = (
+    _props: {
+      variant: 'compact' | 'regular';
+    } & DefaultNavigatorOptions<
+      ParamListBase,
+      StackNavigationState<ParamListBase>,
+      {},
+      {},
+      unknown
+    >
+  ) => null;
+
+  interface MyTypeBag extends NavigatorTypeBagBase {
+    State: StackNavigationState<this['ParamList']>;
+    ActionHelpers: StackActionHelpers<this['ParamList']>;
+    Navigator: typeof MyNavigator;
+  }
+
+  const createMyNavigator = createNavigatorFactory<MyTypeBag>(MyNavigator);
+
+  const MyStack = createMyNavigator<{ Home: undefined }>();
+
+  void MyStack;
+
+  expectTypeOf<
+    Pick<React.ComponentProps<typeof MyStack.Navigator>, 'variant'>
+  >().toEqualTypeOf<{
+    variant: 'compact' | 'regular';
+  }>();
 }

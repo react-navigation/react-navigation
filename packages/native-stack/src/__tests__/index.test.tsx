@@ -1,12 +1,20 @@
-import { afterEach, describe, expect, jest, test } from '@jest/globals';
-import { Text, useHeaderHeight } from '@react-navigation/elements';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from '@jest/globals';
+import { useHeaderHeight } from '@react-navigation/elements';
 import { NavigationContainer } from '@react-navigation/native';
 import {
-  fireEvent,
   isHiddenFromAccessibility,
   render,
+  screen,
+  userEvent,
 } from '@testing-library/react-native';
-import { Button, Platform, View } from 'react-native';
+import { Button, Platform, Text, View } from 'react-native';
 
 import {
   createNativeStackNavigator,
@@ -22,7 +30,13 @@ type NestedStackParamList = {
   C: undefined;
 };
 
+beforeEach(() => {
+  jest.useFakeTimers();
+});
+
 afterEach(() => {
+  jest.runOnlyPendingTimers();
+  jest.useRealTimers();
   jest.restoreAllMocks();
 });
 
@@ -39,8 +53,9 @@ test('renders a native-stack navigator with screens', async () => {
   );
 
   const Stack = createNativeStackNavigator<StackParamList>();
+  const user = userEvent.setup();
 
-  const { getByText, queryByText } = render(
+  await render(
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="A" component={Test} />
@@ -49,13 +64,17 @@ test('renders a native-stack navigator with screens', async () => {
     </NavigationContainer>
   );
 
-  expect(isHiddenFromAccessibility(getByText('Screen A'))).toBe(false);
-  expect(queryByText('Screen B')).toBeNull();
+  expect(isHiddenFromAccessibility(screen.getByText('Screen A'))).toBe(false);
+  expect(screen.queryByText('Screen B')).toBeNull();
 
-  fireEvent.press(getByText(/go to b/i));
+  await user.press(screen.getByRole('button', { name: /go to b/i }));
 
-  expect(isHiddenFromAccessibility(queryByText('Screen A'))).toBe(true);
-  expect(isHiddenFromAccessibility(getByText('Screen B'))).toBe(false);
+  expect(
+    isHiddenFromAccessibility(
+      screen.getByText('Screen A', { includeHiddenElements: true })
+    )
+  ).toBe(true);
+  expect(isHiddenFromAccessibility(screen.getByText('Screen B'))).toBe(false);
 });
 
 describe('useHeaderHeight in native-stack', () => {
@@ -63,6 +82,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -72,7 +92,9 @@ describe('useHeaderHeight in native-stack', () => {
 
     const Stack = createNativeStackNavigator<StackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="A" component={Test} />
@@ -82,7 +104,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -90,6 +114,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -99,7 +124,9 @@ describe('useHeaderHeight in native-stack', () => {
 
     const Stack = createNativeStackNavigator<StackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="A" component={Test} />
@@ -109,7 +136,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(44);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(44);
   });
 
@@ -117,6 +146,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -126,7 +156,9 @@ describe('useHeaderHeight in native-stack', () => {
 
     const Stack = createNativeStackNavigator<StackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="A" component={Test} />
@@ -136,7 +168,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -144,6 +178,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -153,7 +188,9 @@ describe('useHeaderHeight in native-stack', () => {
 
     const Stack = createNativeStackNavigator<StackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="A" component={Test} />
@@ -169,7 +206,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(44);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(56);
   });
 
@@ -177,6 +216,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -186,7 +226,9 @@ describe('useHeaderHeight in native-stack', () => {
 
     const Stack = createNativeStackNavigator<StackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
@@ -209,7 +251,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(44);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(56);
   });
 
@@ -217,6 +261,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -226,7 +271,9 @@ describe('useHeaderHeight in native-stack', () => {
 
     const Stack = createNativeStackNavigator<StackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
@@ -249,7 +296,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -257,6 +306,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -266,7 +316,9 @@ describe('useHeaderHeight in native-stack', () => {
 
     const Stack = createNativeStackNavigator<StackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
@@ -280,7 +332,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(0);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(44);
   });
 
@@ -288,6 +342,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -297,7 +352,9 @@ describe('useHeaderHeight in native-stack', () => {
 
     const Stack = createNativeStackNavigator<StackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
@@ -311,7 +368,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(0);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -319,6 +378,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -328,7 +388,9 @@ describe('useHeaderHeight in native-stack', () => {
 
     const Stack = createNativeStackNavigator<StackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
@@ -342,7 +404,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(0);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -350,6 +414,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -360,7 +425,9 @@ describe('useHeaderHeight in native-stack', () => {
     const Stack = createNativeStackNavigator<StackParamList>();
     const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="A" component={Test} />
@@ -376,7 +443,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(44);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(44);
   });
 
@@ -384,6 +453,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -394,7 +464,9 @@ describe('useHeaderHeight in native-stack', () => {
     const Stack = createNativeStackNavigator<StackParamList>();
     const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="A" component={Test} />
@@ -414,7 +486,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(44);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(44);
   });
 
@@ -422,6 +496,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -432,7 +507,9 @@ describe('useHeaderHeight in native-stack', () => {
     const Stack = createNativeStackNavigator<StackParamList>();
     const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="A" component={Test} />
@@ -448,7 +525,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(0);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(0);
   });
 
@@ -456,6 +535,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -466,7 +546,9 @@ describe('useHeaderHeight in native-stack', () => {
     const Stack = createNativeStackNavigator<StackParamList>();
     const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="A" component={Test} />
@@ -482,7 +564,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -490,6 +574,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -500,7 +585,9 @@ describe('useHeaderHeight in native-stack', () => {
     const Stack = createNativeStackNavigator<StackParamList>();
     const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="A" component={Test} />
@@ -520,7 +607,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -528,6 +617,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'android');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -538,7 +628,9 @@ describe('useHeaderHeight in native-stack', () => {
     const Stack = createNativeStackNavigator<StackParamList>();
     const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="A" component={Test} />
@@ -554,7 +646,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(0);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(0);
   });
 
@@ -562,6 +656,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -572,7 +667,9 @@ describe('useHeaderHeight in native-stack', () => {
     const Stack = createNativeStackNavigator<StackParamList>();
     const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="A" component={Test} />
@@ -588,7 +685,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -596,6 +695,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -606,7 +706,9 @@ describe('useHeaderHeight in native-stack', () => {
     const Stack = createNativeStackNavigator<StackParamList>();
     const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="A" component={Test} />
@@ -626,7 +728,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(64);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(64);
   });
 
@@ -634,6 +738,7 @@ describe('useHeaderHeight in native-stack', () => {
     jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
+
     const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
       headerHeight = useHeaderHeight();
       return (
@@ -644,7 +749,9 @@ describe('useHeaderHeight in native-stack', () => {
     const Stack = createNativeStackNavigator<StackParamList>();
     const NestedStack = createNativeStackNavigator<NestedStackParamList>();
 
-    const { findByText } = render(
+    const user = userEvent.setup();
+
+    await render(
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="A" component={Test} />
@@ -660,7 +767,9 @@ describe('useHeaderHeight in native-stack', () => {
     );
 
     expect(headerHeight).toBe(0);
-    fireEvent.press(await findByText(/go to b/i));
+
+    await user.press(screen.getByRole('button', { name: /go to b/i }));
+
     expect(headerHeight).toBe(0);
   });
 });

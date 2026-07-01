@@ -11,7 +11,7 @@ import {
 
 import { Color } from './Color';
 
-type Props = TextProps & {
+type Props = Omit<TextProps, 'style'> & {
   /**
    * Whether the badge is visible
    */

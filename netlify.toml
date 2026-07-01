@@ -1,8 +1,8 @@
 [build]
   base    = "/"
   publish = "example/dist"
-  command = "yarn example expo export --platform web"
-  environment = { YARN_VERSION = "3.2.2" }
+  command = "pnpm example exec expo export --platform web"
+  environment = { PNPM_VERSION = "11.8.0" }
 
 [[redirects]]
   from = "/*"

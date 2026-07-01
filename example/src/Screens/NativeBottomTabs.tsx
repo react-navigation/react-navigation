@@ -104,7 +104,7 @@ let i = 1;
 const NativeBottomTabsNavigator = createBottomTabNavigator({
   screens: {
     TabStack: createBottomTabScreen({
-      screen: NativeStack,
+      screen: NativeStack.screen,
       options: {
         popToTopOnBlur: true,
         title: 'Article',
@@ -124,10 +124,7 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
         tabBarMinimizeBehavior: 'onScrollDown',
         tabBarControllerMode: 'tabSidebar',
       },
-      linking: {
-        path: 'stack',
-        screens: NativeStack.linking.screens,
-      },
+      linking: 'stack',
     }),
     TabContacts: createBottomTabScreen({
       screen: ContactsScreen,

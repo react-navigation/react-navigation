@@ -114,9 +114,9 @@ export function useDescriptors<
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
   const theme = React.use(ThemeContext);
-  const [options, setOptions] = React.useState<Record<string, ScreenOptions>>(
-    {}
-  );
+  const [options, setOptions] = React.useState<
+    Record<string, Partial<ScreenOptions> | undefined>
+  >({});
   const {
     onDispatchAction,
     onEmitEvent,
@@ -180,20 +180,20 @@ export function useDescriptors<
       ScreenOptions,
       EventMap
     >,
-    overrides: Record<string, ScreenOptions>
+    overrides: Partial<ScreenOptions> | undefined
   ) => {
     const config = screens[route.name];
-    const screen = config.props;
+    const screen = config?.props;
 
     const optionsList = [
       // The default `screenOptions` passed to the navigator
       screenOptions,
       // The `screenOptions` props passed to `Group` elements
-      ...((config.options
+      ...((config?.options
         ? config.options.filter(Boolean)
         : []) as ScreenOptionsOrCallback<ScreenOptions>[]),
       // The `options` prop passed to `Screen` elements,
-      screen.options,
+      screen?.options,
       // The options set via `navigation.setOptions`
       overrides,
     ];
@@ -222,7 +222,11 @@ export function useDescriptors<
     routeState: NavigationState | PartialState<NavigationState> | undefined
   ) => {
     const config = screens[route.name];
-    const screen = config.props;
+    const screen = config?.props;
+
+    if (screen == null) {
+      throw new Error(`Couldn't find a screen named '${route.name}'.`);
+    }
 
     const clearOptions = () =>
       setOptions((o) => {
@@ -239,7 +243,7 @@ export function useDescriptors<
       // The `layout` prop passed to `Screen` elements,
       screen.layout ??
       // The `screenLayout` props passed to `Group` elements
-      config.layout ??
+      config?.layout ??
       // The default `screenLayout` passed to the navigator
       screenLayout;
 
@@ -294,7 +298,15 @@ export function useDescriptors<
     >
   >((acc, route, i) => {
     const navigation = navigations[route.key];
-    const customOptions = getOptions(route, navigation, options[route.key]);
+    const overrides = options[route.key];
+
+    if (navigation == null) {
+      throw new Error(
+        `Couldn't find a navigation object for route '${route.key}'.`
+      );
+    }
+
+    const customOptions = getOptions(route, navigation, overrides);
     const element = render(route, navigation, customOptions, routes[i]?.state);
 
     acc[route.key] = {

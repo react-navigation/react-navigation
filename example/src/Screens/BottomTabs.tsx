@@ -14,6 +14,7 @@ import {
   useHeaderHeight,
 } from '@react-navigation/elements';
 import {
+  createPathConfigForStaticNavigation,
   type NavigatorScreenParams,
   type PathConfig,
   type StaticScreenProps,
@@ -40,10 +41,10 @@ import iconNewspaper from '../../assets/icons/newspaper.png';
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
 import { Contacts } from '../Shared/Contacts';
-import { NativeStack, type NativeStackParamList } from './NativeStack';
+import { NativeStack } from './NativeStack';
 
 export type BottomTabParamList = {
-  TabStack: NavigatorScreenParams<NativeStackParamList>;
+  TabStack: NavigatorScreenParams<typeof NativeStack.screen>;
   TabAlbums: undefined;
   TabContacts: undefined;
   TabChat: { count: number } | undefined;
@@ -53,7 +54,7 @@ const linking = {
   screens: {
     TabStack: {
       path: 'stack',
-      screens: NativeStack.linking.screens,
+      screens: createPathConfigForStaticNavigation(NativeStack.screen),
     },
     TabAlbums: 'albums',
     TabContacts: 'contacts',
@@ -146,7 +147,7 @@ export function BottomTabs(
                     },
                     (index) => {
                       if (index != null) {
-                        setVariant(variants[index]);
+                        setVariant(variants[index] || variants[0]);
                       }
                     }
                   );
@@ -172,7 +173,7 @@ export function BottomTabs(
                     },
                     (index) => {
                       if (index != null) {
-                        setAnimation(animations[index]);
+                        setAnimation(animations[index] || animations[0]);
                       }
                     }
                   );
@@ -199,7 +200,7 @@ export function BottomTabs(
       >
         <Tab.Screen
           name="TabStack"
-          component={NativeStack}
+          component={NativeStack.screen.getComponent()}
           options={{
             popToTopOnBlur: true,
             title: 'Article',

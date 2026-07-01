@@ -20,7 +20,13 @@ export function useFocusEvents<State extends NavigationState>({
   const navigation = React.use(NavigationContext);
   const lastFocusedKeyRef = React.useRef<string | undefined>(undefined);
 
-  const currentFocusedKey = state.routes[state.index].key;
+  const currentFocusedRoute = state.routes[state.index];
+
+  if (currentFocusedRoute == null) {
+    throw new Error(`Couldn't find a route at index ${state.index}.`);
+  }
+
+  const currentFocusedKey = currentFocusedRoute.key;
 
   // When the parent screen changes its focus state, we also need to change child's focus
   // Coz the child screen can't be focused if the parent screen is out of focus

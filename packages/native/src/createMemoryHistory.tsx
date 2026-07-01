@@ -10,7 +10,7 @@ type HistoryRecord = {
   path: string;
 };
 
-const getPathWithoutHash = (path: string) => path.split('#')[0];
+const getPathWithoutHash = (path: string) => path.split('#')[0] ?? '';
 
 export function createMemoryHistory() {
   let index = 0;
@@ -55,6 +55,10 @@ export function createMemoryHistory() {
       // We need to find the index from the element before current to get closest path to go back to
       for (let i = index - 1; i >= 0; i--) {
         const item = items[i];
+
+        if (item == null) {
+          continue;
+        }
 
         if (item.path === pathWithoutHash) {
           return i;
@@ -107,9 +111,12 @@ export function createMemoryHistory() {
         items = [{ path: pathWithoutHash, state, id }];
         index = 0;
       } else {
-        if (items[index].path === pathWithoutHash) {
+        const item = items[index];
+
+        if (item?.path === pathWithoutHash) {
           pathWithHash = pathWithHash + hash;
         }
+
         items[index] = { path: pathWithoutHash, state, id };
       }
 
@@ -185,7 +192,7 @@ export function createMemoryHistory() {
           const foundIndex = pending.findIndex((it) => it.ref === done);
 
           if (foundIndex > -1) {
-            pending[foundIndex].cb();
+            pending[foundIndex]?.cb();
             pending.splice(foundIndex, 1);
           }
 

@@ -1,4 +1,5 @@
 import {
+  CommonActions,
   findFocusedRoute,
   getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
@@ -56,6 +57,10 @@ const findMatchingState = <T extends NavigationState>(
   const aRoute = a.routes[a.index];
   const bRoute = b.routes[b.index];
 
+  if (aRoute == null || bRoute == null) {
+    return [a, b];
+  }
+
   const aChildState = aRoute.state as T | undefined;
   const bChildState = bRoute.state as T | undefined;
 
@@ -88,6 +93,11 @@ const isPoppingLastEntry = (
 ): boolean => {
   const currentRoute = current.routes[current.index];
   const recordRoute = record.routes[record.index];
+
+  if (currentRoute == null || recordRoute == null) {
+    return false;
+  }
+
   const currentRouteHistory = currentRoute.history;
   const recordRouteHistory = recordRoute.history ?? [];
 
@@ -106,7 +116,11 @@ const isPoppingLastEntry = (
   const recordRoutes = getRoutesUntilIndex(record);
 
   if (currentRoutes.length === recordRoutes.length + 1) {
-    return recordRoutes.every((route, i) => route.key === currentRoutes[i].key);
+    return recordRoutes.every((route, i) => {
+      const currentRoute = currentRoutes[i];
+
+      return currentRoute != null && route.key === currentRoute.key;
+    });
   }
 
   return false;
@@ -117,10 +131,12 @@ const isPoppingLastEntry = (
  */
 export const series = (cb: () => Promise<void>) => {
   let queue = Promise.resolve();
+
   const callback = () => {
     // eslint-disable-next-line promise/no-callback-in-promise
     queue = queue.then(cb);
   };
+
   return callback;
 };
 
@@ -269,6 +285,66 @@ export function useLinking<ParamList extends ParamListBase>(
       previousIndexRef.current = index;
       pendingPopStatePathRef.current = path;
 
+      const rollbackHistory = () => {
+        const delta = previousIndex - index;
+
+        if (delta === 0) {
+          return;
+        }
+
+        pendingPopStatePathRef.current = undefined;
+
+        // eslint-disable-next-line promise/always-return
+        history.go(delta)?.then(() => {
+          previousIndexRef.current = history.index;
+        });
+      };
+
+      const rollbackHistoryIfPrevented = (callback: () => void) => {
+        let removePrevented = false;
+        let actionChangedState = false;
+
+        const unsubscribeEvent = navigation.addListener(
+          '__unsafe_event__',
+          (e) => {
+            if (e.data.type === 'beforeRemove' && e.data.defaultPrevented) {
+              removePrevented = true;
+            }
+          }
+        );
+
+        // After preventing remove, user may synchronously continue navigation
+        // This is common when showing a confirmation dialog
+        // If this action produces an update, we don't want to rollback the history
+        const unsubscribeAction = navigation.addListener(
+          '__unsafe_action__',
+          (e) => {
+            if (!e.data.noop) {
+              actionChangedState = true;
+            }
+          }
+        );
+
+        try {
+          callback();
+        } finally {
+          unsubscribeEvent();
+          unsubscribeAction();
+        }
+
+        if (removePrevented && !actionChangedState) {
+          rollbackHistory();
+        }
+      };
+
+      const dispatch = (action: Parameters<typeof navigation.dispatch>[0]) => {
+        rollbackHistoryIfPrevented(() => navigation.dispatch(action));
+      };
+
+      const resetRoot = (state: Parameters<typeof navigation.resetRoot>[0]) => {
+        rollbackHistoryIfPrevented(() => navigation.resetRoot(state));
+      };
+
       // When browser back/forward is clicked, we first need to check if state object for this index exists
       // If it does we'll reset to that state object
       // Otherwise, we'll handle it like a regular deep link
@@ -291,9 +367,9 @@ export function useLinking<ParamList extends ParamListBase>(
           // If we detect that the state change is popping the last entry
           // Dispatch a back action instead of resetting to the state
           // This makes sure changes to history state since the entry was added don't get lost
-          navigation.goBack();
+          dispatch(CommonActions.goBack());
         } else {
-          navigation.resetRoot(record.state);
+          resetRoot(record.state);
         }
 
         return;
@@ -302,7 +378,11 @@ export function useLinking<ParamList extends ParamListBase>(
       let state: ResultState | undefined;
 
       try {
-        state = getStateFromPathRef.current(path, configRef.current);
+        state = getStateFromPathRef.current(
+          path,
+          configRef.current,
+          navigation.getRootState()
+        );
       } catch (e) {
         console.error(e);
 
@@ -326,7 +406,7 @@ export function useLinking<ParamList extends ParamListBase>(
 
           if (action !== undefined) {
             try {
-              navigation.dispatch(action);
+              dispatch(action);
             } catch (e) {
               // Ignore any errors from deep linking.
               // This could happen in case of malformed links, navigation object not being initialized etc.
@@ -339,14 +419,14 @@ export function useLinking<ParamList extends ParamListBase>(
               );
             }
           } else {
-            navigation.resetRoot(state);
+            resetRoot(state);
           }
         } else {
-          navigation.resetRoot(state);
+          resetRoot(state);
         }
       } else {
         // if current path didn't return any state, we should revert to initial state
-        navigation.resetRoot(state);
+        resetRoot(state);
       }
     });
   }, [enabled, history, ref, validateRoutesNotExistInRootState]);
@@ -431,7 +511,7 @@ export function useLinking<ParamList extends ParamListBase>(
       }
     }
 
-    const onStateChange = async () => {
+    const onUpdate = async () => {
       const navigation = ref.current;
 
       if (!navigation || !enabled) {
@@ -443,6 +523,13 @@ export function useLinking<ParamList extends ParamListBase>(
 
       // root state may not available, for example when root navigators switch inside the container
       if (!state) {
+        return;
+      }
+
+      // Skip if the state hasn't changed since we last synced it
+      // This avoids redundant work when the committed `state` event fires
+      // after we already synced from `__unsafe_action__`
+      if (previousState === state) {
         return;
       }
 
@@ -517,10 +604,30 @@ export function useLinking<ParamList extends ParamListBase>(
       previousIndexRef.current = history.index;
     };
 
-    // We debounce onStateChange coz we don't want multiple state changes to be handled at one time
+    // We debounce onUpdate coz we don't want multiple state changes to be handled at one time
     // This could happen since `history.go(n)` is asynchronous
     // If `pushState` or `replaceState` were called before `history.go(n)` completes, it'll mess stuff up
-    return ref.current?.addListener('state', series(onStateChange));
+    const handleUpdate = series(onUpdate);
+
+    // We sync history on `__unsafe_action__` which fires synchronously on dispatch
+    // The committed `state` event can be deferred or skipped with transitions when a
+    // navigation interrupts an in-flight one, which would drop history entries
+    const unsubscribeAction = ref.current?.addListener(
+      '__unsafe_action__',
+      (e) => {
+        if (!e.data.noop) {
+          handleUpdate();
+        }
+      }
+    );
+
+    // We still listen to `state` for changes that don't go through dispatch, e.g. conditional rendering
+    const unsubscribeState = ref.current?.addListener('state', handleUpdate);
+
+    return () => {
+      unsubscribeAction?.();
+      unsubscribeState?.();
+    };
   }, [enabled, history, ref]);
 
   return {

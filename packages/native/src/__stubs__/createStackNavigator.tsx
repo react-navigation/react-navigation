@@ -22,11 +22,19 @@ const StackNavigator = (
     props
   );
 
-  return (
-    <NavigationContent>
-      {descriptors[state.routes[state.index].key].render()}
-    </NavigationContent>
-  );
+  const route = state.routes[state.index];
+
+  if (route == null) {
+    throw new Error(`Couldn't find a route at index ${state.index}.`);
+  }
+
+  const descriptor = descriptors[route.key];
+
+  if (descriptor == null) {
+    throw new Error(`Couldn't find a descriptor for route '${route.key}'.`);
+  }
+
+  return <NavigationContent>{descriptor.render()}</NavigationContent>;
 };
 
 interface StubStackTypeBag extends NavigatorTypeBagBase {
