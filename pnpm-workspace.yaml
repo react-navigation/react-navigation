@@ -7,4 +7,4 @@ allowBuilds:
   esbuild: false
   unrs-resolver: false
 minimumReleaseAgeExclude:
-  - agent-device@0.18.0
+  - agent-device@0.18.1

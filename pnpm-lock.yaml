@@ -42,8 +42,8 @@ importers:
         specifier: ^7.7.1
         version: 7.7.1
       agent-device:
-        specifier: 0.18.0
-        version: 0.18.0
+        specifier: 0.18.1
+        version: 0.18.1
       commitlint:
         specifier: ^21.0.2
         version: 21.0.2(@types/node@24.13.2)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@6.0.3)
@@ -3196,8 +3196,8 @@ packages:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
     engines: {node: '>= 14'}
 
-  agent-device@0.18.0:
-    resolution: {integrity: sha512-2gj1i+70u7UTKz0BjVQo5qWI9VFh+U/tILJ9XPjqEsQYg5Ng06FtxZygxm3tkwKA5xxk5JLbwn9Y+q5l3GQONw==}
+  agent-device@0.18.1:
+    resolution: {integrity: sha512-FqWgrE/j40gG6G+6+z1UyawtjvzQTCWMTjtjOWepa45B6KVIVFqfT64+uPhZJoBTqoF/gLfR3uH5B7lG6wuXGg==}
     engines: {node: '>=22.19'}
     hasBin: true
 
@@ -10034,7 +10034,7 @@ snapshots:
 
   agent-base@7.1.4: {}
 
-  agent-device@0.18.0:
+  agent-device@0.18.1:
     dependencies:
       yaml: 2.9.0
 
