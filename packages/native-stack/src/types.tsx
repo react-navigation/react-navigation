@@ -428,6 +428,25 @@ export type NativeStackNavigationOptions = {
    */
   headerBackButtonDisplayMode?: ScreenStackHeaderConfigProps['backButtonDisplayMode'];
   /**
+   * Unstable API to control which edges of the native header should apply window insets.
+   *
+   * By default, the native header applies window insets for all edges.
+   * When an edge is explicitly set to `false`, it disables inset handling for that edge
+   * in this header and all headers in its subtree.
+   *
+   * The opt-out propagates down the subtree: once an ancestor header sets an edge to `false`,
+   * setting it back to `true` (or leaving it undefined) on a descendant header does not
+   * re-enable the inset.
+   *
+   * @platform android
+   */
+  UNSTABLE_headerInsets?: {
+    top?: boolean;
+    left?: boolean;
+    right?: boolean;
+    bottom?: boolean;
+  };
+  /**
    * Whether the home indicator should prefer to stay hidden on this screen. Defaults to `false`.
    *
    * @platform ios

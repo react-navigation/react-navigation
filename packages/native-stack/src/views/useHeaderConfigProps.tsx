@@ -219,6 +219,7 @@ export function useHeaderConfigProps({
   headerBack,
   route,
   title,
+  UNSTABLE_headerInsets,
   unstable_headerLeftItems: headerLeftItems,
   unstable_headerRightItems: headerRightItems,
 }: Props): ScreenStackHeaderConfigProps {
@@ -527,7 +528,22 @@ export function useHeaderConfigProps({
     titleFontSize,
     titleFontWeight: String(titleFontWeight),
     topInsetEnabled: headerTopInsetEnabled,
-    disableTopInsetApplication: !headerTopInsetEnabled,
+    disableTopInsetApplication:
+      UNSTABLE_headerInsets?.top !== undefined
+        ? !UNSTABLE_headerInsets.top
+        : !headerTopInsetEnabled,
+    disableLeftInsetApplication:
+      UNSTABLE_headerInsets?.left !== undefined
+        ? !UNSTABLE_headerInsets.left
+        : undefined,
+    disableRightInsetApplication:
+      UNSTABLE_headerInsets?.right !== undefined
+        ? !UNSTABLE_headerInsets.right
+        : undefined,
+    disableBottomInsetApplication:
+      UNSTABLE_headerInsets?.bottom !== undefined
+        ? !UNSTABLE_headerInsets.bottom
+        : undefined,
     translucent: translucent === true,
     children,
     headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),
