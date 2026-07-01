@@ -168,8 +168,8 @@ export function DrawerItem(props: Props) {
             <Image
               source={iconValue.source}
               style={{
-                width: size,
-                height: size,
+                width: iconValue.width ?? size,
+                height: iconValue.height ?? size,
                 tintColor: iconValue.tinted === false ? undefined : color,
               }}
             />

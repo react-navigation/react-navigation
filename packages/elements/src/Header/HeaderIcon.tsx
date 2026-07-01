@@ -50,8 +50,11 @@ export function HeaderIcon({ icon, color, style, ...rest }: Props) {
       source={icon.source}
       resizeMode="contain"
       fadeDuration={0}
-      tintColor={color}
-      style={iconStyle}
+      tintColor={icon.tinted === false ? undefined : color}
+      style={[
+        iconStyle,
+        { width: icon.width ?? ICON_SIZE, height: icon.height ?? ICON_SIZE },
+      ]}
       {...rest}
     />
   );
