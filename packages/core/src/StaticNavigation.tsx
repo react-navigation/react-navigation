@@ -1,4 +1,8 @@
-import type { NavigationState, ParamListBase } from '@react-navigation/routers';
+import type {
+  NavigationState,
+  ParamListBase,
+  Route,
+} from '@react-navigation/routers';
 import * as React from 'react';
 import { isValidElementType } from 'react-is';
 
@@ -140,15 +144,8 @@ type ParamListForGroups<Groups> = Groups extends {
   ? ParamListForScreens<UnionToIntersection<Screens>>
   : {};
 
-type RouteTypeBase = {
-  key: string;
-  name: string;
-  path?: string | undefined;
-  history?: { type: 'params'; params: object }[] | undefined;
-};
-
-type RouteType<Params, P = AnyToUnknown<Params>> = Readonly<
-  RouteTypeBase &
+type StaticRoute<Params, P = AnyToUnknown<Params>> = Readonly<
+  Omit<Route<string>, 'params'> &
     (undefined extends Params
       ? {
           /**
@@ -289,7 +286,7 @@ export type StaticScreenConfig<
   options?:
     | ScreenOptions
     | ((props: {
-        route: RouteType<Params>;
+        route: StaticRoute<Params>;
         navigation: Navigation;
         theme: Theme;
       }) => ScreenOptions);
@@ -309,7 +306,7 @@ export type StaticScreenConfig<
   listeners?:
     | ScreenListeners<State, EventMap>
     | ((props: {
-        route: RouteType<Params>;
+        route: StaticRoute<Params>;
         navigation: Navigation;
       }) => ScreenListeners<State, EventMap>);
 
@@ -329,7 +326,7 @@ export type StaticScreenConfig<
    *
    */
   layout?: (props: {
-    route: RouteType<Params>;
+    route: StaticRoute<Params>;
     options: ScreenOptions;
     navigation: Navigation;
     theme: Theme;
