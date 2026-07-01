@@ -6,12 +6,6 @@ import type {
   TreeForPathConfig,
 } from './StaticNavigation';
 
-type Loader = (options: { name: string; params: unknown }) => Promise<void>;
-
-function isLoader(value: unknown): value is Loader {
-  return typeof value === 'function';
-}
-
 function findScreenInConfig(
   config: TreeForPathConfig['config'],
   name: string
@@ -24,10 +18,8 @@ function findScreenInConfig(
 
   if (config.groups) {
     for (const group of Object.values(config.groups)) {
-      const groupScreens = group.screens;
-
-      if (groupScreens[name] != null) {
-        return groupScreens[name];
+      if (group.screens[name] != null) {
+        return group.screens[name];
       }
     }
   }
@@ -35,22 +27,30 @@ function findScreenInConfig(
   return undefined;
 }
 
-function getNestedTree(
-  item: StaticScreenPathConfig
-): TreeForPathConfig | undefined {
-  if (item && typeof item === 'object') {
-    if ('config' in item && (item.config?.screens || item.config?.groups)) {
-      return item;
+function findInitialRouteName(
+  config: TreeForPathConfig['config']
+): string | undefined {
+  if (config.initialRouteName != null) {
+    return config.initialRouteName;
+  }
+
+  for (const key in config) {
+    if (key === 'screens' && config.screens) {
+      const name = Object.keys(config.screens)[0];
+
+      if (name != null) {
+        return name;
+      }
     }
 
-    if (
-      'screen' in item &&
-      item.screen &&
-      typeof item.screen === 'object' &&
-      'config' in item.screen &&
-      (item.screen.config?.screens || item.screen.config?.groups)
-    ) {
-      return item.screen;
+    if (key === 'groups' && config.groups) {
+      for (const group of Object.values(config.groups)) {
+        const name = Object.keys(group.screens)[0];
+
+        if (name != null) {
+          return name;
+        }
+      }
     }
   }
 
@@ -77,15 +77,13 @@ export function UNSTABLE_getLoaderForState(
   tree: TreeForPathConfig,
   state: PartialState<NavigationState> | NavigationState | undefined
 ): (() => Promise<void>) | undefined {
-  const config = tree.config;
   const focusedRoute = state?.routes[state.index ?? 0];
 
   if (!focusedRoute) {
     return undefined;
   }
 
-  const { name } = focusedRoute;
-  const item = findScreenInConfig(config, name);
+  const item = findScreenInConfig(tree.config, focusedRoute.name);
 
   if (item == null) {
     return undefined;
@@ -103,20 +101,35 @@ export function UNSTABLE_getLoaderForState(
 
   const loaders: (() => Promise<void>)[] = [];
 
-  if (
-    typeof item === 'object' &&
-    'UNSTABLE_loader' in item &&
-    isLoader(item.UNSTABLE_loader)
-  ) {
+  if ('UNSTABLE_loader' in item && typeof item.UNSTABLE_loader === 'function') {
     const loader = item.UNSTABLE_loader;
-    loaders.push(() => loader({ name, params }));
+
+    loaders.push(() =>
+      loader({
+        name: focusedRoute.name,
+        params,
+      })
+    );
   }
 
-  const nested = getNestedTree(item);
+  const nested =
+    'config' in item
+      ? item
+      : 'screen' in item && 'config' in item.screen
+        ? item.screen
+        : undefined;
 
   if (nested) {
-    const childState = focusedRoute.state ?? getStateFromRouteParams(params);
+    const initialRouteName = findInitialRouteName(nested.config);
+
+    let childState = focusedRoute.state ?? getStateFromRouteParams(params);
+
+    if (childState == null && initialRouteName != null) {
+      childState = { routes: [{ name: initialRouteName }] };
+    }
+
     const childLoader = UNSTABLE_getLoaderForState(nested, childState);
+
     if (childLoader) {
       loaders.push(childLoader);
     }
