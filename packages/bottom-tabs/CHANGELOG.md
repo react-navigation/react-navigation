@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.18.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.18.4...@react-navigation/bottom-tabs@7.18.5) (2026-07-01)
+
+### Bug Fixes
+
+* **bottom-tabs:** pop nested stack to top on blur even when animation is interrupted ([#13123](https://github.com/react-navigation/react-navigation/issues/13123)) ([6baf55b](https://github.com/react-navigation/react-navigation/commit/6baf55bb4cc2fb403bba0c1b3c84df9df00fbfb3)) - by @
+
 ## [7.18.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.18.3...@react-navigation/bottom-tabs@7.18.4) (2026-06-30)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
