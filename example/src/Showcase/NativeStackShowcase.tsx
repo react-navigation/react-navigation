@@ -302,7 +302,9 @@ const PlaceItem = React.memo(({ item }: { item: Place }) => {
     <Pressable
       testID={getPlaceItemTestID(item.id)}
       style={styles.placeItem}
-      onPress={() => navigation.goBack()}
+      onPress={() =>
+        navigation.navigate('LocationDetails', { placeId: item.id })
+      }
     >
       <Image source={item.image} style={styles.placeImage} />
 

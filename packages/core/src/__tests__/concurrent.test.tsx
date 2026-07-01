@@ -1,4 +1,4 @@
-import { beforeEach, expect, test } from '@jest/globals';
+import { beforeEach, expect, jest, test } from '@jest/globals';
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import { CommonActions } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
@@ -34,7 +34,7 @@ const TestNavigator = (props: any): any => {
   );
 };
 
-test('shows the fallback when navigating to a suspending screen without a transition', async () => {
+test('shows the fallback when navigating with resetRoot without a transition', async () => {
   const { promise, resolve } = Promise.withResolvers<void>();
 
   const ScreenA = () => <Text>[screen-a]</Text>;
@@ -64,8 +64,8 @@ test('shows the fallback when navigating to a suspending screen without a transi
     </Text>
   `);
 
-  await act(async () => {
-    navigation.navigate('B');
+  await act(() => {
+    navigation.resetRoot({ index: 0, routes: [{ name: 'B' }] });
   });
 
   expect(root).toMatchInlineSnapshot(`
@@ -85,7 +85,7 @@ test('shows the fallback when navigating to a suspending screen without a transi
     </>
   `);
 
-  await act(async () => resolve());
+  await act(() => resolve());
 
   expect(root).toMatchInlineSnapshot(`
     <Text>
@@ -94,87 +94,7 @@ test('shows the fallback when navigating to a suspending screen without a transi
   `);
 });
 
-test('shows the fallback when navigating to a lazy screen without a transition', async () => {
-  const { promise, resolve } = Promise.withResolvers<{
-    default: React.ComponentType;
-  }>();
-
-  const ScreenA = () => <Text>[screen-a]</Text>;
-  const ScreenB = () => <Text>[screen-b]</Text>;
-
-  const LazyScreenB = React.lazy(() => promise);
-
-  const LazyNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
-      MockRouter,
-      props
-    );
-
-    const route = state.routes[state.index];
-
-    if (route == null) {
-      return null;
-    }
-
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
-  };
-
-  const navigation = createNavigationContainerRef<ParamListBase>();
-
-  const root = await render(
-    <BaseNavigationContainer ref={navigation}>
-      <React.Suspense fallback={<Text>[fallback]</Text>}>
-        <LazyNavigator>
-          <Screen name="A" component={ScreenA} />
-          <Screen name="B" component={LazyScreenB} />
-        </LazyNavigator>
-      </React.Suspense>
-    </BaseNavigationContainer>
-  );
-
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      [screen-a]
-    </Text>
-  `);
-
-  await act(async () => {
-    navigation.navigate('B');
-  });
-
-  expect(root).toMatchInlineSnapshot(`
-    <>
-      <Text
-        style={
-          {
-            "display": "none",
-          }
-        }
-      >
-        [screen-a]
-      </Text>
-      <Text>
-        [fallback]
-      </Text>
-    </>
-  `);
-
-  await act(async () => {
-    resolve({
-      default: ScreenB,
-    });
-  });
-
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      [screen-b]
-    </Text>
-  `);
-});
-
-test('keeps the previous screen visible when navigating with a transition', async () => {
+test('keeps the previous screen visible when navigating to a suspending screen', async () => {
   const { promise, resolve } = Promise.withResolvers<void>();
 
   const ScreenA = () => <Text>[screen-a]</Text>;
@@ -204,10 +124,8 @@ test('keeps the previous screen visible when navigating with a transition', asyn
     </Text>
   `);
 
-  await act(async () => {
-    React.startTransition(() => {
-      navigation.navigate('B');
-    });
+  await act(() => {
+    navigation.navigate('B');
   });
 
   expect(root).toMatchInlineSnapshot(`
@@ -216,7 +134,7 @@ test('keeps the previous screen visible when navigating with a transition', asyn
     </Text>
   `);
 
-  await act(async () => resolve());
+  await act(() => resolve());
 
   expect(root).toMatchInlineSnapshot(`
     <Text>
@@ -225,78 +143,7 @@ test('keeps the previous screen visible when navigating with a transition', asyn
   `);
 });
 
-test('keeps the previous screen visible when navigating to a lazy screen with a transition', async () => {
-  const { promise, resolve } = Promise.withResolvers<{
-    default: React.ComponentType;
-  }>();
-
-  const ScreenA = () => <Text>[screen-a]</Text>;
-  const ScreenB = () => <Text>[screen-b]</Text>;
-
-  const LazyScreenB = React.lazy(() => promise);
-
-  const LazyNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
-      MockRouter,
-      props
-    );
-
-    const route = state.routes[state.index];
-
-    if (route == null) {
-      return null;
-    }
-
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
-  };
-
-  const navigation = createNavigationContainerRef<ParamListBase>();
-
-  const root = await render(
-    <BaseNavigationContainer ref={navigation}>
-      <React.Suspense fallback={<Text>[fallback]</Text>}>
-        <LazyNavigator>
-          <Screen name="A" component={ScreenA} />
-          <Screen name="B" component={LazyScreenB} />
-        </LazyNavigator>
-      </React.Suspense>
-    </BaseNavigationContainer>
-  );
-
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      [screen-a]
-    </Text>
-  `);
-
-  await act(async () => {
-    React.startTransition(() => {
-      navigation.navigate('B');
-    });
-  });
-
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      [screen-a]
-    </Text>
-  `);
-
-  await act(async () => {
-    resolve({
-      default: ScreenB,
-    });
-  });
-
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      [screen-b]
-    </Text>
-  `);
-});
-
-test('keeps the current screen when going back to a suspending screen with a transition', async () => {
+test('keeps the current screen when going back to a suspending screen', async () => {
   const { promise, resolve } = Promise.withResolvers<void>();
 
   const ScreenA = () => <Text>[screen-a]</Text>;
@@ -326,10 +173,8 @@ test('keeps the current screen when going back to a suspending screen with a tra
     </Text>
   `);
 
-  await act(async () => {
-    React.startTransition(() => {
-      navigation.goBack();
-    });
+  await act(() => {
+    navigation.goBack();
   });
 
   expect(root).toMatchInlineSnapshot(`
@@ -338,7 +183,7 @@ test('keeps the current screen when going back to a suspending screen with a tra
     </Text>
   `);
 
-  await act(async () => resolve());
+  await act(() => resolve());
 
   expect(root).toMatchInlineSnapshot(`
     <Text>
@@ -347,7 +192,7 @@ test('keeps the current screen when going back to a suspending screen with a tra
   `);
 });
 
-test('keeps the previous screen when resetting to a suspending screen with a transition', async () => {
+test('keeps the previous screen when resetting to a suspending screen', async () => {
   const { promise, resolve } = Promise.withResolvers<void>();
 
   const ScreenA = () => <Text>[screen-a]</Text>;
@@ -377,10 +222,8 @@ test('keeps the previous screen when resetting to a suspending screen with a tra
     </Text>
   `);
 
-  await act(async () => {
-    React.startTransition(() => {
-      navigation.reset({ index: 0, routes: [{ name: 'B' }] });
-    });
+  await act(() => {
+    navigation.reset({ index: 0, routes: [{ name: 'B' }] });
   });
 
   expect(root).toMatchInlineSnapshot(`
@@ -389,7 +232,7 @@ test('keeps the previous screen when resetting to a suspending screen with a tra
     </Text>
   `);
 
-  await act(async () => resolve());
+  await act(() => resolve());
 
   expect(root).toMatchInlineSnapshot(`
     <Text>
@@ -398,7 +241,7 @@ test('keeps the previous screen when resetting to a suspending screen with a tra
   `);
 });
 
-test('keeps the previous screen when navigating in a nested navigator with a transition', async () => {
+test('keeps the previous screen when navigating in a nested navigator', async () => {
   const { promise, resolve } = Promise.withResolvers<void>();
 
   const ScreenA = () => <Text>[screen-a]</Text>;
@@ -434,10 +277,8 @@ test('keeps the previous screen when navigating in a nested navigator with a tra
     </Text>
   `);
 
-  await act(async () => {
-    React.startTransition(() => {
-      navigation.navigate('inner-b');
-    });
+  await act(() => {
+    navigation.navigate('inner-b');
   });
 
   expect(root).toMatchInlineSnapshot(`
@@ -446,7 +287,7 @@ test('keeps the previous screen when navigating in a nested navigator with a tra
     </Text>
   `);
 
-  await act(async () => resolve());
+  await act(() => resolve());
 
   expect(root).toMatchInlineSnapshot(`
     <Text>
@@ -455,7 +296,7 @@ test('keeps the previous screen when navigating in a nested navigator with a tra
   `);
 });
 
-test('shows stale content instead of fallback with startTransition for setParams', async () => {
+test('holds stale content instead of fallback when setParams suspends', async () => {
   const SetParamsNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -475,7 +316,7 @@ test('shows stale content instead of fallback with startTransition for setParams
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  let { promise, resolve } = Promise.withResolvers<void>();
+  const { promise, resolve } = Promise.withResolvers<void>();
 
   const Content = ({ contentId }: { contentId: number }) => {
     if (contentId !== 0) {
@@ -511,96 +352,24 @@ test('shows stale content instead of fallback with startTransition for setParams
     </Text>
   `);
 
-  await act(async () => {
+  await act(() => {
     navigation.dispatch(CommonActions.setParams({ contentId: 1 }));
   });
 
   expect(root).toMatchInlineSnapshot(`
-    <>
-      <Text
-        style={
-          {
-            "display": "none",
-          }
-        }
-      >
-        [content-
-        0
-        ]
-      </Text>
-      <Text>
-        [fallback]
-      </Text>
-    </>
+    <Text>
+      [content-
+      0
+      ]
+    </Text>
   `);
 
-  await act(async () => resolve());
+  await act(() => resolve());
 
   expect(root).toMatchInlineSnapshot(`
     <Text>
       [content-
       1
-      ]
-    </Text>
-  `);
-
-  ({ promise, resolve } = Promise.withResolvers<void>());
-
-  await act(async () => {
-    navigation.dispatch(CommonActions.setParams({ contentId: 2 }));
-  });
-
-  expect(root).toMatchInlineSnapshot(`
-    <>
-      <Text
-        style={
-          {
-            "display": "none",
-          }
-        }
-      >
-        [content-
-        1
-        ]
-      </Text>
-      <Text>
-        [fallback]
-      </Text>
-    </>
-  `);
-
-  await act(async () => resolve());
-
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      [content-
-      2
-      ]
-    </Text>
-  `);
-
-  ({ promise, resolve } = Promise.withResolvers<void>());
-
-  await act(async () => {
-    React.startTransition(() => {
-      navigation.dispatch(CommonActions.setParams({ contentId: 3 }));
-    });
-  });
-
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      [content-
-      2
-      ]
-    </Text>
-  `);
-
-  await act(async () => resolve());
-
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      [content-
-      3
       ]
     </Text>
   `);
@@ -651,7 +420,7 @@ test('reflects the pending state with useTransition during navigation', async ()
     </Text>
   `);
 
-  await act(async () => {
+  await act(() => {
     startNavigation?.();
   });
 
@@ -663,7 +432,7 @@ test('reflects the pending state with useTransition during navigation', async ()
     </Text>
   `);
 
-  await act(async () => resolve());
+  await act(() => resolve());
 
   expect(root).toMatchInlineSnapshot(`
     <Text>
@@ -672,7 +441,7 @@ test('reflects the pending state with useTransition during navigation', async ()
   `);
 });
 
-test('keeps useNavigationState consistent with the held screen during a transition', async () => {
+test('keeps useNavigationState consistent with the held screen during navigation', async () => {
   const { promise, resolve } = Promise.withResolvers<void>();
 
   const ScreenA = () => <Text>[screen-a]</Text>;
@@ -734,10 +503,8 @@ test('keeps useNavigationState consistent with the held screen during a transiti
     </>
   `);
 
-  await act(async () => {
-    React.startTransition(() => {
-      navigation.navigate('B');
-    });
+  await act(() => {
+    navigation.navigate('B');
   });
 
   expect(root).toMatchInlineSnapshot(`
@@ -753,7 +520,7 @@ test('keeps useNavigationState consistent with the held screen during a transiti
     </>
   `);
 
-  await act(async () => resolve());
+  await act(() => resolve());
 
   expect(root).toMatchInlineSnapshot(`
     <>
@@ -764,6 +531,352 @@ test('keeps useNavigationState consistent with the held screen during a transiti
       </Text>
       <Text>
         [screen-b]
+      </Text>
+    </>
+  `);
+});
+
+test('interrupts an in-flight transition when navigating again', async () => {
+  const promiseB = Promise.withResolvers<void>();
+  const promiseC = Promise.withResolvers<void>();
+
+  const ScreenA = () => <Text>[screen-a]</Text>;
+
+  const ScreenB = () => {
+    React.use(promiseB.promise);
+
+    return <Text>[screen-b]</Text>;
+  };
+
+  const ScreenC = () => {
+    React.use(promiseC.promise);
+
+    return <Text>[screen-c]</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const root = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <React.Suspense fallback={<Text>[fallback]</Text>}>
+        <TestNavigator>
+          <Screen name="A" component={ScreenA} />
+          <Screen name="B" component={ScreenB} />
+          <Screen name="C" component={ScreenC} />
+        </TestNavigator>
+      </React.Suspense>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => {
+    navigation.navigate('B');
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-a]
+    </Text>
+  `);
+
+  await act(() => {
+    navigation.navigate('C');
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-a]
+    </Text>
+  `);
+
+  await act(() => promiseB.resolve());
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-a]
+    </Text>
+  `);
+
+  await act(() => promiseC.resolve());
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-c]
+    </Text>
+  `);
+});
+
+test('shows the error boundary when a navigation transition fails', async () => {
+  const { promise, reject } = Promise.withResolvers<void>();
+
+  class ErrorBoundary extends React.Component<
+    { children: React.ReactNode },
+    { hasError: boolean }
+  > {
+    override state = { hasError: false };
+
+    static getDerivedStateFromError() {
+      return { hasError: true };
+    }
+
+    override render() {
+      if (this.state.hasError) {
+        return <Text>[error]</Text>;
+      }
+
+      return this.props.children;
+    }
+  }
+
+  const ScreenA = () => <Text>[screen-a]</Text>;
+
+  const ScreenB = () => {
+    React.use(promise);
+
+    return <Text>[screen-b]</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const root = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <ErrorBoundary>
+        <React.Suspense fallback={<Text>[fallback]</Text>}>
+          <TestNavigator>
+            <Screen name="A" component={ScreenA} />
+            <Screen name="B" component={ScreenB} />
+          </TestNavigator>
+        </React.Suspense>
+      </ErrorBoundary>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => {
+    navigation.navigate('B');
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-a]
+    </Text>
+  `);
+
+  const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  await act(() => {
+    reject(new Error('Failed to load'));
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [error]
+    </Text>
+  `);
+
+  expect(errorSpy).toHaveBeenCalled();
+
+  errorSpy.mockRestore();
+});
+
+test('shows the fallback of a freshly mounted boundary during navigation', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const ScreenA = () => <Text>[screen-a]</Text>;
+
+  const ScreenB = () => {
+    React.use(promise);
+
+    return <Text>[screen-b]</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const root = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="A" component={ScreenA} />
+        <Screen name="B">
+          {() => (
+            <React.Suspense fallback={<Text>[fallback-b]</Text>}>
+              <ScreenB />
+            </React.Suspense>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-a]
+    </Text>
+  `);
+
+  await act(() => {
+    navigation.navigate('B');
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [fallback-b]
+    </Text>
+  `);
+
+  await act(() => resolve());
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-b]
+    </Text>
+  `);
+});
+
+test('allows navigating away while a transition is pending', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const ScreenA = () => <Text>[screen-a]</Text>;
+
+  const ScreenB = () => {
+    React.use(promise);
+
+    return <Text>[screen-b]</Text>;
+  };
+
+  const ScreenC = () => <Text>[screen-c]</Text>;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const root = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <React.Suspense fallback={<Text>[fallback]</Text>}>
+        <TestNavigator>
+          <Screen name="A" component={ScreenA} />
+          <Screen name="B" component={ScreenB} />
+          <Screen name="C" component={ScreenC} />
+        </TestNavigator>
+      </React.Suspense>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => {
+    navigation.navigate('B');
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-a]
+    </Text>
+  `);
+
+  await act(() => {
+    navigation.navigate('C');
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-c]
+    </Text>
+  `);
+
+  await act(() => resolve());
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      [screen-c]
+    </Text>
+  `);
+});
+
+test('resets the pending state after a setParams transition completes', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  let triggerUpdate: (() => void) | undefined;
+
+  const Content = ({ contentId }: { contentId: number }) => {
+    if (contentId !== 0) {
+      React.use(promise);
+    }
+
+    return <Text>[content-{contentId}]</Text>;
+  };
+
+  const PendingScreen = (props: any) => {
+    const navigation: any = useNavigation();
+    const [isPending, startTransition] = React.useTransition();
+    const contentId = props.route.params?.contentId ?? 0;
+
+    triggerUpdate = () => {
+      startTransition(() => {
+        navigation.setParams({ contentId: 1 });
+      });
+    };
+
+    return (
+      <>
+        <Text>[{isPending ? 'pending' : 'idle'}]</Text>
+        <React.Suspense fallback={<Text>[fallback]</Text>}>
+          <Content contentId={contentId} />
+        </React.Suspense>
+      </>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const root = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="A" component={PendingScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+    <>
+      <Text>
+        [
+        idle
+        ]
+      </Text>
+      <Text>
+        [content-
+        0
+        ]
+      </Text>
+    </>
+  `);
+
+  await act(() => {
+    triggerUpdate?.();
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <>
+      <Text>
+        [
+        pending
+        ]
+      </Text>
+      <Text>
+        [content-
+        0
+        ]
+      </Text>
+    </>
+  `);
+
+  await act(() => resolve());
+
+  expect(root).toMatchInlineSnapshot(`
+    <>
+      <Text>
+        [
+        idle
+        ]
+      </Text>
+      <Text>
+        [content-
+        1
+        ]
       </Text>
     </>
   `);

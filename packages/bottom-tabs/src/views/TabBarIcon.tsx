@@ -1,7 +1,7 @@
 import { Badge, type Icon } from '@react-navigation/elements';
 import { MissingIcon } from '@react-navigation/elements/internal';
 import { MaterialSymbol, type Route, SFSymbol } from '@react-navigation/native';
-import React from 'react';
+import * as React from 'react';
 import {
   type ColorValue,
   Image,

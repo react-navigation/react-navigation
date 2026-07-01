@@ -143,7 +143,12 @@ async function runStep(page: Page, step: any) {
 
       const locator = query(page, step.tapOn);
 
-      await locator.filter({ visible: true }).last().dispatchEvent('click');
+      const target = locator.filter({ visible: true }).last();
+
+      const handle = await target.elementHandle();
+      await handle?.waitForElementState('stable');
+
+      await target.dispatchEvent('click');
 
       break;
     }

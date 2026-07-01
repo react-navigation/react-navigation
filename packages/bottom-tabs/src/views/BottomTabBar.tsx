@@ -12,7 +12,7 @@ import {
   useLocale,
   useTheme,
 } from '@react-navigation/native';
-import React from 'react';
+import * as React from 'react';
 import {
   Animated,
   type LayoutChangeEvent,
@@ -449,9 +449,11 @@ export function BottomTabBar({ state, navigation, descriptors, style }: Props) {
               !event.defaultPrevented &&
               options.tabBarSelectionEnabled !== false
             ) {
-              navigation.dispatch({
-                ...CommonActions.navigate(route.name, route.params),
-                target: state.key,
+              React.startTransition(() => {
+                navigation.dispatch({
+                  ...CommonActions.navigate(route.name, route.params),
+                  target: state.key,
+                });
               });
             }
           };

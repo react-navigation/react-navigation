@@ -125,10 +125,16 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     (
       action: NavigationAction | ((state: NavigationState) => NavigationAction)
     ) => {
-      if (listeners.focus[0] == null) {
+      const listener = listeners.focus[0];
+
+      if (listener == null) {
         console.error(NOT_INITIALIZED_ERROR);
       } else {
-        listeners.focus[0]((navigation) => navigation.dispatch(action));
+        listener((navigation) =>
+          React.startTransition(() => {
+            navigation.dispatch(action);
+          })
+        );
       }
     }
   );
@@ -195,6 +201,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
         acc[name] = (...args: any[]) =>
           // @ts-expect-error: this is ok
           dispatch(CommonActions[name](...args));
+
         return acc;
       }, {}),
       ...emitter.create('root'),

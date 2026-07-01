@@ -199,7 +199,7 @@ export function BottomTabViewCustom({
       }
 
       Animated.parallel(animations).start(({ finished }) => {
-        if (finished && popToTopAction) {
+        if (popToTopAction) {
           navigation.dispatch(popToTopAction);
         }
 
