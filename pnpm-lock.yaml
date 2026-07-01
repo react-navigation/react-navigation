@@ -41,6 +41,9 @@ importers:
       '@types/semver':
         specifier: ^7.7.1
         version: 7.7.1
+      agent-device:
+        specifier: 0.18.1
+        version: 0.18.1
       commitlint:
         specifier: ^21.0.2
         version: 21.0.2(@types/node@24.13.2)(conventional-commits-filter@5.0.0)(conventional-commits-parser@6.4.0)(typescript@6.0.3)
@@ -3193,6 +3196,11 @@ packages:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
     engines: {node: '>= 14'}
 
+  agent-device@0.18.1:
+    resolution: {integrity: sha512-FqWgrE/j40gG6G+6+z1UyawtjvzQTCWMTjtjOWepa45B6KVIVFqfT64+uPhZJoBTqoF/gLfR3uH5B7lG6wuXGg==}
+    engines: {node: '>=22.19'}
+    hasBin: true
+
   ajv@6.15.0:
     resolution: {integrity: sha512-fgFx7Hfoq60ytK2c7DhnF8jIvzYgOMxfugjLOSMHjLIPgenqa7S7oaagATUq99mV6IYvN2tRmC0wnTYX6iPbMw==}
 
@@ -4491,6 +4499,7 @@ packages:
   git-raw-commits@5.0.1:
     resolution: {integrity: sha512-Y+csSm2GD/PCSh6Isd/WiMjNAydu0VBiG9J7EdQsNA5P9uXvLayqjmTsNlK5Gs9IhblFZqOU0yid5Il5JPoLiQ==}
     engines: {node: '>=18'}
+    deprecated: Deprecated and no longer maintained. Use @conventional-changelog/git-client instead.
     hasBin: true
 
   git-up@8.1.1:
@@ -10024,6 +10033,10 @@ snapshots:
   acorn@8.17.0: {}
 
   agent-base@7.1.4: {}
+
+  agent-device@0.18.1:
+    dependencies:
+      yaml: 2.9.0
 
   ajv@6.15.0:
     dependencies:
