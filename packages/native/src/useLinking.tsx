@@ -253,10 +253,15 @@ export function useLinking(
 
         pendingPopStatePathRef.current = undefined;
 
-        // eslint-disable-next-line promise/always-return
-        history.go(delta)?.then(() => {
-          previousIndexRef.current = history.index;
-        });
+        history
+          .go(delta)
+          // eslint-disable-next-line promise/always-return
+          ?.then(() => {
+            previousIndexRef.current = history.index;
+          })
+          .catch(() => {
+            // The navigation was interrupted
+          });
       };
 
       const rollbackHistoryIfPrevented = (callback: () => void) => {

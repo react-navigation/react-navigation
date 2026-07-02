@@ -1223,3 +1223,86 @@ test('keeps syncing browser history after getPathFromState throws', async () => 
 
   await waitFor(() => expect(window.location.pathname).toBe('/settings'));
 });
+
+test("doesn't leave unhandled rejection when navigation interrupts prevented back rollback", async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const onPreventRemove = jest.fn();
+
+  const ProfileScreen = ({ route }: any): any => {
+    usePreventRemove(true, onPreventRemove);
+
+    return route.name;
+  };
+
+  const rejections: unknown[] = [];
+  const onUnhandledRejection = (reason: unknown) => {
+    rejections.push(reason);
+  };
+
+  jest.useFakeTimers();
+
+  process.on('unhandledRejection', onUnhandledRejection);
+
+  try {
+    render(
+      <NavigationContainer ref={navigation} linking={linking}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Settings" component={TestScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+
+    act(() => navigation.navigate('Profile'));
+
+    await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+    // Navigate right after the prevented back to interrupt its rollback
+    // If the rollback completes before the navigation, the interruption won't be exercised
+    let interrupted = false;
+
+    window.addEventListener('popstate', () => {
+      if (!interrupted && onPreventRemove.mock.calls.length) {
+        interrupted = true;
+        navigation.navigate('Settings');
+      }
+    });
+
+    act(() => window.history.back());
+
+    await act(async () => {
+      await jest.runAllTimersAsync();
+    });
+
+    expect(onPreventRemove).toHaveBeenCalledTimes(1);
+    expect(window.location.pathname).toBe('/settings');
+    expect(navigation.getCurrentRoute()?.name).toBe('Settings');
+
+    // Flush the event loop with real timers so `unhandledRejection` fires
+    jest.useRealTimers();
+
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 0);
+    });
+
+    expect(rejections).toEqual([]);
+  } finally {
+    jest.useRealTimers();
+    process.off('unhandledRejection', onUnhandledRejection);
+  }
+});
