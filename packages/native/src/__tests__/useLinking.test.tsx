@@ -5,6 +5,7 @@ import {
   createNavigatorFactory,
   findFocusedRoute,
   getPathFromState,
+  getStateFromPath,
   type NavigationAction,
   type NavigationState,
   type ParamListBase,
@@ -1649,4 +1650,304 @@ test("doesn't leave unhandled rejection when navigation interrupts prevented bac
   } finally {
     process.off('unhandledRejection', onUnhandledRejection);
   }
+});
+
+test('pushes browser history entry when navigating after popstate with an unhandled path', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Other: 'missing',
+      },
+    },
+    getStateFromPath(
+      path: string,
+      config: Parameters<typeof getStateFromPath>[1]
+    ) {
+      if (path.includes('missing')) {
+        return {
+          routes: [{ name: 'Missing' }],
+        };
+      }
+
+      return getStateFromPath(path, config);
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Other" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(window.location.pathname).toBe('/');
+
+  window.history.pushState(null, '', '/missing');
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  await act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/missing'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+
+  const pushSpy = jest.spyOn(window.history, 'pushState');
+  const replaceSpy = jest.spyOn(window.history, 'replaceState');
+
+  await act(() => navigation.navigate('Other'));
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Other'));
+
+  expect(window.location.pathname).toBe('/missing');
+  expect(pushSpy).toHaveBeenCalledTimes(1);
+  expect(replaceSpy).not.toHaveBeenCalled();
+});
+
+test('goes back a single entry on browser back when the URL contains a hash', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: ':user',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('Profile', { user: 'jane' }));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/jane'));
+
+  window.history.replaceState(window.history.state, '', '/jane#details');
+
+  await act(() =>
+    navigation.dispatch(CommonActions.pushParams({ user: 'john' }))
+  );
+
+  await waitFor(() => {
+    expect(window.location.pathname).toBe('/john');
+    expect(window.location.hash).toBe('#details');
+  });
+
+  await act(() => window.history.back());
+
+  await waitFor(() => {
+    expect(window.location.pathname).toBe('/jane');
+    expect(window.location.hash).toBe('#details');
+  });
+
+  expect(navigation.getCurrentRoute()?.params).toEqual({ user: 'jane' });
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('pushes a history entry for navigation racing with browser back', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  let raced = false;
+
+  window.addEventListener('popstate', () => {
+    if (!raced) {
+      raced = true;
+      navigation.navigate('Settings');
+    }
+  });
+
+  const pushSpy = jest.spyOn(window.history, 'pushState');
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Settings');
+
+  expect(pushSpy).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.anything(),
+    '/settings'
+  );
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('goes back an extra entry for goBack racing with browser back', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  await act(() => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  let raced = false;
+
+  window.addEventListener('popstate', () => {
+    if (!raced) {
+      raced = true;
+      navigation.goBack();
+    }
+  });
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+
+  await act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Profile');
+});
+
+test("rolls back browser history when 'beforeRemove' prevents multi-entry jump", async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const onPreventRemove = jest.fn();
+
+  const SettingsScreen = ({
+    preventRemove,
+    route,
+  }: {
+    preventRemove: boolean;
+    route: any;
+  }): any => {
+    usePreventRemove(preventRemove, onPreventRemove);
+
+    return <Text>{route.name}</Text>;
+  };
+
+  const Container = ({ preventRemove }: { preventRemove: boolean }) => (
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings">
+          {(props) => (
+            <SettingsScreen {...props} preventRemove={preventRemove} />
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  const root = await render(<Container preventRemove={true} />);
+
+  await act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  await act(() => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  await act(() => window.history.go(-2));
+
+  await waitFor(() => expect(onPreventRemove).toHaveBeenCalledTimes(1));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Settings');
+
+  await root.rerender(<Container preventRemove={false} />);
+
+  await act(() => window.history.go(-2));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(onPreventRemove).toHaveBeenCalledTimes(1);
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
 });
