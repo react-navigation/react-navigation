@@ -587,7 +587,7 @@ export function useNavigationBuilder<
 
   const previousRouteKeyListRef = React.useRef(routeKeyList);
 
-  React.useEffect(() => {
+  React.useInsertionEffect(() => {
     previousRouteKeyListRef.current = routeKeyList;
   });
 

@@ -60,7 +60,7 @@ export function useOnAction<State extends NavigationState>({
   const routerConfigOptionsRef =
     React.useRef<RouterConfigOptions>(routerConfigOptions);
 
-  React.useEffect(() => {
+  React.useInsertionEffect(() => {
     routerConfigOptionsRef.current = routerConfigOptions;
   });
 
