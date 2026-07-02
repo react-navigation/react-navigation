@@ -441,6 +441,81 @@ test('reflects the pending state with useTransition during navigation', async ()
   `);
 });
 
+test('does not leak state updates scheduled during a discarded render', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  let collapse: (() => void) | undefined;
+
+  const App = () => {
+    const [collapsed, setCollapsed] = React.useState(false);
+
+    collapse = () => {
+      React.startTransition(() => {
+        setCollapsed(true);
+      });
+    };
+
+    return (
+      <React.Suspense fallback={<Text>[fallback]</Text>}>
+        <TestNavigator>
+          <Screen name="A">
+            {() => {
+              // Collapsing removes screen B (scheduling a state update to drop it)
+              // and suspends the focused screen, so this render is thrown away
+              if (collapsed) {
+                React.use(promise);
+              }
+
+              return <Text>[screen-a]</Text>;
+            }}
+          </Screen>
+          {collapsed ? null : (
+            <Screen name="B">{() => <Text>[screen-b]</Text>}</Screen>
+          )}
+        </TestNavigator>
+      </React.Suspense>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <App />
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.getRootState()).toMatchObject({
+    index: 0,
+    routeNames: ['A', 'B'],
+    routes: [{ name: 'A' }, { name: 'B' }],
+  });
+
+  await act(() => {
+    collapse?.();
+  });
+
+  // The transition is held on the suspending screen, so collapsing hasn't committed.
+  // An unrelated update now commits and flushes pending updates - the update scheduled
+  await act(() => {
+    navigation.dispatch({ type: 'UPDATE' });
+  });
+
+  expect(navigation.getRootState()).toMatchObject({
+    index: 0,
+    routeNames: ['A', 'B'],
+    routes: [{ name: 'A' }, { name: 'B' }],
+  });
+
+  await act(() => resolve());
+
+  expect(navigation.getRootState()).toMatchObject({
+    index: 0,
+    routeNames: ['A'],
+    routes: [{ name: 'A' }],
+  });
+});
+
 test('keeps useNavigationState consistent with the held screen during navigation', async () => {
   const { promise, resolve } = Promise.withResolvers<void>();
 
