@@ -28,8 +28,10 @@ export function useKeyedChildListeners() {
       keyedListeners[type][key] = listener;
 
       return () => {
-        // @ts-expect-error: according to ref stated above you can use `key` to index type
-        keyedListeners[type][key] = undefined;
+        if (keyedListeners[type][key] === listener) {
+          // @ts-expect-error: according to ref stated above you can use `key` to index type
+          keyedListeners[type][key] = undefined;
+        }
       };
     },
     [keyedListeners]
