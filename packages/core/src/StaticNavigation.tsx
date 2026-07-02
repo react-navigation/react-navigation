@@ -11,6 +11,7 @@ import {
   getPatternParts,
   type PatternPart,
 } from './getPatternParts';
+import { StaticTreeContext } from './StaticTreeContext';
 import type {
   EventMapBase,
   NavigationListBase,
@@ -379,7 +380,7 @@ export type StaticScreenConfig<
   navigationKey?: string;
 
   /**
-   * Loader function to be called when the screen is focused. This can be used to load data before the screen is rendered.
+   * Loader function to start loading data when the screen is navigated to.
    *
    * @example
    * ```js
@@ -712,14 +713,16 @@ export function createComponentForStaticConfig<
         : { ...rest.screenListeners, ...props.screenListeners };
 
     return (
-      <Navigator
-        {...rest}
-        {...props}
-        screenOptions={screenOptions}
-        screenListeners={screenListeners}
-      >
-        {children}
-      </Navigator>
+      <StaticTreeContext.Provider value={tree}>
+        <Navigator
+          {...rest}
+          {...props}
+          screenOptions={screenOptions}
+          screenListeners={screenListeners}
+        >
+          {children}
+        </Navigator>
+      </StaticTreeContext.Provider>
     );
   };
 

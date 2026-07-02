@@ -1,0 +1,132 @@
+appId: ${APP_ID}
+name: Loaders
+---
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: loaders
+      TEXT: 'Velociraptor'
+- tapOn:
+    text: 'Velociraptor'
+- assertVisible:
+    text: 'Loading…'
+- assertNotVisible:
+    text: 'A small dromaeosaur from late Cretaceous Mongolia.*'
+- extendedWaitUntil:
+    timeout: 5000
+    visible: 'Velociraptor'
+- assertVisible:
+    text: 'A small dromaeosaur from late Cretaceous Mongolia.*'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'web' || maestro.platform == 'android'}
+    commands:
+      - back
+- runFlow:
+    when:
+      true: ${maestro.platform == 'ios'}
+    commands:
+      - tapOn:
+          text: 'Dinos'
+- assertVisible:
+    text: 'Velociraptor'
+- tapOn:
+    text: 'Team'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'web'}
+    commands:
+      - assertVisible:
+          text: 'Catalog'
+      - assertVisible:
+          text: 'Battle'
+      - assertVisible:
+          text: 'Velociraptor'
+      - assertNotVisible:
+          text: 'Current Team'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'ios' || maestro.platform == 'android'}
+    commands:
+      - assertVisible:
+          text: 'Loading…'
+      - assertNotVisible:
+          text: 'Catalog'
+      - assertNotVisible:
+          text: 'Battle'
+      - assertNotVisible:
+          text: 'Velociraptor'
+- extendedWaitUntil:
+    timeout: 5000
+    visible: 'Current Team'
+- assertVisible:
+    text: 'Tyrannosaurus rex, Triceratops, Velociraptor, Stegosaurus'
+- tapOn:
+    text: 'Battle'
+- assertVisible:
+    text: 'Loading…'
+- assertVisible:
+    text: 'Catalog'
+- assertVisible:
+    text: 'Team'
+- assertVisible:
+    text: 'Battle'
+- assertNotVisible:
+    text: 'Brachiosaurus vs Spinosaurus'
+- extendedWaitUntil:
+    timeout: 5000
+    visible: 'Brachiosaurus vs Spinosaurus'
+- assertVisible:
+    text: 'Battle'
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: loaders
+      TEXT: 'Make next load fail'
+- tapOn:
+    text: 'Make next load fail'
+- tapOn:
+    text: 'Battle'
+- extendedWaitUntil:
+    timeout: 5000
+    visible: 'Failed to load dinosaur.'
+- runFlow:
+    when:
+      visible: 'Dismiss'
+    commands:
+      - tapOn: 'Dismiss'
+- runFlow:
+    when:
+      visible: 'Dismiss'
+    commands:
+      - tapOn: 'Dismiss'
+- assertVisible:
+    text: 'Try Again'
+- assertNotVisible:
+    text: 'Brachiosaurus vs Spinosaurus'
+- runFlow:
+    file: ../launch.yml
+    env:
+      LINK: loaders
+      TEXT: 'Make next load fail'
+- tapOn:
+    text: 'Make next load fail'
+- tapOn:
+    text: 'Stegosaurus'
+- extendedWaitUntil:
+    timeout: 5000
+    visible: 'Failed to load dinosaur.'
+- runFlow:
+    when:
+      visible: 'Dismiss'
+    commands:
+      - tapOn: 'Dismiss'
+- runFlow:
+    when:
+      visible: 'Dismiss'
+    commands:
+      - tapOn: 'Dismiss'
+- assertVisible:
+    text: 'Try Again'
+- assertNotVisible:
+    text: 'Stegosaurus'
