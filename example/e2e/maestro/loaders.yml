@@ -6,34 +6,12 @@ name: Loaders
     env:
       LINK: loaders
       TEXT: 'Velociraptor'
-# The loading state is transient, so if it's missed due to slow hierarchy
-# polling, reset via the cache buttons and try again with a fresh load
-- retry:
-    maxRetries: 2
-    commands:
-      - runFlow:
-          when:
-            visible: 'A small dromaeosaur from late Cretaceous Mongolia.*'
-          commands:
-            - runFlow:
-                when:
-                  true: ${maestro.platform == 'web' || maestro.platform == 'android'}
-                commands:
-                  - back
-            - runFlow:
-                when:
-                  true: ${maestro.platform == 'ios'}
-                commands:
-                  - tapOn:
-                      text: 'Dinos'
-            - tapOn:
-                text: 'Clear all cache'
-      - tapOn:
-          text: 'Velociraptor'
-      - assertVisible:
-          text: 'Loading…'
-      - assertNotVisible:
-          text: 'A small dromaeosaur from late Cretaceous Mongolia.*'
+- tapOn:
+    text: 'Velociraptor'
+- assertVisible:
+    text: 'Loading…'
+- assertNotVisible:
+    text: 'A small dromaeosaur from late Cretaceous Mongolia.*'
 - extendedWaitUntil:
     timeout: 15000
     visible: 'Velociraptor'
@@ -52,75 +30,49 @@ name: Loaders
           text: 'Dinos'
 - assertVisible:
     text: 'Velociraptor'
-- retry:
-    maxRetries: 2
+- tapOn:
+    text: 'Team'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'web'}
     commands:
-      - runFlow:
-          when:
-            visible: "Clear screen's cache"
-          commands:
-            - tapOn:
-                text: "Clear screen's cache"
-      - runFlow:
-          when:
-            visible: 'Team'
-          commands:
-            - tapOn:
-                text: 'Team'
-      - runFlow:
-          when:
-            true: ${maestro.platform == 'web'}
-          commands:
-            - assertVisible:
-                text: 'Catalog'
-            - assertVisible:
-                text: 'Battle'
-            - assertVisible:
-                text: 'Velociraptor'
-            - assertNotVisible:
-                text: 'Current Team'
-      - runFlow:
-          when:
-            true: ${maestro.platform == 'ios' || maestro.platform == 'android'}
-          commands:
-            - assertVisible:
-                text: 'Loading…'
-            - assertNotVisible:
-                text: 'Catalog'
-            - assertNotVisible:
-                text: 'Battle'
-            - assertNotVisible:
-                text: 'Velociraptor'
+      - assertVisible:
+          text: 'Catalog'
+      - assertVisible:
+          text: 'Battle'
+      - assertVisible:
+          text: 'Velociraptor'
+      - assertNotVisible:
+          text: 'Current Team'
+- runFlow:
+    when:
+      true: ${maestro.platform == 'ios' || maestro.platform == 'android'}
+    commands:
+      - assertVisible:
+          text: 'Loading…'
+      - assertNotVisible:
+          text: 'Catalog'
+      - assertNotVisible:
+          text: 'Battle'
+      - assertNotVisible:
+          text: 'Velociraptor'
 - extendedWaitUntil:
     timeout: 15000
     visible: 'Current Team'
 - assertVisible:
     text: 'Tyrannosaurus rex, Triceratops, Velociraptor, Stegosaurus'
-- retry:
-    maxRetries: 2
-    commands:
-      - runFlow:
-          when:
-            visible: 'Brachiosaurus vs Spinosaurus'
-          commands:
-            - tapOn:
-                text: "Clear screen's cache"
-      - runFlow:
-          when:
-            notVisible: 'Loading…'
-          commands:
-            - tapOn:
-                text: 'Battle'
-      - assertVisible:
-          text: 'Loading…'
-      - assertNotVisible:
-          text: 'Brachiosaurus vs Spinosaurus'
-      - assertVisible:
-          text: 'Catalog'
-      - assertVisible:
-          text: 'Team'
-      - assertVisible:
-          text: 'Battle'
+- tapOn:
+    text: 'Battle'
+- assertVisible:
+    text: 'Loading…'
+- assertVisible:
+    text: 'Catalog'
+- assertVisible:
+    text: 'Team'
+- assertVisible:
+    text: 'Battle'
+- assertNotVisible:
+    text: 'Brachiosaurus vs Spinosaurus'
 - extendedWaitUntil:
     timeout: 15000
     visible: 'Brachiosaurus vs Spinosaurus'
