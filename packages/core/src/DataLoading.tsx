@@ -1,15 +1,9 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 
 import { getStateFromRouteParams } from './getStateFromRouteParams';
-import type {
-  StaticScreenPathConfig,
-  TreeForPathConfig,
-} from './StaticNavigation';
+import type { TreeForPathConfig } from './StaticNavigation';
 
-function findScreenInConfig(
-  config: TreeForPathConfig['config'],
-  name: string
-): StaticScreenPathConfig | undefined {
+function findScreenInConfig(config: TreeForPathConfig['config'], name: string) {
   const screens = config.screens;
 
   if (screens?.[name] != null) {
@@ -58,7 +52,7 @@ function findInitialRouteName(
 }
 
 /**
- * Returns a loader function for the focused route in a static navigation config and navigation state.
+ * Get loader for the focused route in a static config tree with given navigation state.
  *
  * @param tree The static navigation config.
  * @param state The navigation state to extract the focused route path from.

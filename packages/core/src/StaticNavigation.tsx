@@ -758,8 +758,6 @@ type ScreenForPathConfig =
       UNSTABLE_loader?: unknown;
     };
 
-export type StaticScreenPathConfig = ScreenForPathConfig;
-
 type PathConfigMapForStaticNavigation = Record<
   string,
   string | PathConfigForStaticNavigation | undefined
