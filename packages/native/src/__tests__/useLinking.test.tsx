@@ -84,7 +84,7 @@ const TestScreen = ({ route }: any): any => (
   </Text>
 );
 
-test('throws if multiple instances of useLinking are used', async () => {
+test('shows error if multiple instances of useLinking are used', async () => {
   const ref = createNavigationContainerRef<ParamListBase>();
   const options = { enabled: true };
 
