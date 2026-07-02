@@ -23,14 +23,23 @@ export function usePreventRemove(
   const navigation = useNavigation();
   const { key: routeKey } = useRoute();
 
-  const { setPreventRemove } = usePreventRemoveContext();
+  const { setPreventRemove, notifyPreventRemove } = usePreventRemoveContext();
 
-  React.useEffect(() => {
+  React.useInsertionEffect(() => {
     setPreventRemove(id, routeKey, preventRemove);
+
     return () => {
       setPreventRemove(id, routeKey, false);
     };
   }, [setPreventRemove, id, routeKey, preventRemove]);
+
+  React.useEffect(() => {
+    notifyPreventRemove();
+
+    return () => {
+      notifyPreventRemove();
+    };
+  }, [id, routeKey, preventRemove, notifyPreventRemove]);
 
   const beforeRemoveListener = useLatestCallback<
     EventListenerCallback<EventMapCore<any>, 'beforeRemove'>
