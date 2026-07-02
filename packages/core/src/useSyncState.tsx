@@ -87,7 +87,11 @@ export function useSyncState<T>(getInitialState: () => T) {
 
     if (pendingUpdates.length !== 0) {
       store.batchUpdates(() => {
-        // Flush all the pending updates
+        // Updates are queued child-first as insertion effects run bottom-up.
+        // The root navigator replaces the whole state while nested navigators merge into it.
+        // So we apply them root-first to avoid the root clobbering nested updates.
+        pendingUpdates.reverse();
+
         for (const update of pendingUpdates) {
           update();
         }
