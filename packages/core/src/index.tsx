@@ -4,6 +4,7 @@ export {
   createNavigatorFactory,
   type TypedNavigatorFactory,
 } from './createNavigatorFactory';
+export { getLoaderForState as UNSTABLE_getLoaderForState } from './DataLoading';
 export { findFocusedRoute } from './findFocusedRoute';
 export { getActionFromState } from './getActionFromState';
 export { getFocusedRouteNameFromRoute } from './getFocusedRouteNameFromRoute';

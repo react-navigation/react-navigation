@@ -14,6 +14,7 @@ import { ComponentsSFSymbols } from './Screens/ComponentsSFSymbols';
 import { DrawerMasterDetail } from './Screens/DrawerMasterDetail';
 import { LibrariesDrawerLayout } from './Screens/LibrariesDrawerLayout';
 import { LibrariesTabView } from './Screens/LibrariesTabView';
+import { Loaders } from './Screens/Loaders';
 import { MaterialTopTabsBasic } from './Screens/MaterialTopTabs';
 import { NativeBottomTabs } from './Screens/NativeBottomTabs';
 import { NativeBottomTabsCustomTabBar } from './Screens/NativeBottomTabsCustomTabBar';
@@ -86,6 +87,7 @@ export const SCREENS = {
   StackShowcase,
   MyStackStatic,
   MyStackDynamic,
+  Loaders,
 } as const satisfies {
   [key: string]:
     | (React.ComponentType<{ route: any }> & {

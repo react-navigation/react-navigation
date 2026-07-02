@@ -11,6 +11,7 @@ import {
   getPatternParts,
   type PatternPart,
 } from './getPatternParts';
+import { StaticTreeContext } from './StaticTreeContext';
 import type {
   EventMapBase,
   NavigationListBase,
@@ -377,6 +378,19 @@ export type StaticScreenConfig<
    * Optional key for this screen.
    */
   navigationKey?: string;
+
+  /**
+   * Loader function to start loading data when the screen is navigated to.
+   *
+   * @example
+   * ```js
+   * UNSTABLE_loader: ({ params }) => loadProfile(params.id),
+   * ```
+   */
+  UNSTABLE_loader?: (options: {
+    name: string;
+    params: AnyToUnknown<Params>;
+  }) => Promise<void>;
 };
 
 export type StaticScreenFactory<in out Bag extends NavigatorTypeBagBase> = <
@@ -699,14 +713,16 @@ export function createComponentForStaticConfig<
         : { ...rest.screenListeners, ...props.screenListeners };
 
     return (
-      <Navigator
-        {...rest}
-        {...props}
-        screenOptions={screenOptions}
-        screenListeners={screenListeners}
-      >
-        {children}
-      </Navigator>
+      <StaticTreeContext.Provider value={tree}>
+        <Navigator
+          {...rest}
+          {...props}
+          screenOptions={screenOptions}
+          screenListeners={screenListeners}
+        >
+          {children}
+        </Navigator>
+      </StaticTreeContext.Provider>
     );
   };
 
@@ -715,7 +731,7 @@ export function createComponentForStaticConfig<
   return NavigatorComponent;
 }
 
-type TreeForPathConfig = {
+export type TreeForPathConfig = {
   config: ConfigForPathConfig;
 };
 
@@ -737,7 +753,9 @@ type ScreenForPathConfig =
   | ScreenValueForPathConfig
   | {
       screen: ScreenValueForPathConfig;
+      initialParams?: object;
       linking?: LinkingForPathConfig;
+      UNSTABLE_loader?: unknown;
     };
 
 type PathConfigMapForStaticNavigation = Record<
