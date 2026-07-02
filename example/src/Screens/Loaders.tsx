@@ -111,7 +111,7 @@ const dinoQuery = (id: string) =>
               }
             }
           },
-          id === '1' ? 10 : id === '2' ? 50 : 3000
+          shouldFailNextLoad ? 50 : id === '1' ? 10 : id === '2' ? 50 : 8000
         );
       }),
   });
