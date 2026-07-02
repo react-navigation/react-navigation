@@ -30,6 +30,11 @@
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
+    "./next": {
+      "source": "./src/next/index.tsx",
+      "types": "./lib/typescript/src/next/index.d.ts",
+      "default": "./lib/module/next/index.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
