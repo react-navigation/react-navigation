@@ -30,6 +30,8 @@ export function createNavigationContainerRef<
 
   const listeners: Record<string, ((...args: any[]) => void)[]> = {};
 
+  let current: NavigationContainerRef<ParamList> | null = null;
+
   const removeListener = (
     event: string,
     callback: (...args: any[]) => void
@@ -37,9 +39,12 @@ export function createNavigationContainerRef<
     if (listeners[event]) {
       listeners[event] = listeners[event].filter((cb) => cb !== callback);
     }
-  };
 
-  let current: NavigationContainerRef<ParamList> | null = null;
+    current?.removeListener(
+      event as keyof NavigationContainerEventMap,
+      callback
+    );
+  };
 
   const ref: NavigationContainerRefWithCurrent<ParamList> = {
     get current() {
@@ -68,7 +73,11 @@ export function createNavigationContainerRef<
     },
     ...methods.reduce<any>((acc, name) => {
       acc[name] = (...args: any[]) => {
-        if (current == null) {
+        if (name === 'removeListener') {
+          const [event, callback] = args;
+
+          removeListener(event, callback);
+        } else if (current == null) {
           switch (name) {
             case 'addListener': {
               const [event, callback] = args;
@@ -77,12 +86,6 @@ export function createNavigationContainerRef<
               listeners[event].push(callback);
 
               return () => removeListener(event, callback);
-            }
-            case 'removeListener': {
-              const [event, callback] = args;
-
-              removeListener(event, callback);
-              break;
             }
             default:
               console.error(NOT_INITIALIZED_ERROR);

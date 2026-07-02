@@ -14,6 +14,7 @@ export const PreventRemoveContext = React.createContext<
         routeKey: string,
         preventRemove: boolean
       ) => void;
+      notifyPreventRemove: () => void;
     }
   | undefined
 >(undefined);

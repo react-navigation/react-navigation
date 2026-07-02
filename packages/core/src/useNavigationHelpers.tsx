@@ -49,9 +49,12 @@ export function useNavigationHelpers<
   // Otherwise it can return an inconsistent state during render in children
   // This may affect hooks like `useNavigationState` that need to read the state during render
   // To avoid this, we use a ref for render phase, and immediately clear it on commit
-  const stateRef = React.useRef<State | null>(state);
+  // The ref won't be cleared if the render is discarded, e.g. when interrupted
+  // So we also track the stored state the render was based on
+  // Then ignore the ref once the stored state changes due to another dispatch
+  const stateRef = React.useRef<{ state: State; base: State } | null>(null);
 
-  stateRef.current = state;
+  stateRef.current = { state, base: getState() };
 
   React.useInsertionEffect(() => {
     stateRef.current = null;
@@ -101,13 +104,16 @@ export function useNavigationHelpers<
         );
       },
       getState: (): State => {
+        const current = getState();
+        const pending = stateRef.current;
+
         // FIXME: Workaround for when the state is read during render
         // Apart from subscriptions, `getState` should never be called during render
-        if (stateRef.current != null) {
-          return stateRef.current;
+        if (pending != null && pending.base === current) {
+          return pending.state;
         }
 
-        return getState();
+        return current;
       },
     } as NavigationHelpers<ParamListBase, EventMap> & ActionHelpers;
 

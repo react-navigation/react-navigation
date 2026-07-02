@@ -1,17 +1,22 @@
 import type {
   NavigationAction,
+  NavigationRoute,
   NavigationState,
+  ParamListBase,
+  PartialRoute,
   PartialState,
   Router,
   RouterConfigOptions,
 } from '@react-navigation/routers';
 import * as React from 'react';
 
+import { getLoaderForState } from './DataLoading';
 import {
   type ChildActionListener,
   type ChildBeforeRemoveListener,
   NavigationBuilderContext,
 } from './NavigationBuilderContext';
+import { StaticTreeContext } from './StaticTreeContext';
 import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
 import { shouldPreventRemove, useOnPreventRemove } from './useOnPreventRemove';
@@ -25,6 +30,40 @@ type Options<State extends NavigationState> = {
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
+};
+
+type MaybePartialRoute =
+  | NavigationRoute<ParamListBase, string>
+  | PartialRoute<NavigationRoute<ParamListBase, string>>;
+
+const didFocusedRouteChange = (
+  currentState: NavigationState | PartialState<NavigationState>,
+  nextState: NavigationState | PartialState<NavigationState>
+) => {
+  let currentFocusedRoute: MaybePartialRoute | undefined =
+    currentState.routes[currentState.index ?? 0];
+
+  let nextFocusedRoute: MaybePartialRoute | undefined =
+    nextState.routes[nextState.index ?? 0];
+
+  let changed = currentFocusedRoute?.key !== nextFocusedRoute?.key;
+
+  while (
+    !changed &&
+    currentFocusedRoute?.state != null &&
+    nextFocusedRoute?.state != null &&
+    currentFocusedRoute.state !== nextFocusedRoute.state
+  ) {
+    currentFocusedRoute =
+      currentFocusedRoute.state.routes[currentFocusedRoute.state.index ?? 0];
+
+    nextFocusedRoute =
+      nextFocusedRoute.state.routes[nextFocusedRoute.state.index ?? 0];
+
+    changed = currentFocusedRoute?.key !== nextFocusedRoute?.key;
+  }
+
+  return changed;
 };
 
 /**
@@ -53,10 +92,12 @@ export function useOnAction<State extends NavigationState>({
     onDispatchAction,
   } = React.use(NavigationBuilderContext);
 
+  const tree = React.use(StaticTreeContext);
+
   const routerConfigOptionsRef =
     React.useRef<RouterConfigOptions>(routerConfigOptions);
 
-  React.useEffect(() => {
+  React.useInsertionEffect(() => {
     routerConfigOptionsRef.current = routerConfigOptions;
   });
 
@@ -104,6 +145,12 @@ export function useOnAction<State extends NavigationState>({
             }
 
             onDispatchAction(action, false);
+
+            if (tree && didFocusedRouteChange(state, result)) {
+              const loader = getLoaderForState(tree, result);
+
+              loader?.();
+            }
 
             setState(result);
           } else {
@@ -155,6 +202,7 @@ export function useOnAction<State extends NavigationState>({
       onRouteFocusParent,
       router,
       setState,
+      tree,
     ]
   );
 

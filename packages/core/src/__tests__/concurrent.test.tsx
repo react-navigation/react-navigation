@@ -1,6 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
-import { CommonActions } from '@react-navigation/routers';
+import { CommonActions, StackRouter } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Text } from 'react-native';
@@ -8,6 +8,7 @@ import { Text } from 'react-native';
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { Screen } from '../Screen';
+import { useIsFocused } from '../useIsFocused';
 import { useNavigation } from '../useNavigation';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import { useNavigationState } from '../useNavigationState';
@@ -439,6 +440,81 @@ test('reflects the pending state with useTransition during navigation', async ()
       [screen-b]
     </Text>
   `);
+});
+
+test('does not leak state updates scheduled during a discarded render', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  let collapse: (() => void) | undefined;
+
+  const App = () => {
+    const [collapsed, setCollapsed] = React.useState(false);
+
+    collapse = () => {
+      React.startTransition(() => {
+        setCollapsed(true);
+      });
+    };
+
+    return (
+      <React.Suspense fallback={<Text>[fallback]</Text>}>
+        <TestNavigator>
+          <Screen name="A">
+            {() => {
+              // Collapsing removes screen B (scheduling a state update to drop it)
+              // and suspends the focused screen, so this render is thrown away
+              if (collapsed) {
+                React.use(promise);
+              }
+
+              return <Text>[screen-a]</Text>;
+            }}
+          </Screen>
+          {collapsed ? null : (
+            <Screen name="B">{() => <Text>[screen-b]</Text>}</Screen>
+          )}
+        </TestNavigator>
+      </React.Suspense>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <App />
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.getRootState()).toMatchObject({
+    index: 0,
+    routeNames: ['A', 'B'],
+    routes: [{ name: 'A' }, { name: 'B' }],
+  });
+
+  await act(() => {
+    collapse?.();
+  });
+
+  // The transition is held on the suspending screen, so collapsing hasn't committed.
+  // An unrelated update now commits and flushes pending updates - the update scheduled
+  await act(() => {
+    navigation.dispatch({ type: 'UPDATE' });
+  });
+
+  expect(navigation.getRootState()).toMatchObject({
+    index: 0,
+    routeNames: ['A', 'B'],
+    routes: [{ name: 'A' }, { name: 'B' }],
+  });
+
+  await act(() => resolve());
+
+  expect(navigation.getRootState()).toMatchObject({
+    index: 0,
+    routeNames: ['A'],
+    routes: [{ name: 'A' }],
+  });
 });
 
 test('keeps useNavigationState consistent with the held screen during navigation', async () => {
@@ -877,6 +953,107 @@ test('resets the pending state after a setParams transition completes', async ()
         [content-
         1
         ]
+      </Text>
+    </>
+  `);
+});
+
+test('keeps navigation and route object identity when a transition render is discarded', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  let suspendA = false;
+
+  const navigations = new Set();
+  const routes = new Set();
+
+  const ScreenA = () => {
+    const isFocused = useIsFocused();
+
+    if (suspendA && isFocused) {
+      React.use(promise);
+    }
+
+    return <Text>[screen-a]</Text>;
+  };
+
+  const ScreenB = (props: any) => {
+    navigations.add(props.navigation);
+    routes.add(props.route);
+
+    return <Text>[screen-b]</Text>;
+  };
+
+  const StackNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const App = ({ label }: { label: string }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <React.Suspense fallback={<Text>[fallback]</Text>}>
+        <StackNavigator>
+          <Screen name="A" component={ScreenA} />
+          <Screen name="B" component={ScreenB} />
+        </StackNavigator>
+      </React.Suspense>
+      <Text>{label}</Text>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<App label="one" />);
+
+  await act(() => navigation.navigate('B'));
+
+  expect(navigations.size).toBe(1);
+  expect(routes.size).toBe(1);
+
+  // Popping the screen starts a transition where the focused screen suspends
+  // So the transition render never commits until the promise resolves
+  suspendA = true;
+
+  await act(() => navigation.goBack());
+
+  // The committed tree still shows both screens
+  expect(root).toMatchInlineSnapshot(`
+    <>
+      <Text>
+        [screen-a]
+      </Text>
+      <Text>
+        [screen-b]
+      </Text>
+      <Text>
+        one
+      </Text>
+    </>
+  `);
+
+  // An urgent update re-renders the committed tree while the transition is pending
+  // The screen must receive the same navigation and route objects as before
+  await root.rerender(<App label="two" />);
+
+  expect(navigations.size).toBe(1);
+  expect(routes.size).toBe(1);
+
+  await act(() => resolve());
+
+  expect(root).toMatchInlineSnapshot(`
+    <>
+      <Text>
+        [screen-a]
+      </Text>
+      <Text>
+        two
       </Text>
     </>
   `);
