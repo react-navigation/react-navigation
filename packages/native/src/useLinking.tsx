@@ -133,8 +133,11 @@ export const series = (cb: () => Promise<void>) => {
   let queue = Promise.resolve();
 
   const callback = () => {
+    // Catch errors so the queue doesn't get stuck on a rejected promise
     // eslint-disable-next-line promise/no-callback-in-promise
-    queue = queue.then(cb);
+    queue = queue.then(cb).catch((e) => {
+      console.error(e);
+    });
   };
 
   return callback;
