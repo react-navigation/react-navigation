@@ -1,7 +1,7 @@
 import { expect, jest, test } from '@jest/globals';
 
 import { createNavigatorFactory } from '../createNavigatorFactory';
-import { UNSTABLE_getLoaderForState } from '../DataLoading';
+import { getLoaderForState } from '../DataLoading';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import { MockRouter } from './__fixtures__/MockRouter';
 
@@ -22,7 +22,7 @@ test('returns undefined when screen has no loader', () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(Navigator, {
+  const loader = getLoaderForState(Navigator, {
     index: 0,
     routes: [{ name: 'Home' }],
   });
@@ -40,7 +40,7 @@ test('returns undefined when focused route is not in the config', () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(Navigator, {
+  const loader = getLoaderForState(Navigator, {
     index: 0,
     routes: [{ name: 'Missing' }],
   });
@@ -60,7 +60,7 @@ test('returns the loader for a screen with UNSTABLE_loader', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(Navigator, {
+  const loader = getLoaderForState(Navigator, {
     index: 0,
     routes: [{ name: 'Home' }],
   });
@@ -89,7 +89,7 @@ test('merges initialParams with route params for the loader', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(Navigator, {
+  const loader = getLoaderForState(Navigator, {
     index: 0,
     routes: [{ name: 'Profile', params: { id: 'override' } }],
   });
@@ -130,7 +130,7 @@ test('composes loaders from nested navigators with their own name and params', a
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+  const loader = getLoaderForState(RootNavigator, {
     index: 0,
     routes: [
       {
@@ -183,7 +183,7 @@ test('uses the screen from nesting-level when there are multiple screens with sa
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+  const loader = getLoaderForState(RootNavigator, {
     index: 0,
     routes: [
       {
@@ -225,7 +225,7 @@ test('uses focused route from nested state', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+  const loader = getLoaderForState(RootNavigator, {
     index: 0,
     routes: [
       {
@@ -268,7 +268,7 @@ test('uses nested initialRouteName when no nested state is provided', async () =
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+  const loader = getLoaderForState(RootNavigator, {
     index: 0,
     routes: [{ name: 'Home' }],
   });
@@ -302,7 +302,7 @@ test('uses first group screen as nested initial route when screens is empty', as
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+  const loader = getLoaderForState(RootNavigator, {
     index: 0,
     routes: [{ name: 'Home' }],
   });
@@ -331,7 +331,7 @@ test('uses first screen as nested initial route when groups is empty', async () 
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+  const loader = getLoaderForState(RootNavigator, {
     index: 0,
     routes: [{ name: 'Home' }],
   });
@@ -373,7 +373,7 @@ test('traverses deeply nested navigators', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+  const loader = getLoaderForState(RootNavigator, {
     index: 0,
     routes: [
       {
@@ -418,7 +418,7 @@ test('finds loaders for screens inside groups', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(Navigator, {
+  const loader = getLoaderForState(Navigator, {
     index: 0,
     routes: [{ name: 'Login' }],
   });
@@ -451,7 +451,7 @@ test('uses params.screen to determine child loader when no nested state', async 
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+  const loader = getLoaderForState(RootNavigator, {
     index: 0,
     routes: [
       {
@@ -490,7 +490,7 @@ test('uses params.state to determine child loader when no nested state', async (
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+  const loader = getLoaderForState(RootNavigator, {
     index: 0,
     routes: [
       {
@@ -534,7 +534,7 @@ test('prefers route.state over params for determining child loader', async () =>
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+  const loader = getLoaderForState(RootNavigator, {
     index: 0,
     routes: [
       {
@@ -566,7 +566,7 @@ test('returns undefined when state is undefined', () => {
     },
   });
 
-  expect(UNSTABLE_getLoaderForState(Navigator, undefined)).toBeUndefined();
+  expect(getLoaderForState(Navigator, undefined)).toBeUndefined();
 });
 
 test('ignores nested state when static config has no nested navigator', async () => {
@@ -586,7 +586,7 @@ test('ignores nested state when static config has no nested navigator', async ()
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(Navigator, {
+  const loader = getLoaderForState(Navigator, {
     index: 0,
     routes: [
       {
@@ -628,7 +628,7 @@ test('uses nested static config when static tree is deeper than state', async ()
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+  const loader = getLoaderForState(RootNavigator, {
     index: 0,
     routes: [{ name: 'Home' }],
   });
@@ -664,7 +664,7 @@ test('traverses deeply nested navigators via params', async () => {
     },
   });
 
-  const loader = UNSTABLE_getLoaderForState(RootNavigator, {
+  const loader = getLoaderForState(RootNavigator, {
     index: 0,
     routes: [
       {

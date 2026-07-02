@@ -66,14 +66,14 @@ function findInitialRouteName(
  *
  * @example
  * ```js
- * const loader = UNSTABLE_getLoaderForState(RootStack, {
+ * const loader = getLoaderForState(RootStack, {
  *   index: 0,
  *   routes: [{ name: 'Home' }],
  * });
  * await loader?.();
  * ```
  */
-export function UNSTABLE_getLoaderForState(
+export function getLoaderForState(
   tree: TreeForPathConfig,
   state: PartialState<NavigationState> | NavigationState | undefined
 ): (() => Promise<void>) | undefined {
@@ -128,7 +128,7 @@ export function UNSTABLE_getLoaderForState(
       childState = { routes: [{ name: initialRouteName }] };
     }
 
-    const childLoader = UNSTABLE_getLoaderForState(nested, childState);
+    const childLoader = getLoaderForState(nested, childState);
 
     if (childLoader) {
       loaders.push(childLoader);

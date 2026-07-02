@@ -10,7 +10,7 @@ import type {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { UNSTABLE_getLoaderForState } from './DataLoading';
+import { getLoaderForState } from './DataLoading';
 import {
   type ChildActionListener,
   type ChildBeforeRemoveListener,
@@ -147,7 +147,7 @@ export function useOnAction<State extends NavigationState>({
             onDispatchAction(action, false);
 
             if (tree && didFocusedRouteChange(state, result)) {
-              const loader = UNSTABLE_getLoaderForState(tree, result);
+              const loader = getLoaderForState(tree, result);
 
               loader?.();
             }
