@@ -3,6 +3,8 @@ import {
   CommonActions,
   createNavigationContainerRef,
   createNavigatorFactory,
+  findFocusedRoute,
+  getPathFromState,
   type NavigationAction,
   type NavigationState,
   type ParamListBase,
@@ -1164,4 +1166,60 @@ test('dispatches RESET when browser back restores older nested state under the s
   expect(state.routes[0].state).toMatchObject({
     index: 0,
   });
+});
+
+test('keeps syncing browser history after getPathFromState throws', async () => {
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+    getPathFromState(
+      state: Parameters<typeof getPathFromState>[0],
+      config: Parameters<typeof getPathFromState>[1]
+    ) {
+      if (findFocusedRoute(state)?.name === 'Profile') {
+        throw new Error('Cannot build path for Profile');
+      }
+
+      return getPathFromState(state, config);
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(window.location.pathname).toBe('/');
+
+  act(() => navigation.navigate('Profile'));
+
+  await waitFor(() =>
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'Cannot build path for Profile' })
+    )
+  );
+
+  // The URL for the failed update is not synced, but the sync should recover
+  expect(window.location.pathname).toBe('/');
+
+  act(() => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
 });
