@@ -376,6 +376,48 @@ test('restores previous params on browser back after pushing params', async ({
   );
 });
 
+test('goes back through params history when the URL contains a hash', async ({
+  page,
+}) => {
+  await page.goto('/components-link/article/gandalf');
+
+  await page.getByRole('button', { name: 'Push params' }).click();
+
+  await expect(page).toHaveURL('/components-link/article/babel-fish');
+
+  await page.getByRole('button', { name: 'Add hash to URL' }).click();
+
+  await expect(page).toHaveURL('/components-link/article/babel-fish#frodo');
+
+  await page.getByRole('button', { name: 'Push params' }).click();
+
+  await expect(page).toHaveURL('/components-link/article/gandalf#frodo');
+  await expect(page).toHaveTitle(
+    'Article by Gandalf - React Navigation Example'
+  );
+
+  await page.goBack();
+
+  await expect(page).toHaveURL('/components-link/article/babel-fish#frodo');
+  await expect(page).toHaveTitle(
+    'Article by Babel fish - React Navigation Example'
+  );
+
+  await page.goBack();
+
+  await expect(page).toHaveURL('/components-link/article/babel-fish');
+  await expect(page).toHaveTitle(
+    'Article by Babel fish - React Navigation Example'
+  );
+
+  await page.goBack();
+
+  await expect(page).toHaveURL('/components-link/article/gandalf');
+  await expect(page).toHaveTitle(
+    'Article by Gandalf - React Navigation Example'
+  );
+});
+
 test('replaces browser history entry when params are updated with setParams', async ({
   page,
 }) => {
