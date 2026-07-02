@@ -9,9 +9,11 @@ import * as React from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
+import type { PreventedRoutes } from '../PreventRemoveContext';
 import { Screen } from '../Screen';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import { usePreventRemove } from '../usePreventRemove';
+import { usePreventRemoveContext } from '../usePreventRemoveContext';
 import { MockRouterKey } from './__fixtures__/MockRouter';
 
 jest.mock('nanoid/non-secure', () => {
@@ -1100,4 +1102,315 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
     stale: false,
     type: 'stack',
   });
+});
+
+test('keeps preventing removal while the screen is hidden with an activity', async () => {
+  let preventedRoutes: PreventedRoutes = {};
+
+  const PreventedRoutesProbe = () => {
+    preventedRoutes = usePreventRemoveContext().preventedRoutes;
+
+    return null;
+  };
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        <PreventedRoutesProbe />
+        {state.routes.map((route, index) => (
+          <React.Activity
+            key={route.key}
+            mode={index === state.index ? 'visible' : 'hidden'}
+          >
+            {descriptors[route.key]?.render()}
+          </React.Activity>
+        ))}
+      </NavigationContent>
+    );
+  };
+
+  const onPreventRemove = jest.fn();
+
+  const TestScreen = () => {
+    usePreventRemove(true, onPreventRemove);
+
+    return null;
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const element = (
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar" component={TestScreen} />
+        <Screen name="baz">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await render(element);
+
+  await act(() => ref.current?.navigate('bar'));
+  await act(() => ref.current?.navigate('baz'));
+
+  const barKey = ref.current
+    ?.getRootState()
+    .routes.find((route) => route.name === 'bar')?.key;
+
+  if (barKey == null) {
+    throw new Error("Couldn't find the route for 'bar'");
+  }
+
+  expect(preventedRoutes[barKey]).toEqual({ preventRemove: true });
+
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+
+  expect(onPreventRemove).toHaveBeenCalledTimes(1);
+
+  expect(ref.current?.getRootState()).toMatchObject({
+    routes: [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }],
+  });
+
+  expect(preventedRoutes[barKey]).toEqual({ preventRemove: true });
+});
+
+test('stops preventing removal when a hidden screen is removed', async () => {
+  let preventedRoutes: PreventedRoutes = {};
+
+  const PreventedRoutesProbe = () => {
+    preventedRoutes = usePreventRemoveContext().preventedRoutes;
+
+    return null;
+  };
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        <PreventedRoutesProbe />
+        {state.routes.map((route, index) => (
+          <React.Activity
+            key={route.key}
+            mode={index === state.index ? 'visible' : 'hidden'}
+          >
+            {descriptors[route.key]?.render()}
+          </React.Activity>
+        ))}
+      </NavigationContent>
+    );
+  };
+
+  const TestScreen = (props: any) => {
+    usePreventRemove(true, ({ data }) => {
+      props.navigation.dispatch(data.action);
+    });
+
+    return null;
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const element = (
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar" component={TestScreen} />
+        <Screen name="baz">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await render(element);
+
+  await act(() => ref.current?.navigate('bar'));
+  await act(() => ref.current?.navigate('baz'));
+
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+
+  expect(ref.current?.getRootState()).toMatchObject({
+    routes: [{ name: 'foo' }],
+  });
+
+  expect(preventedRoutes).toEqual({});
+});
+
+test('keeps preventing removal for hidden screens in strict mode', async () => {
+  let preventedRoutes: PreventedRoutes = {};
+
+  const PreventedRoutesProbe = () => {
+    preventedRoutes = usePreventRemoveContext().preventedRoutes;
+
+    return null;
+  };
+
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        <PreventedRoutesProbe />
+        {state.routes.map((route, index) => (
+          <React.Activity
+            key={route.key}
+            mode={index === state.index ? 'visible' : 'hidden'}
+          >
+            {descriptors[route.key]?.render()}
+          </React.Activity>
+        ))}
+      </NavigationContent>
+    );
+  };
+
+  const onPreventRemove = jest.fn();
+
+  const TestScreen = () => {
+    usePreventRemove(true, onPreventRemove);
+
+    return null;
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const element = (
+    <React.StrictMode>
+      <BaseNavigationContainer ref={ref}>
+        <TestNavigator>
+          <Screen name="foo">{() => null}</Screen>
+          <Screen name="bar" component={TestScreen} />
+          <Screen name="baz">{() => null}</Screen>
+        </TestNavigator>
+      </BaseNavigationContainer>
+    </React.StrictMode>
+  );
+
+  await render(element);
+
+  await act(() => ref.current?.navigate('bar'));
+  await act(() => ref.current?.navigate('baz'));
+
+  const barKey = ref.current
+    ?.getRootState()
+    .routes.find((route) => route.name === 'bar')?.key;
+
+  if (barKey == null) {
+    throw new Error("Couldn't find the route for 'bar'");
+  }
+
+  expect(preventedRoutes[barKey]).toEqual({ preventRemove: true });
+
+  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+
+  expect(onPreventRemove).toHaveBeenCalledTimes(1);
+
+  expect(ref.current?.getRootState()).toMatchObject({
+    routes: [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }],
+  });
+});
+
+test('keeps parent prevention when a nested navigator is hidden with an activity', async () => {
+  let preventedRoutes: PreventedRoutes = {};
+
+  const PreventedRoutesProbe = () => {
+    preventedRoutes = usePreventRemoveContext().preventedRoutes;
+
+    return null;
+  };
+
+  const ParentNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        <PreventedRoutesProbe />
+        {state.routes.map((route, index) => (
+          <React.Activity
+            key={route.key}
+            mode={index === state.index ? 'visible' : 'hidden'}
+          >
+            {descriptors[route.key]?.render()}
+          </React.Activity>
+        ))}
+      </NavigationContent>
+    );
+  };
+
+  const NestedNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const onPreventRemove = jest.fn();
+
+  const InnerScreen = () => {
+    usePreventRemove(true, onPreventRemove);
+
+    return null;
+  };
+
+  const NestedScreen = () => (
+    <NestedNavigator>
+      <Screen name="inner" component={InnerScreen} />
+    </NestedNavigator>
+  );
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const element = (
+    <BaseNavigationContainer ref={ref}>
+      <ParentNavigator>
+        <Screen name="home">{() => null}</Screen>
+        <Screen name="nested" component={NestedScreen} />
+        <Screen name="other">{() => null}</Screen>
+      </ParentNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await render(element);
+
+  await act(() => ref.current?.navigate('nested'));
+  await act(() => ref.current?.navigate('other'));
+
+  const nestedKey = ref.current
+    ?.getRootState()
+    .routes.find((route) => route.name === 'nested')?.key;
+
+  if (nestedKey == null) {
+    throw new Error("Couldn't find the route for 'nested'");
+  }
+
+  expect(preventedRoutes[nestedKey]).toEqual({ preventRemove: true });
+
+  await act(() => ref.current?.dispatch(StackActions.popTo('home')));
+
+  expect(onPreventRemove).toHaveBeenCalledTimes(1);
+
+  expect(ref.current?.getRootState()).toMatchObject({
+    routes: [{ name: 'home' }, { name: 'nested' }, { name: 'other' }],
+  });
+
+  expect(preventedRoutes[nestedKey]).toEqual({ preventRemove: true });
 });
