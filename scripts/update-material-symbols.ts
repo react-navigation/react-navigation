@@ -8,6 +8,20 @@ const assets = new URL('packages/native/assets/fonts/', root);
 const VARIANTS = ['Outlined', 'Rounded', 'Sharp'];
 const WEIGHTS = [100, 200, 300, 400, 500, 600, 700];
 
+// Google Fonts serves ttf or woff2 based on the user agent
+// ttf is used on Android, woff2 on Web
+const FORMATS = [
+  {
+    extension: 'ttf',
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+  },
+  {
+    extension: 'woff2',
+    userAgent:
+      'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+  },
+];
+
 process.stdout.write('Updating Material Symbols...\n\n');
 
 fs.mkdirSync(assets, { recursive: true });
@@ -32,53 +46,59 @@ async function download(url: string, dest: URL): Promise<Buffer> {
   return buffer;
 }
 
-// Download the regular ttf file from Google Fonts
+// Download the regular font files from Google Fonts
 // The variable fonts in the Material Symbols repo are too large
 for (const variant of VARIANTS) {
   for (const weight of WEIGHTS) {
-    process.stdout.write(`Fetching font URL for ${variant} ${weight}...`);
+    for (const { extension, userAgent } of FORMATS) {
+      process.stdout.write(
+        `Fetching ${extension} URL for ${variant} ${weight}...`
+      );
 
-    const cssResponse = await fetch(
-      `https://fonts.googleapis.com/css2?family=Material+Symbols+${variant}:wght@${weight}`,
-      {
-        headers: {
-          'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-        },
+      const cssResponse = await fetch(
+        `https://fonts.googleapis.com/css2?family=Material+Symbols+${variant}:wght@${weight}`,
+        {
+          headers: {
+            'User-Agent': userAgent,
+          },
+        }
+      );
+
+      if (!cssResponse.ok) {
+        throw new Error(
+          `Failed to fetch CSS for ${variant} ${weight}: ${cssResponse.statusText}`
+        );
       }
-    );
 
-    if (!cssResponse.ok) {
-      throw new Error(
-        `Failed to fetch CSS for ${variant} ${weight}: ${cssResponse.statusText}`
+      const css = await cssResponse.text();
+
+      const fontUrlMatch = css.match(
+        /url\((https:\/\/fonts\.gstatic\.com[^)]+)\)/
       );
-    }
 
-    const css = await cssResponse.text();
+      if (!fontUrlMatch) {
+        throw new Error(
+          `Could not find font URL in CSS for ${variant} ${weight}`
+        );
+      }
 
-    const fontUrlMatch = css.match(
-      /url\((https:\/\/fonts\.gstatic\.com[^)]+)\)/
-    );
+      const fontUrl = fontUrlMatch[1];
 
-    if (!fontUrlMatch) {
-      throw new Error(
-        `Could not find font URL in CSS for ${variant} ${weight}`
+      if (fontUrl == null) {
+        throw new Error(
+          `Could not find font URL in CSS for ${variant} ${weight}`
+        );
+      }
+
+      process.stdout.write(' done.\n');
+
+      const dest = new URL(
+        `MaterialSymbols${variant}_${weight}.${extension}`,
+        assets
       );
+
+      await download(fontUrl, dest);
     }
-
-    const fontUrl = fontUrlMatch[1];
-
-    if (fontUrl == null) {
-      throw new Error(
-        `Could not find font URL in CSS for ${variant} ${weight}`
-      );
-    }
-
-    process.stdout.write(' done.\n');
-
-    const ttfDest = new URL(`MaterialSymbols${variant}_${weight}.ttf`, assets);
-
-    await download(fontUrl, ttfDest);
   }
 
   const codepointsUrl = `https://github.com/google/material-design-icons/raw/master/variablefont/${encodeURIComponent(`MaterialSymbols${variant}[FILL,GRAD,opsz,wght].codepoints`)}`;

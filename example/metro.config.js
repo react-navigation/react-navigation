@@ -16,6 +16,9 @@ module.exports = {
   resolver: {
     ...defaultConfig.resolver,
 
+    // Metro doesn't treat `woff2` as an asset by default, needed for Material Symbols on Web
+    assetExts: [...defaultConfig.resolver.assetExts, 'woff2'],
+
     resolveRequest: (context, realModuleName, platform) => {
       // We mock out these native deps on web
       // This is an additional measure to ensure they don't get added accidentally

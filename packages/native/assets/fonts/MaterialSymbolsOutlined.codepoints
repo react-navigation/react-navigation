@@ -1227,6 +1227,7 @@ drive_fusiontable e678
 drone f25a
 drone_2 f259
 dropdown e9a4
+dropdown_menu ffef0
 dropper_eye f351
 dry f1b3
 dry_cleaning ea58
@@ -1383,6 +1384,7 @@ eyebrow eeb3
 eyeglasses f6ee
 eyeglasses_2 f2c7
 eyeglasses_2_sound f265
+eyeglasses_3 ffef1
 face f008
 face_2 f8da
 face_3 f8db
@@ -3096,6 +3098,7 @@ report_problem f083
 request_page f22c
 request_quote f1b6
 reset_brightness f482
+reset_colors ffee2
 reset_exposure f266
 reset_focus f481
 reset_image f824
@@ -3232,6 +3235,7 @@ seat_heat_left f32f
 seat_heat_right f32e
 seat_vent_left f32d
 seat_vent_right f32c
+seat_window ffee1
 security e32a
 security_key f503
 security_update f2cd
@@ -3305,6 +3309,7 @@ settings_phone e8c5
 settings_photo_camera f834
 settings_power e8c6
 settings_remote e8c7
+settings_screen ffedf
 settings_seating ef2d
 settings_slow_motion f623
 settings_suggest f05e
@@ -3373,6 +3378,7 @@ sick f220
 side_navigation e9e2
 sign_language ebe5
 sign_language_2 f258
+sign_language_off ffee4
 signal_cellular_0_bar f0a8
 signal_cellular_1_bar f0a9
 signal_cellular_2_bar f0aa
@@ -3442,6 +3448,7 @@ smoke_free eb4a
 smoking_rooms eb4b
 sms e625
 sms_failed e87f
+snail ffede
 snippet_folder f1c7
 snooze e046
 snowboarding e513
