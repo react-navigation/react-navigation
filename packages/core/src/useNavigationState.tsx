@@ -54,7 +54,7 @@ export function NavigationStateListenerProvider({
     };
   });
 
-  React.useLayoutEffect(() => {
+  React.useInsertionEffect(() => {
     stateRef.current = state;
     listeners.current.forEach((callback) => callback());
   }, [state]);
