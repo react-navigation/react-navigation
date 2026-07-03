@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.6](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.5...react-native-drawer-layout@4.2.6) (2026-07-03)
+
+### Bug Fixes
+
+* fix detecting drawer transition start and end ([fb6f599](https://github.com/react-navigation/react-navigation/commit/fb6f599196dd57864f1ea77e0e1ff1bfd0df4472)) - by @satya164
+
 ## [4.2.5](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.4...react-native-drawer-layout@4.2.5) (2026-06-08)
 
 **Note:** Version bump only for package react-native-drawer-layout
