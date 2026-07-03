@@ -998,7 +998,10 @@ export function useNavigationBuilder<
     return (
       <NavigationMetaContext.Provider value={undefined}>
         <NavigationHelpersContext.Provider value={navigation}>
-          <NavigationStateListenerProvider state={state}>
+          <NavigationStateListenerProvider
+            state={state}
+            getState={navigation.getState}
+          >
             <FocusedRouteKeyContext.Provider
               value={state.routes[state.index].key}
             >
