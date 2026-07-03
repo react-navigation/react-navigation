@@ -13,6 +13,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MATERIAL_SYMBOL_NAMES } from '../material-symbol-names';
 import { SegmentedPicker } from '../Shared/SegmentedPicker';
 
+const SUPPORTS_GET_IMAGE = Platform.OS === 'android';
+
 const COLUMN_COUNT = 4;
 const ICON_SIZE = 32;
 const ICON_PADDING_VERTICAL = 8;
@@ -61,11 +63,11 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
     return result;
   }, [query]);
 
-  if (Platform.OS !== 'android') {
+  if (Platform.OS !== 'android' && Platform.OS !== 'web') {
     return (
       <View style={[styles.centered, { backgroundColor: colors.background }]}>
         <Text style={{ color: colors.text }}>
-          MaterialSymbol is only available on Android
+          MaterialSymbol is only available on Android and Web
         </Text>
       </View>
     );
@@ -74,26 +76,28 @@ export function ComponentsMaterialSymbols(_: StaticScreenProps<{}>) {
   return (
     <FlatList
       data={rows}
-      stickyHeaderIndices={[0]}
+      stickyHeaderIndices={SUPPORTS_GET_IMAGE ? [0] : undefined}
       ListHeaderComponent={
-        <View
-          style={[
-            styles.header,
-            {
-              backgroundColor: colors.background,
-              borderBottomColor: colors.border,
-            },
-          ]}
-        >
-          <SegmentedPicker
-            choices={[
-              { label: 'Font', value: 'font' },
-              { label: 'Image', value: 'image' },
+        SUPPORTS_GET_IMAGE ? (
+          <View
+            style={[
+              styles.header,
+              {
+                backgroundColor: colors.background,
+                borderBottomColor: colors.border,
+              },
             ]}
-            value={image ? 'image' : 'font'}
-            onValueChange={(value) => setImage(value === 'image')}
-          />
-        </View>
+          >
+            <SegmentedPicker
+              choices={[
+                { label: 'Font', value: 'font' },
+                { label: 'Image', value: 'image' },
+              ]}
+              value={image ? 'image' : 'font'}
+              onValueChange={(value) => setImage(value === 'image')}
+            />
+          </View>
+        ) : null
       }
       renderItem={({ item }) => (
         <MaterialSymbolRow items={item} image={image} />
