@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.27...@react-navigation/elements@2.9.28) (2026-07-03)
+
+**Note:** Version bump only for package @react-navigation/elements
+
 ## [2.9.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.26...@react-navigation/elements@2.9.27) (2026-06-30)
 
 **Note:** Version bump only for package @react-navigation/elements

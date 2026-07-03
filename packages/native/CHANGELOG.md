@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.5...@react-navigation/native@7.3.6) (2026-07-03)
+
+### Bug Fixes
+
+* handle interrupted rollback when browser back is prevented ([0c9b2d4](https://github.com/react-navigation/react-navigation/commit/0c9b2d4dd4879846cf3732e71499c2c514d5449b)) - by @satya164
+* keep syncing history after an error during sync ([172e319](https://github.com/react-navigation/react-navigation/commit/172e319e70444e320212553608595e3579afeb70)) - by @satya164
+* track history delta from popstate to detect browser-caused changes ([7f427b7](https://github.com/react-navigation/react-navigation/commit/7f427b7b03e311a0c16f9aaa8c205979e2f36593)) - by @satya164
+
 ## [7.3.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.4...@react-navigation/native@7.3.5) (2026-06-30)
 
 **Note:** Version bump only for package @react-navigation/native
