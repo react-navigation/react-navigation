@@ -2,6 +2,13 @@ import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
 
+import { useClientLayoutEffect } from './useClientLayoutEffect';
+
+type NavigationStateListener = {
+  getState: () => NavigationState<ParamListBase>;
+  subscribe: (callback: () => void) => () => void;
+};
+
 type Selector<ParamList extends ParamListBase, T> = (
   state: NavigationState<ParamList>
 ) => T;
@@ -14,44 +21,39 @@ type Selector<ParamList extends ParamListBase, T> = (
 export function useNavigationState<ParamList extends ParamListBase, T>(
   selector: Selector<ParamList, T>
 ): T {
-  const stateListener = React.useContext(NavigationStateListenerContext);
+  if (typeof selector !== 'function') {
+    throw new Error(
+      `A selector function must be provided (got ${typeof selector}).`
+    );
+  }
 
-  if (stateListener == null) {
+  const listener = React.useContext(NavigationStateListenerContext);
+
+  if (listener == null) {
     throw new Error(
       "Couldn't get the navigation state. Is your component inside a navigator?"
     );
   }
 
-  const { getState, subscribe } = stateListener;
+  const { getState, subscribe } = listener;
 
   const [, forceUpdate] = React.useReducer((count: number) => count + 1, 0);
 
-  // Read the selected value during render so it's always up-to-date
-  // This reads the latest committed (or pending) state via `getState`, so the
-  // value is never stale and doesn't depend on effect timing to be correct
-  const selected = selector(getState() as NavigationState<ParamList>);
+  // @ts-expect-error: this is unsafe, but we need to support it for now
+  const selected = selector(getState());
 
-  // Keep the latest selector and its result so the subscription can detect
-  // whether a state change actually affects this component's selected value
-  const selectionRef = React.useRef({ selector, selected });
+  const selectionRef = React.useRef({ select: selector, selected });
 
-  React.useLayoutEffect(() => {
-    selectionRef.current = { selector, selected };
+  useClientLayoutEffect(() => {
+    selectionRef.current = { select: selector, selected };
   });
 
   React.useEffect(() => {
     const checkForUpdates = () => {
       const selection = selectionRef.current;
 
-      if (
-        !Object.is(
-          selection.selected,
-          selection.selector(getState() as NavigationState<ParamList>)
-        )
-      ) {
-        // Schedule a re-render only when the selected value has changed
-        // This runs in a passive/layout effect (never during an insertion
-        // effect), so it's safe to schedule updates here
+      // @ts-expect-error: this is unsafe, but we need to support it for now
+      if (!Object.is(selection.selected, selection.select(getState()))) {
         forceUpdate();
       }
     };
@@ -87,12 +89,7 @@ export function NavigationStateListenerProvider({
   });
 
   // Notify subscribers once the new state has committed
-  // This runs in a layout effect (not an insertion effect) because notifying
-  // subscribers schedules state updates in the consumers, which React forbids
-  // inside insertion effects (`useInsertionEffect must not schedule updates`).
-  // Consumers still read the up-to-date value during render via `getState`, so
-  // moving the notification to the layout phase doesn't cause stale reads.
-  React.useLayoutEffect(() => {
+  useClientLayoutEffect(() => {
     listeners.current.forEach((callback) => callback());
   }, [state]);
 
@@ -112,9 +109,5 @@ export function NavigationStateListenerProvider({
 }
 
 const NavigationStateListenerContext = React.createContext<
-  | {
-      getState: () => NavigationState<ParamListBase>;
-      subscribe: (callback: () => void) => () => void;
-    }
-  | undefined
+  NavigationStateListener | undefined
 >(undefined);
