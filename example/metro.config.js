@@ -25,6 +25,9 @@ module.exports = {
   resolver: {
     ...defaultConfig.resolver,
 
+    // Metro doesn't treat `woff2` as an asset by default, needed for Material Symbols on Web
+    assetExts: [...defaultConfig.resolver.assetExts, 'woff2'],
+
     resolveRequest: (context, realModuleName, platform) => {
       // We want these packages to work without `react-native-web`
       if (
