@@ -22,6 +22,7 @@ import type {
   NativeStackDescriptorMap,
   NativeStackNavigationHelpers,
 } from '../types';
+import { getModalRouteKeys } from '../utils/getModalRoutesKeys';
 import { AnimatedHeaderHeightContext } from '../utils/useAnimatedHeaderHeight';
 
 type Props = {
@@ -40,6 +41,7 @@ export function NativeStackView({ state, descriptors }: Props) {
   const { buildHref } = useLinkBuilder();
 
   const activeRoutes = state.routes.slice(0, state.index + 1);
+  const modalRouteKeys = getModalRouteKeys(activeRoutes, descriptors);
 
   return (
     <SafeAreaProviderCompat>
@@ -99,6 +101,10 @@ export function NativeStackView({ state, descriptors }: Props) {
 
         const isBeforeLast = i === activeRoutes.length - 2;
 
+        const isNextScreenModal = nextKey
+          ? modalRouteKeys.includes(nextKey)
+          : false;
+
         const activityMode =
           // Render focused screens normally
           isFocused
@@ -109,7 +115,10 @@ export function NativeStackView({ state, descriptors }: Props) {
                 isInactive ||
                 isNextScreenTransparent
               ? 'inert'
-              : inactiveBehavior === 'unmount' && !isBeforeLast && !route.state
+              : inactiveBehavior === 'unmount' &&
+                  !isNextScreenModal &&
+                  !isBeforeLast &&
+                  !route.state
                 ? 'unmounted'
                 : 'paused';
 
