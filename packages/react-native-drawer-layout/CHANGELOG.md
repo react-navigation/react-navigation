@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.7](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.6...react-native-drawer-layout@4.2.7) (2026-07-04)
+
+### Bug Fixes
+
+* add a stub for InteractionManager ([2cd8f9c](https://github.com/react-navigation/react-navigation/commit/2cd8f9c900bba27a1626db503913b268f98d745a)) - by @
+
 ## [4.2.6](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.5...react-native-drawer-layout@4.2.6) (2026-07-03)
 
 ### Bug Fixes

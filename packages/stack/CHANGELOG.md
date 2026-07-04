@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.10.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.9...@react-navigation/stack@7.10.10) (2026-07-04)
+
+### Bug Fixes
+
+* add a stub for InteractionManager ([2cd8f9c](https://github.com/react-navigation/react-navigation/commit/2cd8f9c900bba27a1626db503913b268f98d745a)) - by @
+
 ## [7.10.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.8...@react-navigation/stack@7.10.9) (2026-07-03)
 
 **Note:** Version bump only for package @react-navigation/stack
