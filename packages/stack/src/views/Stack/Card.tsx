@@ -3,7 +3,6 @@ import Color from 'color';
 import * as React from 'react';
 import {
   Animated,
-  InteractionManager,
   Platform,
   type StyleProp,
   StyleSheet,
@@ -29,6 +28,7 @@ import {
   PanGestureHandler,
   type PanGestureHandlerGestureEvent,
 } from '../GestureHandler';
+import { InteractionManager } from '../InteractionManager';
 import { CardContent } from './CardContent';
 
 type Props = {
@@ -182,15 +182,15 @@ function Card({
   const [isSwiping] = React.useState(() => new Animated.Value(FALSE));
 
   const onStartInteraction = useLatestCallback(() => {
-    if (interactionHandleRef.current === undefined) {
+    if (interactionHandleRef.current == null) {
       interactionHandleRef.current =
-        InteractionManager.createInteractionHandle();
+        InteractionManager?.createInteractionHandle();
     }
   });
 
   const onEndInteraction = useLatestCallback(() => {
-    if (interactionHandleRef.current !== undefined) {
-      InteractionManager.clearInteractionHandle(interactionHandleRef.current);
+    if (interactionHandleRef.current != null) {
+      InteractionManager?.clearInteractionHandle(interactionHandleRef.current);
       interactionHandleRef.current = undefined;
     }
   });
