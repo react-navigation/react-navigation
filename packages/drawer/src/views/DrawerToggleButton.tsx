@@ -1,12 +1,11 @@
-import { HeaderButton, type Icon } from '@react-navigation/elements';
 import {
-  DrawerActions,
-  MaterialSymbol,
-  SFSymbol,
-  useNavigation,
-} from '@react-navigation/native';
+  HeaderButton,
+  type Icon,
+  PlatformIcon,
+} from '@react-navigation/elements';
+import { DrawerActions, useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { type ColorValue, Image, Platform, StyleSheet } from 'react-native';
+import { type ColorValue, Platform, StyleSheet } from 'react-native';
 
 import toggleDrawerIcon from './assets/toggle-drawer-icon.png';
 
@@ -55,28 +54,11 @@ export function DrawerToggleButton({
     >
       {typeof drawerIcon === 'function' ? (
         drawerIcon({ tintColor })
-      ) : drawerIcon.type === 'sfSymbol' ? (
-        <SFSymbol
-          name={drawerIcon.name}
-          size={ICON_SIZE}
-          color={tintColor}
-          style={styles.icon}
-        />
-      ) : drawerIcon.type === 'materialSymbol' ? (
-        <MaterialSymbol
-          name={drawerIcon.name}
-          variant={drawerIcon.variant}
-          weight={drawerIcon.weight}
-          size={ICON_SIZE}
-          color={tintColor}
-          style={styles.icon}
-        />
       ) : (
-        <Image
-          resizeMode="contain"
-          source={drawerIcon.source}
-          fadeDuration={0}
-          tintColor={tintColor}
+        <PlatformIcon
+          icon={drawerIcon}
+          size={ICON_SIZE}
+          color={tintColor}
           style={styles.icon}
         />
       )}
