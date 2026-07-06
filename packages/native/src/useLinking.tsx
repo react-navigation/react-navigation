@@ -571,8 +571,6 @@ export function useLinking<ParamList extends ParamListBase>(
       }
 
       // Skip if the state hasn't changed since we last synced it
-      // This avoids redundant work when the committed `state` event fires
-      // after we already synced from `__unsafe_action__`
       if (previousState === state) {
         return;
       }
@@ -655,25 +653,7 @@ export function useLinking<ParamList extends ParamListBase>(
     // If `pushState` or `replaceState` were called before `history.go(n)` completes, it'll mess stuff up
     const handleUpdate = series(onUpdate);
 
-    // We sync history on `__unsafe_action__` which fires synchronously on dispatch
-    // The committed `state` event can be deferred or skipped with transitions when a
-    // navigation interrupts an in-flight one, which would drop history entries
-    const unsubscribeAction = ref.current?.addListener(
-      '__unsafe_action__',
-      (e) => {
-        if (!e.data.noop) {
-          handleUpdate();
-        }
-      }
-    );
-
-    // We still listen to `state` for changes that don't go through dispatch, e.g. conditional rendering
-    const unsubscribeState = ref.current?.addListener('state', handleUpdate);
-
-    return () => {
-      unsubscribeAction?.();
-      unsubscribeState?.();
-    };
+    return ref.current?.addListener('state', handleUpdate);
   }, [enabled, history, ref]);
 
   return {

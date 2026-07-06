@@ -9,6 +9,7 @@ import {
   type NavigationAction,
   type NavigationState,
   type ParamListBase,
+  StackActions,
   StackRouter,
   TabRouter,
   useNavigationBuilder,
@@ -20,6 +21,7 @@ import {
   type RenderResult,
   waitFor,
 } from '@testing-library/react-native';
+import * as React from 'react';
 import { Text } from 'react-native';
 
 import { NavigationContainer } from '../NavigationContainer';
@@ -1950,4 +1952,147 @@ test("rolls back browser history when 'beforeRemove' prevents multi-entry jump",
 
   expect(onPreventRemove).toHaveBeenCalledTimes(1);
   expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test("doesn't update URL until navigation to a suspending screen commits", async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+      },
+    },
+  };
+
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const ProfileScreen = (): any => {
+    React.use(promise);
+
+    return <Text>Profile</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  expect(window.location.pathname).toBe('/');
+
+  await act(() => navigation.navigate('Profile'));
+
+  expect(window.location.pathname).toBe('/');
+
+  await act(() => resolve());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+});
+
+test("doesn't add history entry for navigation interrupted before commit", async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const { promise } = Promise.withResolvers<void>();
+
+  const ProfileScreen = (): any => {
+    React.use(promise);
+
+    return <Text>Profile</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Settings" component={TestScreen} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('Profile'));
+
+  expect(window.location.pathname).toBe('/');
+
+  await act(() => navigation.dispatch(StackActions.replace('Settings')));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('preserves history entries when traversal is slower than the fallback timeout', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  const originalGo = window.history.go.bind(window.history);
+
+  const spy = jest.spyOn(window.history, 'go').mockImplementation((n) => {
+    setTimeout(() => originalGo(n), 150);
+  });
+
+  await act(() => navigation.goBack());
+
+  await act(() => jest.advanceTimersByTime(100));
+  await act(() => jest.advanceTimersByTime(50));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  spy.mockRestore();
+
+  await act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Profile');
 });

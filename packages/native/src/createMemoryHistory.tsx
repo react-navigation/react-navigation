@@ -151,6 +151,8 @@ export function createMemoryHistory() {
         return;
       }
 
+      const targetId = items[index]?.id;
+
       // When we call `history.go`, `popstate` will fire when there's history to go back to
       // So we need to somehow handle following cases:
       // - There's history to go back, `history.go` is called, and `popstate` fires
@@ -160,7 +162,11 @@ export function createMemoryHistory() {
         const done = (interrupted?: boolean) => {
           clearTimeout(timer);
 
-          if (interrupted) {
+          // The current entry may not be the one we intended to land on:
+          // - The traversal didn't happen yet, e.g. it took longer than the timeout
+          // - The user navigated in the browser while our traversal was in-flight
+          // So we treat it the same as the operation being interrupted
+          if (interrupted || window.history.state?.id !== targetId) {
             reject(new Error('History was changed during navigation.'));
             return;
           }
