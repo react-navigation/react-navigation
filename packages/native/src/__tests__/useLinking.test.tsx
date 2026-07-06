@@ -2096,3 +2096,155 @@ test('preserves history entries when traversal is slower than the fallback timeo
 
   expect(navigation.getCurrentRoute()?.name).toBe('Profile');
 });
+
+test('navigates to the last screen without waiting for an interrupted one', async () => {
+  const createStackNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  });
+
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        A: 'a',
+        B: 'b',
+      },
+    },
+  };
+
+  const a = Promise.withResolvers<void>();
+  const b = Promise.withResolvers<void>();
+
+  const ScreenA = () => {
+    React.use(a.promise);
+
+    return <Text>Screen A</Text>;
+  };
+
+  const ScreenB = () => {
+    React.use(b.promise);
+
+    return <Text>Screen B</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="A" component={ScreenA} />
+          <Stack.Screen name="B" component={ScreenB} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('A'));
+  await act(() => navigation.navigate('B'));
+
+  expect(window.location.pathname).toBe('/');
+
+  await act(() => b.resolve());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('B');
+
+  await act(() => a.resolve());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('B');
+});
+
+test("doesn't navigate to an interrupted screen that finishes loading first", async () => {
+  const createStackNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  });
+
+  const Stack = createStackNavigator();
+
+  const linking = {
+    config: {
+      screens: {
+        Home: '',
+        A: 'a',
+        B: 'b',
+      },
+    },
+  };
+
+  const a = Promise.withResolvers<void>();
+  const b = Promise.withResolvers<void>();
+
+  const ScreenA = () => {
+    React.use(a.promise);
+
+    return <Text>Screen A</Text>;
+  };
+
+  const ScreenB = () => {
+    React.use(b.promise);
+
+    return <Text>Screen B</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="A" component={ScreenA} />
+          <Stack.Screen name="B" component={ScreenB} />
+        </Stack.Navigator>
+      </React.Suspense>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('A'));
+  await act(() => navigation.navigate('B'));
+
+  expect(window.location.pathname).toBe('/');
+
+  await act(() => a.resolve());
+
+  expect(window.location.pathname).toBe('/');
+
+  await act(() => b.resolve());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('B');
+});
