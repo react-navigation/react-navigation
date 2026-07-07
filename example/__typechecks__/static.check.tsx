@@ -893,6 +893,147 @@ createNativeStackNavigator({
 });
 
 /**
+ * Rejects unknown properties in `options`, `screenOptions`
+ */
+
+// Valid properties are accepted
+createBottomTabNavigator({
+  screenOptions: { title: 'Home', tabBarActiveTintColor: 'tomato' },
+  screenListeners: { tabPress: () => {} },
+  screens: {
+    Test: {
+      screen: () => null,
+      options: { title: 'Test' },
+      listeners: { focus: () => {} },
+    },
+  },
+  groups: {
+    Group: {
+      screenOptions: { title: 'Group' },
+      screens: {
+        Nested: {
+          screen: () => null,
+          options: () => ({ title: 'Nested' }),
+          listeners: () => ({ blur: () => {} }),
+        },
+      },
+    },
+  },
+});
+
+// `screenListeners` in a group is not supported, only on the navigator
+createBottomTabNavigator({
+  groups: {
+    Group: {
+      // @ts-expect-error
+      screenListeners: { tabPress: () => {} },
+      screens: {},
+    },
+  },
+});
+
+// Unknown property in `screenOptions`
+createBottomTabNavigator({
+  screenOptions: {
+    title: 'Home',
+    // @ts-expect-error
+    titel: 'typo',
+  },
+  screens: {},
+});
+
+// Unknown property in `options`
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      screen: () => null,
+      options: {
+        title: 'Test',
+        // @ts-expect-error
+        titel: 'typo',
+      },
+    },
+  },
+});
+
+// Unknown property in `options` and `screenOptions` inside a group
+createBottomTabNavigator({
+  groups: {
+    Group: {
+      // @ts-expect-error
+      screenOption: {},
+      screenOptions: {
+        title: 'Group',
+        // @ts-expect-error
+        titel: 'typo',
+      },
+      screens: {
+        Test: {
+          screen: () => null,
+          options: {
+            title: 'Test',
+            // @ts-expect-error
+            boo: 'typo',
+          },
+        },
+      },
+    },
+  },
+});
+
+// Unknown property in `options` passed via the screen factory
+createBottomTabNavigator({
+  screens: {
+    Test: createBottomTabScreen({
+      screen: () => null,
+      options: {
+        title: 'Test',
+        // @ts-expect-error
+        titel: 'typo',
+      },
+    }),
+  },
+});
+
+// Unknown property in the object returned from `options` passed via the screen factory
+createBottomTabNavigator({
+  screens: {
+    Test: createBottomTabScreen({
+      screen: () => null,
+      // @ts-expect-error
+      options: () => ({ title: 'Test', titel: 'typo' }),
+    }),
+  },
+});
+
+// Only unknown property, without any known property
+createBottomTabNavigator({
+  screenOptions: {
+    // @ts-expect-error
+    titel: 'typo',
+  },
+  screens: {},
+});
+
+// Unknown property in the object returned from the function form
+createNativeStackNavigator({
+  screens: {
+    Test: {
+      screen: () => null,
+      // @ts-expect-error
+      options: () => ({ title: 'Test', titel: 'typo' }),
+    },
+  },
+});
+
+// Unknown property in the object returned from the `screenOptions` function form
+createNativeStackNavigator({
+  // @ts-expect-error
+  screenOptions: () => ({ title: 'Test', titel: 'typo' }),
+  screens: {},
+});
+
+/**
  * Infer types from group without screens
  */
 const MyTabs = createBottomTabNavigator({

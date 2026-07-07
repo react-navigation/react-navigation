@@ -32,6 +32,7 @@ import type {
   HasArguments,
   InferParamsFromLinking,
   KeysOf,
+  NoExcessObject,
   NotUndefinedObject,
   StandardSchemaV1,
   UnionToIntersection,
@@ -396,6 +397,9 @@ export type StaticScreenConfig<
 export type StaticScreenFactory<in out Bag extends NavigatorTypeBagBase> = <
   const Linking extends StaticScreenConfigLinking,
   const Screen extends StaticScreenConfigScreen,
+  const ProvidedOptions extends
+    | Bag['ScreenOptions']
+    | ((...args: never[]) => unknown) = Bag['ScreenOptions'],
 >(
   config: StaticScreenConfig<
     Linking,
@@ -404,8 +408,18 @@ export type StaticScreenFactory<in out Bag extends NavigatorTypeBagBase> = <
     Bag['ScreenOptions'],
     Bag['EventMap'],
     Bag['NavigationList'][keyof Bag['ParamList']]
-  >
-) => typeof config;
+  > & {
+    options?: ProvidedOptions &
+      NoExcessOptions<ProvidedOptions, Bag['ScreenOptions']>;
+  }
+) => StaticScreenConfig<
+  Linking,
+  Screen,
+  Bag['State'],
+  Bag['ScreenOptions'],
+  Bag['EventMap'],
+  Bag['NavigationList'][keyof Bag['ParamList']]
+>;
 
 /**
  * Helper to create a typed `createXScreen` for static configuration.
@@ -514,6 +528,67 @@ export type StaticConfig<
         groups: Groups;
       }
   );
+
+type NoExcessOptions<Provided, Allowed extends {}> = Provided extends (
+  ...args: never[]
+) => infer Return
+  ? (...args: never[]) => Allowed & NoExcessObject<Return, Allowed>
+  : NoExcessObject<Provided, Allowed>;
+
+type NoExcessScreen<Screen, ScreenOptions extends {}> = Screen extends {
+  screen: unknown;
+  options: unknown;
+}
+  ? { options: NoExcessOptions<Screen['options'], ScreenOptions> }
+  : unknown;
+
+type NoExcessScreens<Screens, ScreenOptions extends {}> = {
+  [RouteName in keyof Screens]: NoExcessScreen<
+    Screens[RouteName],
+    ScreenOptions
+  >;
+};
+
+type NoExcessGroups<
+  Groups,
+  Bag extends NavigatorTypeBagBase,
+  ScreenOptions extends {},
+> = {
+  [GroupName in keyof Groups]: NoExcessObject<
+    Groups[GroupName],
+    StaticConfigGroup<
+      ParamListBase,
+      NavigationState,
+      {},
+      EventMapBase,
+      NavigationListBase<ParamListBase>
+    >
+  > &
+    NoExcessStaticConfig<Groups[GroupName], Bag, ScreenOptions>;
+};
+
+// Each property is probed with `Config extends { key: infer X }` and the results are intersected.
+// These conditionals stay deferred while the config is inferred, so they don't interfere with the inference.
+// Indexed access (`Config['screens']`) or a mapped type over the whole config breaks the param list inference.
+export type NoExcessStaticConfig<
+  Config,
+  Bag extends NavigatorTypeBagBase,
+  ScreenOptions extends {} = Bag['ScreenOptions'],
+> = (Config extends { screenOptions: infer ProvidedOptions }
+  ? {
+      screenOptions: NoExcessOptions<ProvidedOptions, ScreenOptions>;
+    }
+  : unknown) &
+  (Config extends { screens: infer Screens }
+    ? {
+        screens: NoExcessScreens<Screens, ScreenOptions>;
+      }
+    : unknown) &
+  (Config extends { groups: infer Groups }
+    ? {
+        groups: NoExcessGroups<Groups, Bag, ScreenOptions>;
+      }
+    : unknown);
 
 /**
  * Props for a screen component which is rendered by a static navigator.

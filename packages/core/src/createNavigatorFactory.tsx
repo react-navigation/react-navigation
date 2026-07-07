@@ -5,6 +5,7 @@ import { Group } from './Group';
 import { Screen } from './Screen';
 import {
   createComponentForStaticConfig,
+  type NoExcessStaticConfig,
   type StaticConfig,
   type StaticParamList,
 } from './StaticNavigation';
@@ -14,25 +15,24 @@ import type {
   NestedNavigatorsForParamList,
   TypedNavigator,
 } from './types';
-import type { KeysOf } from './utilities';
+import type { KeysOf, NoExcessObject } from './utilities';
 
-type ValidNavigatorNesting<
-  ParamList extends ParamListBase,
-  Nesting,
-> = Nesting extends Partial<Record<keyof ParamList, unknown>> &
-  Record<Exclude<keyof Nesting, keyof ParamList>, never>
-  ? Nesting
-  : never;
+type NavigatorNesting<ParamList extends ParamListBase, Nesting> = {
+  [RouteName in keyof ParamList]?: unknown;
+} & Record<Exclude<KeysOf<Nesting>, keyof ParamList>, never>;
+
+type ValidNavigatorNesting<ParamList extends ParamListBase, Nesting> =
+  Nesting extends NavigatorNesting<ParamList, Nesting> ? Nesting : never;
+
+type AnyStaticConfig<TypeBag extends NavigatorTypeBagBase> = StaticConfig<
+  NavigatorTypeBagFor<TypeBag, ParamListBase>
+>;
 
 export type TypedNavigatorFactory<in out TypeBag extends NavigatorTypeBagBase> =
   {
     <
       const ParamList extends ParamListBase,
-      const Nesting extends Partial<Record<keyof ParamList, unknown>> &
-        // Extra keys satisfy the structural constraint via width subtyping,
-        // Force any key in `Nesting` that isn't in the param list to `never`.
-        // So typos in the nesting config will cause an error.
-        Record<Exclude<keyof Nesting, keyof ParamList>, never> =
+      const Nesting extends NavigatorNesting<ParamList, Nesting> =
         ValidNavigatorNesting<
           ParamList,
           NestedNavigatorsForParamList<ParamList>
@@ -43,22 +43,10 @@ export type TypedNavigatorFactory<in out TypeBag extends NavigatorTypeBagBase> =
       Nesting
     >;
     <
-      const Config extends StaticConfig<
-        NavigatorTypeBagFor<TypeBag, ParamListBase>
-      > &
-        // TS only checks for excess properties for non-generic object literal types.
-        // Since `Config` is generic, extra keys satisfy the constraint and slip through.
-        // So we force any key in `Config` that isn't a known key to have the type `never`,
-        // Thus causing an error for any extra key.
-        Record<
-          Exclude<
-            keyof Config,
-            KeysOf<StaticConfig<NavigatorTypeBagFor<TypeBag, ParamListBase>>>
-          >,
-          never
-        >,
+      const Config extends AnyStaticConfig<TypeBag> &
+        NoExcessObject<Config, AnyStaticConfig<TypeBag>>,
     >(
-      config: Config
+      config: Config & NoExcessStaticConfig<NoInfer<Config>, TypeBag>
     ): TypedNavigator<
       NavigatorTypeBagFor<TypeBag, StaticParamList<{ config: Config }>>,
       Config
