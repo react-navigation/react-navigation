@@ -83,6 +83,13 @@ const isPoppingLastEntry = (
   current: NavigationState,
   record: NavigationState
 ): boolean => {
+  const currentRoute = current.routes[current.index];
+  const recordRoute = record.routes[record.index];
+
+  if (currentRoute == null || recordRoute == null) {
+    return false;
+  }
+
   if (current.history && record.history) {
     return current.history.length === record.history.length + 1;
   }
@@ -106,12 +113,14 @@ const isPoppingLastEntry = (
  */
 export const series = (cb: () => Promise<void>) => {
   let queue = Promise.resolve();
+
   const callback = () => {
     // eslint-disable-next-line promise/no-callback-in-promise
     queue = queue.then(cb).catch((e) => {
       console.error(e);
     });
   };
+
   return callback;
 };
 
@@ -531,8 +540,6 @@ export function useLinking(
       }
 
       // Skip if the state hasn't changed since we last synced it
-      // This avoids redundant work when the committed `state` event fires
-      // after we already synced from `__unsafe_action__`
       if (previousState === state) {
         return;
       }
