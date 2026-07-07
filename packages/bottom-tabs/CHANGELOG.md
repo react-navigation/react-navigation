@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.18.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.18.7...@react-navigation/bottom-tabs@7.18.8) (2026-07-07)
+
+### Bug Fixes
+
+* don't derive screen detach state from animated value ([9bfc8d0](https://github.com/react-navigation/react-navigation/commit/9bfc8d0f65eddbb434f94709b139f0fc2da62463)), closes [#12755](https://github.com/react-navigation/react-navigation/issues/12755) - by @
+* set native tab screen background ([361ea71](https://github.com/react-navigation/react-navigation/commit/361ea71591c3fec44b5a98c5d9fa4fad71d7e720)) - by @satya164
+
 ## [7.18.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.18.6...@react-navigation/bottom-tabs@7.18.7) (2026-07-03)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

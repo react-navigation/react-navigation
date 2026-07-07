@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.7...@react-navigation/native@7.3.8) (2026-07-07)
+
+### Bug Fixes
+
+* handle hash in URLs and delayed browser history sync ([788d7c5](https://github.com/react-navigation/react-navigation/commit/788d7c565554d85fc7d3c3b9d1a7829e1847b8da)) - by @satya164
+
 ## [7.3.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.6...@react-navigation/native@7.3.7) (2026-07-03)
 
 **Note:** Version bump only for package @react-navigation/native
