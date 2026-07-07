@@ -98,20 +98,21 @@ export function BottomTabViewCustom({
   const [lastUpdate, setLastUpdate] = React.useState<{
     current: string;
     previous?: string;
+    animating: boolean;
   }>({
     current: focusedRouteKey,
+    animating: false,
   });
 
   if (lastUpdate.current !== focusedRouteKey) {
     setLastUpdate({
       current: focusedRouteKey,
       previous: lastUpdate.current,
+      animating: true,
     });
   }
 
   const tabAnims = useAnimatedHashMap(state);
-
-  const [isAnimating, setIsAnimating] = React.useState(false);
 
   const previousRouteKeyRef = React.useRef(focusedRouteKey);
 
@@ -137,7 +138,7 @@ export function BottomTabViewCustom({
       }
     }
 
-    let timer: ReturnType<typeof setTimeout>;
+    let timer: ReturnType<typeof setTimeout> | undefined;
 
     const animateToIndex = () => {
       if (previousRouteKey !== focusedRouteKey) {
@@ -147,56 +148,48 @@ export function BottomTabViewCustom({
         });
       }
 
-      const animations = state.routes
-        .map((route, index) => {
-          const descriptor = descriptors[route.key];
+      const animations = state.routes.map((route, index) => {
+        const descriptor = descriptors[route.key];
 
-          if (descriptor == null) {
-            throw new Error(
-              `Couldn't find a descriptor for route '${route.key}'.`
-            );
-          }
+        if (descriptor == null) {
+          throw new Error(
+            `Couldn't find a descriptor for route '${route.key}'.`
+          );
+        }
 
-          const { options } = descriptor;
-          const {
-            animation = 'none',
-            transitionSpec = NAMED_TRANSITIONS_PRESETS[animation]
-              .transitionSpec,
-          } = options;
+        const { options } = descriptor;
+        const {
+          animation = 'none',
+          transitionSpec = NAMED_TRANSITIONS_PRESETS[animation].transitionSpec,
+        } = options;
 
-          let spec = transitionSpec;
+        let spec = transitionSpec;
 
-          if (route.key !== previousRouteKey && route.key !== focusedRouteKey) {
-            // Don't animate if the screen is not previous one or new one
-            // This will avoid flicker for screens not involved in the transition
-            spec = NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
-          }
+        if (route.key !== previousRouteKey && route.key !== focusedRouteKey) {
+          // Don't animate if the screen is not previous one or new one
+          // This will avoid flicker for screens not involved in the transition
+          spec = NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
+        }
 
-          spec = spec ?? NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
+        spec = spec ?? NAMED_TRANSITIONS_PRESETS.none.transitionSpec;
 
-          const toValue =
-            index === state.index ? 0 : index >= state.index ? 1 : -1;
+        const toValue =
+          index === state.index ? 0 : index >= state.index ? 1 : -1;
 
-          const tabAnimation = tabAnims[route.key];
+        const tabAnimation = tabAnims[route.key];
 
-          if (tabAnimation == null) {
-            throw new Error(
-              `Couldn't find an animation for route '${route.key}'.`
-            );
-          }
+        if (tabAnimation == null) {
+          throw new Error(
+            `Couldn't find an animation for route '${route.key}'.`
+          );
+        }
 
-          return Animated[spec.animation](tabAnimation, {
-            ...spec.config,
-            toValue,
-            useNativeDriver,
-          });
-        })
-        .filter((anim) => anim != null);
-
-      if (animations.length) {
-        // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
-        setIsAnimating(true);
-      }
+        return Animated[spec.animation](tabAnimation, {
+          ...spec.config,
+          toValue,
+          useNativeDriver,
+        });
+      });
 
       Animated.parallel(animations).start(({ finished }) => {
         if (popToTopAction) {
@@ -211,10 +204,12 @@ export function BottomTabViewCustom({
         }
 
         if (finished && animations.length) {
-          // Delay clearing `isAnimating`
+          // Delay clearing `animating` state
           // This will give time for `popToAction` to get handled before pause
           timer = setTimeout(() => {
-            setIsAnimating(false);
+            setLastUpdate((update) =>
+              update.animating ? { ...update, animating: false } : update
+            );
           }, 32);
         }
       });
@@ -330,7 +325,7 @@ export function BottomTabViewCustom({
           );
 
           const isAnimatingRoute =
-            isAnimating &&
+            lastUpdate.animating &&
             (lastUpdate.previous === route.key ||
               lastUpdate.current === route.key);
 
