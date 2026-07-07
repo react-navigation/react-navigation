@@ -336,11 +336,17 @@ const cachedConfigResources = new WeakMap<Options<{}>, ConfigResources>();
 function getConfigResources<ParamList extends {}>(
   options: Options<ParamList> | undefined
 ) {
-  if (!options) return prepareConfigResources();
+  if (!options) {
+    return prepareConfigResources();
+  }
 
   const cached = cachedConfigResources.get(options);
 
-  if (cached) return cached;
+  if (cached) {
+    return cached;
+  }
+
+  validatePathConfig(options);
 
   const resources = prepareConfigResources(options);
 
@@ -350,10 +356,6 @@ function getConfigResources<ParamList extends {}>(
 }
 
 function prepareConfigResources(options?: Options<{}>) {
-  if (process.env.NODE_ENV !== 'production' && options) {
-    validatePathConfig(options);
-  }
-
   const initialRoutes = getInitialRoutes(options);
   const configs = getSortedNormalizedConfigs(initialRoutes, options?.screens);
 

@@ -67,20 +67,26 @@ const getActiveRoute = (
 };
 
 const cachedNormalizedConfigs = new WeakMap<
-  PathConfigMap<{}>,
+  Options<{}>,
   Record<string, ConfigItem>
 >();
 
 const getNormalizedConfigs = (options?: Options<{}>) => {
-  if (!options?.screens) return {};
+  if (!options) {
+    return {};
+  }
 
-  const cached = cachedNormalizedConfigs.get(options?.screens);
+  const cached = cachedNormalizedConfigs.get(options);
 
-  if (cached) return cached;
+  if (cached) {
+    return cached;
+  }
+
+  validatePathConfig(options);
 
   const normalizedConfigs = createNormalizedConfigs(options.screens);
 
-  cachedNormalizedConfigs.set(options.screens, normalizedConfigs);
+  cachedNormalizedConfigs.set(options, normalizedConfigs);
 
   return normalizedConfigs;
 };
@@ -122,10 +128,6 @@ export function getPathFromState<ParamList extends {}>(
     throw Error(
       `Got '${String(state)}' for the navigation state. You must pass a valid state object.`
     );
-  }
-
-  if (process.env.NODE_ENV !== 'production' && options) {
-    validatePathConfig(options);
   }
 
   const configs = getNormalizedConfigs(options);

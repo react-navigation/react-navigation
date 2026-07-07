@@ -130,10 +130,6 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
   ref,
   ...rest
 }: Props<ParamList>) {
-  if (linking?.config) {
-    validatePathConfig(linking.config);
-  }
-
   const refContainer = React.useRef<NavigationContainerRef<ParamList>>(null);
 
   useBackButton(refContainer);
@@ -146,6 +142,10 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
           enabled: false,
         },
       };
+    }
+
+    if (linking?.config) {
+      validatePathConfig(linking.config);
     }
 
     return {
