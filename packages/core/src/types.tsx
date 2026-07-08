@@ -93,7 +93,7 @@ export type DefaultNavigatorOptions<
               ScreenOptions,
               EventMap
             >,
-            RouteProp<ParamList>
+            ScreenRouteProp<ParamList>
           >
         >;
         children: React.ReactNode;
@@ -107,7 +107,7 @@ export type DefaultNavigatorOptions<
     | (
         | ScreenListeners<State, EventMap>
         | ((props: {
-            route: RouteProp<ParamList>;
+            route: ScreenRouteProp<ParamList>;
             navigation: Navigation;
           }) => ScreenListeners<State, EventMap>)
       )
@@ -120,7 +120,7 @@ export type DefaultNavigatorOptions<
     | (
         | ScreenOptions
         | ((props: {
-            route: RouteProp<ParamList>;
+            route: ScreenRouteProp<ParamList>;
             navigation: Navigation;
             theme: Theme;
           }) => ScreenOptions)
@@ -569,6 +569,13 @@ export type RouteProp<
   in out RouteName extends keyof ParamList = KeyOf<ParamList>,
 > = Route<Extract<RouteName, string>, ParamList[RouteName]>;
 
+type ScreenRouteProp<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = KeyOf<ParamList>,
+> = {
+  [Name in Extract<RouteName, string>]: RouteProp<ParamList, Name>;
+}[Extract<RouteName, string>];
+
 export type CompositeNavigationProp<
   A extends NavigationProp<ParamListBase, any, any, any, any>,
   B extends NavigationProp<ParamListBase, any, any, any, any>,
@@ -662,7 +669,7 @@ export type ScreenLayoutArgs<
   in out ScreenOptions extends {},
   in out Navigation,
 > = {
-  route: RouteProp<ParamList, RouteName>;
+  route: ScreenRouteProp<ParamList, RouteName>;
   options: ScreenOptions;
   navigation: Navigation;
   theme: Theme;
@@ -860,7 +867,7 @@ export type RouteGroupConfig<
     | (
         | ScreenOptions
         | ((props: {
-            route: RouteProp<ParamList, keyof ParamList>;
+            route: ScreenRouteProp<ParamList>;
             navigation: Navigation;
             theme: Theme;
           }) => ScreenOptions)
