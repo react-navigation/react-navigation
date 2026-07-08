@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.40](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.39...@react-navigation/material-top-tabs@8.0.0-alpha.40) (2026-07-08)
+
+**Note:** Version bump only for package @react-navigation/material-top-tabs
+
 # [8.0.0-alpha.39](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.38...@react-navigation/material-top-tabs@8.0.0-alpha.39) (2026-07-08)
 
 ### Features

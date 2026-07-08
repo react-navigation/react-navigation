@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.26](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.25...@react-navigation/core@8.0.0-alpha.26) (2026-07-08)
+
+### Bug Fixes
+
+* use union type for route when relevant ([ae46141](https://github.com/react-navigation/react-navigation/commit/ae46141c57a748506c28bf841cec5151b4d4f4e5)) - by @
+
 # [8.0.0-alpha.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.24...@react-navigation/core@8.0.0-alpha.25) (2026-07-08)
 
 ### Bug Fixes
