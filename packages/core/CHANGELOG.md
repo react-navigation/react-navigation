@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.25](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.24...@react-navigation/core@8.0.0-alpha.25) (2026-07-08)
+
+### Bug Fixes
+
+* add excess property-checking for options ([7535924](https://github.com/react-navigation/react-navigation/commit/7535924a3ba7da5bab8156327e27eb77141c5369)) - by @
+* avoid leaking state from discarded renders ([336729e](https://github.com/react-navigation/react-navigation/commit/336729eabdcb473294809f2292ab5120e8f53b6e)) - by @satya164
+* avoid removing a replaced keyed child listener on cleanup ([c9a719b](https://github.com/react-navigation/react-navigation/commit/c9a719bf7201f4fa52f5a921766412bc5bfebfa8)) - by @satya164
+* avoid scheduling navigator state updates during render ([e20f165](https://github.com/react-navigation/react-navigation/commit/e20f16505b1d26cbff011f093ae0c1c1fd74ecf4)) - by @satya164
+* handle non-capturing groups in path regex ([95ffd7b](https://github.com/react-navigation/react-navigation/commit/95ffd7b289da30e1e444e2cb5a8bf8e423ba4d02)) - by @satya164
+* keep prevent remove active for screens hidden with an activity ([78248f0](https://github.com/react-navigation/react-navigation/commit/78248f0dfa14b1f15972d4278386209a2393b081)) - by @satya164
+* make static screen route.params read-only ([c5e7cd3](https://github.com/react-navigation/react-navigation/commit/c5e7cd3e78886e11a880e8baadfe10263c0420d8)) - by @satya164
+* prevent optional linking params from making all params optional ([0162352](https://github.com/react-navigation/react-navigation/commit/016235238f58e3c345d909d6c4eececad9bc3f35)) - by @satya164
+* properly handle required props in navigators ([dba7e88](https://github.com/react-navigation/react-navigation/commit/dba7e88bec175771e8218d6a8be1c3f343402908)) - by @satya164
+* remove container ref listeners consistently after the ref is attached ([7613998](https://github.com/react-navigation/react-navigation/commit/7613998638786032b0e489b156cdf45d4fc3c51d)) - by @satya164
+* treat malformed URL as unmatched and simplify ([323cca4](https://github.com/react-navigation/react-navigation/commit/323cca48fb875959d99062fb92b6bebb8b7fca65)) - by @satya164
+* validate linking config only on changes ([ace7ce2](https://github.com/react-navigation/react-navigation/commit/ace7ce2d4ddc4b0cf4d4641a450aa27b527749c2)) - by @satya164
+
+### Features
+
+* add experimental data loaders with `UNSTABLE_loader` ([#13172](https://github.com/react-navigation/react-navigation/issues/13172)) ([a32d048](https://github.com/react-navigation/react-navigation/commit/a32d0483aaecac088f7787f0a56846948285395d)) - by @satya164
+* wrap navigations in startTransition by default ([#13171](https://github.com/react-navigation/react-navigation/issues/13171)) ([cfbbd4c](https://github.com/react-navigation/react-navigation/commit/cfbbd4c9084dc704fc9c9b76302e39146bddf0dd)) - by @satya164
+
 # [8.0.0-alpha.24](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.23...@react-navigation/core@8.0.0-alpha.24) (2026-06-18)
 
 ### Bug Fixes

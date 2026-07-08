@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.39](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.38...@react-navigation/material-top-tabs@8.0.0-alpha.39) (2026-07-08)
+
+### Features
+
+* add a PlatformIcon component to elements ([fba9fd3](https://github.com/react-navigation/react-navigation/commit/fba9fd331c2394d8203b0cc8edc73557cff55491)) - by @satya164
+* wrap navigations in startTransition by default ([#13171](https://github.com/react-navigation/react-navigation/issues/13171)) ([cfbbd4c](https://github.com/react-navigation/react-navigation/commit/cfbbd4c9084dc704fc9c9b76302e39146bddf0dd)) - by @satya164
+
 # [8.0.0-alpha.38](https://github.com/react-navigation/react-navigation/compare/@react-navigation/material-top-tabs@8.0.0-alpha.37...@react-navigation/material-top-tabs@8.0.0-alpha.38) (2026-06-18)
 
 **Note:** Version bump only for package @react-navigation/material-top-tabs

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.38](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.37...@react-navigation/elements@3.0.0-alpha.38) (2026-07-08)
+
+### Features
+
+* add a PlatformIcon component to elements ([fba9fd3](https://github.com/react-navigation/react-navigation/commit/fba9fd331c2394d8203b0cc8edc73557cff55491)) - by @satya164
+
 # [3.0.0-alpha.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.36...@react-navigation/elements@3.0.0-alpha.37) (2026-06-18)
 
 **Note:** Version bump only for package @react-navigation/elements

@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.40](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.39...@react-navigation/bottom-tabs@8.0.0-alpha.40) (2026-07-08)
+
+### Bug Fixes
+
+* **bottom-tabs:** pop nested stack to top on blur even when animation is interrupted ([#13123](https://github.com/react-navigation/react-navigation/issues/13123)) ([66880ed](https://github.com/react-navigation/react-navigation/commit/66880edbfb25c6dd41f694e3c8c673ff29e86c28)) - by @brojor
+* correctly set native tab view background ([ed498d4](https://github.com/react-navigation/react-navigation/commit/ed498d4e87c0bf4fd09d3512d090bf703ccbcecb)) - by @satya164
+* move animated state to render instead of effect ([97cd310](https://github.com/react-navigation/react-navigation/commit/97cd310816d6cc154ecc381a0d24d72e0a9d264b)) - by @satya164
+
+### Features
+
+* add a PlatformIcon component to elements ([fba9fd3](https://github.com/react-navigation/react-navigation/commit/fba9fd331c2394d8203b0cc8edc73557cff55491)) - by @satya164
+* wrap navigations in startTransition by default ([#13171](https://github.com/react-navigation/react-navigation/issues/13171)) ([cfbbd4c](https://github.com/react-navigation/react-navigation/commit/cfbbd4c9084dc704fc9c9b76302e39146bddf0dd)) - by @satya164
+
 # [8.0.0-alpha.39](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.38...@react-navigation/bottom-tabs@8.0.0-alpha.39) (2026-06-18)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

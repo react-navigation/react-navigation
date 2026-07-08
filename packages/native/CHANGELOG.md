@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.33...@react-navigation/native@8.0.0-alpha.34) (2026-07-08)
+
+### Bug Fixes
+
+* handle interrupted rollback when browser back is prevented ([f641a65](https://github.com/react-navigation/react-navigation/commit/f641a6555e0d8cb977e93885000e4a3428b1a474)) - by @satya164
+* keep syncing history after an error during sync ([78e9f92](https://github.com/react-navigation/react-navigation/commit/78e9f928cd7485786d13ae72ab4ce49aaa0367a4)) - by @satya164
+* track history delta from popstate to detect browser-caused changes ([9c85b97](https://github.com/react-navigation/react-navigation/commit/9c85b97f7da09b1ada1280395c701c2aa9984cc6)) - by @satya164
+* update browser url after commit instead of on navigation ([5478a62](https://github.com/react-navigation/react-navigation/commit/5478a62255df8ab34f0847a1392e1e7c02f0d029)) - by @satya164
+* validate linking config only on changes ([ace7ce2](https://github.com/react-navigation/react-navigation/commit/ace7ce2d4ddc4b0cf4d4641a450aa27b527749c2)) - by @satya164
+
+### Features
+
+* wrap navigations in startTransition by default ([#13171](https://github.com/react-navigation/react-navigation/issues/13171)) ([cfbbd4c](https://github.com/react-navigation/react-navigation/commit/cfbbd4c9084dc704fc9c9b76302e39146bddf0dd)) - by @satya164
+
 # [8.0.0-alpha.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.32...@react-navigation/native@8.0.0-alpha.33) (2026-06-18)
 
 ### Bug Fixes
