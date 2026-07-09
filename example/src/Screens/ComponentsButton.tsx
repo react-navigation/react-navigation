@@ -1,5 +1,6 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Button, type Icon, Text } from '@react-navigation/elements';
+import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 
 import iconHeart from '../../assets/icons/heart.png';
@@ -11,6 +12,16 @@ const heartIcon = Platform.select<Icon>({
 });
 
 export function ComponentsButton() {
+  const [loading, setLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [loading]);
+
   return (
     <ScrollView contentContainerStyle={styles.content}>
       <Text style={styles.heading}>Variants</Text>
@@ -71,6 +82,34 @@ export function ComponentsButton() {
           onPress={() => {}}
         >
           Custom
+        </Button>
+      </View>
+
+      <Text style={styles.heading}>Loading</Text>
+      <View style={styles.row}>
+        <Button
+          variant="plain"
+          icon={heartIcon}
+          loading={loading}
+          onPress={() => setLoading(!loading)}
+        >
+          Plain
+        </Button>
+        <Button
+          variant="tinted"
+          icon={heartIcon}
+          loading={loading}
+          onPress={() => setLoading(!loading)}
+        >
+          Tinted
+        </Button>
+        <Button
+          variant="filled"
+          icon={heartIcon}
+          loading={loading}
+          onPress={() => setLoading(!loading)}
+        >
+          Filled
         </Button>
       </View>
     </ScrollView>

@@ -5,7 +5,13 @@ import {
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { type ColorValue, Platform, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  type ColorValue,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { Color } from './Color';
 import { PlatformIcon } from './PlatformIcon';
@@ -46,6 +52,10 @@ type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
     | Icon
     | ((props: { color: ColorValue; size: number }) => Icon | React.ReactNode)
     | undefined;
+  /**
+   * Whether to show a loading indicator instead of the icon.
+   */
+  loading?: boolean | undefined;
   /**
    * Label text to display inside the button.
    */
@@ -109,6 +119,7 @@ function ButtonBase({
   variant = 'tinted',
   color: customColor,
   icon,
+  loading = false,
   android_ripple,
   disabled,
   style,
@@ -139,7 +150,7 @@ function ButtonBase({
       break;
   }
 
-  if (disabled) {
+  if (disabled || loading) {
     textColor = dark ? 'rgba(235, 235, 245, 0.3)' : 'rgba(60, 60, 67, 0.3)';
 
     if (variant !== 'plain') {
@@ -155,12 +166,16 @@ function ButtonBase({
       ? 'rgba(255, 255, 255, 0.12)'
       : 'rgba(0, 0, 0, 0.12)');
 
-  const iconNode = renderIcon(icon, textColor, ICON_SIZE);
+  const iconNode = loading ? (
+    <ActivityIndicator color={textColor} size={ICON_SIZE} />
+  ) : (
+    renderIcon(icon, textColor, ICON_SIZE)
+  );
 
   return (
     <PlatformPressable
       {...rest}
-      disabled={disabled}
+      disabled={disabled || loading}
       android_ripple={{
         foreground: true,
         color: rippleColor,
