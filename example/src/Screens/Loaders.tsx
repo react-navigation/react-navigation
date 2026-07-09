@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Button, type Icon, Text } from '@react-navigation/elements';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import {
   createNativeStackNavigator,
   createNativeStackScreen,
@@ -117,22 +117,33 @@ const dinoQuery = (id: string) =>
   });
 
 function DinoCatalogScreen() {
-  const navigation = useNavigation('DinoCatalog');
-
   return (
     <View style={styles.content}>
       <View style={styles.buttons}>
         {DINOS.map((item) => (
           <Button
             key={item.id}
-            onPress={() => {
-              navigation.navigate('DinoDetail', { id: item.id });
-            }}
+            screen="Loaders"
+            params={{ screen: 'DinoDetail', params: { id: item.id } }}
             style={styles.button}
           >
             {item.name}
           </Button>
         ))}
+        <Button
+          screen="Loaders"
+          params={{ screen: 'DinoCatalog', params: { screen: 'DinoTeam' } }}
+          style={styles.button}
+        >
+          Go to Team
+        </Button>
+        <Button
+          screen="Loaders"
+          params={{ screen: 'DinoCatalog', params: { screen: 'DinoBattle' } }}
+          style={styles.button}
+        >
+          Go to Battle
+        </Button>
         <Button
           onPress={() => {
             shouldFailNextLoad = true;

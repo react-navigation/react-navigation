@@ -103,13 +103,26 @@ function ButtonLink<
   // @ts-expect-error: This is already type-checked by the prop types
   const props = useLinkProps({ screen, params, action, href });
 
+  const [isPending, startTransition] = React.useTransition();
+
+  // Avoid flashing the loading indicator when the transition is fast
+  const isPendingDeferred = React.useDeferredValue(isPending);
+
   return (
     <ButtonBase
       {...rest}
       {...props}
+      loading={
+        typeof rest.loading === 'boolean'
+          ? rest.loading
+          : isPending && isPendingDeferred
+      }
       onPress={(e) => {
         onPress?.(e);
-        props.onPress?.(e);
+
+        startTransition(() => {
+          props.onPress?.(e);
+        });
       }}
     />
   );
