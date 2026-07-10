@@ -1,4 +1,5 @@
 import {
+  CommonActions,
   getPathFromState,
   type NavigationAction,
   NavigationContainerRefContext,
@@ -11,6 +12,80 @@ import * as React from 'react';
 import { type GestureResponderEvent, Platform } from 'react-native';
 
 import { LinkingContext } from './LinkingContext';
+
+const NESTED_KEYS = ['payload', 'params', 'state', 'routes'] as const;
+const NESTED_PARAMS_KEYS = ['params', 'state'] as const;
+
+/**
+ * Nested params are tracked as consumed after handling
+ * So navigating with same params again won't work
+ * This can happen if the action or params are memoized
+ * Or component hasn't re-renderd to re-create inline objects
+ * So we clone the action and params when necessary before dispatch
+ */
+function clone<T>(value: T): T;
+function clone(
+  value: unknown,
+  keys: typeof NESTED_KEYS | typeof NESTED_PARAMS_KEYS,
+  clones: WeakMap<object, object>
+): unknown;
+function clone(
+  value: unknown,
+  keys: typeof NESTED_KEYS | typeof NESTED_PARAMS_KEYS = NESTED_KEYS,
+  clones?: WeakMap<object, object>
+): unknown {
+  if (typeof value !== 'object' || value == null) {
+    return value;
+  }
+
+  const existing = clones?.get(value);
+
+  if (existing) {
+    return existing;
+  }
+
+  const isArray = Array.isArray(value);
+
+  if (
+    keys === NESTED_PARAMS_KEYS &&
+    'screen' in value &&
+    typeof value.screen !== 'string' &&
+    !(
+      'state' in value &&
+      typeof value.state === 'object' &&
+      value.state != null &&
+      'routes' in value.state &&
+      Array.isArray(value.state.routes)
+    )
+  ) {
+    return value;
+  }
+
+  let copy: object | undefined =
+    keys === NESTED_PARAMS_KEYS ? { ...value } : undefined;
+
+  clones ??= new WeakMap();
+  clones.set(value, copy ?? value);
+
+  for (const key of isArray ? value.keys() : keys) {
+    const nested: unknown = Reflect.get(value, key);
+
+    const cloned = clone(
+      nested,
+      key === 'params' ? NESTED_PARAMS_KEYS : NESTED_KEYS,
+      clones
+    );
+
+    if (cloned !== nested) {
+      copy ??= isArray ? [...value] : { ...value };
+      clones.set(value, copy);
+
+      Object.assign(copy, { [key]: cloned });
+    }
+  }
+
+  return copy ?? value;
+}
 
 export type LinkProps<
   ParamList extends ReactNavigation.RootParamList,
@@ -111,19 +186,20 @@ export function useLinkProps<ParamList extends ReactNavigation.RootParamList>({
     }
 
     if (shouldHandle) {
-      if (action) {
-        if (navigation) {
-          navigation.dispatch(action);
-        } else if (root) {
-          root.dispatch(action);
-        } else {
-          throw new Error(
-            "Couldn't find a navigation object. Is your component inside NavigationContainer?"
-          );
-        }
+      const cloned = clone(
+        action ??
+          // @ts-expect-error This is already type-checked by the prop types
+          CommonActions.navigate(screen, params)
+      );
+
+      if (navigation) {
+        navigation.dispatch(cloned);
+      } else if (root) {
+        root.dispatch(cloned);
       } else {
-        // @ts-expect-error This is already type-checked by the prop types
-        navigation?.navigate(screen, params);
+        throw new Error(
+          "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+        );
       }
     }
   };
