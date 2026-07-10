@@ -10,6 +10,72 @@ import { type GestureResponderEvent, Platform } from 'react-native';
 
 import { LinkingContext } from './LinkingContext';
 
+const NESTED_NAVIGATION_KEYS = [
+  'payload',
+  'params',
+  'state',
+  'routes',
+] as const;
+
+const isObject = (value: unknown): value is Record<string | number, unknown> =>
+  typeof value === 'object' && value != null;
+
+/**
+ * Nested params are tracked as consumed after handling
+ * So navigating with same params again won't work
+ * This can happen if the action or params are memoized
+ * Or component hasn't re-renderd to re-create inline objects
+ * So we clone the action and params when necessary before dispatch
+ */
+function clone<T>(value: T): T;
+function clone(value: unknown, clones: WeakMap<object, object>): unknown;
+function clone(value: unknown, clones?: WeakMap<object, object>): unknown {
+  if (!isObject(value)) {
+    return value;
+  }
+
+  const existing = clones?.get(value);
+
+  if (existing) {
+    return existing;
+  }
+
+  const isArray = Array.isArray(value);
+  const shouldClone =
+    typeof value.screen === 'string' ||
+    (isObject(value.state) && Array.isArray(value.state.routes));
+
+  let copy: object | undefined = shouldClone
+    ? isArray
+      ? [...value]
+      : { ...value }
+    : undefined;
+
+  clones?.set(value, copy ?? value);
+
+  for (const key of isArray ? value.keys() : NESTED_NAVIGATION_KEYS) {
+    const nested: unknown = value[key];
+
+    if (isObject(nested)) {
+      if (clones == null) {
+        clones = new WeakMap();
+        clones.set(value, copy ?? value);
+      }
+
+      const cloned = clone(nested, clones);
+
+      if (cloned !== nested) {
+        copy ??= isArray ? [...value] : { ...value };
+        clones.set(value, copy);
+
+        Object.assign(copy, { [key]: cloned });
+      }
+    }
+  }
+
+  return copy ?? value;
+}
+
 export type LinkProps<
   ParamList extends {} = RootParamList,
   RouteName extends keyof ParamList = keyof ParamList,
@@ -80,9 +146,9 @@ export function useLinkProps<
     if (shouldHandle) {
       if (action) {
         if (navigation) {
-          navigation.dispatch(action);
+          navigation.dispatch(clone(action));
         } else if (root) {
-          root.dispatch(action);
+          root.dispatch(clone(action));
         } else {
           throw new Error(
             "Couldn't find a navigation object. Is your component inside NavigationContainer?"
@@ -90,7 +156,7 @@ export function useLinkProps<
         }
       } else {
         // @ts-expect-error This is already type-checked by the prop types
-        navigation?.navigate(screen, params);
+        navigation?.navigate(screen, clone(params));
       }
     }
   };
