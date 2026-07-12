@@ -23,6 +23,7 @@ type SerializedParamValue = string | string[] | null;
 
 type ConfigItem = {
   parts?: PatternPart[];
+  ownParts: PatternPart[];
   stringify?: StringifyConfig;
   screens?: Record<string, ConfigItem>;
 };
@@ -114,8 +115,6 @@ export function getPathFromState<ParamList extends {}>(
   let path = '/';
   let current: State | undefined = state;
 
-  const allParams: Record<string, SerializedParamValue> = {};
-
   while (current) {
     let index = typeof current.index === 'number' ? current.index : 0;
     let route = current.routes[index] as Route<string> & {
@@ -123,6 +122,8 @@ export function getPathFromState<ParamList extends {}>(
     };
 
     let parts: PatternPart[] | undefined;
+
+    const partValues = new Map<PatternPart, SerializedParamValue | undefined>();
 
     let focusedParams: Record<string, SerializedParamValue> | undefined;
     let currentOptions = configs;
@@ -135,19 +136,21 @@ export function getPathFromState<ParamList extends {}>(
     let hasNext = true;
 
     while (route.name in currentOptions && hasNext) {
-      parts = currentOptions[route.name].parts;
+      const config = currentOptions[route.name];
+      parts = config.parts;
+      const ownParts = config.ownParts;
 
       nestedRouteNames.push(route.name);
 
       if (route.params) {
-        const options = currentOptions[route.name];
+        const options = config;
 
         const currentParams = Object.fromEntries(
           Object.entries(route.params)
             .map(([key, value]): [string, SerializedParamValue] | null => {
               if (value === undefined) {
                 if (options) {
-                  const optional = options.parts?.find(
+                  const optional = ownParts.find(
                     (part) => part.param === key
                   )?.optional;
 
@@ -169,26 +172,41 @@ export function getPathFromState<ParamList extends {}>(
             .filter((entry) => entry != null)
         );
 
-        if (parts?.length) {
-          Object.assign(allParams, currentParams);
+        const claimedParams = new Set<string>();
+
+        for (const part of ownParts) {
+          if (part.param && part.param in currentParams) {
+            const value = currentParams[part.param];
+
+            if (value !== undefined) {
+              partValues.set(part, value);
+              claimedParams.add(part.param);
+            }
+          }
         }
 
         if (focusedRoute === route) {
           // If this is the focused route, keep the params for later use
           // We save it here since it's been stringified already
-          focusedParams = { ...currentParams };
+          focusedParams = {};
 
-          parts
-            // eslint-disable-next-line no-loop-func
-            ?.forEach(({ param }) => {
-              if (param) {
-                // Remove the params present in the pattern since we'll only use the rest for query string
-                if (focusedParams) {
-                  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-                  delete focusedParams[param];
-                }
-              }
-            });
+          for (const key in currentParams) {
+            const value = currentParams[key];
+
+            if (
+              !claimedParams.has(key) &&
+              value !== undefined &&
+              value !== 'undefined'
+            ) {
+              focusedParams[key] = value;
+            }
+          }
+        }
+      }
+
+      for (const part of ownParts) {
+        if (part.param && !partValues.has(part)) {
+          partValues.set(part, undefined);
         }
       }
 
@@ -217,7 +235,8 @@ export function getPathFromState<ParamList extends {}>(
 
     if (currentOptions[route.name] !== undefined) {
       path += parts
-        ?.map(({ segment, param, optional }) => {
+        ?.map((part) => {
+          const { segment, param, optional } = part;
           // We don't know what to show for wildcard patterns
           // Showing the route name seems ok, though whatever we show here will be incorrect
           // Since the page doesn't actually exist
@@ -227,7 +246,7 @@ export function getPathFromState<ParamList extends {}>(
 
           // If the path has a pattern for a param, put the param in the path
           if (param) {
-            const value = allParams[param];
+            const value = partValues.get(part);
 
             if (value === undefined && optional) {
               // Optional params without value assigned in route.params should be ignored
@@ -304,14 +323,13 @@ const createConfigItem = (
   parentParts?: PatternPart[]
 ): ConfigItem => {
   if (typeof config === 'string') {
-    // If a string is specified as the value of the key(e.g. Foo: '/path'), use it as the pattern
-    const parts = getPatternParts(config);
+    const ownParts = getPatternParts(config);
 
     if (parentParts) {
-      return { parts: [...parentParts, ...parts] };
+      return { parts: [...parentParts, ...ownParts], ownParts };
     }
 
-    return { parts };
+    return { parts: ownParts, ownParts };
   }
 
   if (config.exact && config.path === undefined) {
@@ -322,14 +340,12 @@ const createConfigItem = (
 
   // If an object is specified as the value (e.g. Foo: { ... }),
   // It can have `path` property and `screens` prop which has nested configs
+  const ownParts = config.path ? getPatternParts(config.path) : [];
   const parts =
     config.exact !== true
-      ? [
-          ...(parentParts || []),
-          ...(config.path ? getPatternParts(config.path) : []),
-        ]
-      : config.path
-        ? getPatternParts(config.path)
+      ? [...(parentParts || []), ...ownParts]
+      : ownParts.length
+        ? ownParts
         : undefined;
 
   const screens = config.screens
@@ -338,6 +354,7 @@ const createConfigItem = (
 
   return {
     parts,
+    ownParts,
     stringify: config.stringify,
     screens,
   };
