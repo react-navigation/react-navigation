@@ -79,10 +79,11 @@ const getRouteHistory = (
     throw new Error(`Couldn't find a route at index ${index}.`);
   }
 
-  const history = [
+  const history: RouteHistory[] = [
     {
       type: TYPE_ROUTE,
       key: route.key,
+      params: backBehavior === 'fullHistory' ? route.params : undefined,
     },
   ];
 
