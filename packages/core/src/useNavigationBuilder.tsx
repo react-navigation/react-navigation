@@ -571,7 +571,14 @@ export function useNavigationBuilder<
         return [stateBeforeInitialization, hydratedState, true, paramsForState];
       }
 
-      return [undefined, hydratedState, false, paramsForState];
+      return [
+        undefined,
+        hydratedState,
+        false,
+        // The hydrated state is discarded when the current state is already initialized
+        // In that case the params weren't used and shouldn't be treated as consumed
+        isStateInitialized(currentState) ? undefined : paramsForState,
+      ];
     }
     // We explicitly don't include routeNames, route.params etc. in the dep list
     // below. We want to avoid forcing a new state to be calculated in those cases
