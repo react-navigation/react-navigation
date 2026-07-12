@@ -270,8 +270,7 @@ test('fires focus and blur events in nested navigator', async () => {
 
   expect(firstFocusCallback).toHaveBeenCalledTimes(1);
 
-  // FIXME: figure out why this is called twice instead of once
-  expect(fourthFocusCallback).toHaveBeenCalledTimes(2);
+  expect(fourthFocusCallback).toHaveBeenCalledTimes(1);
   expect(thirdFocusCallback).toHaveBeenCalledTimes(0);
 
   await act(() => parent.current.navigate('second'));
@@ -285,7 +284,7 @@ test('fires focus and blur events in nested navigator', async () => {
   expect(firstBlurCallback).toHaveBeenCalledTimes(1);
   expect(secondBlurCallback).toHaveBeenCalledTimes(1);
   expect(thirdFocusCallback).toHaveBeenCalledTimes(0);
-  expect(fourthFocusCallback).toHaveBeenCalledTimes(3);
+  expect(fourthFocusCallback).toHaveBeenCalledTimes(2);
 
   await act(() => parent.current.navigate('nested', { screen: 'third' }));
 
@@ -295,12 +294,12 @@ test('fires focus and blur events in nested navigator', async () => {
   await act(() => parent.current.navigate('first'));
 
   expect(firstFocusCallback).toHaveBeenCalledTimes(2);
-  expect(thirdBlurCallback).toHaveBeenCalledTimes(2);
+  expect(thirdBlurCallback).toHaveBeenCalledTimes(1);
 
   await act(() => parent.current.navigate('nested', { screen: 'fourth' }));
 
-  expect(fourthFocusCallback).toHaveBeenCalledTimes(4);
-  expect(thirdBlurCallback).toHaveBeenCalledTimes(2);
+  expect(fourthFocusCallback).toHaveBeenCalledTimes(3);
+  expect(thirdBlurCallback).toHaveBeenCalledTimes(1);
   expect(firstBlurCallback).toHaveBeenCalledTimes(2);
 
   await act(() => parent.current.navigate('nested', { screen: 'third' }));
@@ -316,9 +315,9 @@ test('fires focus and blur events in nested navigator', async () => {
   expect(secondBlurCallback).toHaveBeenCalledTimes(1);
 
   expect(thirdFocusCallback).toHaveBeenCalledTimes(2);
-  expect(thirdBlurCallback).toHaveBeenCalledTimes(2);
+  expect(thirdBlurCallback).toHaveBeenCalledTimes(1);
 
-  expect(fourthFocusCallback).toHaveBeenCalledTimes(4);
+  expect(fourthFocusCallback).toHaveBeenCalledTimes(3);
   expect(fourthBlurCallback).toHaveBeenCalledTimes(3);
 });
 
