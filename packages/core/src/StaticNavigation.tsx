@@ -787,8 +787,8 @@ export function createPathConfigForStaticNavigation(
 
                 screenConfig.path = normalizePath(
                   key
-                    .replace(/([A-Z]+)/g, '-$1')
-                    .replace(/^-/, '')
+                    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+                    .replace(/([A-Z]+)([A-Z][a-z])/g, '$1-$2')
                     .toLowerCase()
                 );
               }
