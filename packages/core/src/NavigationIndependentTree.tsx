@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { NavigationContext } from './NavigationContext';
+import { NavigationFocusedRouteStateContext } from './NavigationFocusedRouteStateContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
 import { NavigationRouteContext } from './NavigationProvider';
 import { IsFocusedContext } from './useIsFocused';
@@ -17,11 +18,13 @@ export function NavigationIndependentTree({
     // We need to clear any existing contexts for nested independent container to work correctly
     <NavigationRouteContext.Provider value={undefined}>
       <NavigationContext.Provider value={undefined}>
-        <IsFocusedContext.Provider value={undefined}>
-          <NavigationIndependentTreeContext.Provider value>
-            {children}
-          </NavigationIndependentTreeContext.Provider>
-        </IsFocusedContext.Provider>
+        <NavigationFocusedRouteStateContext.Provider value={undefined}>
+          <IsFocusedContext.Provider value={undefined}>
+            <NavigationIndependentTreeContext.Provider value>
+              {children}
+            </NavigationIndependentTreeContext.Provider>
+          </IsFocusedContext.Provider>
+        </NavigationFocusedRouteStateContext.Provider>
       </NavigationContext.Provider>
     </NavigationRouteContext.Provider>
   );
