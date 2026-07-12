@@ -2996,6 +2996,75 @@ test('creates a new preloaded route with preload when the ID changes', () => {
   });
 });
 
+test('keeps history ending with the focused route when preload replaces it', () => {
+  const router = TabRouter({ backBehavior: 'history' });
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => `bar-${params?.answer}`,
+    },
+  };
+
+  const state = router.getStateForAction(
+    {
+      stale: false,
+      type: 'tab',
+      preloadedRouteKeys: [],
+      key: 'root',
+      index: 1,
+      routeNames: ['baz', 'bar'],
+      routes: [
+        { key: 'baz-test', name: 'baz' },
+        { key: 'bar-some', name: 'bar', params: { answer: 42 } },
+      ],
+      history: [
+        { type: 'route', key: 'baz-test' },
+        { type: 'route', key: 'bar-some' },
+      ],
+    },
+    CommonActions.preload('bar', { answer: 43 }),
+    options
+  );
+
+  expect(state).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['bar-1'],
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar'],
+    routes: [
+      { key: 'baz-test', name: 'baz' },
+      { key: 'bar-1', name: 'bar', params: { answer: 43 } },
+    ],
+    history: [
+      { type: 'route', key: 'baz-test' },
+      { type: 'route', key: 'bar-1' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      state as TabNavigationState<ParamListBase>,
+      CommonActions.goBack(),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['bar-1'],
+    key: 'root',
+    index: 0,
+    routeNames: ['baz', 'bar'],
+    routes: [
+      { key: 'baz-test', name: 'baz' },
+      { key: 'bar-1', name: 'bar', params: { answer: 43 } },
+    ],
+    history: [{ type: 'route', key: 'baz-test' }],
+  });
+});
+
 test('handles pushParams action', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {

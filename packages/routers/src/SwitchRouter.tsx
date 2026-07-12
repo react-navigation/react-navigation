@@ -602,6 +602,24 @@ export function SwitchRouter<Type extends SwitchRouterType>({
           const newRoute =
             params !== route.params ? { ...route, key, params } : route;
 
+          let history = state.history;
+
+          if (key !== route.key) {
+            history = history.filter(
+              (record) => record.type !== 'route' || record.key !== route.key
+            );
+
+            if (routeIndex === state.index) {
+              // Add an entry for the new key so the history still ends with the focused route
+              history = history.concat({
+                type: TYPE_ROUTE,
+                key: newRoute.key,
+                params:
+                  backBehavior === 'fullHistory' ? newRoute.params : undefined,
+              });
+            }
+          }
+
           return {
             ...state,
             preloadedRouteKeys: state.preloadedRouteKeys
@@ -610,13 +628,7 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             routes: state.routes.map((route, index) =>
               index === routeIndex ? newRoute : route
             ),
-            history:
-              key === route.key
-                ? state.history
-                : state.history.filter(
-                    (record) =>
-                      record.type !== 'route' || record.key !== route.key
-                  ),
+            history,
           };
         }
 
