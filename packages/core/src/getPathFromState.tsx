@@ -22,6 +22,14 @@ type ConfigItem = {
   screens?: Record<string, ConfigItem> | undefined;
 };
 
+// Preserve `null` and arrays so they survive query string serialization
+const coerceParamValue = (value: unknown) =>
+  value === null
+    ? null
+    : Array.isArray(value)
+      ? value.map(String)
+      : String(value);
+
 const encodePathParam = (value: string) => {
   let result = '';
 
@@ -170,7 +178,7 @@ export function getPathFromState<ParamList extends {}>(
   let path = '/';
   let current: State | undefined = state;
 
-  const allParams: Record<string, string> = {};
+  const allParams: Record<string, string | string[] | null> = {};
 
   while (current) {
     let index: number = typeof current.index === 'number' ? current.index : 0;
@@ -186,7 +194,7 @@ export function getPathFromState<ParamList extends {}>(
 
     let parts: PatternPart[] | undefined;
 
-    let focusedParams: Record<string, string> | undefined;
+    let focusedParams: Record<string, string | string[] | null> | undefined;
     let currentOptions = configs;
 
     // Keep all the route names that appeared during going deeper in config in case the pattern is resolved to undefined
@@ -208,7 +216,7 @@ export function getPathFromState<ParamList extends {}>(
       if (route.params) {
         const options = config;
         const params = route.params as Record<string, unknown>;
-        const currentParams: Record<string, string> = {};
+        const currentParams: Record<string, string | string[] | null> = {};
 
         for (const key in params) {
           const value = params[key];
@@ -228,9 +236,11 @@ export function getPathFromState<ParamList extends {}>(
             }
           }
 
-          const stringify = options.stringify?.[key] ?? String;
+          const stringify = options.stringify?.[key];
 
-          currentParams[key] = stringify(value);
+          currentParams[key] = stringify
+            ? stringify(value)
+            : coerceParamValue(value);
         }
 
         if (parts?.length) {
@@ -341,7 +351,7 @@ export function getPathFromState<ParamList extends {}>(
       const params = focusedRoute.params as Record<string, unknown>;
 
       for (const key in params) {
-        const value = String(params[key]);
+        const value = coerceParamValue(params[key]);
 
         if (value !== 'undefined') {
           focusedParams[key] = value;

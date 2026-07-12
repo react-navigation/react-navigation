@@ -2201,3 +2201,34 @@ test('throws when a screen sets exact without a path', () => {
     "A 'path' needs to be specified when specifying 'exact: true'."
   );
 });
+
+test('serializes array and null query params', () => {
+  const config = {
+    screens: {
+      Foo: 'foo',
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { tags: ['a', 'b'], flag: null },
+      },
+    ],
+  };
+
+  const path = '/foo?tags=a&tags=b&flag';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { tags: ['a', 'b'], flag: null },
+        path,
+      },
+    ],
+  });
+});
