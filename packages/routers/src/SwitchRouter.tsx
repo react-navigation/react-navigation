@@ -388,50 +388,64 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             return null;
           }
 
+          let replacedRouteKey: string | undefined;
+
+          const routes = state.routes.map((route) => {
+            if (route.name !== action.payload.name) {
+              return route;
+            }
+
+            const getId = routeGetIdList[route.name];
+
+            const currentId = getId?.({ params: route.params });
+            const nextId = getId?.({ params: action.payload.params });
+
+            const key =
+              currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
+
+            if (key !== route.key) {
+              replacedRouteKey = route.key;
+            }
+
+            let params;
+
+            if (
+              action.type === 'NAVIGATE' &&
+              action.payload.merge &&
+              currentId === nextId
+            ) {
+              params =
+                action.payload.params !== undefined ||
+                routeParamList[route.name] !== undefined
+                  ? {
+                      ...routeParamList[route.name],
+                      ...route.params,
+                      ...action.payload.params,
+                    }
+                  : route.params;
+            } else {
+              params = createParamsFromAction({ action, routeParamList });
+            }
+
+            const path =
+              action.type === 'NAVIGATE' && action.payload.path != null
+                ? action.payload.path
+                : route.path;
+
+            return params !== route.params || path !== route.path
+              ? { ...route, key, path, params }
+              : route;
+          });
+
           const stateWithRoutes: State = {
             ...state,
-            routes: state.routes.map((route) => {
-              if (route.name !== action.payload.name) {
-                return route;
-              }
-
-              const getId = routeGetIdList[route.name];
-
-              const currentId = getId?.({ params: route.params });
-              const nextId = getId?.({ params: action.payload.params });
-
-              const key =
-                currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
-
-              let params;
-
-              if (
-                action.type === 'NAVIGATE' &&
-                action.payload.merge &&
-                currentId === nextId
-              ) {
-                params =
-                  action.payload.params !== undefined ||
-                  routeParamList[route.name] !== undefined
-                    ? {
-                        ...routeParamList[route.name],
-                        ...route.params,
-                        ...action.payload.params,
-                      }
-                    : route.params;
-              } else {
-                params = createParamsFromAction({ action, routeParamList });
-              }
-
-              const path =
-                action.type === 'NAVIGATE' && action.payload.path != null
-                  ? action.payload.path
-                  : route.path;
-
-              return params !== route.params || path !== route.path
-                ? { ...route, key, path, params }
-                : route;
-            }),
+            routes,
+            history:
+              replacedRouteKey == null
+                ? state.history
+                : state.history.filter(
+                    (it) => it.type !== 'route' || it.key !== replacedRouteKey
+                  ),
           };
 
           const updatedState: State = {
@@ -455,7 +469,7 @@ export function SwitchRouter<Type extends SwitchRouterType>({
           return {
             ...updatedState,
             preloadedRouteKeys: updatedState.preloadedRouteKeys.filter(
-              (key) => key !== updatedRoute.key
+              (key) => key !== updatedRoute.key && key !== replacedRouteKey
             ),
           };
         }

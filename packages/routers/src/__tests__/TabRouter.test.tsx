@@ -947,6 +947,75 @@ test('ensures unique ID for navigate', () => {
   });
 });
 
+test('removes stale history entries when getId changes the key', () => {
+  const router = TabRouter({ backBehavior: 'history' });
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => params?.id,
+    },
+  };
+
+  const state = router.getStateForAction(
+    {
+      stale: false,
+      type: 'tab',
+      preloadedRouteKeys: [],
+      key: 'root',
+      index: 1,
+      routeNames: ['baz', 'bar'],
+      routes: [
+        { key: 'baz', name: 'baz' },
+        { key: 'bar', name: 'bar', params: { id: '1' } },
+      ],
+      history: [
+        { type: 'route', key: 'baz' },
+        { type: 'route', key: 'bar' },
+      ],
+    },
+    TabActions.jumpTo('bar', { id: '2' }),
+    options
+  );
+
+  expect(state).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: [],
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar-1', name: 'bar', params: { id: '2' } },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'route', key: 'bar-1' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      state as TabNavigationState<ParamListBase>,
+      CommonActions.goBack(),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: [],
+    key: 'root',
+    index: 0,
+    routeNames: ['baz', 'bar'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar-1', name: 'bar', params: { id: '2' } },
+    ],
+    history: [{ type: 'route', key: 'baz' }],
+  });
+});
+
 test('handles jump to action', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
