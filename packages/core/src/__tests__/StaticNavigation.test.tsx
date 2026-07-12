@@ -1829,6 +1829,26 @@ test('automatically generates paths if auto is specified', () => {
   });
 });
 
+test('splits acronym-to-word boundaries when automatically generating paths', () => {
+  const Root = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+      URLDetails: TestScreen,
+      MyURLScreen: TestScreen,
+      XMLParser: TestScreen,
+      FAQ: TestScreen,
+    },
+  });
+
+  expect(createPathConfigForStaticNavigation(Root, {}, true)).toEqual({
+    Home: { path: '' },
+    URLDetails: { path: 'url-details' },
+    MyURLScreen: { path: 'my-url-screen' },
+    XMLParser: { path: 'xml-parser' },
+    FAQ: { path: 'faq' },
+  });
+});
+
 test('use initialRouteName for the automatic home screen', () => {
   const NestedA = createTestNavigator({
     initialRouteName: 'Profile',
