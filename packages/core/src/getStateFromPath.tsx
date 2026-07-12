@@ -1083,7 +1083,8 @@ const parseQueryParams = (
 ):
   | { valid: true; params?: Record<string, unknown> | undefined }
   | { valid: false } => {
-  const query = path.split('?')[1];
+  const queryIndex = path.indexOf('?');
+  const query = queryIndex === -1 ? undefined : path.slice(queryIndex + 1);
   const params: Record<string, unknown> = query ? queryString.parse(query) : {};
 
   // Path params should always win over same-named query params.
