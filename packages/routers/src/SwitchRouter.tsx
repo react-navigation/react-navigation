@@ -73,10 +73,11 @@ const getRouteHistory = (
   backBehavior: BackBehavior,
   initialRouteName: string | undefined
 ) => {
-  const history = [
+  const history: RouteHistory[] = [
     {
       type: TYPE_ROUTE,
       key: routes[index].key,
+      params: backBehavior === 'fullHistory' ? routes[index].params : undefined,
     },
   ];
 

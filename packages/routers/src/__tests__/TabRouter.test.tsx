@@ -1857,6 +1857,32 @@ test('preserves params in history with backBehavior: fullHistory', () => {
   expect(state.routes[1].params).toEqual({ value: 'first' });
 });
 
+test('keeps initial params on goBack with backBehavior: fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz'],
+    routeParamList: { bar: { initial: true } },
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('baz'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.index).toBe(0);
+  expect(state.routes[0]?.params).toEqual({ initial: true });
+});
+
 test('updates route key history on focus change with backBehavior: fullHistory', () => {
   const router = TabRouter({ backBehavior: 'fullHistory' });
 
