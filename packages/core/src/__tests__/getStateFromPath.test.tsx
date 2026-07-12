@@ -3442,3 +3442,23 @@ test('throws if screen has alias but no path', () => {
     `Screen 'Foo' doesn't specify a 'path'. A 'path' needs to be specified in order to use 'alias'.`
   );
 });
+
+test('parses array and null query params without parse config', () => {
+  const config = {
+    screens: {
+      Foo: 'foo',
+    },
+  };
+
+  const path = '/foo?tags=a&tags=b&flag';
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { tags: ['a', 'b'], flag: null },
+        path,
+      },
+    ],
+  });
+});

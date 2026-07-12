@@ -19,11 +19,20 @@ type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
 type StringifyConfig = Record<string, (value: unknown) => string>;
 
+type SerializedParamValue = string | string[] | null;
+
 type ConfigItem = {
   parts?: PatternPart[];
   stringify?: StringifyConfig;
   screens?: Record<string, ConfigItem>;
 };
+
+const serializeParamValue = (value: unknown): SerializedParamValue =>
+  value === null
+    ? null
+    : Array.isArray(value)
+      ? value.map(String)
+      : String(value);
 
 const getActiveRoute = (state: State): { name: string; params?: object } => {
   const route =
@@ -105,7 +114,7 @@ export function getPathFromState<ParamList extends {}>(
   let path = '/';
   let current: State | undefined = state;
 
-  const allParams: Record<string, string> = {};
+  const allParams: Record<string, SerializedParamValue> = {};
 
   while (current) {
     let index = typeof current.index === 'number' ? current.index : 0;
@@ -115,7 +124,7 @@ export function getPathFromState<ParamList extends {}>(
 
     let parts: PatternPart[] | undefined;
 
-    let focusedParams: Record<string, string> | undefined;
+    let focusedParams: Record<string, SerializedParamValue> | undefined;
     let currentOptions = configs;
 
     const focusedRoute = getActiveRoute(state);
@@ -135,7 +144,7 @@ export function getPathFromState<ParamList extends {}>(
 
         const currentParams = Object.fromEntries(
           Object.entries(route.params)
-            .map(([key, value]): [string, string] | null => {
+            .map(([key, value]): [string, SerializedParamValue] | null => {
               if (value === undefined) {
                 if (options) {
                   const optional = options.parts?.find(
@@ -150,9 +159,12 @@ export function getPathFromState<ParamList extends {}>(
                 }
               }
 
-              const stringify = options?.stringify?.[key] ?? String;
+              const stringify = options?.stringify?.[key];
 
-              return [key, stringify(value)];
+              return [
+                key,
+                stringify ? stringify(value) : serializeParamValue(value),
+              ];
             })
             .filter((entry) => entry != null)
         );
@@ -244,7 +256,7 @@ export function getPathFromState<ParamList extends {}>(
       focusedParams = Object.fromEntries(
         Object.entries(focusedRoute.params).map(([key, value]) => [
           key,
-          String(value),
+          serializeParamValue(value),
         ])
       );
     }
