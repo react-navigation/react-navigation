@@ -354,6 +354,29 @@ test("doesn't handle RESET if routeNames don't match", () => {
   expect(result).toBeNull();
 });
 
+test("doesn't handle RESET if a complete state has an out-of-bounds index", () => {
+  expect(
+    BaseRouter.getStateForAction(
+      STATE,
+      CommonActions.reset({
+        ...STATE,
+        index: 99,
+        routes: [{ key: 'foo', name: 'foo' }],
+      })
+    )
+  ).toBeNull();
+
+  expect(
+    BaseRouter.getStateForAction(
+      STATE,
+      CommonActions.reset({
+        ...STATE,
+        index: -1,
+      })
+    )
+  ).toBeNull();
+});
+
 test("doesn't handle RESET if there are no routes", () => {
   const result = BaseRouter.getStateForAction(
     STATE,
