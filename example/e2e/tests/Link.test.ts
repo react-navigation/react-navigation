@@ -129,11 +129,6 @@ test('replaces article with the album screen', async ({ page }) => {
 
   await expect(page.getByLabel('Article by Gandalf, back')).not.toBeVisible();
 
-  // FIXME: workaround for waiting for the transition to finish
-  await new Promise((resolve) => {
-    setTimeout(resolve, 300);
-  });
-
   await page.getByLabel('Home, back').click();
 
   await page.waitForURL('**/');

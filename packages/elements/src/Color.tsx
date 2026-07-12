@@ -29,7 +29,7 @@ export function Color(value: ColorValue): ColorType | undefined {
 }
 
 Color.foreground = (color: ColorValue): ColorValue => {
-  const value = color as unknown;
+  const value: unknown = color;
 
   if (typeof value === 'object' && value != null) {
     // Special case for Android platform colors

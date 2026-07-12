@@ -774,7 +774,7 @@ function getPlatformIcon(icon: Icon): PlatformIcon {
 }
 
 function getAndroidColorName(color: ColorValue) {
-  const value = color as unknown;
+  const value: unknown = color;
 
   if (
     typeof value === 'object' &&

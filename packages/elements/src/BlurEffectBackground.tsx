@@ -31,7 +31,8 @@ export function BlurEffectBackground({
   children,
   ...rest
 }: Props) {
-  let containerStyle, blurStyle, blurBackground, colorBackground;
+  let blurStyle: (ViewStyle & React.CSSProperties) | undefined;
+  let containerStyle, blurBackground, colorBackground;
 
   if (Platform.OS === 'web' && blurEffect && blurEffect !== 'none') {
     const blurBackgroundColor = getBlurBackgroundColor(blurEffect);
@@ -40,9 +41,8 @@ export function BlurEffectBackground({
       const backdropFilter = `saturate(180%) blur(30px)`;
 
       blurStyle = {
-        // @ts-expect-error backdropFilter is web-only
         backdropFilter,
-        webkitBackdropFilter: backdropFilter,
+        WebkitBackdropFilter: backdropFilter,
       };
 
       blurBackground = (
