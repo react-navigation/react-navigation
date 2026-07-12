@@ -48,12 +48,13 @@ const didFocusedRouteChange = (
 
   let changed = currentFocusedRoute?.key !== nextFocusedRoute?.key;
 
-  while (
-    !changed &&
-    currentFocusedRoute?.state != null &&
-    nextFocusedRoute?.state != null &&
-    currentFocusedRoute.state !== nextFocusedRoute.state
-  ) {
+  while (!changed && currentFocusedRoute?.state !== nextFocusedRoute?.state) {
+    if (currentFocusedRoute?.state == null || nextFocusedRoute?.state == null) {
+      // Nested routes can't be compared if state is present only on one side
+      // So conservatively assume that the focused route has changed
+      return true;
+    }
+
     currentFocusedRoute =
       currentFocusedRoute.state.routes[
         currentFocusedRoute.state.index ??

@@ -325,6 +325,71 @@ test('fires loader when the nested focused route changes under the same route', 
   expect(contactsFn).toHaveBeenCalledTimes(1);
 });
 
+test('fires loader when reset adds nested state under the same route key', async () => {
+  const albumsFn = jest.fn(async () => {});
+  const contactsFn = jest.fn(async () => {});
+
+  const Child = createTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: albumsFn,
+      },
+      Contacts: {
+        screen: TestScreen,
+        UNSTABLE_loader: contactsFn,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    initialRouteName: 'Nested',
+    screens: {
+      Home: TestScreen,
+      Nested: Child,
+    },
+  });
+
+  const Component = Root.getComponent();
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
+
+  albumsFn.mockClear();
+  contactsFn.mockClear();
+
+  const state = navigation.getRootState();
+  const nested = state.routes.find((route) => route.name === 'Nested');
+
+  await act(() => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'Nested',
+            key: nested?.key,
+            state: {
+              index: 1,
+              routes: [{ name: 'Albums' }, { name: 'Contacts' }],
+            },
+          },
+        ],
+      })
+    );
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Contacts');
+
+  expect(albumsFn).not.toHaveBeenCalled();
+  expect(contactsFn).toHaveBeenCalledTimes(1);
+});
+
 test("doesn't fire loader when the nested focused route is updated with the same key", async () => {
   const albumsFn = jest.fn(async () => {});
 
