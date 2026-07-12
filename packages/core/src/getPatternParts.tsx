@@ -15,6 +15,8 @@ export function getPatternParts(path: string): PatternPart[] {
 
   let isRegex = false;
   let isParam = false;
+  let isEscaped = false;
+  let isInCharClass = false;
   let regexInnerParens = 0;
 
   // One extra iteration to add the last character
@@ -34,7 +36,7 @@ export function getPatternParts(path: string): PatternPart[] {
           `Encountered ':' in the middle of a segment in path: ${path}`
         );
       }
-    } else if (char === '(') {
+    } else if (char === '(' && !isEscaped && !isInCharClass) {
       if (isParam) {
         if (isRegex) {
           // The '(' is part of the regex if we're already inside one
@@ -47,7 +49,7 @@ export function getPatternParts(path: string): PatternPart[] {
           `Encountered '(' without preceding ':' in path: ${path}`
         );
       }
-    } else if (char === ')') {
+    } else if (char === ')' && !isEscaped && !isInCharClass) {
       if (isParam && isRegex) {
         if (regexInnerParens) {
           // The ')' is part of the regex if we're already inside one
@@ -102,6 +104,17 @@ export function getPatternParts(path: string): PatternPart[] {
     if (isRegex) {
       current.regex = current.regex || '';
       current.regex += char;
+
+      // Track escapes and character classes so parens inside them are not special
+      if (isEscaped) {
+        isEscaped = false;
+      } else if (char === '\\') {
+        isEscaped = true;
+      } else if (char === '[') {
+        isInCharClass = true;
+      } else if (char === ']') {
+        isInCharClass = false;
+      }
     }
 
     if (isParam && !isRegex) {
