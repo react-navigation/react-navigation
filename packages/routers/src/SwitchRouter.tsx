@@ -335,12 +335,24 @@ export function SwitchRouter<Type extends SwitchRouterType>({
         throw new Error(`Couldn't find a route at index ${state.index}.`);
       }
 
-      const index = Math.max(0, routeNames.indexOf(currentRoute.name));
-
       let history = state.history.filter(
         // Type will always be 'route' for tabs, but could be different in a router extending this (e.g. drawer)
-        (it) => it.type !== 'route' || routes.find((r) => r.key === it.key)
+        (it) => it.type !== 'route' || routes.some((r) => r.key === it.key)
       );
+
+      let index = routeNames.indexOf(currentRoute.name);
+
+      if (index === -1) {
+        // The focused route was removed, so focus the most recently visited surviving route
+        const previousRouteItem = history.findLast(
+          (item): item is RouteHistory => item.type === 'route'
+        );
+
+        index = Math.max(
+          0,
+          routes.findIndex((route) => route.key === previousRouteItem?.key)
+        );
+      }
 
       if (!history.length) {
         history = getRouteHistory(
