@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { NavigationFocusedRouteStateContext } from './NavigationFocusedRouteStateContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
 import {
   NamedRouteContextListContext,
@@ -23,11 +24,13 @@ export function NavigationIndependentTree({
       <NamedRouteContextListContext.Provider value={undefined}>
         <NavigationRouteContext.Provider value={undefined}>
           <NavigationContext.Provider value={undefined}>
-            <IsFocusedContext.Provider value={undefined}>
-              <NavigationIndependentTreeContext.Provider value={true}>
-                {children}
-              </NavigationIndependentTreeContext.Provider>
-            </IsFocusedContext.Provider>
+            <NavigationFocusedRouteStateContext.Provider value={undefined}>
+              <IsFocusedContext.Provider value={undefined}>
+                <NavigationIndependentTreeContext.Provider value={true}>
+                  {children}
+                </NavigationIndependentTreeContext.Provider>
+              </IsFocusedContext.Provider>
+            </NavigationFocusedRouteStateContext.Provider>
           </NavigationContext.Provider>
         </NavigationRouteContext.Provider>
       </NamedRouteContextListContext.Provider>
