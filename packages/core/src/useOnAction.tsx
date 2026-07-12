@@ -48,12 +48,11 @@ const didFocusedRouteChange = (
 
   let changed = currentFocusedRoute?.key !== nextFocusedRoute?.key;
 
-  while (
-    !changed &&
-    currentFocusedRoute?.state != null &&
-    nextFocusedRoute?.state != null &&
-    currentFocusedRoute.state !== nextFocusedRoute.state
-  ) {
+  while (!changed && currentFocusedRoute?.state !== nextFocusedRoute?.state) {
+    if (currentFocusedRoute?.state == null || nextFocusedRoute?.state == null) {
+      return true;
+    }
+
     currentFocusedRoute =
       currentFocusedRoute.state.routes[
         currentFocusedRoute.state.index ??
