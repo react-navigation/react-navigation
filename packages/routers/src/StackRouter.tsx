@@ -703,20 +703,23 @@ export function StackRouter(options: StackRouterOptions) {
           /**
            * When popping entries,
            * - Pop entries from route.history
-           * - Pop routes from state.routes
+           * - Pop the route itself and continue from the route below it
            *
            * Repeat until:
            * - We have popped the amount of items in count
            * - There are no more items to pop
+           *
+           * Routes above the current route (e.g. above the source) are kept intact
            */
           if (route.history?.length || currentIndex > 0) {
             let count = action.payload.count;
-            let nextRoutes = routes;
+
+            let removedFromIndex: number | undefined;
+
+            const sourceIndex = currentIndex;
 
             while (count > 0 && (route.history?.length || currentIndex > 0)) {
               if (route.history?.length) {
-                nextRoutes = [...nextRoutes];
-
                 const end = Math.min(count, route.history.length);
                 const last = route.history.at(-end);
                 const history = route.history.slice(0, -end);
@@ -724,7 +727,7 @@ export function StackRouter(options: StackRouterOptions) {
 
                 count = count - removed;
 
-                nextRoutes[currentIndex] = {
+                route = {
                   ...route,
                   params: last?.type === 'params' ? last.params : route.params,
                   history,
@@ -732,19 +735,11 @@ export function StackRouter(options: StackRouterOptions) {
               }
 
               if (currentIndex > 0 && count > 0) {
-                const length = nextRoutes.length;
-                const end = Math.max(currentIndex - count + 1, 1);
+                count = count - 1;
+                removedFromIndex = currentIndex;
+                currentIndex = currentIndex - 1;
 
-                nextRoutes = nextRoutes
-                  .slice(0, end)
-                  .concat(nextRoutes.slice(currentIndex + 1));
-
-                const removed = length - nextRoutes.length;
-
-                count = count - removed;
-                currentIndex = nextRoutes.length - 1;
-
-                const currentRoute = nextRoutes[currentIndex];
+                const currentRoute = routes[currentIndex];
 
                 if (currentRoute == null) {
                   throw new Error(
@@ -754,6 +749,21 @@ export function StackRouter(options: StackRouterOptions) {
 
                 route = currentRoute;
               }
+            }
+
+            let nextRoutes =
+              removedFromIndex === undefined
+                ? routes
+                : routes
+                    .slice(0, removedFromIndex)
+                    .concat(routes.slice(sourceIndex + 1));
+
+            if (route !== routes[currentIndex]) {
+              if (nextRoutes === routes) {
+                nextRoutes = [...routes];
+              }
+
+              nextRoutes[currentIndex] = route;
             }
 
             return retainRoutes(state, getStateWithRoutes(state, nextRoutes));
