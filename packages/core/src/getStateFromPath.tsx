@@ -69,6 +69,7 @@ type ConfigResources = {
   configs: RouteConfig[];
   configsByScreen: Record<string, RouteConfig[]>;
   configsByPattern: Record<string, RouteConfig[]>;
+  prefixRegex?: RegExp | undefined;
 };
 
 const INVALID_SCHEMA_RESULT_ERROR =
@@ -87,6 +88,17 @@ const NESTED_SCREEN_PARAM_NAMES = [
   'merge',
   'pop',
 ];
+
+const getStaticSegmentPattern = (segment: string) =>
+  Array.from(segment, (char) => {
+    const encoded = encodeURIComponent(char);
+    const percentEncoded =
+      encoded === char
+        ? `%${char.charCodeAt(0).toString(16).padStart(2, '0').toUpperCase()}`
+        : encoded;
+
+    return `(?:${escape(char)}|${escape(percentEncoded)})`;
+  }).join('');
 
 const getExplicitParamNames = (parse?: ParseConfig) => {
   const names: string[] = [];
@@ -161,8 +173,13 @@ export function getStateFromPath<ParamList extends {}>(
   options?: Options<ParamList>,
   previous?: NavigationState
 ): ResultState | undefined {
-  const { initialRoutes, configs, configsByScreen, configsByPattern } =
-    getConfigResources(options);
+  const {
+    initialRoutes,
+    configs,
+    configsByScreen,
+    configsByPattern,
+    prefixRegex,
+  } = getConfigResources(options);
 
   const screens = options?.screens;
 
@@ -183,24 +200,20 @@ export function getStateFromPath<ParamList extends {}>(
   let remaining = path
     .replace(/\/+/g, '/') // Replace multiple slash (//) with single ones
     .replace(/^\//, '') // Remove extra leading slash
-    .replace(/\?.*$/, ''); // Remove query params which we will handle later
+    .replace(/\?.*$/, '') // Remove query params which we will handle later
+    .replace(/%[0-9a-f]{2}/gi, (m) => m.toUpperCase()); // Normalize percent-encoding as hex digits are case-insensitive
 
   // Make sure there is a trailing slash
   remaining = remaining.endsWith('/') ? remaining : `${remaining}/`;
 
-  const prefix = options?.path?.replace(/^\//, ''); // Remove extra leading slash
+  if (prefixRegex) {
+    const prefixMatch = remaining.match(prefixRegex);
 
-  if (prefix) {
-    // Make sure there is a trailing slash
-    const normalizedPrefix = prefix.endsWith('/') ? prefix : `${prefix}/`;
-
-    // If the path doesn't start with the prefix, it's not a match
-    if (!remaining.startsWith(normalizedPrefix)) {
+    if (prefixMatch == null) {
       return undefined;
     }
 
-    // Remove the prefix from the path
-    remaining = remaining.replace(normalizedPrefix, '');
+    remaining = remaining.slice(prefixMatch[0].length);
   }
 
   if (screens === undefined) {
@@ -358,6 +371,19 @@ function getConfigResources<ParamList extends {}>(
 function prepareConfigResources(options?: Options<{}>) {
   const initialRoutes = getInitialRoutes(options);
   const configs = getSortedNormalizedConfigs(initialRoutes, options?.screens);
+  const prefix = options?.path?.replace(/^\//, '');
+
+  let prefixRegex: RegExp | undefined;
+
+  if (prefix) {
+    const normalizedPrefix = prefix.endsWith('/') ? prefix : `${prefix}/`;
+    const prefixPattern = normalizedPrefix
+      .split('/')
+      .map(getStaticSegmentPattern)
+      .join('/');
+
+    prefixRegex = new RegExp(`^${prefixPattern}`);
+  }
 
   const configsByScreen: Record<string, RouteConfig[]> = {};
   const configsByPattern: Record<string, RouteConfig[]> = {};
@@ -380,6 +406,7 @@ function prepareConfigResources(options?: Options<{}>) {
     configs,
     configsByScreen,
     configsByPattern,
+    prefixRegex,
   };
 }
 
@@ -811,8 +838,10 @@ const createConfigItem = (
         if (part.screen === screen) {
           pathParamNames.add(part.param);
         }
+      } else if (part.segment === '*') {
+        regexString += `.*\\/`;
       } else {
-        regexString += `${part.segment === '*' ? '.*' : escape(part.segment)}\\/`;
+        regexString += `${getStaticSegmentPattern(part.segment)}\\/`;
       }
 
       index++;
