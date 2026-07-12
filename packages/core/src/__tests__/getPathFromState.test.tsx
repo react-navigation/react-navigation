@@ -827,8 +827,9 @@ test('handles nested object for second route depth and path and stringify in roo
           routes: [
             {
               name: 'Bar',
+              params: { id: 42 },
               state: {
-                routes: [{ name: 'Baz', params: { id: 42 } }],
+                routes: [{ name: 'Baz' }],
               },
             },
           ],
@@ -2308,4 +2309,235 @@ test('uses stringify and parse for array and null query params', () => {
       },
     ],
   });
+});
+
+test('handles same param name at different nesting levels', () => {
+  const config = {
+    screens: {
+      User: {
+        path: 'user/:id',
+        screens: {
+          Post: 'post/:id',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'User',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Post',
+              params: { id: '2' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const path = '/user/1/post/2';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'User',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Post',
+              params: { id: '2' },
+              path,
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test('handles same param name with exact nested path', () => {
+  const config = {
+    screens: {
+      User: {
+        path: 'user/:id',
+        screens: {
+          Post: {
+            path: 'post/:id',
+            exact: true,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'User',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Post',
+              params: { id: '2' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/post/2');
+});
+
+test("doesn't use child param for missing same-named ancestor param", () => {
+  const config = {
+    screens: {
+      User: {
+        path: 'user/:id',
+        screens: {
+          Post: 'post/:id',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'User',
+        state: {
+          routes: [
+            {
+              name: 'Post',
+              params: { id: '2' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe(
+    '/user/undefined/post/2'
+  );
+});
+
+test("doesn't add undefined for optional same-named child param", () => {
+  const config = {
+    screens: {
+      User: {
+        path: 'user/:id',
+        screens: {
+          Post: 'post/:id?',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'User',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Post',
+              params: { id: undefined },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/user/1/post');
+});
+
+test('keeps query param with same name as ancestor path param', () => {
+  const config = {
+    screens: {
+      User: {
+        path: 'user/:id',
+        screens: {
+          Settings: 'settings',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'User',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Settings',
+              params: { id: '2' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const path = '/user/1/settings?id=2';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'User',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Settings',
+              params: { id: '2' },
+              path,
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test('handles same param name when state is deeper than config', () => {
+  const config = {
+    screens: {
+      Foo: 'foo/:id',
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Foo',
+              params: { id: '2' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/foo/1/foo/2');
 });

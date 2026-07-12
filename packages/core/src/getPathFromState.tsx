@@ -20,6 +20,7 @@ type SerializedParamValue = string | string[] | null;
 
 type ConfigItem = {
   parts?: PatternPart[] | undefined;
+  ownParts: PatternPart[];
   stringify?: StringifyConfig | undefined;
   screens?: Record<string, ConfigItem> | undefined;
 };
@@ -179,8 +180,6 @@ export function getPathFromState<ParamList extends {}>(
   let path = '/';
   let current: State | undefined = state;
 
-  const allParams: Record<string, SerializedParamValue> = {};
-
   while (current) {
     let index: number = typeof current.index === 'number' ? current.index : 0;
 
@@ -194,6 +193,10 @@ export function getPathFromState<ParamList extends {}>(
     let route: State['routes'][number] = initialRoute;
 
     let parts: PatternPart[] | undefined;
+
+    // Values for each pattern part object, so the same param name
+    // at different nesting levels gets the value from its own level
+    const partValues = new Map<PatternPart, SerializedParamValue | undefined>();
 
     let focusedParams: Record<string, SerializedParamValue> | undefined;
     let currentOptions = configs;
@@ -212,6 +215,8 @@ export function getPathFromState<ParamList extends {}>(
 
       parts = config.parts;
 
+      const ownParts = config.ownParts;
+
       nestedRouteNames.push(route.name);
 
       if (route.params) {
@@ -225,7 +230,7 @@ export function getPathFromState<ParamList extends {}>(
           if (value === undefined) {
             let optional = false;
 
-            for (const part of options.parts ?? []) {
+            for (const part of ownParts) {
               if (part.param === key) {
                 optional = part.optional === true;
                 break;
@@ -244,31 +249,42 @@ export function getPathFromState<ParamList extends {}>(
             : serializeParamValue(value);
         }
 
-        if (parts?.length) {
-          Object.assign(allParams, currentParams);
+        const claimedParams = new Set<string>();
+
+        for (const part of ownParts) {
+          if (part.param && part.param in currentParams) {
+            const value = currentParams[part.param];
+
+            if (value !== undefined) {
+              partValues.set(part, value);
+              claimedParams.add(part.param);
+            }
+          }
         }
 
         if (focusedRoute === route) {
           // If this is the focused route, keep the params for later use
           // We save it here since it's been stringified already
+          // Params claimed by the pattern shouldn't be repeated in the query string
           focusedParams = {};
 
           for (const key in currentParams) {
-            let inPattern = false;
-
-            for (const part of parts ?? []) {
-              if (part.param === key) {
-                inPattern = true;
-                break;
-              }
-            }
-
             const value = currentParams[key];
 
-            if (!inPattern && value !== undefined && value !== 'undefined') {
+            if (
+              !claimedParams.has(key) &&
+              value !== undefined &&
+              value !== 'undefined'
+            ) {
               focusedParams[key] = value;
             }
           }
+        }
+      }
+
+      for (const part of ownParts) {
+        if (part.param && !partValues.has(part)) {
+          partValues.set(part, undefined);
         }
       }
 
@@ -309,7 +325,9 @@ export function getPathFromState<ParamList extends {}>(
       if (parts) {
         let index = 0;
 
-        for (const { segment, param, optional } of parts) {
+        for (const part of parts) {
+          const { segment, param, optional } = part;
+
           if (index > 0) {
             path += '/';
           }
@@ -326,7 +344,7 @@ export function getPathFromState<ParamList extends {}>(
 
           // If the path has a pattern for a param, put the param in the path
           if (param) {
-            const value = allParams[param];
+            const value = partValues.get(part);
 
             if (value === undefined && optional) {
               // Optional params without value assigned in route.params should be ignored
@@ -396,14 +414,13 @@ const createConfigItem = (
   parentParts?: PatternPart[]
 ): ConfigItem => {
   if (typeof config === 'string') {
-    // If a string is specified as the value of the key(e.g. Foo: '/path'), use it as the pattern
-    const parts = getPatternParts(config);
+    const ownParts = getPatternParts(config);
 
     if (parentParts) {
-      return { parts: [...parentParts, ...parts] };
+      return { parts: [...parentParts, ...ownParts], ownParts };
     }
 
-    return { parts };
+    return { parts: ownParts, ownParts };
   }
 
   if (config.exact && config.path === undefined) {
@@ -414,14 +431,12 @@ const createConfigItem = (
 
   // If an object is specified as the value (e.g. Foo: { ... }),
   // It can have `path` property and `screens` prop which has nested configs
+  const ownParts = config.path ? getPatternParts(config.path) : [];
   const parts =
     config.exact !== true
-      ? [
-          ...(parentParts || []),
-          ...(config.path ? getPatternParts(config.path) : []),
-        ]
-      : config.path
-        ? getPatternParts(config.path)
+      ? [...(parentParts || []), ...ownParts]
+      : ownParts.length
+        ? ownParts
         : undefined;
 
   const screens =
@@ -431,6 +446,7 @@ const createConfigItem = (
 
   return {
     parts,
+    ownParts,
     stringify: config.stringify,
     screens,
   };
