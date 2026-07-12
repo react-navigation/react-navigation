@@ -3558,6 +3558,73 @@ test('matches percent-encoded static segments', () => {
   });
 });
 
+test('matches custom param regex against the decoded value', () => {
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Bar: 'bar/:name([a-z ]+)',
+      Baz: 'bar/:id(\\d+)',
+    },
+  };
+
+  expect(getStateFromPath<object>('/bar/john doe', config)).toEqual({
+    routes: [
+      {
+        name: 'Bar',
+        params: { name: 'john doe' },
+        path: '/bar/john doe',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('/bar/john%20doe', config)).toEqual({
+    routes: [
+      {
+        name: 'Bar',
+        params: { name: 'john doe' },
+        path: '/bar/john%20doe',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('/bar/%34%32', config)).toEqual({
+    routes: [
+      {
+        name: 'Baz',
+        params: { id: '42' },
+        path: '/bar/%34%32',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('/bar/john%2Fdoe42', config)).toBeUndefined();
+
+  const path = getPathFromState<object>(
+    { routes: [{ name: 'Bar', params: { name: 'john doe' } }] },
+    config
+  );
+
+  expect(path).toBe('/bar/john%20doe');
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Bar',
+        params: { name: 'john doe' },
+        path: '/bar/john%20doe',
+      },
+    ],
+  });
+});
+
+test('rejects decoded value when encoded value matches custom regex', () => {
+  const config = {
+    screens: {
+      Foo: 'foo/:value([a-z%0-9]+)',
+    },
+  };
+
+  expect(getStateFromPath<object>('/foo/john%20doe', config)).toBeUndefined();
+});
+
 test('matches percent-encoded root path prefix', () => {
   const config: Parameters<typeof getStateFromPath>[1] = {
     path: 'café',

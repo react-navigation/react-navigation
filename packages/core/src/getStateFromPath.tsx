@@ -39,7 +39,12 @@ type RouteConfig = {
   regex?: RegExp | undefined;
   pattern: string;
   segments: string[];
-  params: { screen: string; name: string; index: number }[];
+  params: {
+    screen: string;
+    name: string;
+    index: number;
+    regex?: RegExp | undefined;
+  }[];
   routeNames: string[];
   parse?: ParseConfig | undefined;
   explicitParamNames?: Set<string> | undefined;
@@ -612,6 +617,12 @@ const matchAgainstConfig = (
           return undefined;
         }
 
+        // Percent-encoded values are matched permissively
+        // So validate the decoded value against the custom regex
+        if (param.regex && value !== decoded && !param.regex.test(decoded)) {
+          return undefined;
+        }
+
         const parser = routeConfig.parse?.[param.name];
 
         if (!parser) {
@@ -826,13 +837,18 @@ const createConfigItem = (
       segments.push(part.segment);
 
       if (part.param) {
-        const reg = part.regex || '[^/]+';
+        // A custom regex may not match the percent-encoded form of the value
+        // So also accept segments containing an encoded character and validate them after decoding
+        const reg = part.regex
+          ? `(?:${part.regex})|(?=[^/]*%[0-9A-F]{2})[^/]+`
+          : '[^/]+';
 
         regexString += `(((?<${PARAM_GROUP_PREFIX}${index}>${reg})\\/)${part.optional ? '?' : ''})`;
         params.push({
           index,
           screen: part.screen,
           name: part.param,
+          regex: part.regex ? new RegExp(`^(?:${part.regex})$`) : undefined,
         });
 
         if (part.screen === screen) {
