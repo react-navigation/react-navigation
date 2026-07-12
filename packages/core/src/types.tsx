@@ -1654,7 +1654,7 @@ export type PathConfig<Params> = FlatType<
     path?: string | undefined;
     /**
      * An object mapping the param name to a function which converts the param value to a string.
-     * By default, all params are converted to strings using `String(value)`.
+     * By default, arrays and null are preserved for query params, and other values are converted using `String(value)`.
      * Keys are constrained to valid param names when Params type is provided.
      *
      * @example

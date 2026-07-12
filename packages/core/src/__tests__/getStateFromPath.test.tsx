@@ -3585,6 +3585,26 @@ test('matches percent-encoded root path prefix', () => {
   expect(getStateFromPath<object>('/other/foo', config)).toBeUndefined();
 });
 
+test('parses array and null query params without parse config', () => {
+  const config = {
+    screens: {
+      Foo: 'foo',
+    },
+  };
+
+  const path = '/foo?tags=a&tags=b&flag';
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { tags: ['a', 'b'], flag: null },
+        path,
+      },
+    ],
+  });
+});
+
 test('passes null, string and string[] query values to schema parser', () => {
   const QuerySchema = {
     '~standard': {
