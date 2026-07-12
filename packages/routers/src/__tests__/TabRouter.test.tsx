@@ -2784,3 +2784,137 @@ test('handles screen preloading', () => {
     history: [{ type: 'route', key: 'qux-test' }],
   });
 });
+
+test('keeps history ending with the focused route when preload replaces it', () => {
+  const router = TabRouter({ backBehavior: 'history' });
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => `bar-${params?.answer}`,
+    },
+  };
+
+  const state = router.getStateForAction(
+    {
+      stale: false,
+      type: 'tab',
+      preloadedRouteKeys: [],
+      key: 'root',
+      index: 1,
+      routeNames: ['baz', 'bar'],
+      routes: [
+        { key: 'baz-test', name: 'baz' },
+        { key: 'bar-some', name: 'bar', params: { answer: 42 } },
+      ],
+      history: [
+        { type: 'route', key: 'baz-test' },
+        { type: 'route', key: 'bar-some' },
+      ],
+    },
+    CommonActions.preload('bar', { answer: 43 }),
+    options
+  );
+
+  expect(state).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['bar-test'],
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar'],
+    routes: [
+      { key: 'baz-test', name: 'baz' },
+      { key: 'bar-test', name: 'bar', params: { answer: 43 } },
+    ],
+    history: [
+      { type: 'route', key: 'baz-test' },
+      { type: 'route', key: 'bar-test' },
+    ],
+  });
+
+  expect(
+    router.getStateForAction(
+      state as TabNavigationState<ParamListBase>,
+      CommonActions.goBack(),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['bar-test'],
+    key: 'root',
+    index: 0,
+    routeNames: ['baz', 'bar'],
+    routes: [
+      { key: 'baz-test', name: 'baz' },
+      { key: 'bar-test', name: 'bar', params: { answer: 43 } },
+    ],
+    history: [{ type: 'route', key: 'baz-test' }],
+  });
+});
+
+test('preserves params when preload replaces the focused route with fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => `bar-${params?.answer}`,
+    },
+  };
+
+  const preloadedState = router.getStateForAction(
+    {
+      stale: false,
+      type: 'tab',
+      preloadedRouteKeys: [],
+      key: 'root',
+      index: 1,
+      routeNames: ['baz', 'bar'],
+      routes: [
+        { key: 'baz-test', name: 'baz' },
+        { key: 'bar-some', name: 'bar', params: { answer: 42 } },
+      ],
+      history: [
+        { type: 'route', key: 'baz-test' },
+        { type: 'route', key: 'bar-some', params: { answer: 42 } },
+      ],
+    },
+    CommonActions.preload('bar', { answer: 43 }),
+    options
+  );
+
+  if (preloadedState == null || preloadedState.stale !== false) {
+    throw new Error('Expected preload to return a complete state.');
+  }
+
+  const navigatedState = router.getStateForAction(
+    preloadedState,
+    CommonActions.navigate('baz'),
+    options
+  );
+
+  if (navigatedState == null || navigatedState.stale !== false) {
+    throw new Error('Expected navigate to return a complete state.');
+  }
+
+  expect(
+    router.getStateForAction(navigatedState, CommonActions.goBack(), options)
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: [],
+    key: 'root',
+    index: 1,
+    routeNames: ['baz', 'bar'],
+    routes: [
+      { key: 'baz-test', name: 'baz' },
+      { key: 'bar-test', name: 'bar', params: { answer: 43 } },
+    ],
+    history: [
+      { type: 'route', key: 'baz-test' },
+      { type: 'route', key: 'bar-test', params: { answer: 43 } },
+    ],
+  });
+});
