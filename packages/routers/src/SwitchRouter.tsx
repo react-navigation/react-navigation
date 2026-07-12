@@ -388,74 +388,75 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             return null;
           }
 
-          const stateWithRoutes: State = {
-            ...state,
-            routes: state.routes.map((route) => {
-              if (route.name !== action.payload.name) {
-                return route;
-              }
+          const route = state.routes[index];
 
-              const getId = routeGetIdList[route.name];
+          if (route == null) {
+            throw new Error(`Couldn't find a route at index ${index}.`);
+          }
 
-              const currentId = getId?.({ params: route.params });
-              const nextId = getId?.({ params: action.payload.params });
+          const getId = routeGetIdList[route.name];
 
-              const key =
-                currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
+          const currentId = getId?.({ params: route.params });
+          const nextId = getId?.({ params: action.payload.params });
 
-              let params;
+          const key =
+            currentId === nextId ? route.key : `${route.name}-${nanoid()}`;
 
-              if (
-                action.type === 'NAVIGATE' &&
-                action.payload.merge &&
-                currentId === nextId
-              ) {
-                params =
-                  action.payload.params !== undefined ||
-                  routeParamList[route.name] !== undefined
-                    ? {
-                        ...routeParamList[route.name],
-                        ...route.params,
-                        ...action.payload.params,
-                      }
-                    : route.params;
-              } else {
-                params = createParamsFromAction({ action, routeParamList });
-              }
+          let params;
 
-              const path =
-                action.type === 'NAVIGATE' && action.payload.path != null
-                  ? action.payload.path
-                  : route.path;
+          if (
+            action.type === 'NAVIGATE' &&
+            action.payload.merge &&
+            currentId === nextId
+          ) {
+            params =
+              action.payload.params !== undefined ||
+              routeParamList[route.name] !== undefined
+                ? {
+                    ...routeParamList[route.name],
+                    ...route.params,
+                    ...action.payload.params,
+                  }
+                : route.params;
+          } else {
+            params = createParamsFromAction({ action, routeParamList });
+          }
 
-              return params !== route.params || path !== route.path
-                ? { ...route, key, path, params }
-                : route;
-            }),
-          };
+          const path =
+            action.type === 'NAVIGATE' && action.payload.path != null
+              ? action.payload.path
+              : route.path;
+
+          const nextRoute =
+            params !== route.params || path !== route.path || key !== route.key
+              ? { ...route, key, path, params }
+              : route;
+
+          const routes = state.routes.map((item, routeIndex) =>
+            routeIndex === index ? nextRoute : item
+          );
 
           const updatedState: State = {
-            ...stateWithRoutes,
+            ...state,
+            routes,
+            history:
+              key === route.key
+                ? state.history
+                : state.history.filter(
+                    (it) => it.type !== 'route' || it.key !== route.key
+                  ),
+          };
+
+          return {
+            ...updatedState,
             ...changeIndex<Type>(
-              stateWithRoutes,
+              updatedState,
               index,
               backBehavior,
               initialRouteName
             ),
-          };
-
-          const updatedRoute = updatedState.routes[updatedState.index];
-
-          if (updatedRoute == null) {
-            throw new Error(
-              `Couldn't find a route at index ${updatedState.index}.`
-            );
-          }
-
-          return {
-            ...updatedState,
             preloadedRouteKeys: updatedState.preloadedRouteKeys.filter(
-              (key) => key !== updatedRoute.key
+              (key) => key !== route.key && key !== nextRoute.key
             ),
           };
         }
