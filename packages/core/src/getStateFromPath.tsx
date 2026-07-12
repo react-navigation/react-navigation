@@ -26,7 +26,12 @@ type RouteConfig = {
   screen: string;
   regex?: RegExp;
   segments: string[];
-  params: { screen: string; name: string; index: number }[];
+  params: {
+    screen: string;
+    name: string;
+    index: number;
+    regex?: RegExp;
+  }[];
   routeNames: string[];
   parse?: ParseConfig;
   explicitParamNames?: Set<string>;
@@ -463,6 +468,15 @@ const matchAgainstConfigs = (
               break;
             }
 
+            if (
+              param.regex &&
+              value !== decoded &&
+              !param.regex.test(decoded)
+            ) {
+              hasInvalidParam = true;
+              break;
+            }
+
             const parser = routeConfig.parse?.[param.name];
 
             paramEntries.push([param.name, parser ? parser(decoded) : decoded]);
@@ -664,7 +678,9 @@ const createConfigItem = (
         `^(${parts
           .map((it, i) => {
             if (it.param) {
-              const reg = it.regex || '[^/]+';
+              const reg = it.regex
+                ? `(?:${it.regex})|(?=[^/]*%[0-9A-F]{2})[^/]+`
+                : '[^/]+';
 
               return `(((?<param_${i}>${reg})\\/)${it.optional ? '?' : ''})`;
             }
@@ -692,6 +708,7 @@ const createConfigItem = (
       index,
       screen: part.screen,
       name: part.param,
+      regex: part.regex ? new RegExp(`^(?:${part.regex})$`) : undefined,
     });
 
     if (part.screen === screen) {
