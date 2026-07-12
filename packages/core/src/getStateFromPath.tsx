@@ -813,8 +813,9 @@ const parseQueryParams = (
   hasNestedScreens = false,
   routeParams?: Record<string, unknown>
 ) => {
-  const query = path.split('?')[1];
-  const params: Record<string, unknown> = queryString.parse(query);
+  const queryIndex = path.indexOf('?');
+  const query = queryIndex === -1 ? undefined : path.slice(queryIndex + 1);
+  const params: Record<string, unknown> = query ? queryString.parse(query) : {};
 
   for (const name of pathParamNames) {
     // eslint-disable-next-line @typescript-eslint/no-dynamic-delete

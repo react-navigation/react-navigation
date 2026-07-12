@@ -3028,6 +3028,24 @@ test('matches regexp patterns when provided', () => {
   });
 });
 
+test('keeps query string intact when it contains an extra question mark', () => {
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: 'foo',
+    },
+  };
+
+  expect(getStateFromPath<object>('/foo?raw=x?y=1', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { raw: 'x?y=1' },
+        path: '/foo?raw=x?y=1',
+      },
+    ],
+  });
+});
+
 test('strips nested navigation query params for routes with nested screens', () => {
   const config = {
     screens: {
