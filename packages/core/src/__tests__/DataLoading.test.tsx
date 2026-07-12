@@ -76,6 +76,42 @@ test('returns the loader for a screen with UNSTABLE_loader', async () => {
   });
 });
 
+test('uses the last route as focused when state has no index', async () => {
+  const homeFn = jest.fn(
+    async (_options: { name: string; params: unknown }) => {}
+  );
+
+  const detailsFn = jest.fn(
+    async (_options: { name: string; params: unknown }) => {}
+  );
+
+  const Navigator = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+        UNSTABLE_loader: homeFn,
+      },
+      Details: {
+        screen: TestScreen,
+        UNSTABLE_loader: detailsFn,
+      },
+    },
+  });
+
+  const loader = getLoaderForState(Navigator, {
+    routes: [{ name: 'Home' }, { name: 'Details' }],
+  });
+
+  await loader?.();
+
+  expect(homeFn).not.toHaveBeenCalled();
+  expect(detailsFn).toHaveBeenCalledTimes(1);
+  expect(detailsFn).toHaveBeenCalledWith({
+    name: 'Details',
+    params: undefined,
+  });
+});
+
 test('merges initialParams with route params for the loader', async () => {
   const fn = jest.fn(async (_options: { name: string; params: unknown }) => {});
 

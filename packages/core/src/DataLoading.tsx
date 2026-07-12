@@ -71,7 +71,7 @@ export function getLoaderForState(
   tree: TreeForPathConfig,
   state: PartialState<NavigationState> | NavigationState | undefined
 ): (() => Promise<void>) | undefined {
-  const focusedRoute = state?.routes[state.index ?? 0];
+  const focusedRoute = state?.routes[state.index ?? state.routes.length - 1];
 
   if (!focusedRoute) {
     return undefined;

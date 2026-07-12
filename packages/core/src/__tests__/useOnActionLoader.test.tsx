@@ -1,6 +1,6 @@
 import { expect, jest, test } from '@jest/globals';
 import type { ParamListBase } from '@react-navigation/routers';
-import { CommonActions } from '@react-navigation/routers';
+import { CommonActions, StackRouter } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Text } from 'react-native';
@@ -107,6 +107,74 @@ test('does not fire any loader when navigating to a screen without UNSTABLE_load
   });
 
   expect(fn).not.toHaveBeenCalled();
+});
+
+test('fires loader for the focused route on reset without index', async () => {
+  const homeFn = jest.fn(
+    async (_options: { name: string; params: unknown }) => {}
+  );
+
+  const detailFn = jest.fn(
+    async (_options: { name: string; params: unknown }) => {}
+  );
+
+  const StackTestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+    const descriptor = route ? descriptors[route.key] : undefined;
+
+    if (descriptor == null) {
+      throw new Error('Missing descriptor for focused route.');
+    }
+
+    return <NavigationContent>{descriptor.render()}</NavigationContent>;
+  };
+
+  const createStackTestNavigator = createNavigatorFactory(StackTestNavigator);
+
+  const Root = createStackTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+        UNSTABLE_loader: homeFn,
+      },
+      Detail: {
+        screen: TestScreen,
+        UNSTABLE_loader: detailFn,
+      },
+    },
+  });
+
+  const Component = Root.getComponent();
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
+
+  await act(() => {
+    navigation.dispatch(
+      CommonActions.reset({
+        routes: [{ name: 'Home' }, { name: 'Detail' }],
+      })
+    );
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Detail');
+
+  expect(homeFn).not.toHaveBeenCalled();
+  expect(detailFn).toHaveBeenCalledTimes(1);
+  expect(detailFn).toHaveBeenCalledWith({
+    name: 'Detail',
+    params: undefined,
+  });
 });
 
 test("doesn't wait for the loader before committing the state", async () => {
