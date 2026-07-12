@@ -183,7 +183,8 @@ export function getStateFromPath<ParamList extends {}>(
   let remaining = path
     .replace(/\/+/g, '/') // Replace multiple slash (//) with single ones
     .replace(/^\//, '') // Remove extra leading slash
-    .replace(/\?.*$/, ''); // Remove query params which we will handle later
+    .replace(/\?.*$/, '') // Remove query params which we will handle later
+    .replace(/%[0-9a-f]{2}/gi, (m) => m.toUpperCase()); // Normalize percent-encoding as hex digits are case-insensitive
 
   // Make sure there is a trailing slash
   remaining = remaining.endsWith('/') ? remaining : `${remaining}/`;
@@ -194,13 +195,19 @@ export function getStateFromPath<ParamList extends {}>(
     // Make sure there is a trailing slash
     const normalizedPrefix = prefix.endsWith('/') ? prefix : `${prefix}/`;
 
-    // If the path doesn't start with the prefix, it's not a match
-    if (!remaining.startsWith(normalizedPrefix)) {
+    // The incoming path may contain the prefix in percent-encoded form
+    const encodedPrefix = normalizedPrefix
+      .split('/')
+      .map(encodeURIComponent)
+      .join('/');
+
+    if (remaining.startsWith(normalizedPrefix)) {
+      remaining = remaining.slice(normalizedPrefix.length);
+    } else if (remaining.startsWith(encodedPrefix)) {
+      remaining = remaining.slice(encodedPrefix.length);
+    } else {
       return undefined;
     }
-
-    // Remove the prefix from the path
-    remaining = remaining.replace(normalizedPrefix, '');
   }
 
   if (screens === undefined) {
@@ -811,8 +818,16 @@ const createConfigItem = (
         if (part.screen === screen) {
           pathParamNames.add(part.param);
         }
+      } else if (part.segment === '*') {
+        regexString += `.*\\/`;
       } else {
-        regexString += `${part.segment === '*' ? '.*' : escape(part.segment)}\\/`;
+        const encodedSegment = encodeURIComponent(part.segment);
+
+        // The incoming path may contain the segment in percent-encoded form
+        regexString +=
+          encodedSegment === part.segment
+            ? `${escape(part.segment)}\\/`
+            : `(?:${escape(part.segment)}|${escape(encodedSegment)})\\/`;
       }
 
       index++;
