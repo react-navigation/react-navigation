@@ -173,7 +173,7 @@ const changeIndex = <Type extends SwitchRouterType>(
     if (backBehavior === 'history') {
       // Remove the existing key from the history to de-duplicate it
       history = history.filter((it) =>
-        it.type === 'route' ? it.key !== currentRoute.key : false
+        it.type === 'route' ? it.key !== currentRoute.key : true
       );
     } else if (backBehavior === 'fullHistory') {
       const lastHistoryRouteItemIndex = history.findLastIndex(
@@ -202,12 +202,11 @@ const changeIndex = <Type extends SwitchRouterType>(
       params: backBehavior === 'fullHistory' ? currentRoute.params : undefined,
     });
   } else {
-    history = getRouteHistory(
-      state.routes,
-      index,
-      backBehavior,
-      initialRouteName
-    );
+    // Preserve non-route entries (e.g. drawer status) when rebuilding the history
+    history = [
+      ...state.history.filter((it) => it.type !== 'route'),
+      ...getRouteHistory(state.routes, index, backBehavior, initialRouteName),
+    ];
   }
 
   return {

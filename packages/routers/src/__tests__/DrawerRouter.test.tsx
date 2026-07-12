@@ -353,6 +353,69 @@ test('handles navigate action with open drawer', () => {
   });
 });
 
+test('keeps drawer status on navigate to the focused route', () => {
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  const state: DrawerNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'drawer',
+    preloadedRouteKeys: [],
+    key: 'root',
+    index: 0,
+    routeNames: ['baz', 'bar'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
+    history: [
+      { type: 'route', key: 'baz' },
+      { type: 'drawer', status: 'closed' },
+    ],
+    default: 'open',
+  };
+
+  const expected = {
+    stale: false,
+    type: 'drawer',
+    key: 'root',
+    index: 0,
+    routeNames: ['baz', 'bar'],
+    preloadedRouteKeys: [],
+    routes: [
+      { key: 'baz', name: 'baz', params: { answer: 42 } },
+      { key: 'bar', name: 'bar' },
+    ],
+    history: [
+      { type: 'drawer', status: 'closed' },
+      { type: 'route', key: 'baz' },
+    ],
+    default: 'open',
+  };
+
+  expect(
+    DrawerRouter({ defaultStatus: 'open' }).getStateForAction(
+      state,
+      CommonActions.navigate('baz', { answer: 42 }),
+      options
+    )
+  ).toEqual(expected);
+
+  expect(
+    DrawerRouter({
+      defaultStatus: 'open',
+      backBehavior: 'history',
+    }).getStateForAction(
+      state,
+      CommonActions.navigate('baz', { answer: 42 }),
+      options
+    )
+  ).toEqual(expected);
+});
+
 test('handles open drawer action', () => {
   const router = DrawerRouter({});
   const options: RouterConfigOptions = {
