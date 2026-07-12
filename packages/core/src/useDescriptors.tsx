@@ -311,7 +311,7 @@ export function useDescriptors<
       render() {
         return element;
       },
-      options: customOptions as ScreenOptions,
+      options: customOptions,
     };
 
     return acc;

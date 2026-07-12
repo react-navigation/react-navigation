@@ -25,7 +25,6 @@ import type {
   DrawerHeaderProps,
   DrawerNavigationConfig,
   DrawerNavigationHelpers,
-  DrawerNavigationProp,
 } from '../types';
 import { addCancelListener } from '../utils/addCancelListener';
 import { DrawerPositionContext } from '../utils/DrawerPositionContext';
@@ -279,8 +278,7 @@ function DrawerViewBase({
                 header={header({
                   layout: dimensions,
                   route: descriptor.route,
-                  navigation:
-                    descriptor.navigation as DrawerNavigationProp<ParamListBase>,
+                  navigation: descriptor.navigation,
                   options: descriptor.options,
                 })}
                 style={sceneStyle}

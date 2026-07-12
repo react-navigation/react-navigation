@@ -34,9 +34,10 @@ export const shouldPreventRemove = (
     .filter((route) => !nextRouteKeys.includes(route.key))
     .reverse();
 
-  const visitedRouteKeys: Set<string> =
-    // @ts-expect-error: add this property to mark that we've already emitted this action
-    action[VISITED_ROUTE_KEYS] ?? new Set<string>();
+  const visitedRouteKeys =
+    VISITED_ROUTE_KEYS in action && action[VISITED_ROUTE_KEYS] instanceof Set
+      ? action[VISITED_ROUTE_KEYS]
+      : new Set<string>();
 
   const beforeRemoveAction = {
     ...action,

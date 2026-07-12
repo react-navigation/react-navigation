@@ -180,7 +180,9 @@ export function getActionFromState(
   };
 }
 
-const createNormalizedConfigItem = (config: PathConfig<object> | string) =>
+const createNormalizedConfigItem = (
+  config: PathConfig<object> | string
+): ConfigItem =>
   typeof config === 'object' && config != null
     ? {
         initialRouteName: config.initialRouteName,

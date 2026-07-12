@@ -195,20 +195,20 @@ const HoverEffect = ({
     return null;
   }
 
+  const style: React.CSSProperties & {
+    [key: `--${string}`]: string | number;
+  } = {
+    '--overlay-color': color,
+    '--overlay-hover-opacity': hoverOpacity,
+    '--overlay-active-opacity': activeOpacity,
+  };
+
   return (
     <>
       <style href={CLASS_NAME} precedence="elements">
         {CSS_TEXT}
       </style>
-      <div
-        className={CLASS_NAME}
-        style={{
-          // @ts-expect-error: CSS variables are not typed
-          '--overlay-color': color,
-          '--overlay-hover-opacity': hoverOpacity,
-          '--overlay-active-opacity': activeOpacity,
-        }}
-      />
+      <div className={CLASS_NAME} style={style} />
     </>
   );
 };

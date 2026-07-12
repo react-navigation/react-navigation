@@ -1,7 +1,6 @@
 import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
 import {
   NavigationProvider,
-  type ParamListBase,
   type Route,
   useLinkBuilder,
 } from '@react-navigation/native';
@@ -19,7 +18,6 @@ import type {
   Scene,
   StackHeaderMode,
   StackHeaderProps,
-  StackNavigationProp,
 } from '../../types';
 import { Header } from './Header';
 
@@ -128,8 +126,7 @@ export function HeaderContainer({
           progress: scene.progress,
           options: scene.descriptor.options,
           route: scene.descriptor.route,
-          navigation: scene.descriptor
-            .navigation as StackNavigationProp<ParamListBase>,
+          navigation: scene.descriptor.navigation,
           styleInterpolator:
             mode === 'float'
               ? isHeaderStatic
