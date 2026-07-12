@@ -737,6 +737,76 @@ test('falls back to first route if route is removed on route names change', () =
   });
 });
 
+test('focuses the most recent route in history if focused route is removed on route names change', () => {
+  const router = TabRouter({ backBehavior: 'history' });
+
+  const state = router.getStateForRouteNamesChange(
+    {
+      index: 2,
+      key: 'tab-test',
+      routeNames: ['bar', 'baz', 'qux'],
+      routes: [
+        { key: 'bar-test', name: 'bar' },
+        { key: 'baz-test', name: 'baz' },
+        { key: 'qux-test', name: 'qux' },
+      ],
+      history: [
+        { type: 'route', key: 'bar-test' },
+        { type: 'route', key: 'baz-test' },
+        { type: 'route', key: 'qux-test' },
+      ],
+      stale: false,
+      type: 'tab',
+      preloadedRouteKeys: [],
+    },
+    {
+      routeNames: ['bar', 'baz'],
+      routeParamList: {},
+      routeGetIdList: {},
+      routeKeyChanges: [],
+    }
+  );
+
+  expect(state).toEqual({
+    index: 1,
+    key: 'tab-test',
+    routeNames: ['bar', 'baz'],
+    routes: [
+      { key: 'bar-test', name: 'bar' },
+      { key: 'baz-test', name: 'baz' },
+    ],
+    history: [
+      { type: 'route', key: 'bar-test' },
+      { type: 'route', key: 'baz-test' },
+    ],
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: [],
+  });
+
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(state, CommonActions.goBack(), options)
+  ).toEqual({
+    index: 0,
+    key: 'tab-test',
+    routeNames: ['bar', 'baz'],
+    routes: [
+      { key: 'bar-test', name: 'bar' },
+      { key: 'baz-test', name: 'baz' },
+    ],
+    history: [{ type: 'route', key: 'bar-test' }],
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: [],
+  });
+});
+
 test('handles navigate action', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
