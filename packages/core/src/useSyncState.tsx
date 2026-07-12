@@ -25,9 +25,10 @@ const createStore = <T,>(getInitialState: () => T) => {
 
   const setState = (newState: T) => {
     state = deepFreeze(newState);
-    didUpdate = true;
 
-    if (!isBatching) {
+    if (isBatching) {
+      didUpdate = true;
+    } else {
       listeners.forEach((listener) => listener());
     }
   };
