@@ -178,8 +178,6 @@ export function getPathFromState<ParamList extends {}>(
   let path = '/';
   let current: State | undefined = state;
 
-  const allParams: Record<string, string | string[] | null> = {};
-
   while (current) {
     let index: number = typeof current.index === 'number' ? current.index : 0;
 
@@ -193,6 +191,10 @@ export function getPathFromState<ParamList extends {}>(
     let route: State['routes'][number] = initialRoute;
 
     let parts: PatternPart[] | undefined;
+
+    // Values for each pattern part object, so the same param name
+    // at different nesting levels gets the value from its own level
+    const partValues = new Map<PatternPart, string | string[] | null>();
 
     let focusedParams: Record<string, string | string[] | null> | undefined;
     let currentOptions = configs;
@@ -243,28 +245,41 @@ export function getPathFromState<ParamList extends {}>(
             : coerceParamValue(value);
         }
 
+        const claimedParams = new Set<string>();
+
         if (parts?.length) {
-          Object.assign(allParams, currentParams);
+          for (const part of parts) {
+            // Only fill parts not claimed by a parent level
+            // So a nested param with the same name doesn't overwrite the parent's value
+            if (
+              part.param &&
+              !partValues.has(part) &&
+              part.param in currentParams
+            ) {
+              const value = currentParams[part.param];
+
+              if (value !== undefined) {
+                partValues.set(part, value);
+                claimedParams.add(part.param);
+              }
+            }
+          }
         }
 
         if (focusedRoute === route) {
           // If this is the focused route, keep the params for later use
           // We save it here since it's been stringified already
+          // Params claimed by the pattern shouldn't be repeated in the query string
           focusedParams = {};
 
           for (const key in currentParams) {
-            let inPattern = false;
-
-            for (const part of parts ?? []) {
-              if (part.param === key) {
-                inPattern = true;
-                break;
-              }
-            }
-
             const value = currentParams[key];
 
-            if (!inPattern && value !== undefined && value !== 'undefined') {
+            if (
+              !claimedParams.has(key) &&
+              value !== undefined &&
+              value !== 'undefined'
+            ) {
               focusedParams[key] = value;
             }
           }
@@ -308,7 +323,9 @@ export function getPathFromState<ParamList extends {}>(
       if (parts) {
         let index = 0;
 
-        for (const { segment, param, optional } of parts) {
+        for (const part of parts) {
+          const { segment, param, optional } = part;
+
           if (index > 0) {
             path += '/';
           }
@@ -325,7 +342,7 @@ export function getPathFromState<ParamList extends {}>(
 
           // If the path has a pattern for a param, put the param in the path
           if (param) {
-            const value = allParams[param];
+            const value = partValues.get(part);
 
             if (value === undefined && optional) {
               // Optional params without value assigned in route.params should be ignored
