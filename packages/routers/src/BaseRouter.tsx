@@ -84,7 +84,10 @@ function getStateForAction(
       if (nextState.stale === false) {
         if (
           state.routeNames.length !== nextState.routeNames.length ||
-          nextState.routeNames.some((name) => !routeNamesSet.has(name))
+          nextState.routeNames.some((name) => !routeNamesSet.has(name)) ||
+          !Number.isInteger(nextState.index) ||
+          nextState.index < 0 ||
+          nextState.index >= nextState.routes.length
         ) {
           return null;
         }
