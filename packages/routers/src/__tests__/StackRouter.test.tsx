@@ -1675,6 +1675,100 @@ test('handles pop action', () => {
   ).toBeNull();
 });
 
+test("doesn't pop routes above the source on pop with a count", () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux', 'quy'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 3,
+        retainedRouteKeys: [],
+        routeNames: ['baz', 'bar', 'qux', 'quy'],
+        routes: [
+          { key: 'baz-0', name: 'baz' },
+          { key: 'bar-0', name: 'bar' },
+          { key: 'qux-0', name: 'qux' },
+          { key: 'quy-0', name: 'quy' },
+        ],
+      },
+      {
+        ...StackActions.pop(3),
+        target: 'root',
+        source: 'qux-0',
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    retainedRouteKeys: [],
+    routeNames: ['baz', 'bar', 'qux', 'quy'],
+    routes: [
+      { key: 'baz-0', name: 'baz' },
+      { key: 'quy-0', name: 'quy' },
+    ],
+  });
+});
+
+test('pops params history of the source before the routes below it', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        retainedRouteKeys: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz-0', name: 'baz' },
+          {
+            key: 'bar-0',
+            name: 'bar',
+            params: { value: 2 },
+            history: [{ type: 'params', params: { value: 1 } }],
+          },
+          { key: 'qux-0', name: 'qux' },
+        ],
+      },
+      {
+        ...StackActions.pop(3),
+        target: 'root',
+        source: 'bar-0',
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    retainedRouteKeys: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz-0', name: 'baz' },
+      { key: 'qux-0', name: 'qux' },
+    ],
+  });
+});
+
 test("doesn't handle pop if source key isn't present when target is specified", () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {

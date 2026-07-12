@@ -703,11 +703,13 @@ export function StackRouter(options: StackRouterOptions) {
           /**
            * When popping entries,
            * - Pop entries from route.history
-           * - Pop routes from state.routes
+           * - Pop the route itself and continue from the route below it
            *
            * Repeat until:
            * - We have popped the amount of items in count
            * - There are no more items to pop
+           *
+           * Routes above the current route (e.g. above the source) are kept intact
            */
           if (route.history?.length || currentIndex > 0) {
             let count = action.payload.count;
@@ -724,25 +726,23 @@ export function StackRouter(options: StackRouterOptions) {
 
                 count = count - removed;
 
-                nextRoutes[currentIndex] = {
+                const updatedRoute: Route<string> = {
                   ...route,
                   params: last?.type === 'params' ? last.params : route.params,
                   history,
                 };
+
+                nextRoutes[currentIndex] = updatedRoute;
+                route = updatedRoute;
               }
 
               if (currentIndex > 0 && count > 0) {
-                const length = nextRoutes.length;
-                const end = Math.max(currentIndex - count + 1, 1);
-
                 nextRoutes = nextRoutes
-                  .slice(0, end)
+                  .slice(0, currentIndex)
                   .concat(nextRoutes.slice(currentIndex + 1));
 
-                const removed = length - nextRoutes.length;
-
-                count = count - removed;
-                currentIndex = nextRoutes.length - 1;
+                count = count - 1;
+                currentIndex = currentIndex - 1;
 
                 const currentRoute = nextRoutes[currentIndex];
 
