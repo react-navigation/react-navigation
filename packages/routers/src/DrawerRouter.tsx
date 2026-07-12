@@ -1,11 +1,11 @@
 import { nanoid } from 'nanoid/non-secure';
 
+import { SwitchRouter } from './SwitchRouter';
 import {
   type TabActionHelpers,
   TabActions,
   type TabActionType,
   type TabNavigationState,
-  TabRouter,
   type TabRouterOptions,
 } from './TabRouter';
 import type {
@@ -14,6 +14,7 @@ import type {
   PartialState,
   Router,
 } from './types';
+
 export type DrawerStatus = 'open' | 'closed';
 
 export type DrawerActionType =
@@ -44,7 +45,7 @@ export type DrawerNavigationState<ParamList extends ParamListBase> = Omit<
    * List of previously visited route keys and drawer open status.
    */
   history: (
-    | { type: 'route'; key: string }
+    | { type: 'route'; key: string; params?: object | undefined }
     | { type: 'drawer'; status: DrawerStatus }
   )[];
 };
@@ -87,10 +88,7 @@ export function DrawerRouter({
   DrawerNavigationState<ParamListBase>,
   DrawerActionType | CommonNavigationAction
 > {
-  const router = TabRouter(rest) as unknown as Router<
-    DrawerNavigationState<ParamListBase>,
-    TabActionType | CommonNavigationAction
-  >;
+  const router = SwitchRouter<'drawer'>(rest);
 
   const isDrawerInHistory = (
     state:
@@ -179,11 +177,16 @@ export function DrawerRouter({
         return partialState;
       }
 
-      let state = router.getRehydratedState(partialState, {
-        routeNames,
-        routeParamList,
-        routeGetIdList,
-      });
+      let state: DrawerNavigationState<ParamListBase> = {
+        ...router.getRehydratedState(partialState, {
+          routeNames,
+          routeParamList,
+          routeGetIdList,
+        }),
+        default: defaultStatus,
+        type: 'drawer',
+        key: `drawer-${nanoid()}`,
+      };
 
       if (isDrawerInHistory(partialState)) {
         // Re-sync the drawer entry in history to correct it if it was wrong
@@ -191,12 +194,7 @@ export function DrawerRouter({
         state = addDrawerToHistory(state);
       }
 
-      return {
-        ...state,
-        default: defaultStatus,
-        type: 'drawer',
-        key: `drawer-${nanoid()}`,
-      };
+      return state;
     },
 
     getStateForRouteFocus(state, key) {
@@ -225,8 +223,12 @@ export function DrawerRouter({
         case 'NAVIGATE_DEPRECATED': {
           const result = router.getStateForAction(state, action, options);
 
-          if (result != null && result.index !== state.index) {
-            return closeDrawer(result as DrawerNavigationState<ParamListBase>);
+          if (
+            result != null &&
+            result.stale === false &&
+            result.index !== state.index
+          ) {
+            return closeDrawer(result);
           }
 
           return result;
