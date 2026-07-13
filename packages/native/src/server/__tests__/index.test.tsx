@@ -1,3 +1,5 @@
+import { PassThrough } from 'node:stream';
+
 import { expect, jest, test } from '@jest/globals';
 import {
   createNavigatorFactory,
@@ -8,13 +10,11 @@ import {
 } from '@react-navigation/core';
 import * as React from 'react';
 import { renderToPipeableStream } from 'react-dom/server';
-import { PassThrough } from 'stream';
 
-import { NavigationContainer } from '../../NavigationContainer';
 import { ServerContainer } from '..';
+import { NavigationContainer } from '../../NavigationContainer';
 
 // We want to use the web version of useLinking
-// eslint-disable-next-line import-x/extensions
 jest.mock('../../useLinking', () => require('../../useLinking.tsx'));
 
 const render = (element: React.ReactNode, stream = new PassThrough()) => {
@@ -68,7 +68,6 @@ test('renders without browser globals', async () => {
       </ServerContainer>
     );
   } finally {
-    // eslint-disable-next-line require-atomic-updates
     globalThis.window = window;
   }
 

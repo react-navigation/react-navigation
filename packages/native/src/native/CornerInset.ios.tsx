@@ -2,7 +2,6 @@ import { NavigationContainerRefContext } from '@react-navigation/core';
 import * as React from 'react';
 import { Dimensions } from 'react-native';
 
-// eslint-disable-next-line import-x/extensions
 import type { CornerInsetProps, CornerInsetRef } from './CornerInset.tsx';
 import ReactNavigationCornerInsetViewNativeComponent, {
   Commands,
@@ -36,10 +35,8 @@ export function CornerInset({ ref, ...rest }: Props) {
     // We freeze the corner insets after initial measurements
     // This is to avoid the insets getting out of sync during transitions
     // We trigger a relayout explicitly on window resize and transition end
-    // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
     const unsubscribeWindowResize = Dimensions.addEventListener(
       'change',
-      // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
       () => {
         relayout();
 

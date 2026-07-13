@@ -6,3 +6,5 @@ allowBuilds:
   core-js: false
   esbuild: false
   unrs-resolver: false
+minimumReleaseAgeExclude:
+  - oxlint-config-satya164@0.2.1

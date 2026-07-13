@@ -1210,7 +1210,7 @@ test("emits 'beforeRemove' for multiple removed screens in reverse order", async
             props.navigation.dispatch(e.data.action);
           }
         }),
-      [props.navigation, props.route.name]
+      [props.navigation, props.route]
     );
 
     return null;

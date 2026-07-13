@@ -55,7 +55,6 @@ export function CardContent({ enabled, layout, style, ...rest }: Props) {
         document.head.appendChild(style);
       }
 
-      // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
       window.addEventListener('resize', updateStyle);
 
       unsubscribe = () => {
@@ -67,7 +66,6 @@ export function CardContent({ enabled, layout, style, ...rest }: Props) {
       document.getElementById(id)?.remove();
     }
 
-    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setFill(width === layout.width && height === layout.height);
 
     return unsubscribe;

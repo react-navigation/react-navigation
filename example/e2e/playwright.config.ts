@@ -1,7 +1,7 @@
+import path from 'node:path';
 import process from 'node:process';
 
 import { defineConfig } from '@playwright/test';
-import path from 'path';
 
 const PORT = 5173;
 

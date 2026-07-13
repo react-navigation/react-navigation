@@ -1046,7 +1046,6 @@ const MyTabs = createBottomTabNavigator({
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const MyStack = createStackNavigator({
   groups: {
     Guest: {
@@ -1092,7 +1091,6 @@ expectTypeOf<MyParamList>().toEqualTypeOf<{
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const NestedOuter = createStackNavigator({
     screens: {
       NestedMiddle: NestedMiddle,
@@ -1459,7 +1457,6 @@ createBottomTabNavigator({
     Profile: undefined;
   }>();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const ExactUndefinedTabs = createBottomTabNavigator({
     screens: {
       User: ExactUndefinedStack,
@@ -1486,7 +1483,6 @@ createBottomTabNavigator({
     Profile: { userId: string } | undefined;
   }>();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const IncludedUndefinedTabs = createBottomTabNavigator({
     screens: {
       User: IncludedUndefinedStack,
@@ -1513,7 +1509,6 @@ createBottomTabNavigator({
     Profile: { userId: string };
   }>();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const OneExactUndefinedTabs = createBottomTabNavigator({
     screens: {
       User: OneExactUndefinedStack,
@@ -1540,7 +1535,6 @@ createBottomTabNavigator({
     Profile: { userId: string };
   }>();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const OneIncludedUndefinedTabs = createBottomTabNavigator({
     screens: {
       User: OneIncludedUndefinedStack,
@@ -1567,7 +1561,6 @@ createBottomTabNavigator({
     Profile: { userId: string };
   }>();
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const NoUndefinedTabs = createBottomTabNavigator({
     screens: {
       User: NoUndefinedStack,
@@ -2098,7 +2091,6 @@ createStackNavigator({
 
   type SupportTabsParamList = StaticParamList<typeof SupportTabs>;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const TestNavigator = createStackNavigator({
     screens: {
       /**
@@ -2706,7 +2698,6 @@ createStackScreen({
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const StackComponent = Stack.getComponent();
 
   expectTypeOf<React.ComponentProps<typeof StackComponent>>().toExtend<{
@@ -2776,7 +2767,6 @@ createStackScreen({
 
   Dashboard.config = Stack.config;
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const Tabs = createBottomTabNavigator({
     screens: {
       Dashboard: Dashboard,

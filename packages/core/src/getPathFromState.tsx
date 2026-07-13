@@ -135,7 +135,7 @@ export function getPathFromState<ParamList extends {}>(
   options?: Options<ParamList>
 ): string {
   if (state == null) {
-    throw Error(
+    throw new Error(
       `Got '${String(state)}' for the navigation state. You must pass a valid state object.`
     );
   }

@@ -9,7 +9,6 @@ export interface Spec extends TurboModule {
     weight: 100 | 200 | 300 | 400 | 500 | 600 | 700 | undefined,
     size: number,
     // Codegen requires using `Object` instead of `object
-    // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     color: Object
   ): string;
 }

@@ -28,7 +28,6 @@ import { NavigationContainer } from '../NavigationContainer';
 import { useLinking } from '../useLinking';
 
 // We want to use the web version of useLinking
-// eslint-disable-next-line import-x/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
 // Get a fresh window stub for each test to avoid cross-test state leaks

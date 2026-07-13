@@ -544,7 +544,7 @@ const TrendingScreen = () => {
           { marginTop: SPACING_XL, marginBottom: SPACING_M },
         ]}
       >
-        Editor's Picks
+        Editor&apos;s Picks
       </Text>
 
       <CardGrid items={editorPicks} />
@@ -676,12 +676,12 @@ const SeasonalScreen = () => {
       contentInsetAdjustmentBehavior="automatic"
       contentContainerStyle={styles.screenContent}
     >
-      <Text style={styles.displayTitle}>What's in Season</Text>
+      <Text style={styles.displayTitle}>What&apos;s in Season</Text>
 
       <Text style={styles.bodyText}>
         Spring brings a bounty of tender greens, sweet peas, and the first
-        asparagus of the year. These recipes make the most of what's fresh right
-        now.
+        asparagus of the year. These recipes make the most of what&apos;s fresh
+        right now.
       </Text>
 
       <View

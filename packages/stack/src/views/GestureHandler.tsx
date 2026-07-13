@@ -21,7 +21,6 @@ export function GestureDetector({
   );
 }
 
-// eslint-disable-next-line @eslint-react/hooks-extra/no-unnecessary-use-prefix, @eslint-react/hooks-extra/ensure-custom-hooks-using-other-hooks
 export function usePanGesture(_config: PanGestureConfig) {
   return undefined;
 }
