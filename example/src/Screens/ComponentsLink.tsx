@@ -28,6 +28,24 @@ const ArticleScreen = () => {
         <Link screen="ComponentsLink" params={{ screen: 'Albums' }}>
           Go to albums
         </Link>
+        {Platform.OS === 'web' && (
+          <>
+            <Link
+              screen="ComponentsLink"
+              params={{ screen: 'Albums' }}
+              target="_self"
+            >
+              Open albums in current tab
+            </Link>
+            <Link
+              screen="ComponentsLink"
+              params={{ screen: 'Albums' }}
+              target="_blank"
+            >
+              Open albums in new tab
+            </Link>
+          </>
+        )}
         <Link
           screen="ComponentsLink"
           params={{ screen: 'Albums' }}

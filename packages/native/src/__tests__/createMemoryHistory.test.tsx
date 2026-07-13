@@ -243,3 +243,46 @@ test('will not attempt to navigate beyond whatever browser history it is possibl
   const newItem = history.get(1);
   expect(window.history.state).toEqual({ id: newItem?.id });
 });
+
+test('can go back in browser history after a previous attempt failed', async () => {
+  jest.useFakeTimers();
+
+  const state: NavigationState = {
+    key: 'stack-123',
+    index: 0,
+    routeNames: ['One'],
+    routes: [{ name: 'One', key: 'One-23' }],
+    type: 'stack',
+    stale: false,
+  };
+  const history = createMemoryHistory();
+
+  history.replace({ path: '/route-one', state });
+  history.push({ path: '/route-two', state });
+
+  const windowGoSpy = jest
+    .spyOn(window.history, 'go')
+    .mockImplementation(() => {});
+
+  const timedOutNavigation = history.go(-1);
+
+  jest.advanceTimersByTime(100);
+
+  await expect(timedOutNavigation).rejects.toThrow(
+    'History was changed during navigation.'
+  );
+
+  windowGoSpy.mockRestore();
+
+  const listener = jest.fn();
+  const unlisten = history.listen(listener);
+  const navigation = history.go(-1);
+
+  jest.runAllTimers();
+
+  await expect(navigation).resolves.toBeUndefined();
+
+  expect(listener).not.toHaveBeenCalled();
+
+  unlisten();
+});

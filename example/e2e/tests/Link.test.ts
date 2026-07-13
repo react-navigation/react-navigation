@@ -110,6 +110,48 @@ test('goes to the album screen and goes back', async ({ page }) => {
   ).toBeVisible();
 });
 
+test('navigates in the current page with target=_self', async ({ page }) => {
+  await page.waitForURL('**/components-link/article/gandalf');
+
+  const link = page.getByRole('link', {
+    name: 'Open albums in current tab',
+  });
+
+  const timeOrigin = await page.evaluate(() => performance.timeOrigin);
+
+  await expect(link).toHaveAttribute('target', '_self');
+
+  await link.click();
+
+  await page.waitForURL('**/components-link/albums');
+
+  await expect(page.getByRole('heading', { name: 'Albums' })).toBeVisible();
+  expect(await page.evaluate(() => performance.timeOrigin)).toBe(timeOrigin);
+});
+
+test('opens a new page with target=_blank', async ({ page }) => {
+  await page.waitForURL('**/components-link/article/gandalf');
+
+  const link = page.getByRole('link', { name: 'Open albums in new tab' });
+
+  await expect(link).toHaveAttribute('target', '_blank');
+
+  const [targetPage] = await Promise.all([
+    page.waitForEvent('popup'),
+    link.click(),
+  ]);
+
+  await targetPage.waitForURL('**/components-link/albums');
+
+  await expect(
+    targetPage.getByRole('heading', { name: 'Albums' })
+  ).toBeVisible();
+
+  await expect(page).toHaveURL('/components-link/article/gandalf');
+
+  await targetPage.close();
+});
+
 test('replaces article with the album screen', async ({ page }) => {
   await page.waitForURL('**/components-link/article/gandalf');
 

@@ -9,16 +9,18 @@ import {
 
 import { type LinkProps, useLinkProps } from './useLinkProps';
 
+type PressEvent =
+  | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+  | GestureResponderEvent;
+
 type Props<
   ParamList extends {} = RootParamList,
   RouteName extends keyof ParamList = keyof ParamList,
 > = LinkProps<ParamList, RouteName> &
   Omit<TextProps, 'disabled'> & {
     target?: string;
-    onPress?: (
-      e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
-    ) => void;
-    disabled?: boolean | null;
+    onPress?: (e: PressEvent) => void;
+    disabled?: boolean | undefined;
     children: React.ReactNode;
   };
 
@@ -41,15 +43,14 @@ export function Link<
   action,
   href,
   style,
+  target,
   ...rest
 }: Props<ParamList, RouteName>) {
   const { colors, fonts } = useTheme();
   // @ts-expect-error: This is already type-checked by the prop types
   const props = useLinkProps<ParamList>({ screen, params, action, href });
 
-  const onPress = (
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
-  ) => {
+  const onPress = (e: PressEvent) => {
     if ('onPress' in rest) {
       rest.onPress?.(e);
     }
@@ -64,7 +65,7 @@ export function Link<
     ...props,
     ...rest,
     ...Platform.select({
-      web: { onClick: onPress } as any,
+      web: { onClick: onPress, hrefAttrs: { target } },
       default: { onPress },
     }),
     style: [{ color: colors.primary }, fonts.regular, style],
