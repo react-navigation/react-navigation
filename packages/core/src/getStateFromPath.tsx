@@ -291,6 +291,7 @@ function getSortedNormalizedConfigs(
         createNormalizedConfigs(key, screens, initialRoutes, [], [], [])
       )
     )
+    .map((config, order) => ({ ...config, order }))
     .sort((a, b) => {
       // Sort config from most specific to least specific:
       // - more segments
@@ -302,7 +303,21 @@ function getSortedNormalizedConfigs(
       // If 2 patterns are same, move the one with less route names up
       // This is an error state, so it's only useful for consistent error messages
       if (isArrayEqual(a.segments, b.segments)) {
-        return b.routeNames.join('>').localeCompare(a.routeNames.join('>'));
+        if (
+          a.routeNames.length > b.routeNames.length &&
+          arrayStartsWith(a.routeNames, b.routeNames)
+        ) {
+          return -1;
+        }
+
+        if (
+          b.routeNames.length > a.routeNames.length &&
+          arrayStartsWith(b.routeNames, a.routeNames)
+        ) {
+          return 1;
+        }
+
+        return a.routeNames.length - b.routeNames.length || a.order - b.order;
       }
 
       // If one of the patterns starts with the other, it's more exhaustive
