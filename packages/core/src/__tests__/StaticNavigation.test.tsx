@@ -1615,7 +1615,7 @@ test("doesn't mark different components with the same path as shared", () => {
   }
 
   expect(() => getStateFromPath('/profile/123', { screens })).toThrow(
-    `Found conflicting screens with the same pattern. The pattern 'profile/:id' resolves to both 'SearchTab > Profile' and 'HomeTab > Profile'. Patterns must be unique and cannot resolve to more than one screen unless shared: true is specified.`
+    `Found conflicting screens with the same pattern. The pattern 'profile/:id' resolves to both 'HomeTab > Profile' and 'SearchTab > Profile'. Patterns must be unique and cannot resolve to more than one screen unless shared: true is specified.`
   );
 });
 

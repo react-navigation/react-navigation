@@ -2624,6 +2624,19 @@ test('throws if two screens map to the same pattern', () => {
   ).not.toThrow();
 });
 
+test('reports equally nested conflicting screens in configuration order', () => {
+  expect(() =>
+    getStateFromPath<object>('/example', {
+      screens: {
+        Alpha: 'example',
+        Zed: 'example',
+      },
+    })
+  ).toThrow(
+    "Found conflicting screens with the same pattern. The pattern 'example' resolves to both 'Alpha' and 'Zed'. Patterns must be unique and cannot resolve to more than one screen unless shared: true is specified."
+  );
+});
+
 test('correctly applies initialRouteName for config with similar route names', () => {
   const path = '/weekly-earnings';
 
