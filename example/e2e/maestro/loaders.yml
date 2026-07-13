@@ -87,18 +87,17 @@ name: Loaders
     text: 'Make next load fail'
 - tapOn:
     text: 'Battle'
-- waitForAnimationToEnd:
-    timeout: 5000
 - runFlow:
     when:
-      visible: 'Dismiss'
+      true: ${maestro.platform == 'android' || maestro.platform == 'ios'}
     commands:
-      - tapOn: 'Dismiss'
-- runFlow:
-    when:
-      visible: 'Dismiss'
-    commands:
-      - tapOn: 'Dismiss'
+      - waitForAnimationToEnd:
+          timeout: 5000
+      - runFlow:
+          when:
+            visible: 'Dismiss'
+          commands:
+            - tapOn: 'Dismiss'
 - assertVisible:
     text: 'Failed to load dinosaur.'
 - assertVisible:
@@ -114,18 +113,15 @@ name: Loaders
     text: 'Make next load fail'
 - tapOn:
     text: 'Stegosaurus'
-- waitForAnimationToEnd:
-    timeout: 5000
 - runFlow:
     when:
-      visible: 'Dismiss'
+      true: ${maestro.platform == 'android' || maestro.platform == 'ios'}
     commands:
-      - tapOn: 'Dismiss'
-- runFlow:
-    when:
-      visible: 'Dismiss'
-    commands:
-      - tapOn: 'Dismiss'
+      - runFlow:
+          when:
+            visible: 'Dismiss'
+          commands:
+            - tapOn: 'Dismiss'
 - assertVisible:
     text: 'Failed to load dinosaur.'
 - assertVisible:

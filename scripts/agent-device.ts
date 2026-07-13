@@ -77,8 +77,6 @@ if (ci) {
 
 args.push('e2e/maestro');
 
-process.stdout.write(`Running agent-device with args: ${args.join(' ')}\n`);
-
 const result = spawnSync(process.execPath, args, {
   cwd,
   env: {
