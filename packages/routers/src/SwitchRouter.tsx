@@ -283,18 +283,24 @@ export function SwitchRouter<Type extends SwitchRouterType>({
         (name) =>
           state.routes.find(
             (r) => r.name === name && !routeKeyChanges.includes(r.name)
-          ) || {
+          ) ?? {
             name,
             key: `${name}-${nanoid()}`,
             params: routeParamList[name],
           }
       );
 
+      const routeKeys = new Set(routes.map((route) => route.key));
+
       const currentRoute = state.routes[state.index];
 
-      let history = state.history.filter(
+      if (currentRoute == null) {
+        throw new Error(`Couldn't find a route at index ${state.index}.`);
+      }
+
+      const history = state.history.filter(
         // Type will always be 'route' for tabs, but could be different in a router extending this (e.g. drawer)
-        (it) => it.type !== 'route' || routes.some((r) => r.key === it.key)
+        (item) => item.type !== 'route' || routeKeys.has(item.key)
       );
 
       let index = routeNames.indexOf(currentRoute.name);
@@ -311,21 +317,19 @@ export function SwitchRouter<Type extends SwitchRouterType>({
         );
       }
 
-      if (!history.length) {
-        history = getRouteHistory(
-          routes,
+      return {
+        ...state,
+        routeNames,
+        routes,
+        ...changeIndex<Type>(
+          { routes, history },
           index,
           backBehavior,
           initialRouteName
-        );
-      }
-
-      return {
-        ...state,
-        history,
-        routeNames,
-        routes,
-        index,
+        ),
+        preloadedRouteKeys: state.preloadedRouteKeys.filter((key) =>
+          routeKeys.has(key)
+        ),
       };
     },
 

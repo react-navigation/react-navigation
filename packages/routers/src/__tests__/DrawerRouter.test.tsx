@@ -627,6 +627,46 @@ test('handles toggle drawer action', () => {
   });
 });
 
+test('preserves drawer history when the focused route key changes', () => {
+  const router = DrawerRouter({ backBehavior: 'history' });
+
+  const state = router.getStateForRouteNamesChange(
+    {
+      index: 2,
+      key: 'drawer-test',
+      routeNames: ['bar', 'baz', 'qux'],
+      preloadedRouteKeys: [],
+      routes: [
+        { key: 'bar-test', name: 'bar' },
+        { key: 'baz-test', name: 'baz' },
+        { key: 'qux-old', name: 'qux' },
+      ],
+      history: [
+        { type: 'route', key: 'bar-test' },
+        { type: 'route', key: 'baz-test' },
+        { type: 'route', key: 'qux-old' },
+        { type: 'drawer', status: 'open' },
+      ],
+      default: 'closed',
+      stale: false,
+      type: 'drawer',
+    },
+    {
+      routeNames: ['bar', 'baz', 'qux'],
+      routeParamList: {},
+      routeGetIdList: {},
+      routeKeyChanges: ['qux'],
+    }
+  );
+
+  expect(state.history).toEqual([
+    { type: 'route', key: 'bar-test' },
+    { type: 'route', key: 'baz-test' },
+    { type: 'drawer', status: 'open' },
+    { type: 'route', key: 'qux-test' },
+  ]);
+});
+
 test('updates history on focus change with backBehavior: history', () => {
   const router = DrawerRouter({ backBehavior: 'history' });
 
