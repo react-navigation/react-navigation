@@ -91,7 +91,7 @@ type Props = {
 type State = {
   routes: Route<string>[];
   descriptors: StackDescriptorMap;
-  scenes: Scene[];
+  scenes: (Scene & { __memo: unknown[] })[];
   gestures: GestureValues;
   layout: Layout;
   headerHeights: HeaderHeights;
@@ -503,7 +503,6 @@ export class CardStack extends React.Component<Props, State> {
       if (
         oldScene &&
         scene.__memo.every((it, i) => {
-          // @ts-expect-error: we haven't added __memo to the annotation to prevent usage elsewhere
           return oldScene.__memo[i] === it;
         })
       ) {

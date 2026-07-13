@@ -4904,3 +4904,48 @@ test('does not throw if while getting current options with empty container', asy
 
   expect(navigation.getCurrentOptions()).toBeUndefined();
 });
+
+test('handles nested screen navigation batched with a nested state update', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="nested">
+          {() => (
+            <TestNavigator>
+              <Screen name="first" component={TestScreen} />
+              <Screen name="second" component={TestScreen} />
+              <Screen name="third" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="home" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('first');
+
+  await act(() => {
+    navigation.dispatch(CommonActions.navigate('second'));
+    navigation.dispatch(CommonActions.navigate('nested', { screen: 'third' }));
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('third');
+});

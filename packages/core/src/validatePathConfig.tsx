@@ -43,6 +43,7 @@ export function validatePathConfig(config: unknown, root = true) {
   }
 
   const pathConfig = config as Record<string, unknown>;
+
   let validationErrors: string[] | undefined;
 
   for (const key in pathConfig) {

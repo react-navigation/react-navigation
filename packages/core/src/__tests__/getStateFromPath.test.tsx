@@ -3500,6 +3500,178 @@ test('validates ?query and ?query= through schema parsers', () => {
   });
 });
 
+test('keeps query string intact when it contains an extra question mark', () => {
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: 'foo',
+    },
+  };
+
+  expect(getStateFromPath<object>('/foo?raw=x?y=1', config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { raw: 'x?y=1' },
+        path: '/foo?raw=x?y=1',
+      },
+    ],
+  });
+});
+
+test('matches percent-encoded static segments', () => {
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Foo: 'café/foo',
+      Bar: 'foo bar',
+    },
+  };
+
+  expect(getStateFromPath<object>('/café/foo', config)).toEqual({
+    routes: [{ name: 'Foo', path: '/café/foo' }],
+  });
+
+  expect(getStateFromPath<object>('/caf%C3%A9/foo', config)).toEqual({
+    routes: [{ name: 'Foo', path: '/caf%C3%A9/foo' }],
+  });
+
+  expect(getStateFromPath<object>('/caf%c3%a9/foo', config)).toEqual({
+    routes: [{ name: 'Foo', path: '/caf%c3%a9/foo' }],
+  });
+
+  expect(getStateFromPath<object>('/c%61f%C3%A9/foo', config)).toEqual({
+    routes: [{ name: 'Foo', path: '/c%61f%C3%A9/foo' }],
+  });
+
+  expect(getStateFromPath<object>('/foo%20bar', config)).toEqual({
+    routes: [{ name: 'Bar', path: '/foo%20bar' }],
+  });
+
+  expect(getStateFromPath<object>('/f%6Fo%20bar', config)).toEqual({
+    routes: [{ name: 'Bar', path: '/f%6Fo%20bar' }],
+  });
+
+  const path = getPathFromState<object>({ routes: [{ name: 'Foo' }] }, config);
+
+  expect(path).toBe('/caf%C3%A9/foo');
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [{ name: 'Foo', path: '/caf%C3%A9/foo' }],
+  });
+});
+
+test('matches custom param regex against the decoded value', () => {
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    screens: {
+      Bar: 'bar/:name([a-z ]+)',
+      Baz: 'bar/:id(\\d+)',
+    },
+  };
+
+  expect(getStateFromPath<object>('/bar/john doe', config)).toEqual({
+    routes: [
+      {
+        name: 'Bar',
+        params: { name: 'john doe' },
+        path: '/bar/john doe',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('/bar/john%20doe', config)).toEqual({
+    routes: [
+      {
+        name: 'Bar',
+        params: { name: 'john doe' },
+        path: '/bar/john%20doe',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('/bar/%34%32', config)).toEqual({
+    routes: [
+      {
+        name: 'Baz',
+        params: { id: '42' },
+        path: '/bar/%34%32',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('/bar/john%2Fdoe42', config)).toBeUndefined();
+
+  const path = getPathFromState<object>(
+    { routes: [{ name: 'Bar', params: { name: 'john doe' } }] },
+    config
+  );
+
+  expect(path).toBe('/bar/john%20doe');
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Bar',
+        params: { name: 'john doe' },
+        path: '/bar/john%20doe',
+      },
+    ],
+  });
+});
+
+test('rejects decoded value when encoded value matches custom regex', () => {
+  const config = {
+    screens: {
+      Foo: 'foo/:value([a-z%0-9]+)',
+    },
+  };
+
+  expect(getStateFromPath<object>('/foo/john%20doe', config)).toBeUndefined();
+});
+
+test('matches percent-encoded root path prefix', () => {
+  const config: Parameters<typeof getStateFromPath>[1] = {
+    path: 'café',
+    screens: {
+      Foo: 'foo',
+    },
+  };
+
+  expect(getStateFromPath<object>('/café/foo', config)).toEqual({
+    routes: [{ name: 'Foo', path: '/café/foo' }],
+  });
+
+  expect(getStateFromPath<object>('/caf%C3%A9/foo', config)).toEqual({
+    routes: [{ name: 'Foo', path: '/caf%C3%A9/foo' }],
+  });
+
+  expect(getStateFromPath<object>('/caf%c3%a9/foo', config)).toEqual({
+    routes: [{ name: 'Foo', path: '/caf%c3%a9/foo' }],
+  });
+
+  expect(getStateFromPath<object>('/c%61f%C3%A9/foo', config)).toEqual({
+    routes: [{ name: 'Foo', path: '/c%61f%C3%A9/foo' }],
+  });
+
+  expect(getStateFromPath<object>('/other/foo', config)).toBeUndefined();
+});
+
+test('parses array and null query params without parse config', () => {
+  const config = {
+    screens: {
+      Foo: 'foo',
+    },
+  };
+
+  const path = '/foo?tags=a&tags=b&flag';
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { tags: ['a', 'b'], flag: null },
+        path,
+      },
+    ],
+  });
+});
+
 test('passes null, string and string[] query values to schema parser', () => {
   const QuerySchema = {
     '~standard': {

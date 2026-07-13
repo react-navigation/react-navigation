@@ -93,7 +93,7 @@ export type DefaultNavigatorOptions<
               ScreenOptions,
               EventMap
             >,
-            RouteProp<ParamList>
+            ScreenRouteProp<ParamList>
           >
         >;
         children: React.ReactNode;
@@ -107,7 +107,7 @@ export type DefaultNavigatorOptions<
     | (
         | ScreenListeners<State, EventMap>
         | ((props: {
-            route: RouteProp<ParamList>;
+            route: ScreenRouteProp<ParamList>;
             navigation: Navigation;
           }) => ScreenListeners<State, EventMap>)
       )
@@ -120,7 +120,7 @@ export type DefaultNavigatorOptions<
     | (
         | ScreenOptions
         | ((props: {
-            route: RouteProp<ParamList>;
+            route: ScreenRouteProp<ParamList>;
             navigation: Navigation;
             theme: Theme;
           }) => ScreenOptions)
@@ -569,6 +569,13 @@ export type RouteProp<
   in out RouteName extends keyof ParamList = KeyOf<ParamList>,
 > = Route<Extract<RouteName, string>, ParamList[RouteName]>;
 
+type ScreenRouteProp<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = KeyOf<ParamList>,
+> = {
+  [Name in Extract<RouteName, string>]: RouteProp<ParamList, Name>;
+}[Extract<RouteName, string>];
+
 export type CompositeNavigationProp<
   A extends NavigationProp<ParamListBase, any, any, any, any>,
   B extends NavigationProp<ParamListBase, any, any, any, any>,
@@ -662,7 +669,7 @@ export type ScreenLayoutArgs<
   in out ScreenOptions extends {},
   in out Navigation,
 > = {
-  route: RouteProp<ParamList, RouteName>;
+  route: ScreenRouteProp<ParamList, RouteName>;
   options: ScreenOptions;
   navigation: Navigation;
   theme: Theme;
@@ -860,7 +867,7 @@ export type RouteGroupConfig<
     | (
         | ScreenOptions
         | ((props: {
-            route: RouteProp<ParamList, keyof ParamList>;
+            route: ScreenRouteProp<ParamList>;
             navigation: Navigation;
             theme: Theme;
           }) => ScreenOptions)
@@ -1647,7 +1654,7 @@ export type PathConfig<Params> = FlatType<
     path?: string | undefined;
     /**
      * An object mapping the param name to a function which converts the param value to a string.
-     * By default, all params are converted to strings using `String(value)`.
+     * By default, arrays and null are preserved for query params, and other values are converted using `String(value)`.
      * Keys are constrained to valid param names when Params type is provided.
      *
      * @example

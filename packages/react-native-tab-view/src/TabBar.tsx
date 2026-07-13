@@ -710,7 +710,7 @@ export function TabBar<T extends Route>({
       <Animated.View
         style={[
           styles.indicatorContainer,
-          scrollEnabled ? { transform: [{ translateX }] as any } : null,
+          scrollEnabled ? { transform: [{ translateX }] } : null,
           scrollEnabled ? { width: tabBarWidth } : null,
           indicatorContainerStyle,
         ]}

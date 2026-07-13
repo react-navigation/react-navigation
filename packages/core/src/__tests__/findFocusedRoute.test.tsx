@@ -36,7 +36,7 @@ test('returns focused route from nested state', () => {
   ).toEqual({ name: 'Comments' });
 });
 
-test('uses first route when nested state has no index', () => {
+test('uses last route when nested state has no index', () => {
   expect(
     findFocusedRoute({
       routes: [
@@ -48,7 +48,7 @@ test('uses first route when nested state has no index', () => {
         },
       ],
     })
-  ).toEqual({ name: 'Feed' });
+  ).toEqual({ name: 'Profile' });
 });
 
 test('returns undefined when there are no routes', () => {

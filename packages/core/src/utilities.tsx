@@ -16,6 +16,17 @@ export type KeysOf<T> = T extends {} ? keyof T : never;
 export type KeyOf<T extends {}> = Extract<keyof T, string>;
 
 /**
+ * TS only checks object literals for excess properties when they are not generic.
+ * When an object is captured as a generic type, unknown keys are not caught.
+ * This builds a type from the provided object where any key not in the allowed type has the type `never`.
+ * Checking the provided object against this type then produces an error for each unknown key.
+ */
+export type NoExcessObject<Provided, Allowed> = Record<
+  Exclude<keyof Provided, keyof Allowed>,
+  never
+>;
+
+/**
  * We get a union type when using keyof, but we want an intersection instead.
  * https://stackoverflow.com/a/50375286/1665026
  */

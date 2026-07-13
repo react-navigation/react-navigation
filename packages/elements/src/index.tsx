@@ -14,6 +14,7 @@ export { HeaderTitle } from './Header/HeaderTitle';
 export { useHeaderHeight } from './Header/useHeaderHeight';
 export { getLabel } from './Label/getLabel';
 export { Label } from './Label/Label';
+export { PlatformIcon } from './PlatformIcon';
 export { PlatformPressable } from './PlatformPressable';
 export { Text } from './Text';
 export * from './types';

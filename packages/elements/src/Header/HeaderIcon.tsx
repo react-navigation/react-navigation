@@ -1,58 +1,32 @@
-import { MaterialSymbol, SFSymbol, useLocale } from '@react-navigation/native';
+import { useLocale } from '@react-navigation/native';
 import {
   type ColorValue,
-  Image,
-  type ImageProps,
+  type ImageStyle,
   Platform,
+  type StyleProp,
   StyleSheet,
 } from 'react-native';
 
+import { PlatformIcon } from '../PlatformIcon';
 import type { Icon } from '../types';
 
-type Props = Omit<ImageProps, 'source'> & {
+type Props = {
   icon: Icon;
   color: ColorValue;
+  style?: StyleProp<ImageStyle> | undefined;
 };
 
-export function HeaderIcon({ icon, color, style, ...rest }: Props) {
+export function HeaderIcon({ icon, color, style }: Props) {
   const { direction } = useLocale();
 
   const iconStyle = [styles.icon, direction === 'rtl' && styles.flip, style];
 
-  if (icon.type === 'sfSymbol') {
-    return (
-      <SFSymbol
-        name={icon.name}
-        color={color}
-        size={ICON_SIZE}
-        style={iconStyle}
-        {...rest}
-      />
-    );
-  }
-
-  if (icon.type === 'materialSymbol') {
-    return (
-      <MaterialSymbol
-        name={icon.name}
-        variant={icon.variant}
-        weight={icon.weight}
-        color={color}
-        size={ICON_SIZE}
-        style={iconStyle}
-        {...rest}
-      />
-    );
-  }
-
   return (
-    <Image
-      source={icon.source}
-      resizeMode="contain"
-      fadeDuration={0}
-      tintColor={color}
+    <PlatformIcon
+      icon={icon}
+      color={color}
+      size={ICON_SIZE}
       style={iconStyle}
-      {...rest}
     />
   );
 }

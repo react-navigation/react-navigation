@@ -36,12 +36,16 @@ export function Drawer({
 
   const drawerRef = React.useRef<View>(null);
 
-  const onTransitionStartLatest = useLatestCallback(() => {
-    onTransitionStart?.(open === false);
+  const onTransitionStartLatest = useLatestCallback((e: TransitionEvent) => {
+    if (e.target === e.currentTarget && e.propertyName === 'transform') {
+      onTransitionStart?.(open === false);
+    }
   });
 
-  const onTransitionEndLatest = useLatestCallback(() => {
-    onTransitionEnd?.(open === false);
+  const onTransitionEndLatest = useLatestCallback((e: TransitionEvent) => {
+    if (e.target === e.currentTarget && e.propertyName === 'transform') {
+      onTransitionEnd?.(open === false);
+    }
   });
 
   React.useEffect(() => {

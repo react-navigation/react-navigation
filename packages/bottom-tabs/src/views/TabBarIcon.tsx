@@ -1,10 +1,9 @@
-import { Badge, type Icon } from '@react-navigation/elements';
+import { Badge, type Icon, PlatformIcon } from '@react-navigation/elements';
 import { MissingIcon } from '@react-navigation/elements/internal';
-import { MaterialSymbol, type Route, SFSymbol } from '@react-navigation/native';
+import { type Route } from '@react-navigation/native';
 import * as React from 'react';
 import {
   type ColorValue,
-  Image,
   type StyleProp,
   StyleSheet,
   type TextStyle,
@@ -139,36 +138,7 @@ function renderIcon({
     iconValue != null &&
     'type' in iconValue
   ) {
-    switch (iconValue.type) {
-      case 'image':
-        return (
-          <Image
-            source={iconValue.source}
-            style={{
-              width: size,
-              height: size,
-              tintColor: iconValue.tinted === false ? undefined : color,
-            }}
-          />
-        );
-      case 'sfSymbol':
-        return <SFSymbol name={iconValue.name} size={size} color={color} />;
-      case 'materialSymbol':
-        return (
-          <MaterialSymbol
-            name={iconValue.name}
-            variant={iconValue.variant}
-            weight={iconValue.weight}
-            size={size}
-            color={color}
-          />
-        );
-      default: {
-        const _exhaustiveCheck: never = iconValue;
-
-        return _exhaustiveCheck;
-      }
-    }
+    return <PlatformIcon icon={iconValue} size={size} color={color} />;
   }
 
   return <MissingIcon color={color} size={size} />;

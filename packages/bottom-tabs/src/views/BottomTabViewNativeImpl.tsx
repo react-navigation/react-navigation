@@ -447,8 +447,8 @@ export function BottomTabViewNative({
         onTabSelectionRejected={onTabSelectionRejected}
         onTabSelectionPrevented={onTabSelectionPrevented}
         tabBarHidden={hasCustomTabBar || shouldHideTabBar}
-        nativeContainerStyle={{ backgroundColor }}
         colorScheme={dark ? 'dark' : 'light'}
+        nativeContainerStyle={{ backgroundColor: colors.background }}
         ios={{
           bottomAccessory: bottomAccessory
             ? (environment: TabsBottomAccessoryEnvironment) =>
@@ -584,6 +584,7 @@ export function BottomTabViewNative({
               preventNativeSelection={tabBarSelectionEnabled === false}
               badgeValue={tabBarBadge?.toString()}
               title={tabTitle}
+              nativeContainerStyle={{ backgroundColor: colors.background }}
               specialEffects={{
                 repeatedTabSelection: {
                   popToRoot: true,
@@ -773,7 +774,7 @@ function getPlatformIcon(icon: Icon): PlatformIcon {
 }
 
 function getAndroidColorName(color: ColorValue) {
-  const value = color as unknown;
+  const value: unknown = color;
 
   if (
     typeof value === 'object' &&

@@ -41,24 +41,28 @@ const didFocusedRouteChange = (
   nextState: NavigationState | PartialState<NavigationState>
 ) => {
   let currentFocusedRoute: MaybePartialRoute | undefined =
-    currentState.routes[currentState.index ?? 0];
+    currentState.routes[currentState.index ?? currentState.routes.length - 1];
 
   let nextFocusedRoute: MaybePartialRoute | undefined =
-    nextState.routes[nextState.index ?? 0];
+    nextState.routes[nextState.index ?? nextState.routes.length - 1];
 
   let changed = currentFocusedRoute?.key !== nextFocusedRoute?.key;
 
-  while (
-    !changed &&
-    currentFocusedRoute?.state != null &&
-    nextFocusedRoute?.state != null &&
-    currentFocusedRoute.state !== nextFocusedRoute.state
-  ) {
+  while (!changed && currentFocusedRoute?.state !== nextFocusedRoute?.state) {
+    if (currentFocusedRoute?.state == null || nextFocusedRoute?.state == null) {
+      return true;
+    }
+
     currentFocusedRoute =
-      currentFocusedRoute.state.routes[currentFocusedRoute.state.index ?? 0];
+      currentFocusedRoute.state.routes[
+        currentFocusedRoute.state.index ??
+          currentFocusedRoute.state.routes.length - 1
+      ];
 
     nextFocusedRoute =
-      nextFocusedRoute.state.routes[nextFocusedRoute.state.index ?? 0];
+      nextFocusedRoute.state.routes[
+        nextFocusedRoute.state.index ?? nextFocusedRoute.state.routes.length - 1
+      ];
 
     changed = currentFocusedRoute?.key !== nextFocusedRoute?.key;
   }

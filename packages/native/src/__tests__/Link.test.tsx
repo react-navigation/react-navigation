@@ -1,15 +1,22 @@
 import { expect, jest, test } from '@jest/globals';
 import {
   CommonActions,
+  createNavigationContainerRef,
+  createNavigatorFactory,
+  type NavigatorScreenParams,
   StackActions,
   TabActions,
+  TabRouter,
+  useNavigationBuilder,
 } from '@react-navigation/core';
 import { fireEvent, render, screen } from '@testing-library/react-native';
-import { Platform } from 'react-native';
+import { Fragment, useMemo } from 'react';
+import { Platform, Text } from 'react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { Link } from '../Link';
 import { NavigationContainer } from '../NavigationContainer';
+import { useLinkBuilder } from '../useLinkBuilder';
 
 type RootParamList = { Foo: undefined; Bar: { id: string } };
 
@@ -366,4 +373,346 @@ test('does not render link with href from action when screen is not in linking c
   Go to Bar
 </Text>
 `);
+});
+
+test('navigates to a nested screen again with the same params object', async () => {
+  type TabParamList = {
+    First: undefined;
+    Second: { id: string };
+  };
+
+  type ParentParamList = {
+    Nested: NavigatorScreenParams<TabParamList>;
+  };
+
+  const createTabNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      TabRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => (
+          <Fragment key={route.key}>
+            {descriptors[route.key]?.render()}
+          </Fragment>
+        ))}
+      </NavigationContent>
+    );
+  });
+
+  const navigation = createNavigationContainerRef<ParentParamList>();
+
+  const Stack = createStackNavigator<ParentParamList>();
+  const Tab = createTabNavigator<TabParamList>();
+
+  const params: NavigatorScreenParams<TabParamList> = {
+    screen: 'Second',
+    params: { id: '42' },
+  };
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="Nested">
+          {() => (
+            <Tab.Navigator>
+              <Tab.Screen name="First">
+                {() => (
+                  <Link<ParentParamList> screen="Nested" params={params}>
+                    Go to Second
+                  </Link>
+                )}
+              </Tab.Screen>
+              <Tab.Screen name="Second">
+                {({ navigation }) => (
+                  <Text onPress={() => navigation.navigate('First')}>
+                    Go to First
+                  </Text>
+                )}
+              </Tab.Screen>
+            </Tab.Navigator>
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await fireEvent.press(screen.getByText('Go to Second'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Second');
+
+  await fireEvent.press(screen.getByText('Go to First'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('First');
+
+  await fireEvent.press(screen.getByText('Go to Second'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Second');
+});
+
+test('navigates to nested state again with the same params object', async () => {
+  type TabParamList = {
+    First: undefined;
+    Second: { id: string };
+  };
+
+  type ParentParamList = {
+    Nested: NavigatorScreenParams<TabParamList>;
+  };
+
+  const createTabNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      TabRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => (
+          <Fragment key={route.key}>
+            {descriptors[route.key]?.render()}
+          </Fragment>
+        ))}
+      </NavigationContent>
+    );
+  });
+
+  const navigation = createNavigationContainerRef<ParentParamList>();
+
+  const Stack = createStackNavigator<ParentParamList>();
+  const Tab = createTabNavigator<TabParamList>();
+
+  const params: NavigatorScreenParams<TabParamList> = {
+    state: {
+      routes: [{ name: 'Second', params: { id: '42' } }],
+    },
+  };
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="Nested">
+          {() => (
+            <Tab.Navigator>
+              <Tab.Screen name="First">
+                {() => (
+                  <Link<ParentParamList> screen="Nested" params={params}>
+                    Go to Second
+                  </Link>
+                )}
+              </Tab.Screen>
+              <Tab.Screen name="Second">
+                {({ navigation }) => (
+                  <Text onPress={() => navigation.navigate('First')}>
+                    Go to First
+                  </Text>
+                )}
+              </Tab.Screen>
+            </Tab.Navigator>
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await fireEvent.press(screen.getByText('Go to Second'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Second');
+
+  await fireEvent.press(screen.getByText('Go to First'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('First');
+
+  await fireEvent.press(screen.getByText('Go to Second'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Second');
+});
+
+test('navigates again with a memoized action built from an href', async () => {
+  type TabParamList = {
+    First: undefined;
+    Second: { id: string };
+  };
+
+  type ParentParamList = {
+    Nested: NavigatorScreenParams<TabParamList>;
+  };
+
+  const createTabNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      TabRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => (
+          <Fragment key={route.key}>
+            {descriptors[route.key]?.render()}
+          </Fragment>
+        ))}
+      </NavigationContent>
+    );
+  });
+
+  const navigation = createNavigationContainerRef<ParentParamList>();
+
+  const Stack = createStackNavigator<ParentParamList>();
+  const Tab = createTabNavigator<TabParamList>();
+
+  const FirstScreen = () => {
+    const { buildAction } = useLinkBuilder();
+    const action = useMemo(() => buildAction('/second/42'), [buildAction]);
+
+    return (
+      <Link action={action} href="/second/42">
+        Go to Second from href
+      </Link>
+    );
+  };
+
+  await render(
+    <NavigationContainer<ParentParamList>
+      ref={navigation}
+      linking={{
+        config: {
+          screens: {
+            Nested: {
+              path: '',
+              screens: {
+                First: '',
+                Second: 'second/:id',
+              },
+            },
+          },
+        },
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Nested">
+          {() => (
+            <Tab.Navigator>
+              <Tab.Screen name="First" component={FirstScreen} />
+              <Tab.Screen name="Second">
+                {({ navigation }) => (
+                  <Text onPress={() => navigation.navigate('First')}>
+                    Go to First
+                  </Text>
+                )}
+              </Tab.Screen>
+            </Tab.Navigator>
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await fireEvent.press(screen.getByText('Go to Second from href'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Second');
+
+  await fireEvent.press(screen.getByText('Go to First'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('First');
+
+  await fireEvent.press(screen.getByText('Go to Second from href'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Second');
+});
+
+test('navigates through multiple nested screens again with the same params objects', async () => {
+  type LeafParamList = {
+    LeafFirst: undefined;
+    LeafSecond: { id: string };
+  };
+
+  type TabParamList = {
+    First: undefined;
+    Deep: NavigatorScreenParams<LeafParamList>;
+  };
+
+  type ParentParamList = {
+    Nested: NavigatorScreenParams<TabParamList>;
+  };
+
+  const createTabNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      TabRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => (
+          <Fragment key={route.key}>
+            {descriptors[route.key]?.render()}
+          </Fragment>
+        ))}
+      </NavigationContent>
+    );
+  });
+
+  const navigation = createNavigationContainerRef<ParentParamList>();
+
+  const Stack = createStackNavigator<ParentParamList>();
+  const Tab = createTabNavigator<TabParamList>();
+  const Leaf = createTabNavigator<LeafParamList>();
+
+  const leafParams: NavigatorScreenParams<LeafParamList> = {
+    screen: 'LeafSecond',
+    params: { id: '42' },
+  };
+
+  const params: NavigatorScreenParams<TabParamList> = {
+    screen: 'Deep',
+    params: leafParams,
+  };
+
+  const FirstScreen = () => (
+    <Link<ParentParamList> screen="Nested" params={params}>
+      Go to deep second
+    </Link>
+  );
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="Nested">
+          {() => (
+            <Tab.Navigator>
+              <Tab.Screen name="First" component={FirstScreen} />
+              <Tab.Screen name="Deep">
+                {() => (
+                  <Leaf.Navigator>
+                    <Leaf.Screen name="LeafFirst">{() => null}</Leaf.Screen>
+                    <Leaf.Screen name="LeafSecond">
+                      {({ navigation }) => (
+                        <Text onPress={() => navigation.navigate('LeafFirst')}>
+                          Go to leaf first
+                        </Text>
+                      )}
+                    </Leaf.Screen>
+                  </Leaf.Navigator>
+                )}
+              </Tab.Screen>
+            </Tab.Navigator>
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await fireEvent.press(screen.getByText('Go to deep second'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('LeafSecond');
+
+  await fireEvent.press(screen.getByText('Go to leaf first'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('LeafFirst');
+
+  await fireEvent.press(screen.getByText('Go to deep second'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('LeafSecond');
 });

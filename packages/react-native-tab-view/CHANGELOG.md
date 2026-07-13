@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.11...react-native-tab-view@5.0.0-alpha.12) (2026-07-08)
+
+### Features
+
+* wrap navigations in startTransition by default ([#13171](https://github.com/react-navigation/react-navigation/issues/13171)) ([cfbbd4c](https://github.com/react-navigation/react-navigation/commit/cfbbd4c9084dc704fc9c9b76302e39146bddf0dd)) - by @satya164
+
 # [5.0.0-alpha.11](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.10...react-native-tab-view@5.0.0-alpha.11) (2026-06-18)
 
 **Note:** Version bump only for package react-native-tab-view

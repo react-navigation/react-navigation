@@ -39,7 +39,7 @@ export function MockRouter(options: DefaultRouterOptions) {
       const state = partialState;
 
       if (state.stale === false) {
-        return state as NavigationState;
+        return state;
       }
 
       const routes = state.routes

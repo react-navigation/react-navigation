@@ -2,7 +2,6 @@ import { getHeaderTitle, HeaderBackContext } from '@react-navigation/elements';
 import { ActivityView } from '@react-navigation/elements/internal';
 import {
   NavigationProvider,
-  type ParamListBase,
   type Route,
   useLinkBuilder,
 } from '@react-navigation/native';
@@ -21,12 +20,7 @@ import {
   forSlideRight,
   forSlideUp,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
-import type {
-  Scene,
-  StackHeaderMode,
-  StackHeaderProps,
-  StackNavigationProp,
-} from '../../types';
+import type { Scene, StackHeaderMode, StackHeaderProps } from '../../types';
 import { Header } from './Header';
 
 export type HeaderHeight = {
@@ -139,8 +133,7 @@ export function HeaderContainer({
           progress: scene.progress,
           options: scene.descriptor.options,
           route: scene.descriptor.route,
-          navigation: scene.descriptor
-            .navigation as StackNavigationProp<ParamListBase>,
+          navigation: scene.descriptor.navigation,
           styleInterpolator:
             mode === 'float'
               ? isHeaderStatic

@@ -39,7 +39,12 @@ type RouteConfig = {
   regex?: RegExp | undefined;
   pattern: string;
   segments: string[];
-  params: { screen: string; name: string; index: number }[];
+  params: {
+    screen: string;
+    name: string;
+    index: number;
+    regex?: RegExp | undefined;
+  }[];
   routeNames: string[];
   parse?: ParseConfig | undefined;
   explicitParamNames?: Set<string> | undefined;
@@ -69,6 +74,7 @@ type ConfigResources = {
   configs: RouteConfig[];
   configsByScreen: Record<string, RouteConfig[]>;
   configsByPattern: Record<string, RouteConfig[]>;
+  prefixRegex?: RegExp | undefined;
 };
 
 const INVALID_SCHEMA_RESULT_ERROR =
@@ -87,6 +93,17 @@ const NESTED_SCREEN_PARAM_NAMES = [
   'merge',
   'pop',
 ];
+
+const getStaticSegmentPattern = (segment: string) =>
+  Array.from(segment, (char) => {
+    const encoded = encodeURIComponent(char);
+    const percentEncoded =
+      encoded === char
+        ? `%${char.charCodeAt(0).toString(16).padStart(2, '0').toUpperCase()}`
+        : encoded;
+
+    return `(?:${escape(char)}|${escape(percentEncoded)})`;
+  }).join('');
 
 const getExplicitParamNames = (parse?: ParseConfig) => {
   const names: string[] = [];
@@ -161,8 +178,13 @@ export function getStateFromPath<ParamList extends {}>(
   options?: Options<ParamList>,
   previous?: NavigationState
 ): ResultState | undefined {
-  const { initialRoutes, configs, configsByScreen, configsByPattern } =
-    getConfigResources(options);
+  const {
+    initialRoutes,
+    configs,
+    configsByScreen,
+    configsByPattern,
+    prefixRegex,
+  } = getConfigResources(options);
 
   const screens = options?.screens;
 
@@ -183,24 +205,20 @@ export function getStateFromPath<ParamList extends {}>(
   let remaining = path
     .replace(/\/+/g, '/') // Replace multiple slash (//) with single ones
     .replace(/^\//, '') // Remove extra leading slash
-    .replace(/\?.*$/, ''); // Remove query params which we will handle later
+    .replace(/\?.*$/, '') // Remove query params which we will handle later
+    .replace(/%[0-9a-f]{2}/gi, (m) => m.toUpperCase()); // Normalize percent-encoding as hex digits are case-insensitive
 
   // Make sure there is a trailing slash
   remaining = remaining.endsWith('/') ? remaining : `${remaining}/`;
 
-  const prefix = options?.path?.replace(/^\//, ''); // Remove extra leading slash
+  if (prefixRegex) {
+    const prefixMatch = remaining.match(prefixRegex);
 
-  if (prefix) {
-    // Make sure there is a trailing slash
-    const normalizedPrefix = prefix.endsWith('/') ? prefix : `${prefix}/`;
-
-    // If the path doesn't start with the prefix, it's not a match
-    if (!remaining.startsWith(normalizedPrefix)) {
+    if (prefixMatch == null) {
       return undefined;
     }
 
-    // Remove the prefix from the path
-    remaining = remaining.replace(normalizedPrefix, '');
+    remaining = remaining.slice(prefixMatch[0].length);
   }
 
   if (screens === undefined) {
@@ -336,11 +354,17 @@ const cachedConfigResources = new WeakMap<Options<{}>, ConfigResources>();
 function getConfigResources<ParamList extends {}>(
   options: Options<ParamList> | undefined
 ) {
-  if (!options) return prepareConfigResources();
+  if (!options) {
+    return prepareConfigResources();
+  }
 
   const cached = cachedConfigResources.get(options);
 
-  if (cached) return cached;
+  if (cached) {
+    return cached;
+  }
+
+  validatePathConfig(options);
 
   const resources = prepareConfigResources(options);
 
@@ -350,12 +374,21 @@ function getConfigResources<ParamList extends {}>(
 }
 
 function prepareConfigResources(options?: Options<{}>) {
-  if (process.env.NODE_ENV !== 'production' && options) {
-    validatePathConfig(options);
-  }
-
   const initialRoutes = getInitialRoutes(options);
   const configs = getSortedNormalizedConfigs(initialRoutes, options?.screens);
+  const prefix = options?.path?.replace(/^\//, '');
+
+  let prefixRegex: RegExp | undefined;
+
+  if (prefix) {
+    const normalizedPrefix = prefix.endsWith('/') ? prefix : `${prefix}/`;
+    const prefixPattern = normalizedPrefix
+      .split('/')
+      .map(getStaticSegmentPattern)
+      .join('/');
+
+    prefixRegex = new RegExp(`^${prefixPattern}`);
+  }
 
   const configsByScreen: Record<string, RouteConfig[]> = {};
   const configsByPattern: Record<string, RouteConfig[]> = {};
@@ -378,6 +411,7 @@ function prepareConfigResources(options?: Options<{}>) {
     configs,
     configsByScreen,
     configsByPattern,
+    prefixRegex,
   };
 }
 
@@ -580,6 +614,12 @@ const matchAgainstConfig = (
         try {
           decoded = decodeURIComponent(value);
         } catch {
+          return undefined;
+        }
+
+        // Percent-encoded values are matched permissively
+        // So validate the decoded value against the custom regex
+        if (param.regex && value !== decoded && !param.regex.test(decoded)) {
           return undefined;
         }
 
@@ -797,20 +837,27 @@ const createConfigItem = (
       segments.push(part.segment);
 
       if (part.param) {
-        const reg = part.regex || '[^/]+';
+        // A custom regex may not match the percent-encoded form of the value
+        // So also accept segments containing an encoded character and validate them after decoding
+        const reg = part.regex
+          ? `(?:${part.regex})|(?=[^/]*%[0-9A-F]{2})[^/]+`
+          : '[^/]+';
 
         regexString += `(((?<${PARAM_GROUP_PREFIX}${index}>${reg})\\/)${part.optional ? '?' : ''})`;
         params.push({
           index,
           screen: part.screen,
           name: part.param,
+          regex: part.regex ? new RegExp(`^(?:${part.regex})$`) : undefined,
         });
 
         if (part.screen === screen) {
           pathParamNames.add(part.param);
         }
+      } else if (part.segment === '*') {
+        regexString += `.*\\/`;
       } else {
-        regexString += `${part.segment === '*' ? '.*' : escape(part.segment)}\\/`;
+        regexString += `${getStaticSegmentPattern(part.segment)}\\/`;
       }
 
       index++;
@@ -1081,7 +1128,8 @@ const parseQueryParams = (
 ):
   | { valid: true; params?: Record<string, unknown> | undefined }
   | { valid: false } => {
-  const query = path.split('?')[1];
+  const queryIndex = path.indexOf('?');
+  const query = queryIndex === -1 ? undefined : path.slice(queryIndex + 1);
   const params: Record<string, unknown> = query ? queryString.parse(query) : {};
 
   // Path params should always win over same-named query params.

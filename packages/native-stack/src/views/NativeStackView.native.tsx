@@ -55,6 +55,8 @@ type SceneViewProps = {
   nextDescriptor?: NativeStackDescriptor | undefined;
   isPresentationModal: boolean;
   isNextScreenTransparent: boolean;
+  isNextScreenSheet: boolean;
+  isNextScreenModal: boolean;
   isInactive: boolean;
   isBeforeLast: boolean;
   onWillDisappear: () => void;
@@ -75,6 +77,8 @@ const TRANSPARENT_PRESENTATIONS = [
   'containedTransparentModal',
 ];
 
+const SHEET_PRESENTATIONS = ['formSheet', 'pageSheet'];
+
 const SceneView = ({
   index,
   focused,
@@ -82,6 +86,8 @@ const SceneView = ({
   previousDescriptor,
   isPresentationModal,
   isNextScreenTransparent,
+  isNextScreenSheet,
+  isNextScreenModal,
   isInactive,
   isBeforeLast,
   onWillDisappear,
@@ -304,16 +310,22 @@ const SceneView = ({
   const activityMode =
     // Render focused screens normally
     // Unpause preloaded and retained screens so updates are visible
+    // Unpause previous screen so update isn't delayed for swipe back
     // This lets effects on those screens run
     // We don't need to handle inert as it'll be handled natively
     inactiveBehavior === 'none' ||
     focused ||
     isInactive ||
-    isNextScreenTransparent
+    isNextScreenTransparent ||
+    // Unpause the screen behind a sheet so it stays up to date
+    // Sheets don't cover the whole screen, so the screen behind is visible
+    isNextScreenSheet ||
+    // On iPadOS, the base screen is visible while modal is in a smaller area
+    // So also keep the screens unpaused
+    (isNextScreenModal && !isModal) ||
+    isBeforeLast
       ? 'normal'
-      : inactiveBehavior === 'unmount' &&
-          !isBeforeLast &&
-          !('state' in route && route.state)
+      : inactiveBehavior === 'unmount' && !('state' in route && route.state)
         ? 'unmounted'
         : 'paused';
 
@@ -506,6 +518,12 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
           const isNextScreenTransparent =
             nextPresentation != null &&
             TRANSPARENT_PRESENTATIONS.includes(nextPresentation);
+          const isNextScreenSheet =
+            nextPresentation != null &&
+            SHEET_PRESENTATIONS.includes(nextPresentation);
+          const isNextScreenModal = nextKey
+            ? modalRouteKeys.includes(nextKey)
+            : false;
 
           const isModal = modalRouteKeys.includes(route.key);
 
@@ -519,6 +537,8 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
               nextDescriptor={nextDescriptor}
               isPresentationModal={isModal}
               isNextScreenTransparent={isNextScreenTransparent}
+              isNextScreenSheet={isNextScreenSheet}
+              isNextScreenModal={isNextScreenModal}
               isInactive={index > state.index}
               isBeforeLast={index === activeRoutes.length - 2}
               onWillDisappear={() => {
