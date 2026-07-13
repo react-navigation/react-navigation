@@ -195,6 +195,8 @@ export function createMemoryHistory() {
         // But on Firefox, it seems to take much longer, around 50ms from our testing
         // We're using a hacky timeout since there doesn't seem to be way to know for sure
         const timer = setTimeout(() => {
+          window.removeEventListener('popstate', onPopState);
+
           const foundIndex = pending.findIndex((it) => it.ref === done);
 
           if (foundIndex > -1) {
