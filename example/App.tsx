@@ -1,5 +1,4 @@
 import './gesture-handler';
-
 import { setDynamicLoadingEnabled } from '@react-native-vector-icons/common';
 import Feather from '@react-native-vector-icons/feather/fonts/Feather.ttf';
 import Ionicons from '@react-native-vector-icons/ionicons/fonts/Ionicons.ttf';

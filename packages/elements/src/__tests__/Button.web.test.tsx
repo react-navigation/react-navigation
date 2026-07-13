@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom/jest-globals';
-
 import { expect, test } from '@jest/globals';
 import {
   createNavigatorFactory,

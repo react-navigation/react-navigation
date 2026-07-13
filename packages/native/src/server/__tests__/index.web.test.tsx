@@ -2,6 +2,8 @@
  * @jest-environment node
  */
 
+import { PassThrough } from 'node:stream';
+
 import { expect, test } from '@jest/globals';
 import {
   createNavigatorFactory,
@@ -12,10 +14,9 @@ import {
 } from '@react-navigation/core';
 import * as React from 'react';
 import { renderToPipeableStream } from 'react-dom/server.node';
-import { PassThrough } from 'stream';
 
-import { NavigationContainer } from '../../NavigationContainer';
 import { ServerContainer } from '..';
+import { NavigationContainer } from '../../NavigationContainer';
 
 const render = (element: React.ReactNode, stream = new PassThrough()) => {
   return new Promise<string>((resolve, reject) => {
@@ -68,7 +69,6 @@ test('renders without browser globals', async () => {
       </ServerContainer>
     );
   } finally {
-    // eslint-disable-next-line require-atomic-updates
     globalThis.window = window;
   }
 

@@ -1,7 +1,6 @@
 import { type RootParamList, useTheme } from '@react-navigation/core';
 import { type GestureResponderEvent, Text } from 'react-native';
 
-// eslint-disable-next-line import-x/extensions
 import type { Props } from './Link.tsx';
 import { useLinkProps } from './useLinkProps';
 

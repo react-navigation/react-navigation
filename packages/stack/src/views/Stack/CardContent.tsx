@@ -27,7 +27,6 @@ export function CardContent({ enabled, layout, style, ...rest }: Props) {
     // But `layout` is sub-pixel precise, so we allow a small difference.
     const approximatelyEqual = (a: number, b: number) => Math.abs(a - b) < 1;
 
-    // eslint-disable-next-line @eslint-react/set-state-in-effect
     setFill(
       approximatelyEqual(width, layout.width) &&
         approximatelyEqual(height, layout.height)

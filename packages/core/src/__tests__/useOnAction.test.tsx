@@ -32,7 +32,6 @@ jest.mock('nanoid/non-secure', () => {
 beforeEach(() => {
   MockRouterKey.current = 0;
 
-  // eslint-disable-next-line import-x/no-extraneous-dependencies
   require('nanoid/non-secure').__key = 0;
 });
 
@@ -1302,7 +1301,7 @@ test("emits 'beforeRemove' for multiple removed screens in reverse order", async
             props.navigation.dispatch(e.data.action);
           }
         }),
-      [props.navigation, props.route.name]
+      [props.navigation, props.route]
     );
 
     return null;

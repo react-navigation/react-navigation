@@ -1,75 +1,70 @@
 {
-  "fill" : {
-    "solid" : "display-p3:0.40381,0.32544,0.65869,1.00000"
+  "fill": {
+    "solid": "display-p3:0.40381,0.32544,0.65869,1.00000"
   },
-  "groups" : [
+  "groups": [
     {
-      "blend-mode-specializations" : [
+      "blend-mode-specializations": [
         {
-          "value" : "normal"
+          "value": "normal"
         },
         {
-          "appearance" : "dark",
-          "value" : "normal"
+          "appearance": "dark",
+          "value": "normal"
         },
         {
-          "appearance" : "tinted",
-          "value" : "normal"
+          "appearance": "tinted",
+          "value": "normal"
         }
       ],
-      "blur-material" : null,
-      "layers" : [
+      "blur-material": null,
+      "layers": [
         {
-          "glass" : false,
-          "image-name" : "badge-text.png",
-          "name" : "badge-text"
+          "glass": false,
+          "image-name": "badge-text.png",
+          "name": "badge-text"
         },
         {
-          "image-name" : "badge-background.png",
-          "name" : "badge-background"
+          "image-name": "badge-background.png",
+          "name": "badge-background"
         }
       ],
-      "name" : "badge",
-      "position" : {
-        "scale" : 1,
-        "translation-in-points" : [
-          200,
-          -200
-        ]
+      "name": "badge",
+      "position": {
+        "scale": 1,
+        "translation-in-points": [200, -200]
       },
-      "shadow" : {
-        "kind" : "neutral",
-        "opacity" : 0.5
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
       },
-      "specular" : true,
-      "translucency" : {
-        "enabled" : false,
-        "value" : 0.5
+      "specular": true,
+      "translucency": {
+        "enabled": false,
+        "value": 0.5
       }
     },
     {
-      "layers" : [
+      "layers": [
         {
-          "glass" : false,
-          "image-name" : "spiro.png",
-          "name" : "spiro"
+          "glass": false,
+          "image-name": "spiro.png",
+          "name": "spiro"
         }
       ],
-      "name" : "logo",
-      "shadow" : {
-        "kind" : "neutral",
-        "opacity" : 0.5
+      "name": "logo",
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
       },
-      "translucency" : {
-        "enabled" : true,
-        "value" : 0.5
+      "translucency": {
+        "enabled": true,
+        "value": 0.5
       }
     }
   ],
-  "supported-platforms" : {
-    "circles" : [
-      "watchOS"
-    ],
-    "squares" : "shared"
+  "supported-platforms": {
+    "circles": ["watchOS"],
+    "squares": "shared"
   }
 }

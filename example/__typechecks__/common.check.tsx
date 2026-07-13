@@ -1186,7 +1186,6 @@ useLinkProps<LinkRootParamList>({ in: 'ArticleList' });
 <Button<LinkRootParamList> in="ArticleList">Article</Button>;
 
 /* Nested targets in a static navigator */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const LinkStaticStack = createStackNavigator({
   screens: {
     StaticHome: () => null,

@@ -120,8 +120,8 @@ test.each([
 test('returns false when an array loses information', () => {
   const arrayWithProperty = Object.assign([1], { extra: true });
   const arrayWithSymbol = Object.assign([1], { [Symbol('extra')]: true });
-  const sparseArray = new Array<unknown>(3);
-  const sparseArrayWithProperty = Object.assign(new Array<unknown>(2), {
+  const sparseArray = Array<unknown>(3);
+  const sparseArrayWithProperty = Object.assign(Array<unknown>(2), {
     extra: true,
   });
 

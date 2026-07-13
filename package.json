@@ -15,7 +15,8 @@
   },
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/), Michał Osadnik <micosa97@gmail.com> (https://github.com/osdnk/)",
   "scripts": {
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "oxlint -c oxlint.config.mts",
+    "format": "oxfmt",
     "typecheck": "tsc --noEmit",
     "typecheck:standalone:static": "tsc --project example/__typechecks__/standalone/static --noEmit",
     "typecheck:standalone:dynamic": "tsc --project example/__typechecks__/standalone/dynamic --noEmit",
@@ -49,26 +50,17 @@
     "@types/subset-font": "^2.3.0",
     "agent-device": "^0.21.36",
     "commitlint": "^21.2.4",
-    "eslint": "^10.14.0",
-    "eslint-config-satya164": "^5.3.0",
-    "eslint-import-resolver-typescript": "^4.4.5",
-    "eslint-plugin-simple-import-sort": "^14.0.0",
     "fonteditor-core": "^2.6.3",
     "harfbuzzjs": "^1.6.4",
     "jest": "~30.5.2",
     "jest-environment-node": "30.5.2",
     "jsdom": "26.1.0",
     "npm-run-all2": "^9.0.4",
-    "prettier": "~3.8.5",
+    "oxfmt": "^0.58.0",
+    "oxlint": "^1.73.0",
+    "oxlint-config-satya164": "^0.2.1",
     "semver": "^7.8.6",
     "subset-font": "^2.9.0",
     "typescript": "^6.0.3"
-  },
-  "prettier": {
-    "quoteProps": "as-needed",
-    "tabWidth": 2,
-    "useTabs": false,
-    "singleQuote": true,
-    "trailingComma": "es5"
   }
 }

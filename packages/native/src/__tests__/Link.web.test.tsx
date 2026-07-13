@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom/jest-globals';
-
 import { expect, jest, test } from '@jest/globals';
 import {
   CommonActions,
