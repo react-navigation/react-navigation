@@ -15,7 +15,8 @@
   },
   "author": "Satyajit Sahoo <satyajit.happy@gmail.com> (https://github.com/satya164/), Michał Osadnik <micosa97@gmail.com> (https://github.com/osdnk/)",
   "scripts": {
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "oxlint -c oxlint.config.mts",
+    "format": "oxfmt",
     "typecheck": "tsc --noEmit",
     "typecheck:standalone:static": "tsc --project example/__typechecks__/standalone/static --noEmit",
     "typecheck:standalone:dynamic": "tsc --project example/__typechecks__/standalone/dynamic --noEmit",
@@ -45,12 +46,11 @@
     "@types/node": "^24.13.2",
     "@types/semver": "^7.7.1",
     "commitlint": "^21.0.2",
-    "eslint": "^9.39.4",
-    "eslint-config-satya164": "^5.1.8",
-    "eslint-plugin-simple-import-sort": "^13.0.0",
     "jest": "~29.7.0",
     "npm-run-all2": "^9.0.1",
-    "prettier": "^3.8.3",
+    "oxfmt": "^0.58.0",
+    "oxlint": "^1.73.0",
+    "oxlint-config-satya164": "^0.2.1",
     "prettier-2": "npm:prettier@^2.8.8",
     "semver": "^7.8.2",
     "typescript": "^6.0.3"
@@ -73,12 +73,5 @@
       "node_modules/(?!\\.pnpm|(@react-navigation|react-native-drawer-layout|react-native-tab-view|(jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|immer|standard-navigation)/)",
       "node_modules/.pnpm/(?!(?:@react-navigation\\+[^@]+|react-native-drawer-layout|react-native-tab-view|@react-native\\+[^@]+|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|immer|standard-navigation)@)"
     ]
-  },
-  "prettier": {
-    "quoteProps": "as-needed",
-    "tabWidth": 2,
-    "useTabs": false,
-    "singleQuote": true,
-    "trailingComma": "es5"
   }
 }

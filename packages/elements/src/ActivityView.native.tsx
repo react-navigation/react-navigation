@@ -5,7 +5,6 @@ import {
   type ViewProps,
 } from 'react-native';
 
-// eslint-disable-next-line import-x/extensions
 import type { Props } from './ActivityView.tsx';
 import { Container } from './Container';
 

@@ -1,10 +1,10 @@
 [build]
-  base    = "/"
-  publish = "example/dist"
-  command = "pnpm example exec expo export --platform web"
-  environment = { PNPM_VERSION = "11.8.0" }
+base = "/"
+publish = "example/dist"
+command = "pnpm example exec expo export --platform web"
+environment = { PNPM_VERSION = "11.8.0" }
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+from = "/*"
+to = "/index.html"
+status = 200

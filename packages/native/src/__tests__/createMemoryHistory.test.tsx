@@ -1,7 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import type { NavigationState } from '@react-navigation/core';
 
-// eslint-disable-next-line import-x/extensions
 jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
 let window: typeof import('../__stubs__/window').window;

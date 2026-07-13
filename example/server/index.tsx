@@ -1,8 +1,5 @@
-/* eslint-disable require-atomic-updates */
-
 import './resolve-hooks';
 import './env';
-
 import process from 'node:process';
 import { PassThrough } from 'node:stream';
 

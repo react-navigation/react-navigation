@@ -120,9 +120,9 @@ export function useDevToolsBase(
     pendingPromiseRef.current = pendingPromiseRef.current
       .catch(() => {
         // Ignore any errors from the last promise
+        return undefined;
       })
       .then(async () => {
-        // eslint-disable-next-line promise/always-return
         if ('stack' in data && data.stack) {
           let stack: string | undefined;
 
@@ -136,6 +136,8 @@ export function useDevToolsBase(
         } else {
           callbackRef.current(data);
         }
+
+        return undefined;
       });
   }, []);
 

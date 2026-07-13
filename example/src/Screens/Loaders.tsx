@@ -185,7 +185,7 @@ function DinoTeamScreen() {
         }}
         style={styles.button}
       >
-        Clear screen's cache
+        Clear screen&apos;s cache
       </Button>
     </View>
   );
@@ -210,7 +210,7 @@ function DinoBattleScreen() {
         }}
         style={styles.button}
       >
-        Clear screen's cache
+        Clear screen&apos;s cache
       </Button>
     </View>
   );

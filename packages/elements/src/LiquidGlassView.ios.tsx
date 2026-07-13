@@ -10,6 +10,7 @@ type AnimatedLiquidGlassViewProps =
 type AnimatedLiquidGlassContainerViewProps =
   Animated.AnimatedProps<LiquidGlassContainerViewProps>;
 
+// oxlint-disable-next-line import/no-mutable-exports -- Optional dependency exports are initialized at runtime.
 let isLiquidGlassSupported: boolean,
   LiquidGlassView: React.ComponentType<LiquidGlassViewProps>,
   LiquidGlassContainerView: React.ComponentType<LiquidGlassContainerViewProps>,

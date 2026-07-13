@@ -356,7 +356,6 @@ test('handles conditional groups with nested if hooks', async () => {
 });
 
 test('handles non-function screens', async () => {
-  // eslint-disable-next-line @eslint-react/no-useless-forward-ref, @eslint-react/ensure-forward-ref-using-ref, @eslint-react/no-missing-component-display-name
   const TestScreen = React.forwardRef(() => null);
 
   const Root = createTestNavigator({

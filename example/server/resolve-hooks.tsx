@@ -1,6 +1,5 @@
 import 'mock-require-assets';
-
-import Module from 'module';
+import Module from 'node:module';
 
 // We need to make sure that .web.xx extensions are resolved before .xx
 // @ts-expect-error: _extensions doesn't exist in the type definitions

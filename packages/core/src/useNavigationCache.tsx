@@ -110,7 +110,7 @@ export function useNavigationCache<
             !stackRef.current
           ) {
             // Capture the stack trace for devtools
-            stackRef.current = new Error().stack;
+            stackRef.current = new Error('Navigation dispatch stack').stack;
             isStackSet = true;
           }
 

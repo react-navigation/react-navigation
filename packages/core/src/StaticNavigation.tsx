@@ -675,6 +675,7 @@ const getItemsFromScreens = (
     );
 
     return () => {
+      // oxlint-disable-next-line react/rules-of-hooks -- Static config conditions can be hooks.
       const shouldRender = useIf == null || useIf();
 
       if (!shouldRender) {
@@ -735,6 +736,7 @@ export function createComponentForStaticConfig<
             // Call unconditionally since screen configs may contain `useIf` hooks
             const children = groupItems.map((item) => item());
 
+            // oxlint-disable-next-line react/rules-of-hooks -- Static config conditions can be hooks.
             const shouldRender = useIf == null || useIf();
 
             if (!shouldRender) {

@@ -1,10 +1,10 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   Nunito_400Regular,
   Nunito_500Medium,
   useFonts,
 } from '@expo-google-fonts/nunito';
 import { Outfit_600SemiBold, Outfit_700Bold } from '@expo-google-fonts/outfit';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Text } from '@react-navigation/elements';
 import {
   type StaticScreenProps,

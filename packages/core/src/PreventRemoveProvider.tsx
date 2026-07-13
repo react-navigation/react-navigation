@@ -71,7 +71,6 @@ export function PreventRemoveProvider({ children }: Props) {
   );
 
   const notifyPreventRemove = useLatestCallback(() => {
-    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setPreventedRoutesMap((prevPrevented) => {
       const nextPrevented = registry.current;
 
