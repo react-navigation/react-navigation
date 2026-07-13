@@ -66,7 +66,6 @@ if (platform) {
 
 if (ci) {
   args.push(
-    '--verbose',
     '--timeout',
     ciTimeoutMs,
     '--retries',
