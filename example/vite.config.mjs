@@ -19,6 +19,22 @@ const packages = pack.workspaces.flatMap((workspace) =>
 
 export default defineConfig((env) =>
   mergeConfig(config(env), {
+    plugins: [
+      {
+        name: 'expo-font-browser-context',
+        enforce: 'pre',
+        resolveId(source, importer) {
+          if (
+            source === './serverContext' &&
+            importer?.includes('/expo-font/build/')
+          ) {
+            return path.join(path.dirname(importer), 'serverContext.js');
+          }
+
+          return null;
+        },
+      },
+    ],
     resolve: {
       conditions: ['@react-navigation/source'],
       dedupe: [
