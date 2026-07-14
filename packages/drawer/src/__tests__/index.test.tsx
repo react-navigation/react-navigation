@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler/jestSetup';
 
-import { expect, test } from '@jest/globals';
+import { expect, jest, test } from '@jest/globals';
 import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
@@ -11,6 +11,10 @@ import { Button, View } from 'react-native';
 import { setUpTests } from 'react-native-reanimated';
 
 import { createDrawerNavigator, type DrawerScreenProps } from '../index';
+
+jest.mock('react-native-worklets', () =>
+  require('react-native-worklets/src/mock')
+);
 
 setUpTests();
 

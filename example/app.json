@@ -35,7 +35,8 @@
           "backgroundColor": "#7b61c1"
         }
       ],
-      "react-native-edge-to-edge"
+      "expo-navigation-bar",
+      "expo-status-bar"
     ],
     "buildCacheProvider": {
       "plugin": "expo-build-disk-cache",
