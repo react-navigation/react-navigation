@@ -1,6 +1,10 @@
 import { expect, jest, test } from '@jest/globals';
 import type { ParamListBase } from '@react-navigation/routers';
-import { CommonActions, StackRouter } from '@react-navigation/routers';
+import {
+  CommonActions,
+  StackRouter,
+  TabRouter,
+} from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
 import { Text } from 'react-native';
@@ -10,11 +14,10 @@ import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { createNavigatorFactory } from '../createNavigatorFactory';
 import { useIsFocused } from '../useIsFocused';
 import { useNavigationBuilder } from '../useNavigationBuilder';
-import { MockRouter } from './__fixtures__/MockRouter';
 
 const TestNavigator = (props: any) => {
   const { state, descriptors, NavigationContent } = useNavigationBuilder(
-    MockRouter,
+    TabRouter,
     props
   );
 
@@ -29,6 +32,24 @@ const TestNavigator = (props: any) => {
 };
 
 const createTestNavigator = createNavigatorFactory(TestNavigator);
+
+const StackTestNavigator = (props: any) => {
+  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    StackRouter,
+    props
+  );
+
+  const route = state.routes[state.index];
+  const descriptor = route ? descriptors[route.key] : undefined;
+
+  if (descriptor == null) {
+    throw new Error('Missing descriptor for focused route.');
+  }
+
+  return <NavigationContent>{descriptor.render()}</NavigationContent>;
+};
+
+const createStackTestNavigator = createNavigatorFactory(StackTestNavigator);
 
 const TestScreen = ({ route }: any) => {
   const isFocused = useIsFocused();
@@ -117,24 +138,6 @@ test('fires loader for the focused route on reset without index', async () => {
   const detailFn = jest.fn(
     async (_options: { name: string; params: unknown }) => {}
   );
-
-  const StackTestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
-      StackRouter,
-      props
-    );
-
-    const route = state.routes[state.index];
-    const descriptor = route ? descriptors[route.key] : undefined;
-
-    if (descriptor == null) {
-      throw new Error('Missing descriptor for focused route.');
-    }
-
-    return <NavigationContent>{descriptor.render()}</NavigationContent>;
-  };
-
-  const createStackTestNavigator = createNavigatorFactory(StackTestNavigator);
 
   const Root = createStackTestNavigator({
     screens: {
@@ -244,7 +247,48 @@ test("doesn't fire loader when the focused route doesn't change", async () => {
   expect(navigation.getCurrentRoute()?.params).toEqual({ id: '42' });
 });
 
+test('fires loader when a route is replaced with the same name and a different key', async () => {
+  const loader = jest.fn(async () => {});
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+        UNSTABLE_loader: loader,
+      },
+    },
+  });
+
+  const Component = Root.getComponent();
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
+
+  const route = navigation.getRootState().routes[0];
+
+  if (route == null) {
+    throw new Error('Expected a route');
+  }
+
+  await act(() => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: route.name, key: `${route.key}-replacement` }],
+      })
+    );
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  expect(loader).toHaveBeenCalledTimes(1);
+});
+
 test('fires loader when the nested focused route changes under the same route', async () => {
+  const parentFn = jest.fn(async () => {});
   const albumsFn = jest.fn(async () => {});
   const contactsFn = jest.fn(async () => {});
 
@@ -265,7 +309,10 @@ test('fires loader when the nested focused route changes under the same route', 
     initialRouteName: 'Nested',
     screens: {
       Home: TestScreen,
-      Nested: Child,
+      Nested: {
+        screen: Child,
+        UNSTABLE_loader: parentFn,
+      },
     },
   });
 
@@ -297,6 +344,7 @@ test('fires loader when the nested focused route changes under the same route', 
     );
   });
 
+  parentFn.mockClear();
   albumsFn.mockClear();
   contactsFn.mockClear();
 
@@ -321,8 +369,479 @@ test('fires loader when the nested focused route changes under the same route', 
     );
   });
 
+  expect(navigation.getCurrentRoute()?.name).toBe('Contacts');
+  expect(parentFn).not.toHaveBeenCalled();
   expect(albumsFn).not.toHaveBeenCalled();
   expect(contactsFn).toHaveBeenCalledTimes(1);
+});
+
+test.each([
+  {
+    type: 'screen',
+    params: { screen: 'Contacts' },
+  },
+  {
+    type: 'state',
+    params: {
+      state: {
+        index: 0,
+        routes: [{ name: 'Contacts' }],
+      },
+    },
+  },
+])(
+  'fires only the newly focused loader when nested $type params change focus',
+  async ({ params }) => {
+    const parentFn = jest.fn(async () => {});
+    const albumsFn = jest.fn(async () => {});
+    const contactsFn = jest.fn(async () => {});
+
+    const Child = createTestNavigator({
+      screens: {
+        Albums: {
+          screen: TestScreen,
+          UNSTABLE_loader: albumsFn,
+        },
+        Contacts: {
+          screen: TestScreen,
+          UNSTABLE_loader: contactsFn,
+        },
+      },
+    });
+
+    const Root = createTestNavigator({
+      initialRouteName: 'Nested',
+      screens: {
+        Nested: {
+          screen: Child,
+          UNSTABLE_loader: parentFn,
+        },
+      },
+    });
+
+    const Component = Root.getComponent();
+    const navigation = createNavigationContainerRef<ParamListBase>();
+
+    await render(
+      <BaseNavigationContainer ref={navigation}>
+        <Component />
+      </BaseNavigationContainer>
+    );
+
+    await act(() => {
+      navigation.dispatch(CommonActions.navigate('Nested', params));
+    });
+
+    expect(navigation.getCurrentRoute()?.name).toBe('Contacts');
+    expect(parentFn).not.toHaveBeenCalled();
+    expect(albumsFn).not.toHaveBeenCalled();
+    expect(contactsFn).toHaveBeenCalledTimes(1);
+  }
+);
+
+test('fires parent and child loaders when fresh nested params focus the parent', async () => {
+  const parentFn = jest.fn(async () => {});
+  const albumsFn = jest.fn(async () => {});
+  const contactsFn = jest.fn(async () => {});
+
+  const Child = createTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: albumsFn,
+      },
+      Contacts: {
+        screen: TestScreen,
+        UNSTABLE_loader: contactsFn,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+      Nested: {
+        screen: Child,
+        UNSTABLE_loader: parentFn,
+      },
+    },
+  });
+
+  const Component = Root.getComponent();
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
+
+  await act(() => {
+    navigation.dispatch(
+      CommonActions.navigate('Nested', { screen: 'Contacts' })
+    );
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Contacts');
+  expect(parentFn).toHaveBeenCalledTimes(1);
+  expect(albumsFn).not.toHaveBeenCalled();
+  expect(contactsFn).toHaveBeenCalledTimes(1);
+});
+
+test('fires loaders at every newly focused level in a deeply nested navigator', async () => {
+  const parentFn = jest.fn(async () => {});
+  const sectionFn = jest.fn(async () => {});
+  const albumsFn = jest.fn(async () => {});
+  const contactsFn = jest.fn(async () => {});
+
+  const Grandchild = createTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: albumsFn,
+      },
+      Contacts: {
+        screen: TestScreen,
+        UNSTABLE_loader: contactsFn,
+      },
+    },
+  });
+
+  const Child = createTestNavigator({
+    screens: {
+      Section: {
+        screen: Grandchild,
+        UNSTABLE_loader: sectionFn,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    screens: {
+      Home: TestScreen,
+      Nested: {
+        screen: Child,
+        UNSTABLE_loader: parentFn,
+      },
+    },
+  });
+
+  const Component = Root.getComponent();
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
+
+  await act(() => {
+    navigation.dispatch(
+      CommonActions.navigate('Nested', {
+        screen: 'Section',
+        params: { screen: 'Contacts' },
+      })
+    );
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Contacts');
+  expect(parentFn).toHaveBeenCalledTimes(1);
+  expect(sectionFn).toHaveBeenCalledTimes(1);
+  expect(albumsFn).not.toHaveBeenCalled();
+  expect(contactsFn).toHaveBeenCalledTimes(1);
+});
+
+test('fires only the newly focused loader for a deeply nested focus change', async () => {
+  const parentFn = jest.fn(async () => {});
+  const sectionFn = jest.fn(async () => {});
+  const albumsFn = jest.fn(async () => {});
+  const contactsFn = jest.fn(async () => {});
+
+  const Grandchild = createTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: albumsFn,
+      },
+      Contacts: {
+        screen: TestScreen,
+        UNSTABLE_loader: contactsFn,
+      },
+    },
+  });
+
+  const Child = createTestNavigator({
+    screens: {
+      Section: {
+        screen: Grandchild,
+        UNSTABLE_loader: sectionFn,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    initialRouteName: 'Nested',
+    screens: {
+      Nested: {
+        screen: Child,
+        UNSTABLE_loader: parentFn,
+      },
+    },
+  });
+
+  const Component = Root.getComponent();
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
+
+  await act(() => {
+    navigation.dispatch(
+      CommonActions.navigate('Nested', {
+        screen: 'Section',
+        params: { screen: 'Contacts' },
+      })
+    );
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Contacts');
+  expect(parentFn).not.toHaveBeenCalled();
+  expect(sectionFn).not.toHaveBeenCalled();
+  expect(albumsFn).not.toHaveBeenCalled();
+  expect(contactsFn).toHaveBeenCalledTimes(1);
+});
+
+test("doesn't fire loaders when nested params keep the same route focused", async () => {
+  const parentFn = jest.fn(async () => {});
+  const albumsFn = jest.fn(async () => {});
+
+  const Child = createTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: albumsFn,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    initialRouteName: 'Nested',
+    screens: {
+      Nested: {
+        screen: Child,
+        UNSTABLE_loader: parentFn,
+      },
+    },
+  });
+
+  const Component = Root.getComponent();
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
+
+  await act(() => {
+    navigation.dispatch(
+      CommonActions.navigate('Nested', {
+        screen: 'Albums',
+        params: { id: '42' },
+      })
+    );
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Albums');
+  expect(parentFn).not.toHaveBeenCalled();
+  expect(albumsFn).not.toHaveBeenCalled();
+});
+
+test.each([
+  {
+    type: 'screen',
+    params: { screen: 'Contacts' },
+  },
+  {
+    type: 'state',
+    params: {
+      state: {
+        index: 0,
+        routes: [{ name: 'Contacts' }],
+      },
+    },
+  },
+])('uses each nested $type params object only once', async ({ params }) => {
+  const parentFn = jest.fn(async () => {});
+  const albumsFn = jest.fn(async () => {});
+  const contactsFn = jest.fn(async () => {});
+
+  const Child = createTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: albumsFn,
+      },
+      Contacts: {
+        screen: TestScreen,
+        UNSTABLE_loader: contactsFn,
+      },
+    },
+  });
+
+  const Root = createTestNavigator({
+    initialRouteName: 'Nested',
+    screens: {
+      Home: TestScreen,
+      Nested: {
+        screen: Child,
+        UNSTABLE_loader: parentFn,
+      },
+    },
+  });
+
+  const Component = Root.getComponent();
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
+
+  await act(() => {
+    navigation.dispatch(CommonActions.navigate('Nested', params));
+  });
+
+  const consumedParams = navigation
+    .getRootState()
+    .routes.find((route) => route.name === 'Nested')?.params;
+
+  if (consumedParams == null) {
+    throw new Error('Expected nested params');
+  }
+
+  parentFn.mockClear();
+  albumsFn.mockClear();
+  contactsFn.mockClear();
+
+  await act(() => {
+    navigation.dispatch(CommonActions.navigate('Home'));
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [
+          {
+            name: 'Nested',
+            params: consumedParams,
+            state: {
+              index: 0,
+              routes: [{ name: 'Albums' }],
+            },
+          },
+        ],
+      })
+    );
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Albums');
+  expect(parentFn).toHaveBeenCalledTimes(1);
+  expect(albumsFn).toHaveBeenCalledTimes(1);
+  expect(contactsFn).not.toHaveBeenCalled();
+
+  parentFn.mockClear();
+  albumsFn.mockClear();
+  contactsFn.mockClear();
+
+  await act(() => {
+    navigation.dispatch(
+      CommonActions.navigate('Nested', { ...consumedParams })
+    );
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Contacts');
+  expect(parentFn).not.toHaveBeenCalled();
+  expect(albumsFn).not.toHaveBeenCalled();
+  expect(contactsFn).toHaveBeenCalledTimes(1);
+});
+
+test('uses a consumed params object only once within a container', async () => {
+  const firstContactsFn = jest.fn(async () => {});
+  const secondParentFn = jest.fn(async () => {});
+  const secondAlbumsFn = jest.fn(async () => {});
+  const secondContactsFn = jest.fn(async () => {});
+
+  const FirstChild = createStackTestNavigator({
+    screens: {
+      Albums: TestScreen,
+      Contacts: {
+        screen: TestScreen,
+        UNSTABLE_loader: firstContactsFn,
+      },
+    },
+  });
+
+  const SecondChild = createStackTestNavigator({
+    screens: {
+      Albums: {
+        screen: TestScreen,
+        UNSTABLE_loader: secondAlbumsFn,
+      },
+      Contacts: {
+        screen: TestScreen,
+        UNSTABLE_loader: secondContactsFn,
+      },
+    },
+  });
+
+  const Root = createStackTestNavigator({
+    screens: {
+      Home: TestScreen,
+      First: FirstChild,
+      Second: {
+        screen: SecondChild,
+        UNSTABLE_loader: secondParentFn,
+      },
+    },
+  });
+
+  const Component = Root.getComponent();
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
+
+  await act(() => {
+    navigation.dispatch(
+      CommonActions.navigate('First', { screen: 'Contacts' })
+    );
+  });
+
+  const consumedParams = navigation
+    .getRootState()
+    .routes.find((route) => route.name === 'First')?.params;
+
+  if (consumedParams == null) {
+    throw new Error('Expected nested params');
+  }
+
+  firstContactsFn.mockClear();
+
+  await act(() => {
+    navigation.dispatch(CommonActions.navigate('Second', consumedParams));
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Albums');
+  expect(firstContactsFn).not.toHaveBeenCalled();
+  expect(secondParentFn).toHaveBeenCalledTimes(1);
+  expect(secondAlbumsFn).toHaveBeenCalledTimes(1);
+  expect(secondContactsFn).not.toHaveBeenCalled();
 });
 
 test('fires loader when reset adds nested state under the same route key', async () => {

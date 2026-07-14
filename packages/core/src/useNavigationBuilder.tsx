@@ -337,7 +337,7 @@ export function useNavigationBuilder<
 
   const isNestedParamsConsumed =
     typeof route?.params === 'object' && route.params != null
-      ? consumedParams?.isConsumed(route.params)
+      ? consumedParams?.has(route.params)
       : false;
 
   const {
@@ -726,18 +726,16 @@ export function useNavigationBuilder<
         : nextState;
   }
 
-  const setConsumedParams = consumedParams?.setConsumed;
-
   React.useEffect(() => {
     if (
-      setConsumedParams &&
+      consumedParams &&
       didConsumeNestedParams &&
       typeof route?.params === 'object' &&
       route.params != null
     ) {
-      setConsumedParams(route.params);
+      consumedParams.set(route.params, true);
     }
-  }, [didConsumeNestedParams, route?.params, setConsumedParams]);
+  }, [consumedParams, didConsumeNestedParams, route?.params]);
 
   const shouldUpdate = state !== nextState;
 

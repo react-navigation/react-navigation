@@ -1,12 +1,12 @@
 import { expect, jest, test } from '@jest/globals';
+import { StackRouter } from '@react-navigation/routers';
 
 import { createNavigatorFactory } from '../createNavigatorFactory';
 import { getLoaderForState } from '../DataLoading';
 import { useNavigationBuilder } from '../useNavigationBuilder';
-import { MockRouter } from './__fixtures__/MockRouter';
 
 const TestNavigator = (props: any) => {
-  const { NavigationContent } = useNavigationBuilder(MockRouter, props);
+  const { NavigationContent } = useNavigationBuilder(StackRouter, props);
 
   return <NavigationContent>{null}</NavigationContent>;
 };
