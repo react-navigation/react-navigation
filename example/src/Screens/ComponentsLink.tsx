@@ -28,6 +28,9 @@ const ArticleScreen = () => {
         <Link screen="ComponentsLink" params={{ screen: 'Albums' }}>
           Go to albums
         </Link>
+        <Link disabled screen="ComponentsLink" params={{ screen: 'Albums' }}>
+          Go to albums (Disabled)
+        </Link>
         {Platform.OS === 'web' && (
           <>
             <Link

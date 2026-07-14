@@ -8,12 +8,50 @@ import {
 } from '@react-navigation/core';
 import * as React from 'react';
 import { type GestureResponderEvent, Platform } from 'react-native';
+import useLatestCallback from 'use-latest-callback';
 
 import { LinkingContext } from './LinkingContext';
+import { useDeepStableValue } from './useDeepStableValue';
+
+type LinkScreenTargetProps<
+  ParamList extends {},
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
+> = {
+  href?: string | undefined;
+  action?: NavigationAction | undefined;
+} & (RouteName extends unknown
+  ? undefined extends ParamList[RouteName]
+    ? { screen: RouteName; params?: ParamList[RouteName] | undefined }
+    : { screen: RouteName; params: ParamList[RouteName] }
+  : never);
+
+export type LinkProps<
+  ParamList extends {} = RootParamList,
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
+> =
+  | LinkScreenTargetProps<ParamList, RouteName>
+  | {
+      href?: string | undefined;
+      action: NavigationAction;
+      screen?: undefined;
+      params?: undefined;
+    };
 
 const NESTED_KEYS = ['payload', 'params', 'state', 'routes'] as const;
 const NESTED_PARAMS_KEYS = ['params', 'state'] as const;
-
+const NAVIGATE_ACTION_TYPES = [
+  'NAVIGATE',
+  'PUSH',
+  'REPLACE',
+  'POP_TO',
+  'JUMP_TO',
+];
 /**
  * Nested params are tracked as consumed after handling
  * So navigating with same params again won't work
@@ -78,31 +116,43 @@ function clone(
       copy ??= isArray ? [...value] : { ...value };
       clones.set(value, copy);
 
-      Object.assign(copy, { [key]: cloned });
+      Reflect.set(copy, key, cloned);
     }
   }
 
   return copy ?? value;
 }
 
-export type LinkProps<
-  ParamList extends {} = RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList,
-> =
-  | ({
-      href?: string | undefined;
-      action?: NavigationAction | undefined;
-    } & (RouteName extends unknown
-      ? undefined extends ParamList[RouteName]
-        ? { screen: RouteName; params?: ParamList[RouteName] | undefined }
-        : { screen: RouteName; params: ParamList[RouteName] }
-      : never))
-  | {
-      href?: string | undefined;
-      action: NavigationAction;
-      screen?: undefined;
-      params?: undefined;
-    };
+const getTargetFromAction = (
+  action: NavigationAction | undefined,
+  screens: Record<string, unknown> | undefined
+) => {
+  if (action === undefined || screens === undefined) {
+    return undefined;
+  }
+
+  const { payload } = action;
+
+  if (
+    !NAVIGATE_ACTION_TYPES.includes(action.type) ||
+    payload === undefined ||
+    !('name' in payload) ||
+    typeof payload.name !== 'string' ||
+    !(payload.name in screens)
+  ) {
+    return undefined;
+  }
+
+  return {
+    screen: payload.name,
+    params:
+      'params' in payload &&
+      typeof payload.params === 'object' &&
+      payload.params != null
+        ? payload.params
+        : undefined,
+  };
+};
 
 /**
  * Hook to get props for an anchor tag so it can work with in page navigation.
@@ -110,118 +160,121 @@ export type LinkProps<
  * @param props.screen Name of the screen to navigate to (e.g. `'Feeds'`).
  * @param props.params Params to pass to the screen to navigate to (e.g. `{ sort: 'hot' }`).
  * @param props.href Optional absolute path to use for the href (e.g. `/feeds/hot`).
- * @param props.action Optional action to use for in-page navigation. By default, the path is parsed to an action based on linking config.
+ * @param props.action Optional action to override the in-page navigation. The `href` is still derived from `screen`, so this can be used to render a link while dispatching a different action (e.g. a `replace`).
  */
 export function useLinkProps<
-  const ParamList extends {} = RootParamList,
-  const RouteName extends keyof ParamList = keyof ParamList,
->({ screen, params, href, action }: LinkProps<ParamList, RouteName>) {
+  ParamList extends {} = RootParamList,
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
+>({
+  screen,
+  params,
+  action,
+  ...rest
+}: LinkProps<NoInfer<ParamList>, RouteName>) {
   const root = React.use(NavigationContainerRefContext);
-  const navigation = React.use(NavigationHelpersContext);
-  const { options } = React.use(LinkingContext);
+  const navigation = React.use(NavigationHelpersContext) ?? root;
 
-  const onPress = (
-    e?: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
-  ) => {
-    let shouldHandle = false;
-
-    if (Platform.OS !== 'web' || !e) {
-      e?.preventDefault?.();
-      shouldHandle = true;
-    } else {
-      // ignore clicks with modifier keys
-      const hasModifierKey =
-        ('metaKey' in e && e.metaKey) ||
-        ('altKey' in e && e.altKey) ||
-        ('ctrlKey' in e && e.ctrlKey) ||
-        ('shiftKey' in e && e.shiftKey);
-
-      // only handle left clicks
-      const isLeftClick =
-        'button' in e ? e.button == null || e.button === 0 : true;
-
-      // let browser handle "target=_blank" etc.
-      const isSelfTarget =
-        e.currentTarget && 'target' in e.currentTarget
-          ? [undefined, null, '', '_self'].includes(e.currentTarget.target)
-          : true;
-
-      if (!hasModifierKey && isLeftClick && isSelfTarget) {
-        e.preventDefault?.();
-        shouldHandle = true;
-      }
-    }
-
-    if (shouldHandle) {
-      const cloned = clone(
-        action ??
-          // @ts-expect-error This is already type-checked by the prop types
-          CommonActions.navigate(screen, params)
-      );
-
-      if (navigation) {
-        navigation.dispatch(cloned);
-      } else if (root) {
-        root.dispatch(cloned);
-      } else {
-        throw new Error(
-          "Couldn't find a navigation object. Is your component inside NavigationContainer?"
-        );
-      }
-    }
-  };
-
-  const getPathFromStateHelper = options?.getPathFromState ?? getPathFromState;
-
-  if (Platform.OS === 'web') {
-    if (screen == null && action != null && options?.config != null) {
-      switch (action.type) {
-        case 'NAVIGATE':
-        case 'PUSH':
-        case 'REPLACE':
-        case 'POP_TO':
-        case 'JUMP_TO': {
-          if (
-            action.payload != null &&
-            'name' in action.payload &&
-            typeof action.payload.name === 'string' &&
-            action.payload.name in options.config.screens
-          ) {
-            screen = action.payload.name;
-
-            if (
-              'params' in action.payload &&
-              typeof action.payload.params === 'object' &&
-              action.payload.params != null
-            ) {
-              // @ts-expect-error this is fine 🔥
-              params = action.payload.params;
-            }
-          }
-        }
-      }
-    }
+  if (navigation == null) {
+    throw new Error(
+      "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+    );
   }
 
-  return {
-    href:
-      href ??
-      (Platform.OS === 'web' && typeof screen === 'string'
-        ? getPathFromStateHelper(
-            {
-              routes: [
-                {
-                  name: screen,
-                  params:
-                    typeof params === 'object' && params != null
-                      ? params
-                      : undefined,
-                },
-              ],
-            },
-            options?.config
+  const { options } = React.use(LinkingContext);
+
+  const onPress = useLatestCallback(
+    (
+      e?:
+        | React.MouseEvent<HTMLAnchorElement, MouseEvent>
+        | GestureResponderEvent
+    ) => {
+      if (Platform.OS === 'web' && e) {
+        // ignore clicks with modifier keys
+        const hasModifierKey =
+          ('metaKey' in e && e.metaKey) ||
+          ('altKey' in e && e.altKey) ||
+          ('ctrlKey' in e && e.ctrlKey) ||
+          ('shiftKey' in e && e.shiftKey);
+
+        // only handle left clicks
+        const isLeftClick =
+          'button' in e ? e.button == null || e.button === 0 : true;
+
+        // let browser handle "target=_blank" etc.
+        const isSelfTarget =
+          e.currentTarget && 'target' in e.currentTarget
+            ? [undefined, null, '', '_self'].includes(e.currentTarget.target)
+            : true;
+
+        // let the browser handle the interaction
+        if (hasModifierKey || !isLeftClick || !isSelfTarget) {
+          return;
+        }
+      }
+
+      e?.preventDefault();
+
+      let cloned: NavigationAction;
+
+      if (action != null) {
+        cloned = clone(action);
+      } else {
+        if (screen == null) {
+          throw new Error(
+            "Couldn't find a screen to navigate to. Make sure to provide a screen name."
+          );
+        }
+
+        cloned = clone(
+          CommonActions.navigate(
+            screen,
+            // @ts-expect-error This is already type-checked by the prop types
+            params
           )
-        : undefined),
+        );
+      }
+
+      navigation.dispatch(cloned);
+    }
+  );
+
+  const target = useDeepStableValue(
+    Platform.OS === 'web'
+      ? typeof screen === 'string'
+        ? {
+            screen,
+            params:
+              typeof params === 'object' && params != null ? params : undefined,
+          }
+        : getTargetFromAction(action, options?.config?.screens)
+      : undefined
+  );
+
+  const href = React.useMemo(() => {
+    if (Platform.OS !== 'web' || rest.href != null || target == null) {
+      return rest.href;
+    }
+
+    const getPath = options?.getPathFromState ?? getPathFromState;
+
+    return getPath(
+      {
+        routes: [
+          {
+            name: target.screen,
+            params: target.params,
+          },
+        ],
+      },
+      options?.config
+    );
+  }, [rest.href, target, options?.getPathFromState, options?.config]);
+
+  return {
+    href,
     role: 'link' as const,
     onPress,
   };
