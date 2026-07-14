@@ -1553,7 +1553,58 @@ createBottomTabNavigator({
     User: NavigatorScreenParams<OneIncludedUndefinedStackParamList>;
   }>();
 
+  const OptionalInitialStack = createStackNavigator({
+    initialRouteName: 'Home',
+    screens: {
+      Home: () => null,
+      Profile: (_: StaticScreenProps<{ userId: string }>) => null,
+    },
+  });
+
+  type OptionalInitialStackParamList = StaticParamList<
+    typeof OptionalInitialStack
+  >;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const OptionalInitialTabs = createBottomTabNavigator({
+    screens: {
+      User: OptionalInitialStack,
+    },
+  });
+
+  expectTypeOf<StaticParamList<typeof OptionalInitialTabs>>().toEqualTypeOf<{
+    User: NavigatorScreenParams<OptionalInitialStackParamList> | undefined;
+  }>();
+
+  const GroupedInitialStack = createStackNavigator({
+    initialRouteName: 'Home',
+    groups: {
+      Main: {
+        screens: {
+          Home: () => null,
+          Profile: (_: StaticScreenProps<{ userId: string }>) => null,
+        },
+      },
+    },
+  });
+
+  type GroupedInitialStackParamList = StaticParamList<
+    typeof GroupedInitialStack
+  >;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const GroupedInitialTabs = createBottomTabNavigator({
+    screens: {
+      User: GroupedInitialStack,
+    },
+  });
+
+  expectTypeOf<StaticParamList<typeof GroupedInitialTabs>>().toEqualTypeOf<{
+    User: NavigatorScreenParams<GroupedInitialStackParamList> | undefined;
+  }>();
+
   const NoUndefinedStack = createStackNavigator({
+    initialRouteName: 'Home',
     screens: {
       Home: (_: StaticScreenProps<{ homeId: string }>) => null,
       Profile: (_: StaticScreenProps<{ userId: string }>) => null,

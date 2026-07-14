@@ -53,19 +53,23 @@ type ParamsForScreenComponent<T> = [T] extends [(...args: any[]) => any]
     : undefined
   : ScreenComponentParams<T>;
 
-// If every nested route's params include `undefined`, the nested navigator
-// itself can be omitted. Otherwise, require `NavigatorScreenParams`.
+// If the initial route's params include `undefined`, the nested navigator itself can be optional.
+// If no initial route is specified, check if every nested route's params include `undefined`.
+// Otherwise the nested navigator needs to be required.
 type ParamsForNestedNavigator<
   T extends { config: any },
   ParamList extends {} = StaticParamList<T>,
   Params = NavigatorScreenParams<ParamList>,
+  RouteNames extends keyof ParamList = T['config'] extends {
+    initialRouteName: infer RouteName extends keyof ParamList;
+  }
+    ? RouteName
+    : keyof ParamList,
 > = {
-  // Map each route to `never` when params are optional, or name when params are required
-  // If every route has optional params, the resulting union is `never`
-  [RouteName in keyof ParamList]-?: undefined extends ParamList[RouteName]
+  [RouteName in RouteNames]-?: undefined extends ParamList[RouteName]
     ? never
     : RouteName;
-}[keyof ParamList] extends never
+}[RouteNames] extends never
   ? Params | undefined
   : Params;
 
