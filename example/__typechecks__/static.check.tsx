@@ -30,6 +30,7 @@ import {
 import {
   createNativeStackNavigator,
   createNativeStackScreen,
+  type NativeStackNavigationOptions,
 } from '@react-navigation/native-stack';
 import {
   createStackNavigator,
@@ -60,6 +61,19 @@ const NativeStack = createNativeStackNavigator({
     },
   },
 });
+
+const nativeStackOptions = {
+  unstable_headerRightItems: () => [
+    {
+      type: 'button',
+      label: 'Archive',
+      icon: { type: 'xcasset', name: 'archive' },
+      onPress: () => {},
+    },
+  ],
+} satisfies NativeStackNavigationOptions;
+
+expectTypeOf(nativeStackOptions).toExtend<NativeStackNavigationOptions>();
 
 createStaticNavigation(NativeStack);
 
