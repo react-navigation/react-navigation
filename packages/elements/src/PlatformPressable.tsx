@@ -75,7 +75,7 @@ function PlatformPressableInternal(
   const handlePress = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => {
-    if (Platform.OS === 'web' && rest.href !== null) {
+    if (Platform.OS === 'web' && rest.href != null) {
       // ignore clicks with modifier keys
       const hasModifierKey =
         ('metaKey' in e && e.metaKey) ||
@@ -114,9 +114,56 @@ function PlatformPressableInternal(
     onPressOut?.(e);
   };
 
+  const elementRef = React.useRef<HTMLElement | null>(null);
+
+  const handleRef = React.useCallback(
+    (node: React.ComponentRef<typeof AnimatedPressable> | null) => {
+      elementRef.current =
+        Platform.OS === 'web' &&
+        typeof HTMLElement !== 'undefined' &&
+        node instanceof HTMLElement
+          ? node
+          : null;
+
+      if (typeof ref === 'function') {
+        return ref(node);
+      } else if (ref != null) {
+        ref.current = node;
+      }
+    },
+    [ref]
+  );
+
+  // React Native Web doesn't correctly handle ref cleanup functions
+  // So we use a `useEffect` for the listeners instead of the ref callback
+  React.useEffect(() => {
+    const element = elementRef.current;
+
+    if (rest.href == null || element == null || !disabled) {
+      return;
+    }
+
+    // On web, a disabled button prevents our onPress from being called
+    // But the link is still clickable, and will perform a full page navigation
+    // So we manually prevent the default behavior of the link when disabled
+    // The `href` is still set so regular link semantics are preserved
+    const preventNavigation = (event: Event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
+
+    element.addEventListener('click', preventNavigation, true);
+    element.addEventListener('auxclick', preventNavigation, true);
+
+    return () => {
+      element.removeEventListener('click', preventNavigation, true);
+      element.removeEventListener('auxclick', preventNavigation, true);
+    };
+  }, [disabled, rest.href]);
+
   return (
     <AnimatedPressable
-      ref={ref}
+      ref={handleRef}
       accessible
       role={Platform.OS === 'web' && rest.href != null ? 'link' : 'button'}
       onPress={disabled ? undefined : handlePress}
