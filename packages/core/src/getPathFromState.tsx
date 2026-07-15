@@ -1,11 +1,8 @@
-import type {
-  NavigationState,
-  PartialState,
-  Route,
-} from '@react-navigation/routers';
+import type { NavigationState, PartialState } from '@react-navigation/routers';
 import * as queryString from 'query-string';
 
 import { getPatternParts, type PatternPart } from './getPatternParts';
+import { getStateFromRouteParams } from './getStateFromRouteParams';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
@@ -35,14 +32,24 @@ const serializeParamValue = (value: unknown): SerializedParamValue =>
       ? value.map(String)
       : String(value);
 
-const getActiveRoute = (state: State): { name: string; params?: object } => {
+const getActiveRoute = (
+  state: State,
+  configs: Record<string, ConfigItem> | undefined,
+  getRouteState: (
+    route: State['routes'][number],
+    config: ConfigItem | undefined
+  ) => State | undefined
+): { name: string; params?: object } => {
   const route =
     typeof state.index === 'number'
       ? state.routes[state.index]
       : state.routes[state.routes.length - 1];
 
-  if (route.state) {
-    return getActiveRoute(route.state);
+  const config = configs?.[route.name];
+  const routeState = getRouteState(route, config);
+
+  if (routeState) {
+    return getActiveRoute(routeState, config?.screens, getRouteState);
   }
 
   return route;
@@ -111,15 +118,48 @@ export function getPathFromState<ParamList extends {}>(
   }
 
   const configs = getNormalizedConfigs(options);
+  const cachedRouteStates = new Map<object, State | undefined>();
+
+  const getRouteState = (
+    route: State['routes'][number],
+    config: ConfigItem | undefined
+  ) => {
+    if (route.state) {
+      return route.state;
+    }
+
+    const hasScreenParams =
+      route.params &&
+      'screen' in route.params &&
+      typeof route.params.screen === 'string' &&
+      config?.screens?.[route.params.screen];
+
+    const hasStateParams =
+      route.params && 'state' in route.params && config?.screens;
+
+    if (
+      !route.params ||
+      !config?.screens ||
+      (!hasScreenParams && !hasStateParams)
+    ) {
+      return undefined;
+    }
+
+    if (!cachedRouteStates.has(route)) {
+      cachedRouteStates.set(route, getStateFromRouteParams(route.params));
+    }
+
+    return cachedRouteStates.get(route);
+  };
+
+  const focusedRoute = getActiveRoute(state, configs, getRouteState);
 
   let path = '/';
   let current: State | undefined = state;
 
   while (current) {
     let index = typeof current.index === 'number' ? current.index : 0;
-    let route = current.routes[index] as Route<string> & {
-      state?: State;
-    };
+    let route = current.routes[index];
 
     let parts: PatternPart[] | undefined;
 
@@ -127,8 +167,6 @@ export function getPathFromState<ParamList extends {}>(
 
     let focusedParams: Record<string, SerializedParamValue> | undefined;
     let currentOptions = configs;
-
-    const focusedRoute = getActiveRoute(state);
 
     // Keep all the route names that appeared during going deeper in config in case the pattern is resolved to undefined
     const nestedRouteNames = [];
@@ -210,21 +248,23 @@ export function getPathFromState<ParamList extends {}>(
         }
       }
 
+      const routeState = getRouteState(route, config);
+
       // If there is no `screens` property or no nested state, we return pattern
-      if (!currentOptions[route.name].screens || route.state === undefined) {
+      if (!config.screens || routeState === undefined) {
         hasNext = false;
       } else {
         index =
-          typeof route.state.index === 'number'
-            ? route.state.index
-            : route.state.routes.length - 1;
+          typeof routeState.index === 'number'
+            ? routeState.index
+            : routeState.routes.length - 1;
 
-        const nextRoute = route.state.routes[index];
-        const nestedConfig = currentOptions[route.name].screens;
+        const nextRoute = routeState.routes[index];
+        const nestedConfig = config.screens;
 
         // if there is config for next route name, we go deeper
         if (nestedConfig && nextRoute.name in nestedConfig) {
-          route = nextRoute as Route<string> & { state?: State };
+          route = nextRoute;
           currentOptions = nestedConfig;
         } else {
           // If not, there is no sense in going deeper in config
@@ -232,6 +272,8 @@ export function getPathFromState<ParamList extends {}>(
         }
       }
     }
+
+    const routeState = getRouteState(route, currentOptions[route.name]);
 
     if (currentOptions[route.name] !== undefined) {
       path += parts
@@ -280,7 +322,7 @@ export function getPathFromState<ParamList extends {}>(
       );
     }
 
-    if (route.state) {
+    if (routeState) {
       path += '/';
     } else if (focusedParams) {
       for (const param in focusedParams) {
@@ -297,7 +339,7 @@ export function getPathFromState<ParamList extends {}>(
       }
     }
 
-    current = route.state;
+    current = routeState;
   }
 
   // Include the root path if specified
