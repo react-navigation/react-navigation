@@ -27,6 +27,25 @@ export type NoExcessObject<Provided, Allowed> = Record<
 >;
 
 /**
+ * Check an object captured as a generic type against an allowed type,
+ * e.g. an object returned from a callback isn't checked for excess properties.
+ */
+export type NoExcessCallbackReturn<
+  Provided extends {},
+  Allowed extends {},
+> = Allowed & Provided & NoExcessObject<Provided, Allowed>;
+
+/**
+ * Apply excess property checking to a value,
+ * or to the return value if the value is a function.
+ */
+export type NoExcessValue<Provided, Allowed extends {}> = Provided extends (
+  ...args: never[]
+) => infer Return
+  ? (...args: never[]) => Allowed & NoExcessObject<Return, Allowed>
+  : NoExcessObject<Provided, Allowed>;
+
+/**
  * We get a union type when using keyof, but we want an intersection instead.
  * https://stackoverflow.com/a/50375286/1665026
  */

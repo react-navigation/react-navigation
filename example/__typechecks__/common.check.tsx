@@ -36,6 +36,7 @@ import {
   type RouteProp,
   type StackActionHelpers,
   type StackNavigationState,
+  type StaticScreenProps,
   type Theme,
   useLinkProps,
   useNavigation,
@@ -1180,6 +1181,75 @@ useLinkProps<LinkRootParamList>({ in: 'ArticleList' });
 </Button>;
 // @ts-expect-error
 <Button<LinkRootParamList> in="ArticleList">Article</Button>;
+
+/* Nested targets in a static navigator */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const LinkStaticStack = createStackNavigator({
+  screens: {
+    StaticHome: () => null,
+    StaticDetails: (_: StaticScreenProps<{ id: number }>) => null,
+  },
+});
+
+type LinkStaticHostParamList = {
+  Dashboard: undefined;
+  Nested: NavigatorScreenParams<typeof LinkStaticStack>;
+};
+
+useLinkProps<LinkStaticHostParamList>({
+  in: 'Dashboard',
+  screen: 'Nested',
+  params: { screen: 'StaticHome' },
+});
+useLinkProps<LinkStaticHostParamList>({
+  in: 'StaticHome',
+  screen: 'StaticHome',
+});
+useLinkProps<LinkStaticHostParamList>({
+  in: 'StaticHome',
+  screen: 'StaticDetails',
+  params: { id: 1 },
+});
+
+// @ts-expect-error Keys of the navigator object are not screen names.
+useLinkProps<LinkStaticHostParamList>({ in: 'config', screen: 'StaticHome' });
+// @ts-expect-error
+useLinkProps<LinkStaticHostParamList>({ in: 'StaticHome', screen: 'Missing' });
+// @ts-expect-error
+useLinkProps<LinkStaticHostParamList>({
+  in: 'StaticHome',
+  screen: 'StaticDetails',
+});
+useLinkProps<LinkStaticHostParamList>({
+  in: 'StaticHome',
+  screen: 'StaticDetails',
+  // @ts-expect-error
+  params: { id: '1' },
+});
+
+<Link<LinkStaticHostParamList>
+  in="StaticHome"
+  screen="StaticDetails"
+  params={{ id: 1 }}
+>
+  Details
+</Link>;
+// @ts-expect-error
+<Link<LinkStaticHostParamList> in="config" screen="StaticHome">
+  Home
+</Link>;
+
+<Button<LinkStaticHostParamList>
+  in="StaticHome"
+  screen="StaticDetails"
+  params={{ id: 1 }}
+>
+  Details
+</Button>;
+// @ts-expect-error
+<Button<LinkStaticHostParamList> in="config" screen="StaticHome">
+  Home
+</Button>;
 
 /* Generic param lists and route names */
 useLinkProps<ParamListBase>({ in: 'Parent', screen: 'Target' });
