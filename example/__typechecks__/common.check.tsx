@@ -893,6 +893,199 @@ useLinkProps({
   Home
 </Button>;
 
+declare const action: NavigationAction;
+
+/* Union, optional, and empty params */
+type LinkUnionParamsParamList = {
+  Search: { query: string } | { tag: string };
+  Filters: { sort?: 'asc' | 'desc' };
+  Empty: {};
+};
+
+useLinkProps<LinkUnionParamsParamList>({
+  screen: 'Search',
+  params: { query: '42' },
+});
+useLinkProps<LinkUnionParamsParamList>({
+  screen: 'Search',
+  params: { tag: '42' },
+});
+// @ts-expect-error
+useLinkProps<LinkUnionParamsParamList>({ screen: 'Search' });
+useLinkProps<LinkUnionParamsParamList>({
+  screen: 'Filters',
+  params: { sort: 'asc' },
+});
+// @ts-expect-error
+useLinkProps<LinkUnionParamsParamList>({ screen: 'Filters' });
+// @ts-expect-error
+useLinkProps<LinkUnionParamsParamList>({ screen: 'Empty' });
+useLinkProps<LinkUnionParamsParamList>({ screen: 'Empty', params: {} });
+
+<Link<LinkUnionParamsParamList> screen="Search" params={{ query: '42' }}>
+  Search
+</Link>;
+<Link<LinkUnionParamsParamList> screen="Search" params={{ tag: '42' }}>
+  Search
+</Link>;
+// @ts-expect-error
+<Link<LinkUnionParamsParamList> screen="Search">Search</Link>;
+<Link<LinkUnionParamsParamList> screen="Filters" params={{ sort: 'asc' }}>
+  Filters
+</Link>;
+// @ts-expect-error
+<Link<LinkUnionParamsParamList> screen="Filters">Filters</Link>;
+// @ts-expect-error
+<Link<LinkUnionParamsParamList> screen="Empty">Empty</Link>;
+<Link<LinkUnionParamsParamList> screen="Empty" params={{}}>
+  Empty
+</Link>;
+
+<Button<LinkUnionParamsParamList> screen="Search" params={{ query: '42' }}>
+  Search
+</Button>;
+<Button<LinkUnionParamsParamList> screen="Search" params={{ tag: '42' }}>
+  Search
+</Button>;
+// @ts-expect-error
+<Button<LinkUnionParamsParamList> screen="Search">Search</Button>;
+<Button<LinkUnionParamsParamList> screen="Filters" params={{ sort: 'asc' }}>
+  Filters
+</Button>;
+// @ts-expect-error
+<Button<LinkUnionParamsParamList> screen="Filters">Filters</Button>;
+// @ts-expect-error
+<Button<LinkUnionParamsParamList> screen="Empty">Empty</Button>;
+<Button<LinkUnionParamsParamList> screen="Empty" params={{}}>
+  Empty
+</Button>;
+
+/* Actions */
+useLinkProps<LinkUnionParamsParamList>({ action: action });
+useLinkProps<LinkUnionParamsParamList>({ action: action, href: '/search' });
+useLinkProps<LinkUnionParamsParamList>({
+  screen: 'Search',
+  params: { query: '42' },
+  action: action,
+  href: '/search',
+});
+// @ts-expect-error
+useLinkProps<LinkUnionParamsParamList>({
+  screen: 'Search',
+  action: action,
+});
+// @ts-expect-error
+useLinkProps<LinkUnionParamsParamList>({ href: '/search' });
+// @ts-expect-error
+useLinkProps<LinkUnionParamsParamList>({
+  action: action,
+  params: { query: '42' },
+});
+
+<Link<LinkUnionParamsParamList> action={action}>Search</Link>;
+<Link<LinkUnionParamsParamList> action={action} href="/search">
+  Search
+</Link>;
+<Link<LinkUnionParamsParamList>
+  screen="Search"
+  params={{ query: '42' }}
+  action={action}
+  href="/search"
+>
+  Search
+</Link>;
+// @ts-expect-error
+<Link<LinkUnionParamsParamList> screen="Search" action={action}>
+  Search
+</Link>;
+// @ts-expect-error
+<Link<LinkUnionParamsParamList> href="/search">Search</Link>;
+// @ts-expect-error
+<Link<LinkUnionParamsParamList> action={action} params={{ query: '42' }}>
+  Search
+</Link>;
+
+<Button<LinkUnionParamsParamList> action={action}>Search</Button>;
+<Button<LinkUnionParamsParamList> action={action} href="/search">
+  Search
+</Button>;
+<Button<LinkUnionParamsParamList>
+  screen="Search"
+  params={{ query: '42' }}
+  action={action}
+  href="/search"
+>
+  Search
+</Button>;
+// @ts-expect-error
+<Button<LinkUnionParamsParamList> screen="Search" action={action}>
+  Search
+</Button>;
+<Button href="/search">Search</Button>;
+// @ts-expect-error
+<Button<LinkUnionParamsParamList> action={action} params={{ query: '42' }}>
+  Search
+</Button>;
+
+/* Generic param lists and route names */
+type LinkMixedKeyParamList = {
+  Screen: undefined;
+  0: undefined;
+};
+
+useLinkProps<LinkMixedKeyParamList>({ screen: 'Screen' });
+// @ts-expect-error
+useLinkProps<LinkMixedKeyParamList>({ screen: 0 });
+
+<Link<LinkMixedKeyParamList> screen="Screen">Screen</Link>;
+// @ts-expect-error
+<Link<LinkMixedKeyParamList> screen={0}>Screen</Link>;
+
+<Button<LinkMixedKeyParamList> screen="Screen">Screen</Button>;
+// @ts-expect-error
+<Button<LinkMixedKeyParamList> screen={0}>Screen</Button>;
+
+useLinkProps<LinkUnionParamsParamList, 'Search'>({
+  screen: 'Search',
+  params: { query: '42' },
+});
+useLinkProps<LinkUnionParamsParamList, 'Search'>({
+  // @ts-expect-error RouteName is restricted to Search.
+  screen: 'Filters',
+  // @ts-expect-error Params must match Search.
+  params: { sort: 'asc' },
+});
+
+<Link<LinkUnionParamsParamList, 'Search'>
+  screen="Search"
+  params={{ query: '42' }}
+>
+  Search
+</Link>;
+<Link<LinkUnionParamsParamList, 'Search'>
+  // @ts-expect-error RouteName is restricted to Search.
+  screen="Filters"
+  // @ts-expect-error Params must match Search.
+  params={{ sort: 'asc' }}
+>
+  Filters
+</Link>;
+
+<Button<LinkUnionParamsParamList, 'Search'>
+  screen="Search"
+  params={{ query: '42' }}
+>
+  Search
+</Button>;
+<Button<LinkUnionParamsParamList, 'Search'>
+  // @ts-expect-error RouteName is restricted to Search.
+  screen="Filters"
+  // @ts-expect-error Params must match Search.
+  params={{ sort: 'asc' }}
+>
+  Filters
+</Button>;
+
 /**
  * Check for ParamsForRoute
  */

@@ -9,110 +9,58 @@ import {
   TabRouter,
   useNavigationBuilder,
 } from '@react-navigation/core';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { render, screen, userEvent } from '@testing-library/react-native';
 import { Fragment, useMemo } from 'react';
 import { Platform, Text } from 'react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { Link } from '../Link';
 import { NavigationContainer } from '../NavigationContainer';
-import { useLinkBuilder } from '../useLinkBuilder';
 
 type RootParamList = { Foo: undefined; Bar: { id: string } };
 
-jest.replaceProperty(Platform, 'OS', 'web');
+const OS = jest.replaceProperty(Platform, 'OS', 'web');
 
-test('renders link with href on web', async () => {
-  const config = {
-    config: {
-      screens: {
-        Foo: 'foo',
-        Bar: 'bar/:id',
-      },
-    },
-    getInitialURL() {
-      return null;
-    },
-  };
+test('navigates on native', async () => {
+  OS.replaceValue('android');
 
-  const Stack = createStackNavigator<RootParamList>();
+  try {
+    const user = userEvent.setup();
 
-  const FooScreen = () => {
-    return (
-      <Link<any> screen="Bar" params={{ id: '42' }}>
+    const Stack = createStackNavigator<RootParamList>();
+
+    const FooScreen = () => (
+      <Link<RootParamList> screen="Bar" params={{ id: '42' }}>
         Go to Bar
       </Link>
     );
-  };
 
-  const BarScreen = () => {
-    return <Link<any> screen="Foo">Go to Foo</Link>;
-  };
+    await render(
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Foo" component={FooScreen} />
+          <Stack.Screen name="Bar">
+            {() => <Text>Bar Screen</Text>}
+          </Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
 
-  const { toJSON } = await render(
-    <NavigationContainer linking={config}>
-      <Stack.Navigator>
-        <Stack.Screen name="Foo" component={FooScreen} />
-        <Stack.Screen name="Bar" component={BarScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+    const link = screen.getByRole('link', { name: 'Go to Bar' });
 
-  expect(toJSON()).toMatchInlineSnapshot(`
-<Text
-  href="/bar/42"
-  onPress={[Function]}
-  role="link"
-  style={
-    [
-      {
-        "color": "rgb(0, 122, 255)",
-      },
-      {
-        "fontFamily": "System",
-        "fontWeight": "400",
-      },
-      undefined,
-    ]
+    expect(link).not.toHaveProp('href');
+
+    await user.press(link);
+
+    expect(await screen.findByText('Bar Screen')).toBeOnTheScreen();
+  } finally {
+    OS.replaceValue('web');
   }
->
-  Go to Bar
-</Text>
-`);
-
-  const event = {
-    defaultPrevented: false,
-    preventDefault(this: { defaultPrevented: boolean }) {
-      this.defaultPrevented = true;
-    },
-  };
-
-  await fireEvent.press(screen.getByText('Go to Bar'), event);
-
-  expect(toJSON()).toMatchInlineSnapshot(`
-<Text
-  href="/foo"
-  onPress={[Function]}
-  role="link"
-  style={
-    [
-      {
-        "color": "rgb(0, 122, 255)",
-      },
-      {
-        "fontFamily": "System",
-        "fontWeight": "400",
-      },
-      undefined,
-    ]
-  }
->
-  Go to Foo
-</Text>
-`);
 });
 
-test("doesn't navigate if default was prevented", async () => {
+test('renders link with href on web', async () => {
+  const user = userEvent.setup();
+
   const config = {
     config: {
       screens: {
@@ -129,21 +77,17 @@ test("doesn't navigate if default was prevented", async () => {
 
   const FooScreen = () => {
     return (
-      <Link<any>
-        screen="Bar"
-        params={{ id: '42' }}
-        onPress={(e) => e.preventDefault()}
-      >
+      <Link<RootParamList> screen="Bar" params={{ id: '42' }}>
         Go to Bar
       </Link>
     );
   };
 
   const BarScreen = () => {
-    return <Link<any> screen="Foo">Go to Foo</Link>;
+    return <Link<RootParamList> screen="Foo">Go to Foo</Link>;
   };
 
-  const { toJSON } = await render(
+  await render(
     <NavigationContainer linking={config}>
       <Stack.Navigator>
         <Stack.Screen name="Foo" component={FooScreen} />
@@ -152,58 +96,131 @@ test("doesn't navigate if default was prevented", async () => {
     </NavigationContainer>
   );
 
-  expect(toJSON()).toMatchInlineSnapshot(`
-<Text
-  href="/bar/42"
-  onPress={[Function]}
-  role="link"
-  style={
-    [
-      {
-        "color": "rgb(0, 122, 255)",
-      },
-      {
-        "fontFamily": "System",
-        "fontWeight": "400",
-      },
-      undefined,
-    ]
-  }
->
-  Go to Bar
-</Text>
-`);
+  const link = screen.getByRole('link', { name: 'Go to Bar' });
 
-  const event = {
-    defaultPrevented: false,
-    preventDefault(this: { defaultPrevented: boolean }) {
-      this.defaultPrevented = true;
-    },
-  };
+  expect(link).toHaveProp('href', '/bar/42');
 
-  await fireEvent.press(screen.getByText('Go to Bar'), event);
+  await user.press(link);
 
-  expect(toJSON()).toMatchInlineSnapshot(`
-<Text
-  href="/bar/42"
-  onPress={[Function]}
-  role="link"
-  style={
-    [
-      {
-        "color": "rgb(0, 122, 255)",
-      },
-      {
-        "fontFamily": "System",
-        "fontWeight": "400",
-      },
-      undefined,
-    ]
-  }
->
-  Go to Bar
-</Text>
-`);
+  expect(screen.getByRole('link', { name: 'Go to Foo' })).toHaveProp(
+    'href',
+    '/foo'
+  );
+});
+
+test('uses an explicit href and still navigates to the screen', async () => {
+  const user = userEvent.setup();
+
+  const Stack = createStackNavigator<RootParamList>();
+
+  const FooScreen = () => (
+    <Link<RootParamList> href="/custom-bar" screen="Bar" params={{ id: '42' }}>
+      Go to Bar
+    </Link>
+  );
+
+  await render(
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Foo" component={FooScreen} />
+        <Stack.Screen name="Bar">{() => <Text>Bar Screen</Text>}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  const link = screen.getByRole('link', { name: 'Go to Bar' });
+
+  expect(link).toHaveProp('href', '/custom-bar');
+
+  await user.press(link);
+
+  expect(await screen.findByText('Bar Screen')).toBeOnTheScreen();
+});
+
+test('uses the configured getPathFromState', async () => {
+  const Stack = createStackNavigator<RootParamList>();
+
+  const FooScreen = () => (
+    <Link<RootParamList> screen="Bar" params={{ id: '42' }}>
+      Go to Bar
+    </Link>
+  );
+
+  await render(
+    <NavigationContainer
+      linking={{
+        config: {
+          screens: {
+            Foo: 'foo',
+            Bar: 'bar/:id',
+          },
+        },
+        getPathFromState: () => '/custom-path',
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Foo" component={FooScreen} />
+        <Stack.Screen name="Bar">{() => null}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(screen.getByRole('link', { name: 'Go to Bar' })).toHaveProp(
+    'href',
+    '/custom-path'
+  );
+});
+
+test('handles custom onPress and disabled links', async () => {
+  const user = userEvent.setup();
+
+  const Stack = createStackNavigator<RootParamList>();
+
+  const onPressDisabled = jest.fn();
+  const onPressEnabled = jest.fn();
+
+  const FooScreen = () => (
+    <>
+      <Link<RootParamList>
+        disabled
+        screen="Bar"
+        params={{ id: 'disabled' }}
+        onPress={onPressDisabled}
+      >
+        Disabled Bar
+      </Link>
+      <Link<RootParamList>
+        screen="Bar"
+        params={{ id: '42' }}
+        onPress={onPressEnabled}
+      >
+        Enabled Bar
+      </Link>
+    </>
+  );
+
+  await render(
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Foo" component={FooScreen} />
+        <Stack.Screen name="Bar">{() => <Text>Bar Screen</Text>}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  const disabledLink = screen.getByRole('link', { name: 'Disabled Bar' });
+
+  expect(disabledLink).toBeDisabled();
+
+  await user.press(disabledLink);
+
+  expect(onPressDisabled).not.toHaveBeenCalled();
+  expect(screen.queryByText('Bar Screen')).not.toBeOnTheScreen();
+
+  await user.press(screen.getByRole('link', { name: 'Enabled Bar' }));
+
+  expect(onPressEnabled).toHaveBeenCalled();
+  expect(await screen.findByText('Bar Screen')).toBeOnTheScreen();
 });
 
 test.each([
@@ -231,15 +248,17 @@ test.each([
 
     const FooScreen = () => {
       return (
-        <Link<any> action={actionCreator('Bar', { id: '42' })}>Go to Bar</Link>
+        <Link<RootParamList> action={actionCreator('Bar', { id: '42' })}>
+          Go to Bar
+        </Link>
       );
     };
 
     const BarScreen = () => {
-      return <Link<any> screen="Foo">Go to Foo</Link>;
+      return <Link<RootParamList> screen="Foo">Go to Foo</Link>;
     };
 
-    const { toJSON } = await render(
+    await render(
       <NavigationContainer linking={config}>
         <Stack.Navigator>
           <Stack.Screen name="Foo" component={FooScreen} />
@@ -248,46 +267,80 @@ test.each([
       </NavigationContainer>
     );
 
-    expect(toJSON()).toMatchInlineSnapshot(`
-<Text
-  href="/bar/42"
-  onPress={[Function]}
-  role="link"
-  style={
-    [
-      {
-        "color": "rgb(0, 122, 255)",
-      },
-      {
-        "fontFamily": "System",
-        "fontWeight": "400",
-      },
-      undefined,
-    ]
-  }
->
-  Go to Bar
-</Text>
-`);
+    expect(screen.getByRole('link', { name: 'Go to Bar' })).toHaveProp(
+      'href',
+      '/bar/42'
+    );
   }
 );
+
+test('uses screen for href and action for navigation', async () => {
+  const user = userEvent.setup();
+
+  type ParamList = {
+    Foo: undefined;
+    Bar: { id: string };
+    Baz: undefined;
+  };
+
+  const Stack = createStackNavigator<ParamList>();
+
+  const FooScreen = () => (
+    <Link<ParamList>
+      screen="Bar"
+      params={{ id: '42' }}
+      action={StackActions.replace('Baz')}
+    >
+      Go to Bar
+    </Link>
+  );
+
+  await render(
+    <NavigationContainer
+      linking={{
+        config: {
+          screens: {
+            Foo: 'foo',
+            Bar: 'bar/:id',
+            Baz: 'baz',
+          },
+        },
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Foo" component={FooScreen} />
+        <Stack.Screen name="Bar">{() => <Text>Bar Screen</Text>}</Stack.Screen>
+        <Stack.Screen name="Baz">{() => <Text>Baz Screen</Text>}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  const link = screen.getByRole('link', { name: 'Go to Bar' });
+
+  expect(link).toHaveProp('href', '/bar/42');
+
+  await user.press(link);
+
+  expect(await screen.findByText('Baz Screen')).toBeOnTheScreen();
+  expect(screen.queryByText('Bar Screen')).not.toBeOnTheScreen();
+});
 
 test('does not render link with href from action when no linking config is present', async () => {
   const Stack = createStackNavigator<RootParamList>();
 
   const FooScreen = () => {
     return (
-      <Link<any> action={CommonActions.navigate('Bar', { id: '42' })}>
+      <Link<RootParamList> action={CommonActions.navigate('Bar', { id: '42' })}>
         Go to Bar
       </Link>
     );
   };
 
   const BarScreen = () => {
-    return <Link<any> screen="Foo">Go to Foo</Link>;
+    return <Link<RootParamList> screen="Foo">Go to Foo</Link>;
   };
 
-  const { toJSON } = await render(
+  await render(
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Foo" component={FooScreen} />
@@ -296,26 +349,9 @@ test('does not render link with href from action when no linking config is prese
     </NavigationContainer>
   );
 
-  expect(toJSON()).toMatchInlineSnapshot(`
-<Text
-  onPress={[Function]}
-  role="link"
-  style={
-    [
-      {
-        "color": "rgb(0, 122, 255)",
-      },
-      {
-        "fontFamily": "System",
-        "fontWeight": "400",
-      },
-      undefined,
-    ]
-  }
->
-  Go to Bar
-</Text>
-`);
+  expect(screen.getByRole('link', { name: 'Go to Bar' })).not.toHaveProp(
+    'href'
+  );
 });
 
 test('does not render link with href from action when screen is not in linking config', async () => {
@@ -334,17 +370,17 @@ test('does not render link with href from action when screen is not in linking c
 
   const FooScreen = () => {
     return (
-      <Link<any> action={CommonActions.navigate('Bar', { id: '42' })}>
+      <Link<RootParamList> action={CommonActions.navigate('Bar', { id: '42' })}>
         Go to Bar
       </Link>
     );
   };
 
   const BarScreen = () => {
-    return <Link<any> screen="Foo">Go to Foo</Link>;
+    return <Link<RootParamList> screen="Foo">Go to Foo</Link>;
   };
 
-  const { toJSON } = await render(
+  await render(
     <NavigationContainer linking={config}>
       <Stack.Navigator>
         <Stack.Screen name="Foo" component={FooScreen} />
@@ -353,29 +389,48 @@ test('does not render link with href from action when screen is not in linking c
     </NavigationContainer>
   );
 
-  expect(toJSON()).toMatchInlineSnapshot(`
-<Text
-  onPress={[Function]}
-  role="link"
-  style={
-    [
-      {
-        "color": "rgb(0, 122, 255)",
-      },
-      {
-        "fontFamily": "System",
-        "fontWeight": "400",
-      },
-      undefined,
-    ]
-  }
->
-  Go to Bar
-</Text>
-`);
+  expect(screen.getByRole('link', { name: 'Go to Bar' })).not.toHaveProp(
+    'href'
+  );
+});
+
+test('does not infer href from an unsupported custom action', async () => {
+  const Stack = createStackNavigator<RootParamList>();
+
+  const action = {
+    type: 'CUSTOM_ACTION',
+    payload: { name: 'Bar', params: { id: '42' } },
+  };
+
+  const FooScreen = () => (
+    <Link<RootParamList> action={action}>Custom action</Link>
+  );
+
+  await render(
+    <NavigationContainer
+      linking={{
+        config: {
+          screens: {
+            Foo: 'foo',
+            Bar: 'bar/:id',
+          },
+        },
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Foo" component={FooScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(screen.getByRole('link', { name: 'Custom action' })).not.toHaveProp(
+    'href'
+  );
 });
 
 test('navigates to a nested screen again with the same params object', async () => {
+  const user = userEvent.setup();
+
   type TabParamList = {
     First: undefined;
     Second: { id: string };
@@ -427,7 +482,10 @@ test('navigates to a nested screen again with the same params object', async () 
               </Tab.Screen>
               <Tab.Screen name="Second">
                 {({ navigation }) => (
-                  <Text onPress={() => navigation.navigate('First')}>
+                  <Text
+                    role="button"
+                    onPress={() => navigation.navigate('First')}
+                  >
                     Go to First
                   </Text>
                 )}
@@ -439,20 +497,22 @@ test('navigates to a nested screen again with the same params object', async () 
     </NavigationContainer>
   );
 
-  await fireEvent.press(screen.getByText('Go to Second'));
+  await user.press(screen.getByRole('link', { name: 'Go to Second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('Second');
 
-  await fireEvent.press(screen.getByText('Go to First'));
+  await user.press(screen.getByRole('button', { name: 'Go to First' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('First');
 
-  await fireEvent.press(screen.getByText('Go to Second'));
+  await user.press(screen.getByRole('link', { name: 'Go to Second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('Second');
 });
 
 test('navigates to nested state again with the same params object', async () => {
+  const user = userEvent.setup();
+
   type TabParamList = {
     First: undefined;
     Second: { id: string };
@@ -505,7 +565,10 @@ test('navigates to nested state again with the same params object', async () => 
               </Tab.Screen>
               <Tab.Screen name="Second">
                 {({ navigation }) => (
-                  <Text onPress={() => navigation.navigate('First')}>
+                  <Text
+                    role="button"
+                    onPress={() => navigation.navigate('First')}
+                  >
                     Go to First
                   </Text>
                 )}
@@ -517,20 +580,22 @@ test('navigates to nested state again with the same params object', async () => 
     </NavigationContainer>
   );
 
-  await fireEvent.press(screen.getByText('Go to Second'));
+  await user.press(screen.getByRole('link', { name: 'Go to Second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('Second');
 
-  await fireEvent.press(screen.getByText('Go to First'));
+  await user.press(screen.getByRole('button', { name: 'Go to First' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('First');
 
-  await fireEvent.press(screen.getByText('Go to Second'));
+  await user.press(screen.getByRole('link', { name: 'Go to Second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('Second');
 });
 
-test('navigates again with a memoized action built from an href', async () => {
+test('navigates again with a memoized action', async () => {
+  const user = userEvent.setup();
+
   type TabParamList = {
     First: undefined;
     Second: { id: string };
@@ -563,12 +628,18 @@ test('navigates again with a memoized action built from an href', async () => {
   const Tab = createTabNavigator<TabParamList>();
 
   const FirstScreen = () => {
-    const { buildAction } = useLinkBuilder();
-    const action = useMemo(() => buildAction('/second/42'), [buildAction]);
+    const action = useMemo(
+      () =>
+        CommonActions.navigate('Nested', {
+          screen: 'Second',
+          params: { id: '42' },
+        }),
+      []
+    );
 
     return (
       <Link action={action} href="/second/42">
-        Go to Second from href
+        Go to Second
       </Link>
     );
   };
@@ -597,7 +668,10 @@ test('navigates again with a memoized action built from an href', async () => {
               <Tab.Screen name="First" component={FirstScreen} />
               <Tab.Screen name="Second">
                 {({ navigation }) => (
-                  <Text onPress={() => navigation.navigate('First')}>
+                  <Text
+                    role="button"
+                    onPress={() => navigation.navigate('First')}
+                  >
                     Go to First
                   </Text>
                 )}
@@ -609,20 +683,22 @@ test('navigates again with a memoized action built from an href', async () => {
     </NavigationContainer>
   );
 
-  await fireEvent.press(screen.getByText('Go to Second from href'));
+  await user.press(screen.getByRole('link', { name: 'Go to Second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('Second');
 
-  await fireEvent.press(screen.getByText('Go to First'));
+  await user.press(screen.getByRole('button', { name: 'Go to First' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('First');
 
-  await fireEvent.press(screen.getByText('Go to Second from href'));
+  await user.press(screen.getByRole('link', { name: 'Go to Second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('Second');
 });
 
 test('navigates through multiple nested screens again with the same params objects', async () => {
+  const user = userEvent.setup();
+
   type LeafParamList = {
     LeafFirst: undefined;
     LeafSecond: { id: string };
@@ -689,7 +765,10 @@ test('navigates through multiple nested screens again with the same params objec
                     <Leaf.Screen name="LeafFirst">{() => null}</Leaf.Screen>
                     <Leaf.Screen name="LeafSecond">
                       {({ navigation }) => (
-                        <Text onPress={() => navigation.navigate('LeafFirst')}>
+                        <Text
+                          role="button"
+                          onPress={() => navigation.navigate('LeafFirst')}
+                        >
                           Go to leaf first
                         </Text>
                       )}
@@ -704,15 +783,104 @@ test('navigates through multiple nested screens again with the same params objec
     </NavigationContainer>
   );
 
-  await fireEvent.press(screen.getByText('Go to deep second'));
+  await user.press(screen.getByRole('link', { name: 'Go to deep second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('LeafSecond');
 
-  await fireEvent.press(screen.getByText('Go to leaf first'));
+  await user.press(screen.getByRole('button', { name: 'Go to leaf first' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('LeafFirst');
 
-  await fireEvent.press(screen.getByText('Go to deep second'));
+  await user.press(screen.getByRole('link', { name: 'Go to deep second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('LeafSecond');
+});
+
+test('uses the container ref when rendered outside a navigator', async () => {
+  const user = userEvent.setup();
+
+  const Stack = createStackNavigator<RootParamList>();
+
+  await render(
+    <NavigationContainer>
+      <>
+        <Link<RootParamList> screen="Bar" params={{ id: '42' }}>
+          Go to Bar
+        </Link>
+        <Stack.Navigator>
+          <Stack.Screen name="Foo">
+            {() => <Text>Foo Screen</Text>}
+          </Stack.Screen>
+          <Stack.Screen name="Bar">
+            {() => <Text>Bar Screen</Text>}
+          </Stack.Screen>
+        </Stack.Navigator>
+      </>
+    </NavigationContainer>
+  );
+
+  await user.press(screen.getByRole('link', { name: 'Go to Bar' }));
+
+  expect(await screen.findByText('Bar Screen')).toBeOnTheScreen();
+});
+
+test('dispatches custom actions on the nearest navigator from outside screens', async () => {
+  const user = userEvent.setup();
+
+  type ArticleStackParamList = {
+    Article: undefined;
+    Settings: undefined;
+  };
+
+  type RootStackParamList = {
+    Articles: NavigatorScreenParams<ArticleStackParamList>;
+    Settings: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootStackParamList>();
+  const ArticleStack = createStackNavigator<ArticleStackParamList>();
+
+  const ArticlesScreen = () => {
+    return (
+      <ArticleStack.Navigator
+        layout={({ children }) => (
+          <>
+            <Link<RootStackParamList> action={StackActions.replace('Settings')}>
+              Settings
+            </Link>
+            {children}
+          </>
+        )}
+      >
+        <ArticleStack.Screen name="Article">{() => null}</ArticleStack.Screen>
+        <ArticleStack.Screen name="Settings">
+          {() => <Text>Nested Settings Screen</Text>}
+        </ArticleStack.Screen>
+      </ArticleStack.Navigator>
+    );
+  };
+
+  await render(
+    <NavigationContainer>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Articles" component={ArticlesScreen} />
+        <RootStack.Screen name="Settings">
+          {() => <Text>Root Settings Screen</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  await user.press(screen.getByRole('link', { name: 'Settings' }));
+
+  expect(await screen.findByText('Nested Settings Screen')).toBeOnTheScreen();
+  expect(screen.queryByText('Root Settings Screen')).not.toBeOnTheScreen();
+});
+
+test('throws while rendering outside a navigation container', async () => {
+  await expect(
+    render(<Link<RootParamList> screen="Foo">Foo</Link>)
+  ).rejects.toThrow(
+    "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+  );
 });

@@ -1,5 +1,6 @@
 import {
   type LinkProps,
+  type ParamListBase,
   type RootParamList,
   useLinkProps,
   useTheme,
@@ -64,43 +65,56 @@ type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
 
 type ButtonLinkProps<
   ParamList extends {} = RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList,
-> = LinkProps<ParamList, RouteName> & ButtonBaseProps;
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
+> = LinkProps<NoInfer<ParamList>, RouteName> & ButtonBaseProps;
 
 const BUTTON_RADIUS = 40;
 const ICON_SIZE = 14;
 
+/**
+ * Component to render a button that navigates to a screen using a path.
+ * Uses an anchor tag on the web.
+ *
+ * @param props.screen Name of the screen to navigate to (e.g. `'Feeds'`).
+ * @param props.params Params to pass to the screen to navigate to (e.g. `{ sort: 'hot' }`).
+ * @param props.href Optional absolute path to use for the href (e.g. `/feeds/hot`).
+ * @param props.action Optional action to override the in-page navigation. The `href` is still derived from `screen`, so this can be used to render a link while dispatching a different action (e.g. a `replace`).
+ */
 export function Button<
   ParamList extends {} = RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList,
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
 >(props: ButtonLinkProps<ParamList, RouteName>): React.JSX.Element;
 
+/**
+ * Component to render a button.
+ */
 export function Button(props: ButtonBaseProps): React.JSX.Element;
 
-export function Button<
-  ParamList extends {} = RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList,
->(props: ButtonBaseProps | ButtonLinkProps<ParamList, RouteName>) {
+export function Button(
+  props: ButtonBaseProps | ButtonLinkProps<ParamListBase>
+) {
   if ('screen' in props || 'action' in props) {
-    // @ts-expect-error: This is already type-checked by the prop types
     return <ButtonLink {...props} />;
   } else {
     return <ButtonBase {...props} />;
   }
 }
 
-function ButtonLink<
-  const ParamList extends {} = RootParamList,
-  const RouteName extends keyof ParamList = keyof ParamList,
->({
+function ButtonLink({
   screen,
   params,
   action,
   href,
   onPress,
   ...rest
-}: ButtonLinkProps<ParamList, RouteName>) {
-  // @ts-expect-error: This is already type-checked by the prop types
+}: ButtonLinkProps<ParamListBase>) {
+  // @ts-expect-error: destructuring loses the relationship between target props
   const props = useLinkProps({ screen, params, action, href });
 
   const [isPending, startTransition] = React.useTransition();
@@ -121,7 +135,7 @@ function ButtonLink<
         onPress?.(e);
 
         startTransition(() => {
-          props.onPress?.(e);
+          props.onPress(e);
         });
       }}
     />
