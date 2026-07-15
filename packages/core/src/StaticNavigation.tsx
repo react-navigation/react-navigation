@@ -32,7 +32,9 @@ import type {
   HasArguments,
   InferParamsFromLinking,
   KeysOf,
+  NoExcessCallbackReturn,
   NoExcessObject,
+  NoExcessValue,
   NotUndefinedObject,
   StandardSchemaV1,
   UnionToIntersection,
@@ -136,6 +138,8 @@ type ParamListForScreens<Screens> = {
     any,
     any,
     any,
+    any,
+    any,
     any
   >
     ? ParamsForConfig<Linking, Screen>
@@ -150,22 +154,22 @@ type ParamListForGroups<Groups> = Groups extends {
   ? ParamListForScreens<UnionToIntersection<Screens>>
   : {};
 
-type StaticRoute<Params, P = AnyToUnknown<Params>> = Readonly<
-  Omit<Route<string>, 'params'> &
-    (undefined extends Params
-      ? {
-          /**
-           * Params for this route
-           */
-          params?: P extends object ? Readonly<P> : P;
-        }
-      : {
-          /**
-           * Params for this route
-           */
-          params: Readonly<P>;
-        })
->;
+type StaticRouteBase = Readonly<Omit<Route<string>, 'params'>>;
+
+type StaticRoute<Params, P = AnyToUnknown<Params>> = StaticRouteBase &
+  (undefined extends Params
+    ? {
+        /**
+         * Params for this route
+         */
+        readonly params?: P extends object ? Readonly<P> : P;
+      }
+    : {
+        /**
+         * Params for this route
+         */
+        readonly params: Readonly<P>;
+      });
 
 type StaticScreenConfigLinkingAlias = {
   /**
@@ -250,15 +254,17 @@ export type StaticScreenConfigScreen =
   | React.ComponentType<any>
   | StaticNavigation<any>;
 
-export type StaticScreenConfig<
-  Linking extends StaticScreenConfigLinking,
-  Screen,
-  State extends NavigationState,
-  ScreenOptions extends {},
-  EventMap extends EventMapBase,
-  Navigation,
-  Params = ParamsForConfig<Linking, Screen>,
-> = {
+export interface StaticScreenConfig<
+  out Linking extends StaticScreenConfigLinking,
+  out Screen,
+  in out State extends NavigationState,
+  in out ScreenOptions extends {},
+  in out EventMap extends EventMapBase,
+  in out Navigation,
+  in out Params = ParamsForConfig<Linking, Screen>,
+  in out ProvidedOptions extends {} = {},
+  in out ProvidedListeners extends {} = {},
+> {
   /**
    * Static navigation config or Component to render for the screen.
    */
@@ -295,7 +301,7 @@ export type StaticScreenConfig<
         route: StaticRoute<Params>;
         navigation: Navigation;
         theme: Theme;
-      }) => ScreenOptions);
+      }) => NoExcessCallbackReturn<ProvidedOptions, ScreenOptions>);
 
   /**
    * Event listeners for this screen.
@@ -314,7 +320,10 @@ export type StaticScreenConfig<
     | ((props: {
         route: StaticRoute<Params>;
         navigation: Navigation;
-      }) => ScreenListeners<State, EventMap>);
+      }) => NoExcessCallbackReturn<
+        ProvidedListeners,
+        ScreenListeners<State, EventMap>
+      >);
 
   /**
    * Layout for this screen.
@@ -396,14 +405,13 @@ export type StaticScreenConfig<
     name: string;
     params: AnyToUnknown<Params>;
   }) => Promise<void>;
-};
+}
 
 export type StaticScreenFactory<in out Bag extends NavigatorTypeBagBase> = <
   const Linking extends StaticScreenConfigLinking,
   const Screen extends StaticScreenConfigScreen,
-  const ProvidedOptions extends
-    | Bag['ScreenOptions']
-    | ((...args: never[]) => unknown) = Bag['ScreenOptions'],
+  ProvidedOptions extends {} = {},
+  ProvidedListeners extends {} = {},
 >(
   config: StaticScreenConfig<
     Linking,
@@ -411,11 +419,11 @@ export type StaticScreenFactory<in out Bag extends NavigatorTypeBagBase> = <
     Bag['State'],
     Bag['ScreenOptions'],
     Bag['EventMap'],
-    Bag['NavigationList'][keyof Bag['ParamList']]
-  > & {
-    options?: ProvidedOptions &
-      NoExcessOptions<ProvidedOptions, Bag['ScreenOptions']>;
-  }
+    Bag['NavigationList'][keyof Bag['ParamList']],
+    ParamsForConfig<Linking, Screen>,
+    ProvidedOptions,
+    ProvidedListeners
+  >
 ) => StaticScreenConfig<
   Linking,
   Screen,
@@ -450,7 +458,9 @@ type StaticConfigScreens<
         ScreenOptions,
         EventMap,
         NavigationList[RouteName],
-        any
+        any,
+        {},
+        {}
       >;
 };
 
@@ -533,23 +543,26 @@ export type StaticConfig<
       }
   );
 
-type NoExcessOptions<Provided, Allowed extends {}> = Provided extends (
-  ...args: never[]
-) => infer Return
-  ? (...args: never[]) => Allowed & NoExcessObject<Return, Allowed>
-  : NoExcessObject<Provided, Allowed>;
+type NoExcessScreen<
+  Screen,
+  ScreenOptions extends {},
+  Listeners extends {},
+> = (Screen extends { screen: unknown; options: unknown }
+  ? { options: NoExcessValue<Screen['options'], ScreenOptions> }
+  : unknown) &
+  (Screen extends { screen: unknown; listeners: unknown }
+    ? { listeners: NoExcessValue<Screen['listeners'], Listeners> }
+    : unknown);
 
-type NoExcessScreen<Screen, ScreenOptions extends {}> = Screen extends {
-  screen: unknown;
-  options: unknown;
-}
-  ? { options: NoExcessOptions<Screen['options'], ScreenOptions> }
-  : unknown;
-
-type NoExcessScreens<Screens, ScreenOptions extends {}> = {
+type NoExcessScreens<
+  Screens,
+  ScreenOptions extends {},
+  Listeners extends {},
+> = {
   [RouteName in keyof Screens]: NoExcessScreen<
     Screens[RouteName],
-    ScreenOptions
+    ScreenOptions,
+    Listeners
   >;
 };
 
@@ -557,6 +570,7 @@ type NoExcessGroups<
   Groups,
   Bag extends NavigatorTypeBagBase,
   ScreenOptions extends {},
+  Listeners extends {},
 > = {
   [GroupName in keyof Groups]: NoExcessObject<
     Groups[GroupName],
@@ -568,7 +582,7 @@ type NoExcessGroups<
       NavigationListBase<ParamListBase>
     >
   > &
-    NoExcessStaticConfig<Groups[GroupName], Bag, ScreenOptions>;
+    NoExcessStaticConfig<Groups[GroupName], Bag, ScreenOptions, Listeners>;
 };
 
 // Each property is probed with `Config extends { key: infer X }` and the results are intersected.
@@ -578,19 +592,25 @@ export type NoExcessStaticConfig<
   Config,
   Bag extends NavigatorTypeBagBase,
   ScreenOptions extends {} = Bag['ScreenOptions'],
+  Listeners extends {} = ScreenListeners<Bag['State'], Bag['EventMap']>,
 > = (Config extends { screenOptions: infer ProvidedOptions }
   ? {
-      screenOptions: NoExcessOptions<ProvidedOptions, ScreenOptions>;
+      screenOptions: NoExcessValue<ProvidedOptions, ScreenOptions>;
     }
   : unknown) &
+  (Config extends { screenListeners: infer ProvidedListeners }
+    ? {
+        screenListeners: NoExcessValue<ProvidedListeners, Listeners>;
+      }
+    : unknown) &
   (Config extends { screens: infer Screens }
     ? {
-        screens: NoExcessScreens<Screens, ScreenOptions>;
+        screens: NoExcessScreens<Screens, ScreenOptions, Listeners>;
       }
     : unknown) &
   (Config extends { groups: infer Groups }
     ? {
-        groups: NoExcessGroups<Groups, Bag, ScreenOptions>;
+        groups: NoExcessGroups<Groups, Bag, ScreenOptions, Listeners>;
       }
     : unknown);
 

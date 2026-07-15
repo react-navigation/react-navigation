@@ -1006,6 +1006,73 @@ createBottomTabNavigator({
   },
 });
 
+// Unknown event in `listeners` passed via the screen factory
+createBottomTabNavigator({
+  screens: {
+    Test: createBottomTabScreen({
+      screen: () => null,
+      listeners: {
+        focus: () => {},
+        // @ts-expect-error
+        focusTypo: () => {},
+      },
+    }),
+  },
+});
+
+// Unknown event in the object returned from `listeners` passed via the screen factory
+createBottomTabNavigator({
+  screens: {
+    Test: createBottomTabScreen({
+      screen: () => null,
+      // @ts-expect-error
+      listeners: () => ({ focus: () => {}, focusTypo: () => {} }),
+    }),
+  },
+});
+
+// Unknown event in `listeners` in the object form
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      screen: () => null,
+      listeners: {
+        focus: () => {},
+        // @ts-expect-error
+        focusTypo: () => {},
+      },
+    },
+  },
+});
+
+// Unknown event in the object returned from `listeners` in the function form
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      screen: () => null,
+      // @ts-expect-error
+      listeners: () => ({ focus: () => {}, focusTypo: () => {} }),
+    },
+  },
+});
+
+// Unknown event in `screenListeners` on the navigator
+createBottomTabNavigator({
+  screenListeners: {
+    focus: () => {},
+    // @ts-expect-error
+    focusTypo: () => {},
+  },
+  screens: {},
+});
+
+// Unknown event in the object returned from the `screenListeners` function form
+createBottomTabNavigator({
+  // @ts-expect-error
+  screenListeners: () => ({ focus: () => {}, focusTypo: () => {} }),
+  screens: {},
+});
+
 // Only unknown property, without any known property
 createBottomTabNavigator({
   screenOptions: {
