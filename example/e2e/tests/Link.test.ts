@@ -27,6 +27,7 @@ test('goes to the album screen and goes back', async ({ page }) => {
 
   const link = page.getByRole('link', {
     name: 'Go to albums',
+    exact: true,
   });
 
   await expect(link).toHaveAttribute('href', '/link-component/albums');
@@ -52,6 +53,98 @@ test('goes to the album screen and goes back', async ({ page }) => {
   await expect(
     page.getByRole('heading', { name: 'Article by Gandalf' })
   ).toBeVisible();
+});
+
+test('does not navigate when a link is disabled', async ({ page }) => {
+  await page.waitForURL('**/link-component/article/gandalf');
+
+  const link = page.getByRole('link', { name: 'Go to albums (Disabled)' });
+
+  await expect(link).toHaveAttribute('href', '/link-component/albums');
+  await expect(link).toHaveAttribute('aria-disabled', 'true');
+
+  await page.evaluate(() => {
+    document.body.dataset.disabledLinkClicks = '0';
+    document.addEventListener(
+      'click',
+      () => {
+        document.body.dataset.disabledLinkClicks = '1';
+      },
+      { once: true }
+    );
+  });
+
+  await link.click({ force: true });
+
+  await expect(page.locator('body')).toHaveAttribute(
+    'data-disabled-link-clicks',
+    '0'
+  );
+  await expect(page).toHaveURL('/link-component/article/gandalf');
+});
+
+for (const modifier of ['Alt', 'Control', 'Meta', 'Shift'] as const) {
+  test(`lets the browser handle clicks with the ${modifier} key`, async ({
+    page,
+  }) => {
+    await page.waitForURL('**/link-component/article/gandalf');
+
+    const link = page.getByRole('link', {
+      name: 'Go to albums',
+      exact: true,
+    });
+
+    await page.evaluate(() => {
+      document.addEventListener('click', (event) => event.preventDefault(), {
+        once: true,
+      });
+    });
+
+    await link.click({ modifiers: [modifier] });
+
+    await expect(page).toHaveURL('/link-component/article/gandalf');
+  });
+}
+
+for (const modifier of ['Alt', 'Control', 'Meta', 'Shift'] as const) {
+  test(`does not open a disabled link with the ${modifier} key`, async ({
+    page,
+  }) => {
+    await page.waitForURL('**/link-component/article/gandalf');
+
+    await page
+      .getByRole('link', { name: 'Go to albums (Disabled)' })
+      .click({ force: true, modifiers: [modifier] });
+
+    expect(page.context().pages()).toHaveLength(1);
+    await expect(page).toHaveURL('/link-component/article/gandalf');
+  });
+}
+
+test('does not open a disabled link with a middle click', async ({ page }) => {
+  await page.waitForURL('**/link-component/article/gandalf');
+
+  await page.evaluate(() => {
+    document.body.dataset.disabledLinkClicks = '0';
+    document.addEventListener(
+      'auxclick',
+      () => {
+        document.body.dataset.disabledLinkClicks = '1';
+      },
+      { once: true }
+    );
+  });
+
+  await page
+    .getByRole('link', { name: 'Go to albums (Disabled)' })
+    .click({ button: 'middle', force: true });
+
+  await expect(page.locator('body')).toHaveAttribute(
+    'data-disabled-link-clicks',
+    '0'
+  );
+  expect(page.context().pages()).toHaveLength(1);
+  await expect(page).toHaveURL('/link-component/article/gandalf');
 });
 
 test('navigates in the current page with target=_self', async ({ page }) => {
