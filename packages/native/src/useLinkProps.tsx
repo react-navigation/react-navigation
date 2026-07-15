@@ -1,9 +1,18 @@
 import {
   CommonActions,
+  type FocusedRouteState,
   getPathFromState,
   type NavigationAction,
+  type NavigationContainerRef,
   NavigationContainerRefContext,
+  NavigationContext,
+  NavigationFocusedRouteStateContext,
+  type NavigationHelpers,
   NavigationHelpersContext,
+  type NavigationProp,
+  type NavigatorScreenParams,
+  type ParamListBase,
+  type ParamListForNavigator,
   type RootParamList,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -19,14 +28,65 @@ type LinkScreenTargetProps<
     keyof ParamList,
     string
   >,
-> = {
-  href?: string | undefined;
-  action?: NavigationAction | undefined;
-} & (RouteName extends unknown
+> = RouteName extends unknown
   ? undefined extends ParamList[RouteName]
-    ? { screen: RouteName; params?: ParamList[RouteName] | undefined }
-    : { screen: RouteName; params: ParamList[RouteName] }
-  : never);
+    ? {
+        href?: string | undefined;
+        action?: NavigationAction | undefined;
+        in?: Extract<keyof ParamList, string> | undefined;
+        screen: RouteName;
+        params?: ParamList[RouteName] | undefined;
+      }
+    : {
+        href?: string | undefined;
+        action?: NavigationAction | undefined;
+        in?: Extract<keyof ParamList, string> | undefined;
+        screen: RouteName;
+        params: ParamList[RouteName];
+      }
+  : never;
+
+type LinkScreenTargetPropsWithIn<
+  ParamList extends {},
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
+> = RouteName extends unknown
+  ? undefined extends ParamList[RouteName]
+    ? {
+        href?: string | undefined;
+        action?: NavigationAction | undefined;
+        in: Extract<keyof ParamList, string>;
+        screen: RouteName;
+        params?: ParamList[RouteName] | undefined;
+      }
+    : {
+        href?: string | undefined;
+        action?: NavigationAction | undefined;
+        in: Extract<keyof ParamList, string>;
+        screen: RouteName;
+        params: ParamList[RouteName];
+      }
+  : never;
+
+type LinkPropsWithInForParams<Params> = [Params] extends [never]
+  ? never
+  : [Params] extends [NavigatorScreenParams<infer Navigator>]
+    ? ParamListForNavigator<Navigator> extends infer NestedParamList extends {}
+      ?
+          | LinkScreenTargetPropsWithIn<NestedParamList>
+          | LinkPropsWithIn<NestedParamList>
+      : never
+    : never;
+
+type LinkPropsWithIn<ParamList extends {}> = string extends keyof ParamList
+  ? never
+  : {
+      [RouteName in keyof ParamList]: LinkPropsWithInForParams<
+        Exclude<ParamList[RouteName], undefined>
+      >;
+    }[keyof ParamList];
 
 export type LinkProps<
   ParamList extends {} = RootParamList,
@@ -36,9 +96,11 @@ export type LinkProps<
   >,
 > =
   | LinkScreenTargetProps<ParamList, RouteName>
+  | LinkPropsWithIn<ParamList>
   | {
       href?: string | undefined;
       action: NavigationAction;
+      in?: undefined;
       screen?: undefined;
       params?: undefined;
     };
@@ -154,9 +216,45 @@ const getTargetFromAction = (
   };
 };
 
+const getStateForParent = (
+  parent: string | undefined,
+  targetState: FocusedRouteState,
+  focusedRouteState: FocusedRouteState | undefined
+): FocusedRouteState | undefined => {
+  if (parent === undefined) {
+    return targetState;
+  }
+
+  if (focusedRouteState === undefined) {
+    return undefined;
+  }
+
+  const route = focusedRouteState.routes[0];
+
+  const childState = getStateForParent(parent, targetState, route.state);
+
+  if (childState !== undefined) {
+    return {
+      routes: [
+        {
+          ...route,
+          state: childState,
+        },
+      ],
+    };
+  }
+
+  if (route.name === parent) {
+    return targetState;
+  }
+
+  return undefined;
+};
+
 /**
  * Hook to get props for an anchor tag so it can work with in page navigation.
  *
+ * @param props.in Name of the current or parent screen whose navigator contains the target screen.
  * @param props.screen Name of the screen to navigate to (e.g. `'Feeds'`).
  * @param props.params Params to pass to the screen to navigate to (e.g. `{ sort: 'hot' }`).
  * @param props.href Optional absolute path to use for the href (e.g. `/feeds/hot`).
@@ -169,15 +267,47 @@ export function useLinkProps<
     string
   >,
 >({
+  in: parent,
   screen,
   params,
   action,
   ...rest
 }: LinkProps<NoInfer<ParamList>, RouteName>) {
   const root = React.use(NavigationContainerRefContext);
-  const navigation = React.use(NavigationHelpersContext) ?? root;
+
+  let navigation:
+    | NavigationHelpers<ParamListBase>
+    | NavigationProp<ParamListBase>
+    | NavigationContainerRef<ParamListBase>
+    | undefined = React.use(NavigationContext);
+
+  if (parent != null) {
+    navigation = navigation?.getParent(parent);
+  } else if (action != null) {
+    const helpers = React.use(NavigationHelpersContext);
+
+    // Handle custom actions in the immediate parent
+    navigation = helpers ?? navigation ?? root;
+  } else {
+    // The ref dispatches in currently focused screen
+    // So prefer the top-most navigator if available
+    let parent = navigation?.getParent();
+
+    while (parent !== undefined) {
+      navigation = parent;
+      parent = navigation.getParent();
+    }
+
+    navigation = navigation ?? root;
+  }
 
   if (navigation == null) {
+    if (parent != null) {
+      throw new Error(
+        `Couldn't find a navigation object for '${parent}' in current or any parent screens. Is your component inside the correct screen?`
+      );
+    }
+
     throw new Error(
       "Couldn't find a navigation object. Is your component inside NavigationContainer?"
     );
@@ -235,6 +365,13 @@ export function useLinkProps<
             params
           )
         );
+
+        if (parent != null) {
+          cloned = {
+            ...cloned,
+            target: navigation.getState()?.key,
+          };
+        }
       }
 
       navigation.dispatch(cloned);
@@ -253,14 +390,18 @@ export function useLinkProps<
       : undefined
   );
 
+  const state =
+    Platform.OS === 'web' && rest.href == null && target != null
+      ? React.use(NavigationFocusedRouteStateContext)
+      : undefined;
+
   const href = React.useMemo(() => {
     if (Platform.OS !== 'web' || rest.href != null || target == null) {
       return rest.href;
     }
 
-    const getPath = options?.getPathFromState ?? getPathFromState;
-
-    return getPath(
+    const stateForParent = getStateForParent(
+      parent,
       {
         routes: [
           {
@@ -269,9 +410,24 @@ export function useLinkProps<
           },
         ],
       },
-      options?.config
+      state
     );
-  }, [rest.href, target, options?.getPathFromState, options?.config]);
+
+    if (stateForParent) {
+      const getPath = options?.getPathFromState ?? getPathFromState;
+
+      return getPath(stateForParent, options?.config);
+    }
+
+    return undefined;
+  }, [
+    rest.href,
+    target,
+    parent,
+    state,
+    options?.getPathFromState,
+    options?.config,
+  ]);
 
   return {
     href,

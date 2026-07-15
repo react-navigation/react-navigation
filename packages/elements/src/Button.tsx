@@ -78,6 +78,7 @@ const ICON_SIZE = 14;
  * Component to render a button that navigates to a screen using a path.
  * Uses an anchor tag on the web.
  *
+ * @param props.in Name of the current or parent screen whose navigator contains the target screen.
  * @param props.screen Name of the screen to navigate to (e.g. `'Feeds'`).
  * @param props.params Params to pass to the screen to navigate to (e.g. `{ sort: 'hot' }`).
  * @param props.href Optional absolute path to use for the href (e.g. `/feeds/hot`).
@@ -107,6 +108,7 @@ export function Button(
 }
 
 function ButtonLink({
+  in: parent,
   screen,
   params,
   action,
@@ -115,7 +117,7 @@ function ButtonLink({
   ...rest
 }: ButtonLinkProps<ParamListBase>) {
   // @ts-expect-error: destructuring loses the relationship between target props
-  const props = useLinkProps({ screen, params, action, href });
+  const props = useLinkProps({ in: parent, screen, params, action, href });
 
   const [isPending, startTransition] = React.useTransition();
 
