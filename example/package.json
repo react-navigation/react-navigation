@@ -9,7 +9,7 @@
     "ios": "expo run:ios",
     "web": "vite",
     "server": "babel-node -i '/node_modules[/\\\\](?react-native)/' -x '.web.tsx,.web.ts,.web.js,.tsx,.ts,.js' --config-file ./server/babel.config.js server",
-    "e2e:native": "node ../scripts/maestro.ts",
+    "e2e:native": "node ../scripts/agent-device.ts",
     "e2e:web": "pnpm exec playwright test --config=e2e/playwright.config.ts"
   },
   "dependencies": {

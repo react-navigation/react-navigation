@@ -47,6 +47,7 @@ jobs:
     needs: measure
     runs-on: ubuntu-latest
     permissions:
+      issues: write
       pull-requests: write
     steps:
       - name: Comment noticeable variations
@@ -70,39 +71,48 @@ jobs:
 
             core.info(body);
 
-            const { data: comments } = await github.rest.issues.listComments({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-            });
-
-            const existing = comments.find((c) => c.body?.startsWith(MARKER));
-
-            if (!noticeable) {
-              if (existing) {
-                await github.rest.issues.deleteComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  comment_id: existing.id,
-                });
-              }
-
-              core.info('No noticeable change - skipping PR comment.');
-              return;
-            }
-
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                comment_id: existing.id,
-                body,
-              });
-            } else {
-              await github.rest.issues.createComment({
+            try {
+              const { data: comments } = await github.rest.issues.listComments({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 issue_number: context.issue.number,
-                body,
               });
+
+              const existing = comments.find((c) => c.body?.startsWith(MARKER));
+
+              if (!noticeable) {
+                if (existing) {
+                  await github.rest.issues.deleteComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    comment_id: existing.id,
+                  });
+                }
+
+                core.info('No noticeable change - skipping PR comment.');
+                return;
+              }
+
+              if (existing) {
+                await github.rest.issues.updateComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: existing.id,
+                  body,
+                });
+              } else {
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: context.issue.number,
+                  body,
+                });
+              }
+            } catch (error) {
+              if (error.status === 403) {
+                core.warning(`Skipping TypeScript performance comment: ${error.message}`);
+                return;
+              }
+
+              throw error;
             }

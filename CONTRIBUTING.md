@@ -69,13 +69,12 @@ Then run the tests with the `CI` environment variable:
 CI=1 pnpm example e2e:web
 ```
 
-Before running Maestro tests:
+Before running native e2e tests:
 
-- Install it following the instructions [here](https://maestro.mobile.dev/getting-started/installing-maestro).
 - Start the Emulator or Simulator and install the Expo Go app.
 - Start the Metro server with `pnpm example start`.
 
-Then run the Maestro tests by:
+Then run the agent-device tests by:
 
 ```sh
 pnpm example e2e:native
@@ -89,7 +88,7 @@ We follow the [conventional commits specification](https://www.conventionalcommi
 - `feat`: new features, e.g. add new method to the module.
 - `refactor`: code refactor, e.g. migrate from class components to hooks.
 - `docs`: changes to documentation, e.g. add usage example for the module.
-- `test`: adding or updating tests, eg add e2e tests using maestro.
+- `test`: adding or updating tests, e.g. add e2e tests.
 - `chore`: tooling changes, e.g. change CI config.
 
 Our pre-commit hooks verify that your commit message matches this format when committing.
