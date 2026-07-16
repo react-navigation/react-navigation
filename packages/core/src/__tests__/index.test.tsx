@@ -1,4 +1,4 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   CommonActions,
   type NavigationAction,
@@ -21,6 +21,10 @@ import { MockRouter, MockRouterKey } from './__fixtures__/MockRouter';
 
 beforeEach(() => {
   MockRouterKey.current = 0;
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
 });
 
 test('initializes state for a navigator on navigation', () => {
@@ -3866,4 +3870,343 @@ test('handles nested screen navigation batched with a nested state update', () =
   });
 
   expect(navigation.getCurrentRoute()?.name).toBe('third');
+});
+
+test('discards state passed in params for a different type of navigator', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">
+          {() => (
+            <TestNavigator>
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="quux">{() => null}</Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  act(() =>
+    navigation.navigate('bar', {
+      state: {
+        type: 'tab',
+        index: 0,
+        routes: [{ name: 'qux' }, { name: 'quux' }],
+      },
+    })
+  );
+
+  expect(spy).toHaveBeenCalledTimes(1);
+  expect(spy).toHaveBeenCalledWith(
+    expect.stringContaining(
+      "The state passed in the params is for a navigator of type 'tab', but it was passed to a navigator of type 'test'."
+    )
+  );
+
+  expect(navigation.getRootState().routes[1]?.state).toEqual({
+    stale: false,
+    type: 'test',
+    key: '1',
+    index: 0,
+    routeNames: ['qux', 'quux'],
+    routes: [
+      { key: 'qux', name: 'qux' },
+      { key: 'quux', name: 'quux' },
+    ],
+  });
+});
+
+test('restores state passed in params when route names change later', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ condition }: { condition: boolean }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">
+          {() => (
+            <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+              {condition ? (
+                <>
+                  <Screen name="other">{() => null}</Screen>
+                  <Screen name="missing">{() => null}</Screen>
+                </>
+              ) : (
+                <Screen name="qux">{() => null}</Screen>
+              )}
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = render(<Test condition={false} />);
+
+  act(() =>
+    navigation.navigate('bar', {
+      state: {
+        index: 0,
+        routes: [{ name: 'missing' }],
+      },
+    })
+  );
+
+  root.rerender(<Test condition />);
+
+  expect(navigation.getRootState().routes[1]?.state).toEqual({
+    stale: false,
+    type: 'test',
+    key: '4',
+    index: 0,
+    routeNames: ['other', 'missing'],
+    routes: [{ key: 'missing-3', name: 'missing' }],
+  });
+});
+
+test("doesn't restore state passed in params for a different type of navigator", () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ condition }: { condition: boolean }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">
+          {() => (
+            <TestNavigator UNSTABLE_routeNamesChangeBehavior="lastUnhandled">
+              {condition ? (
+                <>
+                  <Screen name="other">{() => null}</Screen>
+                  <Screen name="missing">{() => null}</Screen>
+                </>
+              ) : (
+                <Screen name="qux">{() => null}</Screen>
+              )}
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = render(<Test condition={false} />);
+
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  act(() =>
+    navigation.navigate('bar', {
+      state: {
+        type: 'tab',
+        index: 0,
+        routes: [{ name: 'missing' }],
+      },
+    })
+  );
+
+  expect(spy).toHaveBeenCalledTimes(1);
+  expect(spy).toHaveBeenCalledWith(
+    expect.stringContaining(
+      "The state passed in the params is for a navigator of type 'tab', but it was passed to a navigator of type 'test'."
+    )
+  );
+
+  root.rerender(<Test condition />);
+
+  expect(navigation.getRootState().routes[1]?.state).toEqual({
+    stale: false,
+    type: 'test',
+    key: '1',
+    index: 0,
+    routeNames: ['other', 'missing'],
+    routes: [{ key: 'other-2', name: 'other' }],
+  });
+});
+
+test('warns when the state passed in params contains screens not in the navigator', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">
+          {() => (
+            <TestNavigator>
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="quux">{() => null}</Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  act(() => navigation.navigate('bar'));
+
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  act(() =>
+    navigation.navigate('bar', {
+      state: {
+        index: 0,
+        routes: [{ name: 'qux' }, { name: 'nonexistent' }],
+      },
+    })
+  );
+
+  expect(spy).toHaveBeenCalledTimes(1);
+  expect(spy).toHaveBeenCalledWith(
+    expect.stringContaining(
+      "The 'state' or 'screen' passed in the params couldn't be applied to the navigator with the screens: 'qux', 'quux'."
+    )
+  );
+
+  expect(navigation.getRootState().routes[1]?.state).toEqual({
+    stale: false,
+    type: 'test',
+    key: '1',
+    index: 0,
+    routeNames: ['qux', 'quux'],
+    routes: [
+      { key: 'qux', name: 'qux' },
+      { key: 'quux', name: 'quux' },
+    ],
+  });
+});
+
+test("warns when the screen passed in params doesn't exist in the navigator", () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">
+          {() => (
+            <TestNavigator>
+              <Screen name="qux">{() => null}</Screen>
+              <Screen name="quux">{() => null}</Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  act(() => navigation.navigate('bar'));
+
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  act(() => navigation.navigate('bar', { screen: 'nonexistent' }));
+
+  expect(spy).toHaveBeenCalledTimes(1);
+  expect(spy).toHaveBeenCalledWith(
+    expect.stringContaining(
+      "The 'state' or 'screen' passed in the params couldn't be applied to the navigator with the screens: 'qux', 'quux'."
+    )
+  );
+
+  expect(navigation.getRootState().routes[1]?.state).toEqual({
+    stale: false,
+    type: 'test',
+    key: '1',
+    index: 0,
+    routeNames: ['qux', 'quux'],
+    routes: [
+      { key: 'qux', name: 'qux' },
+      { key: 'quux', name: 'quux' },
+    ],
+  });
 });

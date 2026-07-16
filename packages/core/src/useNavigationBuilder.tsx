@@ -286,10 +286,23 @@ const getRouteConfigsFromChildren = <
   return configs;
 };
 
-const getStateFromParams = (params: NavigatorRoute['params']) => {
+const getStateFromParams = (
+  params: NavigatorRoute['params'],
+  type: string
+): NavigationState | PartialState<NavigationState> | undefined => {
   const state = params?.state;
 
   if (isNavigationState(state)) {
+    if (state.type != null && state.type !== type) {
+      if (process.env.NODE_ENV !== 'production') {
+        console.error(
+          `The state passed in the params is for a navigator of type '${state.type}', but it was passed to a navigator of type '${type}'. This can happen if the state was meant for a different navigator. The state will be discarded.`
+        );
+      }
+
+      return undefined;
+    }
+
     return state;
   } else if (typeof params?.screen === 'string' && params?.initial !== false) {
     return {
@@ -547,7 +560,7 @@ export function useNavigationBuilder<
     } else {
       const paramsForState = isNestedParamsConsumed ? undefined : route?.params;
       const stateFromParams = paramsForState
-        ? getStateFromParams(paramsForState)
+        ? getStateFromParams(paramsForState, router.type)
         : undefined;
 
       const stateBeforeInitialization = (stateFromParams ?? currentState) as
@@ -569,6 +582,7 @@ export function useNavigationBuilder<
 
       if (
         stateBeforeInitialization != null &&
+        isStateValid(stateBeforeInitialization) &&
         options.UNSTABLE_routeNamesChangeBehavior === 'lastUnhandled' &&
         doesStateHaveOnlyInvalidRoutes(stateBeforeInitialization)
       ) {
@@ -627,10 +641,14 @@ export function useNavigationBuilder<
   let nextState: State = state;
   let shouldClearUnhandledState = false;
 
-  // Previously unhandled state is now valid again
-  // And current state no longer has any valid routes
-  // We should reuse the unhandled state instead of re-calculating the state
-  if (
+  if (unhandledState != null && !isStateValid(unhandledState)) {
+    // The stored unhandled state is for a different type of navigator
+    // It can't be used with this navigator, so we discard it
+    setUnhandledState(undefined);
+  } else if (
+    // Previously unhandled state is now valid again
+    // And current state no longer has any valid routes
+    // We should reuse the unhandled state instead of re-calculating the state
     unhandledState?.routes.every((r) => routeNames.includes(r.name)) &&
     state?.routes.every((r) => !routeNames.includes(r.name))
   ) {
@@ -664,21 +682,24 @@ export function useNavigationBuilder<
 
   if (route?.params && !didConsumeNestedParams) {
     let action: CommonActions.Action | undefined;
-    const stateFromParams = route.params.state;
 
-    if (isNavigationState(stateFromParams) && !isNestedParamsConsumed) {
+    if (isNavigationState(route.params.state) && !isNestedParamsConsumed) {
       didConsumeNestedParams = true;
 
-      if (
-        options.UNSTABLE_routeNamesChangeBehavior === 'lastUnhandled' &&
-        doesStateHaveOnlyInvalidRoutes(stateFromParams)
-      ) {
-        if (stateFromParams !== unhandledState) {
-          setUnhandledState(stateFromParams);
+      const stateFromParams = getStateFromParams(route.params, router.type);
+
+      if (stateFromParams != null) {
+        if (
+          options.UNSTABLE_routeNamesChangeBehavior === 'lastUnhandled' &&
+          doesStateHaveOnlyInvalidRoutes(stateFromParams)
+        ) {
+          if (stateFromParams !== unhandledState) {
+            setUnhandledState(stateFromParams);
+          }
+        } else {
+          // If the route was updated with new state, we should reset to it
+          action = CommonActions.reset(stateFromParams);
         }
-      } else {
-        // If the route was updated with new state, we should reset to it
-        action = CommonActions.reset(stateFromParams);
       }
     } else if (
       typeof route.params.screen === 'string' &&
@@ -691,7 +712,7 @@ export function useNavigationBuilder<
         options.UNSTABLE_routeNamesChangeBehavior === 'lastUnhandled' &&
         !routeNames.includes(route.params.screen)
       ) {
-        const state = getStateFromParams(route.params);
+        const state = getStateFromParams(route.params, router.type);
 
         if (state != null && !deepEqual(state, unhandledState)) {
           setUnhandledState(state);
@@ -719,6 +740,18 @@ export function useNavigationBuilder<
           routeGetIdList,
         })
       : null;
+
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      action != null &&
+      updatedState === null
+    ) {
+      const names = routeNames.map((name) => `'${name}'`).join(', ');
+
+      console.error(
+        `The 'state' or 'screen' passed in the params couldn't be applied to the navigator with the screens: ${names}. This can happen if the params contain names of screens that don't exist in the navigator. The navigation specified in the params will be ignored.`
+      );
+    }
 
     nextState =
       updatedState !== null
