@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.40](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.39...@react-navigation/elements@3.0.0-alpha.40) (2026-07-16)
+
+### Bug Fixes
+
+* handle link actions, hrefs, and disabled state correctly ([#13152](https://github.com/react-navigation/react-navigation/issues/13152)) ([6623694](https://github.com/react-navigation/react-navigation/commit/66236944bca79b639d5524c145e9fec9c3e14f6d)) - by @satya164
+* prevent full-page navigation on link click for disabled pressables ([95e029e](https://github.com/react-navigation/react-navigation/commit/95e029e784c57e1557b1d152c1a1b809e501f3e3)) - by @satya164
+
+### Features
+
+* add in prop to useLinkProps, Link & Button ([#13182](https://github.com/react-navigation/react-navigation/issues/13182)) ([797c843](https://github.com/react-navigation/react-navigation/commit/797c8436b3a46c35537b54e81ef878bc3d8bbe8a)) - by @satya164
+* add loading indicator to Button ([0b29b74](https://github.com/react-navigation/react-navigation/commit/0b29b74488b5b9fa6ed44694164346041fd33097)) - by @satya164
+* show loading on Button for pending navigations ([#13179](https://github.com/react-navigation/react-navigation/issues/13179)) ([2c9ca41](https://github.com/react-navigation/react-navigation/commit/2c9ca41feea9bd0519e35f90f3edae57698eebc5)) - by @satya164
+
 # [3.0.0-alpha.39](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.38...@react-navigation/elements@3.0.0-alpha.39) (2026-07-08)
 
 **Note:** Version bump only for package @react-navigation/elements

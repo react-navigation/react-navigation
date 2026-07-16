@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.13...@react-navigation/routers@8.0.0-alpha.14) (2026-07-16)
+
+### Bug Fixes
+
+* add focused route to history when preload replaces it ([986473b](https://github.com/react-navigation/react-navigation/commit/986473b4cfc327fb69c28277c26bec595bea7a5d)) - by @satya164
+* don't handle reset for non-stale state with an invalid index ([d2705e4](https://github.com/react-navigation/react-navigation/commit/d2705e4984a6c08db540ebe254bbe2509c10e86f)) - by @satya164
+* don't pop routes above the source route for pop action ([ec7ab7f](https://github.com/react-navigation/react-navigation/commit/ec7ab7f6ed29daf593192f0c01ab56a49b9d2393)) - by @satya164
+* fix incorrect tab history after navigationKey changes ([859c9f3](https://github.com/react-navigation/react-navigation/commit/859c9f37d16c6adfe80bcc61b71c20cc4bc917d4)) - by @satya164
+* focus most recent route in history when focused route is removed ([3da90c5](https://github.com/react-navigation/react-navigation/commit/3da90c5c835e07ada8574971f91504f63f4f2a2d)) - by @satya164
+* keep initial route params when going back with fullHistory ([e5995c4](https://github.com/react-navigation/react-navigation/commit/e5995c4dc02407460dd40b7c403f20b32ff0d698)) - by @satya164
+* preserve drawer status in history when changing index ([7a36f07](https://github.com/react-navigation/react-navigation/commit/7a36f078d09042738a88daea572d4265558b28e0)) - by @satya164
+* remove stale history entries when getId changes the route key ([a450b4e](https://github.com/react-navigation/react-navigation/commit/a450b4ec6ff58b3f175daf5e8124db5330f5c411)) - by @satya164
+
 # [8.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.12...@react-navigation/routers@8.0.0-alpha.13) (2026-06-18)
 
 ### Features

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.12...react-native-tab-view@5.0.0-alpha.13) (2026-07-16)
+
+### Bug Fixes
+
+* handle link actions, hrefs, and disabled state correctly ([#13152](https://github.com/react-navigation/react-navigation/issues/13152)) ([6623694](https://github.com/react-navigation/react-navigation/commit/66236944bca79b639d5524c145e9fec9c3e14f6d)) - by @satya164
+
 # [5.0.0-alpha.12](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@5.0.0-alpha.11...react-native-tab-view@5.0.0-alpha.12) (2026-07-08)
 
 ### Features

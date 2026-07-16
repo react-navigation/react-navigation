@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.13...react-native-drawer-layout@5.0.0-alpha.14) (2026-07-16)
+
+### Bug Fixes
+
+* prevent drawer from getting stuck during navigation ([814bcc2](https://github.com/react-navigation/react-navigation/commit/814bcc2d4eab6e7d804689ee983cd34859893178)), closes [#13186](https://github.com/react-navigation/react-navigation/issues/13186) - by @satya164
+
 # [5.0.0-alpha.13](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.12...react-native-drawer-layout@5.0.0-alpha.13) (2026-07-08)
 
 ### Bug Fixes

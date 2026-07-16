@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.36](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.35...@react-navigation/native@8.0.0-alpha.36) (2026-07-16)
+
+### Bug Fixes
+
+* cleanup stale listener after failed browser navigation ([51c301c](https://github.com/react-navigation/react-navigation/commit/51c301ce9a1adecc7e0988735864f61deebc65aa)) - by @satya164
+* clone action for links to make subsequent navigation work ([e0c3b8a](https://github.com/react-navigation/react-navigation/commit/e0c3b8a0c19b481a69691fad507a9f94459af902)) - by @satya164
+* fix handling target _self, _blank etc. in link ([22f2657](https://github.com/react-navigation/react-navigation/commit/22f2657e98f2a8d17238ccd26afe4975cba59478)) - by @satya164
+* handle link actions, hrefs, and disabled state correctly ([#13152](https://github.com/react-navigation/react-navigation/issues/13152)) ([6623694](https://github.com/react-navigation/react-navigation/commit/66236944bca79b639d5524c145e9fec9c3e14f6d)) - by @satya164
+
+### Features
+
+* add in prop to useLinkProps, Link & Button ([#13182](https://github.com/react-navigation/react-navigation/issues/13182)) ([797c843](https://github.com/react-navigation/react-navigation/commit/797c8436b3a46c35537b54e81ef878bc3d8bbe8a)) - by @satya164
+
 # [8.0.0-alpha.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.34...@react-navigation/native@8.0.0-alpha.35) (2026-07-08)
 
 **Note:** Version bump only for package @react-navigation/native
