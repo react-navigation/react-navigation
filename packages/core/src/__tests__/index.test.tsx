@@ -5288,3 +5288,141 @@ test("warns when the screen passed in params doesn't exist in the navigator", as
     ],
   });
 });
+
+test('removes route when a parent group navigationKey changes', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ navigationKey }: { navigationKey: string }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Group navigationKey={navigationKey}>
+          <Group navigationKey="inner">
+            <Screen name="bar">{() => null}</Screen>
+          </Group>
+        </Group>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<Test navigationKey="a" />);
+
+  await act(() => navigation.navigate('bar'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('bar');
+
+  await root.rerender(<Test navigationKey="b" />);
+
+  expect(navigation.getCurrentRoute()?.name).toBe('foo');
+});
+
+test('removes route when a group navigationKey changes for screens in a group without navigationKey', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ navigationKey }: { navigationKey: string }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Group navigationKey={navigationKey}>
+          <Group>
+            <Screen name="bar">{() => null}</Screen>
+          </Group>
+        </Group>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<Test navigationKey="a" />);
+
+  await act(() => navigation.navigate('bar'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('bar');
+
+  await root.rerender(<Test navigationKey="b" />);
+
+  expect(navigation.getCurrentRoute()?.name).toBe('foo');
+});
+
+test('removes route when navigationKey changes even if combined keys are similar', async () => {
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ condition }: { condition: boolean }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        {condition ? (
+          <Group navigationKey="a">
+            <Screen name="bar" navigationKey="b:">
+              {() => null}
+            </Screen>
+          </Group>
+        ) : (
+          <Group navigationKey="a:b">
+            <Screen name="bar">{() => null}</Screen>
+          </Group>
+        )}
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<Test condition={false} />);
+
+  await act(() => navigation.navigate('bar'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('bar');
+
+  await root.rerender(<Test condition />);
+
+  expect(navigation.getCurrentRoute()?.name).toBe('foo');
+});
