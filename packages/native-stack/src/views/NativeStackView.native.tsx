@@ -167,13 +167,12 @@ const SceneView = ({
   const isLandscape = useFrameSize((frame) => frame.width > frame.height);
 
   const topInset =
-    unstable_headerInsets?.top === false
+    isParentHeaderShown ||
+    (Platform.OS === 'android' && unstable_headerInsets?.top === false) ||
+    (Platform.OS === 'ios' && isModal) ||
+    (isIPhone && isLandscape)
       ? 0
-      : isParentHeaderShown ||
-          (Platform.OS === 'ios' && isModal) ||
-          (isIPhone && isLandscape)
-        ? 0
-        : insets.top;
+      : insets.top;
 
   const defaultHeaderHeight = useFrameSize((frame) =>
     Platform.select({
