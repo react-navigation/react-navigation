@@ -93,6 +93,17 @@ export function useOnAction<State extends NavigationState>({
         result =
           result === null && action.target === state.key ? state : result;
 
+        if (result !== null && result.stale !== false) {
+          // Some actions (e.g. `RESET`) may return a stale state from the router
+          // We rehydrate it before storing so the stored state is always usable
+          // Otherwise anything reading the state before the next render
+          // (e.g. another dispatch immediately after) would get an outdated state
+          result = router.getRehydratedState(
+            result,
+            routerConfigOptionsRef.current
+          );
+        }
+
         if (result !== null) {
           if (state !== result) {
             const isPrevented = shouldPreventRemove(
