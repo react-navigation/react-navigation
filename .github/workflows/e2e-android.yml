@@ -6,6 +6,8 @@ on:
   pull_request:
     branches:
       - main
+  schedule:
+    - cron: '0 4 * * *'
 
 jobs:
   maestro-android:
@@ -37,6 +39,10 @@ jobs:
 
       - name: Setup
         uses: ./.github/actions/setup
+
+      - name: Install nightly react-native-screens
+        if: github.event_name == 'schedule'
+        run: pnpm --recursive update react-native-screens@nightly --no-save
 
       - name: Calculate fingerprint
         id: calculate-fingerprint
