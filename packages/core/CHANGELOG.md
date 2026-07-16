@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.21.6](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.5...@react-navigation/core@7.21.6) (2026-07-16)
+
+### Bug Fixes
+
+* avoid duplicate focus event when navigating to a nested screen ([547088b](https://github.com/react-navigation/react-navigation/commit/547088b0e5c2fc46c77041125a184b9787780907)) - by @satya164
+* avoid extra notifications after unbatched updates ([4d147cf](https://github.com/react-navigation/react-navigation/commit/4d147cfcddfe55a94378de1caf98407978ec661f)) - by @satya164
+* clear focused route state context in NavigationIndependentTree ([6da1ce8](https://github.com/react-navigation/react-navigation/commit/6da1ce845c9b0167e1dc38af015e12ad725210da)) - by @satya164
+* correctly convert paths to kebab-case for screen names with acronyms ([9139d05](https://github.com/react-navigation/react-navigation/commit/9139d05ccd66423d11333980ad7b2fbadb298d6a)) - by @satya164
+* default to last route in findFocusedRoute when index is missing ([fcb5e58](https://github.com/react-navigation/react-navigation/commit/fcb5e58b5a58e90600716bb4678d491b6a8206e9)) - by @satya164
+* don't mark nested params as consumed when initialized state is unused ([8cd2dd2](https://github.com/react-navigation/react-navigation/commit/8cd2dd27143fe4019dec2d5f97ebdf8db1d29727)) - by @satya164
+* don't truncate query string containing an extra question mark ([3369899](https://github.com/react-navigation/react-navigation/commit/336989983fa7a568c3d2410f1c381c8c20019041)) - by @satya164
+* handle escaped and character class parens when parsing path patterns ([813c716](https://github.com/react-navigation/react-navigation/commit/813c7169fdd6c6e97c3502da585624cefbf8d4de)) - by @satya164
+* match custom param regexes against percent-decoded values ([0695964](https://github.com/react-navigation/react-navigation/commit/0695964d1cdc49016d1fc8d13c5932fde2ede4cc)) - by @satya164
+* match percent-encoded static segments and root path prefix ([f1b9ccb](https://github.com/react-navigation/react-navigation/commit/f1b9ccb1f782b5cc3cba2b9a7e843f712e0e99ec)) - by @satya164
+* preserve array and null query params when serializing state to path ([611e450](https://github.com/react-navigation/react-navigation/commit/611e4509fbaf1c3228223747052ee9fcac7d177b)) - by @satya164
+* serialize same-named params at different nesting levels correctly ([b62eee6](https://github.com/react-navigation/react-navigation/commit/b62eee63ab67febbcb1f6a67fc0e9896ce3fce24)) - by @satya164
+* use nested screen from params when creating path ([c04d166](https://github.com/react-navigation/react-navigation/commit/c04d166d08426338ff278fce85e6f89e4fb06fc8)) - by @satya164
+* use union type for route when relevant ([d652e55](https://github.com/react-navigation/react-navigation/commit/d652e5526ed69e59ee3eb4b39375cf416ee26c21)) - by @satya164
+
 ## [7.21.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.4...@react-navigation/core@7.21.5) (2026-07-03)
 
 **Note:** Version bump only for package @react-navigation/core

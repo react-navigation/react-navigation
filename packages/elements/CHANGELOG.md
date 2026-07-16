@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.31](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.30...@react-navigation/elements@2.9.31) (2026-07-16)
+
+### Bug Fixes
+
+* fix incorrect target detection for links ([799e39c](https://github.com/react-navigation/react-navigation/commit/799e39cc1527b35ce2028801eea3512e7f7b275f)) - by @satya164
+* prevent full-page navigation on link click for disabled pressables ([dbe4dc9](https://github.com/react-navigation/react-navigation/commit/dbe4dc9ed689ed0af94d7f9b12e4d3ba0ae514b0)) - by @satya164
+
 ## [2.9.30](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@2.9.29...@react-navigation/elements@2.9.30) (2026-07-07)
 
 **Note:** Version bump only for package @react-navigation/elements

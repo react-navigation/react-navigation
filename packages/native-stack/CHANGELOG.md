@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.18.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.17.10...@react-navigation/native-stack@7.18.0) (2026-07-16)
+
+### Features
+
+* **native-stack:** add options to disable inset application for header ([#13170](https://github.com/react-navigation/react-navigation/issues/13170)) ([5a6b179](https://github.com/react-navigation/react-navigation/commit/5a6b17971b4b91809995ed23bfc02948d9ed6508)) - by @t0maboro
+
 ## [7.17.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@7.17.9...@react-navigation/native-stack@7.17.10) (2026-07-07)
 
 **Note:** Version bump only for package @react-navigation/native-stack

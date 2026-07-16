@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.6.0...@react-navigation/routers@7.6.1) (2026-07-16)
+
+### Bug Fixes
+
+* add focused route to history when preload replaces it ([0c702e8](https://github.com/react-navigation/react-navigation/commit/0c702e817229c311909b3e6781b50e4cd24bea92)) - by @satya164
+* don't handle reset for non-stale state with an invalid index ([a106df1](https://github.com/react-navigation/react-navigation/commit/a106df16db2298a04b06a65a88ec18610d2f024d)) - by @satya164
+* fix incorrect tab history after navigationKey changes ([b94faca](https://github.com/react-navigation/react-navigation/commit/b94faca34ed4676151ccb4825af8ca2e47a6b427)) - by @satya164
+* focus most recent route in history when focused route is removed ([4411424](https://github.com/react-navigation/react-navigation/commit/4411424e02fbecc499754f2a9697b96bdb4807ae)) - by @satya164
+* keep initial route params when going back with fullHistory ([82c473f](https://github.com/react-navigation/react-navigation/commit/82c473f4dd3230432efed725bfd05458815225c6)) - by @satya164
+* preserve drawer status in history when changing index ([a841d14](https://github.com/react-navigation/react-navigation/commit/a841d142180f55fd2afe6bfadf169c5714cfc252)) - by @satya164
+* remove stale history entries when getId changes the route key ([c2acdc5](https://github.com/react-navigation/react-navigation/commit/c2acdc57d7a5df84c67c3154f303969b56d37558)) - by @satya164
+
 # [7.6.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.5.6...@react-navigation/routers@7.6.0) (2026-06-11)
 
 ### Features

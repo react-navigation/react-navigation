@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.3.2](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.3.1...react-native-tab-view@4.3.2) (2026-07-16)
+
+### Bug Fixes
+
+* fix incorrect target detection for links ([799e39c](https://github.com/react-navigation/react-navigation/commit/799e39cc1527b35ce2028801eea3512e7f7b275f)) - by @satya164
+
 ## [4.3.1](https://github.com/react-navigation/react-navigation/compare/react-native-tab-view@4.3.0...react-native-tab-view@4.3.1) (2026-06-08)
 
 **Note:** Version bump only for package react-native-tab-view

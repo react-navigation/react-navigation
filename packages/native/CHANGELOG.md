@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.8...@react-navigation/native@7.3.9) (2026-07-16)
+
+### Bug Fixes
+
+* cleanup stale listener after failed browser navigation ([a9f7cb6](https://github.com/react-navigation/react-navigation/commit/a9f7cb690623d4aa5cf9721b182fa06256f70c3c)) - by @satya164
+* clone action for links to make subsequent navigation work ([ef8820d](https://github.com/react-navigation/react-navigation/commit/ef8820dfb95de7460ae731b746bb84b1dc523ff4)) - by @satya164
+* fix handling target _self, _blank etc. in link ([2f75989](https://github.com/react-navigation/react-navigation/commit/2f7598951ed054a2587bc0639c9fe2efbb0ba3bc)) - by @satya164
+* handle link actions, hrefs, and disabled state correctly ([#13152](https://github.com/react-navigation/react-navigation/issues/13152)) ([e9900d6](https://github.com/react-navigation/react-navigation/commit/e9900d621f830021b1075e88aa707351a0702b53)) - by @satya164
+
 ## [7.3.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.7...@react-navigation/native@7.3.8) (2026-07-07)
 
 ### Bug Fixes
