@@ -30,7 +30,9 @@ import {
   type StackScreenProps,
 } from '@react-navigation/stack';
 import { createURL } from 'expo-linking';
+import { NavigationBar } from 'expo-navigation-bar';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import { reloadAsync } from 'expo-updates';
 import * as React from 'react';
 import {
@@ -41,7 +43,6 @@ import {
   ScrollView,
   useWindowDimensions,
 } from 'react-native';
-import { SystemBars } from 'react-native-edge-to-edge';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import {
@@ -228,7 +229,8 @@ export function App() {
 
   return (
     <Providers>
-      <SystemBars style="auto" />
+      <StatusBar style="auto" />
+      <NavigationBar style="auto" />
       <NavigationContainer
         ref={navigationRef}
         initialState={initialState}

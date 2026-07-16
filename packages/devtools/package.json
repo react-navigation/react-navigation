@@ -47,11 +47,11 @@
   },
   "devDependencies": {
     "@react-navigation/core": "workspace:^",
-    "@types/react": "~19.0.10",
+    "@types/react": "~19.2.4",
     "del-cli": "^6.0.0",
-    "react": "19.1.0",
+    "react": "19.2.3",
     "react-native-builder-bob": "^0.42.1",
-    "typescript": "^5.9.2"
+    "typescript": "~6.0.3"
   },
   "peerDependencies": {
     "react": ">= 18.2.0"
