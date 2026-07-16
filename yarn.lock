@@ -5276,7 +5276,7 @@ __metadata:
     react-native-web: "npm:~0.21.0"
     react-test-renderer: "npm:19.1.0"
     serve: "npm:^14.2.5"
-    standard-navigation: "npm:^0.0.7"
+    standard-navigation: "npm:^0.0.8"
     typescript: "npm:^5.9.2"
     yaml: "npm:^2.8.0"
   languageName: unknown
@@ -5356,7 +5356,7 @@ __metadata:
     react-native: "npm:0.81.5"
     react-native-builder-bob: "npm:^0.42.1"
     react-test-renderer: "npm:19.1.0"
-    standard-navigation: "npm:^0.0.7"
+    standard-navigation: "npm:^0.0.8"
     typescript: "npm:^5.9.2"
     use-latest-callback: "npm:^0.2.4"
   peerDependencies:
@@ -16076,10 +16076,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"standard-navigation@npm:^0.0.7":
-  version: 0.0.7
-  resolution: "standard-navigation@npm:0.0.7"
-  checksum: 10c0/70ba842538f5b7b51cf7db2a45e66cc0dbf59bb49cbf6f931ab79b58f47c71abe55521f431c859d96e527cc3e3f1a42cdcfda6e82c432976e1b44d4f070dc201
+"standard-navigation@npm:^0.0.8":
+  version: 0.0.8
+  resolution: "standard-navigation@npm:0.0.8"
+  peerDependencies:
+    react: "*"
+  checksum: 10c0/46cdde7d565a612d85a8f479b18467fcd1a0d599c047d70fa50b2355967cc29903c20e1f9f7ed77eea56f55fbaf144ff2d2820389dd6e0ee0e15b162116e69fe
   languageName: node
   linkType: hard
 
