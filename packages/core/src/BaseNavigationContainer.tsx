@@ -12,6 +12,7 @@ import useLatestCallback from 'use-latest-callback';
 
 import { checkDuplicateRouteNames } from './checkDuplicateRouteNames';
 import { checkSerializable } from './checkSerializable';
+import { ConsumedParamsContext } from './ConsumedParamsContext';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
 import { DeprecatedNavigationInChildContext } from './DeprecatedNavigationInChildContext';
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
@@ -30,6 +31,7 @@ import { UnhandledActionContext } from './UnhandledActionContext';
 import { useChildListeners } from './useChildListeners';
 import { useEventEmitter } from './useEventEmitter';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
+import { useLazyValue } from './useLazyValue';
 import { useNavigationIndependentTree } from './useNavigationIndependentTree';
 import { useOptionsGetters } from './useOptionsGetters';
 import { useSyncState } from './useSyncState';
@@ -107,6 +109,8 @@ export const BaseNavigationContainer = React.forwardRef(
       useSyncState<State>(() =>
         getPartialState(initialState == null ? undefined : initialState)
       );
+
+    const consumedParams = useLazyValue(() => new WeakMap<object, true>());
 
     const isFirstMountRef = React.useRef<boolean>(true);
 
@@ -458,17 +462,19 @@ export const BaseNavigationContainer = React.forwardRef(
         <NavigationContainerRefContext.Provider value={navigation}>
           <NavigationBuilderContext.Provider value={builderContext}>
             <NavigationStateContext.Provider value={context}>
-              <UnhandledActionContext.Provider
-                value={onUnhandledAction ?? defaultOnUnhandledAction}
-              >
-                <DeprecatedNavigationInChildContext.Provider
-                  value={navigationInChildEnabled}
+              <ConsumedParamsContext.Provider value={consumedParams}>
+                <UnhandledActionContext.Provider
+                  value={onUnhandledAction ?? defaultOnUnhandledAction}
                 >
-                  <EnsureSingleNavigator>
-                    <ThemeProvider value={theme}>{children}</ThemeProvider>
-                  </EnsureSingleNavigator>
-                </DeprecatedNavigationInChildContext.Provider>
-              </UnhandledActionContext.Provider>
+                  <DeprecatedNavigationInChildContext.Provider
+                    value={navigationInChildEnabled}
+                  >
+                    <EnsureSingleNavigator>
+                      <ThemeProvider value={theme}>{children}</ThemeProvider>
+                    </EnsureSingleNavigator>
+                  </DeprecatedNavigationInChildContext.Provider>
+                </UnhandledActionContext.Provider>
+              </ConsumedParamsContext.Provider>
             </NavigationStateContext.Provider>
           </NavigationBuilderContext.Provider>
         </NavigationContainerRefContext.Provider>

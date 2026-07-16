@@ -37,7 +37,6 @@ import {
 } from './types';
 import { UnhandledActionContext } from './UnhandledActionContext';
 import { useChildListeners } from './useChildListeners';
-import { useClientLayoutEffect } from './useClientLayoutEffect';
 import { useComponent } from './useComponent';
 import { useCurrentRender } from './useCurrentRender';
 import { type ScreenConfigWithParent, useDescriptors } from './useDescriptors';
@@ -342,7 +341,7 @@ export function useNavigationBuilder<
 
   const isNestedParamsConsumed =
     typeof route?.params === 'object' && route.params != null
-      ? consumedParams?.isConsumed(route.params)
+      ? consumedParams?.has(route.params)
       : false;
 
   const {
@@ -576,7 +575,14 @@ export function useNavigationBuilder<
         return [stateBeforeInitialization, hydratedState, true, paramsForState];
       }
 
-      return [undefined, hydratedState, false, paramsForState];
+      return [
+        undefined,
+        hydratedState,
+        false,
+        // Current state is already initialized
+        // So params weren't used, and need to be handled later
+        isStateInitialized(currentState) ? undefined : paramsForState,
+      ];
     }
     // We explicitly don't include routeNames, route.params etc. in the dep list
     // below. We want to avoid forcing a new state to be calculated in those cases
@@ -588,7 +594,7 @@ export function useNavigationBuilder<
 
   const previousRouteKeyListRef = React.useRef(routeKeyList);
 
-  React.useEffect(() => {
+  React.useInsertionEffect(() => {
     previousRouteKeyListRef.current = routeKeyList;
   });
 
@@ -724,18 +730,16 @@ export function useNavigationBuilder<
         : nextState;
   }
 
-  const setConsumedParams = consumedParams?.setConsumed;
-
   React.useEffect(() => {
     if (
-      setConsumedParams &&
+      consumedParams &&
       didConsumeNestedParams &&
       typeof route?.params === 'object' &&
       route.params != null
     ) {
-      setConsumedParams(route.params);
+      consumedParams.set(route.params, true);
     }
-  }, [didConsumeNestedParams, route?.params, setConsumedParams]);
+  }, [consumedParams, didConsumeNestedParams, route?.params]);
 
   const shouldUpdate = state !== nextState;
 
@@ -793,19 +797,6 @@ export function useNavigationBuilder<
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  // In some cases (e.g. route names change), internal state might have changed
-  // But it hasn't been committed yet, so hasn't propagated to the sync external store
-  // During this time, we need to return the internal state in `getState`
-  // Otherwise it can result in inconsistent state during render in children
-  // To avoid this, we use a ref for render phase, and immediately clear it on commit
-  const stateRef = React.useRef<State | null>(state);
-
-  stateRef.current = state;
-
-  useClientLayoutEffect(() => {
-    stateRef.current = null;
-  });
 
   const getState = useLatestCallback((): State => {
     const currentState = getCurrentState();
@@ -955,9 +946,9 @@ export function useNavigationBuilder<
     onAction,
     onUnhandledAction,
     getState,
+    state,
     emitter,
     router,
-    stateRef,
   });
 
   useFocusedListenersChildrenAdapter({
@@ -1012,7 +1003,10 @@ export function useNavigationBuilder<
     return (
       <NavigationMetaContext.Provider value={undefined}>
         <NavigationHelpersContext.Provider value={navigation}>
-          <NavigationStateListenerProvider state={state}>
+          <NavigationStateListenerProvider
+            state={state}
+            getState={navigation.getState}
+          >
             <FocusedRouteKeyContext.Provider
               value={state.routes[state.index].key}
             >

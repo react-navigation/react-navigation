@@ -1,11 +1,8 @@
-import type {
-  NavigationState,
-  PartialState,
-  Route,
-} from '@react-navigation/routers';
+import type { NavigationState, PartialState } from '@react-navigation/routers';
 import * as queryString from 'query-string';
 
 import { getPatternParts, type PatternPart } from './getPatternParts';
+import { getStateFromRouteParams } from './getStateFromRouteParams';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
@@ -19,20 +16,40 @@ type State = NavigationState | Omit<PartialState<NavigationState>, 'stale'>;
 
 type StringifyConfig = Record<string, (value: unknown) => string>;
 
+type SerializedParamValue = string | string[] | null;
+
 type ConfigItem = {
   parts?: PatternPart[];
+  ownParts: PatternPart[];
   stringify?: StringifyConfig;
   screens?: Record<string, ConfigItem>;
 };
 
-const getActiveRoute = (state: State): { name: string; params?: object } => {
+const serializeParamValue = (value: unknown): SerializedParamValue =>
+  value === null
+    ? null
+    : Array.isArray(value)
+      ? value.map(String)
+      : String(value);
+
+const getActiveRoute = (
+  state: State,
+  configs: Record<string, ConfigItem> | undefined,
+  getRouteState: (
+    route: State['routes'][number],
+    config: ConfigItem | undefined
+  ) => State | undefined
+): { name: string; params?: object } => {
   const route =
     typeof state.index === 'number'
       ? state.routes[state.index]
       : state.routes[state.routes.length - 1];
 
-  if (route.state) {
-    return getActiveRoute(route.state);
+  const config = configs?.[route.name];
+  const routeState = getRouteState(route, config);
+
+  if (routeState) {
+    return getActiveRoute(routeState, config?.screens, getRouteState);
   }
 
   return route;
@@ -101,24 +118,55 @@ export function getPathFromState<ParamList extends {}>(
   }
 
   const configs = getNormalizedConfigs(options);
+  const cachedRouteStates = new Map<object, State | undefined>();
+
+  const getRouteState = (
+    route: State['routes'][number],
+    config: ConfigItem | undefined
+  ) => {
+    if (route.state) {
+      return route.state;
+    }
+
+    const hasScreenParams =
+      route.params &&
+      'screen' in route.params &&
+      typeof route.params.screen === 'string' &&
+      config?.screens?.[route.params.screen];
+
+    const hasStateParams =
+      route.params && 'state' in route.params && config?.screens;
+
+    if (
+      !route.params ||
+      !config?.screens ||
+      (!hasScreenParams && !hasStateParams)
+    ) {
+      return undefined;
+    }
+
+    if (!cachedRouteStates.has(route)) {
+      cachedRouteStates.set(route, getStateFromRouteParams(route.params));
+    }
+
+    return cachedRouteStates.get(route);
+  };
+
+  const focusedRoute = getActiveRoute(state, configs, getRouteState);
 
   let path = '/';
   let current: State | undefined = state;
 
-  const allParams: Record<string, string> = {};
-
   while (current) {
     let index = typeof current.index === 'number' ? current.index : 0;
-    let route = current.routes[index] as Route<string> & {
-      state?: State;
-    };
+    let route = current.routes[index];
 
     let parts: PatternPart[] | undefined;
 
-    let focusedParams: Record<string, string> | undefined;
-    let currentOptions = configs;
+    const partValues = new Map<PatternPart, SerializedParamValue | undefined>();
 
-    const focusedRoute = getActiveRoute(state);
+    let focusedParams: Record<string, SerializedParamValue> | undefined;
+    let currentOptions = configs;
 
     // Keep all the route names that appeared during going deeper in config in case the pattern is resolved to undefined
     const nestedRouteNames = [];
@@ -126,19 +174,21 @@ export function getPathFromState<ParamList extends {}>(
     let hasNext = true;
 
     while (route.name in currentOptions && hasNext) {
-      parts = currentOptions[route.name].parts;
+      const config = currentOptions[route.name];
+      parts = config.parts;
+      const ownParts = config.ownParts;
 
       nestedRouteNames.push(route.name);
 
       if (route.params) {
-        const options = currentOptions[route.name];
+        const options = config;
 
         const currentParams = Object.fromEntries(
           Object.entries(route.params)
-            .map(([key, value]): [string, string] | null => {
+            .map(([key, value]): [string, SerializedParamValue] | null => {
               if (value === undefined) {
                 if (options) {
-                  const optional = options.parts?.find(
+                  const optional = ownParts.find(
                     (part) => part.param === key
                   )?.optional;
 
@@ -150,51 +200,71 @@ export function getPathFromState<ParamList extends {}>(
                 }
               }
 
-              const stringify = options?.stringify?.[key] ?? String;
+              const stringify = options?.stringify?.[key];
 
-              return [key, stringify(value)];
+              return [
+                key,
+                stringify ? stringify(value) : serializeParamValue(value),
+              ];
             })
             .filter((entry) => entry != null)
         );
 
-        if (parts?.length) {
-          Object.assign(allParams, currentParams);
+        const claimedParams = new Set<string>();
+
+        for (const part of ownParts) {
+          if (part.param && part.param in currentParams) {
+            const value = currentParams[part.param];
+
+            if (value !== undefined) {
+              partValues.set(part, value);
+              claimedParams.add(part.param);
+            }
+          }
         }
 
         if (focusedRoute === route) {
           // If this is the focused route, keep the params for later use
           // We save it here since it's been stringified already
-          focusedParams = { ...currentParams };
+          focusedParams = {};
 
-          parts
-            // eslint-disable-next-line no-loop-func
-            ?.forEach(({ param }) => {
-              if (param) {
-                // Remove the params present in the pattern since we'll only use the rest for query string
-                if (focusedParams) {
-                  // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-                  delete focusedParams[param];
-                }
-              }
-            });
+          for (const key in currentParams) {
+            const value = currentParams[key];
+
+            if (
+              !claimedParams.has(key) &&
+              value !== undefined &&
+              value !== 'undefined'
+            ) {
+              focusedParams[key] = value;
+            }
+          }
         }
       }
 
+      for (const part of ownParts) {
+        if (part.param && !partValues.has(part)) {
+          partValues.set(part, undefined);
+        }
+      }
+
+      const routeState = getRouteState(route, config);
+
       // If there is no `screens` property or no nested state, we return pattern
-      if (!currentOptions[route.name].screens || route.state === undefined) {
+      if (!config.screens || routeState === undefined) {
         hasNext = false;
       } else {
         index =
-          typeof route.state.index === 'number'
-            ? route.state.index
-            : route.state.routes.length - 1;
+          typeof routeState.index === 'number'
+            ? routeState.index
+            : routeState.routes.length - 1;
 
-        const nextRoute = route.state.routes[index];
-        const nestedConfig = currentOptions[route.name].screens;
+        const nextRoute = routeState.routes[index];
+        const nestedConfig = config.screens;
 
         // if there is config for next route name, we go deeper
         if (nestedConfig && nextRoute.name in nestedConfig) {
-          route = nextRoute as Route<string> & { state?: State };
+          route = nextRoute;
           currentOptions = nestedConfig;
         } else {
           // If not, there is no sense in going deeper in config
@@ -203,9 +273,12 @@ export function getPathFromState<ParamList extends {}>(
       }
     }
 
+    const routeState = getRouteState(route, currentOptions[route.name]);
+
     if (currentOptions[route.name] !== undefined) {
       path += parts
-        ?.map(({ segment, param, optional }) => {
+        ?.map((part) => {
+          const { segment, param, optional } = part;
           // We don't know what to show for wildcard patterns
           // Showing the route name seems ok, though whatever we show here will be incorrect
           // Since the page doesn't actually exist
@@ -215,7 +288,7 @@ export function getPathFromState<ParamList extends {}>(
 
           // If the path has a pattern for a param, put the param in the path
           if (param) {
-            const value = allParams[param];
+            const value = partValues.get(part);
 
             if (value === undefined && optional) {
               // Optional params without value assigned in route.params should be ignored
@@ -244,12 +317,12 @@ export function getPathFromState<ParamList extends {}>(
       focusedParams = Object.fromEntries(
         Object.entries(focusedRoute.params).map(([key, value]) => [
           key,
-          String(value),
+          serializeParamValue(value),
         ])
       );
     }
 
-    if (route.state) {
+    if (routeState) {
       path += '/';
     } else if (focusedParams) {
       for (const param in focusedParams) {
@@ -266,7 +339,7 @@ export function getPathFromState<ParamList extends {}>(
       }
     }
 
-    current = route.state;
+    current = routeState;
   }
 
   // Include the root path if specified
@@ -292,14 +365,13 @@ const createConfigItem = (
   parentParts?: PatternPart[]
 ): ConfigItem => {
   if (typeof config === 'string') {
-    // If a string is specified as the value of the key(e.g. Foo: '/path'), use it as the pattern
-    const parts = getPatternParts(config);
+    const ownParts = getPatternParts(config);
 
     if (parentParts) {
-      return { parts: [...parentParts, ...parts] };
+      return { parts: [...parentParts, ...ownParts], ownParts };
     }
 
-    return { parts };
+    return { parts: ownParts, ownParts };
   }
 
   if (config.exact && config.path === undefined) {
@@ -310,14 +382,12 @@ const createConfigItem = (
 
   // If an object is specified as the value (e.g. Foo: { ... }),
   // It can have `path` property and `screens` prop which has nested configs
+  const ownParts = config.path ? getPatternParts(config.path) : [];
   const parts =
     config.exact !== true
-      ? [
-          ...(parentParts || []),
-          ...(config.path ? getPatternParts(config.path) : []),
-        ]
-      : config.path
-        ? getPatternParts(config.path)
+      ? [...(parentParts || []), ...ownParts]
+      : ownParts.length
+        ? ownParts
         : undefined;
 
   const screens = config.screens
@@ -326,6 +396,7 @@ const createConfigItem = (
 
   return {
     parts,
+    ownParts,
     stringify: config.stringify,
     screens,
   };

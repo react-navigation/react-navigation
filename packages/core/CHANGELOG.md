@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.21.5](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.4...@react-navigation/core@7.21.5) (2026-07-03)
+
+**Note:** Version bump only for package @react-navigation/core
+
+## [7.21.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.3...@react-navigation/core@7.21.4) (2026-07-03)
+
+### Bug Fixes
+
+* avoid leaking state from discarded renders ([2abbd5d](https://github.com/react-navigation/react-navigation/commit/2abbd5d77076a7f62a05251d4b7d5a609daab915)) - by @satya164
+* avoid removing a replaced keyed child listener on cleanup ([e22c8d5](https://github.com/react-navigation/react-navigation/commit/e22c8d5e9bcf421763bb11677964c21ac30a490f)) - by @satya164
+* avoid scheduling navigator state updates during render ([9ca85a8](https://github.com/react-navigation/react-navigation/commit/9ca85a812c76aea5c9bc24d29ce9cb0bf5d2147a)) - by @satya164
+* keep prevent remove active for screens hidden with an activity ([f6574f1](https://github.com/react-navigation/react-navigation/commit/f6574f159d3751de1e3f58c6b53c13a347326073)) - by @satya164
+* remove container ref listeners consistently after the ref is attached ([a2a2cec](https://github.com/react-navigation/react-navigation/commit/a2a2cece0ec970e2c161dae2c47d91dc3ff9bfee)) - by @satya164
+* use insertion effect for useNavigationState ([e067228](https://github.com/react-navigation/react-navigation/commit/e0672284ce18109aff57f6391c24b81bbceab0e4)) - by @satya164
+
+## [7.21.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.2...@react-navigation/core@7.21.3) (2026-06-30)
+
+### Bug Fixes
+
+* properly handle required props for navigators ([52d7e66](https://github.com/react-navigation/react-navigation/commit/52d7e66024b50777178f449ba5a957c443155788)) - by @satya164
+* treat malformed URL as unmatched and simplify ([aed3f68](https://github.com/react-navigation/react-navigation/commit/aed3f688995c9bc9cfca981b4b9d27fee55e8faa)) - by @satya164
+
 ## [7.21.2](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.1...@react-navigation/core@7.21.2) (2026-06-23)
 
 ### Bug Fixes

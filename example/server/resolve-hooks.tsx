@@ -12,5 +12,6 @@ Module._extensions = Object.fromEntries(
 );
 
 // Set __DEV__ that expo needs
-// @ts-expect-error __DEV__ doesn't exist in the type definitions
-globalThis.__DEV__ = process.env.NODE_ENV !== 'production';
+Object.assign(globalThis, {
+  __DEV__: process.env.NODE_ENV !== 'production',
+});

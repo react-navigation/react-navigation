@@ -10,7 +10,7 @@ type HistoryRecord = {
   path: string;
 };
 
-const getPathWithoutHash = (path: string) => path.split('#')[0];
+const getPathWithoutHash = (path: string) => path.split('#')[0] ?? '';
 
 export function createMemoryHistory() {
   let index = 0;
@@ -55,6 +55,10 @@ export function createMemoryHistory() {
       // We need to find the index from the element before current to get closest path to go back to
       for (let i = index - 1; i >= 0; i--) {
         const item = items[i];
+
+        if (item == null) {
+          continue;
+        }
 
         if (item.path === pathWithoutHash) {
           return i;
@@ -107,9 +111,12 @@ export function createMemoryHistory() {
         items = [{ path: pathWithoutHash, state, id }];
         index = 0;
       } else {
-        if (items[index].path === pathWithoutHash) {
+        const item = items[index];
+
+        if (item?.path === pathWithoutHash) {
           pathWithHash = pathWithHash + hash;
         }
+
         items[index] = { path: pathWithoutHash, state, id };
       }
 
@@ -144,6 +151,8 @@ export function createMemoryHistory() {
         return;
       }
 
+      const targetId = items[index]?.id;
+
       // When we call `history.go`, `popstate` will fire when there's history to go back to
       // So we need to somehow handle following cases:
       // - There's history to go back, `history.go` is called, and `popstate` fires
@@ -153,7 +162,11 @@ export function createMemoryHistory() {
         const done = (interrupted?: boolean) => {
           clearTimeout(timer);
 
-          if (interrupted) {
+          // The current entry may not be the one we intended to land on:
+          // - The traversal didn't happen yet, e.g. it took longer than the timeout
+          // - The user navigated in the browser while our traversal was in-flight
+          // So we treat it the same as the operation being interrupted
+          if (interrupted || window.history.state?.id !== targetId) {
             reject(new Error('History was changed during navigation.'));
             return;
           }
@@ -182,10 +195,12 @@ export function createMemoryHistory() {
         // But on Firefox, it seems to take much longer, around 50ms from our testing
         // We're using a hacky timeout since there doesn't seem to be way to know for sure
         const timer = setTimeout(() => {
+          window.removeEventListener('popstate', onPopState);
+
           const foundIndex = pending.findIndex((it) => it.ref === done);
 
           if (foundIndex > -1) {
-            pending[foundIndex].cb();
+            pending[foundIndex]?.cb();
             pending.splice(foundIndex, 1);
           }
 

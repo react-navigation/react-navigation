@@ -19,7 +19,7 @@ export function useEventEmitter<T extends Record<string, any>>(
   const listenRef = React.useRef(listen);
   const onPostEmitRef = React.useRef(onPostEmit);
 
-  React.useEffect(() => {
+  React.useInsertionEffect(() => {
     listenRef.current = listen;
     onPostEmitRef.current = onPostEmit;
   });

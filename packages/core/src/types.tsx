@@ -190,7 +190,7 @@ export type DefaultNavigatorOptions<
           ScreenOptions,
           EventMap
         >,
-        RouteProp<ParamList>
+        ScreenRouteProp<ParamList>
       >
     >;
     children: React.ReactNode;
@@ -202,7 +202,7 @@ export type DefaultNavigatorOptions<
   screenListeners?:
     | ScreenListeners<State, EventMap>
     | ((props: {
-        route: RouteProp<ParamList>;
+        route: ScreenRouteProp<ParamList>;
         navigation: Navigation;
       }) => ScreenListeners<State, EventMap>);
 
@@ -212,7 +212,7 @@ export type DefaultNavigatorOptions<
   screenOptions?:
     | ScreenOptions
     | ((props: {
-        route: RouteProp<ParamList>;
+        route: ScreenRouteProp<ParamList>;
         navigation: Navigation;
         theme: ReactNavigation.Theme;
       }) => ScreenOptions);
@@ -647,6 +647,13 @@ export type RouteProp<
   RouteName extends keyof ParamList = Keyof<ParamList>,
 > = Route<Extract<RouteName, string>, ParamList[RouteName]>;
 
+type ScreenRouteProp<
+  ParamList extends ParamListBase,
+  RouteName extends keyof ParamList = Keyof<ParamList>,
+> = {
+  [Name in Extract<RouteName, string>]: RouteProp<ParamList, Name>;
+}[Extract<RouteName, string>];
+
 export type CompositeNavigationProp<
   A extends NavigationProp<ParamListBase, string, any, any, any>,
   B extends NavigationHelpersCommon<ParamListBase, any>,
@@ -709,7 +716,7 @@ export type ScreenLayoutArgs<
   ScreenOptions extends {},
   Navigation,
 > = {
-  route: RouteProp<ParamList, RouteName>;
+  route: ScreenRouteProp<ParamList, RouteName>;
   options: ScreenOptions;
   navigation: Navigation;
   theme: ReactNavigation.Theme;
@@ -896,7 +903,7 @@ export type RouteGroupConfig<
   screenOptions?:
     | ScreenOptions
     | ((props: {
-        route: RouteProp<ParamList, keyof ParamList>;
+        route: ScreenRouteProp<ParamList>;
         navigation: Navigation;
         theme: ReactNavigation.Theme;
       }) => ScreenOptions);
@@ -1103,23 +1110,36 @@ export type NavigatorTypeBag<
   Navigator: Navigator;
 };
 
-type TypedNavigatorComponent<Bag extends NavigatorTypeBagBase> =
-  React.ComponentType<
+type StaticParamListForConfig<Config> =
+  Config extends StaticNavigationConfig['config']
+    ? StaticParamList<{ config: Config }> extends infer ParamList extends
+        ParamListBase
+      ? ParamList
+      : ParamListBase
+    : ParamListBase;
+
+type TypedNavigatorStaticComponent<
+  Bag extends NavigatorTypeBagBase,
+  Config,
+> = React.ComponentType<
+  Partial<
     Omit<
-      React.ComponentProps<
-        TypedNavigatorInternal<
-          Bag['ParamList'],
+      Omit<
+        React.ComponentProps<Bag['Navigator']>,
+        keyof DefaultNavigatorOptions<any, any, any, any, any, any>
+      > &
+        DefaultNavigatorOptions<
+          StaticParamListForConfig<Config>,
           Bag['NavigatorID'],
           Bag['State'],
           Bag['ScreenOptions'],
           Bag['EventMap'],
-          Bag['NavigationList'],
-          Bag['Navigator']
-        >['Navigator']
-      >,
+          Bag['NavigationList'][keyof Bag['ParamList']]
+        >,
       'children'
     >
-  >;
+  >
+>;
 
 type TypedNavigatorStaticDecorated<
   Bag extends NavigatorTypeBagBase,
@@ -1152,10 +1172,10 @@ type TypedNavigatorStatic<
   config: Config;
   with: (
     Component: React.ComponentType<{
-      Navigator: TypedNavigatorComponent<Bag>;
+      Navigator: TypedNavigatorStaticComponent<Bag, Config>;
     }>
   ) => TypedNavigatorStaticDecorated<Bag, Config>;
-  getComponent: () => TypedNavigatorComponent<Bag>;
+  getComponent: () => TypedNavigatorStaticComponent<Bag, Config>;
 } & PrivateValueStore<[Bag['ParamList'], Bag['NavigationList'], unknown]>;
 
 export type TypedNavigator<
@@ -1282,7 +1302,7 @@ type PathConfigAlias = {
 export type PathConfig<ParamList extends {}> = Partial<PathConfigAlias> & {
   /**
    * An object mapping the param name to a function which converts the param value to a string.
-   * By default, all params are converted to strings using `String(value)`.
+   * By default, arrays and null are preserved for query params, and other values are converted using `String(value)`.
    *
    * @example
    * ```js

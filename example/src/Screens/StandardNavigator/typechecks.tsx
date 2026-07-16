@@ -16,6 +16,7 @@ import {
   type MyStackTypeBag,
 } from './createMyStackNavigator';
 import {
+  type MyStackMapperProps,
   MyStackNavigator,
   type MyStackNavigatorProps,
   type MyStackOptions,
@@ -91,6 +92,14 @@ import { MyStack } from './MyStackStatic';
     });
   };
 
+  /**
+   * `createMyStackScreen` accepts custom `options` (object form)
+   */
+  createMyStackScreen({
+    screen: TypeCheckProfileScreen,
+    options: { title: 'Profile', rightButtonTitle: 'Press me' },
+  });
+
   createMyStackScreen({
     screen: TypeCheckProfileScreen,
     options: {
@@ -100,6 +109,143 @@ import { MyStack } from './MyStackStatic';
     },
   });
 
+  /**
+   * `createMyStackScreen` accepts custom `options` (function form)
+   */
+  createMyStackScreen({
+    screen: TypeCheckProfileScreen,
+    options: ({ route, navigation }) => {
+      expectTypeOf(route.name).toEqualTypeOf<string>();
+      expectTypeOf(navigation.setOptions)
+        .parameter(0)
+        .toEqualTypeOf<Partial<MyStackOptions>>();
+
+      return { title: 'Profile', rightButtonTitle: 'Press me' };
+    },
+  });
+
+  createMyStackScreen({
+    screen: TypeCheckProfileScreen,
+    // @ts-expect-error `subtitle` isn't a valid static screen option.
+    options: () => ({ subtitle: 'Invalid option' }),
+  });
+
+  /**
+   * `createMyStackScreen` accepts custom event `listeners` (object form)
+   */
+  createMyStackScreen({
+    screen: TypeCheckProfileScreen,
+    listeners: {
+      rightButtonPress: (event) => {
+        expectTypeOf(event).toEqualTypeOf<
+          EventArg<'rightButtonPress', true, { count: number }>
+        >();
+      },
+    },
+  });
+
+  /**
+   * `createMyStackScreen` accepts custom event `listeners` (function form)
+   */
+  createMyStackScreen({
+    screen: TypeCheckProfileScreen,
+    listeners: ({ navigation }) => {
+      expectTypeOf(navigation.setOptions)
+        .parameter(0)
+        .toEqualTypeOf<Partial<MyStackOptions>>();
+
+      return {
+        rightButtonPress: (event) => {
+          expectTypeOf(event).toEqualTypeOf<
+            EventArg<'rightButtonPress', true, { count: number }>
+          >();
+        },
+      };
+    },
+  });
+
+  /**
+   * Static navigator accepts `screenOptions` typed as `MyStackOptions` (object form)
+   */
+  createMyStackNavigator({
+    variant: 'regular',
+    screens: { StandardStaticHome: TypeCheckProfileScreen },
+    screenOptions: { title: 'Default title' },
+  });
+
+  createMyStackNavigator({
+    variant: 'regular',
+    screens: { StandardStaticHome: TypeCheckProfileScreen },
+    screenOptions: {
+      // @ts-expect-error `subtitle` isn't a valid option for MyStack.
+      subtitle: 'Invalid option',
+    },
+  });
+
+  /**
+   * Static navigator accepts `screenOptions` (function form)
+   */
+  createMyStackNavigator({
+    variant: 'regular',
+    screens: { StandardStaticHome: TypeCheckProfileScreen },
+    screenOptions: ({ navigation }) => {
+      expectTypeOf(navigation.setOptions)
+        .parameter(0)
+        .toEqualTypeOf<Partial<MyStackOptions>>();
+
+      return { title: 'Default title' };
+    },
+  });
+
+  /**
+   * Static navigator accepts `screenListeners` for custom events (object form)
+   */
+  createMyStackNavigator({
+    variant: 'regular',
+    screens: { StandardStaticHome: TypeCheckProfileScreen },
+    screenListeners: {
+      rightButtonPress: (event) => {
+        expectTypeOf(event).toEqualTypeOf<
+          EventArg<'rightButtonPress', true, { count: number }>
+        >();
+      },
+    },
+  });
+
+  /**
+   * Static navigator accepts `screenListeners` for custom events (function form)
+   */
+  createMyStackNavigator({
+    variant: 'regular',
+    screens: { StandardStaticHome: TypeCheckProfileScreen },
+    screenListeners: ({ navigation }) => {
+      expectTypeOf(navigation.setOptions)
+        .parameter(0)
+        .toEqualTypeOf<Partial<MyStackOptions>>();
+
+      return {
+        rightButtonPress: (event) => {
+          expectTypeOf(event).toEqualTypeOf<
+            EventArg<'rightButtonPress', true, { count: number }>
+          >();
+        },
+      };
+    },
+  });
+
+  /**
+   * Required navigator props must be provided in the static config
+   */
+  createMyStackNavigator(
+    // @ts-expect-error `variant` is a required navigator prop
+    {
+      screens: { StandardStaticHome: TypeCheckProfileScreen },
+    }
+  );
+
+  /**
+   * Dynamic factory: `createMyStackNavigator<ParamList>()`
+   */
   type DynamicMyStackParamList = {
     DynamicHome: undefined;
     DynamicProfile: { user: string };
@@ -120,6 +266,41 @@ import { MyStack } from './MyStackStatic';
     name?: keyof DynamicMyStackParamList;
   }>();
 
+  /**
+   * Navigator component exposes the consumer props: required `variant`, optional `style`
+   */
+  expectTypeOf<
+    Pick<DynamicMyStackNavigatorProps, keyof MyStackNavigatorProps>
+  >().toEqualTypeOf<MyStackNavigatorProps>();
+
+  /**
+   * Mapper-supplied props are not exposed on the navigator component
+   */
+  expectTypeOf<DynamicMyStackNavigatorProps>().not.toHaveProperty(
+    'preloadedCount'
+  );
+
+  /**
+   * Dynamic `<Navigator>` `screenOptions` accepts `MyStackOptions` (object + function form)
+   */
+  const dynamicScreenOptions: DynamicMyStackNavigatorProps['screenOptions'] = {
+    title: 'Default title',
+    // @ts-expect-error `subtitle` isn't a valid option for MyStack.
+    subtitle: 'Invalid option',
+  };
+
+  const dynamicScreenOptionsFn: DynamicMyStackNavigatorProps['screenOptions'] =
+    ({ navigation }) => {
+      expectTypeOf(navigation.setOptions)
+        .parameter(0)
+        .toEqualTypeOf<Partial<MyStackOptions>>();
+
+      return { title: 'Default title' };
+    };
+
+  /**
+   * Dynamic `<Navigator>` `screenListeners` accepts custom events (object + function form)
+   */
   const dynamicScreenListeners: DynamicMyStackNavigatorProps['screenListeners'] =
     {
       rightButtonPress: (event) => {
@@ -130,6 +311,21 @@ import { MyStack } from './MyStackStatic';
         // @ts-expect-error rightButtonPress doesn't include routeKey.
         void event.data.routeKey;
       },
+    };
+
+  const dynamicScreenListenersFn: DynamicMyStackNavigatorProps['screenListeners'] =
+    ({ navigation }) => {
+      expectTypeOf(navigation.setOptions)
+        .parameter(0)
+        .toEqualTypeOf<Partial<MyStackOptions>>();
+
+      return {
+        rightButtonPress: (event) => {
+          expectTypeOf(event).toEqualTypeOf<
+            EventArg<'rightButtonPress', true, { count: number }>
+          >();
+        },
+      };
     };
 
   function TypeCheckProfileScreen() {
@@ -159,6 +355,27 @@ import { MyStack } from './MyStackStatic';
     />
   );
 
+  const dynamicScreenObjectForm = (
+    <DynamicMyStack.Screen
+      name="DynamicProfile"
+      component={TypeCheckProfileScreen}
+      options={{ title: 'Profile', rightButtonTitle: 'Press me' }}
+      listeners={({ navigation }) => {
+        expectTypeOf(navigation.setOptions)
+          .parameter(0)
+          .toEqualTypeOf<Partial<MyStackOptions>>();
+
+        return {
+          rightButtonPress: (event) => {
+            expectTypeOf(event).toEqualTypeOf<
+              EventArg<'rightButtonPress', true, { count: number }>
+            >();
+          },
+        };
+      }}
+    />
+  );
+
   const invalidDynamicScreenName = (
     <DynamicMyStack.Screen
       // @ts-expect-error This route isn't in DynamicMyStackParamList.
@@ -178,7 +395,9 @@ import { MyStack } from './MyStackStatic';
 
   const dynamicNavigator = (
     <DynamicMyStack.Navigator
+      variant="regular"
       initialRouteName="DynamicHome"
+      screenOptions={dynamicScreenOptionsFn}
       screenListeners={dynamicScreenListeners}
     >
       {dynamicScreen}
@@ -194,14 +413,32 @@ import { MyStack } from './MyStackStatic';
     </DynamicMyStack.Navigator>
   );
 
-  createStandardNavigationFactories<MyStackTypeBag, MyStackNavigatorProps>(
+  /**
+   * `createStandardNavigationFactories` validates mapper return against `MapperProps`
+   */
+  createStandardNavigationFactories<
+    MyStackTypeBag,
+    MyStackNavigatorProps,
+    MyStackMapperProps
+  >(MyStackNavigator, StackRouter, ({ state }) => ({
+    preloadedCount: state.routes.slice(state.index + 1).length,
+  }));
+
+  createStandardNavigationFactories<
+    MyStackTypeBag,
+    MyStackNavigatorProps,
+    MyStackMapperProps
+  >(
     MyStackNavigator,
     StackRouter,
-    // @ts-expect-error Mapped props must be keys from MyStackNavigatorProps.
+    // @ts-expect-error Mapped props must be keys from MyStackMapperProps.
     () => ({ label: 'Invalid mapped prop' })
   );
 
   void checkMyStackHomeNavigation;
+  void dynamicScreenOptions;
+  void dynamicScreenListenersFn;
+  void dynamicScreenObjectForm;
   void invalidDynamicScreenName;
   void invalidDynamicScreenOptions;
   void dynamicNavigator;

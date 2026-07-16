@@ -59,6 +59,7 @@ export function DrawerItemList({ state, navigation, descriptors }: Props) {
       drawerIcon,
       drawerLabelStyle,
       drawerItemStyle,
+      drawerItemTestID,
       drawerAllowFontScaling,
     } = descriptors[route.key].options;
 
@@ -84,6 +85,7 @@ export function DrawerItemList({ state, navigation, descriptors }: Props) {
         labelStyle={drawerLabelStyle}
         style={drawerItemStyle}
         onPress={onPress}
+        testID={drawerItemTestID}
       />
     );
   }) as React.ReactNode as React.ReactElement;

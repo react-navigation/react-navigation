@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {
   I18nManager,
-  InteractionManager,
   Keyboard,
   Platform,
   StatusBar,
@@ -30,6 +29,7 @@ import {
   GestureHandlerRootView,
   GestureState,
 } from './GestureHandler';
+import { InteractionManager } from './InteractionManager';
 import { Overlay } from './Overlay';
 
 const SWIPE_EDGE_WIDTH = 32;
@@ -103,22 +103,23 @@ export function Drawer({
     [hideStatusBarOnOpen, statusBarAnimation]
   );
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     hideStatusBar(isOpen);
 
     return () => hideStatusBar(false);
   }, [isOpen, hideStatusBarOnOpen, statusBarAnimation, hideStatusBar]);
 
-  const interactionHandleRef = React.useRef<number | null>(null);
+  const interactionHandleRef = React.useRef<number | undefined>(undefined);
 
   const startInteraction = useLatestCallback(() => {
-    interactionHandleRef.current = InteractionManager.createInteractionHandle();
+    interactionHandleRef.current =
+      InteractionManager?.createInteractionHandle();
   });
 
   const endInteraction = useLatestCallback(() => {
     if (interactionHandleRef.current != null) {
-      InteractionManager.clearInteractionHandle(interactionHandleRef.current);
-      interactionHandleRef.current = null;
+      InteractionManager?.clearInteractionHandle(interactionHandleRef.current);
+      interactionHandleRef.current = undefined;
     }
   });
 
@@ -194,8 +195,6 @@ export function Drawer({
           damping: 500,
           mass: 3,
           overshootClamping: true,
-          restDisplacementThreshold: 0.01,
-          restSpeedThreshold: 0.01,
           reduceMotion: ReduceMotion.Never,
         },
         (finished) => runOnJS(onAnimationEnd)(open, finished)
@@ -241,7 +240,7 @@ export function Drawer({
     previousHasDrawerWidthRef.current = hasDrawerWidth;
   }, [getDrawerTranslationX, hasDrawerWidth, isHidden, open, translationX]);
 
-  React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
+  React.useLayoutEffect(() => toggleDrawer(open), [open, toggleDrawer]);
 
   const startX = useSharedValue(0);
 

@@ -265,7 +265,7 @@ test('gets path in each screen', () => {
 
   expect(screen).toMatchInlineSnapshot(`
 [
-  "bar: /mybar/42?screen=bar-b",
+  "bar: /mybar/42/b",
   "bar-a: /mybar/42/a",
   "bar-b: /mybar/42/b",
   "xux: /myxux",
@@ -276,7 +276,7 @@ test('gets path in each screen', () => {
 
   expect(screen).toMatchInlineSnapshot(`
 [
-  "bar: /mybar/42?screen=bar-b",
+  "bar: /mybar/42/b",
   "bar-a: /mybar/42/a",
   "bar-b: /mybar/42/b",
   "xux: /myxux",
@@ -287,7 +287,7 @@ test('gets path in each screen', () => {
 
   expect(screen).toMatchInlineSnapshot(`
 [
-  "bar: /mybar/42?screen=bar-b",
+  "bar: /mybar/42/b",
   "bar-a: /mybar/42/a",
   "bar-b: /mybar/42/b",
   "xux: /myxux?fruit=apple",

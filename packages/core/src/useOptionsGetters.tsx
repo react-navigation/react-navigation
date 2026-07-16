@@ -31,8 +31,11 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
     }
   }, [navigation, onOptionsChange]);
 
-  React.useEffect(() => {
+  React.useInsertionEffect(() => {
     optionsRef.current = options;
+  }, [options]);
+
+  React.useEffect(() => {
     optionsChangeListener();
 
     return navigation?.addListener('focus', optionsChangeListener);

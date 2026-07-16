@@ -240,12 +240,9 @@ export function Header(props: Props) {
   // Setting a property to undefined triggers default style
   // So we need to filter them out
   // Users can use `null` instead
-  for (const styleProp in safeStyles) {
-    // @ts-expect-error: typescript wrongly complains that styleProp cannot be used to index safeStyles
-    if (safeStyles[styleProp] === undefined) {
-      // @ts-expect-error don't need to care about index signature for deletion
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete safeStyles[styleProp];
+  for (const [styleProp, value] of Object.entries(safeStyles)) {
+    if (value === undefined) {
+      Reflect.deleteProperty(safeStyles, styleProp);
     }
   }
 

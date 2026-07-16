@@ -3,6 +3,9 @@ import {
   CommonActions,
   createNavigationContainerRef,
   createNavigatorFactory,
+  findFocusedRoute,
+  getPathFromState,
+  getStateFromPath,
   type NavigationAction,
   type NavigationState,
   type ParamListBase,
@@ -33,7 +36,7 @@ beforeEach(() => {
     window = require('../__stubs__/window').window;
   });
 
-  Object.assign(global, window);
+  Object.defineProperties(global, Object.getOwnPropertyDescriptors(window));
 });
 
 const createStackNavigator = createNavigatorFactory((props: any) => {
@@ -634,6 +637,44 @@ test('replaces browser history when params change without route change', async (
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 });
 
+test('preserves browser hash when params change without route change', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: ':user',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  act(() => navigation.navigate('Profile', { user: 'jane' }));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/jane'));
+
+  window.history.replaceState(window.history.state, '', '/jane#details');
+
+  act(() => navigation.dispatch(CommonActions.setParams({ user: 'john' })));
+
+  await waitFor(() => {
+    expect(window.location.pathname).toBe('/john');
+    expect(window.location.hash).toBe('#details');
+  });
+});
+
 test('replaces browser history on resetRoot', async () => {
   const Stack = createStackNavigator();
 
@@ -1164,4 +1205,451 @@ test('dispatches RESET when browser back restores older nested state under the s
   expect(state.routes[0].state).toMatchObject({
     index: 0,
   });
+});
+
+test('keeps syncing browser history after getPathFromState throws', async () => {
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+    getPathFromState(
+      state: Parameters<typeof getPathFromState>[0],
+      config: Parameters<typeof getPathFromState>[1]
+    ) {
+      if (findFocusedRoute(state)?.name === 'Profile') {
+        throw new Error('Cannot build path for Profile');
+      }
+
+      return getPathFromState(state, config);
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(window.location.pathname).toBe('/');
+
+  act(() => navigation.navigate('Profile'));
+
+  await waitFor(() =>
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({ message: 'Cannot build path for Profile' })
+    )
+  );
+
+  // The URL for the failed update is not synced, but the sync should recover
+  expect(window.location.pathname).toBe('/');
+
+  act(() => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+});
+
+test("doesn't leave unhandled rejection when navigation interrupts prevented back rollback", async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const onPreventRemove = jest.fn();
+
+  const ProfileScreen = ({ route }: any): any => {
+    usePreventRemove(true, onPreventRemove);
+
+    return route.name;
+  };
+
+  const rejections: unknown[] = [];
+  const onUnhandledRejection = (reason: unknown) => {
+    rejections.push(reason);
+  };
+
+  jest.useFakeTimers();
+
+  process.on('unhandledRejection', onUnhandledRejection);
+
+  try {
+    render(
+      <NavigationContainer ref={navigation} linking={linking}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Settings" component={TestScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+
+    act(() => navigation.navigate('Profile'));
+
+    await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+    // Navigate right after the prevented back to interrupt its rollback
+    // If the rollback completes before the navigation, the interruption won't be exercised
+    let interrupted = false;
+
+    window.addEventListener('popstate', () => {
+      if (!interrupted && onPreventRemove.mock.calls.length) {
+        interrupted = true;
+        navigation.navigate('Settings');
+      }
+    });
+
+    act(() => window.history.back());
+
+    await act(async () => {
+      await jest.runAllTimersAsync();
+    });
+
+    expect(onPreventRemove).toHaveBeenCalledTimes(1);
+    expect(window.location.pathname).toBe('/settings');
+    expect(navigation.getCurrentRoute()?.name).toBe('Settings');
+
+    // Flush the event loop with real timers so `unhandledRejection` fires
+    jest.useRealTimers();
+
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, 0);
+    });
+
+    expect(rejections).toEqual([]);
+  } finally {
+    jest.useRealTimers();
+    process.off('unhandledRejection', onUnhandledRejection);
+  }
+});
+
+test('pushes browser history entry when navigating after popstate with an unhandled path', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Other: 'missing',
+      },
+    },
+    getStateFromPath(
+      path: string,
+      config: Parameters<typeof getStateFromPath>[1]
+    ) {
+      if (path.includes('missing')) {
+        return {
+          routes: [{ name: 'Missing' }],
+        };
+      }
+
+      return getStateFromPath(path, config);
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Other" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(window.location.pathname).toBe('/');
+
+  window.history.pushState(null, '', '/missing');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/missing'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+
+  const pushSpy = jest.spyOn(window.history, 'pushState');
+  const replaceSpy = jest.spyOn(window.history, 'replaceState');
+
+  act(() => navigation.navigate('Other'));
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Other'));
+
+  expect(window.location.pathname).toBe('/missing');
+  expect(pushSpy).toHaveBeenCalledTimes(1);
+  expect(replaceSpy).not.toHaveBeenCalled();
+});
+
+test('pushes a history entry for navigation racing with browser back', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  let raced = false;
+
+  window.addEventListener('popstate', () => {
+    if (!raced) {
+      raced = true;
+      navigation.navigate('Settings');
+    }
+  });
+
+  const pushSpy = jest.spyOn(window.history, 'pushState');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Settings');
+
+  expect(pushSpy).toHaveBeenCalledWith(
+    expect.anything(),
+    expect.anything(),
+    '/settings'
+  );
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('goes back an extra entry for goBack racing with browser back', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  act(() => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  let raced = false;
+
+  window.addEventListener('popstate', () => {
+    if (!raced) {
+      raced = true;
+      navigation.goBack();
+    }
+  });
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+
+  act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Profile');
+});
+
+test("rolls back browser history when 'beforeRemove' prevents multi-entry jump", async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const onPreventRemove = jest.fn();
+
+  type SettingsScreenProps = {
+    preventRemove: boolean;
+    route: { name: string };
+  };
+
+  const SettingsScreen = ({
+    preventRemove,
+    route,
+  }: SettingsScreenProps): string => {
+    usePreventRemove(preventRemove, onPreventRemove);
+
+    return route.name;
+  };
+
+  const Container = ({ preventRemove }: { preventRemove: boolean }) => (
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings">
+          {(props: Omit<SettingsScreenProps, 'preventRemove'>) => (
+            <SettingsScreen {...props} preventRemove={preventRemove} />
+          )}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  const root = render(<Container preventRemove={true} />);
+
+  act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  act(() => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  act(() => window.history.go(-2));
+
+  await waitFor(() => expect(onPreventRemove).toHaveBeenCalledTimes(1));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Settings');
+
+  root.rerender(<Container preventRemove={false} />);
+
+  act(() => window.history.go(-2));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(onPreventRemove).toHaveBeenCalledTimes(1);
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('preserves history entries when traversal is slower than the fallback timeout', async () => {
+  jest.useFakeTimers();
+
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  try {
+    render(
+      <NavigationContainer ref={navigation} linking={linking}>
+        <Stack.Navigator>
+          <Stack.Screen name="Home" component={TestScreen} />
+          <Stack.Screen name="Profile" component={TestScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+
+    act(() => navigation.navigate('Profile'));
+
+    await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+    const originalGo = window.history.go.bind(window.history);
+
+    const spy = jest.spyOn(window.history, 'go').mockImplementation((n) => {
+      setTimeout(() => originalGo(n), 150);
+    });
+
+    act(() => navigation.goBack());
+
+    act(() => jest.advanceTimersByTime(100));
+    act(() => jest.advanceTimersByTime(50));
+
+    await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+    spy.mockRestore();
+
+    act(() => window.history.forward());
+
+    await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+    expect(navigation.getCurrentRoute()?.name).toBe('Profile');
+  } finally {
+    jest.useRealTimers();
+  }
 });

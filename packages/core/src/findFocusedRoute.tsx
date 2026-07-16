@@ -12,11 +12,13 @@ type Result =
 export function findFocusedRoute(state: InitialState): Result {
   let current: InitialState | undefined = state;
 
-  while (current?.routes[current.index ?? 0].state != null) {
-    current = current.routes[current.index ?? 0].state;
+  while (
+    current?.routes[current.index ?? current.routes.length - 1]?.state != null
+  ) {
+    current = current.routes[current.index ?? current.routes.length - 1]?.state;
   }
 
-  const route = current?.routes[current?.index ?? 0];
+  const route = current?.routes[current?.index ?? current.routes.length - 1];
 
   return route;
 }

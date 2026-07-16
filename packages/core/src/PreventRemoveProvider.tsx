@@ -13,13 +13,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-type PreventedRoutesMap = Map<
-  string,
-  {
-    routeKey: string;
-    preventRemove: boolean;
-  }
->;
+type PreventedRoutesMap = Map<string, string>;
 
 /**
  * Util function to transform map of prevented routes to a simpler object.
@@ -27,17 +21,11 @@ type PreventedRoutesMap = Map<
 const transformPreventedRoutes = (
   preventedRoutesMap: PreventedRoutesMap
 ): PreventedRoutes => {
-  const preventedRoutesToTransform = [...preventedRoutesMap.values()];
+  const preventedRoutes: PreventedRoutes = {};
 
-  const preventedRoutes = preventedRoutesToTransform.reduce<PreventedRoutes>(
-    (acc, { routeKey, preventRemove }) => {
-      acc[routeKey] = {
-        preventRemove: acc[routeKey]?.preventRemove || preventRemove,
-      };
-      return acc;
-    },
-    {}
-  );
+  for (const routeKey of preventedRoutesMap.values()) {
+    preventedRoutes[routeKey] = { preventRemove: true };
+  }
 
   return preventedRoutes;
 };
@@ -50,12 +38,15 @@ export function PreventRemoveProvider({ children }: Props) {
   const [preventedRoutesMap, setPreventedRoutesMap] =
     React.useState<PreventedRoutesMap>(() => new Map());
 
+  const registry = React.useRef<PreventedRoutesMap>(new Map());
+
   const navigation = React.useContext(NavigationHelpersContext);
   const route = React.useContext(NavigationRouteContext);
 
   const preventRemoveContextValue = React.useContext(PreventRemoveContext);
   // take `setPreventRemove` from parent context - if exist it means we're in a nested context
   const setParentPrevented = preventRemoveContextValue?.setPreventRemove;
+  const notifyParentPrevented = preventRemoveContextValue?.notifyPreventRemove;
 
   const setPreventRemove = useLatestCallback(
     (id: string, routeKey: string, preventRemove: boolean): void => {
@@ -71,36 +62,49 @@ export function PreventRemoveProvider({ children }: Props) {
         );
       }
 
-      setPreventedRoutesMap((prevPrevented) => {
-        // values haven't changed - do nothing
-        if (
-          routeKey === prevPrevented.get(id)?.routeKey &&
-          preventRemove === prevPrevented.get(id)?.preventRemove
-        ) {
-          return prevPrevented;
-        }
-
-        const nextPrevented = new Map(prevPrevented);
-
-        if (preventRemove) {
-          nextPrevented.set(id, {
-            routeKey,
-            preventRemove,
-          });
-        } else {
-          nextPrevented.delete(id);
-        }
-
-        return nextPrevented;
-      });
+      if (preventRemove) {
+        registry.current.set(id, routeKey);
+      } else {
+        registry.current.delete(id);
+      }
     }
   );
 
-  const isPrevented = [...preventedRoutesMap.values()].some(
-    ({ preventRemove }) => preventRemove
-  );
+  const notifyPreventRemove = useLatestCallback(() => {
+    // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+    setPreventedRoutesMap((prevPrevented) => {
+      const nextPrevented = registry.current;
 
+      const hasChanged =
+        prevPrevented.size !== nextPrevented.size ||
+        [...nextPrevented].some(
+          ([id, routeKey]) => prevPrevented.get(id) !== routeKey
+        );
+
+      // values haven't changed - do nothing
+      if (!hasChanged) {
+        return prevPrevented;
+      }
+
+      return new Map(nextPrevented);
+    });
+  });
+
+  // Sync the state on every commit in case the registry was changed by a screen
+  // unmounting while hidden with `<Activity>`, where no passive effects run
+  // Also notify the parent so nested prevention propagates upwards
   React.useEffect(() => {
+    notifyPreventRemove();
+    notifyParentPrevented?.();
+
+    return () => {
+      notifyParentPrevented?.();
+    };
+  });
+
+  const isPrevented = preventedRoutesMap.size > 0;
+
+  React.useInsertionEffect(() => {
     if (route?.key !== undefined && setParentPrevented !== undefined) {
       // when route is defined (and setParentPrevented) it means we're in a nested stack
       // route.key then will be the route key of parent
@@ -116,9 +120,10 @@ export function PreventRemoveProvider({ children }: Props) {
   const value = React.useMemo(
     () => ({
       setPreventRemove,
+      notifyPreventRemove,
       preventedRoutes: transformPreventedRoutes(preventedRoutesMap),
     }),
-    [setPreventRemove, preventedRoutesMap]
+    [setPreventRemove, notifyPreventRemove, preventedRoutesMap]
   );
 
   return (

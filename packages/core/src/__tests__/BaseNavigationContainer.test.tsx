@@ -1275,6 +1275,59 @@ test('works with state change events in independent nested container', () => {
   });
 });
 
+test('applies updates from parent and child navigators scheduled in the same phase', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ expanded }: { expanded: boolean }) => (
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="parent-a">
+          {() => (
+            <TestNavigator>
+              <Screen name="child-a">{() => null}</Screen>
+              {expanded ? <Screen name="child-b">{() => null}</Screen> : null}
+            </TestNavigator>
+          )}
+        </Screen>
+        {expanded ? <Screen name="parent-b">{() => null}</Screen> : null}
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = render(<Test expanded={false} />);
+
+  expect(ref.current?.getRootState()).toMatchObject({
+    routeNames: ['parent-a'],
+    routes: [{ name: 'parent-a', state: { routeNames: ['child-a'] } }],
+  });
+
+  root.rerender(<Test expanded />);
+
+  expect(ref.current?.getRootState()).toMatchObject({
+    routeNames: ['parent-a', 'parent-b'],
+    routes: [
+      { name: 'parent-a', state: { routeNames: ['child-a', 'child-b'] } },
+    ],
+  });
+});
+
 test('warns for duplicate route names nested inside each other', () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(

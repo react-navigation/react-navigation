@@ -18,6 +18,12 @@ import type { LinkingOptions } from './types';
 
 type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
+/**
+ * History delta already applied by the browser when handling `popstate`
+ * The value 'replace' means the delta is unknown, so we can only replace
+ */
+type PopStateDelta = number | 'replace';
+
 const getRoutesUntilIndex = (state: NavigationState) =>
   state.routes.slice(0, state.index + 1);
 
@@ -44,6 +50,10 @@ const findMatchingState = <T extends NavigationState>(
 
   const aRoute = a.routes[a.index];
   const bRoute = b.routes[b.index];
+
+  if (aRoute == null || bRoute == null) {
+    return [a, b];
+  }
 
   const aChildState = aRoute.state as T | undefined;
   const bChildState = bRoute.state as T | undefined;
@@ -73,6 +83,13 @@ const isPoppingLastEntry = (
   current: NavigationState,
   record: NavigationState
 ): boolean => {
+  const currentRoute = current.routes[current.index];
+  const recordRoute = record.routes[record.index];
+
+  if (currentRoute == null || recordRoute == null) {
+    return false;
+  }
+
   if (current.history && record.history) {
     return current.history.length === record.history.length + 1;
   }
@@ -81,7 +98,11 @@ const isPoppingLastEntry = (
   const recordRoutes = getRoutesUntilIndex(record);
 
   if (currentRoutes.length === recordRoutes.length + 1) {
-    return recordRoutes.every((route, i) => route.key === currentRoutes[i].key);
+    return recordRoutes.every((route, i) => {
+      const currentRoute = currentRoutes[i];
+
+      return currentRoute != null && route.key === currentRoute.key;
+    });
   }
 
   return false;
@@ -92,10 +113,14 @@ const isPoppingLastEntry = (
  */
 export const series = (cb: () => Promise<void>) => {
   let queue = Promise.resolve();
+
   const callback = () => {
     // eslint-disable-next-line promise/no-callback-in-promise
-    queue = queue.then(cb);
+    queue = queue.then(cb).catch((e) => {
+      console.error(e);
+    });
   };
+
   return callback;
 };
 
@@ -219,7 +244,9 @@ export function useLinking(
 
   const previousIndexRef = React.useRef<number | undefined>(undefined);
   const previousStateRef = React.useRef<NavigationState | undefined>(undefined);
-  const pendingPopStatePathRef = React.useRef<string | undefined>(undefined);
+  const pendingPopStateDeltaRef = React.useRef<PopStateDelta | undefined>(
+    undefined
+  );
 
   React.useEffect(() => {
     previousIndexRef.current = history.index;
@@ -239,7 +266,6 @@ export function useLinking(
       const previousIndex = previousIndexRef.current ?? 0;
 
       previousIndexRef.current = index;
-      pendingPopStatePathRef.current = path;
 
       const rollbackHistory = () => {
         const delta = previousIndex - index;
@@ -248,15 +274,21 @@ export function useLinking(
           return;
         }
 
-        pendingPopStatePathRef.current = undefined;
-
-        // eslint-disable-next-line promise/always-return
-        history.go(delta)?.then(() => {
-          previousIndexRef.current = history.index;
-        });
+        history
+          .go(delta)
+          // eslint-disable-next-line promise/always-return
+          ?.then(() => {
+            previousIndexRef.current = history.index;
+          })
+          .catch(() => {
+            // The navigation was interrupted
+          });
       };
 
-      const rollbackHistoryIfPrevented = (callback: () => void) => {
+      const rollbackHistoryIfPrevented = (
+        callback: () => void,
+        pendingDelta: PopStateDelta
+      ) => {
         let removePrevented = false;
         let actionChangedState = false;
 
@@ -288,17 +320,33 @@ export function useLinking(
           unsubscribeAction();
         }
 
-        if (removePrevented && !actionChangedState) {
+        if (actionChangedState) {
+          // The change may be committed later, e.g. with transitions
+          // Remember the delta so it can be subtracted when syncing the commit
+          pendingPopStateDeltaRef.current = pendingDelta;
+        } else if (removePrevented) {
           rollbackHistory();
         }
       };
 
-      const dispatch = (action: Parameters<typeof navigation.dispatch>[0]) => {
-        rollbackHistoryIfPrevented(() => navigation.dispatch(action));
+      const dispatch = (
+        action: Parameters<typeof navigation.dispatch>[0],
+        pendingDelta: PopStateDelta
+      ) => {
+        rollbackHistoryIfPrevented(
+          () => navigation.dispatch(action),
+          pendingDelta
+        );
       };
 
-      const resetRoot = (state: Parameters<typeof navigation.resetRoot>[0]) => {
-        rollbackHistoryIfPrevented(() => navigation.resetRoot(state));
+      const resetRoot = (
+        state: Parameters<typeof navigation.resetRoot>[0],
+        pendingDelta: PopStateDelta
+      ) => {
+        rollbackHistoryIfPrevented(
+          () => navigation.resetRoot(state),
+          pendingDelta
+        );
       };
 
       // When browser back/forward is clicked, we first need to check if state object for this index exists
@@ -320,12 +368,25 @@ export function useLinking(
           recordFocused &&
           isPoppingLastEntry(currentFocused, recordFocused)
         ) {
+          const pending = pendingPopStateDeltaRef.current;
+
           // If we detect that the state change is popping the last entry
           // Dispatch a back action instead of resetting to the state
           // This makes sure changes to history state since the entry was added don't get lost
-          dispatch(CommonActions.goBack());
+          dispatch(
+            CommonActions.goBack(),
+            // Stack on any delta from a previous `popstate` that hasn't committed yet
+            pending === 'replace' ? 'replace' : (pending ?? 0) - 1
+          );
         } else {
-          resetRoot(record.state);
+          // The browser already moved from the current state to the record's state
+          resetRoot(
+            record.state,
+            currentFocused && recordFocused
+              ? getHistoryLength(recordFocused) -
+                  getHistoryLength(currentFocused)
+              : 'replace'
+          );
         }
 
         return;
@@ -358,7 +419,7 @@ export function useLinking(
 
           if (action !== undefined) {
             try {
-              dispatch(action);
+              dispatch(action, 'replace');
             } catch (e) {
               // Ignore any errors from deep linking.
               // This could happen in case of malformed links, navigation object not being initialized etc.
@@ -371,14 +432,14 @@ export function useLinking(
               );
             }
           } else {
-            resetRoot(state);
+            resetRoot(state, 'replace');
           }
         } else {
-          resetRoot(state);
+          resetRoot(state, 'replace');
         }
       } else {
         // if current path didn't return any state, we should revert to initial state
-        resetRoot(state);
+        resetRoot(state, 'replace');
       }
     });
   }, [enabled, history, ref, validateRoutesNotExistInRootState]);
@@ -478,12 +539,18 @@ export function useLinking(
         return;
       }
 
-      const pendingPath = pendingPopStatePathRef.current;
+      // Skip if the state hasn't changed since we last synced it
+      if (previousState === state) {
+        return;
+      }
+
       const route = findFocusedRoute(state);
       const path = getPathForRoute(route, state);
 
+      const pendingPopStateDelta = pendingPopStateDeltaRef.current;
+
       previousStateRef.current = state;
-      pendingPopStatePathRef.current = undefined;
+      pendingPopStateDeltaRef.current = undefined;
 
       // To detect the kind of state change, we need to:
       // - Find the common focused navigation state in previous and current state
@@ -497,13 +564,14 @@ export function useLinking(
       if (
         previousFocusedState &&
         focusedState &&
-        // We should only handle push/pop if path changed from what was in last `popstate`
-        // Otherwise it's likely a change triggered by `popstate`
-        path !== pendingPath
+        // If the delta from `popstate` is unknown, we can only replace
+        pendingPopStateDelta !== 'replace'
       ) {
         const historyDelta =
           getHistoryLength(focusedState) -
-          getHistoryLength(previousFocusedState);
+          getHistoryLength(previousFocusedState) -
+          // Subtract the delta already applied by the browser to sync only the remaining changes
+          (pendingPopStateDelta ?? 0);
 
         if (historyDelta > 0) {
           // If history length is increased, we should pushState

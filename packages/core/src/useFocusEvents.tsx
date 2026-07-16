@@ -45,7 +45,12 @@ export function useFocusEvents<State extends NavigationState>({
   React.useEffect(() => {
     const lastFocusedKey = lastFocusedKeyRef.current;
 
-    lastFocusedKeyRef.current = currentFocusedKey;
+    const isFocused = navigation ? navigation.isFocused() : true;
+
+    if (isFocused) {
+      // Remember the current route as focused if the navigator is focused
+      lastFocusedKeyRef.current = currentFocusedKey;
+    }
 
     // We wouldn't have `lastFocusedKey` on initial mount
     // Fire focus event for the current route on mount if there's no parent navigator
@@ -55,10 +60,7 @@ export function useFocusEvents<State extends NavigationState>({
 
     // We should only emit events when the focused key changed and navigator is focused
     // When navigator is not focused, screens inside shouldn't receive focused status either
-    if (
-      lastFocusedKey === currentFocusedKey ||
-      !(navigation ? navigation.isFocused() : true)
-    ) {
+    if (lastFocusedKey === currentFocusedKey || !isFocused) {
       return;
     }
 

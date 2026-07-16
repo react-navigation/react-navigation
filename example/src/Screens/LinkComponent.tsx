@@ -37,6 +37,27 @@ const ArticleScreen = ({
         <Link screen="LinkComponent" params={{ screen: 'Albums' }}>
           Go to albums
         </Link>
+        <Link disabled screen="LinkComponent" params={{ screen: 'Albums' }}>
+          Go to albums (Disabled)
+        </Link>
+        {Platform.OS === 'web' && (
+          <>
+            <Link
+              screen="LinkComponent"
+              params={{ screen: 'Albums' }}
+              target="_self"
+            >
+              Open albums in current tab
+            </Link>
+            <Link
+              screen="LinkComponent"
+              params={{ screen: 'Albums' }}
+              target="_blank"
+            >
+              Open albums in new tab
+            </Link>
+          </>
+        )}
         <Link
           screen="LinkComponent"
           params={{ screen: 'Albums' }}

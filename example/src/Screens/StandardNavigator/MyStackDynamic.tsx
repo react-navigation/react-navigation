@@ -116,6 +116,7 @@ function DetailsScreen({
 export function MyStackDynamic() {
   return (
     <MyStack.Navigator
+      variant="regular"
       screenListeners={{
         rightButtonPress: (event) => {
           alert(`Right button pressed (${event.data.count})`);

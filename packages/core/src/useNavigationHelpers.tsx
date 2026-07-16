@@ -20,9 +20,9 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
   onAction: (action: NavigationAction) => boolean;
   onUnhandledAction: (action: NavigationAction) => void;
   getState: () => State;
+  state: State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
-  stateRef: React.RefObject<State | null>;
 };
 
 /**
@@ -39,11 +39,28 @@ export function useNavigationHelpers<
   onAction,
   onUnhandledAction,
   getState,
+  state,
   emitter,
   router,
-  stateRef,
 }: Options<State, Action>) {
   const parentNavigationHelpers = React.useContext(NavigationContext);
+
+  // In some cases (e.g. route names change), internal state might have changed
+  // But it hasn't been committed yet, so hasn't propagated to any listeners
+  // During this time, we need to return the internal state in `getState`
+  // Otherwise it can return an inconsistent state during render in children
+  // This may affect hooks like `useNavigationState` that need to read the state during render
+  // To avoid this, we use a ref for render phase, and immediately clear it on commit
+  // The ref won't be cleared if the render is discarded, e.g. when interrupted
+  // So we also track the stored state the render was based on
+  // Then ignore the ref once the stored state changes due to another dispatch
+  const stateRef = React.useRef<{ state: State; base: State } | null>(null);
+
+  stateRef.current = { state, base: getState() };
+
+  React.useInsertionEffect(() => {
+    stateRef.current = null;
+  });
 
   return React.useMemo(() => {
     const dispatch = (op: Action | ((state: State) => Action)) => {
@@ -103,16 +120,16 @@ export function useNavigationHelpers<
         return parentNavigationHelpers;
       },
       getState: (): State => {
+        const current = getState();
+        const pending = stateRef.current;
+
         // FIXME: Workaround for when the state is read during render
-        // By this time, we haven't committed the new state yet
-        // Without this `useSyncExternalStore` will keep reading the old state
-        // This may result in `useNavigationState` or `useIsFocused` returning wrong values
-        // Apart from `useSyncExternalStore`, `getState` should never be called during render
-        if (stateRef.current != null) {
-          return stateRef.current;
+        // Apart from subscriptions, `getState` should never be called during render
+        if (pending != null && pending.base === current) {
+          return pending.state;
         }
 
-        return getState();
+        return current;
       },
     } as NavigationHelpers<ParamListBase, EventMap> & ActionHelpers;
 

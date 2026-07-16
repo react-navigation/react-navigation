@@ -52,6 +52,45 @@ test('splits a path with non-capturing regex groups into parts', () => {
   ]);
 });
 
+test('splits a path with escaped parentheses in regex into parts', () => {
+  const path = '/users/:id(a\\)b)/:tag(\\(+)?';
+
+  expect(getPatternParts(path)).toEqual([
+    { segment: 'users' },
+    {
+      segment: ':id(a\\)b)',
+      param: 'id',
+      regex: 'a\\)b',
+    },
+    {
+      segment: ':tag(\\(+)?',
+      param: 'tag',
+      regex: '\\(+',
+      optional: true,
+    },
+  ]);
+});
+
+test('splits a path with parentheses inside character class into parts', () => {
+  expect(getPatternParts('/users/:id([)])')).toEqual([
+    { segment: 'users' },
+    {
+      segment: ':id([)])',
+      param: 'id',
+      regex: '[)]',
+    },
+  ]);
+
+  expect(getPatternParts('/users/:id([(])')).toEqual([
+    { segment: 'users' },
+    {
+      segment: ':id([(])',
+      param: 'id',
+      regex: '[(]',
+    },
+  ]);
+});
+
 test('thrown an error if duplicate params are found', () => {
   const path = '/users/:id/profile/:id';
 

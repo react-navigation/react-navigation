@@ -138,6 +138,345 @@ test('prepends trailing slash to path', () => {
   ).toBe('/foo/bar');
 });
 
+test('handles same param name at different nesting levels', () => {
+  const config = {
+    screens: {
+      User: {
+        path: 'user/:id',
+        screens: {
+          Post: 'post/:id',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'User',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Post',
+              params: { id: '2' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const path = '/user/1/post/2';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'User',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Post',
+              params: { id: '2' },
+              path,
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test('handles same param name with exact nested path', () => {
+  const config = {
+    screens: {
+      User: {
+        path: 'user/:id',
+        screens: {
+          Post: {
+            path: 'post/:id',
+            exact: true,
+          },
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'User',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Post',
+              params: { id: '2' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/post/2');
+});
+
+test("doesn't use child param for missing same-named ancestor param", () => {
+  const config = {
+    screens: {
+      User: {
+        path: 'user/:id',
+        screens: {
+          Post: 'post/:id',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'User',
+        state: {
+          routes: [
+            {
+              name: 'Post',
+              params: { id: '2' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe(
+    '/user/undefined/post/2'
+  );
+});
+
+test("doesn't add undefined for optional same-named child param", () => {
+  const config = {
+    screens: {
+      User: {
+        path: 'user/:id',
+        screens: {
+          Post: 'post/:id?',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'User',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Post',
+              params: { id: undefined },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/user/1/post');
+});
+
+test('keeps query param with same name as ancestor path param', () => {
+  const config = {
+    screens: {
+      User: {
+        path: 'user/:id',
+        screens: {
+          Settings: 'settings',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'User',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Settings',
+              params: { id: '2' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  const path = '/user/1/settings?id=2';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'User',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Settings',
+              params: { id: '2' },
+              path,
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test('handles same param name when state is deeper than config', () => {
+  const config = {
+    screens: {
+      Foo: 'foo/:id',
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { id: '1' },
+        state: {
+          routes: [
+            {
+              name: 'Foo',
+              params: { id: '2' },
+            },
+          ],
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/foo/1/foo/2');
+});
+
+test('serializes array and null query params', () => {
+  const config = {
+    screens: {
+      Foo: 'foo',
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { tags: ['a', 'b'], values: [1, true], flag: null },
+      },
+    ],
+  };
+
+  const path = '/foo?tags=a&tags=b&values=1&values=true&flag';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: {
+          tags: ['a', 'b'],
+          values: ['1', 'true'],
+          flag: null,
+        },
+        path,
+      },
+    ],
+  });
+});
+
+test('serializes array and null query params without config', () => {
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { tags: ['a', 'b'], flag: null },
+      },
+    ],
+  };
+
+  const path = '/Foo?tags=a&tags=b&flag';
+
+  expect(getPathFromState<object>(state)).toBe(path);
+
+  expect(getStateFromPath<object>(path)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { tags: ['a', 'b'], flag: null },
+        path,
+      },
+    ],
+  });
+});
+
+test('uses stringify and parse for array and null query params', () => {
+  type ParamList = {
+    Foo: {
+      tags: string[];
+      flag: null;
+    };
+  };
+
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        stringify: {
+          tags: (tags: string[]) => tags.join(','),
+          flag: () => 'none',
+        },
+        parse: {
+          tags: (tags: string) => tags.split(','),
+          flag: () => null,
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { tags: ['a', 'b'], flag: null },
+      },
+    ],
+  };
+
+  const path = '/foo?tags=a%2Cb&flag=none';
+
+  expect(getPathFromState<ParamList>(state, config)).toBe(path);
+
+  expect(getStateFromPath<ParamList>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: { tags: ['a', 'b'], flag: null },
+        path,
+      },
+    ],
+  });
+});
+
 test('handles route without param', () => {
   const path = '/foo/bar';
   const state = {
@@ -772,8 +1111,9 @@ test('handles nested object for second route depth and path and stringify in roo
           routes: [
             {
               name: 'Bar',
+              params: { id: 42 },
               state: {
-                routes: [{ name: 'Baz', params: { id: 42 } }],
+                routes: [{ name: 'Baz' }],
               },
             },
           ],
@@ -1909,4 +2249,253 @@ test('correctly handles regex pattern with slash', () => {
       config
     )
   ).toBe('/foo/bar');
+});
+
+test('does not use params.screen if no config is specified', () => {
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { screen: 'Bar' },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state)).toBe('/Foo?screen=Bar');
+});
+
+test('uses params.screen for path when config does not contain screen', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Baz: 'baz',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { screen: 'Bar' },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/foo?screen=Bar');
+});
+
+test('uses params.screen for path when config contains screen', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Bar: 'bar',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { screen: 'Bar' },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/foo/bar');
+});
+
+test('uses path params and creates path from params.screen using config', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo/:type',
+        screens: {
+          Bar: 'bar',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { type: 'sweet', screen: 'Bar' },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/foo/sweet/bar');
+});
+
+test('creates path from params.screen and adds params.params in pattern', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo/:type',
+        screens: {
+          Bar: 'bar/:fruit',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: {
+          type: 'sweet',
+          screen: 'Bar',
+          params: { fruit: 'apple', answer: '42' },
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe(
+    '/foo/sweet/bar/apple?answer=42'
+  );
+});
+
+test('does not use params.state if no config is specified', () => {
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: {
+          state: { routes: [{ name: 'Bar' }] },
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state)).toBe(
+    '/Foo?state=%5Bobject%20Object%5D'
+  );
+});
+
+test('uses params.state for path when config is specified', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo/:type',
+        screens: {
+          Bar: 'bar/:fruit',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: {
+          type: 'sweet',
+          state: {
+            routes: [
+              {
+                name: 'Bar',
+                params: { fruit: 'apple' },
+              },
+            ],
+          },
+        },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/foo/sweet/bar/apple');
+});
+
+test('prioritizes route.state over params.screen', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Bar: 'bar',
+          Baz: 'baz',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { screen: 'Bar' },
+        state: { routes: [{ name: 'Baz' }] },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/foo/baz');
+});
+
+test('prioritizes route.state over params.state', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Bar: 'bar',
+          Baz: 'baz',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Foo',
+        params: { state: { routes: [{ name: 'Bar' }] } },
+        state: { routes: [{ name: 'Baz' }] },
+      },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/foo/baz');
+});
+
+test('ignores nested params in inactive routes', () => {
+  const config = {
+    screens: {
+      Foo: {
+        path: 'foo',
+        screens: {
+          Bar: 'bar',
+        },
+      },
+      Baz: 'baz',
+    },
+  };
+
+  const state = {
+    type: 'tab',
+    key: 'tab-test',
+    index: 1,
+    routeNames: ['Foo', 'Baz'],
+    routes: [
+      {
+        key: 'Foo-test',
+        name: 'Foo',
+        params: { screen: 'Bar' },
+      },
+      { key: 'Baz-test', name: 'Baz' },
+    ],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/baz');
 });

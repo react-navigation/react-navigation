@@ -1,7 +1,13 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
-import { useSyncExternalStoreWithSelector } from 'use-sync-external-store/with-selector';
+
+import { useClientLayoutEffect } from './useClientLayoutEffect';
+
+type NavigationStateListener = {
+  getState: () => NavigationState<ParamListBase>;
+  subscribe: (callback: () => void) => () => void;
+};
 
 type Selector<ParamList extends ParamListBase, T> = (
   state: NavigationState<ParamList>
@@ -15,36 +21,64 @@ type Selector<ParamList extends ParamListBase, T> = (
 export function useNavigationState<ParamList extends ParamListBase, T>(
   selector: Selector<ParamList, T>
 ): T {
-  const stateListener = React.useContext(NavigationStateListenerContext);
+  if (typeof selector !== 'function') {
+    throw new Error(
+      `A selector function must be provided (got ${typeof selector}).`
+    );
+  }
 
-  if (stateListener == null) {
+  const listener = React.useContext(NavigationStateListenerContext);
+
+  if (listener == null) {
     throw new Error(
       "Couldn't get the navigation state. Is your component inside a navigator?"
     );
   }
 
-  const value = useSyncExternalStoreWithSelector(
-    stateListener.subscribe,
-    // @ts-expect-error: this is unsafe, but needed to make the generic work
-    stateListener.getState,
-    stateListener.getState,
-    selector
-  );
+  const { getState, subscribe } = listener;
 
-  return value;
+  const [, forceUpdate] = React.useReducer((count: number) => count + 1, 0);
+
+  // @ts-expect-error: this is unsafe, but we need to support it for now
+  const selected = selector(getState());
+
+  const selectionRef = React.useRef({ select: selector, selected });
+
+  useClientLayoutEffect(() => {
+    selectionRef.current = { select: selector, selected };
+  });
+
+  React.useEffect(() => {
+    const checkForUpdates = () => {
+      const selection = selectionRef.current;
+
+      // @ts-expect-error: this is unsafe, but we need to support it for now
+      if (!Object.is(selection.selected, selection.select(getState()))) {
+        forceUpdate();
+      }
+    };
+
+    const unsubscribe = subscribe(checkForUpdates);
+
+    // The state may have changed between the render and the subscription
+    checkForUpdates();
+
+    return unsubscribe;
+  }, [getState, subscribe]);
+
+  return selected;
 }
 
 export function NavigationStateListenerProvider({
   state,
+  getState,
   children,
 }: {
   state: NavigationState<ParamListBase>;
+  getState: () => NavigationState<ParamListBase>;
   children: React.ReactNode;
 }) {
   const listeners = React.useRef<(() => void)[]>([]);
-  const stateRef = React.useRef(state);
-
-  const getState = useLatestCallback(() => stateRef.current);
 
   const subscribe = useLatestCallback((callback: () => void) => {
     listeners.current.push(callback);
@@ -54,8 +88,8 @@ export function NavigationStateListenerProvider({
     };
   });
 
-  React.useLayoutEffect(() => {
-    stateRef.current = state;
+  // Notify subscribers once the new state has committed
+  useClientLayoutEffect(() => {
     listeners.current.forEach((callback) => callback());
   }, [state]);
 
@@ -75,9 +109,5 @@ export function NavigationStateListenerProvider({
 }
 
 const NavigationStateListenerContext = React.createContext<
-  | {
-      getState: () => NavigationState<ParamListBase>;
-      subscribe: (callback: () => void) => () => void;
-    }
-  | undefined
+  NavigationStateListener | undefined
 >(undefined);

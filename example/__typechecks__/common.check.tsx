@@ -18,6 +18,7 @@ import {
   type NavigationHelpers,
   type NavigatorScreenParams,
   type Route,
+  type Theme,
   useLinkProps,
 } from '@react-navigation/native';
 import {
@@ -409,6 +410,131 @@ const SecondStack = createStackNavigator<SecondParamList>();
     return {};
   }}
 />;
+
+/**
+ * Check for callbacks in Navigator and Group config
+ */
+<SecondStack.Navigator
+  layout={({ descriptors, children }) => {
+    const descriptor = descriptors.test;
+
+    if (descriptor) {
+      switch (descriptor.route.name) {
+        case 'HasParams1':
+          expectTypeOf(descriptor.route.params).toEqualTypeOf<
+            Readonly<{ id: string }>
+          >();
+          break;
+        case 'HasParams2':
+          expectTypeOf(descriptor.route.params).toEqualTypeOf<
+            Readonly<{ user: string }>
+          >();
+          break;
+      }
+    }
+
+    return <>{children}</>;
+  }}
+  screenListeners={({ route, navigation }) => {
+    switch (route.name) {
+      case 'HasParams1':
+        expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
+        break;
+      case 'HasParams2':
+        expectTypeOf(route.params).toEqualTypeOf<Readonly<{ user: string }>>();
+        break;
+    }
+
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+    expectTypeOf(navigation.push)
+      .parameter(0)
+      .toEqualTypeOf<keyof SecondParamList>();
+
+    return {};
+  }}
+  screenLayout={({ route, navigation, theme, children }) => {
+    switch (route.name) {
+      case 'HasParams1':
+        expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
+        break;
+      case 'HasParams2':
+        expectTypeOf(route.params).toEqualTypeOf<Readonly<{ user: string }>>();
+        break;
+    }
+
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+    expectTypeOf(navigation.push)
+      .parameter(0)
+      .toEqualTypeOf<keyof SecondParamList>();
+    expectTypeOf(theme).toEqualTypeOf<Theme>();
+
+    return <>{children}</>;
+  }}
+  screenOptions={({ route, navigation, theme }) => {
+    switch (route.name) {
+      case 'HasParams1':
+        expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
+        break;
+      case 'HasParams2':
+        expectTypeOf(route.params).toEqualTypeOf<Readonly<{ user: string }>>();
+        break;
+    }
+
+    expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+    expectTypeOf(navigation.push)
+      .parameter(0)
+      .toEqualTypeOf<keyof SecondParamList>();
+    expectTypeOf(theme).toEqualTypeOf<Theme>();
+
+    return {};
+  }}
+>
+  <SecondStack.Group
+    screenLayout={({ route, navigation, theme, children }) => {
+      switch (route.name) {
+        case 'HasParams1':
+          expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
+          break;
+        case 'HasParams2':
+          expectTypeOf(route.params).toEqualTypeOf<
+            Readonly<{ user: string }>
+          >();
+          break;
+      }
+
+      expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+      expectTypeOf(navigation.push)
+        .parameter(0)
+        .toEqualTypeOf<keyof SecondParamList>();
+      expectTypeOf(theme).toEqualTypeOf<Theme>();
+
+      return <>{children}</>;
+    }}
+    screenOptions={({ route, navigation, theme }) => {
+      switch (route.name) {
+        case 'HasParams1':
+          expectTypeOf(route.params).toEqualTypeOf<Readonly<{ id: string }>>();
+          break;
+        case 'HasParams2':
+          expectTypeOf(route.params).toEqualTypeOf<
+            Readonly<{ user: string }>
+          >();
+          break;
+      }
+
+      expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+      expectTypeOf(navigation.push)
+        .parameter(0)
+        .toEqualTypeOf<keyof SecondParamList>();
+      expectTypeOf(theme).toEqualTypeOf<Theme>();
+
+      return {};
+    }}
+  >
+    <SecondStack.Screen name="HasParams1" component={() => null} />
+    <SecondStack.Screen name="HasParams2" component={() => null} />
+  </SecondStack.Group>
+</SecondStack.Navigator>;
 
 /**
  * Check for listeners type in Screen config

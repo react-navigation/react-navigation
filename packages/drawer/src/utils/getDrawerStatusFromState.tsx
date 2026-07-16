@@ -13,9 +13,7 @@ export function getDrawerStatusFromState(
     );
   }
 
-  const entry = state.history.findLast((it) => it.type === 'drawer') as
-    | { type: 'drawer'; status: DrawerStatus }
-    | undefined;
+  const entry = state.history.findLast((it) => it.type === 'drawer');
 
   return entry?.status ?? state.default ?? 'closed';
 }

@@ -134,7 +134,7 @@ export function useNavigationCache<
     [base, getState, navigation, setOptions, emitter]
   );
 
-  cache.current = state.routes.reduce<
+  const navigations = state.routes.reduce<
     NavigationCache<State, ScreenOptions, EventMap>
   >((acc, route) => {
     const previous = cache.current[route.key];
@@ -233,8 +233,12 @@ export function useNavigationCache<
     return acc;
   }, {});
 
+  React.useInsertionEffect(() => {
+    cache.current = navigations;
+  });
+
   return {
     base,
-    navigations: cache.current,
+    navigations,
   };
 }

@@ -14,6 +14,7 @@ import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { Group } from '../Group';
 import { Screen } from '../Screen';
+import type { DefaultNavigatorOptions, EventMapBase } from '../types';
 import { useNavigation } from '../useNavigation';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import { MockRouter, MockRouterKey } from './__fixtures__/MockRouter';
@@ -3811,4 +3812,58 @@ test('does not throw if while getting current options with empty container', () 
   render(container).update(container);
 
   expect(navigation.getCurrentOptions()).toBeUndefined();
+});
+
+test('handles nested screen navigation batched with a nested state update', () => {
+  const TestNavigator = (
+    props: DefaultNavigatorOptions<
+      ParamListBase,
+      string | undefined,
+      NavigationState,
+      {},
+      EventMapBase,
+      unknown
+    >
+  ) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="nested">
+          {() => (
+            <TestNavigator>
+              <Screen name="first" component={TestScreen} />
+              <Screen name="second" component={TestScreen} />
+              <Screen name="third" component={TestScreen} />
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="home" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('first');
+
+  act(() => {
+    navigation.dispatch(CommonActions.navigate('second'));
+    navigation.dispatch(CommonActions.navigate('nested', { screen: 'third' }));
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('third');
 });

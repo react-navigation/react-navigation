@@ -2,9 +2,13 @@
   "compilerOptions": {
     "paths": {
       "@react-navigation/*": ["./packages/*/src"],
-      "@react-navigation/bottom-tabs/unstable": ["./packages/bottom-tabs/src/unstable"],
-      "react-native-drawer-layout": ["./packages/react-native-drawer-layout/src"],
-      "react-native-tab-view": ["./packages/react-native-tab-view/src"],
+      "@react-navigation/bottom-tabs/unstable": [
+        "./packages/bottom-tabs/src/unstable"
+      ],
+      "react-native-drawer-layout": [
+        "./packages/react-native-drawer-layout/src"
+      ],
+      "react-native-tab-view": ["./packages/react-native-tab-view/src"]
     },
     "composite": true,
     "allowUnreachableCode": false,
@@ -26,6 +30,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "esnext",
+    "types": ["node"],
     "verbatimModuleSyntax": true
   },
   "exclude": ["packages/*/lib"]

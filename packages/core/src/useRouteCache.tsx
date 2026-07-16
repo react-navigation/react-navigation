@@ -4,8 +4,6 @@ import * as React from 'react';
 import { isRecordEqual } from './isRecordEqual';
 import type { RouteProp } from './types';
 
-type RouteCache = Map<string, RouteProp<ParamListBase>>;
-
 /**
  * Utilities such as `getFocusedRouteNameFromRoute` need to access state.
  * So we need a way to suppress the warning for those use cases.
@@ -21,9 +19,12 @@ export function useRouteCache<State extends NavigationState>(
   routes: State['routes']
 ) {
   // Cache object which holds route objects for each screen
-  const cache = React.useMemo(() => ({ current: new Map() as RouteCache }), []);
+  const cache = React.useMemo(
+    () => ({ current: new Map<string, RouteProp<ParamListBase>>() }),
+    []
+  );
 
-  cache.current = routes.reduce((acc, route) => {
+  const next = routes.reduce((acc, route) => {
     const previous = cache.current.get(route.key);
     const { state, ...routeWithoutState } = route;
 
@@ -40,10 +41,7 @@ export function useRouteCache<State extends NavigationState>(
       // FIXME: since the state is updated with mutation, the route object cannot be frozen
       // As a workaround, loop through the object and make the properties readonly
       // Only needed once per proxy - skip if we're reusing a previously-frozen one
-      for (const key in proxy) {
-        // @ts-expect-error: this is fine since we are looping through the object
-        const value = proxy[key];
-
+      for (const [key, value] of Object.entries(proxy)) {
         Object.defineProperty(proxy, key, {
           enumerable: true,
           configurable: true,
@@ -53,16 +51,23 @@ export function useRouteCache<State extends NavigationState>(
       }
     }
 
-    Object.defineProperty(proxy, CHILD_STATE, {
-      enumerable: false,
-      configurable: true,
-      value: state,
-    });
+    // @ts-expect-error: this isn't in type definitions coz we want this private
+    if (proxy[CHILD_STATE] !== state) {
+      Object.defineProperty(proxy, CHILD_STATE, {
+        enumerable: false,
+        configurable: true,
+        value: state,
+      });
+    }
 
     acc.set(route.key, proxy);
 
     return acc;
-  }, new Map() as RouteCache);
+  }, new Map<string, RouteProp<ParamListBase>>());
 
-  return Array.from(cache.current.values());
+  React.useInsertionEffect(() => {
+    cache.current = next;
+  });
+
+  return Array.from(next.values());
 }

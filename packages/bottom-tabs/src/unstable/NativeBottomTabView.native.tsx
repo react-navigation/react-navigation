@@ -323,8 +323,8 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
         onTabSelectionRejected={onTabSelectionRejected}
         onTabSelectionPrevented={onTabSelectionPrevented}
         tabBarHidden={shouldHideTabBar}
-        nativeContainerStyle={{ backgroundColor: colors.background }}
         colorScheme={dark ? 'dark' : 'light'}
+        nativeContainerStyle={{ backgroundColor: colors.background }}
         ios={{
           bottomAccessory: bottomAccessory
             ? (environment: TabsBottomAccessoryEnvironment) =>
@@ -423,6 +423,7 @@ export function NativeBottomTabView({ state, navigation, descriptors }: Props) {
               preventNativeSelection={tabBarSelectionEnabled === false}
               badgeValue={tabBarBadge?.toString()}
               title={tabTitle}
+              nativeContainerStyle={{ backgroundColor: colors.background }}
               specialEffects={{
                 repeatedTabSelection: {
                   popToRoot: true,

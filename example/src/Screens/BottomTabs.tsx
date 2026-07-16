@@ -20,6 +20,8 @@ import {
   useNavigation,
 } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
+import { NavigationBar } from 'expo-navigation-bar';
+import { StatusBar } from 'expo-status-bar';
 import * as React from 'react';
 import {
   Image,
@@ -29,7 +31,6 @@ import {
   useWindowDimensions,
   View,
 } from 'react-native';
-import { SystemBars } from 'react-native-edge-to-edge';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
@@ -68,7 +69,12 @@ const AlbumsScreen = () => {
 
   return (
     <>
-      {isFocused && Platform.OS === 'android' && <SystemBars style="light" />}
+      {isFocused && Platform.OS === 'android' && (
+        <>
+          <StatusBar style="light" />
+          <NavigationBar style="light" />
+        </>
+      )}
       <ScrollView
         contentContainerStyle={{
           paddingTop: headerHeight,

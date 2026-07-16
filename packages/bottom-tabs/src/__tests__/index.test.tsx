@@ -2,7 +2,16 @@ import { afterEach, expect, jest, test } from '@jest/globals';
 import { Text } from '@react-navigation/elements';
 import {
   createNavigationContainerRef,
+  createNavigatorFactory,
+  type DefaultNavigatorOptions,
   NavigationContainer,
+  type NavigationListBase,
+  type NavigatorScreenParams,
+  type ParamListBase,
+  type StackNavigationState,
+  StackRouter,
+  type TypedNavigator,
+  useNavigationBuilder,
 } from '@react-navigation/native';
 import { act, fireEvent, render } from '@testing-library/react-native';
 import {
@@ -174,4 +183,131 @@ test('tab bars render appropriate hrefs on web', () => {
 
   expect(getByText('/root/first')).not.toBeNull();
   expect(getByText('/root/second')).not.toBeNull();
+});
+
+test('pops nested stack to top on blur even when tab transition animation is interrupted', () => {
+  const StackNavigator = (
+    props: DefaultNavigatorOptions<
+      ParamListBase,
+      string | undefined,
+      StackNavigationState<ParamListBase>,
+      {},
+      {},
+      unknown
+    >
+  ) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => {
+          const descriptor = descriptors[route.key];
+
+          if (descriptor == null) {
+            throw new Error(
+              `Couldn't find a descriptor for route '${route.key}'.`
+            );
+          }
+
+          return descriptor.render();
+        })}
+      </NavigationContent>
+    );
+  };
+
+  function createStackNavigator<ParamList extends {}>(): TypedNavigator<{
+    ParamList: ParamList;
+    NavigatorID: string | undefined;
+    State: StackNavigationState<ParamList>;
+    ScreenOptions: {};
+    EventMap: {};
+    NavigationList: NavigationListBase<ParamList>;
+    Navigator: typeof StackNavigator;
+  }> {
+    return createNavigatorFactory(StackNavigator)();
+  }
+
+  type NestedParamList = { Root: undefined; Detail: undefined };
+
+  type TabParamList = {
+    A: NavigatorScreenParams<NestedParamList>;
+    B: undefined;
+    C: undefined;
+  };
+
+  const Stack = createStackNavigator<NestedParamList>();
+
+  const NestedStack = () => (
+    <Stack.Navigator>
+      <Stack.Screen name="Root">{() => null}</Stack.Screen>
+      <Stack.Screen name="Detail">{() => null}</Stack.Screen>
+    </Stack.Navigator>
+  );
+
+  const Tab = createBottomTabNavigator<TabParamList>();
+  const navigation = createNavigationContainerRef<TabParamList>();
+
+  render(
+    <NavigationContainer ref={navigation}>
+      <Tab.Navigator screenOptions={{ animation: 'fade' }}>
+        <Tab.Screen
+          name="A"
+          component={NestedStack}
+          options={{ popToTopOnBlur: true }}
+        />
+        <Tab.Screen name="B">{() => null}</Tab.Screen>
+        <Tab.Screen name="C">{() => null}</Tab.Screen>
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  act(() => {
+    navigation.navigate('A', {
+      screen: 'Detail',
+    });
+  });
+
+  expect(navigation.getRootState()).toEqual(
+    expect.objectContaining({
+      routes: expect.arrayContaining([
+        expect.objectContaining({
+          name: 'A',
+          state: expect.objectContaining({
+            routes: [
+              expect.objectContaining({ name: 'Root' }),
+              expect.objectContaining({ name: 'Detail' }),
+            ],
+          }),
+        }),
+      ]),
+    })
+  );
+
+  act(() => {
+    navigation.navigate('B');
+  });
+
+  act(() => {
+    jest.advanceTimersByTime(1);
+  });
+
+  act(() => {
+    navigation.navigate('C');
+  });
+
+  expect(navigation.getRootState()).toEqual(
+    expect.objectContaining({
+      routes: expect.arrayContaining([
+        expect.objectContaining({
+          name: 'A',
+          state: expect.objectContaining({
+            routes: [expect.objectContaining({ name: 'Root' })],
+          }),
+        }),
+      ]),
+    })
+  );
 });

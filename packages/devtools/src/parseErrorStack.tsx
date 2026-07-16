@@ -46,9 +46,10 @@ export function parseErrorStack(
     return [];
   }
 
+  const runtime: object = globalThis;
   const parsedStack = Array.isArray(errorStack)
     ? errorStack
-    : (globalThis as any).HermesInternal
+    : 'HermesInternal' in runtime && runtime.HermesInternal
       ? convertHermesStack(parseHermesStack(errorStack))
       : stacktraceParser.parse(errorStack).map((frame) => ({
           ...frame,

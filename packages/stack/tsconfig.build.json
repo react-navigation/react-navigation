@@ -2,5 +2,6 @@
   "extends": "./tsconfig",
   "compilerOptions": {
     "paths": {}
-  }
+  },
+  "exclude": ["lib", "src/__tests__"]
 }
