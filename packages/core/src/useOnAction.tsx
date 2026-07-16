@@ -126,6 +126,13 @@ export function useOnAction<State extends NavigationState>({
               return true;
             }
 
+            if (getState() !== state) {
+              // Listeners for 'beforeRemove' may dispatch actions that change the state
+              // Then the result we have is outdated and would overwrite those changes
+              // So we handle the action again to calculate the result with the latest state
+              return onAction(action, new Set<string>());
+            }
+
             onDispatchAction(action, false);
 
             if (tree) {

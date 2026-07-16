@@ -3155,3 +3155,139 @@ test("doesn't lose navigation from a layout effect when screens change in the sa
     ],
   });
 });
+
+test("doesn't lose changes from an action dispatched in a 'beforeRemove' listener", async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const onBeforeRemove = jest.fn();
+
+  let dispatched = false;
+
+  const TestScreen = (props: any) => {
+    React.useEffect(
+      () =>
+        props.navigation.addListener('beforeRemove', () => {
+          onBeforeRemove();
+
+          if (!dispatched) {
+            dispatched = true;
+
+            props.navigation.dispatch({
+              ...CommonActions.setParams({ answer: 42 }),
+              source: props.navigation.getState().routes[0].key,
+            });
+          }
+        }),
+      [props.navigation]
+    );
+
+    return null;
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer
+      ref={ref}
+      initialState={{
+        index: 2,
+        routes: [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+        <Screen name="baz" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => ref.current?.goBack());
+
+  expect(onBeforeRemove).toHaveBeenCalledTimes(2);
+
+  const state = ref.current?.getRootState();
+
+  expect(state?.routes.map((route) => route.name)).toEqual(['foo', 'bar']);
+  expect(state?.routes[0]?.params).toEqual({ answer: 42 });
+  expect(state?.index).toBe(1);
+});
+
+test("keeps state from a 'beforeRemove' listener when the original action no longer applies", async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const onBeforeRemove = jest.fn();
+
+  let dispatched = false;
+
+  const TestScreen = (props: any) => {
+    React.useEffect(
+      () =>
+        props.navigation.addListener('beforeRemove', () => {
+          onBeforeRemove();
+
+          if (!dispatched) {
+            dispatched = true;
+            props.navigation.dispatch(StackActions.popToTop());
+          }
+        }),
+      [props.navigation]
+    );
+
+    return null;
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer
+      ref={ref}
+      initialState={{
+        index: 2,
+        routes: [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }],
+      }}
+    >
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+        <Screen name="baz" component={TestScreen} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  await act(() => ref.current?.goBack());
+
+  expect(onBeforeRemove).toHaveBeenCalledTimes(2);
+  expect(spy).toHaveBeenCalledWith(
+    expect.stringContaining("The action 'GO_BACK' was not handled")
+  );
+
+  const state = ref.current?.getRootState();
+
+  expect(state?.routes.map((route) => route.name)).toEqual(['foo']);
+  expect(state?.index).toBe(0);
+});
