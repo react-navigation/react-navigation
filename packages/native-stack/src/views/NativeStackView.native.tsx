@@ -137,6 +137,7 @@ const SceneView = ({
     scrollEdgeEffects,
     freezeOnBlur,
     contentStyle,
+    unstable_headerInsets,
   } = options;
 
   if (gestureDirection === 'vertical' && Platform.OS === 'ios') {
@@ -190,6 +191,7 @@ const SceneView = ({
 
   const topInset =
     isParentHeaderShown ||
+    (Platform.OS === 'android' && unstable_headerInsets?.top === false) ||
     (Platform.OS === 'ios' && isModal) ||
     (isIPhone && isLandscape)
       ? 0
