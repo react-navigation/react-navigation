@@ -1689,3 +1689,122 @@ test('reflects reset with partial state when state is read immediately after', (
     ],
   });
 });
+
+test('handles navigating to a newly added screen from a layout effect', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const TestScreen = ({ navigation, signal }: any) => {
+    React.useLayoutEffect(() => {
+      if (signal) {
+        navigation.navigate('qux');
+      }
+    }, [navigation, signal]);
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ condition }: { condition: boolean }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">
+          {(props: any) => <TestScreen {...props} signal={condition} />}
+        </Screen>
+        <Screen name="bar">{() => null}</Screen>
+        {condition ? <Screen name="qux">{() => null}</Screen> : null}
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = render(<Test condition={false} />);
+
+  root.rerender(<Test condition />);
+
+  expect(navigation.getRootState()).toEqual({
+    stale: false,
+    type: 'test',
+    index: 2,
+    key: '0',
+    routeNames: ['foo', 'bar', 'qux'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+      { key: 'qux-1', name: 'qux' },
+    ],
+  });
+});
+
+test("doesn't lose navigation from a layout effect when screens change in the same update", () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const TestScreen = ({ navigation, signal }: any) => {
+    React.useLayoutEffect(() => {
+      if (signal) {
+        navigation.navigate('bar');
+      }
+    }, [navigation, signal]);
+
+    return null;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ condition }: { condition: boolean }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">
+          {(props: any) => <TestScreen {...props} signal={condition} />}
+        </Screen>
+        <Screen name="bar">{() => null}</Screen>
+        {condition ? null : <Screen name="baz">{() => null}</Screen>}
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = render(<Test condition={false} />);
+
+  root.rerender(<Test condition />);
+
+  expect(navigation.getRootState()).toEqual({
+    stale: false,
+    type: 'test',
+    index: 1,
+    key: '0',
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+    ],
+  });
+});
