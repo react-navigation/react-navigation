@@ -1,5 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import {
+  CommonActions,
   type DefaultRouterOptions,
   type NavigationState,
   type ParamListBase,
@@ -1579,5 +1580,112 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
     routes: [{ key: 'foo-3', name: 'foo' }],
     stale: false,
     type: 'stack',
+  });
+});
+
+test('handles action dispatched immediately after a reset with partial state', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+        <Screen name="baz">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  act(() => {
+    navigation.dispatch(
+      CommonActions.reset({ index: 0, routes: [{ name: 'bar' }] })
+    );
+
+    navigation.dispatch(CommonActions.navigate('baz'));
+  });
+
+  expect(navigation.getRootState()).toEqual({
+    stale: false,
+    type: 'test',
+    index: 1,
+    key: '2',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-3', name: 'baz' },
+    ],
+  });
+});
+
+test('reflects reset with partial state when state is read immediately after', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+        <Screen name="baz">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  let state: NavigationState | undefined;
+
+  act(() => {
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'bar' }, { name: 'baz' }],
+      })
+    );
+
+    state = navigation.getRootState();
+  });
+
+  expect(state).toEqual({
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: '3',
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [
+      { key: 'bar-1', name: 'bar' },
+      { key: 'baz-2', name: 'baz' },
+    ],
   });
 });
