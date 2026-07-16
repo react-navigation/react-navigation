@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.44](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.43...@react-navigation/native-stack@8.0.0-alpha.44) (2026-07-16)
+
+### Bug Fixes
+
+* account for disabled top inset for header height ([e15eaa6](https://github.com/react-navigation/react-navigation/commit/e15eaa6231a49447a36cf2c02ce7f5fa0c821c11)) - by @
+
 # [8.0.0-alpha.43](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.42...@react-navigation/native-stack@8.0.0-alpha.43) (2026-07-16)
 
 ### Bug Fixes
