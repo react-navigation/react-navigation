@@ -103,7 +103,7 @@ export function Drawer({
     [hideStatusBarOnOpen, statusBarAnimation]
   );
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     hideStatusBar(isOpen);
 
     return () => hideStatusBar(false);
@@ -242,7 +242,7 @@ export function Drawer({
     previousHasDrawerWidthRef.current = hasDrawerWidth;
   }, [getDrawerTranslationX, hasDrawerWidth, isHidden, open, translationX]);
 
-  React.useEffect(() => toggleDrawer(open), [open, toggleDrawer]);
+  React.useLayoutEffect(() => toggleDrawer(open), [open, toggleDrawer]);
 
   const startX = useSharedValue(0);
 
