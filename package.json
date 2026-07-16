@@ -31,7 +31,7 @@
   "engines": {
     "node": ">= 24.13.0"
   },
-  "packageManager": "pnpm@11.8.0",
+  "packageManager": "pnpm@11.13.1",
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@commitlint/config-conventional": "^21.0.2",

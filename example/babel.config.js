@@ -6,11 +6,11 @@ module.exports = function (api) {
     presets: ['babel-preset-expo'],
     overrides: [
       {
-        exclude: /\/node_modules\//,
+        exclude: (filename) => filename?.includes('/node_modules/'),
         plugins: ['@babel/plugin-transform-strict-mode'],
       },
       {
-        include: /\/packages\//,
+        include: (filename) => filename?.includes('/packages/'),
         presets: [
           [
             'module:react-native-builder-bob/babel-preset',

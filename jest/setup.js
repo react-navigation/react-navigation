@@ -1,6 +1,11 @@
-/* global console */
+/* global console, require */
 
 const error = console.error;
+
+jest.mock(
+  'react-native-safe-area-context',
+  () => require('react-native-safe-area-context/jest/mock').default
+);
 
 console.error = (...args) =>
   // Suppress error messages regarding error boundary in tests
