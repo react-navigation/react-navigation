@@ -54,6 +54,7 @@ export function useOnAction<State extends NavigationState>({
     onRouteFocus: onRouteFocusParent,
     addListener: addListenerParent,
     onDispatchAction,
+    flushUpdates,
   } = React.use(NavigationBuilderContext);
 
   const tree = React.use(StaticTreeContext);
@@ -71,6 +72,11 @@ export function useOnAction<State extends NavigationState>({
       action: NavigationAction,
       visitedNavigators: Set<string> = new Set<string>()
     ) => {
+      // Apply any pending state updates scheduled during render before handling the action
+      // Otherwise the action will be handled with an outdated state,
+      // and the pending updates will overwrite the changes from the action
+      flushUpdates();
+
       const state = getState();
 
       // Since actions can bubble both up and down, they could come to the same navigator again
@@ -177,6 +183,7 @@ export function useOnAction<State extends NavigationState>({
       beforeRemoveListeners,
       consumedParams,
       emitter,
+      flushUpdates,
       getState,
       key,
       onActionParent,
