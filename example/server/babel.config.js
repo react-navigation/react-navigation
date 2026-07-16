@@ -12,11 +12,17 @@ const alias = Object.fromEntries(
     .flatMap(([dir, pak]) =>
       Object.entries(pak.exports || {})
         .reverse()
-        .filter(([, value]) => value[condition] != null)
-        .map(([key, value]) => [
-          path.join(pak.name, key),
-          path.resolve(packages, dir, value[condition]),
-        ])
+        .map(([key, value]) => {
+          const target = typeof value === 'string' ? value : value[condition];
+
+          return target == null
+            ? null
+            : [
+                path.join(pak.name, key.replace(/\/\*$/, '')),
+                path.resolve(packages, dir, target.replace(/\/\*$/, '')),
+              ];
+        })
+        .filter(Boolean)
     )
 );
 
