@@ -19,7 +19,6 @@ import { ConsumedParamsContext } from './ConsumedParamsContext';
 import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
-import { isRecordEqual } from './isRecordEqual';
 import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationMetaContext } from './NavigationMetaContext';
@@ -105,7 +104,7 @@ const getRouteConfigsFromChildren = <
   EventMap extends EventMapBase,
 >(
   children: React.ReactNode,
-  groupKey?: string,
+  groupKeys: string[] = [],
   groupOptions?: ScreenConfigWithParent<
     State,
     ScreenOptions,
@@ -148,7 +147,7 @@ const getRouteConfigsFromChildren = <
         }
 
         acc.push({
-          keys: [groupKey, child.props.navigationKey],
+          keys: [...groupKeys, child.props.navigationKey],
           options: groupOptions,
           layout: groupLayout,
           props: child.props as RouteConfig<
@@ -178,7 +177,9 @@ const getRouteConfigsFromChildren = <
         acc.push(
           ...getRouteConfigsFromChildren<State, ScreenOptions, EventMap>(
             child.props.children as React.ReactNode,
-            child.props.navigationKey,
+            child.props.navigationKey != null
+              ? [...groupKeys, child.props.navigationKey]
+              : groupKeys,
             // FIXME
             // @ts-expect-error: add validation
             child.type !== Group
@@ -412,7 +413,7 @@ export function useNavigationBuilder<
     ScreenConfigWithParent<State, ScreenOptions, EventMap>
   > = {};
 
-  const routeKeyList: Record<string, React.Key | undefined> = {};
+  const routeKeyList: Record<string, (string | undefined)[]> = {};
   const routeParamList: Record<string, object | undefined> = {};
   const routeGetIdList: RouterConfigOptions['routeGetIdList'] = {};
 
@@ -426,7 +427,7 @@ export function useNavigationBuilder<
     }
 
     screens[name] = config;
-    routeKeyList[name] = config.keys.map((key) => key ?? '').join(':');
+    routeKeyList[name] = config.keys;
     routeParamList[name] = config.props.initialParams;
 
     Object.assign(routeGetIdList, { [name]: config.props.getId });
@@ -614,6 +615,16 @@ export function useNavigationBuilder<
 
   const previousRouteKeyList = previousRouteKeyListRef.current;
 
+  // Names of the screens whose navigation key changed since the last render
+  const routeKeyChanges = Object.keys(routeKeyList).filter((name) => {
+    const current = routeKeyList[name];
+    const previous = previousRouteKeyList[name];
+
+    return (
+      current != null && previous != null && !isArrayEqual(current, previous)
+    );
+  });
+
   const [unhandledState, setUnhandledState] = React.useState<
     NavigationState | PartialState<NavigationState> | undefined
   >(stateBeforeInitialization);
@@ -663,18 +674,14 @@ export function useNavigationBuilder<
     );
   } else if (
     !isArrayEqual(state.routeNames, routeNames) ||
-    !isRecordEqual(routeKeyList, previousRouteKeyList)
+    routeKeyChanges.length !== 0
   ) {
     // When the list of route names change, the router should handle it to remove invalid routes
     nextState = router.getStateForRouteNamesChange(state, {
       routeNames,
       routeParamList,
       routeGetIdList,
-      routeKeyChanges: Object.keys(routeKeyList).filter(
-        (name) =>
-          name in previousRouteKeyList &&
-          routeKeyList[name] !== previousRouteKeyList[name]
-      ),
+      routeKeyChanges,
     });
   }
 
