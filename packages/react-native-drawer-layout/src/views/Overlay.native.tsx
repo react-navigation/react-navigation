@@ -5,6 +5,7 @@ import Animated, {
 } from 'react-native-reanimated';
 
 import type { OverlayProps } from '../types';
+import { GestureDetector } from './GestureHandler';
 
 const PROGRESS_EPSILON = 0.05;
 
@@ -13,6 +14,10 @@ export function Overlay({
   onPress,
   style,
   accessibilityLabel = 'Close drawer',
+  // Optional pan: swipe-to-close from the dimmed area without widening the root
+  // edge hitSlop (keeps content horizontal pans + avoids Fabric flash from
+  // hitSlop flips).
+  panGesture,
   ...rest
 }: OverlayProps) {
   const animatedStyle = useAnimatedStyle(() => {
@@ -32,19 +37,27 @@ export function Overlay({
     } as const;
   }, [progress]);
 
+  const pressable = (
+    <Pressable
+      onPress={onPress}
+      style={styles.pressable}
+      role="button"
+      aria-label={accessibilityLabel}
+      accessible
+    />
+  );
+
   return (
     <Animated.View
       {...rest}
       style={[StyleSheet.absoluteFill, styles.overlay, animatedStyle, style]}
       animatedProps={animatedProps}
     >
-      <Pressable
-        onPress={onPress}
-        style={styles.pressable}
-        role="button"
-        aria-label={accessibilityLabel}
-        accessible
-      />
+      {panGesture != null ? (
+        <GestureDetector gesture={panGesture}>{pressable}</GestureDetector>
+      ) : (
+        pressable
+      )}
     </Animated.View>
   );
 }
