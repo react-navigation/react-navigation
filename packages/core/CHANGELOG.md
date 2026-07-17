@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.21.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.7...@react-navigation/core@7.21.8) (2026-07-17)
+
+### Bug Fixes
+
+* preserve static param list inference with TypeScript 7 ([#13188](https://github.com/react-navigation/react-navigation/issues/13188)) ([7c51d7d](https://github.com/react-navigation/react-navigation/commit/7c51d7d4b1702aa3028fd57c99ea7efb14a4d7c5)) - by @WookieFPV
+
 ## [7.21.7](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.6...@react-navigation/core@7.21.7) (2026-07-17)
 
 ### Bug Fixes
