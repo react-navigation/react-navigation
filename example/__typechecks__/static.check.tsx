@@ -53,6 +53,32 @@ expectTypeOf<StaticParamList<typeof NativeStack>>().toMatchTypeOf<{
   Foo: undefined;
 }>();
 
+const NestedStaticStack = createNativeStackNavigator({
+  screens: {
+    Profile: (_: StaticScreenProps<{ id: string }>) => null,
+  },
+});
+
+const StaticRootStack = createNativeStackNavigator({
+  screens: {
+    Home: () => null,
+    Nested: NestedStaticStack,
+  },
+});
+
+createStaticNavigation(StaticRootStack);
+
+type StaticRootParamList = StaticParamList<typeof StaticRootStack>;
+
+expectTypeOf<StaticRootParamList>().toEqualTypeOf<{
+  Home: undefined;
+  Nested:
+    | NavigatorScreenParams<{
+        Profile: { id: string };
+      }>
+    | undefined;
+}>();
+
 const HomeTabs = createBottomTabNavigator({
   screens: {
     Groups: () => null,
