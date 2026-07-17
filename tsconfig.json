@@ -28,6 +28,7 @@
     "resolveJsonModule": true,
     "resolvePackageJsonImports": false,
     "skipLibCheck": true,
+    "stableTypeOrdering": true,
     "strict": true,
     "target": "esnext",
     "types": ["node"],
