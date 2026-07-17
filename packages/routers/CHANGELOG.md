@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.14...@react-navigation/routers@8.0.0-alpha.15) (2026-07-17)
+
+### Bug Fixes
+
+* fall back to first route if initial route isn't present when rehydrating ([7f157c4](https://github.com/react-navigation/react-navigation/commit/7f157c4ad5f5aae54fff72e7b58914e83f64cded)) - by @
+
 # [8.0.0-alpha.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.13...@react-navigation/routers@8.0.0-alpha.14) (2026-07-16)
 
 ### Bug Fixes

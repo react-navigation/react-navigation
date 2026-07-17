@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.27...@react-navigation/core@8.0.0-alpha.28) (2026-07-17)
+
+### Bug Fixes
+
+* don't ignore navigation from layout effects when screens change ([f7c9d9b](https://github.com/react-navigation/react-navigation/commit/f7c9d9b89ce2e0e9c1686bf912c36fb435cd1807)) - by @
+* don't overwrite state changes made by 'beforeRemove' listeners ([7519633](https://github.com/react-navigation/react-navigation/commit/75196330860c6c7fc77e48c13b2ed18dbf70f347)) - by @
+* don't revert reset when dispatching another action immediately after ([acf9d26](https://github.com/react-navigation/react-navigation/commit/acf9d269c69c6dda278bc4faef815ec1eb065ea0)) - by @
+* handle navigationKey on nested groups ([effcf40](https://github.com/react-navigation/react-navigation/commit/effcf40b65da700718646b6f61c91368769c1bc5)) - by @
+* validate navigator type for state passed in params ([155a2ac](https://github.com/react-navigation/react-navigation/commit/155a2acf5d6e63078bb980fab0b2bfeaa8f65180)) - by @
+
 # [8.0.0-alpha.27](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.26...@react-navigation/core@8.0.0-alpha.27) (2026-07-16)
 
 ### Bug Fixes
