@@ -1355,6 +1355,8 @@ test('throws while rendering outside a navigation container', async () => {
 });
 
 test('resolves in to the closest matching screen for href and navigation', async () => {
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
   const user = userEvent.setup();
 
   type NestedStackParamList = {
@@ -1417,6 +1419,15 @@ test('resolves in to the closest matching screen for href and navigation', async
       </RootStack.Navigator>
     </NavigationContainer>
   );
+
+  expect(spy).toHaveBeenCalledTimes(1);
+  expect(spy).toHaveBeenCalledWith(
+    expect.stringContaining(
+      'Found screens with the same name nested inside one another'
+    )
+  );
+
+  spy.mockRestore();
 
   const link = screen.getByRole('link', { name: 'Go to Details' });
 
