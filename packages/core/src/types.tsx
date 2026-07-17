@@ -44,10 +44,10 @@ type ParamsForScreenComponent<T> = T extends {
 
 type StaticNavigationConfig = {
   readonly config: {
-    readonly screens?: Record<string, any>;
+    readonly screens?: Record<string, unknown>;
     readonly groups?: {
       [key: string]: {
-        screens: Record<string, any>;
+        screens: Record<string, unknown>;
       };
     };
   };

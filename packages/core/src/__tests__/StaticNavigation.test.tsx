@@ -82,6 +82,12 @@ type TestNavigatorTypeBag<ParamList extends {}> = {
   Navigator: typeof TestNavigator;
 };
 
+type Assert<T extends true> = T;
+type IsEqual<T, U> =
+  (<V>() => V extends T ? 1 : 2) extends <V>() => V extends U ? 1 : 2
+    ? true
+    : false;
+
 function createTestNavigator<
   const ParamList extends ParamListBase,
 >(): TypedNavigator<TestNavigatorTypeBag<ParamList>, undefined>;
@@ -107,6 +113,45 @@ const TestScreen = ({ route }: any) => {
     </>
   );
 };
+
+test('infers static param list from nested navigator configuration', () => {
+  type StaticParamListTypeTest = StaticParamList<{
+    config: {
+      screens: {
+        Home: typeof TestScreen;
+        Nested: {
+          screen: {
+            config: {
+              screens: {
+                Profile: typeof TestScreen;
+              };
+            };
+          };
+        };
+      };
+    };
+  }>;
+
+  type StaticParamListRootKeysTypeCheck = Assert<
+    IsEqual<keyof StaticParamListTypeTest, 'Home' | 'Nested'>
+  >;
+
+  type NestedStaticParamListRouteName = Extract<
+    NonNullable<StaticParamListTypeTest['Nested']>,
+    { screen: unknown }
+  >['screen'];
+
+  type StaticParamListNestedRouteNameTypeCheck = Assert<
+    IsEqual<NestedStaticParamListRouteName, 'Profile'>
+  >;
+
+  const staticParamListTypeChecks: [
+    StaticParamListRootKeysTypeCheck,
+    StaticParamListNestedRouteNameTypeCheck,
+  ] = [true, true];
+
+  expect(staticParamListTypeChecks).toEqual([true, true]);
+});
 
 test('renders the specified nested navigator configuration', () => {
   const Nested = createTestNavigator({
