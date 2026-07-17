@@ -18,8 +18,8 @@ import type {
   NativeStackNavigationEventMap,
   NativeStackNavigationOptions,
   NativeStackNavigatorProps,
-} from '../types';
-import { NativeStackView } from './NativeStackView';
+} from '../../types';
+import { NativeStackView } from '../views/NativeStackView';
 
 function NativeStackNavigator({
   initialRouteName,
