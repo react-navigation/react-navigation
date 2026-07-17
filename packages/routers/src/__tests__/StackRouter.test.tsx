@@ -178,6 +178,31 @@ test('gets rehydrated state from partial state', () => {
   });
 });
 
+test("falls back to first route when rehydrating if initial route isn't present", () => {
+  const router = StackRouter({ initialRouteName: 'foo' });
+
+  expect(
+    router.getRehydratedState(
+      {
+        routes: [{ name: 'unknown' }],
+      },
+      {
+        routeNames: ['bar', 'baz'],
+        routeParamList: {},
+        routeGetIdList: {},
+      }
+    )
+  ).toEqual({
+    index: 0,
+    key: 'stack-2',
+    retainedRouteKeys: [],
+    routeNames: ['bar', 'baz'],
+    routes: [{ key: 'bar-1', name: 'bar' }],
+    stale: false,
+    type: 'stack',
+  });
+});
+
 test("doesn't rehydrate state if it's not stale", () => {
   const router = StackRouter({});
 

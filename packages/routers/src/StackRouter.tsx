@@ -335,7 +335,8 @@ export function StackRouter(options: StackRouterOptions) {
 
       if (routes.length === 0) {
         const initialRouteName =
-          options.initialRouteName !== undefined
+          options.initialRouteName !== undefined &&
+          routeNames.includes(options.initialRouteName)
             ? options.initialRouteName
             : routeNames[0];
 
