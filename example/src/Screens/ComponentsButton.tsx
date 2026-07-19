@@ -1,4 +1,4 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import { Button, type Icon, Text } from '@react-navigation/elements';
 import * as React from 'react';
 import { Platform, ScrollView, StyleSheet, View } from 'react-native';
@@ -77,7 +77,7 @@ export function ComponentsButton() {
         <Button
           variant="filled"
           icon={({ color, size }) => (
-            <MaterialCommunityIcons name="send" color={color} size={size} />
+            <MaterialDesignIcons name="send" color={color} size={size} />
           )}
           onPress={() => {}}
         >

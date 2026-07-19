@@ -1,6 +1,11 @@
 import './gesture-handler';
 
+import { setDynamicLoadingEnabled } from '@react-native-vector-icons/common';
+import Feather from '@react-native-vector-icons/feather/fonts/Feather.ttf';
+import Ionicons from '@react-native-vector-icons/ionicons/fonts/Ionicons.ttf';
+import MaterialDesignIcons from '@react-native-vector-icons/material-design-icons/fonts/MaterialDesignIcons.ttf';
 import { registerRootComponent } from 'expo';
+import { loadAsync } from 'expo-font';
 import * as React from 'react';
 import { LogBox, Platform } from 'react-native';
 import { configure } from 'react-native-showtime';
@@ -20,6 +25,16 @@ LogBox.ignoreLogs([
   'findHostInstance_DEPRECATED is deprecated in StrictMode',
   'findNodeHandle is deprecated in StrictMode',
 ]);
+
+if (Platform.OS === 'web') {
+  setDynamicLoadingEnabled(false);
+
+  loadAsync({
+    Feather,
+    Ionicons,
+    MaterialDesignIcons,
+  });
+}
 
 registerRootComponent(() => (
   <React.StrictMode>

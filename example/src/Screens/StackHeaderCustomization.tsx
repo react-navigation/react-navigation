@@ -1,4 +1,4 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import {
   Button,
   getHeaderTitle,
@@ -130,7 +130,7 @@ const StackHeaderCustomizationNavigator = createStackNavigator({
         headerStyle: { backgroundColor: '#ff005d' },
         headerBackButtonDisplayMode: 'minimal',
         headerBackIcon: ({ tintColor }) => (
-          <MaterialCommunityIcons
+          <MaterialDesignIcons
             name="arrow-left-circle-outline"
             color={tintColor}
             size={24}
@@ -193,7 +193,7 @@ const StackHeaderCustomizationNavigator = createStackNavigator({
                     );
                   }}
                 >
-                  <MaterialCommunityIcons
+                  <MaterialDesignIcons
                     name="dots-horizontal-circle-outline"
                     size={24}
                     color={tintColor}
