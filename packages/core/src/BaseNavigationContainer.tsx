@@ -193,7 +193,13 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     return route as Route<string> | undefined;
   });
 
-  const isReady = useLatestCallback(() => listeners.focus[0] != null);
+  // In addition to the root navigator being mounted,
+  // we also check that navigators for the focused chain of routes are mounted
+  // They may mount in a later commit, e.g. when the tree isn't fully hydrated
+  const isReady = useLatestCallback(
+    () =>
+      listeners.focus[0] != null && (keyedListeners.getIsReady.root?.() ?? true)
+  );
 
   const emitter = useEventEmitter<NavigationContainerEventMap>();
 
@@ -278,6 +284,24 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   const stackRef = React.useRef<string | undefined>(undefined);
 
+  const lastEmittedStateRef = React.useRef<State>(undefined);
+
+  const getHasEmittedState = useLatestCallback(
+    () => !isFirstMountRef.current && lastEmittedStateRef.current === getState()
+  );
+
+  const onReadyCalledRef = React.useRef(false);
+
+  // Screens may mount in a later commit than the container during hydration
+  // So we check readiness when a screen mounts in addition to state changes
+  const checkReady = useLatestCallback(() => {
+    if (!onReadyCalledRef.current && isReady()) {
+      onReadyCalledRef.current = true;
+      onReady?.();
+      emitter.emit({ type: 'ready' });
+    }
+  });
+
   const builderContext = React.useMemo(
     () => ({
       addListener,
@@ -288,6 +312,8 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       scheduleUpdate,
       flushUpdates,
       stackRef,
+      getHasEmittedState,
+      onSceneMounted: checkReady,
     }),
     [
       addListener,
@@ -297,6 +323,8 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       onOptionsChange,
       scheduleUpdate,
       flushUpdates,
+      getHasEmittedState,
+      checkReady,
     ]
   );
 
@@ -317,24 +345,16 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     [state, getState, setState, getKey, setKey, getIsInitial, addOptionsGetter]
   );
 
-  const onReadyRef = React.useRef(onReady);
   const onStateChangeRef = React.useRef(onStateChange);
 
   React.useEffect(() => {
     isInitialRef.current = false;
     onStateChangeRef.current = onStateChange;
-    onReadyRef.current = onReady;
   });
 
-  const onReadyCalledRef = React.useRef(false);
-
   React.useEffect(() => {
-    if (!onReadyCalledRef.current && isReady()) {
-      onReadyCalledRef.current = true;
-      onReadyRef.current?.();
-      emitter.emit({ type: 'ready' });
-    }
-  }, [state, isReady, emitter]);
+    checkReady();
+  }, [checkReady, state]);
 
   React.useEffect(() => {
     const hydratedState = getRootState();
@@ -409,6 +429,8 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
         }
       }
     }
+
+    lastEmittedStateRef.current = state;
 
     emitter.emit({ type: 'state', data: { state } });
 

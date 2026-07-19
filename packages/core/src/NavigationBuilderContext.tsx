@@ -15,6 +15,8 @@ export type ListenerMap = {
 
 export type KeyedListenerMap = {
   getState: GetStateListener;
+  getIsReady: GetIsReadyListener;
+  sceneMounted: SceneMountedListener;
   beforeRemove: ChildBeforeRemoveListener;
 };
 
@@ -27,7 +29,7 @@ export type AddKeyedListener = <T extends keyof KeyedListenerMap>(
   type: T,
   key: string,
   listener: KeyedListenerMap[T]
-) => void;
+) => () => void;
 
 export type ChildActionListener = (
   action: NavigationAction,
@@ -46,6 +48,10 @@ export type FocusedNavigationListener = <T>(
 };
 
 export type GetStateListener = () => NavigationState;
+
+export type GetIsReadyListener = () => boolean;
+
+export type SceneMountedListener = () => void;
 
 export type ChildBeforeRemoveListener = (
   action: NavigationAction,
@@ -72,11 +78,15 @@ export const NavigationBuilderContext = React.createContext<{
   onOptionsChange: (options: object) => void;
   scheduleUpdate: (callback: () => void) => void;
   flushUpdates: () => void;
-  stackRef?: React.MutableRefObject<string | undefined> | undefined;
+  stackRef?: React.RefObject<string | undefined> | undefined;
+  getHasEmittedState: () => boolean;
+  onSceneMounted: () => void;
 }>({
   onDispatchAction: () => undefined,
   onEmitEvent: () => undefined,
   onOptionsChange: () => undefined,
+  getHasEmittedState: () => false,
+  onSceneMounted: () => undefined,
   scheduleUpdate: () => {
     throw new Error("Couldn't find a context for scheduling updates.");
   },

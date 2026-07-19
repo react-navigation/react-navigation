@@ -8,6 +8,7 @@ import * as React from 'react';
 
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
 import { isArrayEqual } from './isArrayEqual';
+import { NavigationBuilderContext } from './NavigationBuilderContext';
 import {
   type FocusedRouteState,
   NavigationFocusedRouteStateContext,
@@ -101,6 +102,21 @@ export function SceneView<
     return clearOptions;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const { addKeyedListener, onSceneMounted } = React.use(
+    NavigationBuilderContext
+  );
+
+  // Let the parent navigator know that the content for the route has mounted
+  // The screen may mount in a later commit than the navigator during hydration
+  // Use insertion effect so it's preserved under `<Activity mode="hidden">`
+  React.useInsertionEffect(() => {
+    return addKeyedListener?.('sceneMounted', route.key, () => undefined);
+  }, [addKeyedListener, route.key]);
+
+  React.useEffect(() => {
+    onSceneMounted();
+  }, [onSceneMounted]);
 
   const getIsInitial = React.useCallback(() => isInitialRef.current, []);
 

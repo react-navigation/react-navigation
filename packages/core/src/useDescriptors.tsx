@@ -124,6 +124,8 @@ export function useDescriptors<
     scheduleUpdate,
     flushUpdates,
     stackRef,
+    getHasEmittedState,
+    onSceneMounted,
   } = React.use(NavigationBuilderContext);
 
   const context = React.useMemo(
@@ -139,6 +141,8 @@ export function useDescriptors<
       scheduleUpdate,
       flushUpdates,
       stackRef,
+      getHasEmittedState,
+      onSceneMounted,
     }),
     [
       navigation,
@@ -152,6 +156,8 @@ export function useDescriptors<
       scheduleUpdate,
       flushUpdates,
       stackRef,
+      getHasEmittedState,
+      onSceneMounted,
     ]
   );
 

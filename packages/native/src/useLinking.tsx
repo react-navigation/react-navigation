@@ -537,10 +537,10 @@ export function useLinking<ParamList extends ParamListBase>(
       return path;
     };
 
-    if (ref.current) {
+    const recordCurrentState = () => {
       // We need to record the current metadata on the first render if they aren't set
       // This will allow the initial state to be in the history entry
-      const state = ref.current.getRootState();
+      const state = ref.current?.getRootState();
 
       if (state) {
         const route = findFocusedRoute(state);
@@ -553,6 +553,17 @@ export function useLinking<ParamList extends ParamListBase>(
         history.replace({ path, state });
         previousIndexRef.current = history.index;
       }
+    };
+
+    let unsubscribeReady: (() => void) | undefined;
+
+    if (ref.current?.isReady()) {
+      recordCurrentState();
+    } else {
+      // The navigation tree may not be fully ready yet, e.g. during hydration
+      // The state is incomplete until then, so we wait to record it
+      // The URL in the address bar is already correct so it doesn't need updates
+      unsubscribeReady = ref.current?.addListener('ready', recordCurrentState);
     }
 
     const onUpdate = async () => {
@@ -563,6 +574,13 @@ export function useLinking<ParamList extends ParamListBase>(
       }
 
       const previousState = previousStateRef.current;
+
+      // If we haven't recorded the initial state yet, the tree wasn't ready
+      // Skip syncing the state to the history until it's recorded
+      if (previousState === undefined) {
+        return;
+      }
+
       const state = navigation.getRootState();
 
       // root state may not available, for example when root navigators switch inside the container
@@ -653,7 +671,12 @@ export function useLinking<ParamList extends ParamListBase>(
     // If `pushState` or `replaceState` were called before `history.go(n)` completes, it'll mess stuff up
     const handleUpdate = series(onUpdate);
 
-    return ref.current?.addListener('state', handleUpdate);
+    const unsubscribeState = ref.current?.addListener('state', handleUpdate);
+
+    return () => {
+      unsubscribeReady?.();
+      unsubscribeState?.();
+    };
   }, [enabled, history, ref]);
 
   return {

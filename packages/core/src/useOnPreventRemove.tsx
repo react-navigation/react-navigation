@@ -129,5 +129,7 @@ export function useOnPreventRemove({
         }
       );
     }
+
+    return undefined;
   }, [addKeyedListener, beforeRemoveListeners, emitter, getState, routeKey]);
 }

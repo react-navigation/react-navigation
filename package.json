@@ -49,6 +49,7 @@
     "eslint-config-satya164": "^5.1.8",
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "jest": "~29.7.0",
+    "jest-environment-jsdom": "29.7.0",
     "npm-run-all2": "^9.0.1",
     "prettier": "^3.8.3",
     "prettier-2": "npm:prettier@^2.8.8",

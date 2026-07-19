@@ -14,6 +14,8 @@ export function useKeyedChildListeners() {
   }>(
     Object.assign(Object.create(null), {
       getState: {},
+      getIsReady: {},
+      sceneMounted: {},
       beforeRemove: {},
     })
   );

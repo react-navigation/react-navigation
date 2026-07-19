@@ -458,6 +458,10 @@ export function useNavigationBuilder<
     getIsInitial,
   } = React.use(NavigationStateContext);
 
+  const { onEmitEvent, getHasEmittedState } = React.use(
+    NavigationBuilderContext
+  );
+
   const stateCleanupRef = React.useRef<boolean>(false);
   const lastStateRef = React.useRef<State | PartialState<State> | undefined>(
     undefined
@@ -809,12 +813,18 @@ export function useNavigationBuilder<
 
     setKey(navigatorKey);
 
-    if (!getIsInitial() && lastNotifiedStateRef.current !== state) {
+    if (
+      (!getIsInitial() || getHasEmittedState()) &&
+      lastNotifiedStateRef.current !== state
+    ) {
       // If it's not initial render, we need to update the state
       // This will make sure that our container gets notifier of state changes due to new mounts
       // This is necessary for proper screen tracking, URL updates etc.
       // We only notify if the state is different what we already notified
       // Otherwise this goes into a loop when inside `<Activity mode="hidden">`
+      // On initial render, the container will emit a 'state' event with the full state
+      // However during hydration, the navigator may mount in a later commit than the container
+      // Then no 'state' event is pending anymore, so we need to notify the container ourselves
       setState(state);
       lastNotifiedStateRef.current = state;
     }
@@ -843,8 +853,6 @@ export function useNavigationBuilder<
         : initializedState) as State
     );
   });
-
-  const { onEmitEvent } = React.use(NavigationBuilderContext);
 
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
     const routeNames = [];
@@ -1001,6 +1009,8 @@ export function useNavigationBuilder<
   useOnGetState({
     getState,
     getStateListeners: keyedListeners.getState,
+    getIsReadyListeners: keyedListeners.getIsReady,
+    sceneMountedListeners: keyedListeners.sceneMounted,
   });
 
   const descriptors = useDescriptors<
