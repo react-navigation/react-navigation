@@ -57,6 +57,8 @@ const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE';
 const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
 const DIRECTION_PERSISTENCE_KEY = 'DIRECTION';
 
+const EMPTY = () => () => {};
+
 const SCREEN_NAMES = Object.keys(SCREENS) as (keyof typeof SCREENS)[];
 
 const WEB_COLORS = {
@@ -376,6 +378,12 @@ const Navigation = createStaticNavigation(Stack);
 export function App() {
   const [{ isReady, themeName, isRTL }, dispatch] = useAppState();
 
+  const isHydrated = React.useSyncExternalStore(
+    EMPTY,
+    () => true,
+    () => false
+  );
+
   const dimensions = useWindowDimensions();
   const colorScheme = useColorScheme();
 
@@ -397,7 +405,7 @@ export function App() {
     return null;
   }
 
-  const isLargeScreen = dimensions.width >= 1024;
+  const isLargeScreen = isHydrated && dimensions.width >= 1024;
 
   const theme =
     themeName === 'dark'
