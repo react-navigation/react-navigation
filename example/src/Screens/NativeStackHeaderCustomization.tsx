@@ -1,4 +1,4 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import {
   Button,
   getHeaderTitle,
@@ -108,17 +108,13 @@ const NativeStackHeaderCustomizationNavigator = createNativeStackNavigator({
         headerTintColor: 'white',
         headerTitle: ({ tintColor }) => (
           <HeaderButton onPress={onPress}>
-            <MaterialCommunityIcons
-              name="signal-5g"
-              size={24}
-              color={tintColor}
-            />
+            <MaterialDesignIcons name="signal-5g" size={24} color={tintColor} />
           </HeaderButton>
         ),
         headerLeft: ({ tintColor, canGoBack }) =>
           canGoBack ? (
             <HeaderButton onPress={navigation.goBack}>
-              <MaterialCommunityIcons
+              <MaterialDesignIcons
                 name="arrow-left-thick"
                 size={24}
                 color={tintColor}
@@ -127,7 +123,7 @@ const NativeStackHeaderCustomizationNavigator = createNativeStackNavigator({
           ) : null,
         headerRight: ({ tintColor }) => (
           <HeaderButton onPress={onPress}>
-            <MaterialCommunityIcons name="music" size={24} color={tintColor} />
+            <MaterialDesignIcons name="music" size={24} color={tintColor} />
           </HeaderButton>
         ),
         headerBackground: () => (
@@ -164,7 +160,7 @@ const NativeStackHeaderCustomizationNavigator = createNativeStackNavigator({
         headerBackVisible: true,
         headerLeft: ({ tintColor }) => (
           <HeaderButton onPress={onPress}>
-            <MaterialCommunityIcons name="music" size={24} color={tintColor} />
+            <MaterialDesignIcons name="music" size={24} color={tintColor} />
           </HeaderButton>
         ),
       },

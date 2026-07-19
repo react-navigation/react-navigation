@@ -1,4 +1,4 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import { Header, HeaderButton } from '@react-navigation/elements';
 import { type StaticScreenProps, useTheme } from '@react-navigation/native';
 import {
@@ -23,14 +23,10 @@ export function ComponentsHeaders(_: StaticScreenProps<{}>) {
   }) => (
     <>
       <HeaderButton>
-        <MaterialCommunityIcons
-          name="heart-outline"
-          size={24}
-          color={tintColor}
-        />
+        <MaterialDesignIcons name="heart-outline" size={24} color={tintColor} />
       </HeaderButton>
       <HeaderButton>
-        <MaterialCommunityIcons
+        <MaterialDesignIcons
           name="information-outline"
           size={24}
           color={tintColor}

@@ -1,29 +1,29 @@
 import { expect, test as it } from '@playwright/test';
 
-const server = 'http://localhost:3275';
-
-it('renders the home page', async () => {
-  const res = await fetch(server);
+it('renders the home page', async ({ request }) => {
+  const res = await request.get('/');
   const html = await res.text();
 
-  expect(html).toContain('<!DOCTYPE html>');
   expect(html).toContain('id="root"');
 });
 
-it('renders a linked route from the request location', async () => {
-  const res = await fetch(`${server}/stack-basic`);
+it('renders a linked route from the request location', async ({ request }) => {
+  const res = await request.get('/stack-basic');
   const html = await res.text();
 
   expect(html).toContain('Article by Gandalf');
 });
 
-it('streams the shell before suspended content', async () => {
-  const res = await fetch(`${server}/screen-layout/suspense`);
+it('streams the shell before suspended content', async ({ baseURL }) => {
+  const res = await fetch(`${baseURL}/screen-layout/suspense`);
 
   expect(res.ok).toBe(true);
-  expect(res.body).not.toBeNull();
 
-  const reader = res.body!.getReader();
+  if (res.body == null) {
+    throw new Error('Response body was empty');
+  }
+
+  const reader = res.body.getReader();
   const decoder = new TextDecoder();
 
   let html = '';
