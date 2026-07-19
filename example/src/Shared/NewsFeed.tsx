@@ -1,4 +1,4 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import { PlatformPressable, Text } from '@react-navigation/elements';
 import { Color } from '@react-navigation/elements/internal';
 import { useScrollToTop, useTheme } from '@react-navigation/native';
@@ -32,14 +32,14 @@ const FooterIcon = ({
   icon,
   size = 16,
 }: {
-  icon: React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+  icon: React.ComponentProps<typeof MaterialDesignIcons>['name'];
   size?: number;
 }) => {
   const { colors } = useTheme();
 
   return (
     <PlatformPressable style={styles.icon}>
-      <MaterialCommunityIcons name={icon} size={size} color={colors.text} />
+      <MaterialDesignIcons name={icon} size={size} color={colors.text} />
     </PlatformPressable>
   );
 };

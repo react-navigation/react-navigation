@@ -1,7 +1,6 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import {
   useLogger,
   useReduxDevToolsExtension,
@@ -292,7 +291,7 @@ const Drawer = createDrawerNavigator({
           title: 'Examples',
           headerLeft: isLargeScreen ? () => null : undefined,
           drawerIcon: ({ size, color }) => (
-            <MaterialIcons size={size} color={color} name="folder" />
+            <MaterialDesignIcons size={size} color={color} name="folder" />
           ),
         };
       },
@@ -620,11 +619,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           key={item.label}
           label={item.label}
           icon={({ color, size }) => (
-            <MaterialCommunityIcons
-              name={item.icon}
-              color={color}
-              size={size}
-            />
+            <MaterialDesignIcons name={item.icon} color={color} size={size} />
           )}
           onPress={() => {
             // Do nothing for now

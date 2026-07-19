@@ -1,5 +1,5 @@
 import { useActionSheet } from '@expo/react-native-action-sheet';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import {
   type BottomTabScreenProps,
   createBottomTabNavigator,
@@ -153,7 +153,7 @@ export function BottomTabs(
                   );
                 }}
               >
-                <MaterialCommunityIcons
+                <MaterialDesignIcons
                   name={variant === 'uikit' ? 'ballot-outline' : 'ballot'}
                   size={24}
                   color={tintColor}
@@ -179,7 +179,7 @@ export function BottomTabs(
                   );
                 }}
               >
-                <MaterialCommunityIcons
+                <MaterialDesignIcons
                   name={
                     animation === 'none' ? 'movie-open-outline' : 'movie-open'
                   }
@@ -226,7 +226,7 @@ export function BottomTabs(
               color: ColorValue;
               size: number;
             }) => (
-              <MaterialCommunityIcons
+              <MaterialDesignIcons
                 name="message-reply"
                 color={color}
                 size={size}
@@ -326,7 +326,7 @@ export function BottomTabs(
             padding: 16,
           }}
         >
-          <MaterialCommunityIcons
+          <MaterialDesignIcons
             name={isCompact ? 'chevron-double-right' : 'chevron-double-left'}
             size={24}
             color="black"

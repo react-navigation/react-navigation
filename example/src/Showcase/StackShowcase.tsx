@@ -1,10 +1,10 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {
   Nunito_400Regular,
   Nunito_500Medium,
   useFonts,
 } from '@expo-google-fonts/nunito';
 import { Outfit_600SemiBold, Outfit_700Bold } from '@expo-google-fonts/outfit';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import { Text } from '@react-navigation/elements';
 import {
   type StaticScreenProps,
@@ -82,7 +82,7 @@ const CLOSE_IMAGE_VIEWER_TEST_ID = 'showcase-stack-close-image-viewer';
 
 type Period = 'Triassic' | 'Jurassic' | 'Cretaceous';
 type Diet = 'Herbivore' | 'Carnivore' | 'Omnivore';
-type IconName = React.ComponentProps<typeof MaterialCommunityIcons>['name'];
+type IconName = React.ComponentProps<typeof MaterialDesignIcons>['name'];
 
 type Dino = {
   id: string;
@@ -504,7 +504,7 @@ const DetailStat = ({
 
   return (
     <View style={[styles.detailStat, { backgroundColor: colors.background }]}>
-      <MaterialCommunityIcons name={icon} size={18} color={colors.primary} />
+      <MaterialDesignIcons name={icon} size={18} color={colors.primary} />
       <Text
         style={[
           styles.detailStatLabel,
@@ -567,7 +567,7 @@ const EmptyState = () => {
 
   return (
     <View style={[styles.emptyState, { backgroundColor: colors.card }]}>
-      <MaterialCommunityIcons name="magnify" size={28} color={colors.primary} />
+      <MaterialDesignIcons name="magnify" size={28} color={colors.primary} />
       <Text
         style={[styles.emptyStateTitle, fonts.bold, { color: colors.text }]}
       >
@@ -871,7 +871,7 @@ const ImageViewerScreen = ({ route }: StaticScreenProps<{ id: string }>) => {
         style={[styles.viewerClose, { top: insets.top + SPACING_S }]}
         onPress={navigation.goBack}
       >
-        <MaterialCommunityIcons name="close" size={24} color="#fff" />
+        <MaterialDesignIcons name="close" size={24} color="#fff" />
       </Pressable>
     </View>
   );

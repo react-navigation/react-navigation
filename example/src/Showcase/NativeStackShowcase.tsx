@@ -1,4 +1,4 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import { Button, HeaderButton, Text } from '@react-navigation/elements';
 import {
   type StaticScreenProps,
@@ -583,7 +583,7 @@ const NativeStackShowcaseNavigator = createNativeStackNavigator({
                 Alert.alert('Location', 'Centering on your location')
               }
             >
-              <MaterialCommunityIcons
+              <MaterialDesignIcons
                 name="crosshairs-gps"
                 size={24}
                 color={tintColor}
@@ -595,7 +595,7 @@ const NativeStackShowcaseNavigator = createNativeStackNavigator({
               accessibilityLabel="Places"
               onPress={() => navigation.navigate('Places')}
             >
-              <MaterialCommunityIcons
+              <MaterialDesignIcons
                 name="format-list-bulleted"
                 size={24}
                 color={tintColor}
