@@ -31,6 +31,7 @@
   "packageManager": "yarn@4.10.3",
   "devDependencies": {
     "@babel/core": "^7.29.0",
+    "@babel/plugin-transform-explicit-resource-management": "^7.29.7",
     "@commitlint/config-conventional": "^19.8.1",
     "@evilmartians/lefthook": "^1.11.13",
     "@lerna-lite/cli": "^4.11.0",
@@ -46,6 +47,7 @@
     "eslint-config-satya164": "^5.2.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
     "jest": "^30.0.0",
+    "jest-environment-jsdom": "29.7.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.5.3",
     "react": "19.2.3",

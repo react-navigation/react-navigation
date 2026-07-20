@@ -462,6 +462,10 @@ export function useNavigationBuilder<
     getIsInitial,
   } = React.useContext(NavigationStateContext);
 
+  const { onEmitEvent, getIsStateEmitted } = React.useContext(
+    NavigationBuilderContext
+  );
+
   const stateCleanupRef = React.useRef<boolean>(false);
   const lastStateRef = React.useRef<State | PartialState<State> | undefined>(
     undefined
@@ -813,13 +817,27 @@ export function useNavigationBuilder<
 
     setKey(navigatorKey);
 
-    if (!getIsInitial() && lastNotifiedStateRef.current !== state) {
-      // If it's not initial render, we need to update the state
-      // This will make sure that our container gets notifier of state changes due to new mounts
+    if (
+      (!getIsInitial() || getIsStateEmitted()) &&
+      lastNotifiedStateRef.current !== state
+    ) {
+      // We need to notify the state update in these scenarios:
+      // 1. If it's not the initial render of the component containing the navigator
+      // 2. If the container has already emitted state before the navigator mounted
+      //
+      // This will make sure that the container gets notified of state changes due to new mounts
       // This is necessary for proper screen tracking, URL updates etc.
-      // We only notify if the state is different what we already notified
+      //
+      // During hydration, a nested navigator may mount after the container's initial state event.
+      // Or mount could be delayed due to conditional rendering, suspense etc.
+      // So only checking for the initial render is not enough.
+      // We also need to propagate the navigator's initial state when it mounts later,
+      // so the container is notified that the nested state is now available.
+      //
+      // We only notify if the state is different from what we already notified
       // Otherwise this goes into a loop when inside `<Activity mode="hidden">`
       setState(state);
+
       lastNotifiedStateRef.current = state;
     }
 
@@ -847,8 +865,6 @@ export function useNavigationBuilder<
         : initializedState) as State
     );
   });
-
-  const { onEmitEvent } = React.useContext(NavigationBuilderContext);
 
   const emitter = useEventEmitter<EventMapCore<State>>((e) => {
     const routeNames = [];
