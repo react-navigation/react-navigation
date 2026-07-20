@@ -7,6 +7,7 @@ import {
   createBottomTabScreen,
 } from '@react-navigation/bottom-tabs';
 import {
+  CommonActions,
   type CompositeNavigationProp,
   createNavigatorFactory,
   createStaticNavigation,
@@ -20,6 +21,7 @@ import {
   type RouteProp,
   type ScreenLayoutArgs,
   type StackActionHelpers,
+  StackActions,
   type StackNavigationState,
   type StaticParamList,
   type StaticScreenProps,
@@ -3128,3 +3130,36 @@ createStackScreen({
 
   expectTypeOf(DecoratedStack).not.toHaveProperty('with');
 }
+
+/**
+ * Check for typesafe `dispatch` on navigation derived from static config
+ */
+
+/* A generic `NavigationProp` accepts only common actions */
+navigation.dispatch(CommonActions.navigate('Profile', { user: '123' }));
+navigation.dispatch(CommonActions.goBack());
+
+// @ts-expect-error - missing required params
+navigation.dispatch(CommonActions.navigate('Profile'));
+
+// @ts-expect-error - stack actions aren't part of the common action union
+navigation.dispatch(StackActions.push('Profile', { user: '123' }));
+
+/* A navigation prop from the static navigator accepts its router actions */
+function StaticDispatchChecks() {
+  const navigation = useNavigation<typeof RootStack>('Profile');
+
+  navigation.dispatch(StackActions.push('Profile', { user: '123' }));
+  navigation.dispatch(StackActions.replace('Settings'));
+  navigation.dispatch(CommonActions.navigate('Settings'));
+
+  // @ts-expect-error - invalid route name
+  navigation.dispatch(StackActions.push('Invalid'));
+
+  // @ts-expect-error - wrong param type
+  navigation.dispatch(StackActions.push('Profile', { user: 123 }));
+
+  return null;
+}
+
+<StaticDispatchChecks />;

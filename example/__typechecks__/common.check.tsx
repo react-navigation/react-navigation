@@ -3,6 +3,7 @@
 
 import type {
   BottomTabNavigationOptions,
+  BottomTabNavigationProp,
   BottomTabScreenProps,
 } from '@react-navigation/bottom-tabs';
 import type {
@@ -12,10 +13,13 @@ import type {
 } from '@react-navigation/drawer';
 import { Button } from '@react-navigation/elements';
 import {
+  CommonActions,
+  type CommonNavigationAction,
   type CompositeNavigationProp,
   type CompositeScreenProps,
   createNavigatorFactory,
   type DefaultNavigatorOptions,
+  DrawerActions,
   type DrawerNavigationState,
   type GenericNavigation,
   Link,
@@ -35,8 +39,12 @@ import {
   type RouteForName,
   type RouteProp,
   type StackActionHelpers,
+  StackActions,
+  type StackActionType,
   type StackNavigationState,
   type StaticScreenProps,
+  TabActions,
+  type TabNavigationState,
   type Theme,
   useLinkProps,
   useNavigation,
@@ -1954,3 +1962,177 @@ useNavigationState('Invalid', (state) => state.index);
     variant: 'compact' | 'regular';
   }>();
 }
+
+/**
+ * Check for typesafe `dispatch` based on param list and navigator actions
+ */
+declare const stackNavigation: StackNavigationProp<RootStackParamList>;
+declare const tabNavigation: BottomTabNavigationProp<FeedTabParamList>;
+declare const drawerNavigation: DrawerNavigationProp<HomeDrawerParamList>;
+
+/* Common actions on a typed prop */
+stackNavigation.dispatch(CommonActions.navigate('PostDetails', { id: '123' }));
+stackNavigation.dispatch(CommonActions.navigate('Login'));
+stackNavigation.dispatch(CommonActions.goBack());
+
+// Invalid route name
+// @ts-expect-error
+stackNavigation.dispatch(CommonActions.navigate('Invalid', {}));
+
+// Missing required params
+// @ts-expect-error
+stackNavigation.dispatch(CommonActions.navigate('PostDetails'));
+
+// Wrong param type
+// @ts-expect-error
+stackNavigation.dispatch(CommonActions.navigate('PostDetails', { id: 123 }));
+
+/* Router-specific actions on a stack prop */
+stackNavigation.dispatch(StackActions.push('PostDetails', { id: '123' }));
+stackNavigation.dispatch(StackActions.replace('Login'));
+stackNavigation.dispatch(StackActions.popTo('PostDetails', { id: '123' }));
+stackNavigation.dispatch(StackActions.pop());
+stackNavigation.dispatch(StackActions.popToTop());
+
+// Invalid route name for a stack action
+// @ts-expect-error
+stackNavigation.dispatch(StackActions.push('Invalid'));
+
+// Missing required params for a stack action
+// @ts-expect-error
+stackNavigation.dispatch(StackActions.replace('PostDetails'));
+
+// Wrong param type for a stack action
+// @ts-expect-error
+stackNavigation.dispatch(StackActions.push('PostDetails', { id: 123 }));
+
+/* Router-specific actions on a tab prop */
+tabNavigation.dispatch(TabActions.jumpTo('Popular', { filter: 'day' }));
+tabNavigation.dispatch(TabActions.jumpTo('Latest'));
+
+// Invalid route name for a tab action
+// @ts-expect-error
+tabNavigation.dispatch(TabActions.jumpTo('Invalid'));
+
+/* Router-specific actions on a drawer prop */
+drawerNavigation.dispatch(DrawerActions.openDrawer());
+drawerNavigation.dispatch(DrawerActions.closeDrawer());
+drawerNavigation.dispatch(DrawerActions.toggleDrawer());
+drawerNavigation.dispatch(DrawerActions.jumpTo('Account'));
+
+/* Cross-navigator actions are rejected */
+// Tab action on a stack-only prop (`Login` has no required params, so the only
+// reason this fails is that `JUMP_TO` isn't part of the stack action union)
+// @ts-expect-error
+stackNavigation.dispatch(TabActions.jumpTo('Login'));
+
+// Stack action on a tab-only prop
+// @ts-expect-error
+tabNavigation.dispatch(StackActions.push('Popular', { filter: 'day' }));
+
+// Drawer action on a stack-only prop
+// @ts-expect-error
+stackNavigation.dispatch(DrawerActions.openDrawer());
+
+/* Callback form receives the navigator's state */
+stackNavigation.dispatch((state) => {
+  expectTypeOf(state).toExtend<StackNavigationState<RootStackParamList>>();
+  expectTypeOf(state.type).toEqualTypeOf<'stack'>();
+
+  return StackActions.pop();
+});
+
+tabNavigation.dispatch((state) => {
+  expectTypeOf(state).toExtend<TabNavigationState<FeedTabParamList>>();
+  expectTypeOf(state.type).toEqualTypeOf<'tab'>();
+
+  return TabActions.jumpTo('Latest');
+});
+
+// Returning a foreign action from the callback errors
+// @ts-expect-error
+stackNavigation.dispatch(() => DrawerActions.openDrawer());
+
+/* Raw action objects */
+stackNavigation.dispatch({
+  type: 'NAVIGATE',
+  payload: { name: 'PostDetails', params: { id: '123' } },
+});
+
+// Wrong route name in a raw action
+// @ts-expect-error
+stackNavigation.dispatch({
+  type: 'NAVIGATE',
+  payload: { name: 'Invalid', params: {} },
+});
+
+// Unknown action type in a raw action
+// @ts-expect-error
+stackNavigation.dispatch({ type: 'BOGUS', payload: {} });
+
+/* Composite prop can dispatch actions from every navigator in the chain */
+declare const compositeNavigation: FeedTabScreenProps<'Popular'>['navigation'];
+
+compositeNavigation.dispatch(StackActions.push('PostDetails', { id: '123' }));
+compositeNavigation.dispatch(TabActions.jumpTo('Latest'));
+compositeNavigation.dispatch(DrawerActions.openDrawer());
+compositeNavigation.dispatch(
+  CommonActions.navigate('PostDetails', { id: '123' })
+);
+
+// Invalid route name is still rejected through a composite prop
+// @ts-expect-error
+compositeNavigation.dispatch(StackActions.push('Invalid'));
+
+/* Container ref accepts actions for all built-in routers */
+declare const dispatchRef: NavigationContainerRef<RootStackParamList>;
+
+dispatchRef.dispatch(CommonActions.navigate('PostDetails', { id: '123' }));
+dispatchRef.dispatch(StackActions.push('PostDetails', { id: '123' }));
+dispatchRef.dispatch(TabActions.jumpTo('Login'));
+dispatchRef.dispatch(DrawerActions.openDrawer());
+
+// Invalid route name is rejected
+// @ts-expect-error
+dispatchRef.dispatch(StackActions.push('Invalid'));
+
+// Unknown action type is rejected
+// @ts-expect-error
+dispatchRef.dispatch({ type: 'BOGUS', payload: {} });
+
+/* `beforeRemove` action can be re-dispatched */
+stackNavigation.addListener('beforeRemove', (e) => {
+  expectTypeOf(e.data.action).toEqualTypeOf<
+    | CommonNavigationAction<RootStackParamList>
+    | StackActionType<RootStackParamList>
+  >();
+
+  stackNavigation.dispatch(e.data.action);
+});
+
+/* Degradation for a `ParamListBase`-typed prop */
+declare const baseNavigation: NavigationProp<ParamListBase>;
+declare const wideName: string;
+declare const wideParams: object;
+
+baseNavigation.dispatch(CommonActions.navigate(wideName, wideParams));
+baseNavigation.dispatch(CommonActions.navigate(wideName));
+baseNavigation.dispatch(CommonActions.goBack());
+baseNavigation.dispatch({
+  type: 'NAVIGATE',
+  payload: { name: wideName, params: wideParams },
+});
+
+/* `getParent` preserves the dispatchable action union */
+stackNavigation
+  .getParent('PostDetails')
+  .dispatch(StackActions.push('PostDetails', { id: '123' }));
+
+/* `NavigationHelpers` accepts only common actions by default */
+declare const helpers: NavigationHelpers<RootStackParamList>;
+
+helpers.dispatch(CommonActions.navigate('PostDetails', { id: '123' }));
+
+// Router-specific actions aren't part of the common action union
+// @ts-expect-error
+helpers.dispatch(StackActions.push('PostDetails', { id: '123' }));
