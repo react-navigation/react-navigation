@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.11...@react-navigation/native@7.3.12) (2026-07-20)
+
+### Bug Fixes
+
+* fix state events and url when navigator mounts later ([5b47c68](https://github.com/react-navigation/react-navigation/commit/5b47c68a0cf1500d7d8fb3a2a23ca3fc78151f56)) - by @satya164
+
 ## [7.3.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.10...@react-navigation/native@7.3.11) (2026-07-17)
 
 **Note:** Version bump only for package @react-navigation/native

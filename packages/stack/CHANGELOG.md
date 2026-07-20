@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.10.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.14...@react-navigation/stack@7.10.15) (2026-07-20)
+
+**Note:** Version bump only for package @react-navigation/stack
+
 ## [7.10.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.13...@react-navigation/stack@7.10.14) (2026-07-17)
 
 **Note:** Version bump only for package @react-navigation/stack
