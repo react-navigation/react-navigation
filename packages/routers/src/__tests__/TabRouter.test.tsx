@@ -1058,7 +1058,7 @@ test("doesn't navigate to nonexistent screen", () => {
   ).toBeNull();
 });
 
-test('ensures unique ID for navigate', () => {
+test('creates a new route when the ID changes with navigate', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1079,7 +1079,19 @@ test('ensures unique ID for navigate', () => {
         index: 0,
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
-          { key: 'baz', name: 'baz' },
+          {
+            key: 'baz',
+            name: 'baz',
+            path: '/baz/1',
+            state: {
+              stale: false,
+              type: 'stack',
+              key: 'nested',
+              index: 0,
+              routeNames: ['child'],
+              routes: [{ key: 'child', name: 'child' }],
+            },
+          },
           { key: 'bar', name: 'bar' },
         ],
         history: [{ type: 'route', key: 'baz' }],
@@ -1279,7 +1291,7 @@ test("doesn't jump to nonexistent screen", () => {
   ).toBeNull();
 });
 
-test('ensures unique ID for jump to', () => {
+test('creates a new route when the ID changes with jumpTo', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1300,7 +1312,19 @@ test('ensures unique ID for jump to', () => {
         index: 0,
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
-          { key: 'baz', name: 'baz' },
+          {
+            key: 'baz',
+            name: 'baz',
+            path: '/baz/1',
+            state: {
+              stale: false,
+              type: 'stack',
+              key: 'nested',
+              index: 0,
+              routeNames: ['child'],
+              routes: [{ key: 'child', name: 'child' }],
+            },
+          },
           { key: 'bar', name: 'bar' },
         ],
         history: [{ type: 'route', key: 'baz' }],
@@ -3053,6 +3077,135 @@ test('handles screen preloading', () => {
       { key: 'qux-test', name: 'qux' },
     ],
     history: [{ type: 'route', key: 'qux-test' }],
+  });
+});
+
+test('creates a fresh route when preload changes the ID', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => params?.id,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        preloadedRouteKeys: [],
+        key: 'root',
+        index: 0,
+        routeNames: ['foo', 'bar'],
+        routes: [
+          { key: 'foo-test', name: 'foo' },
+          {
+            key: 'bar-old',
+            name: 'bar',
+            path: '/bar/1',
+            params: { id: '1' },
+            state: {
+              stale: false,
+              type: 'stack',
+              key: 'nested',
+              index: 0,
+              routeNames: ['child'],
+              routes: [{ key: 'child-test', name: 'child' }],
+            },
+          },
+        ],
+        history: [{ type: 'route', key: 'foo-test' }],
+      },
+      CommonActions.preload('bar', { id: '2' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['bar-test'],
+    key: 'root',
+    index: 0,
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo-test', name: 'foo' },
+      {
+        key: 'bar-test',
+        name: 'bar',
+        params: { id: '2' },
+      },
+    ],
+    history: [{ type: 'route', key: 'foo-test' }],
+  });
+});
+
+test('updates the existing route when preload keeps the same ID', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => params?.id,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        preloadedRouteKeys: [],
+        key: 'root',
+        index: 0,
+        routeNames: ['foo', 'bar'],
+        routes: [
+          { key: 'foo-test', name: 'foo' },
+          {
+            key: 'bar-old',
+            name: 'bar',
+            path: '/bar/1',
+            params: { id: '1', value: 'old' },
+            state: {
+              stale: false,
+              type: 'stack',
+              key: 'nested',
+              index: 0,
+              routeNames: ['child'],
+              routes: [{ key: 'child-test', name: 'child' }],
+            },
+          },
+        ],
+        history: [{ type: 'route', key: 'foo-test' }],
+      },
+      CommonActions.preload('bar', { id: '1', value: 'updated' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['bar-old'],
+    key: 'root',
+    index: 0,
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo-test', name: 'foo' },
+      {
+        key: 'bar-old',
+        name: 'bar',
+        path: '/bar/1',
+        params: { id: '1', value: 'updated' },
+        state: {
+          stale: false,
+          type: 'stack',
+          key: 'nested',
+          index: 0,
+          routeNames: ['child'],
+          routes: [{ key: 'child-test', name: 'child' }],
+        },
+      },
+    ],
+    history: [{ type: 'route', key: 'foo-test' }],
   });
 });
 
