@@ -228,7 +228,6 @@ export function useDescriptors<
     const clearOptions = () =>
       setOptions((o) => {
         if (route.key in o) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { [route.key]: _, ...rest } = o;
           return rest;
         }

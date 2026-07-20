@@ -474,6 +474,9 @@ export function StackRouter(options: StackRouterOptions) {
             return null;
           }
 
+          const getId = options.routeGetIdList[action.payload.name];
+          const id = getId?.({ params: action.payload.params });
+
           if (
             state.preloadedRoutes.find(
               (route) =>
@@ -485,10 +488,7 @@ export function StackRouter(options: StackRouterOptions) {
           }
 
           // If the route already exists, navigate to that
-          let index = -1;
-
-          const getId = options.routeGetIdList[action.payload.name];
-          const id = getId?.({ params: action.payload.params });
+          let index: number;
 
           if (id !== undefined) {
             index = state.routes.findIndex(

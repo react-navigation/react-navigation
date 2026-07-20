@@ -71,7 +71,6 @@ export default defineConfig([
       ],
 
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/ban-types': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-require-imports': 'off',
 
@@ -84,7 +83,7 @@ export default defineConfig([
         'error',
         {
           additionalHooks:
-            '(useIsomorphicLayoutEffect|useAnimatedStyle|useAnimatedProps)',
+            '(useClientLayoutEffect|useAnimatedStyle|useAnimatedProps)',
         },
       ],
     },
@@ -103,7 +102,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['scripts/*.js', 'netlify/functions/**/*.js'],
+    files: ['netlify/functions/**/*.js'],
 
     rules: {
       'import-x/no-commonjs': 'off',

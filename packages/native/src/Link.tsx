@@ -71,14 +71,14 @@ export function Link<ParamList extends ReactNavigation.RootParamList>({
     ...Platform.select({
       web: {
         'aria-disabled': rest.disabled,
-        'onAuxClick': rest.disabled
+        onAuxClick: rest.disabled
           ? (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
               e.preventDefault();
               e.stopPropagation();
             }
           : undefined,
-        'onClick': onPress,
-        'hrefAttrs': { target },
+        onClick: onPress,
+        hrefAttrs: { target },
       },
       default: { onPress },
     }),

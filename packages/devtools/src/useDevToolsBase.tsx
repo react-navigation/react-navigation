@@ -224,7 +224,7 @@ export function useDevToolsBase(
       unsubscribeAction?.();
       unsubscribeEvent?.();
       unsubscribeState?.();
-      clearTimeout(timer);
+      clearInterval(timer);
     };
   }, [ref, send]);
 

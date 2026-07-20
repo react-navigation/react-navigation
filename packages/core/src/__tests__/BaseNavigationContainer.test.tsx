@@ -516,7 +516,9 @@ test('emits state events when new navigator mounts', () => {
     const [isRendered, setIsRendered] = React.useState(false);
 
     React.useEffect(() => {
-      setTimeout(() => setIsRendered(true), 100);
+      const timer = setTimeout(() => setIsRendered(true), 100);
+
+      return () => clearTimeout(timer);
     }, []);
 
     if (!isRendered) {
