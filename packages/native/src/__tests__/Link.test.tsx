@@ -224,14 +224,14 @@ test('handles custom onPress and disabled links', async () => {
 });
 
 test.each([
-  ['CommonActions.navigate', CommonActions.navigate],
-  ['StackActions.push', StackActions.push],
-  ['StackActions.replace', StackActions.replace],
-  ['StackActions.popTo', StackActions.popTo],
-  ['TabActions.jumpTo', TabActions.jumpTo],
+  ['CommonActions.navigate', () => CommonActions.navigate('Bar', { id: '42' })],
+  ['StackActions.push', () => StackActions.push('Bar', { id: '42' })],
+  ['StackActions.replace', () => StackActions.replace('Bar', { id: '42' })],
+  ['StackActions.popTo', () => StackActions.popTo('Bar', { id: '42' })],
+  ['TabActions.jumpTo', () => TabActions.jumpTo('Bar', { id: '42' })],
 ])(
   'renders link with href from %s when only action is specified',
-  async (_, actionCreator) => {
+  async (_, getAction) => {
     const config = {
       config: {
         screens: {
@@ -248,7 +248,7 @@ test.each([
 
     const FooScreen = () => {
       return (
-        <Link<RootParamList> action={actionCreator('Bar', { id: '42' })}>
+        <Link<RootParamList> action={getAction()}>
           Go to Bar
         </Link>
       );

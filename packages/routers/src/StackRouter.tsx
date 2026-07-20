@@ -12,19 +12,31 @@ import type {
   Router,
 } from './types';
 
-export type StackActionType =
+export type StackActionType<ParamList extends ParamListBase = ParamListBase> =
   | {
-      type: 'REPLACE';
-      payload: { name: string; params?: object | undefined };
-      source?: string | undefined;
-      target?: string | undefined;
-    }
+      [RouteName in keyof ParamList]: {
+        type: 'REPLACE';
+        payload: {
+          name: Extract<RouteName, string>;
+        } & (undefined extends ParamList[RouteName]
+          ? { params?: ParamList[RouteName] }
+          : { params: ParamList[RouteName] });
+        source?: string | undefined;
+        target?: string | undefined;
+      };
+    }[keyof ParamList]
   | {
-      type: 'PUSH';
-      payload: { name: string; params?: object | undefined };
-      source?: string | undefined;
-      target?: string | undefined;
-    }
+      [RouteName in keyof ParamList]: {
+        type: 'PUSH';
+        payload: {
+          name: Extract<RouteName, string>;
+        } & (undefined extends ParamList[RouteName]
+          ? { params?: ParamList[RouteName] }
+          : { params: ParamList[RouteName] });
+        source?: string | undefined;
+        target?: string | undefined;
+      };
+    }[keyof ParamList]
   | {
       type: 'POP';
       payload: { count: number };
@@ -37,15 +49,18 @@ export type StackActionType =
       target?: string | undefined;
     }
   | {
-      type: 'POP_TO';
-      payload: {
-        name: string;
-        params?: object | undefined;
-        merge?: boolean | undefined;
+      [RouteName in keyof ParamList]: {
+        type: 'POP_TO';
+        payload: {
+          name: Extract<RouteName, string>;
+          merge?: boolean | undefined;
+        } & (undefined extends ParamList[RouteName]
+          ? { params?: ParamList[RouteName] }
+          : { params: ParamList[RouteName] });
+        source?: string | undefined;
+        target?: string | undefined;
       };
-      source?: string | undefined;
-      target?: string | undefined;
-    }
+    }[keyof ParamList]
   | {
       type: 'RETAIN';
       payload: { enable: boolean };
@@ -142,19 +157,84 @@ export type StackActionHelpers<ParamList extends ParamListBase> = {
   retain(enable: boolean): void;
 };
 
+function replace<Name extends string>(
+  name: Name
+): {
+  type: 'REPLACE';
+  payload: { name: Name; params: undefined };
+};
+
+function replace<Name extends string, Params extends object | undefined>(
+  name: Name,
+  params: Params
+): {
+  type: 'REPLACE';
+  payload: { name: Name; params: Params };
+};
+
+function replace(name: string, params?: object | undefined) {
+  return {
+    type: 'REPLACE',
+    payload: { name, params },
+  };
+}
+
+function push<Name extends string>(
+  name: Name
+): {
+  type: 'PUSH';
+  payload: { name: Name; params: undefined };
+};
+
+function push<Name extends string, Params extends object | undefined>(
+  name: Name,
+  params: Params
+): {
+  type: 'PUSH';
+  payload: { name: Name; params: Params };
+};
+
+function push(name: string, params?: object | undefined) {
+  return {
+    type: 'PUSH',
+    payload: { name, params },
+  };
+}
+
+function popTo<Name extends string>(
+  name: Name
+): {
+  type: 'POP_TO';
+  payload: { name: Name; params: undefined; merge: undefined };
+};
+
+function popTo<Name extends string, Params extends object | undefined>(
+  name: Name,
+  params: Params,
+  options?: { merge?: boolean } | undefined
+): {
+  type: 'POP_TO';
+  payload: { name: Name; params: Params; merge: boolean | undefined };
+};
+
+function popTo(
+  name: string,
+  params?: object | undefined,
+  options?: { merge?: boolean } | undefined
+) {
+  return {
+    type: 'POP_TO',
+    payload: {
+      name,
+      params,
+      merge: options?.merge,
+    },
+  };
+}
+
 export const StackActions = {
-  replace(name: string, params?: object) {
-    return {
-      type: 'REPLACE',
-      payload: { name, params },
-    } as const satisfies StackActionType;
-  },
-  push(name: string, params?: object) {
-    return {
-      type: 'PUSH',
-      payload: { name, params },
-    } as const satisfies StackActionType;
-  },
+  replace,
+  push,
   pop(count: number = 1) {
     return {
       type: 'POP',
@@ -164,16 +244,7 @@ export const StackActions = {
   popToTop() {
     return { type: 'POP_TO_TOP' } as const satisfies StackActionType;
   },
-  popTo(name: string, params?: object, options?: { merge?: boolean }) {
-    return {
-      type: 'POP_TO',
-      payload: {
-        name,
-        params,
-        merge: options?.merge,
-      },
-    } as const satisfies StackActionType;
-  },
+  popTo,
   retain(enable: boolean) {
     return {
       type: 'RETAIN',

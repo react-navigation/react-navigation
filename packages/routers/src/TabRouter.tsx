@@ -46,13 +46,30 @@ export type TabActionHelpers<ParamList extends ParamListBase> = {
   ): void;
 };
 
+function jumpTo<Name extends string>(
+  name: Name
+): {
+  type: 'JUMP_TO';
+  payload: { name: Name; params: undefined };
+};
+
+function jumpTo<Name extends string, Params extends object | undefined>(
+  name: Name,
+  params: Params
+): {
+  type: 'JUMP_TO';
+  payload: { name: Name; params: Params };
+};
+
+function jumpTo(name: string, params?: object | undefined) {
+  return {
+    type: 'JUMP_TO',
+    payload: { name, params },
+  };
+}
+
 export const TabActions = {
-  jumpTo(name: string, params?: object) {
-    return {
-      type: 'JUMP_TO',
-      payload: { name, params },
-    } as const satisfies TabActionType;
-  },
+  jumpTo,
 };
 
 export function TabRouter(

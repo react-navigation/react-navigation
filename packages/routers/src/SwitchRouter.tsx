@@ -6,17 +6,25 @@ import type {
   CommonNavigationAction,
   DefaultRouterOptions,
   NavigationState,
+  ParamListBase,
   PartialState,
   Route,
   RouterConfigOptions,
 } from './types';
 
-export type SwitchActionType = {
-  type: 'JUMP_TO';
-  payload: { name: string; params?: object | undefined };
-  source?: string | undefined;
-  target?: string | undefined;
-};
+export type SwitchActionType<ParamList extends ParamListBase = ParamListBase> =
+  {
+    [RouteName in keyof ParamList]: {
+      type: 'JUMP_TO';
+      payload: {
+        name: Extract<RouteName, string>;
+      } & (undefined extends ParamList[RouteName]
+        ? { params?: ParamList[RouteName] }
+        : { params: ParamList[RouteName] });
+      source?: string | undefined;
+      target?: string | undefined;
+    };
+  }[keyof ParamList];
 
 export type SwitchRouterOptions = DefaultRouterOptions & {
   /**

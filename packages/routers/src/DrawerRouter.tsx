@@ -17,8 +17,8 @@ import type {
 
 export type DrawerStatus = 'open' | 'closed';
 
-export type DrawerActionType =
-  | TabActionType
+export type DrawerActionType<ParamList extends ParamListBase = ParamListBase> =
+  | TabActionType<ParamList>
   | {
       type: 'OPEN_DRAWER' | 'CLOSE_DRAWER' | 'TOGGLE_DRAWER';
       source?: string | undefined;
