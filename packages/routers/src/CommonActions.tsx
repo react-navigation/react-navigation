@@ -45,7 +45,9 @@ type RouteActions<ParamList extends ParamListBase = ParamListBase> = {
     | {
         type: 'SET_PARAMS';
         payload: {
-          params?: Partial<Exclude<ParamList[RouteName], undefined>> | undefined;
+          params?:
+            | Partial<Exclude<ParamList[RouteName], undefined>>
+            | undefined;
         };
         source?: string | undefined;
         target?: string | undefined;

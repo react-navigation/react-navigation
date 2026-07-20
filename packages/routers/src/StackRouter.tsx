@@ -16,7 +16,8 @@ import type {
 export type StackActionType<ParamList extends ParamListBase = ParamListBase> =
   // The per-route actions (`REPLACE`, `PUSH`, `POP_TO`) are built in a single
   // pass over `keyof ParamList`, instead of a separate mapped type per action.
-  // The resulting union is the same, but the param list is only iterated once.
+  // The resulting union is the same, but the param list is only iterated once
+  // per instantiation.
   | {
       [RouteName in keyof ParamList]:
         | {

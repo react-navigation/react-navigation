@@ -247,11 +247,7 @@ test.each([
     const Stack = createStackNavigator<RootParamList>();
 
     const FooScreen = () => {
-      return (
-        <Link<RootParamList> action={getAction()}>
-          Go to Bar
-        </Link>
-      );
+      return <Link<RootParamList> action={getAction()}>Go to Bar</Link>;
     };
 
     const BarScreen = () => {
