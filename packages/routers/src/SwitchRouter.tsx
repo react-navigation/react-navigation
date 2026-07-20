@@ -437,12 +437,16 @@ export function SwitchRouter<Type extends SwitchRouterType>({
           const path =
             action.type === 'NAVIGATE' && action.payload.path != null
               ? action.payload.path
-              : route.path;
+              : key === route.key
+                ? route.path
+                : undefined;
 
           const nextRoute =
-            params !== route.params || path !== route.path || key !== route.key
-              ? { ...route, key, path, params }
-              : route;
+            key !== route.key
+              ? { key, name: route.name, path, params }
+              : params !== route.params || path !== route.path
+                ? { ...route, path, params }
+                : route;
 
           const routes = state.routes.map((item, routeIndex) =>
             routeIndex === index ? nextRoute : item
@@ -580,7 +584,11 @@ export function SwitchRouter<Type extends SwitchRouterType>({
 
           const params = createParamsFromAction({ action, routeParamList });
           const newRoute =
-            params !== route.params ? { ...route, key, params } : route;
+            key !== route.key
+              ? { key, name: route.name, params }
+              : params !== route.params
+                ? { ...route, params }
+                : route;
 
           let history = state.history;
 
