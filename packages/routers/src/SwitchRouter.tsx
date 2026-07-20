@@ -184,6 +184,26 @@ const changeIndex = <Type extends SwitchRouterType>(
 
       if (
         lastHistoryRouteItem?.type === 'route' &&
+        currentRoute.key !== lastHistoryRouteItem.key
+      ) {
+        const previousRoute = state.routes.find(
+          (route) => route.key === lastHistoryRouteItem.key
+        );
+
+        if (
+          previousRoute != null &&
+          previousRoute.params !== lastHistoryRouteItem.params
+        ) {
+          history = [...history];
+          history[lastHistoryRouteItemIndex] = {
+            ...lastHistoryRouteItem,
+            params: previousRoute.params,
+          };
+        }
+      }
+
+      if (
+        lastHistoryRouteItem?.type === 'route' &&
         currentRoute.key === lastHistoryRouteItem.key
       ) {
         // For full-history, only remove if it matches the last route

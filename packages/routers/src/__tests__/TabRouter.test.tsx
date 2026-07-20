@@ -1993,7 +1993,7 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.history).toEqual([
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
     { type: 'route', key: 'qux-0' },
   ]);
 
@@ -2004,7 +2004,7 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.history).toEqual([
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
     { type: 'route', key: 'qux-0' },
     { type: 'route', key: 'bar-0' },
   ]);
@@ -2016,20 +2016,7 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.history).toEqual([
-    { type: 'route', key: 'baz-0' },
-    { type: 'route', key: 'qux-0' },
-    { type: 'route', key: 'bar-0' },
-    { type: 'route', key: 'baz-0' },
-  ]);
-
-  state = router.getStateForAction(
-    state,
-    TabActions.jumpTo('baz'),
-    options
-  ) as TabNavigationState<ParamListBase>;
-
-  expect(state.history).toEqual([
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
     { type: 'route', key: 'qux-0' },
     { type: 'route', key: 'bar-0' },
     { type: 'route', key: 'baz-0' },
@@ -2042,7 +2029,20 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.history).toEqual([
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
+    { type: 'route', key: 'qux-0' },
+    { type: 'route', key: 'bar-0' },
     { type: 'route', key: 'baz-0' },
+  ]);
+
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('baz'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.history).toEqual([
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
     { type: 'route', key: 'qux-0' },
     { type: 'route', key: 'bar-0' },
     { type: 'route', key: 'baz-0' },
@@ -2055,7 +2055,7 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.history).toEqual([
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
     { type: 'route', key: 'qux-0' },
     { type: 'route', key: 'bar-0' },
   ]);
@@ -2067,7 +2067,7 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.history).toEqual([
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
     { type: 'route', key: 'qux-0' },
   ]);
 });
@@ -2130,6 +2130,55 @@ test('preserves params in history with backBehavior: fullHistory', () => {
 
   expect(state.index).toBe(1);
   expect(state.routes[1]?.params).toEqual({ value: 'first' });
+});
+
+test('restores updated params before initial params with backBehavior: fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar'],
+    routeParamList: { foo: { value: 'initial' } },
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.pushParams({ value: 'updated' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('bar'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.routes[state.index]).toEqual({
+    key: 'foo-1',
+    name: 'foo',
+    params: { value: 'updated' },
+    history: [{ type: 'params', params: { value: 'initial' } }],
+  });
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.routes[state.index]).toEqual({
+    key: 'foo-1',
+    name: 'foo',
+    params: { value: 'initial' },
+    history: [],
+  });
 });
 
 test('keeps initial params on goBack with backBehavior: fullHistory', () => {
