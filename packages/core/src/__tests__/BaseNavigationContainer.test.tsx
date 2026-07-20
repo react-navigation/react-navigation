@@ -174,6 +174,7 @@ test('handle dispatching with ref', async () => {
   await render(element);
 
   await act(() => {
+    // @ts-expect-error: intentionally dispatching an action outside the typed dispatch union
     ref.current?.dispatch({ type: 'REVERSE' });
   });
 
@@ -785,6 +786,7 @@ test("emits '__unsafe_action__' with noop true when action is handled without ch
 
   await act(() =>
     ref.current?.dispatch({
+      // @ts-expect-error: intentionally dispatching an action outside the typed dispatch union
       type: 'UNKNOWN',
       target,
     })
@@ -834,6 +836,7 @@ test("doesn't emit '__unsafe_action__' when action isn't handled", async () => {
 
   await act(() =>
     ref.current?.dispatch({
+      // @ts-expect-error: intentionally dispatching an action outside the typed dispatch union
       type: 'UNKNOWN',
     })
   );
@@ -1196,6 +1199,7 @@ test('throws if there is no navigator rendered', async () => {
 
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
+  // @ts-expect-error: intentionally dispatching an action outside the typed dispatch union
   ref.current?.dispatch({ type: 'WHATEVER' });
   ref.current?.resetRoot({ routes: [] });
 
@@ -1309,6 +1313,7 @@ test('warns for unhandled navigate action without a screen name', async () => {
     </BaseNavigationContainer>
   );
 
+  // @ts-expect-error: intentionally dispatching an action outside the typed dispatch union
   await act(() => ref.current?.dispatch({ type: 'NAVIGATE', payload: {} }));
 
   expect(spy.mock.calls[0]?.[0]).toMatch(
@@ -1385,6 +1390,7 @@ test("throws if the ref hasn't finished initializing", async () => {
     React.useInsertionEffect(() => {
       const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
+      // @ts-expect-error: intentionally dispatching an action outside the typed dispatch union
       ref.dispatch({ type: 'WHATEVER' });
 
       expect(spy.mock.calls[0]?.[0]).toMatch(
@@ -1454,6 +1460,7 @@ test('handles action dispatched on the ref after navigator is rendered', async (
 
   const TestScreen = () => {
     React.useEffect(() => {
+      // @ts-expect-error: intentionally dispatching an action outside the typed dispatch union
       ref.current?.dispatch({ type: 'REVERSE' });
     }, []);
 

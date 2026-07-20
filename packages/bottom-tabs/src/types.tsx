@@ -5,6 +5,7 @@ import type {
 } from '@react-navigation/elements';
 import type { Screen } from '@react-navigation/elements/internal';
 import type {
+  CommonNavigationAction,
   DefaultNavigatorOptions,
   Descriptor,
   NavigationHelpers,
@@ -12,6 +13,7 @@ import type {
   ParamListBase,
   RouteProp,
   TabActionHelpers,
+  TabActionType,
   TabNavigationState,
   TabRouterOptions,
   Theme,
@@ -61,7 +63,8 @@ export type LabelPosition = 'beside-icon' | 'below-icon';
 
 export type BottomTabNavigationHelpers = NavigationHelpers<
   ParamListBase,
-  BottomTabNavigationEventMap
+  BottomTabNavigationEventMap,
+  CommonNavigationAction<ParamListBase> | TabActionType<ParamListBase>
 > &
   TabActionHelpers<ParamListBase>;
 
@@ -74,7 +77,8 @@ export type BottomTabNavigationProp<
   TabNavigationState<ParamList>,
   BottomTabNavigationOptions,
   BottomTabNavigationEventMap,
-  TabActionHelpers<ParamList>
+  TabActionHelpers<ParamList>,
+  CommonNavigationAction<ParamList> | TabActionType<ParamList>
 >;
 
 export type BottomTabScreenProps<

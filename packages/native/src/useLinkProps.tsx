@@ -374,6 +374,7 @@ export function useLinkProps<
         }
       }
 
+      // @ts-expect-error: action from getActionFromState is a wide NavigationAction
       navigation.dispatch(cloned);
     }
   );

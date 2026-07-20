@@ -451,6 +451,7 @@ test('action goes to correct child navigator if target is specified', async () =
   await render(element);
 
   await act(() => {
+    // @ts-expect-error: intentionally dispatching an action outside the typed dispatch union
     ref.dispatch({ type: 'REVERSE', target: '1' });
   });
 

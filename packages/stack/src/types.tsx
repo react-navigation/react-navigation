@@ -6,6 +6,7 @@ import type {
   Icon,
 } from '@react-navigation/elements';
 import type {
+  CommonNavigationAction,
   DefaultNavigatorOptions,
   Descriptor,
   LocaleDirection,
@@ -15,6 +16,7 @@ import type {
   Route,
   RouteProp,
   StackActionHelpers,
+  StackActionType,
   StackNavigationState,
   StackRouterOptions,
   Theme,
@@ -53,7 +55,8 @@ export type StackNavigationEventMap = {
 
 export type StackNavigationHelpers = NavigationHelpers<
   ParamListBase,
-  StackNavigationEventMap
+  StackNavigationEventMap,
+  CommonNavigationAction<ParamListBase> | StackActionType<ParamListBase>
 > &
   StackActionHelpers<ParamListBase>;
 
@@ -66,7 +69,8 @@ export type StackNavigationProp<
   StackNavigationState<ParamList>,
   StackNavigationOptions,
   StackNavigationEventMap,
-  StackActionHelpers<ParamList>
+  StackActionHelpers<ParamList>,
+  CommonNavigationAction<ParamList> | StackActionType<ParamList>
 >;
 
 export type StackScreenProps<

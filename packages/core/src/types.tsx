@@ -1,5 +1,7 @@
 import type {
+  CommonNavigationAction,
   DefaultRouterOptions,
+  DrawerActionType,
   InitialState,
   NavigationAction,
   NavigationState,
@@ -7,6 +9,7 @@ import type {
   PartialState,
   Route,
   Router,
+  StackActionType,
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
@@ -181,11 +184,14 @@ export type EventMapBase = Record<
   { data?: any; canPreventDefault?: boolean | undefined }
 >;
 
-export type EventMapCore<in out State extends NavigationState> = {
+export type EventMapCore<
+  in out State extends NavigationState,
+  in out Action extends NavigationAction = NavigationAction,
+> = {
   focus: { data: undefined };
   blur: { data: undefined };
   state: { data: { state: State } };
-  beforeRemove: { data: { action: NavigationAction }; canPreventDefault: true };
+  beforeRemove: { data: { action: Action }; canPreventDefault: true };
 };
 
 export type EventArg<
@@ -334,6 +340,7 @@ type NavigateOptions = {
 type NavigationHelpersCommon<
   ParamList extends ParamListBase,
   State extends NavigationState = NavigationState,
+  Action extends NavigationAction = CommonNavigationAction<ParamList>,
 > = {
   /**
    * Dispatch an action or an update function to the router.
@@ -341,9 +348,7 @@ type NavigationHelpersCommon<
    *
    * @param action Action object or update function.
    */
-  dispatch(
-    action: NavigationAction | ((state: Readonly<State>) => NavigationAction)
-  ): void;
+  dispatch(action: Action | ((state: Readonly<State>) => Action)): void;
 
   /**
    * Navigate to a screen in the current or parent navigator.
@@ -471,7 +476,8 @@ type NavigationHelpersRoute<
 export type NavigationHelpers<
   ParamList extends ParamListBase,
   EventMap extends EventMapBase = {},
-> = NavigationHelpersCommon<ParamList> &
+  Action extends NavigationAction = CommonNavigationAction<ParamList>,
+> = NavigationHelpersCommon<ParamList, NavigationState, Action> &
   EventEmitter<EventMap> &
   NavigationHelpersRoute<ParamList, keyof ParamList> &
   PrivateValueStore<[ParamList, unknown, unknown, unknown]>;
@@ -517,7 +523,8 @@ type NavigationPropBase<
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {},
   ActionHelpers extends Record<string, (...args: any) => void> = {},
-> = NavigationHelpersCommon<ParamList, State> & {
+  Action extends NavigationAction = CommonNavigationAction<ParamList>,
+> = NavigationHelpersCommon<ParamList, State, Action> & {
   /**
    * Update the options for the route.
    * The options object will be shallow merged with default options object.
@@ -527,7 +534,7 @@ type NavigationPropBase<
   setOptions(options: Partial<ScreenOptions>): void;
 } & NavigationHelpersRoute<ParamList, RouteName> &
   ActionHelpers &
-  EventConsumer<EventMap & EventMapCore<State>>;
+  EventConsumer<EventMap & EventMapCore<State, Action>>;
 
 export type NavigationProp<
   ParamList extends {},
@@ -536,13 +543,15 @@ export type NavigationProp<
   ScreenOptions extends {} = {},
   EventMap extends EventMapBase = {},
   ActionHelpers extends Record<string, (...args: any) => void> = {},
+  Action extends NavigationAction = CommonNavigationAction<ParamList>,
 > = NavigationPropBase<
   ParamList,
   RouteName,
   State,
   ScreenOptions,
   EventMap,
-  ActionHelpers
+  ActionHelpers,
+  Action
 > & {
   /**
    * Returns the navigation prop of the parent screen.
@@ -559,7 +568,8 @@ export type NavigationProp<
     State,
     ScreenOptions,
     EventMap,
-    ActionHelpers
+    ActionHelpers,
+    Action
   >;
   getParent(): NavigationProp<ParamListBase> | undefined;
 } & PrivateValueStore<[ParamList, RouteName, EventMap, ActionHelpers]>;
@@ -577,8 +587,8 @@ type ScreenRouteProp<
 }[Extract<RouteName, string>];
 
 export type CompositeNavigationProp<
-  A extends NavigationProp<ParamListBase, any, any, any, any>,
-  B extends NavigationProp<ParamListBase, any, any, any, any>,
+  A extends NavigationProp<ParamListBase, any, any, any, any, {}, any>,
+  B extends NavigationProp<ParamListBase, any, any, any, any, {}, any>,
 > = CompositeNavigationPropInternal<
   A,
   B,
@@ -598,8 +608,8 @@ export type CompositeNavigationProp<
 >;
 
 type CompositeNavigationPropInternal<
-  A extends NavigationProp<ParamListBase, any, any, any, any>,
-  B extends NavigationProp<ParamListBase, any, any, any, any>,
+  A extends NavigationProp<ParamListBase, any, any, any, any, {}, any>,
+  B extends NavigationProp<ParamListBase, any, any, any, any, {}, any>,
   ParamList extends {},
   RouteName extends keyof ParamList,
   EventMap extends EventMapBase,
@@ -615,7 +625,9 @@ type CompositeNavigationPropInternal<
       RouteName,
       StateOfNavigationProp<A>,
       ScreenOptionsOfNavigationProp<A>,
-      EventMap
+      EventMap,
+      {},
+      ActionOfNavigationProp<A> | ActionOfNavigationProp<B>
     > & {
       getParent: A['getParent'] & B['getParent'];
     } & PrivateValueStore<
@@ -642,6 +654,15 @@ type StateOfNavigationProp<T> = T extends {
   ? State
   : NavigationState;
 
+// Derive the action union structurally from `dispatch` since it isn't stored
+// in the private brand. `dispatch`'s param is `Action | ((state) => Action)`,
+// so `Exclude` strips the callback form to leave just the action union.
+type ActionOfNavigationProp<T> = T extends {
+  dispatch(action: infer Action): void;
+}
+  ? Exclude<Action, (...args: any) => any>
+  : NavigationAction;
+
 type ScreenOptionsOfNavigationProp<T> = T extends {
   setOptions: (options: Partial<infer ScreenOptions>) => void;
 }
@@ -652,11 +673,11 @@ type EventMapOfNavigationProp<T> = PrivateValueOfNavigationProp<T>[2];
 
 export type CompositeScreenProps<
   in out A extends {
-    navigation: NavigationProp<ParamListBase, string, any, any, any>;
+    navigation: NavigationProp<ParamListBase, string, any, any, any, {}, any>;
     route: RouteProp<ParamListBase>;
   },
   in out B extends {
-    navigation: NavigationProp<ParamListBase, string, any, any, any>;
+    navigation: NavigationProp<ParamListBase, string, any, any, any, {}, any>;
   },
 > = {
   navigation: CompositeNavigationProp<A['navigation'], B['navigation']>;
@@ -678,7 +699,15 @@ export type ScreenLayoutArgs<
 
 export type Descriptor<
   out ScreenOptions extends {},
-  out Navigation extends NavigationProp<ParamListBase, any, any, any, any>,
+  out Navigation extends NavigationProp<
+    ParamListBase,
+    any,
+    any,
+    any,
+    any,
+    {},
+    any
+  >,
   out Route extends RouteProp<any, any>,
 > = {
   /**
@@ -1088,8 +1117,8 @@ type MaybeParamListRoute<ParamList extends {}> = ParamList extends ParamListBase
   : Route<string>;
 
 type BasicNavigationComposite<
-  Navigation extends NavigationProp<any, any, any, any, any>,
-  Parent extends NavigationProp<any, any, any, any, any> | undefined,
+  Navigation extends NavigationProp<any, any, any, any, any, {}, any>,
+  Parent extends NavigationProp<any, any, any, any, any, {}, any> | undefined,
 > = Parent extends undefined
   ? Navigation
   : CompositeNavigationProp<Navigation, NonNullable<Parent>>;
@@ -1097,7 +1126,7 @@ type BasicNavigationComposite<
 type BasicNavigationList<
   ParamList extends {},
   ExcludedRouteNames,
-  Parent extends NavigationProp<any, any, any, any, any> | undefined,
+  Parent extends NavigationProp<any, any, any, any, any, {}, any> | undefined,
 > = UnionToIntersection<
   {
     [RouteName in keyof ParamList]: (NavigatorScreenParams<{}> extends ParamList[RouteName]
@@ -1139,7 +1168,7 @@ type GenericNavigationComposite<
   RouteName extends keyof ParamList,
   Parent,
 > =
-  Parent extends NavigationProp<any, any, any, any, any>
+  Parent extends NavigationProp<any, any, any, any, any, {}, any>
     ? ParamListOfNavigationProp<Parent> extends infer ParentParamList
       ? NavigationProp<
           ParamList & InheritedParentParams<ParentParamList, ParamList>,
@@ -1153,7 +1182,7 @@ type NavigationListForScreenParams<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
   ExcludedRouteNames,
-  Parent extends NavigationProp<any, any, any, any, any> | undefined,
+  Parent extends NavigationProp<any, any, any, any, any, {}, any> | undefined,
 > = T extends PrivateValueStore<[any, any, any, any]> & NavigatorLike
   ? NavigationListForNestedInternal<
       T,
@@ -1172,7 +1201,7 @@ type NavigationListForParamListScreenParams<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,
   ExcludedRouteNames,
-  Parent extends NavigationProp<any, any, any, any, any> | undefined,
+  Parent extends NavigationProp<any, any, any, any, any, {}, any> | undefined,
 > =
   // `T` is only ever a plain param list here, since navigators are routed to
   // `NavigationListForNestedInternal` by `NavigationListForScreenParams`.
@@ -1188,7 +1217,7 @@ type NavigationListForParamListScreenParams<
 type BasicNavigationListForParamList<
   ParamList extends ParamListBase,
   ExcludedRouteNames,
-  Parent extends NavigationProp<any, any, any, any, any> | undefined,
+  Parent extends NavigationProp<any, any, any, any, any, {}, any> | undefined,
 > = UnionToIntersection<
   {
     [RouteName in keyof ParamList]: (NavigatorScreenParams<{}> extends ParamList[RouteName]
@@ -1318,7 +1347,7 @@ type NavigationListForNestedParamLists<ParentList, ParamList, Navigators> =
 // When there's no parent (root navigator), the list is returned as-is so the
 // common shallow case doesn't pay for a redundant mapped type.
 type ComposeNavigationList<NavigatorList extends Record<string, any>, Parent> =
-  Parent extends NavigationProp<any, any, any, any, any>
+  Parent extends NavigationProp<any, any, any, any, any, {}, any>
     ? {
         [K in keyof NavigatorList]: CompositeNavigationProp<
           NavigatorList[K],
@@ -1359,7 +1388,16 @@ type NavigationListForGroups<ParentList, Groups> = Groups extends {}
   : {};
 
 export type NavigationContainerRef<ParamList extends {}> = Omit<
-  NavigationHelpers<ParamList>,
+  NavigationHelpers<
+    ParamList,
+    {},
+    // The type of the root navigator isn't known here, so accept the actions
+    // for all built-in routers, with route names and params still checked
+    // against the param list. `DrawerActionType` includes `TabActionType`.
+    | CommonNavigationAction<ParamList>
+    | StackActionType<ParamList>
+    | DrawerActionType<ParamList>
+  >,
   keyof NavigationHelpersRoute<{}>
 > &
   NavigationHelpersRoute<{}> &
@@ -1411,6 +1449,7 @@ export interface NavigatorTypeBagBase {
   ScreenOptions: {};
   EventMap: {};
   ActionHelpers: {};
+  Action: NavigationAction;
   NavigationList: {
     [RouteName in keyof this['ParamList']]: NavigationProp<
       this['ParamList'],
@@ -1418,7 +1457,8 @@ export interface NavigatorTypeBagBase {
       this['State'],
       this['ScreenOptions'],
       this['EventMap'],
-      ActionHelpersOf<this['ActionHelpers']>
+      ActionHelpersOf<this['ActionHelpers']>,
+      this['Action']
     >;
   };
   Navigator: React.ComponentType<any>;

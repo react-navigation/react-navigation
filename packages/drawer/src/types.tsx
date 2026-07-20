@@ -1,9 +1,11 @@
 import type { HeaderOptions, Icon } from '@react-navigation/elements';
 import type { Screen } from '@react-navigation/elements/internal';
 import type {
+  CommonNavigationAction,
   DefaultNavigatorOptions,
   Descriptor,
   DrawerActionHelpers,
+  DrawerActionType,
   DrawerNavigationState,
   DrawerRouterOptions,
   NavigationHelpers,
@@ -273,7 +275,8 @@ export type DrawerNavigationEventMap = {
 
 export type DrawerNavigationHelpers = NavigationHelpers<
   ParamListBase,
-  DrawerNavigationEventMap
+  DrawerNavigationEventMap,
+  CommonNavigationAction<ParamListBase> | DrawerActionType<ParamListBase>
 > &
   DrawerActionHelpers<ParamListBase>;
 
@@ -286,7 +289,8 @@ export type DrawerNavigationProp<
   DrawerNavigationState<ParamList>,
   DrawerNavigationOptions,
   DrawerNavigationEventMap,
-  DrawerActionHelpers<ParamList>
+  DrawerActionHelpers<ParamList>,
+  CommonNavigationAction<ParamList> | DrawerActionType<ParamList>
 >;
 
 export type DrawerScreenProps<

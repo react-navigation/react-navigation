@@ -136,6 +136,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       } else {
         listener((navigation) =>
           React.startTransition(() => {
+            // @ts-expect-error: action is a wide NavigationAction re-dispatched to the root
             navigation.dispatch(action);
           })
         );
@@ -475,7 +476,10 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   return (
     <NavigationIndependentTreeContext.Provider value={false}>
-      <NavigationContainerRefContext.Provider value={navigation}>
+      <NavigationContainerRefContext.Provider
+        // @ts-expect-error: the ref is generic over ParamList but the context is typed with ParamListBase
+        value={navigation}
+      >
         <NavigationBuilderContext.Provider value={builderContext}>
           <NavigationStateContext.Provider value={context}>
             <ConsumedParamsContext.Provider value={consumedParams}>

@@ -1,5 +1,6 @@
 import type { Icon } from '@react-navigation/elements';
 import type {
+  CommonNavigationAction,
   DefaultNavigatorOptions,
   Descriptor,
   NavigationHelpers,
@@ -8,6 +9,7 @@ import type {
   Route,
   RouteProp,
   StackActionHelpers,
+  StackActionType,
   StackNavigationState,
   StackRouterOptions,
   Theme,
@@ -54,7 +56,8 @@ export type NativeStackNavigationProp<
   StackNavigationState<ParamList>,
   NativeStackNavigationOptions,
   NativeStackNavigationEventMap,
-  StackActionHelpers<ParamList>
+  StackActionHelpers<ParamList>,
+  CommonNavigationAction<ParamList> | StackActionType<ParamList>
 >;
 
 export type NativeStackScreenProps<
@@ -74,7 +77,8 @@ export type NativeStackOptionsArgs<
 
 export type NativeStackNavigationHelpers = NavigationHelpers<
   ParamListBase,
-  NativeStackNavigationEventMap
+  NativeStackNavigationEventMap,
+  CommonNavigationAction<ParamListBase> | StackActionType<ParamListBase>
 >;
 
 // We want it to be an empty object because navigator does not have any additional props

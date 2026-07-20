@@ -499,6 +499,7 @@ export function useLinking<ParamList extends ParamListBase>(
 
           if (action !== undefined) {
             try {
+              // @ts-expect-error: action from getActionFromState is a wide NavigationAction
               dispatch(action, 'replace');
             } catch (e) {
               // Ignore any errors from deep linking.

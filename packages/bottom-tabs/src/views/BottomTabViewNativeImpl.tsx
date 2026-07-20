@@ -168,6 +168,7 @@ export function BottomTabViewNative({
           target: prevRoute.state.key,
         };
 
+        // @ts-expect-error: dispatching a stack action to a nested stack navigator
         navigation.dispatch(popToTopAction);
       }
     }

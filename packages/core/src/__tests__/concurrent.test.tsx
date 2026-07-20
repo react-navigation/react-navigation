@@ -499,6 +499,7 @@ test('does not leak state updates scheduled during a discarded render', async ()
   // The transition is held on the suspending screen, so collapsing hasn't committed.
   // An unrelated update now commits and flushes pending updates - the update scheduled
   await act(() => {
+    // @ts-expect-error: intentionally dispatching an action outside the typed dispatch union
     navigation.dispatch({ type: 'UPDATE' });
   });
 

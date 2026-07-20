@@ -3408,6 +3408,7 @@ test('overrides router with router prop', async () => {
 
   await act(() => {
     navigation.dispatch({
+      // @ts-expect-error: intentionally dispatching an action outside the typed dispatch union
       type: 'REVERSE',
     });
   });

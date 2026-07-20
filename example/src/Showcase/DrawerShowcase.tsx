@@ -582,7 +582,10 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       <View style={styles.drawerSpacer} />
 
       <PlatformPressable
-        onPress={() => props.navigation.dispatch(StackActions.pop())}
+        onPress={() =>
+          // @ts-expect-error: dispatching a parent stack action from drawer content (bubbles up)
+          props.navigation.dispatch(StackActions.pop())
+        }
         style={styles.backButton}
       >
         <Text style={[styles.caption, fonts.medium, { color: colors.primary }]}>

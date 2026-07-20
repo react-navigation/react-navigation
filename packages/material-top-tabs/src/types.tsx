@@ -1,5 +1,6 @@
 import type { Icon } from '@react-navigation/elements';
 import type {
+  CommonNavigationAction,
   DefaultNavigatorOptions,
   Descriptor,
   NavigationHelpers,
@@ -8,6 +9,7 @@ import type {
   Route,
   RouteProp,
   TabActionHelpers,
+  TabActionType,
   TabNavigationState,
   TabRouterOptions,
   Theme,
@@ -44,7 +46,8 @@ export type MaterialTopTabNavigationEventMap = {
 
 export type MaterialTopTabNavigationHelpers = NavigationHelpers<
   ParamListBase,
-  MaterialTopTabNavigationEventMap
+  MaterialTopTabNavigationEventMap,
+  CommonNavigationAction<ParamListBase> | TabActionType<ParamListBase>
 > &
   TabActionHelpers<ParamListBase>;
 
@@ -57,7 +60,8 @@ export type MaterialTopTabNavigationProp<
   TabNavigationState<ParamList>,
   MaterialTopTabNavigationOptions,
   MaterialTopTabNavigationEventMap,
-  TabActionHelpers<ParamList>
+  TabActionHelpers<ParamList>,
+  CommonNavigationAction<ParamList> | TabActionType<ParamList>
 >;
 
 export type MaterialTopTabScreenProps<

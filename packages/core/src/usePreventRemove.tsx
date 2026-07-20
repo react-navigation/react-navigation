@@ -42,7 +42,7 @@ export function usePreventRemove(
   }, [id, routeKey, preventRemove, notifyPreventRemove]);
 
   const beforeRemoveListener = useLatestCallback<
-    EventListenerCallback<EventMapCore<any>, 'beforeRemove'>
+    EventListenerCallback<EventMapCore<any, any>, 'beforeRemove'>
   >((e) => {
     if (!preventRemove) {
       return;

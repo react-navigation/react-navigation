@@ -115,7 +115,7 @@ export function useNavigationHelpers<
 
         return current;
       },
-    } as NavigationHelpers<ParamListBase, EventMap> & ActionHelpers;
+    } as NavigationHelpers<ParamListBase, EventMap, Action> & ActionHelpers;
 
     return navigationHelpers;
   }, [

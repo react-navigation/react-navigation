@@ -193,6 +193,7 @@ export function BottomTabViewCustom({
 
       Animated.parallel(animations).start(({ finished }) => {
         if (popToTopAction) {
+          // @ts-expect-error: popToTopAction is a wide NavigationAction targeting a nested stack
           navigation.dispatch(popToTopAction);
         }
 

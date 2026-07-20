@@ -103,6 +103,7 @@ function DrawerViewBase({
       );
 
       if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
+        // @ts-expect-error: dispatching a stack action to a nested stack navigator
         navigation.dispatch({
           ...StackActions.popToTop(),
           target: prevRoute.state.key,

@@ -1,4 +1,5 @@
 import {
+  type CommonNavigationAction,
   createNavigatorFactory,
   createScreenFactory,
   type EventArg,
@@ -7,6 +8,7 @@ import {
   type ParamListBase,
   type StackActionHelpers,
   StackActions,
+  type StackActionType,
   type StackNavigationState,
   StackRouter,
   type StackRouterOptions,
@@ -99,6 +101,9 @@ export interface NativeStackTypeBag extends NavigatorTypeBagBase {
   ScreenOptions: NativeStackNavigationOptions;
   EventMap: NativeStackNavigationEventMap;
   ActionHelpers: StackActionHelpers<this['ParamList']>;
+  Action:
+    | CommonNavigationAction<this['ParamList']>
+    | StackActionType<this['ParamList']>;
   Navigator: typeof NativeStackNavigator;
 }
 

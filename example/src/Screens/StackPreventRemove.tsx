@@ -107,12 +107,7 @@ const InputScreen = () => {
       <Button
         variant="tinted"
         color="tomato"
-        onPress={() =>
-          navigation.dispatch({
-            ...CommonActions.goBack(),
-            payload: { confirmed: true },
-          })
-        }
+        onPress={() => navigation.dispatch(CommonActions.goBack())}
       >
         Discard and go back
       </Button>

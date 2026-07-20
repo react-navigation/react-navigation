@@ -60,6 +60,7 @@ const InputScreen = () => {
         'You have unsaved changes. Discard them and leave the screen?'
       );
       if (discard) {
+        // @ts-expect-error: data.action is a wide NavigationAction from beforeRemove
         navigation.dispatch(data.action);
       }
     } else {
@@ -71,6 +72,7 @@ const InputScreen = () => {
           {
             text: 'Discard',
             style: 'destructive',
+            // @ts-expect-error: data.action is a wide NavigationAction from beforeRemove
             onPress: () => navigation.dispatch(data.action),
           },
         ]
@@ -97,12 +99,7 @@ const InputScreen = () => {
       <Button
         variant="tinted"
         color="tomato"
-        onPress={() =>
-          navigation.dispatch({
-            ...CommonActions.goBack(),
-            payload: { confirmed: true },
-          })
-        }
+        onPress={() => navigation.dispatch(CommonActions.goBack())}
       >
         Discard and go back
       </Button>

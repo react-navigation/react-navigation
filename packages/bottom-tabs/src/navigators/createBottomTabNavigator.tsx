@@ -1,9 +1,11 @@
 import {
+  type CommonNavigationAction,
   createNavigatorFactory,
   createScreenFactory,
   type NavigatorTypeBagBase,
   type ParamListBase,
   type TabActionHelpers,
+  type TabActionType,
   type TabNavigationState,
   TabRouter,
   type TabRouterOptions,
@@ -65,6 +67,9 @@ export interface BottomTabTypeBag extends NavigatorTypeBagBase {
   ScreenOptions: BottomTabNavigationOptions;
   EventMap: BottomTabNavigationEventMap;
   ActionHelpers: TabActionHelpers<this['ParamList']>;
+  Action:
+    | CommonNavigationAction<this['ParamList']>
+    | TabActionType<this['ParamList']>;
   Navigator: typeof BottomTabNavigator;
 }
 

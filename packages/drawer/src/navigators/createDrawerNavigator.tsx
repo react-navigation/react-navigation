@@ -1,7 +1,9 @@
 import {
+  type CommonNavigationAction,
   createNavigatorFactory,
   createScreenFactory,
   type DrawerActionHelpers,
+  type DrawerActionType,
   type DrawerNavigationState,
   DrawerRouter,
   type DrawerRouterOptions,
@@ -68,6 +70,9 @@ export interface DrawerTypeBag extends NavigatorTypeBagBase {
   ScreenOptions: DrawerNavigationOptions;
   EventMap: DrawerNavigationEventMap;
   ActionHelpers: DrawerActionHelpers<this['ParamList']>;
+  Action:
+    | CommonNavigationAction<this['ParamList']>
+    | DrawerActionType<this['ParamList']>;
   Navigator: typeof DrawerNavigator;
 }
 

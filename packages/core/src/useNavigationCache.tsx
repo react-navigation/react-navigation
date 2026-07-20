@@ -133,6 +133,7 @@ export function useNavigationCache<
               typeof thunk === 'function' ? thunk(getState()) : thunk;
 
             if (action != null) {
+              // @ts-expect-error: action is a wide NavigationAction from the generic helper
               navigation.dispatch({ source: route.key, ...action });
             }
           })
