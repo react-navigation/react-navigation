@@ -4,9 +4,11 @@ import {
   getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
+  type InitialState,
   type NavigationContainerRef,
   type NavigationState,
   type ParamListBase,
+  type PartialState,
   useNavigationIndependentTree,
 } from '@react-navigation/core';
 import isEqual from 'fast-deep-equal';
@@ -27,6 +29,53 @@ type PopStateDelta = number | 'replace';
 
 const getRoutesUntilIndex = (state: NavigationState) =>
   state.routes.slice(0, state.index + 1);
+
+/**
+ * Get the state object to construct the path from.
+ *
+ * We use the root state as the base, and fallback to existing `route.state`.
+ * If a navigator mounts later, this ensures we don't remove it from URL.
+ * It could happen during suspense, hydration, conditional rendering etc.
+ */
+const getStateForPath = (
+  state: NavigationState | PartialState<NavigationState>,
+  fallbackState: InitialState | undefined
+): InitialState => {
+  const index = state.index ?? state.routes.length - 1;
+  const route = state.routes[index];
+
+  if (route == null) {
+    return state;
+  }
+
+  const fallbackRoute = fallbackState?.routes[index];
+
+  if (
+    (fallbackRoute != null &&
+      'key' in fallbackRoute &&
+      typeof fallbackRoute?.key === 'string' &&
+      typeof route?.key === 'string' &&
+      fallbackRoute.key !== route.key) ||
+    route.name !== fallbackRoute?.name
+  ) {
+    return state;
+  }
+
+  const childState = route.state
+    ? getStateForPath(route.state, fallbackRoute.state)
+    : fallbackRoute.state;
+
+  if (route.state === childState) {
+    return state;
+  }
+
+  return {
+    ...state,
+    routes: state.routes.map((item) =>
+      item === route ? { ...route, state: childState } : item
+    ),
+  };
+};
 
 /**
  * Calculate total history length including both navigator history and route history
@@ -482,7 +531,7 @@ export function useLinking<ParamList extends ParamListBase>(
 
     const getPathForRoute = (
       route: ReturnType<typeof findFocusedRoute>,
-      state: NavigationState
+      state: InitialState
     ): string => {
       let path;
 
@@ -543,8 +592,10 @@ export function useLinking<ParamList extends ParamListBase>(
       const state = ref.current.getRootState();
 
       if (state) {
-        const route = findFocusedRoute(state);
-        const path = getPathForRoute(route, state);
+        const stateForPath = getStateForPath(state, ref.current.getState());
+
+        const route = findFocusedRoute(stateForPath);
+        const path = getPathForRoute(route, stateForPath);
 
         if (previousStateRef.current === undefined) {
           previousStateRef.current = state;
@@ -575,8 +626,10 @@ export function useLinking<ParamList extends ParamListBase>(
         return;
       }
 
-      const route = findFocusedRoute(state);
-      const path = getPathForRoute(route, state);
+      const stateForPath = getStateForPath(state, navigation.getState());
+
+      const route = findFocusedRoute(stateForPath);
+      const path = getPathForRoute(route, stateForPath);
 
       const pendingPopStateDelta = pendingPopStateDeltaRef.current;
 

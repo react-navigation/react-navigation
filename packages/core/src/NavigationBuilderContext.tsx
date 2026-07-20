@@ -70,13 +70,15 @@ export const NavigationBuilderContext = React.createContext<{
     data: unknown;
   }) => void;
   onOptionsChange: (options: object) => void;
+  getIsStateEmitted: () => boolean;
   scheduleUpdate: (callback: () => void) => void;
   flushUpdates: () => void;
-  stackRef?: React.MutableRefObject<string | undefined> | undefined;
+  stackRef?: React.RefObject<string | undefined> | undefined;
 }>({
   onDispatchAction: () => undefined,
   onEmitEvent: () => undefined,
   onOptionsChange: () => undefined,
+  getIsStateEmitted: () => false,
   scheduleUpdate: () => {
     throw new Error("Couldn't find a context for scheduling updates.");
   },

@@ -635,6 +635,80 @@ test('emits state events when new navigator mounts', async () => {
   expect(onStateChange).toHaveBeenLastCalledWith(resultState);
 });
 
+test('emits state events when a screen with a nested navigator mounts later', async () => {
+  const TestNavigator = ({ show, ...props }: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {show
+          ? state.routes.map((route) => descriptors[route.key]?.render())
+          : null}
+      </NavigationContent>
+    );
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+  const onStateChange = jest.fn();
+
+  const Test = ({ show }: { show: boolean }) => (
+    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+      <TestNavigator show={show}>
+        <Screen name="foo">
+          {() => (
+            <TestNavigator>
+              <Screen name="bar">{() => null}</Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<Test show={false} />);
+
+  const listener =
+    jest.fn<EventListenerCallback<NavigationContainerEventMap, 'state'>>();
+
+  ref.current?.addListener('state', listener);
+
+  expect(listener).not.toHaveBeenCalled();
+  expect(onStateChange).not.toHaveBeenCalled();
+
+  await root.rerender(<Test show />);
+
+  const resultState = {
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: '0',
+    routeNames: ['foo'],
+    routes: [
+      {
+        key: 'foo',
+        name: 'foo',
+        state: {
+          stale: false,
+          type: 'test',
+          index: 0,
+          key: '1',
+          routeNames: ['bar'],
+          routes: [{ key: 'bar', name: 'bar' }],
+        },
+      },
+    ],
+  };
+
+  expect(listener).toHaveBeenCalledTimes(1);
+  expect(listener.mock.calls[0]?.[0].data.state).toEqual(resultState);
+
+  expect(onStateChange).toHaveBeenCalledTimes(1);
+  expect(onStateChange).toHaveBeenLastCalledWith(resultState);
+});
+
 test("emits '__unsafe_action__' with noop false when action updates state", async () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(

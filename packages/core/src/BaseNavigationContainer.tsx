@@ -278,6 +278,12 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   const stackRef = React.useRef<string | undefined>(undefined);
 
+  const lastEmittedStateRef = React.useRef<State>(undefined);
+
+  const getIsStateEmitted = useLatestCallback(
+    () => !isFirstMountRef.current && lastEmittedStateRef.current === getState()
+  );
+
   const builderContext = React.useMemo(
     () => ({
       addListener,
@@ -285,6 +291,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       onDispatchAction,
       onEmitEvent,
       onOptionsChange,
+      getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
       stackRef,
@@ -295,6 +302,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       onDispatchAction,
       onEmitEvent,
       onOptionsChange,
+      getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
     ]
@@ -409,6 +417,8 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
         }
       }
     }
+
+    lastEmittedStateRef.current = state;
 
     emitter.emit({ type: 'state', data: { state } });
 
