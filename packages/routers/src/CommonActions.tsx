@@ -96,9 +96,38 @@ export type Action<ParamList extends ParamListBase = ParamListBase> =
   | PushParamsAction<ParamList>
   | PreloadAction<ParamList>;
 
-export function goBack(): Action {
-  return { type: 'GO_BACK' };
+export function goBack() {
+  return { type: 'GO_BACK' } as const satisfies Action;
 }
+
+export function navigate<Name extends string>(
+  name: Name
+): {
+  type: 'NAVIGATE';
+  payload: { name: Name; params: undefined; merge: undefined; pop: undefined };
+};
+
+export function navigate<
+  Name extends string,
+  Params extends object | undefined,
+>(
+  name: Name,
+  params: Params,
+  options?:
+    | {
+        merge?: boolean | undefined;
+        pop?: boolean | undefined;
+      }
+    | undefined
+): {
+  type: 'NAVIGATE';
+  payload: {
+    name: Name;
+    params: Params;
+    merge: boolean | undefined;
+    pop: boolean | undefined;
+  };
+};
 
 export function navigate(
   name: string,
@@ -109,7 +138,7 @@ export function navigate(
         pop?: boolean | undefined;
       }
     | undefined
-): Action {
+) {
   return {
     type: 'NAVIGATE',
     payload: {
@@ -125,30 +154,45 @@ export function reset(state: ResetState) {
   return { type: 'RESET', payload: state } as const satisfies ResetAction;
 }
 
-export function setParams(params: object) {
+export function setParams<Params extends object>(params: Params) {
   return {
     type: 'SET_PARAMS',
     payload: { params },
   } as const satisfies SetParamsAction;
 }
 
-export function replaceParams(params: object) {
+export function replaceParams<Params extends object>(params: Params) {
   return {
     type: 'REPLACE_PARAMS',
     payload: { params },
   } as const satisfies ReplaceParamsAction;
 }
 
-export function pushParams(params: object) {
+export function pushParams<Params extends object>(params: Params) {
   return {
     type: 'PUSH_PARAMS',
     payload: { params },
   } as const satisfies PushParamsAction;
 }
 
+export function preload<Name extends string>(
+  name: Name
+): {
+  type: 'PRELOAD';
+  payload: { name: Name; params: undefined };
+};
+
+export function preload<Name extends string, Params extends object | undefined>(
+  name: Name,
+  params: Params
+): {
+  type: 'PRELOAD';
+  payload: { name: Name; params: Params };
+};
+
 export function preload(name: string, params?: object | undefined) {
   return {
     type: 'PRELOAD',
     payload: { name, params },
-  } as const satisfies PreloadAction;
+  };
 }
