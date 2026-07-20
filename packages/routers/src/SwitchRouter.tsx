@@ -575,6 +575,26 @@ export function SwitchRouter<Type extends SwitchRouterType>({
                   backBehavior === 'fullHistory' ? newRoute.params : undefined,
               });
             }
+          } else if (
+            backBehavior === 'fullHistory' &&
+            newRoute.params !== route.params
+          ) {
+            const historyItemIndex = history.findLastIndex(
+              (item) => item.type === 'route' && item.key === route.key
+            );
+
+            if (historyItemIndex !== -1) {
+              history = [...history];
+
+              const item = history[historyItemIndex];
+
+              if (item.type === 'route') {
+                history[historyItemIndex] = {
+                  ...item,
+                  params: newRoute.params,
+                };
+              }
+            }
           }
 
           return {
