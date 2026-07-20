@@ -66,10 +66,10 @@ function Content() {
     >
       <Text style={[styles.time, { color: colors.text }]}>{formattedTime}</Text>
       <View style={styles.buttons}>
-        <PlatformPressable onPress={() => setOffset((o) => --o)}>
+        <PlatformPressable onPress={() => setOffset((o) => o - 1)}>
           <Text style={styles.button}>↓</Text>
         </PlatformPressable>
-        <PlatformPressable onPress={() => setOffset((o) => ++o)}>
+        <PlatformPressable onPress={() => setOffset((o) => o + 1)}>
           <Text style={styles.button}>↑</Text>
         </PlatformPressable>
       </View>

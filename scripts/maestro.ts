@@ -71,7 +71,6 @@ if (ci && result.exitCode !== 0) {
     });
 
     if (result.exitCode === 0) {
-      failedFlows = [];
       break;
     }
 
