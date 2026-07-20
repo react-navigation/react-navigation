@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.6.4](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.6.3...@react-navigation/routers@7.6.4) (2026-07-20)
+
+### Bug Fixes
+
+* create fresh route object when key changes in tab ([4c49c07](https://github.com/react-navigation/react-navigation/commit/4c49c070b28cf92737b85962a945be6d75557eea)) - by @satya164
+* filter preloaded routes on route config changes ([c032678](https://github.com/react-navigation/react-navigation/commit/c0326785129b1774108d4a151a61b238c1416c74)) - by @satya164
+* prevent popTo from matching routes above source ([46de2ce](https://github.com/react-navigation/react-navigation/commit/46de2ce795d7f83c2f5046a44f167ba5d0e752d8)) - by @satya164
+* update correct route params in tab history ([634cd4f](https://github.com/react-navigation/react-navigation/commit/634cd4ff509861e072867e9d028ab7248bbf0888)) - by @satya164
+* update route on repeated preload instead of replacing ([85378e4](https://github.com/react-navigation/react-navigation/commit/85378e45d00007374352ebc5f4334a0594fe2050)) - by @satya164
+* update route params in tab history on preload ([6ab10e0](https://github.com/react-navigation/react-navigation/commit/6ab10e0b36984464aa904beecb909cee2dcff784)) - by @satya164
+
 ## [7.6.3](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@7.6.2...@react-navigation/routers@7.6.3) (2026-07-20)
 
 **Note:** Version bump only for package @react-navigation/routers
