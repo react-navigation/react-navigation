@@ -2618,6 +2618,128 @@ test('adds route to preloaded list with preload', () => {
   });
 });
 
+test('updates an existing preloaded route', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        preloadedRoutes: [
+          {
+            key: 'baz-preloaded',
+            name: 'baz',
+            params: { value: 'unchanged' },
+          },
+          {
+            key: 'bar-preloaded',
+            name: 'bar',
+            params: { value: 'old' },
+          },
+        ],
+        routeNames: ['foo', 'bar', 'baz'],
+        routes: [{ key: 'foo', name: 'foo' }],
+      },
+      CommonActions.preload('bar', { value: 'updated' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    preloadedRoutes: [
+      {
+        key: 'baz-preloaded',
+        name: 'baz',
+        params: { value: 'unchanged' },
+      },
+      {
+        key: 'bar-preloaded',
+        name: 'bar',
+        params: { value: 'updated' },
+      },
+    ],
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [{ key: 'foo', name: 'foo' }],
+  });
+});
+
+test('updates an existing preloaded route with the same ID', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => params?.id,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        preloadedRoutes: [
+          {
+            key: 'baz-preloaded',
+            name: 'baz',
+            params: { value: 'unchanged' },
+          },
+          {
+            key: 'bar-1-preloaded',
+            name: 'bar',
+            params: { id: '1', value: 'unchanged' },
+          },
+          {
+            key: 'bar-2-preloaded',
+            name: 'bar',
+            params: { id: '2', value: 'old' },
+          },
+        ],
+        routeNames: ['foo', 'bar', 'baz'],
+        routes: [{ key: 'foo', name: 'foo' }],
+      },
+      CommonActions.preload('bar', { id: '2', value: 'updated' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    preloadedRoutes: [
+      {
+        key: 'baz-preloaded',
+        name: 'baz',
+        params: { value: 'unchanged' },
+      },
+      {
+        key: 'bar-1-preloaded',
+        name: 'bar',
+        params: { id: '1', value: 'unchanged' },
+      },
+      {
+        key: 'bar-2-preloaded',
+        name: 'bar',
+        params: { id: '2', value: 'updated' },
+      },
+    ],
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [{ key: 'foo', name: 'foo' }],
+  });
+});
+
 test('uses preloaded route when pushing a route with the same name', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {

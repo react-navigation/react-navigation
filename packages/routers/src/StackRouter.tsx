@@ -704,6 +704,7 @@ export function StackRouter(options: StackRouterOptions) {
 
           const getId = options.routeGetIdList[action.payload.name];
           const id = getId?.({ params: action.payload.params });
+          const params = createParamsFromAction({ action, routeParamList });
 
           let route: Route<string> | undefined;
 
@@ -724,22 +725,33 @@ export function StackRouter(options: StackRouterOptions) {
                 }
                 return {
                   ...r,
-                  params: createParamsFromAction({ action, routeParamList }),
+                  params,
                 };
               }),
             };
-          } else {
+          }
+
+          const preloadedRoute = state.preloadedRoutes.findLast(
+            (route) =>
+              route.name === action.payload.name &&
+              id === getId?.({ params: route.params })
+          );
+
+          if (preloadedRoute) {
             return {
               ...state,
-              preloadedRoutes: state.preloadedRoutes
-                .filter(
-                  (r) =>
-                    r.name !== action.payload.name ||
-                    id !== getId?.({ params: r.params })
-                )
-                .concat(createRouteFromAction({ action, routeParamList })),
+              preloadedRoutes: state.preloadedRoutes.map((route) =>
+                route.key === preloadedRoute.key ? { ...route, params } : route
+              ),
             };
           }
+
+          return {
+            ...state,
+            preloadedRoutes: state.preloadedRoutes.concat(
+              createRouteFromAction({ action, routeParamList })
+            ),
+          };
         }
 
         default:
