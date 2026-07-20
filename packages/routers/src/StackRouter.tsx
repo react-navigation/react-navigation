@@ -611,11 +611,17 @@ export function StackRouter(options: StackRouterOptions) {
           const id = getId?.({ params: action.payload.params });
 
           if (id !== undefined) {
-            index = state.routes.findIndex(
-              (route) =>
+            for (let i = currentIndex; i >= 0; i--) {
+              const route = state.routes[i];
+
+              if (
                 route.name === action.payload.name &&
                 id === getId?.({ params: route.params })
-            );
+              ) {
+                index = i;
+                break;
+              }
+            }
           } else if (state.routes[currentIndex].name === action.payload.name) {
             index = currentIndex;
           } else {
