@@ -1958,7 +1958,7 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.history).toEqual([
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
     { type: 'route', key: 'qux-0' },
   ]);
 
@@ -1969,7 +1969,7 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.history).toEqual([
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
     { type: 'route', key: 'qux-0' },
     { type: 'route', key: 'bar-0' },
   ]);
@@ -1981,20 +1981,7 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.history).toEqual([
-    { type: 'route', key: 'baz-0' },
-    { type: 'route', key: 'qux-0' },
-    { type: 'route', key: 'bar-0' },
-    { type: 'route', key: 'baz-0' },
-  ]);
-
-  state = router.getStateForAction(
-    state,
-    TabActions.jumpTo('baz'),
-    options
-  ) as TabNavigationState<ParamListBase>;
-
-  expect(state.history).toEqual([
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
     { type: 'route', key: 'qux-0' },
     { type: 'route', key: 'bar-0' },
     { type: 'route', key: 'baz-0' },
@@ -2007,7 +1994,20 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.history).toEqual([
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
+    { type: 'route', key: 'qux-0' },
+    { type: 'route', key: 'bar-0' },
     { type: 'route', key: 'baz-0' },
+  ]);
+
+  state = router.getStateForAction(
+    state,
+    TabActions.jumpTo('baz'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.history).toEqual([
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
     { type: 'route', key: 'qux-0' },
     { type: 'route', key: 'bar-0' },
     { type: 'route', key: 'baz-0' },
@@ -2020,7 +2020,7 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.history).toEqual([
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
     { type: 'route', key: 'qux-0' },
     { type: 'route', key: 'bar-0' },
   ]);
@@ -2032,7 +2032,7 @@ test('updates route key history on navigate and jump to with backBehavior: fullH
   ) as TabNavigationState<ParamListBase>;
 
   expect(state.history).toEqual([
-    { type: 'route', key: 'baz-0' },
+    { type: 'route', key: 'baz-0', params: { answer: 42 } },
     { type: 'route', key: 'qux-0' },
   ]);
 });
