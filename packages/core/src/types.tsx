@@ -337,6 +337,17 @@ type NavigateOptions = {
   pop?: boolean | undefined;
 };
 
+/**
+ * Actions for all built-in routers, for `dispatch` on navigation objects
+ * where the type of the navigator isn't known. Route names and params are
+ * still checked against the param list.
+ * `DrawerActionType` includes `TabActionType`.
+ */
+type BuiltInNavigationAction<ParamList extends {}> =
+  | CommonNavigationAction<ParamList>
+  | StackActionType<ParamList>
+  | DrawerActionType<ParamList>;
+
 type NavigationHelpersCommon<
   ParamList extends ParamListBase,
   State extends NavigationState = NavigationState,
@@ -571,7 +582,19 @@ export type NavigationProp<
     ActionHelpers,
     Action
   >;
-  getParent(): NavigationProp<ParamListBase> | undefined;
+  getParent():
+    | NavigationProp<
+        ParamListBase,
+        string,
+        NavigationState,
+        {},
+        {},
+        {},
+        // The type of the parent navigator isn't known here,
+        // so accept the actions for all built-in routers.
+        BuiltInNavigationAction<ParamListBase>
+      >
+    | undefined;
 } & PrivateValueStore<[ParamList, RouteName, EventMap, ActionHelpers]>;
 
 export type RouteProp<
@@ -1016,7 +1039,15 @@ export type NavigationContainerEventMap = {
  * So navigator specific methods won't be available.
  */
 export type GenericNavigation<ParamList extends {}> = Omit<
-  NavigationProp<ParamList>,
+  NavigationProp<
+    ParamList,
+    KeyOf<ParamList>,
+    NavigationState<ParamList>,
+    {},
+    {},
+    {},
+    BuiltInNavigationAction<ParamList>
+  >,
   'getState' | 'setParams' | 'replaceParams' | 'pushParams' | 'setOptions'
 > & {
   /**
@@ -1393,16 +1424,7 @@ type NavigationListForGroups<ParentList, Groups> = Groups extends {}
   : {};
 
 export type NavigationContainerRef<ParamList extends {}> = Omit<
-  NavigationHelpers<
-    ParamList,
-    {},
-    // The type of the root navigator isn't known here, so accept the actions
-    // for all built-in routers, with route names and params still checked
-    // against the param list. `DrawerActionType` includes `TabActionType`.
-    | CommonNavigationAction<ParamList>
-    | StackActionType<ParamList>
-    | DrawerActionType<ParamList>
-  >,
+  NavigationHelpers<ParamList, {}, BuiltInNavigationAction<ParamList>>,
   keyof NavigationHelpersRoute<{}>
 > &
   NavigationHelpersRoute<{}> &

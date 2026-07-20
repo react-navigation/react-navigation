@@ -20,6 +20,7 @@ import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
   DrawerActions,
+  type DrawerActionType,
   type DrawerNavigationState,
   type GenericNavigation,
   Link,
@@ -1436,7 +1437,18 @@ useNavigation('Invalid');
   expectTypeOf(navigation).toEqualTypeOf<GenericNavigation<RootParamList>>();
 
   expectTypeOf(navigation.getParent()).toEqualTypeOf<
-    NavigationProp<ParamListBase> | undefined
+    | NavigationProp<
+        ParamListBase,
+        string,
+        NavigationState,
+        {},
+        {},
+        {},
+        | CommonNavigationAction<ParamListBase>
+        | StackActionType<ParamListBase>
+        | DrawerActionType<ParamListBase>
+      >
+    | undefined
   >();
 
   expectTypeOf(navigation.getState()).toEqualTypeOf<
@@ -1463,7 +1475,18 @@ useNavigation('Invalid');
   >();
 
   expectTypeOf(navigation.getParent()).toEqualTypeOf<
-    NavigationProp<ParamListBase> | undefined
+    | NavigationProp<
+        ParamListBase,
+        string,
+        NavigationState,
+        {},
+        {},
+        {},
+        | CommonNavigationAction<ParamListBase>
+        | StackActionType<ParamListBase>
+        | DrawerActionType<ParamListBase>
+      >
+    | undefined
   >();
 
   expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
@@ -2128,6 +2151,15 @@ stackNavigation
   .getParent('PostDetails')
   .dispatch(StackActions.push('PostDetails', { id: '123' }));
 
+/* `getParent` without a route name accepts all built-in router actions */
+stackNavigation.getParent()?.dispatch(DrawerActions.openDrawer());
+stackNavigation.getParent()?.dispatch(StackActions.pop());
+stackNavigation.getParent()?.dispatch(TabActions.jumpTo('Feed'));
+
+// Unknown action types are still rejected on the parent
+// @ts-expect-error
+stackNavigation.getParent()?.dispatch({ type: 'UNKNOWN' });
+
 /* `NavigationHelpers` accepts only common actions by default */
 declare const helpers: NavigationHelpers<RootStackParamList>;
 
@@ -2136,3 +2168,22 @@ helpers.dispatch(CommonActions.navigate('PostDetails', { id: '123' }));
 // Router-specific actions aren't part of the common action union
 // @ts-expect-error
 helpers.dispatch(StackActions.push('PostDetails', { id: '123' }));
+
+/* Untyped navigation (from `useNavigation()`) accepts all built-in router actions */
+declare const genericNavigation: GenericNavigation<RootStackParamList>;
+
+genericNavigation.dispatch(
+  CommonActions.navigate('PostDetails', { id: '123' })
+);
+genericNavigation.dispatch(StackActions.push('PostDetails', { id: '123' }));
+genericNavigation.dispatch(StackActions.pop());
+genericNavigation.dispatch(DrawerActions.openDrawer());
+genericNavigation.dispatch(TabActions.jumpTo('Login'));
+
+// Invalid route name is still rejected
+// @ts-expect-error
+genericNavigation.dispatch(StackActions.push('Invalid'));
+
+// Unknown action type is still rejected
+// @ts-expect-error
+genericNavigation.dispatch({ type: 'BOGUS', payload: {} });

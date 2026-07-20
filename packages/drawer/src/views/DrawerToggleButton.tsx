@@ -50,10 +50,7 @@ export function DrawerToggleButton({
     <HeaderButton
       {...rest}
       accessibilityLabel={accessibilityLabel}
-      onPress={() =>
-        // @ts-expect-error: useNavigation() is common-only here but this dispatches a drawer action
-        navigation.dispatch(DrawerActions.toggleDrawer())
-      }
+      onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
     >
       {typeof drawerIcon === 'function' ? (
         drawerIcon({ tintColor })
