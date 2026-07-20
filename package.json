@@ -26,7 +26,7 @@
     "example": "yarn workspace @react-navigation/example"
   },
   "engines": {
-    "node": "^22.12.0"
+    "node": ">= 24.13.0"
   },
   "packageManager": "yarn@4.10.3",
   "devDependencies": {
