@@ -4455,6 +4455,58 @@ test('adds preloaded route with preload when the ID changes', () => {
   });
 });
 
+test('adds a preloaded route without an ID when an existing route has an ID', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => params?.id,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        retainedRouteKeys: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          {
+            key: 'bar-existing',
+            name: 'bar',
+            params: { id: '1', value: 'first' },
+          },
+          { key: 'qux-preloaded', name: 'qux' },
+        ],
+      },
+      CommonActions.preload('bar'),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    retainedRouteKeys: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      {
+        key: 'bar-existing',
+        name: 'bar',
+        params: { id: '1', value: 'first' },
+      },
+      { key: 'qux-preloaded', name: 'qux' },
+      { key: 'bar-1', name: 'bar', params: undefined },
+    ],
+  });
+});
+
 test('updates the last matching preloaded route by name when getId is not provided', () => {
   const router = StackRouter({});
 

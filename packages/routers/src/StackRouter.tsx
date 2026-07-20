@@ -1041,7 +1041,7 @@ export function StackRouter(options: StackRouterOptions) {
           const route = preloadedRoutes.findLast(
             (route) =>
               route.name === action.payload.name &&
-              (id === undefined || id === getId?.({ params: route.params }))
+              id === getId?.({ params: route.params })
           );
 
           if (route) {
