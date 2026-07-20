@@ -7,7 +7,7 @@ import MaterialDesignIcons from '@react-native-vector-icons/material-design-icon
 import { registerRootComponent } from 'expo';
 import { loadAsync } from 'expo-font';
 import * as React from 'react';
-import { LogBox, Platform } from 'react-native';
+import { AppRegistry, LogBox, Platform } from 'react-native';
 import { configure } from 'react-native-showtime';
 
 import { App } from './src/index';
@@ -26,18 +26,36 @@ LogBox.ignoreLogs([
   'findNodeHandle is deprecated in StrictMode',
 ]);
 
-if (Platform.OS === 'web') {
-  setDynamicLoadingEnabled(false);
-
-  loadAsync({
-    Feather,
-    Ionicons,
-    MaterialDesignIcons,
-  });
+function Root() {
+  return (
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
 }
 
-registerRootComponent(() => (
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-));
+export const fonts = {
+  Feather,
+  Ionicons,
+  MaterialDesignIcons,
+};
+
+if (Platform.OS === 'web') {
+  AppRegistry.registerComponent('main', () => Root);
+
+  if (typeof window !== 'undefined') {
+    setDynamicLoadingEnabled(false);
+
+    loadAsync(fonts);
+
+    const rootTag = document.getElementById('root');
+
+    AppRegistry.runApplication('main', {
+      hydrate: rootTag?.firstElementChild != null,
+      initialProps: {},
+      rootTag,
+    });
+  }
+} else {
+  registerRootComponent(Root);
+}

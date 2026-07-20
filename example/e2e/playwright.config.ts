@@ -28,20 +28,11 @@ export default defineConfig({
     hasTouch: true,
     trace: 'on-first-retry',
   },
-  webServer: [
-    {
-      cwd: path.join(__dirname, '..'),
-      command: `pnpm web --port ${PORT}`,
-      url: `http://localhost:${PORT}`,
-      timeout: 120 * 1000,
-      reuseExistingServer: !process.env.CI,
-    },
-    {
-      cwd: path.join(__dirname, '..'),
-      command: 'pnpm server',
-      url: 'http://localhost:3275',
-      timeout: 120 * 1000,
-      reuseExistingServer: !process.env.CI,
-    },
-  ],
+  webServer: {
+    cwd: path.join(__dirname, '..'),
+    command: `pnpm web --port ${PORT}`,
+    url: `http://localhost:${PORT}`,
+    timeout: 120 * 1000,
+    reuseExistingServer: !process.env.CI,
+  },
 });
