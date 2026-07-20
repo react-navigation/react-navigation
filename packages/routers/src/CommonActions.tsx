@@ -1,4 +1,9 @@
-import type { NavigationState, PartialState, Route } from './types';
+import type {
+  NavigationState,
+  ParamListBase,
+  PartialState,
+  Route,
+} from './types';
 
 type ResetState =
   | PartialState<NavigationState>
@@ -13,18 +18,21 @@ type GoBackAction = {
   target?: string | undefined;
 };
 
-type NavigateAction = {
-  type: 'NAVIGATE';
-  payload: {
-    name: string;
-    params?: object | undefined;
-    path?: string | undefined;
-    merge?: boolean | undefined;
-    pop?: boolean | undefined;
+type NavigateAction<ParamList extends ParamListBase = ParamListBase> = {
+  [RouteName in keyof ParamList]: {
+    type: 'NAVIGATE';
+    payload: {
+      name: Extract<RouteName, string>;
+      path?: string | undefined;
+      merge?: boolean | undefined;
+      pop?: boolean | undefined;
+    } & (undefined extends ParamList[RouteName]
+      ? { params?: ParamList[RouteName] }
+      : { params: ParamList[RouteName] });
+    source?: string | undefined;
+    target?: string | undefined;
   };
-  source?: string | undefined;
-  target?: string | undefined;
-};
+}[keyof ParamList];
 
 type ResetAction = {
   type: 'RESET';
@@ -33,45 +41,60 @@ type ResetAction = {
   target?: string | undefined;
 };
 
-type SetParamsAction = {
-  type: 'SET_PARAMS';
-  payload: { params?: object | undefined };
-  source?: string | undefined;
-  target?: string | undefined;
-};
-
-type ReplaceParamsAction = {
-  type: 'REPLACE_PARAMS';
-  payload: { params?: object | undefined };
-  source?: string | undefined;
-  target?: string | undefined;
-};
-
-type PushParamsAction = {
-  type: 'PUSH_PARAMS';
-  payload: { params?: object | undefined };
-  source?: string | undefined;
-  target?: string | undefined;
-};
-
-type PreloadAction = {
-  type: 'PRELOAD';
-  payload: {
-    name: string;
-    params?: object | undefined;
+type SetParamsAction<ParamList extends ParamListBase = ParamListBase> = {
+  [RouteName in keyof ParamList]: {
+    type: 'SET_PARAMS';
+    payload: {
+      params?: Partial<Exclude<ParamList[RouteName], undefined>> | undefined;
+    };
+    source?: string | undefined;
+    target?: string | undefined;
   };
-  source?: string | undefined;
-  target?: string | undefined;
-};
+}[keyof ParamList];
 
-export type Action =
+type ReplaceParamsAction<ParamList extends ParamListBase = ParamListBase> = {
+  [RouteName in keyof ParamList]: {
+    type: 'REPLACE_PARAMS';
+    payload: undefined extends ParamList[RouteName]
+      ? { params?: ParamList[RouteName] }
+      : { params: ParamList[RouteName] };
+    source?: string | undefined;
+    target?: string | undefined;
+  };
+}[keyof ParamList];
+
+type PushParamsAction<ParamList extends ParamListBase = ParamListBase> = {
+  [RouteName in keyof ParamList]: {
+    type: 'PUSH_PARAMS';
+    payload: undefined extends ParamList[RouteName]
+      ? { params?: ParamList[RouteName] }
+      : { params: ParamList[RouteName] };
+    source?: string | undefined;
+    target?: string | undefined;
+  };
+}[keyof ParamList];
+
+type PreloadAction<ParamList extends ParamListBase = ParamListBase> = {
+  [RouteName in keyof ParamList]: {
+    type: 'PRELOAD';
+    payload: {
+      name: Extract<RouteName, string>;
+    } & (undefined extends ParamList[RouteName]
+      ? { params?: ParamList[RouteName] }
+      : { params: ParamList[RouteName] });
+    source?: string | undefined;
+    target?: string | undefined;
+  };
+}[keyof ParamList];
+
+export type Action<ParamList extends ParamListBase = ParamListBase> =
   | GoBackAction
-  | NavigateAction
+  | NavigateAction<ParamList>
   | ResetAction
-  | SetParamsAction
-  | ReplaceParamsAction
-  | PushParamsAction
-  | PreloadAction;
+  | SetParamsAction<ParamList>
+  | ReplaceParamsAction<ParamList>
+  | PushParamsAction<ParamList>
+  | PreloadAction<ParamList>;
 
 export function goBack(): Action {
   return { type: 'GO_BACK' };

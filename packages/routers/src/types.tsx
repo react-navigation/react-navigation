@@ -1,6 +1,8 @@
 import type * as CommonActions from './CommonActions';
 
-export type CommonNavigationAction = CommonActions.Action;
+export type CommonNavigationAction<
+  ParamList extends ParamListBase = ParamListBase,
+> = CommonActions.Action<ParamList>;
 
 export type NavigationRoute<
   ParamList extends ParamListBase,
