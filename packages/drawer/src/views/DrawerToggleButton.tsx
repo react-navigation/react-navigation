@@ -3,7 +3,11 @@ import {
   type Icon,
   PlatformIcon,
 } from '@react-navigation/elements';
-import { DrawerActions, useNavigation } from '@react-navigation/native';
+import {
+  DrawerActions,
+  type NavigationAction,
+  useNavigation,
+} from '@react-navigation/native';
 import * as React from 'react';
 import { type ColorValue, Platform, StyleSheet } from 'react-native';
 
@@ -50,7 +54,15 @@ export function DrawerToggleButton({
     <HeaderButton
       {...rest}
       accessibilityLabel={accessibilityLabel}
-      onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+      onPress={() => {
+        // The drawer handling this action may be any ancestor navigator, which
+        // `useNavigation()` can't know about, so its `dispatch` doesn't accept
+        // drawer actions. At runtime `dispatch` takes any action and bubbles it
+        // to the nearest drawer, so it's widened here to reflect that.
+        (navigation.dispatch as (action: NavigationAction) => void)(
+          DrawerActions.toggleDrawer()
+        );
+      }}
     >
       {typeof drawerIcon === 'function' ? (
         drawerIcon({ tintColor })

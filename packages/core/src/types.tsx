@@ -1,7 +1,6 @@
 import type {
   CommonNavigationAction,
   DefaultRouterOptions,
-  DrawerActionType,
   InitialState,
   NavigationAction,
   NavigationState,
@@ -9,7 +8,6 @@ import type {
   PartialState,
   Route,
   Router,
-  StackActionType,
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
@@ -63,6 +61,32 @@ export type RootParamList =
   >
     ? ParamList
     : {};
+
+/**
+ * Actions dispatchable somewhere in the app's navigation tree, derived from the
+ * augmented `RootNavigator`. Used where the surface is definitionally the app's
+ * root tree (`NavigationContainerRef` with the root param list, and
+ * `GenericNavigation` from a bare `useNavigation()`). The union covers every
+ * navigator that actually exists in the app (custom navigators included), with
+ * route names and params still checked.
+ * Falls back to `Fallback` when `RootNavigator` isn't augmented.
+ */
+// Computed once (no type params) so the (potentially expensive) full-tree
+// expansion is cached and reused across every `RootNavigationAction` consumer.
+type RootNavigationActionUnion = ActionOfNavigationProp<
+  NavigationListForNested<RootNavigator>[keyof NavigationListForNested<RootNavigator>]
+>;
+
+// An unaugmented `RootNavigator` is the empty interface (`keyof` is `never`), so
+// fall back to `Fallback` and avoid instantiating the full-tree derivation. An
+// augmented navigator has members (`Navigator`, `Screen`, `config`, …).
+// A brand match isn't enough here: `{}` structurally satisfies `PrivateValueStore`
+// because its only member is an optional protected property.
+type RootNavigationAction<Fallback extends NavigationAction> = [
+  keyof RootNavigator,
+] extends [never]
+  ? Fallback
+  : RootNavigationActionUnion;
 
 export type DefaultNavigatorOptions<
   ParamList extends ParamListBase,
@@ -184,14 +208,16 @@ export type EventMapBase = Record<
   { data?: any; canPreventDefault?: boolean | undefined }
 >;
 
-export type EventMapCore<
-  in out State extends NavigationState,
-  in out Action extends NavigationAction = NavigationAction,
-> = {
+export type EventMapCore<in out State extends NavigationState> = {
   focus: { data: undefined };
   blur: { data: undefined };
   state: { data: { state: State } };
-  beforeRemove: { data: { action: Action }; canPreventDefault: true };
+  // The action can come from anywhere in the app's navigation tree (it bubbles
+  // at runtime). It can't be the root-derived union here: `EventMapCore` is
+  // embedded in every navigator's props, which `RootNavigationAction` has to
+  // expand, so referencing it would be a value-level self-reference through the
+  // augmented `RootNavigator`. Typed wide instead — re-dispatching needs a cast.
+  beforeRemove: { data: { action: NavigationAction }; canPreventDefault: true };
 };
 
 export type EventArg<
@@ -336,17 +362,6 @@ type NavigateOptions = {
   merge?: boolean | undefined;
   pop?: boolean | undefined;
 };
-
-/**
- * Actions for all built-in routers, for `dispatch` on navigation objects
- * where the type of the navigator isn't known. Route names and params are
- * still checked against the param list.
- * `DrawerActionType` includes `TabActionType`.
- */
-type BuiltInNavigationAction<ParamList extends {}> =
-  | CommonNavigationAction<ParamList>
-  | StackActionType<ParamList>
-  | DrawerActionType<ParamList>;
 
 type NavigationHelpersCommon<
   ParamList extends ParamListBase,
@@ -545,7 +560,7 @@ type NavigationPropBase<
   setOptions(options: Partial<ScreenOptions>): void;
 } & NavigationHelpersRoute<ParamList, RouteName> &
   ActionHelpers &
-  EventConsumer<EventMap & EventMapCore<State, Action>>;
+  EventConsumer<EventMap & EventMapCore<State>>;
 
 export type NavigationProp<
   ParamList extends {},
@@ -590,9 +605,13 @@ export type NavigationProp<
         {},
         {},
         {},
-        // The type of the parent navigator isn't known here,
-        // so accept the actions for all built-in routers.
-        BuiltInNavigationAction<ParamListBase>
+        // The parent navigator is by definition somewhere in the app's tree,
+        // but its action union can't be derived here: `getParent` is a member of
+        // `NavigationProp`, which the root-derived `RootNavigationAction` has to
+        // expand, so referencing it here is a value-level self-reference through
+        // the augmented `RootNavigator`. Accept any action (route names go
+        // unchecked) rather than an unsound built-in-only union.
+        NavigationAction
       >
     | undefined;
 } & PrivateValueStore<[ParamList, RouteName, EventMap, ActionHelpers]>;
@@ -1046,7 +1065,7 @@ export type GenericNavigation<ParamList extends {}> = Omit<
     {},
     {},
     {},
-    BuiltInNavigationAction<ParamList>
+    RootNavigationAction<CommonNavigationAction<ParamList>>
   >,
   'getState' | 'setParams' | 'replaceParams' | 'pushParams' | 'setOptions'
 > & {
@@ -1423,8 +1442,24 @@ type NavigationListForGroups<ParentList, Groups> = Groups extends {}
     >
   : {};
 
-export type NavigationContainerRef<ParamList extends {}> = Omit<
-  NavigationHelpers<ParamList, {}, BuiltInNavigationAction<ParamList>>,
+// Default dispatchable actions for a container ref. When `ParamList` is the
+// augmented `RootParamList`, derive the actions from the app's navigation tree.
+// Otherwise (a ref with an explicit param list) fall back to common actions —
+// callers can pass `Action` explicitly to dispatch router-specific or custom
+// actions. Exported for internal reuse; not part of the public API.
+export type DefaultContainerRefAction<ParamList extends {}> = [
+  ParamList,
+] extends [RootParamList]
+  ? [RootParamList] extends [ParamList]
+    ? RootNavigationAction<CommonNavigationAction<ParamList>>
+    : CommonNavigationAction<ParamList>
+  : CommonNavigationAction<ParamList>;
+
+export type NavigationContainerRef<
+  ParamList extends {},
+  Action extends NavigationAction = DefaultContainerRefAction<ParamList>,
+> = Omit<
+  NavigationHelpers<ParamList, {}, Action>,
   keyof NavigationHelpersRoute<{}>
 > &
   NavigationHelpersRoute<{}> &
@@ -1457,10 +1492,12 @@ export type NavigationContainerRef<ParamList extends {}> = Omit<
     setOptions(): never;
   };
 
-export type NavigationContainerRefWithCurrent<ParamList extends {}> =
-  NavigationContainerRef<ParamList> & {
-    current: NavigationContainerRef<ParamList> | null;
-  };
+export type NavigationContainerRefWithCurrent<
+  ParamList extends {},
+  Action extends NavigationAction = DefaultContainerRefAction<ParamList>,
+> = NavigationContainerRef<ParamList, Action> & {
+  current: NavigationContainerRef<ParamList, Action> | null;
+};
 
 export type NavigationListBase<in out ParamList extends ParamListBase> = {
   [RouteName in keyof ParamList]: unknown;

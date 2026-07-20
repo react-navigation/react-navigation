@@ -68,6 +68,8 @@ const InputScreen = () => {
           );
 
           if (discard) {
+            // @ts-expect-error: the action bubbles from anywhere in the tree, so
+            // it's typed wider than this navigator's own dispatch union.
             navigation.dispatch(e.data.action);
           }
         } else {
@@ -79,6 +81,8 @@ const InputScreen = () => {
               {
                 text: 'Discard',
                 style: 'destructive',
+                // @ts-expect-error: the action bubbles from anywhere in the
+                // tree, so it's typed wider than this navigator's dispatch union.
                 onPress: () => navigation.dispatch(e.data.action),
               },
             ]

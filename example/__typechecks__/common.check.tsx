@@ -20,7 +20,6 @@ import {
   createNavigatorFactory,
   type DefaultNavigatorOptions,
   DrawerActions,
-  type DrawerActionType,
   type DrawerNavigationState,
   type GenericNavigation,
   Link,
@@ -1444,9 +1443,7 @@ useNavigation('Invalid');
         {},
         {},
         {},
-        | CommonNavigationAction<ParamListBase>
-        | StackActionType<ParamListBase>
-        | DrawerActionType<ParamListBase>
+        NavigationAction
       >
     | undefined
   >();
@@ -1482,9 +1479,7 @@ useNavigation('Invalid');
         {},
         {},
         {},
-        | CommonNavigationAction<ParamListBase>
-        | StackActionType<ParamListBase>
-        | DrawerActionType<ParamListBase>
+        NavigationAction
       >
     | undefined
   >();
@@ -2107,29 +2102,60 @@ compositeNavigation.dispatch(
 // @ts-expect-error
 compositeNavigation.dispatch(StackActions.push('Invalid'));
 
-/* Container ref accepts actions for all built-in routers */
+/* A container ref with an explicit (non-root) param list accepts only common actions */
 declare const dispatchRef: NavigationContainerRef<RootStackParamList>;
 
 dispatchRef.dispatch(CommonActions.navigate('PostDetails', { id: '123' }));
+
+// Router-specific actions aren't part of the common action union
+// @ts-expect-error
 dispatchRef.dispatch(StackActions.push('PostDetails', { id: '123' }));
+// @ts-expect-error
 dispatchRef.dispatch(TabActions.jumpTo('Login'));
+// @ts-expect-error
 dispatchRef.dispatch(DrawerActions.openDrawer());
 
 // Invalid route name is rejected
 // @ts-expect-error
-dispatchRef.dispatch(StackActions.push('Invalid'));
+dispatchRef.dispatch(CommonActions.navigate('Invalid'));
 
 // Unknown action type is rejected
 // @ts-expect-error
 dispatchRef.dispatch({ type: 'BOGUS', payload: {} });
 
-/* `beforeRemove` action can be re-dispatched */
-stackNavigation.addListener('beforeRemove', (e) => {
-  expectTypeOf(e.data.action).toEqualTypeOf<
-    | CommonNavigationAction<RootStackParamList>
-    | StackActionType<RootStackParamList>
-  >();
+/* A container ref can opt into a custom action union via the trailing param */
+declare const customRef: NavigationContainerRef<
+  RootStackParamList,
+  | CommonNavigationAction<RootStackParamList>
+  | StackActionType<RootStackParamList>
+>;
 
+customRef.dispatch(CommonActions.navigate('PostDetails', { id: '123' }));
+customRef.dispatch(StackActions.push('PostDetails', { id: '123' }));
+
+// Actions outside the custom union are rejected
+// @ts-expect-error
+customRef.dispatch(DrawerActions.openDrawer());
+
+/* A container ref typed with the augmented root param list derives actions from
+ * the app's navigation tree (which includes stack and drawer navigators) */
+declare const rootRef: NavigationContainerRef<RootParamList>;
+
+rootRef.dispatch(CommonActions.goBack());
+rootRef.dispatch(StackActions.pop());
+rootRef.dispatch(DrawerActions.openDrawer());
+
+// Values that aren't valid actions are still rejected
+// @ts-expect-error
+rootRef.dispatch({ payload: {} });
+
+/* `beforeRemove` action bubbles from anywhere in the tree, so it's the wide
+ * `NavigationAction`; re-dispatching it on a strict prop needs a cast */
+stackNavigation.addListener('beforeRemove', (e) => {
+  expectTypeOf(e.data.action).toEqualTypeOf<NavigationAction>();
+
+  // @ts-expect-error: the wide action union isn't assignable to this
+  // navigator's strict dispatch union
   stackNavigation.dispatch(e.data.action);
 });
 
@@ -2151,14 +2177,17 @@ stackNavigation
   .getParent('PostDetails')
   .dispatch(StackActions.push('PostDetails', { id: '123' }));
 
-/* `getParent` without a route name accepts all built-in router actions */
+/* `getParent` without a route name accepts any action: the parent can be any
+ * navigator in the tree, and its action union can't be derived here without a
+ * self-reference, so it's typed as the wide `NavigationAction` */
 stackNavigation.getParent()?.dispatch(DrawerActions.openDrawer());
 stackNavigation.getParent()?.dispatch(StackActions.pop());
 stackNavigation.getParent()?.dispatch(TabActions.jumpTo('Feed'));
-
-// Unknown action types are still rejected on the parent
-// @ts-expect-error
 stackNavigation.getParent()?.dispatch({ type: 'UNKNOWN' });
+
+// Values that aren't valid actions are still rejected on the parent
+// @ts-expect-error
+stackNavigation.getParent()?.dispatch({ payload: {} });
 
 /* `NavigationHelpers` accepts only common actions by default */
 declare const helpers: NavigationHelpers<RootStackParamList>;
@@ -2169,7 +2198,11 @@ helpers.dispatch(CommonActions.navigate('PostDetails', { id: '123' }));
 // @ts-expect-error
 helpers.dispatch(StackActions.push('PostDetails', { id: '123' }));
 
-/* Untyped navigation (from `useNavigation()`) accepts all built-in router actions */
+/* Untyped navigation (from `useNavigation()`) derives its dispatchable actions
+ * from the app's navigation tree, so it accepts actions from every navigator in
+ * it (stack, drawer, tab). The example tree resolves to a wide union, so unknown
+ * action types aren't rejected here — the standalone stack-only checks assert
+ * strict rejection in a simple augmented tree. */
 declare const genericNavigation: GenericNavigation<RootStackParamList>;
 
 genericNavigation.dispatch(
@@ -2180,10 +2213,6 @@ genericNavigation.dispatch(StackActions.pop());
 genericNavigation.dispatch(DrawerActions.openDrawer());
 genericNavigation.dispatch(TabActions.jumpTo('Login'));
 
-// Invalid route name is still rejected
+// A value that isn't a valid action (no `type`) is still rejected
 // @ts-expect-error
-genericNavigation.dispatch(StackActions.push('Invalid'));
-
-// Unknown action type is still rejected
-// @ts-expect-error
-genericNavigation.dispatch({ type: 'BOGUS', payload: {} });
+genericNavigation.dispatch({ payload: {} });

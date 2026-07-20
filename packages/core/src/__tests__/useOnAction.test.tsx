@@ -2,6 +2,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals';
 import {
   CommonActions,
   type DefaultRouterOptions,
+  type NavigationAction,
   type NavigationState,
   type ParamListBase,
   type PartialState,
@@ -695,7 +696,7 @@ test("emits 'beforeRemove' when removing a screen", async () => {
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -838,7 +839,7 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -1009,7 +1010,7 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -1219,7 +1220,7 @@ test("emits 'beforeRemove' for multiple removed screens in reverse order", async
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>

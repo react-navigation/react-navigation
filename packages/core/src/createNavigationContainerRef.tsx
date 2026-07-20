@@ -1,6 +1,8 @@
+import type { NavigationAction } from '@react-navigation/routers';
 import { CommonActions } from '@react-navigation/routers';
 
 import type {
+  DefaultContainerRefAction,
   NavigationContainerEventMap,
   NavigationContainerRef,
   NavigationContainerRefWithCurrent,
@@ -12,7 +14,8 @@ export const NOT_INITIALIZED_ERROR =
 
 export function createNavigationContainerRef<
   ParamList extends {} = RootParamList,
->(): NavigationContainerRefWithCurrent<ParamList> {
+  Action extends NavigationAction = DefaultContainerRefAction<ParamList>,
+>(): NavigationContainerRefWithCurrent<ParamList, Action> {
   const methods = [
     ...Object.keys(CommonActions),
     'addListener',
@@ -30,7 +33,7 @@ export function createNavigationContainerRef<
 
   const listeners: Record<string, ((...args: any[]) => void)[]> = {};
 
-  let current: NavigationContainerRef<ParamList> | null = null;
+  let current: NavigationContainerRef<ParamList, Action> | null = null;
 
   const removeListener = (
     event: string,
@@ -46,11 +49,11 @@ export function createNavigationContainerRef<
     );
   };
 
-  const ref: NavigationContainerRefWithCurrent<ParamList> = {
+  const ref: NavigationContainerRefWithCurrent<ParamList, Action> = {
     get current() {
       return current;
     },
-    set current(value: NavigationContainerRef<ParamList> | null) {
+    set current(value: NavigationContainerRef<ParamList, Action> | null) {
       current = value;
 
       if (value != null) {

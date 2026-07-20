@@ -1,6 +1,7 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import {
   type DefaultRouterOptions,
+  type NavigationAction,
   type NavigationState,
   type ParamListBase,
   type Router,
@@ -865,7 +866,7 @@ test("emits '__unsafe_action__' with noop false when beforeRemove doesn't preven
     );
   };
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const events: string[] = [];
 
@@ -948,7 +949,7 @@ test("emits '__unsafe_event__' before noop true '__unsafe_action__' when beforeR
     );
   };
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const actionEvents: NavigationContainerEventMap['__unsafe_action__']['data'][] =
     [];
@@ -1327,7 +1328,7 @@ test('warns for unhandled navigate action without a screen name', async () => {
 });
 
 test('warns for unhandled drawer actions', async () => {
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const TestNavigator = (props: TestNavigatorProps) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(

@@ -1,5 +1,6 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import {
+  type NavigationAction,
   type ParamListBase,
   StackActions,
   StackRouter,
@@ -59,7 +60,7 @@ test("prevents removing a screen with 'usePreventRemove' hook", async () => {
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -175,7 +176,7 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -280,7 +281,7 @@ test("doesn't prevent retaining a screen in inactive routes", async () => {
     return null;
   };
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   await render(
     <BaseNavigationContainer ref={ref}>
@@ -337,7 +338,7 @@ test("should have no effect when 'usePreventRemove' hook is set to false", async
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -445,7 +446,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
   };
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -678,7 +679,7 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", asyn
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -867,7 +868,7 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", async
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
@@ -1142,7 +1143,7 @@ test('keeps preventing removal while the screen is hidden with an activity', asy
     return null;
   };
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref}>
@@ -1218,7 +1219,7 @@ test('stops preventing removal when a hidden screen is removed', async () => {
     return null;
   };
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref}>
@@ -1282,7 +1283,7 @@ test('keeps preventing removal for hidden screens in strict mode', async () => {
     return null;
   };
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <React.StrictMode>
@@ -1377,7 +1378,7 @@ test('keeps parent prevention when a nested navigator is hidden with an activity
     </NestedNavigator>
   );
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const ref = createNavigationContainerRef<ParamListBase, NavigationAction>();
 
   const element = (
     <BaseNavigationContainer ref={ref}>

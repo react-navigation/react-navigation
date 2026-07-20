@@ -7,7 +7,11 @@ import {
   type MaterialTopTabNavigationOptions,
 } from '@react-navigation/material-top-tabs';
 import {
+  CommonActions,
+  createNavigationContainerRef,
+  DrawerActions,
   type NavigatorScreenParams,
+  StackActions,
   useNavigation,
   useNavigationState,
   useRoute,
@@ -549,3 +553,23 @@ export const InvalidRouteCheck = () => {
 
   return null;
 };
+
+/**
+ * A root container ref derives its dispatchable actions from the augmented
+ * navigation tree. This tree has stack and tab navigators but no drawer, so
+ * stack/common actions are accepted while drawer actions and unknown action
+ * types are rejected.
+ */
+const containerRef = createNavigationContainerRef();
+
+containerRef.dispatch(CommonActions.navigate('SignIn', { redirectTo: '/' }));
+containerRef.dispatch(StackActions.push('SignIn', { redirectTo: '/' }));
+
+// @ts-expect-error - drawer actions are rejected: the app has no drawer navigator
+containerRef.dispatch(DrawerActions.openDrawer());
+
+// @ts-expect-error - unknown route names are rejected
+containerRef.dispatch(CommonActions.navigate('Unknown'));
+
+// @ts-expect-error - unknown action types are rejected
+containerRef.dispatch({ type: 'BOGUS', payload: {} });

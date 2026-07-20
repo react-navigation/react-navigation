@@ -2019,7 +2019,10 @@ test("doesn't add history entry for navigation interrupted before commit", async
     return <Text>Profile</Text>;
   };
 
-  const navigation = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<
+    ParamListBase,
+    NavigationAction
+  >();
 
   await render(
     <NavigationContainer ref={navigation} linking={linking}>
