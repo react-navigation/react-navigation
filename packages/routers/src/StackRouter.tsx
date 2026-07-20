@@ -13,29 +13,42 @@ import type {
 } from './types';
 
 export type StackActionType<ParamList extends ParamListBase = ParamListBase> =
+  // The per-route actions (`REPLACE`, `PUSH`, `POP_TO`) are built in a single
+  // pass over `keyof ParamList`, instead of a separate mapped type per action.
+  // The resulting union is the same, but the param list is only iterated once.
   | {
-      [RouteName in keyof ParamList]: {
-        type: 'REPLACE';
-        payload: {
-          name: Extract<RouteName, string>;
-        } & (undefined extends ParamList[RouteName]
-          ? { params?: ParamList[RouteName] }
-          : { params: ParamList[RouteName] });
-        source?: string | undefined;
-        target?: string | undefined;
-      };
-    }[keyof ParamList]
-  | {
-      [RouteName in keyof ParamList]: {
-        type: 'PUSH';
-        payload: {
-          name: Extract<RouteName, string>;
-        } & (undefined extends ParamList[RouteName]
-          ? { params?: ParamList[RouteName] }
-          : { params: ParamList[RouteName] });
-        source?: string | undefined;
-        target?: string | undefined;
-      };
+      [RouteName in keyof ParamList]:
+        | {
+            type: 'REPLACE';
+            payload: {
+              name: Extract<RouteName, string>;
+            } & (undefined extends ParamList[RouteName]
+              ? { params?: ParamList[RouteName] }
+              : { params: ParamList[RouteName] });
+            source?: string | undefined;
+            target?: string | undefined;
+          }
+        | {
+            type: 'PUSH';
+            payload: {
+              name: Extract<RouteName, string>;
+            } & (undefined extends ParamList[RouteName]
+              ? { params?: ParamList[RouteName] }
+              : { params: ParamList[RouteName] });
+            source?: string | undefined;
+            target?: string | undefined;
+          }
+        | {
+            type: 'POP_TO';
+            payload: {
+              name: Extract<RouteName, string>;
+              merge?: boolean | undefined;
+            } & (undefined extends ParamList[RouteName]
+              ? { params?: ParamList[RouteName] }
+              : { params: ParamList[RouteName] });
+            source?: string | undefined;
+            target?: string | undefined;
+          };
     }[keyof ParamList]
   | {
       type: 'POP';
@@ -48,19 +61,6 @@ export type StackActionType<ParamList extends ParamListBase = ParamListBase> =
       source?: string | undefined;
       target?: string | undefined;
     }
-  | {
-      [RouteName in keyof ParamList]: {
-        type: 'POP_TO';
-        payload: {
-          name: Extract<RouteName, string>;
-          merge?: boolean | undefined;
-        } & (undefined extends ParamList[RouteName]
-          ? { params?: ParamList[RouteName] }
-          : { params: ParamList[RouteName] });
-        source?: string | undefined;
-        target?: string | undefined;
-      };
-    }[keyof ParamList]
   | {
       type: 'RETAIN';
       payload: { enable: boolean };

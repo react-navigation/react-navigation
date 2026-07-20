@@ -18,22 +18,6 @@ type GoBackAction = {
   target?: string | undefined;
 };
 
-type NavigateAction<ParamList extends ParamListBase = ParamListBase> = {
-  [RouteName in keyof ParamList]: {
-    type: 'NAVIGATE';
-    payload: {
-      name: Extract<RouteName, string>;
-      path?: string | undefined;
-      merge?: boolean | undefined;
-      pop?: boolean | undefined;
-    } & (undefined extends ParamList[RouteName]
-      ? { params?: ParamList[RouteName] }
-      : { params: ParamList[RouteName] });
-    source?: string | undefined;
-    target?: string | undefined;
-  };
-}[keyof ParamList];
-
 type ResetAction = {
   type: 'RESET';
   payload: ResetState;
@@ -41,60 +25,64 @@ type ResetAction = {
   target?: string | undefined;
 };
 
-type SetParamsAction<ParamList extends ParamListBase = ParamListBase> = {
-  [RouteName in keyof ParamList]: {
-    type: 'SET_PARAMS';
-    payload: {
-      params?: Partial<Exclude<ParamList[RouteName], undefined>> | undefined;
-    };
-    source?: string | undefined;
-    target?: string | undefined;
-  };
-}[keyof ParamList];
-
-type ReplaceParamsAction<ParamList extends ParamListBase = ParamListBase> = {
-  [RouteName in keyof ParamList]: {
-    type: 'REPLACE_PARAMS';
-    payload: undefined extends ParamList[RouteName]
-      ? { params?: ParamList[RouteName] }
-      : { params: ParamList[RouteName] };
-    source?: string | undefined;
-    target?: string | undefined;
-  };
-}[keyof ParamList];
-
-type PushParamsAction<ParamList extends ParamListBase = ParamListBase> = {
-  [RouteName in keyof ParamList]: {
-    type: 'PUSH_PARAMS';
-    payload: undefined extends ParamList[RouteName]
-      ? { params?: ParamList[RouteName] }
-      : { params: ParamList[RouteName] };
-    source?: string | undefined;
-    target?: string | undefined;
-  };
-}[keyof ParamList];
-
-type PreloadAction<ParamList extends ParamListBase = ParamListBase> = {
-  [RouteName in keyof ParamList]: {
-    type: 'PRELOAD';
-    payload: {
-      name: Extract<RouteName, string>;
-    } & (undefined extends ParamList[RouteName]
-      ? { params?: ParamList[RouteName] }
-      : { params: ParamList[RouteName] });
-    source?: string | undefined;
-    target?: string | undefined;
-  };
+// All the per-route actions built in a single pass over `keyof ParamList`,
+// instead of a separate mapped type per action. The resulting union is the
+// same, but the param list is only iterated once per instantiation.
+type ParamListActions<ParamList extends ParamListBase = ParamListBase> = {
+  [RouteName in keyof ParamList]:
+    | {
+        type: 'NAVIGATE';
+        payload: {
+          name: Extract<RouteName, string>;
+          path?: string | undefined;
+          merge?: boolean | undefined;
+          pop?: boolean | undefined;
+        } & (undefined extends ParamList[RouteName]
+          ? { params?: ParamList[RouteName] }
+          : { params: ParamList[RouteName] });
+        source?: string | undefined;
+        target?: string | undefined;
+      }
+    | {
+        type: 'SET_PARAMS';
+        payload: {
+          params?: Partial<Exclude<ParamList[RouteName], undefined>> | undefined;
+        };
+        source?: string | undefined;
+        target?: string | undefined;
+      }
+    | {
+        type: 'REPLACE_PARAMS';
+        payload: undefined extends ParamList[RouteName]
+          ? { params?: ParamList[RouteName] }
+          : { params: ParamList[RouteName] };
+        source?: string | undefined;
+        target?: string | undefined;
+      }
+    | {
+        type: 'PUSH_PARAMS';
+        payload: undefined extends ParamList[RouteName]
+          ? { params?: ParamList[RouteName] }
+          : { params: ParamList[RouteName] };
+        source?: string | undefined;
+        target?: string | undefined;
+      }
+    | {
+        type: 'PRELOAD';
+        payload: {
+          name: Extract<RouteName, string>;
+        } & (undefined extends ParamList[RouteName]
+          ? { params?: ParamList[RouteName] }
+          : { params: ParamList[RouteName] });
+        source?: string | undefined;
+        target?: string | undefined;
+      };
 }[keyof ParamList];
 
 export type Action<ParamList extends ParamListBase = ParamListBase> =
   | GoBackAction
-  | NavigateAction<ParamList>
   | ResetAction
-  | SetParamsAction<ParamList>
-  | ReplaceParamsAction<ParamList>
-  | PushParamsAction<ParamList>
-  | PreloadAction<ParamList>;
+  | ParamListActions<ParamList>;
 
 export function goBack() {
   return { type: 'GO_BACK' } as const satisfies Action;
@@ -158,21 +146,21 @@ export function setParams<Params extends object>(params: Params) {
   return {
     type: 'SET_PARAMS',
     payload: { params },
-  } as const satisfies SetParamsAction;
+  } as const satisfies Action;
 }
 
 export function replaceParams<Params extends object>(params: Params) {
   return {
     type: 'REPLACE_PARAMS',
     payload: { params },
-  } as const satisfies ReplaceParamsAction;
+  } as const satisfies Action;
 }
 
 export function pushParams<Params extends object>(params: Params) {
   return {
     type: 'PUSH_PARAMS',
     payload: { params },
-  } as const satisfies PushParamsAction;
+  } as const satisfies Action;
 }
 
 export function preload<Name extends string>(

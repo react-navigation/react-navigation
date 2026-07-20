@@ -656,11 +656,16 @@ type StateOfNavigationProp<T> = T extends {
 
 // Derive the action union structurally from `dispatch` since it isn't stored
 // in the private brand. `dispatch`'s param is `Action | ((state) => Action)`,
-// so `Exclude` strips the callback form to leave just the action union.
+// so the action union is read off the callback's return type (`infer _` absorbs
+// the non-callback member). This is cheaper than inferring the whole param and
+// stripping the callback with `Exclude`, which distributes over every member of
+// the action union.
 type ActionOfNavigationProp<T> = T extends {
-  dispatch(action: infer Action): void;
+  dispatch(
+    action: ((...args: any) => infer Action extends NavigationAction) | infer _
+  ): void;
 }
-  ? Exclude<Action, (...args: any) => any>
+  ? Action
   : NavigationAction;
 
 type ScreenOptionsOfNavigationProp<T> = T extends {
