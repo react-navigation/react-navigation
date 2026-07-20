@@ -445,9 +445,16 @@ export function SwitchRouter<Type extends SwitchRouterType>({
             const index = nextState.index;
 
             if (index != null) {
-              const focusedRoute = nextState.routes[index];
+              const route = action.source
+                ? nextState.routes.find((route) => route.key === action.source)
+                : nextState.routes[index];
+
+              if (route === undefined) {
+                return nextState;
+              }
+
               const historyItemIndex = state.history.findLastIndex(
-                (item) => item.type === 'route' && item.key === focusedRoute.key
+                (item) => item.type === 'route' && item.key === route.key
               );
 
               let updatedHistory = state.history;
@@ -459,7 +466,7 @@ export function SwitchRouter<Type extends SwitchRouterType>({
                 if (item.type === 'route') {
                   updatedHistory[historyItemIndex] = {
                     ...item,
-                    params: focusedRoute.params,
+                    params: route.params,
                   };
                 }
               }

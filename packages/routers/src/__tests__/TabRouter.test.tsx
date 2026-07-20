@@ -2091,6 +2091,91 @@ test('preserves params in history with backBehavior: fullHistory', () => {
   expect(state.routes[1].params).toEqual({ value: 'first' });
 });
 
+test('preserves params updated by source with SET_PARAMS and backBehavior: fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('baz', { preserved: true, value: 'old' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('qux'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    {
+      ...CommonActions.setParams({ value: 'updated' }),
+      source: state.routes[1].key,
+    },
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.index).toBe(1);
+  expect(state.routes[1].params).toEqual({
+    preserved: true,
+    value: 'updated',
+  });
+});
+
+test('preserves params updated by source with REPLACE_PARAMS and backBehavior: fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('baz', { preserved: true, value: 'old' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('qux'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    {
+      ...CommonActions.replaceParams({ value: 'replaced' }),
+      source: state.routes[1].key,
+    },
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.index).toBe(1);
+  expect(state.routes[1].params).toEqual({ value: 'replaced' });
+});
+
 test('keeps initial params on goBack with backBehavior: fullHistory', () => {
   const router = TabRouter({ backBehavior: 'fullHistory' });
   const options: RouterConfigOptions = {
