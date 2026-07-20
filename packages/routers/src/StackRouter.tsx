@@ -4,6 +4,7 @@ import { BaseRouter } from './BaseRouter';
 import { createParamsFromAction } from './createParamsFromAction';
 import { createRouteFromAction } from './createRouteFromAction';
 import type {
+  ActionPayloadParams,
   CommonNavigationAction,
   DefaultRouterOptions,
   NavigationState,
@@ -22,9 +23,7 @@ export type StackActionType<ParamList extends ParamListBase = ParamListBase> =
             type: 'REPLACE';
             payload: {
               name: Extract<RouteName, string>;
-            } & (undefined extends ParamList[RouteName]
-              ? { params?: ParamList[RouteName] }
-              : { params: ParamList[RouteName] });
+            } & ActionPayloadParams<ParamList[RouteName]>;
             source?: string | undefined;
             target?: string | undefined;
           }
@@ -32,9 +31,7 @@ export type StackActionType<ParamList extends ParamListBase = ParamListBase> =
             type: 'PUSH';
             payload: {
               name: Extract<RouteName, string>;
-            } & (undefined extends ParamList[RouteName]
-              ? { params?: ParamList[RouteName] }
-              : { params: ParamList[RouteName] });
+            } & ActionPayloadParams<ParamList[RouteName]>;
             source?: string | undefined;
             target?: string | undefined;
           }
@@ -43,9 +40,7 @@ export type StackActionType<ParamList extends ParamListBase = ParamListBase> =
             payload: {
               name: Extract<RouteName, string>;
               merge?: boolean | undefined;
-            } & (undefined extends ParamList[RouteName]
-              ? { params?: ParamList[RouteName] }
-              : { params: ParamList[RouteName] });
+            } & ActionPayloadParams<ParamList[RouteName]>;
             source?: string | undefined;
             target?: string | undefined;
           };
@@ -176,7 +171,7 @@ function replace(name: string, params?: object | undefined) {
   return {
     type: 'REPLACE',
     payload: { name, params },
-  };
+  } as const satisfies StackActionType;
 }
 
 function push<Name extends string>(
@@ -198,7 +193,7 @@ function push(name: string, params?: object | undefined) {
   return {
     type: 'PUSH',
     payload: { name, params },
-  };
+  } as const satisfies StackActionType;
 }
 
 function popTo<Name extends string>(
@@ -229,7 +224,7 @@ function popTo(
       params,
       merge: options?.merge,
     },
-  };
+  } as const satisfies StackActionType;
 }
 
 export const StackActions = {

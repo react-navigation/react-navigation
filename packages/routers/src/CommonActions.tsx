@@ -1,4 +1,5 @@
 import type {
+  ActionPayloadParams,
   NavigationState,
   ParamListBase,
   PartialState,
@@ -28,7 +29,7 @@ type ResetAction = {
 // All the per-route actions built in a single pass over `keyof ParamList`,
 // instead of a separate mapped type per action. The resulting union is the
 // same, but the param list is only iterated once per instantiation.
-type ParamListActions<ParamList extends ParamListBase = ParamListBase> = {
+type RouteActions<ParamList extends ParamListBase = ParamListBase> = {
   [RouteName in keyof ParamList]:
     | {
         type: 'NAVIGATE';
@@ -37,9 +38,7 @@ type ParamListActions<ParamList extends ParamListBase = ParamListBase> = {
           path?: string | undefined;
           merge?: boolean | undefined;
           pop?: boolean | undefined;
-        } & (undefined extends ParamList[RouteName]
-          ? { params?: ParamList[RouteName] }
-          : { params: ParamList[RouteName] });
+        } & ActionPayloadParams<ParamList[RouteName]>;
         source?: string | undefined;
         target?: string | undefined;
       }
@@ -53,17 +52,13 @@ type ParamListActions<ParamList extends ParamListBase = ParamListBase> = {
       }
     | {
         type: 'REPLACE_PARAMS';
-        payload: undefined extends ParamList[RouteName]
-          ? { params?: ParamList[RouteName] }
-          : { params: ParamList[RouteName] };
+        payload: ActionPayloadParams<ParamList[RouteName]>;
         source?: string | undefined;
         target?: string | undefined;
       }
     | {
         type: 'PUSH_PARAMS';
-        payload: undefined extends ParamList[RouteName]
-          ? { params?: ParamList[RouteName] }
-          : { params: ParamList[RouteName] };
+        payload: ActionPayloadParams<ParamList[RouteName]>;
         source?: string | undefined;
         target?: string | undefined;
       }
@@ -71,9 +66,7 @@ type ParamListActions<ParamList extends ParamListBase = ParamListBase> = {
         type: 'PRELOAD';
         payload: {
           name: Extract<RouteName, string>;
-        } & (undefined extends ParamList[RouteName]
-          ? { params?: ParamList[RouteName] }
-          : { params: ParamList[RouteName] });
+        } & ActionPayloadParams<ParamList[RouteName]>;
         source?: string | undefined;
         target?: string | undefined;
       };
@@ -82,7 +75,7 @@ type ParamListActions<ParamList extends ParamListBase = ParamListBase> = {
 export type Action<ParamList extends ParamListBase = ParamListBase> =
   | GoBackAction
   | ResetAction
-  | ParamListActions<ParamList>;
+  | RouteActions<ParamList>;
 
 export function goBack() {
   return { type: 'GO_BACK' } as const satisfies Action;
@@ -135,7 +128,7 @@ export function navigate(
       merge: options?.merge,
       pop: options?.pop,
     },
-  };
+  } as const satisfies Action;
 }
 
 export function reset(state: ResetState) {
@@ -182,5 +175,5 @@ export function preload(name: string, params?: object | undefined) {
   return {
     type: 'PRELOAD',
     payload: { name, params },
-  };
+  } as const satisfies Action;
 }

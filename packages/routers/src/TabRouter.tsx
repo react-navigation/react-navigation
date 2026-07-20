@@ -65,7 +65,7 @@ function jumpTo(name: string, params?: object | undefined) {
   return {
     type: 'JUMP_TO',
     payload: { name, params },
-  };
+  } as const satisfies TabActionType;
 }
 
 export const TabActions = {

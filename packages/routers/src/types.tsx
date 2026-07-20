@@ -4,6 +4,14 @@ export type CommonNavigationAction<
   ParamList extends ParamListBase = ParamListBase,
 > = CommonActions.Action<ParamList>;
 
+/**
+ * The `params` field of an action payload, required or optional depending on
+ * whether the route's params can be `undefined`.
+ */
+export type ActionPayloadParams<Params> = undefined extends Params
+  ? { params?: Params }
+  : { params: Params };
+
 export type NavigationRoute<
   ParamList extends ParamListBase,
   RouteName extends keyof ParamList,

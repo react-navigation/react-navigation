@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid/non-secure';
 import { BaseRouter } from './BaseRouter';
 import { createParamsFromAction } from './createParamsFromAction';
 import type {
+  ActionPayloadParams,
   CommonNavigationAction,
   DefaultRouterOptions,
   NavigationState,
@@ -18,9 +19,7 @@ export type SwitchActionType<ParamList extends ParamListBase = ParamListBase> =
       type: 'JUMP_TO';
       payload: {
         name: Extract<RouteName, string>;
-      } & (undefined extends ParamList[RouteName]
-        ? { params?: ParamList[RouteName] }
-        : { params: ParamList[RouteName] });
+      } & ActionPayloadParams<ParamList[RouteName]>;
       source?: string | undefined;
       target?: string | undefined;
     };
