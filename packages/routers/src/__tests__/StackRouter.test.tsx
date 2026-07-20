@@ -707,6 +707,94 @@ test('moves retained routes to inactive routes on route focus', () => {
   });
 });
 
+test('focuses retained route', () => {
+  const router = StackRouter({});
+
+  expect(
+    router.getStateForRouteFocus(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        retainedRouteKeys: ['bar'],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+          { key: 'qux', name: 'qux' },
+        ],
+      },
+      'bar'
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    retainedRouteKeys: ['bar'],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+      { key: 'qux', name: 'qux' },
+    ],
+  });
+});
+
+test('focuses preloaded route', () => {
+  const router = StackRouter({});
+
+  expect(
+    router.getStateForRouteFocus(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        retainedRouteKeys: ['bar'],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+          { key: 'qux', name: 'qux' },
+        ],
+      },
+      'qux'
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    retainedRouteKeys: ['bar'],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'qux', name: 'qux' },
+      { key: 'bar', name: 'bar' },
+    ],
+  });
+});
+
+test('ignores unknown route on route focus', () => {
+  const router = StackRouter({});
+  const state = {
+    stale: false as const,
+    type: 'stack' as const,
+    key: 'root',
+    index: 0,
+    retainedRouteKeys: [],
+    routeNames: ['baz', 'bar'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
+  };
+
+  expect(router.getStateForRouteFocus(state, 'qux')).toBe(state);
+});
+
 test('handles navigate action', () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
