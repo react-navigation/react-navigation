@@ -85,7 +85,14 @@ export type Route<
     /**
      * History of param changes for this route.
      */
-    history?: { type: 'params'; params: object }[] | undefined;
+    history?:
+      | {
+          type: 'params';
+          params: undefined extends Params
+            ? Readonly<Params> | undefined
+            : Readonly<Params>;
+        }[]
+      | undefined;
   } & (undefined extends Params
     ? {
         /**
