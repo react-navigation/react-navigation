@@ -258,6 +258,76 @@ test('gets state on route names change', () => {
   });
 });
 
+test('removes preloaded routes whose names are removed', () => {
+  const router = StackRouter({});
+
+  expect(
+    router.getStateForRouteNamesChange(
+      {
+        index: 0,
+        key: 'stack-test',
+        preloadedRoutes: [
+          { key: 'bar-preloaded', name: 'bar' },
+          { key: 'baz-preloaded', name: 'baz' },
+        ],
+        routeNames: ['foo', 'bar', 'baz'],
+        routes: [{ key: 'foo-test', name: 'foo' }],
+        stale: false,
+        type: 'stack',
+      },
+      {
+        routeNames: ['foo', 'baz'],
+        routeParamList: {},
+        routeGetIdList: {},
+        routeKeyChanges: [],
+      }
+    )
+  ).toEqual({
+    index: 0,
+    key: 'stack-test',
+    preloadedRoutes: [{ key: 'baz-preloaded', name: 'baz' }],
+    routeNames: ['foo', 'baz'],
+    routes: [{ key: 'foo-test', name: 'foo' }],
+    stale: false,
+    type: 'stack',
+  });
+});
+
+test('removes preloaded routes for changed route keys', () => {
+  const router = StackRouter({});
+
+  expect(
+    router.getStateForRouteNamesChange(
+      {
+        index: 0,
+        key: 'stack-test',
+        preloadedRoutes: [
+          { key: 'bar-preloaded', name: 'bar' },
+          { key: 'baz-preloaded', name: 'baz' },
+        ],
+        routeNames: ['foo', 'bar', 'baz'],
+        routes: [{ key: 'foo-test', name: 'foo' }],
+        stale: false,
+        type: 'stack',
+      },
+      {
+        routeNames: ['foo', 'bar', 'baz'],
+        routeParamList: {},
+        routeGetIdList: {},
+        routeKeyChanges: ['bar'],
+      }
+    )
+  ).toEqual({
+    index: 0,
+    key: 'stack-test',
+    preloadedRoutes: [{ key: 'baz-preloaded', name: 'baz' }],
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [{ key: 'foo-test', name: 'foo' }],
+    stale: false,
+    type: 'stack',
+  });
+});
+
 test('gets state on route names change with initialRouteName', () => {
   const router = StackRouter({ initialRouteName: 'qux' });
 
