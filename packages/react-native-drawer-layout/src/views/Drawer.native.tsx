@@ -24,6 +24,7 @@ import type { DrawerProps } from '../types';
 import { DrawerGestureContext } from '../utils/DrawerGestureContext';
 import { DrawerProgressContext } from '../utils/DrawerProgressContext';
 import { getDrawerWidthNative } from '../utils/getDrawerWidth';
+import { useResponsiveValue } from '../utils/useResponsiveValue';
 import {
   GestureDetector,
   GestureHandlerRootView,
@@ -47,7 +48,7 @@ export function Drawer({
   direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
   drawerPosition = direction === 'rtl' ? 'right' : 'left',
   drawerStyle,
-  drawerType = 'front',
+  drawerType: drawerTypeProp = 'front',
   configureGestureHandler,
   hideStatusBarOnOpen = false,
   keyboardDismissMode = 'on-drag',
@@ -73,6 +74,8 @@ export function Drawer({
   style,
 }: DrawerProps) {
   const { width: customWidth } = StyleSheet.flatten(drawerStyle) || {};
+
+  const drawerType = useResponsiveValue(drawerTypeProp);
 
   const isOpen = drawerType === 'permanent' ? true : open;
   const isRight = drawerPosition === 'right';

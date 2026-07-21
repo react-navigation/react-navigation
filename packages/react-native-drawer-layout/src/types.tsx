@@ -3,6 +3,8 @@ import type { StyleProp, View, ViewStyle } from 'react-native';
 import type { PanGestureConfig } from 'react-native-gesture-handler';
 import type { SharedValue } from 'react-native-reanimated';
 
+import type { ResponsiveValue } from './utils/responsiveValue';
+
 export type DrawerProps = {
   /**
    * Whether the drawer is open or not.
@@ -68,9 +70,21 @@ export type DrawerProps = {
    * - `slide`: Both the screen and the drawer slide on swipe to reveal the drawer.
    * - `permanent`: A permanent drawer is shown as a sidebar.
    *
-   * Defaults to `slide` on iOS and `front` on other platforms.
+   * It can also be an object with media queries as keys to
+   * change the type based on the dimensions of the screen:
+   *
+   * ```js
+   * {
+   *   'media (width >= 1024)': 'permanent',
+   *   'else': 'front',
+   * }
+   * ```
+   *
+   * Defaults to `front`.
    */
-  drawerType?: 'front' | 'back' | 'slide' | 'permanent' | undefined;
+  drawerType?:
+    | ResponsiveValue<'front' | 'back' | 'slide' | 'permanent'>
+    | undefined;
 
   /**
    * Style object for the drawer component.

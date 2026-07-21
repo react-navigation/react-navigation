@@ -14,6 +14,7 @@ import type {
   Theme,
 } from '@react-navigation/native';
 import type { ColorValue, StyleProp, TextStyle, ViewStyle } from 'react-native';
+import type { ResponsiveValue } from 'react-native-drawer-layout';
 import type { PanGestureConfig } from 'react-native-gesture-handler';
 
 export type Scene = {
@@ -143,9 +144,21 @@ export type DrawerNavigationOptions = HeaderOptions & {
    * - `slide`: Both the screen and the drawer slide on swipe to reveal the drawer.
    * - `permanent`: A permanent drawer is shown as a sidebar.
    *
+   * It can also be an object with media queries as keys to
+   * change the type based on the dimensions of the screen:
+   *
+   * ```js
+   * {
+   *   'media (width >= 1024)': 'permanent',
+   *   'else': 'front',
+   * }
+   * ```
+   *
    * Defaults to `slide` on iOS and `front` on other platforms.
    */
-  drawerType?: 'front' | 'back' | 'slide' | 'permanent' | undefined;
+  drawerType?:
+    | ResponsiveValue<'front' | 'back' | 'slide' | 'permanent'>
+    | undefined;
 
   /**
    * Whether the statusbar should be hidden when the drawer is pulled or opens,

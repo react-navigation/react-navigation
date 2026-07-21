@@ -16,7 +16,7 @@ import {
 } from '@react-navigation/native';
 import * as React from 'react';
 import { Platform, StyleSheet } from 'react-native';
-import { Drawer } from 'react-native-drawer-layout';
+import { Drawer, useResponsiveValue } from 'react-native-drawer-layout';
 import useLatestCallback from 'use-latest-callback';
 
 import type {
@@ -82,6 +82,10 @@ function DrawerViewBase({
     overlayStyle,
     overlayAccessibilityLabel,
   } = focusedOptions;
+
+  // The resolved value is only used for logic outside of the drawer layout,
+  // the responsive value is passed to the drawer for the layout itself
+  const resolvedDrawerType = useResponsiveValue(drawerType);
 
   const [loaded, setLoaded] = React.useState([focusedRouteKey]);
 
@@ -169,7 +173,7 @@ function DrawerViewBase({
   });
 
   React.useEffect(() => {
-    if (drawerStatus === defaultStatus || drawerType === 'permanent') {
+    if (drawerStatus === defaultStatus || resolvedDrawerType === 'permanent') {
       return;
     }
 
@@ -196,7 +200,7 @@ function DrawerViewBase({
   }, [
     defaultStatus,
     drawerStatus,
-    drawerType,
+    resolvedDrawerType,
     handleDrawerClose,
     handleDrawerOpen,
     navigation,
@@ -326,7 +330,7 @@ function DrawerViewBase({
         drawerPosition={drawerPosition}
         drawerStyle={[
           { backgroundColor: colors.card },
-          drawerType === 'permanent' &&
+          resolvedDrawerType === 'permanent' &&
             ((
               Platform.OS === 'web'
                 ? drawerPosition === 'right'
@@ -342,7 +346,7 @@ function DrawerViewBase({
                   borderRightWidth: StyleSheet.hairlineWidth,
                 }),
 
-          drawerType === 'front' &&
+          resolvedDrawerType === 'front' &&
             (drawerPosition === 'left'
               ? {
                   borderTopRightRadius: DRAWER_BORDER_RADIUS,
