@@ -19,5 +19,8 @@ export interface NativeProps extends ViewProps {
 }
 
 export default codegenNativeComponent<NativeProps>(
-  'ReactNavigationMaterialSymbolView'
+  'ReactNavigationMaterialSymbolView',
+  {
+    excludedPlatforms: ['iOS'],
+  }
 );

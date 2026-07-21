@@ -41,5 +41,8 @@ export interface NativeProps extends ViewProps {
 }
 
 export default codegenNativeComponent<NativeProps>(
-  'ReactNavigationSFSymbolView'
+  'ReactNavigationSFSymbolView',
+  {
+    excludedPlatforms: ['android'],
+  }
 );

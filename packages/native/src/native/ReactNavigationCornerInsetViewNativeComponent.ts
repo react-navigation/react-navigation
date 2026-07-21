@@ -27,6 +27,7 @@ export const Commands = codegenNativeCommands<NativeCommands>({
 export default codegenNativeComponent<NativeProps>(
   'ReactNavigationCornerInsetView',
   {
+    excludedPlatforms: ['android'],
     interfaceOnly: true,
   }
 );
