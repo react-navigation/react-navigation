@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.28...@react-navigation/core@8.0.0-alpha.29) (2026-07-21)
+
+### Bug Fixes
+
+* fix state events and url when navigator mounts later ([d2ef669](https://github.com/react-navigation/react-navigation/commit/d2ef66915f479354493213886398656967948104)) - by @satya164
+
 # [8.0.0-alpha.28](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.27...@react-navigation/core@8.0.0-alpha.28) (2026-07-17)
 
 ### Bug Fixes

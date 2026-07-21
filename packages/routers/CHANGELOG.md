@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.15...@react-navigation/routers@8.0.0-alpha.16) (2026-07-21)
+
+### Bug Fixes
+
+* create fresh route object when key changes in tab ([a7e1a7e](https://github.com/react-navigation/react-navigation/commit/a7e1a7e27555f297b6e5bf2cb648dd359cf08c6c)) - by @satya164
+* fix param type for history object in route ([e5018d2](https://github.com/react-navigation/react-navigation/commit/e5018d20f182e56f09c5493b2cce801f1b44df8d)) - by @satya164
+* focus preloaded and retained routes when child is focused ([7d85761](https://github.com/react-navigation/react-navigation/commit/7d857619d6b0d7f30ce69ede23c1c4cdf3f4f1a0)) - by @satya164
+* match preloaded stack routes by exact ID ([338609d](https://github.com/react-navigation/react-navigation/commit/338609dd946014acc4de5ccdad27d687d505592f)) - by @satya164
+* update history params when switching tabs ([db548d8](https://github.com/react-navigation/react-navigation/commit/db548d873c3266634ca362f0ce495b4af18c391f)) - by @satya164
+
 # [8.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/routers@8.0.0-alpha.14...@react-navigation/routers@8.0.0-alpha.15) (2026-07-17)
 
 ### Bug Fixes

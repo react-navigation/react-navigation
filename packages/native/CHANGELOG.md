@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.38](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.37...@react-navigation/native@8.0.0-alpha.38) (2026-07-21)
+
+### Bug Fixes
+
+* exclude unsupported platforms for native components ([af626a6](https://github.com/react-navigation/react-navigation/commit/af626a6108141ebc0522257ed0073ed018d07ea5)) - by @satya164
+* fix state events and url when navigator mounts later ([d2ef669](https://github.com/react-navigation/react-navigation/commit/d2ef66915f479354493213886398656967948104)) - by @satya164
+
 # [8.0.0-alpha.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.36...@react-navigation/native@8.0.0-alpha.37) (2026-07-17)
 
 **Note:** Version bump only for package @react-navigation/native
