@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View } from 'react-native';
+import type { ViewProps } from 'react-native';
 
 export type CornerInsetProps = {
   /**
@@ -17,7 +17,7 @@ export type CornerInsetProps = {
    * @default true
    */
   adaptive?: boolean;
-} & React.ComponentProps<typeof View>;
+} & Omit<ViewProps, 'children'>;
 
 export type CornerInsetRef = {
   relayout(): void;
@@ -27,7 +27,7 @@ type Props = CornerInsetProps & {
   ref?: React.Ref<CornerInsetRef>;
 };
 
-export function CornerInset({ ref, ...rest }: Props) {
+export function CornerInset({ ref }: Props) {
   React.useImperativeHandle(
     ref,
     () => ({
@@ -36,5 +36,5 @@ export function CornerInset({ ref, ...rest }: Props) {
     []
   );
 
-  return <View {...rest} />;
+  return null;
 }
