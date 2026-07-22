@@ -2,7 +2,7 @@ import { expect, test } from '@jest/globals';
 
 import { getShadowStyle } from '../getShadowStyle';
 
-test('returns native shadow styles', () => {
+test('returns web shadow styles', () => {
   const result = getShadowStyle({
     offset: {
       width: 2,
@@ -13,12 +13,6 @@ test('returns native shadow styles', () => {
   });
 
   expect(result).toEqual({
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 2,
-      height: 4,
-    },
-    shadowRadius: 5,
-    shadowOpacity: 0.3,
+    boxShadow: '2px 4px 5px rgba(0, 0, 0, 0.3)',
   });
 });

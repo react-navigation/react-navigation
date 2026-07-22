@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom/jest-globals';
+
 import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
@@ -9,17 +11,10 @@ import {
   TabRouter,
   useNavigationBuilder,
 } from '@react-navigation/core';
-import { act, render, waitFor } from '@testing-library/react-native';
+import { act, render, screen, waitFor } from '@testing-library/react';
 import { Text } from 'react-native';
 
-import { window } from '../__stubs__/window';
 import { NavigationContainer } from '../NavigationContainer';
-
-Object.assign(global, window);
-
-// We want to use the web version of useLinking
-// eslint-disable-next-line import-x/extensions
-jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
 beforeEach(() => {
   jest.useFakeTimers();
@@ -94,7 +89,7 @@ test('integrates with the history API', async () => {
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  await render(
+  render(
     <NavigationContainer ref={navigation} linking={linking}>
       <Tab.Navigator>
         <Tab.Screen name="Home">
@@ -114,46 +109,46 @@ test('integrates with the history API', async () => {
 
   expect(window.location.pathname).toBe('/feed');
 
-  await act(() => navigation.current?.navigate('Profile', { user: 'jane' }));
+  act(() => navigation.current?.navigate('Profile', { user: 'jane' }));
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  await act(() => navigation.current?.navigate('Updates'));
+  act(() => navigation.current?.navigate('Updates'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/updates'));
 
-  await act(() => navigation.current?.goBack());
+  act(() => navigation.current?.goBack());
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  await act(() => {
+  act(() => {
     window.history.back();
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
-  await act(() => {
+  act(() => {
     window.history.forward();
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/jane'));
 
-  await act(() => navigation.current?.navigate('Settings'));
+  act(() => navigation.current?.navigate('Settings'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/edit'));
 
-  await act(() => {
+  act(() => {
     window.history.go(-2);
   });
 
   await waitFor(() => expect(window.location.pathname).toBe('/feed'));
 
-  await act(() => navigation.current?.navigate('Settings'));
-  await act(() => navigation.current?.navigate('Chat'));
+  act(() => navigation.current?.navigate('Settings'));
+  act(() => navigation.current?.navigate('Chat'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/chat'));
 
-  await act(() => navigation.current?.navigate('Home'));
+  act(() => navigation.current?.navigate('Home'));
 
   await waitFor(() => expect(window.location.pathname).toBe('/edit'));
 });
@@ -188,12 +183,12 @@ test('renders fallback before state is restored asynchronously', async () => {
   const { promise, resolve } =
     Promise.withResolvers<PartialState<NavigationState>>();
 
-  const root = await render(
+  render(
     <NavigationContainer
       ref={navigation}
       fallback={<Text>Loading</Text>}
       persistor={{
-        persist: jest.fn(),
+        persist() {},
         restore: () => promise,
       }}
     >
@@ -204,11 +199,8 @@ test('renders fallback before state is restored asynchronously', async () => {
     </NavigationContainer>
   );
 
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      Loading
-    </Text>
-  `);
+  expect(screen.getByText('Loading')).toBeInTheDocument();
+  expect(screen.queryByText('Home')).not.toBeInTheDocument();
 
   await act(() => {
     resolve({
@@ -216,12 +208,8 @@ test('renders fallback before state is restored asynchronously', async () => {
     });
   });
 
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      Profile
-      {"user":"jane"}
-    </Text>
-  `);
+  expect(screen.getByText('Profile{"user":"jane"}')).toBeInTheDocument();
+  expect(screen.queryByText('Loading')).not.toBeInTheDocument();
 
   expect(navigation.getCurrentRoute()).toMatchObject({
     name: 'Profile',
@@ -229,7 +217,7 @@ test('renders fallback before state is restored asynchronously', async () => {
   });
 });
 
-test('renders navigation tree immediately when state is restored synchronously', async () => {
+test('renders navigation tree immediately when state is restored synchronously', () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -256,12 +244,12 @@ test('renders navigation tree immediately when state is restored synchronously',
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  const root = await render(
+  render(
     <NavigationContainer
       ref={navigation}
       fallback={<Text>Loading</Text>}
       persistor={{
-        persist: jest.fn(),
+        persist() {},
         restore: () => ({
           routes: [{ name: 'Profile', params: { user: 'jane' } }],
         }),
@@ -274,12 +262,8 @@ test('renders navigation tree immediately when state is restored synchronously',
     </NavigationContainer>
   );
 
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      Profile
-      {"user":"jane"}
-    </Text>
-  `);
+  expect(screen.getByText('Profile{"user":"jane"}')).toBeInTheDocument();
+  expect(screen.queryByText('Loading')).not.toBeInTheDocument();
 
   expect(navigation.getCurrentRoute()).toMatchObject({
     name: 'Profile',
@@ -316,11 +300,11 @@ test('renders normally when state restoration throws', async () => {
 
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-  const root = await render(
+  render(
     <NavigationContainer
       ref={navigation}
       persistor={{
-        persist: jest.fn(),
+        persist() {},
         restore() {
           throw new Error('Failed');
         },
@@ -333,11 +317,7 @@ test('renders normally when state restoration throws', async () => {
     </NavigationContainer>
   );
 
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      Home
-    </Text>
-  `);
+  expect(screen.getByText('Home')).toBeInTheDocument();
 
   await waitFor(() => {
     expect(navigation.getCurrentRoute()?.name).toBe('Home');
@@ -378,11 +358,11 @@ test('renders normally when state restoration rejects', async () => {
 
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-  const root = await render(
+  render(
     <NavigationContainer
       ref={navigation}
       persistor={{
-        persist: jest.fn(),
+        persist() {},
         restore() {
           return Promise.reject(new Error('Failed'));
         },
@@ -395,13 +375,8 @@ test('renders normally when state restoration rejects', async () => {
     </NavigationContainer>
   );
 
-  expect(root).toMatchInlineSnapshot(`
-    <Text>
-      Home
-    </Text>
-  `);
-
   await waitFor(() => {
+    expect(screen.getByText('Home')).toBeInTheDocument();
     expect(navigation.getCurrentRoute()?.name).toBe('Home');
   });
 
