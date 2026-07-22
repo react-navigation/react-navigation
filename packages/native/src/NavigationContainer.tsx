@@ -13,8 +13,8 @@ import {
   validatePathConfig,
 } from '@react-navigation/core';
 import * as React from 'react';
-import { I18nManager, Platform } from 'react-native';
 
+import { DEFAULT_DIRECTION, IS_NATIVE } from './constants';
 import { LinkingContext } from './LinkingContext';
 import { LocaleDirContext } from './LocaleDirContext';
 import { LightTheme } from './theming/LightTheme';
@@ -120,7 +120,7 @@ const RESTORE_STATE_ERROR =
  * This should be rendered at the root wrapping the whole app.
  */
 export function NavigationContainer<ParamList extends {} = RootParamList>({
-  direction = I18nManager.getConstants().isRTL ? 'rtl' : 'ltr',
+  direction = DEFAULT_DIRECTION,
   theme = LightTheme,
   linking,
   persistor,
@@ -188,8 +188,7 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
     return getInitialState();
   });
 
-  const isPersistenceSupported =
-    Platform.OS === 'web' ? !linkingConfig.options.enabled : true;
+  const isPersistenceSupported = IS_NATIVE || !linkingConfig.options.enabled;
 
   const [isPersistedStateResolved, initialStateFromPersisted] = useThenable(
     () => {

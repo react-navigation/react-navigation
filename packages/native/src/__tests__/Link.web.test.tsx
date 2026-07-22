@@ -1,4 +1,6 @@
-import { expect, jest, test } from '@jest/globals';
+import '@testing-library/jest-dom/jest-globals';
+
+import { afterEach, expect, jest, test } from '@jest/globals';
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -9,56 +11,22 @@ import {
   TabRouter,
   useNavigationBuilder,
 } from '@react-navigation/core';
-import { render, screen, userEvent } from '@testing-library/react-native';
+import { cleanup, render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { Fragment, useMemo } from 'react';
-import { Platform, Text } from 'react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { Link } from '../Link';
 import { NavigationContainer } from '../NavigationContainer';
 
-type RootParamList = { Foo: undefined; Bar: { id: string } };
-
-const OS = jest.replaceProperty(Platform, 'OS', 'web');
-
-test('navigates on native', async () => {
-  OS.replaceValue('android');
-
-  try {
-    const user = userEvent.setup();
-
-    const Stack = createStackNavigator<RootParamList>();
-
-    const FooScreen = () => (
-      <Link<RootParamList> screen="Bar" params={{ id: '42' }}>
-        Go to Bar
-      </Link>
-    );
-
-    await render(
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="Foo" component={FooScreen} />
-          <Stack.Screen name="Bar">
-            {() => <Text>Bar Screen</Text>}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-
-    const link = screen.getByRole('link', { name: 'Go to Bar' });
-
-    expect(link).not.toHaveProp('href');
-
-    await user.press(link);
-
-    expect(await screen.findByText('Bar Screen')).toBeOnTheScreen();
-  } finally {
-    OS.replaceValue('web');
-  }
+afterEach(() => {
+  cleanup();
+  window.history.replaceState({}, '', '/');
 });
 
-test('renders link with href on web', async () => {
+type RootParamList = { Foo: undefined; Bar: { id: string } };
+
+test('renders link with href from linking config', async () => {
   const user = userEvent.setup();
 
   const config = {
@@ -98,11 +66,11 @@ test('renders link with href on web', async () => {
 
   const link = screen.getByRole('link', { name: 'Go to Bar' });
 
-  expect(link).toHaveProp('href', '/bar/42');
+  expect(link).toHaveAttribute('href', '/bar/42');
 
-  await user.press(link);
+  await user.click(link);
 
-  expect(screen.getByRole('link', { name: 'Go to Foo' })).toHaveProp(
+  expect(screen.getByRole('link', { name: 'Go to Foo' })).toHaveAttribute(
     'href',
     '/foo'
   );
@@ -123,18 +91,18 @@ test('uses an explicit href and still navigates to the screen', async () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Foo" component={FooScreen} />
-        <Stack.Screen name="Bar">{() => <Text>Bar Screen</Text>}</Stack.Screen>
+        <Stack.Screen name="Bar">{() => <span>Bar Screen</span>}</Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
 
   const link = screen.getByRole('link', { name: 'Go to Bar' });
 
-  expect(link).toHaveProp('href', '/custom-bar');
+  expect(link).toHaveAttribute('href', '/custom-bar');
 
-  await user.press(link);
+  await user.click(link);
 
-  expect(await screen.findByText('Bar Screen')).toBeOnTheScreen();
+  expect(await screen.findByText('Bar Screen')).toBeInTheDocument();
 });
 
 test('uses the configured getPathFromState', async () => {
@@ -165,7 +133,7 @@ test('uses the configured getPathFromState', async () => {
     </NavigationContainer>
   );
 
-  expect(screen.getByRole('link', { name: 'Go to Bar' })).toHaveProp(
+  expect(screen.getByRole('link', { name: 'Go to Bar' })).toHaveAttribute(
     'href',
     '/custom-path'
   );
@@ -203,24 +171,50 @@ test('handles custom onPress and disabled links', async () => {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Foo" component={FooScreen} />
-        <Stack.Screen name="Bar">{() => <Text>Bar Screen</Text>}</Stack.Screen>
+        <Stack.Screen name="Bar">{() => <span>Bar Screen</span>}</Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
 
   const disabledLink = screen.getByRole('link', { name: 'Disabled Bar' });
 
-  expect(disabledLink).toBeDisabled();
-
-  await user.press(disabledLink);
+  await user.click(disabledLink);
 
   expect(onPressDisabled).not.toHaveBeenCalled();
-  expect(screen.queryByText('Bar Screen')).not.toBeOnTheScreen();
+  expect(screen.queryByText('Bar Screen')).not.toBeInTheDocument();
 
-  await user.press(screen.getByRole('link', { name: 'Enabled Bar' }));
+  await user.click(screen.getByRole('link', { name: 'Enabled Bar' }));
 
   expect(onPressEnabled).toHaveBeenCalled();
-  expect(await screen.findByText('Bar Screen')).toBeOnTheScreen();
+  expect(await screen.findByText('Bar Screen')).toBeInTheDocument();
+});
+
+test('does not navigate when onPress prevents the default', async () => {
+  const user = userEvent.setup();
+  const Stack = createStackNavigator<RootParamList>();
+
+  await render(
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Foo">
+          {() => (
+            <Link<RootParamList>
+              screen="Bar"
+              params={{ id: '42' }}
+              onPress={(event) => event.preventDefault()}
+            >
+              Go to Bar
+            </Link>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="Bar">{() => <span>Bar Screen</span>}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await user.click(screen.getByRole('link', { name: 'Go to Bar' }));
+
+  expect(screen.queryByText('Bar Screen')).not.toBeInTheDocument();
 });
 
 test.each([
@@ -267,7 +261,7 @@ test.each([
       </NavigationContainer>
     );
 
-    expect(screen.getByRole('link', { name: 'Go to Bar' })).toHaveProp(
+    expect(screen.getByRole('link', { name: 'Go to Bar' })).toHaveAttribute(
       'href',
       '/bar/42'
     );
@@ -309,20 +303,20 @@ test('uses screen for href and action for navigation', async () => {
     >
       <Stack.Navigator>
         <Stack.Screen name="Foo" component={FooScreen} />
-        <Stack.Screen name="Bar">{() => <Text>Bar Screen</Text>}</Stack.Screen>
-        <Stack.Screen name="Baz">{() => <Text>Baz Screen</Text>}</Stack.Screen>
+        <Stack.Screen name="Bar">{() => <span>Bar Screen</span>}</Stack.Screen>
+        <Stack.Screen name="Baz">{() => <span>Baz Screen</span>}</Stack.Screen>
       </Stack.Navigator>
     </NavigationContainer>
   );
 
   const link = screen.getByRole('link', { name: 'Go to Bar' });
 
-  expect(link).toHaveProp('href', '/bar/42');
+  expect(link).toHaveAttribute('href', '/bar/42');
 
-  await user.press(link);
+  await user.click(link);
 
-  expect(await screen.findByText('Baz Screen')).toBeOnTheScreen();
-  expect(screen.queryByText('Bar Screen')).not.toBeOnTheScreen();
+  expect(await screen.findByText('Baz Screen')).toBeInTheDocument();
+  expect(screen.queryByText('Bar Screen')).not.toBeInTheDocument();
 });
 
 test('does not render link with href from action when no linking config is present', async () => {
@@ -349,7 +343,7 @@ test('does not render link with href from action when no linking config is prese
     </NavigationContainer>
   );
 
-  expect(screen.getByRole('link', { name: 'Go to Bar' })).not.toHaveProp(
+  expect(screen.getByRole('link', { name: 'Go to Bar' })).not.toHaveAttribute(
     'href'
   );
 });
@@ -389,7 +383,7 @@ test('does not render link with href from action when screen is not in linking c
     </NavigationContainer>
   );
 
-  expect(screen.getByRole('link', { name: 'Go to Bar' })).not.toHaveProp(
+  expect(screen.getByRole('link', { name: 'Go to Bar' })).not.toHaveAttribute(
     'href'
   );
 });
@@ -423,9 +417,9 @@ test('does not infer href from an unsupported custom action', async () => {
     </NavigationContainer>
   );
 
-  expect(screen.getByRole('link', { name: 'Custom action' })).not.toHaveProp(
-    'href'
-  );
+  expect(
+    screen.getByRole('link', { name: 'Custom action' })
+  ).not.toHaveAttribute('href');
 });
 
 test('navigates to a nested screen again with the same params object', async () => {
@@ -482,12 +476,12 @@ test('navigates to a nested screen again with the same params object', async () 
               </Tab.Screen>
               <Tab.Screen name="Second">
                 {({ navigation }) => (
-                  <Text
-                    role="button"
-                    onPress={() => navigation.navigate('First')}
+                  <button
+                    type="button"
+                    onClick={() => navigation.navigate('First')}
                   >
                     Go to First
-                  </Text>
+                  </button>
                 )}
               </Tab.Screen>
             </Tab.Navigator>
@@ -497,15 +491,15 @@ test('navigates to a nested screen again with the same params object', async () 
     </NavigationContainer>
   );
 
-  await user.press(screen.getByRole('link', { name: 'Go to Second' }));
+  await user.click(screen.getByRole('link', { name: 'Go to Second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('Second');
 
-  await user.press(screen.getByRole('button', { name: 'Go to First' }));
+  await user.click(screen.getByRole('button', { name: 'Go to First' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('First');
 
-  await user.press(screen.getByRole('link', { name: 'Go to Second' }));
+  await user.click(screen.getByRole('link', { name: 'Go to Second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('Second');
 });
@@ -565,12 +559,12 @@ test('navigates to nested state again with the same params object', async () => 
               </Tab.Screen>
               <Tab.Screen name="Second">
                 {({ navigation }) => (
-                  <Text
-                    role="button"
-                    onPress={() => navigation.navigate('First')}
+                  <button
+                    type="button"
+                    onClick={() => navigation.navigate('First')}
                   >
                     Go to First
-                  </Text>
+                  </button>
                 )}
               </Tab.Screen>
             </Tab.Navigator>
@@ -580,15 +574,15 @@ test('navigates to nested state again with the same params object', async () => 
     </NavigationContainer>
   );
 
-  await user.press(screen.getByRole('link', { name: 'Go to Second' }));
+  await user.click(screen.getByRole('link', { name: 'Go to Second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('Second');
 
-  await user.press(screen.getByRole('button', { name: 'Go to First' }));
+  await user.click(screen.getByRole('button', { name: 'Go to First' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('First');
 
-  await user.press(screen.getByRole('link', { name: 'Go to Second' }));
+  await user.click(screen.getByRole('link', { name: 'Go to Second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('Second');
 });
@@ -668,12 +662,12 @@ test('navigates again with a memoized action', async () => {
               <Tab.Screen name="First" component={FirstScreen} />
               <Tab.Screen name="Second">
                 {({ navigation }) => (
-                  <Text
-                    role="button"
-                    onPress={() => navigation.navigate('First')}
+                  <button
+                    type="button"
+                    onClick={() => navigation.navigate('First')}
                   >
                     Go to First
-                  </Text>
+                  </button>
                 )}
               </Tab.Screen>
             </Tab.Navigator>
@@ -683,15 +677,15 @@ test('navigates again with a memoized action', async () => {
     </NavigationContainer>
   );
 
-  await user.press(screen.getByRole('link', { name: 'Go to Second' }));
+  await user.click(screen.getByRole('link', { name: 'Go to Second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('Second');
 
-  await user.press(screen.getByRole('button', { name: 'Go to First' }));
+  await user.click(screen.getByRole('button', { name: 'Go to First' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('First');
 
-  await user.press(screen.getByRole('link', { name: 'Go to Second' }));
+  await user.click(screen.getByRole('link', { name: 'Go to Second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('Second');
 });
@@ -765,12 +759,12 @@ test('navigates through multiple nested screens again with the same params objec
                     <Leaf.Screen name="LeafFirst">{() => null}</Leaf.Screen>
                     <Leaf.Screen name="LeafSecond">
                       {({ navigation }) => (
-                        <Text
-                          role="button"
-                          onPress={() => navigation.navigate('LeafFirst')}
+                        <button
+                          type="button"
+                          onClick={() => navigation.navigate('LeafFirst')}
                         >
                           Go to leaf first
-                        </Text>
+                        </button>
                       )}
                     </Leaf.Screen>
                   </Leaf.Navigator>
@@ -783,15 +777,15 @@ test('navigates through multiple nested screens again with the same params objec
     </NavigationContainer>
   );
 
-  await user.press(screen.getByRole('link', { name: 'Go to deep second' }));
+  await user.click(screen.getByRole('link', { name: 'Go to deep second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('LeafSecond');
 
-  await user.press(screen.getByRole('button', { name: 'Go to leaf first' }));
+  await user.click(screen.getByRole('button', { name: 'Go to leaf first' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('LeafFirst');
 
-  await user.press(screen.getByRole('link', { name: 'Go to deep second' }));
+  await user.click(screen.getByRole('link', { name: 'Go to deep second' }));
 
   expect(navigation.getCurrentRoute()?.name).toBe('LeafSecond');
 });
@@ -890,25 +884,25 @@ test('renders hrefs with in for current, parent, and root navigators', async () 
       <RootStack.Navigator>
         <RootStack.Screen name="Home" component={HomeScreen} />
         <RootStack.Screen name="Settings">
-          {() => <Text>Settings Screen</Text>}
+          {() => <span>Settings Screen</span>}
         </RootStack.Screen>
       </RootStack.Navigator>
     </NavigationContainer>
   );
 
-  expect(screen.getByRole('link', { name: 'Article' })).toHaveProp(
+  expect(screen.getByRole('link', { name: 'Article' })).toHaveAttribute(
     'href',
     '/home/feed/articles/1'
   );
-  expect(screen.getByRole('link', { name: 'Profile' })).toHaveProp(
+  expect(screen.getByRole('link', { name: 'Profile' })).toHaveAttribute(
     'href',
     '/home/profile/2'
   );
-  expect(screen.getByRole('link', { name: 'Settings' })).toHaveProp(
+  expect(screen.getByRole('link', { name: 'Settings' })).toHaveAttribute(
     'href',
     '/settings'
   );
-  expect(screen.getByRole('link', { name: 'Root Settings' })).toHaveProp(
+  expect(screen.getByRole('link', { name: 'Root Settings' })).toHaveAttribute(
     'href',
     '/settings'
   );
@@ -961,12 +955,12 @@ test('updates href when focused route params change', async () => {
                     <Link<RootStackParamList> in="Feed" screen="Profile">
                       Go to Profile
                     </Link>
-                    <Text
-                      role="button"
-                      onPress={() => navigation.setParams({ section: 'two' })}
+                    <button
+                      type="button"
+                      onClick={() => navigation.setParams({ section: 'two' })}
                     >
                       Change section
-                    </Text>
+                    </button>
                   </>
                 )}
               </HomeTabs.Screen>
@@ -980,11 +974,11 @@ test('updates href when focused route params change', async () => {
 
   const link = screen.getByRole('link', { name: 'Go to Profile' });
 
-  expect(link).toHaveProp('href', '/home/one/profile');
+  expect(link).toHaveAttribute('href', '/home/one/profile');
 
-  await user.press(screen.getByRole('button', { name: 'Change section' }));
+  await user.click(screen.getByRole('button', { name: 'Change section' }));
 
-  expect(link).toHaveProp('href', '/home/two/profile');
+  expect(link).toHaveAttribute('href', '/home/two/profile');
 });
 
 test('navigates with in for a root navigator', async () => {
@@ -1010,15 +1004,15 @@ test('navigates with in for a root navigator', async () => {
       <RootStack.Navigator>
         <RootStack.Screen name="Home" component={HomeScreen} />
         <RootStack.Screen name="Settings">
-          {() => <Text>Settings Screen</Text>}
+          {() => <span>Settings Screen</span>}
         </RootStack.Screen>
       </RootStack.Navigator>
     </NavigationContainer>
   );
 
-  await user.press(screen.getByRole('link', { name: 'Settings' }));
+  await user.click(screen.getByRole('link', { name: 'Settings' }));
 
-  expect(await screen.findByText('Settings Screen')).toBeOnTheScreen();
+  expect(await screen.findByText('Settings Screen')).toBeInTheDocument();
 });
 
 test('navigates with in for an intermediate navigator', async () => {
@@ -1046,7 +1040,7 @@ test('navigates with in for an intermediate navigator', async () => {
     <HomeTabs.Navigator>
       <HomeTabs.Screen name="Feed" component={FeedScreen} />
       <HomeTabs.Screen name="Profile">
-        {() => <Text>Profile Screen</Text>}
+        {() => <span>Profile Screen</span>}
       </HomeTabs.Screen>
     </HomeTabs.Navigator>
   );
@@ -1059,9 +1053,9 @@ test('navigates with in for an intermediate navigator', async () => {
     </NavigationContainer>
   );
 
-  await user.press(screen.getByRole('link', { name: 'Go to Profile' }));
+  await user.click(screen.getByRole('link', { name: 'Go to Profile' }));
 
-  expect(await screen.findByText('Profile Screen')).toBeOnTheScreen();
+  expect(await screen.findByText('Profile Screen')).toBeInTheDocument();
 });
 
 test('navigates to root when in is not specified', async () => {
@@ -1089,7 +1083,7 @@ test('navigates to root when in is not specified', async () => {
       <ArticleStack.Navigator>
         <ArticleStack.Screen name="Article" component={ArticleScreen} />
         <ArticleStack.Screen name="Settings">
-          {() => <Text>Nested Settings Screen</Text>}
+          {() => <span>Nested Settings Screen</span>}
         </ArticleStack.Screen>
       </ArticleStack.Navigator>
     );
@@ -1100,16 +1094,16 @@ test('navigates to root when in is not specified', async () => {
       <RootStack.Navigator>
         <RootStack.Screen name="Articles" component={ArticlesScreen} />
         <RootStack.Screen name="Settings">
-          {() => <Text>Settings Screen</Text>}
+          {() => <span>Settings Screen</span>}
         </RootStack.Screen>
       </RootStack.Navigator>
     </NavigationContainer>
   );
 
-  await user.press(screen.getByRole('link', { name: 'Settings' }));
+  await user.click(screen.getByRole('link', { name: 'Settings' }));
 
-  expect(await screen.findByText('Settings Screen')).toBeOnTheScreen();
-  expect(screen.queryByText('Nested Settings Screen')).not.toBeOnTheScreen();
+  expect(await screen.findByText('Settings Screen')).toBeInTheDocument();
+  expect(screen.queryByText('Nested Settings Screen')).not.toBeInTheDocument();
 });
 
 test('uses the container ref when rendered outside a navigator', async () => {
@@ -1125,19 +1119,19 @@ test('uses the container ref when rendered outside a navigator', async () => {
         </Link>
         <Stack.Navigator>
           <Stack.Screen name="Foo">
-            {() => <Text>Foo Screen</Text>}
+            {() => <span>Foo Screen</span>}
           </Stack.Screen>
           <Stack.Screen name="Bar">
-            {() => <Text>Bar Screen</Text>}
+            {() => <span>Bar Screen</span>}
           </Stack.Screen>
         </Stack.Navigator>
       </>
     </NavigationContainer>
   );
 
-  await user.press(screen.getByRole('link', { name: 'Go to Bar' }));
+  await user.click(screen.getByRole('link', { name: 'Go to Bar' }));
 
-  expect(await screen.findByText('Bar Screen')).toBeOnTheScreen();
+  expect(await screen.findByText('Bar Screen')).toBeInTheDocument();
 });
 
 test('dispatches custom actions on current navigation when in is not specified', async () => {
@@ -1169,7 +1163,7 @@ test('dispatches custom actions on current navigation when in is not specified',
       <ArticleStack.Navigator>
         <ArticleStack.Screen name="Article" component={ArticleScreen} />
         <ArticleStack.Screen name="Settings">
-          {() => <Text>Nested Settings Screen</Text>}
+          {() => <span>Nested Settings Screen</span>}
         </ArticleStack.Screen>
       </ArticleStack.Navigator>
     );
@@ -1180,16 +1174,16 @@ test('dispatches custom actions on current navigation when in is not specified',
       <RootStack.Navigator>
         <RootStack.Screen name="Articles" component={ArticlesScreen} />
         <RootStack.Screen name="Settings">
-          {() => <Text>Root Settings Screen</Text>}
+          {() => <span>Root Settings Screen</span>}
         </RootStack.Screen>
       </RootStack.Navigator>
     </NavigationContainer>
   );
 
-  await user.press(screen.getByRole('link', { name: 'Settings' }));
+  await user.click(screen.getByRole('link', { name: 'Settings' }));
 
-  expect(await screen.findByText('Nested Settings Screen')).toBeOnTheScreen();
-  expect(screen.queryByText('Root Settings Screen')).not.toBeOnTheScreen();
+  expect(await screen.findByText('Nested Settings Screen')).toBeInTheDocument();
+  expect(screen.queryByText('Root Settings Screen')).not.toBeInTheDocument();
 });
 
 test('dispatches custom actions on the nearest navigator from outside screens', async () => {
@@ -1222,7 +1216,7 @@ test('dispatches custom actions on the nearest navigator from outside screens', 
       >
         <ArticleStack.Screen name="Article">{() => null}</ArticleStack.Screen>
         <ArticleStack.Screen name="Settings">
-          {() => <Text>Nested Settings Screen</Text>}
+          {() => <span>Nested Settings Screen</span>}
         </ArticleStack.Screen>
       </ArticleStack.Navigator>
     );
@@ -1233,16 +1227,16 @@ test('dispatches custom actions on the nearest navigator from outside screens', 
       <RootStack.Navigator>
         <RootStack.Screen name="Articles" component={ArticlesScreen} />
         <RootStack.Screen name="Settings">
-          {() => <Text>Root Settings Screen</Text>}
+          {() => <span>Root Settings Screen</span>}
         </RootStack.Screen>
       </RootStack.Navigator>
     </NavigationContainer>
   );
 
-  await user.press(screen.getByRole('link', { name: 'Settings' }));
+  await user.click(screen.getByRole('link', { name: 'Settings' }));
 
-  expect(await screen.findByText('Nested Settings Screen')).toBeOnTheScreen();
-  expect(screen.queryByText('Root Settings Screen')).not.toBeOnTheScreen();
+  expect(await screen.findByText('Nested Settings Screen')).toBeInTheDocument();
+  expect(screen.queryByText('Root Settings Screen')).not.toBeInTheDocument();
 });
 
 test('uses in to dispatch an action when screen is specified', async () => {
@@ -1295,7 +1289,7 @@ test('uses in to dispatch an action when screen is specified', async () => {
       <RootStack.Navigator>
         <RootStack.Screen name="Articles" component={ArticlesScreen} />
         <RootStack.Screen name="Settings">
-          {() => <Text>Root Settings Screen</Text>}
+          {() => <span>Root Settings Screen</span>}
         </RootStack.Screen>
       </RootStack.Navigator>
     </NavigationContainer>
@@ -1303,14 +1297,14 @@ test('uses in to dispatch an action when screen is specified', async () => {
 
   const link = screen.getByRole('link', { name: 'Settings' });
 
-  expect(link).toHaveProp('href', '/settings');
+  expect(link).toHaveAttribute('href', '/settings');
 
-  await user.press(link);
+  await user.click(link);
 
-  expect(await screen.findByText('Root Settings Screen')).toBeOnTheScreen();
+  expect(await screen.findByText('Root Settings Screen')).toBeInTheDocument();
 });
 
-test('throws while rendering when in does not match current or parent screens', async () => {
+test('throws while rendering when in does not match current or parent screens', () => {
   type RootStackParamList = {
     Home: undefined;
     Settings: undefined;
@@ -1330,26 +1324,24 @@ test('throws while rendering when in does not match current or parent screens', 
     );
   };
 
-  await expect(
+  expect(() =>
     render(
       <NavigationContainer>
         <RootStack.Navigator>
           <RootStack.Screen name="Home" component={HomeScreen} />
           <RootStack.Screen name="Settings">
-            {() => <Text>Settings Screen</Text>}
+            {() => <span>Settings Screen</span>}
           </RootStack.Screen>
         </RootStack.Navigator>
       </NavigationContainer>
     )
-  ).rejects.toThrow(
+  ).toThrow(
     "Couldn't find a navigation object for 'Missing' in current or any parent screens. Is your component inside the correct screen?"
   );
 });
 
-test('throws while rendering outside a navigation container', async () => {
-  await expect(
-    render(<Link<RootParamList> screen="Foo">Foo</Link>)
-  ).rejects.toThrow(
+test('throws while rendering outside a navigation container', () => {
+  expect(() => render(<Link<RootParamList> screen="Foo">Foo</Link>)).toThrow(
     "Couldn't find a navigation object. Is your component inside NavigationContainer?"
   );
 });
@@ -1403,7 +1395,7 @@ test('resolves in to the closest matching screen for href and navigation', async
       <NestedStack.Navigator>
         <NestedStack.Screen name="Home" component={NestedHomeScreen} />
         <NestedStack.Screen name="Details">
-          {() => <Text>Nested Details Screen</Text>}
+          {() => <span>Nested Details Screen</span>}
         </NestedStack.Screen>
       </NestedStack.Navigator>
     );
@@ -1414,7 +1406,7 @@ test('resolves in to the closest matching screen for href and navigation', async
       <RootStack.Navigator>
         <RootStack.Screen name="Home" component={HomeScreen} />
         <RootStack.Screen name="Details">
-          {() => <Text>Root Details Screen</Text>}
+          {() => <span>Root Details Screen</span>}
         </RootStack.Screen>
       </RootStack.Navigator>
     </NavigationContainer>
@@ -1431,10 +1423,10 @@ test('resolves in to the closest matching screen for href and navigation', async
 
   const link = screen.getByRole('link', { name: 'Go to Details' });
 
-  expect(link).toHaveProp('href', '/home/details/1');
+  expect(link).toHaveAttribute('href', '/home/details/1');
 
-  await user.press(link);
+  await user.click(link);
 
-  expect(await screen.findByText('Nested Details Screen')).toBeOnTheScreen();
-  expect(screen.queryByText('Root Details Screen')).not.toBeOnTheScreen();
+  expect(await screen.findByText('Nested Details Screen')).toBeInTheDocument();
+  expect(screen.queryByText('Root Details Screen')).not.toBeInTheDocument();
 });

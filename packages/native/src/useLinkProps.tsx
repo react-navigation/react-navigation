@@ -16,9 +16,10 @@ import {
   type RootParamList,
 } from '@react-navigation/core';
 import * as React from 'react';
-import { type GestureResponderEvent, Platform } from 'react-native';
+import type { GestureResponderEvent } from 'react-native';
 import useLatestCallback from 'use-latest-callback';
 
+import { IS_NATIVE } from './constants';
 import { LinkingContext } from './LinkingContext';
 import { useDeepStableValue } from './useDeepStableValue';
 
@@ -321,7 +322,7 @@ export function useLinkProps<
         | React.MouseEvent<HTMLAnchorElement, MouseEvent>
         | GestureResponderEvent
     ) => {
-      if (Platform.OS === 'web' && e) {
+      if (!IS_NATIVE && e) {
         // ignore clicks with modifier keys
         const hasModifierKey =
           ('metaKey' in e && e.metaKey) ||
@@ -379,7 +380,7 @@ export function useLinkProps<
   );
 
   const target = useDeepStableValue(
-    Platform.OS === 'web'
+    !IS_NATIVE
       ? typeof screen === 'string'
         ? {
             screen,
@@ -391,12 +392,12 @@ export function useLinkProps<
   );
 
   const state =
-    Platform.OS === 'web' && rest.href == null && target != null
+    !IS_NATIVE && rest.href == null && target != null
       ? React.use(NavigationFocusedRouteStateContext)
       : undefined;
 
   const href = React.useMemo(() => {
-    if (Platform.OS !== 'web' || rest.href != null || target == null) {
+    if (IS_NATIVE || rest.href != null || target == null) {
       return rest.href;
     }
 

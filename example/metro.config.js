@@ -17,6 +17,19 @@ module.exports = {
     ...defaultConfig.resolver,
 
     resolveRequest: (context, realModuleName, platform) => {
+      // We want these packages to work without `react-native-web`
+      if (
+        platform === 'web' &&
+        context.originModulePath.startsWith(
+          `${path.resolve(__dirname, '../packages/native')}${path.sep}`
+        ) &&
+        /^react-native-web(?:\/|$)/.test(realModuleName)
+      ) {
+        throw new Error(
+          `The module '${realModuleName}' should not be imported at runtime from '${context.originModulePath}' on Web.`
+        );
+      }
+
       // We mock out these native deps on web
       // This is an additional measure to ensure they don't get added accidentally
       const excludedModules = [

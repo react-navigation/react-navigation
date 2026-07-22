@@ -1,11 +1,6 @@
 import { type RootParamList, useTheme } from '@react-navigation/core';
 import * as React from 'react';
-import {
-  type GestureResponderEvent,
-  Platform,
-  Text,
-  type TextProps,
-} from 'react-native';
+import type { GestureResponderEvent, TextProps, TextStyle } from 'react-native';
 
 import { type LinkProps, useLinkProps } from './useLinkProps';
 
@@ -13,12 +8,21 @@ type PressEvent =
   | React.MouseEvent<HTMLAnchorElement, MouseEvent>
   | GestureResponderEvent;
 
-type LinkBaseProps = Omit<TextProps, 'disabled'> & {
+type LinkBaseProps = Omit<TextProps, 'disabled' | 'onPress' | 'style'> & {
   target?: string;
   onPress?: (e: PressEvent) => void;
   disabled?: boolean | undefined;
+  style?: (React.CSSProperties & TextStyle) | undefined;
   children: React.ReactNode;
 };
+
+export type Props<
+  ParamList extends {} = RootParamList,
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
+> = LinkProps<NoInfer<ParamList>, RouteName> & LinkBaseProps;
 
 /**
  * Component to render link to another screen using a path.
@@ -45,8 +49,18 @@ export function Link<
   href,
   style,
   target,
+  disabled,
+  onPress,
+  children,
+  accessibilityLabel,
+  'aria-label': ariaLabel,
+  id,
+  numberOfLines,
+  selectable,
+  testID,
+  nativeID: _nativeID,
   ...rest
-}: LinkProps<NoInfer<ParamList>, RouteName> & LinkBaseProps) {
+}: Props<ParamList, RouteName>) {
   // @ts-expect-error: destructuring loses the relationship between target props
   const props = useLinkProps({ in: parent, screen, params, action, href });
 
@@ -54,16 +68,18 @@ export function Link<
   // This ensures proper error when used outside of navigation container
   const { colors, fonts } = useTheme();
 
-  const onPress = (e: PressEvent) => {
-    if (rest.disabled) {
+  if (typeof colors.primary !== 'string') {
+    throw new Error('Invalid color format.');
+  }
+
+  const onClick = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+    if (disabled) {
       e.preventDefault();
       e.stopPropagation();
       return;
     }
 
-    if ('onPress' in rest) {
-      rest.onPress?.(e);
-    }
+    onPress?.(e);
 
     // Let user prevent default behavior
     if (!e.defaultPrevented) {
@@ -71,23 +87,57 @@ export function Link<
     }
   };
 
-  return React.createElement(Text, {
-    ...props,
-    ...rest,
-    ...Platform.select({
-      web: {
-        'aria-disabled': rest.disabled,
-        onAuxClick: rest.disabled
-          ? (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+  return (
+    <a
+      {...rest}
+      aria-label={ariaLabel ?? accessibilityLabel}
+      aria-disabled={disabled}
+      data-testid={testID}
+      id={id}
+      target={target}
+      role={props.role}
+      href={props.href}
+      onAuxClick={
+        disabled
+          ? (e) => {
               e.preventDefault();
               e.stopPropagation();
             }
-          : undefined,
-        onClick: onPress,
-        hrefAttrs: { target },
-      },
-      default: { onPress },
-    }),
-    style: [{ color: colors.primary }, fonts.regular, style],
-  });
+          : undefined
+      }
+      onClick={onClick}
+      style={{
+        backgroundColor: 'transparent',
+        boxSizing: 'border-box',
+        color: colors.primary,
+        display:
+          numberOfLines === 1
+            ? 'inline-block'
+            : numberOfLines && numberOfLines > 1
+              ? '-webkit-box'
+              : 'inline',
+        font: '14px System',
+        listStyle: 'none',
+        margin: 0,
+        maxWidth: numberOfLines ? '100%' : undefined,
+        padding: 0,
+        position: 'relative',
+        textAlign: 'start',
+        textDecoration: 'none',
+        whiteSpace: numberOfLines === 1 ? 'nowrap' : 'pre-wrap',
+        overflowWrap: 'break-word',
+        WebkitBoxOrient:
+          numberOfLines && numberOfLines > 1 ? 'vertical' : undefined,
+        WebkitLineClamp:
+          numberOfLines && numberOfLines > 1 ? numberOfLines : undefined,
+        overflow: numberOfLines ? 'hidden' : undefined,
+        textOverflow: numberOfLines === 1 ? 'ellipsis' : undefined,
+        userSelect: selectable === false ? 'none' : undefined,
+        ...fonts.regular,
+        ...style,
+      }}
+    >
+      {children}
+    </a>
+  );
 }

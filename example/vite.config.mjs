@@ -70,6 +70,23 @@ export default defineConfig((env) => {
     },
     plugins: [
       {
+        name: 'react-native-web-import',
+        enforce: 'pre',
+        resolveId(source, importer) {
+          // We want these packages to work without `react-native-web`
+          if (
+            importer?.startsWith(
+              `${path.join(root, 'packages/native')}${path.sep}`
+            ) &&
+            /^react-native-web(?:\/|$)/.test(source)
+          ) {
+            throw new Error(
+              `The module '${source}' should not be imported at runtime from '${importer}' on Web.`
+            );
+          }
+        },
+      },
+      {
         name: 'server-rendering',
         configureServer(server) {
           return () => {

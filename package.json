@@ -57,25 +57,6 @@
     "semver": "^7.8.2",
     "typescript": "^6.0.3"
   },
-  "jest": {
-    "preset": "@react-native/jest-preset",
-    "prettierPath": "prettier-2",
-    "testEnvironmentOptions": {
-      "customExportConditions": [
-        "require",
-        "react-native",
-        "@react-navigation/source"
-      ]
-    },
-    "testRegex": "/__tests__/.*\\.(test|spec)\\.(js|tsx?)$",
-    "setupFilesAfterEnv": [
-      "<rootDir>/jest/setup.js"
-    ],
-    "transformIgnorePatterns": [
-      "node_modules/(?!\\.pnpm|(@react-navigation|react-native-drawer-layout|react-native-tab-view|(jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|immer|standard-navigation)/)",
-      "node_modules/.pnpm/(?!(?:@react-navigation\\+[^@]+|react-native-drawer-layout|react-native-tab-view|@react-native\\+[^@]+|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|immer|standard-navigation)@)"
-    ]
-  },
   "prettier": {
     "quoteProps": "as-needed",
     "tabWidth": 2,

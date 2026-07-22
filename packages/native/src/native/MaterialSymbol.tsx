@@ -1,4 +1,4 @@
-import { type ImageSourcePropType, type ViewProps } from 'react-native';
+import type { ImageSourcePropType, ViewProps } from 'react-native';
 
 import type { MaterialSymbolOptions } from './types';
 
