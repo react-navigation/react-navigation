@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.30](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.29...@react-navigation/core@8.0.0-alpha.30) (2026-07-22)
+
+### Bug Fixes
+
+* fix type errors on callbacks on inline navigators ([37bf2a3](https://github.com/react-navigation/react-navigation/commit/37bf2a3ccca08b867c61bd1c0acbd2c1b15db498)) - by @
+
 # [8.0.0-alpha.29](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.28...@react-navigation/core@8.0.0-alpha.29) (2026-07-21)
 
 ### Bug Fixes
