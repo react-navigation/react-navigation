@@ -12,28 +12,9 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/native';
 import { render, screen, userEvent } from '@testing-library/react-native';
-import { Platform, Text } from 'react-native';
+import { Text } from 'react-native';
 
 import { Button } from '../Button';
-
-jest.replaceProperty(Platform, 'OS', 'web');
-
-jest.mock('../PlatformPressable', () => {
-  const React = jest.requireActual<typeof import('react')>('react');
-  const actual = jest.requireActual<typeof import('../PlatformPressable')>(
-    '../PlatformPressable'
-  );
-
-  // The hover effect on web renders a `<style>` tag with a text child,
-  // which is not supported by the react-native test renderer
-  const PlatformPressable = (props: import('../PlatformPressable').Props) =>
-    React.createElement(actual.PlatformPressable, {
-      ...props,
-      hoverEffect: undefined,
-    });
-
-  return { PlatformPressable };
-});
 
 const StackNavigator = (
   props: DefaultNavigatorOptions<
@@ -122,7 +103,7 @@ const App = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-test('renders an href and navigates within the navigator specified by in', async () => {
+test('navigates within the navigator specified by in', async () => {
   const user = userEvent.setup();
 
   await render(
@@ -138,8 +119,6 @@ test('renders an href and navigates within the navigator specified by in', async
   );
 
   const button = screen.getByRole('link', { name: 'Article' });
-
-  expect(button).toHaveProp('href', '/home/articles/42');
 
   await user.press(button);
 

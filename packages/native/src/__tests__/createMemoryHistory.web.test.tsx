@@ -1,26 +1,10 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import type { NavigationState } from '@react-navigation/core';
 
-// eslint-disable-next-line import-x/extensions
-jest.mock('../useLinking', () => require('../useLinking.tsx'));
-
-let window: typeof import('../__stubs__/window').window;
-let createMemoryHistory: typeof import('../createMemoryHistory').createMemoryHistory;
+import { createMemoryHistory } from '../createMemoryHistory';
 
 beforeEach(() => {
   jest.useRealTimers();
-  jest.resetModules();
-
-  window = require('../__stubs__/window').window;
-  createMemoryHistory = require('../createMemoryHistory').createMemoryHistory;
-
-  Object.assign(global, window);
-  Object.defineProperty(global, 'location', {
-    configurable: true,
-    get() {
-      return window.location;
-    },
-  });
 });
 
 test('finds previous entries without matching hash fragments', () => {
