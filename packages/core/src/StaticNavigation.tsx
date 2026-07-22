@@ -491,25 +491,26 @@ type StaticConfigGroup<
   >;
 };
 
-export type StaticConfig<
-  Bag extends NavigatorTypeBagBase,
-  Screens = StaticConfigScreens<
+type StaticConfigScreensForBag<Bag extends NavigatorTypeBagBase> =
+  StaticConfigScreens<
     Bag['ParamList'],
     Bag['State'],
     Bag['ScreenOptions'],
     Bag['EventMap'],
     Bag['NavigationList']
-  >,
-  Groups = {
-    [key: string]: StaticConfigGroup<
-      Bag['ParamList'],
-      Bag['State'],
-      Bag['ScreenOptions'],
-      Bag['EventMap'],
-      Bag['NavigationList']
-    >;
-  },
-> = Omit<
+  >;
+
+type StaticConfigGroupsForBag<Bag extends NavigatorTypeBagBase> = {
+  [key: string]: StaticConfigGroup<
+    Bag['ParamList'],
+    Bag['State'],
+    Bag['ScreenOptions'],
+    Bag['EventMap'],
+    Bag['NavigationList']
+  >;
+};
+
+type StaticConfigCommon<Bag extends NavigatorTypeBagBase> = Omit<
   NavigatorProps<
     Bag['ParamList'],
     Bag['State'],
@@ -519,7 +520,28 @@ export type StaticConfig<
     Bag['Navigator']
   >,
   'screens' | 'children'
-> &
+>;
+
+export type StaticConfigBase<
+  Bag extends NavigatorTypeBagBase,
+  Screens = StaticConfigScreensForBag<Bag>,
+  Groups = StaticConfigGroupsForBag<Bag>,
+> = StaticConfigCommon<Bag> & {
+  /**
+   * Screens to render in the navigator and their configuration.
+   */
+  screens?: Screens;
+  /**
+   * Groups of screens to render in the navigator and their configuration.
+   */
+  groups?: Groups;
+};
+
+export type StaticConfig<
+  Bag extends NavigatorTypeBagBase,
+  Screens = StaticConfigScreensForBag<Bag>,
+  Groups = StaticConfigGroupsForBag<Bag>,
+> = StaticConfigCommon<Bag> &
   (
     | {
         /**
@@ -641,7 +663,7 @@ export type StaticParamList<
 export type StaticNavigation<
   in out NavigatorTypeBag extends NavigatorTypeBagBase,
 > = {
-  config: StaticConfig<NavigatorTypeBag>;
+  config: StaticConfigBase<NavigatorTypeBag>;
   getComponent: () => React.ComponentType<{}>;
 };
 
