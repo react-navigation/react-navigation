@@ -44,12 +44,16 @@ const createStore = <T,>(getInitialState: () => T) => {
 
   const batchUpdates = (callback: () => void) => {
     isBatching = true;
-    callback();
-    isBatching = false;
 
-    if (didUpdate) {
-      didUpdate = false;
-      listeners.forEach((listener) => listener());
+    try {
+      callback();
+    } finally {
+      isBatching = false;
+
+      if (didUpdate) {
+        didUpdate = false;
+        listeners.forEach((listener) => listener());
+      }
     }
   };
 
