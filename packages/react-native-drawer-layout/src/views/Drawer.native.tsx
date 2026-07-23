@@ -12,6 +12,7 @@ import {
 import Animated, {
   interpolate,
   ReduceMotion,
+  useAnimatedProps,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -36,6 +37,9 @@ const SWIPE_EDGE_WIDTH = 32;
 const SWIPE_MIN_OFFSET = 5;
 const SWIPE_MIN_DISTANCE = 60;
 const SWIPE_MIN_VELOCITY = 500;
+// Treat near-zero progress as closed so float noise doesn't toggle a11y.
+const PROGRESS_EPSILON = 0.05;
+const IS_ANDROID = Platform.OS === 'android';
 
 const minmax = (value: number, start: number, end: number) => {
   'worklet';
@@ -146,10 +150,6 @@ export function Drawer({
     [isRight, swipeEdgeWidth]
   );
 
-  // Defer aria-hidden until the spring finishes. Flipping it with isOpen mid-spring
-  // Fabric-recommits the content tree and can flash even when hitSlop is stable.
-  const [settledOpen, setSettledOpen] = React.useState(isOpen);
-
   const [initialWidth] = React.useState(() => Dimensions.get('window').width);
 
   const layoutWidth = useSharedValue(initialWidth);
@@ -219,7 +219,6 @@ export function Drawer({
         return;
       }
 
-      setSettledOpen(open);
       onTransitionEnd?.(!open);
     }
   );
@@ -240,8 +239,6 @@ export function Drawer({
       const toValue = getDrawerTranslationX(open, containerWidth);
 
       if (translationX.get() === toValue) {
-        // No spring runs, so onAnimationEnd will not fire — still sync settledOpen.
-        scheduleOnRN(setSettledOpen, open);
         return;
       }
 
@@ -298,7 +295,6 @@ export function Drawer({
       onAnimationEnd,
       onOpen,
       onClose,
-      setSettledOpen,
     ]
   );
 
@@ -559,6 +555,26 @@ export function Drawer({
         );
   });
 
+  // Keep content aria-hidden in sync with drawer progress on the UI thread.
+  // React-state toggles of aria-hidden Fabric-recommits the nested navigator
+  // tree (#12137). animatedProps updates the native prop without that recommit.
+  const contentA11yProps = useAnimatedProps(() => {
+    const hidden =
+      drawerType !== 'permanent' && progress.value > PROGRESS_EPSILON;
+
+    return {
+      'aria-hidden': hidden,
+      // TalkBack: hide descendants while the drawer covers content.
+      ...(IS_ANDROID
+        ? {
+            importantForAccessibility: hidden
+              ? ('no-hide-descendants' as const)
+              : ('yes' as const),
+          }
+        : null),
+    };
+  }, [drawerType, progress]);
+
   return (
     <GestureHandlerRootView style={[styles.container, style]}>
       <DrawerProgressContext.Provider value={progress}>
@@ -584,12 +600,12 @@ export function Drawer({
                 onLayout={onLayout}
                 style={[styles.content, contentAnimatedStyle]}
               >
-                <View
-                  aria-hidden={settledOpen && drawerType !== 'permanent'}
+                <Animated.View
                   style={styles.content}
+                  animatedProps={contentA11yProps}
                 >
                   {children}
-                </View>
+                </Animated.View>
                 {drawerType !== 'permanent' ? (
                   <Overlay
                     open={open}

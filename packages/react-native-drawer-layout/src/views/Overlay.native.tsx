@@ -7,6 +7,7 @@ import Animated, {
 import type { OverlayProps } from '../types';
 import { GestureDetector } from './GestureHandler';
 
+// Treat near-zero progress as closed so float noise doesn't toggle a11y/hit testing.
 const PROGRESS_EPSILON = 0.05;
 
 export function Overlay({
@@ -34,6 +35,8 @@ export function Overlay({
 
     return {
       'aria-hidden': !active,
+      // Keep VoiceOver inside drawer UI while open; covered content stays unreachable.
+      accessibilityViewIsModal: active,
     } as const;
   }, [progress]);
 
