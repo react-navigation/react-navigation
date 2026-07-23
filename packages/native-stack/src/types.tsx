@@ -843,7 +843,18 @@ export type NativeStackNavigationOptions = {
   inactiveBehavior?: 'pause' | 'unmount' | 'none' | undefined;
 };
 
-type IconIOS = Extract<Icon, { type: 'image' | 'sfSymbol' }>;
+type IconIOS =
+  | Extract<Icon, { type: 'image' | 'sfSymbol' }>
+  | {
+      /**
+       * - `xcasset` - Use an image from the iOS asset catalog.
+       */
+      type: 'xcasset';
+      /**
+       * Name of the image in the iOS asset catalog.
+       */
+      name: string;
+    };
 
 type SharedHeaderItem = {
   /**
