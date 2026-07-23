@@ -204,7 +204,11 @@ function ButtonBase({
   return (
     <PlatformPressable
       {...rest}
-      disabled={disabled || loading}
+      aria-disabled={
+        // Keep the button focusable while loading
+        disabled || loading || undefined
+      }
+      disabled={disabled}
       android_ripple={{
         foreground: true,
         color: rippleColor,
