@@ -532,15 +532,19 @@ import UIKit
       let variableValue = min(max(props.variableValue, 0), 1)
 
       if #available(iOS 16.0, *) {
-        return UIImage(
+        if let systemImage = UIImage(
           systemName: name,
           variableValue: Double(variableValue),
           configuration: configuration
-        )
+        ) {
+          return systemImage
+        }
       }
     }
 
+    // Fall back to a custom symbol from the app's asset catalog.
     return UIImage(systemName: name, withConfiguration: configuration)
+      ?? UIImage(named: name)?.applyingSymbolConfiguration(configuration)
   }
 
   @available(iOS 26.0, *)
