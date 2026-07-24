@@ -1,8 +1,3 @@
-/**
- * @jest-environment jsdom
- * @jest-environment-options {"url":"https://example.com"}
- */
-
 import { expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
@@ -15,14 +10,10 @@ import {
 import * as React from 'react';
 import { act } from 'react';
 import { hydrateRoot } from 'react-dom/client';
-import { renderToString } from 'react-dom/server';
+import { renderToString } from 'react-dom/server.node';
 
 import { NavigationContainer } from '../NavigationContainer';
 import type { LinkingOptions } from '../types';
-
-// We want to use the web version of useLinking
-// eslint-disable-next-line import-x/extensions
-jest.mock('../useLinking', () => require('../useLinking.tsx'));
 
 type NavigatorProps = Parameters<typeof useNavigationBuilder>[1];
 

@@ -1,4 +1,4 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   CommonActions,
   type DefaultRouterOptions,
@@ -33,6 +33,10 @@ beforeEach(() => {
   MockRouterKey.current = 0;
 
   require('nanoid/non-secure').__key = 0;
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
 });
 
 test("lets parent handle the action if child didn't", async () => {
@@ -649,8 +653,6 @@ test('logs error if no navigator handled the action', async () => {
       "The action 'UNKNOWN' was not handled by any navigator."
     )
   );
-
-  spy.mockRestore();
 });
 
 test("emits 'beforeRemove' when removing a screen", async () => {

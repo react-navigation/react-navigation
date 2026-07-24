@@ -676,7 +676,9 @@ test('uses nested static config when static tree is deeper than state', async ()
 });
 
 test('traverses deeply nested navigators via params', async () => {
-  const leafFn = jest.fn(async () => {});
+  const leafFn = jest.fn(
+    async (_options: { name: string; params: unknown }) => {}
+  );
 
   const LeafNavigator = createTestNavigator({
     screens: {

@@ -1,4 +1,8 @@
-import { expect, jest, test } from '@jest/globals';
+/**
+ * @jest-environment node
+ */
+
+import { expect, test } from '@jest/globals';
 import {
   createNavigatorFactory,
   type NavigatorScreenParams,
@@ -7,15 +11,11 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/core';
 import * as React from 'react';
-import { renderToPipeableStream } from 'react-dom/server';
+import { renderToPipeableStream } from 'react-dom/server.node';
 import { PassThrough } from 'stream';
 
 import { NavigationContainer } from '../../NavigationContainer';
 import { ServerContainer } from '..';
-
-// We want to use the web version of useLinking
-// eslint-disable-next-line import-x/extensions
-jest.mock('../../useLinking', () => require('../../useLinking.tsx'));
 
 const render = (element: React.ReactNode, stream = new PassThrough()) => {
   return new Promise<string>((resolve, reject) => {
