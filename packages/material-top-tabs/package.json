@@ -50,7 +50,7 @@
     "react-native-tab-view": "workspace:^"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
+    "@jest/globals": "^30.4.1",
     "@react-navigation/native": "workspace:^",
     "@testing-library/react-native": "^14.0.0",
     "@types/react": "~19.2.17",

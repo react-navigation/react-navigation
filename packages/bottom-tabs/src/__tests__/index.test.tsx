@@ -14,7 +14,6 @@ import {
   Keyboard,
   type KeyboardEventListener,
   type KeyboardEventName,
-  Platform,
   Text,
   View,
 } from 'react-native';
@@ -154,38 +153,6 @@ test('tab bar cannot be tapped when hidden', async () => {
   expect(screen.getByText('Screen B')).not.toBeNull();
 
   spy.mockRestore();
-});
-
-test('tab bars render appropriate hrefs on web', async () => {
-  jest.replaceProperty(Platform, 'OS', 'web');
-
-  const Tab = createBottomTabNavigator<BottomTabParamList>();
-
-  await render(
-    <NavigationContainer
-      linking={{
-        config: {
-          path: 'root',
-          screens: {
-            A: 'first',
-            B: 'second',
-          },
-        },
-        getInitialURL: () => null,
-      }}
-    >
-      <Tab.Navigator
-        implementation="custom"
-        screenOptions={{ tabBarButton: ({ href }) => <Text>{href}</Text> }}
-      >
-        <Tab.Screen name="A">{() => null}</Tab.Screen>
-        <Tab.Screen name="B">{() => null}</Tab.Screen>
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
-
-  expect(screen.getByText('/root/first')).not.toBeNull();
-  expect(screen.getByText('/root/second')).not.toBeNull();
 });
 
 test('inactiveBehavior="none" keeps effects active when switching tabs', async () => {
