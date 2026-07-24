@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.21.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.10...@react-navigation/core@7.21.11) (2026-07-24)
+
+### Bug Fixes
+
+* ensure resetRoot always resets the root navigator's state ([bec568c](https://github.com/react-navigation/react-navigation/commit/bec568c8940f4afa85d03b48f9f95ad3b5cc99fa)) - by @satya164
+
 ## [7.21.10](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.9...@react-navigation/core@7.21.10) (2026-07-20)
 
 **Note:** Version bump only for package @react-navigation/core
