@@ -288,6 +288,50 @@ test('handle resetting state with ref', async () => {
   });
 });
 
+test('resets root to a state with a different key', async () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={ref}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const state: NavigationState = {
+    stale: false,
+    type: 'test',
+    key: 'restored',
+    index: 1,
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'bar', name: 'bar' },
+    ],
+  };
+
+  await act(() => {
+    ref.current?.resetRoot(state);
+  });
+
+  expect(ref.current?.getRootState()).toEqual(state);
+});
+
 test('returns whether the root navigation can go back', async () => {
   const ref = createNavigationContainerRef<ParamListBase>();
 

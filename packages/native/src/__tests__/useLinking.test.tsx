@@ -829,6 +829,62 @@ test('replaces browser history on resetRoot', async () => {
   await act(() => window.history.back());
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('restores the recorded stack on browser back after resetRoot', async () => {
+  const Stack = createStackNavigator();
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <NavigationContainer
+      ref={navigation}
+      linking={{
+        config: {
+          screens: {
+            Home: '',
+            Profile: 'profile',
+            Settings: 'settings',
+            Other: 'other',
+          },
+        },
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings" component={TestScreen} />
+        <Stack.Screen name="Other" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  await act(() => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  await act(() =>
+    navigation.resetRoot({ index: 0, routes: [{ name: 'Other' }] })
+  );
+
+  await waitFor(() => expect(window.location.pathname).toBe('/other'));
+
+  await act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'Home',
+    'Profile',
+  ]);
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Profile');
 });
 
 test('truncates forward history when navigating from a mid-history position', async () => {

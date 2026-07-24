@@ -161,7 +161,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   const resetRoot = useLatestCallback(
     (state: PartialState<NavigationState> | NavigationState) => {
-      const target = state?.key ?? keyedListeners.getState.root?.().key;
+      const target = keyedListeners.getState.root?.().key;
       const listener = listeners.focus[0];
 
       if (target == null || listener == null) {
