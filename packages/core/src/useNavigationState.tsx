@@ -1,12 +1,19 @@
 import type { NavigationState, ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
-import useLatestCallback from 'use-latest-callback';
 
 import type { NavigationListForNested, RootNavigator } from './types';
 
+type NavigationStateEvent = 'update' | 'commit';
+
 type NavigationStateListener = {
   getState: () => NavigationState<ParamListBase>;
-  subscribe: (callback: () => void) => () => void;
+  getSnapshot: () => NavigationState<ParamListBase>;
+  subscribe: (callback: (event: NavigationStateEvent) => void) => () => void;
+};
+
+type NavigationStateEntry = {
+  listener: NavigationStateListener;
+  state: NavigationState<ParamListBase>;
 };
 
 type NavigationStateForNested<
@@ -74,68 +81,126 @@ export function useNavigationState(...args: unknown[]): unknown {
     }
   }
 
-  const { getState, subscribe } = listener;
+  const { getState, getSnapshot, subscribe } = listener;
 
-  const [, forceUpdate] = React.useReducer((count: number) => count + 1, 0);
+  // The store can contain state from a transition that hasn't committed yet.
+  // Reading it during render can show state that doesn't match the navigator in that render.
+  // The reducer lets React process state in the same render lane as the navigator.
+  const [entry, dispatch] = React.useReducer(
+    (previous: NavigationStateEntry, event: NavigationStateEvent) => {
+      // Navigation state can change between the dispatch and the reducer running.
+      // Reading here ensures the processed event uses the state for that render.
+      const state = event === 'update' ? getState() : getSnapshot();
 
-  const selected = select(getState());
+      if (
+        previous.listener === listener &&
+        (previous.state === state ||
+          (event === 'update' &&
+            Object.is(select(previous.state), select(state))))
+      ) {
+        return previous;
+      }
 
-  const selectionRef = React.useRef({ select, selected });
+      return { listener, state };
+    },
+    undefined,
+    () => ({ listener, state: getState() })
+  );
 
-  React.useLayoutEffect(() => {
-    selectionRef.current = { select, selected };
+  let state = entry.state;
+
+  const committedRef = React.useRef<{
+    entry: NavigationStateEntry | null;
+    state: NavigationState<ParamListBase>;
+    select: (state: NavigationState<ParamListBase>) => unknown;
+  }>({ entry: null, state, select });
+
+  React.useInsertionEffect(() => {
+    committedRef.current = { entry, state, select };
   });
 
-  React.useEffect(() => {
-    const checkForUpdates = () => {
-      const selection = selectionRef.current;
+  const snapshot = getSnapshot();
 
-      if (!Object.is(selection.selected, selection.select(getState()))) {
-        forceUpdate();
+  const behind =
+    state !== snapshot &&
+    // A different listener means the state belongs to another navigator.
+    // This can happen when the passed route name changes.
+    (entry.listener !== listener ||
+      // An entry that advanced past the last commit is at least as new as the snapshot.
+      // An entry that didn't advance while the committed state changed is older.
+      entry === committedRef.current.entry);
+
+  if (behind) {
+    state = snapshot;
+    dispatch('commit');
+  }
+
+  React.useLayoutEffect(() => {
+    const check = (event: NavigationStateEvent) => {
+      const { state, select } = committedRef.current;
+
+      // An 'update' event follows the latest state in the lane the update was made in.
+      // A 'commit' event syncs the reducer to the state committed by the navigator.
+      const target = event === 'update' ? getState() : getSnapshot();
+
+      if (state !== target && !Object.is(select(state), select(target))) {
+        dispatch(event);
       }
     };
 
-    const unsubscribe = subscribe(checkForUpdates);
+    const unsubscribe = subscribe(check);
 
-    // The state may have changed between the render and the subscription
-    checkForUpdates();
+    // The reducer may not match the committed state when the subscription starts.
+    // This happens on mount during a transition or an update before subscribing.
+    check('commit');
 
     return unsubscribe;
-  }, [getState, subscribe]);
+  }, [getState, getSnapshot, subscribe]);
 
-  return selected;
+  return select(state);
 }
 
 export function NavigationStateListenerProvider({
   state,
   getState,
+  subscribe,
   children,
 }: {
   state: NavigationState<ParamListBase>;
   getState: () => NavigationState<ParamListBase>;
+  subscribe: (callback: () => void) => () => void;
   children: React.ReactNode;
 }) {
-  const listeners = React.useRef<(() => void)[]>([]);
+  const snapshotRef = React.useRef(state);
 
-  const subscribe = useLatestCallback((callback: () => void) => {
-    listeners.current.push(callback);
-
-    return () => {
-      listeners.current = listeners.current.filter((cb) => cb !== callback);
-    };
-  });
-
-  // Notify subscribers once the new state has committed
-  React.useLayoutEffect(() => {
-    listeners.current.forEach((callback) => callback());
+  React.useInsertionEffect(() => {
+    snapshotRef.current = state;
   }, [state]);
+
+  const [listeners] = React.useState(
+    () => new Set<(event: NavigationStateEvent) => void>()
+  );
+
+  React.useLayoutEffect(() => {
+    listeners.forEach((listener) => listener('commit'));
+  }, [listeners, state]);
 
   const context = React.useMemo(
     () => ({
       getState,
-      subscribe,
+      getSnapshot: () => snapshotRef.current,
+      subscribe: (callback: (event: NavigationStateEvent) => void) => {
+        const unsubscribe = subscribe(() => callback('update'));
+
+        listeners.add(callback);
+
+        return () => {
+          listeners.delete(callback);
+          unsubscribe();
+        };
+      },
     }),
-    [getState, subscribe]
+    [getState, listeners, subscribe]
   );
 
   return (
@@ -177,7 +242,7 @@ export function NamedNavigationStateListenerProvider({
   );
 }
 
-const NavigationStateListenerContext = React.createContext<
+export const NavigationStateListenerContext = React.createContext<
   NavigationStateListener | undefined
 >(undefined);
 

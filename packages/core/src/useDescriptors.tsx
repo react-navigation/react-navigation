@@ -78,6 +78,7 @@ type Options<
   onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
+  subscribe: (callback: () => void) => () => void;
   addListener: AddListener;
   addKeyedListener: AddKeyedListener;
   onRouteFocus: (key: string) => void;
@@ -107,6 +108,7 @@ export function useDescriptors<
   onAction,
   getState,
   setState,
+  subscribe,
   addListener,
   addKeyedListener,
   onRouteFocus,
@@ -257,6 +259,7 @@ export function useDescriptors<
         routeState={routeState}
         getState={getState}
         setState={setState}
+        subscribe={subscribe}
         options={customOptions}
         clearOptions={clearOptions}
       />

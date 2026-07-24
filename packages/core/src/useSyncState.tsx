@@ -24,13 +24,29 @@ const createStore = <T,>(getInitialState: () => T) => {
   let isBatching = false;
   let didUpdate = false;
 
+  const notify = () => {
+    let error: { value: unknown } | undefined;
+
+    listeners.forEach((listener) => {
+      try {
+        listener();
+      } catch (e) {
+        error = error ?? { value: e };
+      }
+    });
+
+    if (error) {
+      throw error.value;
+    }
+  };
+
   const setState = (newState: T) => {
     state = deepFreeze(newState);
 
     if (isBatching) {
       didUpdate = true;
     } else {
-      listeners.forEach((listener) => listener());
+      notify();
     }
   };
 
@@ -52,7 +68,7 @@ const createStore = <T,>(getInitialState: () => T) => {
 
       if (didUpdate) {
         didUpdate = false;
-        listeners.forEach((listener) => listener());
+        notify();
       }
     }
   };
@@ -123,6 +139,7 @@ export function useSyncState<T>(getInitialState: () => T) {
     state,
     getState: store.getState,
     setState: store.setState,
+    subscribe: store.subscribe,
     scheduleUpdate,
     flushUpdates,
   } as const;

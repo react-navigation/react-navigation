@@ -453,6 +453,7 @@ export function useNavigationBuilder<
     state: currentState,
     getState: getCurrentState,
     setState: setCurrentState,
+    subscribe,
     setKey,
     getKey,
     getIsInitial,
@@ -1033,6 +1034,7 @@ export function useNavigationBuilder<
     onAction,
     getState,
     setState,
+    subscribe,
     onRouteFocus,
     addListener,
     addKeyedListener,
@@ -1064,6 +1066,7 @@ export function useNavigationBuilder<
           <NavigationStateListenerProvider
             state={state}
             getState={navigation.getState}
+            subscribe={subscribe}
           >
             <FocusedRouteKeyContext.Provider value={focusedRoute.key}>
               <PreventRemoveProvider>{element}</PreventRemoveProvider>

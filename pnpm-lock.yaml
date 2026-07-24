@@ -359,8 +359,8 @@ importers:
         specifier: ^19.2.6
         version: 19.2.7
       use-latest-callback:
-        specifier: ^0.3.4
-        version: 0.3.4(react@19.2.3)
+        specifier: ^0.3.5
+        version: 0.3.5(react@19.2.3)
     devDependencies:
       '@jest/globals':
         specifier: ^30.4.1
@@ -445,8 +445,8 @@ importers:
         specifier: workspace:^
         version: link:../react-native-drawer-layout
       use-latest-callback:
-        specifier: ^0.3.4
-        version: 0.3.4(react@19.2.3)
+        specifier: ^0.3.5
+        version: 0.3.5(react@19.2.3)
     devDependencies:
       '@jest/globals':
         specifier: ^30.4.1
@@ -500,8 +500,8 @@ importers:
         specifier: ^2.2.0
         version: 2.2.0
       use-latest-callback:
-        specifier: ^0.3.4
-        version: 0.3.4(react@19.2.3)
+        specifier: ^0.3.5
+        version: 0.3.5(react@19.2.3)
       use-sync-external-store:
         specifier: ^1.6.0
         version: 1.6.0(react@19.2.3)
@@ -628,8 +628,8 @@ importers:
         specifier: ^0.0.8
         version: 0.0.8(react@19.2.3)
       use-latest-callback:
-        specifier: ^0.3.4
-        version: 0.3.4(react@19.2.3)
+        specifier: ^0.3.5
+        version: 0.3.5(react@19.2.3)
     devDependencies:
       '@jest/globals':
         specifier: ^30.4.1
@@ -735,8 +735,8 @@ importers:
   packages/react-native-drawer-layout:
     dependencies:
       use-latest-callback:
-        specifier: ^0.3.4
-        version: 0.3.4(react@19.2.3)
+        specifier: ^0.3.5
+        version: 0.3.5(react@19.2.3)
     devDependencies:
       '@types/react':
         specifier: ~19.2.17
@@ -769,8 +769,8 @@ importers:
   packages/react-native-tab-view:
     dependencies:
       use-latest-callback:
-        specifier: ^0.3.4
-        version: 0.3.4(react@19.2.3)
+        specifier: ^0.3.5
+        version: 0.3.5(react@19.2.3)
     devDependencies:
       '@jest/globals':
         specifier: ^30.4.1
@@ -840,8 +840,8 @@ importers:
         specifier: workspace:^
         version: link:../elements
       use-latest-callback:
-        specifier: ^0.3.4
-        version: 0.3.4(react@19.2.3)
+        specifier: ^0.3.5
+        version: 0.3.5(react@19.2.3)
     devDependencies:
       '@jest/globals':
         specifier: ^30.4.1
@@ -6637,8 +6637,8 @@ packages:
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
-  use-latest-callback@0.3.4:
-    resolution: {integrity: sha512-IcR5xK/dJFzUUsAKBqr/mZw4dGPftRdVvx5+cNsLzDlf7V1GPNfnRTjiuTxSsfPtUJGW/KNrScl7xwQoOsvhkg==}
+  use-latest-callback@0.3.5:
+    resolution: {integrity: sha512-YDTKaeth5egzJLLKxGDvfoajkiZbNbLEaZnvnHXjSt5FDVy1WgPLwXXKdtBDIXDeakBrE4wBJuf2FTFBXzVw4Q==}
     peerDependencies:
       react: '>=16.8'
 
@@ -14234,7 +14234,7 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  use-latest-callback@0.3.4(react@19.2.3):
+  use-latest-callback@0.3.5(react@19.2.3):
     dependencies:
       react: 19.2.3
 

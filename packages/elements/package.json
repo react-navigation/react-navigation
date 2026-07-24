@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "sf-symbols-typescript": "^2.2.0",
-    "use-latest-callback": "^0.3.4",
+    "use-latest-callback": "^0.3.5",
     "use-sync-external-store": "^1.6.0"
   },
   "devDependencies": {

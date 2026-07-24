@@ -24,6 +24,7 @@ type Props<State extends NavigationState, ScreenOptions extends {}> = {
   routeState: NavigationState | PartialState<NavigationState> | undefined;
   getState: () => State;
   setState: (state: State) => void;
+  subscribe: (callback: () => void) => () => void;
   options: object;
   clearOptions: () => void;
 };
@@ -42,6 +43,7 @@ export function SceneView<
   routeState,
   getState,
   setState,
+  subscribe,
   options,
   clearOptions,
 }: Props<State, ScreenOptions>) {
@@ -152,6 +154,7 @@ export function SceneView<
       state: routeState,
       getState: getCurrentState,
       setState: setCurrentState,
+      subscribe,
       getKey,
       setKey,
       getIsInitial,
@@ -161,6 +164,7 @@ export function SceneView<
       routeState,
       getCurrentState,
       setCurrentState,
+      subscribe,
       getKey,
       setKey,
       getIsInitial,
