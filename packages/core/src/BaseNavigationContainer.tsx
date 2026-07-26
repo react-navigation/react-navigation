@@ -104,7 +104,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     );
   }
 
-  const { state, getState, setState, scheduleUpdate, flushUpdates } =
+  const { state, getState, setState, subscribe, scheduleUpdate, flushUpdates } =
     useSyncState<State>(() =>
       getPartialState(initialState == null ? undefined : initialState)
     );
@@ -317,12 +317,22 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       state,
       getState,
       setState,
+      subscribe,
       getKey,
       setKey,
       getIsInitial,
       addOptionsGetter,
     }),
-    [state, getState, setState, getKey, setKey, getIsInitial, addOptionsGetter]
+    [
+      state,
+      getState,
+      setState,
+      subscribe,
+      getKey,
+      setKey,
+      getIsInitial,
+      addOptionsGetter,
+    ]
   );
 
   const onReadyRef = React.useRef(onReady);

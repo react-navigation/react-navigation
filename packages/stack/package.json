@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@react-navigation/elements": "workspace:^",
-    "use-latest-callback": "^0.3.4"
+    "use-latest-callback": "^0.3.5"
   },
   "devDependencies": {
     "@jest/globals": "^30.4.1",

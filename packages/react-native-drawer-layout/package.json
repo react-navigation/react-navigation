@@ -42,7 +42,7 @@
     "clean": "del lib"
   },
   "dependencies": {
-    "use-latest-callback": "^0.3.4"
+    "use-latest-callback": "^0.3.5"
   },
   "devDependencies": {
     "@types/react": "~19.2.17",
