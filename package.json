@@ -49,6 +49,7 @@
     "commitlint": "^21.0.2",
     "eslint": "^9.39.5",
     "eslint-config-satya164": "^5.2.0",
+    "eslint-import-resolver-typescript": "^4.4.5",
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "jest": "~30.4.2",
     "jest-environment-node": "30.4.1",

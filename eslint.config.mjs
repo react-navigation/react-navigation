@@ -1,5 +1,6 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import { jest, react, recommended } from 'eslint-config-satya164';
+import * as tsResolver from 'eslint-import-resolver-typescript';
 import sort from 'eslint-plugin-simple-import-sort';
 
 export default defineConfig([
@@ -16,6 +17,23 @@ export default defineConfig([
     '**/.pnpm-store/',
     '**/.vscode/',
   ]),
+
+  {
+    files: ['**/*.{ts,mts,tsx}'],
+
+    settings: {
+      'import-x/resolver': {
+        name: 'typescript-resolver',
+        resolver: tsResolver,
+        options: {
+          conditionNames: [
+            '@react-navigation/source',
+            ...tsResolver.defaultConditionNames,
+          ],
+        },
+      },
+    },
+  },
 
   {
     plugins: {
