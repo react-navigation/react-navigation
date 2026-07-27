@@ -258,6 +258,76 @@ test('gets state on route names change', () => {
   });
 });
 
+test('removes preloaded routes whose names are removed', () => {
+  const router = StackRouter({});
+
+  expect(
+    router.getStateForRouteNamesChange(
+      {
+        index: 0,
+        key: 'stack-test',
+        preloadedRoutes: [
+          { key: 'bar-preloaded', name: 'bar' },
+          { key: 'baz-preloaded', name: 'baz' },
+        ],
+        routeNames: ['foo', 'bar', 'baz'],
+        routes: [{ key: 'foo-test', name: 'foo' }],
+        stale: false,
+        type: 'stack',
+      },
+      {
+        routeNames: ['foo', 'baz'],
+        routeParamList: {},
+        routeGetIdList: {},
+        routeKeyChanges: [],
+      }
+    )
+  ).toEqual({
+    index: 0,
+    key: 'stack-test',
+    preloadedRoutes: [{ key: 'baz-preloaded', name: 'baz' }],
+    routeNames: ['foo', 'baz'],
+    routes: [{ key: 'foo-test', name: 'foo' }],
+    stale: false,
+    type: 'stack',
+  });
+});
+
+test('removes preloaded routes for changed route keys', () => {
+  const router = StackRouter({});
+
+  expect(
+    router.getStateForRouteNamesChange(
+      {
+        index: 0,
+        key: 'stack-test',
+        preloadedRoutes: [
+          { key: 'bar-preloaded', name: 'bar' },
+          { key: 'baz-preloaded', name: 'baz' },
+        ],
+        routeNames: ['foo', 'bar', 'baz'],
+        routes: [{ key: 'foo-test', name: 'foo' }],
+        stale: false,
+        type: 'stack',
+      },
+      {
+        routeNames: ['foo', 'bar', 'baz'],
+        routeParamList: {},
+        routeGetIdList: {},
+        routeKeyChanges: ['bar'],
+      }
+    )
+  ).toEqual({
+    index: 0,
+    key: 'stack-test',
+    preloadedRoutes: [{ key: 'baz-preloaded', name: 'baz' }],
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [{ key: 'foo-test', name: 'foo' }],
+    stale: false,
+    type: 'stack',
+  });
+});
+
 test('gets state on route names change with initialRouteName', () => {
   const router = StackRouter({ initialRouteName: 'qux' });
 
@@ -2456,6 +2526,107 @@ test('handles popTo when source and target match a route', () => {
   });
 });
 
+test('replaces the source route when popTo ID only matches a route above it', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {
+      baz: ({ params }) => params?.id,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 2,
+        routes: [
+          { key: 'foo', name: 'foo' },
+          { key: 'bar', name: 'bar' },
+          { key: 'baz', name: 'baz', params: { id: '5' } },
+        ],
+        preloadedRoutes: [],
+        routeNames: ['foo', 'bar', 'baz'],
+      },
+      {
+        ...StackActions.popTo('baz', { id: '5' }),
+        source: 'bar',
+        target: 'root',
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routes: [
+      { key: 'foo', name: 'foo' },
+      { key: 'baz-test', name: 'baz', params: { id: '5' } },
+    ],
+    preloadedRoutes: [],
+    routeNames: ['foo', 'bar', 'baz'],
+  });
+});
+
+test('pops to a route with a matching ID below the source', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {
+      baz: ({ params }) => params?.id,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 3,
+        routes: [
+          { key: 'baz-oldest', name: 'baz', params: { id: '5' } },
+          {
+            key: 'baz-nearest',
+            name: 'baz',
+            params: { id: '5', value: 'old' },
+          },
+          { key: 'bar', name: 'bar' },
+          { key: 'foo', name: 'foo' },
+        ],
+        preloadedRoutes: [],
+        routeNames: ['foo', 'bar', 'baz'],
+      },
+      {
+        ...StackActions.popTo('baz', { id: '5', value: 'updated' }),
+        source: 'bar',
+        target: 'root',
+      },
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    routes: [
+      { key: 'baz-oldest', name: 'baz', params: { id: '5' } },
+      {
+        key: 'baz-nearest',
+        name: 'baz',
+        params: { id: '5', value: 'updated' },
+      },
+    ],
+    preloadedRoutes: [],
+    routeNames: ['foo', 'bar', 'baz'],
+  });
+});
+
 test("doesn't handle popTo if source key isn't present when target is specified", () => {
   const router = StackRouter({});
   const options: RouterConfigOptions = {
@@ -2615,6 +2786,128 @@ test('adds route to preloaded list with preload', () => {
       },
       { key: 'baz', name: 'baz' },
     ],
+  });
+});
+
+test('updates an existing preloaded route', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        preloadedRoutes: [
+          {
+            key: 'baz-preloaded',
+            name: 'baz',
+            params: { value: 'unchanged' },
+          },
+          {
+            key: 'bar-preloaded',
+            name: 'bar',
+            params: { value: 'old' },
+          },
+        ],
+        routeNames: ['foo', 'bar', 'baz'],
+        routes: [{ key: 'foo', name: 'foo' }],
+      },
+      CommonActions.preload('bar', { value: 'updated' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    preloadedRoutes: [
+      {
+        key: 'baz-preloaded',
+        name: 'baz',
+        params: { value: 'unchanged' },
+      },
+      {
+        key: 'bar-preloaded',
+        name: 'bar',
+        params: { value: 'updated' },
+      },
+    ],
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [{ key: 'foo', name: 'foo' }],
+  });
+});
+
+test('updates an existing preloaded route with the same ID', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar', 'baz'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => params?.id,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        preloadedRoutes: [
+          {
+            key: 'baz-preloaded',
+            name: 'baz',
+            params: { value: 'unchanged' },
+          },
+          {
+            key: 'bar-1-preloaded',
+            name: 'bar',
+            params: { id: '1', value: 'unchanged' },
+          },
+          {
+            key: 'bar-2-preloaded',
+            name: 'bar',
+            params: { id: '2', value: 'old' },
+          },
+        ],
+        routeNames: ['foo', 'bar', 'baz'],
+        routes: [{ key: 'foo', name: 'foo' }],
+      },
+      CommonActions.preload('bar', { id: '2', value: 'updated' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    preloadedRoutes: [
+      {
+        key: 'baz-preloaded',
+        name: 'baz',
+        params: { value: 'unchanged' },
+      },
+      {
+        key: 'bar-1-preloaded',
+        name: 'bar',
+        params: { id: '1', value: 'unchanged' },
+      },
+      {
+        key: 'bar-2-preloaded',
+        name: 'bar',
+        params: { id: '2', value: 'updated' },
+      },
+    ],
+    routeNames: ['foo', 'bar', 'baz'],
+    routes: [{ key: 'foo', name: 'foo' }],
   });
 });
 

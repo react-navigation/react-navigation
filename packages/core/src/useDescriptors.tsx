@@ -123,6 +123,7 @@ export function useDescriptors<
     scheduleUpdate,
     flushUpdates,
     stackRef,
+    getIsStateEmitted,
   } = React.useContext(NavigationBuilderContext);
 
   const context = React.useMemo(
@@ -135,6 +136,7 @@ export function useDescriptors<
       onDispatchAction,
       onEmitEvent,
       onOptionsChange,
+      getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
       stackRef,
@@ -148,6 +150,7 @@ export function useDescriptors<
       onDispatchAction,
       onEmitEvent,
       onOptionsChange,
+      getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
       stackRef,
@@ -228,7 +231,6 @@ export function useDescriptors<
     const clearOptions = () =>
       setOptions((o) => {
         if (route.key in o) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { [route.key]: _, ...rest } = o;
           return rest;
         }

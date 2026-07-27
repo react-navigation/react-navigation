@@ -25,7 +25,7 @@ export function Overlay({
     const active = progress.value > PROGRESS_EPSILON;
 
     return {
-      'pointerEvents': active ? 'auto' : 'none',
+      pointerEvents: active ? 'auto' : 'none',
       'aria-hidden': !active,
     } as const;
   }, [progress]);

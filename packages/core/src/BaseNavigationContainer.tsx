@@ -158,7 +158,7 @@ export const BaseNavigationContainer = React.forwardRef(
 
     const resetRoot = useLatestCallback(
       (state?: PartialState<NavigationState> | NavigationState) => {
-        const target = state?.key ?? keyedListeners.getState.root?.().key;
+        const target = keyedListeners.getState.root?.().key;
 
         if (target == null) {
           console.error(NOT_INITIALIZED_ERROR);
@@ -268,6 +268,13 @@ export const BaseNavigationContainer = React.forwardRef(
 
     const stackRef = React.useRef<string | undefined>(undefined);
 
+    const lastEmittedStateRef = React.useRef<State | undefined>(undefined);
+
+    const getIsStateEmitted = useLatestCallback(
+      () =>
+        !isFirstMountRef.current && lastEmittedStateRef.current === getState()
+    );
+
     const builderContext = React.useMemo(
       () => ({
         addListener,
@@ -275,6 +282,7 @@ export const BaseNavigationContainer = React.forwardRef(
         onDispatchAction,
         onEmitEvent,
         onOptionsChange,
+        getIsStateEmitted,
         scheduleUpdate,
         flushUpdates,
         stackRef,
@@ -285,6 +293,7 @@ export const BaseNavigationContainer = React.forwardRef(
         onDispatchAction,
         onEmitEvent,
         onOptionsChange,
+        getIsStateEmitted,
         scheduleUpdate,
         flushUpdates,
       ]
@@ -403,6 +412,8 @@ export const BaseNavigationContainer = React.forwardRef(
           }
         }
       }
+
+      lastEmittedStateRef.current = state;
 
       emitter.emit({ type: 'state', data: { state } });
 

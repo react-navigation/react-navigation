@@ -822,8 +822,10 @@ const createNestedStateObject = (
 
   if (routes.length > 0) {
     let nestedState = state;
+    let nextRoute = routes.shift();
 
-    while ((route = routes.shift() as ParsedRoute)) {
+    while (nextRoute) {
+      route = nextRoute;
       initialRoute = findInitialRoute(route.name, parentScreens, initialRoutes);
 
       const nestedStateIndex =
@@ -841,6 +843,7 @@ const createNestedStateObject = (
       }
 
       parentScreens.push(route.name);
+      nextRoute = routes.shift();
     }
   }
 

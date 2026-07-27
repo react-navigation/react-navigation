@@ -55,6 +55,7 @@ export function CardContent({ enabled, layout, style, ...rest }: Props) {
         document.head.appendChild(style);
       }
 
+      // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
       window.addEventListener('resize', updateStyle);
 
       unsubscribe = () => {

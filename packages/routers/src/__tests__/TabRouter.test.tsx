@@ -1058,7 +1058,7 @@ test("doesn't navigate to nonexistent screen", () => {
   ).toBeNull();
 });
 
-test('ensures unique ID for navigate', () => {
+test('creates a new route when the ID changes with navigate', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1079,7 +1079,19 @@ test('ensures unique ID for navigate', () => {
         index: 0,
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
-          { key: 'baz', name: 'baz' },
+          {
+            key: 'baz',
+            name: 'baz',
+            path: '/baz/1',
+            state: {
+              stale: false,
+              type: 'stack',
+              key: 'nested',
+              index: 0,
+              routeNames: ['child'],
+              routes: [{ key: 'child', name: 'child' }],
+            },
+          },
           { key: 'bar', name: 'bar' },
         ],
         history: [{ type: 'route', key: 'baz' }],
@@ -1279,7 +1291,7 @@ test("doesn't jump to nonexistent screen", () => {
   ).toBeNull();
 });
 
-test('ensures unique ID for jump to', () => {
+test('creates a new route when the ID changes with jumpTo', () => {
   const router = TabRouter({});
   const options: RouterConfigOptions = {
     routeNames: ['baz', 'bar', 'qux'],
@@ -1300,7 +1312,19 @@ test('ensures unique ID for jump to', () => {
         index: 0,
         routeNames: ['baz', 'bar', 'qux'],
         routes: [
-          { key: 'baz', name: 'baz' },
+          {
+            key: 'baz',
+            name: 'baz',
+            path: '/baz/1',
+            state: {
+              stale: false,
+              type: 'stack',
+              key: 'nested',
+              index: 0,
+              routeNames: ['child'],
+              routes: [{ key: 'child', name: 'child' }],
+            },
+          },
           { key: 'bar', name: 'bar' },
         ],
         history: [{ type: 'route', key: 'baz' }],
@@ -2089,6 +2113,91 @@ test('preserves params in history with backBehavior: fullHistory', () => {
 
   expect(state.index).toBe(1);
   expect(state.routes[1].params).toEqual({ value: 'first' });
+});
+
+test('preserves params updated by source with SET_PARAMS and backBehavior: fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('baz', { preserved: true, value: 'old' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('qux'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    {
+      ...CommonActions.setParams({ value: 'updated' }),
+      source: state.routes[1].key,
+    },
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.index).toBe(1);
+  expect(state.routes[1].params).toEqual({
+    preserved: true,
+    value: 'updated',
+  });
+});
+
+test('preserves params updated by source with REPLACE_PARAMS and backBehavior: fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['bar', 'baz', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {},
+  };
+
+  let state = router.getInitialState(options);
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('baz', { preserved: true, value: 'old' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('qux'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    {
+      ...CommonActions.replaceParams({ value: 'replaced' }),
+      source: state.routes[1].key,
+    },
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.index).toBe(1);
+  expect(state.routes[1].params).toEqual({ value: 'replaced' });
 });
 
 test('keeps initial params on goBack with backBehavior: fullHistory', () => {
@@ -2969,6 +3078,234 @@ test('handles screen preloading', () => {
     ],
     history: [{ type: 'route', key: 'qux-test' }],
   });
+});
+
+test('creates a fresh route when preload changes the ID', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => params?.id,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        preloadedRouteKeys: [],
+        key: 'root',
+        index: 0,
+        routeNames: ['foo', 'bar'],
+        routes: [
+          { key: 'foo-test', name: 'foo' },
+          {
+            key: 'bar-old',
+            name: 'bar',
+            path: '/bar/1',
+            params: { id: '1' },
+            state: {
+              stale: false,
+              type: 'stack',
+              key: 'nested',
+              index: 0,
+              routeNames: ['child'],
+              routes: [{ key: 'child-test', name: 'child' }],
+            },
+          },
+        ],
+        history: [{ type: 'route', key: 'foo-test' }],
+      },
+      CommonActions.preload('bar', { id: '2' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['bar-test'],
+    key: 'root',
+    index: 0,
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo-test', name: 'foo' },
+      {
+        key: 'bar-test',
+        name: 'bar',
+        params: { id: '2' },
+      },
+    ],
+    history: [{ type: 'route', key: 'foo-test' }],
+  });
+});
+
+test('updates the existing route when preload keeps the same ID', () => {
+  const router = TabRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => params?.id,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'tab',
+        preloadedRouteKeys: [],
+        key: 'root',
+        index: 0,
+        routeNames: ['foo', 'bar'],
+        routes: [
+          { key: 'foo-test', name: 'foo' },
+          {
+            key: 'bar-old',
+            name: 'bar',
+            path: '/bar/1',
+            params: { id: '1', value: 'old' },
+            state: {
+              stale: false,
+              type: 'stack',
+              key: 'nested',
+              index: 0,
+              routeNames: ['child'],
+              routes: [{ key: 'child-test', name: 'child' }],
+            },
+          },
+        ],
+        history: [{ type: 'route', key: 'foo-test' }],
+      },
+      CommonActions.preload('bar', { id: '1', value: 'updated' }),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: ['bar-old'],
+    key: 'root',
+    index: 0,
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo-test', name: 'foo' },
+      {
+        key: 'bar-old',
+        name: 'bar',
+        path: '/bar/1',
+        params: { id: '1', value: 'updated' },
+        state: {
+          stale: false,
+          type: 'stack',
+          key: 'nested',
+          index: 0,
+          routeNames: ['child'],
+          routes: [{ key: 'child-test', name: 'child' }],
+        },
+      },
+    ],
+    history: [{ type: 'route', key: 'foo-test' }],
+  });
+});
+
+test('preserves params when preload updates the focused route with fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => params?.id,
+    },
+  };
+
+  let state: TabNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: [],
+    key: 'root',
+    index: 1,
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo-test', name: 'foo' },
+      { key: 'bar-old', name: 'bar', params: { id: '1', value: 'old' } },
+    ],
+    history: [
+      {
+        type: 'route',
+        key: 'bar-old',
+        params: { id: '1', value: 'old' },
+      },
+    ],
+  };
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.preload('bar', { id: '1', value: 'updated' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.navigate('foo'),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.index).toBe(1);
+  expect(state.routes[1].params).toEqual({ id: '1', value: 'updated' });
+});
+
+test('preserves params when preload updates an unfocused route with fullHistory', () => {
+  const router = TabRouter({ backBehavior: 'fullHistory' });
+  const options: RouterConfigOptions = {
+    routeNames: ['foo', 'bar'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => params?.id,
+    },
+  };
+
+  let state: TabNavigationState<ParamListBase> = {
+    stale: false,
+    type: 'tab',
+    preloadedRouteKeys: [],
+    key: 'root',
+    index: 0,
+    routeNames: ['foo', 'bar'],
+    routes: [
+      { key: 'foo-test', name: 'foo' },
+      { key: 'bar-old', name: 'bar', params: { id: '1', value: 'old' } },
+    ],
+    history: [
+      {
+        type: 'route',
+        key: 'bar-old',
+        params: { id: '1', value: 'old' },
+      },
+      { type: 'route', key: 'foo-test' },
+    ],
+  };
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.preload('bar', { id: '1', value: 'updated' }),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  state = router.getStateForAction(
+    state,
+    CommonActions.goBack(),
+    options
+  ) as TabNavigationState<ParamListBase>;
+
+  expect(state.index).toBe(1);
+  expect(state.routes[1].params).toEqual({ id: '1', value: 'updated' });
 });
 
 test('keeps history ending with the focused route when preload replaces it', () => {
