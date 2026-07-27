@@ -1,4 +1,8 @@
-import type { ParamListBase, Route } from '@react-navigation/routers';
+import type {
+  NavigationState,
+  ParamListBase,
+  Route,
+} from '@react-navigation/routers';
 import * as React from 'react';
 
 import type { NavigationProp } from './types';
@@ -20,9 +24,9 @@ export const NavigationContext = React.createContext<
   NavigationProp<ParamListBase> | undefined
 >(undefined);
 
-type Props = {
+type Props<State extends NavigationState> = {
   route: Route<string>;
-  navigation: NavigationProp<ParamListBase>;
+  navigation: NavigationProp<ParamListBase, string, State>;
   children: React.ReactNode;
 };
 
@@ -33,7 +37,11 @@ export const NamedRouteContextListContext = React.createContext<
   Record<string, React.Context<Route<string>>> | undefined
 >(undefined);
 
-export function NavigationProvider({ route, navigation, children }: Props) {
+export function NavigationProvider<State extends NavigationState>({
+  route,
+  navigation,
+  children,
+}: Props<State>) {
   const NamedRouteContext = useLazyValue(() => React.createContext(route));
 
   const parents = React.use(NamedRouteContextListContext);
@@ -62,7 +70,9 @@ export function NavigationProvider({ route, navigation, children }: Props) {
       <NamedRouteContextListContext.Provider value={NamedRouteContextList}>
         <NamedRouteContext.Provider value={route}>
           <NavigationRouteContext.Provider value={route}>
-            <NavigationContext.Provider value={navigation}>
+            <NavigationContext.Provider
+              value={navigation as NavigationProp<ParamListBase>}
+            >
               <IsFocusedContext.Provider value={isFocused}>
                 {children}
               </IsFocusedContext.Provider>

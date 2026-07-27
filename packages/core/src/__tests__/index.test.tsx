@@ -2454,6 +2454,7 @@ test('resets state of a nested child in a navigator', async () => {
   await act(() =>
     navigation.navigate('bar', {
       state: {
+        index: 0,
         routes: [{ name: 'bar-a' }, { name: 'bar-b' }],
       },
     })
@@ -2476,6 +2477,7 @@ test('resets state of a nested child in a navigator', async () => {
         name: 'bar',
         params: {
           state: {
+            index: 0,
             routes: [{ name: 'bar-a' }, { name: 'bar-b' }],
           },
         },

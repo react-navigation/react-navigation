@@ -1,17 +1,19 @@
-import { nanoid } from 'nanoid/non-secure';
-
 import type {
   CommonNavigationAction,
   NavigationState,
-  PartialState,
+  ResetState,
 } from './types';
 
 function getStateForAction<State extends NavigationState>(
   state: State,
-  action: CommonNavigationAction
-): State | PartialState<State> | null;
-function getStateForAction(
-  state: NavigationState,
+  action: Exclude<CommonNavigationAction, { type: 'RESET' }>
+): State | null;
+function getStateForAction<State extends NavigationState>(
+  state: State,
+  action: Extract<CommonNavigationAction, { type: 'RESET' }>
+): ResetState<NavigationState> | null;
+function getStateForAction<State extends NavigationState>(
+  state: State,
   action: CommonNavigationAction
 ) {
   switch (action.type) {
@@ -73,6 +75,7 @@ function getStateForAction(
       const routeNamesSet = new Set(state.routeNames);
 
       if (
+        (nextState.type !== undefined && nextState.type !== state.type) ||
         nextState.routes.length === 0 ||
         nextState.routes.some(
           (route: { name: string }) => !routeNamesSet.has(route.name)
@@ -91,15 +94,6 @@ function getStateForAction(
         ) {
           return null;
         }
-
-        return {
-          ...nextState,
-          routes: nextState.routes.map((route) =>
-            'key' in route && route.key
-              ? route
-              : { ...route, key: `${route.name}-${nanoid()}` }
-          ),
-        };
       }
 
       return nextState;

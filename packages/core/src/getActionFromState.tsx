@@ -52,9 +52,7 @@ export function getActionFromState(
   }
 
   const routesLength =
-    state.index == null || state.index >= state.routes.length
-      ? state.routes.length
-      : state.index + 1;
+    state.index >= state.routes.length ? state.routes.length : state.index + 1;
 
   if (routesLength === 0) {
     return undefined;
@@ -83,13 +81,14 @@ export function getActionFromState(
     };
   }
 
-  const route = state.routes[state.index ?? state.routes.length - 1];
+  const route = state.routes[state.index];
 
   if (route == null) {
     return undefined;
   }
 
-  let current: PartialState<NavigationState> | undefined = route.state;
+  let current: NavigationState | PartialState<NavigationState> | undefined =
+    route.state;
   let config: ConfigItem | undefined = normalizedConfig?.screens?.[route.name];
   let params = { ...route.params } as NavigatorScreenParams<ParamListBase>;
 
@@ -124,7 +123,7 @@ export function getActionFromState(
     }
 
     const routesLength =
-      current.index == null || current.index >= current.routes.length
+      current.index >= current.routes.length
         ? current.routes.length
         : current.index + 1;
 

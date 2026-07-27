@@ -43,26 +43,25 @@ export type NavigationState<ParamList extends ParamListBase = ParamListBase> =
     stale: false;
   }>;
 
-export type InitialState = Readonly<
-  Partial<Omit<NavigationState, 'stale' | 'routes'>> & {
-    routes: (Omit<Route<string>, 'key'> & {
-      state?: InitialState | undefined;
-    })[];
-  }
->;
-
 export type PartialRoute<R extends Route<string>> = Omit<R, 'key'> & {
   key?: string | undefined;
-  state?: PartialState<NavigationState> | undefined;
+  state?: NavigationState | PartialState<NavigationState> | undefined;
 };
 
 export type PartialState<State extends NavigationState> = Partial<
-  Omit<State, 'stale' | 'routes'>
+  Omit<State, 'stale' | 'index' | 'routes'>
 > &
   Readonly<{
     stale?: true | undefined;
-    routes: PartialRoute<Route<State['routeNames'][number]>>[];
+    index: number;
+    routes: PartialRoute<State['routes'][number]>[];
   }>;
+
+export type ResetState<State extends NavigationState> =
+  | State
+  | (Omit<PartialState<State>, 'index'> & {
+      index?: number | undefined;
+    });
 
 export type Route<
   RouteName extends string,

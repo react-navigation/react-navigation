@@ -1,6 +1,5 @@
 import {
   CommonActions,
-  type InitialState,
   type NavigationAction,
   type NavigationState,
   type PartialState,
@@ -18,9 +17,13 @@ import { findFocusedRoute } from './findFocusedRoute';
 import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
-import { NavigationStateContext } from './NavigationStateContext';
+import {
+  NavigationStateContext,
+  type NavigationStateSnapshot,
+} from './NavigationStateContext';
 import { ThemeProvider } from './theming/ThemeProvider';
 import type {
+  InitialState,
   NavigationContainerEventMap,
   NavigationContainerProps,
   NavigationContainerRef,
@@ -35,7 +38,7 @@ import { useNavigationIndependentTree } from './useNavigationIndependentTree';
 import { useOptionsGetters } from './useOptionsGetters';
 import { useSyncState } from './useSyncState';
 
-type State = NavigationState | PartialState<NavigationState> | undefined;
+type State = NavigationStateSnapshot | undefined;
 
 const serializableWarnings: string[] = [];
 const duplicateNameWarnings: string[] = [];
@@ -51,7 +54,7 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
  */
 const getPartialState = (
   state: InitialState | undefined
-): PartialState<NavigationState> | undefined => {
+): (InitialState & { stale: true }) | undefined => {
   if (state === undefined) {
     return;
   }
@@ -59,18 +62,23 @@ const getPartialState = (
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { key, routeNames, ...partialState } = state;
 
+  const routes = state.routes.map((route) => {
+    if (route.state === undefined) {
+      return route as Route<string> & {
+        state?: PartialState<NavigationState>;
+      };
+    }
+
+    return {
+      ...route,
+      state: getPartialState(route.state),
+    };
+  });
+
   return {
     ...partialState,
     stale: true,
-    routes: state.routes.map((route) => {
-      if (route.state === undefined) {
-        return route as Route<string> & {
-          state?: PartialState<NavigationState>;
-        };
-      }
-
-      return { ...route, state: getPartialState(route.state) };
-    }),
+    routes,
   };
 };
 
@@ -430,7 +438,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
     lastEmittedStateRef.current = state;
 
-    emitter.emit({ type: 'state', data: { state } });
+    emitter.emit({ type: 'state', data: { state: hydratedState } });
 
     if (!isFirstMountRef.current && onStateChangeRef.current) {
       onStateChangeRef.current(hydratedState);

@@ -15,13 +15,16 @@ test('passes through a valid nested state', () => {
 });
 
 test('ignores a state whose routes are missing names', () => {
-  expect(getStateFromRouteParams({ state: { routes: [{}] } })).toBeUndefined();
+  expect(
+    getStateFromRouteParams({ state: { index: 0, routes: [{}] } })
+  ).toBeUndefined();
 });
 
 test('builds a state from screen and params', () => {
   expect(
     getStateFromRouteParams({ screen: 'Profile', params: { id: 1 } })
   ).toEqual({
+    index: 0,
     routes: [{ name: 'Profile', params: { id: 1 } }],
   });
 });
@@ -30,6 +33,7 @@ test('includes the path when provided', () => {
   expect(
     getStateFromRouteParams({ screen: 'Profile', path: '/profile' })
   ).toEqual({
+    index: 0,
     routes: [{ name: 'Profile', path: '/profile' }],
   });
 });
@@ -41,11 +45,13 @@ test('recursively builds nested state from nested screen params', () => {
       params: { screen: 'Profile', params: { id: 1 } },
     })
   ).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Root',
         params: { screen: 'Profile', params: { id: 1 } },
         state: {
+          index: 0,
           routes: [{ name: 'Profile', params: { id: 1 } }],
         },
       },

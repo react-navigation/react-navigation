@@ -986,6 +986,7 @@ test('creates linking configuration for static config', () => {
   }
 
   expect(getStateFromPath('contact', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Contact',
@@ -995,10 +996,12 @@ test('creates linking configuration for static config', () => {
   });
 
   expect(getStateFromPath('settings', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Nested',
         state: {
+          index: 0,
           routes: [{ name: 'Settings', path: 'settings' }],
         },
       },
@@ -1006,10 +1009,12 @@ test('creates linking configuration for static config', () => {
   });
 
   expect(getStateFromPath('nested/profile/123', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Nested',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Profile',
@@ -1755,27 +1760,40 @@ test('automatically generates paths if auto is specified', () => {
   `);
 
   expect(getStateFromPath('/', { screens })).toEqual({
+    index: 0,
     routes: [
-      { name: 'NestedA', state: { routes: [{ name: 'Home', path: '' }] } },
+      {
+        name: 'NestedA',
+        state: {
+          index: 0,
+          routes: [{ name: 'Home', path: '' }],
+        },
+      },
     ],
   });
 
   expect(getStateFromPath('login', { screens })).toBeUndefined();
 
   expect(getStateFromPath('forgot-password', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'NestedA',
-        state: { routes: [{ name: 'Forgot', path: 'forgot-password' }] },
+        state: {
+          index: 0,
+          routes: [{ name: 'Forgot', path: 'forgot-password' }],
+        },
       },
     ],
   });
 
   expect(getStateFromPath('settings', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'NestedA',
         state: {
+          index: 0,
           routes: [{ name: 'Settings', path: 'settings' }],
         },
       },
@@ -1783,10 +1801,12 @@ test('automatically generates paths if auto is specified', () => {
   });
 
   expect(getStateFromPath('profile?id=123', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'NestedA',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Profile',
@@ -1800,6 +1820,7 @@ test('automatically generates paths if auto is specified', () => {
   });
 
   expect(getStateFromPath('store/furniture', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'NestedB',
@@ -1810,16 +1831,21 @@ test('automatically generates paths if auto is specified', () => {
   });
 
   expect(getStateFromPath('store/digital/library', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'NestedB',
         params: { type: 'digital' },
-        state: { routes: [{ name: 'Library', path: 'store/digital/library' }] },
+        state: {
+          index: 0,
+          routes: [{ name: 'Library', path: 'store/digital/library' }],
+        },
       },
     ],
   });
 
   expect(getStateFromPath('contact', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Contact',
@@ -1988,27 +2014,37 @@ test('use initialRouteName for the automatic home screen', () => {
   `);
 
   expect(getStateFromPath('/', { screens })).toEqual({
+    index: 0,
     routes: [
-      { name: 'NestedA', state: { routes: [{ name: 'Profile', path: '' }] } },
+      {
+        name: 'NestedA',
+        state: { index: 0, routes: [{ name: 'Profile', path: '' }] },
+      },
     ],
   });
 
   expect(getStateFromPath('login', { screens })).toBeUndefined();
 
   expect(getStateFromPath('forgot-password', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'NestedA',
-        state: { routes: [{ name: 'Forgot', path: 'forgot-password' }] },
+        state: {
+          index: 0,
+          routes: [{ name: 'Forgot', path: 'forgot-password' }],
+        },
       },
     ],
   });
 
   expect(getStateFromPath('settings', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'NestedA',
         state: {
+          index: 0,
           routes: [{ name: 'Settings', path: 'settings' }],
         },
       },
@@ -2016,6 +2052,7 @@ test('use initialRouteName for the automatic home screen', () => {
   });
 
   expect(getStateFromPath('store/furniture', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'NestedB',
@@ -2026,16 +2063,21 @@ test('use initialRouteName for the automatic home screen', () => {
   });
 
   expect(getStateFromPath('store/digital/library', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'NestedB',
         params: { type: 'digital' },
-        state: { routes: [{ name: 'Library', path: 'store/digital/library' }] },
+        state: {
+          index: 0,
+          routes: [{ name: 'Library', path: 'store/digital/library' }],
+        },
       },
     ],
   });
 
   expect(getStateFromPath('contact', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Contact',
@@ -2390,10 +2432,12 @@ test("doesn't generate duplicate empty path in nested navigator without initialR
   `);
 
   expect(getStateFromPath('/details', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Home',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Details',
@@ -2628,6 +2672,7 @@ test('normalizes leading and trailing slashes in paths and aliases', () => {
   `);
 
   expect(getStateFromPath('/me', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Profile',
@@ -2637,6 +2682,7 @@ test('normalizes leading and trailing slashes in paths and aliases', () => {
   });
 
   expect(getStateFromPath('/u/42', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Profile',
@@ -2647,6 +2693,7 @@ test('normalizes leading and trailing slashes in paths and aliases', () => {
   });
 
   expect(getStateFromPath('/admin/dashboard', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Dashboard',
@@ -2705,10 +2752,12 @@ test('uses linking.initialRouteName for nested static navigation', () => {
   `);
 
   expect(getStateFromPath('/', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Home',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Notifications',
@@ -2765,10 +2814,12 @@ test('preserves linking.screens for nested static navigation', () => {
   `);
 
   expect(getStateFromPath('/start', { screens })).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Home',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Feed',

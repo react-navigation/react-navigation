@@ -204,6 +204,7 @@ test('renders fallback before state is restored asynchronously', async () => {
 
   await act(() => {
     resolve({
+      index: 0,
       routes: [{ name: 'Profile', params: { user: 'jane' } }],
     });
   });
@@ -251,6 +252,7 @@ test('renders navigation tree immediately when state is restored synchronously',
       persistor={{
         persist() {},
         restore: () => ({
+          index: 0,
           routes: [{ name: 'Profile', params: { user: 'jane' } }],
         }),
       }}

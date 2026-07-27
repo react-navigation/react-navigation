@@ -2,6 +2,7 @@ import {
   getStateFromPath,
   type NavigationState,
   type ParamListBase,
+  type PartialState,
 } from '@react-navigation/core';
 
 import { extractPathFromURL } from './extractPathFromURL';
@@ -11,7 +12,7 @@ export function getStateFromHref(
   href: string,
   options: LinkingOptions<ParamListBase> | undefined,
   previous: NavigationState | undefined
-): ReturnType<typeof getStateFromPath> {
+): PartialState<NavigationState> | undefined {
   const {
     prefixes,
     filter,

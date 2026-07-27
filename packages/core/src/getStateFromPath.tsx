@@ -1,13 +1,8 @@
-import type {
-  InitialState,
-  NavigationState,
-  PartialState,
-} from '@react-navigation/routers';
+import type { NavigationState, PartialState } from '@react-navigation/routers';
 import escape from 'escape-string-regexp';
 import queryString from 'query-string';
 
 import { arrayStartsWith } from './arrayStartsWith';
-import { findFocusedRoute } from './findFocusedRoute';
 import {
   combinePatternParts,
   getPatternParts,
@@ -56,10 +51,6 @@ type RouteConfig = {
 type InitialRouteConfig = {
   initialRouteName: string;
   parentScreens: string[];
-};
-
-type ResultState = PartialState<NavigationState> & {
-  state?: ResultState | undefined;
 };
 
 type ParsedRoute = {
@@ -177,7 +168,7 @@ export function getStateFromPath<ParamList extends {}>(
   path: string,
   options?: Options<ParamList>,
   previous?: NavigationState
-): ResultState | undefined {
+): PartialState<NavigationState> | undefined {
   const {
     initialRoutes,
     configs,
@@ -911,12 +902,7 @@ const selectSharedConfig = (
   let current = previous;
 
   while (current?.routes.length) {
-    const index =
-      typeof current.index === 'number'
-        ? current.index
-        : current.routes.length - 1;
-
-    const route = current.routes[index];
+    const route = current.routes[current.index];
 
     if (route == null) {
       break;
@@ -1010,35 +996,20 @@ const findInitialRoute = (
   return undefined;
 };
 
-// returns state object with values depending on whether
-// it is the end of state and if there is initialRoute for this level
 const createStateObject = (
   initialRoute: string | undefined,
-  route: ParsedRoute,
-  isEmpty: boolean
-): InitialState => {
-  if (isEmpty) {
-    if (initialRoute) {
-      return {
-        index: 1,
-        routes: [{ name: initialRoute }, route],
-      };
-    } else {
-      return {
-        routes: [route],
-      };
-    }
+  route: ParsedRoute
+): PartialState<NavigationState> => {
+  if (initialRoute) {
+    return {
+      index: 1,
+      routes: [{ name: initialRoute }, route],
+    };
   } else {
-    if (initialRoute) {
-      return {
-        index: 1,
-        routes: [{ name: initialRoute }, { ...route, state: { routes: [] } }],
-      };
-    } else {
-      return {
-        routes: [{ ...route, state: { routes: [] } }],
-      };
-    }
+    return {
+      index: 0,
+      routes: [route],
+    };
   }
 };
 
@@ -1047,8 +1018,8 @@ const createNestedStateObject = (
   routes: ParsedRoute[],
   initialRoutes: InitialRouteConfig[],
   routeConfig?: RouteConfig
-): InitialState | undefined => {
-  let route = routes.shift();
+): PartialState<NavigationState> | undefined => {
+  const [route, ...nestedRoutes] = routes;
 
   if (route == null) {
     return undefined;
@@ -1060,57 +1031,39 @@ const createNestedStateObject = (
 
   parentScreens.push(route.name);
 
-  const state: InitialState = createStateObject(
-    initialRoute,
-    route,
-    routes.length === 0
-  );
+  const state = createStateObject(initialRoute, route);
 
-  if (routes.length > 0) {
+  let focusedRoute = route;
+
+  if (nestedRoutes.length > 0) {
     let nestedState = state;
 
-    let nextRoute = routes.shift();
+    for (const nestedRouteConfig of nestedRoutes) {
+      initialRoute = findInitialRoute(
+        nestedRouteConfig.name,
+        parentScreens,
+        initialRoutes
+      );
 
-    while (nextRoute != null) {
-      route = nextRoute;
-      initialRoute = findInitialRoute(route.name, parentScreens, initialRoutes);
-
-      const nestedStateIndex =
-        nestedState.index || nestedState.routes.length - 1;
+      const nestedStateIndex = nestedState.index;
       const nestedRoute = nestedState.routes[nestedStateIndex];
 
       if (nestedRoute == null) {
         throw new Error(`Couldn't find a route at index ${nestedStateIndex}.`);
       }
 
-      nestedRoute.state = createStateObject(
-        initialRoute,
-        route,
-        routes.length === 0
-      );
+      const childState = createStateObject(initialRoute, nestedRouteConfig);
 
-      if (routes.length > 0) {
-        if (nestedRoute.state == null) {
-          throw new Error(
-            `Couldn't find nested state for route '${route.name}'.`
-          );
-        }
-
-        nestedState = nestedRoute.state;
-      }
-
-      parentScreens.push(route.name);
-      nextRoute = routes.shift();
+      nestedRoute.state = childState;
+      nestedState = childState;
+      focusedRoute = nestedRouteConfig;
+      parentScreens.push(nestedRouteConfig.name);
     }
   }
 
-  const focusedRoute = findFocusedRoute(state);
-
-  if (focusedRoute == null) {
-    return undefined;
-  }
-
-  focusedRoute.path = path.replace(/\/$/, '');
+  Object.assign(focusedRoute, {
+    path: path.replace(/\/$/, ''),
+  });
 
   const queryParams = parseQueryParams(
     path,
@@ -1126,7 +1079,9 @@ const createNestedStateObject = (
   }
 
   if (queryParams.params) {
-    focusedRoute.params = { ...focusedRoute.params, ...queryParams.params };
+    Object.assign(focusedRoute, {
+      params: { ...focusedRoute.params, ...queryParams.params },
+    });
   }
 
   return state;

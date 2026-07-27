@@ -1,11 +1,4 @@
-import type { NavigationState, PartialState, Route } from './types';
-
-type ResetState =
-  | PartialState<NavigationState>
-  | NavigationState
-  | (Omit<NavigationState, 'routes'> & {
-      routes: Omit<Route<string>, 'key'>[];
-    });
+import type { NavigationState, ResetState } from './types';
 
 type GoBackAction = {
   type: 'GO_BACK';
@@ -28,7 +21,7 @@ type NavigateAction = {
 
 type ResetAction = {
   type: 'RESET';
-  payload: ResetState;
+  payload: ResetState<NavigationState>;
   source?: string | undefined;
   target?: string | undefined;
 };
@@ -73,7 +66,7 @@ export type Action =
   | PushParamsAction
   | PreloadAction;
 
-export function goBack(): Action {
+export function goBack(): GoBackAction {
   return { type: 'GO_BACK' };
 }
 
@@ -86,7 +79,7 @@ export function navigate(
         pop?: boolean | undefined;
       }
     | undefined
-): Action {
+) {
   return {
     type: 'NAVIGATE',
     payload: {
@@ -95,11 +88,14 @@ export function navigate(
       merge: options?.merge,
       pop: options?.pop,
     },
-  };
+  } as const satisfies NavigateAction;
 }
 
-export function reset(state: ResetState) {
-  return { type: 'RESET', payload: state } as const satisfies ResetAction;
+export function reset(state: ResetState<NavigationState>) {
+  return {
+    type: 'RESET',
+    payload: state,
+  } as const satisfies ResetAction;
 }
 
 export function setParams(params: object) {

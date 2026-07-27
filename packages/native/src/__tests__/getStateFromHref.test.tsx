@@ -16,6 +16,7 @@ test('gets navigation state from an absolute path', () => {
       undefined
     )
   ).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Profile',
@@ -46,6 +47,7 @@ test('gets navigation state from a prefixed URL', () => {
       undefined
     )
   ).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Settings',

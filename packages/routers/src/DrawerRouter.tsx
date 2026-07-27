@@ -244,6 +244,61 @@ export function DrawerRouter({
 
           return router.getStateForAction(state, action, options);
 
+        case 'RESET': {
+          const result = router.getStateForAction(state, action, options);
+
+          if (result === null) {
+            return null;
+          }
+
+          const drawerDefault =
+            'default' in action.payload &&
+            (action.payload.default === 'open' ||
+              action.payload.default === 'closed')
+              ? action.payload.default
+              : state.default;
+          const history = (
+            action.payload.history === undefined
+              ? (result.history ?? [])
+              : (action.payload.history ?? [])
+          ).filter(
+            (
+              item
+            ): item is DrawerNavigationState<ParamListBase>['history'][number] => {
+              if (
+                typeof item !== 'object' ||
+                item === null ||
+                !('type' in item)
+              ) {
+                return false;
+              }
+
+              if (item.type === 'route') {
+                return (
+                  'key' in item &&
+                  typeof item.key === 'string' &&
+                  (!('params' in item) ||
+                    item.params === undefined ||
+                    (typeof item.params === 'object' && item.params !== null))
+                );
+              }
+
+              return (
+                item.type === 'drawer' &&
+                'status' in item &&
+                (item.status === 'open' || item.status === 'closed')
+              );
+            }
+          );
+
+          return {
+            ...result,
+            type: 'drawer',
+            default: drawerDefault,
+            history,
+          };
+        }
+
         default:
           return router.getStateForAction(state, action, options);
       }

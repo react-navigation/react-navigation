@@ -95,6 +95,7 @@ test('gets rehydrated state from partial state', () => {
   expect(
     router.getRehydratedState(
       {
+        index: 0,
         routes: [
           { key: 'bar-0', name: 'bar' },
           { key: 'qux-1', name: 'qux' },
@@ -121,6 +122,7 @@ test('gets rehydrated state from partial state', () => {
   expect(
     router.getRehydratedState(
       {
+        index: 0,
         routes: [{ key: 'baz-0', name: 'baz' }],
       },
       options

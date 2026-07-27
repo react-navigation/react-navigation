@@ -1241,7 +1241,7 @@ test('throws if there is no navigator rendered', async () => {
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
   ref.current?.dispatch({ type: 'WHATEVER' });
-  ref.current?.resetRoot({ routes: [] });
+  ref.current?.resetRoot({ index: 0, routes: [] });
 
   expect(spy.mock.calls[0]?.[0]).toMatch(
     "The 'navigation' object hasn't been initialized yet."
@@ -1716,6 +1716,7 @@ test('applies updates from parent and child navigators scheduled in the same pha
   const root = await render(<Test expanded={false} />);
 
   expect(ref.current?.getRootState()).toMatchObject({
+    index: 0,
     routeNames: ['parent-a'],
     routes: [{ name: 'parent-a', state: { routeNames: ['child-a'] } }],
   });
@@ -1723,6 +1724,7 @@ test('applies updates from parent and child navigators scheduled in the same pha
   await root.rerender(<Test expanded={true} />);
 
   expect(ref.current?.getRootState()).toMatchObject({
+    index: 0,
     routeNames: ['parent-a', 'parent-b'],
     routes: [
       { name: 'parent-a', state: { routeNames: ['child-a', 'child-b'] } },

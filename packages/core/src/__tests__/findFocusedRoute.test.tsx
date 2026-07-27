@@ -5,6 +5,7 @@ import { findFocusedRoute } from '../findFocusedRoute';
 test('returns route when there is no nested state', () => {
   expect(
     findFocusedRoute({
+      index: 0,
       routes: [{ name: 'Home', params: { user: 'jane' } }],
     })
   ).toEqual({ name: 'Home', params: { user: 'jane' } });
@@ -25,6 +26,7 @@ test('returns focused route from nested state', () => {
               {
                 name: 'Details',
                 state: {
+                  index: 0,
                   routes: [{ name: 'Comments' }],
                 },
               },
@@ -36,13 +38,15 @@ test('returns focused route from nested state', () => {
   ).toEqual({ name: 'Comments' });
 });
 
-test('uses last route when nested state has no index', () => {
+test('uses index to find the focused nested route', () => {
   expect(
     findFocusedRoute({
+      index: 0,
       routes: [
         {
           name: 'Home',
           state: {
+            index: 1,
             routes: [{ name: 'Feed' }, { name: 'Profile' }],
           },
         },
@@ -52,5 +56,5 @@ test('uses last route when nested state has no index', () => {
 });
 
 test('returns undefined when there are no routes', () => {
-  expect(findFocusedRoute({ routes: [] })).toBeUndefined();
+  expect(findFocusedRoute({ index: 0, routes: [] })).toBeUndefined();
 });

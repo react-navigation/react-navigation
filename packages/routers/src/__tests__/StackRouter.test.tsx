@@ -184,6 +184,7 @@ test("falls back to first route when rehydrating if initial route isn't present"
   expect(
     router.getRehydratedState(
       {
+        index: 0,
         routes: [{ name: 'unknown' }],
       },
       {

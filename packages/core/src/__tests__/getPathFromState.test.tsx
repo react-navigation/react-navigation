@@ -8,6 +8,7 @@ type State = PartialState<NavigationState>;
 
 test('converts state to path string', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
@@ -19,6 +20,7 @@ test('converts state to path string', () => {
               name: 'bar',
               params: { fruit: 'apple' },
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'baz qux',
@@ -72,6 +74,7 @@ test('converts state to path string with config', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -83,6 +86,7 @@ test('converts state to path string with config', () => {
               name: 'Bar',
               params: { fruit: 'apple', type: 'sweet', avaliable: false },
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Baz',
@@ -168,10 +172,12 @@ test('ignores nested params in inactive routes', () => {
 test('prepends trailing slash to path', () => {
   expect(
     getPathFromState<object>({
+      index: 0,
       routes: [
         {
           name: 'foo',
           state: {
+            index: 0,
             routes: [{ name: 'bar' }],
           },
         },
@@ -181,10 +187,12 @@ test('prepends trailing slash to path', () => {
 
   expect(
     getPathFromState<object>({
+      index: 0,
       routes: [
         {
           name: 'foo',
           state: {
+            index: 0,
             routes: [{ name: 'bar', path: 'foo/bar' }],
           },
         },
@@ -196,10 +204,12 @@ test('prepends trailing slash to path', () => {
 test('handles route without param', () => {
   const path = '/foo/bar';
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [{ name: 'bar' }],
         },
       },
@@ -215,6 +225,7 @@ test('handles route without param', () => {
 test("doesn't add query param for empty params", () => {
   const path = '/foo';
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
@@ -267,19 +278,23 @@ test('handles state with config with nested screens', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foe',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Bar',
                     params: { fruit: 'apple', type: 'sweet' },
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Baz',
@@ -349,19 +364,23 @@ test('handles state with config with nested screens and exact', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foe',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Bar',
                     params: { fruit: 'apple', type: 'sweet' },
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Baz',
@@ -425,14 +444,17 @@ test('handles state with config with nested screens and unused configs', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foe',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Baz',
@@ -494,14 +516,17 @@ test('handles state with config with nested screens and unused configs with exac
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foe',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Baz',
@@ -569,19 +594,23 @@ test('handles nested object with stringify in it', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Bar',
         params: { fruit: 'apple', type: 'sweet' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foo',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Baz',
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Bis',
@@ -654,19 +683,23 @@ test('handles nested object with stringify in it with exact', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Bar',
         params: { fruit: 'apple', type: 'sweet' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foo',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Baz',
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Bis',
@@ -718,14 +751,17 @@ test('handles nested object for second route depth', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Baz' }],
               },
             },
@@ -767,14 +803,17 @@ test('handles nested object for second route depth with exact', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Baz' }],
               },
             },
@@ -819,16 +858,19 @@ test('handles nested object for second route depth and path and stringify in roo
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         params: { planet: 'dathomir' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               params: { id: 42 },
               state: {
+                index: 0,
                 routes: [{ name: 'Baz' }],
               },
             },
@@ -879,14 +921,17 @@ test('handles nested object for second route depth and path and stringify in roo
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Baz' }],
               },
             },
@@ -920,10 +965,12 @@ test('ignores empty string paths', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [{ name: 'Bar' }],
         },
       },
@@ -961,14 +1008,17 @@ test('keeps query params if path is empty', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Qux', params: { foo: 42 } }],
               },
             },
@@ -1009,14 +1059,17 @@ test('does not use Object.prototype properties as parsing functions', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Qux', params: { toString: 42 } }],
               },
             },
@@ -1056,14 +1109,17 @@ test('cuts nested configs too', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Baz' }],
               },
             },
@@ -1104,14 +1160,17 @@ test('cuts nested configs too with exact', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Baz' }],
               },
             },
@@ -1145,14 +1204,17 @@ test('handles empty path at the end', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Baz' }],
               },
             },
@@ -1186,10 +1248,12 @@ test('returns "/" for empty path', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
@@ -1223,10 +1287,12 @@ test('parses no path specified', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [{ name: 'Bar' }],
         },
       },
@@ -1281,19 +1347,23 @@ test('strips undefined query params', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Bar',
         params: { fruit: 'apple', type: 'sweet' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foo',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Baz',
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Bis',
@@ -1364,19 +1434,23 @@ test('strips undefined query params with exact', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Bar',
         params: { fruit: 'apple', type: 'sweet' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foo',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Baz',
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Bis',
@@ -1446,19 +1520,23 @@ test('handles stripping all query params', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Bar',
         params: { fruit: 'apple', type: 'sweet' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foo',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Baz',
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Bis',
@@ -1528,19 +1606,23 @@ test('handles stripping all query params with exact', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Bar',
         params: { fruit: 'apple', type: 'sweet' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foo',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Baz',
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Bis',
@@ -1578,6 +1660,7 @@ test('replaces undefined query params', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Bar',
@@ -1604,6 +1687,7 @@ test("doesn't add undefined to path for optional params", () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -1638,6 +1722,7 @@ test('matches wildcard patterns at root', () => {
   };
 
   const state = {
+    index: 0,
     routes: [{ name: '404' }],
   };
 
@@ -1668,15 +1753,18 @@ test('matches wildcard patterns at nested level', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               params: { id: '42' },
               state: {
+                index: 0,
                 routes: [{ name: '404' }],
               },
             },
@@ -1717,14 +1805,17 @@ test('matches wildcard patterns at nested level with exact', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: '404' }],
               },
             },
@@ -1762,15 +1853,18 @@ test('tries to match wildcard patterns at the end', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               params: { id: '42' },
               state: {
+                index: 0,
                 routes: [{ name: 'Test' }],
               },
             },
@@ -1808,10 +1902,12 @@ test('uses nearest parent wildcard match for unmatched paths', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [{ name: '404' }],
         },
       },
@@ -1841,10 +1937,12 @@ test('handles path at top level', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Fruits',
@@ -1889,6 +1987,7 @@ test('ignores regexp patterns when provided', () => {
   expect(
     getPathFromState<object>(
       {
+        index: 0,
         routes: [
           {
             name: 'Foo',
@@ -1903,6 +2002,7 @@ test('ignores regexp patterns when provided', () => {
   expect(
     getPathFromState<object>(
       {
+        index: 0,
         routes: [
           {
             name: 'Bar',
@@ -1917,6 +2017,7 @@ test('ignores regexp patterns when provided', () => {
   expect(
     getPathFromState<object>(
       {
+        index: 0,
         routes: [
           {
             name: 'Baz',
@@ -1931,6 +2032,7 @@ test('ignores regexp patterns when provided', () => {
   expect(
     getPathFromState<object>(
       {
+        index: 0,
         routes: [
           {
             name: 'Qux',
@@ -1955,6 +2057,7 @@ test('correctly handles regex pattern with slash', () => {
   expect(
     getPathFromState<object>(
       {
+        index: 0,
         routes: [
           {
             name: 'Foo',
@@ -1969,6 +2072,7 @@ test('correctly handles regex pattern with slash', () => {
 
 test('does not use params.screen if no config is specified', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -1993,6 +2097,7 @@ test('uses params.screen for path when config does not contain screen', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -2017,6 +2122,7 @@ test('uses params.screen for path when config contains screen', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -2041,6 +2147,7 @@ test('uses path params and creates path from params.screen using config', () => 
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -2065,6 +2172,7 @@ test('creates path from params.screen and adds params.params in pattern', () => 
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -2084,11 +2192,12 @@ test('creates path from params.screen and adds params.params in pattern', () => 
 
 test('does not use params.state if no config is specified', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         params: {
-          state: { routes: [{ name: 'Bar' }] },
+          state: { index: 0, routes: [{ name: 'Bar' }] },
         },
       },
     ],
@@ -2112,12 +2221,14 @@ test('uses params.state for path when config is specified', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         params: {
           type: 'sweet',
           state: {
+            index: 0,
             routes: [
               {
                 name: 'Bar',
@@ -2147,11 +2258,12 @@ test('prioritizes route.state over params.screen', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         params: { screen: 'Bar' },
-        state: { routes: [{ name: 'Baz' }] },
+        state: { index: 0, routes: [{ name: 'Baz' }] },
       },
     ],
   };
@@ -2173,11 +2285,12 @@ test('prioritizes route.state over params.state', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
-        params: { state: { routes: [{ name: 'Bar' }] } },
-        state: { routes: [{ name: 'Baz' }] },
+        params: { state: { index: 0, routes: [{ name: 'Bar' }] } },
+        state: { index: 0, routes: [{ name: 'Baz' }] },
       },
     ],
   };
@@ -2187,6 +2300,7 @@ test('prioritizes route.state over params.state', () => {
 
 test('throws when a screen sets exact without a path', () => {
   const state = {
+    index: 0,
     routes: [{ name: 'Foo' }],
   };
 
@@ -2211,6 +2325,7 @@ test('serializes array and null query params', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -2224,6 +2339,7 @@ test('serializes array and null query params', () => {
   expect(getPathFromState<object>(state, config)).toBe(path);
 
   expect(getStateFromPath<object>(path, config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -2240,6 +2356,7 @@ test('serializes array and null query params', () => {
 
 test('serializes array and null query params without config', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -2253,6 +2370,7 @@ test('serializes array and null query params without config', () => {
   expect(getPathFromState<object>(state)).toBe(path);
 
   expect(getStateFromPath<object>(path)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -2288,6 +2406,7 @@ test('uses stringify and parse for array and null query params', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -2301,6 +2420,7 @@ test('uses stringify and parse for array and null query params', () => {
   expect(getPathFromState<ParamList>(state, config)).toBe(path);
 
   expect(getStateFromPath<ParamList>(path, config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -2324,11 +2444,13 @@ test('handles same param name at different nesting levels', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'User',
         params: { id: '1' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Post',
@@ -2345,11 +2467,13 @@ test('handles same param name at different nesting levels', () => {
   expect(getPathFromState<object>(state, config)).toBe(path);
 
   expect(getStateFromPath<object>(path, config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'User',
         params: { id: '1' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Post',
@@ -2379,11 +2503,13 @@ test('handles same param name with exact nested path', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'User',
         params: { id: '1' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Post',
@@ -2411,10 +2537,12 @@ test("doesn't use child param for missing same-named ancestor param", () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'User',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Post',
@@ -2444,11 +2572,13 @@ test("doesn't add undefined for optional same-named child param", () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'User',
         params: { id: '1' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Post',
@@ -2476,11 +2606,13 @@ test('keeps query param with same name as ancestor path param', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'User',
         params: { id: '1' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Settings',
@@ -2497,11 +2629,13 @@ test('keeps query param with same name as ancestor path param', () => {
   expect(getPathFromState<object>(state, config)).toBe(path);
 
   expect(getStateFromPath<object>(path, config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'User',
         params: { id: '1' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Settings',
@@ -2523,11 +2657,13 @@ test('handles same param name when state is deeper than config', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         params: { id: '1' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foo',

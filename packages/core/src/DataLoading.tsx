@@ -74,24 +74,26 @@ export function getLoaderForState(
   return getLoaderForStateChange(tree, state, undefined, undefined);
 }
 
-export function getLoaderForStateChange(
+export const getLoaderForStateChange = (
   tree: TreeForPathConfig,
   state: PartialState<NavigationState> | NavigationState | undefined,
-  previousState: PartialState<NavigationState> | NavigationState | undefined,
+  previousState:
+    | PartialState<NavigationState>
+    | NavigationState
+    | null
+    | undefined,
   consumedParams: WeakMap<object, true> | undefined
-): (() => Promise<void>) | undefined {
-  const focusedRoute = state?.routes[state.index ?? state.routes.length - 1];
-  const previousFocusedRoute =
-    previousState?.routes[
-      previousState.index ?? previousState.routes.length - 1
-    ];
+): (() => Promise<void>) | undefined => {
+  const hasPreviousState = previousState !== undefined;
+  const focusedRoute = state?.routes[state.index];
+  const previousFocusedRoute = previousState?.routes[previousState.index];
 
   if (!focusedRoute) {
     return undefined;
   }
 
   const isNewlyFocused =
-    previousState === undefined ||
+    !hasPreviousState ||
     previousFocusedRoute == null ||
     focusedRoute.name !== previousFocusedRoute.name ||
     (focusedRoute.key != null &&
@@ -140,20 +142,23 @@ export function getLoaderForStateChange(
 
   if (nested) {
     const initialRouteName = findInitialRouteName(nested.config);
+    const initialState =
+      initialRouteName != null
+        ? {
+            index: 0,
+            routes: [{ name: initialRouteName }],
+          }
+        : undefined;
 
     const stateFromParams =
       focusedRoute.params != null && consumedParams?.has(focusedRoute.params)
         ? undefined
         : getStateFromRouteParams(params);
 
-    let childState =
-      previousState !== undefined && stateFromParams != null
+    const childState =
+      (hasPreviousState && stateFromParams != null
         ? stateFromParams
-        : (focusedRoute.state ?? stateFromParams);
-
-    if (childState == null && initialRouteName != null) {
-      childState = { routes: [{ name: initialRouteName }] };
-    }
+        : (focusedRoute.state ?? stateFromParams)) ?? initialState;
 
     let previousChildState:
       | PartialState<NavigationState>
@@ -172,19 +177,13 @@ export function getLoaderForStateChange(
           : getStateFromRouteParams(previousParams);
 
       previousChildState =
-        previousFocusedRoute?.state ?? previousStateFromParams;
-
-      if (previousChildState == null && initialRouteName != null) {
-        previousChildState = { routes: [{ name: initialRouteName }] };
-      }
+        previousFocusedRoute?.state ?? previousStateFromParams ?? initialState;
     }
 
     const childLoader = getLoaderForStateChange(
       nested,
       childState,
-      previousState === undefined
-        ? undefined
-        : (previousChildState ?? { routes: [] }),
+      hasPreviousState ? (previousChildState ?? null) : undefined,
       consumedParams
     );
 
@@ -200,4 +199,4 @@ export function getLoaderForStateChange(
   return async () => {
     await Promise.all(loaders.map((l) => l()));
   };
-}
+};

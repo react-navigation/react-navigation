@@ -1,20 +1,14 @@
-import type { InitialState } from '@react-navigation/routers';
+import type { NavigationState, PartialState } from '@react-navigation/routers';
 
-type Result =
-  | {
-      key?: string | undefined;
-      name: string;
-      params?: object | undefined;
-      path?: string | undefined;
-    }
-  | undefined;
+type State = NavigationState | PartialState<NavigationState>;
 
-export function findFocusedRoute(state: InitialState): Result {
-  let current: InitialState | undefined = state;
+type Route = State['routes'][number] | undefined;
+
+export function findFocusedRoute(state: State): Route {
+  let current: State | undefined = state;
 
   while (current != null) {
-    const route: InitialState['routes'][number] | undefined =
-      current.routes[current.index ?? current.routes.length - 1];
+    const route: Route = current.routes[current.index];
 
     if (route?.state == null) {
       return route;

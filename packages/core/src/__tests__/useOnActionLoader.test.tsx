@@ -130,7 +130,7 @@ test('does not fire any loader when navigating to a screen without UNSTABLE_load
   expect(fn).not.toHaveBeenCalled();
 });
 
-test('fires loader for the focused route on reset without index', async () => {
+test('fires loader for the focused route on reset', async () => {
   const homeFn = jest.fn(
     async (_options: { name: string; params: unknown }) => {}
   );
@@ -165,6 +165,7 @@ test('fires loader for the focused route on reset without index', async () => {
   await act(() => {
     navigation.dispatch(
       CommonActions.reset({
+        index: 1,
         routes: [{ name: 'Home' }, { name: 'Detail' }],
       })
     );

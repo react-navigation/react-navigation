@@ -52,6 +52,7 @@ export type {
   EventMapBase,
   EventMapCore,
   GenericNavigation,
+  InitialState,
   NavigationContainerEventMap,
   NavigationContainerProps,
   NavigationContainerRef,

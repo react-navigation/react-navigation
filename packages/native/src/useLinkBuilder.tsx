@@ -14,6 +14,7 @@ import { getStateFromHref } from './getStateFromHref';
 import { LinkingContext } from './LinkingContext';
 
 type MinimalState = {
+  index: 0;
   routes: [
     {
       name: string;
@@ -54,6 +55,7 @@ export function useBuildHref() {
           : false;
 
       const stateForRoute: MinimalState = {
+        index: 0,
         routes: [{ name, params }],
       };
 
@@ -72,6 +74,7 @@ export function useBuildHref() {
 
           // Otherwise, dive into the nested state of the route
           return {
+            index: 0,
             routes: [
               {
                 ...route,

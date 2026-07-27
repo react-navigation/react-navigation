@@ -1,7 +1,6 @@
 import type {
   NavigationAction,
   NavigationState,
-  PartialState,
   Router,
   RouterConfigOptions,
 } from '@react-navigation/routers';
@@ -23,7 +22,7 @@ type Options<State extends NavigationState> = {
   router: Router<State, NavigationAction>;
   key?: string | undefined;
   getState: () => State;
-  setState: (state: State | PartialState<State>) => void;
+  setState: (state: State) => void;
   actionListeners: ChildActionListener[];
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;

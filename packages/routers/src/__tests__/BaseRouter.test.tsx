@@ -2,6 +2,7 @@ import { beforeEach, expect, jest, test } from '@jest/globals';
 
 import { BaseRouter } from '../BaseRouter';
 import * as CommonActions from '../CommonActions';
+import type { NavigationState } from '../types';
 
 jest.mock('nanoid/non-secure', () => {
   const m = { nanoid: () => String(++m.__key), __key: 0 };
@@ -24,7 +25,7 @@ const STATE = {
     { key: 'baz', name: 'baz', params: { sort: 'latest' } },
   ],
   routeNames: ['foo', 'bar', 'baz', 'qux'],
-};
+} satisfies NavigationState;
 
 test('sets params for the focused screen with SET_PARAMS', () => {
   const result = BaseRouter.getStateForAction(
@@ -307,21 +308,6 @@ test('resets state to new state with RESET', () => {
   );
 
   expect(result).toEqual({ index: 0, routes });
-});
-
-test('adds keys to routes missing keys during RESET', () => {
-  const result = BaseRouter.getStateForAction(
-    STATE,
-    CommonActions.reset({
-      ...STATE,
-      routes: [...STATE.routes, { name: 'qux' }],
-    })
-  );
-
-  expect(result).toEqual({
-    ...STATE,
-    routes: [...STATE.routes, { key: 'qux-1', name: 'qux' }],
-  });
 });
 
 test("doesn't handle RESET if routes don't match routeNames", () => {

@@ -65,6 +65,12 @@ type SwitchRouterStateMap = {
 
 type SwitchRouterType = 'tab' | 'drawer';
 
+type ResetAction = Extract<CommonNavigationAction, { type: 'RESET' }>;
+
+type SwitchRouterResetState =
+  | (NavigationState & { preloadedRouteKeys: string[] })
+  | (PartialState<NavigationState> & { preloadedRouteKeys: string[] });
+
 const TYPE_ROUTE = 'route' as const;
 
 const getRouteHistory = (
@@ -404,11 +410,11 @@ export function SwitchRouter<Type extends SwitchRouterType>({
       };
     },
 
-    getStateForAction(
+    getStateForActionInternal(
       state: State,
       action: SwitchActionType | CommonNavigationAction,
       { routeParamList, routeGetIdList }: RouterConfigOptions
-    ): State | PartialState<State> | null {
+    ) {
       switch (action.type) {
         case 'JUMP_TO':
         case 'NAVIGATE': {
@@ -639,11 +645,83 @@ export function SwitchRouter<Type extends SwitchRouterType>({
           };
         }
 
+        case 'RESET': {
+          const nextState = BaseRouter.getStateForAction(state, action);
+
+          if (nextState === null) {
+            return null;
+          }
+
+          const index = nextState.index ?? 0;
+          const preloadedRouteKeys =
+            'preloadedRouteKeys' in nextState &&
+            Array.isArray(nextState.preloadedRouteKeys)
+              ? nextState.preloadedRouteKeys.filter(
+                  (key): key is string => typeof key === 'string'
+                )
+              : [];
+
+          if (nextState.stale === false) {
+            return {
+              ...nextState,
+              index,
+              history:
+                nextState.history ??
+                getRouteHistory(
+                  nextState.routes,
+                  index,
+                  backBehavior,
+                  initialRouteName
+                ),
+              preloadedRouteKeys,
+            };
+          }
+
+          const {
+            history: _history,
+            index: _index,
+            stale: _stale,
+            type: _type,
+            ...partialState
+          } = nextState;
+
+          return {
+            ...partialState,
+            stale: true,
+            index,
+            preloadedRouteKeys,
+          } satisfies SwitchRouterResetState;
+        }
+
         default:
           return BaseRouter.getStateForAction(state, action);
       }
     },
   };
 
-  return router;
+  function getStateForAction(
+    state: State,
+    action: ResetAction,
+    options: RouterConfigOptions
+  ): SwitchRouterResetState | null;
+  function getStateForAction(
+    state: State,
+    action: SwitchActionType | Exclude<CommonNavigationAction, ResetAction>,
+    options: RouterConfigOptions
+  ): State | null;
+  function getStateForAction(
+    state: State,
+    action: SwitchActionType | CommonNavigationAction,
+    options: RouterConfigOptions
+  ): State | SwitchRouterResetState | null {
+    return router.getStateForActionInternal(state, action, options);
+  }
+
+  const { getStateForActionInternal: _getStateForActionInternal, ...rest } =
+    router;
+
+  return {
+    ...rest,
+    getStateForAction,
+  };
 }

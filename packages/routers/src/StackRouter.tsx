@@ -8,6 +8,7 @@ import type {
   DefaultRouterOptions,
   NavigationState,
   ParamListBase,
+  PartialState,
   Route,
   Router,
 } from './types';
@@ -1067,6 +1068,32 @@ export function StackRouter(options: StackRouterOptions) {
               createRouteFromAction({ action, routeParamList })
             )
           );
+        }
+
+        case 'RESET': {
+          const nextState = BaseRouter.getStateForAction(state, action);
+
+          if (nextState === null) {
+            return null;
+          }
+
+          const index = nextState.index ?? nextState.routes.length - 1;
+
+          if (nextState.stale === false) {
+            return {
+              ...state,
+              ...nextState,
+              type: state.type,
+              index,
+            };
+          }
+
+          return {
+            ...nextState,
+            stale: true,
+            type: state.type,
+            index,
+          } satisfies PartialState<StackNavigationState<ParamListBase>>;
         }
 
         default:

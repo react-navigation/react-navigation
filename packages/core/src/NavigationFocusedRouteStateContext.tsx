@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 export type FocusedRouteState = {
+  index: 0;
   routes: [
     {
       key?: string | undefined;

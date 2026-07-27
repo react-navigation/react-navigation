@@ -23,7 +23,10 @@ import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationMetaContext } from './NavigationMetaContext';
 import { NavigationRouteContext } from './NavigationProvider';
-import { NavigationStateContext } from './NavigationStateContext';
+import {
+  NavigationStateContext,
+  type NavigationStateSnapshot,
+} from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
 import { Screen } from './Screen';
 import {
@@ -66,6 +69,8 @@ const isNavigationState = (
 ): state is NavigationState | PartialState<NavigationState> =>
   state != null &&
   typeof state === 'object' &&
+  'index' in state &&
+  typeof state.index === 'number' &&
   'routes' in state &&
   Array.isArray(state.routes);
 
@@ -306,6 +311,7 @@ const getStateFromParams = (
     return state;
   } else if (typeof params?.screen === 'string' && params?.initial !== false) {
     return {
+      index: 0,
       routes: [
         {
           name: params.screen,
@@ -430,21 +436,19 @@ export function useNavigationBuilder<
   }
 
   const isStateValid = React.useCallback(
-    (state: NavigationState | PartialState<NavigationState>) =>
+    (state: NavigationStateSnapshot) =>
       state.type === undefined || state.type === router.type,
     [router.type]
   );
 
   const isStateInitialized = React.useCallback(
-    <T extends NavigationState>(
-      state: T | PartialState<T> | undefined
-    ): state is T =>
+    (state: NavigationStateSnapshot | undefined): state is State =>
       state !== undefined && state.stale === false && isStateValid(state),
     [isStateValid]
   );
 
   const doesStateHaveOnlyInvalidRoutes = React.useCallback(
-    (state: NavigationState | PartialState<NavigationState>) =>
+    (state: NavigationStateSnapshot) =>
       state.routes.every((r) => !routeNames.includes(r.name)),
     [routeNames]
   );
@@ -972,6 +976,7 @@ export function useNavigationBuilder<
       !routeNames.includes(action.payload.name)
     ) {
       const state = {
+        index: 0,
         routes: [
           {
             name: action.payload.name,

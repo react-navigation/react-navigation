@@ -4,7 +4,6 @@ import {
   getActionFromState as getActionFromStateDefault,
   getPathFromState as getPathFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
-  type InitialState,
   type NavigationContainerRef,
   type NavigationState,
   type ParamListBase,
@@ -18,8 +17,6 @@ import { createMemoryHistory } from './createMemoryHistory';
 import { ServerContext } from './server/ServerContext';
 import type { LinkingOptions } from './types';
 import type { Thenable } from './useThenable';
-
-type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
 /**
  * History delta already applied by the browser when handling `popstate`
@@ -39,9 +36,9 @@ const getRoutesUntilIndex = (state: NavigationState) =>
  */
 const getStateForPath = (
   state: NavigationState | PartialState<NavigationState>,
-  fallbackState: InitialState | undefined
-): InitialState => {
-  const index = state.index ?? state.routes.length - 1;
+  fallbackState: NavigationState | PartialState<NavigationState> | undefined
+): NavigationState | PartialState<NavigationState> => {
+  const index = state.index;
   const route = state.routes[index];
 
   if (route == null) {
@@ -71,6 +68,7 @@ const getStateForPath = (
 
   return {
     ...state,
+    stale: true,
     routes: state.routes.map((item) =>
       item === route ? { ...route, state: childState } : item
     ),
@@ -271,7 +269,7 @@ export function useLinking<ParamList extends ParamListBase>(
   });
 
   const validateRoutesNotExistInRootState = React.useCallback(
-    (state: ResultState) => {
+    (state: PartialState<NavigationState>) => {
       const navigation = ref.current;
       const rootState = navigation?.getRootState();
       // Make sure that the routes in the state exist in the root navigator
@@ -282,7 +280,7 @@ export function useLinking<ParamList extends ParamListBase>(
   );
 
   const getInitialState = React.useCallback(() => {
-    let value: ResultState | undefined;
+    let value: PartialState<NavigationState> | undefined;
 
     if (enabledRef.current) {
       const location = server
@@ -304,7 +302,7 @@ export function useLinking<ParamList extends ParamListBase>(
       }
     }
 
-    const thenable: Thenable<ResultState | undefined> = {
+    const thenable: Thenable<PartialState<NavigationState> | undefined> = {
       then(onfulfilled) {
         return Promise.resolve(onfulfilled ? onfulfilled(value) : value);
       },
@@ -468,7 +466,7 @@ export function useLinking<ParamList extends ParamListBase>(
         return;
       }
 
-      let state: ResultState | undefined;
+      let state: PartialState<NavigationState> | undefined;
 
       try {
         state = getStateFromPathRef.current(
@@ -531,14 +529,14 @@ export function useLinking<ParamList extends ParamListBase>(
 
     const getPathForRoute = (
       route: ReturnType<typeof findFocusedRoute>,
-      state: InitialState
+      state: NavigationState | PartialState<NavigationState>
     ): string => {
       let path;
 
       // If the `route` object contains a `path`, use that path as long as `route.name` and `params` still match
       // This makes sure that we preserve the original URL for wildcard routes
       if (route?.path) {
-        let stateForPath: ResultState | undefined;
+        let stateForPath: PartialState<NavigationState> | undefined;
 
         try {
           stateForPath = getStateFromPathRef.current(

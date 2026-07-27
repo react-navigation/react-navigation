@@ -76,7 +76,7 @@ test('returns the loader for a screen with UNSTABLE_loader', async () => {
   });
 });
 
-test('uses the last route as focused when state has no index', async () => {
+test('uses index to find the focused route', async () => {
   const homeFn = jest.fn(
     async (_options: { name: string; params: unknown }) => {}
   );
@@ -99,6 +99,7 @@ test('uses the last route as focused when state has no index', async () => {
   });
 
   const loader = getLoaderForState(Navigator, {
+    index: 1,
     routes: [{ name: 'Home' }, { name: 'Details' }],
   });
 

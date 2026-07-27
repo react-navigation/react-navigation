@@ -236,6 +236,7 @@ const getStateForParent = (
 
   if (childState !== undefined) {
     return {
+      index: 0,
       routes: [
         {
           ...route,
@@ -404,6 +405,7 @@ export function useLinkProps<
     const stateForParent = getStateForParent(
       parent,
       {
+        index: 0,
         routes: [
           {
             name: target.screen,

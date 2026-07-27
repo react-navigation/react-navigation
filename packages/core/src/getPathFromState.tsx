@@ -57,10 +57,7 @@ const getActiveRoute = (
     config: ConfigItem | undefined
   ) => State | undefined
 ): { name: string; params?: object | undefined } => {
-  const route =
-    typeof state.index === 'number'
-      ? state.routes[state.index]
-      : state.routes[state.routes.length - 1];
+  const route = state.routes[state.index];
 
   if (route == null) {
     throw new Error(`Couldn't find the active route.`);
@@ -181,7 +178,7 @@ export function getPathFromState<ParamList extends {}>(
   let current: State | undefined = state;
 
   while (current) {
-    let index: number = typeof current.index === 'number' ? current.index : 0;
+    let index = current.index;
 
     const initialRoute: State['routes'][number] | undefined =
       current.routes[index];
@@ -294,10 +291,7 @@ export function getPathFromState<ParamList extends {}>(
       if (!config.screens || routeState == null) {
         hasNext = false;
       } else {
-        index =
-          typeof routeState.index === 'number'
-            ? routeState.index
-            : routeState.routes.length - 1;
+        index = routeState.index;
 
         const nextRoute: State['routes'][number] | undefined =
           routeState.routes[index];

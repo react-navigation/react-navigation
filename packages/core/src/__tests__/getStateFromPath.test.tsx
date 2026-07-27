@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals';
-import type { InitialState, NavigationState } from '@react-navigation/routers';
+import type { NavigationState, PartialState } from '@react-navigation/routers';
 import { produce } from 'immer';
 import * as v from 'valibot';
 import { z } from 'zod';
@@ -8,7 +8,10 @@ import { findFocusedRoute } from '../findFocusedRoute';
 import { getPathFromState } from '../getPathFromState';
 import { getStateFromPath } from '../getStateFromPath';
 
-const changePath = <T extends InitialState>(state: T, path: string): T =>
+const changePath = <T extends PartialState<NavigationState>>(
+  state: T,
+  path: string
+): T =>
   produce(state, (draftState) => {
     const route = findFocusedRoute(draftState);
     // @ts-expect-error: immer won't mutate this
@@ -43,6 +46,7 @@ test('matches malformed encoded path against wildcard', () => {
   };
 
   const state = {
+    index: 0,
     routes: [{ name: '404', path }],
   };
 
@@ -59,6 +63,7 @@ test('matches malformed encoded first segment against wildcard', () => {
   };
 
   const state = {
+    index: 0,
     routes: [{ name: '404', path }],
   };
 
@@ -78,14 +83,17 @@ test('returns undefined for malformed encoded first segment without wildcard', (
 test('converts path string to initial state', () => {
   const path = 'foo/bar/baz%20qux?author=jane%20%26%20co&valid=true';
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'baz qux',
@@ -123,10 +131,12 @@ test('decodes encoded params in path', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
@@ -161,10 +171,12 @@ test('decodes encoded params in path that have encoded /', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
@@ -213,15 +225,18 @@ test('converts path string to initial state with config', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               params: { fruit: 'apple', type: 'sweet' },
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Baz',
@@ -252,10 +267,12 @@ test('handles leading slash when converting', () => {
   const path = '/foo/bar/?count=42';
 
   expect(getStateFromPath<object>(path)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
@@ -273,10 +290,12 @@ test('handles ending slash when converting', () => {
   const path = 'foo/bar/?count=42';
 
   expect(getStateFromPath<object>(path)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
@@ -293,10 +312,12 @@ test('handles ending slash when converting', () => {
 test('handles route without param', () => {
   const path = 'foo/bar';
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [{ name: 'bar', path }],
         },
       },
@@ -345,19 +366,23 @@ test('converts path string to initial state with config with nested screens', ()
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foe',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Bar',
                     params: { fruit: 'apple', type: 'sweet' },
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Baz',
@@ -416,14 +441,17 @@ test('converts path string to initial state with config with nested screens and 
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foe',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Baz',
@@ -493,23 +521,28 @@ test('handles nested object with unused configs and with parse in it', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Bar',
         params: { fruit: 'apple', type: 'sweet' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foo',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Foe',
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Baz',
                           state: {
+                            index: 0,
                             routes: [
                               {
                                 name: 'Bis',
@@ -569,14 +602,17 @@ test('handles parse in nested object for second route depth', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Baz', path }],
               },
             },
@@ -620,14 +656,17 @@ test('handles parse in nested object for second route depth and and path and par
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Baz', path }],
               },
             },
@@ -657,10 +696,12 @@ test('handles path at top level', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Fruits',
@@ -704,10 +745,12 @@ test('handles initialRouteName at top level', () => {
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Baz', path }],
               },
             },
@@ -742,6 +785,7 @@ test('handles initialRouteName inside a screen', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -754,6 +798,7 @@ test('handles initialRouteName inside a screen', () => {
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Baz', path }],
               },
             },
@@ -788,14 +833,17 @@ test('handles initialRouteName included in path', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foe',
               state: {
+                index: 0,
                 routes: [{ name: 'Baz', path }],
               },
             },
@@ -855,19 +903,23 @@ test('handles two initialRouteNames', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Bar',
         params: { fruit: 'apple', type: 'sweet' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foo',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Foe',
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Baz',
@@ -950,19 +1002,23 @@ test('accepts initialRouteName without config for it', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Bar',
         params: { fruit: 'apple', type: 'sweet' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Foo',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Foe',
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Baz',
@@ -1082,14 +1138,17 @@ test('returns matching screen if path is empty', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Qux', path }],
               },
             },
@@ -1124,14 +1183,17 @@ test('returns matching screen if path is only slash', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Qux', path: '' }],
               },
             },
@@ -1169,14 +1231,17 @@ test('returns matching screen with params if path is empty', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: 'Qux', params: { foo: 42 }, path }],
               },
             },
@@ -1239,6 +1304,7 @@ test('chooses more exhaustive pattern', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1284,6 +1350,7 @@ test('handles same paths beginnings', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1331,6 +1398,7 @@ test('handles same paths beginnings with params', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1386,6 +1454,7 @@ test('handles not taking path with too many segments', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1441,6 +1510,7 @@ test('handles differently ordered params v1', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1496,6 +1566,7 @@ test('handles differently ordered params v2', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1551,6 +1622,7 @@ test('handles differently ordered params v3', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1606,6 +1678,7 @@ test('handles differently ordered params v4', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1661,6 +1734,7 @@ test('handles simple optional params', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1716,6 +1790,7 @@ test('handle 2 optional params at the end v1', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1771,6 +1846,7 @@ test('handle 2 optional params at the end v2', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1827,6 +1903,7 @@ test('handle 2 optional params at the end v3', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1883,6 +1960,7 @@ test('handle optional params in the middle v1', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1939,6 +2017,7 @@ test('handle optional params in the middle v2', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -1996,6 +2075,7 @@ test('handle optional params in the middle v3', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -2053,6 +2133,7 @@ test('handle optional params in the middle v4', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -2110,6 +2191,7 @@ test('handle optional params in the middle v5', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -2167,6 +2249,7 @@ test('handle optional params in the beginning v1', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -2224,6 +2307,7 @@ test('handle optional params in the beginning v2', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foe',
@@ -2268,11 +2352,13 @@ test('merges parent patterns if needed', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         params: { bar: 42 },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Baz',
@@ -2306,10 +2392,12 @@ test('ignores extra slashes in the pattern', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
@@ -2344,6 +2432,7 @@ test('matches wildcard patterns at root', () => {
   };
 
   const state = {
+    index: 0,
     routes: [{ name: '404', path }],
   };
 
@@ -2364,10 +2453,12 @@ test('matches param and wildcard patterns after unrelated static first segments'
   };
 
   expect(getStateFromPath<object>('/bar/42', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Bar', params: { id: '42' }, path: '/bar/42' }],
   });
 
   expect(getStateFromPath<object>('/baz/42', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Dynamic',
@@ -2378,6 +2469,7 @@ test('matches param and wildcard patterns after unrelated static first segments'
   });
 
   expect(getStateFromPath<object>('/foo/42/extra', config)).toEqual({
+    index: 0,
     routes: [{ name: 'NotFound', path: '/foo/42/extra' }],
   });
 });
@@ -2400,15 +2492,18 @@ test('matches wildcard patterns at nested level', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               params: { id: '42' },
               state: {
+                index: 0,
                 routes: [{ name: '404', path }],
               },
             },
@@ -2446,14 +2541,17 @@ test('matches wildcard patterns at nested level with exact', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               state: {
+                index: 0,
                 routes: [{ name: '404', path }],
               },
             },
@@ -2489,15 +2587,18 @@ test('tries to match wildcard patterns at the end', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
               params: { id: '42' },
               state: {
+                index: 0,
                 routes: [{ name: 'Test', path }],
               },
             },
@@ -2532,10 +2633,12 @@ test('uses nearest parent wildcard match for unmatched paths', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [{ name: '404', path }],
         },
       },
@@ -2567,10 +2670,12 @@ test('matches screen with overlapping initial path and wildcard', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [{ name: 'Baz', params: { id: '42' }, path }],
         },
       },
@@ -2665,14 +2770,17 @@ test('correctly applies initialRouteName for config with similar route names', (
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'RootTabs',
         state: {
+          index: 0,
           routes: [
             {
               name: 'HomeTab',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'WeeklyEarnings',
@@ -2721,10 +2829,12 @@ test('correctly applies initialRouteName for config with similar route names v2'
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'RootTabs',
         state: {
+          index: 0,
           routes: [
             {
               name: 'EarningsTab',
@@ -2843,10 +2953,12 @@ test('encodes special characters in params', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Users',
         state: {
+          index: 0,
           routes: [
             {
               name: 'User',
@@ -2885,11 +2997,13 @@ test('resolves nested path params with same name to correct screen', () => {
   };
 
   const state = {
+    index: 0,
     routes: [
       {
         name: 'Foo',
         params: { id: '42' },
         state: {
+          index: 0,
           routes: [
             {
               name: 'Bar',
@@ -2959,6 +3073,7 @@ test('matches regexp patterns when provided', () => {
   };
 
   expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -2969,6 +3084,7 @@ test('matches regexp patterns when provided', () => {
   });
 
   expect(getStateFromPath<object>('foo/bar', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Bar',
@@ -2979,6 +3095,7 @@ test('matches regexp patterns when provided', () => {
   });
 
   expect(getStateFromPath<object>('foo/42/bar', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Baz',
@@ -2989,6 +3106,7 @@ test('matches regexp patterns when provided', () => {
   });
 
   expect(getStateFromPath<object>('foo/@bar', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Qux',
@@ -2999,6 +3117,7 @@ test('matches regexp patterns when provided', () => {
   });
 
   expect(getStateFromPath<object>('foo/@bar', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Qux',
@@ -3011,6 +3130,7 @@ test('matches regexp patterns when provided', () => {
   expect(getStateFromPath<object>('foo/42a', config)).toBeUndefined();
 
   expect(getStateFromPath<object>('foo/bar/123', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Quy',
@@ -3021,6 +3141,7 @@ test('matches regexp patterns when provided', () => {
   });
 
   expect(getStateFromPath<object>('foo/bar/test', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Quz',
@@ -3031,6 +3152,7 @@ test('matches regexp patterns when provided', () => {
   });
 
   expect(getStateFromPath<object>('foo/bar/baz', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Quu',
@@ -3040,6 +3162,7 @@ test('matches regexp patterns when provided', () => {
   });
 
   expect(getStateFromPath<object>('foo/bar/hello/world', config)).toEqual({
+    index: 0,
     routes: [{ name: 'NotFound', path: 'foo/bar/hello/world' }],
   });
 });
@@ -3062,6 +3185,7 @@ test("doesn't match pattern when standard schema validation fails", () => {
   };
 
   expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Bar',
@@ -3072,6 +3196,7 @@ test("doesn't match pattern when standard schema validation fails", () => {
   });
 
   expect(getStateFromPath<object>('foo/@test', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3104,6 +3229,7 @@ test('parses values with valibot schema and falls back on validation failure', (
   };
 
   expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3114,6 +3240,7 @@ test('parses values with valibot schema and falls back on validation failure', (
   });
 
   expect(getStateFromPath<object>('foo/x', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Bar',
@@ -3143,6 +3270,7 @@ test('falls back to next pattern when query param schema validation fails', () =
   };
 
   expect(getStateFromPath<object>('foo/42?query=bad', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Bar',
@@ -3163,6 +3291,7 @@ test("doesn't overwrite path param with same-named query param", () => {
   };
 
   expect(getStateFromPath<object>('foo/42?id=7&query=test', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3186,6 +3315,7 @@ test("doesn't use same-named query param when optional path param is missing wit
   };
 
   expect(getStateFromPath<object>('foo?query=test', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3209,6 +3339,7 @@ test("doesn't use same-named query param when optional path param is missing wit
   };
 
   expect(getStateFromPath<object>('foo?query=test', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3232,6 +3363,7 @@ test('keeps params object when optional path param is missing with optional func
   };
 
   expect(getStateFromPath<object>('foo', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3242,6 +3374,7 @@ test('keeps params object when optional path param is missing with optional func
   });
 
   expect(getStateFromPath<object>('foo?query=test', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3267,6 +3400,7 @@ test('keeps params object when optional path param is missing with optional sche
   };
 
   expect(getStateFromPath<object>('foo', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3277,6 +3411,7 @@ test('keeps params object when optional path param is missing with optional sche
   });
 
   expect(getStateFromPath<object>('foo?query=@ok', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3306,6 +3441,7 @@ test('falls back to next pattern when required query param is missing', () => {
   };
 
   expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Bar',
@@ -3316,6 +3452,7 @@ test('falls back to next pattern when required query param is missing', () => {
   });
 
   expect(getStateFromPath<object>('foo/42?query=@ok', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3345,6 +3482,7 @@ test('allows missing query param when schema is optional', () => {
   };
 
   expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3355,6 +3493,7 @@ test('allows missing query param when schema is optional', () => {
   });
 
   expect(getStateFromPath<object>('foo/42?query=@ok', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3382,6 +3521,7 @@ test('treats function query parser as optional when query param is missing', () 
   };
 
   expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3392,6 +3532,7 @@ test('treats function query parser as optional when query param is missing', () 
   });
 
   expect(getStateFromPath<object>('foo/42?query=test', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3425,6 +3566,7 @@ test('uses optional schema default for missing query param', () => {
   };
 
   expect(getStateFromPath<object>('foo/42', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3454,6 +3596,7 @@ test('uses optional schema default for missing query param with no path params',
   };
 
   expect(getStateFromPath<object>('foo', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3483,6 +3626,7 @@ test('validates ?query and ?query= through schema parsers', () => {
   };
 
   expect(getStateFromPath<object>('foo/42?query', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Bar',
@@ -3493,6 +3637,7 @@ test('validates ?query and ?query= through schema parsers', () => {
   });
 
   expect(getStateFromPath<object>('foo/42?query=', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Bar',
@@ -3503,6 +3648,7 @@ test('validates ?query and ?query= through schema parsers', () => {
   });
 
   expect(getStateFromPath<object>('foo/42?query=@ok', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3521,6 +3667,7 @@ test('keeps query string intact when it contains an extra question mark', () => 
   };
 
   expect(getStateFromPath<object>('/foo?raw=x?y=1', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3540,33 +3687,43 @@ test('matches percent-encoded static segments', () => {
   };
 
   expect(getStateFromPath<object>('/café/foo', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Foo', path: '/café/foo' }],
   });
 
   expect(getStateFromPath<object>('/caf%C3%A9/foo', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Foo', path: '/caf%C3%A9/foo' }],
   });
 
   expect(getStateFromPath<object>('/caf%c3%a9/foo', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Foo', path: '/caf%c3%a9/foo' }],
   });
 
   expect(getStateFromPath<object>('/c%61f%C3%A9/foo', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Foo', path: '/c%61f%C3%A9/foo' }],
   });
 
   expect(getStateFromPath<object>('/foo%20bar', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Bar', path: '/foo%20bar' }],
   });
 
   expect(getStateFromPath<object>('/f%6Fo%20bar', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Bar', path: '/f%6Fo%20bar' }],
   });
 
-  const path = getPathFromState<object>({ routes: [{ name: 'Foo' }] }, config);
+  const path = getPathFromState<object>(
+    { index: 0, routes: [{ name: 'Foo' }] },
+    config
+  );
 
   expect(path).toBe('/caf%C3%A9/foo');
   expect(getStateFromPath<object>(path, config)).toEqual({
+    index: 0,
     routes: [{ name: 'Foo', path: '/caf%C3%A9/foo' }],
   });
 });
@@ -3580,6 +3737,7 @@ test('matches custom param regex against the decoded value', () => {
   };
 
   expect(getStateFromPath<object>('/bar/john doe', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Bar',
@@ -3590,6 +3748,7 @@ test('matches custom param regex against the decoded value', () => {
   });
 
   expect(getStateFromPath<object>('/bar/john%20doe', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Bar',
@@ -3600,6 +3759,7 @@ test('matches custom param regex against the decoded value', () => {
   });
 
   expect(getStateFromPath<object>('/bar/%34%32', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Baz',
@@ -3612,12 +3772,13 @@ test('matches custom param regex against the decoded value', () => {
   expect(getStateFromPath<object>('/bar/john%2Fdoe42', config)).toBeUndefined();
 
   const path = getPathFromState<object>(
-    { routes: [{ name: 'Bar', params: { name: 'john doe' } }] },
+    { index: 0, routes: [{ name: 'Bar', params: { name: 'john doe' } }] },
     config
   );
 
   expect(path).toBe('/bar/john%20doe');
   expect(getStateFromPath<object>(path, config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Bar',
@@ -3647,18 +3808,22 @@ test('matches percent-encoded root path prefix', () => {
   };
 
   expect(getStateFromPath<object>('/café/foo', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Foo', path: '/café/foo' }],
   });
 
   expect(getStateFromPath<object>('/caf%C3%A9/foo', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Foo', path: '/caf%C3%A9/foo' }],
   });
 
   expect(getStateFromPath<object>('/caf%c3%a9/foo', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Foo', path: '/caf%c3%a9/foo' }],
   });
 
   expect(getStateFromPath<object>('/c%61f%C3%A9/foo', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Foo', path: '/c%61f%C3%A9/foo' }],
   });
 
@@ -3675,6 +3840,7 @@ test('parses array and null query params without parse config', () => {
   const path = '/foo?tags=a&tags=b&flag';
 
   expect(getStateFromPath<object>(path, config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3724,6 +3890,7 @@ test('passes null, string and string[] query values to schema parser', () => {
   };
 
   expect(getStateFromPath<object>('foo/42?query', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3734,6 +3901,7 @@ test('passes null, string and string[] query values to schema parser', () => {
   });
 
   expect(getStateFromPath<object>('foo/42?query=test', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3744,6 +3912,7 @@ test('passes null, string and string[] query values to schema parser', () => {
   });
 
   expect(getStateFromPath<object>('foo/42?query=a&query=b', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3771,6 +3940,7 @@ test('uses first repeated query value for function parser', () => {
   };
 
   expect(getStateFromPath<object>('foo/42?query=a&query=b', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3812,6 +3982,7 @@ test('prefers standard schema when parser is both callable and schema', () => {
   };
 
   expect(getStateFromPath<object>('foo/42?query=@ok', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3822,6 +3993,7 @@ test('prefers standard schema when parser is both callable and schema', () => {
   });
 
   expect(getStateFromPath<object>('foo/42?query=bad', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Bar',
@@ -3933,6 +4105,7 @@ test('strips null query param when function parser is configured', () => {
   };
 
   expect(getStateFromPath<object>('foo/42?query', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
@@ -3959,6 +4132,7 @@ test('strips nested navigation query params for routes with nested screens', () 
     'parent?screen=Child&params=value&initial=false&path=/child&merge=true&pop=true&state=keep&query=test';
 
   expect(getStateFromPath<object>(path, config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Parent',
@@ -3983,6 +4157,7 @@ test("doesn't strip nested navigation query params for leaf routes", () => {
     'leaf?screen=Child&params=value&initial=false&path=/child&merge=true&pop=true';
 
   expect(getStateFromPath<object>(path, config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Leaf',
@@ -4016,6 +4191,7 @@ test("doesn't strip nested navigation query params without screen", () => {
     'parent?params=value&initial=false&path=/child&merge=true&pop=true';
 
   expect(getStateFromPath<object>(path, config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Parent',
@@ -4056,6 +4232,7 @@ test('keeps reserved query params configured with parsers on routes with nested 
     'parent?screen=Child&params=value&initial=false&path=/child&merge=true&pop=true';
 
   expect(getStateFromPath<object>(path, config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Parent',
@@ -4124,6 +4301,7 @@ test('handles alias for paths', () => {
   };
 
   expect(getStateFromPath<object>('foo', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Foo', path: 'foo' }],
   });
 
@@ -4132,6 +4310,7 @@ test('handles alias for paths', () => {
   ).toBe('/foo');
 
   expect(getStateFromPath<object>('first', config)).toEqual({
+    index: 0,
     routes: [{ name: 'Foo', path: 'first' }],
   });
 
@@ -4140,10 +4319,12 @@ test('handles alias for paths', () => {
   ).toBe('/foo');
 
   expect(getStateFromPath<object>('foo/baz/@$test', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Baz',
@@ -4164,10 +4345,12 @@ test('handles alias for paths', () => {
   ).toBe('/foo/baz/$test');
 
   expect(getStateFromPath<object>('second/42', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Baz',
@@ -4188,10 +4371,12 @@ test('handles alias for paths', () => {
   ).toBe('/foo/baz/42');
 
   expect(getStateFromPath<object>('foo/third', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Baz',
@@ -4211,10 +4396,12 @@ test('handles alias for paths', () => {
   ).toBe('/foo/baz');
 
   expect(getStateFromPath<object>('foo/fourth/@$test', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Baz',
@@ -4235,10 +4422,12 @@ test('handles alias for paths', () => {
   ).toBe('/foo/baz/@test');
 
   expect(getStateFromPath<object>('foo/qux/42', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'Qux',
@@ -4305,10 +4494,12 @@ test('resolves shared paths to the initial tab or current tab', () => {
   };
 
   expect(getStateFromPath<object>('/profile/123', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Tabs',
         state: {
+          index: 0,
           routes: [
             {
               name: 'HomeTab',
@@ -4369,6 +4560,7 @@ test('resolves shared paths to the initial tab or current tab', () => {
   const state = getStateFromPath<object>('/profile/123', config, previous);
 
   expect(state).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Tabs',
@@ -4437,10 +4629,12 @@ test('uses parse config from the selected shared screen', () => {
   };
 
   expect(getStateFromPath<object>('/profile/123', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Tabs',
         state: {
+          index: 0,
           routes: [
             {
               name: 'HomeTab',
@@ -4499,6 +4693,7 @@ test('uses parse config from the selected shared screen', () => {
   };
 
   expect(getStateFromPath<object>('/profile/123', config, previous)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Tabs',
@@ -4589,10 +4784,12 @@ test("uses the initial tab for shared paths when the current tab doesn't contain
   };
 
   expect(getStateFromPath<object>('/profile/123', config, previous)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Tabs',
         state: {
+          index: 0,
           routes: [
             {
               name: 'HomeTab',
@@ -4642,14 +4839,17 @@ test('uses the first shared screen in the config when no tab is preferred', () =
   };
 
   expect(getStateFromPath<object>('/profile/123', config)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Tabs',
         state: {
+          index: 0,
           routes: [
             {
               name: 'HomeTab',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Profile',
@@ -4754,6 +4954,7 @@ test('resolves nested shared paths in the current tab', () => {
   expect(
     getStateFromPath<object>('/post/9/comments', config, previous)
   ).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Tabs',
@@ -4771,6 +4972,7 @@ test('resolves nested shared paths in the current tab', () => {
                     name: 'Post',
                     params: { id: '9' },
                     state: {
+                      index: 0,
                       routes: [
                         {
                           name: 'Comments',
@@ -4839,6 +5041,7 @@ test('resolves shared alias paths in the current tab', () => {
   };
 
   expect(getStateFromPath<object>('/u/123', config, previous)).toEqual({
+    index: 0,
     routes: [
       {
         name: 'Tabs',
@@ -4849,6 +5052,7 @@ test('resolves shared alias paths in the current tab', () => {
             {
               name: 'SearchTab',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Profile',

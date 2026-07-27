@@ -528,6 +528,7 @@ test('navigates to nested state again with the same params object', async () => 
 
   const params: NavigatorScreenParams<TabParamList> = {
     state: {
+      index: 0,
       routes: [{ name: 'Second', params: { id: '42' } }],
     },
   };

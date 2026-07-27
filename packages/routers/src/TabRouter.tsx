@@ -92,6 +92,51 @@ export function TabRouter(
       };
     },
 
+    getStateForAction(state, action, options) {
+      if (action.type === 'RESET') {
+        const result = router.getStateForAction(state, action, options);
+
+        if (result === null) {
+          return null;
+        }
+
+        const history = (
+          action.payload.history === undefined
+            ? (result.history ?? [])
+            : (action.payload.history ?? [])
+        ).filter(
+          (
+            item
+          ): item is TabNavigationState<ParamListBase>['history'][number] => {
+            if (
+              typeof item !== 'object' ||
+              item === null ||
+              !('type' in item) ||
+              item.type !== 'route'
+            ) {
+              return false;
+            }
+
+            return (
+              'key' in item &&
+              typeof item.key === 'string' &&
+              (!('params' in item) ||
+                item.params === undefined ||
+                (typeof item.params === 'object' && item.params !== null))
+            );
+          }
+        );
+
+        return {
+          ...result,
+          type: 'tab',
+          history,
+        };
+      }
+
+      return router.getStateForAction(state, action, options);
+    },
+
     actionCreators: TabActions,
   };
 }

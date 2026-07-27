@@ -55,13 +55,13 @@ test('gets focused route state at root', async () => {
     bar
   </Text>
   <Text>
-    {"routes":[{"key":"bar","name":"bar"}]}
+    {"index":0,"routes":[{"key":"bar","name":"bar"}]}
   </Text>
   <Text>
     xux
   </Text>
   <Text>
-    {"routes":[{"key":"xux","name":"xux"}]}
+    {"index":0,"routes":[{"key":"xux","name":"xux"}]}
   </Text>
 </>
 `);
@@ -74,13 +74,13 @@ test('gets focused route state at root', async () => {
     bar
   </Text>
   <Text>
-    {"routes":[{"key":"bar","name":"bar"}]}
+    {"index":0,"routes":[{"key":"bar","name":"bar"}]}
   </Text>
   <Text>
     xux
   </Text>
   <Text>
-    {"routes":[{"key":"xux","name":"xux"}]}
+    {"index":0,"routes":[{"key":"xux","name":"xux"}]}
   </Text>
 </>
 `);
@@ -136,19 +136,19 @@ test('gets focused route state in nested navigator', async () => {
     bar-a
   </Text>
   <Text>
-    {"routes":[{"key":"bar","name":"bar","state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
+    {"index":0,"routes":[{"key":"bar","name":"bar","state":{"index":0,"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
   </Text>
   <Text>
     bar-b
   </Text>
   <Text>
-    {"routes":[{"key":"bar","name":"bar","state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
+    {"index":0,"routes":[{"key":"bar","name":"bar","state":{"index":0,"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
   </Text>
   <Text>
     xux
   </Text>
   <Text>
-    {"routes":[{"key":"xux","name":"xux"}]}
+    {"index":0,"routes":[{"key":"xux","name":"xux"}]}
   </Text>
 </>
 `);
@@ -161,19 +161,19 @@ test('gets focused route state in nested navigator', async () => {
     bar-a
   </Text>
   <Text>
-    {"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
+    {"index":0,"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"index":0,"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
   </Text>
   <Text>
     bar-b
   </Text>
   <Text>
-    {"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
+    {"index":0,"routes":[{"key":"bar","name":"bar","params":{"answer":42},"state":{"index":0,"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
   </Text>
   <Text>
     xux
   </Text>
   <Text>
-    {"routes":[{"key":"xux","name":"xux"}]}
+    {"index":0,"routes":[{"key":"xux","name":"xux"}]}
   </Text>
 </>
 `);
@@ -186,19 +186,19 @@ test('gets focused route state in nested navigator', async () => {
     bar-a
   </Text>
   <Text>
-    {"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
+    {"index":0,"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"index":0,"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
   </Text>
   <Text>
     bar-b
   </Text>
   <Text>
-    {"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
+    {"index":0,"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"index":0,"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
   </Text>
   <Text>
     xux
   </Text>
   <Text>
-    {"routes":[{"key":"xux","name":"xux"}]}
+    {"index":0,"routes":[{"key":"xux","name":"xux"}]}
   </Text>
 </>
 `);
@@ -211,19 +211,19 @@ test('gets focused route state in nested navigator', async () => {
     bar-a
   </Text>
   <Text>
-    {"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
+    {"index":0,"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"index":0,"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
   </Text>
   <Text>
     bar-b
   </Text>
   <Text>
-    {"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
+    {"index":0,"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"index":0,"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
   </Text>
   <Text>
     xux
   </Text>
   <Text>
-    {"routes":[{"key":"xux","name":"xux"}]}
+    {"index":0,"routes":[{"key":"xux","name":"xux"}]}
   </Text>
 </>
 `);
@@ -236,19 +236,19 @@ test('gets focused route state in nested navigator', async () => {
     bar-a
   </Text>
   <Text>
-    {"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
+    {"index":0,"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"index":0,"routes":[{"key":"bar-a","name":"bar-a"}]}}]}
   </Text>
   <Text>
     bar-b
   </Text>
   <Text>
-    {"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
+    {"index":0,"routes":[{"key":"bar","name":"bar","params":{"answer":42,"screen":"bar-b"},"state":{"index":0,"routes":[{"key":"bar-b","name":"bar-b"}]}}]}
   </Text>
   <Text>
     xux
   </Text>
   <Text>
-    {"routes":[{"key":"xux","name":"xux","params":{"fruit":"apple"}}]}
+    {"index":0,"routes":[{"key":"xux","name":"xux","params":{"fruit":"apple"}}]}
   </Text>
 </>
 `);

@@ -4,15 +4,18 @@ import { getActionFromState } from '../getActionFromState';
 
 test('gets navigate action from state', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               params: { answer: 42 },
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'qux',
@@ -53,6 +56,7 @@ test('gets navigate action from state', () => {
 
 test('gets navigate action from state for top-level screen', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
@@ -74,15 +78,18 @@ test('gets navigate action from state for top-level screen', () => {
 
 test('gets reset action from state with 1 route with key at root', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         key: 'test',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               state: {
+                index: 0,
                 routes: [
                   {
                     key: 'test',
@@ -101,15 +108,18 @@ test('gets reset action from state with 1 route with key at root', () => {
 
   expect(getActionFromState(state)).toEqual({
     payload: {
+      index: 0,
       routes: [
         {
           key: 'test',
           name: 'foo',
           state: {
+            index: 0,
             routes: [
               {
                 name: 'bar',
                 state: {
+                  index: 0,
                   routes: [
                     {
                       key: 'test',
@@ -131,6 +141,7 @@ test('gets reset action from state with 1 route with key at root', () => {
 
 test('gets reset action from state for top-level screen with 2 screens', () => {
   const state = {
+    index: 1,
     routes: [
       {
         name: 'foo',
@@ -146,6 +157,7 @@ test('gets reset action from state for top-level screen with 2 screens', () => {
 
   expect(getActionFromState(state)).toEqual({
     payload: {
+      index: 1,
       routes: [
         {
           name: 'foo',
@@ -164,6 +176,7 @@ test('gets reset action from state for top-level screen with 2 screens', () => {
 
 test('gets reset action from state for top-level screen with more than 2 screens with config', () => {
   const state = {
+    index: 2,
     routes: [
       {
         name: 'foo',
@@ -186,6 +199,7 @@ test('gets reset action from state for top-level screen with more than 2 screens
 
   expect(getActionFromState(state, config)).toEqual({
     payload: {
+      index: 2,
       routes: [
         {
           name: 'foo',
@@ -204,6 +218,7 @@ test('gets reset action from state for top-level screen with more than 2 screens
 
 test('gets reset action from state for top-level screen with 2 screens with config', () => {
   const state = {
+    index: 1,
     routes: [
       {
         name: 'foo',
@@ -227,6 +242,7 @@ test('gets reset action from state for top-level screen with 2 screens with conf
 
   expect(getActionFromState(state, config)).toEqual({
     payload: {
+      index: 1,
       routes: [
         {
           name: 'foo',
@@ -246,6 +262,7 @@ test('gets reset action from state for top-level screen with 2 screens with conf
 
 test('gets navigate action from state for top-level screen with 2 screens with config', () => {
   const state = {
+    index: 1,
     routes: [
       {
         name: 'foo',
@@ -312,14 +329,17 @@ test('gets navigate action from state for top-level screen with more than 2 scre
 
 test('gets navigate action from state with 2 screens', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               state: {
+                index: 1,
                 routes: [
                   {
                     name: 'qux',
@@ -344,6 +364,7 @@ test('gets navigate action from state with 2 screens', () => {
         pop: true,
         params: {
           state: {
+            index: 1,
             routes: [
               {
                 name: 'qux',
@@ -364,10 +385,12 @@ test('gets navigate action from state with 2 screens', () => {
 
 test('gets navigate action from state with 2 screens with lower index', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
@@ -413,14 +436,17 @@ test('gets navigate action from state with 2 screens with lower index', () => {
 
 test('gets navigate action from state with more than 2 screens', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               state: {
+                index: 2,
                 routes: [
                   {
                     name: 'qux',
@@ -446,6 +472,7 @@ test('gets navigate action from state with more than 2 screens', () => {
         pop: true,
         params: {
           state: {
+            index: 2,
             routes: [
               {
                 name: 'qux',
@@ -467,15 +494,18 @@ test('gets navigate action from state with more than 2 screens', () => {
 
 test('gets navigate action from state with config', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               params: { answer: 42 },
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'qux',
@@ -529,6 +559,7 @@ test('gets navigate action from state with config', () => {
 
 test('gets navigate action from state for top-level screen with config', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
@@ -562,14 +593,17 @@ test('gets navigate action from state for top-level screen with config', () => {
 
 test('gets navigate action from state with 2 screens including initial route and with config', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               state: {
+                index: 1,
                 routes: [
                   {
                     name: 'qux',
@@ -619,14 +653,17 @@ test('gets navigate action from state with 2 screens including initial route and
 
 test('gets navigate action from state with 2 screens without initial route and with config', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               state: {
+                index: 1,
                 routes: [
                   {
                     name: 'qux',
@@ -664,6 +701,7 @@ test('gets navigate action from state with 2 screens without initial route and w
         pop: true,
         params: {
           state: {
+            index: 1,
             routes: [
               {
                 name: 'qux',
@@ -684,14 +722,17 @@ test('gets navigate action from state with 2 screens without initial route and w
 
 test('gets navigate action from state with 2 screens including route with key on initial route and with config', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               state: {
+                index: 1,
                 routes: [
                   {
                     key: 'test',
@@ -730,6 +771,7 @@ test('gets navigate action from state with 2 screens including route with key on
         pop: true,
         params: {
           state: {
+            index: 1,
             routes: [
               {
                 key: 'test',
@@ -751,14 +793,17 @@ test('gets navigate action from state with 2 screens including route with key on
 
 test('gets navigate action from state with 2 screens including route with key on 2nd route and with config', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               state: {
+                index: 1,
                 routes: [
                   {
                     name: 'qux',
@@ -799,6 +844,7 @@ test('gets navigate action from state with 2 screens including route with key on
         pop: true,
         params: {
           state: {
+            index: 1,
             routes: [
               {
                 name: 'qux',
@@ -822,14 +868,17 @@ test('gets navigate action from state with 2 screens including route with key on
 
 test('gets navigate action from state with more than 2 screens and with config', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               state: {
+                index: 2,
                 routes: [
                   {
                     name: 'qux',
@@ -868,6 +917,7 @@ test('gets navigate action from state with more than 2 screens and with config',
         pop: true,
         params: {
           state: {
+            index: 2,
             routes: [
               {
                 name: 'qux',
@@ -889,10 +939,12 @@ test('gets navigate action from state with more than 2 screens and with config',
 
 test('gets navigate action from state with more than 2 screens with lower index', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
@@ -951,19 +1003,22 @@ test('gets navigate action from state with more than 2 screens with lower index'
 });
 
 test("doesn't return action if no routes are provided'", () => {
-  expect(getActionFromState({ routes: [] })).toBeUndefined();
+  expect(getActionFromState({ index: 0, routes: [] })).toBeUndefined();
 });
 
 test('gets undefined action from state', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               state: {
+                index: 0,
                 routes: [],
               },
             },
@@ -974,11 +1029,12 @@ test('gets undefined action from state', () => {
   };
 
   expect(getActionFromState(state)).toBeUndefined();
-  expect(getActionFromState({ routes: [] })).toBeUndefined();
+  expect(getActionFromState({ index: 0, routes: [] })).toBeUndefined();
 });
 
 test('gets navigate action with pop if config has nested screens at top level', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
@@ -1014,14 +1070,17 @@ test('gets navigate action with pop if config has nested screens at top level', 
 
 test('gets navigate action with pop if config has nested screens at nested level', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'foo',
         state: {
+          index: 0,
           routes: [
             {
               name: 'bar',
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'qux',
@@ -1075,6 +1134,7 @@ test('gets navigate action with pop if config has nested screens at nested level
 
 test('gets navigate action for a screen after the initial screen', () => {
   const state = {
+    index: 0,
     routes: [
       {
         name: 'HomeBranch',
@@ -1200,6 +1260,7 @@ test('gets navigate action for a child screen in the current top-level route', (
               name: 'Post',
               params: { id: '9' },
               state: {
+                index: 0,
                 routes: [
                   {
                     name: 'Comments',

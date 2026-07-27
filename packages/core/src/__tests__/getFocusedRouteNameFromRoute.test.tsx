@@ -13,6 +13,7 @@ test('gets focused route name from nested state', () => {
       name: 'Home',
       // @ts-expect-error: this isn't in the type defs
       state: {
+        index: 0,
         routes: [{ name: 'Article' }],
       },
     })
@@ -34,6 +35,7 @@ test('gets focused route name from nested state', () => {
       name: 'Home',
       // @ts-expect-error: this isn't in the type defs
       state: {
+        index: 1,
         routes: [{ name: 'Article' }, { name: 'Chat' }],
       },
     })
@@ -45,6 +47,7 @@ test('gets focused route name from nested state', () => {
       // @ts-expect-error: this isn't in the type defs
       state: {
         type: 'tab',
+        index: 0,
         routes: [{ name: 'Article' }, { name: 'Chat' }],
       },
     })
@@ -57,6 +60,7 @@ test('gets focused route name from nested state with symbol', () => {
       name: 'Home',
       // @ts-expect-error: this isn't in the type defs
       [CHILD_STATE]: {
+        index: 0,
         routes: [{ name: 'Article' }],
       },
     })
@@ -78,6 +82,7 @@ test('gets focused route name from nested state with symbol', () => {
       name: 'Home',
       // @ts-expect-error: this isn't in the type defs
       [CHILD_STATE]: {
+        index: 1,
         routes: [{ name: 'Article' }, { name: 'Chat' }],
       },
     })
@@ -89,6 +94,7 @@ test('gets focused route name from nested state with symbol', () => {
       // @ts-expect-error: this isn't in the type defs
       [CHILD_STATE]: {
         type: 'tab',
+        index: 0,
         routes: [{ name: 'Article' }, { name: 'Chat' }],
       },
     })

@@ -713,6 +713,7 @@ test("doesn't reset state when URL parses to routes not in root navigator", asyn
   const linking = {
     getStateFromPath() {
       return {
+        index: 0,
         routes: [{ name: 'Missing' }],
       };
     },
@@ -1693,6 +1694,7 @@ test('pushes browser history entry when navigating after popstate with an unhand
     ) {
       if (path.includes('missing')) {
         return {
+          index: 0,
           routes: [{ name: 'Missing' }],
         };
       }

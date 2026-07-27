@@ -15,6 +15,7 @@ test('returns no duplicates when nested route names are unique', () => {
         key: 'home-1',
         name: 'Home',
         state: {
+          index: 0,
           routeNames: ['Feed', 'Profile'],
           routes: [{ name: 'Feed' }, { name: 'Profile' }],
         },
@@ -37,6 +38,7 @@ test('detects a nested navigator reusing its parent route name', () => {
         key: 'home-1',
         name: 'Home',
         state: {
+          index: 0,
           routeNames: ['Home', 'Settings'],
           routes: [{ name: 'Home' }, { name: 'Settings' }],
         },
@@ -59,11 +61,13 @@ test('reports the full location path for deeply nested duplicates', () => {
         key: 'root-1',
         name: 'Root',
         state: {
+          index: 0,
           routeNames: ['Profile'],
           routes: [
             {
               name: 'Profile',
               state: {
+                index: 0,
                 routeNames: ['Profile'],
                 routes: [{ name: 'Profile' }],
               },

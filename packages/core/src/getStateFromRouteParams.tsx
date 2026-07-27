@@ -1,5 +1,22 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 
+const isNavigationState = (
+  state: unknown
+): state is PartialState<NavigationState> | NavigationState =>
+  state != null &&
+  typeof state === 'object' &&
+  'index' in state &&
+  typeof state.index === 'number' &&
+  'routes' in state &&
+  Array.isArray(state.routes) &&
+  state.routes.every(
+    (route) =>
+      typeof route === 'object' &&
+      route != null &&
+      'name' in route &&
+      typeof route.name === 'string'
+  );
+
 export function getStateFromRouteParams(
   params: object | undefined
 ): PartialState<NavigationState> | NavigationState | undefined {
@@ -7,21 +24,7 @@ export function getStateFromRouteParams(
     return undefined;
   }
 
-  if (
-    'state' in params &&
-    params.state &&
-    typeof params.state === 'object' &&
-    'routes' in params.state &&
-    Array.isArray(params.state.routes) &&
-    params.state.routes.every(
-      (route) =>
-        typeof route === 'object' &&
-        route != null &&
-        'name' in route &&
-        typeof route.name === 'string'
-    )
-  ) {
-    // @ts-expect-error this is fine 🔥
+  if ('state' in params && isNavigationState(params.state)) {
     return params.state;
   }
 
@@ -31,6 +34,7 @@ export function getStateFromRouteParams(
     typeof params.screen === 'string'
   ) {
     return {
+      index: 0,
       routes: [
         {
           name: params.screen,
@@ -44,7 +48,6 @@ export function getStateFromRouteParams(
             'path' in params && typeof params.path === 'string'
               ? params.path
               : undefined,
-          // @ts-expect-error this is fine 🔥
           state:
             'params' in params &&
             typeof params.params === 'object' &&

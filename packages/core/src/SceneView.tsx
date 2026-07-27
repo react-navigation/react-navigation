@@ -110,6 +110,7 @@ export function SceneView<
 
   const focusedRouteState = React.useMemo(() => {
     const state: FocusedRouteState = {
+      index: 0,
       routes: [
         {
           key: route.key,
@@ -128,6 +129,7 @@ export function SceneView<
 
       if (parentRoute) {
         return {
+          index: 0,
           routes: [
             {
               ...parentRoute,

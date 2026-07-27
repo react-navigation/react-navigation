@@ -202,6 +202,19 @@ export function MockRouter(options: DefaultRouterOptions) {
           };
         }
 
+        case 'RESET': {
+          const resetState = BaseRouter.getStateForAction(state, action);
+
+          if (resetState === null) {
+            return null;
+          }
+
+          return {
+            ...resetState,
+            index: resetState.index ?? 0,
+          };
+        }
+
         default:
           return BaseRouter.getStateForAction(state, action);
       }

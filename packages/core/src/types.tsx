@@ -1,10 +1,10 @@
 import type {
   DefaultRouterOptions,
-  InitialState,
   NavigationAction,
   NavigationState,
   ParamListBase,
   PartialState,
+  ResetState,
   Route,
   Router,
 } from '@react-navigation/routers';
@@ -394,7 +394,7 @@ type NavigationHelpersCommon<
    *
    * @param state Navigation state object.
    */
-  reset(state: PartialState<State> | State): void;
+  reset(state: ResetState<State>): void;
 
   /**
    * Go back to the previous route in history.
@@ -475,6 +475,14 @@ export type NavigationHelpers<
   EventEmitter<EventMap> &
   NavigationHelpersRoute<ParamList, keyof ParamList> &
   PrivateValueStore<[ParamList, unknown, unknown, unknown]>;
+
+export type InitialState = Readonly<
+  Partial<Omit<NavigationState, 'stale' | 'routes'>> & {
+    routes: (Omit<Route<string>, 'key'> & {
+      state?: InitialState | undefined;
+    })[];
+  }
+>;
 
 export type NavigationContainerProps = {
   /**
