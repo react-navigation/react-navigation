@@ -55,6 +55,7 @@ function DrawerViewBase({
   drawerContent = renderDrawerContentDefault,
 }: Props) {
   const { direction } = useLocale();
+  const isRTL = direction === 'rtl';
 
   const focusedRoute = state.routes[state.index];
 
@@ -239,7 +240,6 @@ function DrawerViewBase({
             // Don't render a lazy screen if we've never navigated to it or it wasn't preloaded
             return null;
           }
-
           const {
             inactiveBehavior = 'pause',
             header = ({ options }: DrawerHeaderProps) => (
@@ -247,12 +247,16 @@ function DrawerViewBase({
                 {...options}
                 title={getHeaderTitle(options, route.name)}
                 headerLeft={
-                  drawerPosition === 'left' && options.headerLeft == null
+                  ((isRTL && drawerPosition === 'right') ||
+                    (!isRTL && drawerPosition === 'left')) &&
+                  options.headerLeft == null
                     ? (props) => <DrawerToggleButton {...props} />
                     : options.headerLeft
                 }
                 headerRight={
-                  drawerPosition === 'right' && options.headerRight == null
+                  ((!isRTL && drawerPosition === 'right') ||
+                    (isRTL && drawerPosition === 'left')) &&
+                  options.headerRight == null
                     ? (props) => <DrawerToggleButton {...props} />
                     : options.headerRight
                 }
