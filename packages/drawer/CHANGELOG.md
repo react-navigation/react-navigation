@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.47](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.46...@react-navigation/drawer@8.0.0-alpha.47) (2026-07-27)
+
+### Bug Fixes
+
+* improve useNavigationState with concurrent rendering ([#13196](https://github.com/react-navigation/react-navigation/issues/13196)) ([2799698](https://github.com/react-navigation/react-navigation/commit/2799698af35962cbd1a67cd9e3a038805035adab)) - by @satya164
+
 # [8.0.0-alpha.46](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@8.0.0-alpha.45...@react-navigation/drawer@8.0.0-alpha.46) (2026-07-22)
 
 **Note:** Version bump only for package @react-navigation/drawer

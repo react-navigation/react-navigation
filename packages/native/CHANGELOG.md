@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.40](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.39...@react-navigation/native@8.0.0-alpha.40) (2026-07-27)
+
+### Bug Fixes
+
+* ensure resetRoot always resets the root navigator's state ([423482f](https://github.com/react-navigation/react-navigation/commit/423482f8f0042dedebdeebf1b53c91089ad0f814)) - by @satya164
+* improve useNavigationState with concurrent rendering ([#13196](https://github.com/react-navigation/react-navigation/issues/13196)) ([2799698](https://github.com/react-navigation/react-navigation/commit/2799698af35962cbd1a67cd9e3a038805035adab)) - by @satya164
+
+### Features
+
+* make native package work without react-native-web ([#13195](https://github.com/react-navigation/react-navigation/issues/13195)) ([abc56cc](https://github.com/react-navigation/react-navigation/commit/abc56ccfbd9b6fba5656ef5c108a88753ebf2eb9)) - by @satya164
+* support custom asset-catalog symbols in SFSymbol ([#13167](https://github.com/react-navigation/react-navigation/issues/13167)) ([6044a79](https://github.com/react-navigation/react-navigation/commit/6044a793d97d8dad5bfaedc58b8e543b36910a42)) - by @stachbial
+
 # [8.0.0-alpha.39](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.38...@react-navigation/native@8.0.0-alpha.39) (2026-07-22)
 
 **Note:** Version bump only for package @react-navigation/native

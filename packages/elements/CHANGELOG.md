@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.44](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.43...@react-navigation/elements@3.0.0-alpha.44) (2026-07-27)
+
+### Bug Fixes
+
+* improve useNavigationState with concurrent rendering ([#13196](https://github.com/react-navigation/react-navigation/issues/13196)) ([2799698](https://github.com/react-navigation/react-navigation/commit/2799698af35962cbd1a67cd9e3a038805035adab)) - by @satya164
+* keep button focusable while loading ([e617cd2](https://github.com/react-navigation/react-navigation/commit/e617cd23944247da3fa5e7b2827d662d6c8b9874)) - by @satya164
+
 # [3.0.0-alpha.43](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.42...@react-navigation/elements@3.0.0-alpha.43) (2026-07-22)
 
 **Note:** Version bump only for package @react-navigation/elements

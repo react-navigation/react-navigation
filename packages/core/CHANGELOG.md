@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.31](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.30...@react-navigation/core@8.0.0-alpha.31) (2026-07-27)
+
+### Bug Fixes
+
+* ensure resetRoot always resets the root navigator's state ([423482f](https://github.com/react-navigation/react-navigation/commit/423482f8f0042dedebdeebf1b53c91089ad0f814)) - by @satya164
+* improve useNavigationState with concurrent rendering ([#13196](https://github.com/react-navigation/react-navigation/issues/13196)) ([2799698](https://github.com/react-navigation/react-navigation/commit/2799698af35962cbd1a67cd9e3a038805035adab)) - by @satya164
+
 # [8.0.0-alpha.30](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.29...@react-navigation/core@8.0.0-alpha.30) (2026-07-22)
 
 ### Bug Fixes
