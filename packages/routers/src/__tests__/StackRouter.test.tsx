@@ -178,6 +178,31 @@ test('gets rehydrated state from partial state', () => {
   });
 });
 
+test("falls back to first route when rehydrating if initial route isn't present", () => {
+  const router = StackRouter({ initialRouteName: 'foo' });
+
+  expect(
+    router.getRehydratedState(
+      {
+        routes: [{ name: 'unknown' }],
+      },
+      {
+        routeNames: ['bar', 'baz'],
+        routeParamList: {},
+        routeGetIdList: {},
+      }
+    )
+  ).toEqual({
+    index: 0,
+    key: 'stack-2',
+    retainedRouteKeys: [],
+    routeNames: ['bar', 'baz'],
+    routes: [{ key: 'bar-1', name: 'bar' }],
+    stale: false,
+    type: 'stack',
+  });
+});
+
 test("doesn't rehydrate state if it's not stale", () => {
   const router = StackRouter({});
 
@@ -680,6 +705,94 @@ test('moves retained routes to inactive routes on route focus', () => {
       { key: 'qux', name: 'qux' },
     ],
   });
+});
+
+test('focuses retained route', () => {
+  const router = StackRouter({});
+
+  expect(
+    router.getStateForRouteFocus(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        retainedRouteKeys: ['bar'],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+          { key: 'qux', name: 'qux' },
+        ],
+      },
+      'bar'
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    retainedRouteKeys: ['bar'],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+      { key: 'qux', name: 'qux' },
+    ],
+  });
+});
+
+test('focuses preloaded route', () => {
+  const router = StackRouter({});
+
+  expect(
+    router.getStateForRouteFocus(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        retainedRouteKeys: ['bar'],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          { key: 'bar', name: 'bar' },
+          { key: 'qux', name: 'qux' },
+        ],
+      },
+      'qux'
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 1,
+    retainedRouteKeys: ['bar'],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'qux', name: 'qux' },
+      { key: 'bar', name: 'bar' },
+    ],
+  });
+});
+
+test('ignores unknown route on route focus', () => {
+  const router = StackRouter({});
+  const state = {
+    stale: false as const,
+    type: 'stack' as const,
+    key: 'root',
+    index: 0,
+    retainedRouteKeys: [],
+    routeNames: ['baz', 'bar'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      { key: 'bar', name: 'bar' },
+    ],
+  };
+
+  expect(router.getStateForRouteFocus(state, 'qux')).toBe(state);
 });
 
 test('handles navigate action', () => {
@@ -4426,6 +4539,58 @@ test('adds preloaded route with preload when the ID changes', () => {
       },
       { key: 'baz', name: 'baz' },
       { key: 'bar-1', name: 'bar', params: { answer: 43, color: 'test' } },
+    ],
+  });
+});
+
+test('adds a preloaded route without an ID when an existing route has an ID', () => {
+  const router = StackRouter({});
+  const options: RouterConfigOptions = {
+    routeNames: ['baz', 'bar', 'qux'],
+    routeParamList: {},
+    routeGetIdList: {
+      bar: ({ params }) => params?.id,
+    },
+  };
+
+  expect(
+    router.getStateForAction(
+      {
+        stale: false,
+        type: 'stack',
+        key: 'root',
+        index: 0,
+        retainedRouteKeys: [],
+        routeNames: ['baz', 'bar', 'qux'],
+        routes: [
+          { key: 'baz', name: 'baz' },
+          {
+            key: 'bar-existing',
+            name: 'bar',
+            params: { id: '1', value: 'first' },
+          },
+          { key: 'qux-preloaded', name: 'qux' },
+        ],
+      },
+      CommonActions.preload('bar'),
+      options
+    )
+  ).toEqual({
+    stale: false,
+    type: 'stack',
+    key: 'root',
+    index: 0,
+    retainedRouteKeys: [],
+    routeNames: ['baz', 'bar', 'qux'],
+    routes: [
+      { key: 'baz', name: 'baz' },
+      {
+        key: 'bar-existing',
+        name: 'bar',
+        params: { id: '1', value: 'first' },
+      },
+      { key: 'qux-preloaded', name: 'qux' },
+      { key: 'bar-1', name: 'bar', params: undefined },
     ],
   });
 });

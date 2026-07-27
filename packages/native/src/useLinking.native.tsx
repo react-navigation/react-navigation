@@ -4,6 +4,7 @@ import {
   type NavigationContainerRef,
   type NavigationState,
   type ParamListBase,
+  type PartialState,
   useNavigationIndependentTree,
 } from '@react-navigation/core';
 import * as React from 'react';
@@ -12,8 +13,6 @@ import { Linking, Platform } from 'react-native';
 import { getStateFromHref } from './getStateFromHref';
 import type { LinkingOptions } from './types';
 import type { Thenable } from './useThenable';
-
-type ResultState = ReturnType<typeof getStateFromPathDefault>;
 
 const linkingHandlers = new Set<symbol>();
 
@@ -140,7 +139,7 @@ export function useLinking<ParamList extends ParamListBase>(
   );
 
   const getInitialState = React.useCallback(() => {
-    let state: ResultState | undefined;
+    let state: PartialState<NavigationState> | undefined;
 
     if (enabledRef.current) {
       const url = getInitialURLRef.current();
@@ -158,8 +157,10 @@ export function useLinking<ParamList extends ParamListBase>(
       state = getStateFromURL(url, undefined);
     }
 
-    const thenable: Thenable<ResultState | undefined> = {
-      then(onfulfilled?: (state: ResultState | undefined) => void) {
+    const thenable: Thenable<PartialState<NavigationState> | undefined> = {
+      then(
+        onfulfilled?: (state: PartialState<NavigationState> | undefined) => void
+      ) {
         return Promise.resolve(onfulfilled ? onfulfilled(state) : state);
       },
     };

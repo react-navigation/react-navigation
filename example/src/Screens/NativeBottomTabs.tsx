@@ -1,4 +1,4 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import {
   createBottomTabNavigator,
   createBottomTabScreen,
@@ -110,7 +110,7 @@ const NativeBottomTabsNavigator = createBottomTabNavigator({
         title: 'Article',
         headerRight: ({ tintColor }) => (
           <HeaderButton onPress={() => Alert.alert('Favorite button pressed')}>
-            <MaterialCommunityIcons
+            <MaterialDesignIcons
               name="heart-outline"
               size={24}
               color={tintColor}

@@ -104,7 +104,7 @@ export function Drawer({
     [hideStatusBarOnOpen, statusBarAnimation]
   );
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     hideStatusBar(isOpen);
 
     return () => hideStatusBar(false);
@@ -285,7 +285,7 @@ export function Drawer({
     ]
   );
 
-  React.useEffect(() => {
+  React.useLayoutEffect(() => {
     toggleDrawer(open);
   }, [animatingTo, open, toggleDrawer]);
 

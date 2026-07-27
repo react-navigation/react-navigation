@@ -44,7 +44,6 @@ export function getStateFromRouteParams(
             'path' in params && typeof params.path === 'string'
               ? params.path
               : undefined,
-          // @ts-expect-error this is fine 🔥
           state:
             'params' in params &&
             typeof params.params === 'object' &&

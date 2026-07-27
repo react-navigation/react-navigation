@@ -11,6 +11,10 @@ export { getFocusedRouteNameFromRoute } from './getFocusedRouteNameFromRoute';
 export { getPathFromState } from './getPathFromState';
 export { getStateFromPath } from './getStateFromPath';
 export { NavigationContainerRefContext } from './NavigationContainerRefContext';
+export {
+  type FocusedRouteState,
+  NavigationFocusedRouteStateContext,
+} from './NavigationFocusedRouteStateContext';
 export { NavigationHelpersContext } from './NavigationHelpersContext';
 export { NavigationIndependentTree } from './NavigationIndependentTree';
 export { NavigationMetaContext } from './NavigationMetaContext';
@@ -61,6 +65,7 @@ export type {
   NavigatorTypeBagBase,
   NavigatorTypeBagFor,
   NestedNavigatorsForParamList,
+  ParamListForNavigator,
   PathConfig,
   PathConfigMap,
   RootNavigator,

@@ -33,7 +33,6 @@ import type {
 } from '../types';
 
 type Props = NativeStackNavigationOptions & {
-  headerTopInsetEnabled: boolean;
   headerHeight: number;
   headerBack: { title?: string | undefined; href: undefined } | undefined;
   route: Route<string>;
@@ -216,10 +215,10 @@ export function useHeaderConfigProps({
   headerTitleStyle,
   headerTransparent,
   headerSearchBarOptions,
-  headerTopInsetEnabled,
   headerBack,
   route,
   title,
+  unstable_headerInsets: headerInsets,
   unstable_headerLeftItems: headerLeftItems,
   unstable_headerRightItems: headerRightItems,
 }: Props): ScreenStackHeaderConfigProps {
@@ -552,7 +551,14 @@ export function useHeaderConfigProps({
     titleFontFamily,
     titleFontSize,
     titleFontWeight: String(titleFontWeight),
-    topInsetEnabled: headerTopInsetEnabled,
+    disableTopInsetApplication:
+      headerInsets?.top !== undefined ? !headerInsets.top : undefined,
+    disableLeftInsetApplication:
+      headerInsets?.left !== undefined ? !headerInsets.left : undefined,
+    disableRightInsetApplication:
+      headerInsets?.right !== undefined ? !headerInsets.right : undefined,
+    disableBottomInsetApplication:
+      headerInsets?.bottom !== undefined ? !headerInsets.bottom : undefined,
     translucent: translucent === true,
     children,
     headerLeftBarButtonItems: processBarButtonItems(leftItems, colors, fonts),

@@ -1,16 +1,14 @@
 import type {
   NavigationAction,
-  NavigationRoute,
   NavigationState,
-  ParamListBase,
-  PartialRoute,
   PartialState,
   Router,
   RouterConfigOptions,
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { getLoaderForState } from './DataLoading';
+import { ConsumedParamsContext } from './ConsumedParamsContext';
+import { getLoaderForStateChange } from './DataLoading';
 import {
   type ChildActionListener,
   type ChildBeforeRemoveListener,
@@ -30,44 +28,6 @@ type Options<State extends NavigationState> = {
   beforeRemoveListeners: Record<string, ChildBeforeRemoveListener | undefined>;
   routerConfigOptions: RouterConfigOptions;
   emitter: NavigationEventEmitter<EventMapCore<any>>;
-};
-
-type MaybePartialRoute =
-  | NavigationRoute<ParamListBase, string>
-  | PartialRoute<NavigationRoute<ParamListBase, string>>;
-
-const didFocusedRouteChange = (
-  currentState: NavigationState | PartialState<NavigationState>,
-  nextState: NavigationState | PartialState<NavigationState>
-) => {
-  let currentFocusedRoute: MaybePartialRoute | undefined =
-    currentState.routes[currentState.index ?? currentState.routes.length - 1];
-
-  let nextFocusedRoute: MaybePartialRoute | undefined =
-    nextState.routes[nextState.index ?? nextState.routes.length - 1];
-
-  let changed = currentFocusedRoute?.key !== nextFocusedRoute?.key;
-
-  while (!changed && currentFocusedRoute?.state !== nextFocusedRoute?.state) {
-    if (currentFocusedRoute?.state == null || nextFocusedRoute?.state == null) {
-      return true;
-    }
-
-    currentFocusedRoute =
-      currentFocusedRoute.state.routes[
-        currentFocusedRoute.state.index ??
-          currentFocusedRoute.state.routes.length - 1
-      ];
-
-    nextFocusedRoute =
-      nextFocusedRoute.state.routes[
-        nextFocusedRoute.state.index ?? nextFocusedRoute.state.routes.length - 1
-      ];
-
-    changed = currentFocusedRoute?.key !== nextFocusedRoute?.key;
-  }
-
-  return changed;
 };
 
 /**
@@ -94,9 +54,11 @@ export function useOnAction<State extends NavigationState>({
     onRouteFocus: onRouteFocusParent,
     addListener: addListenerParent,
     onDispatchAction,
+    flushUpdates,
   } = React.use(NavigationBuilderContext);
 
   const tree = React.use(StaticTreeContext);
+  const consumedParams = React.use(ConsumedParamsContext);
 
   const routerConfigOptionsRef =
     React.useRef<RouterConfigOptions>(routerConfigOptions);
@@ -110,6 +72,11 @@ export function useOnAction<State extends NavigationState>({
       action: NavigationAction,
       visitedNavigators: Set<string> = new Set<string>()
     ) => {
+      // Apply any pending state updates scheduled during render before handling the action
+      // Otherwise the action will be handled with an outdated state,
+      // and the pending updates will overwrite the changes from the action
+      flushUpdates();
+
       const state = getState();
 
       // Since actions can bubble both up and down, they could come to the same navigator again
@@ -132,6 +99,17 @@ export function useOnAction<State extends NavigationState>({
         result =
           result === null && action.target === state.key ? state : result;
 
+        if (result !== null && result.stale !== false) {
+          // Some actions (e.g. `RESET`) may return a stale state from the router
+          // We rehydrate it before storing so the stored state is always usable
+          // Otherwise anything reading the state before the next render
+          // (e.g. another dispatch immediately after) would get an outdated state
+          result = router.getRehydratedState(
+            result,
+            routerConfigOptionsRef.current
+          );
+        }
+
         if (result !== null) {
           if (state !== result) {
             const isPrevented = shouldPreventRemove(
@@ -148,10 +126,22 @@ export function useOnAction<State extends NavigationState>({
               return true;
             }
 
+            if (getState() !== state) {
+              // Listeners for 'beforeRemove' may dispatch actions that change the state
+              // Then the result we have is outdated and would overwrite those changes
+              // So we handle the action again to calculate the result with the latest state
+              return onAction(action, new Set<string>());
+            }
+
             onDispatchAction(action, false);
 
-            if (tree && didFocusedRouteChange(state, result)) {
-              const loader = getLoaderForState(tree, result);
+            if (tree) {
+              const loader = getLoaderForStateChange(
+                tree,
+                result,
+                state,
+                consumedParams
+              );
 
               loader?.();
             }
@@ -198,7 +188,9 @@ export function useOnAction<State extends NavigationState>({
     [
       actionListeners,
       beforeRemoveListeners,
+      consumedParams,
       emitter,
+      flushUpdates,
       getState,
       key,
       onActionParent,

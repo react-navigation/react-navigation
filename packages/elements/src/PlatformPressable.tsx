@@ -63,6 +63,8 @@ export function PlatformPressable({
   const { dark } = useTheme();
   const [opacity] = React.useState(() => new Animated.Value(1));
 
+  const interactive = !disabled && !rest['aria-disabled'];
+
   const animateTo = (toValue: number, duration: number) => {
     if (ANDROID_SUPPORTS_RIPPLE) {
       return;
@@ -79,7 +81,7 @@ export function PlatformPressable({
   const handlePress = (
     e: React.MouseEvent<HTMLAnchorElement, MouseEvent> | GestureResponderEvent
   ) => {
-    if (Platform.OS === 'web' && rest.href !== null) {
+    if (Platform.OS === 'web' && rest.href != null) {
       // ignore clicks with modifier keys
       const hasModifierKey =
         ('metaKey' in e && e.metaKey) ||
@@ -94,7 +96,7 @@ export function PlatformPressable({
       // let browser handle "target=_blank" etc.
       const isSelfTarget =
         e.currentTarget && 'target' in e.currentTarget
-          ? [undefined, null, '', 'self'].includes(e.currentTarget.target)
+          ? [undefined, null, '', '_self'].includes(e.currentTarget.target)
           : true;
 
       if (!hasModifierKey && isLeftClick && isSelfTarget) {
@@ -118,6 +120,53 @@ export function PlatformPressable({
     onPressOut?.(e);
   };
 
+  const elementRef = React.useRef<HTMLElement | null>(null);
+
+  const handleRef = React.useCallback(
+    (node: React.ComponentRef<typeof AnimatedPressable> | null) => {
+      elementRef.current =
+        Platform.OS === 'web' &&
+        typeof HTMLElement !== 'undefined' &&
+        node instanceof HTMLElement
+          ? node
+          : null;
+
+      if (typeof ref === 'function') {
+        return ref(node);
+      } else if (ref != null) {
+        ref.current = node;
+      }
+    },
+    [ref]
+  );
+
+  // React Native Web doesn't correctly handle ref cleanup functions
+  // So we use a `useEffect` for the listeners instead of the ref callback
+  React.useEffect(() => {
+    const element = elementRef.current;
+
+    if (rest.href == null || element == null || interactive) {
+      return;
+    }
+
+    // On web, a non-interactive button prevents our onPress from being called
+    // But the link is still clickable, and will perform a full page navigation
+    // So we manually prevent the default behavior of the link in that case
+    // The `href` is still set so regular link semantics are preserved
+    const preventNavigation = (event: Event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    };
+
+    element.addEventListener('click', preventNavigation, true);
+    element.addEventListener('auxclick', preventNavigation, true);
+
+    return () => {
+      element.removeEventListener('click', preventNavigation, true);
+      element.removeEventListener('auxclick', preventNavigation, true);
+    };
+  }, [interactive, rest.href]);
+
   let focusable: boolean | undefined;
 
   if (disabled) {
@@ -130,16 +179,16 @@ export function PlatformPressable({
 
   return (
     <AnimatedPressable
-      ref={ref ?? null}
+      ref={handleRef}
       accessible
       disabled={disabled}
       focusable={focusable}
       role={Platform.OS === 'web' && rest.href != null ? 'link' : 'button'}
-      onPress={disabled ? undefined : handlePress}
-      onPressIn={disabled ? undefined : handlePressIn}
-      onPressOut={disabled ? undefined : handlePressOut}
+      onPress={interactive ? handlePress : undefined}
+      onPressIn={interactive ? handlePressIn : undefined}
+      onPressOut={interactive ? handlePressOut : undefined}
       android_ripple={
-        ANDROID_SUPPORTS_RIPPLE && !disabled
+        ANDROID_SUPPORTS_RIPPLE && interactive
           ? {
               color:
                 pressColor !== undefined
@@ -154,18 +203,18 @@ export function PlatformPressable({
       style={[
         {
           cursor:
-            (Platform.OS === 'web' || Platform.OS === 'ios') && !disabled
+            (Platform.OS === 'web' || Platform.OS === 'ios') && interactive
               ? // Pointer cursor on web
                 // Hover effect on iPad and visionOS
                 'pointer'
               : 'auto',
-          opacity: !ANDROID_SUPPORTS_RIPPLE && !disabled ? opacity : 1,
+          opacity: !ANDROID_SUPPORTS_RIPPLE && interactive ? opacity : 1,
         },
         style,
       ]}
       {...rest}
     >
-      {!disabled ? <HoverEffect {...hoverEffect} /> : null}
+      {interactive ? <HoverEffect {...hoverEffect} /> : null}
       {children}
     </AnimatedPressable>
   );

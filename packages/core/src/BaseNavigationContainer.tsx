@@ -11,6 +11,7 @@ import useLatestCallback from 'use-latest-callback';
 
 import { checkDuplicateRouteNames } from './checkDuplicateRouteNames';
 import { checkSerializable } from './checkSerializable';
+import { ConsumedParamsContext } from './ConsumedParamsContext';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
 import { findFocusedRoute } from './findFocusedRoute';
@@ -29,6 +30,7 @@ import { UnhandledActionContext } from './UnhandledActionContext';
 import { useChildListeners } from './useChildListeners';
 import { useEventEmitter } from './useEventEmitter';
 import { useKeyedChildListeners } from './useKeyedChildListeners';
+import { useLazyValue } from './useLazyValue';
 import { useNavigationIndependentTree } from './useNavigationIndependentTree';
 import { useOptionsGetters } from './useOptionsGetters';
 import { useSyncState } from './useSyncState';
@@ -102,10 +104,12 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     );
   }
 
-  const { state, getState, setState, scheduleUpdate, flushUpdates } =
+  const { state, getState, setState, subscribe, scheduleUpdate, flushUpdates } =
     useSyncState<State>(() =>
       getPartialState(initialState == null ? undefined : initialState)
     );
+
+  const consumedParams = useLazyValue(() => new WeakMap<object, true>());
 
   const isFirstMountRef = React.useRef<boolean>(true);
 
@@ -157,7 +161,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   const resetRoot = useLatestCallback(
     (state: PartialState<NavigationState> | NavigationState) => {
-      const target = state?.key ?? keyedListeners.getState.root?.().key;
+      const target = keyedListeners.getState.root?.().key;
       const listener = listeners.focus[0];
 
       if (target == null || listener == null) {
@@ -274,6 +278,12 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   const stackRef = React.useRef<string | undefined>(undefined);
 
+  const lastEmittedStateRef = React.useRef<State>(undefined);
+
+  const getIsStateEmitted = useLatestCallback(
+    () => !isFirstMountRef.current && lastEmittedStateRef.current === getState()
+  );
+
   const builderContext = React.useMemo(
     () => ({
       addListener,
@@ -281,6 +291,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       onDispatchAction,
       onEmitEvent,
       onOptionsChange,
+      getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
       stackRef,
@@ -291,6 +302,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       onDispatchAction,
       onEmitEvent,
       onOptionsChange,
+      getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
     ]
@@ -305,12 +317,22 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       state,
       getState,
       setState,
+      subscribe,
       getKey,
       setKey,
       getIsInitial,
       addOptionsGetter,
     }),
-    [state, getState, setState, getKey, setKey, getIsInitial, addOptionsGetter]
+    [
+      state,
+      getState,
+      setState,
+      subscribe,
+      getKey,
+      setKey,
+      getIsInitial,
+      addOptionsGetter,
+    ]
   );
 
   const onReadyRef = React.useRef(onReady);
@@ -406,6 +428,8 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       }
     }
 
+    lastEmittedStateRef.current = state;
+
     emitter.emit({ type: 'state', data: { state } });
 
     if (!isFirstMountRef.current && onStateChangeRef.current) {
@@ -464,13 +488,15 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       <NavigationContainerRefContext.Provider value={navigation}>
         <NavigationBuilderContext.Provider value={builderContext}>
           <NavigationStateContext.Provider value={context}>
-            <UnhandledActionContext.Provider
-              value={onUnhandledAction ?? defaultOnUnhandledAction}
-            >
-              <EnsureSingleNavigator>
-                <ThemeProvider value={theme}>{children}</ThemeProvider>
-              </EnsureSingleNavigator>
-            </UnhandledActionContext.Provider>
+            <ConsumedParamsContext.Provider value={consumedParams}>
+              <UnhandledActionContext.Provider
+                value={onUnhandledAction ?? defaultOnUnhandledAction}
+              >
+                <EnsureSingleNavigator>
+                  <ThemeProvider value={theme}>{children}</ThemeProvider>
+                </EnsureSingleNavigator>
+              </UnhandledActionContext.Provider>
+            </ConsumedParamsContext.Provider>
           </NavigationStateContext.Provider>
         </NavigationBuilderContext.Provider>
       </NavigationContainerRefContext.Provider>

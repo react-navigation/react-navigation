@@ -1006,6 +1006,73 @@ createBottomTabNavigator({
   },
 });
 
+// Unknown event in `listeners` passed via the screen factory
+createBottomTabNavigator({
+  screens: {
+    Test: createBottomTabScreen({
+      screen: () => null,
+      listeners: {
+        focus: () => {},
+        // @ts-expect-error
+        focusTypo: () => {},
+      },
+    }),
+  },
+});
+
+// Unknown event in the object returned from `listeners` passed via the screen factory
+createBottomTabNavigator({
+  screens: {
+    Test: createBottomTabScreen({
+      screen: () => null,
+      // @ts-expect-error
+      listeners: () => ({ focus: () => {}, focusTypo: () => {} }),
+    }),
+  },
+});
+
+// Unknown event in `listeners` in the object form
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      screen: () => null,
+      listeners: {
+        focus: () => {},
+        // @ts-expect-error
+        focusTypo: () => {},
+      },
+    },
+  },
+});
+
+// Unknown event in the object returned from `listeners` in the function form
+createBottomTabNavigator({
+  screens: {
+    Test: {
+      screen: () => null,
+      // @ts-expect-error
+      listeners: () => ({ focus: () => {}, focusTypo: () => {} }),
+    },
+  },
+});
+
+// Unknown event in `screenListeners` on the navigator
+createBottomTabNavigator({
+  screenListeners: {
+    focus: () => {},
+    // @ts-expect-error
+    focusTypo: () => {},
+  },
+  screens: {},
+});
+
+// Unknown event in the object returned from the `screenListeners` function form
+createBottomTabNavigator({
+  // @ts-expect-error
+  screenListeners: () => ({ focus: () => {}, focusTypo: () => {} }),
+  screens: {},
+});
+
 // Only unknown property, without any known property
 createBottomTabNavigator({
   screenOptions: {
@@ -1553,7 +1620,58 @@ createBottomTabNavigator({
     User: NavigatorScreenParams<OneIncludedUndefinedStackParamList>;
   }>();
 
+  const OptionalInitialStack = createStackNavigator({
+    initialRouteName: 'Home',
+    screens: {
+      Home: () => null,
+      Profile: (_: StaticScreenProps<{ userId: string }>) => null,
+    },
+  });
+
+  type OptionalInitialStackParamList = StaticParamList<
+    typeof OptionalInitialStack
+  >;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const OptionalInitialTabs = createBottomTabNavigator({
+    screens: {
+      User: OptionalInitialStack,
+    },
+  });
+
+  expectTypeOf<StaticParamList<typeof OptionalInitialTabs>>().toEqualTypeOf<{
+    User: NavigatorScreenParams<OptionalInitialStackParamList> | undefined;
+  }>();
+
+  const GroupedInitialStack = createStackNavigator({
+    initialRouteName: 'Home',
+    groups: {
+      Main: {
+        screens: {
+          Home: () => null,
+          Profile: (_: StaticScreenProps<{ userId: string }>) => null,
+        },
+      },
+    },
+  });
+
+  type GroupedInitialStackParamList = StaticParamList<
+    typeof GroupedInitialStack
+  >;
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const GroupedInitialTabs = createBottomTabNavigator({
+    screens: {
+      User: GroupedInitialStack,
+    },
+  });
+
+  expectTypeOf<StaticParamList<typeof GroupedInitialTabs>>().toEqualTypeOf<{
+    User: NavigatorScreenParams<GroupedInitialStackParamList> | undefined;
+  }>();
+
   const NoUndefinedStack = createStackNavigator({
+    initialRouteName: 'Home',
     screens: {
       Home: (_: StaticScreenProps<{ homeId: string }>) => null,
       Profile: (_: StaticScreenProps<{ userId: string }>) => null,
@@ -3009,4 +3127,110 @@ createStackScreen({
   });
 
   expectTypeOf(DecoratedStack).not.toHaveProperty('with');
+}
+
+/**
+ * Check inline nested navigators
+ */
+{
+  const Wrapper = ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  );
+
+  const Nested = createBottomTabNavigator({
+    screens: {
+      AlbumsStack: createBottomTabScreen({
+        screen: createNativeStackNavigator({
+          initialRouteName: 'Albums',
+          screens: {
+            Albums: createNativeStackScreen({
+              screen: () => null,
+            }),
+            Album: createNativeStackScreen({
+              screen: (_: StaticScreenProps<{ id: string }>) => null,
+            }),
+          },
+          screenOptions: ({ navigation }) => {
+            expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+            return {};
+          },
+          screenListeners: ({ navigation }) => {
+            expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+            return {};
+          },
+          screenLayout: ({ navigation, children }) => {
+            expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+            return <Wrapper>{children}</Wrapper>;
+          },
+          layout: ({ state, children }) => {
+            expectTypeOf(state.type).toEqualTypeOf<'stack'>();
+
+            return <Wrapper>{children}</Wrapper>;
+          },
+        }),
+      }),
+    },
+  });
+
+  createStaticNavigation(Nested);
+
+  expectTypeOf<StaticParamList<typeof Nested>>().toEqualTypeOf<{
+    AlbumsStack:
+      | NavigatorScreenParams<{
+          Albums: undefined;
+          Album: { id: string };
+        }>
+      | undefined;
+  }>();
+}
+
+{
+  const Wrapper = ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  );
+
+  const Nested = createBottomTabNavigator({
+    screens: {
+      AlbumsStack: createBottomTabScreen({
+        screen: createNativeStackNavigator({
+          groups: {
+            Main: {
+              screenLayout: ({ navigation, children }) => {
+                expectTypeOf(
+                  navigation.getState().type
+                ).toEqualTypeOf<'stack'>();
+
+                return <Wrapper>{children}</Wrapper>;
+              },
+              screens: {
+                Albums: createNativeStackScreen({
+                  screen: () => null,
+                }),
+                Album: createNativeStackScreen({
+                  screen: (_: StaticScreenProps<{ id: string }>) => null,
+                }),
+              },
+            },
+          },
+          screenLayout: ({ navigation, children }) => {
+            expectTypeOf(navigation.getState().type).toEqualTypeOf<'stack'>();
+
+            return <Wrapper>{children}</Wrapper>;
+          },
+        }),
+      }),
+    },
+  });
+
+  createStaticNavigation(Nested);
+
+  expectTypeOf<StaticParamList<typeof Nested>>().toEqualTypeOf<{
+    AlbumsStack: NavigatorScreenParams<{
+      Albums: undefined;
+      Album: { id: string };
+    }>;
+  }>();
 }

@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals';
-import type { InitialState, NavigationState } from '@react-navigation/routers';
+import type { NavigationState, PartialState } from '@react-navigation/routers';
 import { produce } from 'immer';
 import * as v from 'valibot';
 import { z } from 'zod';
@@ -8,7 +8,10 @@ import { findFocusedRoute } from '../findFocusedRoute';
 import { getPathFromState } from '../getPathFromState';
 import { getStateFromPath } from '../getStateFromPath';
 
-const changePath = <T extends InitialState>(state: T, path: string): T =>
+const changePath = <T extends PartialState<NavigationState>>(
+  state: T,
+  path: string
+): T =>
   produce(state, (draftState) => {
     const route = findFocusedRoute(draftState);
     // @ts-expect-error: immer won't mutate this
@@ -767,6 +770,47 @@ test('handles initialRouteName inside a screen', () => {
   expect(
     getStateFromPath<object>(getPathFromState<object>(state, config), config)
   ).toEqual(state);
+});
+
+test('parses query params when inserting a nested initial route', () => {
+  const path = '/root/details/42?sort=latest';
+  const config = {
+    screens: {
+      Root: {
+        path: 'root',
+        initialRouteName: 'Home',
+        screens: {
+          Home: 'home',
+          Details: {
+            path: 'details/:id',
+            parse: {
+              id: Number,
+              sort: (value: string) => value.toUpperCase(),
+            },
+          },
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Root',
+        state: {
+          index: 1,
+          routes: [
+            { name: 'Home' },
+            {
+              name: 'Details',
+              params: { id: 42, sort: 'LATEST' },
+              path,
+            },
+          ],
+        },
+      },
+    ],
+  });
 });
 
 test('handles initialRouteName included in path', () => {

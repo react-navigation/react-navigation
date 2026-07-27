@@ -7,6 +7,7 @@ import {
   type NavigationContainerRef,
   type NavigationState,
   type ParamListBase,
+  type PartialState,
   useNavigationIndependentTree,
 } from '@react-navigation/core';
 import isEqual from 'fast-deep-equal';
@@ -17,8 +18,6 @@ import { ServerContext } from './server/ServerContext';
 import type { LinkingOptions } from './types';
 import type { Thenable } from './useThenable';
 
-type ResultState = ReturnType<typeof getStateFromPathDefault>;
-
 /**
  * History delta already applied by the browser when handling `popstate`
  * The value 'replace' means the delta is unknown, so we can only replace
@@ -27,6 +26,53 @@ type PopStateDelta = number | 'replace';
 
 const getRoutesUntilIndex = (state: NavigationState) =>
   state.routes.slice(0, state.index + 1);
+
+/**
+ * Get the state object to construct the path from.
+ *
+ * We use the root state as the base, and fallback to existing `route.state`.
+ * If a navigator mounts later, this ensures we don't remove it from URL.
+ * It could happen during suspense, hydration, conditional rendering etc.
+ */
+const getStateForPath = (
+  state: NavigationState | PartialState<NavigationState>,
+  fallbackState: NavigationState | PartialState<NavigationState> | undefined
+): Omit<PartialState<NavigationState>, 'stale'> => {
+  const index = state.index ?? state.routes.length - 1;
+  const route = state.routes[index];
+
+  if (route == null) {
+    return state;
+  }
+
+  const fallbackRoute = fallbackState?.routes[index];
+
+  if (
+    (fallbackRoute != null &&
+      'key' in fallbackRoute &&
+      typeof fallbackRoute?.key === 'string' &&
+      typeof route?.key === 'string' &&
+      fallbackRoute.key !== route.key) ||
+    route.name !== fallbackRoute?.name
+  ) {
+    return state;
+  }
+
+  const childState = route.state
+    ? getStateForPath(route.state, fallbackRoute.state)
+    : fallbackRoute.state;
+
+  if (route.state === childState) {
+    return state;
+  }
+
+  return {
+    ...state,
+    routes: state.routes.map((item) =>
+      item === route ? { ...item, state: childState } : item
+    ),
+  };
+};
 
 /**
  * Calculate total history length including both navigator history and route history
@@ -222,7 +268,7 @@ export function useLinking<ParamList extends ParamListBase>(
   });
 
   const validateRoutesNotExistInRootState = React.useCallback(
-    (state: ResultState) => {
+    (state: PartialState<NavigationState>) => {
       const navigation = ref.current;
       const rootState = navigation?.getRootState();
       // Make sure that the routes in the state exist in the root navigator
@@ -233,7 +279,7 @@ export function useLinking<ParamList extends ParamListBase>(
   );
 
   const getInitialState = React.useCallback(() => {
-    let value: ResultState | undefined;
+    let value: PartialState<NavigationState> | undefined;
 
     if (enabledRef.current) {
       const location = server
@@ -255,7 +301,7 @@ export function useLinking<ParamList extends ParamListBase>(
       }
     }
 
-    const thenable: Thenable<ResultState | undefined> = {
+    const thenable: Thenable<PartialState<NavigationState> | undefined> = {
       then(onfulfilled) {
         return Promise.resolve(onfulfilled ? onfulfilled(value) : value);
       },
@@ -419,7 +465,7 @@ export function useLinking<ParamList extends ParamListBase>(
         return;
       }
 
-      let state: ResultState | undefined;
+      let state: PartialState<NavigationState> | undefined;
 
       try {
         state = getStateFromPathRef.current(
@@ -482,14 +528,14 @@ export function useLinking<ParamList extends ParamListBase>(
 
     const getPathForRoute = (
       route: ReturnType<typeof findFocusedRoute>,
-      state: NavigationState
+      state: NavigationState | PartialState<NavigationState>
     ): string => {
       let path;
 
       // If the `route` object contains a `path`, use that path as long as `route.name` and `params` still match
       // This makes sure that we preserve the original URL for wildcard routes
       if (route?.path) {
-        let stateForPath: ResultState | undefined;
+        let stateForPath: PartialState<NavigationState> | undefined;
 
         try {
           stateForPath = getStateFromPathRef.current(
@@ -543,8 +589,10 @@ export function useLinking<ParamList extends ParamListBase>(
       const state = ref.current.getRootState();
 
       if (state) {
-        const route = findFocusedRoute(state);
-        const path = getPathForRoute(route, state);
+        const stateForPath = getStateForPath(state, ref.current.getState());
+
+        const route = findFocusedRoute(stateForPath);
+        const path = getPathForRoute(route, stateForPath);
 
         if (previousStateRef.current === undefined) {
           previousStateRef.current = state;
@@ -575,8 +623,10 @@ export function useLinking<ParamList extends ParamListBase>(
         return;
       }
 
-      const route = findFocusedRoute(state);
-      const path = getPathForRoute(route, state);
+      const stateForPath = getStateForPath(state, navigation.getState());
+
+      const route = findFocusedRoute(stateForPath);
+      const path = getPathForRoute(route, stateForPath);
 
       const pendingPopStateDelta = pendingPopStateDeltaRef.current;
 

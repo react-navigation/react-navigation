@@ -1,5 +1,6 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import { jest, react, recommended } from 'eslint-config-satya164';
+import * as tsResolver from 'eslint-import-resolver-typescript';
 import sort from 'eslint-plugin-simple-import-sort';
 
 export default defineConfig([
@@ -16,6 +17,23 @@ export default defineConfig([
     '**/.pnpm-store/',
     '**/.vscode/',
   ]),
+
+  {
+    files: ['**/*.{ts,mts,tsx}'],
+
+    settings: {
+      'import-x/resolver': {
+        name: 'typescript-resolver',
+        resolver: tsResolver,
+        options: {
+          conditionNames: [
+            '@react-navigation/source',
+            ...tsResolver.defaultConditionNames,
+          ],
+        },
+      },
+    },
+  },
 
   {
     plugins: {
@@ -54,7 +72,6 @@ export default defineConfig([
       ],
 
       '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/ban-types': 'off',
       '@typescript-eslint/no-empty-object-type': 'off',
       '@typescript-eslint/no-require-imports': 'off',
 
@@ -66,8 +83,7 @@ export default defineConfig([
       'react-hooks/exhaustive-deps': [
         'error',
         {
-          additionalHooks:
-            '(useIsomorphicLayoutEffect|useAnimatedStyle|useAnimatedProps)',
+          additionalHooks: '(useAnimatedStyle|useAnimatedProps)',
         },
       ],
     },
@@ -105,13 +121,6 @@ export default defineConfig([
           paths: [],
         },
       ],
-    },
-  },
-  {
-    files: ['scripts/*.js', 'netlify/functions/**/*.js'],
-
-    rules: {
-      'import-x/no-commonjs': 'off',
     },
   },
   {

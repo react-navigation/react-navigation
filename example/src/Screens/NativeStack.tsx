@@ -1,4 +1,4 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import {
   Button,
   HeaderButton,
@@ -374,7 +374,7 @@ const NativeStackNavigator = createNativeStackNavigator({
             type: 'custom',
             element: (
               <HeaderButton onPress={() => Alert.alert('Info pressed')}>
-                <MaterialCommunityIcons name="information-outline" size={28} />
+                <MaterialDesignIcons name="information-outline" size={28} />
               </HeaderButton>
             ),
           },
@@ -388,11 +388,7 @@ const NativeStackNavigator = createNativeStackNavigator({
             <HeaderButton
               onPress={() => Alert.alert('Favorite button pressed')}
             >
-              <MaterialCommunityIcons
-                name="heart"
-                size={24}
-                color={tintColor}
-              />
+              <MaterialDesignIcons name="heart" size={24} color={tintColor} />
             </HeaderButton>
           ),
           unstable_headerLeftItems: () => leftItems,

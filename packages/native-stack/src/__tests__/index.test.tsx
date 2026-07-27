@@ -142,38 +142,6 @@ describe('useHeaderHeight in native-stack', () => {
     expect(headerHeight).toBe(44);
   });
 
-  test('returns header height on Web', async () => {
-    jest.replaceProperty(Platform, 'OS', 'web');
-
-    let headerHeight;
-
-    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
-      headerHeight = useHeaderHeight();
-      return (
-        <Button onPress={() => navigation.navigate('B')} title="Go to B" />
-      );
-    };
-
-    const Stack = createNativeStackNavigator<StackParamList>();
-
-    const user = userEvent.setup();
-
-    await render(
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="A" component={Test} />
-          <Stack.Screen name="B" component={Test} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-
-    expect(headerHeight).toBe(64);
-
-    await user.press(screen.getByRole('button', { name: /go to b/i }));
-
-    expect(headerHeight).toBe(64);
-  });
-
   test('returns header height in modal on iOS', async () => {
     jest.replaceProperty(Platform, 'OS', 'ios');
 
@@ -340,42 +308,6 @@ describe('useHeaderHeight in native-stack', () => {
 
   test("doesn't return header height with headerShown: false on Android", async () => {
     jest.replaceProperty(Platform, 'OS', 'android');
-
-    let headerHeight;
-
-    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
-      headerHeight = useHeaderHeight();
-      return (
-        <Button onPress={() => navigation.navigate('B')} title="Go to B" />
-      );
-    };
-
-    const Stack = createNativeStackNavigator<StackParamList>();
-
-    const user = userEvent.setup();
-
-    await render(
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="A"
-            component={Test}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="B" component={Test} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-
-    expect(headerHeight).toBe(0);
-
-    await user.press(screen.getByRole('button', { name: /go to b/i }));
-
-    expect(headerHeight).toBe(64);
-  });
-
-  test("doesn't return header height with headerShown: false on Web", async () => {
-    jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
 
@@ -615,127 +547,6 @@ describe('useHeaderHeight in native-stack', () => {
 
   test('returns header height 0 in nested stack when headerShown: false on both screens on Android', async () => {
     jest.replaceProperty(Platform, 'OS', 'android');
-
-    let headerHeight;
-
-    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
-      headerHeight = useHeaderHeight();
-      return (
-        <Button onPress={() => navigation.navigate('B')} title="Go to B" />
-      );
-    };
-
-    const Stack = createNativeStackNavigator<StackParamList>();
-    const NestedStack = createNativeStackNavigator<NestedStackParamList>();
-
-    const user = userEvent.setup();
-
-    await render(
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="A" component={Test} />
-          <Stack.Screen name="B">
-            {() => (
-              <NestedStack.Navigator screenOptions={{ headerShown: false }}>
-                <NestedStack.Screen name="C" component={Test} />
-              </NestedStack.Navigator>
-            )}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-
-    expect(headerHeight).toBe(0);
-
-    await user.press(screen.getByRole('button', { name: /go to b/i }));
-
-    expect(headerHeight).toBe(0);
-  });
-
-  test('returns header height in nested stack on Web', async () => {
-    jest.replaceProperty(Platform, 'OS', 'web');
-
-    let headerHeight;
-
-    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
-      headerHeight = useHeaderHeight();
-      return (
-        <Button onPress={() => navigation.navigate('B')} title="Go to B" />
-      );
-    };
-
-    const Stack = createNativeStackNavigator<StackParamList>();
-    const NestedStack = createNativeStackNavigator<NestedStackParamList>();
-
-    const user = userEvent.setup();
-
-    await render(
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="A" component={Test} />
-          <Stack.Screen name="B">
-            {() => (
-              <NestedStack.Navigator>
-                <NestedStack.Screen name="C" component={Test} />
-              </NestedStack.Navigator>
-            )}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-
-    expect(headerHeight).toBe(64);
-
-    await user.press(screen.getByRole('button', { name: /go to b/i }));
-
-    expect(headerHeight).toBe(64);
-  });
-
-  test('returns parent header height in nested stack when headerShown: false on Web', async () => {
-    jest.replaceProperty(Platform, 'OS', 'web');
-
-    let headerHeight;
-
-    const Test = ({ navigation }: NativeStackScreenProps<StackParamList>) => {
-      headerHeight = useHeaderHeight();
-      return (
-        <Button onPress={() => navigation.navigate('B')} title="Go to B" />
-      );
-    };
-
-    const Stack = createNativeStackNavigator<StackParamList>();
-    const NestedStack = createNativeStackNavigator<NestedStackParamList>();
-
-    const user = userEvent.setup();
-
-    await render(
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="A" component={Test} />
-          <Stack.Screen name="B">
-            {() => (
-              <NestedStack.Navigator>
-                <NestedStack.Screen
-                  name="C"
-                  component={Test}
-                  options={{ headerShown: false }}
-                />
-              </NestedStack.Navigator>
-            )}
-          </Stack.Screen>
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-
-    expect(headerHeight).toBe(64);
-
-    await user.press(screen.getByRole('button', { name: /go to b/i }));
-
-    expect(headerHeight).toBe(64);
-  });
-
-  test('returns header height 0 in nested stack when headerShown: false on both screens on Web', async () => {
-    jest.replaceProperty(Platform, 'OS', 'web');
 
     let headerHeight;
 

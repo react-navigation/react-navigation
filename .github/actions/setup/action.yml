@@ -10,8 +10,7 @@ runs:
         node-version-file: .nvmrc
 
     - name: Install pnpm
-      run: npm install --global pnpm@11.8.0
-      shell: bash
+      uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271
 
     - name: Get pnpm store path
       id: pnpm-store
@@ -26,6 +25,10 @@ runs:
         key: ${{ runner.os }}-pnpm-store-v1-${{ hashFiles('pnpm-lock.yaml') }}
         restore-keys: |
           ${{ runner.os }}-pnpm-store-v1-
+
+    - name: Disable minimum release age
+      run: echo "PNPM_CONFIG_MINIMUM_RELEASE_AGE=0" >> "$GITHUB_ENV"
+      shell: bash
 
     - name: Install dependencies
       run: pnpm install --frozen-lockfile --prefer-offline

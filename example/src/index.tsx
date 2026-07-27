@@ -1,7 +1,6 @@
 import { ActionSheetProvider } from '@expo/react-native-action-sheet';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import {
   useLogger,
   useReduxDevToolsExtension,
@@ -57,6 +56,8 @@ import { PlatformTheme } from './theme';
 const NAVIGATION_PERSISTENCE_KEY = 'NAVIGATION_STATE';
 const THEME_PERSISTENCE_KEY = 'THEME_TYPE';
 const DIRECTION_PERSISTENCE_KEY = 'DIRECTION';
+
+const EMPTY = () => () => {};
 
 const SCREEN_NAMES = Object.keys(SCREENS) as (keyof typeof SCREENS)[];
 
@@ -292,7 +293,7 @@ const Drawer = createDrawerNavigator({
           title: 'Examples',
           headerLeft: isLargeScreen ? () => null : undefined,
           drawerIcon: ({ size, color }) => (
-            <MaterialIcons size={size} color={color} name="folder" />
+            <MaterialDesignIcons size={size} color={color} name="folder" />
           ),
         };
       },
@@ -377,6 +378,12 @@ const Navigation = createStaticNavigation(Stack);
 export function App() {
   const [{ isReady, themeName, isRTL }, dispatch] = useAppState();
 
+  const isHydrated = React.useSyncExternalStore(
+    EMPTY,
+    () => true,
+    () => false
+  );
+
   const dimensions = useWindowDimensions();
   const colorScheme = useColorScheme();
 
@@ -398,7 +405,7 @@ export function App() {
     return null;
   }
 
-  const isLargeScreen = dimensions.width >= 1024;
+  const isLargeScreen = isHydrated && dimensions.width >= 1024;
 
   const theme =
     themeName === 'dark'
@@ -620,11 +627,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
           key={item.label}
           label={item.label}
           icon={({ color, size }) => (
-            <MaterialCommunityIcons
-              name={item.icon}
-              color={color}
-              size={size}
-            />
+            <MaterialDesignIcons name={item.icon} color={color} size={size} />
           )}
           onPress={() => {
             // Do nothing for now

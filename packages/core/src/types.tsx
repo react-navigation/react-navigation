@@ -298,7 +298,7 @@ type NavigatorLike =
       getComponent: () => React.ComponentType<any>;
     };
 
-type ParamListForNavigator<T extends {}> = T extends NavigatorLike
+export type ParamListForNavigator<T extends {}> = T extends NavigatorLike
   ? T extends PrivateValueStore<[infer ParamList extends {}, any, any, any]>
     ? ParamList
     : T

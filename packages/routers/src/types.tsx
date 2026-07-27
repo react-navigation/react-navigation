@@ -53,7 +53,7 @@ export type InitialState = Readonly<
 
 export type PartialRoute<R extends Route<string>> = Omit<R, 'key'> & {
   key?: string | undefined;
-  state?: PartialState<NavigationState> | undefined;
+  state?: NavigationState | PartialState<NavigationState> | undefined;
 };
 
 export type PartialState<State extends NavigationState> = Partial<
@@ -61,7 +61,7 @@ export type PartialState<State extends NavigationState> = Partial<
 > &
   Readonly<{
     stale?: true | undefined;
-    routes: PartialRoute<Route<State['routeNames'][number]>>[];
+    routes: PartialRoute<State['routes'][number]>[];
   }>;
 
 export type Route<
@@ -85,7 +85,14 @@ export type Route<
     /**
      * History of param changes for this route.
      */
-    history?: { type: 'params'; params: object }[] | undefined;
+    history?:
+      | {
+          type: 'params';
+          params: undefined extends Params
+            ? Readonly<Params> | undefined
+            : Readonly<Params>;
+        }[]
+      | undefined;
   } & (undefined extends Params
     ? {
         /**

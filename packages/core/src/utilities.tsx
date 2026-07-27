@@ -20,11 +20,33 @@ export type KeyOf<T extends {}> = Extract<keyof T, string>;
  * When an object is captured as a generic type, unknown keys are not caught.
  * This builds a type from the provided object where any key not in the allowed type has the type `never`.
  * Checking the provided object against this type then produces an error for each unknown key.
+ *
+ * When `Provided` has a string index signature (e.g. a type built from `any`,
+ * whose `keyof` includes `string`), there are no specific excess keys to flag,
+ * so this resolves to an empty type to avoid marking every key as `never`.
  */
-export type NoExcessObject<Provided, Allowed> = Record<
-  Exclude<keyof Provided, keyof Allowed>,
-  never
->;
+export type NoExcessObject<Provided, Allowed> = string extends keyof Provided
+  ? {}
+  : Record<Exclude<keyof Provided, keyof Allowed>, never>;
+
+/**
+ * Check an object captured as a generic type against an allowed type,
+ * e.g. an object returned from a callback isn't checked for excess properties.
+ */
+export type NoExcessCallbackReturn<
+  Provided extends {},
+  Allowed extends {},
+> = Allowed & Provided & NoExcessObject<Provided, Allowed>;
+
+/**
+ * Apply excess property checking to a value,
+ * or to the return value if the value is a function.
+ */
+export type NoExcessValue<Provided, Allowed extends {}> = Provided extends (
+  ...args: never[]
+) => infer Return
+  ? (...args: never[]) => Allowed & NoExcessObject<Return, Allowed>
+  : NoExcessObject<Provided, Allowed>;
 
 /**
  * We get a union type when using keyof, but we want an intersection instead.

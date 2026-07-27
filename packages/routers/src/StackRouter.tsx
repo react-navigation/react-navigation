@@ -335,7 +335,8 @@ export function StackRouter(options: StackRouterOptions) {
 
       if (routes.length === 0) {
         const initialRouteName =
-          options.initialRouteName !== undefined
+          options.initialRouteName !== undefined &&
+          routeNames.includes(options.initialRouteName)
             ? options.initialRouteName
             : routeNames[0];
 
@@ -437,17 +438,21 @@ export function StackRouter(options: StackRouterOptions) {
     },
 
     getStateForRouteFocus(state, key) {
-      const routes = getActiveRoutes(state);
-      const index = routes.findIndex((r) => r.key === key);
+      const activeRoutes = getActiveRoutes(state);
 
-      if (index === -1 || index === state.index) {
+      const route = state.routes.find((route) => route.key === key);
+
+      if (route == null || route === activeRoutes.at(-1)) {
         return state;
       }
 
-      return retainRoutes(
-        state,
-        getStateWithRoutes(state, routes.slice(0, index + 1))
-      );
+      const index = activeRoutes.indexOf(route);
+      const routes =
+        index === -1
+          ? activeRoutes.concat(route)
+          : activeRoutes.slice(0, index + 1);
+
+      return retainRoutes(state, getStateWithRoutes(state, routes));
     },
 
     getStateForAction(state, action, options) {
@@ -1040,7 +1045,7 @@ export function StackRouter(options: StackRouterOptions) {
           const route = preloadedRoutes.findLast(
             (route) =>
               route.name === action.payload.name &&
-              (id === undefined || id === getId?.({ params: route.params }))
+              id === getId?.({ params: route.params })
           );
 
           if (route) {

@@ -1,12 +1,12 @@
 import { expect, jest, test } from '@jest/globals';
+import { StackRouter } from '@react-navigation/routers';
 
 import { createNavigatorFactory } from '../createNavigatorFactory';
 import { getLoaderForState } from '../DataLoading';
 import { useNavigationBuilder } from '../useNavigationBuilder';
-import { MockRouter } from './__fixtures__/MockRouter';
 
 const TestNavigator = (props: any) => {
-  const { NavigationContent } = useNavigationBuilder(MockRouter, props);
+  const { NavigationContent } = useNavigationBuilder(StackRouter, props);
 
   return <NavigationContent>{null}</NavigationContent>;
 };
@@ -676,7 +676,9 @@ test('uses nested static config when static tree is deeper than state', async ()
 });
 
 test('traverses deeply nested navigators via params', async () => {
-  const leafFn = jest.fn(async () => {});
+  const leafFn = jest.fn(
+    async (_options: { name: string; params: unknown }) => {}
+  );
 
   const LeafNavigator = createTestNavigator({
     screens: {

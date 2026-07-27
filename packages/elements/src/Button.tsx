@@ -1,11 +1,18 @@
 import {
   type LinkProps,
+  type ParamListBase,
   type RootParamList,
   useLinkProps,
   useTheme,
 } from '@react-navigation/native';
 import * as React from 'react';
-import { type ColorValue, Platform, StyleSheet, View } from 'react-native';
+import {
+  ActivityIndicator,
+  type ColorValue,
+  Platform,
+  StyleSheet,
+  View,
+} from 'react-native';
 
 import { Color } from './Color';
 import { PlatformIcon } from './PlatformIcon';
@@ -47,6 +54,10 @@ type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
     | ((props: { color: ColorValue; size: number }) => Icon | React.ReactNode)
     | undefined;
   /**
+   * Whether to show a loading indicator instead of the icon.
+   */
+  loading?: boolean | undefined;
+  /**
    * Label text to display inside the button.
    */
   children: string | string[] | React.ReactElement | React.ReactElement[];
@@ -54,52 +65,80 @@ type ButtonBaseProps = Omit<PlatformPressableProps, 'children'> & {
 
 type ButtonLinkProps<
   ParamList extends {} = RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList,
-> = LinkProps<ParamList, RouteName> & ButtonBaseProps;
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
+> = LinkProps<NoInfer<ParamList>, RouteName> & ButtonBaseProps;
 
 const BUTTON_RADIUS = 40;
 const ICON_SIZE = 14;
 
+/**
+ * Component to render a button that navigates to a screen using a path.
+ * Uses an anchor tag on the web.
+ *
+ * @param props.in Name of the current or parent screen whose navigator contains the target screen.
+ * @param props.screen Name of the screen to navigate to (e.g. `'Feeds'`).
+ * @param props.params Params to pass to the screen to navigate to (e.g. `{ sort: 'hot' }`).
+ * @param props.href Optional absolute path to use for the href (e.g. `/feeds/hot`).
+ * @param props.action Optional action to override the in-page navigation. The `href` is still derived from `screen`, so this can be used to render a link while dispatching a different action (e.g. a `replace`).
+ */
 export function Button<
   ParamList extends {} = RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList,
+  RouteName extends Extract<keyof ParamList, string> = Extract<
+    keyof ParamList,
+    string
+  >,
 >(props: ButtonLinkProps<ParamList, RouteName>): React.JSX.Element;
 
+/**
+ * Component to render a button.
+ */
 export function Button(props: ButtonBaseProps): React.JSX.Element;
 
-export function Button<
-  ParamList extends {} = RootParamList,
-  RouteName extends keyof ParamList = keyof ParamList,
->(props: ButtonBaseProps | ButtonLinkProps<ParamList, RouteName>) {
+export function Button(
+  props: ButtonBaseProps | ButtonLinkProps<ParamListBase>
+) {
   if ('screen' in props || 'action' in props) {
-    // @ts-expect-error: This is already type-checked by the prop types
     return <ButtonLink {...props} />;
   } else {
     return <ButtonBase {...props} />;
   }
 }
 
-function ButtonLink<
-  const ParamList extends {} = RootParamList,
-  const RouteName extends keyof ParamList = keyof ParamList,
->({
+function ButtonLink({
+  in: parent,
   screen,
   params,
   action,
   href,
   onPress,
   ...rest
-}: ButtonLinkProps<ParamList, RouteName>) {
-  // @ts-expect-error: This is already type-checked by the prop types
-  const props = useLinkProps({ screen, params, action, href });
+}: ButtonLinkProps<ParamListBase>) {
+  // @ts-expect-error: destructuring loses the relationship between target props
+  const props = useLinkProps({ in: parent, screen, params, action, href });
+
+  const [isPending, startTransition] = React.useTransition();
+
+  // Avoid flashing the loading indicator when the transition is fast
+  const isPendingDeferred = React.useDeferredValue(isPending);
 
   return (
     <ButtonBase
       {...rest}
       {...props}
+      loading={
+        typeof rest.loading === 'boolean'
+          ? rest.loading
+          : isPending && isPendingDeferred
+      }
       onPress={(e) => {
         onPress?.(e);
-        props.onPress?.(e);
+
+        startTransition(() => {
+          props.onPress(e);
+        });
       }}
     />
   );
@@ -109,6 +148,7 @@ function ButtonBase({
   variant = 'tinted',
   color: customColor,
   icon,
+  loading = false,
   android_ripple,
   disabled,
   style,
@@ -139,7 +179,7 @@ function ButtonBase({
       break;
   }
 
-  if (disabled) {
+  if (disabled || loading) {
     textColor = dark ? 'rgba(235, 235, 245, 0.3)' : 'rgba(60, 60, 67, 0.3)';
 
     if (variant !== 'plain') {
@@ -155,11 +195,19 @@ function ButtonBase({
       ? 'rgba(255, 255, 255, 0.12)'
       : 'rgba(0, 0, 0, 0.12)');
 
-  const iconNode = renderIcon(icon, textColor, ICON_SIZE);
+  const iconNode = loading ? (
+    <ActivityIndicator color={textColor} size={ICON_SIZE} />
+  ) : (
+    renderIcon(icon, textColor, ICON_SIZE)
+  );
 
   return (
     <PlatformPressable
       {...rest}
+      aria-disabled={
+        // Keep the button focusable while loading
+        disabled || loading || undefined
+      }
       disabled={disabled}
       android_ripple={{
         foreground: true,

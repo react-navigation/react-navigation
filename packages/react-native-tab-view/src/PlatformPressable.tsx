@@ -55,7 +55,7 @@ export function PlatformPressable({
       // let browser handle "target=_blank" etc.
       const isSelfTarget =
         e.currentTarget && 'target' in e.currentTarget
-          ? [undefined, null, '', 'self'].includes(e.currentTarget.target)
+          ? [undefined, null, '', '_self'].includes(e.currentTarget.target)
           : true;
 
       if (!hasModifierKey && isLeftClick && isSelfTarget) {

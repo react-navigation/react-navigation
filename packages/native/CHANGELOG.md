@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.40](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.39...@react-navigation/native@8.0.0-alpha.40) (2026-07-27)
+
+### Bug Fixes
+
+* ensure resetRoot always resets the root navigator's state ([423482f](https://github.com/react-navigation/react-navigation/commit/423482f8f0042dedebdeebf1b53c91089ad0f814)) - by @satya164
+* improve useNavigationState with concurrent rendering ([#13196](https://github.com/react-navigation/react-navigation/issues/13196)) ([2799698](https://github.com/react-navigation/react-navigation/commit/2799698af35962cbd1a67cd9e3a038805035adab)) - by @satya164
+
+### Features
+
+* make native package work without react-native-web ([#13195](https://github.com/react-navigation/react-navigation/issues/13195)) ([abc56cc](https://github.com/react-navigation/react-navigation/commit/abc56ccfbd9b6fba5656ef5c108a88753ebf2eb9)) - by @satya164
+* support custom asset-catalog symbols in SFSymbol ([#13167](https://github.com/react-navigation/react-navigation/issues/13167)) ([6044a79](https://github.com/react-navigation/react-navigation/commit/6044a793d97d8dad5bfaedc58b8e543b36910a42)) - by @stachbial
+
+# [8.0.0-alpha.39](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.38...@react-navigation/native@8.0.0-alpha.39) (2026-07-22)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [8.0.0-alpha.38](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.37...@react-navigation/native@8.0.0-alpha.38) (2026-07-21)
+
+### Bug Fixes
+
+* exclude unsupported platforms for native components ([af626a6](https://github.com/react-navigation/react-navigation/commit/af626a6108141ebc0522257ed0073ed018d07ea5)) - by @satya164
+* fix state events and url when navigator mounts later ([d2ef669](https://github.com/react-navigation/react-navigation/commit/d2ef66915f479354493213886398656967948104)) - by @satya164
+
+# [8.0.0-alpha.37](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.36...@react-navigation/native@8.0.0-alpha.37) (2026-07-17)
+
+**Note:** Version bump only for package @react-navigation/native
+
+# [8.0.0-alpha.36](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.35...@react-navigation/native@8.0.0-alpha.36) (2026-07-16)
+
+### Bug Fixes
+
+* cleanup stale listener after failed browser navigation ([51c301c](https://github.com/react-navigation/react-navigation/commit/51c301ce9a1adecc7e0988735864f61deebc65aa)) - by @satya164
+* clone action for links to make subsequent navigation work ([e0c3b8a](https://github.com/react-navigation/react-navigation/commit/e0c3b8a0c19b481a69691fad507a9f94459af902)) - by @satya164
+* fix handling target _self, _blank etc. in link ([22f2657](https://github.com/react-navigation/react-navigation/commit/22f2657e98f2a8d17238ccd26afe4975cba59478)) - by @satya164
+* handle link actions, hrefs, and disabled state correctly ([#13152](https://github.com/react-navigation/react-navigation/issues/13152)) ([6623694](https://github.com/react-navigation/react-navigation/commit/66236944bca79b639d5524c145e9fec9c3e14f6d)) - by @satya164
+
+### Features
+
+* add in prop to useLinkProps, Link & Button ([#13182](https://github.com/react-navigation/react-navigation/issues/13182)) ([797c843](https://github.com/react-navigation/react-navigation/commit/797c8436b3a46c35537b54e81ef878bc3d8bbe8a)) - by @satya164
+
 # [8.0.0-alpha.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.34...@react-navigation/native@8.0.0-alpha.35) (2026-07-08)
 
 **Note:** Version bump only for package @react-navigation/native

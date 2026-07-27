@@ -73,8 +73,8 @@ export type Action =
   | PushParamsAction
   | PreloadAction;
 
-export function goBack(): Action {
-  return { type: 'GO_BACK' };
+export function goBack() {
+  return { type: 'GO_BACK' } as const satisfies GoBackAction;
 }
 
 export function navigate(
@@ -86,7 +86,7 @@ export function navigate(
         pop?: boolean | undefined;
       }
     | undefined
-): Action {
+) {
   return {
     type: 'NAVIGATE',
     payload: {
@@ -95,7 +95,7 @@ export function navigate(
       merge: options?.merge,
       pop: options?.pop,
     },
-  };
+  } as const satisfies NavigateAction;
 }
 
 export function reset(state: ResetState) {

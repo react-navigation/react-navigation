@@ -509,12 +509,7 @@ export class StackView extends React.Component<Props, State> {
   };
 
   override render() {
-    const {
-      state,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      descriptors: _,
-      ...rest
-    } = this.props;
+    const { state, descriptors: _, ...rest } = this.props;
 
     const {
       routes,

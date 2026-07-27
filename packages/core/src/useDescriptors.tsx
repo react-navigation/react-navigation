@@ -78,6 +78,7 @@ type Options<
   onAction: (action: NavigationAction) => boolean;
   getState: () => State;
   setState: (state: State) => void;
+  subscribe: (callback: () => void) => () => void;
   addListener: AddListener;
   addKeyedListener: AddKeyedListener;
   onRouteFocus: (key: string) => void;
@@ -107,6 +108,7 @@ export function useDescriptors<
   onAction,
   getState,
   setState,
+  subscribe,
   addListener,
   addKeyedListener,
   onRouteFocus,
@@ -124,6 +126,7 @@ export function useDescriptors<
     scheduleUpdate,
     flushUpdates,
     stackRef,
+    getIsStateEmitted,
   } = React.use(NavigationBuilderContext);
 
   const context = React.useMemo(
@@ -136,6 +139,7 @@ export function useDescriptors<
       onDispatchAction,
       onEmitEvent,
       onOptionsChange,
+      getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
       stackRef,
@@ -149,6 +153,7 @@ export function useDescriptors<
       onDispatchAction,
       onEmitEvent,
       onOptionsChange,
+      getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
       stackRef,
@@ -231,7 +236,6 @@ export function useDescriptors<
     const clearOptions = () =>
       setOptions((o) => {
         if (route.key in o) {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { [route.key]: _, ...rest } = o;
           return rest;
         }
@@ -255,6 +259,7 @@ export function useDescriptors<
         routeState={routeState}
         getState={getState}
         setState={setState}
+        subscribe={subscribe}
         options={customOptions}
         clearOptions={clearOptions}
       />

@@ -1,4 +1,4 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { Ionicons } from '@react-native-vector-icons/ionicons';
 import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';

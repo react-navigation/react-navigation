@@ -1,7 +1,7 @@
 {
   "name": "@react-navigation/core",
   "description": "Core utilities for building navigators",
-  "version": "8.0.0-alpha.26",
+  "version": "8.0.0-alpha.31",
   "keywords": [
     "react",
     "react-native",
@@ -46,17 +46,17 @@
     "nanoid": "^5.1.11",
     "query-string": "^9.4.0",
     "react-is": "^19.2.6",
-    "use-latest-callback": "^0.3.4"
+    "use-latest-callback": "^0.3.5"
   },
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
+    "@jest/globals": "^30.4.1",
     "@testing-library/react-native": "^14.0.0",
     "@types/react": "~19.2.17",
     "@types/react-is": "^19.2.0",
     "del-cli": "^7.0.0",
     "immer": "^11.1.8",
-    "react": "19.2.0",
-    "react-native": "0.83.6",
+    "react": "19.2.3",
+    "react-native": "0.85.3",
     "react-native-builder-bob": "^0.43.0",
     "test-renderer": "1.2.0",
     "typescript": "^6.0.3",

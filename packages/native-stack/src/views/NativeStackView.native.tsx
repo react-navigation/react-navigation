@@ -134,6 +134,7 @@ const SceneView = ({
     statusBarAnimation,
     statusBarHidden,
     statusBarStyle,
+    unstable_headerInsets,
     unstable_sheetFooter,
     scrollEdgeEffects,
     contentStyle,
@@ -167,6 +168,7 @@ const SceneView = ({
 
   const topInset =
     isParentHeaderShown ||
+    (Platform.OS === 'android' && unstable_headerInsets?.top === false) ||
     (Platform.OS === 'ios' && isModal) ||
     (isIPhone && isLandscape)
       ? 0
@@ -198,8 +200,6 @@ const SceneView = ({
   );
 
   const hasCustomHeader = header != null;
-
-  const headerTopInsetEnabled = topInset !== 0;
 
   const canGoBack = previousDescriptor != null || parentHeaderBack != null;
   const backTitle = previousDescriptor
@@ -234,7 +234,6 @@ const SceneView = ({
         : undefined,
     headerHeight,
     headerShown: header !== undefined ? false : headerShown,
-    headerTopInsetEnabled,
     headerBack,
   });
 
