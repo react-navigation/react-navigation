@@ -89,7 +89,8 @@ export function getActionFromState(
     return undefined;
   }
 
-  let current: PartialState<NavigationState> | undefined = route.state;
+  let current: NavigationState | PartialState<NavigationState> | undefined =
+    route.state;
   let config: ConfigItem | undefined = normalizedConfig?.screens?.[route.name];
   let params = { ...route.params } as NavigatorScreenParams<ParamListBase>;
 

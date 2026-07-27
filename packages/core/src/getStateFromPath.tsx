@@ -1,13 +1,8 @@
-import type {
-  InitialState,
-  NavigationState,
-  PartialState,
-} from '@react-navigation/routers';
+import type { NavigationState, PartialState } from '@react-navigation/routers';
 import escape from 'escape-string-regexp';
 import queryString from 'query-string';
 
 import { arrayStartsWith } from './arrayStartsWith';
-import { findFocusedRoute } from './findFocusedRoute';
 import {
   combinePatternParts,
   getPatternParts,
@@ -58,13 +53,10 @@ type InitialRouteConfig = {
   parentScreens: string[];
 };
 
-type ResultState = PartialState<NavigationState> & {
-  state?: ResultState | undefined;
-};
-
 type ParsedRoute = {
   name: string;
   params?: Record<string, unknown> | undefined;
+  path?: string | undefined;
 };
 
 type RoutePatternPart = PatternPart & { screen: string };
@@ -177,7 +169,7 @@ export function getStateFromPath<ParamList extends {}>(
   path: string,
   options?: Options<ParamList>,
   previous?: NavigationState
-): ResultState | undefined {
+): PartialState<NavigationState> | undefined {
   const {
     initialRoutes,
     configs,
@@ -1016,7 +1008,7 @@ const createStateObject = (
   initialRoute: string | undefined,
   route: ParsedRoute,
   isEmpty: boolean
-): InitialState => {
+): PartialState<NavigationState> => {
   if (isEmpty) {
     if (initialRoute) {
       return {
@@ -1047,7 +1039,32 @@ const createNestedStateObject = (
   routes: ParsedRoute[],
   initialRoutes: InitialRouteConfig[],
   routeConfig?: RouteConfig
-): InitialState | undefined => {
+): PartialState<NavigationState> | undefined => {
+  const focusedRoute = routes[routes.length - 1];
+
+  if (focusedRoute == null) {
+    return undefined;
+  }
+
+  focusedRoute.path = path.replace(/\/$/, '');
+
+  const queryParams = parseQueryParams(
+    path,
+    routeConfig?.parse,
+    routeConfig?.pathParamNames,
+    routeConfig?.explicitParamNames,
+    routeConfig?.hasNestedScreens,
+    focusedRoute.params
+  );
+
+  if (!queryParams.valid) {
+    return undefined;
+  }
+
+  if (queryParams.params) {
+    focusedRoute.params = { ...focusedRoute.params, ...queryParams.params };
+  }
+
   let route = routes.shift();
 
   if (route == null) {
@@ -1060,11 +1077,7 @@ const createNestedStateObject = (
 
   parentScreens.push(route.name);
 
-  const state: InitialState = createStateObject(
-    initialRoute,
-    route,
-    routes.length === 0
-  );
+  const state = createStateObject(initialRoute, route, routes.length === 0);
 
   if (routes.length > 0) {
     let nestedState = state;
@@ -1102,31 +1115,6 @@ const createNestedStateObject = (
       parentScreens.push(route.name);
       nextRoute = routes.shift();
     }
-  }
-
-  const focusedRoute = findFocusedRoute(state);
-
-  if (focusedRoute == null) {
-    return undefined;
-  }
-
-  focusedRoute.path = path.replace(/\/$/, '');
-
-  const queryParams = parseQueryParams(
-    path,
-    routeConfig?.parse,
-    routeConfig?.pathParamNames,
-    routeConfig?.explicitParamNames,
-    routeConfig?.hasNestedScreens,
-    focusedRoute.params
-  );
-
-  if (!queryParams.valid) {
-    return undefined;
-  }
-
-  if (queryParams.params) {
-    focusedRoute.params = { ...focusedRoute.params, ...queryParams.params };
   }
 
   return state;
