@@ -72,7 +72,7 @@ export function useNavigationCache<
   router,
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
-  const parentNavigationHelpers = React.use(NavigationContext);
+  const parentNavigation = React.use(NavigationContext);
   const { stackRef } = React.use(NavigationBuilderContext);
 
   // Cache object which holds navigation objects for each screen
@@ -88,7 +88,7 @@ export function useNavigationCache<
       >,
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [getState, parentNavigationHelpers, navigation, setOptions, emitter]
+    [getState, parentNavigation, navigation, setOptions, emitter]
   );
 
   const next = routes.reduce<
@@ -172,10 +172,18 @@ export function useNavigationCache<
           }
 
           if (routeName !== undefined) {
-            return parentNavigationHelpers?.getParent(routeName);
+            const parent = parentNavigation?.getParent(routeName);
+
+            if (parent === undefined) {
+              throw new Error(
+                `Couldn't find a navigation object for '${routeName}' in current or any parent screens. Is your component inside the correct screen?`
+              );
+            }
+
+            return parent;
           }
 
-          return parentNavigationHelpers;
+          return parentNavigation;
         },
         setOptions: (options: Partial<ScreenOptions>) => {
           setOptions((o) => ({

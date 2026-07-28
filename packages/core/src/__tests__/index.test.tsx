@@ -3638,7 +3638,7 @@ test('gets self with a route name with getParent(routeName)', async () => {
   `);
 });
 
-test('returns undefined when route name is not found with getParent(routeName)', async () => {
+test('throws when route name is not found with getParent(routeName)', async () => {
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       MockRouter,
@@ -3656,13 +3656,15 @@ test('returns undefined when route name is not found with getParent(routeName)',
     );
   };
 
-  const TestComponent = ({ route, navigation }: any): any => (
-    <Text>{`${route.name} [${navigation.getParent('foo-non-existent')}]`}</Text>
-  );
+  const TestComponent = ({ navigation }: any): any => {
+    navigation.getParent('foo-non-existent');
+
+    return null;
+  };
 
   const onStateChange = jest.fn();
 
-  const element = await render(
+  const element = (
     <BaseNavigationContainer onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">
@@ -3682,11 +3684,9 @@ test('returns undefined when route name is not found with getParent(routeName)',
     </BaseNavigationContainer>
   );
 
-  expect(element).toMatchInlineSnapshot(`
-    <Text>
-      bar [undefined]
-    </Text>
-  `);
+  await expect(render(element)).rejects.toThrow(
+    "Couldn't find a navigation object for 'foo-non-existent' in current or any parent screens. Is your component inside the correct screen?"
+  );
 });
 
 test('gives access to internal state', async () => {
