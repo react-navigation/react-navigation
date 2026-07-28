@@ -1,4 +1,4 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import {
   Button,
   getHeaderTitle,
@@ -289,7 +289,7 @@ const HeaderButtonsScreen = () => {
       headerLeft: showLeft
         ? ({ tintColor, label }) => (
             <HeaderButton onPress={onHeaderButtonPress}>
-              <MaterialCommunityIcons name="menu" size={24} color={tintColor} />
+              <MaterialDesignIcons name="menu" size={24} color={tintColor} />
               {label != null ? (
                 <Text style={{ color: tintColor }}>{label}</Text>
               ) : null}
@@ -299,7 +299,7 @@ const HeaderButtonsScreen = () => {
       headerRight: showRight
         ? ({ tintColor }) => (
             <HeaderButton onPress={onHeaderButtonPress}>
-              <MaterialCommunityIcons name="star" size={24} color={tintColor} />
+              <MaterialDesignIcons name="star" size={24} color={tintColor} />
             </HeaderButton>
           )
         : undefined,
@@ -410,7 +410,7 @@ const HeaderItemsScreen = () => {
         {
           type: 'custom',
           element: (
-            <MaterialCommunityIcons name="heart" size={24} color="tomato" />
+            <MaterialDesignIcons name="heart" size={24} color="tomato" />
           ),
         },
       ],
