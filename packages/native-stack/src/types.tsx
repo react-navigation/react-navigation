@@ -148,23 +148,20 @@ export type NativeStackNextNavigationOptions = {
    */
   headerBackButtonTintColorFocused?: ColorValue | undefined;
   /**
+   * Controls how a custom header background behaves as the app bar collapses.
+   *
+   * @platform android
+   */
+  headerBackgroundCollapseMode?: 'off' | 'parallax' | undefined;
+  /**
    * Subtitle displayed below the large title.
    *
    * @platform ios 26+
    */
   headerLargeSubtitle?:
     | string
-    | ((props: {
-        children: string;
-        tintColor?: ColorValue | undefined;
-      }) => React.ReactNode)
+    | ((props: { tintColor?: ColorValue | undefined }) => React.ReactNode)
     | undefined;
-  /**
-   * Controls how a custom header background behaves as the app bar collapses.
-   *
-   * @platform android
-   */
-  headerBackgroundCollapseMode?: 'off' | 'parallax' | undefined;
   /**
    * String or React element displayed as the header subtitle.
    *
@@ -172,10 +169,7 @@ export type NativeStackNextNavigationOptions = {
    */
   headerSubtitle?:
     | string
-    | ((props: {
-        children: string;
-        tintColor?: ColorValue | undefined;
-      }) => React.ReactNode)
+    | ((props: { tintColor?: ColorValue | undefined }) => React.ReactNode)
     | undefined;
   /**
    * Material app bar size.
@@ -373,6 +367,8 @@ export type NativeStackNavigationOptions = {
    * Boolean indicating whether the navigation bar is translucent.
    * Setting this to `true` makes the header absolutely positioned,
    * and changes the background color to `transparent` unless specified in `headerStyle`.
+   * On Android, enabling this disables header scrolling and collapsing, so
+   * `headerScrollFlag*` options have no effect.
    */
   headerTransparent?: boolean | undefined;
   /**
@@ -394,6 +390,7 @@ export type NativeStackNavigationOptions = {
    * Function which returns a React Element to render as the background of the header.
    * This is useful for using backgrounds such as an image, a gradient, blur effect etc.
    * You can use this with `headerTransparent` to render content underneath a translucent header.
+   * On Android, this is ignored for a small header when `headerScrollFlagScroll` is enabled.
    */
   headerBackground?: (() => React.ReactNode) | undefined;
   /**
@@ -1316,6 +1313,7 @@ type NativeStackHeaderToolbarMenuItemBase = {
   label?: string | undefined;
   condensedLabel?: string | undefined;
   tooltip?: string | undefined;
+  accessibilityLabel?: string | undefined;
   hidden?: boolean | undefined;
   disabled?: boolean | undefined;
   showAsAction?:
