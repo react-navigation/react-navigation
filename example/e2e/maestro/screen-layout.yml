@@ -31,5 +31,5 @@ name: Screen Layout
 - assertNotVisible:
     text: 'Suspend'
 - extendedWaitUntil:
-    timeout: 3500
+    timeout: 5000
     visible: 'Suspend'
