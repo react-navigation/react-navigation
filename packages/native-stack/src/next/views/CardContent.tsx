@@ -24,6 +24,7 @@ type Props = {
   headerBack: React.ContextType<typeof HeaderBackContext>;
   activityMode: React.ComponentProps<typeof ActivityView>['mode'] | 'unmounted';
   backgroundColor: ColorValue;
+  headerBackgroundMode: 'native' | 'screen' | 'none';
 };
 
 export function CardContent({
@@ -31,6 +32,7 @@ export function CardContent({
   headerBack,
   activityMode,
   backgroundColor,
+  headerBackgroundMode,
 }: Props) {
   const { route, navigation, options, render } = descriptor;
 
@@ -41,8 +43,6 @@ export function CardContent({
     headerTransparent,
     contentStyle,
   } = options;
-  const usesNativeHeaderBackground =
-    Platform.OS === 'android' && header == null && headerShown !== false;
 
   const insets = useSafeAreaInsets();
 
@@ -69,18 +69,26 @@ export function CardContent({
     () => new Animated.Value(defaultHeaderHeight)
   );
 
-  const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
+  const [measuredHeaderHeight, setMeasuredHeaderHeight] =
+    React.useState<number>();
+  const headerHeight =
+    header == null
+      ? defaultHeaderHeight
+      : (measuredHeaderHeight ?? defaultHeaderHeight);
 
   const headerContainerRef = React.useRef<View>(null);
 
-  // Stable so the layout effect below only runs on mount.
   const updateHeaderHeight = React.useCallback(
     (height: number) => {
       animatedHeaderHeight.setValue(height);
-      setHeaderHeight(height);
+      setMeasuredHeaderHeight(height);
     },
     [animatedHeaderHeight]
   );
+
+  React.useLayoutEffect(() => {
+    animatedHeaderHeight.setValue(headerHeight);
+  }, [animatedHeaderHeight, headerHeight]);
 
   React.useLayoutEffect(() => {
     headerContainerRef.current?.measure((_x, _y, _width, height) => {
@@ -88,65 +96,77 @@ export function CardContent({
     });
   }, [updateHeaderHeight]);
 
+  let contentElement: React.ReactNode;
+
+  if (activityMode === 'unmounted') {
+    contentElement = null;
+  } else {
+    const backgroundElement =
+      headerShown !== false &&
+      headerBackground != null &&
+      headerBackgroundMode === 'screen' ? (
+        <View
+          style={[
+            styles.background,
+            headerTransparent ? [styles.absolute, styles.elevated] : null,
+            { height: headerHeight },
+          ]}
+        >
+          {headerBackground()}
+        </View>
+      ) : null;
+
+    const headerElement =
+      header != null && headerShown !== false ? (
+        <View
+          style={[
+            styles.header,
+            headerTransparent
+              ? [styles.absolute, { minHeight: headerHeight }]
+              : null,
+          ]}
+        >
+          <View
+            ref={headerContainerRef}
+            onLayout={(e) => updateHeaderHeight(e.nativeEvent.layout.height)}
+            style={styles.headerContent}
+          >
+            {header({
+              back: headerBack,
+              options,
+              route,
+              navigation,
+            })}
+          </View>
+        </View>
+      ) : null;
+
+    contentElement = (
+      <ActivityView mode={activityMode} visible style={styles.content}>
+        <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
+          <HeaderHeightContext.Provider
+            value={
+              headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)
+            }
+          >
+            {backgroundElement}
+            {headerElement}
+            <HeaderShownContext.Provider
+              value={isParentHeaderShown || headerShown !== false}
+            >
+              <HeaderBackContext.Provider value={headerBack}>
+                {render()}
+              </HeaderBackContext.Provider>
+            </HeaderShownContext.Provider>
+          </HeaderHeightContext.Provider>
+        </AnimatedHeaderHeightContext.Provider>
+      </ActivityView>
+    );
+  }
+
   return (
     <View style={[styles.container, { backgroundColor }, contentStyle]}>
-      {activityMode === 'unmounted' ? null : (
-        <ActivityView mode={activityMode} visible style={styles.content}>
-          <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
-            <HeaderHeightContext.Provider
-              value={
-                headerShown !== false ? headerHeight : (parentHeaderHeight ?? 0)
-              }
-            >
-              {headerBackground != null && !usesNativeHeaderBackground ? (
-                <View
-                  style={[
-                    styles.background,
-                    headerTransparent
-                      ? [styles.absolute, styles.elevated]
-                      : null,
-                    { height: headerHeight },
-                  ]}
-                >
-                  {headerBackground()}
-                </View>
-              ) : null}
-              {header != null && headerShown !== false ? (
-                <View
-                  style={[
-                    styles.header,
-                    headerTransparent
-                      ? [styles.absolute, { minHeight: headerHeight }]
-                      : null,
-                  ]}
-                >
-                  <View
-                    ref={headerContainerRef}
-                    onLayout={(e) =>
-                      updateHeaderHeight(e.nativeEvent.layout.height)
-                    }
-                    style={styles.headerContent}
-                  >
-                    {header({
-                      back: headerBack,
-                      options,
-                      route,
-                      navigation,
-                    })}
-                  </View>
-                </View>
-              ) : null}
-              <HeaderShownContext.Provider
-                value={isParentHeaderShown || headerShown !== false}
-              >
-                <HeaderBackContext.Provider value={headerBack}>
-                  {render()}
-                </HeaderBackContext.Provider>
-              </HeaderShownContext.Provider>
-            </HeaderHeightContext.Provider>
-          </AnimatedHeaderHeightContext.Provider>
-        </ActivityView>
-      )}
+      {contentElement}
     </View>
   );
 }
