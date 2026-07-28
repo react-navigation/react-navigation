@@ -9,25 +9,23 @@ on:
   schedule:
     - cron: '0 4 * * *'
 
+env:
+  JAVA_DISTRIBUTION: 'zulu'
+  JAVA_VERSION: '17'
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  ANDROID_USER_HOME: /home/runner/.android
+  API_LEVEL: 34
+
 jobs:
-  maestro-android:
+  build-android:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
-      checks: read
       contents: read
     concurrency:
       group: ${{ github.workflow_ref }}-${{ github.ref }}
       cancel-in-progress: true
     env:
-      JAVA_DISTRIBUTION: 'zulu'
-      JAVA_VERSION: '17'
-      ANDROID_HOME: /usr/local/lib/android/sdk
-      ANDROID_USER_HOME: /home/runner/.android
-      API_LEVEL: 34
-      AVD_NAME: e2e_emulator
-      EMULATOR_PROFILE: pixel_5
-      EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096 -cores 2 -memory 4096'
       ORG_GRADLE_PROJECT_reactNativeArchitectures: x86_64
     steps:
       - name: Checkout
@@ -53,7 +51,7 @@ jobs:
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae
         with:
           path: android-debug-build/
-          key: android-debug-build-${{ steps.calculate-fingerprint.outputs.fingerprint }}
+          key: android-debug-build-${{ runner.os }}-${{ env.API_LEVEL }}-${{ env.ORG_GRADLE_PROJECT_reactNativeArchitectures }}-${{ steps.calculate-fingerprint.outputs.fingerprint }}
 
       - name: Maximize build space
         if: steps.restore-debug-build.outputs.cache-hit != 'true'
@@ -64,12 +62,8 @@ jobs:
           remove-codeql: 'true'
           remove-docker-images: 'true'
 
-      - name: Install AVD dependencies
-        run: |
-          sudo apt update
-          sudo apt-get install -y libpulse0 libgl1 libxkbfile1
-
       - name: Setup JDK
+        if: steps.restore-debug-build.outputs.cache-hit != 'true'
         uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
         with:
           distribution: ${{ env.JAVA_DISTRIBUTION }}
@@ -107,6 +101,55 @@ jobs:
           path: android-debug-build/
           key: ${{ steps.restore-debug-build.outputs.cache-primary-key }}
 
+      - name: Upload debug build artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: android-debug-build
+          path: android-debug-build/android-debug.apk
+          if-no-files-found: error
+          retention-days: 1
+
+  e2e-android:
+    needs: build-android
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    concurrency:
+      group: ${{ github.workflow_ref }}-${{ github.ref }}
+      cancel-in-progress: true
+    env:
+      AVD_NAME: e2e_emulator
+      EMULATOR_PROFILE: pixel_5
+      EMULATOR_OPTIONS: '-no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none -camera-front none -partition-size 4096 -cores 2 -memory 4096'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Install nightly react-native-screens
+        if: github.event_name == 'schedule'
+        run: pnpm --recursive update react-native-screens@nightly --no-save
+
+      - name: Download debug build artifact
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: android-debug-build
+          path: android-debug-build
+
+      - name: Install AVD dependencies
+        run: |
+          sudo apt update
+          sudo apt-get install -y libpulse0 libgl1 libxkbfile1
+
+      - name: Setup JDK
+        uses: actions/setup-java@be666c2fcd27ec809703dec50e508c2fdc7f6654
+        with:
+          distribution: ${{ env.JAVA_DISTRIBUTION }}
+          java-version: ${{ env.JAVA_VERSION }}
+
       - name: Setup Android SDK
         run: |
           {
@@ -118,7 +161,7 @@ jobs:
       - name: Install Android SDK components
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null 2>&1 || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install emulator "platform-tools" "platforms;android-${{ env.API_LEVEL }}" "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --install emulator "platform-tools" "system-images;android-${{ env.API_LEVEL }};google_apis;x86_64"
 
       - name: Enable KVM
         run: |
@@ -154,11 +197,11 @@ jobs:
           cd example
           pnpm e2e:native --platform android
 
-      - name: Store timing output
+      - name: Store E2E output
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: e2e-timing-android
+          name: e2e-output-android
           path: example/agent-device-artifacts/**/*
           include-hidden-files: true
           overwrite: true
@@ -173,7 +216,6 @@ jobs:
         with:
           name: e2e-artifacts-android
           path: |
-            example/agent-device-artifacts/**/*
             example/agent-device-state/**/*.log
             ~/.agent-device/**/*.log
           include-hidden-files: true
