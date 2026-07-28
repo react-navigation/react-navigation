@@ -284,7 +284,7 @@ const LoaderTabs = createBottomTabNavigator({
       UNSTABLE_loader: async () => {
         await Promise.all(
           TEAM_DINO_IDS.map((id) => queryClient.ensureQueryData(dinoQuery(id)))
-        );
+        ).catch(() => {});
       },
     },
     DinoBattle: {
@@ -303,7 +303,7 @@ const LoaderTabs = createBottomTabNavigator({
           BATTLE_DINO_IDS.map((id) =>
             queryClient.ensureQueryData(dinoQuery(id))
           )
-        );
+        ).catch(() => {});
       },
     },
   },
@@ -329,7 +329,7 @@ const LoaderStack = createNativeStackNavigator({
         headerTransparent: true,
       },
       UNSTABLE_loader: async ({ params }) => {
-        await queryClient.ensureQueryData(dinoQuery(params.id));
+        await queryClient.ensureQueryData(dinoQuery(params.id)).catch(() => {});
       },
     }),
   },
