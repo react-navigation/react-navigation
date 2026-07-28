@@ -1,47 +1,45 @@
 import * as React from 'react';
 import {
-  Stack,
   type StackHeaderConfigProps,
   type StackHeaderMenuElementIOS,
   type StackHeaderMenuIOS,
-} from 'react-native-screens/experimental';
+} from 'react-native-screens';
 
 import type {
   NativeStackHeaderItem,
   NativeStackHeaderItemMenu,
+  NativeStackHeaderItemMenuSubmenu,
   NativeStackNavigationOptions,
 } from '../../types';
-import {
-  getHeaderConfigBase,
-  type HeaderConfigProps,
-  useHeaderConfig,
-} from './HeaderConfigShared';
+import type {
+  HeaderConfigOptions,
+  HeaderConfigResult,
+} from './useHeaderConfig';
 
 type StackHeaderConfigIOS = NonNullable<StackHeaderConfigProps['ios']>;
 type StackHeaderItemIOS = NonNullable<
   StackHeaderConfigIOS['leadingItems']
 >[number];
 
-export function HeaderConfig(props: HeaderConfigProps) {
-  const config = useHeaderConfig(props);
-  const {
-    descriptor: { options },
-    hasCustomHeader,
-    headerBack,
-    headerLeftElement,
-    headerRightElement,
-    headerTitleElement,
-    headerTitleText,
-    canGoBack,
-  } = config;
+type HeaderMenu = Omit<NativeStackHeaderItemMenu['menu'], 'title'> &
+  Partial<Pick<NativeStackHeaderItemMenuSubmenu, 'icon' | 'inline'>>;
+
+// eslint-disable-next-line @eslint-react/hooks-extra/no-unnecessary-use-prefix, @eslint-react/hooks-extra/ensure-custom-hooks-using-other-hooks
+export function useHeaderConfig({
+  options,
+  hasCustomHeader,
+  headerLeftElement,
+  headerRightElement,
+  headerTitleElement,
+  headerTitleText,
+  canGoBack,
+  tintColor,
+}: HeaderConfigOptions): HeaderConfigResult {
   const renderElementOption = (
     option: NativeStackNavigationOptions['headerSubtitle']
   ) =>
     !hasCustomHeader && typeof option === 'function'
-      ? option({
-          tintColor: options.headerTintColor,
-          children: '',
-        })
+      ? option({ tintColor })
       : null;
 
   const headerSubtitleElement = renderElementOption(options.headerSubtitle);
@@ -51,21 +49,20 @@ export function HeaderConfig(props: HeaderConfigProps) {
   const nativeHeaderLeftItems = hasCustomHeader
     ? undefined
     : options.unstable_headerLeftItems?.({
-        tintColor: options.headerTintColor,
+        tintColor,
         canGoBack,
       });
   const nativeHeaderRightItems = hasCustomHeader
     ? undefined
     : options.unstable_headerRightItems?.({
-        tintColor: options.headerTintColor,
+        tintColor,
         canGoBack,
       });
   const usesHeaderLeftElement =
     nativeHeaderLeftItems == null && headerLeftElement != null;
   const usesHeaderRightElement =
     nativeHeaderRightItems == null && headerRightElement != null;
-  const headerConfig: StackHeaderConfigProps = {
-    ...getHeaderConfigBase(config, usesHeaderLeftElement),
+  const platformConfig: HeaderConfigResult['platformConfig'] = {
     ios: {
       subtitleItem: getRenderItem('header-subtitle', headerSubtitleElement),
       leadingItems:
@@ -106,12 +103,11 @@ export function HeaderConfig(props: HeaderConfigProps) {
     },
   };
 
-  return (
-    <>
-      {props.children(headerBack)}
-      <Stack.HeaderConfig {...headerConfig} />
-    </>
-  );
+  return {
+    platformConfig,
+    usesHeaderLeftElement,
+    headerBackgroundMode: 'screen',
+  };
 }
 
 function getRenderItem(id: string, element: React.ReactNode) {
@@ -130,6 +126,7 @@ function getIOSHeaderItems(
         id: item.identifier ?? fallbackId,
         type: 'item',
         title: item.label,
+        icon: getIOSHeaderIcon(item.icon),
         onPress: item.onPress,
       };
     }
@@ -141,7 +138,11 @@ function getIOSHeaderItems(
         id,
         type: 'item',
         title: item.label,
-        menu: getIOSHeaderMenu(item.menu, `${id}-menu`),
+        icon: getIOSHeaderIcon(item.icon),
+        menu: {
+          ...getIOSHeaderMenu(item.menu, `${id}-menu`),
+          title: item.menu.title,
+        },
       };
     }
 
@@ -163,22 +164,7 @@ function getIOSHeaderItems(
 }
 
 function getIOSHeaderMenu(
-  menu: NativeStackHeaderItemMenu['menu'],
-  id: string
-): StackHeaderMenuIOS {
-  return {
-    ...getIOSHeaderMenuBase(menu, id),
-    title: menu.title,
-  };
-}
-
-function getIOSHeaderMenuBase(
-  menu: {
-    identifier?: string | undefined;
-    multiselectable?: boolean | undefined;
-    onSelectionChange?: ((selectedItemIds: string[]) => void) | undefined;
-    items: NativeStackHeaderItemMenu['menu']['items'];
-  },
+  menu: HeaderMenu,
   id: string
 ): Omit<StackHeaderMenuIOS, 'title'> {
   const menuId = menu.identifier ?? id;
@@ -186,12 +172,15 @@ function getIOSHeaderMenuBase(
   return {
     id: menuId,
     type: 'menu',
+    icon: getIOSHeaderIcon(menu.icon),
+    displayInline: menu.inline,
+    displayAsPalette: menu.layout === 'palette',
     singleSelection:
       typeof menu.multiselectable === 'boolean'
         ? !menu.multiselectable
         : undefined,
     ...(menu.onSelectionChange == null
-      ? {}
+      ? null
       : { onSelectionChange: menu.onSelectionChange }),
     children: menu.items.map((item, index) =>
       getIOSHeaderMenuElement(item, `${menuId}-${index}`)
@@ -208,15 +197,28 @@ function getIOSHeaderMenuElement(
       id: item.identifier ?? id,
       type: 'menuItem',
       title: item.label,
+      icon: getIOSHeaderIcon(item.icon),
       itemType: item.role,
       initialToggleState: item.initialState,
-      ...(item.onPress == null ? {} : { onPress: item.onPress }),
+      ...(item.onPress == null ? null : { onPress: item.onPress }),
       keepsMenuPresented: item.keepsMenuPresented,
     };
   }
 
   return {
-    ...getIOSHeaderMenuBase(item, id),
+    ...getIOSHeaderMenu(item, id),
     title: item.label,
   };
+}
+
+function getIOSHeaderIcon(
+  icon: NativeStackHeaderItemMenu['icon']
+): StackHeaderMenuIOS['icon'] {
+  if (icon?.type === 'image') {
+    return icon.tinted === false
+      ? { type: 'imageSource', imageSource: icon.source }
+      : { type: 'templateSource', templateSource: icon.source };
+  }
+
+  return icon;
 }
