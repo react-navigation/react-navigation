@@ -12,6 +12,7 @@ import {
 import Animated, {
   interpolate,
   ReduceMotion,
+  useAnimatedProps,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
@@ -36,6 +37,9 @@ const SWIPE_EDGE_WIDTH = 32;
 const SWIPE_MIN_OFFSET = 5;
 const SWIPE_MIN_DISTANCE = 60;
 const SWIPE_MIN_VELOCITY = 500;
+// Treat near-zero progress as closed so float noise doesn't toggle a11y.
+const PROGRESS_EPSILON = 0.05;
+const IS_ANDROID = Platform.OS === 'android';
 
 const minmax = (value: number, start: number, end: number) => {
   'worklet';
@@ -130,14 +134,20 @@ export function Drawer({
     onGestureCancel?.();
   });
 
+  // Root pan hitSlop stays edge-only forever (never keyed off isOpen). Changing
+  // hitSlop mid-spring remounts GestureDetector and flashes on Android Fabric
+  // (#12137). Full-width root hitSlop while closed steals content horizontal pans.
+  //
+  // Swipe-to-close from the dimmed content / drawer body uses separate pans
+  // (below) so root hitSlop can stay edge-only forever.
+  // Widen the open-edge via swipeEdgeWidth if the default feels too small.
   const hitSlop = React.useMemo(
     () =>
       isRight
-        ? // Extend hitSlop to the side of the screen when drawer is closed
-          // This lets the user drag the drawer from the side of the screen
-          { right: 0, width: isOpen ? undefined : swipeEdgeWidth }
-        : { left: 0, width: isOpen ? undefined : swipeEdgeWidth },
-    [isRight, isOpen, swipeEdgeWidth]
+        ? // Edge-only hit area so the user can drag the drawer open from the side
+          { right: 0, width: swipeEdgeWidth }
+        : { left: 0, width: swipeEdgeWidth },
+    [isRight, swipeEdgeWidth]
   );
 
   const [initialWidth] = React.useState(() => Dimensions.get('window').width);
@@ -213,6 +223,9 @@ export function Drawer({
     }
   );
 
+  // Ignore duplicate springs to the same end state. Always clear when a spring
+  // ends (finished or not) and on drag begin so an interrupted spring cannot
+  // leave animatingTo stuck and block the next settle.
   const animatingTo = useSharedValue<'open' | 'close' | null>(null);
 
   const toggleDrawer = React.useCallback(
@@ -291,11 +304,13 @@ export function Drawer({
 
   const startX = useSharedValue(0);
 
-  const panGestureConfig = React.useMemo(() => {
-    const config: PanGestureConfig = {
-      onBegin: (event) => {
+  const panHandlers = React.useMemo(
+    () => ({
+      onBegin: (event: { x: number }) => {
         'worklet';
 
+        // Drag takes over — drop any in-flight open/close spring target.
+        animatingTo.set(null);
         startX.set(translationX.get());
         touchStartX.set(event.x);
       },
@@ -305,13 +320,17 @@ export function Drawer({
         isGestureActive.set(true);
         scheduleOnRN(onGestureBegin);
       },
-      onUpdate: (event) => {
+      onUpdate: (event: { x: number; translationX: number }) => {
         'worklet';
 
         touchX.set(event.x);
         translationX.set(startX.get() + event.translationX);
       },
-      onDeactivate: (event) => {
+      onDeactivate: (event: {
+        canceled?: boolean;
+        translationX: number;
+        velocityX: number;
+      }) => {
         'worklet';
 
         isGestureActive.set(false);
@@ -339,34 +358,58 @@ export function Drawer({
         toggleDrawer(nextOpen, event.velocityX);
         scheduleOnRN(onGestureFinish);
       },
-      activeOffsetX: [-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET],
-      failOffsetY: [-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET],
-      hitSlop,
+      activeOffsetX: [-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET] as [number, number],
+      failOffsetY: [-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET] as [number, number],
       enabled: drawerType !== 'permanent' && swipeEnabled,
+    }),
+    [
+      animatingTo,
+      drawerPosition,
+      drawerType,
+      isGestureActive,
+      onGestureBegin,
+      onGestureAbort,
+      onGestureFinish,
+      open,
+      startX,
+      swipeEnabled,
+      swipeMinDistance,
+      swipeMinVelocity,
+      toggleDrawer,
+      touchStartX,
+      touchX,
+      translationX,
+    ]
+  );
+
+  const panGestureConfig = React.useMemo(() => {
+    const config: PanGestureConfig = {
+      ...panHandlers,
+      hitSlop,
     };
 
     return configureGestureHandler?.(config) ?? config;
-  }, [
-    configureGestureHandler,
-    drawerPosition,
-    drawerType,
-    hitSlop,
-    isGestureActive,
-    onGestureBegin,
-    onGestureAbort,
-    onGestureFinish,
-    open,
-    startX,
-    swipeEnabled,
-    swipeMinDistance,
-    swipeMinVelocity,
-    toggleDrawer,
-    touchStartX,
-    touchX,
-    translationX,
-  ]);
+  }, [configureGestureHandler, hitSlop, panHandlers]);
+
+  // Dimmed overlay + drawer panel: swipe-to-close without widening root hitSlop.
+  // Overlay only receives touches while open (pointerEvents driven by progress).
+  // Drawer pan restores stock drag-to-close on the drawer body without remounting
+  // the root edge pan. Separate configs — one gesture config must not be shared
+  // across two hooks. Also run through configureGestureHandler so apps can
+  // customize close pans.
+  const overlayPanGestureConfig = React.useMemo((): PanGestureConfig => {
+    const config: PanGestureConfig = { ...panHandlers };
+    return configureGestureHandler?.(config) ?? config;
+  }, [configureGestureHandler, panHandlers]);
+
+  const drawerPanGestureConfig = React.useMemo((): PanGestureConfig => {
+    const config: PanGestureConfig = { ...panHandlers };
+    return configureGestureHandler?.(config) ?? config;
+  }, [configureGestureHandler, panHandlers]);
 
   const pan = usePanGesture(panGestureConfig);
+  const overlayPan = usePanGesture(overlayPanGestureConfig);
+  const drawerPan = usePanGesture(drawerPanGestureConfig);
 
   const translateX = useDerivedValue(() => {
     const drawerWidth = getDrawerWidthNative({
@@ -512,6 +555,26 @@ export function Drawer({
         );
   });
 
+  // Keep content aria-hidden in sync with drawer progress on the UI thread.
+  // React-state toggles of aria-hidden Fabric-recommits the nested navigator
+  // tree (#12137). animatedProps updates the native prop without that recommit.
+  const contentA11yProps = useAnimatedProps(() => {
+    const hidden =
+      drawerType !== 'permanent' && progress.value > PROGRESS_EPSILON;
+
+    return {
+      'aria-hidden': hidden,
+      // TalkBack: hide descendants while the drawer covers content.
+      ...(IS_ANDROID
+        ? {
+            importantForAccessibility: hidden
+              ? ('no-hide-descendants' as const)
+              : ('yes' as const),
+          }
+        : null),
+    };
+  }, [drawerType, progress]);
+
   return (
     <GestureHandlerRootView style={[styles.container, style]}>
       <DrawerProgressContext.Provider value={progress}>
@@ -537,12 +600,12 @@ export function Drawer({
                 onLayout={onLayout}
                 style={[styles.content, contentAnimatedStyle]}
               >
-                <View
-                  aria-hidden={isOpen && drawerType !== 'permanent'}
+                <Animated.View
                   style={styles.content}
+                  animatedProps={contentA11yProps}
                 >
                   {children}
-                </View>
+                </Animated.View>
                 {drawerType !== 'permanent' ? (
                   <Overlay
                     open={open}
@@ -550,23 +613,26 @@ export function Drawer({
                     onPress={() => toggleDrawer(false)}
                     style={overlayStyle}
                     accessibilityLabel={overlayAccessibilityLabel}
+                    panGesture={overlayPan}
                   />
                 ) : null}
               </Animated.View>
-              <Animated.View
-                removeClippedSubviews={Platform.OS !== 'ios'}
-                style={[
-                  styles.drawer,
-                  {
-                    position:
-                      drawerType === 'permanent' ? 'relative' : 'absolute',
-                  },
-                  drawerAnimatedStyle,
-                  drawerStyle,
-                ]}
-              >
-                {renderDrawerContent()}
-              </Animated.View>
+              <GestureDetector gesture={drawerPan}>
+                <Animated.View
+                  removeClippedSubviews={Platform.OS !== 'ios'}
+                  style={[
+                    styles.drawer,
+                    {
+                      position:
+                        drawerType === 'permanent' ? 'relative' : 'absolute',
+                    },
+                    drawerAnimatedStyle,
+                    drawerStyle,
+                  ]}
+                >
+                  {renderDrawerContent()}
+                </Animated.View>
+              </GestureDetector>
             </Animated.View>
           </GestureDetector>
         </DrawerGestureContext.Provider>

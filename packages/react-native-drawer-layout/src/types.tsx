@@ -1,6 +1,9 @@
 import * as React from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
-import type { PanGestureConfig } from 'react-native-gesture-handler';
+import type {
+  PanGesture,
+  PanGestureConfig,
+} from 'react-native-gesture-handler';
 import type { SharedValue } from 'react-native-reanimated';
 
 export type DrawerProps = {
@@ -157,4 +160,6 @@ export type OverlayProps = React.ComponentProps<typeof View> & {
   progress: SharedValue<number>;
   onPress: () => void;
   accessibilityLabel?: string | undefined;
+  /** Optional pan for swipe-to-close from the dimmed overlay area. */
+  panGesture?: PanGesture | undefined;
 };
