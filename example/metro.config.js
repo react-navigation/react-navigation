@@ -3,7 +3,16 @@ const { withMetroConfig } = require('react-native-monorepo-config');
 
 const { getDefaultConfig } = require('@expo/metro-config');
 
-const defaultConfig = withMetroConfig(getDefaultConfig(__dirname), {
+const expoConfig = getDefaultConfig(__dirname);
+
+// Expo serializer reads the assetPlugins from the original config
+// So we need to mutate the config object
+expoConfig.transformer.assetPlugins = [
+  ...expoConfig.transformer.assetPlugins,
+  path.resolve(__dirname, 'metro-asset-plugin.config.js'),
+];
+
+const defaultConfig = withMetroConfig(expoConfig, {
   root: path.resolve(__dirname, '..'),
   dirname: __dirname,
   conditions: ['@react-navigation/source'],
