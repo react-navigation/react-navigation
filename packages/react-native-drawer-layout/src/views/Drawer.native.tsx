@@ -334,8 +334,34 @@ export function Drawer({
 
         isGestureActive.set(false);
 
+        const velocityX = event.velocityX;
+
+        /**
+         * Reanimated flushes queued animation frame callbacks synchronously at
+         * the end of a gesture event. On Android, the gesture event timestamp can
+         * be newer than the timestamp of the next native animation frame.
+         *
+         * Starting the spring directly in `onDeactivate`, or in the first
+         * `requestAnimationFrame` callback, initializes it with the gesture event
+         * timestamp. The next native frame can then produce a negative time delta.
+         * With `overshootClamping` enabled, that invalid spring step can cross the
+         * target and finish immediately, which makes the drawer snap after release.
+         *
+         * The first callback below is consumed by Reanimated's synchronous gesture
+         * event flush. The second callback stays queued until a native animation
+         * frame, so the spring starts with a timestamp from the native frame clock.
+         *
+         * Reanimated 4.4 clamps negative spring time deltas to zero. Keep this
+         * workaround while older Reanimated versions remain supported.
+         * https://github.com/software-mansion/react-native-reanimated/pull/9463
+         */
         if (event.canceled) {
-          toggleDrawer(open, event.velocityX);
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              toggleDrawer(open, velocityX);
+            });
+          });
+
           scheduleOnRN(onGestureAbort);
 
           return;
@@ -354,7 +380,12 @@ export function Drawer({
                 0
             : open;
 
-        toggleDrawer(nextOpen, event.velocityX);
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            toggleDrawer(nextOpen, velocityX);
+          });
+        });
+
         scheduleOnRN(onGestureFinish);
       },
       activeOffsetX: [-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET],
