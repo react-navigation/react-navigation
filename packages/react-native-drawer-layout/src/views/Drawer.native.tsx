@@ -30,7 +30,9 @@ import {
   GestureDetector,
   GestureHandlerRootView,
   type PanGestureConfig,
+  useLongPressGesture,
   usePanGesture,
+  useSimultaneousGestures,
 } from './GestureHandler';
 import { Overlay } from './Overlay';
 
@@ -38,7 +40,16 @@ const SWIPE_EDGE_WIDTH = 32;
 const SWIPE_MIN_OFFSET = 5;
 const SWIPE_MIN_DISTANCE = 60;
 const SWIPE_MIN_VELOCITY = 500;
+const PEEK_DELAY = 160;
 const PROGRESS_EPSILON = 0.05;
+
+const SPRING_CONFIG = {
+  stiffness: 500,
+  damping: 40,
+  mass: 1,
+  overshootClamping: true,
+  reduceMotion: ReduceMotion.Never,
+};
 
 const minmax = (value: number, start: number, end: number) => {
   'worklet';
@@ -201,6 +212,7 @@ export function Drawer({
   const touchStartX = useSharedValue(0);
   const touchX = useSharedValue(0);
   const isGestureActive = useSharedValue(false);
+  const isPeeking = useSharedValue(false);
 
   const onAnimationStart = useLatestCallback((open: boolean) => {
     onTransitionStart?.(!open);
@@ -224,6 +236,7 @@ export function Drawer({
 
       touchStartX.set(0);
       touchX.set(0);
+      isPeeking.set(false);
 
       const containerWidth = layoutWidth.get();
       const toValue = getDrawerTranslationX(open, containerWidth);
@@ -277,6 +290,7 @@ export function Drawer({
     [
       touchStartX,
       touchX,
+      isPeeking,
       layoutWidth,
       getDrawerTranslationX,
       translationX,
@@ -292,27 +306,28 @@ export function Drawer({
     toggleDrawer(open);
   }, [animatingTo, open, toggleDrawer]);
 
-  const startX = useSharedValue(0);
-
   const panGestureConfig = React.useMemo(() => {
     const config: PanGestureConfig = {
       onBegin: (event) => {
         'worklet';
 
-        startX.set(translationX.get());
         touchStartX.set(event.x);
       },
-      onActivate: () => {
+      onActivate: (event) => {
         'worklet';
 
+        translationX.set(translationX.get() + event.translationX);
+        isPeeking.set(false);
         isGestureActive.set(true);
         scheduleOnRN(onGestureBegin);
       },
       onUpdate: (event) => {
         'worklet';
 
+        isPeeking.set(false);
+        isGestureActive.set(true);
         touchX.set(event.x);
-        translationX.set(startX.get() + event.translationX);
+        translationX.set(translationX.get() + event.changeX);
       },
       onDeactivate: (event) => {
         'worklet';
@@ -355,11 +370,11 @@ export function Drawer({
     drawerType,
     hitSlop,
     isGestureActive,
+    isPeeking,
     onGestureBegin,
     onGestureAbort,
     onGestureFinish,
     open,
-    startX,
     swipeEnabled,
     swipeMinDistance,
     swipeMinVelocity,
@@ -370,6 +385,59 @@ export function Drawer({
   ]);
 
   const pan = usePanGesture(panGestureConfig);
+
+  const longPress = useLongPressGesture({
+    enabled: !isOpen && panGestureConfig.enabled,
+    hitSlop: panGestureConfig.hitSlop,
+    minDuration: PEEK_DELAY,
+    onActivate: () => {
+      'worklet';
+
+      if (isGestureActive.get()) {
+        return;
+      }
+
+      const containerWidth = layoutWidth.get();
+      const closedTranslation = getDrawerTranslationX(false, containerWidth);
+
+      if (translationX.get() !== closedTranslation) {
+        return;
+      }
+
+      const peekDistance = Math.min(
+        swipeEdgeWidth,
+        Math.abs(closedTranslation)
+      );
+
+      if (peekDistance <= 0) {
+        return;
+      }
+
+      const peekTranslation =
+        closedTranslation + peekDistance * (drawerPosition === 'left' ? 1 : -1);
+
+      isPeeking.set(true);
+      translationX.set(withSpring(peekTranslation, SPRING_CONFIG));
+    },
+    onDeactivate: () => {
+      'worklet';
+
+      if (isPeeking.get()) {
+        isPeeking.set(false);
+
+        const containerWidth = layoutWidth.get();
+
+        translationX.set(
+          withSpring(
+            getDrawerTranslationX(false, containerWidth),
+            SPRING_CONFIG
+          )
+        );
+      }
+    },
+  });
+
+  const gesture = useSimultaneousGestures(pan, longPress);
 
   const translateX = useDerivedValue(() => {
     const drawerWidth = getDrawerWidthNative({
@@ -517,7 +585,21 @@ export function Drawer({
 
   const contentAnimatedProps = useAnimatedProps<ViewProps>(() => {
     const hidden =
-      drawerType !== 'permanent' && progress.value > PROGRESS_EPSILON;
+      drawerType !== 'permanent' && progress.value >= 1 - PROGRESS_EPSILON;
+
+    if (Platform.OS === 'android') {
+      const importantForAccessibility: ViewProps['importantForAccessibility'] =
+        hidden ? 'no-hide-descendants' : 'auto';
+
+      return { importantForAccessibility };
+    }
+
+    return { accessibilityElementsHidden: hidden };
+  }, [drawerType, progress]);
+
+  const drawerContentAnimatedProps = useAnimatedProps<ViewProps>(() => {
+    const hidden =
+      drawerType !== 'permanent' && progress.value < 1 - PROGRESS_EPSILON;
 
     if (Platform.OS === 'android') {
       const importantForAccessibility: ViewProps['importantForAccessibility'] =
@@ -533,7 +615,7 @@ export function Drawer({
     <GestureHandlerRootView style={[styles.container, style]}>
       <DrawerProgressContext.Provider value={progress}>
         <DrawerGestureContext.Provider value={pan}>
-          <GestureDetector gesture={pan}>
+          <GestureDetector gesture={gesture}>
             {/* Immediate child of gesture handler needs to be an Animated.View */}
             <Animated.View
               style={[
@@ -571,6 +653,7 @@ export function Drawer({
                 ) : null}
               </Animated.View>
               <Animated.View
+                animatedProps={drawerContentAnimatedProps}
                 removeClippedSubviews={Platform.OS !== 'ios'}
                 style={[
                   styles.drawer,
