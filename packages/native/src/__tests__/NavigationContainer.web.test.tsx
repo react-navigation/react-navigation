@@ -12,8 +12,10 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, render, screen, waitFor } from '@testing-library/react';
+import * as React from 'react';
 import { Text } from 'react-native';
 
+import { LinkingContext } from '../LinkingContext';
 import { NavigationContainer } from '../NavigationContainer';
 
 beforeEach(() => {
@@ -327,6 +329,54 @@ test('renders normally when state restoration throws', async () => {
     'Failed to restore navigation state. The state will be initialized based on the navigation tree.',
     expect.any(Error)
   );
+});
+
+test('provides the linking context to the fallback while state is not ready', async () => {
+  const createStackNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    return (
+      <NavigationContent>
+        {route ? descriptors[route.key]?.render() : null}
+      </NavigationContent>
+    );
+  });
+
+  const Stack = createStackNavigator();
+
+  const TestScreen = ({ route }: any): any => <Text>{route.name}</Text>;
+
+  // Reads the linking context the same way `Link`/`useLinkBuilder` do internally.
+  // Accessing `options` throws "Couldn't find a LinkingContext context." if the
+  // fallback isn't wrapped in `LinkingContext.Provider`.
+  const LinkingConsumer = () => {
+    const { options } = React.use(LinkingContext);
+    return <Text>fallback:{String(options?.enabled ?? false)}</Text>;
+  };
+
+  // Never resolves, so the container stays on the `fallback` branch.
+  const { promise } = Promise.withResolvers<PartialState<NavigationState>>();
+
+  render(
+    <NavigationContainer
+      fallback={<LinkingConsumer />}
+      persistor={{
+        persist() {},
+        restore: () => promise,
+      }}
+    >
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(screen.getByText('fallback:false')).toBeInTheDocument();
 });
 
 test('renders normally when state restoration rejects', async () => {

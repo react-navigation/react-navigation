@@ -246,9 +246,14 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
     (isLinkStateResolved && isPersistedStateResolved);
 
   if (!isStateReady) {
+    // Keep the same linking context available as in the ready branch, so that
+    // anything rendered in `fallback` (e.g. a `Link`) doesn't hit the default
+    // `LinkingContext` value, which throws.
     return (
       <LocaleDirContext.Provider value={direction}>
-        <ThemeProvider value={theme}>{fallback}</ThemeProvider>
+        <LinkingContext.Provider value={linkingConfig}>
+          <ThemeProvider value={theme}>{fallback}</ThemeProvider>
+        </LinkingContext.Provider>
       </LocaleDirContext.Provider>
     );
   }
