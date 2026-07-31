@@ -98,6 +98,60 @@ test('fires loader when an action navigates to a screen with UNSTABLE_loader', a
   });
 });
 
+test('fires loader when preload adds a route and when navigation focuses it', async () => {
+  const homeFn = jest.fn(async () => {});
+  const detailFn = jest.fn(
+    async (_options: { name: string; params: unknown }) => {}
+  );
+
+  const Root = createStackTestNavigator({
+    screens: {
+      Home: {
+        screen: TestScreen,
+        UNSTABLE_loader: homeFn,
+      },
+      Detail: {
+        screen: TestScreen,
+        UNSTABLE_loader: detailFn,
+      },
+    },
+  });
+
+  const Component = Root.getComponent();
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <Component />
+    </BaseNavigationContainer>
+  );
+
+  await act(() => {
+    navigation.dispatch(CommonActions.preload('Detail', { id: '42' }));
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+  expect(homeFn).not.toHaveBeenCalled();
+  expect(detailFn).toHaveBeenCalledTimes(1);
+  expect(detailFn).toHaveBeenCalledWith({
+    name: 'Detail',
+    params: { id: '42' },
+  });
+
+  await act(() => {
+    navigation.dispatch(CommonActions.preload('Detail', { id: '43' }));
+  });
+
+  expect(detailFn).toHaveBeenCalledTimes(1);
+
+  await act(() => {
+    navigation.dispatch(CommonActions.navigate('Detail', { id: '43' }));
+  });
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Detail');
+  expect(detailFn).toHaveBeenCalledTimes(2);
+});
+
 test('does not fire any loader when navigating to a screen without UNSTABLE_loader', async () => {
   const fn = jest.fn(async (_options: { name: string; params: unknown }) => {});
 

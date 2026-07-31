@@ -3,6 +3,11 @@ import type { NavigationState, PartialState } from '@react-navigation/routers';
 import { getStateFromRouteParams } from './getStateFromRouteParams';
 import type { TreeForPathConfig } from './StaticNavigation';
 
+type StateRoute = (
+  | PartialState<NavigationState>
+  | NavigationState
+)['routes'][number];
+
 function findScreenInConfig(config: TreeForPathConfig['config'], name: string) {
   const screens = config.screens;
 
@@ -78,9 +83,15 @@ export function getLoaderForStateChange(
   tree: TreeForPathConfig,
   state: PartialState<NavigationState> | NavigationState | undefined,
   previousState: PartialState<NavigationState> | NavigationState | undefined,
-  consumedParams: WeakMap<object, true> | undefined
+  consumedParams: WeakMap<object, true> | undefined,
+  addedRoutesOnly: boolean = false
 ): (() => Promise<void>) | undefined {
-  const focusedRoute = state?.routes[state.index ?? state.routes.length - 1];
+  if (state == null) {
+    return undefined;
+  }
+
+  const focusedIndex = state.index ?? state.routes.length - 1;
+  const focusedRoute = state.routes[focusedIndex];
   const previousFocusedRoute =
     previousState?.routes[
       previousState.index ?? previousState.routes.length - 1
@@ -91,7 +102,6 @@ export function getLoaderForStateChange(
   }
 
   const isNewlyFocused =
-    previousState === undefined ||
     previousFocusedRoute == null ||
     focusedRoute.name !== previousFocusedRoute.name ||
     (focusedRoute.key != null &&
@@ -116,8 +126,86 @@ export function getLoaderForStateChange(
 
   const loaders: (() => Promise<void>)[] = [];
 
+  let previousRouteForFocusedRoute: StateRoute | undefined;
+
+  if ((!isNewlyFocused || addedRoutesOnly) && previousState) {
+    const previousRouteIndicesByKey = new Map<string, number>();
+
+    previousState.routes.forEach((previousRoute, previousIndex) => {
+      if (previousRoute.key != null) {
+        previousRouteIndicesByKey.set(previousRoute.key, previousIndex);
+      }
+    });
+
+    const matchedPreviousRoutes = new Map<number, StateRoute>();
+    const matchedPreviousRouteIndices = new Set<number>();
+
+    state.routes.forEach((route, index) => {
+      if (route.key == null) {
+        return;
+      }
+
+      const previousRouteIndex = previousRouteIndicesByKey.get(route.key);
+      const previousRoute =
+        previousRouteIndex != null
+          ? previousState.routes[previousRouteIndex]
+          : undefined;
+
+      if (previousRouteIndex != null && previousRoute?.name === route.name) {
+        matchedPreviousRoutes.set(index, previousRoute);
+        matchedPreviousRouteIndices.add(previousRouteIndex);
+      }
+    });
+
+    state.routes.forEach((route, index) => {
+      if (matchedPreviousRoutes.has(index)) {
+        return;
+      }
+
+      const previousRouteIndex = previousState.routes.findIndex(
+        (previousRoute, previousIndex) =>
+          !matchedPreviousRouteIndices.has(previousIndex) &&
+          route.name === previousRoute.name &&
+          (route.key == null || previousRoute.key == null)
+      );
+
+      if (previousRouteIndex !== -1) {
+        const previousRoute = previousState.routes[previousRouteIndex];
+
+        if (previousRoute != null) {
+          matchedPreviousRoutes.set(index, previousRoute);
+          matchedPreviousRouteIndices.add(previousRouteIndex);
+        }
+      }
+    });
+
+    state.routes.forEach((route, index) => {
+      const previousRoute = matchedPreviousRoutes.get(index);
+
+      if (index === focusedIndex) {
+        previousRouteForFocusedRoute = previousRoute;
+
+        return;
+      }
+
+      const loader = getLoaderForStateChange(
+        tree,
+        { index: 0, routes: [route] },
+        previousRoute != null
+          ? { index: 0, routes: [previousRoute] }
+          : undefined,
+        consumedParams,
+        previousRoute != null
+      );
+
+      if (loader) {
+        loaders.push(loader);
+      }
+    });
+  }
+
   if (
-    isNewlyFocused &&
+    previousRouteForFocusedRoute == null &&
     'UNSTABLE_loader' in item &&
     typeof item.UNSTABLE_loader === 'function'
   ) {
@@ -131,40 +219,43 @@ export function getLoaderForStateChange(
     );
   }
 
-  const nested =
-    'config' in item
-      ? item
-      : 'screen' in item &&
-          // Nested navigators cannot be defined as a getter
-          Object.getOwnPropertyDescriptor(item, 'screen')?.get == null &&
-          'config' in item.screen
-        ? item.screen
-        : undefined;
+  let nested: TreeForPathConfig | undefined;
+
+  if ('config' in item) {
+    nested = item;
+  } else if (
+    'screen' in item &&
+    // Nested navigators cannot be defined as a getter
+    Object.getOwnPropertyDescriptor(item, 'screen')?.get == null &&
+    'config' in item.screen
+  ) {
+    nested = item.screen;
+  }
 
   if (nested) {
     const initialRouteName = findInitialRouteName(nested.config);
+    const initialChildState =
+      initialRouteName != null
+        ? { routes: [{ name: initialRouteName }] }
+        : undefined;
 
     const stateFromParams =
       focusedRoute.params != null && consumedParams?.has(focusedRoute.params)
         ? undefined
         : getStateFromRouteParams(params);
 
-    let childState =
-      previousState !== undefined && stateFromParams != null
-        ? stateFromParams
-        : (focusedRoute.state ?? stateFromParams);
-
-    if (childState == null && initialRouteName != null) {
-      childState = { routes: [{ name: initialRouteName }] };
-    }
+    const childState =
+      (previousState === undefined
+        ? (focusedRoute.state ?? stateFromParams)
+        : (stateFromParams ?? focusedRoute.state)) ?? initialChildState;
 
     let previousChildState:
       | PartialState<NavigationState>
       | NavigationState
       | undefined;
 
-    if (!isNewlyFocused) {
-      const previousRouteParams = previousFocusedRoute?.params;
+    if (previousRouteForFocusedRoute != null) {
+      const previousRouteParams = previousRouteForFocusedRoute.params;
       const previousParams =
         initialParams != null || previousRouteParams != null
           ? { ...initialParams, ...previousRouteParams }
@@ -175,11 +266,9 @@ export function getLoaderForStateChange(
           : getStateFromRouteParams(previousParams);
 
       previousChildState =
-        previousFocusedRoute?.state ?? previousStateFromParams;
-
-      if (previousChildState == null && initialRouteName != null) {
-        previousChildState = { routes: [{ name: initialRouteName }] };
-      }
+        previousRouteForFocusedRoute.state ??
+        previousStateFromParams ??
+        initialChildState;
     }
 
     const childLoader = getLoaderForStateChange(
@@ -188,7 +277,8 @@ export function getLoaderForStateChange(
       previousState === undefined
         ? undefined
         : (previousChildState ?? { routes: [] }),
-      consumedParams
+      consumedParams,
+      addedRoutesOnly && previousRouteForFocusedRoute != null
     );
 
     if (childLoader) {
