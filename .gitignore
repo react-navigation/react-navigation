@@ -98,6 +98,9 @@ dist/
 
 # @end expo-cli
 
+# SwiftPM
+.build/
+
 # Maestro
 maestro-debug-output/
 

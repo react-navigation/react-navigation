@@ -1,6 +1,10 @@
 #import "ReactNavigationSFSymbolView.h"
 
-#if __has_include("ReactNavigation/ReactNavigation-Swift.h")
+#if SWIFT_PACKAGE
+#import <ReactNavigationSwiftBridge/ReactNavigationSwiftBridge.h>
+#define ReactNavigationSFSymbolViewImpl ReactNavigationSFSymbolViewBridge
+#define ReactNavigationSFSymbolViewImplProps ReactNavigationSFSymbolViewBridgeProps
+#elif __has_include("ReactNavigation/ReactNavigation-Swift.h")
 #import "ReactNavigation/ReactNavigation-Swift.h"
 #else
 #import "ReactNavigation-Swift.h"
@@ -10,7 +14,7 @@
 #import <react/renderer/components/ReactNavigationSpec/ComponentDescriptors.h>
 #import <react/renderer/components/ReactNavigationSpec/Props.h>
 
-#import "RCTFabricComponentsPlugins.h"
+#import <React/RCTFabricComponentsPlugins.h>
 
 using namespace facebook::react;
 
@@ -44,7 +48,9 @@ static ReactNavigationSFSymbolViewImplProps *convertProps(const Props::Shared &p
 
     swiftProps.name = RCTNSStringFromString(viewProps.name);
     swiftProps.size = viewProps.size;
-    swiftProps.color = RCTUIColorFromSharedColor(viewProps.color);
+    if (viewProps.color) {
+      swiftProps.color = RCTUIColorFromSharedColor(viewProps.color);
+    }
     swiftProps.weight = viewProps.weight;
     swiftProps.scale = RCTNSStringFromString(viewProps.scale);
     swiftProps.variableValue = viewProps.variableValue;

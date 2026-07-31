@@ -2,7 +2,18 @@
 
 #import <React/RCTConversions.h>
 
-#if __has_include("ReactNavigation/ReactNavigation-Swift.h")
+#if SWIFT_PACKAGE
+#import <ReactNavigationSwiftBridge/ReactNavigationSwiftBridge.h>
+#define ReactNavigationCornerInsetViewImpl ReactNavigationCornerInsetViewBridge
+#define ReactNavigationCornerInsetViewImplDelegate ReactNavigationCornerInsetViewBridgeDelegate
+#define ReactNavigationCornerInsetViewImplProps ReactNavigationCornerInsetViewBridgeProps
+#define CornerInsetDirectionHorizontal ReactNavigationCornerInsetDirectionHorizontal
+#define CornerInsetDirectionVertical ReactNavigationCornerInsetDirectionVertical
+#define CornerInsetEdgeBottom ReactNavigationCornerInsetEdgeBottom
+#define CornerInsetEdgeLeft ReactNavigationCornerInsetEdgeLeft
+#define CornerInsetEdgeRight ReactNavigationCornerInsetEdgeRight
+#define CornerInsetEdgeTop ReactNavigationCornerInsetEdgeTop
+#elif __has_include("ReactNavigation/ReactNavigation-Swift.h")
 #import "ReactNavigation/ReactNavigation-Swift.h"
 #else
 #import "ReactNavigation-Swift.h"
@@ -14,7 +25,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import <react/renderer/components/ReactNavigationSpec/Props.h>
 
-#import "RCTFabricComponentsPlugins.h"
+#import <React/RCTFabricComponentsPlugins.h>
 
 using namespace facebook::react;
 
