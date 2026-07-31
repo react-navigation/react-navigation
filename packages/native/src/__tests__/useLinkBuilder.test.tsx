@@ -5,6 +5,7 @@ import {
   type NavigatorScreenParams,
 } from '@react-navigation/core';
 import { act, render } from '@testing-library/react-native';
+import * as React from 'react';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { NavigationContainer } from '../NavigationContainer';
@@ -228,6 +229,69 @@ test('builds href in nested navigator screen', async () => {
       </StackA.Navigator>
     </NavigationContainer>
   );
+});
+
+test('builds a sibling href when a screen is added during render', async () => {
+  expect.assertions(1);
+
+  let showScreen: (() => void) | undefined;
+
+  type ParamList = {
+    A: undefined;
+    B: NavigatorScreenParams<{ Target: undefined }>;
+    Target: undefined;
+  };
+
+  const linking: LinkingOptions<ParamList> = {
+    ...config,
+    config: {
+      screens: {
+        A: 'a',
+        B: {
+          path: 'b',
+          screens: {
+            Target: 'target',
+          },
+        },
+        Target: 'target',
+      },
+    },
+  };
+
+  const Test = () => {
+    const { buildHref } = useLinkBuilder();
+
+    const href = buildHref('Target');
+
+    expect(href).toBe('/target');
+
+    return null;
+  };
+
+  const Stack = createStackNavigator<ParamList>();
+
+  const App = () => {
+    const [show, setShow] = React.useState(false);
+
+    showScreen = () => setShow(true);
+
+    return (
+      <NavigationContainer linking={linking}>
+        <Stack.Navigator>
+          {show ? (
+            <Stack.Screen name="B" component={Test} />
+          ) : (
+            <Stack.Screen name="A">{() => null}</Stack.Screen>
+          )}
+          <Stack.Screen name="Target">{() => null}</Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  };
+
+  await render(<App />);
+
+  await act(() => showScreen?.());
 });
 
 test('builds action from href outside of a navigator', async () => {

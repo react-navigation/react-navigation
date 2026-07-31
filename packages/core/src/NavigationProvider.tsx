@@ -20,11 +20,10 @@ export const NavigationContext = React.createContext<
   NavigationProp<ParamListBase> | undefined
 >(undefined);
 
-type Props = {
-  route: Route<string>;
-  navigation: NavigationProp<ParamListBase>;
-  children: React.ReactNode;
-};
+/**
+ * Context which indicates whether the component is inside a screen.
+ */
+export const IsScreenContext = React.createContext(false);
 
 /**
  * Component to provide the navigation and route contexts to its children.
@@ -32,6 +31,12 @@ type Props = {
 export const NamedRouteContextListContext = React.createContext<
   Record<string, React.Context<Route<string>>> | undefined
 >(undefined);
+
+type Props = {
+  route: Route<string>;
+  navigation: NavigationProp<ParamListBase>;
+  children: React.ReactNode;
+};
 
 export function NavigationProvider({ route, navigation, children }: Props) {
   const NamedRouteContext = useLazyValue(() => React.createContext(route));
@@ -64,7 +69,9 @@ export function NavigationProvider({ route, navigation, children }: Props) {
           <NavigationRouteContext.Provider value={route}>
             <NavigationContext.Provider value={navigation}>
               <IsFocusedContext.Provider value={isFocused}>
-                {children}
+                <IsScreenContext.Provider value={true}>
+                  {children}
+                </IsScreenContext.Provider>
               </IsFocusedContext.Provider>
             </NavigationContext.Provider>
           </NavigationRouteContext.Provider>

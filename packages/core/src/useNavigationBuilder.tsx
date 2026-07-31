@@ -22,7 +22,7 @@ import { isArrayEqual } from './isArrayEqual';
 import { NavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationMetaContext } from './NavigationMetaContext';
-import { NavigationRouteContext } from './NavigationProvider';
+import { IsScreenContext, NavigationRouteContext } from './NavigationProvider';
 import { NavigationStateContext } from './NavigationStateContext';
 import { PreventRemoveProvider } from './PreventRemoveProvider';
 import { Screen } from './Screen';
@@ -1069,7 +1069,11 @@ export function useNavigationBuilder<
             subscribe={subscribe}
           >
             <FocusedRouteKeyContext.Provider value={focusedRoute.key}>
-              <PreventRemoveProvider>{element}</PreventRemoveProvider>
+              <PreventRemoveProvider>
+                <IsScreenContext.Provider value={false}>
+                  {element}
+                </IsScreenContext.Provider>
+              </PreventRemoveProvider>
             </FocusedRouteKeyContext.Provider>
           </NavigationStateListenerProvider>
         </NavigationHelpersContext.Provider>
