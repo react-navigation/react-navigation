@@ -11,6 +11,7 @@ import {
   Screen,
 } from '@react-navigation/elements/internal';
 import {
+  IsFocusedContext,
   type ParamListBase,
   type StackNavigationState,
   useLinkBuilder,
@@ -39,6 +40,11 @@ const TRANSPARENT_PRESENTATIONS = [
 export function NativeStackView({ state, descriptors }: Props) {
   const parentHeaderBack = React.use(HeaderBackContext);
   const { buildHref } = useLinkBuilder();
+
+  // Whether a navigator above this one is covered, e.g. by a modal in a parent stack
+  // The context composes the parent chain, so it's `false` if any ancestor is blurred
+  // It's `undefined` in the root navigator, which is always considered focused
+  const isCoveredExternally = React.use(IsFocusedContext) === false;
 
   const activeRoutes = state.routes.slice(0, state.index + 1);
   const modalRouteKeys = getModalRouteKeys(activeRoutes, descriptors);
@@ -105,22 +111,33 @@ export function NativeStackView({ state, descriptors }: Props) {
           ? modalRouteKeys.includes(nextKey)
           : false;
 
+        const pauseWhenCovered = inactiveBehavior === 'pauseWhenCovered';
+
+        // Whether the screen is covered: by the screen above it in this stack,
+        // or by a screen covering the navigator it's in
+        const isCovered = isFocused
+          ? isCoveredExternally
+          : !isInactive && (isNextScreenTransparent || isBeforeLast);
+
         const activityMode =
-          // Render focused screens normally
-          isFocused
-            ? 'normal'
-            : // Unpause preloaded and retained screens so updates are visible
-              // This lets effects on those screens run
-              inactiveBehavior === 'none' ||
-                isInactive ||
-                isNextScreenTransparent
-              ? 'inert'
-              : inactiveBehavior === 'unmount' &&
-                  !isNextScreenModal &&
-                  !isBeforeLast &&
-                  !route.state
-                ? 'unmounted'
-                : 'paused';
+          // Pause covered screens, including covers that leave them visible
+          pauseWhenCovered && isCovered
+            ? 'paused'
+            : // Render focused screens normally
+              isFocused
+              ? 'normal'
+              : // Unpause preloaded and retained screens so updates are visible
+                // This lets effects on those screens run
+                inactiveBehavior === 'none' ||
+                  isInactive ||
+                  isNextScreenTransparent
+                ? 'inert'
+                : inactiveBehavior === 'unmount' &&
+                    !isNextScreenModal &&
+                    !isBeforeLast &&
+                    !route.state
+                  ? 'unmounted'
+                  : 'paused';
 
         if (activityMode === 'unmounted') {
           return null;

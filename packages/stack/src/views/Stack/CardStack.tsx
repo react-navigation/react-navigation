@@ -3,11 +3,12 @@ import {
   ActivityView,
   SafeAreaProviderCompat,
 } from '@react-navigation/elements/internal';
-import type {
-  LocaleDirection,
-  ParamListBase,
-  Route,
-  StackNavigationState,
+import {
+  IsFocusedContext,
+  type LocaleDirection,
+  type ParamListBase,
+  type Route,
+  type StackNavigationState,
 } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -311,6 +312,9 @@ const isInactiveRoute = (route: Route<string>, routes: Route<string>[]) =>
   !routes.some((currentRoute) => currentRoute.key === route.key);
 
 export class CardStack extends React.Component<Props, State> {
+  // Used to read whether a navigator above this one is covered
+  static override contextType = IsFocusedContext;
+
   static getDerivedStateFromProps(
     props: Props,
     state: State
@@ -655,6 +659,13 @@ export class CardStack extends React.Component<Props, State> {
       throw new Error(`Couldn't find a route at index ${state.index}.`);
     }
 
+    // Whether a navigator above this one is covered, e.g. by a modal in a parent stack
+    // The context composes the parent chain, so it's `false` if any ancestor is blurred
+    // It's `undefined` in the root navigator, which is always considered focused
+    // The type of `this.context` isn't inferred from `contextType`, so we cast it
+    const isCoveredExternally =
+      (this.context as React.ContextType<typeof IsFocusedContext>) === false;
+
     // Render only two top-most active headers as a workaround for
     // https://github.com/react-navigation/react-navigation/issues/12456.
     // If the header is persisted, it might be placed incorrectly when navigating back
@@ -730,6 +741,8 @@ export class CardStack extends React.Component<Props, State> {
               headerTransparent,
             } = scene.descriptor.options;
 
+            const pauseWhenCovered = inactiveBehavior === 'pauseWhenCovered';
+
             const safeAreaInsetTop = insets.top;
             const safeAreaInsetRight = insets.right;
             const safeAreaInsetBottom = insets.bottom;
@@ -790,6 +803,17 @@ export class CardStack extends React.Component<Props, State> {
             const isTopmost = index === routes.length - 1;
             const isBeforeLast = index === routes.length - 2;
 
+            // Whether the screen is covered: by the screen above it in this stack,
+            // or by a screen covering the navigator it's in
+            // Screens animating in or out aren't covered yet
+            const isCovered =
+              !isFocusing &&
+              (focused
+                ? isCoveredExternally
+                : !isInactive &&
+                  !isRetained &&
+                  (isNextScreenTransparent || isBeforeLast));
+
             // Keep animating and the last two rendered routes visible for smoother transitions
             const isVisible =
               focused ||
@@ -810,29 +834,33 @@ export class CardStack extends React.Component<Props, State> {
                   // Preloaded screens should stay mounted, but remain hidden until focused
                   (!isPreloaded && index >= routes.length - 2)));
 
-            const activityMode = // Render focused and animating screens normally
-              focused || isFocusing
-                ? 'normal'
-                : inactiveBehavior === 'none' ||
-                    // Unpause preloaded or retained screens so updates are visible
-                    // Handle retained explicitly as isInactive won't be updated until animation end
-                    isInactive ||
-                    isRetained ||
-                    // Keep the screen before transparent screen active
-                    // This lets the screen under the transparent screen update and animate
-                    isNextScreenTransparent ||
-                    // Keep the screen before last screen active
-                    // Otherwise it breaks animation when going back
-                    isBeforeLast
-                  ? 'inert'
-                  : inactiveBehavior === 'unmount' &&
-                      // Don't unmount screens that needs to stay visible
-                      !isVisible &&
-                      // Don't unmount screens with nested navigators
-                      // So we don't lose their state
-                      !('state' in route && route.state)
-                    ? 'unmounted'
-                    : 'paused';
+            const activityMode =
+              // Pause covered screens, including covers that leave them visible
+              pauseWhenCovered && isCovered
+                ? 'paused'
+                : // Render focused and animating screens normally
+                  focused || isFocusing
+                  ? 'normal'
+                  : inactiveBehavior === 'none' ||
+                      // Unpause preloaded or retained screens so updates are visible
+                      // Handle retained explicitly as isInactive won't be updated until animation end
+                      isInactive ||
+                      isRetained ||
+                      // Keep the screen before transparent screen active
+                      // This lets the screen under the transparent screen update and animate
+                      isNextScreenTransparent ||
+                      // Keep the screen before last screen active
+                      // Otherwise it breaks animation when going back
+                      isBeforeLast
+                    ? 'inert'
+                    : inactiveBehavior === 'unmount' &&
+                        // Don't unmount screens that needs to stay visible
+                        !isVisible &&
+                        // Don't unmount screens with nested navigators
+                        // So we don't lose their state
+                        !('state' in route && route.state)
+                      ? 'unmounted'
+                      : 'paused';
 
             if (activityMode === 'unmounted') {
               return null;
