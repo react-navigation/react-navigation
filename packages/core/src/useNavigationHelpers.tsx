@@ -19,7 +19,6 @@ type Options<State extends NavigationState, Action extends NavigationAction> = {
   onAction: (action: NavigationAction) => boolean;
   onUnhandledAction: (action: NavigationAction) => void;
   getState: () => State;
-  state: State;
   emitter: NavigationEventEmitter<any>;
   router: Router<State, Action>;
 };
@@ -37,28 +36,10 @@ export function useNavigationHelpers<
   onAction,
   onUnhandledAction,
   getState,
-  state,
   emitter,
   router,
 }: Options<State, Action>) {
   const parentNavigationHelpers = React.use(NavigationContext);
-
-  // In some cases (e.g. route names change), internal state might have changed
-  // But it hasn't been committed yet, so hasn't propagated to any listeners
-  // During this time, we need to return the internal state in `getState`
-  // Otherwise it can return an inconsistent state during render in children
-  // This may affect hooks like `useNavigationState` that need to read the state during render
-  // To avoid this, we use a ref for render phase, and immediately clear it on commit
-  // The ref won't be cleared if the render is discarded, e.g. when interrupted
-  // So we also track the stored state the render was based on
-  // Then ignore the ref once the stored state changes due to another dispatch
-  const stateRef = React.useRef<{ state: State; base: State } | null>(null);
-
-  stateRef.current = { state, base: getState() };
-
-  React.useInsertionEffect(() => {
-    stateRef.current = null;
-  });
 
   return React.useMemo(() => {
     const dispatch = (op: Action | ((state: State) => Action)) => {
@@ -103,18 +84,7 @@ export function useNavigationHelpers<
           false
         );
       },
-      getState: (): State => {
-        const current = getState();
-        const pending = stateRef.current;
-
-        // FIXME: Workaround for when the state is read during render
-        // Apart from subscriptions, `getState` should never be called during render
-        if (pending != null && pending.base === current) {
-          return pending.state;
-        }
-
-        return current;
-      },
+      getState,
     } as NavigationHelpers<ParamListBase, EventMap> & ActionHelpers;
 
     return navigationHelpers;
@@ -125,6 +95,5 @@ export function useNavigationHelpers<
     getState,
     onAction,
     onUnhandledAction,
-    stateRef,
   ]);
 }

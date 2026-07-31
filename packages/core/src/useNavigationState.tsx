@@ -161,22 +161,18 @@ export function useNavigationState(...args: unknown[]): unknown {
 }
 
 export function NavigationStateListenerProvider({
+  isSynced,
   state,
   getState,
   subscribe,
   children,
 }: {
+  isSynced: boolean;
   state: NavigationState<ParamListBase>;
   getState: () => NavigationState<ParamListBase>;
   subscribe: (callback: () => void) => () => void;
   children: React.ReactNode;
 }) {
-  const snapshotRef = React.useRef(state);
-
-  React.useInsertionEffect(() => {
-    snapshotRef.current = state;
-  }, [state]);
-
   const [listeners] = React.useState(
     () => new Set<(event: NavigationStateEvent) => void>()
   );
@@ -185,10 +181,22 @@ export function NavigationStateListenerProvider({
     listeners.forEach((listener) => listener('commit'));
   }, [listeners, state]);
 
+  const snapshotRef = React.useRef(state);
+
+  React.useInsertionEffect(() => {
+    snapshotRef.current = state;
+  }, [state]);
+
+  // Route config or nested params can produce new state during render.
+  // If the scheduled update hasn't synced that state to the store yet,
+  // We need to expose the rendered state so consumers match the navigator.
+  // We keep this `undefined` for other scenarios, so the context isn't recreated.
+  const nextState = isSynced ? undefined : state;
+
   const context = React.useMemo(
     () => ({
       getState,
-      getSnapshot: () => snapshotRef.current,
+      getSnapshot: () => nextState ?? snapshotRef.current,
       subscribe: (callback: (event: NavigationStateEvent) => void) => {
         const unsubscribe = subscribe(() => callback('update'));
 
@@ -200,7 +208,7 @@ export function NavigationStateListenerProvider({
         };
       },
     }),
-    [getState, listeners, subscribe]
+    [getState, listeners, nextState, subscribe]
   );
 
   return (

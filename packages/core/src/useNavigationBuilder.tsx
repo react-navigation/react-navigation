@@ -1005,7 +1005,6 @@ export function useNavigationBuilder<
     onAction,
     onUnhandledAction,
     getState,
-    state,
     emitter,
     router,
   });
@@ -1064,8 +1063,9 @@ export function useNavigationBuilder<
       <NavigationMetaContext.Provider value={undefined}>
         <NavigationHelpersContext.Provider value={navigation}>
           <NavigationStateListenerProvider
+            isSynced={!shouldUpdate}
             state={state}
-            getState={navigation.getState}
+            getState={getState}
             subscribe={subscribe}
           >
             <FocusedRouteKeyContext.Provider value={focusedRoute.key}>

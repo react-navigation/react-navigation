@@ -598,7 +598,7 @@ test('surfaces an error thrown by a selector', async () => {
   }).rejects.toThrow(/^Selector failed$/);
 });
 
-test('does not re-render when the selected value is unchanged', async () => {
+test('does not re-render when navigation state changes but the selected value is unchanged', async () => {
   const onRender = jest.fn();
 
   const Index = React.memo(function Index() {
@@ -623,6 +623,10 @@ test('does not re-render when the selected value is unchanged', async () => {
   expect(onRender).toHaveBeenCalledTimes(1);
 
   await act(() => navigation.navigate('first', { answer: 42 }));
+
+  expect(onRender).toHaveBeenCalledTimes(1);
+
+  await act(() => navigation.navigate('first', { answer: 43 }));
 
   expect(onRender).toHaveBeenCalledTimes(1);
 
@@ -880,6 +884,72 @@ test('matches the visible screen when re-rendering during a pending navigation',
   expect(screen.getByText('[name-second-1]')).toBeOnTheScreen();
   expect(screen.getByText('[screen-b]')).toBeOnTheScreen();
   expect(screen.queryByText('[screen-a]')).not.toBeOnTheScreen();
+});
+
+test('uses state from the current render when a config change suspends', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  let addScreen: (() => void) | undefined;
+
+  const RouteNames = () => {
+    const routeNames = useNavigationState(
+      (state: NavigationState) => state.routeNames
+    );
+
+    if (routeNames.includes('second')) {
+      React.use(promise);
+    }
+
+    return <Text>[routes-{routeNames.join(',')}]</Text>;
+  };
+
+  const App = () => {
+    const [showScreen, setShowScreen] = React.useState(false);
+
+    addScreen = () => {
+      React.startTransition(() => {
+        setShowScreen(true);
+      });
+    };
+
+    return (
+      <BaseNavigationContainer>
+        <React.Suspense fallback={<Text>[fallback]</Text>}>
+          <TestNavigator
+            mode="focused"
+            layout={({ children }) => (
+              <>
+                <RouteNames />
+                {children}
+              </>
+            )}
+          >
+            <Screen name="first">{() => <Text>[screen-a]</Text>}</Screen>
+            {showScreen ? (
+              <Screen name="second">{() => <Text>[screen-b]</Text>}</Screen>
+            ) : null}
+          </TestNavigator>
+        </React.Suspense>
+      </BaseNavigationContainer>
+    );
+  };
+
+  await render(<App />);
+
+  expect(screen.getByText('[routes-first]')).toBeOnTheScreen();
+  expect(screen.getByText('[screen-a]')).toBeOnTheScreen();
+
+  await act(() => addScreen?.());
+
+  expect(screen.getByText('[routes-first]')).toBeOnTheScreen();
+  expect(screen.getByText('[screen-a]')).toBeOnTheScreen();
+  expect(screen.queryByText('[fallback]')).not.toBeOnTheScreen();
+
+  await act(() => resolve());
+
+  expect(screen.getByText('[routes-first,second]')).toBeOnTheScreen();
+  expect(screen.getByText('[screen-a]')).toBeOnTheScreen();
+  expect(screen.queryByText('[fallback]')).not.toBeOnTheScreen();
 });
 
 test('keeps the previous content visible when a component using the selected value suspends', async () => {
