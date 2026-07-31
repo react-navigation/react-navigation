@@ -12,17 +12,20 @@ import UIKit
   case left
 }
 
+@objc(ReactNavigationCornerInsetViewImplProps)
 @objcMembers public class ReactNavigationCornerInsetViewImplProps: NSObject {
   public var direction: CornerInsetDirection = .vertical
   public var edge: CornerInsetEdge = .top
   public var adaptive: Bool = true
 }
 
-@objc public protocol ReactNavigationCornerInsetViewImplDelegate: NSObjectProtocol {
+@objc(ReactNavigationCornerInsetViewImplDelegate)
+public protocol ReactNavigationCornerInsetViewImplDelegate: NSObjectProtocol {
   func cornerInsetDidChange(_ cornerInset: CGFloat, animated: Bool)
 }
 
-@objc public class ReactNavigationCornerInsetViewImpl: UIView {
+@objc(ReactNavigationCornerInsetViewImpl)
+public class ReactNavigationCornerInsetViewImpl: UIView {
   @objc public weak var delegate: ReactNavigationCornerInsetViewImplDelegate?
 
   private var props: ReactNavigationCornerInsetViewImplProps = ReactNavigationCornerInsetViewImplProps()

@@ -1,6 +1,8 @@
 #import "ReactNavigationSFSymbolView.h"
 
-#if __has_include("ReactNavigation/ReactNavigation-Swift.h")
+#if SWIFT_PACKAGE
+#import "ReactNavigationSwiftInterface.h"
+#elif __has_include("ReactNavigation/ReactNavigation-Swift.h")
 #import "ReactNavigation/ReactNavigation-Swift.h"
 #else
 #import "ReactNavigation-Swift.h"

@@ -1,5 +1,6 @@
 import UIKit
 
+@objc(ReactNavigationSFSymbolViewImplProps)
 @objcMembers public class ReactNavigationSFSymbolViewImplProps: NSObject {
   public var name: String?
   public var size: CGFloat = 24
@@ -33,7 +34,8 @@ import UIKit
   public var contentTransitionMagic: Bool = false
 }
 
-@objc public class ReactNavigationSFSymbolViewImpl: UIView {
+@objc(ReactNavigationSFSymbolViewImpl)
+public class ReactNavigationSFSymbolViewImpl: UIView {
   private var imageView: UIImageView
 
   override init(frame: CGRect) {
