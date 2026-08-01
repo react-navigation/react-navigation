@@ -1,3 +1,4 @@
+import { Inert } from '@react-navigation/elements';
 import * as React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
@@ -30,18 +31,6 @@ export const CardA11yWrapper = React.forwardRef(
 
     React.useImperativeHandle(ref, () => ({ setInert }), []);
 
-    const viewRef = React.useRef<View>(null);
-
-    // On web, `aria-hidden` and `pointerEvents` don't prevent the screen from receiving keyboard focus
-    // So the `inert` attribute is needed to make the hidden screen unfocusable
-    // React Native Web's `View` doesn't support the `inert` prop, so set it on the DOM element
-    React.useEffect(() => {
-      if (Platform.OS === 'web' && viewRef.current != null) {
-        // On Web, the ref contains a DOM element
-        (viewRef.current as unknown as HTMLElement).inert = !focused;
-      }
-    }, [focused]);
-
     const isHidden =
       !animated &&
       isNextScreenTransparent === false &&
@@ -50,7 +39,6 @@ export const CardA11yWrapper = React.forwardRef(
 
     return (
       <View
-        ref={viewRef}
         aria-hidden={!focused}
         pointerEvents={(animated ? inert : !focused) ? 'none' : 'box-none'}
         style={[
@@ -71,7 +59,7 @@ export const CardA11yWrapper = React.forwardRef(
         // This can happen when the view flattening results in different trees - due to `overflow` style changing in a parent.
         collapsable={false}
       >
-        {children}
+        <Inert enabled={!focused}>{children}</Inert>
       </View>
     );
   }

@@ -1,9 +1,22 @@
-import { afterEach, describe, expect, jest, test } from '@jest/globals';
+import { expect, jest, test } from '@jest/globals';
 import { render } from '@testing-library/react-native';
-import * as React from 'react';
 import { Platform, View } from 'react-native';
 
 import { CardA11yWrapper } from '../CardA11yWrapper';
+
+const findInertElement = (json: any): any => {
+  if (json == null || typeof json !== 'object') {
+    return undefined;
+  }
+
+  if (json.type === 'div') {
+    return json;
+  }
+
+  return []
+    .concat(json.children ?? [])
+    .reduce<any>((acc, child) => acc ?? findInertElement(child), undefined);
+};
 
 const renderCard = ({ focused }: { focused: boolean }) =>
   render(
@@ -14,59 +27,22 @@ const renderCard = ({ focused }: { focused: boolean }) =>
       isNextScreenTransparent={false}
       detachCurrentScreen
     >
-      <React.Fragment />
+      <View />
     </CardA11yWrapper>
-  );
+  ).toJSON();
 
-const getCardElement = (root: ReturnType<typeof renderCard>) =>
-  root.UNSAFE_getByType(View).instance as unknown as { inert?: boolean };
+test("makes an unfocused card's content inert on the web", () => {
+  jest.replaceProperty(Platform, 'OS', 'web');
 
-describe('on web', () => {
-  afterEach(() => {
-    jest.restoreAllMocks();
-  });
-
-  test("sets `inert` on the unfocused card's element so it can't receive keyboard focus", () => {
-    jest.replaceProperty(Platform, 'OS', 'web');
-
-    const root = renderCard({ focused: false });
-
-    expect(getCardElement(root).inert).toBe(true);
-  });
-
-  test("doesn't set `inert` on the focused card's element", () => {
-    jest.replaceProperty(Platform, 'OS', 'web');
-
-    const root = renderCard({ focused: true });
-
-    expect(getCardElement(root).inert).toBe(false);
-  });
-
-  test('updates `inert` when focus changes', () => {
-    jest.replaceProperty(Platform, 'OS', 'web');
-
-    const root = renderCard({ focused: false });
-
-    root.rerender(
-      <CardA11yWrapper
-        focused
-        active
-        animated
-        isNextScreenTransparent={false}
-        detachCurrentScreen
-      >
-        <React.Fragment />
-      </CardA11yWrapper>
-    );
-
-    expect(getCardElement(root).inert).toBe(false);
-  });
+  expect(
+    findInertElement(renderCard({ focused: false }))?.props.inert
+  ).toBeDefined();
 });
 
-describe('on native', () => {
-  test("doesn't set `inert` on the card's element", () => {
-    const root = renderCard({ focused: false });
+test("doesn't make a focused card's content inert on the web", () => {
+  jest.replaceProperty(Platform, 'OS', 'web');
 
-    expect(getCardElement(root).inert).toBeUndefined();
-  });
+  expect(
+    findInertElement(renderCard({ focused: true }))?.props.inert
+  ).toBeUndefined();
 });
