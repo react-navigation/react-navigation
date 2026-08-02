@@ -161,7 +161,7 @@ export function Drawer({
     getDrawerTranslationX(open, initialWidth)
   );
 
-  const contentRef = React.useRef<View>(null);
+  const contentRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
   const updateLayout = useLatestCallback((width: number) => {
     layoutWidth.set(width);

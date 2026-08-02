@@ -48,7 +48,7 @@ export function useFrameSize<T>(
 type FrameSizeProviderProps = {
   initialFrame: Frame;
   render: (props: {
-    ref: React.RefObject<View | null>;
+    ref: React.RefObject<React.ComponentRef<typeof View> | null>;
     onLayout: (event: LayoutChangeEvent) => void;
   }) => React.ReactNode;
 };
@@ -137,7 +137,7 @@ export function FrameSizeProvider({
     listeners.forEach((listener) => listener());
   });
 
-  const viewRef = React.useRef<View>(null);
+  const viewRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
   React.useEffect(() => {
     if (Platform.OS === 'web') {

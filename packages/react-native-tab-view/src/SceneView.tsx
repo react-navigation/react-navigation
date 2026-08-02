@@ -75,7 +75,7 @@ export function SceneView<T extends Route>({
     };
   }, [subscribe, index, isLoading, lazy]);
 
-  const ref = React.useRef<View>(null);
+  const ref = React.useRef<React.ComponentRef<typeof View>>(null);
 
   React.useLayoutEffect(() => {
     let unsubscribe: (() => void) | undefined;

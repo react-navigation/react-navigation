@@ -237,7 +237,8 @@ const SceneView = ({
     headerBack,
   });
 
-  const headerContainerRef = React.useRef<View>(null);
+  const headerContainerRef =
+    React.useRef<React.ComponentRef<typeof View>>(null);
 
   React.useLayoutEffect(() => {
     headerContainerRef.current?.measure((_x, _y, _width, height) => {

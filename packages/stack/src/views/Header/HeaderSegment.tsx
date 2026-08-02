@@ -64,9 +64,8 @@ export function HeaderSegment(props: Props) {
     topInset: headerStatusBarHeight,
   });
 
-  const { height = defaultHeight } = StyleSheet.flatten(
-    customHeaderStyle || {}
-  ) as ViewStyle;
+  const { height = defaultHeight } = (StyleSheet.flatten(customHeaderStyle) ??
+    {}) as ViewStyle;
 
   const headerHeight = typeof height === 'number' ? height : defaultHeight;
 

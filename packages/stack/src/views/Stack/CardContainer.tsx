@@ -97,7 +97,7 @@ function CardContainerInner({
 
   const { options } = scene.descriptor;
   const enabled = options.keyboardHandlingEnabled !== false;
-  const contentRef = React.useRef<View>(null);
+  const contentRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
   const { onPageChangeStart, onPageChangeCancel, onPageChangeConfirm } =
     useKeyboardManager({

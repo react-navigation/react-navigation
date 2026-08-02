@@ -125,7 +125,7 @@ const TabBarItemInternal = <T extends Route>({
   labelAllowFontScaling,
   route,
 }: TabBarItemInternalProps<T>) => {
-  const labelColorFromStyle = StyleSheet.flatten(labelStyle || {}).color;
+  const labelColorFromStyle = StyleSheet.flatten(labelStyle || {})?.color;
   const defaultActiveColor =
     variant === 'primary'
       ? TAB_BAR_PRIMARY_ACTIVE_COLOR
@@ -222,8 +222,8 @@ const TabBarItemInternal = <T extends Route>({
   const ariaLabel =
     typeof accessibilityLabel !== 'undefined' ? accessibilityLabel : labelText;
 
-  const viewRef = React.useRef<View>(null);
-  const labelRef = React.useRef<View>(null);
+  const viewRef = React.useRef<React.ComponentRef<typeof View>>(null);
+  const labelRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
   React.useLayoutEffect(() => {
     viewRef.current?.measure((_x, _y, width, height) => {
