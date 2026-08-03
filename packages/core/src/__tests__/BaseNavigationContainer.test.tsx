@@ -1228,7 +1228,7 @@ test('emits option events when options change with stack router', async () => {
 });
 
 test('throws if there is no navigator rendered', async () => {
-  expect.assertions(5);
+  expect.assertions(4);
 
   const ref = createNavigationContainerRef<ParamListBase>();
 
@@ -1252,7 +1252,6 @@ test('throws if there is no navigator rendered', async () => {
 
   expect(ref.current?.canGoBack()).toBe(false);
   expect(ref.current?.getCurrentRoute()).toBeUndefined();
-  expect(ref.current?.isFocused()).toBe(true);
 
   spy.mockRestore();
 });

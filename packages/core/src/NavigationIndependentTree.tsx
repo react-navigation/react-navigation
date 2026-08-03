@@ -8,6 +8,7 @@ import {
   NavigationContext,
   NavigationRouteContext,
 } from './NavigationProvider';
+import { NavigationRootContext } from './NavigationRootContext';
 import { IsFocusedContext } from './useIsFocused';
 import {
   NamedNavigationStateListenerListContext,
@@ -29,15 +30,17 @@ export function NavigationIndependentTree({
         <NamedRouteContextListContext.Provider value={undefined}>
           <NavigationRouteContext.Provider value={undefined}>
             <NavigationContext.Provider value={undefined}>
-              <NavigationFocusedRouteStateContext.Provider value={undefined}>
-                <IsFocusedContext.Provider value={undefined}>
-                  <NavigationIndependentTreeContext.Provider value={true}>
-                    <IsScreenContext.Provider value={false}>
-                      {children}
-                    </IsScreenContext.Provider>
-                  </NavigationIndependentTreeContext.Provider>
-                </IsFocusedContext.Provider>
-              </NavigationFocusedRouteStateContext.Provider>
+              <NavigationRootContext.Provider value={undefined}>
+                <NavigationFocusedRouteStateContext.Provider value={undefined}>
+                  <IsFocusedContext.Provider value={undefined}>
+                    <NavigationIndependentTreeContext.Provider value={true}>
+                      <IsScreenContext.Provider value={false}>
+                        {children}
+                      </IsScreenContext.Provider>
+                    </NavigationIndependentTreeContext.Provider>
+                  </IsFocusedContext.Provider>
+                </NavigationFocusedRouteStateContext.Provider>
+              </NavigationRootContext.Provider>
             </NavigationContext.Provider>
           </NavigationRouteContext.Provider>
         </NamedRouteContextListContext.Provider>

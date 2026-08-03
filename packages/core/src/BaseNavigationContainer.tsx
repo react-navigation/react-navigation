@@ -3,6 +3,7 @@ import {
   type InitialState,
   type NavigationAction,
   type NavigationState,
+  type ParamListBase,
   type PartialState,
   type Route,
 } from '@react-navigation/routers';
@@ -21,9 +22,12 @@ import {
 } from './NavigationBuilderContext';
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
+import { NavigationRootContext } from './NavigationRootContext';
 import { NavigationStateContext } from './NavigationStateContext';
 import { ThemeProvider } from './theming/ThemeProvider';
 import type {
+  EventListenerCallback,
+  GenericNavigation,
   NavigationContainerEventMap,
   NavigationContainerProps,
   NavigationContainerRef,
@@ -239,7 +243,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   const { addOptionsGetter, getCurrentOptions } = useOptionsGetters({});
 
-  const navigation: NavigationContainerRef<ParamList> = React.useMemo(
+  const container: NavigationContainerRef<ParamList> = React.useMemo(
     () => ({
       ...Object.keys(CommonActions).reduce<any>((acc, name) => {
         const helper = (...args: any[]) =>
@@ -255,17 +259,12 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       ...emitter.create('root'),
       dispatch,
       resetRoot,
-      isFocused: () => true,
       canGoBack,
-      getParent: () => undefined,
       getState,
       getRootState,
       getCurrentRoute,
       getCurrentOptions,
       isReady,
-      setOptions: () => {
-        throw new Error('Cannot call setOptions outside a screen');
-      },
     }),
     [
       canGoBack,
@@ -281,7 +280,108 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     ]
   );
 
-  React.useImperativeHandle(ref, () => navigation, [navigation]);
+  const navigation: GenericNavigation<ParamListBase> = React.useMemo(() => {
+    const events = emitter.create('root');
+
+    const dispatch = (
+      thunk: NavigationAction | ((state: NavigationState) => NavigationAction)
+    ) => {
+      const root = keyedListeners.getNavigation.root?.();
+
+      if (root == null) {
+        console.error(NOT_INITIALIZED_ERROR);
+        return;
+      }
+
+      withStackTrace(dispatch, () => {
+        React.startTransition(() => {
+          root.dispatch(thunk);
+        });
+      });
+    };
+
+    const helpers = Object.keys(CommonActions).reduce<any>((acc, name) => {
+      const helper = (...args: any) => {
+        if (
+          name === 'setParams' ||
+          name === 'replaceParams' ||
+          name === 'pushParams'
+        ) {
+          throw new Error(`Cannot call ${name} outside a screen`);
+        }
+
+        withStackTrace(helper, () =>
+          // @ts-expect-error name is a valid key, but TypeScript cannot infer it.
+          dispatch(CommonActions[name](...args))
+        );
+      };
+
+      acc[name] = helper;
+
+      return acc;
+    }, {});
+
+    const listeners = new WeakMap<
+      (...args: never[]) => void,
+      EventListenerCallback<NavigationContainerEventMap, 'state'>
+    >();
+
+    return {
+      ...helpers,
+      dispatch,
+      addListener: (type, callback) => {
+        if (type === 'state') {
+          let listener = listeners.get(callback);
+
+          if (listener === undefined) {
+            // Root's state change events can contain stale and undefined state
+            // But navigation objects should only receive non-stale state
+            // So we add a wrapper to filter out stale events
+            listener = (event) => {
+              if (event.data.state?.stale === false) {
+                // @ts-expect-error TypeScript doesn't narrow the generic event callback with its type.
+                callback(event);
+              }
+            };
+
+            listeners.set(callback, listener);
+          }
+
+          return events.addListener('state', listener);
+        }
+
+        return () => {};
+      },
+      removeListener: (type, callback) => {
+        if (type === 'state') {
+          const listener = listeners.get(callback);
+
+          if (listener) {
+            events.removeListener('state', listener);
+            listeners.delete(callback);
+          }
+        }
+      },
+      canGoBack: () =>
+        keyedListeners.getNavigation.root?.().canGoBack() ?? false,
+      getState: () => keyedListeners.getState.root?.(),
+      getParent: (routeName?: string) => {
+        if (routeName !== undefined) {
+          throw new Error(
+            `Couldn't find a navigation object for '${routeName}' because it's called outside a screen. Is your component inside a screen?`
+          );
+        }
+
+        return undefined;
+      },
+      setOptions: () => {
+        throw new Error('Cannot call setOptions outside a screen');
+      },
+      isFocused: () => true,
+    };
+  }, [emitter, keyedListeners, withStackTrace]);
+
+  React.useImperativeHandle(ref, () => container, [container]);
 
   const onDispatchAction = useLatestCallback(
     (action: NavigationAction, noop: boolean) => {
@@ -529,20 +629,22 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   return (
     <NavigationIndependentTreeContext.Provider value={false}>
-      <NavigationContainerRefContext.Provider value={navigation}>
-        <NavigationBuilderContext.Provider value={builderContext}>
-          <NavigationStateContext.Provider value={context}>
-            <ConsumedParamsContext.Provider value={consumedParams}>
-              <UnhandledActionContext.Provider
-                value={onUnhandledAction ?? defaultOnUnhandledAction}
-              >
-                <EnsureSingleNavigator>
-                  <ThemeProvider value={theme}>{children}</ThemeProvider>
-                </EnsureSingleNavigator>
-              </UnhandledActionContext.Provider>
-            </ConsumedParamsContext.Provider>
-          </NavigationStateContext.Provider>
-        </NavigationBuilderContext.Provider>
+      <NavigationContainerRefContext.Provider value={container}>
+        <NavigationRootContext.Provider value={navigation}>
+          <NavigationBuilderContext.Provider value={builderContext}>
+            <NavigationStateContext.Provider value={context}>
+              <ConsumedParamsContext.Provider value={consumedParams}>
+                <UnhandledActionContext.Provider
+                  value={onUnhandledAction ?? defaultOnUnhandledAction}
+                >
+                  <EnsureSingleNavigator>
+                    <ThemeProvider value={theme}>{children}</ThemeProvider>
+                  </EnsureSingleNavigator>
+                </UnhandledActionContext.Provider>
+              </ConsumedParamsContext.Provider>
+            </NavigationStateContext.Provider>
+          </NavigationBuilderContext.Provider>
+        </NavigationRootContext.Provider>
       </NavigationContainerRefContext.Provider>
     </NavigationIndependentTreeContext.Provider>
   );
