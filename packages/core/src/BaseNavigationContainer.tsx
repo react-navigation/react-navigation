@@ -15,7 +15,10 @@ import { ConsumedParamsContext } from './ConsumedParamsContext';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
 import { findFocusedRoute } from './findFocusedRoute';
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import {
+  NavigationBuilderContext,
+  type WithStackTrace,
+} from './NavigationBuilderContext';
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
 import { NavigationStateContext } from './NavigationStateContext';
@@ -125,6 +128,41 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
 
+  const stackRef = React.useRef<string | undefined>(undefined);
+
+  const withStackTrace = React.useCallback<WithStackTrace>(
+    (entry, callback) => {
+      if (process.env.NODE_ENV === 'production' || stackRef.current != null) {
+        callback();
+        return;
+      }
+
+      const error = new Error();
+
+      if (Error.captureStackTrace) {
+        // Available on V8 and Hermes, omits the frames of `entry` and what it called
+        Error.captureStackTrace(error, entry);
+
+        stackRef.current = error.stack;
+      } else {
+        // Other engines always include them, so we drop the frames up to `entry` ourselves
+        const frames = error.stack?.split('\n') ?? [];
+        const index = frames.findIndex((frame) =>
+          frame.includes(`${entry.name}@`)
+        );
+
+        stackRef.current = frames.slice(index + 1).join('\n');
+      }
+
+      try {
+        callback();
+      } finally {
+        stackRef.current = undefined;
+      }
+    },
+    []
+  );
+
   const dispatch = useLatestCallback(
     (
       action: NavigationAction | ((state: NavigationState) => NavigationAction)
@@ -134,11 +172,13 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       if (listener == null) {
         console.error(NOT_INITIALIZED_ERROR);
       } else {
-        listener((navigation) =>
-          React.startTransition(() => {
-            navigation.dispatch(action);
-          })
-        );
+        withStackTrace(dispatch, () => {
+          listener((navigation) =>
+            React.startTransition(() => {
+              navigation.dispatch(action);
+            })
+          );
+        });
       }
     }
   );
@@ -202,9 +242,13 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
   const navigation: NavigationContainerRef<ParamList> = React.useMemo(
     () => ({
       ...Object.keys(CommonActions).reduce<any>((acc, name) => {
-        acc[name] = (...args: any[]) =>
-          // @ts-expect-error: this is ok
-          dispatch(CommonActions[name](...args));
+        const helper = (...args: any[]) =>
+          withStackTrace(helper, () =>
+            // @ts-expect-error: this is ok
+            dispatch(CommonActions[name](...args))
+          );
+
+        acc[name] = helper;
 
         return acc;
       }, {}),
@@ -233,6 +277,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       getState,
       isReady,
       resetRoot,
+      withStackTrace,
     ]
   );
 
@@ -276,8 +321,6 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     });
   });
 
-  const stackRef = React.useRef<string | undefined>(undefined);
-
   const lastEmittedStateRef = React.useRef<State>(undefined);
 
   const getIsStateEmitted = useLatestCallback(
@@ -294,7 +337,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
-      stackRef,
+      withStackTrace,
     }),
     [
       addListener,
@@ -305,6 +348,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
+      withStackTrace,
     ]
   );
 
