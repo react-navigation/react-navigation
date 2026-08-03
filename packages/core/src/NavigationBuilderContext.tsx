@@ -15,6 +15,7 @@ export type ListenerMap = {
 
 export type KeyedListenerMap = {
   getState: GetStateListener;
+  getNavigation: GetNavigationListener;
   beforeRemove: ChildBeforeRemoveListener;
 };
 
@@ -46,6 +47,8 @@ export type FocusedNavigationListener = <T>(
 };
 
 export type GetStateListener = () => NavigationState;
+
+export type GetNavigationListener = () => NavigationHelpers<ParamListBase>;
 
 export type WithStackTrace = (
   entry: (...args: never[]) => void,

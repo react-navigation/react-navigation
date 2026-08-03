@@ -1360,7 +1360,7 @@ type NavigationListForGroups<ParentList, Groups> = Groups extends {}
 
 export type NavigationContainerRef<ParamList extends {}> = Omit<
   NavigationHelpers<ParamList>,
-  keyof NavigationHelpersRoute<{}>
+  keyof NavigationHelpersRoute<{}> | 'isFocused'
 > &
   NavigationHelpersRoute<{}> &
   EventConsumer<NavigationContainerEventMap> & {
@@ -1386,10 +1386,6 @@ export type NavigationContainerRef<ParamList extends {}> = Omit<
      * Whether the navigation container is ready to handle actions.
      */
     isReady(): boolean;
-    /**
-     * Stub function for setOptions on navigation object for use with useNavigation.
-     */
-    setOptions(): never;
   };
 
 export type NavigationContainerRefWithCurrent<ParamList extends {}> =

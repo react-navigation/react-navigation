@@ -14,6 +14,7 @@ export function useKeyedChildListeners() {
   }>(
     Object.assign(Object.create(null), {
       getState: {},
+      getNavigation: {},
       beforeRemove: {},
     })
   );

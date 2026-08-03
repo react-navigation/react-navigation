@@ -47,6 +47,7 @@ import { useLazyValue } from './useLazyValue';
 import { useNavigationHelpers } from './useNavigationHelpers';
 import { NavigationStateListenerProvider } from './useNavigationState';
 import { useOnAction } from './useOnAction';
+import { useOnGetNavigation } from './useOnGetNavigation';
 import { useOnGetState } from './useOnGetState';
 import { useOnRouteFocus } from './useOnRouteFocus';
 import { useRegisterNavigator } from './useRegisterNavigator';
@@ -1018,6 +1019,8 @@ export function useNavigationBuilder<
     getState,
     getStateListeners: keyedListeners.getState,
   });
+
+  useOnGetNavigation({ navigation });
 
   const descriptors = useDescriptors<
     State,
