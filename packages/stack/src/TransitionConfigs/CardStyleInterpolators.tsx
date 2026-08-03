@@ -382,11 +382,9 @@ export function forScaleFromCenterAndroid({
 }
 
 /**
- * Standard Android-style fade from right for Android 14.
- *
- * The card underneath deliberately doesn't move. Offsetting it while the card
- * above is still fading in uncovers the strip it vacates, and nothing painted
- * behind the cards can match both the screen body and the header.
+ * Standard Android-style fade from right for Android 14. The card underneath
+ * deliberately doesn't move: offsetting it would expose the strip it vacates
+ * through the still-translucent card above.
  */
 export function forFadeFromRightAndroid({
   current,

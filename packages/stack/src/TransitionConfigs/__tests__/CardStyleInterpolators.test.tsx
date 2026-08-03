@@ -3,7 +3,6 @@ import { Animated } from 'react-native';
 
 import { forFadeFromRightAndroid } from '../CardStyleInterpolators';
 
-// Animated nodes only expose their current value through an internal method.
 const readValue = (value: object | number | undefined): number => {
   if (typeof value === 'number') {
     return value;
@@ -100,8 +99,6 @@ test('the incoming card slides in from 96dp', () => {
   expect(interpolate({ progress: 1 }).translateFocused).toBe(0);
 });
 
-// Offsetting it would uncover the strip it vacates while the card above is
-// still translucent, which is the flash this preset used to produce.
 test('the card underneath never moves', () => {
   expect(interpolate({ progress: 1, nextProgress: 0.5 }).transformCount).toBe(
     1
