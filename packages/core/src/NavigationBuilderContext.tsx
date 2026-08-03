@@ -47,6 +47,11 @@ export type FocusedNavigationListener = <T>(
 
 export type GetStateListener = () => NavigationState;
 
+export type WithStackTrace = (
+  entry: (...args: never[]) => void,
+  callback: () => void
+) => void;
+
 export type ChildBeforeRemoveListener = (
   action: NavigationAction,
   nextState: NavigationState | PartialState<NavigationState> | undefined
@@ -73,7 +78,7 @@ export const NavigationBuilderContext = React.createContext<{
   getIsStateEmitted: () => boolean;
   scheduleUpdate: (callback: () => void) => void;
   flushUpdates: () => void;
-  stackRef?: React.RefObject<string | undefined> | undefined;
+  withStackTrace: WithStackTrace;
 }>({
   onDispatchAction: () => undefined,
   onEmitEvent: () => undefined,
@@ -85,4 +90,5 @@ export const NavigationBuilderContext = React.createContext<{
   flushUpdates: () => {
     throw new Error("Couldn't find a context for flushing updates.");
   },
+  withStackTrace: (_entry, callback) => callback(),
 });

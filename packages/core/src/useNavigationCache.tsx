@@ -73,7 +73,8 @@ export function useNavigationCache<
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
   const parentNavigation = React.use(NavigationContext);
-  const { stackRef } = React.use(NavigationBuilderContext);
+
+  const { withStackTrace } = React.use(NavigationBuilderContext);
 
   // Cache object which holds navigation objects for each screen
   // We use `React.useMemo` instead of `React.useRef` coz we want to invalidate it when deps change
@@ -100,34 +101,12 @@ export function useNavigationCache<
       // If a cached navigation object already exists, reuse it
       acc[route.key] = previous;
     } else {
-      const withStack = (callback: () => void) => {
-        let isStackSet = false;
-
-        try {
-          if (
-            process.env.NODE_ENV !== 'production' &&
-            stackRef &&
-            !stackRef.current
-          ) {
-            // Capture the stack trace for devtools
-            stackRef.current = new Error().stack;
-            isStackSet = true;
-          }
-
-          callback();
-        } finally {
-          if (isStackSet && stackRef) {
-            stackRef.current = undefined;
-          }
-        }
-      };
-
       const dispatch = (
         thunk:
           | NavigationAction
           | ((state: State) => NavigationAction | null | undefined)
       ) => {
-        withStack(() =>
+        withStackTrace(dispatch, () => {
           React.startTransition(() => {
             const action =
               typeof thunk === 'function' ? thunk(getState()) : thunk;
@@ -135,8 +114,8 @@ export function useNavigationCache<
             if (action != null) {
               navigation.dispatch({ source: route.key, ...action });
             }
-          })
-        );
+          });
+        });
       };
 
       const actions = {
@@ -146,9 +125,13 @@ export function useNavigationCache<
 
       const helpers = Object.keys(actions).reduce<Record<string, () => void>>(
         (acc, name) => {
-          acc[name] = (...args: any) =>
-            // @ts-expect-error: name is a valid key, but TypeScript is dumb
-            dispatch(actions[name](...args));
+          const helper = (...args: any) =>
+            withStackTrace(helper, () =>
+              // @ts-expect-error: name is a valid key, but TypeScript is dumb
+              dispatch(actions[name](...args))
+            );
+
+          acc[name] = helper;
 
           return acc;
         },
