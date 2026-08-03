@@ -265,6 +265,8 @@ function Card({
     preloaded: boolean;
   } | null>(null);
 
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+
   React.useEffect(() => {
     return () => {
       if (animationHandleRef.current) {
@@ -273,10 +275,9 @@ function Card({
 
       clearTimeout(pendingGestureCallbackRef.current);
       clearTimeout(pendingOnCloseCallbackRef.current);
+      clearTimeout(timeoutRef.current);
     };
   }, []);
-
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const maybeAnimate = useLatestCallback(() => {
     clearTimeout(pendingGestureCallbackRef.current);
