@@ -678,6 +678,9 @@ const MemoizedScreen = React.memo(
 
 MemoizedScreen.displayName = 'Memo(Screen)';
 
+const hasPropertyGetter = (object: object, property: PropertyKey) =>
+  Object.getOwnPropertyDescriptor(object, property)?.get != null;
+
 const getItemsFromScreens = (
   Screen: React.ComponentType<any>,
   screens: StaticConfigScreens<any, any, any, any, any>
@@ -688,18 +691,57 @@ const getItemsFromScreens = (
     let useIf: (() => boolean) | undefined;
 
     let isNavigator = false;
+    let getComponent: (() => React.ComponentType<any>) | undefined;
 
     if ('screen' in item) {
-      const { screen, if: _if, ...rest } = item;
+      if (hasPropertyGetter(item, 'screen')) {
+        const rest: Record<string, unknown> = {};
 
-      useIf = _if;
-      props = rest;
+        // Iterate over the keys to avoid triggering the getter for 'screen'
+        for (const key of Object.keys(item)) {
+          if (key === 'screen' || key === 'if') {
+            continue;
+          }
 
-      if (isValidElementType(screen)) {
-        component = screen;
-      } else if ('config' in screen) {
-        isNavigator = true;
-        component = screen.getComponent();
+          rest[key] = Reflect.get(item, key);
+        }
+
+        useIf = item.if;
+        props = rest;
+
+        getComponent = () => {
+          const screen = item.screen;
+
+          if (isValidElementType(screen)) {
+            return screen;
+          }
+
+          if (
+            screen != null &&
+            typeof screen === 'object' &&
+            'config' in screen
+          ) {
+            throw new Error(
+              `Got a navigator object for the screen '${name}' instead of a component. A navigator cannot be specified when using a getter.`
+            );
+          }
+
+          throw new Error(
+            `Got an invalid screen component for the screen '${name}'. This can happen if you passed 'undefined'. You likely forgot to export your component from the file it's defined in, or mixed up default import and named import when importing.`
+          );
+        };
+      } else {
+        const { screen, if: _if, ...rest } = item;
+
+        useIf = _if;
+        props = rest;
+
+        if (isValidElementType(screen)) {
+          component = screen;
+        } else if ('config' in screen) {
+          isNavigator = true;
+          component = screen.getComponent();
+        }
       }
     } else if (isValidElementType(item)) {
       component = item;
@@ -708,17 +750,28 @@ const getItemsFromScreens = (
       component = item.getComponent();
     }
 
-    if (component == null) {
+    let children: (() => React.JSX.Element) | undefined;
+
+    if (getComponent != null) {
+      let element: React.JSX.Element | undefined;
+
+      children = () =>
+        (element ??= <MemoizedScreen component={getComponent()} />);
+    } else if (component != null) {
+      const element = isNavigator ? (
+        React.createElement(component, {})
+      ) : (
+        <MemoizedScreen component={component} />
+      );
+
+      children = () => element;
+    }
+
+    if (children == null) {
       throw new Error(
         `Couldn't find a 'screen' property for the screen '${name}'. This can happen if you passed 'undefined'. You likely forgot to export your component from the file it's defined in, or mixed up default import and named import when importing.`
       );
     }
-
-    const element = isNavigator ? (
-      React.createElement(component, {})
-    ) : (
-      <MemoizedScreen component={component} />
-    );
 
     return () => {
       const shouldRender = useIf == null || useIf();
@@ -729,7 +782,7 @@ const getItemsFromScreens = (
 
       return (
         <Screen key={name} name={name} {...props}>
-          {() => element}
+          {children}
         </Screen>
       );
     };
@@ -895,7 +948,7 @@ type PathConfigForStaticNavigation = Omit<
 // Mark screens that resolve to the same pattern and same component or navigator
 const markSharedPathConfigs = (
   screens: PathConfigMapForStaticNavigation,
-  sources: WeakMap<PathConfigForStaticNavigation, ScreenValueForPathConfig>,
+  sources: WeakMap<PathConfigForStaticNavigation, ScreenForPathConfig>,
   blocked: WeakSet<PathConfigForStaticNavigation>
 ) => {
   const candidates = new Map<string, PathConfigForStaticNavigation[]>();
@@ -992,7 +1045,7 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
   const blocked = new WeakSet<PathConfigForStaticNavigation>();
   const sources = new WeakMap<
     PathConfigForStaticNavigation,
-    ScreenValueForPathConfig
+    ScreenForPathConfig
   >();
 
   const createPathConfigForTree = (
@@ -1043,7 +1096,11 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
 
             sources.set(
               screenConfig,
-              typeof item === 'object' && 'screen' in item ? item.screen : item
+              typeof item === 'object' &&
+                'screen' in item &&
+                !hasPropertyGetter(item, 'screen')
+                ? item.screen
+                : item
             );
 
             const normalizePath = (path: string) =>
@@ -1129,6 +1186,7 @@ export function createPathConfigForStaticNavigation<ParamList extends {}>(
               !hasExplicitScreens &&
               !hasDisabledLinking &&
               'screen' in item &&
+              !hasPropertyGetter(item, 'screen') &&
               'config' in item.screen &&
               (item.screen.config.screens || item.screen.config.groups)
             ) {
