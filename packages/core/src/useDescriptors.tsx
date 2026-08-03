@@ -149,7 +149,7 @@ export function useDescriptors<
     onOptionsChange,
     scheduleUpdate,
     flushUpdates,
-    stackRef,
+    withStackTrace,
     getIsStateEmitted,
   } = React.useContext(NavigationBuilderContext);
 
@@ -166,7 +166,7 @@ export function useDescriptors<
       getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
-      stackRef,
+      withStackTrace,
     }),
     [
       navigation,
@@ -180,7 +180,7 @@ export function useDescriptors<
       getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
-      stackRef,
+      withStackTrace,
     ]
   );
 
