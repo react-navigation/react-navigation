@@ -453,17 +453,18 @@ export function App() {
             }}
             persistor={{
               async persist(state) {
-                await AsyncStorage.setItem(
-                  NAVIGATION_PERSISTENCE_KEY,
-                  JSON.stringify(state)
-                );
+                if (state !== undefined) {
+                  await AsyncStorage.setItem(NAVIGATION_PERSISTENCE_KEY, state);
+                } else {
+                  await AsyncStorage.removeItem(NAVIGATION_PERSISTENCE_KEY);
+                }
               },
               async restore() {
                 const value = await AsyncStorage.getItem(
                   NAVIGATION_PERSISTENCE_KEY
                 );
 
-                return value ? JSON.parse(value) : undefined;
+                return value ?? undefined;
               },
             }}
             fallback={<Text>Loading…</Text>}

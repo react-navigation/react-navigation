@@ -17,6 +17,7 @@ import * as React from 'react';
 import { DEFAULT_DIRECTION, IS_NATIVE } from './constants';
 import { LinkingContext } from './LinkingContext';
 import { LocaleDirContext } from './LocaleDirContext';
+import { parse as parseState, stringify as stringifyState } from './serializer';
 import { LightTheme } from './theming/LightTheme';
 import type {
   DocumentTitleOptions,
@@ -78,12 +79,14 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
    * ```ts
    * const persistor = {
    *   async persist(state) {
-   *     await AsyncStorage.setItem('state-key-v1', JSON.stringify(state));
+   *     if (state !== undefined) {
+   *       await AsyncStorage.setItem('state-key-v1', state);
+   *     }
    *   },
    *   async restore() {
    *     const state = await AsyncStorage.getItem('state-key-v1');
    *
-   *     return state ? JSON.parse(state) : undefined;
+   *     return state ?? undefined;
    *   },
    * };
    *
@@ -113,6 +116,16 @@ type Props<ParamList extends {}> = NavigationContainerProps & {
 
 const RESTORE_STATE_ERROR =
   'Failed to restore navigation state. The state will be initialized based on the navigation tree.';
+
+const PERSIST_STATE_ERROR = 'Failed to persist navigation state.';
+
+const isPromiseLike = <T,>(
+  value: T | PromiseLike<T>
+): value is PromiseLike<T> =>
+  value !== null &&
+  (typeof value === 'object' || typeof value === 'function') &&
+  'then' in value &&
+  typeof value.then === 'function';
 
 /**
  * Container component that manages the navigation state.
@@ -200,40 +213,45 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
         return undefined;
       }
 
-      let restoredState;
-
       try {
-        restoredState = persistor.restore();
-      } catch (e) {
-        console.error(RESTORE_STATE_ERROR, e);
+        const restoredState = persistor.restore();
 
-        return undefined;
-      }
+        if (isPromiseLike(restoredState)) {
+          return Promise.resolve(restoredState)
+            .then((state) =>
+              parseState(
+                state,
+                linking?.config,
+                persistor.parse?.bind(persistor)
+              )
+            )
+            .catch((error) => {
+              console.error(RESTORE_STATE_ERROR, error);
 
-      if (restoredState == null) {
-        return undefined;
-      }
+              return undefined;
+            });
+        }
 
-      if ('then' in restoredState) {
-        return restoredState.then(
-          (state) => state,
-          (error) => {
-            console.error(RESTORE_STATE_ERROR, error);
-
-            return undefined;
-          }
+        const parsedState = parseState(
+          restoredState,
+          linking?.config,
+          persistor.parse?.bind(persistor)
         );
+
+        const thenable: Thenable<InitialState | undefined> = {
+          then(onfulfilled) {
+            return Promise.resolve(
+              onfulfilled ? onfulfilled(parsedState) : parsedState
+            );
+          },
+        };
+
+        return thenable;
+      } catch (error) {
+        console.error(RESTORE_STATE_ERROR, error);
+
+        return undefined;
       }
-
-      const thenable: Thenable<InitialState | undefined> = {
-        then(onfulfilled) {
-          return Promise.resolve(
-            onfulfilled ? onfulfilled(restoredState) : restoredState
-          );
-        },
-      };
-
-      return thenable;
     }
   );
 
@@ -266,7 +284,28 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
           }
           onStateChange={(state) => {
             onStateChange?.(state);
-            persistor?.persist(state);
+
+            if (persistor == null) {
+              return;
+            }
+
+            try {
+              const result = persistor.persist(
+                stringifyState(
+                  state,
+                  linking?.config,
+                  persistor.stringify?.bind(persistor)
+                )
+              );
+
+              if (isPromiseLike(result)) {
+                Promise.resolve(result).catch((error) => {
+                  console.error(PERSIST_STATE_ERROR, error);
+                });
+              }
+            } catch (error) {
+              console.error(PERSIST_STATE_ERROR, error);
+            }
           }}
           ref={refContainer}
         />

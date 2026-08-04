@@ -4,9 +4,7 @@ import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
   createNavigatorFactory,
-  type NavigationState,
   type ParamListBase,
-  type PartialState,
   StackRouter,
   TabRouter,
   useNavigationBuilder,
@@ -180,8 +178,7 @@ test('renders fallback before state is restored asynchronously', async () => {
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  const { promise, resolve } =
-    Promise.withResolvers<PartialState<NavigationState>>();
+  const { promise, resolve } = Promise.withResolvers<string>();
 
   render(
     <NavigationContainer
@@ -203,9 +200,11 @@ test('renders fallback before state is restored asynchronously', async () => {
   expect(screen.queryByText('Home')).not.toBeInTheDocument();
 
   await act(() => {
-    resolve({
-      routes: [{ name: 'Profile', params: { user: 'jane' } }],
-    });
+    resolve(
+      JSON.stringify({
+        routes: [{ name: 'Profile', params: { user: 'jane' } }],
+      })
+    );
   });
 
   expect(screen.getByText('Profile{"user":"jane"}')).toBeInTheDocument();
@@ -217,7 +216,7 @@ test('renders fallback before state is restored asynchronously', async () => {
   });
 });
 
-test('renders navigation tree immediately when state is restored synchronously', () => {
+test('uses custom parsing and serialization with synchronous restoration', () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -243,16 +242,39 @@ test('renders navigation tree immediately when state is restored synchronously',
   );
 
   const navigation = createNavigationContainerRef<ParamListBase>();
+  let persistedState: string | undefined;
+  let failSerialization = false;
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
   render(
     <NavigationContainer
       ref={navigation}
       fallback={<Text>Loading</Text>}
       persistor={{
-        persist() {},
-        restore: () => ({
-          routes: [{ name: 'Profile', params: { user: 'jane' } }],
-        }),
+        persist(state) {
+          persistedState = state;
+        },
+        restore: () => 'Profile:jane',
+        parse(state) {
+          if (state === undefined) {
+            return undefined;
+          }
+
+          const [name = 'Home', user] = state.split(':');
+
+          return {
+            routes: [{ name, params: { user } }],
+          };
+        },
+        stringify(state) {
+          if (failSerialization) {
+            throw new Error('Failed');
+          }
+
+          return state === undefined
+            ? undefined
+            : `current-route:${state.routes[state.index]?.name}`;
+        },
       }}
     >
       <Stack.Navigator>
@@ -269,9 +291,22 @@ test('renders navigation tree immediately when state is restored synchronously',
     name: 'Profile',
     params: { user: 'jane' },
   });
+
+  act(() => navigation.navigate('Home'));
+
+  expect(persistedState).toBe('current-route:Home');
+
+  failSerialization = true;
+  act(() => navigation.navigate('Profile'));
+
+  expect(persistedState).toBe('current-route:Home');
+  expect(spy).toHaveBeenCalledWith(
+    'Failed to persist navigation state.',
+    expect.any(Error)
+  );
 });
 
-test('renders normally when state restoration throws', async () => {
+test('renders normally when restored state fails validation', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
       StackRouter,
@@ -303,10 +338,33 @@ test('renders normally when state restoration throws', async () => {
   render(
     <NavigationContainer
       ref={navigation}
+      linking={{
+        enabled: false,
+        config: {
+          screens: {
+            Home: {
+              parse: {
+                id: {
+                  '~standard': {
+                    version: 1,
+                    vendor: 'test',
+                    validate: () => ({ issues: [{ message: 'Invalid' }] }),
+                  },
+                },
+              },
+            },
+          },
+        },
+      }}
       persistor={{
         persist() {},
         restore() {
-          throw new Error('Failed');
+          return 'state';
+        },
+        parse() {
+          return {
+            routes: [{ name: 'Home', params: { id: 'invalid' } }],
+          };
         },
       }}
     >
