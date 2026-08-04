@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [4.2.10](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.9...react-native-drawer-layout@4.2.10) (2026-08-04)
+
+### Bug Fixes
+
+* avoid import * in InteractionManager shims ([#13199](https://github.com/react-navigation/react-navigation/issues/13199)) ([1821b06](https://github.com/react-navigation/react-navigation/commit/1821b06b5a441f404083bf90a8e99e4ccd572872)) - by @delekta
+
 ## [4.2.9](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@4.2.8...react-native-drawer-layout@4.2.9) (2026-07-20)
 
 **Note:** Version bump only for package react-native-drawer-layout
