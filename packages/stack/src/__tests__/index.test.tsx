@@ -428,6 +428,101 @@ test('default inactiveBehavior="pause" unmounts effects except last 2 screens', 
   expect(effectActiveB).toBe(true);
 });
 
+test('inactiveBehavior="pauseWhenCovered" pauses the screen when it is covered', async () => {
+  let effectActive = false;
+
+  const ScreenA = () => {
+    React.useEffect(() => {
+      effectActive = true;
+      return () => {
+        effectActive = false;
+      };
+    }, []);
+    return null;
+  };
+
+  const Stack = createStackNavigator<StackParamList>();
+  const navigation = createNavigationContainerRef<StackParamList>();
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="A"
+          component={ScreenA}
+          options={{ inactiveBehavior: 'pauseWhenCovered' }}
+        />
+        <Stack.Screen name="B">{() => null}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(effectActive).toBe(true);
+
+  await act(() => navigation.navigate('B'));
+  await act(() => jest.runAllTimers());
+
+  // The screen before the last one stays active by default
+  // Here it's paused since the screen opted in with `pauseWhenCovered`
+  expect(effectActive).toBe(false);
+
+  await act(() => navigation.goBack());
+  await act(() => jest.runAllTimers());
+
+  expect(effectActive).toBe(true);
+});
+
+test('inactiveBehavior="pauseWhenCovered" pauses the screen when a parent navigator is covered', async () => {
+  let effectActive = false;
+
+  const ScreenD = () => {
+    React.useEffect(() => {
+      effectActive = true;
+      return () => {
+        effectActive = false;
+      };
+    }, []);
+    return null;
+  };
+
+  const Stack = createStackNavigator<StackParamList>();
+  const NestedStack = createStackNavigator<NestedStackParamList>();
+  const navigation = createNavigationContainerRef<StackParamList>();
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="A">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen
+                name="D"
+                component={ScreenD}
+                options={{ inactiveBehavior: 'pauseWhenCovered' }}
+              />
+            </NestedStack.Navigator>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="B">{() => null}</Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(effectActive).toBe(true);
+
+  await act(() => navigation.navigate('B'));
+  await act(() => jest.runAllTimers());
+
+  // The nested screen is still focused in its own stack,
+  // but the screen containing the nested navigator is covered
+  expect(effectActive).toBe(false);
+
+  await act(() => navigation.goBack());
+  await act(() => jest.runAllTimers());
+
+  expect(effectActive).toBe(true);
+});
+
 test('preloading a screen runs effects', async () => {
   let effectActive = false;
 

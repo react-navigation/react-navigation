@@ -7,9 +7,13 @@ import {
   test,
 } from '@jest/globals';
 import { useHeaderHeight } from '@react-navigation/elements';
-import { NavigationContainer } from '@react-navigation/native';
-import { render, screen } from '@testing-library/react';
+import {
+  createNavigationContainerRef,
+  NavigationContainer,
+} from '@react-navigation/native';
+import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import * as React from 'react';
 import { Button } from 'react-native';
 
 import {
@@ -33,6 +37,127 @@ beforeEach(() => {
 afterEach(() => {
   jest.runOnlyPendingTimers();
   jest.useRealTimers();
+});
+
+test('inactiveBehavior="pauseWhenCovered" pauses the screen when it is covered', async () => {
+  let effectActive = false;
+
+  const ScreenA = () => {
+    React.useEffect(() => {
+      effectActive = true;
+
+      return () => {
+        effectActive = false;
+      };
+    }, []);
+
+    return null;
+  };
+
+  const Stack = createNativeStackNavigator<StackParamList>();
+  const navigation = createNavigationContainerRef<StackParamList>();
+
+  render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="A"
+          component={ScreenA}
+          options={{ inactiveBehavior: 'pauseWhenCovered' }}
+        />
+        <Stack.Screen name="B" options={{ presentation: 'transparentModal' }}>
+          {() => null}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(effectActive).toBe(true);
+
+  await act(async () => {
+    navigation.navigate('B');
+  });
+
+  await act(async () => {
+    jest.runAllTimers();
+  });
+
+  // Unlike `pause`, the screen is paused even though it's visible under the modal
+  expect(effectActive).toBe(false);
+
+  await act(async () => {
+    navigation.goBack();
+  });
+
+  await act(async () => {
+    jest.runAllTimers();
+  });
+
+  expect(effectActive).toBe(true);
+});
+
+test('inactiveBehavior="pauseWhenCovered" pauses the screen when a parent navigator is covered', async () => {
+  let effectActive = false;
+
+  const ScreenC = () => {
+    React.useEffect(() => {
+      effectActive = true;
+
+      return () => {
+        effectActive = false;
+      };
+    }, []);
+
+    return null;
+  };
+
+  const Stack = createNativeStackNavigator<StackParamList>();
+  const NestedStack = createNativeStackNavigator<NestedStackParamList>();
+  const navigation = createNavigationContainerRef<StackParamList>();
+
+  render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="A">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen
+                name="C"
+                component={ScreenC}
+                options={{ inactiveBehavior: 'pauseWhenCovered' }}
+              />
+            </NestedStack.Navigator>
+          )}
+        </Stack.Screen>
+        <Stack.Screen name="B" options={{ presentation: 'transparentModal' }}>
+          {() => null}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(effectActive).toBe(true);
+
+  await act(async () => {
+    navigation.navigate('B');
+  });
+
+  await act(async () => {
+    jest.runAllTimers();
+  });
+
+  // The nested screen is still focused in its own stack
+  expect(effectActive).toBe(false);
+
+  await act(async () => {
+    navigation.goBack();
+  });
+
+  await act(async () => {
+    jest.runAllTimers();
+  });
+
+  expect(effectActive).toBe(true);
 });
 
 describe('useHeaderHeight in native-stack', () => {

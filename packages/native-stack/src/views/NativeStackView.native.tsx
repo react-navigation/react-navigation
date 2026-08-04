@@ -11,6 +11,7 @@ import {
   SafeAreaProviderCompat,
 } from '@react-navigation/elements/internal';
 import {
+  IsFocusedContext,
   NavigationProvider,
   type ParamListBase,
   StackActions,
@@ -59,6 +60,7 @@ type SceneViewProps = {
   isNextScreenModal: boolean;
   isInactive: boolean;
   isBeforeLast: boolean;
+  isCoveredExternally: boolean;
   onWillDisappear: () => void;
   onWillAppear: () => void;
   onAppear: () => void;
@@ -90,6 +92,7 @@ const SceneView = ({
   isNextScreenModal,
   isInactive,
   isBeforeLast,
+  isCoveredExternally,
   onWillDisappear,
   onWillAppear,
   onAppear,
@@ -307,27 +310,38 @@ const SceneView = ({
         }
       );
 
+  const pauseWhenCovered = inactiveBehavior === 'pauseWhenCovered';
+
+  // Whether the screen is covered: by the screen above it in this stack,
+  // or by a screen covering the navigator it's in
+  const isCovered = focused
+    ? isCoveredExternally
+    : !isInactive && (isNextScreenTransparent || isBeforeLast);
+
   const activityMode =
-    // Render focused screens normally
-    // Unpause preloaded and retained screens so updates are visible
-    // Unpause previous screen so update isn't delayed for swipe back
-    // This lets effects on those screens run
-    // We don't need to handle inert as it'll be handled natively
-    inactiveBehavior === 'none' ||
-    focused ||
-    isInactive ||
-    isNextScreenTransparent ||
-    // Unpause the screen behind a sheet so it stays up to date
-    // Sheets don't cover the whole screen, so the screen behind is visible
-    isNextScreenSheet ||
-    // On iPadOS, the base screen is visible while modal is in a smaller area
-    // So also keep the screens unpaused
-    (isNextScreenModal && !isModal) ||
-    isBeforeLast
-      ? 'normal'
-      : inactiveBehavior === 'unmount' && !('state' in route && route.state)
-        ? 'unmounted'
-        : 'paused';
+    // Pause covered screens, including covers that leave them visible, e.g. sheets
+    pauseWhenCovered && isCovered
+      ? 'paused'
+      : // Render focused screens normally
+        // Unpause preloaded and retained screens so updates are visible
+        // Unpause previous screen so update isn't delayed for swipe back
+        // This lets effects on those screens run
+        // We don't need to handle inert as it'll be handled natively
+        inactiveBehavior === 'none' ||
+          focused ||
+          isInactive ||
+          isNextScreenTransparent ||
+          // Unpause the screen behind a sheet so it stays up to date
+          // Sheets don't cover the whole screen, so the screen behind is visible
+          isNextScreenSheet ||
+          // On iPadOS, the base screen is visible while modal is in a smaller area
+          // So also keep the screens unpaused
+          (isNextScreenModal && !isModal) ||
+          isBeforeLast
+        ? 'normal'
+        : inactiveBehavior === 'unmount' && !('state' in route && route.state)
+          ? 'unmounted'
+          : 'paused';
 
   const content = (
     <AnimatedHeaderHeightContext.Provider value={animatedHeaderHeight}>
@@ -486,6 +500,11 @@ type Props = {
 };
 
 export function NativeStackView({ state, navigation, descriptors }: Props) {
+  // Whether a navigator above this one is covered, e.g. by a modal in a parent stack
+  // The context composes the parent chain, so it's `false` if any ancestor is blurred
+  // It's `undefined` in the root navigator, which is always considered focused
+  const isCoveredExternally = React.use(IsFocusedContext) === false;
+
   const { setNextDismissedKey } = useDismissedRouteError(state);
 
   useInvalidPreventRemoveError(descriptors);
@@ -541,6 +560,7 @@ export function NativeStackView({ state, navigation, descriptors }: Props) {
               isNextScreenModal={isNextScreenModal}
               isInactive={index > state.index}
               isBeforeLast={index === activeRoutes.length - 2}
+              isCoveredExternally={isCoveredExternally}
               onWillDisappear={() => {
                 navigation.emit({
                   type: 'transitionStart',

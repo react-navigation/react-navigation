@@ -409,6 +409,8 @@ export type StackNavigationOptions = StackHeaderOptions &
     /**
      * What should happen when screens become inactive.
      * - `pause`: Effects are cleaned up
+     * - `pauseWhenCovered`: Effects are cleaned up, also when the screen is covered
+     *   by the screen above it
      * - `unmount`: Screen is unmounted
      * - `none`: Screen renders normally
      *
@@ -418,8 +420,18 @@ export type StackNavigationOptions = StackHeaderOptions &
      * This makes sure that effects are run to initialize the screen.
      *
      * Screens with nested navigators and last 2 screens won't be unmounted.
+     *
+     * `pauseWhenCovered` is useful for expensive screens, that are partially visible or behind current screen.
+     * May produce stale content while the user interacts with the screen covering them.
+     * It doesn't change whether the screen is visible - a paused screen is shown or hidden
+     * by the same rules as any other covered screen.
      */
-    inactiveBehavior?: 'pause' | 'unmount' | 'none' | undefined;
+    inactiveBehavior?:
+      | 'pause'
+      | 'pauseWhenCovered'
+      | 'unmount'
+      | 'none'
+      | undefined;
   };
 
 export type StackNavigationConfig = {};
