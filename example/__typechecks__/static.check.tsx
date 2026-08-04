@@ -708,7 +708,7 @@ createBottomTabNavigator({
 createBottomTabNavigator({
   screenOptions: {
     // @ts-expect-error
-    tabBarActiveTintColor: 42,
+    tabBarActiveTintColor: true,
   },
   screens: {},
 });
@@ -723,7 +723,7 @@ createBottomTabNavigator({
 createBottomTabNavigator({
   // @ts-expect-error
   screenOptions: () => ({
-    tabBarActiveTintColor: 42,
+    tabBarActiveTintColor: true,
   }),
   screens: {},
 });
@@ -748,7 +748,7 @@ createBottomTabNavigator({
       screen: () => null,
       options: {
         // @ts-expect-error
-        tabBarActiveTintColor: 42,
+        tabBarActiveTintColor: true,
       },
     }),
   },
@@ -769,9 +769,9 @@ createBottomTabNavigator({
   screens: {
     Test: createBottomTabScreen({
       screen: () => null,
-      // @ts-expect-error
+      // @ts-expect-error: tint color must be a ColorValue
       options: () => ({
-        tabBarActiveTintColor: 42,
+        tabBarActiveTintColor: true,
       }),
     }),
   },

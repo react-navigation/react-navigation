@@ -2,7 +2,7 @@
 
 import {
   codegenNativeComponent,
-  CodegenTypes,
+  type CodegenTypes,
   type ColorValue,
   type ViewProps,
 } from 'react-native';

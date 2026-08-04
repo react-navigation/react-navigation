@@ -65,7 +65,7 @@ export function ActivityView({
    * So we use hidden mode, but unset display: none to make content visible
    */
   const onRef = useCallback(
-    (node: HTMLDivElement | View | null) => {
+    (node: HTMLDivElement | React.ComponentRef<typeof View> | null) => {
       if (Platform.OS !== 'web' || !(node && node instanceof HTMLElement)) {
         return;
       }

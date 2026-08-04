@@ -7,15 +7,14 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, render, waitFor } from '@testing-library/react-native';
-import { type EmitterSubscription, Linking, Text } from 'react-native';
+import { Linking, Text } from 'react-native';
 
 import { NavigationContainer } from '../NavigationContainer';
 
 beforeEach(() => {
   jest.mocked(Linking.getInitialURL).mockResolvedValue(null);
-  jest
-    .mocked(Linking.addEventListener)
-    .mockReturnValue({ remove: () => {} } as EmitterSubscription);
+  // @ts-expect-error:  types require private fields.
+  jest.mocked(Linking.addEventListener).mockReturnValue({ remove: () => {} });
 });
 
 afterEach(() => {
@@ -103,10 +102,11 @@ test('handles Linking URL events', async () => {
 
   let listener: ((event: { url: string }) => void) | undefined;
 
+  // @ts-expect-error:  types require private fields.
   jest.mocked(Linking.addEventListener).mockImplementation((_, callback) => {
     listener = callback;
 
-    return { remove: () => {} } as EmitterSubscription;
+    return { remove: () => {} };
   });
 
   const navigation = createNavigationContainerRef<ParamListBase>();

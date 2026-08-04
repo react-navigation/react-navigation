@@ -3,7 +3,7 @@ import * as React from 'react';
 import {
   codegenNativeCommands,
   codegenNativeComponent,
-  CodegenTypes,
+  type CodegenTypes,
   type HostComponent,
   type ViewProps,
 } from 'react-native';
@@ -15,9 +15,7 @@ export interface NativeProps extends ViewProps {
 }
 
 interface NativeCommands {
-  // FIXME: codegen fails with ComponentRef
-  // so we currently use the deprecated ElementRef
-  relayout(viewRef: React.ElementRef<HostComponent<NativeProps>>): void;
+  relayout(viewRef: React.ComponentRef<HostComponent<NativeProps>>): void;
 }
 
 export const Commands = codegenNativeCommands<NativeCommands>({

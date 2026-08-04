@@ -1,7 +1,8 @@
+import * as React from 'react';
 import { Platform, View, type ViewStyle } from 'react-native';
 
 export type Props = {
-  ref?: React.Ref<HTMLDivElement | View> | undefined;
+  ref?: React.Ref<HTMLDivElement | React.ComponentRef<typeof View>> | undefined;
   inert?: boolean | undefined;
   style?:
     | (ViewStyle &

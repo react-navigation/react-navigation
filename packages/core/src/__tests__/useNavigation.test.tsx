@@ -1,17 +1,26 @@
-import { beforeEach, expect, test } from '@jest/globals';
-import { StackRouter } from '@react-navigation/routers';
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
+import {
+  CommonActions,
+  type ParamListBase,
+  StackRouter,
+} from '@react-navigation/routers';
 import { render } from '@testing-library/react-native';
 import { act, useEffect } from 'react';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
 import { Screen } from '../Screen';
+import type { GenericNavigation } from '../types';
 import { useNavigation } from '../useNavigation';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 import { MockRouter, MockRouterKey } from './__fixtures__/MockRouter';
 
 beforeEach(() => {
   MockRouterKey.current = 0;
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
 });
 
 test('gets navigation prop from context', async () => {
@@ -113,7 +122,7 @@ test("gets navigation's parent from context", async () => {
 });
 
 test('gets navigation from container from context', async () => {
-  expect.assertions(3);
+  expect.assertions(7);
 
   const TestNavigator = (props: any): any => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
@@ -135,6 +144,17 @@ test('gets navigation from container from context', async () => {
     expect(navigation.getState()).toBeUndefined();
 
     useEffect(() => {
+      expect(navigation.isFocused()).toBe(true);
+
+      expect(() => navigation.setParams({})).toThrow(
+        'Cannot call setParams outside a screen'
+      );
+      expect(() => navigation.replaceParams({})).toThrow(
+        'Cannot call replaceParams outside a screen'
+      );
+      expect(() => navigation.pushParams({})).toThrow(
+        'Cannot call pushParams outside a screen'
+      );
       expect(() => navigation.setOptions({})).toThrow(
         'Cannot call setOptions outside a screen'
       );
@@ -148,6 +168,196 @@ test('gets navigation from container from context', async () => {
       <Test />
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+});
+
+test('dispatches to the root navigator by default and preserves explicit targets', async () => {
+  const ref = createNavigationContainerRef();
+
+  const onStateChange = jest.fn();
+  const onAction = jest.fn();
+
+  let dispatch: GenericNavigation<ParamListBase>['dispatch'];
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const Test = () => {
+    const navigation = useNavigation();
+
+    useEffect(() => {
+      dispatch = navigation.dispatch;
+    }, [navigation]);
+
+    return null;
+  };
+
+  await render(
+    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+      <Test />
+      <TestNavigator>
+        <Screen name="root">
+          {() => (
+            <TestNavigator>
+              <Screen name="first">{() => null}</Screen>
+              <Screen name="second">{() => null}</Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+        <Screen name="second">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  ref.addListener('__unsafe_action__', onAction);
+
+  const target = ref.getRootState().routes[0]!.state!.key;
+
+  act(() => {
+    dispatch(() => ({
+      ...CommonActions.navigate('second'),
+      target,
+    }));
+  });
+
+  expect(onAction).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      data: expect.objectContaining({
+        action: expect.objectContaining({ target }),
+      }),
+    })
+  );
+  expect(onStateChange).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      index: 0,
+      routes: [
+        expect.objectContaining({
+          state: expect.objectContaining({ index: 1 }),
+        }),
+        expect.anything(),
+      ],
+    })
+  );
+
+  act(() => {
+    dispatch(() => CommonActions.navigate('second'));
+  });
+
+  expect(onAction).toHaveBeenLastCalledWith(
+    expect.objectContaining({
+      data: expect.objectContaining({
+        action: expect.not.objectContaining({ target: expect.anything() }),
+      }),
+    })
+  );
+  expect(onStateChange).toHaveBeenLastCalledWith(
+    expect.objectContaining({ index: 1 })
+  );
+});
+
+test('warns when an action is not handled by the root navigator', async () => {
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+  let navigation: GenericNavigation<ParamListBase>;
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const Test = () => {
+    navigation = useNavigation();
+
+    return null;
+  };
+
+  await render(
+    <BaseNavigationContainer>
+      <Test />
+      <TestNavigator>
+        <Screen name="root">
+          {() => (
+            <TestNavigator>
+              <Screen name="nested">{() => null}</Screen>
+            </TestNavigator>
+          )}
+        </Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  // The screen only exists in a child navigator, so the root navigator can't handle it
+  act(() => {
+    navigation.navigate('nested');
+  });
+
+  expect(spy).toHaveBeenCalledWith(
+    expect.stringContaining(
+      'The action \'NAVIGATE\' with payload {"name":"nested"} was not handled by any navigator.'
+    )
+  );
+});
+
+test('emits state events from the root navigator', async () => {
+  expect.assertions(1);
+
+  const TestNavigator = (props: any): any => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const Test = () => {
+    const navigation = useNavigation();
+
+    useEffect(() => {
+      const unsubscribe = navigation.addListener('state', (event) => {
+        expect(event.data.state.routes[event.data.state.index]?.name).toBe(
+          'second'
+        );
+      });
+
+      navigation.dispatch(CommonActions.navigate('second'));
+
+      return unsubscribe;
+    }, [navigation]);
+
+    return null;
+  };
+
+  await render(
+    <BaseNavigationContainer>
+      <Test />
+      <TestNavigator>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="second">{() => null}</Screen>
       </TestNavigator>
     </BaseNavigationContainer>
   );

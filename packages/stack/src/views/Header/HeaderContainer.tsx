@@ -147,7 +147,7 @@ export function HeaderContainer({
               : forNoAnimation,
         };
 
-        const onRef = (node: View | null) => {
+        const onRef = (node: React.ComponentRef<typeof View> | null) => {
           node?.measure((_x, _y, _width, height) => {
             if (height && !contentHeight?.measured) {
               onContentHeightChange({

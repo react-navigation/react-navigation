@@ -3,6 +3,7 @@ import {
   type InitialState,
   type NavigationAction,
   type NavigationState,
+  type ParamListBase,
   type PartialState,
   type Route,
 } from '@react-navigation/routers';
@@ -15,12 +16,18 @@ import { ConsumedParamsContext } from './ConsumedParamsContext';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
 import { findFocusedRoute } from './findFocusedRoute';
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import {
+  NavigationBuilderContext,
+  type WithStackTrace,
+} from './NavigationBuilderContext';
 import { NavigationContainerRefContext } from './NavigationContainerRefContext';
 import { NavigationIndependentTreeContext } from './NavigationIndependentTreeContext';
+import { NavigationRootContext } from './NavigationRootContext';
 import { NavigationStateContext } from './NavigationStateContext';
 import { ThemeProvider } from './theming/ThemeProvider';
 import type {
+  EventListenerCallback,
+  GenericNavigation,
   NavigationContainerEventMap,
   NavigationContainerProps,
   NavigationContainerRef,
@@ -125,6 +132,41 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   const { keyedListeners, addKeyedListener } = useKeyedChildListeners();
 
+  const stackRef = React.useRef<string | undefined>(undefined);
+
+  const withStackTrace = React.useCallback<WithStackTrace>(
+    (entry, callback) => {
+      if (process.env.NODE_ENV === 'production' || stackRef.current != null) {
+        callback();
+        return;
+      }
+
+      const error = new Error();
+
+      if (Error.captureStackTrace) {
+        // Available on V8 and Hermes, omits the frames of `entry` and what it called
+        Error.captureStackTrace(error, entry);
+
+        stackRef.current = error.stack;
+      } else {
+        // Other engines always include them, so we drop the frames up to `entry` ourselves
+        const frames = error.stack?.split('\n') ?? [];
+        const index = frames.findIndex((frame) =>
+          frame.includes(`${entry.name}@`)
+        );
+
+        stackRef.current = frames.slice(index + 1).join('\n');
+      }
+
+      try {
+        callback();
+      } finally {
+        stackRef.current = undefined;
+      }
+    },
+    []
+  );
+
   const dispatch = useLatestCallback(
     (
       action: NavigationAction | ((state: NavigationState) => NavigationAction)
@@ -134,11 +176,13 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       if (listener == null) {
         console.error(NOT_INITIALIZED_ERROR);
       } else {
-        listener((navigation) =>
-          React.startTransition(() => {
-            navigation.dispatch(action);
-          })
-        );
+        withStackTrace(dispatch, () => {
+          listener((navigation) =>
+            React.startTransition(() => {
+              navigation.dispatch(action);
+            })
+          );
+        });
       }
     }
   );
@@ -199,29 +243,28 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   const { addOptionsGetter, getCurrentOptions } = useOptionsGetters({});
 
-  const navigation: NavigationContainerRef<ParamList> = React.useMemo(
+  const container: NavigationContainerRef<ParamList> = React.useMemo(
     () => ({
       ...Object.keys(CommonActions).reduce<any>((acc, name) => {
-        acc[name] = (...args: any[]) =>
-          // @ts-expect-error: this is ok
-          dispatch(CommonActions[name](...args));
+        const helper = (...args: any[]) =>
+          withStackTrace(helper, () =>
+            // @ts-expect-error: this is ok
+            dispatch(CommonActions[name](...args))
+          );
+
+        acc[name] = helper;
 
         return acc;
       }, {}),
       ...emitter.create('root'),
       dispatch,
       resetRoot,
-      isFocused: () => true,
       canGoBack,
-      getParent: () => undefined,
       getState,
       getRootState,
       getCurrentRoute,
       getCurrentOptions,
       isReady,
-      setOptions: () => {
-        throw new Error('Cannot call setOptions outside a screen');
-      },
     }),
     [
       canGoBack,
@@ -233,10 +276,112 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       getState,
       isReady,
       resetRoot,
+      withStackTrace,
     ]
   );
 
-  React.useImperativeHandle(ref, () => navigation, [navigation]);
+  const navigation: GenericNavigation<ParamListBase> = React.useMemo(() => {
+    const events = emitter.create('root');
+
+    const dispatch = (
+      thunk: NavigationAction | ((state: NavigationState) => NavigationAction)
+    ) => {
+      const root = keyedListeners.getNavigation.root?.();
+
+      if (root == null) {
+        console.error(NOT_INITIALIZED_ERROR);
+        return;
+      }
+
+      withStackTrace(dispatch, () => {
+        React.startTransition(() => {
+          root.dispatch(thunk);
+        });
+      });
+    };
+
+    const helpers = Object.keys(CommonActions).reduce<any>((acc, name) => {
+      const helper = (...args: any) => {
+        if (
+          name === 'setParams' ||
+          name === 'replaceParams' ||
+          name === 'pushParams'
+        ) {
+          throw new Error(`Cannot call ${name} outside a screen`);
+        }
+
+        withStackTrace(helper, () =>
+          // @ts-expect-error name is a valid key, but TypeScript cannot infer it.
+          dispatch(CommonActions[name](...args))
+        );
+      };
+
+      acc[name] = helper;
+
+      return acc;
+    }, {});
+
+    const listeners = new WeakMap<
+      (...args: never[]) => void,
+      EventListenerCallback<NavigationContainerEventMap, 'state'>
+    >();
+
+    return {
+      ...helpers,
+      dispatch,
+      addListener: (type, callback) => {
+        if (type === 'state') {
+          let listener = listeners.get(callback);
+
+          if (listener === undefined) {
+            // Root's state change events can contain stale and undefined state
+            // But navigation objects should only receive non-stale state
+            // So we add a wrapper to filter out stale events
+            listener = (event) => {
+              if (event.data.state?.stale === false) {
+                // @ts-expect-error TypeScript doesn't narrow the generic event callback with its type.
+                callback(event);
+              }
+            };
+
+            listeners.set(callback, listener);
+          }
+
+          return events.addListener('state', listener);
+        }
+
+        return () => {};
+      },
+      removeListener: (type, callback) => {
+        if (type === 'state') {
+          const listener = listeners.get(callback);
+
+          if (listener) {
+            events.removeListener('state', listener);
+            listeners.delete(callback);
+          }
+        }
+      },
+      canGoBack: () =>
+        keyedListeners.getNavigation.root?.().canGoBack() ?? false,
+      getState: () => keyedListeners.getState.root?.(),
+      getParent: (routeName?: string) => {
+        if (routeName !== undefined) {
+          throw new Error(
+            `Couldn't find a navigation object for '${routeName}' because it's called outside a screen. Is your component inside a screen?`
+          );
+        }
+
+        return undefined;
+      },
+      setOptions: () => {
+        throw new Error('Cannot call setOptions outside a screen');
+      },
+      isFocused: () => true,
+    };
+  }, [emitter, keyedListeners, withStackTrace]);
+
+  React.useImperativeHandle(ref, () => container, [container]);
 
   const onDispatchAction = useLatestCallback(
     (action: NavigationAction, noop: boolean) => {
@@ -276,8 +421,6 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     });
   });
 
-  const stackRef = React.useRef<string | undefined>(undefined);
-
   const lastEmittedStateRef = React.useRef<State>(undefined);
 
   const getIsStateEmitted = useLatestCallback(
@@ -294,7 +437,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
-      stackRef,
+      withStackTrace,
     }),
     [
       addListener,
@@ -305,6 +448,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       getIsStateEmitted,
       scheduleUpdate,
       flushUpdates,
+      withStackTrace,
     ]
   );
 
@@ -485,20 +629,22 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
   return (
     <NavigationIndependentTreeContext.Provider value={false}>
-      <NavigationContainerRefContext.Provider value={navigation}>
-        <NavigationBuilderContext.Provider value={builderContext}>
-          <NavigationStateContext.Provider value={context}>
-            <ConsumedParamsContext.Provider value={consumedParams}>
-              <UnhandledActionContext.Provider
-                value={onUnhandledAction ?? defaultOnUnhandledAction}
-              >
-                <EnsureSingleNavigator>
-                  <ThemeProvider value={theme}>{children}</ThemeProvider>
-                </EnsureSingleNavigator>
-              </UnhandledActionContext.Provider>
-            </ConsumedParamsContext.Provider>
-          </NavigationStateContext.Provider>
-        </NavigationBuilderContext.Provider>
+      <NavigationContainerRefContext.Provider value={container}>
+        <NavigationRootContext.Provider value={navigation}>
+          <NavigationBuilderContext.Provider value={builderContext}>
+            <NavigationStateContext.Provider value={context}>
+              <ConsumedParamsContext.Provider value={consumedParams}>
+                <UnhandledActionContext.Provider
+                  value={onUnhandledAction ?? defaultOnUnhandledAction}
+                >
+                  <EnsureSingleNavigator>
+                    <ThemeProvider value={theme}>{children}</ThemeProvider>
+                  </EnsureSingleNavigator>
+                </UnhandledActionContext.Provider>
+              </ConsumedParamsContext.Provider>
+            </NavigationStateContext.Provider>
+          </NavigationBuilderContext.Provider>
+        </NavigationRootContext.Provider>
       </NavigationContainerRefContext.Provider>
     </NavigationIndependentTreeContext.Provider>
   );

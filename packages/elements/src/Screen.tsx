@@ -56,7 +56,7 @@ export function Screen(props: Props) {
     })
   );
 
-  const headerRef = React.useRef<View>(null);
+  const headerRef = React.useRef<React.ComponentRef<typeof View>>(null);
 
   const [headerHeight, setHeaderHeight] = React.useState(defaultHeaderHeight);
 

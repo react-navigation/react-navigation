@@ -4,7 +4,6 @@ import {
   Animated,
   BackHandler,
   type ColorValue,
-  type NativeEventSubscription,
   Platform,
   type StyleProp,
   StyleSheet,
@@ -71,7 +70,7 @@ export function HeaderSearchBar({
   const [clearVisibleAnim] = React.useState(() => new Animated.Value(0));
 
   const clearVisibleValueRef = React.useRef(false);
-  const inputRef = React.useRef<TextInput>(null);
+  const inputRef = React.useRef<React.ComponentRef<typeof TextInput>>(null);
 
   const hasText = value !== '';
 
@@ -121,7 +120,9 @@ export function HeaderSearchBar({
       }
     };
 
-    let backHandlerSubscription: NativeEventSubscription | undefined;
+    let backHandlerSubscription:
+      | ReturnType<typeof BackHandler.addEventListener>
+      | undefined;
 
     if (Platform.OS === 'web') {
       document?.body?.addEventListener?.('keyup', onKeyup);

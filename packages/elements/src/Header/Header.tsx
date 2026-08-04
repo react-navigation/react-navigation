@@ -180,7 +180,7 @@ export function Header(props: Props) {
     transform,
     transformOrigin,
     ...unsafeStyles
-  } = StyleSheet.flatten(customHeaderStyle || {}) as ViewStyle;
+  } = (StyleSheet.flatten(customHeaderStyle) || {}) as ViewStyle;
 
   if (process.env.NODE_ENV !== 'production') {
     warnIfHeaderStylesDefined(unsafeStyles);

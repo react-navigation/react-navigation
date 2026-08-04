@@ -128,6 +128,32 @@ test("doesn't inherit outer tree's navigation object", async () => {
   );
 });
 
+test("doesn't inherit outer tree's root navigation object", async () => {
+  const Test = () => {
+    useNavigation();
+
+    return null;
+  };
+
+  await expect(
+    render(
+      <BaseNavigationContainer>
+        <TestNavigator>
+          <Screen name="Outer">
+            {() => (
+              <NavigationIndependentTree>
+                <Test />
+              </NavigationIndependentTree>
+            )}
+          </Screen>
+        </TestNavigator>
+      </BaseNavigationContainer>
+    )
+  ).rejects.toThrow(
+    "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+  );
+});
+
 test("doesn't inherit outer tree's focus state", async () => {
   const navigation = createNavigationContainerRef<ParamListBase>();
 

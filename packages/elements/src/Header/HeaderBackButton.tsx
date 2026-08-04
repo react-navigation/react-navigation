@@ -135,9 +135,9 @@ function HeaderBackLabel({
     number | null
   >(null);
 
-  const wrapperRef = React.useRef<View | null>(null);
-  const labelRef = React.useRef<Text | null>(null);
-  const truncatedLabelRef = React.useRef<Text | null>(null);
+  const wrapperRef = React.useRef<React.ComponentRef<typeof View>>(null);
+  const labelRef = React.useRef<React.ComponentRef<typeof Text>>(null);
+  const truncatedLabelRef = React.useRef<React.ComponentRef<typeof Text>>(null);
 
   React.useLayoutEffect(() => {
     wrapperRef.current?.measure((_x, _y, width) => {
