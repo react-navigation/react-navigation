@@ -20,6 +20,7 @@ import { DEFAULT_DIRECTION, IS_NATIVE } from './constants';
 import { getStateBreadcrumb } from './getStateBreadcrumb';
 import { LinkingContext } from './LinkingContext';
 import { LocaleDirContext } from './LocaleDirContext';
+import { serializer } from './serializer';
 import { LightTheme } from './theming/LightTheme';
 import type {
   DocumentTitleOptions,
@@ -225,7 +226,7 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
         try {
           return persistor.parse
             ? persistor.parse(serializedState)
-            : JSON.parse(serializedState);
+            : serializer.parse(serializedState, linking?.config);
         } catch (e) {
           console.error(PARSE_STATE_ERROR, e);
 
@@ -261,7 +262,7 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
     try {
       serializedState = persistor.stringify
         ? persistor.stringify(state)
-        : JSON.stringify(state);
+        : serializer.stringify(state, linking?.config);
     } catch (e) {
       console.error(STRINGIFY_STATE_ERROR, e);
 
@@ -286,7 +287,7 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
     state: Readonly<NavigationState> | undefined
   ) => {
     if (process.env.NODE_ENV !== 'production' && state != null) {
-      const result = checkSerializable(state);
+      const result = checkSerializable(state, linking?.config);
 
       if (!result.serializable) {
         const breadcrumb = getStateBreadcrumb(state, result.location);
