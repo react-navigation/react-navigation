@@ -214,14 +214,23 @@ export type DocumentTitleOptions = {
 
 export type Persistor = {
   /**
-   * Callback to persist the navigation state.
+   * Callback to persist the serialized navigation state.
    */
-  persist(state: NavigationState | undefined): void;
+  persist: (state: string | undefined) => void | PromiseLike<void>;
   /**
-   * Callback to restore the navigation state.
-   * Should return the restored state or a Promise which resolves to the restored state.
+   * Callback to restore the serialized navigation state.
+   *
+   * Should return the serialized state or a Promise which resolves to the serialized state.
    *
    * If a Promise is returned, providing a `fallback` component is recommended.
    */
-  restore(): PromiseLike<InitialState | undefined> | InitialState | undefined;
+  restore: () => PromiseLike<string | undefined> | string | undefined;
+  /**
+   * Optional callback to serialize the navigation state.
+   */
+  stringify?: (state: NavigationState | undefined) => string | undefined;
+  /**
+   * Optional callback to parse the serialized navigation state.
+   */
+  parse?: (state: string | undefined) => InitialState | undefined;
 };

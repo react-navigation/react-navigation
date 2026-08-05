@@ -4,19 +4,21 @@ export type Thenable<T> = {
   then(onfulfilled?: (value: T) => unknown): PromiseLike<unknown>;
 };
 
-export function useThenable<T>(create: () => Thenable<T> | undefined) {
-  const [promise] = React.useState(create);
+export function useThenable<T>(create: () => Thenable<T> | T | undefined) {
+  const [value] = React.useState(create);
 
   let initialState: [boolean, T | undefined] = [false, undefined];
 
-  if (promise == null) {
+  if (value == null) {
     initialState = [true, undefined];
-  } else {
+  } else if (typeof value === 'object' && 'then' in value) {
     // Check if our thenable is synchronous
     // eslint-disable-next-line promise/catch-or-return, promise/always-return
-    promise.then((result) => {
+    value.then((result) => {
       initialState = [true, result];
     });
+  } else {
+    initialState = [true, value];
   }
 
   const [state, setState] = React.useState(initialState);
@@ -29,7 +31,7 @@ export function useThenable<T>(create: () => Thenable<T> | undefined) {
       let result;
 
       try {
-        result = await promise;
+        result = await value;
       } finally {
         if (!cancelled) {
           setState([true, result]);
@@ -44,7 +46,7 @@ export function useThenable<T>(create: () => Thenable<T> | undefined) {
     return () => {
       cancelled = true;
     };
-  }, [promise, resolved]);
+  }, [value, resolved]);
 
   return state;
 }
