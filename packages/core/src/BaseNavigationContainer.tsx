@@ -9,9 +9,9 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 import useLatestCallback from 'use-latest-callback';
+import warnOnce from 'warn-once';
 
 import { checkDuplicateRouteNames } from './checkDuplicateRouteNames';
-import { checkSerializable } from './checkSerializable';
 import { ConsumedParamsContext } from './ConsumedParamsContext';
 import { NOT_INITIALIZED_ERROR } from './createNavigationContainerRef';
 import { EnsureSingleNavigator } from './EnsureSingleNavigator';
@@ -43,9 +43,6 @@ import { useOptionsGetters } from './useOptionsGetters';
 import { useSyncState } from './useSyncState';
 
 type State = NavigationState | PartialState<NavigationState> | undefined;
-
-const serializableWarnings: string[] = [];
-const duplicateNameWarnings: string[] = [];
 
 type Props<ParamList extends {}> = NavigationContainerProps & {
   ref?: React.Ref<NavigationContainerRef<ParamList>>;
@@ -503,59 +500,6 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
 
     if (process.env.NODE_ENV !== 'production') {
       if (hydratedState !== undefined) {
-        const serializableResult = checkSerializable(hydratedState);
-
-        if (!serializableResult.serializable) {
-          const { location, reason } = serializableResult;
-
-          let path = '';
-          let pointer: Record<any, any> = hydratedState;
-          let params = false;
-
-          for (let i = 0; i < location.length; i++) {
-            const curr = location[i];
-            const prev = location[i - 1];
-
-            if (curr == null) {
-              continue;
-            }
-
-            pointer = pointer[curr];
-
-            if (!params && curr === 'state') {
-              continue;
-            } else if (!params && curr === 'routes') {
-              if (path) {
-                path += ' > ';
-              }
-            } else if (
-              !params &&
-              typeof curr === 'number' &&
-              prev === 'routes'
-            ) {
-              path += pointer?.name;
-            } else if (!params) {
-              path += ` > ${curr}`;
-              params = true;
-            } else {
-              if (typeof curr === 'number' || /^[0-9]+$/.test(curr)) {
-                path += `[${curr}]`;
-              } else if (/^[a-z$_]+$/i.test(curr)) {
-                path += `.${curr}`;
-              } else {
-                path += `[${JSON.stringify(curr)}]`;
-              }
-            }
-          }
-
-          const message = `Non-serializable values were found in the navigation state. Check:\n\n${path} (${reason})\n\nThis can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/troubleshooting#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state for more details.`;
-
-          if (!serializableWarnings.includes(message)) {
-            serializableWarnings.push(message);
-            console.warn(message);
-          }
-        }
-
         const duplicateRouteNamesResult =
           checkDuplicateRouteNames(hydratedState);
 
@@ -564,10 +508,7 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
             (locations) => `\n${locations.join(', ')}`
           )}\n\nThis can cause confusing behavior during navigation. Consider using unique names for each screen instead.`;
 
-          if (!duplicateNameWarnings.includes(message)) {
-            duplicateNameWarnings.push(message);
-            console.warn(message);
-          }
+          warnOnce(true, message);
         }
       }
     }

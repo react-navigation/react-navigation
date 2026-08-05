@@ -367,6 +367,9 @@ importers:
       use-latest-callback:
         specifier: ^0.3.5
         version: 0.3.5(react@19.2.3)
+      warn-once:
+        specifier: ^0.1.1
+        version: 0.1.1
     devDependencies:
       '@jest/globals':
         specifier: ^30.4.1
@@ -636,6 +639,9 @@ importers:
       use-latest-callback:
         specifier: ^0.3.5
         version: 0.3.5(react@19.2.3)
+      warn-once:
+        specifier: ^0.1.1
+        version: 0.1.1
     devDependencies:
       '@jest/globals':
         specifier: ^30.4.1

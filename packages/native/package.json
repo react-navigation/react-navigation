@@ -68,7 +68,8 @@
     "nanoid": "^5.1.11",
     "sf-symbols-typescript": "^2.2.0",
     "standard-navigation": "^0.0.8",
-    "use-latest-callback": "^0.3.5"
+    "use-latest-callback": "^0.3.5",
+    "warn-once": "^0.1.1"
   },
   "devDependencies": {
     "@jest/globals": "^30.4.1",

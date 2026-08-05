@@ -13,8 +13,11 @@ import {
   validatePathConfig,
 } from '@react-navigation/core';
 import * as React from 'react';
+import warnOnce from 'warn-once';
 
+import { checkSerializable } from './checkSerializable';
 import { DEFAULT_DIRECTION, IS_NATIVE } from './constants';
+import { getStateBreadcrumb } from './getStateBreadcrumb';
 import { LinkingContext } from './LinkingContext';
 import { LocaleDirContext } from './LocaleDirContext';
 import { LightTheme } from './theming/LightTheme';
@@ -279,6 +282,22 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
     }
   };
 
+  const onSerializableCheck = (
+    state: Readonly<NavigationState> | undefined
+  ) => {
+    if (process.env.NODE_ENV !== 'production' && state != null) {
+      const result = checkSerializable(state);
+
+      if (!result.serializable) {
+        const breadcrumb = getStateBreadcrumb(state, result.location);
+
+        const message = `Non-serializable values were found in the navigation state. Check:\n\n${breadcrumb} (${result.reason})\n\nThis can break usage such as persisting and restoring state. This might happen if you passed non-serializable values such as function, class instances etc. in params. If you need to use components with callbacks in your options, you can use 'navigation.setOptions' instead. See https://reactnavigation.org/docs/troubleshooting#i-get-the-warning-non-serializable-values-were-found-in-the-navigation-state for more details.`;
+
+        warnOnce(true, message);
+      }
+    }
+  };
+
   // FIXME
   // @ts-expect-error not sure why this is not working
   React.useImperativeHandle(ref, () => refContainer.current);
@@ -309,6 +328,7 @@ export function NavigationContainer<ParamList extends {} = RootParamList>({
           onStateChange={(state) => {
             onStateChange?.(state);
             onPersistState(state);
+            onSerializableCheck(state);
           }}
           ref={refContainer}
         />

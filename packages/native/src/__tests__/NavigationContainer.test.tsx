@@ -189,6 +189,49 @@ test('persists state from a custom stringifier', async () => {
   expect(screen.getByText('Profile')).toBeOnTheScreen();
 });
 
+test('warns for non-serializable values in navigation state', async () => {
+  const createStackNavigator = createNavigatorFactory((props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    return (
+      <NavigationContent>
+        {route ? descriptors[route.key]?.render() : null}
+      </NavigationContent>
+    );
+  });
+
+  const Stack = createStackNavigator();
+
+  const TestScreen = () => null;
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+
+  await render(
+    <NavigationContainer ref={navigation}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  await act(() => navigation.navigate('Profile', { callback: () => null }));
+
+  expect(spy.mock.calls[0]?.[0]).toMatch(
+    'Non-serializable values were found in the navigation state.'
+  );
+  expect(spy.mock.calls[0]?.[0]).toMatch('Profile > params.callback');
+
+  spy.mockRestore();
+});
+
 test('renders navigation tree immediately when state is restored synchronously', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(

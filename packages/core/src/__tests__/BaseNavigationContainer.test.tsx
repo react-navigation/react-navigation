@@ -1256,40 +1256,6 @@ test('throws if there is no navigator rendered', async () => {
   spy.mockRestore();
 });
 
-test('warns for non-serializable values in navigation state', async () => {
-  const TestNavigator = (props: TestNavigatorProps) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
-      MockRouter,
-      props
-    );
-
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
-    );
-  };
-
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
-  await render(
-    <BaseNavigationContainer>
-      <TestNavigator>
-        <Screen name="foo" initialParams={{ callback: () => null }}>
-          {() => null}
-        </Screen>
-      </TestNavigator>
-    </BaseNavigationContainer>
-  );
-
-  expect(spy.mock.calls[0]?.[0]).toMatch(
-    'Non-serializable values were found in the navigation state.'
-  );
-  expect(spy.mock.calls[0]?.[0]).toMatch('foo > params.callback');
-
-  spy.mockRestore();
-});
-
 test('warns for unhandled go back action', async () => {
   const ref = createNavigationContainerRef<ParamListBase>();
 
