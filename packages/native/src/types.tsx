@@ -6,44 +6,6 @@ import type {
   Route,
 } from '@react-navigation/core';
 
-declare module '@react-navigation/core' {
-  interface Theme extends NativeTheme {}
-}
-
-type FontStyle = {
-  fontFamily: string;
-  fontWeight:
-    | 'normal'
-    | 'bold'
-    | '100'
-    | '200'
-    | '300'
-    | '400'
-    | '500'
-    | '600'
-    | '700'
-    | '800'
-    | '900';
-};
-
-interface NativeTheme {
-  dark: boolean;
-  colors: {
-    primary: string;
-    background: string;
-    card: string;
-    text: string;
-    border: string;
-    notification: string;
-  };
-  fonts: {
-    regular: FontStyle;
-    medium: FontStyle;
-    bold: FontStyle;
-    heavy: FontStyle;
-  };
-}
-
 export type LocaleDirection = 'ltr' | 'rtl';
 
 export type LinkingOptions<ParamList extends {}> = {

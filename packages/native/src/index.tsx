@@ -11,6 +11,7 @@ export { NavigationContainer } from './NavigationContainer';
 export { ServerContainer } from './ServerContainer';
 export { DarkTheme } from './theming/DarkTheme';
 export { DefaultTheme } from './theming/DefaultTheme';
+export type { Theme } from './theming/types';
 export * from './types';
 export { UnhandledLinkingContext as UNSTABLE_UnhandledLinkingContext } from './UnhandledLinkingContext';
 export { useLinkBuilder } from './useLinkBuilder';

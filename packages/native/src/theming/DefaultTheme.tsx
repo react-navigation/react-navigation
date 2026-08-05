@@ -1,6 +1,5 @@
-import type { Theme } from '@react-navigation/core';
-
 import { fonts } from './fonts';
+import type { Theme } from './types';
 
 export const DefaultTheme: Theme = {
   dark: false,
