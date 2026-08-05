@@ -25,6 +25,11 @@
       "types": "./lib/typescript/src/index.d.ts",
       "default": "./lib/module/index.js"
     },
+    "./internal": {
+      "@react-navigation/source": "./src/internal.tsx",
+      "types": "./lib/typescript/src/internal.d.ts",
+      "default": "./lib/module/internal.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [

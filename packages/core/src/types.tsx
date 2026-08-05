@@ -10,6 +10,7 @@ import type {
 } from '@react-navigation/routers';
 import type * as React from 'react';
 
+import type { Theme as InternalTheme } from './internal';
 import type {
   FlatType,
   KeyOf,
@@ -51,8 +52,7 @@ export interface RootNavigator {}
  * }
  * ```
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface Theme {}
+export interface Theme extends InternalTheme {}
 
 export type RootParamList =
   RootNavigator extends PrivateValueStore<
