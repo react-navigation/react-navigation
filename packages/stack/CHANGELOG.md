@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.10.19](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.18...@react-navigation/stack@7.10.19) (2026-08-05)
+
+### Bug Fixes
+
+* clear stale inert state after route reset ([#13207](https://github.com/react-navigation/react-navigation/issues/13207)) ([94b0d3f](https://github.com/react-navigation/react-navigation/commit/94b0d3f726e397daa4685342f4efffd35b66ec92)), closes [#13206](https://github.com/react-navigation/react-navigation/issues/13206) - by @hgray-instawork
+
 ## [7.10.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.17...@react-navigation/stack@7.10.18) (2026-08-04)
 
 ### Bug Fixes
