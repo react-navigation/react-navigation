@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.15](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.14...@react-navigation/native@7.3.15) (2026-08-05)
+
+### Bug Fixes
+
+* workaround VSCode autoimport not working for `useNavigation` etc ([1d26955](https://github.com/react-navigation/react-navigation/commit/1d2695530c2ab017b9c08ad53a6b1fdaecdf196d)), closes [#13204](https://github.com/react-navigation/react-navigation/issues/13204) - by @
+
 ## [7.3.14](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.13...@react-navigation/native@7.3.14) (2026-07-24)
 
 ### Bug Fixes
