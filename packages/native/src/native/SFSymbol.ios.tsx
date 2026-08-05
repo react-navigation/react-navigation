@@ -1,4 +1,4 @@
-import type { ViewProps } from 'react-native';
+import type { ViewStyle } from 'react-native';
 
 import { FONT_WEIGHTS } from './constants';
 import SFSymbolViewNativeComponent from './SFSymbolViewNativeComponent';
@@ -16,7 +16,12 @@ import type {
   SFSymbolReplaceTransitionVariant,
 } from './types';
 
-export type SFSymbolProps = SFSymbolOptions & ViewProps;
+export type SFSymbolProps = SFSymbolOptions & {
+  /**
+   * Style object for the symbol.
+   */
+  style?: ViewStyle | undefined;
+};
 
 type NativeEffectConfig = {
   type: SFSymbolEffectName;
@@ -54,7 +59,6 @@ export function SFSymbol({
   effect,
   contentTransition,
   style,
-  ...rest
 }: SFSymbolProps): React.ReactElement {
   const effectConfig: NativeEffectConfig | undefined =
     typeof effect === 'string' ? { type: effect } : effect;
@@ -106,7 +110,6 @@ export function SFSymbol({
         },
         style,
       ]}
-      {...rest}
     />
   );
 }

@@ -212,10 +212,10 @@ export function HeaderSearchBar({
             name="magnifyingglass"
             size={SEARCH_ICON_SIZE}
             color={textColor}
-            style={[
+            style={StyleSheet.flatten([
               styles.inputSearchIconIos,
               !isLiquidGlassSupported && styles.inputSearchIconIosLegacy,
-            ]}
+            ])}
           />
         ) : null}
         <TextInput

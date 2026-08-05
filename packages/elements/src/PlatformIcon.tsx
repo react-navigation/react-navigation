@@ -4,15 +4,19 @@ import {
   Image,
   type ImageStyle,
   type StyleProp,
+  StyleSheet,
+  type ViewStyle,
 } from 'react-native';
 
 import type { Icon } from './types';
+
+export type PlatformIconStyle = ImageStyle & ViewStyle;
 
 export type PlatformIconProps = {
   icon: Icon;
   size: number;
   color?: ColorValue | undefined;
-  style?: StyleProp<ImageStyle> | undefined;
+  style?: StyleProp<PlatformIconStyle> | undefined;
 };
 
 export function PlatformIcon({
@@ -29,7 +33,7 @@ export function PlatformIcon({
           name={icon.name}
           color={color}
           size={size}
-          style={style}
+          style={StyleSheet.flatten(style)}
           {...rest}
         />
       );
@@ -41,7 +45,7 @@ export function PlatformIcon({
           weight={icon.weight}
           size={size}
           color={color}
-          style={style}
+          style={StyleSheet.flatten(style)}
           {...rest}
         />
       );

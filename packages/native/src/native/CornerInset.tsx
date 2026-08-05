@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { ViewProps } from 'react-native';
+import type { ViewStyle } from 'react-native';
 
 export type CornerInsetProps = {
   /**
@@ -17,7 +17,11 @@ export type CornerInsetProps = {
    * @default true
    */
   adaptive?: boolean;
-} & Omit<ViewProps, 'children'>;
+  /**
+   * Style object for the inset view.
+   */
+  style?: ViewStyle | undefined;
+};
 
 export type CornerInsetRef = {
   relayout(): void;
