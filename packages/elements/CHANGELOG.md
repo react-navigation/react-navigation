@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [3.0.0-alpha.45](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.44...@react-navigation/elements@3.0.0-alpha.45) (2026-08-06)
+
+### Bug Fixes
+
+* accept only plain style object for components ([66feaf2](https://github.com/react-navigation/react-navigation/commit/66feaf275e6244b8bdcde5372acdc3c94ef18742)) - by @satya164
+* remove usage of deprecated APIs and prepare for strict api ([060c263](https://github.com/react-navigation/react-navigation/commit/060c263562a9ffb62393037238d180b44bdedd03)) - by @satya164
+
 # [3.0.0-alpha.44](https://github.com/react-navigation/react-navigation/compare/@react-navigation/elements@3.0.0-alpha.43...@react-navigation/elements@3.0.0-alpha.44) (2026-07-27)
 
 ### Bug Fixes

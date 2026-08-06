@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.32](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.31...@react-navigation/core@8.0.0-alpha.32) (2026-08-06)
+
+### Bug Fixes
+
+* capture stack traces for devtools at the call site ([bf9f7b2](https://github.com/react-navigation/react-navigation/commit/bf9f7b2e029ce12c12161456d5c289fa64fff347)) - by @satya164
+* throw when getParent doesn't find navigation object for a screen ([ed576a0](https://github.com/react-navigation/react-navigation/commit/ed576a01375a038864c54f56f654d45173a06030)) - by @satya164
+* use a separate navigation object for useNavigation instead of using ref ([5b87c09](https://github.com/react-navigation/react-navigation/commit/5b87c094c4334c215bb679aec2067e04342a76d0)) - by @satya164
+* workaround VSCode autoimport not working for `useNavigation` etc ([70d4465](https://github.com/react-navigation/react-navigation/commit/70d4465e74cd0d5d39afde52dfa1c523eeb14be2)), closes [#13204](https://github.com/react-navigation/react-navigation/issues/13204) - by @satya164
+
+### Features
+
+* add getter support to screens for lazy requires ([#13141](https://github.com/react-navigation/react-navigation/issues/13141)) ([f79217a](https://github.com/react-navigation/react-navigation/commit/f79217a1f2b8cb5866ac62bfc36dff5e41451a89)) - by @satya164
+
 # [8.0.0-alpha.31](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.30...@react-navigation/core@8.0.0-alpha.31) (2026-07-27)
 
 ### Bug Fixes

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.15...react-native-drawer-layout@5.0.0-alpha.16) (2026-08-06)
+
+### Bug Fixes
+
+* remove usage of deprecated APIs and prepare for strict api ([060c263](https://github.com/react-navigation/react-navigation/commit/060c263562a9ffb62393037238d180b44bdedd03)) - by @satya164
+
+### Features
+
+* support long press gesture to peek drawer ([dcc79c0](https://github.com/react-navigation/react-navigation/commit/dcc79c0bef849568210f8ace65a939f8fc710ea7)) - by @satya164
+
 # [5.0.0-alpha.15](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.14...react-native-drawer-layout@5.0.0-alpha.15) (2026-07-27)
 
 ### Bug Fixes

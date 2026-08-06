@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.41](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.40...@react-navigation/native@8.0.0-alpha.41) (2026-08-06)
+
+### Bug Fixes
+
+* accept only plain style object for components ([66feaf2](https://github.com/react-navigation/react-navigation/commit/66feaf275e6244b8bdcde5372acdc3c94ef18742)) - by @satya164
+* remove usage of deprecated APIs and prepare for strict api ([060c263](https://github.com/react-navigation/react-navigation/commit/060c263562a9ffb62393037238d180b44bdedd03)) - by @satya164
+
+### Features
+
+* add support for custom stringify and parse in persistor ([5b8857d](https://github.com/react-navigation/react-navigation/commit/5b8857d29dec42b5a121081e0a4869aa125dc51a)) - by @satya164
+
 # [8.0.0-alpha.40](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.39...@react-navigation/native@8.0.0-alpha.40) (2026-07-27)
 
 ### Bug Fixes

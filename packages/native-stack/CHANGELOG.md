@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.49](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.48...@react-navigation/native-stack@8.0.0-alpha.49) (2026-08-06)
+
+### Bug Fixes
+
+* remove usage of deprecated APIs and prepare for strict api ([060c263](https://github.com/react-navigation/react-navigation/commit/060c263562a9ffb62393037238d180b44bdedd03)) - by @satya164
+
 # [8.0.0-alpha.48](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.47...@react-navigation/native-stack@8.0.0-alpha.48) (2026-07-27)
 
 **Note:** Version bump only for package @react-navigation/native-stack
