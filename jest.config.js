@@ -40,7 +40,11 @@ module.exports = {
         customExportConditions: ['browser', '@react-navigation/source'],
       },
       testMatch: ['<rootDir>/**/__tests__/**/*.web.test.tsx'],
-      transform,
+      transform: {
+        ...transform,
+        '^.+\\.woff2$':
+          require.resolve('@react-native/jest-preset/jest/assetFileTransformer.js'),
+      },
       transformIgnorePatterns,
     },
   ],
