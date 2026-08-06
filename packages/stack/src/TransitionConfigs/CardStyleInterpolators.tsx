@@ -382,9 +382,9 @@ export function forScaleFromCenterAndroid({
 }
 
 /**
- * Standard Android-style fade from right for Android 14. The card underneath
- * deliberately doesn't move: offsetting it would expose the strip it vacates
- * through the still-translucent card above.
+ * Based on the Android 14 fade from right, without its parallax. Offsetting
+ * the card underneath would expose the strip it vacates through the card
+ * above, which is still translucent.
  */
 export function forFadeFromRightAndroid({
   current,
