@@ -382,11 +382,12 @@ export function forScaleFromCenterAndroid({
 }
 
 /**
- * Standard Android-style fade from right for Android 14.
+ * Based on the Android 14 fade from right, without its parallax. Offsetting
+ * the card underneath would expose the strip it vacates through the card
+ * above, which is still translucent.
  */
 export function forFadeFromRightAndroid({
   current,
-  next,
   inverted,
   closing,
 }: StackCardInterpolationProps): StackCardInterpolatedStyle {
@@ -398,17 +399,6 @@ export function forFadeFromRightAndroid({
     }),
     inverted
   );
-
-  const translateUnfocused = next
-    ? multiply(
-        next.progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, -96],
-          extrapolate: 'clamp',
-        }),
-        inverted
-      )
-    : 0;
 
   const opacity = conditional(
     closing,
@@ -423,12 +413,7 @@ export function forFadeFromRightAndroid({
   return {
     cardStyle: {
       opacity,
-      transform: [
-        // Translation for the animation of the current card
-        { translateX: translateFocused },
-        // Translation for the animation of the card on top of this
-        { translateX: translateUnfocused },
-      ],
+      transform: [{ translateX: translateFocused }],
     },
   };
 }
