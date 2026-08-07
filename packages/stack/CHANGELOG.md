@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.10.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.21...@react-navigation/stack@7.10.22) (2026-08-07)
+
+### Bug Fixes
+
+* fix gestures not working in some scenarios ([9a0117e](https://github.com/react-navigation/react-navigation/commit/9a0117e2b39be0c3ff2c0fb0efff99b4f974c610)), closes [#13208](https://github.com/react-navigation/react-navigation/issues/13208) - by @
+
 ## [7.10.21](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.20...@react-navigation/stack@7.10.21) (2026-08-07)
 
 **Note:** Version bump only for package @react-navigation/stack
