@@ -555,7 +555,7 @@ function Card({
         <GestureDetector gesture={panGesture}>
           <Animated.View
             needsOffscreenAlphaCompositing={hasOpacityStyle(cardStyle)}
-            style={[styles.container, cardStyle]}
+            style={[styles.card, cardStyle]}
           >
             {shadowEnabled && shadowStyle && !isTransparent ? (
               <Animated.View
@@ -594,6 +594,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     pointerEvents: 'box-none',
+  },
+  card: {
+    flex: 1,
+    // This is necessary for gestures to work
+    // Without this, gestures won't work if the child view is flattened
+    pointerEvents: 'auto',
   },
   overlay: {
     flex: 1,
