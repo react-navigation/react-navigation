@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.21.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.11...@react-navigation/core@7.21.12) (2026-08-07)
+
+### Bug Fixes
+
+* emit `beforeRemove` for nested routes removed by reset ([#13153](https://github.com/react-navigation/react-navigation/issues/13153)) ([e7724dd](https://github.com/react-navigation/react-navigation/commit/e7724dd42f6cc1ea5ab1fc19e4f6d7ab79246ec9)) - by @
+
 ## [7.21.11](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.10...@react-navigation/core@7.21.11) (2026-07-24)
 
 ### Bug Fixes
