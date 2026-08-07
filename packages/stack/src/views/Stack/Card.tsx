@@ -568,7 +568,9 @@ function Card({
           })}
         >
           <Animated.View
-            pointerEvents="box-none"
+            // This is necessary for gestures to work
+            // Without this, gestures won't work if the child view is flattened
+            pointerEvents="auto"
             needsOffscreenAlphaCompositing={hasOpacityStyle(cardStyle)}
             style={[styles.container, cardStyle]}
           >
