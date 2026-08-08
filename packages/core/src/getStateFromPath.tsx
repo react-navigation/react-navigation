@@ -1,5 +1,4 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
-import escape from 'escape-string-regexp';
 import queryString from 'query-string';
 
 import { arrayStartsWith } from './arrayStartsWith';
@@ -34,6 +33,7 @@ type RouteConfig = {
   regex?: RegExp | undefined;
   pattern: string;
   segments: string[];
+  segmentRanks: number[];
   params: {
     screen: string;
     name: string;
@@ -60,7 +60,12 @@ type ParsedRoute = {
   path?: string | undefined;
 };
 
-type RoutePatternPart = PatternPart & { screen: string };
+type RoutePatternPart = PatternPart & {
+  screen: string;
+  rank: number;
+  staticPattern: string;
+  paramRegex?: RegExp | undefined;
+};
 
 type ConfigResources = {
   initialRoutes: InitialRouteConfig[];
@@ -88,16 +93,42 @@ const NESTED_SCREEN_PARAM_NAMES = [
   'pop',
 ];
 
-const getStaticSegmentPattern = (segment: string) =>
-  Array.from(segment, (char) => {
-    const encoded = encodeURIComponent(char);
-    const percentEncoded =
-      encoded === char
-        ? `%${char.charCodeAt(0).toString(16).padStart(2, '0').toUpperCase()}`
-        : encoded;
+const REGEX_SYNTAX_CHAR = /[|\\{}()[\]^$+*?.]/;
+const HEX_DIGITS = '0123456789ABCDEF';
 
-    return `(?:${escape(char)}|${escape(percentEncoded)})`;
-  }).join('');
+const getStaticSegmentPattern = (segment: string) => {
+  let pattern = '';
+
+  for (const char of segment) {
+    const code = char.charCodeAt(0);
+
+    let escaped = char;
+
+    // A hyphen uses a hexadecimal escape because a regular backslash escape
+    // isn't valid outside character classes when a regex uses Unicode mode.
+    if (char === '-') {
+      escaped = '\\x2d';
+    } else {
+      // Other characters with special meaning in a regex can use a regular
+      // backslash escape so they are matched as literal characters.
+      if (REGEX_SYNTAX_CHAR.test(char)) {
+        escaped = `\\${char}`;
+      }
+    }
+
+    // ASCII characters have a single-byte percent-encoded form that can be
+    // built directly. Other characters need encodeURIComponent to encode all
+    // bytes in their UTF-8 representation.
+    const percentEncoded =
+      char.length === 1 && code < 128
+        ? `%${HEX_DIGITS.charAt(code >> 4)}${HEX_DIGITS.charAt(code & 15)}`
+        : encodeURIComponent(char);
+
+    pattern += `(?:${escaped}|${percentEncoded})`;
+  }
+
+  return pattern;
+};
 
 const getExplicitParamNames = (parse?: ParseConfig) => {
   const names: string[] = [];
@@ -475,9 +506,7 @@ function getSortedNormalizedConfigs(
   const configs: RouteConfig[] = [];
 
   for (const key in screens) {
-    configs.push(
-      ...createNormalizedConfigs(key, screens, initialRoutes, [], [], [])
-    );
+    setupNormalizedConfigs(key, screens, initialRoutes, configs, [], [], []);
   }
 
   for (let order = 0; order < configs.length; order++) {
@@ -500,7 +529,7 @@ function getSortedNormalizedConfigs(
 
     // If 2 patterns are same, move the one with less route names up
     // This is an error state, so it's only useful for consistent error messages
-    if (isArrayEqual(a.segments, b.segments)) {
+    if (a.pattern === b.pattern && isArrayEqual(a.segments, b.segments)) {
       if (
         a.routeNames.length > b.routeNames.length &&
         arrayStartsWith(a.routeNames, b.routeNames)
@@ -519,8 +548,7 @@ function getSortedNormalizedConfigs(
     }
 
     for (let i = 0; i < Math.max(a.segments.length, b.segments.length); i++) {
-      const rank =
-        getSegmentRank(a.segments[i]) - getSegmentRank(b.segments[i]);
+      const rank = (a.segmentRanks[i] ?? 5) - (b.segmentRanks[i] ?? 5);
 
       if (rank !== 0) {
         return rank;
@@ -723,16 +751,30 @@ const matchAgainstConfig = (
   return matchedRoutes;
 };
 
-const createNormalizedConfigs = (
+const getRoutePatternParts = (
+  path: string,
+  screen: string
+): RoutePatternPart[] =>
+  getPatternParts(path).map((part) => ({
+    ...part,
+    screen,
+    rank: getSegmentRank(part.segment),
+    staticPattern:
+      !part.param && part.segment !== '*'
+        ? getStaticSegmentPattern(part.segment)
+        : '',
+    paramRegex: part.regex ? new RegExp(`^(?:${part.regex})$`) : undefined,
+  }));
+
+const setupNormalizedConfigs = (
   screen: string,
   routeConfig: Record<string, string | PathConfig<{}>>,
   initials: InitialRouteConfig[],
+  configs: RouteConfig[],
   parts: RoutePatternPart[],
   parentScreens: string[],
   routeNames: string[]
-): RouteConfig[] => {
-  const configs: RouteConfig[] = [];
-
+): void => {
   routeNames.push(screen);
 
   parentScreens.push(screen);
@@ -742,7 +784,7 @@ const createNormalizedConfigs = (
   if (typeof config === 'string') {
     const configParts = combinePatternParts(
       parts,
-      getPatternParts(config).map((part) => ({ ...part, screen }))
+      getRoutePatternParts(config, screen)
     );
 
     configs.push(createConfigItem(screen, [...routeNames], configParts));
@@ -759,7 +801,7 @@ const createNormalizedConfigs = (
       typeof config.path === 'string'
         ? combinePatternParts(
             parts,
-            getPatternParts(config.path).map((part) => ({ ...part, screen })),
+            getRoutePatternParts(config.path, screen),
             config.exact
           )
         : parts;
@@ -776,10 +818,7 @@ const createNormalizedConfigs = (
               createConfigItem(
                 screen,
                 [...routeNames],
-                combinePatternParts(
-                  parts,
-                  getPatternParts(alias).map((part) => ({ ...part, screen }))
-                ),
+                combinePatternParts(parts, getRoutePatternParts(alias, screen)),
                 config.parse,
                 hasNestedScreens,
                 false
@@ -792,10 +831,7 @@ const createNormalizedConfigs = (
                 [...routeNames],
                 combinePatternParts(
                   parts,
-                  getPatternParts(alias.path).map((part) => ({
-                    ...part,
-                    screen,
-                  })),
+                  getRoutePatternParts(alias.path, screen),
                   alias.exact
                 ),
                 alias.parse,
@@ -844,23 +880,20 @@ const createNormalizedConfigs = (
       }
 
       for (const nestedConfig in nestedScreens) {
-        const result = createNormalizedConfigs(
+        setupNormalizedConfigs(
           nestedConfig,
           nestedScreens,
           initials,
+          configs,
           currentParts,
           [...parentScreens],
           routeNames
         );
-
-        configs.push(...result);
       }
     }
   }
 
   routeNames.pop();
-
-  return configs;
 };
 
 const createConfigItem = (
@@ -874,6 +907,7 @@ const createConfigItem = (
   let regex: RegExp | undefined;
 
   const segments: string[] = [];
+  const segmentRanks: number[] = [];
   const params: RouteConfig['params'] = [];
   const pathParamNames = new Set<string>();
 
@@ -883,6 +917,7 @@ const createConfigItem = (
 
     for (const part of parts) {
       segments.push(part.segment);
+      segmentRanks.push(part.rank);
 
       if (part.param) {
         // A custom regex may not match the percent-encoded form of the value
@@ -911,7 +946,7 @@ const createConfigItem = (
           index,
           screen: part.screen,
           name: part.param,
-          regex: part.regex ? new RegExp(`^(?:${part.regex})$`) : undefined,
+          regex: part.paramRegex,
           repeat: part.repeat,
         });
 
@@ -921,7 +956,7 @@ const createConfigItem = (
       } else if (part.segment === '*') {
         regexString += `.*\\/`;
       } else {
-        regexString += `${getStaticSegmentPattern(part.segment)}\\/`;
+        regexString += `${part.staticPattern}\\/`;
       }
 
       index++;
@@ -939,6 +974,7 @@ const createConfigItem = (
     regex,
     pattern,
     segments,
+    segmentRanks,
     params,
     routeNames,
     parse,
