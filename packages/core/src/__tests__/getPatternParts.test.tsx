@@ -8,21 +8,21 @@ test('splits a path into parts', () => {
 
   expect(getPatternParts(path)).toEqual([
     { segment: 'users' },
-    { segment: ':type', param: 'type' },
+    { segment: ':type', name: 'type' },
     {
       segment: ':page(profile|settings)',
-      param: 'page',
-      regex: 'profile|settings',
+      name: 'page',
+      pattern: 'profile|settings',
     },
     {
       segment: ':id([a-z]+:(\\d+))?',
-      param: 'id',
-      regex: '[a-z]+:(\\d+)',
+      name: 'id',
+      pattern: '[a-z]+:(\\d+)',
       optional: true,
     },
     {
       segment: ':name?',
-      param: 'name',
+      name: 'name',
       optional: true,
     },
   ]);
@@ -35,18 +35,18 @@ test('splits a path with non-capturing regex groups into parts', () => {
     { segment: 'users' },
     {
       segment: ':id(\\d+)',
-      param: 'id',
-      regex: '\\d+',
+      name: 'id',
+      pattern: '\\d+',
     },
     { segment: 'posts' },
     {
       segment: ':slug([a-z]+(?:-[a-z]+)*)',
-      param: 'slug',
-      regex: '[a-z]+(?:-[a-z]+)*',
+      name: 'slug',
+      pattern: '[a-z]+(?:-[a-z]+)*',
     },
     {
       segment: ':tab?',
-      param: 'tab',
+      name: 'tab',
       optional: true,
     },
   ]);
@@ -59,20 +59,20 @@ test('splits a path with repeated params into parts', () => {
     { segment: 'files' },
     {
       segment: ':required+',
-      param: 'required',
+      name: 'required',
       repeat: 'one-or-more',
     },
     { segment: 'optional' },
     {
       segment: ':optional*',
-      param: 'optional',
+      name: 'optional',
       repeat: 'zero-or-more',
     },
     { segment: 'ids' },
     {
       segment: ':ids(\\d+)+',
-      param: 'ids',
-      regex: '\\d+',
+      name: 'ids',
+      pattern: '\\d+',
       repeat: 'one-or-more',
     },
   ]);
@@ -114,13 +114,13 @@ test('splits a path with escaped parentheses in regex into parts', () => {
     { segment: 'users' },
     {
       segment: ':id(a\\)b)',
-      param: 'id',
-      regex: 'a\\)b',
+      name: 'id',
+      pattern: 'a\\)b',
     },
     {
       segment: ':tag(\\(+)?',
-      param: 'tag',
-      regex: '\\(+',
+      name: 'tag',
+      pattern: '\\(+',
       optional: true,
     },
   ]);
@@ -131,8 +131,8 @@ test('splits a path with parentheses inside character class into parts', () => {
     { segment: 'users' },
     {
       segment: ':id([)])',
-      param: 'id',
-      regex: '[)]',
+      name: 'id',
+      pattern: '[)]',
     },
   ]);
 
@@ -140,8 +140,8 @@ test('splits a path with parentheses inside character class into parts', () => {
     { segment: 'users' },
     {
       segment: ':id([(])',
-      param: 'id',
-      regex: '[(]',
+      name: 'id',
+      pattern: '[(]',
     },
   ]);
 });

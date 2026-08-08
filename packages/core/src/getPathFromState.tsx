@@ -235,7 +235,7 @@ export function getPathFromState<ParamList extends {}>(
             let canBeOmitted = false;
 
             for (const part of ownParts) {
-              if (part.param === key) {
+              if (part.name === key) {
                 canBeOmitted = part.optional === true || part.repeat != null;
                 break;
               }
@@ -256,12 +256,12 @@ export function getPathFromState<ParamList extends {}>(
         const claimedParams = new Set<string>();
 
         for (const part of ownParts) {
-          if (part.param && part.param in currentParams) {
-            const value = currentParams[part.param];
+          if (part.name && part.name in currentParams) {
+            const value = currentParams[part.name];
 
             if (value !== undefined) {
               partValues.set(part, value);
-              claimedParams.add(part.param);
+              claimedParams.add(part.name);
             }
           }
         }
@@ -287,7 +287,7 @@ export function getPathFromState<ParamList extends {}>(
       }
 
       for (const part of ownParts) {
-        if (part.param && !partValues.has(part)) {
+        if (part.name && !partValues.has(part)) {
           partValues.set(part, undefined);
         }
       }
@@ -330,7 +330,7 @@ export function getPathFromState<ParamList extends {}>(
         let index = 0;
 
         for (const part of parts) {
-          const { segment, param, optional, repeat } = part;
+          const { segment, name, optional, repeat } = part;
 
           if (index > 0) {
             path += '/';
@@ -347,7 +347,7 @@ export function getPathFromState<ParamList extends {}>(
           }
 
           // If the path has a pattern for a param, put the param in the path
-          if (param) {
+          if (name) {
             const value = partValues.get(part);
 
             if (value === undefined && optional) {
@@ -358,13 +358,13 @@ export function getPathFromState<ParamList extends {}>(
             if (repeat) {
               if (value === null) {
                 throw new Error(
-                  `The path pattern '${segment}' does not allow null for param '${param}'.`
+                  `The path pattern '${segment}' does not allow null for param '${name}'.`
                 );
               }
 
               if (Array.isArray(value)) {
                 throw new Error(
-                  `The path pattern '${segment}' requires a string for param '${param}'.`
+                  `The path pattern '${segment}' requires a string for param '${name}'.`
                 );
               }
 
@@ -373,13 +373,13 @@ export function getPathFromState<ParamList extends {}>(
 
               if (repeat === 'one-or-more' && values.length === 0) {
                 throw new Error(
-                  `The path pattern '${segment}' requires at least one value for param '${param}'.`
+                  `The path pattern '${segment}' requires at least one value for param '${name}'.`
                 );
               }
 
               if (values.some((item) => item.length === 0)) {
                 throw new Error(
-                  `The path pattern '${segment}' does not allow empty values for param '${param}'.`
+                  `The path pattern '${segment}' does not allow empty values for param '${name}'.`
                 );
               }
 
@@ -437,8 +437,13 @@ export function getPathFromState<ParamList extends {}>(
   }
 
   // Remove multiple as well as trailing slashes
-  path = path.replace(/\/+/g, '/');
-  path = path.length > 1 ? path.replace(/\/$/, '') : path;
+  if (path.includes('//')) {
+    path = path.replace(/\/+/g, '/');
+  }
+
+  if (path.length > 1 && path.endsWith('/')) {
+    path = path.slice(0, -1);
+  }
 
   // If path doesn't start with a slash, add it
   // This makes sure that history.pushState will update the path correctly instead of appending
