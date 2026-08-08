@@ -65,6 +65,7 @@ type RoutePatternPart = PatternPart & { screen: string };
 type ConfigResources = {
   initialRoutes: InitialRouteConfig[];
   configs: RouteConfig[];
+  configsWithZeroOrMore: RouteConfig[];
   configsByScreen: Record<string, RouteConfig[]>;
   configsByPattern: Record<string, RouteConfig[]>;
   prefixRegex?: RegExp | undefined;
@@ -174,6 +175,7 @@ export function getStateFromPath<ParamList extends {}>(
   const {
     initialRoutes,
     configs,
+    configsWithZeroOrMore,
     configsByScreen,
     configsByPattern,
     prefixRegex,
@@ -257,11 +259,7 @@ export function getStateFromPath<ParamList extends {}>(
       }
     }
 
-    for (const config of configs) {
-      if (!config.params.some((param) => param.repeat === 'zero-or-more')) {
-        continue;
-      }
-
+    for (const config of configsWithZeroOrMore) {
       const routes = matchAgainstConfig('', config, configsByScreen);
 
       if (routes) {
@@ -427,8 +425,13 @@ function prepareConfigResources(options?: Options<{}>) {
 
   const configsByScreen: Record<string, RouteConfig[]> = {};
   const configsByPattern: Record<string, RouteConfig[]> = {};
+  const configsWithZeroOrMore: RouteConfig[] = [];
 
   for (const c of configs) {
+    if (c.params.some((param) => param.repeat === 'zero-or-more')) {
+      configsWithZeroOrMore.push(c);
+    }
+
     (configsByScreen[c.screen] ??= []).push(c);
 
     const existing = configsByPattern[c.pattern];
@@ -444,6 +447,7 @@ function prepareConfigResources(options?: Options<{}>) {
   return {
     initialRoutes,
     configs,
+    configsWithZeroOrMore,
     configsByScreen,
     configsByPattern,
     prefixRegex,

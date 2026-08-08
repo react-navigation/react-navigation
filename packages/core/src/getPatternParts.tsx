@@ -16,6 +16,7 @@ export function getPatternParts(path: string): PatternPart[] {
 
   let isRegex = false;
   let isParam = false;
+  let hasRepeat = false;
   let isEscaped = false;
   let isInCharClass = false;
   let regexInnerParens = 0;
@@ -76,9 +77,9 @@ export function getPatternParts(path: string): PatternPart[] {
         );
       }
     } else if (
-      (char === '*' || char === '+') &&
-      !isRegex &&
       current.param &&
+      !isRegex &&
+      (char === '*' || char === '+') &&
       (path[i + 1] == null ||
         path[i + 1] === '/' ||
         path[i + 1] === '?' ||
@@ -95,6 +96,7 @@ export function getPatternParts(path: string): PatternPart[] {
       isParam = false;
 
       current.repeat = char === '*' ? 'zero-or-more' : 'one-or-more';
+      hasRepeat = true;
     } else if (char == null || (char === '/' && !isRegex)) {
       isParam = false;
 
@@ -156,7 +158,9 @@ export function getPatternParts(path: string): PatternPart[] {
     }
   }
 
-  validateRepeatedParts(parts, path);
+  if (hasRepeat) {
+    validateRepeatedParts(parts, path);
+  }
 
   return parts;
 }
@@ -191,10 +195,12 @@ export function combinePatternParts<T extends PatternPart>(
 ): T[] {
   const combined = exact ? parts : [...parentParts, ...parts];
 
-  validateRepeatedParts(
-    combined,
-    combined.map((part) => part.segment).join('/')
-  );
+  if (combined.some((part) => part.repeat)) {
+    validateRepeatedParts(
+      combined,
+      combined.map((part) => part.segment).join('/')
+    );
+  }
 
   return combined;
 }
