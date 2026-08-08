@@ -52,6 +52,61 @@ test('splits a path with non-capturing regex groups into parts', () => {
   ]);
 });
 
+test('splits a path with repeated params into parts', () => {
+  expect(
+    getPatternParts('/files/:required+/optional/:optional*/ids/:ids(\\d+)+')
+  ).toEqual([
+    { segment: 'files' },
+    {
+      segment: ':required+',
+      param: 'required',
+      repeat: 'one-or-more',
+    },
+    { segment: 'optional' },
+    {
+      segment: ':optional*',
+      param: 'optional',
+      repeat: 'zero-or-more',
+    },
+    { segment: 'ids' },
+    {
+      segment: ':ids(\\d+)+',
+      param: 'ids',
+      regex: '\\d+',
+      repeat: 'one-or-more',
+    },
+  ]);
+});
+
+test('rejects ambiguous repeated path params', () => {
+  for (const path of [
+    '/:first+/:second+',
+    '/:first*/:second?',
+    '/:first?/:second+',
+    '/:first+/*',
+    '/*/:first+',
+  ]) {
+    expect(() => getPatternParts(path)).toThrow(
+      `A repeated param must be separated from optional, repeated, or wildcard segments by a static segment: ${path}`
+    );
+  }
+});
+
+test.each([
+  ':parts?+',
+  ':parts?*',
+  ':parts+?',
+  ':parts*?',
+  ':parts++',
+  ':parts+*',
+  ':parts*+',
+  ':parts**',
+])('rejects combined path param modifiers in %s', (path) => {
+  expect(() => getPatternParts(path)).toThrow(
+    `Cannot combine path param modifiers in path: ${path}`
+  );
+});
+
 test('splits a path with escaped parentheses in regex into parts', () => {
   const path = '/users/:id(a\\)b)/:tag(\\(+)?';
 

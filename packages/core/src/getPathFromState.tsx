@@ -1,7 +1,11 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
 import queryString from 'query-string';
 
-import { getPatternParts, type PatternPart } from './getPatternParts';
+import {
+  combinePatternParts,
+  getPatternParts,
+  type PatternPart,
+} from './getPatternParts';
 import { getStateFromRouteParams } from './getStateFromRouteParams';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
@@ -228,16 +232,16 @@ export function getPathFromState<ParamList extends {}>(
           const value = params[key];
 
           if (value === undefined) {
-            let optional = false;
+            let canBeOmitted = false;
 
             for (const part of ownParts) {
               if (part.param === key) {
-                optional = part.optional === true;
+                canBeOmitted = part.optional === true || part.repeat != null;
                 break;
               }
             }
 
-            if (optional) {
+            if (canBeOmitted) {
               continue;
             }
           }
@@ -326,7 +330,7 @@ export function getPathFromState<ParamList extends {}>(
         let index = 0;
 
         for (const part of parts) {
-          const { segment, param, optional } = part;
+          const { segment, param, optional, repeat } = part;
 
           if (index > 0) {
             path += '/';
@@ -348,6 +352,42 @@ export function getPathFromState<ParamList extends {}>(
 
             if (value === undefined && optional) {
               // Optional params without value assigned in route.params should be ignored
+              continue;
+            }
+
+            if (repeat) {
+              if (value === null) {
+                throw new Error(
+                  `The path pattern '${segment}' does not allow null for param '${param}'.`
+                );
+              }
+
+              if (Array.isArray(value)) {
+                throw new Error(
+                  `The path pattern '${segment}' requires a string for param '${param}'.`
+                );
+              }
+
+              const values =
+                value === undefined || value === '' ? [] : value.split('/');
+
+              if (repeat === 'one-or-more' && values.length === 0) {
+                throw new Error(
+                  `The path pattern '${segment}' requires at least one value for param '${param}'.`
+                );
+              }
+
+              if (values.some((item) => item.length === 0)) {
+                throw new Error(
+                  `The path pattern '${segment}' does not allow empty values for param '${param}'.`
+                );
+              }
+
+              if (values.length === 0) {
+                path = path.replace(/\/$/, '');
+              }
+
+              path += values.map(encodePathParam).join('/');
               continue;
             }
 
@@ -417,7 +457,10 @@ const createConfigItem = (
     const ownParts = getPatternParts(config);
 
     if (parentParts) {
-      return { parts: [...parentParts, ...ownParts], ownParts };
+      return {
+        parts: combinePatternParts(parentParts, ownParts),
+        ownParts,
+      };
     }
 
     return { parts: ownParts, ownParts };
@@ -434,7 +477,7 @@ const createConfigItem = (
   const ownParts = config.path ? getPatternParts(config.path) : [];
   const parts =
     config.exact !== true
-      ? [...(parentParts || []), ...ownParts]
+      ? combinePatternParts(parentParts || [], ownParts)
       : ownParts.length
         ? ownParts
         : undefined;

@@ -120,9 +120,13 @@ type StripRegex<Param extends string> = Param extends `${infer Name}(${string})`
 type ExtractSegmentParam<Segment extends string> =
   Segment extends `:${infer Param}?`
     ? { [K in StripRegex<Param>]?: string }
-    : Segment extends `:${infer Param}`
+    : Segment extends `:${infer Param}+`
       ? { [K in StripRegex<Param>]: string }
-      : {};
+      : Segment extends `:${infer Param}*`
+        ? { [K in StripRegex<Param>]: string }
+        : Segment extends `:${infer Param}`
+          ? { [K in StripRegex<Param>]: string }
+          : {};
 
 export type StandardSchemaValidationResult<Output> =
   | { value: Output; issues?: undefined }
@@ -146,6 +150,7 @@ export type QueryParamInput = string | string[] | null | undefined;
  * Extract path params from a path string.
  * e.g. `/foo/:userId/:postId` -> `{ userId: string; postId: string }`
  * Supports optional params with `?` suffix.
+ * Supports repeated params with `+` and `*` suffixes as strings.
  * Params must start with `:` at the beginning of a segment (after `/`).
  */
 export type ExtractParamStrings<Path extends string> =
