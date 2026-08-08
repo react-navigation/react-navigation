@@ -120,13 +120,11 @@ type StripRegex<Param extends string> = Param extends `${infer Name}(${string})`
 type ExtractSegmentParam<Segment extends string> =
   Segment extends `:${infer Param}?`
     ? { [K in StripRegex<Param>]?: string }
-    : Segment extends `:${infer Param}+`
+    : Segment extends `:${infer Param}${'+' | '*'}`
       ? { [K in StripRegex<Param>]: string }
-      : Segment extends `:${infer Param}*`
+      : Segment extends `:${infer Param}`
         ? { [K in StripRegex<Param>]: string }
-        : Segment extends `:${infer Param}`
-          ? { [K in StripRegex<Param>]: string }
-          : {};
+        : {};
 
 export type StandardSchemaValidationResult<Output> =
   | { value: Output; issues?: undefined }
