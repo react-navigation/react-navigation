@@ -3187,6 +3187,302 @@ createStackScreen({
   }>();
 }
 
+/**
+ * Infer params for all supported path pattern formats and parser outputs.
+ */
+{
+  const NumberSchema = {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'test',
+      validate: (value: unknown) => ({
+        value: typeof value === 'string' ? value.length : 0,
+      }),
+    },
+  };
+
+  const RepeatedPartsSchema = {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'test',
+      validate: (value: unknown) => ({
+        value:
+          typeof value === 'string'
+            ? value.split('/').filter(Boolean).map(Number)
+            : [],
+      }),
+    },
+  };
+
+  const _Stack = createStackNavigator({
+    screens: {
+      Static: createStackScreen({
+        screen: () => null,
+        linking: 'files',
+      }),
+      Wildcard: createStackScreen({
+        screen: () => null,
+        linking: '*',
+      }),
+      Required: createStackScreen({
+        screen: () => null,
+        linking: 'files/:part',
+      }),
+      RequiredWithRegex: createStackScreen({
+        screen: () => null,
+        linking: 'files/:part(\\d+)',
+      }),
+      Optional: createStackScreen({
+        screen: () => null,
+        linking: 'files/:part?',
+      }),
+      OptionalWithRegex: createStackScreen({
+        screen: () => null,
+        linking: 'files/:part(\\d+)?',
+      }),
+      OneOrMore: createStackScreen({
+        screen: () => null,
+        linking: 'files/:parts+',
+      }),
+      OneOrMoreWithRegex: createStackScreen({
+        screen: () => null,
+        linking: 'files/:parts(\\d+)+',
+      }),
+      ZeroOrMore: createStackScreen({
+        screen: () => null,
+        linking: 'optional-files/:parts*',
+      }),
+      ZeroOrMoreWithRegex: createStackScreen({
+        screen: () => null,
+        linking: 'optional-files/:parts(\\d+)*',
+      }),
+      RequiredWithFunction: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'function-required/:part',
+          parse: {
+            part: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string>();
+
+              return value.length;
+            },
+          },
+        },
+      }),
+      RequiredWithRegexAndFunction: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'function-required-regex/:part(\\d+)',
+          parse: {
+            part: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string>();
+
+              return value.length;
+            },
+          },
+        },
+      }),
+      OptionalWithFunction: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'function-optional/:part?',
+          parse: {
+            part: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string>();
+
+              return value.length;
+            },
+          },
+        },
+      }),
+      OptionalWithRegexAndFunction: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'function-optional-regex/:part(\\d+)?',
+          parse: {
+            part: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string>();
+
+              return value.length;
+            },
+          },
+        },
+      }),
+      OneOrMoreWithFunction: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'function-one-or-more/:parts+',
+          parse: {
+            parts: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string>();
+
+              return value.split('/').filter(Boolean).map(Number);
+            },
+          },
+          stringify: {
+            parts: (value) => {
+              expectTypeOf(value).toEqualTypeOf<unknown>();
+
+              return '10/20';
+            },
+          },
+        },
+      }),
+      OneOrMoreWithRegexAndFunction: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'function-one-or-more-regex/:parts(\\d+)+',
+          parse: {
+            parts: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string>();
+
+              return value.split('/').filter(Boolean).map(Number);
+            },
+          },
+        },
+      }),
+      ZeroOrMoreWithFunction: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'function-zero-or-more/:parts*',
+          parse: {
+            parts: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string>();
+
+              return value.split('/').filter(Boolean).map(Number);
+            },
+          },
+        },
+      }),
+      ZeroOrMoreWithRegexAndFunction: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'function-zero-or-more-regex/:parts(\\d+)*',
+          parse: {
+            parts: (value) => {
+              expectTypeOf(value).toEqualTypeOf<string>();
+
+              return value.split('/').filter(Boolean).map(Number);
+            },
+          },
+        },
+      }),
+      RequiredWithSchema: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'schema-required/:part',
+          parse: {
+            part: NumberSchema,
+          },
+        },
+      }),
+      RequiredWithRegexAndSchema: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'schema-required-regex/:part(\\d+)',
+          parse: {
+            part: NumberSchema,
+          },
+        },
+      }),
+      OptionalWithSchema: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'schema-optional/:part?',
+          parse: {
+            part: NumberSchema,
+          },
+        },
+      }),
+      OptionalWithRegexAndSchema: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'schema-optional-regex/:part(\\d+)?',
+          parse: {
+            part: NumberSchema,
+          },
+        },
+      }),
+      OneOrMoreWithSchema: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'schema-one-or-more/:parts+',
+          parse: {
+            parts: RepeatedPartsSchema,
+          },
+        },
+      }),
+      OneOrMoreWithRegexAndSchema: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'schema-one-or-more-regex/:parts(\\d+)+',
+          parse: {
+            parts: RepeatedPartsSchema,
+          },
+        },
+      }),
+      ZeroOrMoreWithSchema: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'schema-zero-or-more/:parts*',
+          parse: {
+            parts: RepeatedPartsSchema,
+          },
+        },
+      }),
+      ZeroOrMoreWithRegexAndSchema: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'schema-zero-or-more-regex/:parts(\\d+)*',
+          parse: {
+            parts: RepeatedPartsSchema,
+          },
+        },
+      }),
+      MixedParsers: createStackScreen({
+        screen: () => null,
+        linking: {
+          path: 'mixed/:id/:parts+',
+          parse: {
+            id: (value) => Number(value),
+            parts: (value) => value.split('/').map(Number),
+          },
+        },
+      }),
+    },
+  });
+
+  expectTypeOf<StaticParamList<typeof _Stack>>().toEqualTypeOf<{
+    Static: undefined;
+    Wildcard: undefined;
+    Required: { part: string };
+    RequiredWithRegex: { part: string };
+    Optional: { part?: string } | undefined;
+    OptionalWithRegex: { part?: string } | undefined;
+    OneOrMore: { parts: string };
+    OneOrMoreWithRegex: { parts: string };
+    ZeroOrMore: { parts: string };
+    ZeroOrMoreWithRegex: { parts: string };
+    RequiredWithFunction: { part: number };
+    RequiredWithRegexAndFunction: { part: number };
+    OptionalWithFunction: { part?: number } | undefined;
+    OptionalWithRegexAndFunction: { part?: number } | undefined;
+    OneOrMoreWithFunction: { parts: number[] };
+    OneOrMoreWithRegexAndFunction: { parts: number[] };
+    ZeroOrMoreWithFunction: { parts: number[] };
+    ZeroOrMoreWithRegexAndFunction: { parts: number[] };
+    RequiredWithSchema: { part: number };
+    RequiredWithRegexAndSchema: { part: number };
+    OptionalWithSchema: { part?: number } | undefined;
+    OptionalWithRegexAndSchema: { part?: number } | undefined;
+    OneOrMoreWithSchema: { parts: number[] };
+    OneOrMoreWithRegexAndSchema: { parts: number[] };
+    ZeroOrMoreWithSchema: { parts: number[] };
+    ZeroOrMoreWithRegexAndSchema: { parts: number[] };
+    MixedParsers: { id: number; parts: number[] };
+  }>();
+}
+
 {
   const Wrapper = ({ children }: { children: React.ReactNode }) => (
     <>{children}</>

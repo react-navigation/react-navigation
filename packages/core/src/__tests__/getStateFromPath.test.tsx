@@ -4941,3 +4941,610 @@ test("doesn't treat alias paths as shared unless the alias is marked as shared",
     `Found conflicting screens with the same pattern. The pattern 'u/:id' resolves to both 'Tabs > HomeTab > Profile' and 'Tabs > SearchTab > Profile'. Patterns must be unique and cannot resolve to more than one screen unless shared: true is specified.`
   );
 });
+
+test('parses one or more path segments into a string', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts+',
+    },
+  };
+
+  expect(getStateFromPath<object>('/files/a', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: 'a' },
+        path: '/files/a',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('/files/a/b', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: 'a/b' },
+        path: '/files/a/b',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('/files', config)).toBeUndefined();
+});
+
+test('parses zero or more path segments into a string', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts*',
+    },
+  };
+
+  expect(getStateFromPath<object>('/files', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: '' },
+        path: '/files',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('/files/a/b', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: 'a/b' },
+        path: '/files/a/b',
+      },
+    ],
+  });
+});
+
+test('parses zero path segments at the root into an empty string', () => {
+  const config = {
+    screens: {
+      Files: ':parts*',
+    },
+  };
+
+  expect(getStateFromPath<object>('/', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: '' },
+        path: '',
+      },
+    ],
+  });
+});
+
+test('parses one or more path segments at the root into a string', () => {
+  const config = {
+    screens: {
+      Files: ':parts+',
+    },
+  };
+
+  expect(getStateFromPath<object>('/a/b', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: 'a/b' },
+        path: '/a/b',
+      },
+    ],
+  });
+});
+
+test('matches a root zero-or-more param after a prefix', () => {
+  const config = {
+    path: 'app',
+    screens: {
+      Files: ':parts*',
+    },
+  };
+
+  expect(getStateFromPath<object>('/app', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: '' },
+        path: '/app',
+      },
+    ],
+  });
+});
+
+test('rejects ambiguous repeated params across nested screens', () => {
+  const config = {
+    screens: {
+      Parent: {
+        path: ':first+',
+        screens: {
+          Child: ':second+',
+        },
+      },
+    },
+  };
+
+  expect(() => getStateFromPath<object>('/a/b', config)).toThrow(
+    'A repeated param must be separated from optional, repeated, or wildcard segments by a static segment: :first+/:second+'
+  );
+});
+
+test('falls back from an invalid empty path config to a root repeated path', () => {
+  const RequiredQuerySchema = {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'test',
+      validate: (value: unknown) =>
+        typeof value === 'string'
+          ? { value }
+          : { issues: [{ message: 'Required' }] },
+    },
+  };
+
+  const config = {
+    screens: {
+      Empty: {
+        path: '',
+        parse: { query: RequiredQuerySchema },
+      },
+      Files: ':parts*',
+    },
+  };
+
+  expect(getStateFromPath<object>('/', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: '' },
+        path: '',
+      },
+    ],
+  });
+});
+
+test('falls back after query validation fails for a root repeated path', () => {
+  const RequiredQuerySchema = {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'test',
+      validate: (value: unknown) =>
+        typeof value === 'string'
+          ? { value }
+          : { issues: [{ message: 'Required' }] },
+    },
+  };
+
+  const config = {
+    screens: {
+      First: {
+        path: ':parts*',
+        parse: { query: RequiredQuerySchema },
+      },
+      Second: ':other*',
+    },
+  };
+
+  expect(getStateFromPath<object>('/', config)).toEqual({
+    routes: [
+      {
+        name: 'Second',
+        params: { other: '' },
+        path: '',
+      },
+    ],
+  });
+});
+
+test('falls back when a selected shared root repeated path does not match', () => {
+  const NonEmptyPartsSchema = {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'test',
+      validate: (value: unknown) =>
+        typeof value === 'string' && value.length > 0
+          ? { value }
+          : { issues: [{ message: 'Expected at least one part' }] },
+    },
+  };
+
+  const config = {
+    screens: {
+      First: {
+        path: ':parts*',
+        shared: true,
+      },
+      Second: {
+        path: ':parts*',
+        shared: true,
+        parse: { parts: NonEmptyPartsSchema },
+      },
+    },
+  };
+
+  const previous = {
+    stale: false as const,
+    type: 'stack',
+    key: 'stack',
+    routeNames: ['First', 'Second'],
+    index: 0,
+    routes: [{ key: 'second', name: 'Second' }],
+  };
+
+  expect(getStateFromPath<object>('/', config, previous)).toEqual({
+    routes: [
+      {
+        name: 'First',
+        params: { parts: '' },
+        path: '',
+      },
+    ],
+  });
+});
+
+test('decodes each repeated path segment', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts+',
+    },
+  };
+
+  expect(getStateFromPath<object>('/files/a%20b/c%20d', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: 'a b/c d' },
+        path: '/files/a%20b/c%20d',
+      },
+    ],
+  });
+});
+
+test('prefers a scalar param over a repeated param for one segment', () => {
+  const config = {
+    screens: {
+      Repeated: 'files/:parts+',
+      Scalar: 'files/:part',
+    },
+  };
+
+  expect(getStateFromPath<object>('/files/a', config)).toEqual({
+    routes: [
+      {
+        name: 'Scalar',
+        params: { part: 'a' },
+        path: '/files/a',
+      },
+    ],
+  });
+});
+
+test('prefers an exact static path over a zero-or-more param', () => {
+  const config = {
+    screens: {
+      Exact: 'files',
+      Repeated: 'files/:parts*',
+    },
+  };
+
+  expect(getStateFromPath<object>('/files', config)).toEqual({
+    routes: [{ name: 'Exact', path: '/files' }],
+  });
+});
+
+test('prefers an exact path over a zero-or-more param with an unrelated route between them', () => {
+  const config = {
+    screens: {
+      Repeated: 'a/:parts*',
+      Other: 'b',
+      Exact: 'a',
+    },
+  };
+
+  expect(getStateFromPath<object>('/a', config)).toEqual({
+    routes: [{ name: 'Exact', path: '/a' }],
+  });
+});
+
+const getRouteOrderPermutations = <T,>(first: T, second: T, third: T) => [
+  [first, second, third],
+  [first, third, second],
+  [second, first, third],
+  [second, third, first],
+  [third, first, second],
+  [third, second, first],
+];
+
+test.each(getRouteOrderPermutations('Exact', 'Repeated', 'Wildcard'))(
+  'sorts exact, zero-or-more, and wildcard paths consistently: %j',
+  (...order) => {
+    const screens = Object.fromEntries(
+      order.map((name) => [
+        name,
+        name === 'Exact' ? 'a' : name === 'Repeated' ? 'a/:parts*' : 'a/*',
+      ])
+    );
+
+    expect(getStateFromPath<object>('/a', { screens })).toEqual({
+      routes: [{ name: 'Exact', path: '/a' }],
+    });
+
+    expect(getStateFromPath<object>('/a/x', { screens })).toEqual({
+      routes: [
+        {
+          name: 'Repeated',
+          params: { parts: 'x' },
+          path: '/a/x',
+        },
+      ],
+    });
+  }
+);
+
+test.each(getRouteOrderPermutations('Exact', 'RegexStar', 'Other'))(
+  'sorts zero-or-more paths with static and regex segments consistently: %j',
+  (...order) => {
+    const screens = Object.fromEntries(
+      order.map((name) => [
+        name,
+        name === 'Exact'
+          ? 'a'
+          : name === 'RegexStar'
+            ? 'a/:parts(.+)*'
+            : 'a/:other*/a',
+      ])
+    );
+
+    expect(getStateFromPath<object>('/a', { screens })).toEqual({
+      routes: [{ name: 'Exact', path: '/a' }],
+    });
+  }
+);
+
+test.each([
+  ['Repeated', 'Generic'],
+  ['Generic', 'Repeated'],
+])(
+  'prefers a static prefix with zero-or-more over generic params: %j',
+  (...order) => {
+    const screens = Object.fromEntries(
+      order.map((name) => [
+        name,
+        name === 'Repeated' ? 'files/:parts*' : ':name/:id',
+      ])
+    );
+
+    expect(getStateFromPath<object>('/files/a', { screens })).toEqual({
+      routes: [
+        {
+          name: 'Repeated',
+          params: { parts: 'a' },
+          path: '/files/a',
+        },
+      ],
+    });
+  }
+);
+
+test('prefers one-or-more over zero-or-more for non-empty segments', () => {
+  const config = {
+    screens: {
+      ZeroOrMore: 'files/:parts*',
+      OneOrMore: 'files/:parts+',
+    },
+  };
+
+  expect(getStateFromPath<object>('/files/a', config)).toEqual({
+    routes: [
+      {
+        name: 'OneOrMore',
+        params: { parts: 'a' },
+        path: '/files/a',
+      },
+    ],
+  });
+});
+
+test('parses zero repeated segments before a trailing static segment', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts*/edit',
+    },
+  };
+
+  expect(getStateFromPath<object>('/files/edit', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: '' },
+        path: '/files/edit',
+      },
+    ],
+  });
+});
+
+test('passes repeated path params to a function parser as a string', () => {
+  type ParamList = {
+    Files: { parts: number[] };
+  };
+
+  const config = {
+    screens: {
+      Files: {
+        path: 'files/:parts+',
+        parse: {
+          parts: (value: string) => value.split('/').map(Number),
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<ParamList>('/files/10/20', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: [10, 20] },
+        path: '/files/10/20',
+      },
+    ],
+  });
+
+  const zeroOrMoreConfig = {
+    screens: {
+      Files: {
+        path: 'files/:parts*',
+        parse: {
+          parts: (value: string) =>
+            value === '' ? [] : value.split('/').map(Number),
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<ParamList>('/files', zeroOrMoreConfig)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: [] },
+        path: '/files',
+      },
+    ],
+  });
+});
+
+test('passes repeated path params to a schema parser as a string', () => {
+  type ParamList = {
+    Files: { parts: number[] };
+  };
+
+  const PartsSchema = {
+    '~standard': {
+      version: 1 as const,
+      vendor: 'test',
+      validate: (value: unknown) => {
+        if (typeof value !== 'string') {
+          return { issues: [{ message: 'Expected a string' }] };
+        }
+
+        const parts = value === '' ? [] : value.split('/');
+
+        if (parts.every((item) => /^\d+$/.test(item))) {
+          return { value: parts.map(Number) };
+        }
+
+        return { issues: [{ message: 'Expected numeric segments' }] };
+      },
+    },
+  };
+
+  const config = {
+    screens: {
+      Files: {
+        path: 'files/:parts+',
+        parse: {
+          parts: PartsSchema,
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<ParamList>('/files/10/20', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: [10, 20] },
+        path: '/files/10/20',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<ParamList>('/files/10/nope', config)).toBeUndefined();
+
+  const zeroOrMoreConfig = {
+    screens: {
+      Files: {
+        path: 'files/:parts*',
+        parse: {
+          parts: PartsSchema,
+        },
+      },
+    },
+  };
+
+  expect(getStateFromPath<ParamList>('/files', zeroOrMoreConfig)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: [] },
+        path: '/files',
+      },
+    ],
+  });
+});
+
+test('applies a custom regex to every repeated path segment', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts(\\d+)+',
+    },
+  };
+
+  expect(getStateFromPath<object>('/files/10/20', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: '10/20' },
+        path: '/files/10/20',
+      },
+    ],
+  });
+
+  expect(getStateFromPath<object>('/files/10/nope', config)).toBeUndefined();
+  expect(getStateFromPath<object>('/files/10/%32%30', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: '10/20' },
+        path: '/files/10/%32%30',
+      },
+    ],
+  });
+});
+
+test('backtracks repeated custom regex params at static segments', () => {
+  const config = {
+    screens: {
+      Files: ':first(\\d+)+/edit/:second+',
+    },
+  };
+
+  expect(getStateFromPath<object>('/1/edit/2/edit/3', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { first: '1', second: '2/edit/3' },
+        path: '/1/edit/2/edit/3',
+      },
+    ],
+  });
+});
+
+test('supports named capture groups in repeated custom regex params', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts((?<digit>\\d+))+',
+    },
+  };
+
+  expect(getStateFromPath<object>('/files/10/20', config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: '10/20' },
+        path: '/files/10/20',
+      },
+    ],
+  });
+});
