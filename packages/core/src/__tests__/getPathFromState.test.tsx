@@ -2541,3 +2541,399 @@ test('handles same param name when state is deeper than config', () => {
 
   expect(getPathFromState<object>(state, config)).toBe('/foo/1/foo/2');
 });
+
+test('serializes one or more path segments from a string', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts+',
+    },
+  };
+
+  const state = {
+    routes: [{ name: 'Files', params: { parts: 'a/b' } }],
+  };
+
+  const path = '/files/a/b';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [{ name: 'Files', params: { parts: 'a/b' }, path }],
+  });
+});
+
+test('serializes zero path segments from an empty string', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts*',
+    },
+  };
+
+  const state = {
+    routes: [{ name: 'Files', params: { parts: '' } }],
+  };
+
+  const path = '/files';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [{ name: 'Files', params: { parts: '' }, path }],
+  });
+
+  expect(
+    getPathFromState<object>({ routes: [{ name: 'Files' }] }, config)
+  ).toBe(path);
+  expect(
+    getPathFromState<object>(
+      { routes: [{ name: 'Files', params: { parts: undefined } }] },
+      config
+    )
+  ).toBe(path);
+});
+
+test('serializes query params without a trailing slash after zero path segments', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts*',
+    },
+  };
+
+  const state = {
+    routes: [{ name: 'Files', params: { parts: '', query: 'value' } }],
+  };
+
+  const path = '/files?query=value';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: '', query: 'value' },
+        path,
+      },
+    ],
+  });
+});
+
+test('serializes zero path segments at the root', () => {
+  const config = {
+    screens: {
+      Files: ':parts*',
+    },
+  };
+
+  const state = {
+    routes: [{ name: 'Files', params: { parts: '' } }],
+  };
+
+  expect(getPathFromState<object>(state, config)).toBe('/');
+  expect(getStateFromPath<object>('/', config)).toEqual({
+    routes: [{ name: 'Files', params: { parts: '' }, path: '' }],
+  });
+});
+
+test('encodes each repeated path segment separately', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts+',
+    },
+  };
+
+  const state = {
+    routes: [{ name: 'Files', params: { parts: 'a b/c d' } }],
+  };
+
+  const path = '/files/a%20b/c%20d';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [{ name: 'Files', params: { parts: 'a b/c d' }, path }],
+  });
+});
+
+test('serializes repeated path params before a trailing segment', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts+/edit',
+    },
+  };
+
+  const state = {
+    routes: [{ name: 'Files', params: { parts: 'a/b' } }],
+  };
+
+  const path = '/files/a/b/edit';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [{ name: 'Files', params: { parts: 'a/b' }, path }],
+  });
+});
+
+test('serializes zero repeated path segments before a trailing segment', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts*/edit',
+    },
+  };
+
+  const state = {
+    routes: [{ name: 'Files', params: { parts: '' } }],
+  };
+
+  const path = '/files/edit';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [{ name: 'Files', params: { parts: '' }, path }],
+  });
+});
+
+test('parses a repeated path param from an alias and serializes the main path', () => {
+  const config = {
+    screens: {
+      Files: {
+        path: 'files/:parts+',
+        alias: ['archive/:parts+'],
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: 'a/b' },
+        path: '/archive/a/b',
+      },
+    ],
+  };
+
+  expect(getStateFromPath<object>('/archive/a/b', config)).toEqual(state);
+  expect(getPathFromState<object>(state, config)).toBe('/files/a/b');
+});
+
+test('serializes repeated path params in a nested screen', () => {
+  const config = {
+    screens: {
+      User: {
+        path: 'users/:user',
+        screens: {
+          Files: 'files/:parts+',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'User',
+        params: { user: 'jane' },
+        state: {
+          routes: [{ name: 'Files', params: { parts: 'a/b' } }],
+        },
+      },
+    ],
+  };
+
+  const path = '/users/jane/files/a/b';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'User',
+        params: { user: 'jane' },
+        state: {
+          routes: [
+            {
+              name: 'Files',
+              params: { parts: 'a/b' },
+              path,
+            },
+          ],
+        },
+      },
+    ],
+  });
+});
+
+test('serializes a repeated path param on a parent screen', () => {
+  const config = {
+    screens: {
+      Files: {
+        path: 'files/:parts+',
+        screens: {
+          Edit: 'edit',
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: 'a/b' },
+        state: { routes: [{ name: 'Edit' }] },
+      },
+    ],
+  };
+
+  const path = '/files/a/b/edit';
+
+  expect(getPathFromState<object>(state, config)).toBe(path);
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Files',
+        params: { parts: 'a/b' },
+        state: { routes: [{ name: 'Edit', path }] },
+      },
+    ],
+  });
+});
+
+test('rejects ambiguous repeated params across nested screens', () => {
+  const config = {
+    screens: {
+      Parent: {
+        path: ':first+',
+        screens: {
+          Child: ':second+',
+        },
+      },
+    },
+  };
+
+  expect(() =>
+    getPathFromState<object>(
+      {
+        routes: [
+          {
+            name: 'Parent',
+            params: { first: 'a' },
+            state: {
+              routes: [{ name: 'Child', params: { second: 'b' } }],
+            },
+          },
+        ],
+      },
+      config
+    )
+  ).toThrow(
+    'A repeated param must be separated from optional, repeated, or wildcard segments by a static segment: :first+/:second+'
+  );
+});
+
+test('uses parse and stringify for repeated path params', () => {
+  type ParamList = {
+    Files: { parts: number[] };
+  };
+
+  const config = {
+    screens: {
+      Files: {
+        path: 'files/:parts+',
+        parse: {
+          parts: (value: string) => value.split('/').map(Number),
+        },
+        stringify: {
+          parts: (value: number[]) => value.join('/'),
+        },
+      },
+    },
+  };
+
+  const state = {
+    routes: [{ name: 'Files', params: { parts: [10, 20] } }],
+  };
+
+  const path = '/files/10/20';
+
+  expect(getPathFromState<ParamList>(state, config)).toBe(path);
+  expect(getStateFromPath<ParamList>(path, config)).toEqual({
+    routes: [{ name: 'Files', params: { parts: [10, 20] }, path }],
+  });
+});
+
+test('throws when one or more path param has no values', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts+',
+    },
+  };
+
+  expect(() =>
+    getPathFromState<object>(
+      { routes: [{ name: 'Files', params: { parts: '' } }] },
+      config
+    )
+  ).toThrow(
+    "The path pattern ':parts+' requires at least one value for param 'parts'."
+  );
+
+  expect(() =>
+    getPathFromState<object>({ routes: [{ name: 'Files' }] }, config)
+  ).toThrow(
+    "The path pattern ':parts+' requires at least one value for param 'parts'."
+  );
+  expect(() =>
+    getPathFromState<object>(
+      { routes: [{ name: 'Files', params: { parts: undefined } }] },
+      config
+    )
+  ).toThrow(
+    "The path pattern ':parts+' requires at least one value for param 'parts'."
+  );
+});
+
+test('throws when a repeated path param contains an empty value', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts*',
+    },
+  };
+
+  expect(() =>
+    getPathFromState<object>(
+      { routes: [{ name: 'Files', params: { parts: 'a//b' } }] },
+      config
+    )
+  ).toThrow(
+    "The path pattern ':parts*' does not allow empty values for param 'parts'."
+  );
+});
+
+test('throws when a repeated path param is null', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts*',
+    },
+  };
+
+  expect(() =>
+    getPathFromState<object>(
+      { routes: [{ name: 'Files', params: { parts: null } }] },
+      config
+    )
+  ).toThrow(
+    "The path pattern ':parts*' does not allow null for param 'parts'."
+  );
+});
+
+test('throws when a repeated path param is an array', () => {
+  const config = {
+    screens: {
+      Files: 'files/:parts+',
+    },
+  };
+
+  expect(() =>
+    getPathFromState<object>(
+      { routes: [{ name: 'Files', params: { parts: ['a', 'b'] } }] },
+      config
+    )
+  ).toThrow("The path pattern ':parts+' requires a string for param 'parts'.");
+});

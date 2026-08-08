@@ -3,6 +3,7 @@ export type PatternPart = {
   param?: string;
   regex?: string;
   optional?: boolean;
+  repeat?: 'zero-or-more' | 'one-or-more';
 };
 
 /**
@@ -15,6 +16,7 @@ export function getPatternParts(path: string): PatternPart[] {
 
   let isRegex = false;
   let isParam = false;
+  let hasRepeat = false;
   let isEscaped = false;
   let isInCharClass = false;
   let regexInnerParens = 0;
@@ -74,6 +76,27 @@ export function getPatternParts(path: string): PatternPart[] {
           `Encountered '?' without preceding ':' in path: ${path}`
         );
       }
+    } else if (
+      current.param &&
+      !isRegex &&
+      (char === '*' || char === '+') &&
+      (path[i + 1] == null ||
+        path[i + 1] === '/' ||
+        path[i + 1] === '?' ||
+        path[i + 1] === '*' ||
+        path[i + 1] === '+')
+    ) {
+      if (
+        current.optional ||
+        (path[i + 1] !== undefined && path[i + 1] !== '/')
+      ) {
+        throw new Error(`Cannot combine path param modifiers in path: ${path}`);
+      }
+
+      isParam = false;
+
+      current.repeat = char === '*' ? 'zero-or-more' : 'one-or-more';
+      hasRepeat = true;
     } else if (char == null || (char === '/' && !isRegex)) {
       isParam = false;
 
@@ -135,7 +158,34 @@ export function getPatternParts(path: string): PatternPart[] {
     }
   }
 
+  if (hasRepeat) {
+    validateRepeatedParts(parts, path);
+  }
+
   return parts;
+}
+
+function validateRepeatedParts(parts: PatternPart[], path: string) {
+  let variablePart: PatternPart | undefined;
+
+  for (const part of parts) {
+    if (!part.param && part.segment !== '*') {
+      variablePart = undefined;
+      continue;
+    }
+
+    if (!part.repeat && !part.optional && part.segment !== '*') {
+      continue;
+    }
+
+    if (variablePart && (variablePart.repeat || part.repeat)) {
+      throw new Error(
+        `A repeated param must be separated from optional, repeated, or wildcard segments by a static segment: ${path}`
+      );
+    }
+
+    variablePart = part;
+  }
 }
 
 export function combinePatternParts<T extends PatternPart>(
@@ -143,5 +193,14 @@ export function combinePatternParts<T extends PatternPart>(
   parts: T[],
   exact = false
 ): T[] {
-  return exact ? parts : [...parentParts, ...parts];
+  const combined = exact ? parts : [...parentParts, ...parts];
+
+  if (combined.some((part) => part.repeat)) {
+    validateRepeatedParts(
+      combined,
+      combined.map((part) => part.segment).join('/')
+    );
+  }
+
+  return combined;
 }

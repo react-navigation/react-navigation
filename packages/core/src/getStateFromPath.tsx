@@ -39,6 +39,7 @@ type RouteConfig = {
     name: string;
     index: number;
     regex?: RegExp | undefined;
+    repeat?: PatternPart['repeat'];
   }[];
   routeNames: string[];
   parse?: ParseConfig | undefined;
@@ -64,6 +65,7 @@ type RoutePatternPart = PatternPart & { screen: string };
 type ConfigResources = {
   initialRoutes: InitialRouteConfig[];
   configs: RouteConfig[];
+  configsWithZeroOrMore: RouteConfig[];
   configsByScreen: Record<string, RouteConfig[]>;
   configsByPattern: Record<string, RouteConfig[]>;
   prefixRegex?: RegExp | undefined;
@@ -173,6 +175,7 @@ export function getStateFromPath<ParamList extends {}>(
   const {
     initialRoutes,
     configs,
+    configsWithZeroOrMore,
     configsByScreen,
     configsByPattern,
     prefixRegex,
@@ -244,12 +247,50 @@ export function getStateFromPath<ParamList extends {}>(
     if (match) {
       const config = resolveSharedConfig(match);
 
-      return createNestedStateObject(
+      const state = createNestedStateObject(
         path,
         config.routeNames.map((name) => ({ name })),
         initialRoutes,
         config
       );
+
+      if (state) {
+        return state;
+      }
+    }
+
+    for (const config of configsWithZeroOrMore) {
+      const routes = matchAgainstConfig('', config, configsByScreen);
+
+      if (routes) {
+        let selectedConfig = resolveSharedConfig(config);
+        let selectedRoutes = routes;
+
+        if (selectedConfig !== config) {
+          const rematchedRoutes = matchAgainstConfig(
+            '',
+            selectedConfig,
+            configsByScreen
+          );
+
+          if (rematchedRoutes === undefined) {
+            selectedConfig = config;
+          } else {
+            selectedRoutes = rematchedRoutes;
+          }
+        }
+
+        const state = createNestedStateObject(
+          path,
+          selectedRoutes,
+          initialRoutes,
+          selectedConfig
+        );
+
+        if (state) {
+          return state;
+        }
+      }
     }
 
     return undefined;
@@ -384,8 +425,13 @@ function prepareConfigResources(options?: Options<{}>) {
 
   const configsByScreen: Record<string, RouteConfig[]> = {};
   const configsByPattern: Record<string, RouteConfig[]> = {};
+  const configsWithZeroOrMore: RouteConfig[] = [];
 
   for (const c of configs) {
+    if (c.params.some((param) => param.repeat === 'zero-or-more')) {
+      configsWithZeroOrMore.push(c);
+    }
+
     (configsByScreen[c.screen] ??= []).push(c);
 
     const existing = configsByPattern[c.pattern];
@@ -401,6 +447,7 @@ function prepareConfigResources(options?: Options<{}>) {
   return {
     initialRoutes,
     configs,
+    configsWithZeroOrMore,
     configsByScreen,
     configsByPattern,
     prefixRegex,
@@ -443,10 +490,12 @@ function getSortedNormalizedConfigs(
 
   return configs.sort((a, b) => {
     // Sort config from most specific to least specific:
-    // - more segments
     // - static segments
     // - params with regex
     // - regular params
+    // - one-or-more params
+    // - the end of the pattern
+    // - zero-or-more params
     // - wildcard
 
     // If 2 patterns are same, move the one with less route names up
@@ -469,76 +518,44 @@ function getSortedNormalizedConfigs(
       return a.routeNames.length - b.routeNames.length || a.order - b.order;
     }
 
-    // If one of the patterns starts with the other, it's more exhaustive
-    // So move it up
-    if (arrayStartsWith(a.segments, b.segments)) {
-      return -1;
-    }
-
-    if (arrayStartsWith(b.segments, a.segments)) {
-      return 1;
-    }
-
     for (let i = 0; i < Math.max(a.segments.length, b.segments.length); i++) {
-      const aSegment = a.segments[i];
-      const bSegment = b.segments[i];
+      const rank =
+        getSegmentRank(a.segments[i]) - getSegmentRank(b.segments[i]);
 
-      // if b is longer, b gets higher priority
-      if (aSegment == null) {
-        return 1;
-      }
-
-      // if a is longer, a gets higher priority
-      if (bSegment == null) {
-        return -1;
-      }
-
-      const aWildCard = aSegment === '*';
-      const bWildCard = bSegment === '*';
-      const aParam = aSegment.startsWith(':');
-      const bParam = bSegment.startsWith(':');
-      const aRegex = aParam && aSegment.includes('(');
-      const bRegex = bParam && bSegment.includes('(');
-
-      // if both are wildcard or regex, we compare next component
-      if ((aWildCard && bWildCard) || (aRegex && bRegex)) {
-        continue;
-      }
-
-      // if only a is wildcard, b gets higher priority
-      if (aWildCard && !bWildCard) {
-        return 1;
-      }
-
-      // if only b is wildcard, a gets higher priority
-      if (bWildCard && !aWildCard) {
-        return -1;
-      }
-
-      // If only a has a param, b gets higher priority
-      if (aParam && !bParam) {
-        return 1;
-      }
-
-      // If only b has a param, a gets higher priority
-      if (bParam && !aParam) {
-        return -1;
-      }
-
-      // if only a has regex, a gets higher priority
-      if (aRegex && !bRegex) {
-        return -1;
-      }
-
-      // if only b has regex, b gets higher priority
-      if (bRegex && !aRegex) {
-        return 1;
+      if (rank !== 0) {
+        return rank;
       }
     }
 
-    return a.segments.length - b.segments.length;
+    return a.order - b.order;
   });
 }
+
+const getSegmentRank = (segment: string | undefined) => {
+  if (segment === undefined) {
+    return 5;
+  }
+
+  if (segment === '*') {
+    return 8;
+  }
+
+  if (!segment.startsWith(':')) {
+    return 0;
+  }
+
+  const regex = segment.includes('(');
+
+  if (segment.endsWith('+')) {
+    return regex ? 3 : 4;
+  }
+
+  if (segment.endsWith('*')) {
+    return regex ? 6 : 7;
+  }
+
+  return regex ? 1 : 2;
+};
 
 // Throw if two configs resolve to the same pattern but conflicting screens
 function checkForDuplicatedConfigs(
@@ -607,26 +624,51 @@ const matchAgainstConfig = (
           continue;
         }
 
-        const value = match.groups[`${PARAM_GROUP_PREFIX}${param.index}`];
+        let value = match.groups[`${PARAM_GROUP_PREFIX}${param.index}`];
 
-        if (value == null) {
-          params[param.name] = undefined;
-          hasParams = true;
-          continue;
+        if (param.repeat && value != null) {
+          value = value.replace(/\/$/, '');
         }
 
         let decoded: string;
+        let decodedSegments: string[] | undefined;
 
         try {
-          decoded = decodeURIComponent(value);
+          if (param.repeat) {
+            if (value == null) {
+              decodedSegments = [];
+            } else {
+              decodedSegments = value.split('/').map(decodeURIComponent);
+            }
+
+            decoded = decodedSegments.join('/');
+          } else {
+            if (value == null) {
+              params[param.name] = undefined;
+              hasParams = true;
+              continue;
+            }
+
+            decoded = decodeURIComponent(value);
+          }
         } catch {
           return undefined;
         }
 
         // Percent-encoded values are matched permissively
         // So validate the decoded value against the custom regex
-        if (param.regex && value !== decoded && !param.regex.test(decoded)) {
-          return undefined;
+        if (param.regex) {
+          const regex = param.regex;
+          const values = decodedSegments ?? [decoded];
+          const rawValues = param.repeat ? (value?.split('/') ?? []) : [value];
+
+          if (
+            values.some(
+              (item, index) => item !== rawValues[index] && !regex.test(item)
+            )
+          ) {
+            return undefined;
+          }
         }
 
         const parser = routeConfig.parse?.[param.name];
@@ -845,16 +887,32 @@ const createConfigItem = (
       if (part.param) {
         // A custom regex may not match the percent-encoded form of the value
         // So also accept segments containing an encoded character and validate them after decoding
-        const reg = part.regex
-          ? `(?:${part.regex})|(?=[^/]*%[0-9A-F]{2})[^/]+`
-          : '[^/]+';
+        let reg = '[^/]+';
 
-        regexString += `(((?<${PARAM_GROUP_PREFIX}${index}>${reg})\\/)${part.optional ? '?' : ''})`;
+        if (part.regex) {
+          const encodedReg = `(?=[^/]*%[0-9A-F]{2})[^/]+`;
+
+          reg = part.repeat
+            ? `(?:${encodedReg})|(?![^/]*%[0-9A-F]{2})(?:${part.regex})`
+            : `(?:${part.regex})|${encodedReg}`;
+        }
+
+        if (part.repeat) {
+          const repeatedReg = `(?:(?:${reg})\\/)+`;
+
+          regexString += `(?<${PARAM_GROUP_PREFIX}${index}>${repeatedReg})${
+            part.repeat === 'zero-or-more' ? '?' : ''
+          }`;
+        } else {
+          regexString += `(((?<${PARAM_GROUP_PREFIX}${index}>${reg})\\/)${part.optional ? '?' : ''})`;
+        }
+
         params.push({
           index,
           screen: part.screen,
           name: part.param,
           regex: part.regex ? new RegExp(`^(?:${part.regex})$`) : undefined,
+          repeat: part.repeat,
         });
 
         if (part.screen === screen) {
