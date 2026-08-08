@@ -3,11 +3,13 @@ import { Platform } from 'react-native';
 import type { TransitionPreset } from '../types';
 import {
   forBottomSheetAndroid,
+  forCrossDissolveIOS,
+  forDialogAndroid,
   forFadeFromBottomAndroid,
-  forFadeFromCenter as forFadeCard,
+  forFadeFromCenter,
   forFadeFromRightAndroid,
+  forFlipIOS,
   forHorizontalIOS,
-  forHorizontalIOSInverted,
   forModalPresentationIOS,
   forRevealFromBottomAndroid,
   forScaleFromCenterAndroid,
@@ -17,8 +19,12 @@ import { forFade, forUIKit } from './HeaderStyleInterpolators';
 import {
   BottomSheetSlideInSpec,
   BottomSheetSlideOutSpec,
+  DialogAndroidSpec,
   FadeInFromBottomAndroidSpec,
+  FadeInFromRightAndroidSpec,
   FadeOutToBottomAndroidSpec,
+  FadeOutToRightAndroidSpec,
+  FlipIOSSpec,
   RevealFromBottomAndroidSpec,
   ScaleFromCenterAndroidSpec,
   TransitionIOSSpec,
@@ -81,6 +87,19 @@ export const FadeFromBottomAndroid: TransitionPreset = {
 };
 
 /**
+ * Standard Android dialog transition.
+ */
+export const DialogAndroid: TransitionPreset = {
+  gestureDirection: 'vertical',
+  transitionSpec: {
+    open: DialogAndroidSpec,
+    close: DialogAndroidSpec,
+  },
+  cardStyleInterpolator: forDialogAndroid,
+  headerStyleInterpolator: forFade,
+};
+
+/**
  * Standard Android navigation transition when opening or closing an Activity on Android 9 (Pie).
  */
 export const RevealFromBottomAndroid: TransitionPreset = {
@@ -107,20 +126,20 @@ export const ScaleFromCenterAndroid: TransitionPreset = {
 };
 
 /**
- * Standard Android navigation transition when opening or closing an Activity on Android 14.
+ * Standard Android navigation transition when opening or closing an Activity on Android 14 and later.
  */
 export const FadeFromRightAndroid: TransitionPreset = {
   gestureDirection: 'horizontal',
   transitionSpec: {
-    open: FadeInFromBottomAndroidSpec,
-    close: FadeOutToBottomAndroidSpec,
+    open: FadeInFromRightAndroidSpec,
+    close: FadeOutToRightAndroidSpec,
   },
   cardStyleInterpolator: forFadeFromRightAndroid,
   headerStyleInterpolator: forFade,
 };
 
 /**
- * Standard bottom sheet slide transition for Android 10.
+ * Standard Material 3 bottom sheet transition.
  */
 export const BottomSheetAndroid: TransitionPreset = {
   gestureDirection: 'vertical',
@@ -138,10 +157,36 @@ export const BottomSheetAndroid: TransitionPreset = {
 export const ModalFadeTransition: TransitionPreset = {
   gestureDirection: 'vertical',
   transitionSpec: {
-    open: BottomSheetSlideInSpec,
-    close: BottomSheetSlideOutSpec,
+    open: TransitionIOSSpec,
+    close: TransitionIOSSpec,
   },
-  cardStyleInterpolator: forFadeCard,
+  cardStyleInterpolator: forFadeFromCenter,
+  headerStyleInterpolator: forFade,
+};
+
+/**
+ * Standard iOS horizontal flip transition.
+ */
+export const ModalFlipIOS: TransitionPreset = {
+  gestureDirection: 'horizontal',
+  transitionSpec: {
+    open: FlipIOSSpec,
+    close: FlipIOSSpec,
+  },
+  cardStyleInterpolator: forFlipIOS,
+  headerStyleInterpolator: forFade,
+};
+
+/**
+ * Standard iOS cross-dissolve transition.
+ */
+export const CrossDissolveIOS: TransitionPreset = {
+  gestureDirection: 'horizontal',
+  transitionSpec: {
+    open: TransitionIOSSpec,
+    close: TransitionIOSSpec,
+  },
+  cardStyleInterpolator: forCrossDissolveIOS,
   headerStyleInterpolator: forFade,
 };
 
@@ -174,5 +219,6 @@ export const ModalTransition = Platform.select({
  */
 export const SlideFromLeftIOS: TransitionPreset = {
   ...SlideFromRightIOS,
-  cardStyleInterpolator: forHorizontalIOSInverted,
+  gestureDirection: 'horizontal-inverted',
+  cardStyleInterpolator: forHorizontalIOS,
 };

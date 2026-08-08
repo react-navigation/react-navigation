@@ -4,6 +4,7 @@ import {
   NavigationProvider,
   type Route,
   useLinkBuilder,
+  useLocale,
 } from '@react-navigation/native';
 import * as React from 'react';
 import {
@@ -17,10 +18,10 @@ import {
 import {
   forNoAnimation,
   forSlideLeft,
-  forSlideRight,
   forSlideUp,
 } from '../../TransitionConfigs/HeaderStyleInterpolators';
 import type { Scene, StackHeaderMode, StackHeaderProps } from '../../types';
+import { getInvertedMultiplier } from '../../utils/getInvertedMultiplier';
 import { Header } from './Header';
 
 export type HeaderHeight = {
@@ -53,6 +54,7 @@ export function HeaderContainer({
   const focusedRoute = getFocusedRoute();
   const parentHeaderBack = React.use(HeaderBackContext);
   const { buildHref } = useLinkBuilder();
+  const { direction } = useLocale();
 
   return (
     <View style={[styles.container, style]}>
@@ -131,6 +133,12 @@ export function HeaderContainer({
         const props: StackHeaderProps = {
           back: headerBack,
           progress: scene.progress,
+          inverted: getInvertedMultiplier(
+            isHeaderStatic && nextHeaderlessGestureDirection
+              ? nextHeaderlessGestureDirection
+              : scene.descriptor.options.gestureDirection,
+            direction === 'rtl'
+          ),
           options: scene.descriptor.options,
           route: scene.descriptor.route,
           navigation: scene.descriptor.navigation,
@@ -140,9 +148,7 @@ export function HeaderContainer({
                 ? nextHeaderlessGestureDirection === 'vertical' ||
                   nextHeaderlessGestureDirection === 'vertical-inverted'
                   ? forSlideUp
-                  : nextHeaderlessGestureDirection === 'horizontal-inverted'
-                    ? forSlideRight
-                    : forSlideLeft
+                  : forSlideLeft
                 : headerStyleInterpolator
               : forNoAnimation,
         };
