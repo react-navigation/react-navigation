@@ -11,6 +11,7 @@ import {
   createNavigatorFactory,
   createStaticNavigation,
   type DefaultNavigatorOptions,
+  type Href,
   type NavigationContainerRef,
   type NavigationListForNested,
   type NavigationProp,
@@ -1695,6 +1696,297 @@ createBottomTabNavigator({
   expectTypeOf<StaticParamList<typeof NoUndefinedTabs>>().toEqualTypeOf<{
     User: NavigatorScreenParams<NoUndefinedStackParamList>;
   }>();
+}
+
+/**
+ * Infer hrefs from static linking configuration.
+ */
+{
+  const Screen = () => null;
+
+  const acceptsHrefFor =
+    <Navigator,>(_navigator: Navigator) =>
+    (_href: Href<Navigator>) =>
+      undefined;
+
+  const AutoNested = createStackNavigator({
+    initialRouteName: 'NestedHomeScreen',
+    screens: {
+      NestedHomeScreen: Screen,
+      NestedSettings: createStackScreen({ screen: Screen }),
+    },
+  });
+
+  const FactoryScreen = createStackScreen({ screen: Screen });
+
+  const AutoPaths = createStackNavigator({
+    initialRouteName: 'HomeScreen',
+    screens: {
+      HomeScreen: Screen,
+      WrappedLeaf: { screen: Screen },
+      FactoryLeaf: FactoryScreen,
+      XMLHttpRequest: Screen,
+      OAuth2FA: Screen,
+      URL2FAView: Screen,
+      ConditionalScreen: { screen: Screen, if: () => false },
+      ExplicitOverride: {
+        screen: Screen,
+        linking: 'custom-path',
+      },
+      DisabledScreen: {
+        screen: Screen,
+        linking: null,
+      },
+      Nested: AutoNested,
+      Parent: {
+        screen: AutoNested,
+        linking: 'parent',
+      },
+    },
+    groups: {
+      Modal: {
+        screens: {
+          GroupLeaf: Screen,
+        },
+      },
+    },
+  });
+
+  const autoHref = acceptsHrefFor(AutoPaths);
+
+  autoHref('/');
+  autoHref('/?from=notification');
+  autoHref('/wrapped-leaf');
+  autoHref('/factory-leaf');
+  autoHref('/xml-http-request');
+  autoHref('/o-auth2-fa');
+  autoHref('/url2-fa-view');
+  autoHref('/conditional-screen');
+  autoHref('/custom-path');
+  autoHref('/nested-home-screen');
+  autoHref('/nested-settings');
+  autoHref('/parent');
+  autoHref('/parent/nested-home-screen');
+  autoHref('/parent/nested-settings');
+  autoHref('/group-leaf');
+  autoHref('example://parent/nested-settings');
+
+  // The generated path is replaced by the empty path at runtime. It remains
+  // accepted because a runtime linking prop can override the initial route.
+  autoHref('/home-screen');
+
+  // @ts-expect-error - Explicit linking replaces the generated path.
+  autoHref('/explicit-override');
+
+  // @ts-expect-error - Linking is disabled for this screen.
+  autoHref('/disabled-screen');
+
+  // @ts-expect-error - This route doesn't exist.
+  autoHref('/missing-screen');
+
+  const OrderFallback = createStackNavigator({
+    screens: {
+      FirstScreen: Screen,
+      SecondScreen: Screen,
+    },
+  });
+
+  const orderFallbackHref = acceptsHrefFor(OrderFallback);
+
+  orderFallbackHref('/');
+  orderFallbackHref('/first-screen');
+  orderFallbackHref('/second-screen');
+
+  const ExplicitInitialRoute = createStackNavigator({
+    initialRouteName: 'Landing',
+    screens: {
+      Landing: { screen: Screen, linking: 'landing' },
+      OtherScreen: Screen,
+    },
+  });
+
+  const explicitInitialHref = acceptsHrefFor(ExplicitInitialRoute);
+
+  explicitInitialHref('/landing');
+  explicitInitialHref('/other-screen');
+
+  // @ts-expect-error - An explicit non-empty initial path prevents an auto home path.
+  explicitInitialHref('/');
+
+  const ExplicitEmptyPath = createStackNavigator({
+    screens: {
+      Home: { screen: Screen, linking: '' },
+      Other: { screen: Screen, linking: 'other' },
+    },
+  });
+
+  const explicitEmptyHref = acceptsHrefFor(ExplicitEmptyPath);
+
+  explicitEmptyHref('/');
+  explicitEmptyHref('/other');
+
+  // @ts-expect-error - An explicit empty path replaces the generated path.
+  explicitEmptyHref('/home');
+
+  const NestedStaticInitial = createStackNavigator({
+    initialRouteName: 'First',
+    screens: {
+      First: { screen: Screen, linking: 'first' },
+      Second: Screen,
+    },
+  });
+
+  const RootWithNestedInitialOverride = createStackNavigator({
+    initialRouteName: 'Shell',
+    screens: {
+      Shell: {
+        screen: NestedStaticInitial,
+        linking: {
+          path: '',
+          initialRouteName: 'Second',
+        },
+      },
+    },
+  });
+
+  acceptsHrefFor(RootWithNestedInitialOverride)('/');
+
+  const ExplicitPaths = createStackNavigator({
+    screens: {
+      Catalog: { screen: Screen, linking: '/catalog/' },
+      Product: {
+        screen: Screen,
+        linking: {
+          path: 'products/:id([0-9]+)',
+          alias: ['item/:id', { path: '/p/:id', exact: true }],
+        },
+      },
+      Post: { screen: Screen, linking: 'posts/:slug?' },
+      Search: { screen: Screen, linking: 'search/:query/:page?' },
+      Archive: { screen: Screen, linking: 'archive/:year?/:month?' },
+      Guide: { screen: Screen, linking: 'docs/:language?/guide' },
+      SharedA: {
+        screen: Screen,
+        linking: { path: 'shared/:id', shared: true },
+      },
+      SharedB: {
+        screen: Screen,
+        linking: { path: 'shared/:id', shared: true },
+      },
+      Disabled: { screen: Screen, linking: null },
+    },
+  });
+
+  const explicitHref = acceptsHrefFor(ExplicitPaths);
+
+  explicitHref('/catalog');
+  explicitHref('/catalog?sort=popular');
+  explicitHref('/products/42');
+  explicitHref('/item/42');
+  explicitHref('/p/42');
+  explicitHref('/posts');
+  explicitHref('/posts/typed-links');
+  explicitHref('/search/react-navigation');
+  explicitHref('/search/react-navigation/2');
+  explicitHref('/archive');
+  explicitHref('/archive/2026');
+  explicitHref('/archive/2026/08');
+  explicitHref('/docs/guide');
+  explicitHref('/docs/en/guide');
+  explicitHref('/shared/42');
+
+  // @ts-expect-error - Paths are normalized without a trailing slash.
+  explicitHref('/catalog/');
+
+  // @ts-expect-error - A required path parameter is missing.
+  explicitHref('/products');
+
+  // @ts-expect-error - Linking is disabled for this screen.
+  explicitHref('/disabled');
+
+  const ChildStack = createStackNavigator({
+    screens: {
+      Child: { screen: Screen, linking: 'child' },
+      ExactChild: {
+        screen: Screen,
+        linking: { path: 'exact-child', exact: true },
+      },
+      ActualChild: { screen: Screen, linking: 'actual-child' },
+    },
+  });
+
+  const NestedPaths = createStackNavigator({
+    screens: {
+      Parent: {
+        screen: ChildStack,
+        linking: {
+          path: 'parent',
+          alias: ['alternate', { path: 'root-alias', exact: true }],
+        },
+      },
+      Manual: {
+        screen: ChildStack,
+        linking: {
+          path: 'manual',
+          screens: {
+            ActualChild: 'overridden-child',
+          },
+        },
+      },
+    },
+  });
+
+  const nestedHref = acceptsHrefFor(NestedPaths);
+
+  nestedHref('/parent');
+  nestedHref('/alternate');
+  nestedHref('/root-alias');
+  nestedHref('/parent/child');
+  nestedHref('/exact-child');
+  nestedHref('/manual');
+  nestedHref('/manual/overridden-child');
+
+  // @ts-expect-error - Aliases don't become prefixes for child paths.
+  nestedHref('/alternate/child');
+
+  // @ts-expect-error - Explicit screens replace the static child config.
+  nestedHref('/manual/actual-child');
+
+  const WildcardPath = createStackNavigator({
+    screens: {
+      NotFound: { screen: Screen, linking: '*' },
+    },
+  });
+
+  const wildcardHref = acceptsHrefFor(WildcardPath);
+
+  wildcardHref('/anything');
+  wildcardHref('/anything/nested');
+
+  const runtimePath = '' as string;
+
+  const WidenedPath = createStackNavigator({
+    screens: {
+      Runtime: { screen: Screen, linking: { path: runtimePath } },
+    },
+  });
+
+  acceptsHrefFor(WidenedPath)('runtime-dependent-href');
+
+  const _runtimeScreens = {} as Record<string, typeof Screen>;
+  const runtimeGroups = {} as Record<
+    string,
+    { screens: typeof _runtimeScreens }
+  >;
+  const WidenedScreens = createStackNavigator({
+    screens: {
+      Known: { screen: Screen, linking: 'known' },
+    },
+    groups: runtimeGroups,
+  });
+
+  acceptsHrefFor(WidenedScreens)('/known');
+  acceptsHrefFor(WidenedScreens)('runtime-dependent-href');
 }
 
 /**

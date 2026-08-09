@@ -5,6 +5,7 @@ import type {
   InitialState,
   NavigationState,
   PathConfigMap,
+  RootNavigator,
   Route,
 } from '@react-navigation/core';
 import type { ColorValue as ReactNativeColorValue } from 'react-native';
@@ -201,6 +202,357 @@ export type LinkingOptions<ParamList extends {}> = {
    */
   getActionFromState?: typeof getActionFromStateDefault | undefined;
 };
+
+type NormalizePath<Path extends string> = Path extends `/${infer Rest}`
+  ? NormalizePath<Rest>
+  : Path extends `${infer Rest}/`
+    ? NormalizePath<Rest>
+    : Path;
+
+declare const _HREF_UNKNOWN_PATH: unique symbol;
+
+type UnknownPath = typeof _HREF_UNKNOWN_PATH;
+
+type IsUppercaseLetter<Character extends string> =
+  Character extends Uppercase<Character>
+    ? Character extends Lowercase<Character>
+      ? false
+      : true
+    : false;
+
+type IsLowercaseLetter<Character extends string> =
+  Character extends Lowercase<Character>
+    ? Character extends Uppercase<Character>
+      ? false
+      : true
+    : false;
+
+type IsDigit<Character extends string> =
+  Character extends `${0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}` ? true : false;
+
+type FirstCharacter<Value extends string> =
+  Value extends `${infer Character}${infer _}` ? Character : '';
+
+type NeedsKebabSeparator<
+  Previous extends string,
+  Current extends string,
+  Rest extends string,
+> =
+  IsUppercaseLetter<Current> extends true
+    ? IsLowercaseLetter<Previous> extends true
+      ? true
+      : IsDigit<Previous> extends true
+        ? true
+        : IsUppercaseLetter<Previous> extends true
+          ? IsLowercaseLetter<FirstCharacter<Rest>>
+          : false
+    : false;
+
+type KebabCase<
+  Value extends string,
+  Previous extends string = '',
+> = Value extends `${infer Current}${infer Rest}`
+  ? `${NeedsKebabSeparator<Previous, Current, Rest> extends true
+      ? '-'
+      : ''}${Lowercase<Current>}${KebabCase<Rest, Current>}`
+  : '';
+
+type JoinPath<
+  Parent extends string,
+  Child extends string,
+  NormalizedChild extends string = NormalizePath<Child>,
+> = Parent extends ''
+  ? NormalizedChild
+  : NormalizedChild extends ''
+    ? Parent
+    : `${Parent}/${NormalizedChild}`;
+
+type CanonicalPathForConfig<Config, Parent extends string> = Config extends {
+  readonly path: infer Path extends string;
+}
+  ? string extends Path
+    ? UnknownPath
+    : Config extends { readonly exact: true }
+      ? NormalizePath<Path>
+      : JoinPath<Parent, Path>
+  : Config extends string
+    ? string extends Config
+      ? UnknownPath
+      : JoinPath<Parent, Config>
+    : Parent;
+
+type AliasPathsForConfig<Config, Parent extends string> = Config extends {
+  readonly alias: readonly (infer Alias)[];
+}
+  ? CanonicalPathForConfig<Alias, Parent>
+  : never;
+
+type ExplicitPathsForConfig<Config, Parent extends string> =
+  | (Config extends string | { readonly path: string }
+      ? CanonicalPathForConfig<Config, Parent>
+      : never)
+  | AliasPathsForConfig<Config, Parent>;
+
+type PathsForPathConfig<Config, Parent extends string> = string extends Config
+  ? UnknownPath
+  : Config extends undefined
+    ? never
+    : CanonicalPathForConfig<Config, Parent> extends infer CanonicalPath
+      ? CanonicalPath extends UnknownPath
+        ? UnknownPath
+        : CanonicalPath extends string
+          ?
+              | ExplicitPathsForConfig<Config, Parent>
+              | (Config extends { readonly screens: infer Screens }
+                  ? PathsForPathConfigScreens<Screens, CanonicalPath>
+                  : never)
+          : never
+      : never;
+
+type PathsForPathConfigScreens<
+  Screens,
+  Parent extends string,
+> = string extends keyof Screens
+  ? UnknownPath
+  : PathsForPathConfig<Screens[keyof Screens], Parent>;
+
+type CanBeHomeForScreen<
+  Name extends string,
+  InitialRouteName,
+  CanBeHome extends boolean,
+> = CanBeHome extends false
+  ? false
+  : InitialRouteName extends string
+    ? string extends InitialRouteName
+      ? true
+      : Name extends InitialRouteName
+        ? true
+        : false
+    : true;
+
+type CanBeHomeForChildren<
+  Linking,
+  CanBeHome extends boolean,
+> = Linking extends { readonly path: infer Path extends string }
+  ? string extends Path
+    ? CanBeHome
+    : NormalizePath<Path> extends ''
+      ? CanBeHome
+      : false
+  : Linking extends string
+    ? string extends Linking
+      ? CanBeHome
+      : NormalizePath<Linking> extends ''
+        ? CanBeHome
+        : false
+    : CanBeHome;
+
+type InitialRouteNameForConfig<Config, Override> = Override extends string
+  ? Override
+  : Config extends { readonly initialRouteName: infer InitialRouteName }
+    ? InitialRouteName
+    : undefined;
+
+// Runtime linking props can override the static initial route, and TypeScript
+// cannot identify the first key used by order-based home detection. Keep both
+// the generated path and the possible parent path for auto-generated leaves.
+type AutoPathForScreen<
+  Name extends string,
+  Parent extends string,
+  CanBeHome extends boolean,
+> = string extends Name
+  ? UnknownPath
+  :
+      | JoinPath<Parent, KebabCase<Name>>
+      | (CanBeHome extends false ? never : Parent);
+
+type PathsForStaticLeaf<
+  Name extends string,
+  Linking,
+  Parent extends string,
+  CanBeHome extends boolean,
+> = Linking extends string | { readonly path: string }
+  ? ExplicitPathsForConfig<Linking, Parent>
+  :
+      | AliasPathsForConfig<Linking, Parent>
+      | AutoPathForScreen<Name, Parent, CanBeHome>;
+
+type PathsForStaticScreen<
+  Name extends string,
+  Screen,
+  Linking,
+  Parent extends string,
+  CanBeHome extends boolean,
+> = string extends Linking
+  ? Screen extends { readonly config: infer Config }
+    ? PathsForStaticConfig<Config, Parent, CanBeHome>
+    : AutoPathForScreen<Name, Parent, CanBeHome>
+  : Linking extends null
+    ? never
+    : Linking extends undefined
+      ? Screen extends { readonly config: infer Config }
+        ? PathsForStaticConfig<Config, Parent, CanBeHome>
+        : AutoPathForScreen<Name, Parent, CanBeHome>
+      : Linking extends { readonly screens: infer Screens }
+        ? CanonicalPathForConfig<Linking, Parent> extends infer CanonicalPath
+          ? CanonicalPath extends UnknownPath
+            ? UnknownPath
+            : CanonicalPath extends string
+              ?
+                  | ExplicitPathsForConfig<Linking, Parent>
+                  | PathsForPathConfigScreens<Screens, CanonicalPath>
+              : never
+          : never
+        : Screen extends { readonly config: infer Config }
+          ? CanonicalPathForConfig<Linking, Parent> extends infer CanonicalPath
+            ? CanonicalPath extends UnknownPath
+              ? UnknownPath
+              : CanonicalPath extends string
+                ?
+                    | ExplicitPathsForConfig<Linking, Parent>
+                    | PathsForStaticConfig<
+                        Config,
+                        CanonicalPath,
+                        CanBeHomeForChildren<Linking, CanBeHome>,
+                        Linking extends {
+                          readonly initialRouteName: infer InitialRouteName;
+                        }
+                          ? InitialRouteName
+                          : undefined
+                      >
+                : never
+            : never
+          : PathsForStaticLeaf<Name, Linking, Parent, CanBeHome>;
+
+type PathsForStaticScreenItem<
+  Name extends string,
+  Item,
+  Parent extends string,
+  CanBeHome extends boolean,
+> = Item extends {
+  readonly screen: infer Screen;
+  readonly linking?: infer Linking;
+}
+  ? PathsForStaticScreen<Name, Screen, Linking, Parent, CanBeHome>
+  : Item extends { readonly config: infer Config }
+    ? PathsForStaticConfig<Config, Parent, CanBeHome>
+    : AutoPathForScreen<Name, Parent, CanBeHome>;
+
+type PathsForStaticScreens<
+  Screens,
+  Parent extends string,
+  CanBeHome extends boolean,
+  InitialRouteName,
+> = string extends keyof Screens
+  ? UnknownPath
+  : {
+      [Name in keyof Screens & string]: PathsForStaticScreenItem<
+        Name,
+        Screens[Name],
+        Parent,
+        CanBeHomeForScreen<Name, InitialRouteName, CanBeHome>
+      >;
+    }[keyof Screens & string];
+
+type PathsForStaticGroup<
+  Group,
+  Parent extends string,
+  CanBeHome extends boolean,
+  InitialRouteName,
+> = Group extends {
+  readonly screens: infer Screens;
+}
+  ? PathsForStaticScreens<Screens, Parent, CanBeHome, InitialRouteName>
+  : never;
+
+type PathsForStaticGroups<
+  Groups,
+  Parent extends string,
+  CanBeHome extends boolean,
+  InitialRouteName,
+> = PathsForStaticGroup<
+  Groups[keyof Groups],
+  Parent,
+  CanBeHome,
+  InitialRouteName
+>;
+
+type PathsForStaticConfig<
+  Config,
+  Parent extends string,
+  CanBeHome extends boolean,
+  InitialRouteNameOverride = undefined,
+  InitialRouteName = InitialRouteNameForConfig<
+    Config,
+    InitialRouteNameOverride
+  >,
+> =
+  | (Config extends { readonly screens: infer Screens }
+      ? PathsForStaticScreens<Screens, Parent, CanBeHome, InitialRouteName>
+      : never)
+  | (Config extends { readonly groups: infer Groups }
+      ? PathsForStaticGroups<Groups, Parent, CanBeHome, InitialRouteName>
+      : never);
+
+type HrefParam = '__REACT_NAVIGATION_HREF_PARAM__';
+
+type JoinHrefSegments<
+  Parent extends string,
+  Child extends string,
+> = Parent extends ''
+  ? Child
+  : Child extends ''
+    ? Parent
+    : `${Parent}/${Child}`;
+
+type PathForHref<Path extends string> =
+  Path extends `${infer Segment}/${infer Rest}`
+    ? JoinHrefSegments<
+        Segment extends `:${string}?`
+          ? '' | HrefParam
+          : Segment extends `:${string}` | '*'
+            ? HrefParam
+            : Segment,
+        PathForHref<Rest>
+      >
+    : Path extends `:${string}?`
+      ? '' | HrefParam
+      : Path extends `:${string}` | '*'
+        ? HrefParam
+        : Path;
+
+type ReplaceHrefParams<Path extends string> =
+  Path extends `${infer Before}${HrefParam}${infer After}`
+    ? `${Before}${string}${ReplaceHrefParams<After>}`
+    : Path;
+
+type HrefForPath<Path extends string> =
+  PathForHref<Path> extends infer Href extends string
+    ? Href extends ''
+      ? '/' | `/?${string}`
+      : `/${ReplaceHrefParams<Href>}` | `/${ReplaceHrefParams<Href>}?${string}`
+    : never;
+
+type HrefForNavigator<Navigator> = Navigator extends {
+  readonly config: infer Config;
+}
+  ? PathsForStaticConfig<Config, '', true> extends infer Path
+    ? UnknownPath extends Path
+      ? string
+      : [Path] extends [never]
+        ? string
+        :
+            | `${string}://${string}`
+            | (Path extends string ? HrefForPath<Path> : never)
+    : never
+  : string;
+
+/**
+ * Href inferred from a static navigator's linking configuration.
+ * Defaults to the registered root navigator and falls back to `string` when
+ * the href cannot be inferred.
+ */
+export type Href<Navigator = RootNavigator> = HrefForNavigator<Navigator>;
 
 export type DocumentTitleOptions = {
   enabled?: boolean | undefined;

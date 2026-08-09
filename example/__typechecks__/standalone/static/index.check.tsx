@@ -9,6 +9,7 @@ import {
 } from '@react-navigation/material-top-tabs';
 import {
   createStaticNavigation,
+  useLinkTo,
   useNavigation,
   useNavigationState,
   useRoute,
@@ -217,6 +218,21 @@ declare module '@react-navigation/native' {
 }
 
 type RootStackType = typeof RootStack;
+
+export const LinkToChecks = () => {
+  const linkTo = useLinkTo();
+
+  linkTo('/products');
+  linkTo('/products/42');
+  linkTo('/products/42/reviews/2?sort=recent');
+  linkTo('/sign-in/home');
+  linkTo('example://orders/123');
+
+  // @ts-expect-error - This path isn't in the static linking config.
+  linkTo('/missing');
+
+  return null;
+};
 
 export const ProductListScreen = () => {
   const navigation = useNavigation('ProductList');

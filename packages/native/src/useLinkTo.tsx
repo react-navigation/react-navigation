@@ -1,6 +1,7 @@
 import { NavigationContainerRefContext } from '@react-navigation/core';
 import * as React from 'react';
 
+import type { Href } from './types';
 import { useBuildAction } from './useLinkBuilder';
 
 /**
@@ -13,7 +14,7 @@ export function useLinkTo() {
   const buildAction = useBuildAction();
 
   const linkTo = React.useCallback(
-    (href: string) => {
+    (href: Href) => {
       if (navigation === undefined) {
         throw new Error(
           "Couldn't find a navigation object. Is your component inside NavigationContainer?"
