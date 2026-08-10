@@ -36,15 +36,17 @@ export function useHeaderConfig({
   tintColor,
 }: HeaderConfigOptions): HeaderConfigResult {
   const renderElementOption = (
-    option: NativeStackNavigationOptions['headerSubtitle']
+    option: NativeStackNavigationOptions['unstable_headerSubtitle']
   ) =>
     !hasCustomHeader && typeof option === 'function'
       ? option({ tintColor })
       : null;
 
-  const headerSubtitleElement = renderElementOption(options.headerSubtitle);
+  const headerSubtitleElement = renderElementOption(
+    options.unstable_headerSubtitle
+  );
   const headerLargeSubtitleElement = renderElementOption(
-    options.headerLargeSubtitle
+    options.unstable_headerLargeSubtitle
   );
   const nativeHeaderLeftItems = hasCustomHeader
     ? undefined
@@ -93,8 +95,8 @@ export function useHeaderConfig({
       largeTitle: headerTitleText,
       largeTitleEnabled: options.headerLargeTitleEnabled,
       largeSubtitle:
-        typeof options.headerLargeSubtitle === 'string'
-          ? options.headerLargeSubtitle
+        typeof options.unstable_headerLargeSubtitle === 'string'
+          ? options.unstable_headerLargeSubtitle
           : undefined,
       largeSubtitleItem: getRenderItem(
         'header-large-subtitle',
