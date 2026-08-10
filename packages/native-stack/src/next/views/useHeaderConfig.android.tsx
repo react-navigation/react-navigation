@@ -90,14 +90,18 @@ export function useHeaderConfig({
 
   const usesHeaderLeftElement = headerLeftElement != null;
   const usesHeaderRightElement = headerRightElement != null;
+  const headerScroll = options.unstable_headerScroll;
+  const isHeaderScrollDisabled = headerScroll?.enabled === false;
+  const enabledHeaderScroll =
+    headerScroll?.enabled === true ? headerScroll : undefined;
   const hasCollapsingHeader =
-    options.headerType === 'medium' || options.headerType === 'large';
+    options.unstable_headerType === 'medium' ||
+    options.unstable_headerType === 'large';
   const hasHeaderBackground =
     options.headerBackground != null &&
     !hasCustomHeader &&
     options.headerShown !== false;
-  const isHeaderScrollingEnabled =
-    options.headerScrollFlagScroll ?? hasCollapsingHeader;
+  const isHeaderScrollingEnabled = headerScroll?.enabled ?? hasCollapsingHeader;
   const ignoresHeaderBackground =
     hasHeaderBackground && !hasCollapsingHeader && isHeaderScrollingEnabled;
   const headerBackgroundElement =
@@ -112,12 +116,12 @@ export function useHeaderConfig({
     options.headerBackIcon?.type === 'image' && isBackIconTintEnabled;
   const platformConfig: HeaderConfigResult['platformConfig'] = {
     android: {
-      type: options.headerType,
+      type: options.unstable_headerType,
       backgroundSubview:
         headerBackgroundElement == null
           ? undefined
           : {
-              collapseMode: options.headerBackgroundCollapseMode,
+              collapseMode: options.unstable_headerBackgroundCollapseMode,
               render: () => <>{headerBackgroundElement}</>,
             },
       leadingSubview: usesHeaderLeftElement
@@ -136,27 +140,34 @@ export function useHeaderConfig({
       backButtonTintColorNormal: isBackIconTintEnabled
         ? (options.headerTintColor ??
           (usesTintedBackImage ||
-          options.headerBackButtonTintColorPressed != null ||
-          options.headerBackButtonTintColorFocused != null
+          options.unstable_headerBackButtonTintColorPressed != null ||
+          options.unstable_headerBackButtonTintColorFocused != null
             ? tintColor
             : undefined))
         : undefined,
       backButtonTintColorPressed: isBackIconTintEnabled
-        ? options.headerBackButtonTintColorPressed
+        ? options.unstable_headerBackButtonTintColorPressed
         : undefined,
       backButtonTintColorFocused: isBackIconTintEnabled
-        ? options.headerBackButtonTintColorFocused
+        ? options.unstable_headerBackButtonTintColorFocused
         : undefined,
       backButtonIcon:
         options.headerBackIcon == null
           ? undefined
           : getAndroidIcon(options.headerBackIcon, tintColor),
-      scrollFlagScroll: options.headerScrollFlagScroll,
-      scrollFlagEnterAlways: options.headerScrollFlagEnterAlways,
-      scrollFlagEnterAlwaysCollapsed:
-        options.headerScrollFlagEnterAlwaysCollapsed,
-      scrollFlagExitUntilCollapsed: options.headerScrollFlagExitUntilCollapsed,
-      scrollFlagSnap: options.headerScrollFlagSnap,
+      scrollFlagScroll: headerScroll?.enabled,
+      scrollFlagEnterAlways: isHeaderScrollDisabled
+        ? false
+        : enabledHeaderScroll?.enterAlways,
+      scrollFlagEnterAlwaysCollapsed: isHeaderScrollDisabled
+        ? false
+        : enabledHeaderScroll?.enterAlwaysCollapsed,
+      scrollFlagExitUntilCollapsed: isHeaderScrollDisabled
+        ? false
+        : enabledHeaderScroll?.exitUntilCollapsed,
+      scrollFlagSnap: isHeaderScrollDisabled
+        ? false
+        : enabledHeaderScroll?.snap,
       toolbarMenu:
         toolbarMenu == null
           ? undefined
