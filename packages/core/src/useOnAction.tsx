@@ -12,7 +12,7 @@ import { getLoaderForStateChange } from './DataLoading';
 import {
   type ChildActionListener,
   type ChildBeforeRemoveListener,
-  NavigationBuilderContext,
+  useNavigationBuilderContext,
 } from './NavigationBuilderContext';
 import { StaticTreeContext } from './StaticTreeContext';
 import type { EventMapCore } from './types';
@@ -55,7 +55,7 @@ export function useOnAction<State extends NavigationState>({
     addListener: addListenerParent,
     onDispatchAction,
     flushUpdates,
-  } = React.use(NavigationBuilderContext);
+  } = useNavigationBuilderContext();
 
   const tree = React.use(StaticTreeContext);
   const consumedParams = React.use(ConsumedParamsContext);

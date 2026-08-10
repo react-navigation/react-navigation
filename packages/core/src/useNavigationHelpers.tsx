@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { useNavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContext } from './NavigationProvider';
 import { type NavigationHelpers, PrivateValueStore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
@@ -41,7 +41,7 @@ export function useNavigationHelpers<
   router,
 }: Options<State, Action>) {
   const parentNavigationHelpers = React.use(NavigationContext);
-  const { withStackTrace } = React.use(NavigationBuilderContext);
+  const { withStackTrace } = useNavigationBuilderContext();
 
   return React.useMemo(() => {
     const dispatch = (op: Action | ((state: State) => Action)) => {

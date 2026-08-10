@@ -19,7 +19,7 @@ import { ConsumedParamsContext } from './ConsumedParamsContext';
 import { deepFreeze } from './deepFreeze';
 import { Group } from './Group';
 import { isArrayEqual } from './isArrayEqual';
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { useNavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationHelpersContext } from './NavigationHelpersContext';
 import { NavigationMetaContext } from './NavigationMetaContext';
 import { IsScreenContext, NavigationRouteContext } from './NavigationProvider';
@@ -460,9 +460,7 @@ export function useNavigationBuilder<
     getIsInitial,
   } = React.use(NavigationStateContext);
 
-  const { onEmitEvent, getIsStateEmitted } = React.use(
-    NavigationBuilderContext
-  );
+  const { onEmitEvent, getIsStateEmitted } = useNavigationBuilderContext();
 
   const stateCleanupRef = React.useRef<boolean>(false);
   const lastStateRef = React.useRef<State | PartialState<State> | undefined>(

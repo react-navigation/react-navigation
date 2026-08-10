@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { useNavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContext } from './NavigationProvider';
 import type { NavigationHelpers, NavigationProp } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
@@ -72,9 +72,9 @@ export function useNavigationCache<
   router,
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
-  const parentNavigation = React.use(NavigationContext);
+  const { withStackTrace } = useNavigationBuilderContext();
 
-  const { withStackTrace } = React.use(NavigationBuilderContext);
+  const parentNavigation = React.use(NavigationContext);
 
   // Cache object which holds navigation objects for each screen
   // We use `React.useMemo` instead of `React.useRef` coz we want to invalidate it when deps change

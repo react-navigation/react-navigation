@@ -1,7 +1,7 @@
 import type { ParamListBase } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { useNavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationRouteContext } from './NavigationProvider';
 import type { NavigationHelpers } from './types';
 
@@ -14,7 +14,8 @@ type Options = {
  * It's used for the navigation object returned by `useNavigation` outside a screen.
  */
 export function useOnGetNavigation({ navigation }: Options) {
-  const { addKeyedListener } = React.use(NavigationBuilderContext);
+  const { addKeyedListener } = useNavigationBuilderContext();
+
   const route = React.use(NavigationRouteContext);
 
   React.useInsertionEffect(() => {

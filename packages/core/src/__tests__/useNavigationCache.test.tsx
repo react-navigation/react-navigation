@@ -60,9 +60,17 @@ test('preserves reference for navigation objects', async () => {
     return null;
   };
 
-  const root = await render(<Test />);
+  const root = await render(
+    <BaseNavigationContainer>
+      <Test />
+    </BaseNavigationContainer>
+  );
 
-  await root.rerender(<Test />);
+  await root.rerender(
+    <BaseNavigationContainer>
+      <Test />
+    </BaseNavigationContainer>
+  );
 });
 
 test('returns correct value for isFocused', async () => {
