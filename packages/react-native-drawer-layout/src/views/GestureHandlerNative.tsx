@@ -5,7 +5,5 @@ export type {
 export {
   GestureDetector,
   GestureHandlerRootView,
-  useLongPressGesture,
   usePanGesture,
-  useSimultaneousGestures,
 } from 'react-native-gesture-handler';

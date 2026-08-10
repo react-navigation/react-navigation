@@ -11,12 +11,14 @@ import {
   type ViewProps,
 } from 'react-native';
 import Animated, {
+  cancelAnimation,
   interpolate,
   ReduceMotion,
   useAnimatedProps,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
+  withDelay,
   withSpring,
 } from 'react-native-reanimated';
 import { scheduleOnRN } from 'react-native-worklets';
@@ -30,9 +32,7 @@ import {
   GestureDetector,
   GestureHandlerRootView,
   type PanGestureConfig,
-  useLongPressGesture,
   usePanGesture,
-  useSimultaneousGestures,
 } from './GestureHandler';
 import { Overlay } from './Overlay';
 
@@ -313,19 +313,71 @@ export function Drawer({
         'worklet';
 
         touchStartX.set(event.x);
+
+        if (open) {
+          return;
+        }
+
+        const closedTranslation = getDrawerTranslationX(
+          false,
+          layoutWidth.get()
+        );
+
+        // Don't start the peek if the drawer isn't fully closed
+        if (translationX.get() !== closedTranslation) {
+          return;
+        }
+
+        const peekDistance = Math.min(
+          PEEK_DISTANCE,
+          Math.abs(closedTranslation)
+        );
+
+        if (peekDistance <= 0) {
+          return;
+        }
+
+        const peekTranslation =
+          closedTranslation +
+          peekDistance * (drawerPosition === 'left' ? 1 : -1);
+
+        isPeeking.set(true);
+        translationX.set(
+          withDelay(PEEK_DELAY, withSpring(peekTranslation, SPRING_CONFIG))
+        );
       },
       onActivate: (event) => {
         'worklet';
 
-        translationX.set(translationX.get() + event.translationX);
+        const wasPeeking = isPeeking.get();
+
+        if (wasPeeking) {
+          // If a peek is pending or the drawer is peeking,
+          // cancel the peek animation
+          cancelAnimation(translationX);
+        }
+
+        const currentTranslation = translationX.get();
+        const closedTranslation = getDrawerTranslationX(
+          false,
+          layoutWidth.get()
+        );
+
+        // Start the gesture from the pan's initial translation
+        // We avoid this if the drawer has already moved for the peek,
+        // otherwise there can be a jump to the pan's initial translation
+        if (!wasPeeking || currentTranslation === closedTranslation) {
+          translationX.set(currentTranslation + event.translationX);
+        }
+
         isPeeking.set(false);
         isGestureActive.set(true);
+
         scheduleOnRN(onGestureBegin);
       },
       onUpdate: (event) => {
         'worklet';
 
-        isPeeking.set(false);
         isGestureActive.set(true);
         touchX.set(event.x);
         translationX.set(translationX.get() + event.changeX);
@@ -358,6 +410,20 @@ export function Drawer({
         toggleDrawer(nextOpen, event.velocityX);
         scheduleOnRN(onGestureFinish);
       },
+      onFinalize: () => {
+        'worklet';
+
+        if (isPeeking.get()) {
+          isPeeking.set(false);
+
+          translationX.set(
+            withSpring(
+              getDrawerTranslationX(false, layoutWidth.get()),
+              SPRING_CONFIG
+            )
+          );
+        }
+      },
       activeOffsetX: [-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET],
       failOffsetY: [-SWIPE_MIN_OFFSET, SWIPE_MIN_OFFSET],
       hitSlop,
@@ -369,9 +435,11 @@ export function Drawer({
     configureGestureHandler,
     drawerPosition,
     drawerType,
+    getDrawerTranslationX,
     hitSlop,
     isGestureActive,
     isPeeking,
+    layoutWidth,
     onGestureBegin,
     onGestureAbort,
     onGestureFinish,
@@ -386,56 +454,6 @@ export function Drawer({
   ]);
 
   const pan = usePanGesture(panGestureConfig);
-
-  const longPress = useLongPressGesture({
-    enabled: !isOpen && panGestureConfig.enabled,
-    hitSlop: panGestureConfig.hitSlop,
-    minDuration: PEEK_DELAY,
-    onActivate: () => {
-      'worklet';
-
-      if (isGestureActive.get()) {
-        return;
-      }
-
-      const containerWidth = layoutWidth.get();
-      const closedTranslation = getDrawerTranslationX(false, containerWidth);
-
-      if (translationX.get() !== closedTranslation) {
-        return;
-      }
-
-      const peekDistance = Math.min(PEEK_DISTANCE, Math.abs(closedTranslation));
-
-      if (peekDistance <= 0) {
-        return;
-      }
-
-      const peekTranslation =
-        closedTranslation + peekDistance * (drawerPosition === 'left' ? 1 : -1);
-
-      isPeeking.set(true);
-      translationX.set(withSpring(peekTranslation, SPRING_CONFIG));
-    },
-    onDeactivate: () => {
-      'worklet';
-
-      if (isPeeking.get()) {
-        isPeeking.set(false);
-
-        const containerWidth = layoutWidth.get();
-
-        translationX.set(
-          withSpring(
-            getDrawerTranslationX(false, containerWidth),
-            SPRING_CONFIG
-          )
-        );
-      }
-    },
-  });
-
-  const gesture = useSimultaneousGestures(pan, longPress);
 
   const translateX = useDerivedValue(() => {
     const drawerWidth = getDrawerWidthNative({
@@ -613,7 +631,7 @@ export function Drawer({
     <GestureHandlerRootView style={[styles.container, style]}>
       <DrawerProgressContext.Provider value={progress}>
         <DrawerGestureContext.Provider value={pan}>
-          <GestureDetector gesture={gesture}>
+          <GestureDetector gesture={pan}>
             {/* Immediate child of gesture handler needs to be an Animated.View */}
             <Animated.View
               style={[
