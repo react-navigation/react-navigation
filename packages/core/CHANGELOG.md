@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.32...@react-navigation/core@8.0.0-alpha.33) (2026-08-10)
+
+### Bug Fixes
+
+* fix typo with using fallback index when parsing paths ([b172d15](https://github.com/react-navigation/react-navigation/commit/b172d1588bf9d8a5b115d82f733b5302c1288e21)) - by @satya164
+
 # [8.0.0-alpha.32](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.31...@react-navigation/core@8.0.0-alpha.32) (2026-08-06)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.16...react-native-drawer-layout@5.0.0-alpha.17) (2026-08-10)
+
+### Bug Fixes
+
+* match native android distance for drawer peek ([8424429](https://github.com/react-navigation/react-navigation/commit/8424429fe0b124f61f2da0f992c71d4ffb217014)) - by @
+
 # [5.0.0-alpha.16](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.15...react-native-drawer-layout@5.0.0-alpha.16) (2026-08-06)
 
 ### Bug Fixes

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.51](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.50...@react-navigation/stack@8.0.0-alpha.51) (2026-08-10)
+
+### Bug Fixes
+
+* fix gestures not working in some scenarios ([95eb60c](https://github.com/react-navigation/react-navigation/commit/95eb60cdd93ff7a06e643b1d8741863e0d918704)), closes [#13208](https://github.com/react-navigation/react-navigation/issues/13208) - by @satya164
+
 # [8.0.0-alpha.50](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.49...@react-navigation/stack@8.0.0-alpha.50) (2026-08-06)
 
 ### Bug Fixes
