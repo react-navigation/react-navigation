@@ -96,6 +96,13 @@ export function useBuildHref() {
  */
 export function useBuildAction() {
   const navigation = React.use(NavigationContainerRefContext);
+
+  if (navigation === undefined) {
+    throw new Error(
+      "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+    );
+  }
+
   const { options } = React.use(LinkingContext);
 
   const getActionFromStateHelper =
@@ -103,7 +110,7 @@ export function useBuildAction() {
 
   const buildAction = React.useCallback(
     (href: string) => {
-      const state = getStateFromHref(href, options, navigation?.getRootState());
+      const state = getStateFromHref(href, options, navigation.getRootState());
 
       if (state) {
         const action = getActionFromStateHelper(state, options?.config);

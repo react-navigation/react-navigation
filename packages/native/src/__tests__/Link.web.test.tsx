@@ -5,6 +5,7 @@ import {
   CommonActions,
   createNavigationContainerRef,
   createNavigatorFactory,
+  NavigationIndependentTree,
   type NavigatorScreenParams,
   StackActions,
   TabActions,
@@ -1088,7 +1089,7 @@ test('navigates to root when in is not specified', async () => {
   expect(screen.queryByText('Nested Settings Screen')).not.toBeInTheDocument();
 });
 
-test('uses the container ref when rendered outside a navigator', async () => {
+test('uses the root navigation object when rendered outside a navigator', async () => {
   const user = userEvent.setup();
 
   const Stack = createStackNavigator<RootParamList>();
@@ -1324,6 +1325,31 @@ test('throws while rendering when in does not match current or parent screens', 
 
 test('throws while rendering outside a navigation container', () => {
   expect(() => render(<Link<RootParamList> screen="Foo">Foo</Link>)).toThrow(
+    "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+  );
+});
+
+test('does not use navigation from outside an independent tree', () => {
+  const Stack = createStackNavigator<RootParamList>();
+
+  const FooScreen = () => (
+    <NavigationIndependentTree>
+      <Link<RootParamList> screen="Bar" params={{ id: '42' }}>
+        Go to Bar
+      </Link>
+    </NavigationIndependentTree>
+  );
+
+  expect(() =>
+    render(
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="Foo" component={FooScreen} />
+          <Stack.Screen name="Bar">{() => <span>Bar</span>}</Stack.Screen>
+        </Stack.Navigator>
+      </NavigationContainer>
+    )
+  ).toThrow(
     "Couldn't find a navigation object. Is your component inside NavigationContainer?"
   );
 });
