@@ -133,32 +133,84 @@ export type NativeStackHeaderBackProps = NativeStackHeaderItemProps & {
   href?: string | undefined;
 };
 
-/** Options only mapped by the experimental Next renderer. */
+/**
+ * Controls how the header responds when the screen content scrolls.
+ *
+ * An expanded header displays its full height. A collapsed header displays
+ * only the compact toolbar. The start of the content is usually its top.
+ */
+export type NativeStackHeaderScrollOptions =
+  | {
+      /**
+       * Keeps the header at its full height while the content scrolls.
+       */
+      enabled: false;
+    }
+  | ({
+      /**
+       * Allows scrolling to collapse or hide the header.
+       */
+      enabled: true;
+      /**
+       * Whether the header automatically settles at its nearest expanded,
+       * collapsed, or hidden position when scrolling ends.
+       * When `false`, the header can remain partially collapsed.
+       */
+      snap?: boolean | undefined;
+      /**
+       * Whether collapsing stops at the compact toolbar height.
+       * When `false`, the entire header can move off-screen.
+       */
+      exitUntilCollapsed?: boolean | undefined;
+    } & (
+      | {
+          enterAlways?: false | undefined;
+          enterAlwaysCollapsed?: false | undefined;
+        }
+      | {
+          /**
+           * Whether the header starts expanding as soon as the user scrolls
+           * toward the start of the content. When `false`, expansion starts
+           * after the content reaches its start.
+           */
+          enterAlways: true;
+          /**
+           * Whether expansion before the content reaches its start is limited
+           * to the compact toolbar height. The remaining header expands after
+           * the content reaches its start.
+           */
+          enterAlwaysCollapsed?: boolean | undefined;
+        }
+    ));
+
+/**
+ * Options only supported by the experimental stack.
+ */
 export type NativeStackNextNavigationOptions = {
   /**
    * Tint color for the back button while it is pressed.
    *
    * @platform android
    */
-  headerBackButtonTintColorPressed?: ColorValue | undefined;
+  unstable_headerBackButtonTintColorPressed?: ColorValue | undefined;
   /**
    * Tint color for the back button while it is focused.
    *
    * @platform android
    */
-  headerBackButtonTintColorFocused?: ColorValue | undefined;
+  unstable_headerBackButtonTintColorFocused?: ColorValue | undefined;
   /**
    * Controls how a custom header background behaves as the app bar collapses.
    *
    * @platform android
    */
-  headerBackgroundCollapseMode?: 'off' | 'parallax' | undefined;
+  unstable_headerBackgroundCollapseMode?: 'off' | 'parallax' | undefined;
   /**
    * Subtitle displayed below the large title.
    *
    * @platform ios 26+
    */
-  headerLargeSubtitle?:
+  unstable_headerLargeSubtitle?:
     | string
     | ((props: { tintColor?: ColorValue | undefined }) => React.ReactNode)
     | undefined;
@@ -167,7 +219,7 @@ export type NativeStackNextNavigationOptions = {
    *
    * @platform ios 26+
    */
-  headerSubtitle?:
+  unstable_headerSubtitle?:
     | string
     | ((props: { tintColor?: ColorValue | undefined }) => React.ReactNode)
     | undefined;
@@ -176,37 +228,14 @@ export type NativeStackNextNavigationOptions = {
    *
    * @platform android
    */
-  headerType?: 'small' | 'medium' | 'large' | undefined;
+  unstable_headerType?: 'small' | 'medium' | 'large' | undefined;
   /**
-   * Whether the app bar reacts to nested scrolling.
+   * Scroll behavior configuration for the app bar.
+   * Defaults to disabled for a small header and enabled for medium and large headers.
    *
    * @platform android
    */
-  headerScrollFlagScroll?: boolean | undefined;
-  /**
-   * Whether the app bar re-enters immediately when scrolling toward the top.
-   *
-   * @platform android
-   */
-  headerScrollFlagEnterAlways?: boolean | undefined;
-  /**
-   * Whether immediate re-entry stops at the collapsed app bar height.
-   *
-   * @platform android
-   */
-  headerScrollFlagEnterAlwaysCollapsed?: boolean | undefined;
-  /**
-   * Whether the app bar remains pinned at its collapsed height.
-   *
-   * @platform android
-   */
-  headerScrollFlagExitUntilCollapsed?: boolean | undefined;
-  /**
-   * Whether the app bar snaps to an expanded or collapsed position.
-   *
-   * @platform android
-   */
-  headerScrollFlagSnap?: boolean | undefined;
+  unstable_headerScroll?: NativeStackHeaderScrollOptions | undefined;
   /**
    * Native Android toolbar menu configuration.
    *
@@ -368,7 +397,7 @@ export type NativeStackNavigationOptions = {
    * Setting this to `true` makes the header absolutely positioned,
    * and changes the background color to `transparent` unless specified in `headerStyle`.
    * On Android, enabling this disables header scrolling and collapsing, so
-   * `headerScrollFlag*` options have no effect.
+   * `unstable_headerScroll` has no effect.
    */
   headerTransparent?: boolean | undefined;
   /**
@@ -390,7 +419,7 @@ export type NativeStackNavigationOptions = {
    * Function which returns a React Element to render as the background of the header.
    * This is useful for using backgrounds such as an image, a gradient, blur effect etc.
    * You can use this with `headerTransparent` to render content underneath a translucent header.
-   * On Android, this is ignored for a small header when `headerScrollFlagScroll` is enabled.
+   * On Android, this is ignored for a small header when header scrolling is enabled.
    */
   headerBackground?: (() => React.ReactNode) | undefined;
   /**
@@ -1051,7 +1080,7 @@ export type NativeStackHeaderItemButton = SharedHeaderItem & {
 };
 
 /**
- * Options only mapped for menu actions by the experimental Next renderer.
+ * Options only mapped for menu actions by the experimental stack.
  */
 export type NativeStackNextHeaderItemMenuAction = {
   /**
@@ -1131,7 +1160,7 @@ export type NativeStackHeaderItemMenuAction = {
 } & NativeStackNextHeaderItemMenuAction;
 
 /**
- * Options only mapped for submenus by the experimental Next renderer.
+ * Options only mapped for submenus by the experimental stack.
  */
 export type NativeStackNextHeaderItemMenuSubmenu = {
   /**
@@ -1198,7 +1227,7 @@ export type NativeStackHeaderItemMenuSubmenu = {
 } & NativeStackNextHeaderItemMenuSubmenu;
 
 /**
- * Options only mapped for menus by the experimental Next renderer.
+ * Options only mapped for menus by the experimental stack.
  */
 export type NativeStackNextHeaderItemMenuOptions = {
   /**
@@ -1302,7 +1331,9 @@ export type NativeStackHeaderItem =
   | NativeStackHeaderItemSpacing
   | NativeStackHeaderItemCustom;
 
-/** Icon supported by native Android header controls in the Next renderer. */
+/**
+ * Icon supported by native Android header controls in the experimental stack.
+ */
 export type NativeStackHeaderIconAndroid = Extract<
   Icon,
   { type: 'image' | 'materialSymbol' }
@@ -1330,7 +1361,9 @@ type NativeStackHeaderToolbarMenuItemBase = {
   iconTintColorDisabled?: ColorValue | undefined;
 };
 
-/** An item in the native Android toolbar menu. */
+/**
+ * An item in the native Android toolbar menu.
+ */
 export type NativeStackHeaderToolbarMenuItem =
   NativeStackHeaderToolbarMenuItemBase & {
     type: 'item';
@@ -1340,7 +1373,9 @@ export type NativeStackHeaderToolbarMenuItem =
     onPress?: (() => void) | undefined;
   };
 
-/** Selection behavior for a group of native Android toolbar menu items. */
+/**
+ * Selection behavior for a group of native Android toolbar menu items.
+ */
 export type NativeStackHeaderToolbarMenuGroup = {
   identifier: string;
   singleSelection?: boolean | undefined;
@@ -1352,7 +1387,9 @@ type NativeStackHeaderToolbarMenuBase = {
   items?: NativeStackHeaderToolbarMenuElement[] | undefined;
 };
 
-/** A submenu in the native Android toolbar menu. */
+/**
+ * A submenu in the native Android toolbar menu.
+ */
 export type NativeStackHeaderToolbarSubmenu =
   NativeStackHeaderToolbarMenuItemBase &
     NativeStackHeaderToolbarMenuBase & {
@@ -1360,12 +1397,16 @@ export type NativeStackHeaderToolbarSubmenu =
       menuLabel?: string | undefined;
     };
 
-/** An element in the native Android toolbar menu. */
+/**
+ * An element in the native Android toolbar menu.
+ */
 export type NativeStackHeaderToolbarMenuElement =
   | NativeStackHeaderToolbarMenuItem
   | NativeStackHeaderToolbarSubmenu;
 
-/** Options that can be updated imperatively for a toolbar menu element. */
+/**
+ * Options that can be updated imperatively for a toolbar menu element.
+ */
 export type NativeStackHeaderToolbarMenuElementOptions = Partial<
   Omit<NativeStackHeaderToolbarMenuItemBase, 'identifier'>
 > & {
@@ -1373,7 +1414,9 @@ export type NativeStackHeaderToolbarMenuElementOptions = Partial<
   menuLabel?: string | undefined;
 };
 
-/** Methods for updating the native Android toolbar menu. */
+/**
+ * Methods for updating the native Android toolbar menu.
+ */
 export type NativeStackHeaderToolbarMenuRef = {
   setOptions: (
     identifier: string,
@@ -1381,7 +1424,9 @@ export type NativeStackHeaderToolbarMenuRef = {
   ) => void;
 };
 
-/** Configuration for the native Android toolbar menu. */
+/**
+ * Configuration for the native Android toolbar menu.
+ */
 export type NativeStackHeaderToolbarMenu = NativeStackHeaderToolbarMenuBase & {
   ref?: React.Ref<NativeStackHeaderToolbarMenuRef> | undefined;
 };

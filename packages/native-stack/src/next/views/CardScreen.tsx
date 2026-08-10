@@ -200,8 +200,8 @@ export function CardScreen({
           ref={headerConfigRef}
           title={headerTitleElement == null ? headerTitleText : undefined}
           subtitle={
-            typeof options.headerSubtitle === 'string'
-              ? options.headerSubtitle
+            typeof options.unstable_headerSubtitle === 'string'
+              ? options.unstable_headerSubtitle
               : undefined
           }
           hidden={hasCustomHeader || options.headerShown === false}
