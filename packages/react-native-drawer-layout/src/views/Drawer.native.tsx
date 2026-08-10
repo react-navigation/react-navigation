@@ -41,6 +41,7 @@ const SWIPE_MIN_OFFSET = 5;
 const SWIPE_MIN_DISTANCE = 60;
 const SWIPE_MIN_VELOCITY = 500;
 const PEEK_DELAY = 160;
+const PEEK_DISTANCE = 20;
 const PROGRESS_EPSILON = 0.05;
 
 const SPRING_CONFIG = {
@@ -404,10 +405,7 @@ export function Drawer({
         return;
       }
 
-      const peekDistance = Math.min(
-        swipeEdgeWidth,
-        Math.abs(closedTranslation)
-      );
+      const peekDistance = Math.min(PEEK_DISTANCE, Math.abs(closedTranslation));
 
       if (peekDistance <= 0) {
         return;
