@@ -12,6 +12,7 @@ export {
  */
 export type {
   NativeStackHeaderIconAndroid,
+  NativeStackHeaderScrollOptions,
   NativeStackHeaderToolbarMenu,
   NativeStackHeaderToolbarMenuElement,
   NativeStackHeaderToolbarMenuElementOptions,

@@ -155,13 +155,13 @@ const TitlesScreen = () => {
           )
         : undefined,
       headerLargeTitleEnabled: largeTitle,
-      headerSubtitle:
+      unstable_headerSubtitle:
         subtitle === 'custom'
           ? () => <Text style={styles.subtitleText}>Custom subtitle</Text>
           : subtitle === 'string'
             ? 'A string subtitle'
             : undefined,
-      headerLargeSubtitle:
+      unstable_headerLargeSubtitle:
         largeSubtitle === 'custom'
           ? () => <Text style={styles.subtitleText}>Custom large subtitle</Text>
           : largeSubtitle === 'string'
@@ -451,7 +451,8 @@ const AppBarScreen = () => {
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      headerType: type === 'small' || type === 'large' ? type : 'medium',
+      unstable_headerType:
+        type === 'small' || type === 'large' ? type : 'medium',
       headerBackground:
         background === 'none'
           ? undefined
@@ -462,14 +463,19 @@ const AppBarScreen = () => {
                 style={StyleSheet.absoluteFill}
               />
             ),
-      headerBackgroundCollapseMode:
+      unstable_headerBackgroundCollapseMode:
         background === 'parallax' ? 'parallax' : 'off',
       headerTintColor: background === 'none' ? undefined : 'white',
-      headerScrollFlagScroll: scroll,
-      headerScrollFlagEnterAlways: enterAlways,
-      headerScrollFlagEnterAlwaysCollapsed: enterAlways,
-      headerScrollFlagExitUntilCollapsed: exitUntilCollapsed,
-      headerScrollFlagSnap: snap,
+      unstable_headerScroll: scroll
+        ? {
+            enabled: true,
+            ...(enterAlways
+              ? { enterAlways: true, enterAlwaysCollapsed: true }
+              : { enterAlways: false, enterAlwaysCollapsed: false }),
+            exitUntilCollapsed,
+            snap,
+          }
+        : { enabled: false },
     });
   }, [
     navigation,
@@ -545,8 +551,8 @@ const ToolbarMenuScreen = () => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerBackIcon: { type: 'materialSymbol', name: 'arrow_back' },
-      headerBackButtonTintColorPressed: 'tomato',
-      headerBackButtonTintColorFocused: 'orange',
+      unstable_headerBackButtonTintColorPressed: 'tomato',
+      unstable_headerBackButtonTintColorFocused: 'orange',
       unstable_headerToolbarMenuGroupDividerEnabled: true,
       unstable_headerToolbarMenu: {
         ref: menuRef,
