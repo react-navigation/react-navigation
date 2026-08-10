@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/routers';
 import * as React from 'react';
 
-import { NavigationBuilderContext } from './NavigationBuilderContext';
+import { useNavigationBuilderContext } from './NavigationBuilderContext';
 import { NavigationContext } from './NavigationContext';
 import { type NavigationHelpers, PrivateValueStore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
@@ -45,7 +45,7 @@ export function useNavigationHelpers<
   router,
 }: Options<State, Action>) {
   const parentNavigationHelpers = React.useContext(NavigationContext);
-  const { withStackTrace } = React.useContext(NavigationBuilderContext);
+  const { withStackTrace } = useNavigationBuilderContext();
 
   // In some cases (e.g. route names change), internal state might have changed
   // But it hasn't been committed yet, so hasn't propagated to any listeners
