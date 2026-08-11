@@ -750,6 +750,12 @@ importers:
         specifier: ^0.3.5
         version: 0.3.5(react@19.2.3)
     devDependencies:
+      '@jest/globals':
+        specifier: ^30.4.1
+        version: 30.4.1
+      '@testing-library/react-native':
+        specifier: ^14.0.0
+        version: 14.0.0(jest@30.4.2(@types/node@24.13.2))(react-native@0.85.3(@babel/core@7.29.7)(@react-native/jest-preset@0.85.3(@babel/core@7.29.7)(react@19.2.3))(@react-native/metro-config@0.85.3(@babel/core@7.29.7))(@types/react@19.2.17)(react@19.2.3))(react@19.2.3)(test-renderer@1.2.0(@types/react@19.2.17)(react@19.2.3))
       '@types/react':
         specifier: ~19.2.17
         version: 19.2.17
