@@ -1,8 +1,10 @@
 const { transform } = require('@react-native/jest-preset');
 
+// Under pnpm, long peer-dep folder names are truncated with _<hash>
+// (e.g. react-native-gesture-handle_<hash>) instead of @<version>.
 const transformIgnorePatterns = [
   'node_modules/(?!\\.pnpm|(@react-navigation|react-native-drawer-layout|react-native-tab-view|(jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|immer|standard-navigation)/)',
-  'node_modules/.pnpm/(?!(?:@react-navigation\\+[^@]+|react-native-drawer-layout|react-native-tab-view|@react-native\\+[^@]+|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|immer|standard-navigation)@)',
+  'node_modules/.pnpm/(?!(?:@react-navigation\\+[^@_]+|react-native-drawer-layout|react-native-tab-view|@react-native\\+[^@_]+|react-native-reanimated|react-native-worklets|react-native-gesture-handle(?:r)?|react-native-safe-area-cont(?:ext)?|react-native|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|immer|standard-navigation)[@_])',
 ];
 
 module.exports = {
