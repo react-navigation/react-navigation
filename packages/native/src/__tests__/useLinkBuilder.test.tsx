@@ -1,6 +1,7 @@
 import { expect, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
+  NavigationIndependentTree,
   NavigationRouteContext,
   type NavigatorScreenParams,
 } from '@react-navigation/core';
@@ -319,6 +320,26 @@ test('builds action from href outside of a navigator', async () => {
     <NavigationContainer linking={config}>
       <Test />
     </NavigationContainer>
+  );
+});
+
+test('does not use a container from outside an independent tree', async () => {
+  const Test = () => {
+    useLinkBuilder();
+
+    return null;
+  };
+
+  await expect(
+    render(
+      <NavigationContainer linking={config}>
+        <NavigationIndependentTree>
+          <Test />
+        </NavigationIndependentTree>
+      </NavigationContainer>
+    )
+  ).rejects.toThrow(
+    "Couldn't find a navigation object. Is your component inside NavigationContainer?"
   );
 });
 

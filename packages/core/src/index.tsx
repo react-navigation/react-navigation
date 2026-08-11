@@ -24,6 +24,7 @@ export {
   NavigationProvider,
   NavigationRouteContext,
 } from './NavigationProvider';
+export { NavigationRootContext } from './NavigationRootContext';
 export { PreventRemoveContext } from './PreventRemoveContext';
 export { PreventRemoveProvider } from './PreventRemoveProvider';
 export {

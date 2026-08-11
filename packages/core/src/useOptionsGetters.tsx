@@ -17,7 +17,8 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
     Record<string, () => object | undefined | null>
   >({});
 
-  const { onOptionsChange } = React.use(NavigationBuilderContext);
+  const onOptionsChange = React.use(NavigationBuilderContext)?.onOptionsChange;
+
   const { addOptionsGetter: parentAddOptionsGetter } = React.use(
     NavigationStateContext
   );
@@ -27,7 +28,7 @@ export function useOptionsGetters({ key, options, navigation }: Options) {
     const hasChildren = Object.keys(optionsGettersFromChildRef.current).length;
 
     if (isFocused && !hasChildren) {
-      onOptionsChange(optionsRef.current ?? {});
+      onOptionsChange?.(optionsRef.current ?? {});
     }
   }, [navigation, onOptionsChange]);
 

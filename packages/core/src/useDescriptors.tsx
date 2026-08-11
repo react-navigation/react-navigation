@@ -11,6 +11,7 @@ import {
   type AddKeyedListener,
   type AddListener,
   NavigationBuilderContext,
+  useNavigationBuilderContext,
 } from './NavigationBuilderContext';
 import { NavigationProvider } from './NavigationProvider';
 import { SceneView } from './SceneView';
@@ -127,7 +128,7 @@ export function useDescriptors<
     flushUpdates,
     getIsStateEmitted,
     withStackTrace,
-  } = React.use(NavigationBuilderContext);
+  } = useNavigationBuilderContext();
 
   const context = React.useMemo(
     () => ({
