@@ -506,6 +506,10 @@ export class CardStack extends React.Component<Props, State> {
         }
       }
 
+      const isTopScreenModal =
+        scenes[props.routes.length - 1]?.descriptor.options.presentation ===
+        'modal';
+
       activeStates = props.routes.map((_, index, self) => {
         // The activity state represents state of the screen:
         // 0 - inactive, the screen is detached
@@ -519,9 +523,19 @@ export class CardStack extends React.Component<Props, State> {
 
         const lastActiveState = state.activeStates[index];
         const activeAfterTransition = index >= self.length - activeScreensLimit;
+        // Recreate the activity interpolation below a remaining modal.
+        const shouldReactivateForModal =
+          props.routes.length < state.routes.length &&
+          index === self.length - activeScreensLimit - 1 &&
+          isTopScreenModal;
 
-        if (lastActiveState === STATE_INACTIVE && !activeAfterTransition) {
-          // screen was inactive before and it will still be inactive after the transition
+        if (
+          (isTopScreenModal && index < self.length - activeScreensLimit - 1) ||
+          (lastActiveState === STATE_INACTIVE &&
+            !activeAfterTransition &&
+            !shouldReactivateForModal)
+        ) {
+          // screen is deeply covered by a modal, or was inactive and will remain inactive
           activityState = STATE_INACTIVE;
         } else {
           const sceneForActivity = scenes[self.length - 1];
