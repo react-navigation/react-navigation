@@ -270,3 +270,56 @@ test('can go back in browser history after a previous attempt failed', async () 
 
   unlisten();
 });
+
+test("doesn't treat late popstate from own traversal as user navigation", async () => {
+  jest.useFakeTimers();
+
+  const state: NavigationState = {
+    key: 'stack-123',
+    index: 0,
+    routeNames: ['One'],
+    routes: [{ name: 'One', key: 'One-23' }],
+    type: 'stack',
+    stale: false,
+  };
+  const history = createMemoryHistory();
+
+  history.replace({ path: '/route-one', state });
+  history.push({ path: '/route-two', state });
+
+  const listener = jest.fn();
+  const unlisten = history.listen(listener);
+
+  // Simulate a slow traversal (e.g. Firefox when the main thread is busy)
+  // where `popstate` doesn't fire before the timeout in `go`
+  const windowGoSpy = jest
+    .spyOn(window.history, 'go')
+    .mockImplementation(() => {});
+
+  const timedOutNavigation = history.go(-1);
+
+  jest.advanceTimersByTime(100);
+
+  await expect(timedOutNavigation).rejects.toThrow(
+    'History was changed during navigation.'
+  );
+
+  windowGoSpy.mockRestore();
+
+  // The browser performs the traversal after the timeout and fires a late `popstate`
+  window.history.go(-1);
+  jest.runAllTimers();
+
+  // The late `popstate` is from our own traversal, so it shouldn't call the listener
+  expect(listener).not.toHaveBeenCalled();
+  expect(history.index).toBe(0);
+
+  // A user-initiated navigation afterwards should still call the listener
+  window.history.go(1);
+  jest.runAllTimers();
+
+  expect(listener).toHaveBeenCalledTimes(1);
+  expect(history.index).toBe(1);
+
+  unlisten();
+});

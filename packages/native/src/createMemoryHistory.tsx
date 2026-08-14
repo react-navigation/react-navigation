@@ -20,6 +20,11 @@ export function createMemoryHistory() {
   // We might modify the callback stored if it was interrupted, so we have a ref to identify it
   const pending: { ref: unknown; cb: (interrupted?: boolean) => void }[] = [];
 
+  // The entry we were traversing to when the timeout in `go` fired before `popstate` arrived
+  // The `popstate` may still arrive later (e.g. on Firefox when the main thread is busy)
+  // and shouldn't be confused with a user-initiated back/forward navigation in `listen`
+  let latePopState: { id: string; until: number } | null = null;
+
   const interrupt = () => {
     // If another history operation was performed we need to interrupt existing ones
     // This makes sure that calls such as `history.replace` after `history.go` don't happen
@@ -197,6 +202,13 @@ export function createMemoryHistory() {
         const timer = setTimeout(() => {
           window.removeEventListener('popstate', onPopState);
 
+          // The `popstate` for this traversal may still arrive after the timeout
+          // e.g. on Firefox the traversal can take a lot longer when the main thread is busy
+          // Remember the target entry so `listen` doesn't treat it as a user navigation
+          if (targetId != null) {
+            latePopState = { id: targetId, until: Date.now() + 1000 };
+          }
+
           const foundIndex = pending.findIndex((it) => it.ref === done);
 
           if (foundIndex > -1) {
@@ -235,6 +247,18 @@ export function createMemoryHistory() {
         if (pending.length) {
           // This was triggered by `history.go(n)`, we shouldn't call the listener
           return;
+        }
+
+        if (latePopState) {
+          const { id, until } = latePopState;
+
+          latePopState = null;
+
+          if (window.history.state?.id === id && Date.now() <= until) {
+            // This was triggered by our own `history.go(n)` that arrived after the timeout
+            // e.g. on Firefox when the main thread is busy, so we shouldn't call the listener
+            return;
+          }
         }
 
         listener();
