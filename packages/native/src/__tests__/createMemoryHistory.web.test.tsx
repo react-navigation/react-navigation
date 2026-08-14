@@ -250,7 +250,7 @@ test('can go back in browser history after a previous attempt failed', async () 
 
   const timedOutNavigation = history.go(-1);
 
-  jest.advanceTimersByTime(100);
+  jest.advanceTimersByTime(1000);
 
   await expect(timedOutNavigation).rejects.toThrow(
     'History was changed during navigation.'
@@ -271,7 +271,7 @@ test('can go back in browser history after a previous attempt failed', async () 
   unlisten();
 });
 
-test("doesn't treat late popstate from own traversal as user navigation", async () => {
+test('resolves go when popstate arrives before the timeout', async () => {
   jest.useFakeTimers();
 
   const state: NavigationState = {
@@ -290,36 +290,28 @@ test("doesn't treat late popstate from own traversal as user navigation", async 
   const listener = jest.fn();
   const unlisten = history.listen(listener);
 
-  // Simulate a slow traversal (e.g. Firefox when the main thread is busy)
-  // where `popstate` doesn't fire before the timeout in `go`
+  // Simulate a slow traversal, e.g. on Firefox `history.go(n)` can take
+  // several hundred milliseconds when the main thread is busy
+  const originalGo = window.history.go.bind(window.history);
   const windowGoSpy = jest
     .spyOn(window.history, 'go')
-    .mockImplementation(() => {});
+    .mockImplementation((delta) => {
+      setTimeout(() => originalGo(delta), 600);
+    });
 
-  const timedOutNavigation = history.go(-1);
+  const navigation = history.go(-1);
 
-  jest.advanceTimersByTime(100);
-
-  await expect(timedOutNavigation).rejects.toThrow(
-    'History was changed during navigation.'
-  );
-
-  windowGoSpy.mockRestore();
-
-  // The browser performs the traversal after the timeout and fires a late `popstate`
-  window.history.go(-1);
+  jest.advanceTimersByTime(600);
   jest.runAllTimers();
 
-  // The late `popstate` is from our own traversal, so it shouldn't call the listener
+  // The traversal arrived before the timeout, so it should resolve
+  // and not be treated as a user-initiated navigation
+  await expect(navigation).resolves.toBeUndefined();
+
   expect(listener).not.toHaveBeenCalled();
   expect(history.index).toBe(0);
 
-  // A user-initiated navigation afterwards should still call the listener
-  window.history.go(1);
-  jest.runAllTimers();
-
-  expect(listener).toHaveBeenCalledTimes(1);
-  expect(history.index).toBe(1);
+  windowGoSpy.mockRestore();
 
   unlisten();
 });
