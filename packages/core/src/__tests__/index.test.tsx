@@ -2924,7 +2924,7 @@ test('preserves order of screens in state with non-numeric names', () => {
 
   render(root);
 
-  expect(navigation.getRootState().routeNames).toEqual(['foo', 'bar', 'baz']);
+  expect(navigation.getRootState()?.routeNames).toEqual(['foo', 'bar', 'baz']);
 });
 
 test('preserves order of screens in state with numeric names', () => {
@@ -2947,7 +2947,7 @@ test('preserves order of screens in state with numeric names', () => {
 
   render(root);
 
-  expect(navigation.getRootState().routeNames).toEqual(['4', '7', '1']);
+  expect(navigation.getRootState()?.routeNames).toEqual(['4', '7', '1']);
 });
 
 test("throws if navigator doesn't have any screens", () => {
@@ -3927,7 +3927,7 @@ test('discards state passed in params for a different type of navigator', () => 
     )
   );
 
-  expect(navigation.getRootState().routes[1]?.state).toEqual({
+  expect(navigation.getRootState()?.routes[1]?.state).toEqual({
     stale: false,
     type: 'test',
     key: '1',
@@ -3995,7 +3995,7 @@ test('restores state passed in params when route names change later', () => {
 
   root.rerender(<Test condition />);
 
-  expect(navigation.getRootState().routes[1]?.state).toEqual({
+  expect(navigation.getRootState()?.routes[1]?.state).toEqual({
     stale: false,
     type: 'test',
     key: '4',
@@ -4070,7 +4070,7 @@ test("doesn't restore state passed in params for a different type of navigator",
 
   root.rerender(<Test condition />);
 
-  expect(navigation.getRootState().routes[1]?.state).toEqual({
+  expect(navigation.getRootState()?.routes[1]?.state).toEqual({
     stale: false,
     type: 'test',
     key: '1',
@@ -4136,7 +4136,7 @@ test('warns when the state passed in params contains screens not in the navigato
     )
   );
 
-  expect(navigation.getRootState().routes[1]?.state).toEqual({
+  expect(navigation.getRootState()?.routes[1]?.state).toEqual({
     stale: false,
     type: 'test',
     key: '1',
@@ -4198,7 +4198,7 @@ test("warns when the screen passed in params doesn't exist in the navigator", ()
     )
   );
 
-  expect(navigation.getRootState().routes[1]?.state).toEqual({
+  expect(navigation.getRootState()?.routes[1]?.state).toEqual({
     stale: false,
     type: 'test',
     key: '1',

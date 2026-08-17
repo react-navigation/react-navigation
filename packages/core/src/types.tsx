@@ -1032,7 +1032,7 @@ export type NavigationContainerRef<ParamList extends {}> =
       /**
        * Get the rehydrated navigation state of the navigation tree.
        */
-      getRootState(): NavigationState;
+      getRootState(): NavigationState | undefined;
       /**
        * Get the currently focused navigation route.
        */

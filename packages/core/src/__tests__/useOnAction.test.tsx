@@ -686,6 +686,11 @@ test("action doesn't bubble to parent if target is specified", () => {
   );
 
   const stateBeforeAction = ref.getRootState();
+
+  if (stateBeforeAction == null) {
+    throw new Error('Expected navigation state');
+  }
+
   const target = stateBeforeAction.routes[0]?.state?.key;
 
   act(() => ref.dispatch({ type: 'REVERSE', target }));
@@ -698,7 +703,7 @@ test("action doesn't bubble to parent if target is specified", () => {
 
   act(() => ref.dispatch({ type: 'REVERSE' }));
 
-  expect(ref.getRootState().routes.map((route) => route.name)).toEqual([
+  expect(ref.getRootState()?.routes.map((route) => route.name)).toEqual([
     'sibling',
     'nested',
   ]);
@@ -2967,7 +2972,7 @@ test.each(['reset action', 'resetRoot'])(
     expect(onBeforeRemove).not.toHaveBeenCalled();
 
     expect(
-      ref.current?.getRootState().routes.find((route) => route.name === 'baz')
+      ref.current?.getRootState()?.routes.find((route) => route.name === 'baz')
         ?.state?.routes
     ).toEqual(
       nextState.routes.find((route) => route.name === 'baz')?.state?.routes
@@ -3307,7 +3312,7 @@ test.each(['reset action', 'resetRoot'])(
     expect(
       ref.current
         ?.getRootState()
-        .routes.find((route) => route.name === 'baz')
+        ?.routes.find((route) => route.name === 'baz')
         ?.state?.routes.map((route) => route.name)
     ).toEqual(['lex']);
   }

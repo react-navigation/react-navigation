@@ -302,7 +302,7 @@ test("rolls back browser history when 'beforeRemove' prevents browser back", asy
 
   await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
-  expect(navigation.getRootState().routes).toEqual(
+  expect(navigation.getRootState()?.routes).toEqual(
     expect.arrayContaining([expect.objectContaining({ name: 'Profile' })])
   );
 
@@ -314,7 +314,7 @@ test("rolls back browser history when 'beforeRemove' prevents browser back", asy
 
   expect(onPreventRemove).toHaveBeenCalledTimes(1);
 
-  expect(navigation.getRootState().routes).toEqual([
+  expect(navigation.getRootState()?.routes).toEqual([
     expect.objectContaining({ name: 'Home' }),
   ]);
 });
@@ -490,7 +490,7 @@ test('handles browser forward after going back', async () => {
 
   await waitFor(() => expect(window.location.pathname).toBe('/'));
 
-  expect(navigation.getRootState().index).toBe(0);
+  expect(navigation.getRootState()?.index).toBe(0);
 
   onStateChange.mockClear();
 

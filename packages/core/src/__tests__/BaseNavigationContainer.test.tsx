@@ -873,7 +873,7 @@ test('invokes unhandled action listener when targeted action is not handled', ()
     events.push(e.data);
   });
 
-  const target = ref.current?.getRootState().key;
+  const target = ref.current?.getRootState()?.key;
 
   act(() => ref.current?.dispatch({ type: 'UNKNOWN', target }));
 
@@ -959,7 +959,7 @@ test("emits '__unsafe_action__' with noop false when beforeRemove doesn't preven
     }),
   ]);
 
-  expect(ref.current?.getRootState().routes).toEqual([
+  expect(ref.current?.getRootState()?.routes).toEqual([
     expect.objectContaining({ name: 'foo' }),
   ]);
 });
@@ -1053,7 +1053,7 @@ test("emits '__unsafe_event__' before noop true '__unsafe_action__' when beforeR
     }),
   ]);
 
-  expect(ref.current?.getRootState().routes).toEqual([
+  expect(ref.current?.getRootState()?.routes).toEqual([
     expect.objectContaining({ name: 'bar' }),
   ]);
 });
