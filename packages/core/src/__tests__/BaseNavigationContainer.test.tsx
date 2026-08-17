@@ -753,7 +753,7 @@ test("emits '__unsafe_action__' with noop false when action updates state", () =
 test("emits '__unsafe_action__' with noop true when action is handled without changing state", () => {
   const TestNavigator = (props: any) => {
     const { state, descriptors, NavigationContent } = useNavigationBuilder(
-      StackRouter,
+      MockRouter,
       props
     );
 
@@ -781,18 +781,11 @@ test("emits '__unsafe_action__' with noop true when action is handled without ch
     events.push(e.data);
   });
 
-  const target = ref.current?.getRootState().key;
-
-  act(() =>
-    ref.current?.dispatch({
-      type: 'UNKNOWN',
-      target,
-    })
-  );
+  act(() => ref.current?.dispatch({ type: 'NOOP' }));
 
   expect(events).toEqual([
     expect.objectContaining({
-      action: expect.objectContaining({ type: 'UNKNOWN' }),
+      action: expect.objectContaining({ type: 'NOOP' }),
       noop: true,
     }),
   ]);
@@ -846,6 +839,46 @@ test("doesn't emit '__unsafe_action__' when action isn't handled", () => {
   );
 
   spy.mockRestore();
+});
+
+test('invokes unhandled action listener when targeted action is not handled', () => {
+  const TestNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+  const onUnhandledAction = jest.fn();
+
+  const events: NavigationContainerEventMap['__unsafe_action__']['data'][] = [];
+
+  render(
+    <BaseNavigationContainer ref={ref} onUnhandledAction={onUnhandledAction}>
+      <TestNavigator>
+        <Screen name="foo">{() => null}</Screen>
+        <Screen name="bar">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  ref.current?.addListener('__unsafe_action__', (e) => {
+    events.push(e.data);
+  });
+
+  const target = ref.current?.getRootState().key;
+
+  act(() => ref.current?.dispatch({ type: 'UNKNOWN', target }));
+
+  expect(events).toEqual([]);
+  expect(onUnhandledAction).toHaveBeenCalledWith({ type: 'UNKNOWN', target });
 });
 
 test("emits '__unsafe_action__' with noop false when beforeRemove doesn't prevent removal", () => {

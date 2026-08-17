@@ -587,7 +587,125 @@ test('action goes to correct child navigator if target is specified', () => {
   });
 });
 
-test("action doesn't bubble if target is specified", () => {
+test("action doesn't bubble to parent if target is specified", () => {
+  function ParentRouter(options: DefaultRouterOptions) {
+    const router = MockRouter(options);
+    const parentRouter: Router<
+      NavigationState,
+      MockActions | { type: 'REVERSE' }
+    > = {
+      ...router,
+      getStateForAction(state, action, options) {
+        if (action.type === 'REVERSE') {
+          return {
+            ...state,
+            routes: state.routes.slice().reverse(),
+          };
+        }
+
+        return router.getStateForAction(state, action, options);
+      },
+    };
+
+    return parentRouter;
+  }
+
+  const ParentNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      ParentRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const ChildNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const initialState: NavigationState = {
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: 'parent',
+    routeNames: ['nested', 'sibling'],
+    routes: [
+      {
+        key: 'nested',
+        name: 'nested',
+        state: {
+          stale: false,
+          type: 'test',
+          index: 0,
+          key: 'child',
+          routeNames: ['child'],
+          routes: [{ key: 'child', name: 'child' }],
+        },
+      },
+      { key: 'sibling', name: 'sibling' },
+    ],
+  };
+
+  const ref = createNavigationContainerRef<ParamListBase>();
+  const onUnhandledAction = jest.fn();
+
+  render(
+    <BaseNavigationContainer
+      ref={ref}
+      initialState={initialState}
+      onUnhandledAction={onUnhandledAction}
+    >
+      <ParentNavigator>
+        <Screen name="nested">
+          {() => (
+            <ChildNavigator>
+              <Screen name="child">{() => null}</Screen>
+            </ChildNavigator>
+          )}
+        </Screen>
+        <Screen name="sibling">{() => null}</Screen>
+      </ParentNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const stateBeforeAction = ref.getRootState();
+  const target = stateBeforeAction.routes[0]?.state?.key;
+
+  act(() => ref.dispatch({ type: 'REVERSE', target }));
+
+  expect(ref.getRootState()).toEqual(stateBeforeAction);
+  expect(onUnhandledAction).toHaveBeenCalledWith({
+    type: 'REVERSE',
+    target,
+  });
+
+  act(() => ref.dispatch({ type: 'REVERSE' }));
+
+  expect(ref.getRootState().routes.map((route) => route.name)).toEqual([
+    'sibling',
+    'nested',
+  ]);
+  expect(onUnhandledAction).toHaveBeenCalledTimes(1);
+});
+
+test("action doesn't bubble to child if target is specified", () => {
   const CurrentParentRouter = MockRouter;
 
   function CurrentChildRouter(options: DefaultRouterOptions) {
