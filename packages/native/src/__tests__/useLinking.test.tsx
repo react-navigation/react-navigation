@@ -2,6 +2,7 @@ import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   createNavigationContainerRef,
   createNavigatorFactory,
+  type NavigatorScreenParams,
   type ParamListBase,
   StackRouter,
   useNavigationBuilder,
@@ -140,6 +141,151 @@ test('handles Linking URL events', async () => {
     name: 'Profile',
     params: { user: 'jane' },
   });
+});
+
+test('handles URL action in the root navigator', async () => {
+  type NestedParamList = {
+    Home: undefined;
+    Target: undefined;
+  };
+
+  type RootParamList = {
+    Nested: NavigatorScreenParams<NestedParamList>;
+    Target: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootParamList>();
+  const NestedStack = createStackNavigator<NestedParamList>();
+
+  let listener: ((url: string) => void) | undefined;
+
+  const linking = {
+    subscribe: (callback: (url: string) => void) => {
+      listener = callback;
+
+      return () => {
+        listener = undefined;
+      };
+    },
+    config: {
+      screens: {
+        Nested: {
+          screens: {
+            Home: '',
+            Target: 'nested-target',
+          },
+        },
+        Target: 'target',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<RootParamList>();
+
+  const root = await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Nested">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen name="Home" component={TestScreen} />
+              <NestedStack.Screen name="Target">
+                {() => <Text>Nested target</Text>}
+              </NestedStack.Screen>
+            </NestedStack.Navigator>
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="Target">
+          {() => <Text>Root target</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  await act(() => {
+    listener?.('example://target');
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      Root target
+    </Text>
+  `);
+});
+
+test('handles reset action in the root navigator', async () => {
+  type NestedParamList = {
+    Home: undefined;
+    Target: undefined;
+  };
+
+  type RootParamList = {
+    Nested: NavigatorScreenParams<NestedParamList>;
+    Target: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootParamList>();
+  const NestedStack = createStackNavigator<NestedParamList>();
+
+  let listener: ((url: string) => void) | undefined;
+
+  const linking = {
+    subscribe: (callback: (url: string) => void) => {
+      listener = callback;
+
+      return () => {
+        listener = undefined;
+      };
+    },
+    config: {
+      screens: {
+        Nested: {
+          screens: {
+            Home: '',
+            Target: 'nested-target',
+          },
+        },
+        Target: 'target',
+      },
+    },
+    getActionFromState: () => undefined,
+  };
+
+  const navigation = createNavigationContainerRef<RootParamList>();
+
+  const root = await render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Nested">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen name="Home" component={TestScreen} />
+              <NestedStack.Screen name="Target">
+                {() => <Text>Nested target</Text>}
+              </NestedStack.Screen>
+            </NestedStack.Navigator>
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="Target">
+          {() => <Text>Root target</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  await waitFor(() => expect(navigation.getCurrentRoute()?.name).toBe('Home'));
+
+  await act(() => {
+    listener?.('example://target');
+  });
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      Root target
+    </Text>
+  `);
 });
 
 test('handles custom initial URL', async () => {

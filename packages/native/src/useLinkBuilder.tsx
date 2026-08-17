@@ -110,12 +110,16 @@ export function useBuildAction() {
 
   const buildAction = React.useCallback(
     (href: string) => {
-      const state = getStateFromHref(href, options, navigation.getRootState());
+      const rootState = navigation.getRootState();
+
+      const state = getStateFromHref(href, options, rootState);
 
       if (state) {
-        const action = getActionFromStateHelper(state, options?.config);
+        const action =
+          getActionFromStateHelper(state, options?.config) ??
+          CommonActions.reset(state);
 
-        return action ?? CommonActions.reset(state);
+        return { target: rootState?.key, ...action };
       } else {
         throw new Error(
           `Failed to parse href '${href}' to a navigation state.`
