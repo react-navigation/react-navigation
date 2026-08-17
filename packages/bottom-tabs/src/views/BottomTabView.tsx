@@ -5,7 +5,6 @@ import {
   Screen,
 } from '@react-navigation/elements';
 import {
-  type NavigationAction,
   type ParamListBase,
   StackActions,
   type TabNavigationState,
@@ -118,24 +117,6 @@ export function BottomTabView(props: Props) {
   React.useEffect(() => {
     const previousRouteKey = previousRouteKeyRef.current;
 
-    let popToTopAction: NavigationAction | undefined;
-
-    if (
-      previousRouteKey !== focusedRouteKey &&
-      descriptors[previousRouteKey]?.options.popToTopOnBlur
-    ) {
-      const prevRoute = state.routes.find(
-        (route) => route.key === previousRouteKey
-      );
-
-      if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
-        popToTopAction = {
-          ...StackActions.popToTop(),
-          target: prevRoute.state.key,
-        };
-      }
-    }
-
     let timer: ReturnType<typeof setTimeout> | undefined;
 
     const animateToIndex = () => {
@@ -174,8 +155,25 @@ export function BottomTabView(props: Props) {
       });
 
       Animated.parallel(animations).start(({ finished }) => {
-        if (popToTopAction) {
-          navigation.dispatch(popToTopAction);
+        if (
+          previousRouteKey !== focusedRouteKey &&
+          descriptors[previousRouteKey]?.options.popToTopOnBlur
+        ) {
+          const currentState = navigation.getState();
+          const prevRoute = currentState.routes.find(
+            (route) => route.key === previousRouteKey
+          );
+
+          if (
+            prevRoute?.state?.type === 'stack' &&
+            prevRoute.state.key &&
+            (prevRoute.state.index ?? prevRoute.state.routes.length - 1) > 0
+          ) {
+            navigation.dispatch({
+              ...StackActions.popToTop(),
+              target: prevRoute.state.key,
+            });
+          }
         }
 
         if (previousRouteKey !== focusedRouteKey) {

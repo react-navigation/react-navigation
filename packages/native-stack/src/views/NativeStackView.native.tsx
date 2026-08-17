@@ -595,11 +595,19 @@ export function NativeStackView({
                 });
               }}
               onDismissed={(event) => {
-                navigation.dispatch({
-                  ...StackActions.pop(event.nativeEvent.dismissCount),
-                  source: route.key,
-                  target: state.key,
-                });
+                const currentState = navigation.getState();
+                const currentActiveRoutes = currentState.routes.slice(
+                  0,
+                  currentState.index + 1
+                );
+
+                if (currentActiveRoutes.some((r) => r.key === route.key)) {
+                  navigation.dispatch({
+                    ...StackActions.pop(event.nativeEvent.dismissCount),
+                    source: route.key,
+                    target: currentState.key,
+                  });
+                }
 
                 setNextDismissedKey(route.key);
               }}

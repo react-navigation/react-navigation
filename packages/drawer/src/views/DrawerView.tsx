@@ -93,11 +93,16 @@ function DrawerViewBase({
       previousRouteKey !== focusedRouteKey &&
       descriptors[previousRouteKey]?.options.popToTopOnBlur
     ) {
-      const prevRoute = state.routes.find(
+      const currentState = navigation.getState();
+      const prevRoute = currentState.routes.find(
         (route) => route.key === previousRouteKey
       );
 
-      if (prevRoute?.state?.type === 'stack' && prevRoute.state.key) {
+      if (
+        prevRoute?.state?.type === 'stack' &&
+        prevRoute.state.key &&
+        (prevRoute.state.index ?? prevRoute.state.routes.length - 1) > 0
+      ) {
         navigation.dispatch({
           ...StackActions.popToTop(),
           target: prevRoute.state.key,
@@ -106,7 +111,7 @@ function DrawerViewBase({
     }
 
     previousRouteKeyRef.current = focusedRouteKey;
-  }, [descriptors, focusedRouteKey, navigation, state.routes]);
+  }, [descriptors, focusedRouteKey, navigation]);
 
   const dimensions = useFrameSize((size) => size, true);
 
