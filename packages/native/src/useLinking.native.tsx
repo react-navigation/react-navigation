@@ -185,19 +185,25 @@ export function useLinking(
 
   React.useEffect(() => {
     const listener = (url: string) => {
-      if (!enabled) {
+      const navigation = ref.current;
+
+      if (!enabled || !navigation) {
         return;
       }
 
-      const navigation = ref.current;
-      const state = navigation ? getStateFromURL(url) : undefined;
+      const rootState = navigation.getRootState();
 
-      if (navigation && state) {
+      const state = getStateFromURL(url);
+
+      if (state) {
         const action = getActionFromStateRef.current(state, configRef.current);
 
         if (action !== undefined) {
           try {
-            navigation.dispatch(action);
+            navigation.dispatch({
+              target: rootState?.key,
+              ...action,
+            });
           } catch (e) {
             // Ignore any errors from deep linking.
             // This could happen in case of malformed links, navigation object not being initialized etc.

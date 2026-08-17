@@ -8,6 +8,7 @@ import {
   getStateFromPath,
   type NavigationAction,
   type NavigationState,
+  type NavigatorScreenParams,
   type ParamListBase,
   StackRouter,
   TabRouter,
@@ -502,6 +503,135 @@ test('handles browser forward after going back', async () => {
 
   expect(state.index).toBe(1);
   expect(state.routes[1].name).toBe('Profile');
+});
+
+test('handles URL action in the root navigator', async () => {
+  type NestedParamList = {
+    Home: undefined;
+    Target: undefined;
+  };
+
+  type RootParamList = {
+    Nested: NavigatorScreenParams<NestedParamList>;
+    Target: undefined;
+  };
+
+  const RootStack = createStackNavigator();
+  const NestedStack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Nested: {
+          screens: {
+            Home: '',
+            Target: 'nested-target',
+          },
+        },
+        Target: 'target',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<RootParamList>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Nested">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen name="Home" component={TestScreen} />
+              <NestedStack.Screen name="Target" component={TestScreen} />
+            </NestedStack.Navigator>
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="Target" component={TestScreen} />
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(window.location.pathname).toBe('/');
+
+  window.history.pushState(null, '', '/target');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/target'));
+
+  expect(navigation.getRootState()?.routes).toEqual([
+    expect.objectContaining({ name: 'Target' }),
+  ]);
+});
+
+test('handles reset action in the root navigator', async () => {
+  type NestedParamList = {
+    Home: undefined;
+    Target: undefined;
+  };
+
+  type RootParamList = {
+    Nested: NavigatorScreenParams<NestedParamList>;
+    Target: undefined;
+  };
+
+  const RootStack = createStackNavigator();
+  const NestedStack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Nested: {
+          screens: {
+            Home: '',
+            Target: 'nested-target',
+          },
+        },
+        Target: 'target',
+      },
+    },
+    getActionFromState: () => undefined,
+  };
+
+  const navigation = createNavigationContainerRef<RootParamList>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Nested">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen name="Home" component={TestScreen} />
+              <NestedStack.Screen name="Target" component={TestScreen} />
+            </NestedStack.Navigator>
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="Target" component={TestScreen} />
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(window.location.pathname).toBe('/');
+
+  window.history.pushState(null, '', '/target');
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/target'));
+
+  expect(navigation.getRootState()?.routes).toEqual([
+    expect.objectContaining({ name: 'Target' }),
+  ]);
 });
 
 test('syncs path with browser history across back and forward', async () => {

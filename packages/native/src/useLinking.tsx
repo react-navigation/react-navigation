@@ -245,14 +245,12 @@ export function useLinking(
   });
 
   const validateRoutesNotExistInRootState = React.useCallback(
-    (state: ResultState) => {
-      const navigation = ref.current;
-      const rootState = navigation?.getRootState();
+    (state: ResultState, rootState: NavigationState | undefined) => {
       // Make sure that the routes in the state exist in the root navigator
       // Otherwise there's an error in the linking configuration
       return state?.routes.some((r) => !rootState?.routeNames.includes(r.name));
     },
-    [ref]
+    []
   );
 
   const server = React.useContext(ServerContext);
@@ -441,6 +439,8 @@ export function useLinking(
         return;
       }
 
+      const rootState = navigation.getRootState();
+
       let state: ResultState | undefined;
 
       try {
@@ -456,7 +456,7 @@ export function useLinking(
       if (state) {
         // Make sure that the routes in the state exist in the root navigator
         // Otherwise there's an error in the linking configuration
-        if (validateRoutesNotExistInRootState(state)) {
+        if (validateRoutesNotExistInRootState(state, rootState)) {
           return;
         }
 
@@ -468,7 +468,13 @@ export function useLinking(
 
           if (action !== undefined) {
             try {
-              dispatch(action, 'replace');
+              dispatch(
+                {
+                  target: rootState?.key,
+                  ...action,
+                },
+                'replace'
+              );
             } catch (e) {
               // Ignore any errors from deep linking.
               // This could happen in case of malformed links, navigation object not being initialized etc.

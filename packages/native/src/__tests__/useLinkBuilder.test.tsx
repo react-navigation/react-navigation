@@ -1,6 +1,13 @@
 import { expect, test } from '@jest/globals';
-import { NavigationRouteContext } from '@react-navigation/core';
-import { render } from '@testing-library/react-native';
+import {
+  createNavigationContainerRef,
+  type NavigationProp,
+  NavigationRouteContext,
+  type NavigatorScreenParams,
+  type ParamListBase,
+  useNavigation,
+} from '@react-navigation/core';
+import { act, render } from '@testing-library/react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { NavigationContainer } from '../NavigationContainer';
@@ -229,20 +236,10 @@ test('builds href in nested navigator screen', () => {
 test('builds action from href outside of a navigator', () => {
   expect.assertions(1);
 
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
   const Test = () => {
-    const { buildAction } = useLinkBuilder();
-
-    const action = buildAction('/foo');
-
-    expect(action).toEqual({
-      type: 'NAVIGATE',
-      payload: {
-        name: 'Foo',
-        path: '/foo',
-        params: {},
-        pop: true,
-      },
-    });
+    buildAction = useLinkBuilder().buildAction;
 
     return null;
   };
@@ -252,25 +249,25 @@ test('builds action from href outside of a navigator', () => {
       <Test />
     </NavigationContainer>
   );
+
+  expect(buildAction?.('/foo')).toEqual({
+    type: 'NAVIGATE',
+    payload: {
+      name: 'Foo',
+      path: '/foo',
+      params: {},
+      pop: true,
+    },
+  });
 });
 
 test('builds action from href in navigator screen', () => {
   expect.assertions(1);
 
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
   const Test = () => {
-    const { buildAction } = useLinkBuilder();
-
-    const action = buildAction('/foo');
-
-    expect(action).toEqual({
-      type: 'NAVIGATE',
-      payload: {
-        name: 'Foo',
-        path: '/foo',
-        params: {},
-        pop: true,
-      },
-    });
+    buildAction = useLinkBuilder().buildAction;
 
     return null;
   };
@@ -284,29 +281,26 @@ test('builds action from href in navigator screen', () => {
       </Stack.Navigator>
     </NavigationContainer>
   );
+
+  expect(buildAction?.('/foo')).toEqual({
+    type: 'NAVIGATE',
+    target: expect.any(String),
+    payload: {
+      name: 'Foo',
+      path: '/foo',
+      params: {},
+      pop: true,
+    },
+  });
 });
 
 test('builds action from href in nested navigator', () => {
   expect.assertions(1);
 
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
   const Test = () => {
-    const { buildAction } = useLinkBuilder();
-
-    const action = buildAction('/foo/bar/42');
-
-    expect(action).toEqual({
-      type: 'NAVIGATE',
-      payload: {
-        name: 'Foo',
-        params: {
-          initial: true,
-          screen: 'Bar',
-          params: { id: '42' },
-          path: '/foo/bar/42',
-        },
-        pop: true,
-      },
-    });
+    buildAction = useLinkBuilder().buildAction;
 
     return null;
   };
@@ -327,4 +321,170 @@ test('builds action from href in nested navigator', () => {
       </StackA.Navigator>
     </NavigationContainer>
   );
+
+  expect(buildAction?.('/foo/bar/42')).toEqual({
+    type: 'NAVIGATE',
+    target: expect.any(String),
+    payload: {
+      name: 'Foo',
+      params: {
+        initial: true,
+        screen: 'Bar',
+        params: { id: '42' },
+        path: '/foo/bar/42',
+      },
+      pop: true,
+    },
+  });
+});
+
+test('handles the built action in the root navigator', () => {
+  type NestedParamList = {
+    Home: undefined;
+    Target: undefined;
+  };
+
+  type RootParamList = {
+    Nested: NavigatorScreenParams<NestedParamList>;
+    Target: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootParamList>();
+  const NestedStack = createStackNavigator<NestedParamList>();
+  const rootNavigation = createNavigationContainerRef<RootParamList>();
+
+  let childNavigation: NavigationProp<ParamListBase> | undefined;
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
+  const HomeScreen = () => {
+    childNavigation = useNavigation<NavigationProp<ParamListBase>>();
+    buildAction = useLinkBuilder().buildAction;
+
+    return null;
+  };
+
+  render(
+    <NavigationContainer
+      ref={rootNavigation}
+      linking={{
+        prefixes: [],
+        config: {
+          screens: {
+            Nested: {
+              screens: {
+                Home: '',
+                Target: 'nested-target',
+              },
+            },
+            Target: 'target',
+          },
+        },
+        getInitialURL: () => null,
+      }}
+    >
+      <RootStack.Navigator>
+        <RootStack.Screen name="Nested">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen name="Home" component={HomeScreen} />
+              <NestedStack.Screen name="Target">
+                {() => null}
+              </NestedStack.Screen>
+            </NestedStack.Navigator>
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="Target">{() => null}</RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  const navigation = childNavigation;
+
+  if (navigation == null || buildAction == null) {
+    throw new Error('Expected linking helpers to be ready');
+  }
+
+  const action = buildAction('/target');
+
+  act(() => navigation.dispatch(action));
+
+  const rootState = rootNavigation.getRootState();
+
+  expect(rootState?.routes[rootState.index].name).toBe('Target');
+});
+
+test('handles the built reset action in the root navigator', () => {
+  type NestedParamList = {
+    Home: undefined;
+    Target: undefined;
+  };
+
+  type RootParamList = {
+    Nested: NavigatorScreenParams<NestedParamList>;
+    Target: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootParamList>();
+  const NestedStack = createStackNavigator<NestedParamList>();
+  const rootNavigation = createNavigationContainerRef<RootParamList>();
+
+  let childNavigation: NavigationProp<ParamListBase> | undefined;
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
+  const HomeScreen = () => {
+    childNavigation = useNavigation<NavigationProp<ParamListBase>>();
+    buildAction = useLinkBuilder().buildAction;
+
+    return null;
+  };
+
+  render(
+    <NavigationContainer
+      ref={rootNavigation}
+      linking={{
+        prefixes: [],
+        config: {
+          screens: {
+            Nested: {
+              screens: {
+                Home: '',
+                Target: 'nested-target',
+              },
+            },
+            Target: 'target',
+          },
+        },
+        getActionFromState: () => undefined,
+        getInitialURL: () => null,
+      }}
+    >
+      <RootStack.Navigator>
+        <RootStack.Screen name="Nested">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen name="Home" component={HomeScreen} />
+              <NestedStack.Screen name="Target">
+                {() => null}
+              </NestedStack.Screen>
+            </NestedStack.Navigator>
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="Target">{() => null}</RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  const navigation = childNavigation;
+
+  if (navigation == null || buildAction == null) {
+    throw new Error('Expected linking helpers to be ready');
+  }
+
+  const action = buildAction('/target');
+
+  act(() => navigation.dispatch(action));
+
+  expect(rootNavigation.getRootState()?.routes).toEqual([
+    expect.objectContaining({ name: 'Target' }),
+  ]);
 });

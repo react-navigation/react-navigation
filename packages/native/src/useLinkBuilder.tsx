@@ -4,6 +4,7 @@ import {
   getActionFromState,
   getPathFromState,
   getStateFromPath,
+  NavigationContainerRefContext,
   NavigationHelpersContext,
   NavigationRouteContext,
   useStateForPath,
@@ -103,6 +104,14 @@ export function useBuildHref() {
  * Helper to build a navigation action from a href based on the linking options.
  */
 export const useBuildAction = () => {
+  const navigation = React.useContext(NavigationContainerRefContext);
+
+  if (navigation === undefined) {
+    throw new Error(
+      "Couldn't find a navigation object. Is your component inside NavigationContainer?"
+    );
+  }
+
   const { options } = React.useContext(LinkingContext);
 
   const getStateFromPathHelper = options?.getStateFromPath ?? getStateFromPath;
@@ -115,17 +124,25 @@ export const useBuildAction = () => {
         throw new Error(`The href must start with '/' (${href}).`);
       }
 
+      const rootState = navigation.getRootState();
       const state = getStateFromPathHelper(href, options?.config);
 
       if (state) {
-        const action = getActionFromStateHelper(state, options?.config);
+        const action =
+          getActionFromStateHelper(state, options?.config) ??
+          CommonActions.reset(state);
 
-        return action ?? CommonActions.reset(state);
+        return { target: rootState?.key, ...action };
       } else {
         throw new Error('Failed to parse the href to a navigation state.');
       }
     },
-    [options?.config, getStateFromPathHelper, getActionFromStateHelper]
+    [
+      navigation,
+      options?.config,
+      getStateFromPathHelper,
+      getActionFromStateHelper,
+    ]
   );
 
   return buildAction;
