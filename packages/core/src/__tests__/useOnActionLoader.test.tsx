@@ -268,7 +268,7 @@ test('fires loader when a route is replaced with the same name and a different k
     </BaseNavigationContainer>
   );
 
-  const route = navigation.getRootState().routes[0];
+  const route = navigation.getRootState()?.routes[0];
 
   if (route == null) {
     throw new Error('Expected a route');
@@ -718,7 +718,7 @@ test.each([
 
   const consumedParams = navigation
     .getRootState()
-    .routes.find((route) => route.name === 'Nested')?.params;
+    ?.routes.find((route) => route.name === 'Nested')?.params;
 
   if (consumedParams == null) {
     throw new Error('Expected nested params');
@@ -825,7 +825,7 @@ test('uses a consumed params object only once within a container', async () => {
 
   const consumedParams = navigation
     .getRootState()
-    .routes.find((route) => route.name === 'First')?.params;
+    ?.routes.find((route) => route.name === 'First')?.params;
 
   if (consumedParams == null) {
     throw new Error('Expected nested params');
@@ -883,7 +883,7 @@ test('fires loader when reset adds nested state under the same route key', async
 
   const nested = navigation
     .getRootState()
-    .routes.find((route) => route.name === 'Nested');
+    ?.routes.find((route) => route.name === 'Nested');
 
   if (!nested) {
     throw new Error('Nested route not found');
@@ -944,7 +944,7 @@ test('fires loader when reset removes nested state', async () => {
 
   const nested = navigation
     .getRootState()
-    .routes.find((route) => route.name === 'Nested');
+    ?.routes.find((route) => route.name === 'Nested');
 
   if (!nested) {
     throw new Error('Nested route not found');

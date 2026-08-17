@@ -916,7 +916,7 @@ test('invokes unhandled action listener when targeted action is not handled', as
     events.push(e.data);
   });
 
-  const target = navigation.getRootState().key;
+  const target = navigation.getRootState()?.key;
 
   await act(() => navigation.dispatch({ type: 'UNKNOWN', target }));
 
@@ -1002,7 +1002,7 @@ test("emits '__unsafe_action__' with noop false when beforeRemove doesn't preven
     }),
   ]);
 
-  expect(navigation.getRootState().routes).toEqual([
+  expect(navigation.getRootState()?.routes).toEqual([
     expect.objectContaining({ name: 'foo' }),
   ]);
 });
@@ -1096,7 +1096,7 @@ test("emits '__unsafe_event__' before noop true '__unsafe_action__' when beforeR
     }),
   ]);
 
-  expect(navigation.getRootState().routes).toEqual([
+  expect(navigation.getRootState()?.routes).toEqual([
     expect.objectContaining({ name: 'bar' }),
   ]);
 });

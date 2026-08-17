@@ -194,7 +194,7 @@ test('action goes to hidden nested navigator if target is specified', async () =
     </BaseNavigationContainer>
   );
 
-  const childKey = navigation.getRootState().routes[0]?.state?.key;
+  const childKey = navigation.getRootState()?.routes[0]?.state?.key;
 
   await act(() => navigation.navigate('parent-b'));
 
@@ -599,7 +599,7 @@ test("action doesn't bubble to parent if target is specified", async () => {
 
   await act(() => navigation.dispatch({ type: 'REVERSE' }));
 
-  expect(navigation.getRootState().routes.map((route) => route.name)).toEqual([
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
     'sibling',
     'nested',
   ]);
@@ -2515,7 +2515,7 @@ test.each(['reset action', 'resetRoot'])(
     expect(onBeforeRemove).not.toHaveBeenCalled();
 
     expect(
-      navigation.getRootState().routes.find((route) => route.name === 'baz')
+      navigation.getRootState()?.routes.find((route) => route.name === 'baz')
         ?.state?.routes
     ).toEqual(
       nextState.routes.find((route) => route.name === 'baz')?.state?.routes

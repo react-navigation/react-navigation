@@ -223,7 +223,7 @@ test('dispatches to the root navigator by default and preserves explicit targets
 
   ref.addListener('__unsafe_action__', onAction);
 
-  const target = ref.getRootState().routes[0]!.state!.key;
+  const target = ref.getRootState()?.routes[0]!.state!.key;
 
   act(() => {
     dispatch(() => ({
