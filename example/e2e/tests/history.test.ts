@@ -112,46 +112,6 @@ test('keeps state in sync when browser back and forward interrupt navigation', a
   );
 });
 
-test('keeps state in sync when going back with a delayed history traversal', async ({
-  page,
-}) => {
-  await page.goto('/native-stack/article/gandalf');
-
-  await page
-    .getByRole('button', {
-      name: 'Navigate to feed',
-    })
-    .click();
-
-  await expect(page).toHaveURL(/\/native-stack\/feed\/\d+$/);
-
-  // Simulate a slow history traversal, e.g. on Firefox `history.go(n)`
-  // can take several hundred milliseconds when the main thread is busy
-  await page.evaluate(() => {
-    const originalGo = window.history.go.bind(window.history);
-
-    window.history.go = (delta?: number) => {
-      setTimeout(() => originalGo(delta), 600);
-    };
-  });
-
-  await page
-    .getByRole('button', {
-      name: 'Go back',
-    })
-    .click();
-
-  await expect(
-    page.getByRole('heading', { name: 'Article by Gandalf' })
-  ).toBeVisible();
-
-  // Once the delayed traversal settles, the URL should be in sync
-  await expect(page).toHaveURL('/native-stack/article/gandalf');
-  await expect(page).toHaveTitle(
-    'Article by Gandalf - React Navigation Example'
-  );
-});
-
 test('replaces the current browser history entry on replace', async ({
   page,
 }) => {

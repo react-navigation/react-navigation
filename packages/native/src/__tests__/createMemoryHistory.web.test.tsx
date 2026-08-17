@@ -290,8 +290,6 @@ test('resolves go when popstate arrives before the timeout', async () => {
   const listener = jest.fn();
   const unlisten = history.listen(listener);
 
-  // Simulate a slow traversal, e.g. on Firefox `history.go(n)` can take
-  // several hundred milliseconds when the main thread is busy
   const originalGo = window.history.go.bind(window.history);
   const windowGoSpy = jest
     .spyOn(window.history, 'go')
@@ -304,8 +302,6 @@ test('resolves go when popstate arrives before the timeout', async () => {
   jest.advanceTimersByTime(600);
   jest.runAllTimers();
 
-  // The traversal arrived before the timeout, so it should resolve
-  // and not be treated as a user-initiated navigation
   await expect(navigation).resolves.toBeUndefined();
 
   expect(listener).not.toHaveBeenCalled();
