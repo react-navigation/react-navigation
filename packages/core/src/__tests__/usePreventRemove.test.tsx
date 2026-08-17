@@ -59,10 +59,10 @@ test("prevents removing a screen with 'usePreventRemove' hook", async () => {
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={TestScreen} />
@@ -73,7 +73,7 @@ test("prevents removing a screen with 'usePreventRemove' hook", async () => {
 
   await render(element);
 
-  await act(() => ref.current?.navigate('bar'));
+  await act(() => navigation.navigate('bar'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -89,7 +89,7 @@ test("prevents removing a screen with 'usePreventRemove' hook", async () => {
     type: 'stack',
   });
 
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -106,12 +106,12 @@ test("prevents removing a screen with 'usePreventRemove' hook", async () => {
     type: 'stack',
   });
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onPreventRemove).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
     retainedRouteKeys: [],
@@ -127,8 +127,8 @@ test("prevents removing a screen with 'usePreventRemove' hook", async () => {
 
   shouldContinue = true;
 
-  await act(() => ref.current?.navigate('bar'));
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.navigate('bar'));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(4);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -175,10 +175,10 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={TestScreen} />
@@ -189,7 +189,7 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
 
   await render(element);
 
-  await act(() => ref.current?.navigate('bar'));
+  await act(() => navigation.navigate('bar'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -205,7 +205,7 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
     type: 'stack',
   });
 
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -222,12 +222,12 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
     type: 'stack',
   });
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onPreventRemove).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
     retainedRouteKeys: [],
@@ -243,8 +243,8 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
 
   shouldContinue = true;
 
-  await act(() => ref.current?.navigate('bar'));
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.navigate('bar'));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(4);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -280,10 +280,10 @@ test("doesn't prevent retaining a screen in inactive routes", async () => {
     return null;
   };
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   await render(
-    <BaseNavigationContainer ref={ref}>
+    <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={TestScreen} />
@@ -292,14 +292,14 @@ test("doesn't prevent retaining a screen in inactive routes", async () => {
     </BaseNavigationContainer>
   );
 
-  await act(() => ref.current?.navigate('bar'));
-  await act(() => ref.current?.dispatch(StackActions.retain(true)));
-  await act(() => ref.current?.navigate('baz'));
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.navigate('bar'));
+  await act(() => navigation.dispatch(StackActions.retain(true)));
+  await act(() => navigation.navigate('baz'));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onPreventRemove).not.toHaveBeenCalled();
 
-  expect(ref.current?.getRootState()).toEqual(
+  expect(navigation.getRootState()).toEqual(
     expect.objectContaining({
       index: 0,
       routes: [
@@ -337,10 +337,10 @@ test("should have no effect when 'usePreventRemove' hook is set to false", async
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={TestScreen} />
@@ -351,7 +351,7 @@ test("should have no effect when 'usePreventRemove' hook is set to false", async
 
   await render(element);
 
-  await act(() => ref.current?.navigate('bar'));
+  await act(() => navigation.navigate('bar'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -367,7 +367,7 @@ test("should have no effect when 'usePreventRemove' hook is set to false", async
     type: 'stack',
   });
 
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -384,11 +384,11 @@ test("should have no effect when 'usePreventRemove' hook is set to false", async
     type: 'stack',
   });
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(3);
 
-  expect(ref.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 0,
     key: 'stack-2',
     retainedRouteKeys: [],
@@ -398,8 +398,8 @@ test("should have no effect when 'usePreventRemove' hook is set to false", async
     type: 'stack',
   });
 
-  await act(() => ref.current?.navigate('bar'));
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.navigate('bar'));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -445,10 +445,10 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
   };
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar">{() => null}</Screen>
@@ -466,7 +466,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
 
   await render(element);
 
-  await act(() => ref.current?.navigate('bar'));
+  await act(() => navigation.navigate('bar'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -482,7 +482,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
     type: 'stack',
   });
 
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -511,12 +511,12 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
     type: 'stack',
   });
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onPreventRemove).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
     retainedRouteKeys: [],
@@ -542,10 +542,10 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
     type: 'stack',
   });
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
-  expect(ref.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
     retainedRouteKeys: [],
@@ -573,8 +573,8 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
 
   shouldContinue = true;
 
-  await act(() => ref.current?.navigate('bar'));
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.navigate('bar'));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(4);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -621,10 +621,10 @@ test("prevents removing a hidden screen with 'usePreventRemove' hook", async () 
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   await render(
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo" component={TestScreen} />
         <Screen name="bar">{() => null}</Screen>
@@ -632,19 +632,19 @@ test("prevents removing a hidden screen with 'usePreventRemove' hook", async () 
     </BaseNavigationContainer>
   );
 
-  await act(() => ref.current?.navigate('bar'));
+  await act(() => navigation.navigate('bar'));
 
-  const state = ref.current?.getRootState();
+  const state = navigation.getRootState();
 
   await act(() => {
-    ref.current?.resetRoot({
+    navigation.resetRoot({
       index: 0,
       routes: [{ name: 'bar' }],
     });
   });
 
   expect(onPreventRemove).toHaveBeenCalledTimes(1);
-  expect(ref.current?.getRootState()).toEqual(state);
+  expect(navigation.getRootState()).toEqual(state);
 });
 
 test("prevents removing a grand child screen with 'usePreventRemove' hook", async () => {
@@ -678,10 +678,10 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", asyn
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar">{() => null}</Screen>
@@ -704,7 +704,7 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", asyn
 
   await render(element);
 
-  await act(() => ref.current?.navigate('bar'));
+  await act(() => navigation.navigate('bar'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -720,7 +720,7 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", asyn
     type: 'stack',
   });
 
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -763,12 +763,12 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", asyn
     type: 'stack',
   });
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onPreventRemove).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
     retainedRouteKeys: [],
@@ -810,8 +810,8 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", asyn
 
   shouldContinue = true;
 
-  await act(() => ref.current?.navigate('bar'));
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.navigate('bar'));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(4);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -867,10 +867,10 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", async
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={TestScreen} />
@@ -895,9 +895,9 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", async
   await render(element);
 
   await act(() => {
-    ref.current?.navigate('bar');
-    ref.current?.navigate('baz');
-    ref.current?.navigate('bax');
+    navigation.navigate('bar');
+    navigation.navigate('baz');
+    navigation.navigate('bax');
   });
 
   const preventedState = {
@@ -944,34 +944,34 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", async
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith(preventedState);
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onPreventRemove.lex).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual(preventedState);
+  expect(navigation.getRootState()).toEqual(preventedState);
 
   shouldContinue.lex = false;
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onPreventRemove.baz).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual(preventedState);
+  expect(navigation.getRootState()).toEqual(preventedState);
 
   shouldContinue.baz = false;
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onPreventRemove.bar).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual(preventedState);
+  expect(navigation.getRootState()).toEqual(preventedState);
 
   shouldContinue.bar = false;
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1013,10 +1013,10 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar">{() => null}</Screen>
@@ -1034,7 +1034,7 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
 
   await render(element);
 
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1073,12 +1073,12 @@ test("prevents removing a child screen with 'usePreventRemove' hook with 'resetR
       type: 'stack',
     };
 
-    ref.current?.resetRoot(state);
+    navigation.resetRoot(state);
   });
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 1,
     key: 'stack-2',
     retainedRouteKeys: [],
@@ -1142,10 +1142,10 @@ test('keeps preventing removal while the screen is hidden with an activity', asy
     return null;
   };
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref}>
+    <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={TestScreen} />
@@ -1156,12 +1156,12 @@ test('keeps preventing removal while the screen is hidden with an activity', asy
 
   await render(element);
 
-  await act(() => ref.current?.navigate('bar'));
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('bar'));
+  await act(() => navigation.navigate('baz'));
 
-  const barKey = ref.current
-    ?.getRootState()
-    .routes.find((route) => route.name === 'bar')?.key;
+  const barKey = navigation
+    .getRootState()
+    ?.routes.find((route) => route.name === 'bar')?.key;
 
   if (barKey == null) {
     throw new Error("Couldn't find the route for 'bar'");
@@ -1169,11 +1169,11 @@ test('keeps preventing removal while the screen is hidden with an activity', asy
 
   expect(preventedRoutes[barKey]).toEqual({ preventRemove: true });
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onPreventRemove).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toMatchObject({
+  expect(navigation.getRootState()).toMatchObject({
     routes: [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }],
   });
 
@@ -1218,10 +1218,10 @@ test('stops preventing removal when a hidden screen is removed', async () => {
     return null;
   };
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref}>
+    <BaseNavigationContainer ref={navigation}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={TestScreen} />
@@ -1232,12 +1232,12 @@ test('stops preventing removal when a hidden screen is removed', async () => {
 
   await render(element);
 
-  await act(() => ref.current?.navigate('bar'));
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('bar'));
+  await act(() => navigation.navigate('baz'));
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
-  expect(ref.current?.getRootState()).toMatchObject({
+  expect(navigation.getRootState()).toMatchObject({
     routes: [{ name: 'foo' }],
   });
 
@@ -1282,11 +1282,11 @@ test('keeps preventing removal for hidden screens in strict mode', async () => {
     return null;
   };
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <React.StrictMode>
-      <BaseNavigationContainer ref={ref}>
+      <BaseNavigationContainer ref={navigation}>
         <TestNavigator>
           <Screen name="foo">{() => null}</Screen>
           <Screen name="bar" component={TestScreen} />
@@ -1298,12 +1298,12 @@ test('keeps preventing removal for hidden screens in strict mode', async () => {
 
   await render(element);
 
-  await act(() => ref.current?.navigate('bar'));
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('bar'));
+  await act(() => navigation.navigate('baz'));
 
-  const barKey = ref.current
-    ?.getRootState()
-    .routes.find((route) => route.name === 'bar')?.key;
+  const barKey = navigation
+    .getRootState()
+    ?.routes.find((route) => route.name === 'bar')?.key;
 
   if (barKey == null) {
     throw new Error("Couldn't find the route for 'bar'");
@@ -1311,11 +1311,11 @@ test('keeps preventing removal for hidden screens in strict mode', async () => {
 
   expect(preventedRoutes[barKey]).toEqual({ preventRemove: true });
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onPreventRemove).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toMatchObject({
+  expect(navigation.getRootState()).toMatchObject({
     routes: [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }],
   });
 });
@@ -1377,10 +1377,10 @@ test('keeps parent prevention when a nested navigator is hidden with an activity
     </NestedNavigator>
   );
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref}>
+    <BaseNavigationContainer ref={navigation}>
       <ParentNavigator>
         <Screen name="home">{() => null}</Screen>
         <Screen name="nested" component={NestedScreen} />
@@ -1391,12 +1391,12 @@ test('keeps parent prevention when a nested navigator is hidden with an activity
 
   await render(element);
 
-  await act(() => ref.current?.navigate('nested'));
-  await act(() => ref.current?.navigate('other'));
+  await act(() => navigation.navigate('nested'));
+  await act(() => navigation.navigate('other'));
 
-  const nestedKey = ref.current
-    ?.getRootState()
-    .routes.find((route) => route.name === 'nested')?.key;
+  const nestedKey = navigation
+    .getRootState()
+    ?.routes.find((route) => route.name === 'nested')?.key;
 
   if (nestedKey == null) {
     throw new Error("Couldn't find the route for 'nested'");
@@ -1404,11 +1404,11 @@ test('keeps parent prevention when a nested navigator is hidden with an activity
 
   expect(preventedRoutes[nestedKey]).toEqual({ preventRemove: true });
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('home')));
+  await act(() => navigation.dispatch(StackActions.popTo('home')));
 
   expect(onPreventRemove).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toMatchObject({
+  expect(navigation.getRootState()).toMatchObject({
     routes: [{ name: 'home' }, { name: 'nested' }, { name: 'other' }],
   });
 

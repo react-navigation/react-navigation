@@ -1067,10 +1067,10 @@ test('renders wrapped navigator and merges options and listeners callbacks', asy
 
   const RootComponent = Root.getComponent();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = await render(
-    <BaseNavigationContainer ref={ref}>
+    <BaseNavigationContainer ref={navigation}>
       <RootComponent />
     </BaseNavigationContainer>
   );
@@ -1112,7 +1112,7 @@ test('renders wrapped navigator and merges options and listeners callbacks', asy
 </section>
 `);
 
-  await act(() => ref.current?.navigate('Feed'));
+  await act(() => navigation.navigate('Feed'));
 
   expect(configFocusListener).toHaveBeenCalled();
   expect(navigatorBlurListener).toHaveBeenCalled();
