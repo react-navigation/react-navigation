@@ -78,7 +78,10 @@ function createPersistentTabNavigator() {
           const descriptor = descriptors[route.key];
           const focused = index === state.index;
           return (
-            <View key={route.key} style={{ display: focused ? 'flex' : 'none' }}>
+            <View
+              key={route.key}
+              style={{ display: focused ? 'flex' : 'none' }}
+            >
               {descriptor?.render()}
             </View>
           );
