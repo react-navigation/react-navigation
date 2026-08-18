@@ -156,10 +156,6 @@ function Card({
   const lastToValueRef = React.useRef<number | undefined>(undefined);
 
   const animationHandleRef = React.useRef<number | undefined>(undefined);
-  const pendingGestureCallbackRef =
-    React.useRef<ReturnType<typeof setTimeout>>(undefined);
-  const pendingOnCloseCallbackRef =
-    React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const [isClosing] = React.useState(() => new Animated.Value(FALSE));
 
@@ -200,8 +196,6 @@ function Card({
       const animation =
         spec.animation === 'spring' ? Animated.spring : Animated.timing;
 
-      clearTimeout(pendingGestureCallbackRef.current);
-
       if (animationHandleRef.current !== undefined) {
         cancelAnimationFrame(animationHandleRef.current);
       }
@@ -232,8 +226,6 @@ function Card({
           useNativeDriver,
           isInteraction: false,
         }).start(({ finished }) => {
-          clearTimeout(pendingGestureCallbackRef.current);
-
           if (finished) {
             onFinish();
           }
@@ -274,18 +266,12 @@ function Card({
       if (animationHandleRef.current) {
         cancelAnimationFrame(animationHandleRef.current);
       }
-
-      clearTimeout(pendingGestureCallbackRef.current);
-      clearTimeout(pendingOnCloseCallbackRef.current);
     };
   }, []);
 
   const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const maybeAnimate = useLatestCallback(() => {
-    clearTimeout(pendingGestureCallbackRef.current);
-    clearTimeout(pendingOnCloseCallbackRef.current);
-
     if (!didInitiallyAnimate.current) {
       // Animate the card in on initial mount
       // Wrap in setTimeout to ensure animation starts after
@@ -403,8 +389,6 @@ function Card({
 
   const onGestureActivate: PanGestureConfig['onActivate'] = useLatestCallback(
     () => {
-      clearTimeout(pendingGestureCallbackRef.current);
-      clearTimeout(pendingOnCloseCallbackRef.current);
       isSwiping.setValue(TRUE);
       onGestureBegin?.();
     }
@@ -451,22 +435,15 @@ function Card({
           ? velocity !== 0 || translation !== 0
           : closing;
 
+      // When closing, the pop is dispatched from `animate`'s `onFinish` once
+      // the close animation ends (`handleCloseRoute` handles this case).
+      // Dispatching it while the animation was running made the state update
+      // (re-render + view unmounts) land mid-animation, which stalls its first
+      // frames on the new architecture where mounting runs on the UI thread —
+      // a visible hitch right after releasing the gesture. Pops triggered by
+      // `goBack` don't hitch because their state update happens before the
+      // animation starts; this mirrors that ordering.
       animate({ closing: shouldClose, velocity });
-
-      if (shouldClose) {
-        // We call onClose with a delay to make sure that the animation has already started
-        // This will make sure that the state update caused by this doesn't affect start of animation
-        pendingGestureCallbackRef.current = setTimeout(() => {
-          onClose();
-
-          // Check if the screen is still closing with a delay
-          // So state update from onClose has a chance to go through
-          // If route wasn't removed after onClose, re-open it
-          pendingOnCloseCallbackRef.current = setTimeout(() => {
-            maybeAnimate();
-          }, 32);
-        }, 16);
-      }
 
       onGestureEnd?.();
     });
