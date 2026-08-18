@@ -38,7 +38,9 @@ function createPersistentTabNavigator() {
     };
   };
 
-  type MyTabNavigatorProps = Record<string, never>;
+  type MyTabNavigatorProps = {
+    variant?: 'compact' | 'regular';
+  };
   type MyTabMapperProps = Record<string, never>;
 
   const MyTabNavigator = createStandardNavigator<
