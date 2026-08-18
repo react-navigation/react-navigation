@@ -14,7 +14,14 @@ type ScrollableView =
   | { scrollToTop(): void }
   | { scrollTo(options: ScrollOptions): void }
   | { scrollToOffset(options: { offset: number; animated?: boolean }): void }
-  | { scrollResponderScrollTo(options: ScrollOptions): void };
+  | { scrollResponderScrollTo(options: ScrollOptions): void }
+  | {
+      scrollToLocation(options: {
+        sectionIndex: number;
+        itemIndex: number;
+        animated?: boolean;
+      }): void;
+    };
 
 type ScrollableWrapper =
   | { getScrollResponder(): React.ReactNode | ScrollView }
@@ -103,6 +110,12 @@ export function useScrollToTop(ref: React.RefObject<ScrollableWrapper>) {
                 scrollable.scrollToOffset({ offset: 0, animated: true });
               } else if ('scrollResponderScrollTo' in scrollable) {
                 scrollable.scrollResponderScrollTo({ y: 0, animated: true });
+              } else if ('scrollToLocation' in scrollable) {
+                scrollable.scrollToLocation({
+                  sectionIndex: 0,
+                  itemIndex: 0,
+                  animated: true,
+                });
               }
             }
           });
