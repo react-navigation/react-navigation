@@ -8,7 +8,6 @@ import type {
 import type {
   DefaultNavigatorOptions,
   Descriptor,
-  LocaleDirection,
   NavigationHelpers,
   NavigationProp,
   ParamListBase,
@@ -97,6 +96,9 @@ export type StackAnimationName =
   | 'fade'
   | 'fade_from_bottom'
   | 'fade_from_right'
+  | 'flip'
+  | 'ios_from_left'
+  | 'ios_from_right'
   | 'none'
   | 'reveal_from_bottom'
   | 'scale_from_center'
@@ -107,7 +109,8 @@ export type StackAnimationName =
 type SceneOptionsDefaults = TransitionPreset & {
   animation: StackAnimationName;
   gestureEnabled: boolean;
-  cardOverlayEnabled: boolean;
+  cardOverlayEnabled: boolean | undefined;
+  cardShadowEnabled: boolean | undefined;
   headerMode: StackHeaderMode;
 };
 
@@ -127,6 +130,10 @@ export type Scene = {
    * Animated nodes representing the progress of the animation.
    */
   progress: SceneProgress;
+  /**
+   * Animated node representing whether the screen is closing.
+   */
+  closing: Animated.Value;
 };
 
 export type SceneProgress = {
@@ -257,6 +264,10 @@ export type StackHeaderProps = {
    */
   progress: SceneProgress;
   /**
+   * Direction multiplier for the transition.
+   */
+  inverted: 1 | -1;
+  /**
    * Options for the current screen.
    */
   options: StackNavigationOptions;
@@ -320,7 +331,8 @@ export type StackNavigationOptions = StackHeaderOptions &
     header?: (props: StackHeaderProps) => React.ReactNode;
     /**
      * Whether the header floats above the screen or part of the screen.
-     * Defaults to `float` on iOS for non-modals, and `screen` for the rest.
+     * Defaults to `float` on iOS for animations where the header transitions
+     * separately, and `screen` otherwise.
      */
     headerMode?: StackHeaderMode;
     /**
@@ -329,14 +341,17 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     headerShown?: boolean;
     /**
-     * Whether a shadow is visible for the card during transitions. Defaults to `true`.
+     * Whether a shadow is visible for the card during transitions.
+     * Defaults to whether `cardStyleInterpolator` returns a `shadowStyle`.
+     * Setting this overrides the default behavior.
      */
-    cardShadowEnabled?: boolean;
+    cardShadowEnabled?: boolean | undefined;
     /**
      * Whether to have a semi-transparent dark overlay visible under the card during transitions.
-     * Defaults to `true` on Android and `false` on iOS.
+     * Defaults to whether `cardStyleInterpolator` returns an `overlayStyle`.
+     * Setting this overrides the default behavior.
      */
-    cardOverlayEnabled?: boolean;
+    cardOverlayEnabled?: boolean | undefined;
     /**
      * Function that returns a React Element to display as a overlay for the card.
      */
@@ -371,8 +386,12 @@ export type StackNavigationOptions = StackHeaderOptions &
      * Supported values:
      * - 'none': don't animate the screen
      * - 'default': use the platform default animation
-     * - 'fade': fade screen in or out
+     * - 'fade': fade between screens
      * - 'fade_from_bottom': fade screen in or out from bottom
+     * - 'fade_from_right': fade screen in from the right
+     * - 'flip': flip the screen horizontally
+     * - 'ios_from_left': use the iOS-style slide from left
+     * - 'ios_from_right': use the iOS-style slide from right
      * - 'slide_from_bottom': slide in the new screen from bottom
      * - 'slide_from_right': slide in the new screen from right
      * - 'slide_from_left': slide in the new screen from left
@@ -386,7 +405,9 @@ export type StackNavigationOptions = StackHeaderOptions &
      */
     animationTypeForReplace?: 'push' | 'pop';
     /**
-     * Whether you can use gestures to dismiss this screen. Defaults to `true` on iOS, `false` on Android.
+     * Whether you can use gestures to dismiss this screen. Defaults to `true`
+     * on iOS for navigation-style transitions with an interactive dismissal,
+     * and `false` otherwise.
      * Not supported on Web.
      */
     gestureEnabled?: boolean;
@@ -440,36 +461,32 @@ export type TransitionSpec =
       >;
     };
 
+type StackCardInterpolationState = {
+  /**
+   * Animated node representing the progress value of the screen.
+   */
+  progress: Animated.AnimatedInterpolation<number>;
+  /**
+   * Animated node representing whether the screen is using the closing or
+   * opening animation (1 - closing, 0 - opening).
+   */
+  closing: Animated.AnimatedInterpolation<0 | 1>;
+};
+
 export type StackCardInterpolationProps = {
   /**
    * Values for the current screen.
    */
-  current: {
-    /**
-     * Animated node representing the progress value of the current screen.
-     */
-    progress: Animated.AnimatedInterpolation<number>;
-  };
+  current: StackCardInterpolationState;
   /**
    * Values for the screen after this one in the stack.
    * This can be `undefined` in case the screen animating is the last one.
    */
-  next?:
-    | {
-        /**
-         * Animated node representing the progress value of the next screen.
-         */
-        progress: Animated.AnimatedInterpolation<number>;
-      }
-    | undefined;
+  next?: StackCardInterpolationState | undefined;
   /**
    * The index of the card with this interpolation in the stack.
    */
   index: number;
-  /**
-   * Animated node representing whether the card is closing (1 - closing, 0 - not closing).
-   */
-  closing: Animated.AnimatedInterpolation<0 | 1>;
   /**
    * Animated node representing whether the card is being swiped (1 - swiping, 0 - not swiping).
    */
@@ -548,9 +565,9 @@ export type StackHeaderInterpolationProps = {
       }
     | undefined;
   /**
-   * Writing direction of the layout.
+   * Direction multiplier for the transition.
    */
-  direction: LocaleDirection;
+  inverted: 1 | -1;
   /**
    * Layout measurements for various items we use for animation.
    */

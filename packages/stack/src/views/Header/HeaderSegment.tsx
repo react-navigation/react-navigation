@@ -6,7 +6,6 @@ import {
   HeaderTitle,
   useFrameSize,
 } from '@react-navigation/elements';
-import { useLocale } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet, type ViewStyle } from 'react-native';
 
@@ -23,15 +22,16 @@ type Props = Omit<StackHeaderOptions, 'headerStatusBarHeight'> & {
   onGoBack?: (() => void) | undefined;
   backHref?: string | undefined;
   progress: SceneProgress;
+  inverted: 1 | -1;
   styleInterpolator: StackHeaderStyleInterpolator;
 };
 
 export function HeaderSegment(props: Props) {
-  const { direction } = useLocale();
   const layout = useFrameSize((frame) => frame, true);
 
   const {
     progress,
+    inverted,
     modal,
     onGoBack,
     backHref,
@@ -75,7 +75,7 @@ export function HeaderSegment(props: Props) {
         styleInterpolator({
           current: { progress: progress.current },
           next: progress.next && { progress: progress.next },
-          direction,
+          inverted,
           layouts: {
             header: {
               height: headerHeight,
@@ -84,7 +84,7 @@ export function HeaderSegment(props: Props) {
             screen: layout,
           },
         }),
-      [styleInterpolator, progress, direction, headerHeight, layout]
+      [styleInterpolator, progress, inverted, headerHeight, layout]
     );
 
   const headerLeft: StackHeaderOptions['headerLeft'] = left

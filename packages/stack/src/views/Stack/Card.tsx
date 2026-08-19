@@ -32,8 +32,16 @@ type Props = {
   interpolationIndex: number;
   opening: boolean;
   closing: boolean;
-  next: Animated.AnimatedInterpolation<number> | undefined;
-  current: Animated.AnimatedInterpolation<number>;
+  current: {
+    progress: Animated.AnimatedInterpolation<number>;
+    closing: Animated.Value;
+  };
+  next:
+    | {
+        progress: Animated.AnimatedInterpolation<number>;
+        closing: Animated.Value;
+      }
+    | undefined;
   gesture: Animated.Value;
   layout: Layout;
   insets: EdgeInsets;
@@ -52,7 +60,7 @@ type Props = {
         style: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
       }) => React.ReactNode)
     | undefined;
-  overlayEnabled: boolean;
+  overlayEnabled: boolean | undefined;
   shadowEnabled: boolean | undefined;
   gestureEnabled: boolean;
   gestureResponseDistance?: number | undefined;
@@ -121,7 +129,7 @@ const defaultOverlay = ({
 }) => (style ? <Animated.View style={[styles.overlay, style]} /> : null);
 
 function Card({
-  shadowEnabled = false,
+  shadowEnabled,
   gestureEnabled = true,
   gestureVelocityImpact = GESTURE_VELOCITY_IMPACT,
   overlay = defaultOverlay,
@@ -153,15 +161,16 @@ function Card({
   contentStyle,
 }: Props) {
   const didInitiallyAnimate = React.useRef(false);
+  const isClosingValueLockedRef = React.useRef(false);
   const lastToValueRef = React.useRef<number | undefined>(undefined);
+  const animationIdRef = React.useRef(0);
 
   const animationHandleRef = React.useRef<number | undefined>(undefined);
   const pendingGestureCallbackRef =
     React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const pendingOnCloseCallbackRef =
     React.useRef<ReturnType<typeof setTimeout>>(undefined);
-
-  const [isClosing] = React.useState(() => new Animated.Value(FALSE));
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const [inverted] = React.useState(
     () =>
@@ -185,6 +194,8 @@ function Card({
       closing: boolean;
       velocity?: number;
     }) => {
+      const id = ++animationIdRef.current;
+
       const toValue = getAnimateToValue({
         closing: isClosingParam,
         layout,
@@ -194,7 +205,13 @@ function Card({
       });
 
       lastToValueRef.current = toValue;
-      isClosing.setValue(isClosingParam ? TRUE : FALSE);
+
+      // Switching between open and close mid-gesture and animation can cause a visible jump.
+      // So we lock the closing value until the animation is finished.
+      if (!isClosingValueLockedRef.current) {
+        isClosingValueLockedRef.current = true;
+        current.closing.setValue(isClosingParam ? TRUE : FALSE);
+      }
 
       const spec = isClosingParam ? transitionSpec.close : transitionSpec.open;
       const animation =
@@ -212,6 +229,9 @@ function Card({
       });
 
       const onFinish = () => {
+        current.closing.setValue(isClosingParam ? TRUE : FALSE);
+        isClosingValueLockedRef.current = false;
+
         if (isClosingParam) {
           onClose();
         } else {
@@ -232,6 +252,10 @@ function Card({
           useNativeDriver,
           isInteraction: false,
         }).start(({ finished }) => {
+          if (id !== animationIdRef.current) {
+            return;
+          }
+
           clearTimeout(pendingGestureCallbackRef.current);
 
           if (finished) {
@@ -239,6 +263,7 @@ function Card({
           }
         });
       } else {
+        gesture.setValue(toValue);
         onFinish();
       }
     }
@@ -270,17 +295,23 @@ function Card({
   } | null>(null);
 
   React.useEffect(() => {
+    const animationIdRefForCleanup = animationIdRef;
+
     return () => {
+      // Increment the animation ID when the card unmounts.
+      // This makes pending callbacks return because their IDs no longer match.
+      animationIdRefForCleanup.current++;
+      gesture.stopAnimation();
+
       if (animationHandleRef.current) {
         cancelAnimationFrame(animationHandleRef.current);
       }
 
       clearTimeout(pendingGestureCallbackRef.current);
       clearTimeout(pendingOnCloseCallbackRef.current);
+      clearTimeout(timeoutRef.current);
     };
-  }, []);
-
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  }, [gesture]);
 
   const maybeAnimate = useLatestCallback(() => {
     clearTimeout(pendingGestureCallbackRef.current);
@@ -365,9 +396,8 @@ function Card({
   const interpolationProps = React.useMemo(
     () => ({
       index: interpolationIndex,
-      current: { progress: current },
-      next: next && { progress: next },
-      closing: isClosing,
+      current,
+      next,
       swiping: isSwiping,
       inverted,
       layouts: {
@@ -384,7 +414,6 @@ function Card({
       interpolationIndex,
       current,
       next,
-      isClosing,
       isSwiping,
       inverted,
       layout,
@@ -405,7 +434,14 @@ function Card({
     () => {
       clearTimeout(pendingGestureCallbackRef.current);
       clearTimeout(pendingOnCloseCallbackRef.current);
+
       isSwiping.setValue(TRUE);
+
+      if (!isClosingValueLockedRef.current) {
+        isClosingValueLockedRef.current = true;
+        current.closing.setValue(TRUE);
+      }
+
       onGestureBegin?.();
     }
   );
@@ -538,13 +574,13 @@ function Card({
             // Animated needs the animated value to be used somewhere, otherwise things don't update properly.
             // If we disable animations and hide header, it could end up making the value unused.
             // So we have this dummy style that will always be used regardless of what else changed.
-            opacity: current,
+            opacity: current.progress,
           }}
           // Make sure that this view isn't removed. If this view is removed, our style with animated value won't apply
           collapsable={false}
         />
       ) : null}
-      {overlayEnabled ? (
+      {(overlayEnabled ?? overlayStyle != null) ? (
         <View style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none' }]}>
           {overlay({ style: overlayStyle })}
         </View>
@@ -557,17 +593,16 @@ function Card({
             needsOffscreenAlphaCompositing={hasOpacityStyle(cardStyle)}
             style={[styles.card, cardStyle]}
           >
-            {shadowEnabled && shadowStyle && !isTransparent ? (
+            {(shadowEnabled ?? shadowStyle != null) && !isTransparent ? (
               <Animated.View
                 style={[
                   styles.shadow,
-                  gestureDirection === 'horizontal'
-                    ? [styles.shadowHorizontal, styles.shadowStart]
-                    : gestureDirection === 'horizontal-inverted'
-                      ? [styles.shadowHorizontal, styles.shadowEnd]
-                      : gestureDirection === 'vertical'
-                        ? [styles.shadowVertical, styles.shadowTop]
-                        : [styles.shadowVertical, styles.shadowBottom],
+                  gestureDirection === 'horizontal' ||
+                  gestureDirection === 'horizontal-inverted'
+                    ? styles.shadowHorizontal
+                    : gestureDirection === 'vertical'
+                      ? [styles.shadowVertical, styles.shadowTop]
+                      : [styles.shadowVertical, styles.shadowBottom],
                   { backgroundColor },
                   shadowStyle,
                 ]}
@@ -580,7 +615,9 @@ function Card({
             >
               {children}
             </CardContent>
-            {dimStyle ? <Animated.View style={[styles.dim, dimStyle]} /> : null}
+            {dimStyle != null ? (
+              <Animated.View style={[styles.dim, dimStyle]} />
+            ) : null}
           </Animated.View>
         </GestureDetector>
       </Animated.View>
@@ -597,6 +634,10 @@ const styles = StyleSheet.create({
   },
   card: {
     flex: 1,
+    // The flip animation adds `backfaceVisibility`
+    // On Android, it crashes when the style property is removed
+    // So we always add the property with the default
+    backfaceVisibility: 'visible',
     // This is necessary for gestures to work
     // Without this, gestures won't work if the child view is flattened
     pointerEvents: 'auto',
@@ -617,22 +658,17 @@ const styles = StyleSheet.create({
   },
   shadowHorizontal: {
     top: 0,
+    start: 0,
+    end: 0,
     bottom: 0,
-    width: 3,
     ...getShadowStyle({
       offset: {
-        width: -1,
-        height: 1,
+        width: 0,
+        height: -3,
       },
-      radius: 5,
-      opacity: 0.3,
+      radius: 12,
+      opacity: 0.04,
     }),
-  },
-  shadowStart: {
-    start: 0,
-  },
-  shadowEnd: {
-    end: 0,
   },
   shadowVertical: {
     start: 0,
