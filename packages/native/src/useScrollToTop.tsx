@@ -6,7 +6,6 @@ import {
   useRoute,
 } from '@react-navigation/core';
 import * as React from 'react';
-import type { ScrollView } from 'react-native';
 
 type ScrollOptions = { x?: number; y?: number; animated?: boolean };
 
@@ -14,17 +13,10 @@ type ScrollableView =
   | { scrollToTop(): void }
   | { scrollTo(options: ScrollOptions): void }
   | { scrollToOffset(options: { offset: number; animated?: boolean }): void }
-  | { scrollResponderScrollTo(options: ScrollOptions): void }
-  | {
-      scrollToLocation(options: {
-        sectionIndex: number;
-        itemIndex: number;
-        animated?: boolean;
-      }): void;
-    };
+  | { scrollResponderScrollTo(options: ScrollOptions): void };
 
 type ScrollableWrapper =
-  | { getScrollResponder(): React.ReactNode | ScrollView }
+  | { getScrollResponder(): React.ReactNode | ScrollableView }
   | ScrollableView
   | null;
 
@@ -108,12 +100,6 @@ export function useScrollToTop(ref: React.RefObject<ScrollableWrapper>) {
                 scrollable.scrollTo({ y: 0, animated: true });
               } else if ('scrollToOffset' in scrollable) {
                 scrollable.scrollToOffset({ offset: 0, animated: true });
-              } else if ('scrollToLocation' in scrollable) {
-                scrollable.scrollToLocation({
-                  sectionIndex: 0,
-                  itemIndex: 0,
-                  animated: true,
-                });
               } else if ('scrollResponderScrollTo' in scrollable) {
                 scrollable.scrollResponderScrollTo({ y: 0, animated: true });
               }
