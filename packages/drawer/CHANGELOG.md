@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.13.9](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.8...@react-navigation/drawer@7.13.9) (2026-08-19)
+
+### Bug Fixes
+
+* read latest state to determine pop to top ([1a29cb4](https://github.com/react-navigation/react-navigation/commit/1a29cb46ffdd54f6e2f2082526bc7a07870d58b5)) - by @satya164
+
 ## [7.13.8](https://github.com/react-navigation/react-navigation/compare/@react-navigation/drawer@7.13.7...@react-navigation/drawer@7.13.8) (2026-08-07)
 
 **Note:** Version bump only for package @react-navigation/drawer

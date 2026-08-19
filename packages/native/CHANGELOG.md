@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.16...@react-navigation/native@7.3.17) (2026-08-19)
+
+### Bug Fixes
+
+* ensure linking actions are handled by root navigator ([e00a3ac](https://github.com/react-navigation/react-navigation/commit/e00a3acb033d2d2a562feda33af1c8918c8555d6)) - by @satya164
+* fix return type of getRootState ([4e6eaaa](https://github.com/react-navigation/react-navigation/commit/4e6eaaac6fad57d09ab5a828484b8ffeb4cfc6e5)) - by @satya164
+* update useScrollToTop type so SectionList ref works under RN 0.87 strict types ([#13221](https://github.com/react-navigation/react-navigation/issues/13221)) ([6dc33e7](https://github.com/react-navigation/react-navigation/commit/6dc33e7b0b9d27ad87bcb6158d80511722e3d01b)) - by @ErfanBagheri404
+
 ## [7.3.16](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.15...@react-navigation/native@7.3.16) (2026-08-07)
 
 **Note:** Version bump only for package @react-navigation/native

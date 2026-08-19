@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.21.13](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.12...@react-navigation/core@7.21.13) (2026-08-19)
+
+### Bug Fixes
+
+* fix return type of getRootState ([4e6eaaa](https://github.com/react-navigation/react-navigation/commit/4e6eaaac6fad57d09ab5a828484b8ffeb4cfc6e5)) - by @satya164
+* fix typo with using fallback index when parsing paths ([f64ceef](https://github.com/react-navigation/react-navigation/commit/f64ceef80a49bf05531dc86f23c7b2294ff44a9a)) - by @satya164
+* properly mark unhandled actions that have target ([399f0ba](https://github.com/react-navigation/react-navigation/commit/399f0ba5fe3d608276d8e7bd8f746f03bef2f518)) - by @satya164
+
 ## [7.21.12](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.11...@react-navigation/core@7.21.12) (2026-08-07)
 
 ### Bug Fixes

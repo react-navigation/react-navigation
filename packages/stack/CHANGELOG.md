@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.10.23](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.22...@react-navigation/stack@7.10.23) (2026-08-19)
+
+### Bug Fixes
+
+* avoid restarting animation unnecessarily in stack ([7bda145](https://github.com/react-navigation/react-navigation/commit/7bda14564a8b1b772f825357be70cfe22136debf)) - by @satya164
+* improve animation lifecycle handling in stack ([ba004a8](https://github.com/react-navigation/react-navigation/commit/ba004a89632eeb34d6c6e93a9db02612b5ce9dd3)) - by @satya164
+* read latest state to determine pop to top ([1a29cb4](https://github.com/react-navigation/react-navigation/commit/1a29cb46ffdd54f6e2f2082526bc7a07870d58b5)) - by @satya164
+
 ## [7.10.22](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@7.10.21...@react-navigation/stack@7.10.22) (2026-08-07)
 
 ### Bug Fixes
