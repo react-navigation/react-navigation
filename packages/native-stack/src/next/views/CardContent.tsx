@@ -76,7 +76,8 @@ export function CardContent({
       ? defaultHeaderHeight
       : (measuredHeaderHeight ?? defaultHeaderHeight);
 
-  const headerContainerRef = React.useRef<View>(null);
+  const headerContainerRef =
+    React.useRef<React.ComponentRef<typeof View>>(null);
 
   const updateHeaderHeight = React.useCallback(
     (height: number) => {
