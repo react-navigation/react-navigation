@@ -156,7 +156,9 @@ function Card({
   contentStyle,
 }: Props) {
   const didInitiallyAnimate = React.useRef(false);
+  const isClosingValueLockedRef = React.useRef(false);
   const lastToValueRef = React.useRef<number | undefined>(undefined);
+  const animationIdRef = React.useRef(0);
 
   const interactionHandleRef = React.useRef<number | undefined>(undefined);
   const animationHandleRef = React.useRef<number | undefined>(undefined);
@@ -164,6 +166,7 @@ function Card({
     React.useRef<ReturnType<typeof setTimeout>>(undefined);
   const pendingOnCloseCallbackRef =
     React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const [isClosing] = React.useState(() => new Animated.Value(FALSE));
 
@@ -203,6 +206,8 @@ function Card({
       closing: boolean;
       velocity?: number;
     }) => {
+      const id = ++animationIdRef.current;
+
       const toValue = getAnimateToValue({
         closing: isClosingParam,
         layout,
@@ -212,7 +217,13 @@ function Card({
       });
 
       lastToValueRef.current = toValue;
-      isClosing.setValue(isClosingParam ? TRUE : FALSE);
+
+      // Switching between open and close mid-gesture and animation can cause a visible jump.
+      // So we lock the closing value until the animation is finished.
+      if (!isClosingValueLockedRef.current) {
+        isClosingValueLockedRef.current = true;
+        isClosing.setValue(isClosingParam ? TRUE : FALSE);
+      }
 
       const spec = isClosingParam ? transitionSpec.close : transitionSpec.open;
       const animation =
@@ -230,6 +241,9 @@ function Card({
       });
 
       const onFinish = () => {
+        isClosing.setValue(isClosingParam ? TRUE : FALSE);
+        isClosingValueLockedRef.current = false;
+
         if (isClosingParam) {
           onClose();
         } else {
@@ -251,6 +265,10 @@ function Card({
           useNativeDriver,
           isInteraction: false,
         }).start(({ finished }) => {
+          if (id !== animationIdRef.current) {
+            return;
+          }
+
           onEndInteraction();
           clearTimeout(pendingGestureCallbackRef.current);
 
@@ -259,6 +277,7 @@ function Card({
           }
         });
       } else {
+        gesture.setValue(toValue);
         onFinish();
       }
     }
@@ -271,6 +290,12 @@ function Card({
           clearTimeout(pendingGestureCallbackRef.current);
           clearTimeout(pendingOnCloseCallbackRef.current);
           isSwiping.setValue(TRUE);
+
+          if (!isClosingValueLockedRef.current) {
+            isClosingValueLockedRef.current = true;
+            isClosing.setValue(TRUE);
+          }
+
           onStartInteraction();
           onGestureBegin?.();
           break;
@@ -370,7 +395,13 @@ function Card({
   } | null>(null);
 
   React.useEffect(() => {
+    const animationIdRefForCleanup = animationIdRef;
+
     return () => {
+      // Increment the animation ID when the card unmounts.
+      // This makes pending callbacks return because their IDs no longer match.
+      animationIdRefForCleanup.current++;
+      gesture.stopAnimation();
       onEndInteraction();
 
       if (animationHandleRef.current) {
@@ -379,13 +410,9 @@ function Card({
 
       clearTimeout(pendingGestureCallbackRef.current);
       clearTimeout(pendingOnCloseCallbackRef.current);
+      clearTimeout(timeoutRef.current);
     };
-
-    // We only want to clean up the animation on unmount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const timeoutRef = React.useRef<ReturnType<typeof setTimeout>>(undefined);
+  }, [gesture, onEndInteraction]);
 
   const maybeAnimate = useLatestCallback(() => {
     clearTimeout(pendingGestureCallbackRef.current);
