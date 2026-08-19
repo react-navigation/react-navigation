@@ -57,23 +57,37 @@ function NativeStackNavigator({
       return;
     }
 
-    // @ts-expect-error: there may not be a tab navigator in parent
-    return navigation?.addListener?.(
-      'tabPress',
-      (e: EventArg<'tabPress', true>) => {
-        const isFocused = navigation.isFocused();
+    let handle: ReturnType<typeof requestAnimationFrame> | undefined;
 
-        requestAnimationFrame(() => {
-          if (state.index > 0 && isFocused && !e.defaultPrevented) {
-            navigation.dispatch({
-              ...StackActions.popToTop(),
-              target: state.key,
-            });
-          }
-        });
-      }
-    );
-  }, [meta, navigation, state.index, state.key]);
+    // @ts-expect-error: there may not be a tab navigator in parent
+    const unsubscribe = navigation.addListener?.('tabPress', (e) => {
+      const isFocused = navigation.isFocused();
+
+      cancelAnimationFrame(handle);
+
+      // Run the operation in the next frame so we're sure all listeners have been run
+      // This is necessary to know if preventDefault() has been called
+      handle = requestAnimationFrame(() => {
+        const currentState = navigation.getState();
+
+        if (
+          isFocused &&
+          (currentState.index > 0 || currentState.routes[0]?.history?.length) &&
+          !(e as EventArg<'tabPress', true>).defaultPrevented
+        ) {
+          navigation.dispatch({
+            ...StackActions.popToTop(),
+            target: currentState.key,
+          });
+        }
+      });
+    });
+
+    return () => {
+      cancelAnimationFrame(handle);
+      unsubscribe?.();
+    };
+  }, [meta, navigation]);
 
   return (
     <NavigationContent>

@@ -62,13 +62,14 @@ function NativeStackViewContent({
     key: string;
     markNativelyDismissed: boolean;
   }) => {
-    const index = routeIndexByKey.get(key);
+    const currentState = navigation.getState();
+    const index = currentState.routes.findIndex((route) => route.key === key);
 
-    if (index == null) {
+    if (index === -1) {
       return;
     }
 
-    const dismissCount = state.index - index + 1;
+    const dismissCount = currentState.index - index + 1;
 
     if (dismissCount < 1) {
       return;
@@ -77,8 +78,8 @@ function NativeStackViewContent({
     if (markNativelyDismissed) {
       dispatch({
         type: 'ADD_NATIVELY_DISMISSED_ROUTES',
-        keys: state.routes
-          .slice(index, state.index + 1)
+        keys: currentState.routes
+          .slice(index, currentState.index + 1)
           .map((route) => route.key),
       });
     }
@@ -86,7 +87,7 @@ function NativeStackViewContent({
     navigation.dispatch({
       ...StackActions.pop(dismissCount),
       source: key,
-      target: state.key,
+      target: currentState.key,
     });
 
     if (markNativelyDismissed) {
@@ -95,10 +96,12 @@ function NativeStackViewContent({
   };
 
   const onNativeDismissPrevented = (key: string) => {
+    const currentState = navigation.getState();
+
     navigation.dispatch({
       ...StackActions.pop(),
       source: key,
-      target: state.key,
+      target: currentState.key,
     });
   };
 
