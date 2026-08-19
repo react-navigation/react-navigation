@@ -41,6 +41,7 @@ const SWIPE_MIN_OFFSET = 5;
 const SWIPE_MIN_DISTANCE = 60;
 const SWIPE_MIN_VELOCITY = 500;
 const PEEK_DELAY = 160;
+const PEEK_EDGE_WIDTH = 20;
 const PEEK_DISTANCE = 20;
 const PROGRESS_EPSILON = 0.05;
 
@@ -315,6 +316,13 @@ export function Drawer({
         touchStartX.set(event.x);
 
         if (open) {
+          return;
+        }
+
+        const distanceFromEdge =
+          drawerPosition === 'left' ? event.x : layoutWidth.get() - event.x;
+
+        if (distanceFromEdge > PEEK_EDGE_WIDTH) {
           return;
         }
 
