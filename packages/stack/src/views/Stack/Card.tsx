@@ -163,6 +163,7 @@ function Card({
   const didInitiallyAnimate = React.useRef(false);
   const isClosingValueLockedRef = React.useRef(false);
   const lastToValueRef = React.useRef<number | undefined>(undefined);
+  const isAnimatingRef = React.useRef(false);
   const animationIdRef = React.useRef(0);
 
   const animationHandleRef = React.useRef<number | undefined>(undefined);
@@ -245,6 +246,8 @@ function Card({
       };
 
       if (animated) {
+        isAnimatingRef.current = true;
+
         animation(gesture, {
           ...spec.config,
           velocity,
@@ -256,6 +259,8 @@ function Card({
             return;
           }
 
+          isAnimatingRef.current = false;
+
           clearTimeout(pendingGestureCallbackRef.current);
 
           if (finished) {
@@ -263,6 +268,7 @@ function Card({
           }
         });
       } else {
+        isAnimatingRef.current = false;
         gesture.setValue(toValue);
         onFinish();
       }
@@ -349,7 +355,10 @@ function Card({
         // When route was closed due to a gesture, the animation would've happened already
         // It's still important to trigger the animation so that `onClose` is called
         // If `onClose` is not called, cleanup step won't be performed for gestures
-        animate({ closing });
+        // We also check if animation was already running so we don't restart it unnecessarily
+        if (!isAnimatingRef.current || lastToValueRef.current !== toValue) {
+          animate({ closing });
+        }
       } else if (
         typeof previousOpening === 'boolean' &&
         opening &&
