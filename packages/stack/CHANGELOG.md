@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.52](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.51...@react-navigation/stack@8.0.0-alpha.52) (2026-08-19)
+
+### Bug Fixes
+
+* avoid restarting animation unnecessarily in stack ([2ecbf72](https://github.com/react-navigation/react-navigation/commit/2ecbf7277eaf9da84be9fc555bd605d3f331f8a4)) - by @satya164
+* read latest state to determine pop to top ([ca99c68](https://github.com/react-navigation/react-navigation/commit/ca99c6889fa99da70001f817df4af4896ab371c4)) - by @satya164
+
+### Features
+
+* add new animations and update existing animations in stack ([#13209](https://github.com/react-navigation/react-navigation/issues/13209)) ([46c37f5](https://github.com/react-navigation/react-navigation/commit/46c37f59f95ebbc2bda5b280f9d3f82a2364dae8)) - by @satya164
+
+### BREAKING CHANGES
+
+* **
+
+Card style interpolator functions now receive `closing` in
+`current.closing` instead of top-level. There is also `next.closing`
+now.
+
+Header style interpolators now receive `inverted` instead of `direction`
+to be consistent with Stack. Unlike `direction` which represented locale
+direction, `inverted` can represent animation direction.
+
+New transition presets:
+- `DialogAndroid`
+- `ModalFlipIOS`
+- `CrossDissolveIOS`
+
+Additions to named animations:
+- `flip`
+- `ios_from_left`
+- `ios_from_right`
+
 # [8.0.0-alpha.51](https://github.com/react-navigation/react-navigation/compare/@react-navigation/stack@8.0.0-alpha.50...@react-navigation/stack@8.0.0-alpha.51) (2026-08-10)
 
 ### Bug Fixes

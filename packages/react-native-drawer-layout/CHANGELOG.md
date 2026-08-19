@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [5.0.0-alpha.18](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.17...react-native-drawer-layout@5.0.0-alpha.18) (2026-08-19)
+
+### Bug Fixes
+
+* ensure drawer peek only starts in small area ([894b7ec](https://github.com/react-navigation/react-navigation/commit/894b7ecd24c2b8e2189a43d1b30901b98f6a706c)) - by @satya164
+
 # [5.0.0-alpha.17](https://github.com/react-navigation/react-navigation/compare/react-native-drawer-layout@5.0.0-alpha.16...react-native-drawer-layout@5.0.0-alpha.17) (2026-08-10)
 
 ### Bug Fixes
