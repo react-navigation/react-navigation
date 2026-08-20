@@ -194,8 +194,6 @@ export function createMemoryHistory() {
         // In Chrome, navigation seems to happen instantly in next microtask
         // But on Firefox, the traversal can take much longer when the main thread
         // is busy, e.g. it was measured to take up to ~900ms while rendering a new screen
-        // While the promise is pending, subsequent `pushState`/`replaceState` are queued,
-        // which avoids racing them against the in-flight traversal
         // We're using a hacky timeout since there doesn't seem to be way to know for sure
         const timer = setTimeout(() => {
           window.removeEventListener('popstate', onPopState);

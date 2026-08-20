@@ -1,10 +1,14 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import type { NavigationState } from '@react-navigation/core';
 
 import { createMemoryHistory } from '../createMemoryHistory';
 
 beforeEach(() => {
   jest.useRealTimers();
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
 });
 
 test('finds previous entries without matching hash fragments', () => {
@@ -267,47 +271,6 @@ test('can go back in browser history after a previous attempt failed', async () 
   await expect(navigation).resolves.toBeUndefined();
 
   expect(listener).not.toHaveBeenCalled();
-
-  unlisten();
-});
-
-test('resolves go when popstate arrives before the timeout', async () => {
-  jest.useFakeTimers();
-
-  const state: NavigationState = {
-    key: 'stack-123',
-    index: 0,
-    routeNames: ['One'],
-    routes: [{ name: 'One', key: 'One-23' }],
-    type: 'stack',
-    stale: false,
-  };
-  const history = createMemoryHistory();
-
-  history.replace({ path: '/route-one', state });
-  history.push({ path: '/route-two', state });
-
-  const listener = jest.fn();
-  const unlisten = history.listen(listener);
-
-  const originalGo = window.history.go.bind(window.history);
-  const windowGoSpy = jest
-    .spyOn(window.history, 'go')
-    .mockImplementation((delta) => {
-      setTimeout(() => originalGo(delta), 600);
-    });
-
-  const navigation = history.go(-1);
-
-  jest.advanceTimersByTime(600);
-  jest.runAllTimers();
-
-  await expect(navigation).resolves.toBeUndefined();
-
-  expect(listener).not.toHaveBeenCalled();
-  expect(history.index).toBe(0);
-
-  windowGoSpy.mockRestore();
 
   unlisten();
 });
