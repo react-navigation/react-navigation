@@ -146,14 +146,19 @@ export function Drawer({
     onGestureCancel?.();
   });
 
+  // Drive hitSlop from the settled open state, not `isOpen`.
+  // Updating hitSlop when `open` flips at animation start remounts
+  // GestureDetector mid-spring and flashes on Android Fabric (#12137).
+  const [settledOpen, setSettledOpen] = React.useState(isOpen);
+
   const hitSlop = React.useMemo(
     () =>
       isRight
         ? // Extend hitSlop to the side of the screen when drawer is closed
           // This lets the user drag the drawer from the side of the screen
-          { right: 0, width: isOpen ? undefined : swipeEdgeWidth }
-        : { left: 0, width: isOpen ? undefined : swipeEdgeWidth },
-    [isRight, isOpen, swipeEdgeWidth]
+          { right: 0, width: settledOpen ? undefined : swipeEdgeWidth }
+        : { left: 0, width: settledOpen ? undefined : swipeEdgeWidth },
+    [isRight, settledOpen, swipeEdgeWidth]
   );
 
   const [initialWidth] = React.useState(() => Dimensions.get('window').width);
@@ -226,6 +231,7 @@ export function Drawer({
         return;
       }
 
+      setSettledOpen(open);
       onTransitionEnd?.(!open);
     }
   );
@@ -244,6 +250,8 @@ export function Drawer({
       const toValue = getDrawerTranslationX(open, containerWidth);
 
       if (translationX.get() === toValue) {
+        // Already at the target — keep hitSlop in sync without animating.
+        scheduleOnRN(setSettledOpen, open);
         return;
       }
 

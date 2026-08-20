@@ -12,6 +12,7 @@ import { ComponentsLink } from './Screens/ComponentsLink';
 import { ComponentsMaterialSymbols } from './Screens/ComponentsMaterialSymbols';
 import { ComponentsSFSymbols } from './Screens/ComponentsSFSymbols';
 import { DrawerMasterDetail } from './Screens/DrawerMasterDetail';
+import { DrawerNestedTabs } from './Screens/DrawerNestedTabs';
 import { LibrariesDrawerLayout } from './Screens/LibrariesDrawerLayout';
 import { LibrariesTabView } from './Screens/LibrariesTabView';
 import { Loaders } from './Screens/Loaders';
@@ -68,6 +69,7 @@ export const SCREENS = {
   BottomTabsFullHistory,
   BottomTabsPreloadFlow,
   DrawerMasterDetail,
+  DrawerNestedTabs,
   MaterialTopTabsBasic,
   LibrariesDrawerLayout,
   LibrariesTabView,
