@@ -20,15 +20,24 @@ import {
 import type { EdgeInsets } from 'react-native-safe-area-context';
 
 import {
+  forBottomSheetAndroid,
+  forCrossDissolveIOS,
+  forDialogAndroid,
+  forFadeFromBottomAndroid,
+  forFadeFromRightAndroid,
+  forFlipIOS,
   forModalPresentationIOS,
   forNoAnimation as forNoAnimationCard,
+  forRevealFromBottomAndroid,
+  forScaleFromCenterAndroid,
+  forVerticalIOS,
 } from '../../TransitionConfigs/CardStyleInterpolators';
 import {
-  BottomSheetAndroid,
   DefaultTransition,
   FadeFromBottomAndroid,
   FadeFromRightAndroid,
   ModalFadeTransition,
+  ModalFlipIOS,
   ModalSlideFromBottomIOS,
   ModalTransition,
   RevealFromBottomAndroid,
@@ -102,16 +111,32 @@ const NAMED_TRANSITIONS_PRESETS = {
   fade: ModalFadeTransition,
   fade_from_bottom: FadeFromBottomAndroid,
   fade_from_right: FadeFromRightAndroid,
+  flip: ModalFlipIOS,
+  ios_from_left: SlideFromLeftIOS,
+  ios_from_right: SlideFromRightIOS,
   none: DefaultTransition,
   reveal_from_bottom: RevealFromBottomAndroid,
   scale_from_center: ScaleFromCenterAndroid,
   slide_from_left: SlideFromLeftIOS,
   slide_from_right: SlideFromRightIOS,
-  slide_from_bottom: Platform.select({
-    ios: ModalSlideFromBottomIOS,
-    default: BottomSheetAndroid,
-  }),
+  slide_from_bottom: ModalSlideFromBottomIOS,
 } as const satisfies Record<StackAnimationName, TransitionPreset>;
+
+const GESTURE_DISABLED_INTERPOLATORS = [
+  forCrossDissolveIOS,
+  forDialogAndroid,
+  forFadeFromBottomAndroid,
+  forFadeFromRightAndroid,
+  forFlipIOS,
+  forRevealFromBottomAndroid,
+  forScaleFromCenterAndroid,
+  forVerticalIOS,
+];
+
+const SCREEN_HEADER_INTERPOLATORS = [
+  ...GESTURE_DISABLED_INTERPOLATORS,
+  forBottomSheetAndroid,
+];
 
 const HIDDEN_HEADER_HEIGHT = { measured: false, value: 0 };
 
@@ -146,10 +171,25 @@ const getIsModalPresentation = (
 ) => {
   return (
     cardStyleInterpolator === forModalPresentationIOS ||
-    // Handle custom modal presentation interpolators as well
-    cardStyleInterpolator.name === 'forModalPresentationIOS'
+    cardStyleInterpolator.name === forModalPresentationIOS.name
   );
 };
+
+const getIsGestureEnabledByDefault = (
+  cardStyleInterpolator: StackCardStyleInterpolator
+) =>
+  !GESTURE_DISABLED_INTERPOLATORS.some(
+    (interpolator) =>
+      cardStyleInterpolator === interpolator ||
+      cardStyleInterpolator.name === interpolator.name
+  );
+
+const getIsScreenHeader = (cardStyleInterpolator: StackCardStyleInterpolator) =>
+  SCREEN_HEADER_INTERPOLATORS.some(
+    (interpolator) =>
+      cardStyleInterpolator === interpolator ||
+      cardStyleInterpolator.name === interpolator.name
+  );
 
 const getIsInModalPresentation = (
   scene: Scene,
@@ -323,7 +363,6 @@ export class CardStack extends React.Component<Props, State> {
     }
 
     const allRoutes = getAllRoutes(props.routes, props.state);
-
     const gestures = allRoutes.reduce<GestureValues>((acc, curr) => {
       const descriptor = props.descriptors[curr.key];
       const { animation } = descriptor?.options || {};
@@ -354,6 +393,13 @@ export class CardStack extends React.Component<Props, State> {
       const nextRoute = isInactive ? undefined : self[index + 1];
 
       const oldScene = state.scenes[index];
+      const previousScene =
+        oldScene?.route.key === route.key
+          ? oldScene
+          : state.scenes.find((scene) => scene.route.key === route.key);
+      const closing =
+        previousScene?.closing ??
+        new Animated.Value(props.closingRouteKeys.includes(route.key) ? 1 : 0);
 
       const currentGesture = gestures[route.key];
 
@@ -420,16 +466,17 @@ export class CardStack extends React.Component<Props, State> {
               : DefaultTransition;
 
       const {
-        gestureEnabled = Platform.OS === 'ios' && isAnimationEnabled,
         gestureDirection = transitionPreset.gestureDirection,
         transitionSpec = transitionPreset.transitionSpec,
         cardStyleInterpolator = isAnimationEnabled
           ? transitionPreset.cardStyleInterpolator
           : forNoAnimationCard,
+        gestureEnabled = Platform.OS === 'ios' &&
+          isAnimationEnabled &&
+          getIsGestureEnabledByDefault(cardStyleInterpolator),
         headerStyleInterpolator = transitionPreset.headerStyleInterpolator,
-        cardOverlayEnabled = (Platform.OS !== 'ios' &&
-          optionsForTransitionConfig.presentation !== 'transparentModal') ||
-          getIsModalPresentation(cardStyleInterpolator),
+        cardOverlayEnabled,
+        cardShadowEnabled,
       } = optionsForTransitionConfig;
 
       const headerMode: StackHeaderMode =
@@ -439,7 +486,8 @@ export class CardStack extends React.Component<Props, State> {
           optionsForTransitionConfig.presentation === 'transparentModal' ||
           nextOptions?.presentation === 'modal' ||
           nextOptions?.presentation === 'transparentModal' ||
-          getIsModalPresentation(cardStyleInterpolator)
+          getIsModalPresentation(cardStyleInterpolator) ||
+          getIsScreenHeader(cardStyleInterpolator)
         ) &&
         Platform.OS === 'ios' &&
         descriptor.options.header === undefined
@@ -456,6 +504,7 @@ export class CardStack extends React.Component<Props, State> {
             ...descriptor.options,
             animation,
             cardOverlayEnabled,
+            cardShadowEnabled,
             cardStyleInterpolator,
             gestureDirection,
             gestureEnabled,
@@ -489,6 +538,7 @@ export class CardStack extends React.Component<Props, State> {
               )
             : undefined,
         },
+        closing,
         __memo: [
           state.layout,
           descriptor,
@@ -810,10 +860,13 @@ export class CardStack extends React.Component<Props, State> {
                   // Preloaded screens should stay mounted, but remain hidden until focused
                   (!isPreloaded && index >= routes.length - 2)));
 
-            const activityMode = // Render focused and animating screens normally
+            const activityMode =
+              // Keep focused and focusing screens interactive
               focused || isFocusing
                 ? 'normal'
                 : inactiveBehavior === 'none' ||
+                    // Keep effects running until the closing animation finishes
+                    isRemoving ||
                     // Unpause preloaded or retained screens so updates are visible
                     // Handle retained explicitly as isInactive won't be updated until animation end
                     isInactive ||
@@ -870,6 +923,8 @@ export class CardStack extends React.Component<Props, State> {
                   focused={focused}
                   opening={openingRouteKeys.includes(route.key)}
                   closing={closingRouteKeys.includes(route.key)}
+                  closingAnimated={scene.closing}
+                  nextClosingAnimated={nextScene?.closing}
                   layout={layout}
                   gesture={gesture}
                   scene={scene}

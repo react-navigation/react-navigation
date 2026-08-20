@@ -22,10 +22,27 @@ name: Native Bottom Tabs - Basic
     text: 'Go to Contacts'
 - assertVisible:
     text: 'Marissa Castillo'
+- scroll
+- assertNotVisible:
+    text: 'Marissa Castillo'
+- tapOn:
+    text: 'Contacts'
+- extendedWaitUntil:
+    visible:
+      text: 'Marissa Castillo'
+    timeout: 5000
 - tapOn:
     text: 'Albums'
 - assertVisible:
     text: 'Albums'
+- tapOn:
+    text: 'Article'
+- assertVisible:
+    text: 'Article by Babel fish'
+- tapOn:
+    text: 'Navigate to feed'
+- assertVisible:
+    text: 'Feed'
 - tapOn:
     text: 'Article'
 - assertVisible:

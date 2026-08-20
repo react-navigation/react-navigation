@@ -4,9 +4,11 @@ import {
   NavigationIndependentTree,
   NavigationRouteContext,
   type NavigatorScreenParams,
+  useNavigation,
 } from '@react-navigation/core';
-import { act, render } from '@testing-library/react-native';
+import { act, render, screen, userEvent } from '@testing-library/react-native';
 import * as React from 'react';
+import { Pressable, Text } from 'react-native';
 
 import { createStackNavigator } from '../__stubs__/createStackNavigator';
 import { NavigationContainer } from '../NavigationContainer';
@@ -298,20 +300,10 @@ test('builds a sibling href when a screen is added during render', async () => {
 test('builds action from href outside of a navigator', async () => {
   expect.assertions(1);
 
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
   const Test = () => {
-    const { buildAction } = useLinkBuilder();
-
-    const action = buildAction('/foo');
-
-    expect(action).toEqual({
-      type: 'NAVIGATE',
-      payload: {
-        name: 'Foo',
-        path: '/foo',
-        params: {},
-        pop: true,
-      },
-    });
+    buildAction = useLinkBuilder().buildAction;
 
     return null;
   };
@@ -321,6 +313,16 @@ test('builds action from href outside of a navigator', async () => {
       <Test />
     </NavigationContainer>
   );
+
+  expect(buildAction?.('/foo')).toEqual({
+    type: 'NAVIGATE',
+    payload: {
+      name: 'Foo',
+      path: '/foo',
+      params: {},
+      pop: true,
+    },
+  });
 });
 
 test('does not use a container from outside an independent tree', async () => {
@@ -346,20 +348,10 @@ test('does not use a container from outside an independent tree', async () => {
 test('builds action from href in navigator screen', async () => {
   expect.assertions(1);
 
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
   const Test = () => {
-    const { buildAction } = useLinkBuilder();
-
-    const action = buildAction('/foo');
-
-    expect(action).toEqual({
-      type: 'NAVIGATE',
-      payload: {
-        name: 'Foo',
-        path: '/foo',
-        params: {},
-        pop: true,
-      },
-    });
+    buildAction = useLinkBuilder().buildAction;
 
     return null;
   };
@@ -373,29 +365,26 @@ test('builds action from href in navigator screen', async () => {
       </Stack.Navigator>
     </NavigationContainer>
   );
+
+  expect(buildAction?.('/foo')).toEqual({
+    type: 'NAVIGATE',
+    target: expect.any(String),
+    payload: {
+      name: 'Foo',
+      path: '/foo',
+      params: {},
+      pop: true,
+    },
+  });
 });
 
 test('builds action from href in nested navigator', async () => {
   expect.assertions(1);
 
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
   const Test = () => {
-    const { buildAction } = useLinkBuilder();
-
-    const action = buildAction('/foo/bar/42');
-
-    expect(action).toEqual({
-      type: 'NAVIGATE',
-      payload: {
-        name: 'Foo',
-        params: {
-          initial: true,
-          screen: 'Bar',
-          params: { id: '42' },
-          path: '/foo/bar/42',
-        },
-        pop: true,
-      },
-    });
+    buildAction = useLinkBuilder().buildAction;
 
     return null;
   };
@@ -416,41 +405,30 @@ test('builds action from href in nested navigator', async () => {
       </StackA.Navigator>
     </NavigationContainer>
   );
+
+  expect(buildAction?.('/foo/bar/42')).toEqual({
+    type: 'NAVIGATE',
+    target: expect.any(String),
+    payload: {
+      name: 'Foo',
+      params: {
+        initial: true,
+        screen: 'Bar',
+        params: { id: '42' },
+        path: '/foo/bar/42',
+      },
+      pop: true,
+    },
+  });
 });
 
 test('builds action from href for URL with scheme and host', async () => {
   expect.assertions(2);
 
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
   const Root = () => {
-    const { buildAction } = useLinkBuilder();
-
-    expect(buildAction('myapp://foo/bar/42')).toEqual({
-      type: 'NAVIGATE',
-      payload: {
-        name: 'Foo',
-        params: {
-          initial: true,
-          screen: 'Bar',
-          params: { id: '42' },
-          path: '/foo/bar/42',
-        },
-        pop: true,
-      },
-    });
-
-    expect(buildAction('http://myapp.org/foo/bar/42')).toEqual({
-      type: 'NAVIGATE',
-      payload: {
-        name: 'Foo',
-        params: {
-          initial: true,
-          screen: 'Bar',
-          params: { id: '42' },
-          path: '/foo/bar/42',
-        },
-        pop: true,
-      },
-    });
+    buildAction = useLinkBuilder().buildAction;
 
     return null;
   };
@@ -460,65 +438,43 @@ test('builds action from href for URL with scheme and host', async () => {
       <Root />
     </NavigationContainer>
   );
+
+  expect(buildAction?.('myapp://foo/bar/42')).toEqual({
+    type: 'NAVIGATE',
+    payload: {
+      name: 'Foo',
+      params: {
+        initial: true,
+        screen: 'Bar',
+        params: { id: '42' },
+        path: '/foo/bar/42',
+      },
+      pop: true,
+    },
+  });
+
+  expect(buildAction?.('http://myapp.org/foo/bar/42')).toEqual({
+    type: 'NAVIGATE',
+    payload: {
+      name: 'Foo',
+      params: {
+        initial: true,
+        screen: 'Bar',
+        params: { id: '42' },
+        path: '/foo/bar/42',
+      },
+      pop: true,
+    },
+  });
 });
 
 test('builds action from href for URL with custom prefixes', async () => {
   // expect.assertions(2);
 
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
   const Root = () => {
-    const { buildAction } = useLinkBuilder();
-
-    expect(buildAction('foo://foo/bar/42')).toEqual({
-      type: 'NAVIGATE',
-      payload: {
-        name: 'Foo',
-        params: {
-          initial: true,
-          screen: 'Bar',
-          params: { id: '42' },
-          path: '/foo/bar/42',
-        },
-        pop: true,
-      },
-    });
-
-    expect(buildAction('https://foo.example.com/foo/bar/42')).toEqual({
-      type: 'NAVIGATE',
-      payload: {
-        name: 'Foo',
-        params: {
-          initial: true,
-          screen: 'Bar',
-          params: { id: '42' },
-          path: '/foo/bar/42',
-        },
-        pop: true,
-      },
-    });
-
-    expect(buildAction('https://test.myapp.com/foo/bar/42')).toEqual({
-      type: 'NAVIGATE',
-      payload: {
-        name: 'Foo',
-        params: {
-          initial: true,
-          screen: 'Bar',
-          params: { id: '42' },
-          path: '/foo/bar/42',
-        },
-        pop: true,
-      },
-    });
-
-    expect(() => buildAction('otherscheme://foo/bar/42')).toThrow(
-      "Got invalid href 'otherscheme://foo/bar/42'. It must start with '/' or match one of the prefixes: 'foo://', 'https://foo.example.com', 'https://*.myapp.com'."
-    );
-
-    expect(() =>
-      buildAction('https://test.otherdomain.com/foo/bar/42')
-    ).toThrow(
-      "Got invalid href 'https://test.otherdomain.com/foo/bar/42'. It must start with '/' or match one of the prefixes: 'foo://', 'https://foo.example.com', 'https://*.myapp.com'."
-    );
+    buildAction = useLinkBuilder().buildAction;
 
     return null;
   };
@@ -533,17 +489,67 @@ test('builds action from href for URL with custom prefixes', async () => {
       <Root />
     </NavigationContainer>
   );
+
+  expect(buildAction?.('foo://foo/bar/42')).toEqual({
+    type: 'NAVIGATE',
+    payload: {
+      name: 'Foo',
+      params: {
+        initial: true,
+        screen: 'Bar',
+        params: { id: '42' },
+        path: '/foo/bar/42',
+      },
+      pop: true,
+    },
+  });
+
+  expect(buildAction?.('https://foo.example.com/foo/bar/42')).toEqual({
+    type: 'NAVIGATE',
+    payload: {
+      name: 'Foo',
+      params: {
+        initial: true,
+        screen: 'Bar',
+        params: { id: '42' },
+        path: '/foo/bar/42',
+      },
+      pop: true,
+    },
+  });
+
+  expect(buildAction?.('https://test.myapp.com/foo/bar/42')).toEqual({
+    type: 'NAVIGATE',
+    payload: {
+      name: 'Foo',
+      params: {
+        initial: true,
+        screen: 'Bar',
+        params: { id: '42' },
+        path: '/foo/bar/42',
+      },
+      pop: true,
+    },
+  });
+
+  expect(() => buildAction?.('otherscheme://foo/bar/42')).toThrow(
+    "Got invalid href 'otherscheme://foo/bar/42'. It must start with '/' or match one of the prefixes: 'foo://', 'https://foo.example.com', 'https://*.myapp.com'."
+  );
+
+  expect(() =>
+    buildAction?.('https://test.otherdomain.com/foo/bar/42')
+  ).toThrow(
+    "Got invalid href 'https://test.otherdomain.com/foo/bar/42'. It must start with '/' or match one of the prefixes: 'foo://', 'https://foo.example.com', 'https://*.myapp.com'."
+  );
 });
 
 test('throws for invalid hrefs', async () => {
   // expect.assertions(2);
 
-  const Root = () => {
-    const { buildAction } = useLinkBuilder();
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
 
-    expect(() => buildAction('foo/bar/42')).toThrow(
-      "Got invalid href 'foo/bar/42'. It must start with '/' or match one of the prefixes: '*'."
-    );
+  const Root = () => {
+    buildAction = useLinkBuilder().buildAction;
 
     return null;
   };
@@ -552,6 +558,10 @@ test('throws for invalid hrefs', async () => {
     <NavigationContainer linking={config}>
       <Root />
     </NavigationContainer>
+  );
+
+  expect(() => buildAction?.('foo/bar/42')).toThrow(
+    "Got invalid href 'foo/bar/42'. It must start with '/' or match one of the prefixes: '*'."
   );
 });
 
@@ -601,18 +611,18 @@ test('builds action for shared path in the current tab', async () => {
     },
   };
 
-  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
-
-  const Test = () => {
-    buildAction = useLinkBuilder().buildAction;
-    return null;
-  };
-
   const RootStack = createStackNavigator<RootStackParamList>();
   const HomeStack = createStackNavigator<HomeStackParamList>();
   const SearchStack = createStackNavigator<SearchStackParamList>();
 
   const navigation = createNavigationContainerRef<RootStackParamList>();
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
+  const Test = () => {
+    buildAction = useLinkBuilder().buildAction;
+
+    return null;
+  };
 
   await render(
     <NavigationContainer
@@ -633,7 +643,7 @@ test('builds action for shared path in the current tab', async () => {
         <RootStack.Screen name="HomeBranch">
           {() => (
             <HomeStack.Navigator>
-              <HomeStack.Screen name="Home">{() => null}</HomeStack.Screen>
+              <HomeStack.Screen name="Home" component={Test} />
               <HomeStack.Screen name="Profile">{() => null}</HomeStack.Screen>
             </HomeStack.Navigator>
           )}
@@ -654,6 +664,7 @@ test('builds action for shared path in the current tab', async () => {
 
   expect(buildAction?.('/profile/123')).toEqual({
     type: 'NAVIGATE',
+    target: navigation.getRootState()?.key,
     payload: {
       name: 'SearchBranch',
       params: {
@@ -672,6 +683,7 @@ test('builds action for shared path in the current tab', async () => {
 
   expect(buildAction?.('/profile/123')).toEqual({
     type: 'NAVIGATE',
+    target: navigation.getRootState()?.key,
     payload: {
       name: 'HomeBranch',
       params: {
@@ -688,20 +700,10 @@ test('builds action for shared path in the current tab', async () => {
 test('throws if no prefixes are defined', async () => {
   expect.assertions(3);
 
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
   const Root = () => {
-    const { buildAction } = useLinkBuilder();
-
-    expect(() => buildAction('myapp://foo/bar/42')).toThrow(
-      "Failed to parse href 'myapp://foo/bar/42'. It doesn't start with '/' and no prefixes are defined in linking config."
-    );
-
-    expect(() => buildAction('https://myapp.org/foo/bar/42')).toThrow(
-      "Failed to parse href 'https://myapp.org/foo/bar/42'. It doesn't start with '/' and no prefixes are defined in linking config."
-    );
-
-    expect(() => buildAction('foo/bar/42')).toThrow(
-      "Failed to parse href 'foo/bar/42'. It doesn't start with '/' and no prefixes are defined in linking config."
-    );
+    buildAction = useLinkBuilder().buildAction;
 
     return null;
   };
@@ -716,21 +718,27 @@ test('throws if no prefixes are defined', async () => {
       <Root />
     </NavigationContainer>
   );
+
+  expect(() => buildAction?.('myapp://foo/bar/42')).toThrow(
+    "Failed to parse href 'myapp://foo/bar/42'. It doesn't start with '/' and no prefixes are defined in linking config."
+  );
+
+  expect(() => buildAction?.('https://myapp.org/foo/bar/42')).toThrow(
+    "Failed to parse href 'https://myapp.org/foo/bar/42'. It doesn't start with '/' and no prefixes are defined in linking config."
+  );
+
+  expect(() => buildAction?.('foo/bar/42')).toThrow(
+    "Failed to parse href 'foo/bar/42'. It doesn't start with '/' and no prefixes are defined in linking config."
+  );
 });
 
 test('throws for hrefs that do not match the filter', async () => {
   expect.assertions(2);
 
+  let buildAction: ReturnType<typeof useLinkBuilder>['buildAction'] | undefined;
+
   const Root = () => {
-    const { buildAction } = useLinkBuilder();
-
-    expect(() => buildAction('https://myapp.org/foo/bar/42')).not.toThrow(
-      "Failed to parse href 'https://myapp.org/foo/bar/42'. It doesn't match the filter specified in linking config."
-    );
-
-    expect(() => buildAction('https://myapp.org/foo/bar/42+skip-this')).toThrow(
-      "Failed to parse href 'https://myapp.org/foo/bar/42+skip-this'. It doesn't match the filter specified in linking config."
-    );
+    buildAction = useLinkBuilder().buildAction;
 
     return null;
   };
@@ -745,4 +753,147 @@ test('throws for hrefs that do not match the filter', async () => {
       <Root />
     </NavigationContainer>
   );
+
+  expect(() => buildAction?.('https://myapp.org/foo/bar/42')).not.toThrow(
+    "Failed to parse href 'https://myapp.org/foo/bar/42'. It doesn't match the filter specified in linking config."
+  );
+
+  expect(() => buildAction?.('https://myapp.org/foo/bar/42+skip-this')).toThrow(
+    "Failed to parse href 'https://myapp.org/foo/bar/42+skip-this'. It doesn't match the filter specified in linking config."
+  );
+});
+
+test('handles the built action in the root navigator', async () => {
+  const user = userEvent.setup();
+
+  type NestedParamList = {
+    Home: undefined;
+    Target: undefined;
+  };
+
+  type RootParamList = {
+    Nested: NavigatorScreenParams<NestedParamList>;
+    Target: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootParamList>();
+  const NestedStack = createStackNavigator<NestedParamList>();
+
+  const linking = {
+    config: {
+      screens: {
+        Nested: {
+          screens: {
+            Home: '',
+            Target: 'nested-target',
+          },
+        },
+        Target: 'target',
+      },
+    },
+  };
+
+  const HomeScreen = () => {
+    const navigation = useNavigation();
+    const { buildAction } = useLinkBuilder();
+
+    return (
+      <Pressable onPress={() => navigation.dispatch(buildAction('/target'))}>
+        <Text>Open target</Text>
+      </Pressable>
+    );
+  };
+
+  await render(
+    <NavigationContainer<RootParamList> linking={linking}>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Nested">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen name="Home" component={HomeScreen} />
+              <NestedStack.Screen name="Target">
+                {() => <Text>Nested target</Text>}
+              </NestedStack.Screen>
+            </NestedStack.Navigator>
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="Target">
+          {() => <Text>Root target</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  await user.press(screen.getByText('Open target'));
+
+  expect(screen.getByText('Root target')).toBeOnTheScreen();
+  expect(screen.queryByText('Nested target')).not.toBeOnTheScreen();
+});
+
+test('handles the reset action in the root navigator', async () => {
+  const user = userEvent.setup();
+
+  type NestedParamList = {
+    Home: undefined;
+    Target: undefined;
+  };
+
+  type RootParamList = {
+    Nested: NavigatorScreenParams<NestedParamList>;
+    Target: undefined;
+  };
+
+  const RootStack = createStackNavigator<RootParamList>();
+  const NestedStack = createStackNavigator<NestedParamList>();
+
+  const linking = {
+    config: {
+      screens: {
+        Nested: {
+          screens: {
+            Home: '',
+            Target: 'nested-target',
+          },
+        },
+        Target: 'target',
+      },
+    },
+    getActionFromState: () => undefined,
+  };
+
+  const HomeScreen = () => {
+    const navigation = useNavigation();
+    const { buildAction } = useLinkBuilder();
+
+    return (
+      <Pressable onPress={() => navigation.dispatch(buildAction('/target'))}>
+        <Text>Open target</Text>
+      </Pressable>
+    );
+  };
+
+  await render(
+    <NavigationContainer<RootParamList> linking={linking}>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Nested">
+          {() => (
+            <NestedStack.Navigator>
+              <NestedStack.Screen name="Home" component={HomeScreen} />
+              <NestedStack.Screen name="Target">
+                {() => <Text>Nested target</Text>}
+              </NestedStack.Screen>
+            </NestedStack.Navigator>
+          )}
+        </RootStack.Screen>
+        <RootStack.Screen name="Target">
+          {() => <Text>Root target</Text>}
+        </RootStack.Screen>
+      </RootStack.Navigator>
+    </NavigationContainer>
+  );
+
+  await user.press(screen.getByText('Open target'));
+
+  expect(screen.getByText('Root target')).toBeOnTheScreen();
+  expect(screen.queryByText('Nested target')).not.toBeOnTheScreen();
 });

@@ -194,7 +194,7 @@ test('action goes to hidden nested navigator if target is specified', async () =
     </BaseNavigationContainer>
   );
 
-  const childKey = navigation.getRootState().routes[0]?.state?.key;
+  const childKey = navigation.getRootState()?.routes[0]?.state?.key;
 
   await act(() => navigation.navigate('parent-b'));
 
@@ -429,11 +429,11 @@ test('action goes to correct child navigator if target is specified', async () =
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
     <BaseNavigationContainer
-      ref={ref}
+      ref={navigation}
       initialState={initialState}
       onStateChange={onStateChange}
     >
@@ -455,7 +455,7 @@ test('action goes to correct child navigator if target is specified', async () =
   await render(element);
 
   await act(() => {
-    ref.dispatch({ type: 'REVERSE', target: '1' });
+    navigation.dispatch({ type: 'REVERSE', target: '1' });
   });
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
@@ -487,7 +487,126 @@ test('action goes to correct child navigator if target is specified', async () =
   });
 });
 
-test("action doesn't bubble if target is specified", async () => {
+test("action doesn't bubble to parent if target is specified", async () => {
+  function ParentRouter(options: DefaultRouterOptions) {
+    const router = MockRouter(options);
+    const parentRouter: Router<
+      NavigationState,
+      MockActions | { type: 'REVERSE' }
+    > = {
+      ...router,
+      getStateForAction(state, action, options) {
+        if (action.type === 'REVERSE') {
+          return {
+            ...state,
+            routes: state.routes.slice().reverse(),
+          };
+        }
+
+        return router.getStateForAction(state, action, options);
+      },
+    };
+
+    return parentRouter;
+  }
+
+  const ParentNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      ParentRouter,
+      props
+    );
+
+    return (
+      <NavigationContent>
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </NavigationContent>
+    );
+  };
+
+  const ChildNavigator = (props: any) => {
+    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return (
+      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
+    );
+  };
+
+  const initialState: NavigationState = {
+    stale: false,
+    type: 'test',
+    index: 0,
+    key: 'parent',
+    routeNames: ['nested', 'sibling'],
+    routes: [
+      {
+        key: 'nested',
+        name: 'nested',
+        state: {
+          stale: false,
+          type: 'test',
+          index: 0,
+          key: 'child',
+          routeNames: ['child'],
+          routes: [{ key: 'child', name: 'child' }],
+        },
+      },
+      { key: 'sibling', name: 'sibling' },
+    ],
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+  const onUnhandledAction = jest.fn();
+
+  await render(
+    <BaseNavigationContainer
+      ref={navigation}
+      initialState={initialState}
+      onUnhandledAction={onUnhandledAction}
+    >
+      <ParentNavigator>
+        <Screen name="nested">
+          {() => (
+            <ChildNavigator>
+              <Screen name="child">{() => null}</Screen>
+            </ChildNavigator>
+          )}
+        </Screen>
+        <Screen name="sibling">{() => null}</Screen>
+      </ParentNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const stateBeforeAction = navigation.getRootState();
+
+  const target = stateBeforeAction?.routes[0]?.state?.key;
+
+  await act(() => navigation.dispatch({ type: 'REVERSE', target }));
+
+  expect(navigation.getRootState()).toEqual(stateBeforeAction);
+  expect(onUnhandledAction).toHaveBeenCalledWith({
+    type: 'REVERSE',
+    target,
+  });
+
+  await act(() => navigation.dispatch({ type: 'REVERSE' }));
+
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'sibling',
+    'nested',
+  ]);
+  expect(onUnhandledAction).toHaveBeenCalledTimes(1);
+});
+
+test("action doesn't bubble to child if target is specified", async () => {
   const CurrentParentRouter = MockRouter;
 
   function CurrentChildRouter(options: DefaultRouterOptions) {
@@ -696,10 +815,10 @@ test("emits 'beforeRemove' when removing a screen", async () => {
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={TestScreen} />
@@ -710,7 +829,7 @@ test("emits 'beforeRemove' when removing a screen", async () => {
 
   await render(element);
 
-  await act(() => ref.current?.navigate('bar'));
+  await act(() => navigation.navigate('bar'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -726,7 +845,7 @@ test("emits 'beforeRemove' when removing a screen", async () => {
     type: 'stack',
   });
 
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -746,12 +865,12 @@ test("emits 'beforeRemove' when removing a screen", async () => {
     type: 'stack',
   });
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
     retainedRouteKeys: [],
@@ -767,7 +886,7 @@ test("emits 'beforeRemove' when removing a screen", async () => {
 
   shouldPrevent = false;
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -783,8 +902,8 @@ test("emits 'beforeRemove' when removing a screen", async () => {
   shouldPrevent = true;
   shouldContinue = true;
 
-  await act(() => ref.current?.navigate('bar'));
-  await act(() => ref.current?.navigate('foo'));
+  await act(() => navigation.navigate('bar'));
+  await act(() => navigation.navigate('foo'));
 
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -839,10 +958,10 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar">{() => null}</Screen>
@@ -860,7 +979,7 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
 
   await render(element);
 
-  await act(() => ref.current?.navigate('bar'));
+  await act(() => navigation.navigate('bar'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -876,7 +995,7 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
     type: 'stack',
   });
 
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -905,12 +1024,12 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
     type: 'stack',
   });
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
     retainedRouteKeys: [],
@@ -938,7 +1057,7 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
 
   shouldPrevent = false;
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -954,8 +1073,8 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
   shouldPrevent = true;
   shouldContinue = true;
 
-  await act(() => ref.current?.navigate('bar'));
-  await act(() => ref.current?.navigate('foo'));
+  await act(() => navigation.navigate('bar'));
+  await act(() => navigation.navigate('foo'));
 
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1010,10 +1129,10 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar">{() => null}</Screen>
@@ -1036,7 +1155,7 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
 
   await render(element);
 
-  await act(() => ref.current?.navigate('bar'));
+  await act(() => navigation.navigate('bar'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1052,7 +1171,7 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
     type: 'stack',
   });
 
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1095,12 +1214,12 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
     type: 'stack',
   });
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 2,
     key: 'stack-2',
     retainedRouteKeys: [],
@@ -1142,7 +1261,7 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
 
   shouldPrevent = false;
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1158,8 +1277,8 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
   shouldPrevent = true;
   shouldContinue = true;
 
-  await act(() => ref.current?.navigate('bar'));
-  await act(() => ref.current?.navigate('foo'));
+  await act(() => navigation.navigate('bar'));
+  await act(() => navigation.navigate('foo'));
 
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1220,10 +1339,10 @@ test("emits 'beforeRemove' for multiple removed screens in reverse order", async
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={TestScreen} />
@@ -1248,9 +1367,9 @@ test("emits 'beforeRemove' for multiple removed screens in reverse order", async
   await render(element);
 
   await act(() => {
-    ref.current?.navigate('bar');
-    ref.current?.navigate('baz');
-    ref.current?.navigate('bax');
+    navigation.navigate('bar');
+    navigation.navigate('baz');
+    navigation.navigate('bax');
   });
 
   const preventedState = {
@@ -1297,34 +1416,34 @@ test("emits 'beforeRemove' for multiple removed screens in reverse order", async
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith(preventedState);
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onBeforeRemove.lex).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual(preventedState);
+  expect(navigation.getRootState()).toEqual(preventedState);
 
   shouldPrevent.lex = false;
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onBeforeRemove.baz).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual(preventedState);
+  expect(navigation.getRootState()).toEqual(preventedState);
 
   shouldPrevent.baz = false;
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onBeforeRemove.bar).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual(preventedState);
+  expect(navigation.getRootState()).toEqual(preventedState);
 
   shouldPrevent.bar = false;
 
-  await act(() => ref.current?.dispatch(StackActions.popTo('foo')));
+  await act(() => navigation.dispatch(StackActions.popTo('foo')));
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1380,10 +1499,10 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
 
   const onStateChange = jest.fn();
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   const element = (
-    <BaseNavigationContainer ref={ref} onStateChange={onStateChange}>
+    <BaseNavigationContainer ref={navigation} onStateChange={onStateChange}>
       <TestNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar">{() => null}</Screen>
@@ -1401,7 +1520,7 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
 
   await render(element);
 
-  await act(() => ref.current?.navigate('baz'));
+  await act(() => navigation.navigate('baz'));
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
@@ -1440,13 +1559,13 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
       type: 'stack',
     };
 
-    ref.current?.resetRoot(state);
+    navigation.resetRoot(state);
   });
 
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
-  expect(ref.current?.getRootState()).toEqual({
+  expect(navigation.getRootState()).toEqual({
     index: 1,
     key: 'stack-2',
     retainedRouteKeys: [],
@@ -1484,7 +1603,7 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
       type: 'stack',
     };
 
-    ref.current?.resetRoot(state);
+    navigation.resetRoot(state);
   });
 
   expect(onStateChange).toHaveBeenCalledTimes(2);
@@ -1529,11 +1648,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 2,
           routes: [
@@ -1561,7 +1680,7 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const state = ref.current?.getRootState();
+    const state = navigation.getRootState();
 
     if (state == null) {
       throw new Error('Expected navigation state to be available.');
@@ -1593,13 +1712,13 @@ test.each(['reset action', 'resetRoot'])(
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(calls).toEqual(['lex', 'bar']);
 
-    expect(ref.current?.getRootState()).toEqual(nextState);
+    expect(navigation.getRootState()).toEqual(nextState);
   }
 );
 
@@ -1638,11 +1757,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 1,
           routes: [
@@ -1668,7 +1787,7 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const state = ref.current?.getRootState();
+    const state = navigation.getRootState();
 
     if (state == null) {
       throw new Error('Expected navigation state to be available.');
@@ -1697,25 +1816,25 @@ test.each(['reset action', 'resetRoot'])(
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
-    expect(ref.current?.getRootState()).toEqual(state);
+    expect(navigation.getRootState()).toEqual(state);
 
     shouldPrevent = false;
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).toHaveBeenCalledTimes(2);
 
-    expect(ref.current?.getRootState()).toEqual(nextState);
+    expect(navigation.getRootState()).toEqual(nextState);
   }
 );
 
@@ -1750,11 +1869,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 1,
           routes: [
@@ -1780,7 +1899,7 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const state = ref.current?.getRootState();
+    const state = navigation.getRootState();
 
     if (state == null) {
       throw new Error('Expected navigation state to be available.');
@@ -1809,13 +1928,13 @@ test.each(['reset action', 'resetRoot'])(
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).not.toHaveBeenCalled();
 
-    expect(ref.current?.getRootState()).toEqual(nextState);
+    expect(navigation.getRootState()).toEqual(nextState);
   }
 );
 
@@ -1863,11 +1982,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 1,
           routes: [
@@ -1893,23 +2012,23 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const nextState = ref.current?.getRootState();
+    const nextState = navigation.getRootState();
 
     if (nextState == null) {
       throw new Error('Expected navigation state to be available.');
     }
 
-    await act(() => ref.current?.navigate('tabB'));
+    await act(() => navigation.navigate('tabB'));
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).not.toHaveBeenCalled();
 
-    expect(ref.current?.getRootState()).toEqual(nextState);
+    expect(navigation.getRootState()).toEqual(nextState);
   }
 );
 
@@ -1944,11 +2063,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 1,
           routes: [
@@ -1991,7 +2110,7 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const state = ref.current?.getRootState();
+    const state = navigation.getRootState();
 
     if (state == null) {
       throw new Error('Expected navigation state to be available.');
@@ -2033,13 +2152,13 @@ test.each(['reset action', 'resetRoot'])(
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
-    expect(ref.current?.getRootState()).toEqual(state);
+    expect(navigation.getRootState()).toEqual(state);
   }
 );
 
@@ -2095,11 +2214,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 2,
           routes: [
@@ -2137,7 +2256,7 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const state = ref.current?.getRootState();
+    const state = navigation.getRootState();
 
     if (state == null) {
       throw new Error('Expected navigation state to be available.');
@@ -2165,40 +2284,40 @@ test.each(['reset action', 'resetRoot'])(
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove.lex2).toHaveBeenCalledTimes(1);
     expect(onBeforeRemove.lex1).not.toHaveBeenCalled();
 
-    expect(ref.current?.getRootState()).toEqual(state);
+    expect(navigation.getRootState()).toEqual(state);
 
     shouldPrevent.lex2 = false;
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove.lex2).toHaveBeenCalledTimes(2);
     expect(onBeforeRemove.lex1).toHaveBeenCalledTimes(1);
 
-    expect(ref.current?.getRootState()).toEqual(state);
+    expect(navigation.getRootState()).toEqual(state);
 
     shouldPrevent.lex1 = false;
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove.lex2).toHaveBeenCalledTimes(3);
     expect(onBeforeRemove.lex1).toHaveBeenCalledTimes(2);
 
-    expect(ref.current?.getRootState()).toEqual(nextState);
+    expect(navigation.getRootState()).toEqual(nextState);
   }
 );
 
@@ -2233,11 +2352,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 1,
           routes: [
@@ -2263,7 +2382,7 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const state = ref.current?.getRootState();
+    const state = navigation.getRootState();
 
     if (state == null) {
       throw new Error('Expected navigation state to be available.');
@@ -2288,13 +2407,13 @@ test.each(['reset action', 'resetRoot'])(
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
-    expect(ref.current?.getRootState()).toEqual(state);
+    expect(navigation.getRootState()).toEqual(state);
   }
 );
 
@@ -2329,11 +2448,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 1,
           routes: [
@@ -2359,7 +2478,7 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const state = ref.current?.getRootState();
+    const state = navigation.getRootState();
 
     if (state == null) {
       throw new Error('Expected navigation state to be available.');
@@ -2389,14 +2508,14 @@ test.each(['reset action', 'resetRoot'])(
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).not.toHaveBeenCalled();
 
     expect(
-      ref.current?.getRootState().routes.find((route) => route.name === 'baz')
+      navigation.getRootState()?.routes.find((route) => route.name === 'baz')
         ?.state?.routes
     ).toEqual(
       nextState.routes.find((route) => route.name === 'baz')?.state?.routes
@@ -2435,11 +2554,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 1,
           routes: [
@@ -2465,7 +2584,7 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const state = ref.current?.getRootState();
+    const state = navigation.getRootState();
 
     if (state == null) {
       throw new Error('Expected navigation state to be available.');
@@ -2495,13 +2614,13 @@ test.each(['reset action', 'resetRoot'])(
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
-    expect(ref.current?.getRootState()).toEqual(state);
+    expect(navigation.getRootState()).toEqual(state);
   }
 );
 
@@ -2542,11 +2661,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 1,
           routes: [
@@ -2572,7 +2691,7 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const state = ref.current?.getRootState();
+    const state = navigation.getRootState();
 
     if (state == null) {
       throw new Error('Expected navigation state to be available.');
@@ -2601,25 +2720,25 @@ test.each(['reset action', 'resetRoot'])(
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
-    expect(ref.current?.getRootState()).toEqual(state);
+    expect(navigation.getRootState()).toEqual(state);
 
     shouldContinue = true;
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).toHaveBeenCalledTimes(2);
 
-    expect(ref.current?.getRootState()).toEqual(nextState);
+    expect(navigation.getRootState()).toEqual(nextState);
   }
 );
 
@@ -2660,11 +2779,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 1,
           routes: [
@@ -2690,7 +2809,7 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const state = ref.current?.getRootState();
+    const state = navigation.getRootState();
 
     if (state == null) {
       throw new Error('Expected navigation state to be available.');
@@ -2715,28 +2834,28 @@ test.each(['reset action', 'resetRoot'])(
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
-    expect(ref.current?.getRootState()).toEqual(state);
+    expect(navigation.getRootState()).toEqual(state);
 
     shouldContinue = true;
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).toHaveBeenCalledTimes(2);
 
     expect(
-      ref.current
-        ?.getRootState()
-        .routes.find((route) => route.name === 'baz')
+      navigation
+        .getRootState()
+        ?.routes.find((route) => route.name === 'baz')
         ?.state?.routes.map((route) => route.name)
     ).toEqual(['lex']);
   }
@@ -2773,11 +2892,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 1,
           routes: [
@@ -2802,7 +2921,7 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const state = ref.current?.getRootState();
+    const state = navigation.getRootState();
 
     if (state == null) {
       throw new Error('Expected navigation state to be available.');
@@ -2832,13 +2951,13 @@ test.each(['reset action', 'resetRoot'])(
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
-    expect(ref.current?.getRootState()).toEqual(state);
+    expect(navigation.getRootState()).toEqual(state);
   }
 );
 
@@ -2873,11 +2992,11 @@ test.each(['reset action', 'resetRoot'])(
       return null;
     };
 
-    const ref = createNavigationContainerRef<ParamListBase>();
+    const navigation = createNavigationContainerRef<ParamListBase>();
 
     await render(
       <BaseNavigationContainer
-        ref={ref}
+        ref={navigation}
         initialState={{
           index: 1,
           routes: [
@@ -2902,7 +3021,7 @@ test.each(['reset action', 'resetRoot'])(
       </BaseNavigationContainer>
     );
 
-    const state = ref.current?.getRootState();
+    const state = navigation.getRootState();
 
     if (state == null) {
       throw new Error('Expected navigation state to be available.');
@@ -2922,13 +3041,13 @@ test.each(['reset action', 'resetRoot'])(
 
     await act(() =>
       action === 'reset action'
-        ? ref.current?.dispatch(CommonActions.reset(nextState))
-        : ref.current?.resetRoot(nextState)
+        ? navigation.dispatch(CommonActions.reset(nextState))
+        : navigation.resetRoot(nextState)
     );
 
     expect(onBeforeRemove).toHaveBeenCalledTimes(1);
 
-    expect(ref.current?.getRootState()).toEqual(state);
+    expect(navigation.getRootState()).toEqual(state);
   }
 );
 
@@ -3197,11 +3316,11 @@ test("doesn't lose changes from an action dispatched in a 'beforeRemove' listene
     return null;
   };
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   await render(
     <BaseNavigationContainer
-      ref={ref}
+      ref={navigation}
       initialState={{
         index: 2,
         routes: [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }],
@@ -3215,11 +3334,11 @@ test("doesn't lose changes from an action dispatched in a 'beforeRemove' listene
     </BaseNavigationContainer>
   );
 
-  await act(() => ref.current?.goBack());
+  await act(() => navigation.goBack());
 
   expect(onBeforeRemove).toHaveBeenCalledTimes(2);
 
-  const state = ref.current?.getRootState();
+  const state = navigation.getRootState();
 
   expect(state?.routes.map((route) => route.name)).toEqual(['foo', 'bar']);
   expect(state?.routes[0]?.params).toEqual({ answer: 42 });
@@ -3261,11 +3380,11 @@ test("keeps state from a 'beforeRemove' listener when the original action no lon
     return null;
   };
 
-  const ref = createNavigationContainerRef<ParamListBase>();
+  const navigation = createNavigationContainerRef<ParamListBase>();
 
   await render(
     <BaseNavigationContainer
-      ref={ref}
+      ref={navigation}
       initialState={{
         index: 2,
         routes: [{ name: 'foo' }, { name: 'bar' }, { name: 'baz' }],
@@ -3281,14 +3400,14 @@ test("keeps state from a 'beforeRemove' listener when the original action no lon
 
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {});
 
-  await act(() => ref.current?.goBack());
+  await act(() => navigation.goBack());
 
   expect(onBeforeRemove).toHaveBeenCalledTimes(2);
   expect(spy).toHaveBeenCalledWith(
     expect.stringContaining("The action 'GO_BACK' was not handled")
   );
 
-  const state = ref.current?.getRootState();
+  const state = navigation.getRootState();
 
   expect(state?.routes.map((route) => route.name)).toEqual(['foo']);
   expect(state?.index).toBe(0);

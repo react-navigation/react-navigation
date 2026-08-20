@@ -161,7 +161,7 @@ test('preserves the linked path while a nested navigator hydrates', async () => 
   expect(onReady).toHaveBeenCalledTimes(1);
   expect(navigation.isReady()).toBe(true);
 
-  expect(navigation.getRootState().routes[0]?.state).toBeUndefined();
+  expect(navigation.getRootState()?.routes[0]?.state).toBeUndefined();
   expect(navigation.getState().routes[0]?.state).toBeDefined();
 
   expect(window.location.pathname).toBe('/details/42');
@@ -392,7 +392,7 @@ test('preserves the linked path while the focused route chain hydrates', async (
   expect(onReady).toHaveBeenCalledTimes(1);
   expect(navigation.isReady()).toBe(true);
 
-  expect(navigation.getRootState().routes[0]?.state).toBeUndefined();
+  expect(navigation.getRootState()?.routes[0]?.state).toBeUndefined();
 
   expect(window.location.pathname).toBe('/details/42');
 

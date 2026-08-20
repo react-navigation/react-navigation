@@ -3755,7 +3755,7 @@ test('preserves order of screens in state with non-numeric names', async () => {
 
   await render(root);
 
-  expect(navigation.getRootState().routeNames).toEqual(['foo', 'bar', 'baz']);
+  expect(navigation.getRootState()?.routeNames).toEqual(['foo', 'bar', 'baz']);
 });
 
 test('preserves order of screens in state with numeric names', async () => {
@@ -3778,7 +3778,7 @@ test('preserves order of screens in state with numeric names', async () => {
 
   await render(root);
 
-  expect(navigation.getRootState().routeNames).toEqual(['4', '7', '1']);
+  expect(navigation.getRootState()?.routeNames).toEqual(['4', '7', '1']);
 });
 
 test('removes route when screen navigationKey changes', async () => {
@@ -5005,7 +5005,7 @@ test('discards state passed in params for a different type of navigator', async 
     )
   );
 
-  expect(navigation.getRootState().routes[1]?.state).toEqual({
+  expect(navigation.getRootState()?.routes[1]?.state).toEqual({
     stale: false,
     type: 'test',
     key: '1',
@@ -5073,7 +5073,7 @@ test('restores state passed in params when route names change later', async () =
 
   await root.rerender(<Test condition />);
 
-  expect(navigation.getRootState().routes[1]?.state).toEqual({
+  expect(navigation.getRootState()?.routes[1]?.state).toEqual({
     stale: false,
     type: 'test',
     key: '4',
@@ -5148,7 +5148,7 @@ test("doesn't restore state passed in params for a different type of navigator",
 
   await root.rerender(<Test condition />);
 
-  expect(navigation.getRootState().routes[1]?.state).toEqual({
+  expect(navigation.getRootState()?.routes[1]?.state).toEqual({
     stale: false,
     type: 'test',
     key: '1',
@@ -5214,7 +5214,7 @@ test('warns when the state passed in params contains screens not in the navigato
     )
   );
 
-  expect(navigation.getRootState().routes[1]?.state).toEqual({
+  expect(navigation.getRootState()?.routes[1]?.state).toEqual({
     stale: false,
     type: 'test',
     key: '1',
@@ -5276,7 +5276,7 @@ test("warns when the screen passed in params doesn't exist in the navigator", as
     )
   );
 
-  expect(navigation.getRootState().routes[1]?.state).toEqual({
+  expect(navigation.getRootState()?.routes[1]?.state).toEqual({
     stale: false,
     type: 'test',
     key: '1',

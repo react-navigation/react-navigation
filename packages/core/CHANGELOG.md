@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.33...@react-navigation/core@8.0.0-alpha.34) (2026-08-19)
+
+### Bug Fixes
+
+* cleanup more contexts in NavigationIndependentTree ([999fc2c](https://github.com/react-navigation/react-navigation/commit/999fc2c914f592618921923bbe6e986a7f78ec9a)) - by @satya164
+* fix return type of getRootState ([ed851e7](https://github.com/react-navigation/react-navigation/commit/ed851e7ca42b07c96dd09903e475a2c3d50c3125)) - by @satya164
+* properly mark unhandled actions that have target ([3a76dfb](https://github.com/react-navigation/react-navigation/commit/3a76dfbed95eb8b502d44918dff2e4e54620f6eb)) - by @satya164
+* use root navigation for dispatching actions for links ([76b74cd](https://github.com/react-navigation/react-navigation/commit/76b74cdecafe32db9feb4427aa422b925b483b73)) - by @satya164
+
+### Features
+
+* support repeated path params ([32c4333](https://github.com/react-navigation/react-navigation/commit/32c4333a6d87efbbb5c0d52a054927c0a0b11e50)) - by @satya164
+
 # [8.0.0-alpha.33](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.32...@react-navigation/core@8.0.0-alpha.33) (2026-08-10)
 
 ### Bug Fixes

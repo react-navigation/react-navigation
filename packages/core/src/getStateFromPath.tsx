@@ -1,12 +1,11 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
-import escape from 'escape-string-regexp';
 import queryString from 'query-string';
 
 import { arrayStartsWith } from './arrayStartsWith';
 import {
   combinePatternParts,
   getPatternParts,
-  type PatternPart,
+  type PatternPartRepeat,
 } from './getPatternParts';
 import { isArrayEqual } from './isArrayEqual';
 import type { PathConfig, PathConfigMap } from './types';
@@ -34,11 +33,13 @@ type RouteConfig = {
   regex?: RegExp | undefined;
   pattern: string;
   segments: string[];
+  segmentRanks: number[];
   params: {
     screen: string;
     name: string;
     index: number;
     regex?: RegExp | undefined;
+    repeat?: PatternPartRepeat;
   }[];
   routeNames: string[];
   parse?: ParseConfig | undefined;
@@ -59,11 +60,34 @@ type ParsedRoute = {
   path?: string | undefined;
 };
 
-type RoutePatternPart = PatternPart & { screen: string };
+type RoutePatternPart =
+  | {
+      type: 'static';
+      segment: string;
+      rank: number;
+      pattern: string;
+    }
+  | {
+      type: 'param';
+      screen: string;
+      segment: string;
+      rank: number;
+      name: string;
+      pattern?: string;
+      regex?: RegExp;
+      optional?: boolean;
+      repeat?: PatternPartRepeat;
+    }
+  | {
+      type: 'wildcard';
+      segment: '*';
+      rank: number;
+    };
 
 type ConfigResources = {
   initialRoutes: InitialRouteConfig[];
   configs: RouteConfig[];
+  configsWithZeroOrMore: RouteConfig[];
   configsByScreen: Record<string, RouteConfig[]>;
   configsByPattern: Record<string, RouteConfig[]>;
   prefixRegex?: RegExp | undefined;
@@ -86,16 +110,42 @@ const NESTED_SCREEN_PARAM_NAMES = [
   'pop',
 ];
 
-const getStaticSegmentPattern = (segment: string) =>
-  Array.from(segment, (char) => {
-    const encoded = encodeURIComponent(char);
-    const percentEncoded =
-      encoded === char
-        ? `%${char.charCodeAt(0).toString(16).padStart(2, '0').toUpperCase()}`
-        : encoded;
+const REGEX_SYNTAX_CHAR = /[|\\{}()[\]^$+*?.]/;
+const HEX_DIGITS = '0123456789ABCDEF';
 
-    return `(?:${escape(char)}|${escape(percentEncoded)})`;
-  }).join('');
+const getStaticSegmentPattern = (segment: string) => {
+  let pattern = '';
+
+  for (const char of segment) {
+    const code = char.charCodeAt(0);
+
+    let escaped = char;
+
+    // A hyphen uses a hexadecimal escape because a regular backslash escape
+    // isn't valid outside character classes when a regex uses Unicode mode.
+    if (char === '-') {
+      escaped = '\\x2d';
+    } else {
+      // Other characters with special meaning in a regex can use a regular
+      // backslash escape so they are matched as literal characters.
+      if (REGEX_SYNTAX_CHAR.test(char)) {
+        escaped = `\\${char}`;
+      }
+    }
+
+    // ASCII characters have a single-byte percent-encoded form that can be
+    // built directly. Other characters need encodeURIComponent to encode all
+    // bytes in their UTF-8 representation.
+    const percentEncoded =
+      char.length === 1 && code < 128
+        ? `%${HEX_DIGITS.charAt(code >> 4)}${HEX_DIGITS.charAt(code & 15)}`
+        : encodeURIComponent(char);
+
+    pattern += `(?:${escaped}|${percentEncoded})`;
+  }
+
+  return pattern;
+};
 
 const getExplicitParamNames = (parse?: ParseConfig) => {
   const names: string[] = [];
@@ -173,6 +223,7 @@ export function getStateFromPath<ParamList extends {}>(
   const {
     initialRoutes,
     configs,
+    configsWithZeroOrMore,
     configsByScreen,
     configsByPattern,
     prefixRegex,
@@ -244,12 +295,50 @@ export function getStateFromPath<ParamList extends {}>(
     if (match) {
       const config = resolveSharedConfig(match);
 
-      return createNestedStateObject(
+      const state = createNestedStateObject(
         path,
         config.routeNames.map((name) => ({ name })),
         initialRoutes,
         config
       );
+
+      if (state) {
+        return state;
+      }
+    }
+
+    for (const config of configsWithZeroOrMore) {
+      const routes = matchAgainstConfig('', config, configsByScreen);
+
+      if (routes) {
+        let selectedConfig = resolveSharedConfig(config);
+        let selectedRoutes = routes;
+
+        if (selectedConfig !== config) {
+          const rematchedRoutes = matchAgainstConfig(
+            '',
+            selectedConfig,
+            configsByScreen
+          );
+
+          if (rematchedRoutes === undefined) {
+            selectedConfig = config;
+          } else {
+            selectedRoutes = rematchedRoutes;
+          }
+        }
+
+        const state = createNestedStateObject(
+          path,
+          selectedRoutes,
+          initialRoutes,
+          selectedConfig
+        );
+
+        if (state) {
+          return state;
+        }
+      }
     }
 
     return undefined;
@@ -384,8 +473,13 @@ function prepareConfigResources(options?: Options<{}>) {
 
   const configsByScreen: Record<string, RouteConfig[]> = {};
   const configsByPattern: Record<string, RouteConfig[]> = {};
+  const configsWithZeroOrMore: RouteConfig[] = [];
 
   for (const c of configs) {
+    if (c.params.some((param) => param.repeat === 'zero-or-more')) {
+      configsWithZeroOrMore.push(c);
+    }
+
     (configsByScreen[c.screen] ??= []).push(c);
 
     const existing = configsByPattern[c.pattern];
@@ -401,6 +495,7 @@ function prepareConfigResources(options?: Options<{}>) {
   return {
     initialRoutes,
     configs,
+    configsWithZeroOrMore,
     configsByScreen,
     configsByPattern,
     prefixRegex,
@@ -428,9 +523,7 @@ function getSortedNormalizedConfigs(
   const configs: RouteConfig[] = [];
 
   for (const key in screens) {
-    configs.push(
-      ...createNormalizedConfigs(key, screens, initialRoutes, [], [], [])
-    );
+    setupNormalizedConfigs(key, screens, initialRoutes, configs, [], [], []);
   }
 
   for (let order = 0; order < configs.length; order++) {
@@ -443,15 +536,17 @@ function getSortedNormalizedConfigs(
 
   return configs.sort((a, b) => {
     // Sort config from most specific to least specific:
-    // - more segments
     // - static segments
     // - params with regex
     // - regular params
+    // - one-or-more params
+    // - the end of the pattern
+    // - zero-or-more params
     // - wildcard
 
     // If 2 patterns are same, move the one with less route names up
     // This is an error state, so it's only useful for consistent error messages
-    if (isArrayEqual(a.segments, b.segments)) {
+    if (a.pattern === b.pattern && isArrayEqual(a.segments, b.segments)) {
       if (
         a.routeNames.length > b.routeNames.length &&
         arrayStartsWith(a.routeNames, b.routeNames)
@@ -469,76 +564,43 @@ function getSortedNormalizedConfigs(
       return a.routeNames.length - b.routeNames.length || a.order - b.order;
     }
 
-    // If one of the patterns starts with the other, it's more exhaustive
-    // So move it up
-    if (arrayStartsWith(a.segments, b.segments)) {
-      return -1;
-    }
-
-    if (arrayStartsWith(b.segments, a.segments)) {
-      return 1;
-    }
-
     for (let i = 0; i < Math.max(a.segments.length, b.segments.length); i++) {
-      const aSegment = a.segments[i];
-      const bSegment = b.segments[i];
+      const rank = (a.segmentRanks[i] ?? 5) - (b.segmentRanks[i] ?? 5);
 
-      // if b is longer, b gets higher priority
-      if (aSegment == null) {
-        return 1;
-      }
-
-      // if a is longer, a gets higher priority
-      if (bSegment == null) {
-        return -1;
-      }
-
-      const aWildCard = aSegment === '*';
-      const bWildCard = bSegment === '*';
-      const aParam = aSegment.startsWith(':');
-      const bParam = bSegment.startsWith(':');
-      const aRegex = aParam && aSegment.includes('(');
-      const bRegex = bParam && bSegment.includes('(');
-
-      // if both are wildcard or regex, we compare next component
-      if ((aWildCard && bWildCard) || (aRegex && bRegex)) {
-        continue;
-      }
-
-      // if only a is wildcard, b gets higher priority
-      if (aWildCard && !bWildCard) {
-        return 1;
-      }
-
-      // if only b is wildcard, a gets higher priority
-      if (bWildCard && !aWildCard) {
-        return -1;
-      }
-
-      // If only a has a param, b gets higher priority
-      if (aParam && !bParam) {
-        return 1;
-      }
-
-      // If only b has a param, a gets higher priority
-      if (bParam && !aParam) {
-        return -1;
-      }
-
-      // if only a has regex, a gets higher priority
-      if (aRegex && !bRegex) {
-        return -1;
-      }
-
-      // if only b has regex, b gets higher priority
-      if (bRegex && !aRegex) {
-        return 1;
+      if (rank !== 0) {
+        return rank;
       }
     }
 
-    return a.segments.length - b.segments.length;
+    return a.order - b.order;
   });
 }
+
+const getSegmentRank = (segment: string | undefined) => {
+  if (segment === undefined) {
+    return 5;
+  }
+
+  if (segment === '*') {
+    return 8;
+  }
+
+  if (!segment.startsWith(':')) {
+    return 0;
+  }
+
+  const regex = segment.includes('(');
+
+  if (segment.endsWith('+')) {
+    return regex ? 3 : 4;
+  }
+
+  if (segment.endsWith('*')) {
+    return regex ? 6 : 7;
+  }
+
+  return regex ? 1 : 2;
+};
 
 // Throw if two configs resolve to the same pattern but conflicting screens
 function checkForDuplicatedConfigs(
@@ -607,26 +669,51 @@ const matchAgainstConfig = (
           continue;
         }
 
-        const value = match.groups[`${PARAM_GROUP_PREFIX}${param.index}`];
+        let value = match.groups[`${PARAM_GROUP_PREFIX}${param.index}`];
 
-        if (value == null) {
-          params[param.name] = undefined;
-          hasParams = true;
-          continue;
+        if (param.repeat && value != null) {
+          value = value.replace(/\/$/, '');
         }
 
         let decoded: string;
+        let decodedSegments: string[] | undefined;
 
         try {
-          decoded = decodeURIComponent(value);
+          if (param.repeat) {
+            if (value == null) {
+              decodedSegments = [];
+            } else {
+              decodedSegments = value.split('/').map(decodeURIComponent);
+            }
+
+            decoded = decodedSegments.join('/');
+          } else {
+            if (value == null) {
+              params[param.name] = undefined;
+              hasParams = true;
+              continue;
+            }
+
+            decoded = decodeURIComponent(value);
+          }
         } catch {
           return undefined;
         }
 
         // Percent-encoded values are matched permissively
         // So validate the decoded value against the custom regex
-        if (param.regex && value !== decoded && !param.regex.test(decoded)) {
-          return undefined;
+        if (param.regex) {
+          const regex = param.regex;
+          const values = decodedSegments ?? [decoded];
+          const rawValues = param.repeat ? (value?.split('/') ?? []) : [value];
+
+          if (
+            values.some(
+              (item, index) => item !== rawValues[index] && !regex.test(item)
+            )
+          ) {
+            return undefined;
+          }
         }
 
         const parser = routeConfig.parse?.[param.name];
@@ -681,16 +768,56 @@ const matchAgainstConfig = (
   return matchedRoutes;
 };
 
-const createNormalizedConfigs = (
+const getRoutePatternParts = (
+  path: string,
+  screen: string
+): RoutePatternPart[] =>
+  getPatternParts(path).map((part) => {
+    const rank = getSegmentRank(part.segment);
+
+    if (part.name) {
+      return {
+        type: 'param',
+        screen,
+        segment: part.segment,
+        rank,
+        name: part.name,
+        ...(part.pattern
+          ? {
+              pattern: part.pattern,
+              regex: new RegExp(`^(?:${part.pattern})$`),
+            }
+          : null),
+        ...(part.optional ? { optional: true } : null),
+        ...(part.repeat ? { repeat: part.repeat } : null),
+      };
+    }
+
+    if (part.segment === '*') {
+      return {
+        type: 'wildcard',
+        segment: part.segment,
+        rank,
+      };
+    }
+
+    return {
+      type: 'static',
+      segment: part.segment,
+      rank,
+      pattern: getStaticSegmentPattern(part.segment),
+    };
+  });
+
+const setupNormalizedConfigs = (
   screen: string,
   routeConfig: Record<string, string | PathConfig<{}>>,
   initials: InitialRouteConfig[],
+  configs: RouteConfig[],
   parts: RoutePatternPart[],
   parentScreens: string[],
   routeNames: string[]
-): RouteConfig[] => {
-  const configs: RouteConfig[] = [];
-
+): void => {
   routeNames.push(screen);
 
   parentScreens.push(screen);
@@ -700,7 +827,7 @@ const createNormalizedConfigs = (
   if (typeof config === 'string') {
     const configParts = combinePatternParts(
       parts,
-      getPatternParts(config).map((part) => ({ ...part, screen }))
+      getRoutePatternParts(config, screen)
     );
 
     configs.push(createConfigItem(screen, [...routeNames], configParts));
@@ -717,7 +844,7 @@ const createNormalizedConfigs = (
       typeof config.path === 'string'
         ? combinePatternParts(
             parts,
-            getPatternParts(config.path).map((part) => ({ ...part, screen })),
+            getRoutePatternParts(config.path, screen),
             config.exact
           )
         : parts;
@@ -734,10 +861,7 @@ const createNormalizedConfigs = (
               createConfigItem(
                 screen,
                 [...routeNames],
-                combinePatternParts(
-                  parts,
-                  getPatternParts(alias).map((part) => ({ ...part, screen }))
-                ),
+                combinePatternParts(parts, getRoutePatternParts(alias, screen)),
                 config.parse,
                 hasNestedScreens,
                 false
@@ -750,10 +874,7 @@ const createNormalizedConfigs = (
                 [...routeNames],
                 combinePatternParts(
                   parts,
-                  getPatternParts(alias.path).map((part) => ({
-                    ...part,
-                    screen,
-                  })),
+                  getRoutePatternParts(alias.path, screen),
                   alias.exact
                 ),
                 alias.parse,
@@ -802,23 +923,20 @@ const createNormalizedConfigs = (
       }
 
       for (const nestedConfig in nestedScreens) {
-        const result = createNormalizedConfigs(
+        setupNormalizedConfigs(
           nestedConfig,
           nestedScreens,
           initials,
+          configs,
           currentParts,
           [...parentScreens],
           routeNames
         );
-
-        configs.push(...result);
       }
     }
   }
 
   routeNames.pop();
-
-  return configs;
 };
 
 const createConfigItem = (
@@ -832,6 +950,7 @@ const createConfigItem = (
   let regex: RegExp | undefined;
 
   const segments: string[] = [];
+  const segmentRanks: number[] = [];
   const params: RouteConfig['params'] = [];
   const pathParamNames = new Set<string>();
 
@@ -841,29 +960,46 @@ const createConfigItem = (
 
     for (const part of parts) {
       segments.push(part.segment);
+      segmentRanks.push(part.rank);
 
-      if (part.param) {
+      if (part.type === 'param') {
         // A custom regex may not match the percent-encoded form of the value
         // So also accept segments containing an encoded character and validate them after decoding
-        const reg = part.regex
-          ? `(?:${part.regex})|(?=[^/]*%[0-9A-F]{2})[^/]+`
-          : '[^/]+';
+        let reg = '[^/]+';
 
-        regexString += `(((?<${PARAM_GROUP_PREFIX}${index}>${reg})\\/)${part.optional ? '?' : ''})`;
+        if (part.pattern) {
+          const encodedReg = `(?=[^/]*%[0-9A-F]{2})[^/]+`;
+
+          reg = part.repeat
+            ? `(?:${encodedReg})|(?![^/]*%[0-9A-F]{2})(?:${part.pattern})`
+            : `(?:${part.pattern})|${encodedReg}`;
+        }
+
+        if (part.repeat) {
+          const repeatedReg = `(?:(?:${reg})\\/)+`;
+
+          regexString += `(?<${PARAM_GROUP_PREFIX}${index}>${repeatedReg})${
+            part.repeat === 'zero-or-more' ? '?' : ''
+          }`;
+        } else {
+          regexString += `(((?<${PARAM_GROUP_PREFIX}${index}>${reg})\\/)${part.optional ? '?' : ''})`;
+        }
+
         params.push({
           index,
           screen: part.screen,
-          name: part.param,
-          regex: part.regex ? new RegExp(`^(?:${part.regex})$`) : undefined,
+          name: part.name,
+          regex: part.regex,
+          ...(part.repeat ? { repeat: part.repeat } : {}),
         });
 
         if (part.screen === screen) {
-          pathParamNames.add(part.param);
+          pathParamNames.add(part.name);
         }
-      } else if (part.segment === '*') {
+      } else if (part.type === 'wildcard') {
         regexString += `.*\\/`;
       } else {
-        regexString += `${getStaticSegmentPattern(part.segment)}\\/`;
+        regexString += `${part.pattern}\\/`;
       }
 
       index++;
@@ -881,6 +1017,7 @@ const createConfigItem = (
     regex,
     pattern,
     segments,
+    segmentRanks,
     params,
     routeNames,
     parse,

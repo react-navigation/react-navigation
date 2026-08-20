@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.49](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.48...@react-navigation/bottom-tabs@8.0.0-alpha.49) (2026-08-19)
+
+### Bug Fixes
+
+* read latest state to determine pop to top ([ca99c68](https://github.com/react-navigation/react-navigation/commit/ca99c6889fa99da70001f817df4af4896ab371c4)) - by @satya164
+
 # [8.0.0-alpha.48](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@8.0.0-alpha.47...@react-navigation/bottom-tabs@8.0.0-alpha.48) (2026-08-10)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs

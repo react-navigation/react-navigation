@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.43](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.42...@react-navigation/native@8.0.0-alpha.43) (2026-08-19)
+
+### Bug Fixes
+
+* ensure linking actions are handled by root navigator ([901b9bf](https://github.com/react-navigation/react-navigation/commit/901b9bff07a5aba9ac5fee7f4d9146ed564dbbb0)) - by @satya164
+* fix return type of getRootState ([ed851e7](https://github.com/react-navigation/react-navigation/commit/ed851e7ca42b07c96dd09903e475a2c3d50c3125)) - by @satya164
+* update useScrollToTop type so SectionList ref works under RN 0.87 strict types ([#13221](https://github.com/react-navigation/react-navigation/issues/13221)) ([2396be6](https://github.com/react-navigation/react-navigation/commit/2396be64da6c3be102b6e3e9e6bd7ba743d405bd)) - by @ErfanBagheri404
+* use namespace import for RCTFabricComponentsPlugins ([cec5e05](https://github.com/react-navigation/react-navigation/commit/cec5e05aa7f329f624a34858f8d89c27daa72a87)) - by @satya164
+* use root navigation for dispatching actions for links ([76b74cd](https://github.com/react-navigation/react-navigation/commit/76b74cdecafe32db9feb4427aa422b925b483b73)) - by @satya164
+
 # [8.0.0-alpha.42](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@8.0.0-alpha.41...@react-navigation/native@8.0.0-alpha.42) (2026-08-10)
 
 **Note:** Version bump only for package @react-navigation/native
