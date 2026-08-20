@@ -506,9 +506,11 @@ export class CardStack extends React.Component<Props, State> {
         }
       }
 
-      const isTopScreenModal =
-        scenes[props.routes.length - 1]?.descriptor.options.presentation ===
-        'modal';
+      const focusedRouteKey = props.state.routes[props.state.index]?.key;
+      const isSingleOpeningTransition =
+        props.openingRouteKeys.length === 1 &&
+        props.openingRouteKeys[0] === focusedRouteKey &&
+        props.closingRouteKeys.length === 0;
 
       activeStates = props.routes.map((_, index, self) => {
         // The activity state represents state of the screen:
@@ -523,19 +525,21 @@ export class CardStack extends React.Component<Props, State> {
 
         const lastActiveState = state.activeStates[index];
         const activeAfterTransition = index >= self.length - activeScreensLimit;
-        // Recreate the activity interpolation below a remaining modal.
-        const shouldReactivateForModal =
+        // Recreate the activity interpolation below the active window after a
+        // route removal so the screen can appear during a later close.
+        const shouldReactivateBelowActiveWindow =
           props.routes.length < state.routes.length &&
-          index === self.length - activeScreensLimit - 1 &&
-          isTopScreenModal;
+          index === self.length - activeScreensLimit - 1;
 
         if (
-          (isTopScreenModal && index < self.length - activeScreensLimit - 1) ||
+          (isSingleOpeningTransition &&
+            index < self.length - activeScreensLimit - 1) ||
           (lastActiveState === STATE_INACTIVE &&
             !activeAfterTransition &&
-            !shouldReactivateForModal)
+            !shouldReactivateBelowActiveWindow)
         ) {
-          // screen is deeply covered by a modal, or was inactive and will remain inactive
+          // screen is deeply covered during an opening transition, or was
+          // inactive and will remain inactive
           activityState = STATE_INACTIVE;
         } else {
           const sceneForActivity = scenes[self.length - 1];
