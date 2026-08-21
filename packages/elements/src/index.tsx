@@ -19,6 +19,7 @@ export { HeaderHeightContext } from './Header/HeaderHeightContext';
 export { HeaderShownContext } from './Header/HeaderShownContext';
 export { HeaderTitle } from './Header/HeaderTitle';
 export { useHeaderHeight } from './Header/useHeaderHeight';
+export { Inert } from './Inert';
 export { getLabel } from './Label/getLabel';
 export { Label } from './Label/Label';
 export { Lazy } from './Lazy';
