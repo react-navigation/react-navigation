@@ -402,6 +402,20 @@ function Card({
     maybeAnimate,
   ]);
 
+  React.useEffect(() => {
+    // Register a no-op listener on the gesture value.
+    // When the gesture is updated from the native side (e.g. on iOS swipe-back)
+    // with `useNativeDriver`, React Native warns about `onAnimatedValueUpdate`
+    // being sent with no listeners registered. Attaching a listener tells the
+    // native side that JS is observing the value, silencing the warning.
+    // cf. https://github.com/react-navigation/react-navigation/issues/11564
+    const id = gesture.addListener(() => {});
+
+    return () => {
+      gesture.removeListener(id);
+    };
+  }, [gesture]);
+
   const interpolationProps = React.useMemo(
     () => ({
       index: interpolationIndex,
