@@ -208,12 +208,7 @@ export function useLinking<ParamList extends ParamListBase>(
               }`
             );
           }
-        } else if (!navigation.isReady()) {
-          // Cold start — fall back to resetRoot when the container
-          // isn't initialized yet. When already running (e.g. with
-          // modals open), skip resetRoot so we don't destroy the
-          // existing stack like linkTo()/dispatch(CommonActions.reset)
-          // would have done inside useBuildAction.
+        } else {
           navigation.resetRoot(state);
         }
       }
