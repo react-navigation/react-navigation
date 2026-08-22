@@ -1,5 +1,4 @@
 import {
-  CommonActions,
   getActionFromState as getActionFromStateDefault,
   getStateFromPath as getStateFromPathDefault,
   type NavigationContainerRef,
@@ -210,10 +209,7 @@ export function useLinking<ParamList extends ParamListBase>(
             );
           }
         } else {
-          // Use CommonActions.reset via dispatch (same as useBuildAction / linkTo)
-          // instead of resetRoot, so the action goes through the normal pipeline
-          // and stays consistent with programmatic linkTo() calls.
-          navigation.dispatch(CommonActions.reset(state));
+          navigation.resetRoot(state);
         }
       }
     };
