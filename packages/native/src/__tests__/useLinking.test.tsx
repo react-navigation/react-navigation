@@ -1,4 +1,4 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import {
   CommonActions,
   createNavigationContainerRef,
@@ -10,6 +10,7 @@ import {
   type NavigationState,
   type NavigatorScreenParams,
   type ParamListBase,
+  StackActions,
   StackRouter,
   TabRouter,
   useNavigationBuilder,
@@ -33,11 +34,18 @@ jest.mock('../useLinking', () => require('../useLinking.tsx'));
 let window: typeof import('../__stubs__/window').window;
 
 beforeEach(() => {
+  jest.useFakeTimers();
+
   jest.isolateModules(() => {
     window = require('../__stubs__/window').window;
   });
 
   Object.defineProperties(global, Object.getOwnPropertyDescriptors(window));
+});
+
+afterEach(() => {
+  jest.useRealTimers();
+  jest.restoreAllMocks();
 });
 
 const createStackNavigator = createNavigatorFactory((props: any) => {
@@ -78,8 +86,6 @@ const TestScreen = ({ route }: any): any =>
   `${route.name} ${JSON.stringify(route.params)}`;
 
 test('throws if multiple instances of useLinking are used', () => {
-  jest.useFakeTimers();
-
   const ref = createNavigationContainerRef<ParamListBase>();
   const options = { prefixes: [] };
 
@@ -143,8 +149,6 @@ test('throws if multiple instances of useLinking are used', () => {
   expect(spy).toHaveBeenCalledTimes(2);
 
   element?.unmount();
-
-  jest.useRealTimers();
 });
 
 test('pushes a browser history entry for each forward navigation', async () => {
@@ -1477,8 +1481,6 @@ test("doesn't leave unhandled rejection when navigation interrupts prevented bac
     rejections.push(reason);
   };
 
-  jest.useFakeTimers();
-
   process.on('unhandledRejection', onUnhandledRejection);
 
   try {
@@ -1526,7 +1528,6 @@ test("doesn't leave unhandled rejection when navigation interrupts prevented bac
 
     expect(rejections).toEqual([]);
   } finally {
-    jest.useRealTimers();
     process.off('unhandledRejection', onUnhandledRejection);
   }
 });
@@ -1784,8 +1785,6 @@ test("rolls back browser history when 'beforeRemove' prevents multi-entry jump",
 });
 
 test('preserves history entries when traversal is slower than the fallback timeout', async () => {
-  jest.useFakeTimers();
-
   const Stack = createStackNavigator();
 
   const linking = {
@@ -1800,41 +1799,510 @@ test('preserves history entries when traversal is slower than the fallback timeo
 
   const navigation = createNavigationContainerRef<ParamListBase>();
 
-  try {
-    render(
-      <NavigationContainer ref={navigation} linking={linking}>
-        <Stack.Navigator>
-          <Stack.Screen name="Home" component={TestScreen} />
-          <Stack.Screen name="Profile" component={TestScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
 
-    act(() => navigation.navigate('Profile'));
+  act(() => navigation.navigate('Profile'));
 
-    await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
 
-    const originalGo = window.history.go.bind(window.history);
+  const originalGo = window.history.go.bind(window.history);
 
-    const spy = jest.spyOn(window.history, 'go').mockImplementation((n) => {
-      setTimeout(() => originalGo(n), 150);
-    });
+  const goSpy = jest.spyOn(window.history, 'go').mockImplementation((n) => {
+    setTimeout(() => originalGo(n), 1500);
+  });
 
-    act(() => navigation.goBack());
+  act(() => navigation.goBack());
 
-    act(() => jest.advanceTimersByTime(100));
-    act(() => jest.advanceTimersByTime(50));
+  await Promise.resolve();
 
-    await waitFor(() => expect(window.location.pathname).toBe('/'));
+  act(() => jest.advanceTimersByTime(1600));
 
-    spy.mockRestore();
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
 
-    act(() => window.history.forward());
+  goSpy.mockRestore();
 
-    await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+  act(() => window.history.forward());
 
-    expect(navigation.getCurrentRoute()?.name).toBe('Profile');
-  } finally {
-    jest.useRealTimers();
-  }
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Profile');
+});
+
+test('keeps the latest navigation when programmatic back is delayed', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+        Feed: 'feed',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings" component={TestScreen} />
+        <Stack.Screen name="Feed" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  act(() => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  const originalGo = window.history.go.bind(window.history);
+
+  const goSpy = jest.spyOn(window.history, 'go').mockImplementation((n) => {
+    setTimeout(() => originalGo(n), 600);
+  });
+
+  act(() => navigation.goBack());
+
+  await Promise.resolve();
+
+  expect(goSpy).toHaveBeenCalledWith(-1);
+
+  act(() => navigation.navigate('Feed'));
+  act(() => jest.advanceTimersByTime(700));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/feed'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Feed');
+
+  goSpy.mockRestore();
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Profile');
+});
+
+test('queues replace while programmatic back is delayed', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  act(() => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  const originalGo = window.history.go.bind(window.history);
+
+  const goSpy = jest.spyOn(window.history, 'go').mockImplementation((n) => {
+    setTimeout(() => originalGo(n), 600);
+  });
+
+  act(() => navigation.goBack());
+
+  await Promise.resolve();
+
+  expect(goSpy).toHaveBeenCalledWith(-1);
+
+  act(() => navigation.dispatch(StackActions.replace('Settings')));
+  act(() => jest.advanceTimersByTime(700));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Settings');
+
+  goSpy.mockRestore();
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Home');
+});
+
+test('applies multiple updates queued during delayed history traversal', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        A: 'a',
+        B: 'b',
+        C: 'c',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="A" component={TestScreen} />
+        <Stack.Screen name="B" component={TestScreen} />
+        <Stack.Screen name="C" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  act(() => navigation.navigate('A'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/a'));
+
+  act(() => navigation.navigate('B'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+  const originalGo = window.history.go.bind(window.history);
+
+  const goSpy = jest.spyOn(window.history, 'go').mockImplementation((n) => {
+    setTimeout(() => originalGo(n), 600);
+  });
+
+  act(() => navigation.goBack());
+
+  await Promise.resolve();
+
+  expect(goSpy).toHaveBeenCalledWith(-1);
+
+  act(() => navigation.navigate('B'));
+  act(() => navigation.navigate('C'));
+  act(() => jest.advanceTimersByTime(700));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/c'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('C');
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'Home',
+    'A',
+    'B',
+    'C',
+  ]);
+
+  goSpy.mockRestore();
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/a'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('A');
+
+  act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/c'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('C');
+  expect(navigation.getRootState()?.routes.map((route) => route.name)).toEqual([
+    'Home',
+    'A',
+    'B',
+    'C',
+  ]);
+});
+
+test('syncs a queued navigation after history traversal times out', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+        Settings: 'settings',
+        Feed: 'feed',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={TestScreen} />
+        <Stack.Screen name="Settings" component={TestScreen} />
+        <Stack.Screen name="Feed" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  act(() => navigation.navigate('Settings'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/settings'));
+
+  const goSpy = jest.spyOn(window.history, 'go').mockImplementation(() => {});
+
+  act(() => navigation.goBack());
+
+  await Promise.resolve();
+
+  expect(goSpy).toHaveBeenCalledWith(-1);
+
+  act(() => navigation.navigate('Feed'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Feed');
+  expect(window.location.pathname).toBe('/settings');
+
+  act(() => jest.advanceTimersByTime(999));
+
+  expect(window.location.pathname).toBe('/settings');
+
+  act(() => jest.advanceTimersByTime(1));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/feed'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Feed');
+});
+
+test('rolls back prevented browser back when forward traversal is delayed', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        Profile: 'profile',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+  const onPreventRemove = jest.fn();
+
+  type ProfileScreenProps = {
+    route: { name: string };
+  };
+
+  const ProfileScreen = ({ route }: ProfileScreenProps): string => {
+    usePreventRemove(true, onPreventRemove);
+
+    return route.name;
+  };
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  act(() => navigation.navigate('Profile'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  const originalGo = window.history.go.bind(window.history);
+
+  jest.spyOn(window.history, 'go').mockImplementation((n) => {
+    setTimeout(() => originalGo(n), 600);
+  });
+
+  act(() => window.history.back());
+
+  await waitFor(() => expect(onPreventRemove).toHaveBeenCalledTimes(1));
+
+  expect(window.location.pathname).toBe('/');
+
+  act(() => jest.advanceTimersByTime(700));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/profile'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Profile');
+});
+
+test('syncs a delayed multi-entry programmatic pop', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        A: 'a',
+        B: 'b',
+        C: 'c',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="A" component={TestScreen} />
+        <Stack.Screen name="B" component={TestScreen} />
+        <Stack.Screen name="C" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  act(() => navigation.navigate('A'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/a'));
+
+  act(() => navigation.navigate('B'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+  act(() => navigation.navigate('C'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/c'));
+
+  const originalGo = window.history.go.bind(window.history);
+
+  const goSpy = jest.spyOn(window.history, 'go').mockImplementation((n) => {
+    setTimeout(() => originalGo(n), 600);
+  });
+
+  act(() => navigation.dispatch(StackActions.pop(2)));
+
+  await Promise.resolve();
+
+  act(() => jest.advanceTimersByTime(700));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/a'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('A');
+
+  goSpy.mockRestore();
+
+  act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('B');
+
+  act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/c'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('C');
+});
+
+test('handles browser navigation during a delayed programmatic traversal', async () => {
+  const Stack = createStackNavigator();
+
+  const linking = {
+    prefixes: [],
+    config: {
+      screens: {
+        Home: '',
+        A: 'a',
+        B: 'b',
+        C: 'c',
+      },
+    },
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  render(
+    <NavigationContainer ref={navigation} linking={linking}>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={TestScreen} />
+        <Stack.Screen name="A" component={TestScreen} />
+        <Stack.Screen name="B" component={TestScreen} />
+        <Stack.Screen name="C" component={TestScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+
+  act(() => navigation.navigate('A'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/a'));
+
+  act(() => navigation.navigate('B'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+  act(() => navigation.navigate('C'));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/c'));
+
+  const originalGo = window.history.go.bind(window.history);
+
+  const goSpy = jest.spyOn(window.history, 'go').mockImplementation((n) => {
+    setTimeout(() => originalGo(n), 600);
+  });
+
+  act(() => navigation.goBack());
+
+  await Promise.resolve();
+
+  expect(goSpy).toHaveBeenCalledWith(-1);
+
+  act(() => window.history.back());
+  act(() => jest.advanceTimersByTime(700));
+
+  await waitFor(() => expect(window.location.pathname).toBe('/a'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('A');
+
+  goSpy.mockRestore();
+
+  act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/b'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('B');
+
+  act(() => window.history.forward());
+
+  await waitFor(() => expect(window.location.pathname).toBe('/c'));
+
+  expect(navigation.getCurrentRoute()?.name).toBe('C');
 });

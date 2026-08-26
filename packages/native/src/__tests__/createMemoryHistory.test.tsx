@@ -1,4 +1,4 @@
-import { beforeEach, expect, jest, test } from '@jest/globals';
+import { afterEach, beforeEach, expect, jest, test } from '@jest/globals';
 import type { NavigationState } from '@react-navigation/core';
 
 // eslint-disable-next-line import-x/extensions
@@ -21,6 +21,10 @@ beforeEach(() => {
       return window.location;
     },
   });
+});
+
+afterEach(() => {
+  jest.restoreAllMocks();
 });
 
 test('finds previous entries without matching hash fragments', () => {
@@ -266,7 +270,7 @@ test('can go back in browser history after a previous attempt failed', async () 
 
   const timedOutNavigation = history.go(-1);
 
-  jest.advanceTimersByTime(100);
+  jest.advanceTimersByTime(1000);
 
   await expect(timedOutNavigation).rejects.toThrow(
     'History was changed during navigation.'
