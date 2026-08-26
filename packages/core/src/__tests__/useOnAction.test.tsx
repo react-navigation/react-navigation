@@ -776,9 +776,13 @@ test("action doesn't bubble to child if target is specified", () => {
   };
 
   const onStateChange = jest.fn();
+  const onUnhandledAction = jest.fn();
 
   const element = (
-    <BaseNavigationContainer onStateChange={onStateChange}>
+    <BaseNavigationContainer
+      onStateChange={onStateChange}
+      onUnhandledAction={onUnhandledAction}
+    >
       <ParentNavigator>
         <Screen name="foo">{() => null}</Screen>
         <Screen name="bar" component={TestScreen} />
@@ -797,6 +801,11 @@ test("action doesn't bubble to child if target is specified", () => {
   render(element).update(element);
 
   expect(onStateChange).not.toHaveBeenCalled();
+  expect(onUnhandledAction).toHaveBeenCalledWith({
+    source: 'bar',
+    type: 'REVERSE',
+    target: '0',
+  });
 });
 
 test('logs error if no navigator handled the action', () => {
