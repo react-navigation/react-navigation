@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.3.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.17...@react-navigation/native@7.3.18) (2026-08-26)
+
+### Bug Fixes
+
+* prevent state reset when history.go() takes longer than timeout on web ([#13217](https://github.com/react-navigation/react-navigation/issues/13217)) ([1b309a7](https://github.com/react-navigation/react-navigation/commit/1b309a75fc012d777073b195b8edc58e7f6f38ab)) - by @collectioneur
+
 ## [7.3.17](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native@7.3.16...@react-navigation/native@7.3.17) (2026-08-19)
 
 ### Bug Fixes
