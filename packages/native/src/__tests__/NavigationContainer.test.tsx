@@ -8,9 +8,42 @@ import {
   useNavigationBuilder,
 } from '@react-navigation/core';
 import { act, render, screen, waitFor } from '@testing-library/react-native';
+import * as React from 'react';
 import { Text } from 'react-native';
 
+import { LinkingContext } from '../LinkingContext';
 import { NavigationContainer } from '../NavigationContainer';
+
+test('provides linking context while initial linking state is pending', async () => {
+  const { promise } = Promise.withResolvers<string | undefined>();
+
+  const Fallback = () => {
+    const { options } = React.useContext(LinkingContext);
+
+    return (
+      <Text>
+        Linking enabled: {String(options?.enabled)}; prefixes:{' '}
+        {options?.prefixes?.join(',')}
+      </Text>
+    );
+  };
+
+  await render(
+    <NavigationContainer
+      fallback={<Fallback />}
+      linking={{
+        prefixes: ['test://'],
+        getInitialURL: () => promise,
+      }}
+    >
+      <Text>Navigation content</Text>
+    </NavigationContainer>
+  );
+
+  expect(
+    screen.getByText('Linking enabled: true; prefixes: test://')
+  ).toBeOnTheScreen();
+});
 
 test('renders fallback before state is restored asynchronously', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
