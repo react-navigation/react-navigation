@@ -111,13 +111,29 @@ export default defineConfig([
     },
   },
   {
-    files: ['packages/{native,devtools}/src/**'],
+    files: ['packages/devtools/src/**'],
 
     rules: {
       'no-restricted-imports': [
         'error',
         {
           patterns: ['@react-navigation/*/*'],
+          paths: [],
+        },
+      ],
+    },
+  },
+  {
+    files: ['packages/native/src/**'],
+
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            '@react-navigation/*/*',
+            '!@react-navigation/core/internal',
+          ],
           paths: [],
         },
       ],

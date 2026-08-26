@@ -13,6 +13,7 @@ import {
   NavigationFocusedRouteStateContext,
 } from './NavigationFocusedRouteStateContext';
 import { NavigationStateContext } from './NavigationStateContext';
+import { ServerStateContext } from './ServerStateContext';
 import { StaticContainer } from './StaticContainer';
 import type { NavigationProp, RouteConfigComponent } from './types';
 import { useOptionsGetters } from './useOptionsGetters';
@@ -148,6 +149,16 @@ export function SceneView<
     route.params,
     route.path,
   ]);
+
+  const server = React.use(ServerStateContext);
+
+  if (server != null && navigation.isFocused()) {
+    // Write the focused route chain so that the server renderer can read it
+    // Since children render after parents, the deepest focused screen wins
+    // The context is only provided on the server, where the record is only
+    // read after rendering, so it's not unsafe like mutation during render
+    server.focusedState = focusedRouteState;
+  }
 
   const context = React.useMemo(
     () => ({

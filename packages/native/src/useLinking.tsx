@@ -10,6 +10,7 @@ import {
   type PartialState,
   useNavigationIndependentTree,
 } from '@react-navigation/core';
+import { ServerStateContext } from '@react-navigation/core/internal';
 import isEqual from 'fast-deep-equal';
 import * as React from 'react';
 
@@ -241,6 +242,17 @@ export function useLinking<ParamList extends ParamListBase>(
   }, [enabled, independent]);
 
   const server = React.use(ServerContext);
+  const serverState = React.use(ServerStateContext);
+
+  if (serverState != null && enabled !== false) {
+    // Record the linking options during render so that the server renderer
+    // can compute the path for the rendered state to detect redirects
+    serverState.linking = {
+      config,
+      getStateFromPath,
+      getPathFromState,
+    };
+  }
 
   const [history] = React.useState(() => {
     if (server || typeof window === 'undefined') {

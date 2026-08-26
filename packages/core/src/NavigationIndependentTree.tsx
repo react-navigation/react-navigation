@@ -14,6 +14,7 @@ import {
 } from './NavigationProvider';
 import { NavigationRootContext } from './NavigationRootContext';
 import { PreventRemoveContext } from './PreventRemoveContext';
+import { ServerStateContext } from './ServerStateContext';
 import { StaticTreeContext } from './StaticTreeContext';
 import { FocusedRouteKeyContext, IsFocusedContext } from './useIsFocused';
 import {
@@ -54,7 +55,11 @@ export function NavigationIndependentTree({
                                     <NavigationFocusedRouteStateContext.Provider
                                       value={undefined}
                                     >
-                                      {children}
+                                      <ServerStateContext.Provider
+                                        value={undefined}
+                                      >
+                                        {children}
+                                      </ServerStateContext.Provider>
                                     </NavigationFocusedRouteStateContext.Provider>
                                   </IsScreenContext.Provider>
                                 </IsFocusedContext.Provider>
