@@ -1,3 +1,4 @@
+import { Inert } from '@react-navigation/elements';
 import * as React from 'react';
 import { Platform, StyleSheet, View } from 'react-native';
 
@@ -58,7 +59,7 @@ export const CardA11yWrapper = React.forwardRef(
         // This can happen when the view flattening results in different trees - due to `overflow` style changing in a parent.
         collapsable={false}
       >
-        {children}
+        <Inert enabled={!focused}>{children}</Inert>
       </View>
     );
   }
