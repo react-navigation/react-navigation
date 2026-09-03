@@ -3542,3 +3542,29 @@ test('parses array and null query params without parse config', () => {
     ],
   });
 });
+
+test('decodes query params with percent-encoding and plus signs', () => {
+  const config = {
+    screens: {
+      Foo: 'foo',
+    },
+  };
+
+  const path =
+    '/foo?greeting=hello+world&city=caf%C3%A9&emoji=%F0%9F%98%80&malformed=%C3';
+
+  expect(getStateFromPath<object>(path, config)).toEqual({
+    routes: [
+      {
+        name: 'Foo',
+        params: {
+          greeting: 'hello world',
+          city: 'café',
+          emoji: '😀',
+          malformed: '%C3',
+        },
+        path,
+      },
+    ],
+  });
+});
