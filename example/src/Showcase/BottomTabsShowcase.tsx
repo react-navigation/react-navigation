@@ -591,6 +591,7 @@ const NowPlayingBar = ({ placement }: { placement: 'inline' | 'regular' }) => {
 
 const BottomTabsShowcaseNavigator = createBottomTabNavigator({
   screenOptions: {
+    lazy: true,
     bottomAccessory: ({ placement }) => <NowPlayingBar placement={placement} />,
   },
   screens: {

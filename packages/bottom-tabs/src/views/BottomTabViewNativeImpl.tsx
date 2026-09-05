@@ -586,6 +586,7 @@ export function BottomTabViewNative({
               tabBarItemAccessibilityLabel={tabBarAccessibilityLabel}
               tabBarItemTestID={tabBarButtonTestID}
               preventNativeSelection={tabBarSelectionEnabled === false}
+              deferTransitionUntilStateUpdate={lazy}
               badgeValue={tabBarBadge?.toString()}
               title={tabTitle}
               nativeContainerStyle={{ backgroundColor: colors.background }}

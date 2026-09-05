@@ -1,0 +1,267 @@
+diff --git a/ios/tabs/host/RNSTabBarController.mm b/ios/tabs/host/RNSTabBarController.mm
+index 481a9e6d5367ff6cad083b001d8b1dd780918b47..f9ad6f59f52c9c00aaa4a6ec626d8e899923e90c 100644
+--- a/ios/tabs/host/RNSTabBarController.mm
++++ b/ios/tabs/host/RNSTabBarController.mm
+@@ -1,4 +1,5 @@
+ #import "RNSTabBarController.h"
++#import <QuartzCore/QuartzCore.h>
+ #import <React/RCTAssert.h>
+ #import <React/RCTLog.h>
+ #import <objc/message.h>
+@@ -16,6 +17,114 @@
+ // https://developer.apple.com/documentation/uikit/uitabbarcontroller?language=objc#The-More-navigation-controller
+ static constexpr NSUInteger kMinCountOfVCsForMoreVCPresence = 6;
+ 
++@interface RNSTabsDeferredTransition : NSObject <UIViewControllerAnimatedTransitioning>
++@property (nonatomic, weak) RNSTabBarController *controller;
++@property (nonatomic, strong) id<UIViewControllerContextTransitioning> context;
++@property (nonatomic) BOOL animating;
++- (void)resumeIfMounted;
++- (void)finish;
++@end
++
++@implementation RNSTabsDeferredTransition
++
++- (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext
++{
++  if (@available(iOS 27.0, *)) {
++    return 0;
++  }
++
++  return 0.467;
++}
++
++- (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext
++{
++  self.context = transitionContext;
++  UIView *fromView = [transitionContext viewForKey:UITransitionContextFromViewKey];
++  UIView *toView = [transitionContext viewForKey:UITransitionContextToViewKey];
++  UIViewController *toController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
++  toView.frame = [transitionContext finalFrameForViewController:toController];
++  [transitionContext.containerView addSubview:toView];
++  [transitionContext.containerView addSubview:fromView];
++  [self resumeIfMounted];
++}
++
++- (void)resumeIfMounted
++{
++  if (self.context == nil || self.animating) {
++    return;
++  }
++
++  auto *destination = (RNSTabsScreenViewController *)[self.context
++      viewControllerForKey:UITransitionContextToViewControllerKey];
++  NSString *screenKey = destination.tabScreenComponentView.screenKey;
++  if (![self.controller.tabsHostComponentView.navStateRequest.selectedScreenKey isEqualToString:screenKey]) {
++    return;
++  }
++
++  // The request and children must be committed before exposing the selected screen.
++  // UIKit can update its selected item while the outgoing content stays in place.
++  if ([self transitionDuration:self.context] == 0) {
++    [self finish];
++    return;
++  }
++
++  UIView *fromView = [self.context viewForKey:UITransitionContextFromViewKey];
++  UIView *toView = [self.context viewForKey:UITransitionContextToViewKey];
++  self.animating = YES;
++
++  [CATransaction begin];
++  [CATransaction setDisableActions:YES];
++  __weak RNSTabsDeferredTransition *weakSelf = self;
++  [CATransaction setCompletionBlock:^{
++    [weakSelf finish];
++  }];
++
++  [self.context.containerView addSubview:toView];
++
++  // These opacity springs and delays were measured from UIKit on iOS 18.6 and 26.5.
++  // UIKit's accompanying private mesh deformation is intentionally omitted.
++  for (UIView *view in @[ fromView, toView ]) {
++    BOOL outgoing = view == fromView;
++    CASpringAnimation *fade = [CASpringAnimation animationWithKeyPath:@"opacity"];
++    fade.mass = 1;
++    fade.stiffness = 2221.771737253;
++    fade.damping = 94.271347445;
++    fade.initialVelocity = 0;
++    fade.fromValue = outgoing ? @1 : @0;
++    fade.toValue = outgoing ? @0 : @1;
++    fade.beginTime = outgoing ? 0.1833 : 0.05;
++    fade.duration = 0.195924570;
++    fade.fillMode = kCAFillModeBoth;
++    fade.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
++
++    CAAnimationGroup *group = [CAAnimationGroup animation];
++    group.animations = @[ fade ];
++    group.duration = [self transitionDuration:self.context];
++    group.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear];
++    view.alpha = outgoing ? 0 : 1;
++    [view.layer addAnimation:group forKey:@"RNSTabsDeferredOpacity"];
++  }
++  [CATransaction commit];
++}
++
++- (void)finish
++{
++  if (self.context != nil) {
++    id<UIViewControllerContextTransitioning> context = self.context;
++    self.context = nil;
++    self.animating = NO;
++    UIView *fromView = [context viewForKey:UITransitionContextFromViewKey];
++    UIView *toView = [context viewForKey:UITransitionContextToViewKey];
++    [fromView.layer removeAnimationForKey:@"RNSTabsDeferredOpacity"];
++    [toView.layer removeAnimationForKey:@"RNSTabsDeferredOpacity"];
++    [context completeTransition:!context.transitionWasCancelled];
++    fromView.alpha = 1;
++    toView.alpha = 1;
++  }
++}
++
++@end
++
+ // We need UINavigationControllerDelegate to handle navigation within `moreNavigationController`
+ @interface RNSTabBarController () <UITabBarControllerDelegate, UINavigationControllerDelegate>
+ @end
+@@ -88,6 +197,8 @@ static void rns_pushViewController(__unsafe_unretained id self,
+ 
+   RNSTabsNavigationStateObserverRegistry *_observerRegistry;
+ 
++  RNSTabsDeferredTransition *_deferredTransition;
++
+   RNSParentContainerItemRegistry *_Nonnull _parentContainerRegistry;
+ }
+ 
+@@ -139,6 +250,8 @@ static void rns_pushViewController(__unsafe_unretained id self,
+ 
+ - (void)tearDown
+ {
++  [_deferredTransition finish];
++  _deferredTransition = nil;
+   [_observerRegistry clear];
+   _pendingStateUpdate = nil;
+   _tabsHostComponentView = nil;
+@@ -268,6 +381,7 @@ static void rns_pushViewController(__unsafe_unretained id self,
+ {
+   RNSLog(@"TabBarCtrl mountintTransactionDidMount running updates");
+   [self performContainerUpdate];
++  [_deferredTransition resumeIfMounted];
+ }
+ 
+ #pragma mark - Container update
+@@ -392,6 +506,24 @@ static void rns_pushViewController(__unsafe_unretained id self,
+ 
+ #pragma mark - UITabBarControllerDelegate
+ 
++- (id<UIViewControllerAnimatedTransitioning>)tabBarController:(UITabBarController *)tabBarController
++    animationControllerForTransitionFromViewController:(UIViewController *)fromViewController
++                                     toViewController:(UIViewController *)toViewController
++{
++  [_deferredTransition finish];
++  _deferredTransition = nil;
++
++  if ([toViewController isKindOfClass:RNSTabsScreenViewController.class] &&
++      ((RNSTabsScreenViewController *)toViewController).tabScreenComponentView.deferTransitionUntilStateUpdate &&
++      toViewController.view.subviews.count == 0) {
++    _deferredTransition = [RNSTabsDeferredTransition new];
++    _deferredTransition.controller = self;
++    return _deferredTransition;
++  }
++
++  return nil;
++}
++
+ // These methods are not called on programatic selection!
+ // They are called only when a user taps on tab bar.
+ 
+diff --git a/ios/tabs/screen/RNSTabsScreenComponentView.h b/ios/tabs/screen/RNSTabsScreenComponentView.h
+index ebd8f2fe5b1d98d599d7874203e5bf17535c08fa..78d36b02bf3ac28fc5be30478d422e6ecc74260a 100644
+--- a/ios/tabs/screen/RNSTabsScreenComponentView.h
++++ b/ios/tabs/screen/RNSTabsScreenComponentView.h
+@@ -68,6 +68,7 @@ NS_ASSUME_NONNULL_BEGIN
+ @property (nonatomic, readonly) BOOL shouldUseRepeatedTabSelectionScrollToTopSpecialEffect;
+ 
+ @property (nonatomic, readonly) BOOL preventNativeSelection;
++@property (nonatomic, readonly) BOOL deferTransitionUntilStateUpdate;
+ 
+ @property (nonatomic, readonly) BOOL overrideScrollViewContentInsetAdjustmentBehavior;
+ 
+diff --git a/ios/tabs/screen/RNSTabsScreenComponentView.mm b/ios/tabs/screen/RNSTabsScreenComponentView.mm
+index 1cdecb225fe77bb921dc87e8aa57757d6c19dabc..e5643fe9847e9b53b2f66f89ecf9861b3548db00 100644
+--- a/ios/tabs/screen/RNSTabsScreenComponentView.mm
++++ b/ios/tabs/screen/RNSTabsScreenComponentView.mm
+@@ -72,6 +72,7 @@ namespace react = facebook::react;
+ 
+ - (void)resetProps
+ {
++  _deferTransitionUntilStateUpdate = NO;
+   _badgeValue = nil;
+   _title = nil;
+   _isTitleUndefined = YES;
+@@ -344,6 +345,10 @@ RNS_IGNORE_SUPER_CALL_END
+     _preventNativeSelection = newComponentProps.preventNativeSelection;
+   }
+ 
++  if (newComponentProps.deferTransitionUntilStateUpdate != oldComponentProps.deferTransitionUntilStateUpdate) {
++    _deferTransitionUntilStateUpdate = newComponentProps.deferTransitionUntilStateUpdate;
++  }
++
+   if (newComponentProps.overrideScrollViewContentInsetAdjustmentBehavior !=
+       oldComponentProps.overrideScrollViewContentInsetAdjustmentBehavior) {
+     _overrideScrollViewContentInsetAdjustmentBehavior =
+diff --git a/lib/typescript/components/tabs/screen/TabsScreen.types.d.ts b/lib/typescript/components/tabs/screen/TabsScreen.types.d.ts
+index 013416fd790be8e9ea6ae908de6f11f7f14c21d8..0baa786962588e31f91f13e97dd8e67977dee93e 100644
+--- a/lib/typescript/components/tabs/screen/TabsScreen.types.d.ts
++++ b/lib/typescript/components/tabs/screen/TabsScreen.types.d.ts
+@@ -20,6 +20,17 @@ export interface TabsScreenPropsBase {
+      * @platform android, ios
+      */
+     preventNativeSelection?: boolean | undefined;
++    /**
++     * @summary Defers the first transition to a lazily mounted screen until the navigation state update.
++     *
++     * Keeps the previous screen visible until `Tabs.Host` receives a
++     * `navStateRequest` selecting this screen. The tab bar selection updates immediately.
++     *
++     * @default false
++     *
++     * @platform ios
++     */
++    deferTransitionUntilStateUpdate?: boolean | undefined;
+     children?: ViewProps['children'] | undefined;
+     style?: StyleProp<Pick<ViewStyle, 'backgroundColor'>> | undefined;
+     /**
+diff --git a/src/components/tabs/screen/TabsScreen.types.ts b/src/components/tabs/screen/TabsScreen.types.ts
+index fb6ab580751cbe5f33ebbbb0fe3842aec1690e7f..908bd1722ac7772f4f086ea6664ccade8eb4387e 100644
+--- a/src/components/tabs/screen/TabsScreen.types.ts
++++ b/src/components/tabs/screen/TabsScreen.types.ts
+@@ -38,6 +38,17 @@ export interface TabsScreenPropsBase {
+    * @platform android, ios
+    */
+   preventNativeSelection?: boolean | undefined;
++  /**
++   * @summary Defers the first transition to a lazily mounted screen until the navigation state update.
++   *
++   * Keeps the previous screen visible until `Tabs.Host` receives a
++   * `navStateRequest` selecting this screen. The tab bar selection updates immediately.
++   *
++   * @default false
++   *
++   * @platform ios
++   */
++  deferTransitionUntilStateUpdate?: boolean | undefined;
+ 
+   // General
+   children?: ViewProps['children'] | undefined;
+diff --git a/src/fabric/tabs/TabsScreenIOSNativeComponent.ts b/src/fabric/tabs/TabsScreenIOSNativeComponent.ts
+index 45c286badd1f02da518585f7403df89d2079a156..76fbb924e3dfd45fa90b84cec7e217728d909633 100644
+--- a/src/fabric/tabs/TabsScreenIOSNativeComponent.ts
++++ b/src/fabric/tabs/TabsScreenIOSNativeComponent.ts
+@@ -119,6 +119,7 @@ export interface NativeProps extends ViewProps {
+   // Control
+   screenKey: string;
+   preventNativeSelection?: CT.WithDefault<boolean, false>;
++  deferTransitionUntilStateUpdate?: CT.WithDefault<boolean, false>;
+ 
+   // General
+   title?: string | undefined | null;
