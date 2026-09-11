@@ -29,7 +29,7 @@ afterEach(() => {
 
 test('initializes state for a navigator on navigation', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -40,9 +40,7 @@ test('initializes state for a navigator on navigation', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const FooScreen = (props: any) => {
@@ -95,7 +93,7 @@ test('initializes state for a navigator on navigation', async () => {
 
 test("doesn't crash when initialState is null", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -106,9 +104,7 @@ test("doesn't crash when initialState is null", async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = () => null;
@@ -127,7 +123,7 @@ test("doesn't crash when initialState is null", async () => {
 
 test('throws for incorrect initialRouteName', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -138,9 +134,7 @@ test('throws for incorrect initialRouteName', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = () => null;
@@ -174,7 +168,7 @@ test('throws for incorrect initialRouteName', async () => {
 
 test('rehydrates state for a navigator on navigation', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -185,9 +179,7 @@ test('rehydrates state for a navigator on navigation', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const BarScreen = (props: any) => {
@@ -238,7 +230,7 @@ test('rehydrates state for a navigator on navigation', async () => {
 
 test("doesn't rehydrate state if the type of state didn't match router", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -249,9 +241,7 @@ test("doesn't rehydrate state if the type of state didn't match router", async (
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const FooScreen = (props: any) => {
@@ -311,7 +301,7 @@ test("doesn't rehydrate state if the type of state didn't match router", async (
 
 test('initializes state for nested screens in React.Fragment', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -322,9 +312,7 @@ test('initializes state for nested screens in React.Fragment', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = (props: any) => {
@@ -369,7 +357,7 @@ test('initializes state for nested screens in React.Fragment', async () => {
 
 test('initializes state for nested screens in Group', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -380,9 +368,7 @@ test('initializes state for nested screens in Group', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = (props: any) => {
@@ -427,7 +413,7 @@ test('initializes state for nested screens in Group', async () => {
 
 test('initializes state for nested navigator on navigation', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -438,9 +424,7 @@ test('initializes state for nested navigator on navigation', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = (props: any) => {
@@ -500,7 +484,7 @@ test('initializes state for nested navigator on navigation', async () => {
 
 test("doesn't update state if nothing changed", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -511,9 +495,7 @@ test("doesn't update state if nothing changed", async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const FooScreen = (props: any) => {
@@ -541,7 +523,7 @@ test("doesn't update state if nothing changed", async () => {
 
 test("doesn't update state if action wasn't handled", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -552,9 +534,7 @@ test("doesn't update state if action wasn't handled", async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const FooScreen = (props: any) => {
@@ -591,7 +571,7 @@ test("doesn't update state if action wasn't handled", async () => {
 
 test('cleans up state when the navigator unmounts', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -602,9 +582,7 @@ test('cleans up state when the navigator unmounts', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const FooScreen = (props: any) => {
@@ -654,7 +632,7 @@ test('cleans up state when the navigator unmounts', async () => {
 
 test('preserves initial state when navigator mount is delayed in StrictMode', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -665,9 +643,7 @@ test('preserves initial state when navigator mount is delayed in StrictMode', as
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
@@ -709,7 +685,7 @@ test('preserves initial state when navigator mount is delayed in StrictMode', as
 
 test('preserves state after rendered in `<Activity mode="hidden">`', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -720,11 +696,11 @@ test('preserves state after rendered in `<Activity mode="hidden">`', async () =>
       return null;
     }
 
-    return (
-      <NavigationContent>
+    return render(
+      <>
         <Text>{state.routes.map((route) => route.name).join(', ')}</Text>
         {descriptors[route.key]?.render()}
-      </NavigationContent>
+      </>
     );
   };
 
@@ -807,7 +783,7 @@ test('preserves state after rendered in `<Activity mode="hidden">`', async () =>
 
 test('handles container ref methods in hidden trees', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -818,11 +794,11 @@ test('handles container ref methods in hidden trees', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>
+    return render(
+      <>
         <Text>{state.routes.map((route) => route.name).join(', ')}</Text>
         {descriptors[route.key]?.render()}
-      </NavigationContent>
+      </>
     );
   };
 
@@ -879,27 +855,25 @@ test('handles container ref methods in hidden trees', async () => {
 
 test('preserves child state after switching parent screens rendered in `<Activity>`', async () => {
   const ParentNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route, index) => (
-          <React.Activity
-            key={route.key}
-            mode={index === state.index ? 'visible' : 'hidden'}
-          >
-            {descriptors[route.key]?.render()}
-          </React.Activity>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route, index) => (
+        <React.Activity
+          key={route.key}
+          mode={index === state.index ? 'visible' : 'hidden'}
+        >
+          {descriptors[route.key]?.render()}
+        </React.Activity>
+      ))
     );
   };
 
   const ChildNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -910,11 +884,11 @@ test('preserves child state after switching parent screens rendered in `<Activit
       return null;
     }
 
-    return (
-      <NavigationContent>
+    return render(
+      <>
         <Text>{state.routes.map((route) => route.name).join(', ')}</Text>
         {descriptors[route.key]?.render()}
-      </NavigationContent>
+      </>
     );
   };
 
@@ -1062,7 +1036,7 @@ test('preserves child state after switching parent screens rendered in `<Activit
 
 test('allows state updates by dispatching a function returning an action', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -1073,9 +1047,7 @@ test('allows state updates by dispatching a function returning an action', async
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const FooScreen = (props: any) => {
@@ -1122,7 +1094,7 @@ test('allows state updates by dispatching a function returning an action', async
 
 test('re-initializes state once for conditional rendering', async () => {
   const TestNavigatorA = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -1133,13 +1105,11 @@ test('re-initializes state once for conditional rendering', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestNavigatorB = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -1150,9 +1120,7 @@ test('re-initializes state once for conditional rendering', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const onStateChange = jest.fn();
@@ -1210,7 +1178,7 @@ test('re-initializes state once for conditional rendering', async () => {
 
 test('updates route params with setParams', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -1221,9 +1189,7 @@ test('updates route params with setParams', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   let setParams: (params: object) => void = () => undefined;
@@ -1278,7 +1244,7 @@ test('updates route params with setParams', async () => {
 
 test('updates route params with setParams applied to parent', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -1289,9 +1255,7 @@ test('updates route params with setParams applied to parent', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   let setParams: (params: object) => void = () => undefined;
@@ -1416,7 +1380,7 @@ test('handles change in route names', async () => {
 
 test('navigates to nested child in a navigator', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -1427,9 +1391,7 @@ test('navigates to nested child in a navigator', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestComponent = ({ route }: any): any => (
@@ -1522,7 +1484,7 @@ test('navigates to nested child in a navigator', async () => {
 
 test('passes path to nested child navigation from route params', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
@@ -1533,9 +1495,7 @@ test('passes path to nested child navigation from route params', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = () => null;
@@ -1591,7 +1551,7 @@ test('passes path to nested child navigation from route params', async () => {
 
 test('passes merge and pop to nested child navigation from route params', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
@@ -1602,9 +1562,7 @@ test('passes merge and pop to nested child navigation from route params', async 
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = () => null;
@@ -1709,7 +1667,7 @@ test('navigates to nested child in a navigator with initial: false', async () =>
   };
 
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TestRouter,
       props
     );
@@ -1720,9 +1678,7 @@ test('navigates to nested child in a navigator with initial: false', async () =>
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestComponent = ({ route }: any): any => (
@@ -2069,20 +2025,18 @@ test('navigates to nested child in a navigator with initial: false', async () =>
 
 test('preserves navigation state changes for preloaded screens', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
   const ChildNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
@@ -2093,9 +2047,7 @@ test('preserves navigation state changes for preloaded screens', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   let navigate: any;
@@ -2167,20 +2119,18 @@ test('preserves navigation state changes for preloaded screens', async () => {
 
 test('includes child state for preloaded screens in root state', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
   const ChildNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
@@ -2191,9 +2141,7 @@ test('includes child state for preloaded screens in root state', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -2238,7 +2186,7 @@ test('includes child state for preloaded screens in root state', async () => {
 
 test('resets to nested child in a navigator', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -2249,9 +2197,7 @@ test('resets to nested child in a navigator', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestComponent = ({ route }: any): any => (
@@ -2362,7 +2308,7 @@ test('resets to nested child in a navigator', async () => {
 
 test('resets state of a nested child in a navigator', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -2373,9 +2319,7 @@ test('resets state of a nested child in a navigator', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestComponent = ({ route }: any): any => (
@@ -2574,7 +2518,7 @@ test('resets state of a nested child in a navigator', async () => {
 
 test('resets state for navigator which has screen from params', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -2585,9 +2529,7 @@ test('resets state for navigator which has screen from params', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = () => null;
@@ -2690,7 +2632,7 @@ test('resets state for navigator which has screen from params', async () => {
 
 test('clears params for nested navigator after initial mount', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -2701,9 +2643,7 @@ test('clears params for nested navigator after initial mount', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
@@ -2784,7 +2724,7 @@ test('clears params for nested navigator after initial mount', async () => {
 
 test('does not clear params if there is no nested navigator', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -2795,9 +2735,7 @@ test('does not clear params if there is no nested navigator', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
@@ -2842,7 +2780,7 @@ test('does not clear params if there is no nested navigator', async () => {
 
 test('restores previously discarded state when route names change after initial render', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -2853,9 +2791,7 @@ test('restores previously discarded state when route names change after initial 
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
@@ -2918,7 +2854,7 @@ test('restores previously discarded state when route names change after initial 
 
 test('restores previously discarded state when route names change after navigation', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -2929,9 +2865,7 @@ test('restores previously discarded state when route names change after navigati
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
@@ -3023,7 +2957,7 @@ test('restores previously discarded state when route names change after navigati
 
 test('restores previously discarded state when route names change after navigation in a child navigator', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -3034,9 +2968,7 @@ test('restores previously discarded state when route names change after navigati
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
@@ -3191,7 +3123,7 @@ test('restores previously discarded state when route names change after navigati
 
 test('restores previously discarded state when route names change after navigation to nested child in a navigator', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -3202,9 +3134,7 @@ test('restores previously discarded state when route names change after navigati
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
@@ -3348,7 +3278,7 @@ test('restores previously discarded state when route names change after navigati
 
 test('overrides router with router prop', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -3359,9 +3289,7 @@ test('overrides router with router prop', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = () => null;
@@ -3448,7 +3376,7 @@ test('overrides router with router prop', async () => {
 
 test('gets immediate parent with getParent()', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -3459,9 +3387,7 @@ test('gets immediate parent with getParent()', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestComponent = ({ route, navigation }: any): any => {
@@ -3512,7 +3438,7 @@ test('gets immediate parent with getParent()', async () => {
 
 test('gets parent with a route name with getParent(routeName)', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -3523,9 +3449,7 @@ test('gets parent with a route name with getParent(routeName)', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestComponent = ({ route, navigation }: any): any => {
@@ -3576,7 +3500,7 @@ test('gets parent with a route name with getParent(routeName)', async () => {
 
 test('gets self with a route name with getParent(routeName)', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -3587,9 +3511,7 @@ test('gets self with a route name with getParent(routeName)', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestComponent = ({ route, navigation }: any): any => {
@@ -3640,7 +3562,7 @@ test('gets self with a route name with getParent(routeName)', async () => {
 
 test('throws when route name is not found with getParent(routeName)', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -3651,9 +3573,7 @@ test('throws when route name is not found with getParent(routeName)', async () =
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestComponent = ({ navigation }: any): any => {
@@ -3691,7 +3611,7 @@ test('throws when route name is not found with getParent(routeName)', async () =
 
 test('gives access to internal state', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -3702,9 +3622,7 @@ test('gives access to internal state', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   let state: NavigationState | undefined;
@@ -3783,7 +3701,7 @@ test('preserves order of screens in state with numeric names', async () => {
 
 test('removes route when screen navigationKey changes', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
@@ -3794,9 +3712,7 @@ test('removes route when screen navigationKey changes', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = ({ route }: any): any => <Text>[{route.name}]</Text>;
@@ -4371,7 +4287,7 @@ test("doesn't throw if children is null", async () => {
 
 test('returns currently focused route with getCurrentRoute', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -4382,9 +4298,7 @@ test('returns currently focused route with getCurrentRoute', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = () => null;
@@ -4420,7 +4334,7 @@ test('returns currently focused route with getCurrentRoute', async () => {
 
 test("returns focused screen's options with getCurrentOptions when focused screen is rendered", async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -4431,9 +4345,7 @@ test("returns focused screen's options with getCurrentOptions when focused scree
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = () => null;
@@ -4479,7 +4391,7 @@ test("returns focused screen's options with getCurrentOptions when focused scree
 
 test('returns focused screen options with getCurrentOptions from navigators in hidden trees', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -4490,9 +4402,7 @@ test('returns focused screen options with getCurrentOptions from navigators in h
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = () => null;
@@ -4540,7 +4450,7 @@ test('returns focused screen options with getCurrentOptions from navigators in h
 
 test("returns focused screen's options with getCurrentOptions when focused screen is rendered when using screenOptions", async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -4551,9 +4461,7 @@ test("returns focused screen's options with getCurrentOptions when focused scree
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = () => null;
@@ -4604,7 +4512,7 @@ test("returns focused screen's options with getCurrentOptions when focused scree
 
 test("returns focused screen's options with getCurrentOptions when focused screen is rendered when using Group", async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -4615,9 +4523,7 @@ test("returns focused screen's options with getCurrentOptions when focused scree
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = () => null;
@@ -4671,15 +4577,13 @@ test("returns focused screen's options with getCurrentOptions when focused scree
 
 test("returns focused screen's options with getCurrentOptions when all screens are rendered", async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        <>{state.routes.map((route) => descriptors[route.key]?.render())}</>
-      </NavigationContent>
+    return render(
+      <>{state.routes.map((route) => descriptors[route.key]?.render())}</>
     );
   };
 
@@ -4726,15 +4630,13 @@ test("returns focused screen's options with getCurrentOptions when all screens a
 
 test("returns focused screen's options with getCurrentOptions when all screens are rendered with screenOptions", async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        <>{state.routes.map((route) => descriptors[route.key]?.render())}</>
-      </NavigationContent>
+    return render(
+      <>{state.routes.map((route) => descriptors[route.key]?.render())}</>
     );
   };
 
@@ -4786,15 +4688,13 @@ test("returns focused screen's options with getCurrentOptions when all screens a
 
 test("returns focused screen's options with getCurrentOptions when all screens are rendered with Group", async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        <>{state.routes.map((route) => descriptors[route.key]?.render())}</>
-      </NavigationContent>
+    return render(
+      <>{state.routes.map((route) => descriptors[route.key]?.render())}</>
     );
   };
 
@@ -4849,7 +4749,7 @@ test("returns focused screen's options with getCurrentOptions when all screens a
 
 test('does not throw if while getting current options with no options defined', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -4860,9 +4760,7 @@ test('does not throw if while getting current options with no options defined', 
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = () => null;
@@ -4907,15 +4805,13 @@ test('does not throw if while getting current options with empty container', asy
 
 test('handles nested screen navigation batched with a nested state update', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -4952,7 +4848,7 @@ test('handles nested screen navigation batched with a nested state update', asyn
 
 test('discards state passed in params for a different type of navigator', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -4963,9 +4859,7 @@ test('discards state passed in params for a different type of navigator', async 
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -5020,7 +4914,7 @@ test('discards state passed in params for a different type of navigator', async 
 
 test('restores state passed in params when route names change later', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -5031,9 +4925,7 @@ test('restores state passed in params when route names change later', async () =
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -5085,7 +4977,7 @@ test('restores state passed in params when route names change later', async () =
 
 test("doesn't restore state passed in params for a different type of navigator", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -5096,9 +4988,7 @@ test("doesn't restore state passed in params for a different type of navigator",
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -5160,7 +5050,7 @@ test("doesn't restore state passed in params for a different type of navigator",
 
 test('warns when the state passed in params contains screens not in the navigator', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -5171,9 +5061,7 @@ test('warns when the state passed in params contains screens not in the navigato
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -5229,7 +5117,7 @@ test('warns when the state passed in params contains screens not in the navigato
 
 test("warns when the screen passed in params doesn't exist in the navigator", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -5240,9 +5128,7 @@ test("warns when the screen passed in params doesn't exist in the navigator", as
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -5291,7 +5177,7 @@ test("warns when the screen passed in params doesn't exist in the navigator", as
 
 test('removes route when a parent group navigationKey changes', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
@@ -5302,9 +5188,7 @@ test('removes route when a parent group navigationKey changes', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -5335,7 +5219,7 @@ test('removes route when a parent group navigationKey changes', async () => {
 
 test('removes route when a group navigationKey changes for screens in a group without navigationKey', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
@@ -5346,9 +5230,7 @@ test('removes route when a group navigationKey changes for screens in a group wi
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -5379,7 +5261,7 @@ test('removes route when a group navigationKey changes for screens in a group wi
 
 test('removes route when navigationKey changes even if combined keys are similar', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
@@ -5390,9 +5272,7 @@ test('removes route when navigationKey changes even if combined keys are similar
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();

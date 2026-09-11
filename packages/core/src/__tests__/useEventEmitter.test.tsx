@@ -21,15 +21,15 @@ beforeEach(() => {
 
 test('fires focus and blur events in root navigator', async () => {
   function TestNavigator({ ref, ...props }: any): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   }
 
@@ -116,15 +116,15 @@ test('fires focus and blur events in root navigator', async () => {
 
 test('fires focus event after blur', async () => {
   function TestNavigator({ ref, ...props }: any): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   }
 
@@ -181,15 +181,15 @@ test('fires focus event after blur', async () => {
 
 test('fires focus and blur events in nested navigator', async () => {
   function TestNavigator({ ref, ...props }: any): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   }
 
@@ -385,8 +385,10 @@ test('fires blur event when a route is removed with a delay', async () => {
   };
 
   function TestNavigator({ ref, ...props }: any): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(TestRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      TestRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => navigation, [navigation]);
 
@@ -405,12 +407,10 @@ test('fires blur event when a route is removed with a delay', async () => {
       dispatch({ routes: state.routes, descriptors });
     }, [descriptors, state.routes]);
 
-    return (
-      <NavigationContent>
-        {previous.routes.map((route: any) =>
-          previous.descriptors[route.key]?.render()
-        )}
-      </NavigationContent>
+    return render(
+      previous.routes.map((route: any) =>
+        previous.descriptors[route.key]?.render()
+      )
     );
   }
 
@@ -458,18 +458,18 @@ test('fires custom events added with addListener', async () => {
   const eventName = 'someSuperCoolEvent';
 
   function TestNavigator({ ref, ...props }: any): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => ({ navigation, state }), [
       navigation,
       state,
     ]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   }
 
@@ -543,18 +543,18 @@ test('fires custom events for preloaded routes', async () => {
   const eventName = 'someSuperCoolEvent';
 
   function TestNavigator({ ref, ...props }: any): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(StackRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => ({ navigation, state }), [
       navigation,
       state,
     ]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   }
 
@@ -618,18 +618,18 @@ test("doesn't call same listener multiple times with addListener", async () => {
   const eventName = 'someSuperCoolEvent';
 
   function TestNavigator({ ref, ...props }: any): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => ({ navigation, state }), [
       navigation,
       state,
     ]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   }
 
@@ -888,18 +888,18 @@ test('has option to prevent default', async () => {
   const eventName = 'someSuperCoolEvent';
 
   function TestNavigator({ ref, ...props }: any): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => ({ navigation, state }), [
       navigation,
       state,
     ]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   }
 
@@ -948,18 +948,18 @@ test('removes only one listener when unsubscribe is called multiple times', asyn
   const eventName = 'someSuperCoolEvent';
 
   function TestNavigator({ ref, ...props }: any): any {
-    const { state, navigation, descriptors, NavigationContent } =
-      useNavigationBuilder(MockRouter, props);
+    const { state, navigation, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
 
     React.useImperativeHandle(ref, () => ({ navigation, state }), [
       navigation,
       state,
     ]);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   }
 

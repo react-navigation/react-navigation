@@ -32,23 +32,22 @@ function NativeStackNavigator({
   router,
   ...rest
 }: NativeStackNavigatorProps) {
-  const { state, descriptors, navigation, NavigationContent } =
-    useNavigationBuilder<
-      StackNavigationState<ParamListBase>,
-      StackRouterOptions,
-      StackActionHelpers<ParamListBase>,
-      NativeStackNavigationOptions,
-      NativeStackNavigationEventMap
-    >(StackRouter, {
-      initialRouteName,
-      routeNamesChangeBehavior,
-      children,
-      layout,
-      screenListeners,
-      screenOptions,
-      screenLayout,
-      router,
-    });
+  const { state, descriptors, navigation, render } = useNavigationBuilder<
+    StackNavigationState<ParamListBase>,
+    StackRouterOptions,
+    StackActionHelpers<ParamListBase>,
+    NativeStackNavigationOptions,
+    NativeStackNavigationEventMap
+  >(StackRouter, {
+    initialRouteName,
+    routeNamesChangeBehavior,
+    children,
+    layout,
+    screenListeners,
+    screenOptions,
+    screenLayout,
+    router,
+  });
 
   const meta = React.use(NavigationMetaContext);
 
@@ -93,15 +92,13 @@ function NativeStackNavigator({
     };
   }, [meta, navigation]);
 
-  return (
-    <NavigationContent>
-      <NativeStackView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-      />
-    </NavigationContent>
+  return render(
+    <NativeStackView
+      {...rest}
+      state={state}
+      navigation={navigation}
+      descriptors={descriptors}
+    />
   );
 }
 

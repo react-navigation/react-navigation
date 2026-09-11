@@ -20,7 +20,7 @@ test('adds the listener even if container is mounted later', async () => {
   ref.addListener('state', listener);
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       {},
@@ -30,15 +30,13 @@ test('adds the listener even if container is mounted later', async () => {
     const route = state.routes[state.index];
     const descriptor = route == null ? undefined : descriptors[route.key];
 
-    return (
-      <NavigationContent>
-        <main>
-          <h1>
-            <Text>{descriptor?.options.title}</Text>
-          </h1>
-          <div>{descriptor?.render()}</div>
-        </main>
-      </NavigationContent>
+    return render(
+      <main>
+        <h1>
+          <Text>{descriptor?.options.title}</Text>
+        </h1>
+        <div>{descriptor?.render()}</div>
+      </main>
     );
   };
 
@@ -71,7 +69,7 @@ test("doesn't restore a removed pre-mount listener when re-attached", async () =
   ref.addListener('ready', listener);
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -82,9 +80,7 @@ test("doesn't restore a removed pre-mount listener when re-attached", async () =
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const App = ({ id }: { id: string }) => (
@@ -113,7 +109,7 @@ test('removes a pre-mount listener with its unsubscribe after the container is m
   const unsubscribe = ref.addListener('state', listener);
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -124,9 +120,7 @@ test('removes a pre-mount listener with its unsubscribe after the container is m
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   await render(

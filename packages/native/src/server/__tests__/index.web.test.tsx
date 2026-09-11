@@ -77,17 +77,15 @@ test('renders without browser globals', async () => {
 
 test('renders correct state with location', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <div key={route.key}>{descriptors[route.key]?.render()}</div>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <div key={route.key}>{descriptors[route.key]?.render()}</div>
+      ))
     );
   });
 
@@ -156,17 +154,15 @@ test('renders correct state with location', async () => {
 
 test('waits for pending async screens with Suspense boundary around container', async () => {
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TabRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <div key={route.key}>{descriptors[route.key]?.render()}</div>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <div key={route.key}>{descriptors[route.key]?.render()}</div>
+      ))
     );
   });
 
@@ -208,17 +204,15 @@ test('waits for pending async screens with Suspense boundary around container', 
 
 test('waits for pending async screens with Suspense boundary in screen layout', async () => {
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TabRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <div key={route.key}>{descriptors[route.key]?.render()}</div>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <div key={route.key}>{descriptors[route.key]?.render()}</div>
+      ))
     );
   });
 
@@ -270,17 +264,15 @@ test('waits for pending async screens with Suspense boundary in screen layout', 
 
 test('waits for lazy screens when Suspense boundary is in screen layout', async () => {
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TabRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <div key={route.key}>{descriptors[route.key]?.render()}</div>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <div key={route.key}>{descriptors[route.key]?.render()}</div>
+      ))
     );
   });
 
@@ -332,17 +324,15 @@ test('waits for lazy screens when Suspense boundary is in screen layout', async 
 
 test('waits for async screens without a Suspense boundary', async () => {
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TabRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <div key={route.key}>{descriptors[route.key]?.render()}</div>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <div key={route.key}>{descriptors[route.key]?.render()}</div>
+      ))
     );
   });
 
@@ -380,17 +370,15 @@ test('waits for async screens without a Suspense boundary', async () => {
 
 test('waits for lazy screens without a Suspense boundary', async () => {
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TabRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <div key={route.key}>{descriptors[route.key]?.render()}</div>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <div key={route.key}>{descriptors[route.key]?.render()}</div>
+      ))
     );
   });
 
@@ -428,17 +416,15 @@ test('waits for lazy screens without a Suspense boundary', async () => {
 
 test('streams fallback before rejecting screen promise without an error boundary', async () => {
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TabRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <div key={route.key}>{descriptors[route.key]?.render()}</div>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <div key={route.key}>{descriptors[route.key]?.render()}</div>
+      ))
     );
   });
 
@@ -487,17 +473,15 @@ test('streams fallback before rejecting screen promise without an error boundary
 
 test('streams fallback before rejecting screen promise with an error boundary', async () => {
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TabRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <div key={route.key}>{descriptors[route.key]?.render()}</div>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <div key={route.key}>{descriptors[route.key]?.render()}</div>
+      ))
     );
   });
 

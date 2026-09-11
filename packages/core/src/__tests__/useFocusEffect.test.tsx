@@ -14,15 +14,13 @@ beforeEach(() => {
 
 test('runs focus effect on focus change', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -76,7 +74,7 @@ test('runs focus effect on focus change', async () => {
 
 test('runs focus effect on deps change', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -87,9 +85,7 @@ test('runs focus effect on deps change', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const focusEffect = jest.fn();
@@ -129,15 +125,13 @@ test('runs focus effect on deps change', async () => {
 
 test('runs focus effect when initial state is given', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -188,7 +182,7 @@ test('runs focus effect when initial state is given', async () => {
 
 test('runs focus effect when only focused route is rendered', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -199,9 +193,7 @@ test('runs focus effect when only focused route is rendered', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const focusEffect = jest.fn();
@@ -242,7 +234,7 @@ test('runs focus effect when only focused route is rendered', async () => {
 
 test('runs cleanup when component is unmounted', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -253,9 +245,7 @@ test('runs cleanup when component is unmounted', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const focusEffect = jest.fn();
@@ -295,7 +285,7 @@ test('runs cleanup when component is unmounted', async () => {
 
 test('prints error when a dependency array is passed', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -306,9 +296,7 @@ test('prints error when a dependency array is passed', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const Test = () => {
@@ -339,7 +327,7 @@ test('prints error when a dependency array is passed', async () => {
 
 test('prints error when the effect returns a value', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -350,9 +338,7 @@ test('prints error when the effect returns a value', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const Test = () => {
@@ -383,7 +369,7 @@ test('prints error when the effect returns a value', async () => {
 
 test('prints error when the effect returns null', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -394,9 +380,7 @@ test('prints error when the effect returns null', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const Test = () => {
@@ -427,7 +411,7 @@ test('prints error when the effect returns null', async () => {
 
 test('prints error when the effect is an async function', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -438,9 +422,7 @@ test('prints error when the effect is an async function', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const Test = () => {

@@ -16,10 +16,7 @@ import { useIsFocused } from '../useIsFocused';
 import { useNavigationBuilder } from '../useNavigationBuilder';
 
 const TestNavigator = (props: any) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
-    TabRouter,
-    props
-  );
+  const { state, descriptors, render } = useNavigationBuilder(TabRouter, props);
 
   const route = state.routes[state.index];
   const descriptor = route ? descriptors[route.key] : undefined;
@@ -28,13 +25,13 @@ const TestNavigator = (props: any) => {
     throw new Error('Missing descriptor for focused route.');
   }
 
-  return <NavigationContent>{descriptor.render()}</NavigationContent>;
+  return render(descriptor.render());
 };
 
 const createTestNavigator = createNavigatorFactory(TestNavigator);
 
 const StackTestNavigator = (props: any) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     StackRouter,
     props
   );
@@ -46,7 +43,7 @@ const StackTestNavigator = (props: any) => {
     throw new Error('Missing descriptor for focused route.');
   }
 
-  return <NavigationContent>{descriptor.render()}</NavigationContent>;
+  return render(descriptor.render());
 };
 
 const createStackTestNavigator = createNavigatorFactory(StackTestNavigator);

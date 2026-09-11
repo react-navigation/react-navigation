@@ -18,7 +18,7 @@ type TestNavigatorProps = Parameters<typeof useNavigationBuilder>[1] & {
 };
 
 const TestNavigator = ({ mode = 'all', ...props }: TestNavigatorProps) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     MockRouter,
     props
   );
@@ -30,11 +30,7 @@ const TestNavigator = ({ mode = 'all', ...props }: TestNavigatorProps) => {
         ? state.routes.slice(state.index, state.index + 1)
         : [];
 
-  return (
-    <NavigationContent>
-      {routes.map((route) => descriptors[route.key]?.render())}
-    </NavigationContent>
-  );
+  return render(routes.map((route) => descriptors[route.key]?.render()));
 };
 
 beforeEach(() => {
