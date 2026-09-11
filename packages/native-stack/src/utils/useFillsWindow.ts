@@ -1,11 +1,17 @@
 import * as React from 'react';
-import { StyleSheet, View, type ViewProps } from 'react-native';
 
-type Props = ViewProps & {
+type Options = {
+  /**
+   * Whether the "fills window" behavior should be considered at all.
+   */
   enabled: boolean;
+  /**
+   * The size of the content that might fill the window.
+   */
   layout: { width: number; height: number };
-  children: React.ReactNode;
 };
+
+const STYLE_ID = '__react-navigation-native-stack-mobile-chrome-viewport-fix';
 
 // `document.body.clientHeight`/`clientWidth` are always rounded integers,
 // but `layout` is sub-pixel precise, so this tolerates a sub-pixel
@@ -28,11 +34,18 @@ function isMobileChrome() {
   return /Android/.test(ua) && /Chrome\//.test(ua);
 }
 
-// This component will render a page which overflows the screen
-// if the container fills the body by comparing the size
-// This lets the document.body handle scrolling of the content
-// It's necessary for mobile browsers to be able to hide address bar on scroll
-export function CardContent({ enabled, layout, style, ...rest }: Props) {
+/**
+ * On mobile browsers, the address bar collapses when the page scrolls,
+ * but only if `document.body` is the element that grows/scrolls - not a
+ * nested fixed-height container. This hook detects when the given `layout`
+ * fills the whole page, so the caller can switch from a fixed-size container
+ * to one that lets its content overflow naturally into `document.body`.
+ *
+ * This mirrors `packages/stack/src/views/Stack/CardContent.tsx`'s logic -
+ * kept as a separate, local copy rather than a shared abstraction, since the
+ * two packages apply it to differently-shaped container trees.
+ */
+export function useFillsWindow({ enabled, layout }: Options): boolean {
   const [fill, setFill] = React.useState(false);
 
   React.useEffect(() => {
@@ -44,22 +57,21 @@ export function CardContent({ enabled, layout, style, ...rest }: Props) {
     const width = document.body.clientWidth;
     const height = document.body.clientHeight;
 
-    // Workaround for mobile Chrome, necessary when a navigation happens
-    // when the address bar has already collapsed, which resulted in an
-    // empty space at the bottom of the page (matching the height of the
-    // address bar). To fix this, it's necessary to update the height of
-    // the DOM with the current height of the window.
+    // Workaround necessary when a navigation happens when the address bar
+    // has already collapsed, which resulted in an empty space at the
+    // bottom of the page (matching the height of the address bar). To fix
+    // this, it's necessary to update the height of the DOM with the
+    // current height of the window.
     // See https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
     const isFullHeight = approximatelyEqual(height, layout.height);
-    const id = '__react-navigation-stack-mobile-chrome-viewport-fix';
 
     let unsubscribe: (() => void) | undefined;
 
     if (isFullHeight && isMobileChrome()) {
       const style =
-        document.getElementById(id) ?? document.createElement('style');
+        document.getElementById(STYLE_ID) ?? document.createElement('style');
 
-      style.id = id;
+      style.id = STYLE_ID;
 
       const updateStyle = () => {
         const vh = window.innerHeight * 0.01;
@@ -83,9 +95,9 @@ export function CardContent({ enabled, layout, style, ...rest }: Props) {
         window.removeEventListener('resize', updateStyle);
       };
     } else {
-      // Remove the workaround if the stack does not occupy the whole
+      // Remove the workaround if the content does not occupy the whole
       // height of the page
-      document.getElementById(id)?.remove();
+      document.getElementById(STYLE_ID)?.remove();
     }
 
     // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
@@ -97,27 +109,5 @@ export function CardContent({ enabled, layout, style, ...rest }: Props) {
     return unsubscribe;
   }, [layout.height, layout.width]);
 
-  // Screens can opt out by explicitly setting `flex: 1` in `contentStyle`
-  const optedOut = StyleSheet.flatten(style)?.flex === 1;
-
-  return (
-    <View
-      {...rest}
-      style={[
-        { pointerEvents: 'box-none' },
-        enabled && !optedOut && fill ? styles.page : styles.card,
-        style,
-      ]}
-    />
-  );
+  return enabled && fill;
 }
-
-const styles = StyleSheet.create({
-  page: {
-    minHeight: '100%',
-  },
-  card: {
-    flex: 1,
-    overflow: 'hidden',
-  },
-});
