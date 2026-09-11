@@ -6,6 +6,7 @@ import type { NavigationListForNested, RootNavigator } from './types';
 type NavigationStateEvent = 'update' | 'commit';
 
 type NavigationStateListener = {
+  initialStateContext: React.Context<NavigationState<ParamListBase>>;
   getState: () => NavigationState<ParamListBase>;
   getSnapshot: () => NavigationState<ParamListBase>;
   subscribe: (callback: (event: NavigationStateEvent) => void) => () => void;
@@ -83,6 +84,25 @@ export function useNavigationState(...args: unknown[]): unknown {
 
   const { getState, getSnapshot, subscribe } = listener;
 
+  const initialRef = React.useRef(true);
+
+  // We read the initial state from context on mount instead of using getState
+  // This ensures that we get proper state for the current render,
+  // even if the external store has been updated.
+  // We conditionally use `use` to avoid more unnecessary re-renders after first mount.
+  // The context subscription is removed on the next render, which can cause one extra render.
+  const initialState = initialRef.current
+    ? React.use(listener.initialStateContext)
+    : undefined;
+
+  // We track the last committed reducer entry, navigation state, and selector,
+  // so we can check if an update changes the value the component last committed.
+  const committedRef = React.useRef<{
+    entry: NavigationStateEntry | null;
+    state: NavigationState<ParamListBase>;
+    select: (state: NavigationState<ParamListBase>) => unknown;
+  }>({ entry: null, state: initialState ?? getSnapshot(), select });
+
   // The store can contain state from a transition that hasn't committed yet.
   // Reading it during render can show state that doesn't match the navigator in that render.
   // The reducer lets React process state in the same render lane as the navigator.
@@ -92,11 +112,28 @@ export function useNavigationState(...args: unknown[]): unknown {
       // Reading here ensures the processed event uses the state for that render.
       const state = event === 'update' ? getState() : getSnapshot();
 
+      // If we're processing the same reducer entry as the last commit,
+      // we compare against the state last committed by the component.
+      // We keep the reducer entry to avoid re-renders for unchanged selections.
+      // This means the reducer entry can still hold older navigation state.
+      // If a parent causes another render,
+      // we use the latest snapshot so the selector doesn't read stale state.
+      // We leave the reducer entry unchanged to avoid an extra render.
+      // We save that snapshot in committedRef when the render commits,
+      // so later updates compare against the state we actually rendered,
+      // including when the selector changed.
+      // If the reducer entry is different, we use its own navigation state,
+      // so comparisons include updates already processed in the pending render.
+      const previousState =
+        previous === committedRef.current.entry
+          ? committedRef.current.state
+          : previous.state;
+
       if (
         previous.listener === listener &&
-        (previous.state === state ||
+        (previousState === state ||
           (event === 'update' &&
-            Object.is(select(previous.state), select(state))))
+            Object.is(select(previousState), select(state))))
       ) {
         return previous;
       }
@@ -104,36 +141,23 @@ export function useNavigationState(...args: unknown[]): unknown {
       return { listener, state };
     },
     undefined,
-    () => ({ listener, state: getState() })
+    () => ({ listener, state: initialState ?? getSnapshot() })
   );
 
-  let state = entry.state;
-
-  const committedRef = React.useRef<{
-    entry: NavigationStateEntry | null;
-    state: NavigationState<ParamListBase>;
-    select: (state: NavigationState<ParamListBase>) => unknown;
-  }>({ entry: null, state, select });
-
-  React.useInsertionEffect(() => {
-    committedRef.current = { entry, state, select };
-  });
-
-  const snapshot = getSnapshot();
-
-  const behind =
-    state !== snapshot &&
+  const state =
     // A different listener means the state belongs to another navigator.
     // This can happen when the passed route name changes.
-    (entry.listener !== listener ||
-      // An entry that advanced past the last commit is at least as new as the snapshot.
-      // An entry that didn't advance while the committed state changed is older.
-      entry === committedRef.current.entry);
+    entry.listener !== listener ||
+    // An entry that advanced past the last commit is at least as new as the snapshot.
+    // An entry that didn't advance while the committed state changed is older.
+    entry === committedRef.current.entry
+      ? getSnapshot()
+      : entry.state;
 
-  if (behind) {
-    state = snapshot;
-    dispatch('commit');
-  }
+  React.useInsertionEffect(() => {
+    initialRef.current = false;
+    committedRef.current = { entry, state, select };
+  });
 
   React.useLayoutEffect(() => {
     const check = (event: NavigationStateEvent) => {
@@ -173,6 +197,10 @@ export function NavigationStateListenerProvider({
   subscribe: (callback: () => void) => () => void;
   children: React.ReactNode;
 }) {
+  const [InitialStateContext] = React.useState(() =>
+    React.createContext(state)
+  );
+
   const [listeners] = React.useState(
     () => new Set<(event: NavigationStateEvent) => void>()
   );
@@ -195,6 +223,7 @@ export function NavigationStateListenerProvider({
 
   const context = React.useMemo(
     () => ({
+      initialStateContext: InitialStateContext,
       getState,
       getSnapshot: () => nextState ?? snapshotRef.current,
       subscribe: (callback: (event: NavigationStateEvent) => void) => {
@@ -208,12 +237,14 @@ export function NavigationStateListenerProvider({
         };
       },
     }),
-    [getState, listeners, nextState, subscribe]
+    [InitialStateContext, getState, listeners, nextState, subscribe]
   );
 
   return (
     <NavigationStateListenerContext.Provider value={context}>
-      {children}
+      <InitialStateContext.Provider value={state}>
+        {children}
+      </InitialStateContext.Provider>
     </NavigationStateListenerContext.Provider>
   );
 }
