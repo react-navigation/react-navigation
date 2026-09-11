@@ -229,7 +229,7 @@ export function NamedNavigationStateListenerProvider({
 
   if (listener == null) {
     throw new Error(
-      "Couldn't find a navigation state listener. This is likely because the navigator doesn't render its content under 'NavigationContent'."
+      "Couldn't find a navigation state listener. This is likely a bug in the navigator.\n\nIf you're using a custom navigator, make sure that the navigator content is wrapped by the 'render' function returned by 'useNavigationBuilder'."
     );
   }
 

@@ -36,7 +36,6 @@ import {
 } from './types';
 import { UnhandledActionContext } from './UnhandledActionContext';
 import { useChildListeners } from './useChildListeners';
-import { useComponent } from './useComponent';
 import { type ScreenConfigWithParent, useDescriptors } from './useDescriptors';
 import { useEventEmitter } from './useEventEmitter';
 import { useFocusedListenersChildrenAdapter } from './useFocusedListenersChildrenAdapter';
@@ -1043,7 +1042,7 @@ export function useNavigationBuilder<
     emitter,
   });
 
-  const NavigationContent = useComponent((children: React.ReactNode) => {
+  const render = (children: React.ReactNode) => {
     const focusedRoute = state.routes[state.index];
 
     if (focusedRoute == null) {
@@ -1080,12 +1079,12 @@ export function useNavigationBuilder<
         </NavigationHelpersContext.Provider>
       </NavigationMetaContext.Provider>
     );
-  });
+  };
 
   return {
     state,
     navigation,
     descriptors,
-    NavigationContent,
+    render,
   };
 }

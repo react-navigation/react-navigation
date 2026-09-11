@@ -424,19 +424,15 @@ test('navigates to a nested screen again with the same params object', async () 
   };
 
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TabRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <Fragment key={route.key}>
-            {descriptors[route.key]?.render()}
-          </Fragment>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <Fragment key={route.key}>{descriptors[route.key]?.render()}</Fragment>
+      ))
     );
   });
 
@@ -506,19 +502,15 @@ test('navigates to nested state again with the same params object', async () => 
   };
 
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TabRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <Fragment key={route.key}>
-            {descriptors[route.key]?.render()}
-          </Fragment>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <Fragment key={route.key}>{descriptors[route.key]?.render()}</Fragment>
+      ))
     );
   });
 
@@ -589,19 +581,15 @@ test('navigates again with a memoized action', async () => {
   };
 
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TabRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <Fragment key={route.key}>
-            {descriptors[route.key]?.render()}
-          </Fragment>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <Fragment key={route.key}>{descriptors[route.key]?.render()}</Fragment>
+      ))
     );
   });
 
@@ -697,19 +685,15 @@ test('navigates through multiple nested screens again with the same params objec
   };
 
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TabRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <Fragment key={route.key}>
-            {descriptors[route.key]?.render()}
-          </Fragment>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <Fragment key={route.key}>{descriptors[route.key]?.render()}</Fragment>
+      ))
     );
   });
 

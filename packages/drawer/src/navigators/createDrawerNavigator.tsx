@@ -30,36 +30,33 @@ function DrawerNavigator({
   router,
   ...rest
 }: DrawerNavigatorProps) {
-  const { state, descriptors, navigation, NavigationContent } =
-    useNavigationBuilder<
-      DrawerNavigationState<ParamListBase>,
-      DrawerRouterOptions,
-      DrawerActionHelpers<ParamListBase>,
-      DrawerNavigationOptions,
-      DrawerNavigationEventMap
-    >(DrawerRouter, {
-      initialRouteName,
-      defaultStatus,
-      backBehavior,
-      routeNamesChangeBehavior,
-      children,
-      layout,
-      screenListeners,
-      screenOptions,
-      screenLayout,
-      router,
-    });
+  const { state, descriptors, navigation, render } = useNavigationBuilder<
+    DrawerNavigationState<ParamListBase>,
+    DrawerRouterOptions,
+    DrawerActionHelpers<ParamListBase>,
+    DrawerNavigationOptions,
+    DrawerNavigationEventMap
+  >(DrawerRouter, {
+    initialRouteName,
+    defaultStatus,
+    backBehavior,
+    routeNamesChangeBehavior,
+    children,
+    layout,
+    screenListeners,
+    screenOptions,
+    screenLayout,
+    router,
+  });
 
-  return (
-    <NavigationContent>
-      <DrawerView
-        {...rest}
-        defaultStatus={defaultStatus}
-        state={state}
-        descriptors={descriptors}
-        navigation={navigation}
-      />
-    </NavigationContent>
+  return render(
+    <DrawerView
+      {...rest}
+      defaultStatus={defaultStatus}
+      state={state}
+      descriptors={descriptors}
+      navigation={navigation}
+    />
   );
 }
 
