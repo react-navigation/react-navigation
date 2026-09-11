@@ -46,7 +46,7 @@ class MaterialSymbolModule(reactContext: ReactApplicationContext) :
     }
 
     val resolvedColor = ColorPropConverter.getColor(
-      colorValue, currentActivity ?: reactApplicationContext
+      colorValue, reactApplicationContext.currentActivity ?: reactApplicationContext
     ) ?: throw IllegalArgumentException("Could not resolve color")
 
     val density = reactApplicationContext.resources.displayMetrics.density
