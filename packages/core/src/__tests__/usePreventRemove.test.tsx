@@ -1,11 +1,13 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import {
+  CommonActions,
   type ParamListBase,
   StackActions,
   StackRouter,
 } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
+import { Text } from 'react-native';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
@@ -1393,4 +1395,108 @@ test('keeps parent prevention when a nested navigator is hidden with an activity
   });
 
   expect(preventedRoutes[nestedKey]).toEqual({ preventRemove: true });
+});
+
+test('registers removal prevention for a visible screen during a suspended reset', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const onPreventRemove = jest.fn();
+
+  let enablePrevention: () => void;
+  let preventedRoutes: PreventedRoutes = {};
+
+  const PreventedRoutesProbe = () => {
+    preventedRoutes = usePreventRemoveContext().preventedRoutes;
+
+    return null;
+  };
+
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return render(
+      <>
+        <PreventedRoutesProbe />
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </>
+    );
+  };
+
+  const First = () => {
+    const [prevent, setPrevent] = React.useState(false);
+
+    enablePrevention = () => setPrevent(true);
+
+    usePreventRemove(prevent, onPreventRemove);
+
+    return (
+      <Text>First: {prevent ? 'removal prevented' : 'removal allowed'}</Text>
+    );
+  };
+
+  const Second = () => {
+    React.use(promise);
+
+    return <Text>Second</Text>;
+  };
+
+  const root = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <React.Suspense fallback={null}>
+        <TestNavigator>
+          <Screen name="First" component={First} />
+          <Screen name="Second" component={Second} />
+        </TestNavigator>
+      </React.Suspense>
+    </BaseNavigationContainer>
+  );
+
+  const initialState = navigation.getRootState();
+  const firstKey = initialState?.routes[0]?.key;
+
+  if (firstKey == null) {
+    throw new Error("Couldn't find the route for 'First'");
+  }
+
+  expect(preventedRoutes).toEqual({});
+
+  await act(() =>
+    navigation.dispatch(
+      CommonActions.reset({ index: 0, routes: [{ name: 'Second' }] })
+    )
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Second');
+
+  expect(root.getByText('First: removal allowed')).toBeVisible();
+  expect(root.queryByText('Second')).toBeNull();
+
+  await act(() => enablePrevention());
+
+  expect(root.getByText('First: removal prevented')).toBeVisible();
+
+  expect(preventedRoutes[firstKey]).toEqual({ preventRemove: true });
+
+  expect(onPreventRemove).not.toHaveBeenCalled();
+
+  await act(() => navigation.resetRoot(initialState));
+  await act(() => resolve());
+
+  await act(() =>
+    navigation.dispatch(
+      CommonActions.reset({ index: 0, routes: [{ name: 'Second' }] })
+    )
+  );
+
+  expect(onPreventRemove).toHaveBeenCalledTimes(1);
+
+  expect(navigation.getCurrentRoute()?.name).toBe('First');
+
+  expect(root.getByText('First: removal prevented')).toBeVisible();
+  expect(root.queryByText('Second')).toBeNull();
 });
