@@ -5308,6 +5308,107 @@ test('removes route when navigationKey changes even if combined keys are similar
   expect(navigation.getCurrentRoute()?.name).toBe('foo');
 });
 
+test.each<{
+  initialMode: 'visible' | 'hidden';
+  hasInitialState: boolean;
+}>([
+  { initialMode: 'visible', hasInitialState: false },
+  { initialMode: 'hidden', hasInitialState: false },
+  { initialMode: 'hidden', hasInitialState: true },
+])(
+  'preserves local screen state on reveal after screen names change while hidden (initial mode: $initialMode, initial state: $hasInitialState)',
+  async ({ initialMode, hasInitialState }) => {
+    const TestContext = React.createContext<{
+      name: string;
+      mode: 'visible' | 'hidden';
+    }>({ name: 'First', mode: initialMode });
+
+    let count = 0;
+
+    const TestScreen = () => {
+      const route = useRoute();
+      const [value] = React.useState(() => ++count);
+
+      return <Text>{`${route.name}:${value}`}</Text>;
+    };
+
+    const TestNavigator = (props: { children: React.ReactNode }) => {
+      const { state, descriptors, render } = useNavigationBuilder(
+        MockRouter,
+        props
+      );
+
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
+      );
+    };
+
+    const TestContent = () => {
+      const { name, mode } = React.use(TestContext);
+
+      return (
+        <React.Activity mode={mode}>
+          <TestNavigator>
+            <Screen name={name} component={TestScreen} />
+          </TestNavigator>
+        </React.Activity>
+      );
+    };
+
+    const element = (
+      <BaseNavigationContainer
+        initialState={
+          hasInitialState ? { routes: [{ name: 'First' }] } : undefined
+        }
+      >
+        <TestContent />
+      </BaseNavigationContainer>
+    );
+
+    const root = await render(
+      <TestContext value={{ name: 'First', mode: initialMode }}>
+        {element}
+      </TestContext>
+    );
+
+    if (initialMode === 'visible') {
+      await root.rerender(
+        <TestContext value={{ name: 'First', mode: 'hidden' }}>
+          {element}
+        </TestContext>
+      );
+    }
+
+    await root.rerender(
+      <TestContext value={{ name: 'Second', mode: 'hidden' }}>
+        {element}
+      </TestContext>
+    );
+
+    expect(
+      root.getByText('Second:2', { includeHiddenElements: true })
+    ).toBeTruthy();
+
+    await root.rerender(
+      <TestContext value={{ name: 'Third', mode: 'hidden' }}>
+        {element}
+      </TestContext>
+    );
+
+    expect(
+      root.getByText('Third:3', { includeHiddenElements: true })
+    ).toBeTruthy();
+
+    await root.rerender(
+      <TestContext value={{ name: 'Third', mode: 'visible' }}>
+        {element}
+      </TestContext>
+    );
+
+    expect(root.getByText('Third:3')).toBeTruthy();
+  }
+);
+
 test('applies only the latest pending navigation update after multiple screen configuration changes while hidden', async () => {
   const TestContext = React.createContext<{
     name: string;
@@ -5401,3 +5502,628 @@ test('applies only the latest pending navigation update after multiple screen co
     </Text>
   `);
 });
+
+test.each<{ initialMode: 'hidden' | 'visible'; partial: boolean }>([
+  { initialMode: 'hidden', partial: true },
+  { initialMode: 'hidden', partial: false },
+  { initialMode: 'visible', partial: true },
+  { initialMode: 'visible', partial: false },
+])(
+  'shows the reset screen and preserves its local state through rerenders and reveal (initial mode: $initialMode, partial reset: $partial)',
+  async ({ initialMode, partial }) => {
+    const TestContext = React.createContext<{
+      mode: 'visible' | 'hidden';
+    }>({ mode: initialMode });
+
+    let count = 0;
+
+    const TestScreen = () => {
+      const route = useRoute();
+      const [value] = React.useState(() => ++count);
+
+      return <Text>{`${route.name}:${value}`}</Text>;
+    };
+
+    const TestNavigator = (props: { children: React.ReactNode }) => {
+      const { state, descriptors, render } = useNavigationBuilder(
+        StackRouter,
+        props
+      );
+
+      const route = state.routes[state.index];
+
+      return render(route ? descriptors[route.key]?.render() : null);
+    };
+
+    const ChildNavigator = () => {
+      const { mode } = React.use(TestContext);
+
+      return (
+        <React.Activity mode={mode}>
+          <TestNavigator>
+            <Screen name="foo" component={TestScreen} />
+            <Screen name="bar" component={TestScreen} />
+            <Screen name="baz" component={TestScreen} />
+          </TestNavigator>
+        </React.Activity>
+      );
+    };
+
+    const navigation = createNavigationContainerRef<ParamListBase>();
+
+    const element = (
+      <BaseNavigationContainer ref={navigation}>
+        <TestNavigator>
+          <Screen name="parent" component={ChildNavigator} />
+        </TestNavigator>
+      </BaseNavigationContainer>
+    );
+
+    const root = await render(
+      <TestContext value={{ mode: initialMode }}>{element}</TestContext>
+    );
+
+    await root.rerender(
+      <TestContext value={{ mode: 'hidden' }}>{element}</TestContext>
+    );
+
+    for (const name of ['bar', 'baz']) {
+      const state = navigation.getRootState();
+
+      if (state === undefined) {
+        throw new Error('Expected the parent navigator to have state.');
+      }
+
+      await act(() =>
+        navigation.resetRoot({
+          ...state,
+          routes: state.routes.map((route) => ({
+            ...route,
+            state: partial
+              ? { routes: [{ name }] }
+              : {
+                  stale: false,
+                  type: 'stack',
+                  retainedRouteKeys: [],
+                  key: 'reset-child',
+                  index: 0,
+                  routeNames: ['foo', 'bar', 'baz'],
+                  routes: [{ key: name, name }],
+                },
+          })),
+        })
+      );
+
+      const text = `${name}:${count}`;
+
+      expect(
+        root.getByText(text, { includeHiddenElements: true })
+      ).toBeTruthy();
+
+      const resetState = navigation.getRootState()?.routes[0]?.state;
+
+      expect(resetState).toBeDefined();
+
+      await root.rerender(
+        <TestContext value={{ mode: 'hidden' }}>{element}</TestContext>
+      );
+
+      expect(
+        root.getByText(text, { includeHiddenElements: true })
+      ).toBeTruthy();
+
+      expect(navigation.getRootState()?.routes[0]?.state).toEqual(resetState);
+    }
+
+    const text = `baz:${count}`;
+
+    const hiddenState = navigation.getRootState()?.routes[0]?.state;
+
+    await root.rerender(
+      <TestContext value={{ mode: 'visible' }}>{element}</TestContext>
+    );
+
+    expect(root.getByText(text)).toBeTruthy();
+    expect(navigation.getRootState()?.routes[0]?.state).toEqual(hiddenState);
+  }
+);
+
+test.each<'visible' | 'hidden'>(['visible', 'hidden'])(
+  'preserves local screen state through rerenders and reveal after a full parent reset and a hidden screen name change (initial mode: %s)',
+  async (initialMode) => {
+    const NameContext = React.createContext('First');
+
+    let count = 0;
+
+    const TestScreen = () => {
+      const route = useRoute();
+      const [value] = React.useState(() => ++count);
+
+      return <Text>{`${route.name}:${value}`}</Text>;
+    };
+
+    const TestNavigator = (props: { children: React.ReactNode }) => {
+      const { state, descriptors, render } = useNavigationBuilder(
+        StackRouter,
+        props
+      );
+
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
+      );
+    };
+
+    const TestContent = ({ mode }: { mode: 'visible' | 'hidden' }) => {
+      const name = React.use(NameContext);
+
+      return (
+        <React.Activity mode={mode}>
+          <TestNavigator>
+            <Screen name={name} component={TestScreen} />
+          </TestNavigator>
+        </React.Activity>
+      );
+    };
+
+    const navigation = createNavigationContainerRef<ParamListBase>();
+
+    const Test = ({ mode }: { mode: 'visible' | 'hidden' }) => (
+      <BaseNavigationContainer ref={navigation}>
+        <TestNavigator>
+          <Screen name="parent">{() => <TestContent mode={mode} />}</Screen>
+        </TestNavigator>
+      </BaseNavigationContainer>
+    );
+
+    const hiddenElement = <Test mode="hidden" />;
+
+    const root = await render(
+      <NameContext value="First">
+        <Test mode={initialMode} />
+      </NameContext>
+    );
+    await root.rerender(
+      <NameContext value="First">{hiddenElement}</NameContext>
+    );
+
+    const state = navigation.getRootState();
+
+    if (state === undefined) {
+      throw new Error('Expected the parent navigator to have state.');
+    }
+
+    await act(() =>
+      navigation.resetRoot({
+        ...state,
+        routes: state.routes.map((route) => ({
+          ...route,
+          state: {
+            stale: false,
+            type: 'stack',
+            retainedRouteKeys: [],
+            key: 'reset-child',
+            index: 0,
+            routeNames: ['First'],
+            routes: [{ key: 'First', name: 'First' }],
+          },
+        })),
+      })
+    );
+
+    await root.rerender(
+      <NameContext value="Second">{hiddenElement}</NameContext>
+    );
+
+    const text = `Second:${count}`;
+
+    expect(root.getByText(text, { includeHiddenElements: true })).toBeTruthy();
+
+    await root.rerender(
+      <NameContext value="Second">
+        <Test mode="hidden" />
+      </NameContext>
+    );
+
+    expect(root.getByText(text, { includeHiddenElements: true })).toBeTruthy();
+
+    const childState = navigation.getRootState()?.routes[0]?.state;
+
+    expect(childState).toMatchObject({ routeNames: ['Second'] });
+
+    await root.rerender(
+      <NameContext value="Second">
+        <Test mode="visible" />
+      </NameContext>
+    );
+
+    expect(root.getByText(text)).toBeTruthy();
+
+    expect(navigation.getRootState()?.routes[0]?.state).toEqual(childState);
+  }
+);
+
+test.each([
+  {
+    name: 'default state',
+    strict: false,
+    params: undefined,
+    initialState: false,
+  },
+  {
+    name: 'restored state',
+    strict: false,
+    params: undefined,
+    initialState: true,
+  },
+  {
+    name: 'screen params',
+    strict: false,
+    params: { screen: 'foo' },
+    initialState: false,
+  },
+  {
+    name: 'state params',
+    strict: false,
+    params: { state: { routes: [{ name: 'foo' }] } },
+    initialState: false,
+  },
+  {
+    name: 'default state',
+    strict: true,
+    params: undefined,
+    initialState: false,
+  },
+  {
+    name: 'restored state',
+    strict: true,
+    params: undefined,
+    initialState: true,
+  },
+  {
+    name: 'screen params',
+    strict: true,
+    params: { screen: 'foo' },
+    initialState: false,
+  },
+  {
+    name: 'state params',
+    strict: true,
+    params: { state: { routes: [{ name: 'foo' }] } },
+    initialState: false,
+  },
+])(
+  'preserves local screen state through rerenders and navigation to an initially hidden child with $name (strict mode: $strict)',
+  async ({ strict, params, initialState }) => {
+    const RevisionContext = React.createContext(0);
+
+    let count = 0;
+
+    let committedValue: number | undefined;
+
+    const TestScreen = () => {
+      const [value] = React.useState(() => ++count);
+
+      React.useInsertionEffect(() => {
+        committedValue = value;
+      });
+
+      return <Text>{`foo:${value}`}</Text>;
+    };
+
+    const ParentNavigator = (props: { children: React.ReactNode }) => {
+      const { state, descriptors, render } = useNavigationBuilder(
+        MockRouter,
+        props
+      );
+
+      return render(
+        state.routes.map((route, index) => (
+          <React.Activity
+            key={route.key}
+            mode={index === state.index ? 'visible' : 'hidden'}
+          >
+            {descriptors[route.key]?.render()}
+          </React.Activity>
+        ))
+      );
+    };
+
+    const ChildNavigator = (props: { children: React.ReactNode }) => {
+      const { state, descriptors, render } = useNavigationBuilder(
+        StackRouter,
+        props
+      );
+
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
+      );
+    };
+
+    const TestContent = () => {
+      React.use(RevisionContext);
+
+      return (
+        <ChildNavigator>
+          <Screen name="foo" component={TestScreen} />
+        </ChildNavigator>
+      );
+    };
+
+    const navigation = createNavigationContainerRef<ParamListBase>();
+
+    const Wrapper = strict ? React.StrictMode : React.Fragment;
+
+    const element = (
+      <Wrapper>
+        <BaseNavigationContainer
+          ref={navigation}
+          initialState={
+            initialState
+              ? {
+                  routes: [
+                    { name: 'other' },
+                    { name: 'parent', state: { routes: [{ name: 'foo' }] } },
+                  ],
+                }
+              : undefined
+          }
+        >
+          <ParentNavigator>
+            <Screen name="other">{() => null}</Screen>
+            <Screen
+              name="parent"
+              component={TestContent}
+              initialParams={params}
+            />
+          </ParentNavigator>
+        </BaseNavigationContainer>
+      </Wrapper>
+    );
+
+    const root = await render(
+      <RevisionContext value={0}>{element}</RevisionContext>
+    );
+
+    const text = `foo:${committedValue}`;
+    const childState = navigation.getRootState()?.routes[1]?.state;
+
+    expect(childState).toBeDefined();
+
+    expect(root.getByText(text, { includeHiddenElements: true })).toBeTruthy();
+
+    await root.rerender(<RevisionContext value={1}>{element}</RevisionContext>);
+
+    expect(root.getByText(text, { includeHiddenElements: true })).toBeTruthy();
+
+    expect(navigation.getRootState()?.routes[1]?.state).toEqual(childState);
+
+    await act(() => navigation.navigate('parent'));
+
+    expect(root.getByText(text)).toBeTruthy();
+
+    expect(navigation.getRootState()?.routes[1]?.state).toEqual(childState);
+
+    await root.rerender(<RevisionContext value={2}>{element}</RevisionContext>);
+
+    expect(root.getByText(text)).toBeTruthy();
+
+    expect(navigation.getRootState()?.routes[1]?.state).toEqual(childState);
+  }
+);
+
+test('updates params on the new child screen after parent and child screen changes while initially hidden', async () => {
+  const ParentContext = React.createContext(false);
+  const ChildContext = React.createContext('First');
+
+  const TestScreen = () => {
+    const route = useRoute();
+
+    return <Text>{`${route.name}:${JSON.stringify(route.params)}`}</Text>;
+  };
+
+  const TestNavigator = (props: { children: React.ReactNode }) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
+    );
+  };
+
+  const Child = () => {
+    const name = React.use(ChildContext);
+
+    return (
+      <TestNavigator>
+        <Screen name={name} component={TestScreen} />
+      </TestNavigator>
+    );
+  };
+
+  const Parent = () => {
+    const extra = React.use(ParentContext);
+
+    return (
+      <TestNavigator>
+        <Screen name="parent" component={Child} />
+        {extra && <Screen name="extra" component={TestScreen} />}
+      </TestNavigator>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Test = ({ mode }: { mode: 'visible' | 'hidden' }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <React.Activity mode={mode}>
+        <Parent />
+      </React.Activity>
+    </BaseNavigationContainer>
+  );
+
+  const hiddenElement = <Test mode="hidden" />;
+
+  const root = await render(
+    <ParentContext value={false}>
+      <ChildContext value="First">{hiddenElement}</ChildContext>
+    </ParentContext>
+  );
+
+  await root.rerender(
+    <ParentContext value={true}>
+      <ChildContext value="First">{hiddenElement}</ChildContext>
+    </ParentContext>
+  );
+
+  await root.rerender(
+    <ParentContext value={true}>
+      <ChildContext value="Second">{hiddenElement}</ChildContext>
+    </ParentContext>
+  );
+
+  await act(() => navigation.dispatch(CommonActions.setParams({ count: 1 })));
+
+  expect(navigation.getRootState()?.routes[0]?.state?.routes[0]).toMatchObject({
+    name: 'Second',
+    params: { count: 1 },
+  });
+
+  await root.rerender(
+    <ParentContext value={true}>
+      <ChildContext value="Second">
+        <Test mode="visible" />
+      </ChildContext>
+    </ParentContext>
+  );
+
+  expect(navigation.getRootState()?.routeNames).toEqual(['parent', 'extra']);
+
+  expect(root.getByText('Second:{"count":1}')).toBeTruthy();
+});
+
+test.each<{ initialMode: 'visible' | 'hidden'; strict: boolean }>([
+  { initialMode: 'visible', strict: false },
+  { initialMode: 'hidden', strict: false },
+  { initialMode: 'visible', strict: true },
+  { initialMode: 'hidden', strict: true },
+])(
+  'preserves local screen state when updating params after replacing a hidden navigator (initial mode: $initialMode, strict mode: $strict)',
+  async ({ initialMode, strict }) => {
+    const TestContext = React.createContext<{
+      name: string;
+      navigatorKey: string;
+      mode: 'visible' | 'hidden';
+    }>({ name: 'First', navigatorKey: 'First', mode: initialMode });
+    let count = 0;
+
+    let committedValue: number | undefined;
+
+    const TestScreen = () => {
+      const route = useRoute();
+      const [value] = React.useState(() => ++count);
+
+      React.useInsertionEffect(() => {
+        committedValue = value;
+      });
+
+      return <Text>{`${route.name}:${value}`}</Text>;
+    };
+
+    const TestNavigator = (props: { children: React.ReactNode }) => {
+      const { state, descriptors, render } = useNavigationBuilder(
+        StackRouter,
+        props
+      );
+
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
+      );
+    };
+
+    const TestContent = () => {
+      const { name, navigatorKey, mode } = React.use(TestContext);
+
+      return (
+        <React.Activity mode={mode}>
+          <TestNavigator key={navigatorKey}>
+            <Screen name={name} component={TestScreen} />
+          </TestNavigator>
+        </React.Activity>
+      );
+    };
+
+    const navigation = createNavigationContainerRef<ParamListBase>();
+    const Wrapper = strict ? React.StrictMode : React.Fragment;
+
+    const element = (
+      <Wrapper>
+        <BaseNavigationContainer ref={navigation}>
+          <TestNavigator>
+            <Screen name="parent" component={TestContent} />
+          </TestNavigator>
+        </BaseNavigationContainer>
+      </Wrapper>
+    );
+
+    const root = await render(
+      <TestContext
+        value={{ name: 'First', navigatorKey: 'First', mode: initialMode }}
+      >
+        {element}
+      </TestContext>
+    );
+
+    await root.rerender(
+      <TestContext
+        value={{ name: 'First', navigatorKey: 'First', mode: 'hidden' }}
+      >
+        {element}
+      </TestContext>
+    );
+
+    await root.rerender(
+      <TestContext
+        value={{ name: 'Second', navigatorKey: 'First', mode: 'hidden' }}
+      >
+        {element}
+      </TestContext>
+    );
+
+    await root.rerender(
+      <TestContext
+        value={{ name: 'Third', navigatorKey: 'Third', mode: 'hidden' }}
+      >
+        {element}
+      </TestContext>
+    );
+
+    const text = `Third:${committedValue}`;
+
+    expect(root.getByText(text, { includeHiddenElements: true })).toBeTruthy();
+
+    await act(() => navigation.dispatch(CommonActions.setParams({ count: 1 })));
+
+    expect(root.getByText(text, { includeHiddenElements: true })).toBeTruthy();
+
+    expect(
+      navigation.getRootState()?.routes[0]?.state?.routes[0]
+    ).toMatchObject({
+      name: 'Third',
+      params: { count: 1 },
+    });
+
+    await root.rerender(
+      <TestContext
+        value={{ name: 'Third', navigatorKey: 'Third', mode: 'visible' }}
+      >
+        {element}
+      </TestContext>
+    );
+
+    expect(root.getByText(text)).toBeTruthy();
+
+    expect(navigation.getCurrentRoute()?.params).toEqual({ count: 1 });
+  }
+);
