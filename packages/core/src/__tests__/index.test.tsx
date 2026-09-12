@@ -17,6 +17,7 @@ import { Group } from '../Group';
 import { Screen } from '../Screen';
 import { useNavigation } from '../useNavigation';
 import { useNavigationBuilder } from '../useNavigationBuilder';
+import { useRoute } from '../useRoute';
 import { MockRouter, MockRouterKey } from './__fixtures__/MockRouter';
 
 beforeEach(() => {
@@ -5305,4 +5306,98 @@ test('removes route when navigationKey changes even if combined keys are similar
   await root.rerender(<Test condition />);
 
   expect(navigation.getCurrentRoute()?.name).toBe('foo');
+});
+
+test('applies only the latest pending navigation update after multiple screen configuration changes while hidden', async () => {
+  const TestContext = React.createContext<{
+    name: string;
+    mode: 'visible' | 'hidden';
+  }>({ name: 'First', mode: 'visible' });
+
+  const TestNavigator = (props: { children: React.ReactNode }) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      MockRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    if (route == null) {
+      return null;
+    }
+
+    return render(descriptors[route.key]?.render());
+  };
+
+  const TestScreen = () => {
+    const route = useRoute();
+
+    return <Text>{`${route.name}: ${JSON.stringify(route.params)}`}</Text>;
+  };
+
+  const TestContent = () => {
+    const { name, mode } = React.use(TestContext);
+
+    return (
+      <React.Activity mode={mode}>
+        <TestNavigator>
+          <Screen name={name} component={TestScreen} />
+        </TestNavigator>
+      </React.Activity>
+    );
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const element = (
+    <BaseNavigationContainer ref={navigation}>
+      <TestContent />
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(
+    <TestContext value={{ name: 'First', mode: 'visible' }}>
+      {element}
+    </TestContext>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      First: undefined
+    </Text>
+  `);
+
+  await root.rerender(
+    <TestContext value={{ name: 'First', mode: 'hidden' }}>
+      {element}
+    </TestContext>
+  );
+
+  await root.rerender(
+    <TestContext value={{ name: 'Second', mode: 'hidden' }}>
+      {element}
+    </TestContext>
+  );
+
+  await root.rerender(
+    <TestContext value={{ name: 'Third', mode: 'hidden' }}>
+      {element}
+    </TestContext>
+  );
+
+  await act(() =>
+    navigation.dispatch(CommonActions.setParams({ value: 'updated' }))
+  );
+
+  await root.rerender(
+    <TestContext value={{ name: 'Third', mode: 'visible' }}>
+      {element}
+    </TestContext>
+  );
+
+  expect(root).toMatchInlineSnapshot(`
+    <Text>
+      Third: {"value":"updated"}
+    </Text>
+  `);
 });

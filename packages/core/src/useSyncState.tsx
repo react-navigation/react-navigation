@@ -108,25 +108,23 @@ export function useSyncState<T>(getInitialState: () => T) {
     return unsubscribe;
   }, [store]);
 
-  const pendingUpdatesRef = React.useRef<(() => void)[]>([]);
+  const pendingUpdates = useLazyValue(() => new Set<() => void>());
 
   const scheduleUpdate = useLatestCallback((callback: () => void) => {
-    pendingUpdatesRef.current.push(callback);
+    pendingUpdates.add(callback);
   });
 
   const flushUpdates = useLatestCallback(() => {
-    const pendingUpdates = pendingUpdatesRef.current;
+    if (pendingUpdates.size !== 0) {
+      // Updates are queued child-first as insertion effects run bottom-up.
+      // The root navigator replaces the whole state while nested navigators merge into it.
+      // So we apply them root-first to avoid the root clobbering nested updates.
+      const callbacks = Array.from(pendingUpdates).reverse();
 
-    pendingUpdatesRef.current = [];
+      pendingUpdates.clear();
 
-    if (pendingUpdates.length !== 0) {
       store.batchUpdates(() => {
-        // Updates are queued child-first as insertion effects run bottom-up.
-        // The root navigator replaces the whole state while nested navigators merge into it.
-        // So we apply them root-first to avoid the root clobbering nested updates.
-        pendingUpdates.reverse();
-
-        for (const update of pendingUpdates) {
+        for (const update of callbacks) {
           update();
         }
       });
