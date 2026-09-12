@@ -602,7 +602,7 @@ export type NativeStackNavigationOptions = {
    */
   gestureResponseDistance?: ScreenProps['gestureResponseDistance'];
   /**
-   * The type of animation to use when this screen replaces another screen. Defaults to `pop`.
+   * The type of animation to use when this screen replaces another screen. Defaults to `push`.
    *
    * Supported values:
    * - "push": the new screen will perform push animation.
