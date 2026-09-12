@@ -1,8 +1,13 @@
 import type { ParamListBase, Route } from '@react-navigation/routers';
 import * as React from 'react';
+import useLatestCallback from 'use-latest-callback';
 
 import type { NavigationProp } from './types';
-import { FocusedRouteKeyContext, IsFocusedContext } from './useIsFocused';
+import {
+  FocusedRouteKeyContext,
+  IsFocusedContext,
+  IsFocusedGetterContext,
+} from './useIsFocused';
 import { useLazyValue } from './useLazyValue';
 import { NamedNavigationStateListenerProvider } from './useNavigationState';
 
@@ -62,6 +67,8 @@ export function NavigationProvider({ route, navigation, children }: Props) {
       ? focusedRouteKey === route.key
       : false;
 
+  const getIsFocused = useLatestCallback(() => isFocused);
+
   return (
     <NamedNavigationStateListenerProvider name={route.name}>
       <NamedRouteContextListContext.Provider value={NamedRouteContextList}>
@@ -69,9 +76,11 @@ export function NavigationProvider({ route, navigation, children }: Props) {
           <NavigationRouteContext.Provider value={route}>
             <NavigationContext.Provider value={navigation}>
               <IsFocusedContext.Provider value={isFocused}>
-                <IsScreenContext.Provider value={true}>
-                  {children}
-                </IsScreenContext.Provider>
+                <IsFocusedGetterContext.Provider value={getIsFocused}>
+                  <IsScreenContext.Provider value={true}>
+                    {children}
+                  </IsScreenContext.Provider>
+                </IsFocusedGetterContext.Provider>
               </IsFocusedContext.Provider>
             </NavigationContext.Provider>
           </NavigationRouteContext.Provider>
