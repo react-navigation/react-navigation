@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useLatestCallback from 'use-latest-callback';
 
 import { useNavigationBuilderContext } from './NavigationBuilderContext';
 
@@ -13,8 +14,10 @@ import { useNavigationBuilderContext } from './NavigationBuilderContext';
 export function useScheduleUpdate(callback: () => void) {
   const { scheduleUpdate, flushUpdates } = useNavigationBuilderContext();
 
+  const latestCallback = useLatestCallback(callback);
+
   React.useInsertionEffect(() => {
-    scheduleUpdate(callback);
+    scheduleUpdate(latestCallback);
   });
 
   React.useLayoutEffect(flushUpdates);
