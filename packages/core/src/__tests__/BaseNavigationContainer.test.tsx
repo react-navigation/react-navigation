@@ -8,8 +8,9 @@ import {
   StackRouter,
   TabRouter,
 } from '@react-navigation/routers';
-import { act, render } from '@testing-library/react-native';
+import { act, render, screen, userEvent } from '@testing-library/react-native';
 import * as React from 'react';
+import { Button, Text } from 'react-native';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
@@ -1221,6 +1222,293 @@ test('emits option events when options change with stack router', async () => {
   expect(listener2).toHaveBeenCalledTimes(2);
   expect(listener2.mock.calls[1]?.[0]?.data.options).toEqual({ h: 9 });
   expect(navigation.getCurrentOptions()).toEqual({ h: 9 });
+});
+
+test('reports the parent screen options when its nested navigator is removed', async () => {
+  const user = userEvent.setup();
+
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { descriptors, render } = useNavigationBuilder(TabRouter, props);
+
+    return render(Object.values(descriptors).map((it) => it.render()));
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  let notifiedOptions: object | undefined;
+
+  navigation.addListener('options', ({ data }) => {
+    notifiedOptions = data.options;
+  });
+
+  const Nested = () => {
+    const [mounted, setMounted] = React.useState(true);
+
+    return (
+      <>
+        <Button
+          title="Remove nested navigator"
+          onPress={() => setMounted(false)}
+        />
+        {mounted ? (
+          <TestNavigator>
+            <Screen name="child" options={{ title: 'Child' }}>
+              {() => null}
+            </Screen>
+          </TestNavigator>
+        ) : null}
+      </>
+    );
+  };
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen
+          name="parent"
+          component={Nested}
+          options={{ title: 'Parent' }}
+        />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(notifiedOptions).toEqual({ title: 'Child' });
+
+  await user.press(
+    screen.getByRole('button', { name: 'Remove nested navigator' })
+  );
+
+  expect(notifiedOptions).toEqual({ title: 'Parent' });
+});
+
+test('reports the parent screen options when an initially hidden nested navigator is removed', async () => {
+  const user = userEvent.setup();
+
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { descriptors, render } = useNavigationBuilder(TabRouter, props);
+
+    return render(Object.values(descriptors).map((it) => it.render()));
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  let notifiedOptions: object | undefined;
+
+  navigation.addListener('options', ({ data }) => {
+    notifiedOptions = data.options;
+  });
+
+  const Nested = () => {
+    const [mounted, setMounted] = React.useState(true);
+
+    return (
+      <>
+        <Button
+          title="Remove nested navigator"
+          onPress={() => setMounted(false)}
+        />
+        {mounted ? (
+          <React.Activity mode="hidden">
+            <TestNavigator>
+              <Screen name="child" options={{ title: 'Child' }}>
+                {() => null}
+              </Screen>
+            </TestNavigator>
+          </React.Activity>
+        ) : null}
+      </>
+    );
+  };
+
+  const App = () => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        <Screen
+          name="parent"
+          component={Nested}
+          options={{ title: 'Parent' }}
+        />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<App />);
+
+  await root.rerender(<App />);
+
+  expect(notifiedOptions).toEqual({ title: 'Child' });
+
+  await user.press(
+    screen.getByRole('button', { name: 'Remove nested navigator' })
+  );
+
+  expect(notifiedOptions).toEqual({ title: 'Parent' });
+});
+
+test('reports options for the current route when the available screens change', async () => {
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  let notifiedOptions: object | undefined;
+
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      TabRouter,
+      props
+    );
+
+    const route = state.routes[state.index];
+
+    return render(route ? descriptors[route.key]?.render() : null);
+  };
+
+  navigation.addListener('options', ({ data }) => {
+    expect(data.options).toEqual({ title: navigation.getCurrentRoute()?.name });
+
+    notifiedOptions = data.options;
+  });
+
+  const Test = ({ showSecond }: { showSecond: boolean }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator>
+        {showSecond ? (
+          <Screen name="Second" options={{ title: 'Second' }}>
+            {() => <Text>Second</Text>}
+          </Screen>
+        ) : (
+          <Screen name="First" options={{ title: 'First' }}>
+            {() => <Text>First</Text>}
+          </Screen>
+        )}
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<Test showSecond={false} />);
+
+  expect(notifiedOptions).toEqual({ title: 'First' });
+
+  await root.rerender(<Test showSecond />);
+
+  expect(screen.getByText('Second')).toBeOnTheScreen();
+
+  expect(notifiedOptions).toEqual({ title: 'Second' });
+});
+
+test("keeps the current screen's options while the next screen is loading", async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const events: object[] = [];
+
+  const Second = () => {
+    React.use(promise);
+
+    return <Text>Second</Text>;
+  };
+
+  const FocusedNavigator = (
+    props: Parameters<typeof useNavigationBuilder>[1]
+  ) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      TabRouter,
+      props
+    );
+    const route = state.routes[state.index];
+
+    return render(route ? descriptors[route.key]?.render() : null);
+  };
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <React.Suspense fallback={<Text>Loading</Text>}>
+        <FocusedNavigator>
+          <Screen name="first" options={{ title: 'First' }}>
+            {() => <Text>First</Text>}
+          </Screen>
+          <Screen
+            name="second"
+            component={Second}
+            options={{ title: 'Second' }}
+          />
+        </FocusedNavigator>
+      </React.Suspense>
+    </BaseNavigationContainer>
+  );
+
+  navigation.addListener('options', ({ data }) => events.push(data.options));
+
+  await act(() => navigation.navigate('second'));
+
+  expect(screen.getByText('First')).toBeOnTheScreen();
+
+  expect(events).toEqual([]);
+
+  await act(() => resolve());
+
+  expect(screen.getByText('Second')).toBeOnTheScreen();
+
+  expect(events).toEqual([{ title: 'Second' }]);
+});
+
+test("reports the active screen's options when switching between hidden screens", async () => {
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const events: object[] = [];
+
+  const ActivityNavigator = (
+    props: Parameters<typeof useNavigationBuilder>[1]
+  ) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      TabRouter,
+      props
+    );
+
+    return render(
+      state.routes.map((route, index) => (
+        <React.Activity
+          key={route.key}
+          mode={index === state.index ? 'visible' : 'hidden'}
+        >
+          {descriptors[route.key]?.render()}
+        </React.Activity>
+      ))
+    );
+  };
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <ActivityNavigator>
+        <Screen name="first" options={{ title: 'First' }}>
+          {() => <Text>First</Text>}
+        </Screen>
+        <Screen name="second" options={{ title: 'Second' }}>
+          {() => <Text>Second</Text>}
+        </Screen>
+      </ActivityNavigator>
+    </BaseNavigationContainer>
+  );
+
+  navigation.addListener('options', ({ data }) => events.push(data.options));
+
+  await act(() => navigation.navigate('second'));
+
+  expect(screen.getByText('Second')).toBeOnTheScreen();
+
+  expect(navigation.getCurrentOptions()).toEqual({ title: 'Second' });
+
+  expect(events).toEqual([{ title: 'Second' }]);
+
+  events.length = 0;
+
+  await act(() => navigation.navigate('first'));
+
+  expect(screen.getByText('First')).toBeOnTheScreen();
+
+  expect(navigation.getCurrentOptions()).toEqual({ title: 'First' });
+
+  expect(events).toEqual([{ title: 'First' }]);
 });
 
 test('throws if there is no navigator rendered', async () => {

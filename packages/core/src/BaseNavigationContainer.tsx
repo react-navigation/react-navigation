@@ -403,10 +403,17 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
     }
   );
 
+  const isOptionsListenerReadyRef = React.useRef(false);
   const lastEmittedOptionsRef = React.useRef<object | undefined>(undefined);
 
-  const onOptionsChange = useLatestCallback((options: object) => {
-    if (lastEmittedOptionsRef.current === options) {
+  const onOptionsChange = useLatestCallback(() => {
+    if (!isOptionsListenerReadyRef.current) {
+      return;
+    }
+
+    const options = getCurrentOptions();
+
+    if (options == null || lastEmittedOptionsRef.current === options) {
       return;
     }
 
@@ -417,6 +424,16 @@ export function BaseNavigationContainer<ParamList extends {} = RootParamList>({
       data: { options },
     });
   });
+
+  React.useEffect(() => {
+    isOptionsListenerReadyRef.current = true;
+
+    onOptionsChange();
+
+    return () => {
+      isOptionsListenerReadyRef.current = false;
+    };
+  }, [onOptionsChange]);
 
   const lastEmittedStateRef = React.useRef<State>(undefined);
 

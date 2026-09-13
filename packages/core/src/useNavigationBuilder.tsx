@@ -1034,8 +1034,8 @@ export function useNavigationBuilder<
     ScreenOptions,
     EventMap
   >({
-    routes: state.routes,
     screens,
+    state,
     navigation,
     screenOptions,
     screenLayout,
