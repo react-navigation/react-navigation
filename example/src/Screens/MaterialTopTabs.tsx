@@ -13,7 +13,7 @@ const MaterialTopTabsNavigator = createMaterialTopTabNavigator({
   screens: {
     Chat: createMaterialTopTabScreen({
       screen: ChatScreen,
-      options: { title: 'Chat' },
+      options: { title: 'Chat', tabBarBadge: 3 },
     }),
     Contacts: createMaterialTopTabScreen({
       screen: Contacts,
@@ -21,7 +21,11 @@ const MaterialTopTabsNavigator = createMaterialTopTabNavigator({
     }),
     Albums: createMaterialTopTabScreen({
       screen: Albums,
-      options: { title: 'Albums' },
+      options: {
+        title: 'Albums',
+        tabBarBadge: 'new',
+        tabBarBadgeStyle: { backgroundColor: 'tomato' },
+      },
     }),
   },
 });
