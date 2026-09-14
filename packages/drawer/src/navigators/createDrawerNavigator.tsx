@@ -65,7 +65,7 @@ export interface DrawerTypeBag extends NavigatorTypeBagBase {
   ScreenOptions: DrawerNavigationOptions;
   EventMap: DrawerNavigationEventMap;
   ActionHelpers: DrawerActionHelpers<this['ParamList']>;
-  Navigator: typeof DrawerNavigator;
+  Navigator: React.ComponentType<DrawerNavigatorProps<this['ParamList']>>;
 }
 
 export const createDrawerNavigator =
