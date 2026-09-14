@@ -240,7 +240,10 @@ function NativeStackViewContent({
             key={route.key}
             mode={activityMode}
             visible={isFocused || isNextScreenTransparent}
-            style={usesPageStyle ? styles.page : StyleSheet.absoluteFill}
+            // Always out of flow, even when the screen fills the window:
+            // this is what stops the grown content from feeding back into
+            // the frame size that `useFillsWindow` measures against
+            style={StyleSheet.absoluteFill}
           >
             {content}
           </ActivityView>

@@ -14,20 +14,6 @@ function approximatelyEqual(a: number, b: number) {
   return Math.abs(a - b) < 1;
 }
 
-// This workaround is specifically for mobile Chrome's behavior of leaving
-// an empty space at the bottom of the page after a navigation that happens
-// while the address bar is collapsed. It must not run on Safari/WebKit:
-// Safari fires `resize` *during* its own address bar collapse/expand
-// animation, and forcing the body's height on every one of those events
-// fights that animation and causes a visible flicker. iOS forces every
-// browser, including Chrome ("CriOS"), to use WebKit, so checking for
-// Android is enough to scope this to actual mobile Chrome (Blink).
-function isMobileChrome() {
-  const ua = navigator.userAgent;
-
-  return /Android/.test(ua) && /Chrome\//.test(ua);
-}
-
 // This component will render a page which overflows the screen
 // if the container fills the body by comparing the size
 // This lets the document.body handle scrolling of the content
@@ -44,57 +30,11 @@ export function CardContent({ enabled, layout, style, ...rest }: Props) {
     const width = document.body.clientWidth;
     const height = document.body.clientHeight;
 
-    // Workaround for mobile Chrome, necessary when a navigation happens
-    // when the address bar has already collapsed, which resulted in an
-    // empty space at the bottom of the page (matching the height of the
-    // address bar). To fix this, it's necessary to update the height of
-    // the DOM with the current height of the window.
-    // See https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
-    const isFullHeight = approximatelyEqual(height, layout.height);
-    const id = '__react-navigation-stack-mobile-chrome-viewport-fix';
-
-    let unsubscribe: (() => void) | undefined;
-
-    if (isFullHeight && isMobileChrome()) {
-      const style =
-        document.getElementById(id) ?? document.createElement('style');
-
-      style.id = id;
-
-      const updateStyle = () => {
-        const vh = window.innerHeight * 0.01;
-
-        style.textContent = [
-          `:root { --vh: ${vh}px; }`,
-          `body { height: calc(var(--vh, 1vh) * 100); }`,
-        ].join('\n');
-      };
-
-      updateStyle();
-
-      if (!document.head.contains(style)) {
-        document.head.appendChild(style);
-      }
-
-      // eslint-disable-next-line @eslint-react/web-api/no-leaked-event-listener
-      window.addEventListener('resize', updateStyle);
-
-      unsubscribe = () => {
-        window.removeEventListener('resize', updateStyle);
-      };
-    } else {
-      // Remove the workaround if the stack does not occupy the whole
-      // height of the page
-      document.getElementById(id)?.remove();
-    }
-
     // eslint-disable-next-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
     setFill(
       approximatelyEqual(width, layout.width) &&
         approximatelyEqual(height, layout.height)
     );
-
-    return unsubscribe;
   }, [layout.height, layout.width]);
 
   // Screens can opt out by explicitly setting `flex: 1` in `contentStyle`
