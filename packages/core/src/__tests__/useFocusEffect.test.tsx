@@ -14,6 +14,7 @@ import { useNavigationBuilder } from '../useNavigationBuilder';
 import { MockRouter, MockRouterKey } from './__fixtures__/MockRouter';
 
 beforeEach(() => {
+  jest.useFakeTimers();
   MockRouterKey.current = 0;
 });
 
@@ -58,21 +59,25 @@ test('runs focus effect on focus change', async () => {
 
   await render(element);
 
+  jest.runAllTimers();
   expect(focusEffect).not.toHaveBeenCalled();
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
   await act(() => navigation.current.navigate('second'));
 
+  jest.runAllTimers();
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).not.toHaveBeenCalled();
 
   await act(() => navigation.current.navigate('third'));
 
+  jest.runAllTimers();
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 
   await act(() => navigation.current.navigate('second'));
 
+  jest.runAllTimers();
   expect(focusEffect).toHaveBeenCalledTimes(2);
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
@@ -181,6 +186,7 @@ test('runs focus effect when initial state is given', async () => {
 
   await act(() => navigation.current.navigate('first'));
 
+  jest.runAllTimers();
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
@@ -233,6 +239,7 @@ test('runs focus effect when only focused route is rendered', async () => {
 
   await act(() => navigation.current.navigate('second'));
 
+  jest.runAllTimers();
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
@@ -284,6 +291,7 @@ test('runs cleanup when component is unmounted', async () => {
 
   await root.rerender(<App mounted={false} />);
 
+  jest.runAllTimers();
   expect(focusEffect).toHaveBeenCalledTimes(1);
   expect(focusEffectCleanup).toHaveBeenCalledTimes(1);
 });
