@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.35](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.34...@react-navigation/core@8.0.0-alpha.35) (2026-09-14)
+
+* refactor!: use a render callback instead of NavigationContent for custom navigators (#13238) ([c9c119e](https://github.com/react-navigation/react-navigation/commit/c9c119e13716ab82862c0cdddab2c84a4d3832ad)), closes [#13238](https://github.com/react-navigation/react-navigation/issues/13238) - by @satya164
+
+### Bug Fixes
+
+* allow removal prevention when navigation was suspended ([#13244](https://github.com/react-navigation/react-navigation/issues/13244)) ([75ac425](https://github.com/react-navigation/react-navigation/commit/75ac425f6931cda8e793baaa2e6ca2b03ed14f01)) - by @satya164
+* avoid stale options events & notify when nested navigators are removed ([#13245](https://github.com/react-navigation/react-navigation/issues/13245)) ([be48fea](https://github.com/react-navigation/react-navigation/commit/be48feaea76f999e55f9f4d058ca36d45b87d308)) - by @satya164
+* deduplicate scheduled navigation updates ([#13241](https://github.com/react-navigation/react-navigation/issues/13241)) ([92e57ea](https://github.com/react-navigation/react-navigation/commit/92e57eabb98efb78014cb66b988ea821bdab7aa1)) - by @satya164
+* fix more concurrent rendering issues in useNavigationState ([#13239](https://github.com/react-navigation/react-navigation/issues/13239)) ([7685418](https://github.com/react-navigation/react-navigation/commit/7685418c0794e98751fd1bf13f4cab2185dec360)) - by @satya164
+* keep navigation and route stable after suspense ([#13240](https://github.com/react-navigation/react-navigation/issues/13240)) ([6db6331](https://github.com/react-navigation/react-navigation/commit/6db6331ceda72a3e51aecbfa1f04371ecaf62907)) - by @satya164
+* preserve navigator state across hidden activity updates ([#13242](https://github.com/react-navigation/react-navigation/issues/13242)) ([2f02e12](https://github.com/react-navigation/react-navigation/commit/2f02e1297513cff3cbebc724281c6865e40b12d1)) - by @satya164
+* use committed focus for events and effects ([#13243](https://github.com/react-navigation/react-navigation/issues/13243)) ([c386bf0](https://github.com/react-navigation/react-navigation/commit/c386bf0ad1725324a0438f69b4485f8307ee9566)) - by @satya164
+
+### BREAKING CHANGES
+
+* this changes the API for custom navigators:
+
+```diff
+-const { NavigationContent } = useNavigationBuilder(Router, props);
++const { render } = useNavigationBuilder(Router, props);
+
+-return (
+-  <NavigationContent>
+-    <NavigatorView />
+-  </NavigationContent>
++return render(
++  <NavigatorView />
+ );
+```
+
+custom navigators now must use the returned `render` function from
+`useNavigationBuilder` instead of the `NavigationContent`.
+
+the previous API isn't feasible while maintaining concurrent safety.
+
 # [8.0.0-alpha.34](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@8.0.0-alpha.33...@react-navigation/core@8.0.0-alpha.34) (2026-08-19)
 
 ### Bug Fixes
