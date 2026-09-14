@@ -19,7 +19,7 @@ beforeEach(() => {
 });
 
 const TestNavigator = (props: any): any => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     MockRouter,
     props
   );
@@ -30,9 +30,7 @@ const TestNavigator = (props: any): any => {
     return null;
   }
 
-  return (
-    <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-  );
+  return render(descriptors[route.key]?.render());
 };
 
 test('shows the fallback when navigating with resetRoot without a transition', async () => {
@@ -299,7 +297,7 @@ test('keeps the previous screen when navigating in a nested navigator', async ()
 
 test('holds stale content instead of fallback when setParams suspends', async () => {
   const SetParamsNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -310,9 +308,7 @@ test('holds stale content instead of fallback when setParams suspends', async ()
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -535,7 +531,7 @@ test('keeps useNavigationState consistent with the held screen during navigation
   };
 
   const TestNavigatorWithIndex = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -545,13 +541,13 @@ test('keeps useNavigationState consistent with the held screen during navigation
       return null;
     }
 
-    return (
-      <NavigationContent>
+    return render(
+      <>
         <Index />
         <React.Suspense fallback={<Text>[fallback]</Text>}>
           {descriptors[route.key]?.render()}
         </React.Suspense>
-      </NavigationContent>
+      </>
     );
   };
 
@@ -984,15 +980,13 @@ test('keeps navigation and route object identity when a transition render is dis
   };
 
   const StackNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 

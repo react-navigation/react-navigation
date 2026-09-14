@@ -15,7 +15,11 @@ import {
 import { NavigationRootContext } from './NavigationRootContext';
 import { PreventRemoveContext } from './PreventRemoveContext';
 import { StaticTreeContext } from './StaticTreeContext';
-import { FocusedRouteKeyContext, IsFocusedContext } from './useIsFocused';
+import {
+  FocusedRouteKeyContext,
+  IsFocusedContext,
+  IsFocusedGetterContext,
+} from './useIsFocused';
 import {
   NamedNavigationStateListenerListContext,
   NavigationStateListenerContext,
@@ -50,13 +54,17 @@ export function NavigationIndependentTree({
                             <NavigationRouteContext.Provider value={undefined}>
                               <NavigationContext.Provider value={undefined}>
                                 <IsFocusedContext.Provider value={undefined}>
-                                  <IsScreenContext.Provider value={false}>
-                                    <NavigationFocusedRouteStateContext.Provider
-                                      value={undefined}
-                                    >
-                                      {children}
-                                    </NavigationFocusedRouteStateContext.Provider>
-                                  </IsScreenContext.Provider>
+                                  <IsFocusedGetterContext.Provider
+                                    value={undefined}
+                                  >
+                                    <IsScreenContext.Provider value={false}>
+                                      <NavigationFocusedRouteStateContext.Provider
+                                        value={undefined}
+                                      >
+                                        {children}
+                                      </NavigationFocusedRouteStateContext.Provider>
+                                    </IsScreenContext.Provider>
+                                  </IsFocusedGetterContext.Provider>
                                 </IsFocusedContext.Provider>
                               </NavigationContext.Provider>
                             </NavigationRouteContext.Provider>

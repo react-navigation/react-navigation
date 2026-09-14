@@ -22,6 +22,7 @@ type Props<State extends NavigationState, ScreenOptions extends {}> = {
   navigation: NavigationProp<ParamListBase, string, State, ScreenOptions>;
   route: Route<string>;
   routeState: NavigationState | PartialState<NavigationState> | undefined;
+  getFocusedRouteKey: () => string | undefined;
   getState: () => State;
   setState: (state: State) => void;
   subscribe: (callback: () => void) => () => void;
@@ -41,6 +42,7 @@ export function SceneView<
   route,
   navigation,
   routeState,
+  getFocusedRouteKey,
   getState,
   setState,
   subscribe,
@@ -53,7 +55,7 @@ export function SceneView<
   const { addOptionsGetter } = useOptionsGetters({
     key: route.key,
     options,
-    navigation,
+    getFocusedRouteKey,
   });
 
   const setKey = React.useCallback((key: string) => {

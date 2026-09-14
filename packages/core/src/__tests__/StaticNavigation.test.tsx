@@ -40,7 +40,7 @@ type TestNavigatorProps = DefaultNavigatorOptions<
 >;
 
 const TestNavigator = (props: TestNavigatorProps) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder<
+  const { state, descriptors, render } = useNavigationBuilder<
     NavigationState,
     DefaultRouterOptions,
     {},
@@ -48,24 +48,22 @@ const TestNavigator = (props: TestNavigatorProps) => {
     EventMapBase
   >(MockRouter, props);
 
-  return (
-    <NavigationContent>
-      <main>
-        {state.routes.map((route) => {
-          const descriptor = descriptors[route.key];
+  return render(
+    <main>
+      {state.routes.map((route) => {
+        const descriptor = descriptors[route.key];
 
-          return (
-            <div
-              key={route.key}
-              className={descriptor?.options?.className}
-              data-testid={descriptor?.options?.testId}
-            >
-              {descriptor?.render()}
-            </div>
-          );
-        })}
-      </main>
-    </NavigationContent>
+        return (
+          <div
+            key={route.key}
+            className={descriptor?.options?.className}
+            data-testid={descriptor?.options?.testId}
+          >
+            {descriptor?.render()}
+          </div>
+        );
+      })}
+    </main>
   );
 };
 
@@ -98,7 +96,7 @@ test('does not read getter screens until rendering them', async () => {
   };
 
   const FocusedTestNavigator = (props: TestNavigatorProps) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       DefaultRouterOptions,
       {},
@@ -112,11 +110,7 @@ test('does not read getter screens until rendering them', async () => {
       return null;
     }
 
-    return (
-      <NavigationContent>
-        <main>{descriptors[route.key]?.render()}</main>
-      </NavigationContent>
-    );
+    return render(<main>{descriptors[route.key]?.render()}</main>);
   };
 
   interface FocusedTestNavigatorTypeBag extends NavigatorTypeBagBase {

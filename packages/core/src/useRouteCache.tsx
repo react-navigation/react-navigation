@@ -11,6 +11,10 @@ import type { RouteProp } from './types';
  */
 export const CHILD_STATE = Symbol('CHILD_STATE');
 
+type CachedRoute = RouteProp<ParamListBase> & {
+  [CHILD_STATE]?: NavigationState;
+};
+
 /**
  * Hook to cache route props for each screen in the navigator.
  * This lets add warnings and modifications to the route object but keep references between renders.
@@ -20,38 +24,58 @@ export function useRouteCache<State extends NavigationState>(
 ) {
   // Cache object which holds route objects for each screen
   const cache = React.useMemo(
-    () => ({ current: new Map<string, RouteProp<ParamListBase>>() }),
+    () => ({ current: new Map<string, CachedRoute>() }),
     []
   );
 
-  const next = routes.reduce((acc, route) => {
-    const previous = cache.current.get(route.key);
-    const { state, ...routeWithoutState } = route;
+  const next = React.useMemo(() => {
+    return routes.reduce((acc, route) => {
+      const previous = cache.current.get(route.key);
 
-    let proxy;
+      const { state: _, ...routeWithoutState } = route;
 
-    if (previous && isRecordEqual(previous, routeWithoutState)) {
-      // If a cached route object already exists, reuse it
-      proxy = previous;
-    } else {
-      proxy = routeWithoutState;
-    }
+      let proxy: CachedRoute;
 
-    if (process.env.NODE_ENV !== 'production' && proxy !== previous) {
-      // FIXME: since the state is updated with mutation, the route object cannot be frozen
-      // As a workaround, loop through the object and make the properties readonly
-      // Only needed once per proxy - skip if we're reusing a previously-frozen one
-      for (const [key, value] of Object.entries(proxy)) {
-        Object.defineProperty(proxy, key, {
-          enumerable: true,
-          configurable: true,
-          writable: false,
-          value,
-        });
+      if (previous && isRecordEqual(previous, routeWithoutState)) {
+        // If a cached route object already exists, reuse it
+        proxy = previous;
+      } else {
+        proxy = routeWithoutState;
+
+        if (process.env.NODE_ENV !== 'production') {
+          // FIXME: since the state is updated with mutation, the route object cannot be frozen
+          // As a workaround, loop through the object and make the properties readonly
+          // Only needed once per proxy - skip if we're reusing a previously-frozen one
+          for (const [key, value] of Object.entries(proxy)) {
+            Object.defineProperty(proxy, key, {
+              enumerable: true,
+              configurable: true,
+              writable: false,
+              value,
+            });
+          }
+        }
       }
-    }
 
-    // @ts-expect-error: this isn't in type definitions coz we want this private
+      acc.set(route.key, proxy);
+
+      return acc;
+    }, new Map<string, CachedRoute>());
+  }, [cache, routes]);
+
+  React.useInsertionEffect(() => {
+    cache.current = next;
+  });
+
+  // Update child state on every render, including when the memo is reused.
+  // This restores the previous child state when a pending render is canceled.
+  return Array.from(next.values(), (proxy, index) => {
+    const state = routes[index]?.state;
+
+    // FIXME: We mutate the child state without replacing the cached route object,
+    // so nested navigation doesn't re-render the parent screen.
+    // This is not concurrent render safe, pending renders mutate this shared child state.
+    // Then `getFocusedRouteNameFromRoute` can expose it before the render commits.
     if (proxy[CHILD_STATE] !== state) {
       Object.defineProperty(proxy, CHILD_STATE, {
         enumerable: false,
@@ -60,14 +84,6 @@ export function useRouteCache<State extends NavigationState>(
       });
     }
 
-    acc.set(route.key, proxy);
-
-    return acc;
-  }, new Map<string, RouteProp<ParamListBase>>());
-
-  React.useInsertionEffect(() => {
-    cache.current = next;
+    return proxy;
   });
-
-  return Array.from(next.values());
 }

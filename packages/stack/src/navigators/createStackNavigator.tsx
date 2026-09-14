@@ -34,23 +34,22 @@ function StackNavigator({
 }: StackNavigatorProps) {
   const { direction } = useLocale();
 
-  const { state, descriptors, navigation, NavigationContent } =
-    useNavigationBuilder<
-      StackNavigationState<ParamListBase>,
-      StackRouterOptions,
-      StackActionHelpers<ParamListBase>,
-      StackNavigationOptions,
-      StackNavigationEventMap
-    >(StackRouter, {
-      initialRouteName,
-      routeNamesChangeBehavior,
-      children,
-      layout,
-      screenListeners,
-      screenOptions,
-      screenLayout,
-      router,
-    });
+  const { state, descriptors, navigation, render } = useNavigationBuilder<
+    StackNavigationState<ParamListBase>,
+    StackRouterOptions,
+    StackActionHelpers<ParamListBase>,
+    StackNavigationOptions,
+    StackNavigationEventMap
+  >(StackRouter, {
+    initialRouteName,
+    routeNamesChangeBehavior,
+    children,
+    layout,
+    screenListeners,
+    screenOptions,
+    screenLayout,
+    router,
+  });
 
   React.useEffect(() => {
     let handle: ReturnType<typeof requestAnimationFrame> | undefined;
@@ -87,16 +86,14 @@ function StackNavigator({
     };
   }, [navigation]);
 
-  return (
-    <NavigationContent>
-      <StackView
-        {...rest}
-        direction={direction}
-        state={state}
-        descriptors={descriptors}
-        navigation={navigation}
-      />
-    </NavigationContent>
+  return render(
+    <StackView
+      {...rest}
+      direction={direction}
+      state={state}
+      descriptors={descriptors}
+      navigation={navigation}
+    />
   );
 }
 

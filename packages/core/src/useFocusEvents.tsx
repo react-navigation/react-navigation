@@ -4,6 +4,7 @@ import * as React from 'react';
 import { NavigationContext } from './NavigationProvider';
 import type { EventMapCore } from './types';
 import type { NavigationEventEmitter } from './useEventEmitter';
+import { IsFocusedGetterContext } from './useIsFocused';
 
 type Options<State extends NavigationState> = {
   state: State;
@@ -18,6 +19,8 @@ export function useFocusEvents<State extends NavigationState>({
   emitter,
 }: Options<State>) {
   const navigation = React.use(NavigationContext);
+  const getIsFocused = React.use(IsFocusedGetterContext);
+
   const lastFocusedKeyRef = React.useRef<string | undefined>(undefined);
 
   const currentFocusedRoute = state.routes[state.index];
@@ -51,7 +54,7 @@ export function useFocusEvents<State extends NavigationState>({
   React.useEffect(() => {
     const lastFocusedKey = lastFocusedKeyRef.current;
 
-    const isFocused = navigation ? navigation.isFocused() : true;
+    const isFocused = getIsFocused?.() ?? true;
 
     if (isFocused) {
       // Remember the current route as focused if the navigator is focused
@@ -77,5 +80,5 @@ export function useFocusEvents<State extends NavigationState>({
 
     emitter.emit({ type: 'blur', target: lastFocusedKey });
     emitter.emit({ type: 'focus', target: currentFocusedKey });
-  }, [currentFocusedKey, emitter, navigation]);
+  }, [currentFocusedKey, emitter, navigation, getIsFocused]);
 }

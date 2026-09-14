@@ -6,6 +6,7 @@ import type {
   Router,
 } from '@react-navigation/routers';
 import * as React from 'react';
+import useLatestCallback from 'use-latest-callback';
 
 import {
   type AddKeyedListener,
@@ -68,11 +69,11 @@ type Options<
   ScreenOptions extends {},
   EventMap extends EventMapBase,
 > = {
-  routes: State['routes'];
   screens: Record<
     string,
     ScreenConfigWithParent<State, ScreenOptions, EventMap>
   >;
+  state: State;
   navigation: NavigationHelpers<ParamListBase>;
   screenOptions: ScreenOptionsOrCallback<ScreenOptions> | undefined;
   screenLayout: ScreenLayout<ScreenOptions> | undefined;
@@ -101,8 +102,8 @@ export function useDescriptors<
   ScreenOptions extends {},
   EventMap extends EventMapBase,
 >({
-  routes,
   screens,
+  state,
   navigation,
   screenOptions,
   screenLayout,
@@ -117,6 +118,7 @@ export function useDescriptors<
   emitter,
 }: Options<State, ScreenOptions, EventMap>) {
   const theme = React.use(ThemeContext);
+
   const [options, setOptions] = React.useState<
     Record<string, Partial<ScreenOptions> | undefined>
   >({});
@@ -167,7 +169,7 @@ export function useDescriptors<
     EventMap,
     ActionHelpers
   >({
-    routes,
+    routes: state.routes,
     getState,
     navigation,
     setOptions,
@@ -175,7 +177,11 @@ export function useDescriptors<
     emitter,
   });
 
-  const cachedRoutes = useRouteCache(routes);
+  const cachedRoutes = useRouteCache(state.routes);
+
+  const getFocusedRouteKey = useLatestCallback(
+    () => state.routes[state.index]?.key
+  );
 
   const getOptions = (
     route: RouteProp<ParamListBase, string>,
@@ -258,6 +264,7 @@ export function useDescriptors<
         route={route}
         screen={screen}
         routeState={routeState}
+        getFocusedRouteKey={getFocusedRouteKey}
         getState={getState}
         setState={setState}
         subscribe={subscribe}
@@ -313,7 +320,13 @@ export function useDescriptors<
     }
 
     const customOptions = getOptions(route, navigation, overrides);
-    const element = render(route, navigation, customOptions, routes[i]?.state);
+
+    const element = render(
+      route,
+      navigation,
+      customOptions,
+      state.routes[i]?.state
+    );
 
     acc[route.key] = {
       route,

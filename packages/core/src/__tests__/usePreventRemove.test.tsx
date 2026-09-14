@@ -1,11 +1,13 @@
 import { beforeEach, expect, jest, test } from '@jest/globals';
 import {
+  CommonActions,
   type ParamListBase,
   StackActions,
   StackRouter,
 } from '@react-navigation/routers';
 import { act, render } from '@testing-library/react-native';
 import * as React from 'react';
+import { Text } from 'react-native';
 
 import { BaseNavigationContainer } from '../BaseNavigationContainer';
 import { createNavigationContainerRef } from '../createNavigationContainerRef';
@@ -30,15 +32,13 @@ beforeEach(() => {
 
 test("prevents removing a screen with 'usePreventRemove' hook", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -144,15 +144,13 @@ test("prevents removing a screen with 'usePreventRemove' hook", async () => {
 
 test("prevents removing a screen when 'usePreventRemove' hook is called multiple times", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -260,15 +258,13 @@ test("prevents removing a screen when 'usePreventRemove' hook is called multiple
 
 test("doesn't prevent retaining a screen in inactive routes", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -313,15 +309,13 @@ test("doesn't prevent retaining a screen in inactive routes", async () => {
 
 test("should have no effect when 'usePreventRemove' hook is set to false", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -417,15 +411,13 @@ test("should have no effect when 'usePreventRemove' hook is set to false", async
 
 test("prevents removing a child screen with 'usePreventRemove' hook", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -590,22 +582,20 @@ test("prevents removing a child screen with 'usePreventRemove' hook", async () =
 
 test("prevents removing a hidden screen with 'usePreventRemove' hook", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route, index) => (
-          <React.Activity
-            key={route.key}
-            mode={index === state.index ? 'visible' : 'hidden'}
-          >
-            {descriptors[route.key]?.render()}
-          </React.Activity>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route, index) => (
+        <React.Activity
+          key={route.key}
+          mode={index === state.index ? 'visible' : 'hidden'}
+        >
+          {descriptors[route.key]?.render()}
+        </React.Activity>
+      ))
     );
   };
 
@@ -649,15 +639,13 @@ test("prevents removing a hidden screen with 'usePreventRemove' hook", async () 
 
 test("prevents removing a grand child screen with 'usePreventRemove' hook", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -827,15 +815,13 @@ test("prevents removing a grand child screen with 'usePreventRemove' hook", asyn
 
 test("prevents removing by multiple screens with 'usePreventRemove' hook", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -987,15 +973,13 @@ test("prevents removing by multiple screens with 'usePreventRemove' hook", async
 
 test("prevents removing a child screen with 'usePreventRemove' hook with 'resetRoot'", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -1114,13 +1098,13 @@ test('keeps preventing removal while the screen is hidden with an activity', asy
   };
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
+    return render(
+      <>
         <PreventedRoutesProbe />
         {state.routes.map((route, index) => (
           <React.Activity
@@ -1130,7 +1114,7 @@ test('keeps preventing removal while the screen is hidden with an activity', asy
             {descriptors[route.key]?.render()}
           </React.Activity>
         ))}
-      </NavigationContent>
+      </>
     );
   };
 
@@ -1190,13 +1174,13 @@ test('stops preventing removal when a hidden screen is removed', async () => {
   };
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
+    return render(
+      <>
         <PreventedRoutesProbe />
         {state.routes.map((route, index) => (
           <React.Activity
@@ -1206,7 +1190,7 @@ test('stops preventing removal when a hidden screen is removed', async () => {
             {descriptors[route.key]?.render()}
           </React.Activity>
         ))}
-      </NavigationContent>
+      </>
     );
   };
 
@@ -1254,13 +1238,13 @@ test('keeps preventing removal for hidden screens in strict mode', async () => {
   };
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
+    return render(
+      <>
         <PreventedRoutesProbe />
         {state.routes.map((route, index) => (
           <React.Activity
@@ -1270,7 +1254,7 @@ test('keeps preventing removal for hidden screens in strict mode', async () => {
             {descriptors[route.key]?.render()}
           </React.Activity>
         ))}
-      </NavigationContent>
+      </>
     );
   };
 
@@ -1330,13 +1314,13 @@ test('keeps parent prevention when a nested navigator is hidden with an activity
   };
 
   const ParentNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
+    return render(
+      <>
         <PreventedRoutesProbe />
         {state.routes.map((route, index) => (
           <React.Activity
@@ -1346,20 +1330,18 @@ test('keeps parent prevention when a nested navigator is hidden with an activity
             {descriptors[route.key]?.render()}
           </React.Activity>
         ))}
-      </NavigationContent>
+      </>
     );
   };
 
   const NestedNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -1413,4 +1395,108 @@ test('keeps parent prevention when a nested navigator is hidden with an activity
   });
 
   expect(preventedRoutes[nestedKey]).toEqual({ preventRemove: true });
+});
+
+test('registers removal prevention for a visible screen during a suspended reset', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const onPreventRemove = jest.fn();
+
+  let enablePrevention: () => void;
+  let preventedRoutes: PreventedRoutes = {};
+
+  const PreventedRoutesProbe = () => {
+    preventedRoutes = usePreventRemoveContext().preventedRoutes;
+
+    return null;
+  };
+
+  const TestNavigator = (props: Parameters<typeof useNavigationBuilder>[1]) => {
+    const { state, descriptors, render } = useNavigationBuilder(
+      StackRouter,
+      props
+    );
+
+    return render(
+      <>
+        <PreventedRoutesProbe />
+        {state.routes.map((route) => descriptors[route.key]?.render())}
+      </>
+    );
+  };
+
+  const First = () => {
+    const [prevent, setPrevent] = React.useState(false);
+
+    enablePrevention = () => setPrevent(true);
+
+    usePreventRemove(prevent, onPreventRemove);
+
+    return (
+      <Text>First: {prevent ? 'removal prevented' : 'removal allowed'}</Text>
+    );
+  };
+
+  const Second = () => {
+    React.use(promise);
+
+    return <Text>Second</Text>;
+  };
+
+  const root = await render(
+    <BaseNavigationContainer ref={navigation}>
+      <React.Suspense fallback={null}>
+        <TestNavigator>
+          <Screen name="First" component={First} />
+          <Screen name="Second" component={Second} />
+        </TestNavigator>
+      </React.Suspense>
+    </BaseNavigationContainer>
+  );
+
+  const initialState = navigation.getRootState();
+  const firstKey = initialState?.routes[0]?.key;
+
+  if (firstKey == null) {
+    throw new Error("Couldn't find the route for 'First'");
+  }
+
+  expect(preventedRoutes).toEqual({});
+
+  await act(() =>
+    navigation.dispatch(
+      CommonActions.reset({ index: 0, routes: [{ name: 'Second' }] })
+    )
+  );
+
+  expect(navigation.getCurrentRoute()?.name).toBe('Second');
+
+  expect(root.getByText('First: removal allowed')).toBeVisible();
+  expect(root.queryByText('Second')).toBeNull();
+
+  await act(() => enablePrevention());
+
+  expect(root.getByText('First: removal prevented')).toBeVisible();
+
+  expect(preventedRoutes[firstKey]).toEqual({ preventRemove: true });
+
+  expect(onPreventRemove).not.toHaveBeenCalled();
+
+  await act(() => navigation.resetRoot(initialState));
+  await act(() => resolve());
+
+  await act(() =>
+    navigation.dispatch(
+      CommonActions.reset({ index: 0, routes: [{ name: 'Second' }] })
+    )
+  );
+
+  expect(onPreventRemove).toHaveBeenCalledTimes(1);
+
+  expect(navigation.getCurrentRoute()?.name).toBe('First');
+
+  expect(root.getByText('First: removal prevented')).toBeVisible();
+  expect(root.queryByText('Second')).toBeNull();
 });

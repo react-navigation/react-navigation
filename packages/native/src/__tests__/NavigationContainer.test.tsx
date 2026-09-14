@@ -14,18 +14,14 @@ import { NavigationContainer } from '../NavigationContainer';
 
 test('renders fallback before state is restored asynchronously', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
     const route = state.routes[state.index];
 
-    return (
-      <NavigationContent>
-        {route ? descriptors[route.key]?.render() : null}
-      </NavigationContent>
-    );
+    return render(route ? descriptors[route.key]?.render() : null);
   });
 
   const Stack = createStackNavigator();
@@ -79,18 +75,14 @@ test('renders fallback before state is restored asynchronously', async () => {
 
 test('restores state with a custom parser', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
     const route = state.routes[state.index];
 
-    return (
-      <NavigationContent>
-        {route ? descriptors[route.key]?.render() : null}
-      </NavigationContent>
-    );
+    return render(route ? descriptors[route.key]?.render() : null);
   });
 
   const Stack = createStackNavigator();
@@ -138,18 +130,14 @@ test('restores state with a custom parser', async () => {
 
 test('persists state from a custom stringifier', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
     const route = state.routes[state.index];
 
-    return (
-      <NavigationContent>
-        {route ? descriptors[route.key]?.render() : null}
-      </NavigationContent>
-    );
+    return render(route ? descriptors[route.key]?.render() : null);
   });
 
   const Stack = createStackNavigator();
@@ -191,18 +179,14 @@ test('persists state from a custom stringifier', async () => {
 
 test('warns for non-serializable values in navigation state', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
     const route = state.routes[state.index];
 
-    return (
-      <NavigationContent>
-        {route ? descriptors[route.key]?.render() : null}
-      </NavigationContent>
-    );
+    return render(route ? descriptors[route.key]?.render() : null);
   });
 
   const Stack = createStackNavigator();
@@ -234,18 +218,14 @@ test('warns for non-serializable values in navigation state', async () => {
 
 test('renders navigation tree immediately when state is restored synchronously', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
     const route = state.routes[state.index];
 
-    return (
-      <NavigationContent>
-        {route ? descriptors[route.key]?.render() : null}
-      </NavigationContent>
-    );
+    return render(route ? descriptors[route.key]?.render() : null);
   });
 
   const Stack = createStackNavigator();
@@ -289,18 +269,14 @@ test('renders navigation tree immediately when state is restored synchronously',
 
 test('renders normally when state restoration throws', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
     const route = state.routes[state.index];
 
-    return (
-      <NavigationContent>
-        {route ? descriptors[route.key]?.render() : null}
-      </NavigationContent>
-    );
+    return render(route ? descriptors[route.key]?.render() : null);
   });
 
   const Stack = createStackNavigator();
@@ -347,18 +323,14 @@ test('renders normally when state restoration throws', async () => {
 
 test('renders normally when state restoration rejects', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
     const route = state.routes[state.index];
 
-    return (
-      <NavigationContent>
-        {route ? descriptors[route.key]?.render() : null}
-      </NavigationContent>
-    );
+    return render(route ? descriptors[route.key]?.render() : null);
   });
 
   const Stack = createStackNavigator();

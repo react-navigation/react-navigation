@@ -10,15 +10,13 @@ import { MockRouter } from './__fixtures__/MockRouter';
 
 test('can get current theme with useTheme', async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -52,15 +50,13 @@ test('can get current theme with useTheme', async () => {
 
 test("throws if theme isn't passed to BaseNavigationContainer", async () => {
   const TestNavigator = (props: any): any => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 

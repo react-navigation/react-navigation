@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { IsFocusedGetterContext } from './useIsFocused';
 import { useNavigation } from './useNavigation';
 
 type EffectCallback = () => undefined | void | (() => void);
@@ -13,6 +14,8 @@ type EffectCallback = () => undefined | void | (() => void);
  */
 export function useFocusEffect(effect: EffectCallback) {
   const navigation = useNavigation();
+
+  const getIsFocused = React.use(IsFocusedGetterContext);
 
   // eslint-disable-next-line prefer-rest-params
   if (arguments[1] !== undefined) {
@@ -72,7 +75,7 @@ export function useFocusEffect(effect: EffectCallback) {
     };
 
     // We need to run the effect on initial render/dep changes if the screen is focused
-    if (navigation.isFocused()) {
+    if (getIsFocused?.() ?? true) {
       cleanup = callback();
       isFocused = true;
     }
@@ -109,5 +112,5 @@ export function useFocusEffect(effect: EffectCallback) {
       unsubscribeFocus();
       unsubscribeBlur();
     };
-  }, [effect, navigation]);
+  }, [effect, navigation, getIsFocused]);
 }
