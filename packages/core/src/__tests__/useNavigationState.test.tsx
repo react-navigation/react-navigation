@@ -18,7 +18,7 @@ type TestNavigatorProps = Parameters<typeof useNavigationBuilder>[1] & {
 };
 
 const TestNavigator = ({ mode = 'all', ...props }: TestNavigatorProps) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     MockRouter,
     props
   );
@@ -30,11 +30,7 @@ const TestNavigator = ({ mode = 'all', ...props }: TestNavigatorProps) => {
         ? state.routes.slice(state.index, state.index + 1)
         : [];
 
-  return (
-    <NavigationContent>
-      {routes.map((route) => descriptors[route.key]?.render())}
-    </NavigationContent>
-  );
+  return render(routes.map((route) => descriptors[route.key]?.render()));
 };
 
 beforeEach(() => {
@@ -598,7 +594,7 @@ test('surfaces an error thrown by a selector', async () => {
   }).rejects.toThrow(/^Selector failed$/);
 });
 
-test('does not re-render when navigation state changes but the selected value is unchanged', async () => {
+test('skips re-renders for unchanged selections after the first update', async () => {
   const onRender = jest.fn();
 
   const Index = React.memo(function Index() {
@@ -624,17 +620,108 @@ test('does not re-render when navigation state changes but the selected value is
 
   await act(() => navigation.navigate('first', { answer: 42 }));
 
-  expect(onRender).toHaveBeenCalledTimes(1);
+  expect(onRender).toHaveBeenCalledTimes(2);
 
   await act(() => navigation.navigate('first', { answer: 43 }));
 
-  expect(onRender).toHaveBeenCalledTimes(1);
+  expect(onRender).toHaveBeenCalledTimes(2);
 
   await act(() => navigation.navigate('second'));
 
-  expect(onRender).toHaveBeenCalledTimes(2);
+  expect(onRender).toHaveBeenCalledTimes(3);
 
   expect(screen.getByText('[index-1]')).toBeOnTheScreen();
+});
+
+test('does not add a render when the first update changes the selected value', async () => {
+  const onRender = jest.fn();
+
+  const Index = React.memo(function Index() {
+    const index = useNavigationState((state: NavigationState) => state.index);
+
+    onRender();
+
+    return <Text>[index-{index}]</Text>;
+  });
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator mode="none" layout={() => <Index />}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="second">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  expect(onRender).toHaveBeenCalledTimes(1);
+
+  await act(() => navigation.navigate('second', { answer: 42 }));
+
+  expect(onRender).toHaveBeenCalledTimes(2);
+
+  await act(() => navigation.navigate('second', { answer: 43 }));
+
+  expect(onRender).toHaveBeenCalledTimes(2);
+
+  await act(() => navigation.navigate('first'));
+
+  expect(onRender).toHaveBeenCalledTimes(3);
+
+  expect(screen.getByText('[index-0]')).toBeOnTheScreen();
+});
+
+test('renders once when props change after navigation updates leave the selected value unchanged', async () => {
+  const onRender = jest.fn();
+
+  const Index = React.memo(function Index({ tick }: { tick: number }) {
+    const index = useNavigationState((state) => state.index);
+
+    onRender();
+
+    return (
+      <Text>
+        [index-{index}-tick-{tick}]
+      </Text>
+    );
+  });
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const App = ({ tick }: { tick: number }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator mode="none" layout={() => <Index tick={tick} />}>
+        <Screen name="first">{() => null}</Screen>
+        <Screen name="second">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<App tick={0} />);
+
+  await act(() => navigation.navigate('first', { answer: 42 }));
+  await act(() => navigation.navigate('first', { answer: 43 }));
+
+  expect(onRender).toHaveBeenCalledTimes(2);
+
+  await root.rerender(<App tick={1} />);
+
+  expect(onRender).toHaveBeenCalledTimes(3);
+
+  expect(screen.getByText('[index-0-tick-1]')).toBeOnTheScreen();
+
+  await act(() => navigation.navigate('second'));
+
+  expect(onRender).toHaveBeenCalledTimes(4);
+
+  expect(screen.getByText('[index-1-tick-1]')).toBeOnTheScreen();
+
+  await act(() => navigation.navigate('first'));
+
+  expect(onRender).toHaveBeenCalledTimes(5);
+
+  expect(screen.getByText('[index-0-tick-1]')).toBeOnTheScreen();
 });
 
 test('keeps the latest state when a pending navigation is superseded', async () => {
@@ -699,7 +786,7 @@ test('keeps the latest state when a pending navigation is superseded', async () 
   await act(() => resolve());
 
   expect(mismatches).toEqual([]);
-  expect(committed).toEqual([0]);
+  expect(committed).toEqual([0, 0]);
 
   expect(screen.getByText('[details-0]')).toBeOnTheScreen();
   expect(screen.getByText('[index-0]')).toBeOnTheScreen();
@@ -731,6 +818,35 @@ test('returns the latest state on the initial render of a screen', async () => {
   await act(() => navigation.navigate('second'));
 
   expect(screen.getByText('1')).toBeOnTheScreen();
+});
+
+test('a newly mounted destination consumer reads the state of its own render', async () => {
+  const seen: string[] = [];
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const Second = () => {
+    const name = useNavigationState((state) => state.routes[state.index]?.name);
+
+    seen.push(name ?? 'missing');
+
+    return <Text>{name}</Text>;
+  };
+
+  await render(
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator mode="focused">
+        <Screen name="first">{() => <Text>[first]</Text>}</Screen>
+        <Screen name="second" component={Second} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  await act(() => navigation.navigate('second'));
+
+  expect(seen.length).toBeGreaterThan(0);
+  expect(seen.every((name) => name === 'second')).toBe(true);
+  expect(screen.getByText('second')).toBeOnTheScreen();
 });
 
 test('returns the latest state when navigation changes during mount', async () => {
@@ -823,6 +939,62 @@ test('matches the visible screen when mounting during a pending navigation', asy
   expect(screen.getByText('[screen-b]')).toBeOnTheScreen();
 });
 
+test('does not suspend a newly mounted consumer on state from a pending navigation', async () => {
+  const { promise, resolve } = Promise.withResolvers<void>();
+
+  const Index = () => {
+    const index = useNavigationState((state) => state.index);
+
+    if (index === 1) {
+      React.use(promise);
+    }
+
+    return <Text>[index-{index}]</Text>;
+  };
+
+  const Second = () => {
+    React.use(promise);
+
+    return <Text>[second]</Text>;
+  };
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const App = ({ mounted }: { mounted: boolean }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator
+        mode="focused"
+        layout={({ children }) => (
+          <>
+            <React.Suspense fallback={<Text>[consumer-fallback]</Text>}>
+              {mounted ? <Index /> : null}
+            </React.Suspense>
+            {children}
+          </>
+        )}
+      >
+        <Screen name="first">{() => <Text>[first]</Text>}</Screen>
+        <Screen name="second" component={Second} />
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<App mounted={false} />);
+
+  await act(() => navigation.navigate('second'));
+
+  await root.rerender(<App mounted />);
+
+  expect(screen.getByText('[first]')).toBeOnTheScreen();
+  expect(screen.queryByText('[consumer-fallback]')).not.toBeOnTheScreen();
+  expect(screen.getByText('[index-0]')).toBeOnTheScreen();
+
+  await act(() => resolve());
+
+  expect(screen.getByText('[second]')).toBeOnTheScreen();
+  expect(screen.getByText('[index-1]')).toBeOnTheScreen();
+});
+
 test('matches the visible screen when re-rendering during a pending navigation', async () => {
   const { promise, resolve } = Promise.withResolvers<void>();
 
@@ -891,7 +1063,7 @@ test('uses state from the current render when a config change suspends', async (
 
   let addScreen: (() => void) | undefined;
 
-  const RouteNames = () => {
+  const RouteNames = React.memo(function RouteNames() {
     const routeNames = useNavigationState(
       (state: NavigationState) => state.routeNames
     );
@@ -901,7 +1073,7 @@ test('uses state from the current render when a config change suspends', async (
     }
 
     return <Text>[routes-{routeNames.join(',')}]</Text>;
-  };
+  });
 
   const App = () => {
     const [showScreen, setShowScreen] = React.useState(false);
@@ -1106,6 +1278,58 @@ test('reads the latest state when the selector changes after an update with an u
   );
 
   expect(screen.getByText('{"answer":42}')).toBeOnTheScreen();
+});
+
+test('updates the selected value after changing the selector and navigating again', async () => {
+  const onRender = jest.fn();
+
+  const Value = React.memo(function Value({
+    selector,
+  }: {
+    selector: (state: NavigationState) => unknown;
+  }) {
+    const value = useNavigationState(selector);
+
+    onRender();
+
+    return <Text>[value-{String(value)}]</Text>;
+  });
+
+  const navigation = createNavigationContainerRef<ParamListBase>();
+
+  const App = ({
+    selector,
+  }: {
+    selector: (state: NavigationState) => unknown;
+  }) => (
+    <BaseNavigationContainer ref={navigation}>
+      <TestNavigator mode="none" layout={() => <Value selector={selector} />}>
+        <Screen name="first">{() => null}</Screen>
+      </TestNavigator>
+    </BaseNavigationContainer>
+  );
+
+  const root = await render(<App selector={(state) => state.index} />);
+
+  await act(() => navigation.navigate('first', { answer: 42 }));
+  await act(() => navigation.navigate('first', { answer: 43 }));
+
+  expect(onRender).toHaveBeenCalledTimes(2);
+
+  await root.rerender(
+    <App
+      selector={(state) =>
+        state.routes[state.index]?.params === undefined ? 'empty' : 'set'
+      }
+    />
+  );
+
+  expect(onRender).toHaveBeenCalledTimes(3);
+  expect(screen.getByText('[value-set]')).toBeOnTheScreen();
+
+  await act(() => navigation.reset({ index: 0, routes: [{ name: 'first' }] }));
+
+  expect(screen.getByText('[value-empty]')).toBeOnTheScreen();
 });
 
 test('keeps the selected value consistent when an urgent update supersedes a transition', async () => {

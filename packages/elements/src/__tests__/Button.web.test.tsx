@@ -26,7 +26,7 @@ const StackNavigator = (
     unknown
   >
 ) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     StackRouter,
     props
   );
@@ -43,7 +43,7 @@ const StackNavigator = (
     throw new Error(`Couldn't find a descriptor for route '${route.key}'.`);
   }
 
-  return <NavigationContent>{descriptor.render()}</NavigationContent>;
+  return render(descriptor.render());
 };
 
 interface StubStackTypeBag extends NavigatorTypeBagBase {

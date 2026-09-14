@@ -23,18 +23,14 @@ afterEach(() => {
 });
 
 const createStackNavigator = createNavigatorFactory((props: any) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     StackRouter,
     props
   );
 
   const route = state.routes[state.index];
 
-  return (
-    <NavigationContent>
-      {route ? descriptors[route.key]?.render() : null}
-    </NavigationContent>
-  );
+  return render(route ? descriptors[route.key]?.render() : null);
 });
 
 const TestScreen = ({ route }: any): any => (

@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [8.0.0-alpha.53](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.52...@react-navigation/native-stack@8.0.0-alpha.53) (2026-09-14)
+
+* refactor!: use a render callback instead of NavigationContent for custom navigators (#13238) ([c9c119e](https://github.com/react-navigation/react-navigation/commit/c9c119e13716ab82862c0cdddab2c84a4d3832ad)), closes [#13238](https://github.com/react-navigation/react-navigation/issues/13238) - by @satya164
+
+### BREAKING CHANGES
+
+* this changes the API for custom navigators:
+
+```diff
+-const { NavigationContent } = useNavigationBuilder(Router, props);
++const { render } = useNavigationBuilder(Router, props);
+
+-return (
+-  <NavigationContent>
+-    <NavigatorView />
+-  </NavigationContent>
++return render(
++  <NavigatorView />
+ );
+```
+
+custom navigators now must use the returned `render` function from
+`useNavigationBuilder` instead of the `NavigationContent`.
+
+the previous API isn't feasible while maintaining concurrent safety.
+
 # [8.0.0-alpha.52](https://github.com/react-navigation/react-navigation/compare/@react-navigation/native-stack@8.0.0-alpha.51...@react-navigation/native-stack@8.0.0-alpha.52) (2026-08-26)
 
 **Note:** Version bump only for package @react-navigation/native-stack

@@ -26,7 +26,7 @@ beforeEach(() => {
 
 test('sets options with options prop as an object', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       {},
@@ -36,15 +36,13 @@ test('sets options with options prop as an object', async () => {
     const route = state.routes[state.index];
     const descriptor = route == null ? undefined : descriptors[route.key];
 
-    return (
-      <NavigationContent>
-        <main>
-          <h1>
-            <Text>{descriptor?.options.title}</Text>
-          </h1>
-          <div>{descriptor?.render()}</div>
-        </main>
-      </NavigationContent>
+    return render(
+      <main>
+        <h1>
+          <Text>{descriptor?.options.title}</Text>
+        </h1>
+        <div>{descriptor?.render()}</div>
+      </main>
     );
   };
 
@@ -81,7 +79,7 @@ test('sets options with options prop as an object', async () => {
 
 test('sets options with options prop as a fuction', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       {},
@@ -91,15 +89,13 @@ test('sets options with options prop as a fuction', async () => {
     const route = state.routes[state.index];
     const descriptor = route == null ? undefined : descriptors[route.key];
 
-    return (
-      <NavigationContent>
-        <main>
-          <h1>
-            <Text>{descriptor?.options.title}</Text>
-          </h1>
-          <div>{descriptor?.render()}</div>
-        </main>
-      </NavigationContent>
+    return render(
+      <main>
+        <h1>
+          <Text>{descriptor?.options.title}</Text>
+        </h1>
+        <div>{descriptor?.render()}</div>
+      </main>
     );
   };
 
@@ -137,7 +133,7 @@ test('sets options with options prop as a fuction', async () => {
 
 test('sets options with screenOptions prop as an object', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       {},
@@ -145,21 +141,19 @@ test('sets options with screenOptions prop as an object', async () => {
       any
     >(MockRouter, props);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => {
-          const descriptor = descriptors[route.key];
+    return render(
+      state.routes.map((route) => {
+        const descriptor = descriptors[route.key];
 
-          return (
-            <main key={route.key}>
-              <h1>
-                <Text>{descriptor?.options.title}</Text>
-              </h1>
-              <div>{descriptor?.render()}</div>
-            </main>
-          );
-        })}
-      </NavigationContent>
+        return (
+          <main key={route.key}>
+            <h1>
+              <Text>{descriptor?.options.title}</Text>
+            </h1>
+            <div>{descriptor?.render()}</div>
+          </main>
+        );
+      })
     );
   };
 
@@ -208,7 +202,7 @@ test('sets options with screenOptions prop as an object', async () => {
 
 test('sets options with screenOptions prop as a fuction', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       {},
@@ -216,21 +210,19 @@ test('sets options with screenOptions prop as a fuction', async () => {
       any
     >(MockRouter, props);
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => {
-          const descriptor = descriptors[route.key];
+    return render(
+      state.routes.map((route) => {
+        const descriptor = descriptors[route.key];
 
-          return (
-            <main key={route.key}>
-              <h1>
-                <Text>{descriptor?.options.title}</Text>
-              </h1>
-              <div>{descriptor?.render()}</div>
-            </main>
-          );
-        })}
-      </NavigationContent>
+        return (
+          <main key={route.key}>
+            <h1>
+              <Text>{descriptor?.options.title}</Text>
+            </h1>
+            <div>{descriptor?.render()}</div>
+          </main>
+        );
+      })
     );
   };
 
@@ -291,7 +283,7 @@ test('sets options with screenOptions prop as a fuction', async () => {
 
 test('sets initial options with setOptions', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       {},
@@ -304,15 +296,13 @@ test('sets initial options with setOptions', async () => {
     const route = state.routes[state.index];
     const descriptor = route == null ? undefined : descriptors[route.key];
 
-    return (
-      <NavigationContent>
-        <main>
-          <h1 color={descriptor?.options.color}>
-            <Text>{descriptor?.options.title}</Text>
-          </h1>
-          <div>{descriptor?.render()}</div>
-        </main>
-      </NavigationContent>
+    return render(
+      <main>
+        <h1 color={descriptor?.options.color}>
+          <Text>{descriptor?.options.title}</Text>
+        </h1>
+        <div>{descriptor?.render()}</div>
+      </main>
     );
   };
 
@@ -357,7 +347,7 @@ test('sets initial options with setOptions', async () => {
 
 test('updates options with setOptions', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       any,
@@ -367,21 +357,19 @@ test('updates options with setOptions', async () => {
     const route = state.routes[state.index];
     const descriptor = route == null ? undefined : descriptors[route.key];
 
-    return (
-      <NavigationContent>
-        <main>
-          <h1 color={descriptor?.options.color}>
-            <Text>{descriptor?.options.title}</Text>
-          </h1>
-          <p>
-            <Text>{descriptor?.options.description}</Text>
-          </p>
-          <caption>
-            <Text>{descriptor?.options.author}</Text>
-          </caption>
-          <div>{descriptor?.render()}</div>
-        </main>
-      </NavigationContent>
+    return render(
+      <main>
+        <h1 color={descriptor?.options.color}>
+          <Text>{descriptor?.options.title}</Text>
+        </h1>
+        <p>
+          <Text>{descriptor?.options.description}</Text>
+        </p>
+        <caption>
+          <Text>{descriptor?.options.author}</Text>
+        </caption>
+        <div>{descriptor?.render()}</div>
+      </main>
     );
   };
 
@@ -450,7 +438,7 @@ test('updates options with setOptions', async () => {
 
 test('renders layout defined for the screen', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       any,
@@ -460,7 +448,7 @@ test('renders layout defined for the screen', async () => {
     const route = state.routes[state.index];
     const descriptor = route == null ? undefined : descriptors[route.key];
 
-    return <NavigationContent>{descriptor?.render()}</NavigationContent>;
+    return render(descriptor?.render());
   };
 
   const TestScreen = () => {
@@ -497,7 +485,7 @@ test('renders layout defined for the screen', async () => {
 
 test('renders layout defined for the group', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       any,
@@ -507,7 +495,7 @@ test('renders layout defined for the group', async () => {
     const route = state.routes[state.index];
     const descriptor = route == null ? undefined : descriptors[route.key];
 
-    return <NavigationContent>{descriptor?.render()}</NavigationContent>;
+    return render(descriptor?.render());
   };
 
   const TestScreen = () => {
@@ -540,7 +528,7 @@ test('renders layout defined for the group', async () => {
 
 test('renders layout defined for the navigator', async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       any,
@@ -550,7 +538,7 @@ test('renders layout defined for the navigator', async () => {
     const route = state.routes[state.index];
     const descriptor = route == null ? undefined : descriptors[route.key];
 
-    return <NavigationContent>{descriptor?.render()}</NavigationContent>;
+    return render(descriptor?.render());
   };
 
   const TestScreen = () => {
@@ -581,7 +569,7 @@ test('renders layout defined for the navigator', async () => {
 
 test("returns correct value for canGoBack when it's not overridden", async () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       {},
@@ -591,15 +579,13 @@ test("returns correct value for canGoBack when it's not overridden", async () =>
     const route = state.routes[state.index];
     const descriptor = route == null ? undefined : descriptors[route.key];
 
-    return (
-      <NavigationContent>
-        <main>
-          <h1>
-            <Text>{descriptor?.options.title}</Text>
-          </h1>
-          <div>{descriptor?.render()}</div>
-        </main>
-      </NavigationContent>
+    return render(
+      <main>
+        <h1>
+          <Text>{descriptor?.options.title}</Text>
+        </h1>
+        <div>{descriptor?.render()}</div>
+      </main>
     );
   };
 
@@ -649,7 +635,7 @@ test(`returns false for canGoBack when current router doesn't handle GO_BACK`, a
   }
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       any,
@@ -663,9 +649,7 @@ test(`returns false for canGoBack when current router doesn't handle GO_BACK`, a
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   let result = false;
@@ -709,7 +693,7 @@ test('returns true for canGoBack when current router handles GO_BACK', async () 
   }
 
   const ParentNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       {},
@@ -722,13 +706,11 @@ test('returns true for canGoBack when current router handles GO_BACK', async () 
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const ChildNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       {},
@@ -742,9 +724,7 @@ test('returns true for canGoBack when current router handles GO_BACK', async () 
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   let result = false;
@@ -794,7 +774,7 @@ test('returns true for canGoBack when parent router handles GO_BACK', async () =
   }
 
   const OverrodeNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       {},
@@ -807,13 +787,11 @@ test('returns true for canGoBack when parent router handles GO_BACK', async () =
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder<
+    const { state, descriptors, render } = useNavigationBuilder<
       NavigationState,
       any,
       {},
@@ -827,9 +805,7 @@ test('returns true for canGoBack when parent router handles GO_BACK', async () =
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   let result = true;

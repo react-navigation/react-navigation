@@ -302,25 +302,23 @@ test('lazy=false pre-renders screen with effects active, pauses after first visi
 test('pops nested stack to top on blur even when tab transition animation is interrupted', async () => {
   const createStackNavigator = createNavigatorFactory(
     (props: Parameters<typeof useNavigationBuilder>[1]) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => {
-            const descriptor = descriptors[route.key];
+      return render(
+        state.routes.map((route) => {
+          const descriptor = descriptors[route.key];
 
-            if (descriptor == null) {
-              throw new Error(
-                `Couldn't find a descriptor for route '${route.key}'.`
-              );
-            }
+          if (descriptor == null) {
+            throw new Error(
+              `Couldn't find a descriptor for route '${route.key}'.`
+            );
+          }
 
-            return descriptor.render();
-          })}
-        </NavigationContent>
+          return descriptor.render();
+        })
       );
     }
   );

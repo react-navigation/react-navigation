@@ -74,7 +74,7 @@ type NavigationBuilderContextValue = {
     target: string | undefined;
     data: unknown;
   }) => void;
-  onOptionsChange: (options: object) => void;
+  onOptionsChange: () => void;
   getIsStateEmitted: () => boolean;
   scheduleUpdate: (callback: () => void) => void;
   flushUpdates: () => void;

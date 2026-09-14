@@ -63,7 +63,11 @@ export function forHorizontalIOS({
       ],
     },
     overlayStyle: { opacity: overlayOpacity },
-    shadowStyle: { shadowOpacity: 0.04 },
+    shadowStyle:
+      Platform.OS === 'web'
+        ? // React Native Web prints deprecation warnings for `shadowX` properties
+          {}
+        : { shadowOpacity: 0.04 },
   };
 }
 

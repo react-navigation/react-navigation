@@ -34,36 +34,29 @@ afterEach(() => {
 });
 
 const createStackNavigator = createNavigatorFactory((props: any) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     StackRouter,
     props
   );
 
-  return (
-    <NavigationContent>
-      {state.routes.map((route, i) => (
-        <div key={route.key} aria-current={state.index === i || undefined}>
-          {descriptors[route.key]?.render()}
-        </div>
-      ))}
-    </NavigationContent>
+  return render(
+    state.routes.map((route, i) => (
+      <div key={route.key} aria-current={state.index === i || undefined}>
+        {descriptors[route.key]?.render()}
+      </div>
+    ))
   );
 });
 
 const createTabNavigator = createNavigatorFactory((props: any) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
-    TabRouter,
-    props
-  );
+  const { state, descriptors, render } = useNavigationBuilder(TabRouter, props);
 
-  return (
-    <NavigationContent>
-      {state.routes.map((route, i) => (
-        <div key={route.key} aria-current={state.index === i || undefined}>
-          {descriptors[route.key]?.render()}
-        </div>
-      ))}
-    </NavigationContent>
+  return render(
+    state.routes.map((route, i) => (
+      <div key={route.key} aria-current={state.index === i || undefined}>
+        {descriptors[route.key]?.render()}
+      </div>
+    ))
   );
 });
 
@@ -627,19 +620,17 @@ test('replaces browser history when params change without route change', async (
 
 test('preserves browser hash when params change without route change', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route, i) => (
-          <div key={route.key} aria-current={state.index === i || undefined}>
-            {descriptors[route.key]?.render()}
-          </div>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route, i) => (
+        <div key={route.key} aria-current={state.index === i || undefined}>
+          {descriptors[route.key]?.render()}
+        </div>
+      ))
     );
   });
 
@@ -687,19 +678,17 @@ test('preserves browser hash when params change without route change', async () 
 
 test("doesn't reset state when URL parses to routes not in root navigator", async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route, i) => (
-          <div key={route.key} aria-current={state.index === i || undefined}>
-            {descriptors[route.key]?.render()}
-          </div>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route, i) => (
+        <div key={route.key} aria-current={state.index === i || undefined}>
+          {descriptors[route.key]?.render()}
+        </div>
+      ))
     );
   });
 
@@ -2716,7 +2705,7 @@ test('handles browser navigation during a delayed programmatic traversal', async
 
 test('navigates to the last screen without waiting for an interrupted one', async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
@@ -2727,9 +2716,7 @@ test('navigates to the last screen without waiting for an interrupted one', asyn
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   });
 
   const Stack = createStackNavigator();
@@ -2801,7 +2788,7 @@ test('navigates to the last screen without waiting for an interrupted one', asyn
 
 test("doesn't navigate to an interrupted screen that finishes loading first", async () => {
   const createStackNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
@@ -2812,9 +2799,7 @@ test("doesn't navigate to an interrupted screen that finishes loading first", as
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   });
 
   const Stack = createStackNavigator();
