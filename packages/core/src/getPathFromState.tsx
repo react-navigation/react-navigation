@@ -1,8 +1,8 @@
 import type { NavigationState, PartialState } from '@react-navigation/routers';
-import * as queryString from 'query-string';
 
 import { getPatternParts, type PatternPart } from './getPatternParts';
 import { getStateFromRouteParams } from './getStateFromRouteParams';
+import * as queryString from './queryString';
 import type { PathConfig, PathConfigMap } from './types';
 import { validatePathConfig } from './validatePathConfig';
 
@@ -226,7 +226,7 @@ export function getPathFromState<ParamList extends {}>(
         if (focusedRoute === route) {
           // If this is the focused route, keep the params for later use
           // We save it here since it's been stringified already
-          focusedParams = {};
+          focusedParams = { __proto__: null };
 
           for (const key in currentParams) {
             const value = currentParams[key];
@@ -332,7 +332,7 @@ export function getPathFromState<ParamList extends {}>(
         }
       }
 
-      const query = queryString.stringify(focusedParams, { sort: false });
+      const query = queryString.stringify(focusedParams);
 
       if (query) {
         path += `?${query}`;

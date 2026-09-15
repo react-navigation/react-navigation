@@ -429,6 +429,21 @@ test('serializes array and null query params without config', () => {
   });
 });
 
+test.each([{ value: 'a' }, { value: ['a', 'b'] }])(
+  'preserves __proto__ query parameters with value $value',
+  ({ value }) => {
+    const state = {
+      routes: [{ name: 'foo', params: { ['__proto__']: value } }],
+    };
+    const path = Array.isArray(value)
+      ? '/foo?__proto__=a&__proto__=b'
+      : '/foo?__proto__=a';
+
+    expect(getPathFromState(state)).toBe(path);
+    expect(getPathFromState(state, { screens: { foo: 'foo' } })).toBe(path);
+  }
+);
+
 test('uses stringify and parse for array and null query params', () => {
   type ParamList = {
     Foo: {
