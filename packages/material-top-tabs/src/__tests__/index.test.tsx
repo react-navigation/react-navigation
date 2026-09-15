@@ -68,3 +68,46 @@ test('renders a material top tab navigator with screens', async () => {
 
   expect(screen.getByText('Screen B')).not.toBeNull();
 });
+
+test('renders a badge in the tab bar from a string or number', async () => {
+  const Test = () => <View />;
+
+  const Tab = createMaterialTopTabNavigator<TopTabParamList>();
+
+  await render(
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen name="A" component={Test} options={{ tabBarBadge: 3 }} />
+        <Tab.Screen
+          name="B"
+          component={Test}
+          options={{ tabBarBadge: 'new' }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(screen.getByText('3')).not.toBeNull();
+  expect(screen.getByText('new')).not.toBeNull();
+});
+
+test('renders a badge in the tab bar from a function', async () => {
+  const Test = () => <View />;
+
+  const Tab = createMaterialTopTabNavigator<TopTabParamList>();
+
+  await render(
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen
+          name="A"
+          component={Test}
+          options={{ tabBarBadge: () => <Text>Custom badge</Text> }}
+        />
+        <Tab.Screen name="B" component={Test} />
+      </Tab.Navigator>
+    </NavigationContainer>
+  );
+
+  expect(screen.getByText('Custom badge')).not.toBeNull();
+});
