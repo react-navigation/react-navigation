@@ -33,35 +33,32 @@ function BottomTabNavigator({
   UNSTABLE_router,
   ...rest
 }: BottomTabNavigatorProps) {
-  const { state, descriptors, navigation, NavigationContent } =
-    useNavigationBuilder<
-      TabNavigationState<ParamListBase>,
-      TabRouterOptions,
-      TabActionHelpers<ParamListBase>,
-      BottomTabNavigationOptions,
-      BottomTabNavigationEventMap
-    >(TabRouter, {
-      id,
-      initialRouteName,
-      backBehavior,
-      UNSTABLE_routeNamesChangeBehavior,
-      children,
-      layout,
-      screenListeners,
-      screenOptions,
-      screenLayout,
-      UNSTABLE_router,
-    });
+  const { state, descriptors, navigation, render } = useNavigationBuilder<
+    TabNavigationState<ParamListBase>,
+    TabRouterOptions,
+    TabActionHelpers<ParamListBase>,
+    BottomTabNavigationOptions,
+    BottomTabNavigationEventMap
+  >(TabRouter, {
+    id,
+    initialRouteName,
+    backBehavior,
+    UNSTABLE_routeNamesChangeBehavior,
+    children,
+    layout,
+    screenListeners,
+    screenOptions,
+    screenLayout,
+    UNSTABLE_router,
+  });
 
-  return (
-    <NavigationContent>
-      <BottomTabView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-      />
-    </NavigationContent>
+  return render(
+    <BottomTabView
+      {...rest}
+      state={state}
+      navigation={navigation}
+      descriptors={descriptors}
+    />
   );
 }
 

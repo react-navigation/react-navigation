@@ -19,16 +19,12 @@ const StackNavigator = (
     unknown
   >
 ) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     StackRouter,
     props
   );
 
-  return (
-    <NavigationContent>
-      {descriptors[state.routes[state.index].key].render()}
-    </NavigationContent>
-  );
+  return render(descriptors[state.routes[state.index].key].render());
 };
 
 export function createStackNavigator<

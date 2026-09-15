@@ -41,7 +41,7 @@ type TestNavigatorProps = DefaultNavigatorOptions<
 >;
 
 const TestNavigator = (props: TestNavigatorProps) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder<
+  const { state, descriptors, render } = useNavigationBuilder<
     NavigationState,
     DefaultRouterOptions,
     {},
@@ -49,24 +49,22 @@ const TestNavigator = (props: TestNavigatorProps) => {
     EventMapBase
   >(MockRouter, props);
 
-  return (
-    <NavigationContent>
-      <main>
-        {state.routes.map((route) => {
-          const descriptor = descriptors[route.key];
+  return render(
+    <main>
+      {state.routes.map((route) => {
+        const descriptor = descriptors[route.key];
 
-          return (
-            <div
-              key={route.key}
-              className={descriptor.options?.className}
-              data-testid={descriptor.options?.testId}
-            >
-              {descriptor.render()}
-            </div>
-          );
-        })}
-      </main>
-    </NavigationContent>
+        return (
+          <div
+            key={route.key}
+            className={descriptor.options?.className}
+            data-testid={descriptor.options?.testId}
+          >
+            {descriptor.render()}
+          </div>
+        );
+      })}
+    </main>
   );
 };
 

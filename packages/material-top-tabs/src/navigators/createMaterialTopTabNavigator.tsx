@@ -33,35 +33,32 @@ function MaterialTopTabNavigator({
   UNSTABLE_router,
   ...rest
 }: MaterialTopTabNavigatorProps) {
-  const { state, descriptors, navigation, NavigationContent } =
-    useNavigationBuilder<
-      TabNavigationState<ParamListBase>,
-      TabRouterOptions,
-      TabActionHelpers<ParamListBase>,
-      MaterialTopTabNavigationOptions,
-      MaterialTopTabNavigationEventMap
-    >(TabRouter, {
-      id,
-      initialRouteName,
-      backBehavior,
-      UNSTABLE_routeNamesChangeBehavior,
-      children,
-      layout,
-      screenListeners,
-      screenOptions,
-      screenLayout,
-      UNSTABLE_router,
-    });
+  const { state, descriptors, navigation, render } = useNavigationBuilder<
+    TabNavigationState<ParamListBase>,
+    TabRouterOptions,
+    TabActionHelpers<ParamListBase>,
+    MaterialTopTabNavigationOptions,
+    MaterialTopTabNavigationEventMap
+  >(TabRouter, {
+    id,
+    initialRouteName,
+    backBehavior,
+    UNSTABLE_routeNamesChangeBehavior,
+    children,
+    layout,
+    screenListeners,
+    screenOptions,
+    screenLayout,
+    UNSTABLE_router,
+  });
 
-  return (
-    <NavigationContent>
-      <MaterialTopTabView
-        {...rest}
-        state={state}
-        navigation={navigation}
-        descriptors={descriptors}
-      />
-    </NavigationContent>
+  return render(
+    <MaterialTopTabView
+      {...rest}
+      state={state}
+      navigation={navigation}
+      descriptors={descriptors}
+    />
   );
 }
 

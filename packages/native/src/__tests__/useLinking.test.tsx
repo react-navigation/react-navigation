@@ -49,36 +49,29 @@ afterEach(() => {
 });
 
 const createStackNavigator = createNavigatorFactory((props: any) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     StackRouter,
     props
   );
 
-  return (
-    <NavigationContent>
-      {state.routes.map((route, i) => (
-        <div key={route.key} aria-current={state.index === i || undefined}>
-          {descriptors[route.key].render()}
-        </div>
-      ))}
-    </NavigationContent>
+  return render(
+    state.routes.map((route, i) => (
+      <div key={route.key} aria-current={state.index === i || undefined}>
+        {descriptors[route.key].render()}
+      </div>
+    ))
   );
 });
 
 const createTabNavigator = createNavigatorFactory((props: any) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
-    TabRouter,
-    props
-  );
+  const { state, descriptors, render } = useNavigationBuilder(TabRouter, props);
 
-  return (
-    <NavigationContent>
-      {state.routes.map((route, i) => (
-        <div key={route.key} aria-current={state.index === i || undefined}>
-          {descriptors[route.key].render()}
-        </div>
-      ))}
-    </NavigationContent>
+  return render(
+    state.routes.map((route, i) => (
+      <div key={route.key} aria-current={state.index === i || undefined}>
+        {descriptors[route.key].render()}
+      </div>
+    ))
   );
 });
 

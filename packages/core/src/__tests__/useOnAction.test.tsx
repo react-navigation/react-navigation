@@ -62,29 +62,21 @@ test("lets parent handle the action if child didn't", () => {
     return ParentRouter;
   }
   const ParentNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       CurrentRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
-    );
+    return render(descriptors[state.routes[state.index].key].render());
   };
 
   const ChildNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
-    );
+    return render(descriptors[state.routes[state.index].key].render());
   };
 
   const TestScreen = (props: any) => {
@@ -159,29 +151,21 @@ test("lets children handle the action if parent didn't with navigationInChildEna
   }
 
   const ChildNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       CurrentChildRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
-    );
+    return render(descriptors[state.routes[state.index].key].render());
   };
 
   const ParentNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       CurrentParentRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const TestScreen = (props: any) => {
@@ -269,16 +253,12 @@ test("lets children handle the action if parent didn't with navigationInChildEna
 
 test("lets children handle the action if parent didn't with NAVIGATE_DEPRECATED", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const TestScreen = () => null;
@@ -360,16 +340,12 @@ test('action goes to correct parent navigator if target is specified', () => {
   }
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       CurrentTestRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const TestScreen = (props: any) => {
@@ -488,16 +464,12 @@ test('action goes to correct child navigator if target is specified', () => {
   }
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       CurrentTestRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const initialState = {
@@ -611,20 +583,18 @@ test("action doesn't bubble to parent if target is specified", () => {
   }
 
   const ParentNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       ParentRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
   const ChildNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -635,9 +605,7 @@ test("action doesn't bubble to parent if target is specified", () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const initialState: NavigationState = {
@@ -740,29 +708,21 @@ test("action doesn't bubble to child if target is specified", () => {
   }
 
   const ChildNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       CurrentChildRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {descriptors[state.routes[state.index].key].render()}
-      </NavigationContent>
-    );
+    return render(descriptors[state.routes[state.index].key].render());
   };
 
   const ParentNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       CurrentParentRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const TestScreen = (props: any) => {
@@ -812,16 +772,12 @@ test('logs error if no navigator handled the action', () => {
   const TestRouter = MockRouter;
 
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TestRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const TestScreen = (props: any) => {
@@ -887,16 +843,12 @@ test('logs error if no navigator handled the action', () => {
 
 test("prevents removing a screen with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const onBeforeRemove = jest.fn();
@@ -1030,16 +982,12 @@ test("prevents removing a screen with 'beforeRemove' event", () => {
 
 test("prevents removing a child screen with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const onBeforeRemove = jest.fn();
@@ -1201,16 +1149,12 @@ test("prevents removing a child screen with 'beforeRemove' event", () => {
 
 test("prevents removing a grand child screen with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const onBeforeRemove = jest.fn();
@@ -1405,16 +1349,12 @@ test("prevents removing a grand child screen with 'beforeRemove' event", () => {
 
 test("prevents removing by multiple screens with 'beforeRemove' event", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const onBeforeRemove = {
@@ -1570,16 +1510,12 @@ test("prevents removing by multiple screens with 'beforeRemove' event", () => {
 
 test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot'", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key].render())}
-      </NavigationContent>
-    );
+    return render(state.routes.map((route) => descriptors[route.key].render()));
   };
 
   const onBeforeRemove = jest.fn();
@@ -1724,7 +1660,7 @@ test("prevents removing a child screen with 'beforeRemove' event with 'resetRoot
 
 test('handles action dispatched immediately after a reset with partial state', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -1735,9 +1671,7 @@ test('handles action dispatched immediately after a reset with partial state', (
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -1775,7 +1709,7 @@ test('handles action dispatched immediately after a reset with partial state', (
 
 test('reflects reset with partial state when state is read immediately after', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -1786,9 +1720,7 @@ test('reflects reset with partial state when state is read immediately after', (
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const navigation = createNavigationContainerRef<ParamListBase>();
@@ -1831,7 +1763,7 @@ test('reflects reset with partial state when state is read immediately after', (
 
 test('handles navigating to a newly added screen from a layout effect', () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -1842,9 +1774,7 @@ test('handles navigating to a newly added screen from a layout effect', () => {
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = ({ navigation, signal }: any) => {
@@ -1891,7 +1821,7 @@ test('handles navigating to a newly added screen from a layout effect', () => {
 
 test("doesn't lose navigation from a layout effect when screens change in the same update", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       MockRouter,
       props
     );
@@ -1902,9 +1832,7 @@ test("doesn't lose navigation from a layout effect when screens change in the sa
       return null;
     }
 
-    return (
-      <NavigationContent>{descriptors[route.key]?.render()}</NavigationContent>
-    );
+    return render(descriptors[route.key]?.render());
   };
 
   const TestScreen = ({ navigation, signal }: any) => {
@@ -1950,15 +1878,13 @@ test("doesn't lose navigation from a layout effect when screens change in the sa
 
 test("doesn't lose changes from an action dispatched in a 'beforeRemove' listener", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -2018,15 +1944,13 @@ test("doesn't lose changes from an action dispatched in a 'beforeRemove' listene
 
 test("keeps state from a 'beforeRemove' listener when the original action no longer applies", () => {
   const TestNavigator = (props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => descriptors[route.key]?.render())}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => descriptors[route.key]?.render())
     );
   };
 
@@ -2088,15 +2012,13 @@ test.each(['reset action', 'resetRoot'])(
   "emits 'beforeRemove' for removed and updated routes in reverse order from %s",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
@@ -2192,15 +2114,13 @@ test.each(['reset action', 'resetRoot'])(
   "emits 'beforeRemove' for a nested route removed by %s when parent route key is the same",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
@@ -2308,15 +2228,13 @@ test.each(['reset action', 'resetRoot'])(
   "doesn't emit 'beforeRemove' when %s keeps the nested screen",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
@@ -2408,28 +2326,24 @@ test.each(['reset action', 'resetRoot'])(
   "doesn't emit 'beforeRemove' when %s changes nested index without removing the route",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
     const TestTabNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         TabRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
@@ -2502,15 +2416,13 @@ test.each(['reset action', 'resetRoot'])(
   "emits 'beforeRemove' for a deeply nested route removed from nested state by %s",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
@@ -2632,15 +2544,13 @@ test.each(['reset action', 'resetRoot'])(
   "emits 'beforeRemove' for multiple nested routes removed from nested state by %s",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
@@ -2791,15 +2701,13 @@ test.each(['reset action', 'resetRoot'])(
   "emits 'beforeRemove' with stale state from %s when route key is omitted",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
@@ -2887,15 +2795,13 @@ test.each(['reset action', 'resetRoot'])(
   "doesn't emit 'beforeRemove' with stale state from %s when the route keeps the same key",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
@@ -2993,15 +2899,13 @@ test.each(['reset action', 'resetRoot'])(
   "emits 'beforeRemove' with stale state from %s when route is omitted",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
@@ -3094,15 +2998,13 @@ test.each(['reset action', 'resetRoot'])(
   "emits 'beforeRemove' and applies %s when prevented action is re-dispatched",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
@@ -3212,15 +3114,13 @@ test.each(['reset action', 'resetRoot'])(
   "emits 'beforeRemove' and applies stale %s when prevented action is re-dispatched",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
@@ -3331,15 +3231,13 @@ test.each(['reset action', 'resetRoot'])(
   "emits 'beforeRemove' when %s replaces a route with the same name and a different key",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 
@@ -3431,15 +3329,13 @@ test.each(['reset action', 'resetRoot'])(
   "emits 'beforeRemove' when %s omits nested state for a kept route",
   (action) => {
     const TestNavigator = (props: any) => {
-      const { state, descriptors, NavigationContent } = useNavigationBuilder(
+      const { state, descriptors, render } = useNavigationBuilder(
         StackRouter,
         props
       );
 
-      return (
-        <NavigationContent>
-          {state.routes.map((route) => descriptors[route.key]?.render())}
-        </NavigationContent>
+      return render(
+        state.routes.map((route) => descriptors[route.key]?.render())
       );
     };
 

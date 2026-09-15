@@ -58,7 +58,7 @@ export function PreventRemoveProvider({ children }: Props) {
             .routes.every((route) => route.key !== routeKey))
       ) {
         throw new Error(
-          `Couldn't find a route with the key ${routeKey}. Is your component inside NavigationContent?`
+          `Couldn't find a route with the key ${routeKey}. This is likely a bug in the navigator.\n\nIf you're using a custom navigator, make sure that the navigator content is wrapped by the 'render' function returned by 'useNavigationBuilder'.`
         );
       }
 

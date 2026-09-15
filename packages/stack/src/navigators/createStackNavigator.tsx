@@ -38,7 +38,7 @@ function StackNavigator({
 }: StackNavigatorProps) {
   const { direction } = useLocale();
 
-  const { state, describe, descriptors, navigation, NavigationContent } =
+  const { state, describe, descriptors, navigation, render } =
     useNavigationBuilder<
       StackNavigationState<ParamListBase>,
       StackRouterOptions,
@@ -92,17 +92,15 @@ function StackNavigator({
     };
   }, [navigation]);
 
-  return (
-    <NavigationContent>
-      <StackView
-        {...rest}
-        direction={direction}
-        state={state}
-        describe={describe}
-        descriptors={descriptors}
-        navigation={navigation}
-      />
-    </NavigationContent>
+  return render(
+    <StackView
+      {...rest}
+      direction={direction}
+      state={state}
+      describe={describe}
+      descriptors={descriptors}
+      navigation={navigation}
+    />
   );
 }
 

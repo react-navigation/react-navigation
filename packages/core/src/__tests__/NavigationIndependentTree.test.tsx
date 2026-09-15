@@ -45,16 +45,12 @@ const TestNavigator = (
     unknown
   >
 ) => {
-  const { state, descriptors, NavigationContent } = useNavigationBuilder(
+  const { state, descriptors, render } = useNavigationBuilder(
     MockRouter,
     props
   );
 
-  return (
-    <NavigationContent>
-      {state.routes.map((route) => descriptors[route.key]?.render())}
-    </NavigationContent>
-  );
+  return render(state.routes.map((route) => descriptors[route.key]?.render()));
 };
 
 const App = ({

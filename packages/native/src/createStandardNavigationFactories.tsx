@@ -290,17 +290,15 @@ export function createStandardNavigationFactories<
       ...rest
     } = props;
 
-    return (
-      <builder.NavigationContent>
-        <NavigatorContent
-          {...(rest as NavigatorProps & MapperProps)}
-          {...mapped}
-          state={state}
-          descriptors={descriptors}
-          actions={actions}
-          emitter={emitter}
-        />
-      </builder.NavigationContent>
+    return builder.render(
+      <NavigatorContent
+        {...(rest as NavigatorProps & MapperProps)}
+        {...mapped}
+        state={state}
+        descriptors={descriptors}
+        actions={actions}
+        emitter={emitter}
+      />
     );
   }
 

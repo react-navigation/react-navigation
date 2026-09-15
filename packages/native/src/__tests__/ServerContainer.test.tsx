@@ -54,17 +54,15 @@ test('renders correct state with location', () => {
       unknown
     >
   ) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       StackRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <div key={route.key}>{descriptors[route.key].render()}</div>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <div key={route.key}>{descriptors[route.key].render()}</div>
+      ))
     );
   };
 
@@ -159,17 +157,15 @@ test('renders correct state with location', () => {
 
 test('gets the current options', () => {
   const createTabNavigator = createNavigatorFactory((props: any) => {
-    const { state, descriptors, NavigationContent } = useNavigationBuilder(
+    const { state, descriptors, render } = useNavigationBuilder(
       TabRouter,
       props
     );
 
-    return (
-      <NavigationContent>
-        {state.routes.map((route) => (
-          <div key={route.key}>{descriptors[route.key].render()}</div>
-        ))}
-      </NavigationContent>
+    return render(
+      state.routes.map((route) => (
+        <div key={route.key}>{descriptors[route.key].render()}</div>
+      ))
     );
   });
 

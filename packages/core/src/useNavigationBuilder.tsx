@@ -1045,7 +1045,7 @@ export function useNavigationBuilder<
     descriptors,
   });
 
-  const NavigationContent = useComponent((children: React.ReactNode) => {
+  const render = (children: React.ReactNode) => {
     const element =
       layout != null
         ? layout({
@@ -1072,13 +1072,34 @@ export function useNavigationBuilder<
         </NavigationHelpersContext.Provider>
       </NavigationMetaContext.Provider>
     );
-  });
+  };
+
+  const NavigationContent = useComponent(render);
 
   return {
     state,
     navigation,
     describe,
     descriptors,
+    render,
+    /**
+     * Use the `render` function instead:
+     *
+     * ```diff
+     * -const { NavigationContent } = useNavigationBuilder(Router, props);
+     * +const { render } = useNavigationBuilder(Router, props);
+     *
+     * -return (
+     * -  <NavigationContent>
+     * -    <NavigatorView />
+     * -  </NavigationContent>
+     * +return render(
+     * +  <NavigatorView />
+     * );
+     * ```
+     *
+     * @deprecated
+     */
     NavigationContent,
   };
 }
