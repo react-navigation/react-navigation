@@ -25,6 +25,13 @@ type Props = {
   headerStatusBarHeight?: number | undefined;
   headerTransparent?: boolean | undefined;
   style?: ContainerProps['style'] | undefined;
+  /**
+   * Whether the screen's content should be allowed to grow beyond the
+   * screen's height instead of being clipped to it. Used on web to let
+   * `document.body` handle scrolling, so mobile browsers can collapse
+   * their address bar on scroll.
+   */
+  fill?: boolean | undefined;
   children: React.ReactNode;
 };
 
@@ -46,6 +53,7 @@ export function Screen(props: Props) {
     route,
     children,
     style,
+    fill,
   } = props;
 
   const defaultHeaderHeight = useFrameSize((size) =>
@@ -107,7 +115,7 @@ export function Screen(props: Props) {
           </View>
         </NavigationProvider>
       ) : null}
-      <View style={styles.content}>
+      <View style={fill ? styles.contentFill : styles.content}>
         <HeaderShownContext.Provider
           value={isParentHeaderShown || headerShown !== false}
         >
@@ -128,6 +136,9 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+  },
+  contentFill: {
+    minHeight: '100%',
   },
   header: {
     zIndex: 1,
