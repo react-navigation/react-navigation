@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [7.22.1](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.22.0...@react-navigation/core@7.22.1) (2026-09-15)
+
+**Note:** Version bump only for package @react-navigation/core
+
 # [7.22.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/core@7.21.13...@react-navigation/core@7.22.0) (2026-09-15)
 
 ### Features
