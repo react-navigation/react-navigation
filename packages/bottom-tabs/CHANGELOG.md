@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [7.19.0](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.18.18...@react-navigation/bottom-tabs@7.19.0) (2026-09-15)
+
+### Features
+
+* use a render callback for custom navigators ([#13238](https://github.com/react-navigation/react-navigation/issues/13238)) ([0706d1a](https://github.com/react-navigation/react-navigation/commit/0706d1aaf3ccc4949cb010af661a542021d392c0)) - by @
+
 ## [7.18.18](https://github.com/react-navigation/react-navigation/compare/@react-navigation/bottom-tabs@7.18.17...@react-navigation/bottom-tabs@7.18.18) (2026-08-26)
 
 **Note:** Version bump only for package @react-navigation/bottom-tabs
