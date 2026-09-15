@@ -1,8 +1,8 @@
 const { transform } = require('@react-native/jest-preset');
 
 const transformIgnorePatterns = [
-  'node_modules/(?!\\.pnpm|(@react-navigation|react-native-drawer-layout|react-native-tab-view|(jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|immer|standard-navigation)/)',
-  'node_modules/.pnpm/(?!(?:@react-navigation\\+[^@]+|react-native-drawer-layout|react-native-tab-view|@react-native\\+[^@]+|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|query-string|decode-uri-component|filter-obj|split-on-first|escape-string-regexp|immer|standard-navigation)@)',
+  'node_modules/(?!\\.pnpm|(@react-navigation|react-native-drawer-layout|react-native-tab-view|(jest-)?@react-native|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|escape-string-regexp|immer|standard-navigation)/)',
+  'node_modules/.pnpm/(?!(?:@react-navigation\\+[^@]+|react-native-drawer-layout|react-native-tab-view|@react-native\\+[^@]+|react-native|react-native-reanimated|react-native-worklets|react-native-gesture-handler|react-native-safe-area-context|nanoid|escape-string-regexp|immer|standard-navigation)@)',
 ];
 
 module.exports = {
