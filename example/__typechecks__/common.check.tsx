@@ -235,6 +235,7 @@ export const PopularScreen = ({
       | 'tabLongPress'
       | 'transitionStart'
       | 'transitionEnd'
+      | 'bottomAccessoryPlacementChange'
     >();
 
   expectTypeOf(navigation.setParams)
