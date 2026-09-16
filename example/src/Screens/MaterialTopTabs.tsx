@@ -1,7 +1,9 @@
+import { MaterialDesignIcons } from '@react-native-vector-icons/material-design-icons';
 import {
   createMaterialTopTabNavigator,
   createMaterialTopTabScreen,
 } from '@react-navigation/material-top-tabs';
+import type { ColorValue } from 'react-native';
 
 import { Albums } from '../Shared/Albums';
 import { Chat } from '../Shared/Chat';
@@ -13,7 +15,13 @@ const MaterialTopTabsNavigator = createMaterialTopTabNavigator({
   screens: {
     Chat: createMaterialTopTabScreen({
       screen: ChatScreen,
-      options: { title: 'Chat', tabBarBadge: 3 },
+      options: {
+        title: 'Chat',
+        tabBarBadge: 3,
+        tabBarIcon: ({ color, size }: { color: ColorValue; size: number }) => (
+          <MaterialDesignIcons name="message-reply" color={color} size={size} />
+        ),
+      },
     }),
     Contacts: createMaterialTopTabScreen({
       screen: Contacts,

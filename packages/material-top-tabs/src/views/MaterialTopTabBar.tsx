@@ -1,4 +1,4 @@
-import { Badge, PlatformIcon, Text } from '@react-navigation/elements';
+import { PlatformIcon, Text } from '@react-navigation/elements';
 import { Color } from '@react-navigation/elements/internal';
 import { useLinkBuilder, useLocale, useTheme } from '@react-navigation/native';
 import * as React from 'react';
@@ -39,7 +39,7 @@ export function MaterialTopTabBar({
   descriptors,
   ...rest
 }: MaterialTopTabBarProps) {
-  const { colors, dark } = useTheme();
+  const { colors, dark, fonts } = useTheme();
   const { direction } = useLocale();
   const { buildHref } = useLinkBuilder();
 
@@ -86,20 +86,18 @@ export function MaterialTopTabBar({
         tabBarLabelStyle,
       } = options;
 
-      let badge;
+      let badgeStyle;
 
-      if (typeof tabBarBadge === 'function') {
-        badge = tabBarBadge;
-      } else if (tabBarBadge != null) {
-        badge = () => (
-          <Badge
-            visible
-            allowFontScaling={tabBarAllowFontScaling}
-            style={tabBarBadgeStyle}
-          >
-            {tabBarBadge}
-          </Badge>
-        );
+      if (tabBarBadge != null && typeof tabBarBadge !== 'function') {
+        const { backgroundColor = colors.notification, ...restBadgeStyle } =
+          StyleSheet.flatten(tabBarBadgeStyle) ?? {};
+
+        badgeStyle = {
+          backgroundColor,
+          color: Color.foreground(backgroundColor),
+          ...fonts.medium,
+          ...restBadgeStyle,
+        };
       }
 
       let icon;
@@ -143,7 +141,8 @@ export function MaterialTopTabBar({
           href: buildHref(route.name, route.params),
           testID: tabBarButtonTestID,
           accessibilityLabel: tabBarAccessibilityLabel,
-          badge,
+          badge: tabBarBadge,
+          badgeStyle,
           icon,
           label:
             tabBarShowLabel === false
