@@ -32,6 +32,7 @@ jest.mock('nanoid/non-secure', () => {
 beforeEach(() => {
   MockRouterKey.current = 0;
 
+  // eslint-disable-next-line import-x/no-extraneous-dependencies
   require('nanoid/non-secure').__key = 0;
 });
 
@@ -810,12 +811,12 @@ test("emits 'beforeRemove' when removing a screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-3', name: 'foo' },
-      { key: 'bar-5', name: 'bar' },
+      { key: 'foo-2', name: 'foo' },
+      { key: 'bar-3', name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -826,14 +827,14 @@ test("emits 'beforeRemove' when removing a screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-3', name: 'foo' },
-      { key: 'bar-5', name: 'bar' },
+      { key: 'foo-2', name: 'foo' },
+      { key: 'bar-3', name: 'bar' },
       {
-        key: 'baz-6',
+        key: 'baz-4',
         name: 'baz',
       },
     ],
@@ -848,13 +849,13 @@ test("emits 'beforeRemove' when removing a screen", async () => {
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-3', name: 'foo' },
-      { key: 'bar-5', name: 'bar' },
-      { key: 'baz-6', name: 'baz' },
+      { key: 'foo-2', name: 'foo' },
+      { key: 'bar-3', name: 'bar' },
+      { key: 'baz-4', name: 'baz' },
     ],
     stale: false,
     type: 'stack',
@@ -867,10 +868,10 @@ test("emits 'beforeRemove' when removing a screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-3', name: 'foo' }],
+    routes: [{ key: 'foo-2', name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -884,10 +885,10 @@ test("emits 'beforeRemove' when removing a screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-3', name: 'foo' }],
+    routes: [{ key: 'foo-2', name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -958,12 +959,12 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-3', name: 'foo' },
-      { key: 'bar-5', name: 'bar' },
+      { key: 'foo-2', name: 'foo' },
+      { key: 'bar-3', name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -974,21 +975,21 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-3', name: 'foo' },
-      { key: 'bar-5', name: 'bar' },
+      { key: 'foo-2', name: 'foo' },
+      { key: 'bar-3', name: 'bar' },
       {
-        key: 'baz-6',
+        key: 'baz-4',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-8',
+          key: 'stack-5',
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-9', name: 'qux' }],
+          routes: [{ key: 'qux-6', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -1005,21 +1006,21 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-3', name: 'foo' },
-      { key: 'bar-5', name: 'bar' },
+      { key: 'foo-2', name: 'foo' },
+      { key: 'bar-3', name: 'bar' },
       {
-        key: 'baz-6',
+        key: 'baz-4',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-8',
+          key: 'stack-5',
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-9', name: 'qux' }],
+          routes: [{ key: 'qux-6', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -1036,10 +1037,10 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-3', name: 'foo' }],
+    routes: [{ key: 'foo-2', name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -1053,10 +1054,10 @@ test("emits 'beforeRemove' when removing a child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-3', name: 'foo' }],
+    routes: [{ key: 'foo-2', name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -1132,12 +1133,12 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-3', name: 'foo' },
-      { key: 'bar-5', name: 'bar' },
+      { key: 'foo-2', name: 'foo' },
+      { key: 'bar-3', name: 'bar' },
     ],
     stale: false,
     type: 'stack',
@@ -1148,30 +1149,30 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 2,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-3', name: 'foo' },
-      { key: 'bar-5', name: 'bar' },
+      { key: 'foo-2', name: 'foo' },
+      { key: 'bar-3', name: 'bar' },
       {
-        key: 'baz-6',
+        key: 'baz-4',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-8',
+          key: 'stack-5',
           retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-9',
+              key: 'qux-6',
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-12',
+                key: 'stack-7',
                 retainedRouteKeys: [],
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-13', name: 'lex' }],
+                routes: [{ key: 'lex-8', name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -1193,30 +1194,30 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
 
   expect(navigation.getRootState()).toEqual({
     index: 2,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-3', name: 'foo' },
-      { key: 'bar-5', name: 'bar' },
+      { key: 'foo-2', name: 'foo' },
+      { key: 'bar-3', name: 'bar' },
       {
-        key: 'baz-6',
+        key: 'baz-4',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-8',
+          key: 'stack-5',
           retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-9',
+              key: 'qux-6',
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-12',
+                key: 'stack-7',
                 retainedRouteKeys: [],
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-13', name: 'lex' }],
+                routes: [{ key: 'lex-8', name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -1238,10 +1239,10 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(3);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-3', name: 'foo' }],
+    routes: [{ key: 'foo-2', name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -1255,10 +1256,10 @@ test("emits 'beforeRemove' when removing a grand child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(5);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-3', name: 'foo' }],
+    routes: [{ key: 'foo-2', name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -1344,31 +1345,31 @@ test("emits 'beforeRemove' for multiple removed screens in reverse order", async
 
   const preventedState = {
     index: 3,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
     routes: [
-      { key: 'foo-3', name: 'foo' },
-      { key: 'bar-5', name: 'bar' },
-      { key: 'baz-6', name: 'baz' },
+      { key: 'foo-2', name: 'foo' },
+      { key: 'bar-3', name: 'bar' },
+      { key: 'baz-4', name: 'baz' },
       {
-        key: 'bax-7',
+        key: 'bax-5',
         name: 'bax',
         state: {
           index: 0,
-          key: 'stack-9',
+          key: 'stack-6',
           retainedRouteKeys: [],
           routeNames: ['qux'],
           routes: [
             {
-              key: 'qux-10',
+              key: 'qux-7',
               name: 'qux',
               state: {
                 index: 0,
-                key: 'stack-13',
+                key: 'stack-8',
                 retainedRouteKeys: [],
                 routeNames: ['lex'],
-                routes: [{ key: 'lex-14', name: 'lex' }],
+                routes: [{ key: 'lex-9', name: 'lex' }],
                 stale: false,
                 type: 'stack',
               },
@@ -1418,10 +1419,10 @@ test("emits 'beforeRemove' for multiple removed screens in reverse order", async
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz', 'bax'],
-    routes: [{ key: 'foo-3', name: 'foo' }],
+    routes: [{ key: 'foo-2', name: 'foo' }],
     stale: false,
     type: 'stack',
   });
@@ -1493,20 +1494,20 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(1);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 1,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-3', name: 'foo' },
+      { key: 'foo-2', name: 'foo' },
       {
-        key: 'baz-5',
+        key: 'baz-3',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-7',
+          key: 'stack-4',
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-8', name: 'qux' }],
+          routes: [{ key: 'qux-5', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -1519,9 +1520,9 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
   await act(() => {
     const state = {
       index: 0,
-      key: 'stack-2',
+      key: 'stack-1',
       routeNames: ['foo', 'bar', 'baz'],
-      routes: [{ key: 'foo-3', name: 'foo' }],
+      routes: [{ key: 'foo-2', name: 'foo' }],
       retainedRouteKeys: [],
       stale: false,
       type: 'stack',
@@ -1535,20 +1536,20 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
 
   expect(navigation.getRootState()).toEqual({
     index: 1,
-    key: 'stack-2',
+    key: 'stack-1',
     retainedRouteKeys: [],
     routeNames: ['foo', 'bar', 'baz'],
     routes: [
-      { key: 'foo-3', name: 'foo' },
+      { key: 'foo-2', name: 'foo' },
       {
-        key: 'baz-5',
+        key: 'baz-3',
         name: 'baz',
         state: {
           index: 0,
-          key: 'stack-7',
+          key: 'stack-4',
           retainedRouteKeys: [],
           routeNames: ['qux', 'lex'],
-          routes: [{ key: 'qux-8', name: 'qux' }],
+          routes: [{ key: 'qux-5', name: 'qux' }],
           stale: false,
           type: 'stack',
         },
@@ -1563,9 +1564,9 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
   await act(() => {
     const state = {
       index: 0,
-      key: 'stack-2',
+      key: 'stack-1',
       routeNames: ['foo', 'bar', 'baz'],
-      routes: [{ key: 'foo-3', name: 'foo' }],
+      routes: [{ key: 'foo-2', name: 'foo' }],
       retainedRouteKeys: [],
       stale: false,
       type: 'stack',
@@ -1577,9 +1578,9 @@ test("emits 'beforeRemove' when resetRoot removes a child screen", async () => {
   expect(onStateChange).toHaveBeenCalledTimes(2);
   expect(onStateChange).toHaveBeenCalledWith({
     index: 0,
-    key: 'stack-2',
+    key: 'stack-1',
     routeNames: ['foo', 'bar', 'baz'],
-    routes: [{ key: 'foo-3', name: 'foo' }],
+    routes: [{ key: 'foo-2', name: 'foo' }],
     retainedRouteKeys: [],
     stale: false,
     type: 'stack',

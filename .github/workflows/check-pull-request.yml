@@ -1,0 +1,97 @@
+name: Check Pull Request
+
+on:
+  pull_request_target:
+    types: [opened, edited, reopened]
+
+permissions:
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: pull-request-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Check description and visual evidence
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check pull request details
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const MAX_PR_BODY_LENGTH = 1000;
+            const MARKER = '<!-- pull-request-details-check -->';
+
+            const { owner, repo } = context.repo;
+
+            const issueNumber = context.payload.pull_request.number;
+            const body = context.payload.pull_request.body || '';
+
+            const problems = [];
+
+            if (Array.from(body).length > MAX_PR_BODY_LENGTH) {
+              problems.push(
+                `- The description is too long. Please keep it under ${MAX_PR_BODY_LENGTH} characters.`
+              );
+            }
+
+            if (
+              !/(?:https?:\/\/[^\s)"']+\.(?:png|jpe?g|gif|webp|avif|mp4|mov|webm|m4v)(?:[?#][^\s)"']*)?|https?:\/\/github\.com\/user-attachments\/assets\/[^\s)"']+)/i.test(
+                body
+              )
+            ) {
+              problems.push(
+                '- Screenshot or video evidence is missing. Make sure to include one if it affects the UI.'
+              );
+            }
+
+            const existingComment = (
+              await github.paginate(github.rest.issues.listComments, {
+                owner,
+                repo,
+                issue_number: issueNumber,
+                per_page: 100,
+              })
+            ).find(
+              (comment) =>
+                comment.user?.login === 'github-actions[bot]' &&
+                comment.body?.includes(MARKER)
+            );
+
+            if (problems.length === 0) {
+              if (existingComment) {
+                await github.rest.issues.deleteComment({
+                  owner,
+                  repo,
+                  comment_id: existingComment.id,
+                });
+              }
+
+              return;
+            }
+
+            const commentBody = [
+              MARKER,
+              'Found potential problems with the pull request:',
+              '',
+              problems.join('\n'),
+            ].join('\n');
+
+            if (existingComment) {
+              await github.rest.issues.updateComment({
+                owner,
+                repo,
+                comment_id: existingComment.id,
+                body: commentBody,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: issueNumber,
+                body: commentBody,
+              });
+            }
